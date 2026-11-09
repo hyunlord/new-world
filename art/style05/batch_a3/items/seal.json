@@ -1,0 +1,204 @@
+{
+  "schema_version": 1,
+  "id": "seal",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "bronze",
+  "family": "bronze",
+  "catalogue_source": "C2 GOAL §3.3",
+  "inferred_completion_candidate": false,
+  "sim_identity": null,
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "seal",
+    "era": "bronze",
+    "prompt": "Use case: stylized-concept. Create ONE isolated WorldSim concept-05 item, using attached images as visual STYLE references only. Hand-ink natural-history illustration with restrained muted earth pigment wash. Warm brown-black delicate main contour, secondary line half its width (2:1). Sparse lower-left to upper-right hatching in at most two groups of 2-3 marks per face. Broad calm midtone planes, no all-over stippling or white speckles. Front three-quarter camera about20 degrees down, narrow visible top, upper-left light. Center at70% canvas extent, all parts entirely visible, generous transparent margin. Transparent background, no ground, no cast shadow, no labels, text, border, scenery, modern details, pixel art, or3D rendering. Must read when reduced to64px and32px. CRITICAL ALPHA: alpha must be exactly zero immediately outside the object silhouette. No soft glow, no brown aura, no vignette, no atmospheric surround, no ambient occlusion outside, no shadow, no paper sheet behind object. Draw ONLY the solid physical object and its crisp cutout edge, on literal empty transparency. Subject: one small bronze-age stone stamp seal lying on its side, a squat mushroom-like handle behind a visible flat round face carved with a simple branching geometric motif. Muted grey-brown stone,3-4 engraved strokes, no letters, words, modern stamp mechanism or ink pad.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/clay_pot_empty.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/raw_pot.png"
+    ],
+    "started_at": "2026-11-09T23:09:45.094Z",
+    "completed_at": "2026-11-09T23:10:11.445Z",
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c28b-a62f-7f50-93e5-183a70b4d483 as /Users/rexxa/.codex/generated_images/01a1c28b-a62f-7f50-93e5-183a70b4d483/exec-206e6c0f-ad4a-4de1-95f1-e0f61fb0d786.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "attempt": 1,
+    "source": "/Users/rexxa/.codex/generated_images/01a1c28b-a62f-7f50-93e5-183a70b4d483/exec-206e6c0f-ad4a-4de1-95f1-e0f61fb0d786.png",
+    "raw": "/Users/rexxa/work/art-batch/A3/bronze/seal_try1_raw.png",
+    "path": "/Users/rexxa/work/art-batch/A3/bronze/seal_try1_raw.png",
+    "raw_sha256": "8dd412e51ed36085fa49890daa1d98a11d485e6bb75e5912cd3f046ccec42ba2",
+    "reference_sha256": {
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/clay_pot_empty.png": "1e0fd136c5b99ad8f4114c9fd0d4b3b518c7c66cf7912812238a7d1b1ba68cd1",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/raw_pot.png": "0bc4ef70479fb3614f8038cdce455f11c1e775fbf0819b174d57a4a5eac8119f"
+    }
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/bronze/seal_try1.json",
+    "record_sha256": "849aa636ffb3ab0d534978f1f95837f343ada4fa446c109b9c93f5844f1c3ece",
+    "raw": "/Users/rexxa/work/art-batch/A3/bronze/seal_try1_raw.png",
+    "raw_sha256": "8dd412e51ed36085fa49890daa1d98a11d485e6bb75e5912cd3f046ccec42ba2",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/seal_try1.json",
+    "candidate_sha256": "a75b5db0625b03eaca23425fd7c7bbc48d5a5d1b7ac5ebc266dfff644c22b45e"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 0,
+    "passed": true,
+    "visible_pixels": 266481,
+    "opaque_pixels": 256153,
+    "fringe_pixels": 10328,
+    "visible_bounds": [
+      17,
+      28,
+      1286,
+      1181
+    ],
+    "opaque_bounds": [
+      299,
+      306,
+      1011,
+      897
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/bronze/seal_try1_raw.png",
+    "sha256": "8dd412e51ed36085fa49890daa1d98a11d485e6bb75e5912cd3f046ccec42ba2",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.15859587095144895,
+      "saturation_q25": 0.3017148276935748,
+      "saturation_q75": 0.3663642377665757,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.01176144426196786,
+      "foreground_pixels": 33041
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "seal",
+      "source": "art/style05/batch_a3/items/seal.png",
+      "bucket": "1",
+      "sha256": "5744642e6c6b77a4f60ea4854ba4a8ad0aeefe5c37fe42d3e980a48fc5326e55",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 701,
+          "opaque_pixels": 535,
+          "fringe_pixels": 166,
+          "visible_bounds": [
+            13,
+            15,
+            51,
+            48
+          ],
+          "opaque_bounds": [
+            16,
+            18,
+            48,
+            45
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            44
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 535,
+          "base_row": 44,
+          "base_error": 0,
+          "height": 27,
+          "gradient_x": -2.3273956521739128,
+          "gradient_y": -4.007717296222664,
+          "light_angle_degrees": 239.8550435967029,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 32,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          0.0,
+          -0.5
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

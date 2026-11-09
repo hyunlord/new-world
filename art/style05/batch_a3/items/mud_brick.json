@@ -1,0 +1,356 @@
+{
+  "schema_version": 1,
+  "id": "mud_brick",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "bronze",
+  "family": "bronze",
+  "catalogue_source": "C2 GOAL §3.3",
+  "inferred_completion_candidate": false,
+  "sim_identity": null,
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "mud_brick",
+    "era": "bronze",
+    "prompt": "Use case: stylized-concept. Create ONE isolated WorldSim concept-05 item, using attached images as visual STYLE references only. Hand-ink natural-history illustration with restrained muted earth pigment wash. Warm brown-black delicate main contour, secondary line half its width (2:1). Sparse lower-left to upper-right hatching in at most two groups of 2-3 marks per face. Broad calm midtone planes, no all-over stippling or white speckles. Front three-quarter camera about20 degrees down, narrow visible top, upper-left light. Center at70% canvas extent, all parts entirely visible, generous transparent margin. Transparent background, no ground, no cast shadow, no labels, text, border, scenery, modern details, pixel art, or3D rendering. Must read when reduced to64px and32px. CRITICAL ALPHA: alpha must be exactly zero immediately outside the object silhouette. No soft glow, no brown aura, no vignette, no atmospheric surround, no ambient occlusion outside, no shadow, no paper sheet behind object. Draw ONLY the solid physical object and its crisp cutout edge, on literal empty transparency. Subject: a single low rectangular sun-dried mud brick with softened chipped edges, tawny ochre clay and3-4 visible short straw inclusions. Narrow top face, long front face, rough hand-moulded form, no fired-red masonry, writing, pile or background.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/clay_pot_empty.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/raw_pot.png"
+    ],
+    "started_at": "2026-11-09T23:07:57.935Z",
+    "completed_at": "2026-11-09T23:08:54.393Z",
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c28b-a62f-7f50-93e5-183a70b4d483 as /Users/rexxa/.codex/generated_images/01a1c28b-a62f-7f50-93e5-183a70b4d483/exec-8659d89c-9575-4125-a1c6-ace3be89c20d.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "attempt": 1,
+    "source": "/Users/rexxa/.codex/generated_images/01a1c28b-a62f-7f50-93e5-183a70b4d483/exec-8659d89c-9575-4125-a1c6-ace3be89c20d.png",
+    "raw": "/Users/rexxa/work/art-batch/A3/bronze/mud_brick_try1_raw.png",
+    "path": "/Users/rexxa/work/art-batch/A3/bronze/mud_brick_try1_raw.png",
+    "raw_sha256": "f3c98fd8ea43560ab3b37da5e91db8254e335010e4c199f19f8c57c9f56c12df",
+    "reference_sha256": {
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/clay_pot_empty.png": "1e0fd136c5b99ad8f4114c9fd0d4b3b518c7c66cf7912812238a7d1b1ba68cd1",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/raw_pot.png": "0bc4ef70479fb3614f8038cdce455f11c1e775fbf0819b174d57a4a5eac8119f"
+    }
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/bronze/mud_brick_try1.json",
+    "record_sha256": "a8e3bcffe252f43ad42403b9d66d97d5143b79267d3a978318433c3b9d1dfca3",
+    "raw": "/Users/rexxa/work/art-batch/A3/bronze/mud_brick_try1_raw.png",
+    "raw_sha256": "f3c98fd8ea43560ab3b37da5e91db8254e335010e4c199f19f8c57c9f56c12df",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/mud_brick_try1.json",
+    "candidate_sha256": "16f0f6c9f40c4e00ebb6c8151fcf3594e415da2b8440d38f8c38ef945eea9956"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 1,
+    "passed": true,
+    "visible_pixels": 401772,
+    "opaque_pixels": 373186,
+    "fringe_pixels": 28586,
+    "visible_bounds": [
+      0,
+      16,
+      1535,
+      1024
+    ],
+    "opaque_bounds": [
+      271,
+      281,
+      1260,
+      742
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/bronze/mud_brick_try1_raw.png",
+    "sha256": "f3c98fd8ea43560ab3b37da5e91db8254e335010e4c199f19f8c57c9f56c12df",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.1397235957905414,
+      "saturation_q25": 0.6227623197277848,
+      "saturation_q75": 0.6673822232825354,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.00493383623587119,
+      "foreground_pixels": 24933
+    },
+    "numeric_checks": {
+      "edge_density": false,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": false,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "mud_brick",
+      "source": "art/style05/batch_a3/items/mud_brick.png",
+      "bucket": "1",
+      "sha256": "fa0be9ece58be238d8bfc7ff7117105b48c1f033f7cfcfc029b8ac4dbb2435b8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 699,
+          "opaque_pixels": 524,
+          "fringe_pixels": 175,
+          "visible_bounds": [
+            11,
+            19,
+            53,
+            43
+          ],
+          "opaque_bounds": [
+            13,
+            23,
+            51,
+            40
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            39
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 524,
+          "base_row": 39,
+          "base_error": 0,
+          "height": 17,
+          "gradient_x": -0.7152573122529645,
+          "gradient_y": -2.0497921810699586,
+          "light_angle_degrees": 250.76400676174285,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 38,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          0.0,
+          -1.0
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    },
+    {
+      "id": "mud_brick_count_2_8",
+      "source": "art/style05/batch_a3/items/mud_brick_count_2_8.png",
+      "bucket": "2_8",
+      "sha256": "0b2248c9d6d311d27d7ff68d3c0e6603f2d18879235dbc022f77c0f97bd65721",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 911,
+          "opaque_pixels": 627,
+          "fringe_pixels": 284,
+          "visible_bounds": [
+            9,
+            15,
+            52,
+            49
+          ],
+          "opaque_bounds": [
+            12,
+            18,
+            49,
+            46
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            45
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 627,
+          "base_row": 45,
+          "base_error": 0,
+          "height": 28,
+          "gradient_x": -1.2427223333333333,
+          "gradient_y": -3.667781625441696,
+          "light_angle_degrees": 251.28252789788604,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 37,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": null,
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    },
+    {
+      "id": "mud_brick_count_9_plus",
+      "source": "art/style05/batch_a3/items/mud_brick_count_9_plus.png",
+      "bucket": "9_plus",
+      "sha256": "71fff709bafaf4a23ab7966499f985a9b96ca5ab445ec4101e7241d22fd29674",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 1476,
+          "opaque_pixels": 942,
+          "fringe_pixels": 534,
+          "visible_bounds": [
+            5,
+            11,
+            59,
+            55
+          ],
+          "opaque_bounds": [
+            8,
+            13,
+            56,
+            52
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            51
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 942,
+          "base_row": 51,
+          "base_error": 0,
+          "height": 39,
+          "gradient_x": -0.8235470982142858,
+          "gradient_y": -4.828624438902743,
+          "light_angle_degrees": 260.3210393576444,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 48,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": null,
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,201 @@
+{
+  "schema_version": 1,
+  "id": "copper_awl",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "bronze",
+  "family": "metal",
+  "catalogue_source": "C2 GOAL §3.3",
+  "inferred_completion_candidate": false,
+  "sim_identity": null,
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "copper_awl",
+    "era": "bronze",
+    "attempt": 1,
+    "prompt": "Use case: stylized-concept. Create ONE isolated inventory item for WorldSim concept05. Reference image1 establishes fine ink/earth-wash technique; reference image2 shows the existing item family. Copy STYLE, not their subjects or labels. Warm brown-black delicate hand-ink contour and restrained translucent pigment wash; main contour:secondary line weight2:1. At final64px contour about1px, secondary0.5px. Calm broad material planes. Sparse hatch groups slanting lower-left to upper-right, maximum2 groups of2-3 short lines per face. No speckles or all-over noise. Restrained muted earth colours, not glossy or photorealistic. Front three-quarter view looking down about20degrees; upper-left light and narrow top face. One complete object resting naturally, centered, about70percent width of square image, generous margin. Real transparent background, no ground, cast shadow, lettering, border, tile, watermark, scenery, detached chips. Full uncropped silhouette readable at64px and32px. CRITICAL ALPHA: no glow, no vignette, no ambient aura, no smoke, no dusty surround. Alpha must be exactly zero immediately outside the crisp object edge, object interior opaque. These references show the ink treatment only; do not add any reference object. Subject: One early COPPER AWL, short brown wooden barrel grip with a clearly visible tapered reddish-copper spike emerging from one end; no guard, no rivet ornament. Laid diagonally but mainly horizontal, grip left, point right. Broad readable proportions;2 wood grain strokes, restrained metal edge. Not knife or spear.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/ground_axe.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/clay_pot_empty.png"
+    ],
+    "started_at": "2026-11-09T23:06:45.667Z",
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "completed_at": "2026-11-09T23:08:05.900Z",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c28b-86b5-77a2-b285-14a40355d5e7 as /Users/rexxa/.codex/generated_images/01a1c28b-86b5-77a2-b285-14a40355d5e7/exec-33a27b8e-e63b-4e3a-bea7-1f58c17a76bc.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c28b-86b5-77a2-b285-14a40355d5e7/exec-33a27b8e-e63b-4e3a-bea7-1f58c17a76bc.png",
+    "raw": "/Users/rexxa/work/art-batch/A3/metal/copper_awl_try1_raw.png",
+    "path": "/Users/rexxa/work/art-batch/A3/metal/copper_awl_try1_raw.png",
+    "raw_sha256": "758a72e215f3967b71f110c8119ad350a566f8e0d1580835a030823fd46e9252",
+    "status": "GENERATED_PENDING_NORMALIZED_REVIEW"
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/metal/copper_awl_try1.json",
+    "record_sha256": "a703b762381798931c2f89ce103563630902310786e4ff82fc452f217ca6b3ff",
+    "raw": "/Users/rexxa/work/art-batch/A3/metal/copper_awl_try1_raw.png",
+    "raw_sha256": "758a72e215f3967b71f110c8119ad350a566f8e0d1580835a030823fd46e9252",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/copper_awl_try1.json",
+    "candidate_sha256": "1c067050563930430fda8eda9a355b140a07e3ce431be2ed4e710e2b0cc3095a"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 0,
+    "passed": true,
+    "visible_pixels": 186558,
+    "opaque_pixels": 178747,
+    "fringe_pixels": 7811,
+    "visible_bounds": [
+      25,
+      21,
+      1504,
+      1000
+    ],
+    "opaque_bounds": [
+      259,
+      384,
+      1275,
+      706
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/metal/copper_awl_try1_raw.png",
+    "sha256": "758a72e215f3967b71f110c8119ad350a566f8e0d1580835a030823fd46e9252",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.18916015625,
+      "saturation_q25": 0.6518493749514725,
+      "saturation_q75": 0.6913446021319883,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.011985056777421453,
+      "foreground_pixels": 11334
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "copper_awl",
+      "source": "art/style05/batch_a3/items/copper_awl.png",
+      "bucket": "1",
+      "sha256": "3d8bbc14820c8c21d6d9509a129434298fd2257543c76ed3c276059fd575a152",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 426,
+          "opaque_pixels": 269,
+          "fringe_pixels": 157,
+          "visible_bounds": [
+            9,
+            24,
+            53,
+            42
+          ],
+          "opaque_bounds": [
+            12,
+            27,
+            51,
+            40
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            39
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 269,
+          "base_row": 39,
+          "base_error": 0,
+          "height": 13,
+          "gradient_x": -0.347825,
+          "gradient_y": -6.592838260869565,
+          "light_angle_degrees": 266.9799888221199,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 39,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          -1.0,
+          1.0
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

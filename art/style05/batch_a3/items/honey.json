@@ -1,0 +1,204 @@
+{
+  "schema_version": 1,
+  "id": "honey",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "bronze",
+  "family": "bronze",
+  "catalogue_source": "C2 GOAL §3.3",
+  "inferred_completion_candidate": false,
+  "sim_identity": null,
+  "state": "filled",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "honey",
+    "era": "bronze",
+    "prompt": "Use case: stylized-concept. Create ONE isolated WorldSim concept-05 item, using attached images as visual STYLE references only. Hand-ink natural-history illustration with restrained muted earth pigment wash. Warm brown-black delicate main contour, secondary line half its width (2:1). Sparse lower-left to upper-right hatching in at most two groups of 2-3 marks per face. Broad calm midtone planes, no all-over stippling or white speckles. Front three-quarter camera about20 degrees down, narrow visible top, upper-left light. Center at70% canvas extent, all parts entirely visible, generous transparent margin. Transparent background, no ground, no cast shadow, no labels, text, border, scenery, modern details, pixel art, or3D rendering. Must read when reduced to64px and32px. Subject: bronze-age honey in a single open squat orange-brown earthenware jar, wide oval mouth visibly full of golden amber honey, one small attached honey streak over the front rim. No dipper, bees or extra objects. Shape matches the rounded fired pot in reference. Sparse clay marks and a single restrained highlight on honey.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png"
+    ],
+    "started_at": "2026-11-09T23:02:14.784Z",
+    "completed_at": "2026-11-09T23:03:12.221Z",
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c28b-a62f-7f50-93e5-183a70b4d483 as /Users/rexxa/.codex/generated_images/01a1c28b-a62f-7f50-93e5-183a70b4d483/exec-2e54c451-8bc6-4281-9b55-ecea736ed37d.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "attempt": 1,
+    "source": "/Users/rexxa/.codex/generated_images/01a1c28b-a62f-7f50-93e5-183a70b4d483/exec-2e54c451-8bc6-4281-9b55-ecea736ed37d.png",
+    "raw": "/Users/rexxa/work/art-batch/A3/bronze/honey_try1_raw.png",
+    "path": "/Users/rexxa/work/art-batch/A3/bronze/honey_try1_raw.png",
+    "raw_sha256": "8d6cfc5dc35480729393fb5e3e615580d9f97c1f23743a8496f57a144b3f176d",
+    "reference_sha256": {
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png": "d51c80b1a9b6dc7747ddc36c7c451c54221e215a3c8ad8a2d58a48f8a4e84c5f"
+    }
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/bronze/honey_try1.json",
+    "record_sha256": "833958e6bd7772bd87b129d9fe783206355b9450f07a840e6f2b860dcdb99fba",
+    "raw": "/Users/rexxa/work/art-batch/A3/bronze/honey_try1_raw.png",
+    "raw_sha256": "8d6cfc5dc35480729393fb5e3e615580d9f97c1f23743a8496f57a144b3f176d",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/honey_try1.json",
+    "candidate_sha256": "7669aa26fe947580cc9aaf8bf827784a0333b8bdc7f25bd74355fa6882ced803"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 1,
+    "passed": true,
+    "visible_pixels": 382608,
+    "opaque_pixels": 370191,
+    "fringe_pixels": 12417,
+    "visible_bounds": [
+      0,
+      7,
+      1234,
+      1234
+    ],
+    "opaque_bounds": [
+      246,
+      274,
+      992,
+      947
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/bronze/honey_try1_raw.png",
+    "sha256": "8d6cfc5dc35480729393fb5e3e615580d9f97c1f23743a8496f57a144b3f176d",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.13728704825718155,
+      "saturation_q25": 0.7207859637748836,
+      "saturation_q75": 0.7758284680349012,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.010838146954098161,
+      "foreground_pixels": 43615
+    },
+    "numeric_checks": {
+      "edge_density": false,
+      "saturation_q25": false,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": false,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "honey",
+      "source": "art/style05/batch_a3/items/honey.png",
+      "bucket": "1",
+      "sha256": "5dd612ac62248ab6d8d18a8ef513583199dd6bf75301c1ed0830f53e059df46c",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 1008,
+          "opaque_pixels": 821,
+          "fringe_pixels": 187,
+          "visible_bounds": [
+            12,
+            13,
+            54,
+            54
+          ],
+          "opaque_bounds": [
+            15,
+            16,
+            50,
+            47
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            46
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 821,
+          "base_row": 46,
+          "base_error": 0,
+          "height": 31,
+          "gradient_x": -1.4605362944162434,
+          "gradient_y": -2.311528826530612,
+          "light_angle_degrees": 237.71331186937138,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 35,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          1.0,
+          1.5
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,201 @@
+{
+  "schema_version": 1,
+  "id": "bronze_dagger",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "bronze",
+  "family": "metal",
+  "catalogue_source": "C2 GOAL §3.3",
+  "inferred_completion_candidate": false,
+  "sim_identity": null,
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "bronze_dagger",
+    "era": "bronze",
+    "attempt": 1,
+    "prompt": "Use case: stylized-concept. Create ONE isolated inventory item for WorldSim concept05. Reference image1 establishes fine ink/earth-wash technique; reference image2 shows the existing item family. Copy STYLE, not their subjects or labels. Warm brown-black delicate hand-ink contour and restrained translucent pigment wash; main contour:secondary line weight2:1. At final64px contour about1px, secondary0.5px. Calm broad material planes. Sparse hatch groups slanting lower-left to upper-right, maximum2 groups of2-3 short lines per face. No speckles or all-over noise. Restrained muted earth colours, not glossy or photorealistic. Front three-quarter view looking down about20degrees; upper-left light and narrow top face. One complete object resting naturally, centered, about70percent width of square image, generous margin. Real transparent background, no ground, cast shadow, lettering, border, tile, watermark, scenery, detached chips. Full uncropped silhouette readable at64px and32px. CRITICAL ALPHA: no glow, no vignette, no ambient aura, no smoke, no dusty surround. Alpha must be exactly zero immediately outside the crisp object edge, object interior opaque. These references show the ink treatment only; do not add any reference object. Subject: One BRONZE DAGGER with broad triangular double-edged yellow-ochre bronze blade, central ridge, short plain dark-wood grip and tiny rivets. No crossguard, no pommel ornament, no sheath. Laid nearly horizontal, point left and grip right. Compact sturdy early-bronze proportions, muted natural metal with only2 narrow edge accents.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/ground_axe.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/clay_pot_empty.png"
+    ],
+    "started_at": "2026-11-09T23:10:38.461Z",
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "completed_at": "2026-11-09T23:11:53.512Z",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c28b-86b5-77a2-b285-14a40355d5e7 as /Users/rexxa/.codex/generated_images/01a1c28b-86b5-77a2-b285-14a40355d5e7/exec-9b94b57a-6109-41f2-a87a-21017b495b08.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c28b-86b5-77a2-b285-14a40355d5e7/exec-9b94b57a-6109-41f2-a87a-21017b495b08.png",
+    "raw": "/Users/rexxa/work/art-batch/A3/metal/bronze_dagger_try1_raw.png",
+    "path": "/Users/rexxa/work/art-batch/A3/metal/bronze_dagger_try1_raw.png",
+    "raw_sha256": "a34069f5e01769d8cf825bc99b858a2c05e92666257928dce54ffe42cad5d38a",
+    "status": "GENERATED_PENDING_NORMALIZED_REVIEW"
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/metal/bronze_dagger_try1.json",
+    "record_sha256": "742d40a5724d5c9e3fdc31229ea071df3485a1de1507712ae0205ecd0af9e119",
+    "raw": "/Users/rexxa/work/art-batch/A3/metal/bronze_dagger_try1_raw.png",
+    "raw_sha256": "a34069f5e01769d8cf825bc99b858a2c05e92666257928dce54ffe42cad5d38a",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/bronze_dagger_try1.json",
+    "candidate_sha256": "3914374b56d3c41ab6318035bf1948ed5b7f7cd8bd25ca8fb2681339987af5db"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 1,
+    "passed": true,
+    "visible_pixels": 197179,
+    "opaque_pixels": 173019,
+    "fringe_pixels": 24160,
+    "visible_bounds": [
+      39,
+      87,
+      1498,
+      1024
+    ],
+    "opaque_bounds": [
+      227,
+      393,
+      1319,
+      675
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/metal/bronze_dagger_try1_raw.png",
+    "sha256": "a34069f5e01769d8cf825bc99b858a2c05e92666257928dce54ffe42cad5d38a",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.16965026674570244,
+      "saturation_q25": 0.604904507996624,
+      "saturation_q75": 0.6515263743714683,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.02293433752356983,
+      "foreground_pixels": 9501
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": false
+    },
+    "numeric_pass": false,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "bronze_dagger",
+      "source": "art/style05/batch_a3/items/bronze_dagger.png",
+      "bucket": "1",
+      "sha256": "986ee825993b8563efa005c7ddb844eb637b7c01ff551819dd85cb44b488a491",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 434,
+          "opaque_pixels": 270,
+          "fringe_pixels": 164,
+          "visible_bounds": [
+            8,
+            22,
+            57,
+            39
+          ],
+          "opaque_bounds": [
+            11,
+            25,
+            54,
+            36
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            35
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 270,
+          "base_row": 35,
+          "base_error": 0,
+          "height": 11,
+          "gradient_x": -2.0684342412451366,
+          "gradient_y": -5.029557709251102,
+          "light_angle_degrees": 247.6448057463416,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 43,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          0.5,
+          -1.5
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

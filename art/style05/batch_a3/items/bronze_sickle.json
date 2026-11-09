@@ -1,0 +1,201 @@
+{
+  "schema_version": 1,
+  "id": "bronze_sickle",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "bronze",
+  "family": "metal",
+  "catalogue_source": "C2 GOAL §3.3",
+  "inferred_completion_candidate": false,
+  "sim_identity": null,
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "bronze_sickle",
+    "era": "bronze",
+    "attempt": 1,
+    "prompt": "Use case: stylized-concept. Create ONE isolated inventory item for WorldSim concept05. Reference image1 establishes fine ink/earth-wash technique; reference image2 shows the existing item family. Copy STYLE, not their subjects or labels. Warm brown-black delicate hand-ink contour and restrained translucent pigment wash; main contour:secondary line weight2:1. At final64px contour about1px, secondary0.5px. Calm broad material planes. Sparse hatch groups slanting lower-left to upper-right, maximum2 groups of2-3 short lines per face. No speckles or all-over noise. Restrained muted earth colours, not glossy or photorealistic. Front three-quarter view looking down about20degrees; upper-left light and narrow top face. One complete object resting naturally, centered, about70percent width of square image, generous margin. Real transparent background, no ground, cast shadow, lettering, border, tile, watermark, scenery, detached chips. Full uncropped silhouette readable at64px and32px. CRITICAL ALPHA: no glow, no vignette, no ambient aura, no smoke, no dusty surround. Alpha must be exactly zero immediately outside the crisp object edge, object interior opaque. These references show the ink treatment only; do not add any reference object. Subject: One BRONZE SICKLE, broad curved crescent bronze blade sweeping inward to a pointed tip from a short simple dark wooden grip. Distinct hooked C silhouette, muted ochre-bronze cutting edge, two sparse hatches, handle two grain strokes. Laid flat in low three-quarter view, whole single tool. No modern scythe, serrations or steel.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/ground_axe.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/clay_pot_empty.png"
+    ],
+    "started_at": "2026-11-09T23:08:31.192Z",
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "completed_at": "2026-11-09T23:10:12.100Z",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c28b-86b5-77a2-b285-14a40355d5e7 as /Users/rexxa/.codex/generated_images/01a1c28b-86b5-77a2-b285-14a40355d5e7/exec-4e3c1e61-5bad-4517-94fa-fa152928ef49.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c28b-86b5-77a2-b285-14a40355d5e7/exec-4e3c1e61-5bad-4517-94fa-fa152928ef49.png",
+    "raw": "/Users/rexxa/work/art-batch/A3/metal/bronze_sickle_try1_raw.png",
+    "path": "/Users/rexxa/work/art-batch/A3/metal/bronze_sickle_try1_raw.png",
+    "raw_sha256": "a8be16bd7b83c210dbb2e60fbda134c962a0791bd655cd2902e72da086f5a9e3",
+    "status": "GENERATED_PENDING_NORMALIZED_REVIEW"
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/metal/bronze_sickle_try1.json",
+    "record_sha256": "0285fdfcbf223276775573c4a3771302dba12da24c9aa71cc49b65eb57c8be9f",
+    "raw": "/Users/rexxa/work/art-batch/A3/metal/bronze_sickle_try1_raw.png",
+    "raw_sha256": "a8be16bd7b83c210dbb2e60fbda134c962a0791bd655cd2902e72da086f5a9e3",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/bronze_sickle_try1.json",
+    "candidate_sha256": "2880298fba9abf6f9b2e09494c6d702f9ef5d0e165bd7aad3f9f596c3043e440"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 8,
+    "passed": true,
+    "visible_pixels": 1418879,
+    "opaque_pixels": 207469,
+    "fringe_pixels": 1211410,
+    "visible_bounds": [
+      0,
+      0,
+      1254,
+      1254
+    ],
+    "opaque_bounds": [
+      142,
+      220,
+      1054,
+      1025
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/metal/bronze_sickle_try1_raw.png",
+    "sha256": "a8be16bd7b83c210dbb2e60fbda134c962a0791bd655cd2902e72da086f5a9e3",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.15364951227716112,
+      "saturation_q25": 0.5299885880378167,
+      "saturation_q75": 0.6209263257483195,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.017291839348537584,
+      "foreground_pixels": 16340
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "bronze_sickle",
+      "source": "art/style05/batch_a3/items/bronze_sickle.png",
+      "bucket": "1",
+      "sha256": "591e5a773d1cec4fcde77ed78a0d1d2533326ea484ee9b3d2fc3f6e08a035154",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 2942,
+          "opaque_pixels": 444,
+          "fringe_pixels": 2498,
+          "visible_bounds": [
+            3,
+            3,
+            61,
+            59
+          ],
+          "opaque_bounds": [
+            10,
+            13,
+            52,
+            50
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            49
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 444,
+          "base_row": 49,
+          "base_error": 0,
+          "height": 37,
+          "gradient_x": -1.7173650872817954,
+          "gradient_y": -3.004959798994974,
+          "light_angle_degrees": 240.2515943802295,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 42,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          0.0,
+          -1.0
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

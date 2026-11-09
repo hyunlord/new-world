@@ -1,0 +1,206 @@
+{
+  "schema_version": 1,
+  "id": "bronze_hoe",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "bronze",
+  "family": "metal",
+  "catalogue_source": "C2 GOAL §3.3",
+  "inferred_completion_candidate": false,
+  "sim_identity": null,
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 2,
+  "generation": {
+    "id": "bronze_hoe",
+    "era": "bronze",
+    "attempt": 2,
+    "dir": "metal",
+    "previous_attempt": "/Users/rexxa/work/art-batch/A3/metal/bronze_hoe_try1.json",
+    "repair_reason": "Independent metal/iron review: original hangs broad blade in axe plane; requires transverse hoe foot.",
+    "refs": [
+      "/Users/rexxa/work/art-batch/A3/iron/iron_hoe_try2_raw.png"
+    ],
+    "prompt": "Use case: precise-object-edit. The attached accepted farming hoe is the exact SHAPE GUIDE. Create its bronze-age bronze-metal version. Preserve this unmistakable anatomy and low wide composition: wooden haft extends diagonally toward upper-right; attached head descends via a narrow clearly offset bent neck, then forms one broad shallow horizontal working foot with its straight cutting edge running left-right across the handle axis near lower-left. Keep the flat upper plane of the transverse soil blade clearly visible as a shallow trapezoid. Keep that foot horizontal and wide, not a vertical hanging axe blade. CHANGE ALL DARK IRON METAL to matte muted yellow-ochre BRONZE with a slightly darker umber shadow face and restrained pale ochre edge accent, no grey iron remaining. Preserve simple natural fibre binding and plain honey-brown wooden handle; simplify wood to3-5 sparse grain lines and metal to2-3 edge accents plus1-2 tiny hatch groups. Warm thin brown ink contour with secondary lines half width, quiet earthy pigment wash, soft upper-left light. One whole ancient practical farming hoe, front three-quarter about20degrees down, all parts visible with generous margin. Transparent background; no ground, shadow, halo, glow, labels, text, ruler, nails, bolts, rubber grips, factory fittings or extra objects. Main silhouette and connected offset-neck/transverse-foot topology must remain the same as the guide.",
+    "started_at": "2026-11-09T23:22:09.864Z",
+    "completed_at": "2026-11-09T23:23:09.444Z",
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c28b-a62f-7f50-93e5-183a70b4d483 as /Users/rexxa/.codex/generated_images/01a1c28b-a62f-7f50-93e5-183a70b4d483/exec-b4f9f60e-9aca-4d1b-a5c9-bcb26547f10f.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c28b-a62f-7f50-93e5-183a70b4d483/exec-b4f9f60e-9aca-4d1b-a5c9-bcb26547f10f.png",
+    "raw": "/Users/rexxa/work/art-batch/A3/metal/bronze_hoe_try2_raw.png",
+    "path": "/Users/rexxa/work/art-batch/A3/metal/bronze_hoe_try2_raw.png",
+    "status": "GENERATED_PENDING_NORMALIZED_QA",
+    "raw_sha256": "002c3243a4835516870dcea67f6c93d514aaef3446a295256aa6e9dc62857a51",
+    "reference_sha256": {
+      "/Users/rexxa/work/art-batch/A3/iron/iron_hoe_try2_raw.png": "25815805266338b4e1cf118ad703e69156cb8cec4172d28edd7e6549f71f3fbc"
+    }
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/metal/bronze_hoe_try2.json",
+    "record_sha256": "04cc2f800dc9dfe127e47fffc1e9e69e7ee5d35ad9f6cf0f81e17119a3a73dc1",
+    "raw": "/Users/rexxa/work/art-batch/A3/metal/bronze_hoe_try2_raw.png",
+    "raw_sha256": "002c3243a4835516870dcea67f6c93d514aaef3446a295256aa6e9dc62857a51",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/bronze_hoe_try2.json",
+    "candidate_sha256": "122eddca334d52d94d900a10d813f1e07145c75cbf97e0487d30fa93eafa42fe"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 1,
+    "passed": true,
+    "visible_pixels": 247555,
+    "opaque_pixels": 231438,
+    "fringe_pixels": 16117,
+    "visible_bounds": [
+      0,
+      17,
+      1752,
+      869
+    ],
+    "opaque_bounds": [
+      68,
+      134,
+      1737,
+      813
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/metal/bronze_hoe_try2_raw.png",
+    "sha256": "002c3243a4835516870dcea67f6c93d514aaef3446a295256aa6e9dc62857a51",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.19479905437352246,
+      "saturation_q25": 0.6207330787141597,
+      "saturation_q75": 0.6838409102032686,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.012799339372755715,
+      "foreground_pixels": 5435
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "bronze_hoe",
+      "source": "art/style05/batch_a3/items/bronze_hoe.png",
+      "bucket": "1",
+      "sha256": "9fadf263dac83c529d75ed6890b5984be9e7b58e8763ed14bcceed931d4cd63a",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 452,
+          "opaque_pixels": 249,
+          "fringe_pixels": 203,
+          "visible_bounds": [
+            3,
+            19,
+            61,
+            45
+          ],
+          "opaque_bounds": [
+            6,
+            22,
+            60,
+            44
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            43
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 249,
+          "base_row": 43,
+          "base_error": 0,
+          "height": 22,
+          "gradient_x": -2.903094690265486,
+          "gradient_y": -10.412783157894735,
+          "light_angle_degrees": 254.42147495473807,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 54,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          0.0,
+          0.0
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

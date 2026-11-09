@@ -1,0 +1,206 @@
+{
+  "schema_version": 1,
+  "id": "wool_tunic",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "bronze",
+  "family": "bronze",
+  "catalogue_source": "C2 GOAL §3.3",
+  "inferred_completion_candidate": false,
+  "sim_identity": null,
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 2,
+  "generation": {
+    "id": "wool_tunic",
+    "era": "bronze",
+    "attempt": 2,
+    "dir": "bronze",
+    "previous_attempt": "/Users/rexxa/work/art-batch/A3/bronze/wool_tunic_try1.json",
+    "repair_reason": "Independent noniron review: short T-shirt silhouette, regular hems and bound crew neck are modern.",
+    "refs": [
+      "/Users/rexxa/work/art-batch/A3/bronze/wool_tunic_try1_raw.png"
+    ],
+    "prompt": "Use case: precise-object-edit. Correct the attached wool garment into an unmistakable ancient bronze-age woven wool tunic. Preserve the warm thin brown ink, subdued cream-beige wool, restrained pigment wash and soft upper-left lighting. REBUILD THE GARMENT CONSTRUCTION: a long straight rectangular knee-length body, approximately twice as long below the shoulders as the shoulder width, made from two coarse rectangular woven panels sewn crudely at the sides. Plain narrow V-shaped slit opening cut straight into the upper panel, with no collar, no binding, no ribbing and no rounded crew neck. Simple short boxy sleeves formed from rectangular cloth, crude sparse hand stitches at the side seams, slightly uneven hand-cut lower hem, tiny side slits. Show the full long tunic laid flat with its complete silhouette, slight natural loose folds but no deep fold hiding its length. Three to five broad folds and only two short weave groups, no dense fabric stippling. This must read as an ancient handwoven long tunic, never a modern T-shirt, jersey, sweatshirt, knitted clothing, tailored shirt, or dress with a fitted waist. No buttons, belt, pockets, decoration or person. One isolated complete garment, front-three-quarter looking down about20degrees, generous transparent margin. Transparent alpha, no ground, cast shadow, halo, glow, paper background, labels or props.",
+    "started_at": "2026-11-09T23:22:09.864Z",
+    "completed_at": "2026-11-09T23:22:42.287Z",
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c28b-a62f-7f50-93e5-183a70b4d483 as /Users/rexxa/.codex/generated_images/01a1c28b-a62f-7f50-93e5-183a70b4d483/exec-938129bb-a925-41af-991d-fae0241db3ae.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c28b-a62f-7f50-93e5-183a70b4d483/exec-938129bb-a925-41af-991d-fae0241db3ae.png",
+    "raw": "/Users/rexxa/work/art-batch/A3/bronze/wool_tunic_try2_raw.png",
+    "path": "/Users/rexxa/work/art-batch/A3/bronze/wool_tunic_try2_raw.png",
+    "status": "GENERATED_PENDING_NORMALIZED_QA",
+    "raw_sha256": "8b65adc6e77fca98810b82eb6b0c11bc955c96141f8c4be8d0b0e6773ad5788f",
+    "reference_sha256": {
+      "/Users/rexxa/work/art-batch/A3/bronze/wool_tunic_try1_raw.png": "3afb51b07d757d5b678478b5d59805c8fffc1484fd741e1c138eb7b72400747d"
+    }
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/bronze/wool_tunic_try2.json",
+    "record_sha256": "0f36954419718bca0110e92b310641d81275630328d7d7ee74ebd5003f09a41f",
+    "raw": "/Users/rexxa/work/art-batch/A3/bronze/wool_tunic_try2_raw.png",
+    "raw_sha256": "8b65adc6e77fca98810b82eb6b0c11bc955c96141f8c4be8d0b0e6773ad5788f",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/wool_tunic_try2.json",
+    "candidate_sha256": "f95402c3d72dd83feba2337f4d2a19349bce2017f985d2fda911ee2985a781a3"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 1,
+    "passed": true,
+    "visible_pixels": 602726,
+    "opaque_pixels": 586220,
+    "fringe_pixels": 16506,
+    "visible_bounds": [
+      0,
+      0,
+      1535,
+      1024
+    ],
+    "opaque_bounds": [
+      288,
+      58,
+      1246,
+      976
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/bronze/wool_tunic_try2_raw.png",
+    "sha256": "8b65adc6e77fca98810b82eb6b0c11bc955c96141f8c4be8d0b0e6773ad5788f",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.0942615758730477,
+      "saturation_q25": 0.3222956420451783,
+      "saturation_q75": 0.355083317599326,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.0035104774942801174,
+      "foreground_pixels": 41801
+    },
+    "numeric_checks": {
+      "edge_density": false,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": false,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "wool_tunic",
+      "source": "art/style05/batch_a3/items/wool_tunic.png",
+      "bucket": "1",
+      "sha256": "a5a18f577ca19b4d46b33ffa162a5617252a81ab827a632a26fde1826f0571d0",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 1068,
+          "opaque_pixels": 837,
+          "fringe_pixels": 231,
+          "visible_bounds": [
+            11,
+            12,
+            53,
+            51
+          ],
+          "opaque_bounds": [
+            14,
+            14,
+            50,
+            49
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            48
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 837,
+          "base_row": 48,
+          "base_error": 0,
+          "height": 35,
+          "gradient_x": -0.1455844806007508,
+          "gradient_y": -0.5768085642317379,
+          "light_angle_degrees": 255.83459560178142,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 36,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          0.0,
+          -0.5
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}
