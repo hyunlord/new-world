@@ -1,0 +1,185 @@
+{
+  "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+  "source_branch": "v8/art-batch-a1",
+  "animals": {
+    "species": [
+      "wolf",
+      "deer",
+      "cattle",
+      "aurochs",
+      "sheep_fleeced",
+      "sheep_shorn",
+      "calf",
+      "goat",
+      "kid",
+      "lamb",
+      "wild_boar",
+      "pig",
+      "piglet",
+      "reindeer",
+      "dog",
+      "chicken",
+      "junglefowl",
+      "donkey",
+      "horse",
+      "reindeer_winter"
+    ],
+    "facings": [
+      "S",
+      "E"
+    ],
+    "poses": {
+      "wolf": [
+        "stand",
+        "walk",
+        "run",
+        "attack",
+        "dead"
+      ],
+      "deer": [
+        "stand",
+        "walk",
+        "run",
+        "graze",
+        "dead"
+      ],
+      "cattle": [
+        "stand",
+        "walk",
+        "run",
+        "graze",
+        "dead"
+      ],
+      "aurochs": [
+        "stand",
+        "walk",
+        "run",
+        "graze",
+        "attack",
+        "dead"
+      ],
+      "sheep_fleeced": [
+        "stand",
+        "walk",
+        "run",
+        "graze",
+        "attack",
+        "dead"
+      ],
+      "sheep_shorn": [
+        "stand",
+        "walk",
+        "run",
+        "graze",
+        "dead"
+      ],
+      "calf": [
+        "stand",
+        "walk",
+        "run",
+        "graze",
+        "dead"
+      ],
+      "goat": [
+        "stand",
+        "walk",
+        "run",
+        "graze",
+        "attack",
+        "dead"
+      ],
+      "kid": [
+        "stand",
+        "walk",
+        "run",
+        "graze",
+        "dead"
+      ],
+      "lamb": [
+        "stand",
+        "walk",
+        "run",
+        "graze",
+        "dead"
+      ],
+      "wild_boar": [
+        "stand",
+        "walk",
+        "run",
+        "graze",
+        "attack",
+        "dead"
+      ],
+      "pig": [
+        "stand",
+        "walk",
+        "run",
+        "graze",
+        "dead"
+      ],
+      "piglet": [
+        "stand",
+        "walk",
+        "run",
+        "graze",
+        "dead"
+      ],
+      "reindeer": [
+        "stand",
+        "walk",
+        "run",
+        "graze",
+        "attack",
+        "dead"
+      ],
+      "dog": [
+        "stand",
+        "walk",
+        "run",
+        "graze",
+        "dead"
+      ],
+      "chicken": [
+        "stand",
+        "walk",
+        "run",
+        "graze",
+        "dead"
+      ],
+      "junglefowl": [
+        "stand",
+        "walk",
+        "run",
+        "graze",
+        "attack",
+        "dead"
+      ],
+      "donkey": [
+        "stand",
+        "walk",
+        "run",
+        "graze",
+        "dead"
+      ],
+      "horse": [
+        "stand",
+        "walk",
+        "run",
+        "graze",
+        "attack",
+        "dead"
+      ],
+      "reindeer_winter": [
+        "stand",
+        "walk",
+        "run",
+        "graze",
+        "attack",
+        "dead"
+      ]
+    },
+    "source": "art/animal/batch_a1/adopted/{species}/{facing}/{pose}.png",
+    "dest": "animals/{species}/{facing}/{pose}.png",
+    "meta_source": "docs/v8/artbatch_a1/animal_manifest.json"
+  }
+}

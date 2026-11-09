@@ -1,0 +1,134 @@
+{
+  "document_type": "handoff_notes_not_runtime_bindings",
+  "verified_against_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+  "source": "rust/crates/sim-core/data/colony/animals.ron",
+  "pending": [
+    {
+      "art_species": "cattle",
+      "code": null,
+      "sim": null,
+      "existing_parent_kind_code": null,
+      "proposed_adult_set": null,
+      "status": "NOT_APPLICABLE_AS_BINDING_ROW",
+      "reason": "C2 is expected to author cattle; verify its actual identity/code after that lands."
+    },
+    {
+      "art_species": "aurochs",
+      "code": null,
+      "sim": null,
+      "existing_parent_kind_code": null,
+      "proposed_adult_set": null,
+      "status": "NOT_APPLICABLE_AS_BINDING_ROW",
+      "reason": "Bible names the wild source, but inspected animals.ron does not yet register it."
+    },
+    {
+      "art_species": "sheep_shorn",
+      "code": null,
+      "sim": null,
+      "existing_parent_kind_code": 3,
+      "proposed_adult_set": "sheep_fleeced",
+      "status": "NOT_APPLICABLE_AS_BINDING_ROW",
+      "reason": "Same verified wild_sheep kind 3; bindings currently have no fleece/shearing state selector."
+    },
+    {
+      "art_species": "calf",
+      "code": null,
+      "sim": null,
+      "existing_parent_kind_code": null,
+      "proposed_adult_set": "cattle",
+      "status": "NOT_APPLICABLE_AS_BINDING_ROW",
+      "reason": "No cattle identity or age-aware cattle art selector exists in inspected content."
+    },
+    {
+      "art_species": "kid",
+      "code": null,
+      "sim": null,
+      "existing_parent_kind_code": 2,
+      "proposed_adult_set": "goat",
+      "status": "NOT_APPLICABLE_AS_BINDING_ROW",
+      "reason": "Same verified wild_goat kind 2; renderer needs an age-aware art selector, not a new invented species code."
+    },
+    {
+      "art_species": "lamb",
+      "code": null,
+      "sim": null,
+      "existing_parent_kind_code": 3,
+      "proposed_adult_set": "sheep_fleeced",
+      "status": "NOT_APPLICABLE_AS_BINDING_ROW",
+      "reason": "Same verified wild_sheep kind 3; renderer needs an age-aware art selector, not a new invented species code."
+    },
+    {
+      "art_species": "pig",
+      "code": null,
+      "sim": null,
+      "existing_parent_kind_code": null,
+      "proposed_adult_set": null,
+      "status": "NOT_APPLICABLE_AS_BINDING_ROW",
+      "reason": "No pig identity exists in inspected animals.ron. WildBoar 4 is a separate Inert wild predator and cannot stand in for an authored domestic species."
+    },
+    {
+      "art_species": "piglet",
+      "code": null,
+      "sim": null,
+      "existing_parent_kind_code": null,
+      "proposed_adult_set": "pig",
+      "status": "NOT_APPLICABLE_AS_BINDING_ROW",
+      "reason": "No pig identity or pig age selector exists in the inspected content. Do not assign WildBoar 4 as a domestic piglet code."
+    },
+    {
+      "art_species": "dog",
+      "code": null,
+      "sim": null,
+      "existing_parent_kind_code": null,
+      "proposed_adult_set": null,
+      "status": "NOT_APPLICABLE_AS_BINDING_ROW",
+      "reason": "Bible dog_taming exists as a plan; no dog identity is registered in inspected animals.ron. Do not reuse Wolf 0 as a domestic dog code."
+    },
+    {
+      "art_species": "chicken",
+      "code": null,
+      "sim": null,
+      "existing_parent_kind_code": null,
+      "proposed_adult_set": null,
+      "status": "NOT_APPLICABLE_AS_BINDING_ROW",
+      "reason": "Bible climate catalogue entry; no registered chicken identity in inspected content."
+    },
+    {
+      "art_species": "junglefowl",
+      "code": null,
+      "sim": null,
+      "existing_parent_kind_code": null,
+      "proposed_adult_set": null,
+      "status": "NOT_APPLICABLE_AS_BINDING_ROW",
+      "reason": "Bible names the wild source; no registered junglefowl identity in inspected content."
+    },
+    {
+      "art_species": "donkey",
+      "code": null,
+      "sim": null,
+      "existing_parent_kind_code": null,
+      "proposed_adult_set": null,
+      "status": "NOT_APPLICABLE_AS_BINDING_ROW",
+      "reason": "Bronze cart-use candidate; no registered identity, climate or origin row."
+    },
+    {
+      "art_species": "horse",
+      "code": null,
+      "sim": null,
+      "existing_parent_kind_code": null,
+      "proposed_adult_set": null,
+      "status": "NOT_APPLICABLE_AS_BINDING_ROW",
+      "reason": "Iron content candidate; no registered horse identity in inspected content."
+    },
+    {
+      "art_species": "reindeer_winter",
+      "code": null,
+      "sim": null,
+      "existing_parent_kind_code": 5,
+      "proposed_adult_set": "reindeer",
+      "status": "OPTIONAL_NOT_APPLICABLE_AS_BINDING_ROW",
+      "reason": "Generated optional winter coat set is selected for import, but current binding chooses species by kind only and has no season selector. Keep existing parent kind 5; do not invent a winter-species code.",
+      "art_selection_status": "SELECTED_PENDING_ROOT_ASSEMBLY"
+    }
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "animals": {
+    "fallback_code": 1,
+    "codes": [
+      {
+        "code": 0,
+        "sim": "Wolf",
+        "species": "wolf",
+        "lod_colour": [
+          184,
+          67,
+          54
+        ],
+        "poses": {
+          "0": "walk",
+          "1": "run",
+          "2": "stand",
+          "3": "run",
+          "4": "attack",
+          "5": "run"
+        },
+        "still": "stand",
+        "dead": "dead",
+        "moving": [
+          "walk",
+          "run"
+        ]
+      },
+      {
+        "code": 1,
+        "sim": "Deer",
+        "species": "deer",
+        "lod_colour": [
+          194,
+          157,
+          97
+        ],
+        "poses": {
+          "0": "graze",
+          "1": "run",
+          "2": "stand",
+          "3": "walk",
+          "4": "stand",
+          "5": "run"
+        },
+        "still": "stand",
+        "dead": "dead",
+        "moving": [
+          "walk",
+          "run"
+        ]
+      },
+      {
+        "code": 2,
+        "sim": "WildGoat",
+        "species": "goat",
+        "lod_colour": [
+          194,
+          157,
+          97
+        ],
+        "poses": {
+          "0": "graze",
+          "1": "run",
+          "2": "stand",
+          "3": "walk",
+          "4": "attack",
+          "5": "run"
+        },
+        "still": "stand",
+        "dead": "dead",
+        "moving": [
+          "walk",
+          "run"
+        ]
+      },
+      {
+        "code": 3,
+        "sim": "WildSheep",
+        "species": "sheep_fleeced",
+        "lod_colour": [
+          194,
+          157,
+          97
+        ],
+        "poses": {
+          "0": "graze",
+          "1": "run",
+          "2": "stand",
+          "3": "walk",
+          "4": "attack",
+          "5": "run"
+        },
+        "still": "stand",
+        "dead": "dead",
+        "moving": [
+          "walk",
+          "run"
+        ]
+      },
+      {
+        "code": 4,
+        "sim": "WildBoar",
+        "species": "wild_boar",
+        "lod_colour": [
+          184,
+          67,
+          54
+        ],
+        "poses": {
+          "0": "walk",
+          "1": "run",
+          "2": "stand",
+          "3": "run",
+          "4": "attack",
+          "5": "run"
+        },
+        "still": "stand",
+        "dead": "dead",
+        "moving": [
+          "walk",
+          "run"
+        ]
+      },
+      {
+        "code": 5,
+        "sim": "Reindeer",
+        "species": "reindeer",
+        "lod_colour": [
+          194,
+          157,
+          97
+        ],
+        "poses": {
+          "0": "graze",
+          "1": "run",
+          "2": "stand",
+          "3": "walk",
+          "4": "attack",
+          "5": "run"
+        },
+        "still": "stand",
+        "dead": "dead",
+        "moving": [
+          "walk",
+          "run"
+        ]
+      }
+    ],
+    "category_fallbacks": {
+      "grazer": 1,
+      "predator": 0
+    }
+  }
+}

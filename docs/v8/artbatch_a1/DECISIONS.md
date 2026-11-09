@@ -1,6 +1,7 @@
 # A1 animal batch decisions — 2026-11-10
 
-Status: production decisions; asset verification and adoption remain pending.
+Status: production decisions; 196 new frames accepted as art candidates and the
+216-frame delivery verified. Owner approval and runtime import remain pending.
 Authority: `/Users/rexxa/work/art-batch/BRIEF.md`, content bible
 [#690](https://github.com/hyunlord/new-world/issues/690), C2 §3.5 and
 [#695](https://github.com/hyunlord/new-world/issues/695).
@@ -77,3 +78,14 @@ Draft import/binding rows are handed to C2/C3 without applying them. Runtime
 integration, Godot playback and gameplay verification remain with that import
 pass. Push only `v8/art-batch-a1` and verify remote landing; do not move the main,
 WIP, C2, or other art branches.
+
+## D6 — Freeze generation records after hashing
+
+Seven generator-record hashes became stale when later review notes were added to
+the records. The verifier now checks the optional generator-record hash as well
+as source, prompt and reference hashes. A regression demonstrated the former false
+pass and now rejects changed evidence. Before assembly, root verified raw/prompt/
+reference equality and reconciled the seven manifest hashes; PNGs did not change.
+Keep future dispositions in separate ledgers instead of editing hashed records.
+Evidence: `/Users/rexxa/work/art-batch/A1/records/generator-record-reconciliation.json`;
+`art/animal/batch_a1/test_process.py`.

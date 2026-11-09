@@ -1,7 +1,9 @@
 # A1 finite production plan — 2026-11-10
 
-Status: **PENDING production and adoption**. Planned counts are not generated or
-adopted counts. The run ledger and frame sidecars supply actual results.
+Status: **ART CANDIDATE DELIVERY COMPLETE**. The original scope below is fulfilled:
+184 required + 12 optional new frames accepted, with 20 unchanged reference frames
+in the 216-frame delivery. See `docs/v8/artbatch_a1/production_summary.json` and
+`docs/v8/artbatch_a1/animal_manifest.json`; owner approval and game import remain pending.
 
 Scope: the A1 animal family from `/Users/rexxa/work/art-batch/BRIEF.md`, content
 bible [#690](https://github.com/hyunlord/new-world/issues/690), and C2 §3.5 / issue

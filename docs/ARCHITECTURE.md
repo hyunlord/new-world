@@ -31,6 +31,12 @@ section 6), `assets/` (fonts, theme, atlas, terrain sheets), `shaders/`,
 capture, contact sheet, inventory, docs checks), `tools/play.sh` and `tools/play/` (play any version
 in its own worktree; the owner's double-click launchers), `docs/` (this file and the owner docs).
 
+Offline animal production lives in `art/animal/batch_a1/`: the catalogue and fixed style rules feed
+generated sheets, `process.py` reuses whole-figure splitting/normalization, `check.py` verifies structure
+and source RGBA, and `adopt.py` copies reviewed candidate bytes into a delivery pack. Import drafts live
+in `docs/v8/artbatch_a1/import_drafts/`; they are not runtime registrations. This art pipeline adds no
+simulation system, bridge method or Godot layer, so it does not change the generated system table.
+
 ## 2. Data flow
 
 ```

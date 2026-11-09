@@ -1,8 +1,9 @@
 # A1 animal production rules
 
-Status: production specification; generated frames remain **PENDING** until their
-recorded structural and visual reviews pass. This document does not certify any
-asset or supersede a historical owner verdict.
+Status: production specification. The final 196 new frames have recorded structural
+and independent visual passes in `docs/v8/artbatch_a1/production_summary.json`.
+Original attempt manifests preserve their processing-stage status; final disposition
+lives in the adopted sidecars. This does not supersede a historical owner verdict.
 
 ## References and medium
 

@@ -1,0 +1,453 @@
+{
+  "document_type": "PROPOSED_DESIGN_NOT_SCHEMA_READY",
+  "status": "DRAFT_NOT_APPLIED",
+  "verified_against_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+  "request": "C2 GOAL §3.5 / issue 695",
+  "catalog_source": "art/animal/batch_a1/catalog.json",
+  "units": "Native 64-px tile scale. Torso dimensions are proposals, not measured sprite bounds or collision data.",
+  "current_schema_limit": "Inspected animals.ron uses art.shape and art.tint_material. These handoff keys are not accepted RON fields.",
+  "shared_rules": {
+    "main_to_secondary_line_ratio": [
+      2,
+      1
+    ],
+    "light": "upper_left",
+    "hatch": "upper_left_to_lower_right",
+    "body_leg_head_silhouette_required": true,
+    "young_scale": 0.6,
+    "wild_or_penned_marker": "Separate rope/pen marker; do not bake into sprite.",
+    "young_double_scale_warning": "Dedicated young frames already use 0.6 geometry; do not apply a second 0.6 scale."
+  },
+  "species": [
+    {
+      "art_species": "cattle",
+      "shoulder_height_px_target": 40,
+      "torso_length_height_px_proposal": [
+        40,
+        22
+      ],
+      "dead_length_px_target": 72,
+      "leg_count": 4,
+      "head_direction": "From facing/movement: E right; W mirrored E; S front three-quarter; N currently uses S.",
+      "horns_or_antlers": "short outward horns",
+      "tint_description_proposal": "russet brown with pale muzzle",
+      "tint_rgb": null,
+      "tint_rgb_status": "Sample or author on importer side; no numeric colour was measured here.",
+      "young_scale": 1.0,
+      "silhouette_cues": [
+        "heavy barrel body",
+        "broad square muzzle",
+        "short outward horns",
+        "long tufted tail"
+      ]
+    },
+    {
+      "art_species": "aurochs",
+      "shoulder_height_px_target": 42,
+      "torso_length_height_px_proposal": [
+        42,
+        22
+      ],
+      "dead_length_px_target": 76,
+      "leg_count": 4,
+      "head_direction": "From facing/movement: E right; W mirrored E; S front three-quarter; N currently uses S.",
+      "horns_or_antlers": "long outward-forward horns",
+      "tint_description_proposal": "dark umber",
+      "tint_rgb": null,
+      "tint_rgb_status": "Sample or author on importer side; no numeric colour was measured here.",
+      "young_scale": 1.0,
+      "silhouette_cues": [
+        "high heavy shoulders",
+        "long outward-forward horns",
+        "deep chest",
+        "dark hide"
+      ]
+    },
+    {
+      "art_species": "sheep_fleeced",
+      "shoulder_height_px_target": 28,
+      "torso_length_height_px_proposal": [
+        32,
+        22
+      ],
+      "dead_length_px_target": 50,
+      "leg_count": 4,
+      "head_direction": "From facing/movement: E right; W mirrored E; S front three-quarter; N currently uses S.",
+      "horns_or_antlers": "curved attached horns",
+      "tint_description_proposal": "bone cream fleece with umber face",
+      "tint_rgb": null,
+      "tint_rgb_status": "Sample or author on importer side; no numeric colour was measured here.",
+      "young_scale": 1.0,
+      "silhouette_cues": [
+        "rounded connected fleece mass",
+        "short legs",
+        "sheep muzzle",
+        "broad attached horn form"
+      ]
+    },
+    {
+      "art_species": "sheep_shorn",
+      "shoulder_height_px_target": 28,
+      "torso_length_height_px_proposal": [
+        28,
+        16
+      ],
+      "dead_length_px_target": 50,
+      "leg_count": 4,
+      "head_direction": "From facing/movement: E right; W mirrored E; S front three-quarter; N currently uses S.",
+      "horns_or_antlers": "same horns as fleeced variant",
+      "tint_description_proposal": "warm pale beige",
+      "tint_rgb": null,
+      "tint_rgb_status": "Sample or author on importer side; no numeric colour was measured here.",
+      "young_scale": 1.0,
+      "silhouette_cues": [
+        "same head and horn identity as fleeced sheep",
+        "narrower exposed torso",
+        "short even remaining coat"
+      ]
+    },
+    {
+      "art_species": "calf",
+      "shoulder_height_px_target": 24,
+      "torso_length_height_px_proposal": [
+        24,
+        13
+      ],
+      "dead_length_px_target": 43,
+      "leg_count": 4,
+      "head_direction": "From facing/movement: E right; W mirrored E; S front three-quarter; N currently uses S.",
+      "horns_or_antlers": "immature buds only",
+      "tint_description_proposal": "russet brown with pale muzzle",
+      "tint_rgb": null,
+      "tint_rgb_status": "Sample or author on importer side; no numeric colour was measured here.",
+      "young_scale": 0.6,
+      "silhouette_cues": [
+        "large head relative to body",
+        "short bovine muzzle",
+        "small horn buds",
+        "small tufted tail"
+      ]
+    },
+    {
+      "art_species": "goat",
+      "shoulder_height_px_target": 30,
+      "torso_length_height_px_proposal": [
+        30,
+        16
+      ],
+      "dead_length_px_target": 52,
+      "leg_count": 4,
+      "head_direction": "From facing/movement: E right; W mirrored E; S front three-quarter; N currently uses S.",
+      "horns_or_antlers": "back-swept horns",
+      "tint_description_proposal": "warm tan with dark extremities",
+      "tint_rgb": null,
+      "tint_rgb_status": "Sample or author on importer side; no numeric colour was measured here.",
+      "young_scale": 1.0,
+      "silhouette_cues": [
+        "back-swept horns",
+        "angular muzzle",
+        "small beard",
+        "upright short tail"
+      ]
+    },
+    {
+      "art_species": "kid",
+      "shoulder_height_px_target": 18,
+      "torso_length_height_px_proposal": [
+        18,
+        10
+      ],
+      "dead_length_px_target": 31,
+      "leg_count": 4,
+      "head_direction": "From facing/movement: E right; W mirrored E; S front three-quarter; N currently uses S.",
+      "horns_or_antlers": "immature buds only",
+      "tint_description_proposal": "warm tan with dark extremities",
+      "tint_rgb": null,
+      "tint_rgb_status": "Sample or author on importer side; no numeric colour was measured here.",
+      "young_scale": 0.6,
+      "silhouette_cues": [
+        "large ears and head",
+        "short muzzle",
+        "tiny horn buds",
+        "upright short tail"
+      ]
+    },
+    {
+      "art_species": "lamb",
+      "shoulder_height_px_target": 17,
+      "torso_length_height_px_proposal": [
+        19,
+        13
+      ],
+      "dead_length_px_target": 30,
+      "leg_count": 4,
+      "head_direction": "From facing/movement: E right; W mirrored E; S front three-quarter; N currently uses S.",
+      "horns_or_antlers": "immature buds only",
+      "tint_description_proposal": "bone cream fleece with umber face",
+      "tint_rgb": null,
+      "tint_rgb_status": "Sample or author on importer side; no numeric colour was measured here.",
+      "young_scale": 0.6,
+      "silhouette_cues": [
+        "small rounded fleece body",
+        "large soft ears",
+        "short sheep muzzle",
+        "immature horn area"
+      ]
+    },
+    {
+      "art_species": "wild_boar",
+      "shoulder_height_px_target": 26,
+      "torso_length_height_px_proposal": [
+        34,
+        20
+      ],
+      "dead_length_px_target": 56,
+      "leg_count": 4,
+      "head_direction": "From facing/movement: E right; W mirrored E; S front three-quarter; N currently uses S.",
+      "horns_or_antlers": "none",
+      "tint_description_proposal": "charcoal umber",
+      "tint_rgb": null,
+      "tint_rgb_status": "Sample or author on importer side; no numeric colour was measured here.",
+      "young_scale": 1.0,
+      "silhouette_cues": [
+        "wedged long snout",
+        "high bristled shoulder",
+        "small attached tusks",
+        "low heavy body"
+      ]
+    },
+    {
+      "art_species": "pig",
+      "shoulder_height_px_target": 24,
+      "torso_length_height_px_proposal": [
+        32,
+        19
+      ],
+      "dead_length_px_target": 50,
+      "leg_count": 4,
+      "head_direction": "From facing/movement: E right; W mirrored E; S front three-quarter; N currently uses S.",
+      "horns_or_antlers": "none",
+      "tint_description_proposal": "muted warm brown",
+      "tint_rgb": null,
+      "tint_rgb_status": "Sample or author on importer side; no numeric colour was measured here.",
+      "young_scale": 1.0,
+      "silhouette_cues": [
+        "rounded low barrel body",
+        "blunt snout",
+        "large ears",
+        "small curled tail"
+      ]
+    },
+    {
+      "art_species": "piglet",
+      "shoulder_height_px_target": 14,
+      "torso_length_height_px_proposal": [
+        19,
+        11
+      ],
+      "dead_length_px_target": 30,
+      "leg_count": 4,
+      "head_direction": "From facing/movement: E right; W mirrored E; S front three-quarter; N currently uses S.",
+      "horns_or_antlers": "none",
+      "tint_description_proposal": "muted warm brown",
+      "tint_rgb": null,
+      "tint_rgb_status": "Sample or author on importer side; no numeric colour was measured here.",
+      "young_scale": 0.6,
+      "silhouette_cues": [
+        "large ears relative to small body",
+        "short blunt snout",
+        "short legs",
+        "small curled tail"
+      ]
+    },
+    {
+      "art_species": "reindeer",
+      "shoulder_height_px_target": 40,
+      "torso_length_height_px_proposal": [
+        38,
+        20
+      ],
+      "dead_length_px_target": 68,
+      "leg_count": 4,
+      "head_direction": "From facing/movement: E right; W mirrored E; S front three-quarter; N currently uses S.",
+      "horns_or_antlers": "broad connected branching antlers",
+      "tint_description_proposal": "umber brown with bone neck bib",
+      "tint_rgb": null,
+      "tint_rgb_status": "Sample or author on importer side; no numeric colour was measured here.",
+      "young_scale": 1.0,
+      "silhouette_cues": [
+        "broad connected branching antlers",
+        "pale neck bib",
+        "stocky cervid body",
+        "broad hooves"
+      ]
+    },
+    {
+      "art_species": "dog",
+      "shoulder_height_px_target": 26,
+      "torso_length_height_px_proposal": [
+        32,
+        14
+      ],
+      "dead_length_px_target": 54,
+      "leg_count": 4,
+      "head_direction": "From facing/movement: E right; W mirrored E; S front three-quarter; N currently uses S.",
+      "horns_or_antlers": "none",
+      "tint_description_proposal": "muted tan and charcoal",
+      "tint_rgb": null,
+      "tint_rgb_status": "Sample or author on importer side; no numeric colour was measured here.",
+      "young_scale": 1.0,
+      "silhouette_cues": [
+        "primitive canine muzzle",
+        "upright ears",
+        "clear paws",
+        "tail distinguishable from wolf reference"
+      ]
+    },
+    {
+      "art_species": "chicken",
+      "shoulder_height_px_target": 16,
+      "torso_length_height_px_proposal": [
+        20,
+        14
+      ],
+      "dead_length_px_target": 32,
+      "leg_count": 2,
+      "head_direction": "From facing/movement: E right; W mirrored E; S front three-quarter; N currently uses S.",
+      "horns_or_antlers": "none",
+      "tint_description_proposal": "muted ochre and bone",
+      "tint_rgb": null,
+      "tint_rgb_status": "Sample or author on importer side; no numeric colour was measured here.",
+      "young_scale": 1.0,
+      "silhouette_cues": [
+        "compact bird body",
+        "short beak",
+        "two connected legs",
+        "raised fan tail"
+      ]
+    },
+    {
+      "art_species": "junglefowl",
+      "shoulder_height_px_target": 16,
+      "torso_length_height_px_proposal": [
+        22,
+        13
+      ],
+      "dead_length_px_target": 32,
+      "leg_count": 2,
+      "head_direction": "From facing/movement: E right; W mirrored E; S front three-quarter; N currently uses S.",
+      "horns_or_antlers": "none",
+      "tint_description_proposal": "umber with restrained rusty neck accents",
+      "tint_rgb": null,
+      "tint_rgb_status": "Sample or author on importer side; no numeric colour was measured here.",
+      "young_scale": 1.0,
+      "silhouette_cues": [
+        "slender wild bird body",
+        "long arched tail",
+        "clear beak and comb",
+        "two connected legs"
+      ]
+    },
+    {
+      "art_species": "donkey",
+      "shoulder_height_px_target": 36,
+      "torso_length_height_px_proposal": [
+        36,
+        18
+      ],
+      "dead_length_px_target": 64,
+      "leg_count": 4,
+      "head_direction": "From facing/movement: E right; W mirrored E; S front three-quarter; N currently uses S.",
+      "horns_or_antlers": "none",
+      "tint_description_proposal": "warm grey-brown with pale muzzle",
+      "tint_rgb": null,
+      "tint_rgb_status": "Sample or author on importer side; no numeric colour was measured here.",
+      "young_scale": 1.0,
+      "silhouette_cues": [
+        "very long upright ears",
+        "short upright mane",
+        "pale muzzle",
+        "thin tufted tail"
+      ]
+    },
+    {
+      "art_species": "horse",
+      "shoulder_height_px_target": 42,
+      "torso_length_height_px_proposal": [
+        42,
+        21
+      ],
+      "dead_length_px_target": 76,
+      "leg_count": 4,
+      "head_direction": "From facing/movement: E right; W mirrored E; S front three-quarter; N currently uses S.",
+      "horns_or_antlers": "none",
+      "tint_description_proposal": "ochre brown with dark mane",
+      "tint_rgb": null,
+      "tint_rgb_status": "Sample or author on importer side; no numeric colour was measured here.",
+      "young_scale": 1.0,
+      "silhouette_cues": [
+        "long equine head and neck",
+        "defined mane",
+        "long full tail",
+        "single hooves"
+      ]
+    },
+    {
+      "art_species": "deer",
+      "existing_reference": true,
+      "shoulder_height_px_target": 40,
+      "torso_length_height_px_proposal": [
+        36,
+        18
+      ],
+      "dead_length_px_target": 64,
+      "leg_count": 4,
+      "head_direction": "Use existing S/E frame contract.",
+      "horns_or_antlers": "connected deer antlers",
+      "tint_description_proposal": "existing tan deer",
+      "tint_rgb": null,
+      "tint_rgb_status": "Use the existing reference or preserve its current LOD binding colour."
+    },
+    {
+      "art_species": "wolf",
+      "existing_reference": true,
+      "shoulder_height_px_target": 28,
+      "torso_length_height_px_proposal": [
+        34,
+        16
+      ],
+      "dead_length_px_target": 56,
+      "leg_count": 4,
+      "head_direction": "Use existing S/E frame contract.",
+      "horns_or_antlers": "none",
+      "tint_description_proposal": "existing grey wolf",
+      "tint_rgb": null,
+      "tint_rgb_status": "Use the existing reference or preserve its current LOD binding colour."
+    },
+    {
+      "art_species": "reindeer_winter",
+      "shoulder_height_px_target": 40,
+      "torso_length_height_px_proposal": [
+        38,
+        20
+      ],
+      "dead_length_px_target": 68,
+      "leg_count": 4,
+      "head_direction": "From facing/movement: E right; W mirrored E; S front three-quarter; N currently uses S.",
+      "horns_or_antlers": "broad connected branching antlers",
+      "tint_description_proposal": "pale grey-brown winter coat with bone neck bib; match selected winter art",
+      "tint_rgb": null,
+      "tint_rgb_status": "Sample or author on importer side; no numeric colour was measured here.",
+      "young_scale": 1.0,
+      "silhouette_cues": [
+        "broad connected branching antlers",
+        "pale neck bib",
+        "stocky cervid body",
+        "broad hooves"
+      ],
+      "variant_of": "reindeer",
+      "art_selection_status": "SELECTED_PENDING_ROOT_ASSEMBLY",
+      "integration_limit": "Optional coat variant of verified kind 5; needs season-aware presentation selection, not a new species code."
+    }
+  ]
+}

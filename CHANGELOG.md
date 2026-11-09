@@ -5,6 +5,31 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## ART-BATCH A1 animals — 2026-11-10
+
+Completed art-candidate delivery on `v8/art-batch-a1`: 17 core sets / 184 S/E pose frames,
+plus 12 optional winter-reindeer frames and 20 byte-identical deer/wolf references. All 216 delivery
+frames passed integrity and geometry checks; all 196 new frames passed independent visual review.
+Asset commit: `326822482b33edd1ac3bd4acefd0061f557756d6`. Game import and owner approval remain pending.
+
+### Added
+- `art/animal/batch_a1/catalog.json` and the fixed family style rules: species, age and coat variants,
+  climate/era provenance, one shoulder scale per sheet, explicit pose matrices and size targets.
+- Candidate generation records, normalized PNGs and sidecars under `art/animal/batch_a1/`; raw generations,
+  prompts, rejects and review evidence stay in `/Users/rexxa/work/art-batch/A1/`.
+- `process.py`, `check.py` and `adopt.py` in that family directory: reuse the existing ownership splitter
+  and normalization, reproduce source RGBA, verify frame grids and hashes, and assemble exact-byte
+  `ACCEPTED_ART_CANDIDATE` deliveries with compact native/2× comparison boards. Runtime import stays pending.
+- Draft C2/C3 import rows in `docs/v8/artbatch_a1/import_drafts/`, and ADR 0063 for the delivery boundary.
+
+### Changed
+- Generator-record hashes are now verified; regression tests reject later evidence mutations.
+  Replaced the earlier horse base after a review correction; rejected normalized outputs are external.
+- Recorded the alpha-background failure and the alpha-16 attack-gutter rule in `worldsim-pitfalls`.
+  Faint gutter pixels are retained and reported; opaque-background candidates require regeneration.
+- Added an art-line status section to the historical roadmap and an offline animal pipeline note to the
+  architecture map. No game gate or owner approval is claimed by this production entry.
+
 ## M1-ART — 2026-10-21
 
 The colony view drawn like the mock-up: real ground, a canopy that reads as forest, buildings and log piles you can read, people you can find (`docs/v8/m1art/ART_GOAL.md`, report `docs/v8/m1art/ART_REPORT.md`). No simulation change (`rust/` untouched; identity, colony determinism and replay pass).
