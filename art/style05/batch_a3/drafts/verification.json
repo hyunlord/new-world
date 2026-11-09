@@ -1,0 +1,80 @@
+{
+  "status": "REAL_GIT_IMPORT_PLAN_VERIFIED_NOT_IMPORTED",
+  "counts": {
+    "catalogue_base_ids": 122,
+    "count_bucket_policies": 55,
+    "extra_count_pngs": 110,
+    "empty_state_ids": 7,
+    "logical_sprites_including_empty_states": 129,
+    "proposed_pngs": 239,
+    "verified_base_bindings": 53,
+    "pending_base_identities": 69,
+    "pending_empty_state_bindings": 7,
+    "legacy_geometry_rows_preserved": 22,
+    "adapter_geometry_rows": 259,
+    "deferred_logical_sprites": 2,
+    "deferred_pngs": 2,
+    "active_logical_sprites": 127,
+    "active_import_pngs": 237
+  },
+  "sources": {
+    "integration_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "art_base_commit": "f182769fe06b1cb60105e4d0bf127b6524277838",
+    "simulation_identity_source": "rust/crates/sim-core/data/colony/items.ron",
+    "simulation_identity_sha256": "aeb2db57e75328f439498d6bd051d75d46e49c55740bcafd3b1576ce77f099bc",
+    "verified_registry_size": 72,
+    "catalogue_sha256": "060354e0fcf3ecee5c5edaaa74e7ca465ff3077cb5319ee73d3da42401282e0c",
+    "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+    "source_commit_status": "Pinned adopted asset commit, independently read through actual importer GitReader",
+    "importer_sha256": "54781baf7039f0afd873e1cbab475fac31e4db8cb33be4717579f337c98c2a79",
+    "selection_path": "/Users/rexxa/work/art-batch/A3/selection_final.json",
+    "selection_sha256": "1efa9ba49f3df72e501d360c1c07a5e27e6ed4c77b9cff3abb98e1b2e1eacab2",
+    "adapter_sha256": "4294de32fc7a50ae3cb37650699c7dccff08d3c7ac19b588ecce25a2d71c4fc9"
+  },
+  "checks": {
+    "every_claimed_identity_matches_registry": true,
+    "every_pending_base_id_absent_from_registry": true,
+    "no_new_id_or_destination_collisions": true,
+    "no_new_code_collisions_with_existing_bindings": true,
+    "legacy_geometry_preserved": true,
+    "all_proposed_assets_have_geometry": true,
+    "pinned_importer_plan_accepts_237_geometry_rows_using_synthetic_png_fixture": true,
+    "omitting_adapter_demonstrably_omits_all_237_geometry_records": true,
+    "all_active_draft_binding_assets_resolve_in_237_proposed_ids": true,
+    "deferred_steel_edge_and_iron_spear_absent_from_active_import_and_geometry": true,
+    "active_logical_ids_exactly_match_final_selection_127": true,
+    "active_png_ids_exactly_match_selected_count_expansion_237": true,
+    "iron_plough_attempt_3_and_garment_attempt_2_selections_confirmed": true,
+    "all_237_git_pngs_read": true,
+    "all_237_are_64px_items": true,
+    "all_237_imported_anchors_32_32": true,
+    "all_53_active_binding_rows_resolve": true,
+    "all_22_legacy_geometry_rows_preserved": true,
+    "no_destination_collisions": true,
+    "combined_plan_within_40_mib_budget": true,
+    "withheld_assets_absent": true,
+    "real_git_plan_pngs237_geometry_and_bindings53": true
+  },
+  "not_verified": [
+    "Actual importer write/check/verify against game output",
+    "Godot import and runtime rendering/count transitions",
+    "Future C2/C3 simulation identities and empty-state selector"
+  ],
+  "fixture_limit": "Earlier schema test used one known PNG as bytes for all paths and did not prove file existence. The later real_import_plan.json supersedes that limitation for actual237 Git PNG paths, hashes, sizes, geometry, and source availability. It still does not execute importer writes or game rendering.",
+  "selection_status": "Root final selection reconciled;127 logical sprites /237 committed PNGs. Actual GitReader plan verified at pinned asset commit. Game import not applied.",
+  "review_limits": [
+    "Labels visible; no blind identification study.",
+    "Existing numeric diagnostics retained; explicit visual exceptions recorded.",
+    "Game import and runtime visual behavior not exercised."
+  ],
+  "real_data_receipt": "real_import_plan.json",
+  "real_data_plan_counts": {
+    "a3_pngs": 237,
+    "a3_png_bytes": 691146,
+    "all_plan_files": 940,
+    "all_plan_bytes": 14846830,
+    "budget_bytes": 41943040,
+    "verified_binding_rows": 53,
+    "geometry_adapter_rows": 259
+  }
+}

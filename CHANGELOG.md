@@ -5,6 +5,22 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## ART-BATCH A3 — 2026-11-10
+
+### Added
+- The item-family art handoff under `art/style05/batch_a3/`: selected transparent
+  64px icons, ordinal count buckets, filled/empty vessel states, generation
+  sidecars, comparison sheets, and data-only import/binding drafts. The manifest
+  records accepted and withheld identities; the game has not imported them.
+- `art/pipeline_batch_a3/`: an ENV1 normalization/count wrapper with source-hash,
+  alpha and placement checks, retained numeric diagnostics, and native/half-size
+  review sheets. Nine regression tests cover its export boundary.
+
+### Changed
+- Recorded the alpha-preview and icon-versus-world-anchor lessons in the art
+  style contract and project pitfalls. No simulation, renderer or runtime data
+  changed; see `art/style05/batch_a3/README.md` for verification limits.
+
 ## M1-ART — 2026-10-21
 
 The colony view drawn like the mock-up: real ground, a canopy that reads as forest, buildings and log piles you can read, people you can find (`docs/v8/m1art/ART_GOAL.md`, report `docs/v8/m1art/ART_REPORT.md`). No simulation change (`rust/` untouched; identity, colony determinism and replay pass).

@@ -1,0 +1,396 @@
+{
+  "schema_version": 1,
+  "items": {
+    "codes": [
+      {
+        "code": 18,
+        "sim": "Hazelnuts",
+        "assets": [
+          "hazelnuts",
+          "hazelnuts_count_2_8",
+          "hazelnuts_count_9_plus"
+        ]
+      },
+      {
+        "code": 19,
+        "sim": "WildGrain",
+        "assets": [
+          "wild_grain",
+          "wild_grain_count_2_8",
+          "wild_grain_count_9_plus"
+        ]
+      },
+      {
+        "code": 20,
+        "sim": "Roots",
+        "assets": [
+          "roots",
+          "roots_count_2_8",
+          "roots_count_9_plus"
+        ]
+      },
+      {
+        "code": 21,
+        "sim": "FlaxStalks",
+        "assets": [
+          "flax_stalks",
+          "flax_stalks_count_2_8",
+          "flax_stalks_count_9_plus"
+        ]
+      },
+      {
+        "code": 22,
+        "sim": "RoastMeat",
+        "asset": "roast_meat"
+      },
+      {
+        "code": 23,
+        "sim": "Porridge",
+        "asset": "porridge"
+      },
+      {
+        "code": 24,
+        "sim": "Stew",
+        "asset": "stew"
+      },
+      {
+        "code": 25,
+        "sim": "DriedMeat",
+        "assets": [
+          "dried_meat",
+          "dried_meat_count_2_8",
+          "dried_meat_count_9_plus"
+        ]
+      },
+      {
+        "code": 26,
+        "sim": "DriedBerries",
+        "assets": [
+          "dried_berries",
+          "dried_berries_count_2_8",
+          "dried_berries_count_9_plus"
+        ]
+      },
+      {
+        "code": 27,
+        "sim": "RoastedRoots",
+        "assets": [
+          "roasted_roots",
+          "roasted_roots_count_2_8",
+          "roasted_roots_count_9_plus"
+        ]
+      },
+      {
+        "code": 28,
+        "sim": "FruitPorridge",
+        "asset": "fruit_porridge"
+      },
+      {
+        "code": 30,
+        "sim": "FlaxSeed",
+        "assets": [
+          "flax_seed",
+          "flax_seed_count_2_8",
+          "flax_seed_count_9_plus"
+        ]
+      },
+      {
+        "code": 31,
+        "sim": "EmmerSeed",
+        "assets": [
+          "emmer_seed",
+          "emmer_seed_count_2_8",
+          "emmer_seed_count_9_plus"
+        ]
+      },
+      {
+        "code": 32,
+        "sim": "FlaxFibre",
+        "assets": [
+          "flax_fibre",
+          "flax_fibre_count_2_8",
+          "flax_fibre_count_9_plus"
+        ]
+      },
+      {
+        "code": 33,
+        "sim": "LinenThread",
+        "assets": [
+          "linen_thread",
+          "linen_thread_count_2_8",
+          "linen_thread_count_9_plus"
+        ]
+      },
+      {
+        "code": 34,
+        "sim": "LinenCloth",
+        "assets": [
+          "linen_cloth",
+          "linen_cloth_count_2_8",
+          "linen_cloth_count_9_plus"
+        ]
+      },
+      {
+        "code": 35,
+        "sim": "HandSpindle",
+        "asset": "hand_spindle"
+      },
+      {
+        "code": 36,
+        "sim": "LinenTunic",
+        "asset": "linen_tunic"
+      },
+      {
+        "code": 37,
+        "sim": "LinenWrap",
+        "asset": "linen_wrap"
+      },
+      {
+        "code": 38,
+        "sim": "Cord",
+        "asset": "cord"
+      },
+      {
+        "code": 39,
+        "sim": "Basket",
+        "asset": "basket"
+      },
+      {
+        "code": 40,
+        "sim": "Sling",
+        "asset": "sling"
+      },
+      {
+        "code": 41,
+        "sim": "BoneNeedle",
+        "asset": "bone_needle"
+      },
+      {
+        "code": 42,
+        "sim": "Fish",
+        "assets": [
+          "fish",
+          "fish_count_2_8",
+          "fish_count_9_plus"
+        ]
+      },
+      {
+        "code": 43,
+        "sim": "Flour",
+        "assets": [
+          "flour",
+          "flour_count_2_8",
+          "flour_count_9_plus"
+        ]
+      },
+      {
+        "code": 44,
+        "sim": "Bread",
+        "assets": [
+          "bread",
+          "bread_count_2_8",
+          "bread_count_9_plus"
+        ]
+      },
+      {
+        "code": 45,
+        "sim": "Beer",
+        "asset": "beer"
+      },
+      {
+        "code": 46,
+        "sim": "Milk",
+        "asset": "milk"
+      },
+      {
+        "code": 47,
+        "sim": "Cheese",
+        "assets": [
+          "cheese",
+          "cheese_count_2_8",
+          "cheese_count_9_plus"
+        ]
+      },
+      {
+        "code": 48,
+        "sim": "SmokedMeat",
+        "assets": [
+          "smoked_meat",
+          "smoked_meat_count_2_8",
+          "smoked_meat_count_9_plus"
+        ]
+      },
+      {
+        "code": 49,
+        "sim": "Hay",
+        "assets": [
+          "hay",
+          "hay_count_2_8",
+          "hay_count_9_plus"
+        ]
+      },
+      {
+        "code": 50,
+        "sim": "Hoe",
+        "asset": "hoe"
+      },
+      {
+        "code": 51,
+        "sim": "Sickle",
+        "asset": "sickle"
+      },
+      {
+        "code": 52,
+        "sim": "Adze",
+        "asset": "adze"
+      },
+      {
+        "code": 53,
+        "sim": "Bow",
+        "asset": "bow"
+      },
+      {
+        "code": 54,
+        "sim": "Arrow",
+        "asset": "arrow"
+      },
+      {
+        "code": 55,
+        "sim": "DyedTunic",
+        "asset": "dyed_tunic"
+      },
+      {
+        "code": 56,
+        "sim": "LeatherArmor",
+        "asset": "leather_armor"
+      },
+      {
+        "code": 57,
+        "sim": "Herbs",
+        "assets": [
+          "herbs",
+          "herbs_count_2_8",
+          "herbs_count_9_plus"
+        ]
+      },
+      {
+        "code": 58,
+        "sim": "Poultice",
+        "asset": "poultice"
+      },
+      {
+        "code": 59,
+        "sim": "Barley",
+        "assets": [
+          "barley",
+          "barley_count_2_8",
+          "barley_count_9_plus"
+        ]
+      },
+      {
+        "code": 60,
+        "sim": "BarleySeed",
+        "assets": [
+          "barley_seed",
+          "barley_seed_count_2_8",
+          "barley_seed_count_9_plus"
+        ]
+      },
+      {
+        "code": 61,
+        "sim": "Rye",
+        "assets": [
+          "rye",
+          "rye_count_2_8",
+          "rye_count_9_plus"
+        ]
+      },
+      {
+        "code": 62,
+        "sim": "RyeSeed",
+        "assets": [
+          "rye_seed",
+          "rye_seed_count_2_8",
+          "rye_seed_count_9_plus"
+        ]
+      },
+      {
+        "code": 63,
+        "sim": "Lentil",
+        "assets": [
+          "lentil",
+          "lentil_count_2_8",
+          "lentil_count_9_plus"
+        ]
+      },
+      {
+        "code": 64,
+        "sim": "LentilSeed",
+        "assets": [
+          "lentil_seed",
+          "lentil_seed_count_2_8",
+          "lentil_seed_count_9_plus"
+        ]
+      },
+      {
+        "code": 65,
+        "sim": "Pea",
+        "assets": [
+          "pea",
+          "pea_count_2_8",
+          "pea_count_9_plus"
+        ]
+      },
+      {
+        "code": 66,
+        "sim": "PeaSeed",
+        "assets": [
+          "pea_seed",
+          "pea_seed_count_2_8",
+          "pea_seed_count_9_plus"
+        ]
+      },
+      {
+        "code": 67,
+        "sim": "Millet",
+        "assets": [
+          "millet",
+          "millet_count_2_8",
+          "millet_count_9_plus"
+        ]
+      },
+      {
+        "code": 68,
+        "sim": "MilletSeed",
+        "assets": [
+          "millet_seed",
+          "millet_seed_count_2_8",
+          "millet_seed_count_9_plus"
+        ]
+      },
+      {
+        "code": 69,
+        "sim": "Apple",
+        "assets": [
+          "apple",
+          "apple_count_2_8",
+          "apple_count_9_plus"
+        ]
+      },
+      {
+        "code": 70,
+        "sim": "GoatHide",
+        "asset": "goat_hide"
+      },
+      {
+        "code": 71,
+        "sim": "Wool",
+        "assets": [
+          "wool",
+          "wool_count_2_8",
+          "wool_count_9_plus"
+        ]
+      }
+    ]
+  }
+}

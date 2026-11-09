@@ -1,0 +1,2107 @@
+{
+  "status": "ADOPTED_ASSET_COMMIT_VERIFIED_NOT_IMPORTED",
+  "counts": {
+    "catalogue_base_ids": 122,
+    "count_bucket_policies": 55,
+    "extra_count_pngs": 110,
+    "empty_state_ids": 7,
+    "logical_sprites_including_empty_states": 129,
+    "proposed_pngs": 239,
+    "verified_base_bindings": 53,
+    "pending_base_identities": 69,
+    "pending_empty_state_bindings": 7,
+    "legacy_geometry_rows_preserved": 22,
+    "adapter_geometry_rows": 259,
+    "deferred_logical_sprites": 2,
+    "deferred_pngs": 2,
+    "active_logical_sprites": 127,
+    "active_import_pngs": 237
+  },
+  "rows": [
+    {
+      "id": "charcoal",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "charcoal",
+        "charcoal_count_2_8",
+        "charcoal_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "copper_ore",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "copper_ore",
+        "copper_ore_count_2_8",
+        "copper_ore_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "tin_ore",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "tin_ore",
+        "tin_ore_count_2_8",
+        "tin_ore_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "copper_ingot",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "copper_ingot",
+        "copper_ingot_count_2_8",
+        "copper_ingot_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "tin_ingot",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "tin_ingot",
+        "tin_ingot_count_2_8",
+        "tin_ingot_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "bronze_ingot",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "bronze_ingot",
+        "bronze_ingot_count_2_8",
+        "bronze_ingot_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "clay_mould",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "clay_mould",
+        "clay_mould_count_2_8",
+        "clay_mould_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "mud_brick",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "mud_brick",
+        "mud_brick_count_2_8",
+        "mud_brick_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "lime",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "lime",
+        "lime_count_2_8",
+        "lime_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "copper_awl",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "copper_awl"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "copper_needle",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "copper_needle"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "copper_axe",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "copper_axe"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "bronze_axe",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "bronze_axe"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "bronze_sickle",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "bronze_sickle"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "bronze_hoe",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "bronze_hoe"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 2
+    },
+    {
+      "id": "bronze_spear",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "bronze_spear"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "bronze_dagger",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "bronze_dagger"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "honey",
+      "parent_id": null,
+      "state": "filled",
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "honey"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "honey_empty",
+      "parent_id": "honey",
+      "state": "empty",
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "honey_empty"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "ART-BATCH filled/empty variant policy; no current item-state selector",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "beeswax",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "beeswax",
+        "beeswax_count_2_8",
+        "beeswax_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 2
+    },
+    {
+      "id": "wool",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": {
+        "code": 71,
+        "sim": "Wool"
+      },
+      "asset_ids": [
+        "wool",
+        "wool_count_2_8",
+        "wool_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 2
+    },
+    {
+      "id": "wool_yarn",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "wool_yarn",
+        "wool_yarn_count_2_8",
+        "wool_yarn_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "wool_tunic",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "wool_tunic"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 2
+    },
+    {
+      "id": "wheel",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "wheel"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "seal",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "seal"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "tablet",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "tablet"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "glass_bead",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "glass_bead",
+        "glass_bead_count_2_8",
+        "glass_bead_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "flour",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": {
+        "code": 43,
+        "sim": "Flour"
+      },
+      "asset_ids": [
+        "flour",
+        "flour_count_2_8",
+        "flour_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "bread",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": {
+        "code": 44,
+        "sim": "Bread"
+      },
+      "asset_ids": [
+        "bread",
+        "bread_count_2_8",
+        "bread_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "beer",
+      "parent_id": null,
+      "state": "filled",
+      "era": "neolithic",
+      "sim_identity": {
+        "code": 45,
+        "sim": "Beer"
+      },
+      "asset_ids": [
+        "beer"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "beer_empty",
+      "parent_id": "beer",
+      "state": "empty",
+      "era": "neolithic",
+      "sim_identity": null,
+      "asset_ids": [
+        "beer_empty"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "ART-BATCH filled/empty variant policy; no current item-state selector",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "milk",
+      "parent_id": null,
+      "state": "filled",
+      "era": "neolithic",
+      "sim_identity": {
+        "code": 46,
+        "sim": "Milk"
+      },
+      "asset_ids": [
+        "milk"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "milk_empty",
+      "parent_id": "milk",
+      "state": "empty",
+      "era": "neolithic",
+      "sim_identity": null,
+      "asset_ids": [
+        "milk_empty"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "ART-BATCH filled/empty variant policy; no current item-state selector",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "cheese",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": {
+        "code": 47,
+        "sim": "Cheese"
+      },
+      "asset_ids": [
+        "cheese",
+        "cheese_count_2_8",
+        "cheese_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "smoked_meat",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": {
+        "code": 48,
+        "sim": "SmokedMeat"
+      },
+      "asset_ids": [
+        "smoked_meat",
+        "smoked_meat_count_2_8",
+        "smoked_meat_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "hoe",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": {
+        "code": 50,
+        "sim": "Hoe"
+      },
+      "asset_ids": [
+        "hoe"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 2
+    },
+    {
+      "id": "sickle",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": {
+        "code": 51,
+        "sim": "Sickle"
+      },
+      "asset_ids": [
+        "sickle"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "adze",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": {
+        "code": 52,
+        "sim": "Adze"
+      },
+      "asset_ids": [
+        "adze"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "bow",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": {
+        "code": 53,
+        "sim": "Bow"
+      },
+      "asset_ids": [
+        "bow"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "arrow",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": {
+        "code": 54,
+        "sim": "Arrow"
+      },
+      "asset_ids": [
+        "arrow"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "leather_armor",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": {
+        "code": 56,
+        "sim": "LeatherArmor"
+      },
+      "asset_ids": [
+        "leather_armor"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "herbs",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": {
+        "code": 57,
+        "sim": "Herbs"
+      },
+      "asset_ids": [
+        "herbs",
+        "herbs_count_2_8",
+        "herbs_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "poultice",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": {
+        "code": 58,
+        "sim": "Poultice"
+      },
+      "asset_ids": [
+        "poultice"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "barley",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": {
+        "code": 59,
+        "sim": "Barley"
+      },
+      "asset_ids": [
+        "barley",
+        "barley_count_2_8",
+        "barley_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "barley_seed",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": {
+        "code": 60,
+        "sim": "BarleySeed"
+      },
+      "asset_ids": [
+        "barley_seed",
+        "barley_seed_count_2_8",
+        "barley_seed_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "rye",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": {
+        "code": 61,
+        "sim": "Rye"
+      },
+      "asset_ids": [
+        "rye",
+        "rye_count_2_8",
+        "rye_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "rye_seed",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": {
+        "code": 62,
+        "sim": "RyeSeed"
+      },
+      "asset_ids": [
+        "rye_seed",
+        "rye_seed_count_2_8",
+        "rye_seed_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "lentil",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": {
+        "code": 63,
+        "sim": "Lentil"
+      },
+      "asset_ids": [
+        "lentil",
+        "lentil_count_2_8",
+        "lentil_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "lentil_seed",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": {
+        "code": 64,
+        "sim": "LentilSeed"
+      },
+      "asset_ids": [
+        "lentil_seed",
+        "lentil_seed_count_2_8",
+        "lentil_seed_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "pea",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": {
+        "code": 65,
+        "sim": "Pea"
+      },
+      "asset_ids": [
+        "pea",
+        "pea_count_2_8",
+        "pea_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "pea_seed",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": {
+        "code": 66,
+        "sim": "PeaSeed"
+      },
+      "asset_ids": [
+        "pea_seed",
+        "pea_seed_count_2_8",
+        "pea_seed_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "millet",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": {
+        "code": 67,
+        "sim": "Millet"
+      },
+      "asset_ids": [
+        "millet",
+        "millet_count_2_8",
+        "millet_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "millet_seed",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": {
+        "code": 68,
+        "sim": "MilletSeed"
+      },
+      "asset_ids": [
+        "millet_seed",
+        "millet_seed_count_2_8",
+        "millet_seed_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "apple",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": {
+        "code": 69,
+        "sim": "Apple"
+      },
+      "asset_ids": [
+        "apple",
+        "apple_count_2_8",
+        "apple_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "hay",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": {
+        "code": 49,
+        "sim": "Hay"
+      },
+      "asset_ids": [
+        "hay",
+        "hay_count_2_8",
+        "hay_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "goat_hide",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": {
+        "code": 70,
+        "sim": "GoatHide"
+      },
+      "asset_ids": [
+        "goat_hide"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "butter",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": null,
+      "asset_ids": [
+        "butter",
+        "butter_count_2_8",
+        "butter_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "ART-BATCH brief A3 explicit list",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "salt",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": null,
+      "asset_ids": [
+        "salt",
+        "salt_count_2_8",
+        "salt_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "ART-BATCH brief A3 explicit list",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "fermented_milk",
+      "parent_id": null,
+      "state": "filled",
+      "era": "neolithic",
+      "sim_identity": null,
+      "asset_ids": [
+        "fermented_milk"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2 explicit unlocks/list",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "fermented_milk_empty",
+      "parent_id": "fermented_milk",
+      "state": "empty",
+      "era": "neolithic",
+      "sim_identity": null,
+      "asset_ids": [
+        "fermented_milk_empty"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "ART-BATCH filled/empty variant policy; no current item-state selector",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "fermented_vegetables",
+      "parent_id": null,
+      "state": "filled",
+      "era": "neolithic",
+      "sim_identity": null,
+      "asset_ids": [
+        "fermented_vegetables"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2 explicit unlocks/list",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "fermented_vegetables_empty",
+      "parent_id": "fermented_vegetables",
+      "state": "empty",
+      "era": "neolithic",
+      "sim_identity": null,
+      "asset_ids": [
+        "fermented_vegetables_empty"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "ART-BATCH filled/empty variant policy; no current item-state selector",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "tally_stick",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": null,
+      "asset_ids": [
+        "tally_stick"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2 explicit unlocks/list",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "dugout_canoe",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": null,
+      "asset_ids": [
+        "dugout_canoe"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2 explicit unlocks/list",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "wild_grain",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": {
+        "code": 19,
+        "sim": "WildGrain"
+      },
+      "asset_ids": [
+        "wild_grain",
+        "wild_grain_count_2_8",
+        "wild_grain_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "emmer_seed",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": {
+        "code": 31,
+        "sim": "EmmerSeed"
+      },
+      "asset_ids": [
+        "emmer_seed",
+        "emmer_seed_count_2_8",
+        "emmer_seed_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "flax_seed",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": {
+        "code": 30,
+        "sim": "FlaxSeed"
+      },
+      "asset_ids": [
+        "flax_seed",
+        "flax_seed_count_2_8",
+        "flax_seed_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "flax_stalks",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": {
+        "code": 21,
+        "sim": "FlaxStalks"
+      },
+      "asset_ids": [
+        "flax_stalks",
+        "flax_stalks_count_2_8",
+        "flax_stalks_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Current items.ron; bronze art label follows newer ART-BATCH brief era rule",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "flax_fibre",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": {
+        "code": 32,
+        "sim": "FlaxFibre"
+      },
+      "asset_ids": [
+        "flax_fibre",
+        "flax_fibre_count_2_8",
+        "flax_fibre_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Current items.ron; bronze art label follows newer ART-BATCH brief era rule",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "linen_thread",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": {
+        "code": 33,
+        "sim": "LinenThread"
+      },
+      "asset_ids": [
+        "linen_thread",
+        "linen_thread_count_2_8",
+        "linen_thread_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Current items.ron; bronze art label follows newer ART-BATCH brief era rule",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "linen_cloth",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": {
+        "code": 34,
+        "sim": "LinenCloth"
+      },
+      "asset_ids": [
+        "linen_cloth",
+        "linen_cloth_count_2_8",
+        "linen_cloth_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Current items.ron; bronze art label follows newer ART-BATCH brief era rule",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "hand_spindle",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": {
+        "code": 35,
+        "sim": "HandSpindle"
+      },
+      "asset_ids": [
+        "hand_spindle"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Current items.ron; bronze art label follows newer ART-BATCH brief era rule",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "linen_tunic",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": {
+        "code": 36,
+        "sim": "LinenTunic"
+      },
+      "asset_ids": [
+        "linen_tunic"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Current items.ron; bronze art label follows newer ART-BATCH brief era rule",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 2
+    },
+    {
+      "id": "linen_wrap",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": {
+        "code": 37,
+        "sim": "LinenWrap"
+      },
+      "asset_ids": [
+        "linen_wrap"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Current items.ron; bronze art label follows newer ART-BATCH brief era rule",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "dyed_tunic",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": {
+        "code": 55,
+        "sim": "DyedTunic"
+      },
+      "asset_ids": [
+        "dyed_tunic"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Current items.ron; bronze art label follows newer ART-BATCH brief era rule",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 2
+    },
+    {
+      "id": "cord",
+      "parent_id": null,
+      "state": null,
+      "era": "paleolithic",
+      "sim_identity": {
+        "code": 38,
+        "sim": "Cord"
+      },
+      "asset_ids": [
+        "cord"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.1/current items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "basket",
+      "parent_id": null,
+      "state": null,
+      "era": "paleolithic",
+      "sim_identity": {
+        "code": 39,
+        "sim": "Basket"
+      },
+      "asset_ids": [
+        "basket"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.1/current items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "sling",
+      "parent_id": null,
+      "state": null,
+      "era": "paleolithic",
+      "sim_identity": {
+        "code": 40,
+        "sim": "Sling"
+      },
+      "asset_ids": [
+        "sling"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.1/current items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "bone_needle",
+      "parent_id": null,
+      "state": null,
+      "era": "paleolithic",
+      "sim_identity": {
+        "code": 41,
+        "sim": "BoneNeedle"
+      },
+      "asset_ids": [
+        "bone_needle"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.1/current items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "fish",
+      "parent_id": null,
+      "state": null,
+      "era": "paleolithic",
+      "sim_identity": {
+        "code": 42,
+        "sim": "Fish"
+      },
+      "asset_ids": [
+        "fish",
+        "fish_count_2_8",
+        "fish_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.1/current items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "hazelnuts",
+      "parent_id": null,
+      "state": null,
+      "era": "paleolithic",
+      "sim_identity": {
+        "code": 18,
+        "sim": "Hazelnuts"
+      },
+      "asset_ids": [
+        "hazelnuts",
+        "hazelnuts_count_2_8",
+        "hazelnuts_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.1/current items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 2
+    },
+    {
+      "id": "roots",
+      "parent_id": null,
+      "state": null,
+      "era": "paleolithic",
+      "sim_identity": {
+        "code": 20,
+        "sim": "Roots"
+      },
+      "asset_ids": [
+        "roots",
+        "roots_count_2_8",
+        "roots_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.1/current items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "roast_meat",
+      "parent_id": null,
+      "state": null,
+      "era": "paleolithic",
+      "sim_identity": {
+        "code": 22,
+        "sim": "RoastMeat"
+      },
+      "asset_ids": [
+        "roast_meat"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.1/current items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "porridge",
+      "parent_id": null,
+      "state": null,
+      "era": "paleolithic",
+      "sim_identity": {
+        "code": 23,
+        "sim": "Porridge"
+      },
+      "asset_ids": [
+        "porridge"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.1/current items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "stew",
+      "parent_id": null,
+      "state": null,
+      "era": "paleolithic",
+      "sim_identity": {
+        "code": 24,
+        "sim": "Stew"
+      },
+      "asset_ids": [
+        "stew"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.1/current items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "dried_meat",
+      "parent_id": null,
+      "state": null,
+      "era": "paleolithic",
+      "sim_identity": {
+        "code": 25,
+        "sim": "DriedMeat"
+      },
+      "asset_ids": [
+        "dried_meat",
+        "dried_meat_count_2_8",
+        "dried_meat_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.1/current items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "dried_berries",
+      "parent_id": null,
+      "state": null,
+      "era": "paleolithic",
+      "sim_identity": {
+        "code": 26,
+        "sim": "DriedBerries"
+      },
+      "asset_ids": [
+        "dried_berries",
+        "dried_berries_count_2_8",
+        "dried_berries_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.1/current items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "roasted_roots",
+      "parent_id": null,
+      "state": null,
+      "era": "paleolithic",
+      "sim_identity": {
+        "code": 27,
+        "sim": "RoastedRoots"
+      },
+      "asset_ids": [
+        "roasted_roots",
+        "roasted_roots_count_2_8",
+        "roasted_roots_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.1/current items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "fruit_porridge",
+      "parent_id": null,
+      "state": null,
+      "era": "paleolithic",
+      "sim_identity": {
+        "code": 28,
+        "sim": "FruitPorridge"
+      },
+      "asset_ids": [
+        "fruit_porridge"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.1/current items.ron",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "atlatl",
+      "parent_id": null,
+      "state": null,
+      "era": "paleolithic",
+      "sim_identity": null,
+      "asset_ids": [
+        "atlatl"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.1 explicit unlocks/list",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "bone_awl",
+      "parent_id": null,
+      "state": null,
+      "era": "paleolithic",
+      "sim_identity": null,
+      "asset_ids": [
+        "bone_awl"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.1 explicit unlocks/list",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "iron_ore",
+      "parent_id": null,
+      "state": null,
+      "era": "iron",
+      "sim_identity": null,
+      "asset_ids": [
+        "iron_ore",
+        "iron_ore_count_2_8",
+        "iron_ore_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.3 three ores + §4.4 iron chain",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "iron_bloom",
+      "parent_id": null,
+      "state": null,
+      "era": "iron",
+      "sim_identity": null,
+      "asset_ids": [
+        "iron_bloom",
+        "iron_bloom_count_2_8",
+        "iron_bloom_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 + ART-BATCH brief explicit list",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "iron_ingot",
+      "parent_id": null,
+      "state": null,
+      "era": "iron",
+      "sim_identity": null,
+      "asset_ids": [
+        "iron_ingot",
+        "iron_ingot_count_2_8",
+        "iron_ingot_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 + ART-BATCH brief explicit list",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "iron_axe",
+      "parent_id": null,
+      "state": null,
+      "era": "iron",
+      "sim_identity": null,
+      "asset_ids": [
+        "iron_axe"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 explicit named unlocks/list",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "iron_hoe",
+      "parent_id": null,
+      "state": null,
+      "era": "iron",
+      "sim_identity": null,
+      "asset_ids": [
+        "iron_hoe"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 explicit named unlocks/list",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 2
+    },
+    {
+      "id": "iron_sickle",
+      "parent_id": null,
+      "state": null,
+      "era": "iron",
+      "sim_identity": null,
+      "asset_ids": [
+        "iron_sickle"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 explicit named unlocks/list",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "iron_saw",
+      "parent_id": null,
+      "state": null,
+      "era": "iron",
+      "sim_identity": null,
+      "asset_ids": [
+        "iron_saw"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 explicit named unlocks/list",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "iron_spear",
+      "parent_id": null,
+      "state": null,
+      "era": "iron",
+      "sim_identity": null,
+      "asset_ids": [
+        "iron_spear"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 explicit named unlocks/list",
+      "import_status": "DEFERRED_REJECTED_NO_REPLACEMENT",
+      "selected_attempt": null,
+      "withheld_reason": "Defining iron head lost at32px; replacement request blocked by image service; no replacement output."
+    },
+    {
+      "id": "iron_sword",
+      "parent_id": null,
+      "state": null,
+      "era": "iron",
+      "sim_identity": null,
+      "asset_ids": [
+        "iron_sword"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 explicit named unlocks/list",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "iron_helmet",
+      "parent_id": null,
+      "state": null,
+      "era": "iron",
+      "sim_identity": null,
+      "asset_ids": [
+        "iron_helmet"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 explicit named unlocks/list",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "steel_edge",
+      "parent_id": null,
+      "state": null,
+      "era": "iron",
+      "sim_identity": null,
+      "asset_ids": [
+        "steel_edge"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 explicit named unlocks/list",
+      "import_status": "DEFERRED_REJECTED_NO_REPLACEMENT",
+      "selected_attempt": null,
+      "withheld_reason": "Chipped/flaked shape reads as stone rather than forged steel; replacement request blocked by image service; no replacement output."
+    },
+    {
+      "id": "coin",
+      "parent_id": null,
+      "state": null,
+      "era": "iron",
+      "sim_identity": null,
+      "asset_ids": [
+        "coin",
+        "coin_count_2_8",
+        "coin_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 explicit named unlocks/list",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "record_book",
+      "parent_id": null,
+      "state": null,
+      "era": "iron",
+      "sim_identity": null,
+      "asset_ids": [
+        "record_book"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 explicit named unlocks/list",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "composite_bow",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "composite_bow"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.3 explicit named objects/unlocks",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "cart",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "cart"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.3 explicit named objects/unlocks",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "plough",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "plough"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.3 explicit named objects/unlocks",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "reed_boat",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "reed_boat"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.3 explicit named objects/unlocks",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "sail",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "sail"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.3 explicit named objects/unlocks",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "wine",
+      "parent_id": null,
+      "state": "filled",
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "wine"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.3 explicit named objects/unlocks",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "wine_empty",
+      "parent_id": "wine",
+      "state": "empty",
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "wine_empty"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "ART-BATCH filled/empty variant policy; no current item-state selector",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "olive_oil",
+      "parent_id": null,
+      "state": "filled",
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "olive_oil"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.3 explicit named objects/unlocks",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "olive_oil_empty",
+      "parent_id": "olive_oil",
+      "state": "empty",
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "olive_oil_empty"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "ART-BATCH filled/empty variant policy; no current item-state selector",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "faience",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "faience"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.3 explicit named objects/unlocks",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "drum",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "drum"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.3 explicit named objects/unlocks",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "flute",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "flute"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.3 explicit named objects/unlocks",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "ritual_mask",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "ritual_mask"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.3 explicit named objects/unlocks",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "grape",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "grape",
+        "grape_count_2_8",
+        "grape_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.5 crops",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "olive",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "olive",
+        "olive_count_2_8",
+        "olive_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.5 crops",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "hemp",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "hemp",
+        "hemp_count_2_8",
+        "hemp_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.5 crops",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "oats",
+      "parent_id": null,
+      "state": null,
+      "era": "neolithic",
+      "sim_identity": null,
+      "asset_ids": [
+        "oats",
+        "oats_count_2_8",
+        "oats_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.5 crop table",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "iron_plough",
+      "parent_id": null,
+      "state": null,
+      "era": "iron",
+      "sim_identity": null,
+      "asset_ids": [
+        "iron_plough"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 explicit named objects/unlocks",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 3
+    },
+    {
+      "id": "silk",
+      "parent_id": null,
+      "state": null,
+      "era": "iron",
+      "sim_identity": null,
+      "asset_ids": [
+        "silk",
+        "silk_count_2_8",
+        "silk_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 explicit named objects/unlocks",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "purple_cloth",
+      "parent_id": null,
+      "state": null,
+      "era": "iron",
+      "sim_identity": null,
+      "asset_ids": [
+        "purple_cloth",
+        "purple_cloth_count_2_8",
+        "purple_cloth_count_9_plus"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 explicit named objects/unlocks",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "map",
+      "parent_id": null,
+      "state": null,
+      "era": "iron",
+      "sim_identity": null,
+      "asset_ids": [
+        "map"
+      ],
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 explicit named objects/unlocks",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "bronze_sword",
+      "parent_id": null,
+      "state": null,
+      "era": "bronze",
+      "sim_identity": null,
+      "asset_ids": [
+        "bronze_sword"
+      ],
+      "inferred_completion_candidate": true,
+      "source": "Bible §4.3 says three bronze weapons but explicitly names only spear/dagger; sword is proposed third",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 2
+    },
+    {
+      "id": "iron_pickaxe",
+      "parent_id": null,
+      "state": null,
+      "era": "iron",
+      "sim_identity": null,
+      "asset_ids": [
+        "iron_pickaxe"
+      ],
+      "inferred_completion_candidate": true,
+      "source": "Bible §4.4 says six tools/four weapons; proposed completion of unnamed two tools/one weapon",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "iron_chisel",
+      "parent_id": null,
+      "state": null,
+      "era": "iron",
+      "sim_identity": null,
+      "asset_ids": [
+        "iron_chisel"
+      ],
+      "inferred_completion_candidate": true,
+      "source": "Bible §4.4 says six tools/four weapons; proposed completion of unnamed two tools/one weapon",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "iron_shield",
+      "parent_id": null,
+      "state": null,
+      "era": "iron",
+      "sim_identity": null,
+      "asset_ids": [
+        "iron_shield"
+      ],
+      "inferred_completion_candidate": true,
+      "source": "Bible §4.4 says six tools/four weapons; proposed completion of unnamed two tools/one weapon",
+      "import_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    }
+  ],
+  "selection_source": "/Users/rexxa/work/art-batch/A3/selection_final.json",
+  "selection_sha256": "1efa9ba49f3df72e501d360c1c07a5e27e6ed4c77b9cff3abb98e1b2e1eacab2",
+  "review_limits": [
+    "Labels visible; no blind identification study.",
+    "Existing numeric diagnostics retained; explicit visual exceptions recorded.",
+    "Game import and runtime visual behavior not exercised."
+  ],
+  "art_source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+}

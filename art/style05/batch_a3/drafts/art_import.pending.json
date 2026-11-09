@@ -1,0 +1,52 @@
+{
+  "status": "DEFERRED_NOT_FOR_IMPORT",
+  "reason": "Root independent QA rejected original steel_edge and iron_spear; correction batch rejected by image service at input and produced no files. No replacements invented.",
+  "files": [
+    {
+      "role": "item",
+      "id": "iron_spear",
+      "source": "art/style05/batch_a3/items/iron_spear.png",
+      "dest": "items/iron_spear.png"
+    },
+    {
+      "role": "item",
+      "id": "steel_edge",
+      "source": "art/style05/batch_a3/items/steel_edge.png",
+      "dest": "items/steel_edge.png"
+    }
+  ],
+  "geometry_if_later_adopted": [
+    {
+      "id": "iron_spear",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "steel_edge",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    }
+  ],
+  "withheld": [
+    {
+      "id": "iron_spear",
+      "reason": "Defining iron head lost at32px; replacement request blocked by image service; no replacement output."
+    },
+    {
+      "id": "steel_edge",
+      "reason": "Chipped/flaked shape reads as stone rather than forged steel; replacement request blocked by image service; no replacement output."
+    }
+  ]
+}

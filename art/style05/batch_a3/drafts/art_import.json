@@ -1,0 +1,1441 @@
+{
+  "_draft": {
+    "status": "PROPOSED_NOT_APPLIED",
+    "format": "additive fragment, not a complete importer configuration",
+    "merge_into": "tools/v8/art_import.json",
+    "source_commit_requirement": "Pinned asset commit contains all selected PNGs and the merged geometry adapter. Keep all existing configuration sections and files when merging this fragment.",
+    "reviewed_integration_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "selection_status": "Root final selection reconciled;127 logical sprites /237 committed PNGs. Actual GitReader plan verified at pinned asset commit. Game import not applied.",
+    "selection_source": "/Users/rexxa/work/art-batch/A3/selection_final.json",
+    "selection_sha256": "1efa9ba49f3df72e501d360c1c07a5e27e6ed4c77b9cff3abb98e1b2e1eacab2"
+  },
+  "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+  "source_branch": "v8/art-batch-a3",
+  "meta_sources": {
+    "item": "art/style05/batch_a3/items_manifest.json"
+  },
+  "files": [
+    {
+      "role": "item",
+      "id": "charcoal",
+      "source": "art/style05/batch_a3/items/charcoal.png",
+      "dest": "items/charcoal.png"
+    },
+    {
+      "role": "item",
+      "id": "charcoal_count_2_8",
+      "source": "art/style05/batch_a3/items/charcoal_count_2_8.png",
+      "dest": "items/charcoal_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "charcoal_count_9_plus",
+      "source": "art/style05/batch_a3/items/charcoal_count_9_plus.png",
+      "dest": "items/charcoal_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "copper_ore",
+      "source": "art/style05/batch_a3/items/copper_ore.png",
+      "dest": "items/copper_ore.png"
+    },
+    {
+      "role": "item",
+      "id": "copper_ore_count_2_8",
+      "source": "art/style05/batch_a3/items/copper_ore_count_2_8.png",
+      "dest": "items/copper_ore_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "copper_ore_count_9_plus",
+      "source": "art/style05/batch_a3/items/copper_ore_count_9_plus.png",
+      "dest": "items/copper_ore_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "tin_ore",
+      "source": "art/style05/batch_a3/items/tin_ore.png",
+      "dest": "items/tin_ore.png"
+    },
+    {
+      "role": "item",
+      "id": "tin_ore_count_2_8",
+      "source": "art/style05/batch_a3/items/tin_ore_count_2_8.png",
+      "dest": "items/tin_ore_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "tin_ore_count_9_plus",
+      "source": "art/style05/batch_a3/items/tin_ore_count_9_plus.png",
+      "dest": "items/tin_ore_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "copper_ingot",
+      "source": "art/style05/batch_a3/items/copper_ingot.png",
+      "dest": "items/copper_ingot.png"
+    },
+    {
+      "role": "item",
+      "id": "copper_ingot_count_2_8",
+      "source": "art/style05/batch_a3/items/copper_ingot_count_2_8.png",
+      "dest": "items/copper_ingot_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "copper_ingot_count_9_plus",
+      "source": "art/style05/batch_a3/items/copper_ingot_count_9_plus.png",
+      "dest": "items/copper_ingot_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "tin_ingot",
+      "source": "art/style05/batch_a3/items/tin_ingot.png",
+      "dest": "items/tin_ingot.png"
+    },
+    {
+      "role": "item",
+      "id": "tin_ingot_count_2_8",
+      "source": "art/style05/batch_a3/items/tin_ingot_count_2_8.png",
+      "dest": "items/tin_ingot_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "tin_ingot_count_9_plus",
+      "source": "art/style05/batch_a3/items/tin_ingot_count_9_plus.png",
+      "dest": "items/tin_ingot_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "bronze_ingot",
+      "source": "art/style05/batch_a3/items/bronze_ingot.png",
+      "dest": "items/bronze_ingot.png"
+    },
+    {
+      "role": "item",
+      "id": "bronze_ingot_count_2_8",
+      "source": "art/style05/batch_a3/items/bronze_ingot_count_2_8.png",
+      "dest": "items/bronze_ingot_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "bronze_ingot_count_9_plus",
+      "source": "art/style05/batch_a3/items/bronze_ingot_count_9_plus.png",
+      "dest": "items/bronze_ingot_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "clay_mould",
+      "source": "art/style05/batch_a3/items/clay_mould.png",
+      "dest": "items/clay_mould.png"
+    },
+    {
+      "role": "item",
+      "id": "clay_mould_count_2_8",
+      "source": "art/style05/batch_a3/items/clay_mould_count_2_8.png",
+      "dest": "items/clay_mould_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "clay_mould_count_9_plus",
+      "source": "art/style05/batch_a3/items/clay_mould_count_9_plus.png",
+      "dest": "items/clay_mould_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "mud_brick",
+      "source": "art/style05/batch_a3/items/mud_brick.png",
+      "dest": "items/mud_brick.png"
+    },
+    {
+      "role": "item",
+      "id": "mud_brick_count_2_8",
+      "source": "art/style05/batch_a3/items/mud_brick_count_2_8.png",
+      "dest": "items/mud_brick_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "mud_brick_count_9_plus",
+      "source": "art/style05/batch_a3/items/mud_brick_count_9_plus.png",
+      "dest": "items/mud_brick_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "lime",
+      "source": "art/style05/batch_a3/items/lime.png",
+      "dest": "items/lime.png"
+    },
+    {
+      "role": "item",
+      "id": "lime_count_2_8",
+      "source": "art/style05/batch_a3/items/lime_count_2_8.png",
+      "dest": "items/lime_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "lime_count_9_plus",
+      "source": "art/style05/batch_a3/items/lime_count_9_plus.png",
+      "dest": "items/lime_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "copper_awl",
+      "source": "art/style05/batch_a3/items/copper_awl.png",
+      "dest": "items/copper_awl.png"
+    },
+    {
+      "role": "item",
+      "id": "copper_needle",
+      "source": "art/style05/batch_a3/items/copper_needle.png",
+      "dest": "items/copper_needle.png"
+    },
+    {
+      "role": "item",
+      "id": "copper_axe",
+      "source": "art/style05/batch_a3/items/copper_axe.png",
+      "dest": "items/copper_axe.png"
+    },
+    {
+      "role": "item",
+      "id": "bronze_axe",
+      "source": "art/style05/batch_a3/items/bronze_axe.png",
+      "dest": "items/bronze_axe.png"
+    },
+    {
+      "role": "item",
+      "id": "bronze_sickle",
+      "source": "art/style05/batch_a3/items/bronze_sickle.png",
+      "dest": "items/bronze_sickle.png"
+    },
+    {
+      "role": "item",
+      "id": "bronze_hoe",
+      "source": "art/style05/batch_a3/items/bronze_hoe.png",
+      "dest": "items/bronze_hoe.png"
+    },
+    {
+      "role": "item",
+      "id": "bronze_spear",
+      "source": "art/style05/batch_a3/items/bronze_spear.png",
+      "dest": "items/bronze_spear.png"
+    },
+    {
+      "role": "item",
+      "id": "bronze_dagger",
+      "source": "art/style05/batch_a3/items/bronze_dagger.png",
+      "dest": "items/bronze_dagger.png"
+    },
+    {
+      "role": "item",
+      "id": "honey",
+      "source": "art/style05/batch_a3/items/honey.png",
+      "dest": "items/honey.png"
+    },
+    {
+      "role": "item",
+      "id": "honey_empty",
+      "source": "art/style05/batch_a3/items/honey_empty.png",
+      "dest": "items/honey_empty.png"
+    },
+    {
+      "role": "item",
+      "id": "beeswax",
+      "source": "art/style05/batch_a3/items/beeswax.png",
+      "dest": "items/beeswax.png"
+    },
+    {
+      "role": "item",
+      "id": "beeswax_count_2_8",
+      "source": "art/style05/batch_a3/items/beeswax_count_2_8.png",
+      "dest": "items/beeswax_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "beeswax_count_9_plus",
+      "source": "art/style05/batch_a3/items/beeswax_count_9_plus.png",
+      "dest": "items/beeswax_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "wool",
+      "source": "art/style05/batch_a3/items/wool.png",
+      "dest": "items/wool.png"
+    },
+    {
+      "role": "item",
+      "id": "wool_count_2_8",
+      "source": "art/style05/batch_a3/items/wool_count_2_8.png",
+      "dest": "items/wool_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "wool_count_9_plus",
+      "source": "art/style05/batch_a3/items/wool_count_9_plus.png",
+      "dest": "items/wool_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "wool_yarn",
+      "source": "art/style05/batch_a3/items/wool_yarn.png",
+      "dest": "items/wool_yarn.png"
+    },
+    {
+      "role": "item",
+      "id": "wool_yarn_count_2_8",
+      "source": "art/style05/batch_a3/items/wool_yarn_count_2_8.png",
+      "dest": "items/wool_yarn_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "wool_yarn_count_9_plus",
+      "source": "art/style05/batch_a3/items/wool_yarn_count_9_plus.png",
+      "dest": "items/wool_yarn_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "wool_tunic",
+      "source": "art/style05/batch_a3/items/wool_tunic.png",
+      "dest": "items/wool_tunic.png"
+    },
+    {
+      "role": "item",
+      "id": "wheel",
+      "source": "art/style05/batch_a3/items/wheel.png",
+      "dest": "items/wheel.png"
+    },
+    {
+      "role": "item",
+      "id": "seal",
+      "source": "art/style05/batch_a3/items/seal.png",
+      "dest": "items/seal.png"
+    },
+    {
+      "role": "item",
+      "id": "tablet",
+      "source": "art/style05/batch_a3/items/tablet.png",
+      "dest": "items/tablet.png"
+    },
+    {
+      "role": "item",
+      "id": "glass_bead",
+      "source": "art/style05/batch_a3/items/glass_bead.png",
+      "dest": "items/glass_bead.png"
+    },
+    {
+      "role": "item",
+      "id": "glass_bead_count_2_8",
+      "source": "art/style05/batch_a3/items/glass_bead_count_2_8.png",
+      "dest": "items/glass_bead_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "glass_bead_count_9_plus",
+      "source": "art/style05/batch_a3/items/glass_bead_count_9_plus.png",
+      "dest": "items/glass_bead_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "flour",
+      "source": "art/style05/batch_a3/items/flour.png",
+      "dest": "items/flour.png"
+    },
+    {
+      "role": "item",
+      "id": "flour_count_2_8",
+      "source": "art/style05/batch_a3/items/flour_count_2_8.png",
+      "dest": "items/flour_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "flour_count_9_plus",
+      "source": "art/style05/batch_a3/items/flour_count_9_plus.png",
+      "dest": "items/flour_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "bread",
+      "source": "art/style05/batch_a3/items/bread.png",
+      "dest": "items/bread.png"
+    },
+    {
+      "role": "item",
+      "id": "bread_count_2_8",
+      "source": "art/style05/batch_a3/items/bread_count_2_8.png",
+      "dest": "items/bread_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "bread_count_9_plus",
+      "source": "art/style05/batch_a3/items/bread_count_9_plus.png",
+      "dest": "items/bread_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "beer",
+      "source": "art/style05/batch_a3/items/beer.png",
+      "dest": "items/beer.png"
+    },
+    {
+      "role": "item",
+      "id": "beer_empty",
+      "source": "art/style05/batch_a3/items/beer_empty.png",
+      "dest": "items/beer_empty.png"
+    },
+    {
+      "role": "item",
+      "id": "milk",
+      "source": "art/style05/batch_a3/items/milk.png",
+      "dest": "items/milk.png"
+    },
+    {
+      "role": "item",
+      "id": "milk_empty",
+      "source": "art/style05/batch_a3/items/milk_empty.png",
+      "dest": "items/milk_empty.png"
+    },
+    {
+      "role": "item",
+      "id": "cheese",
+      "source": "art/style05/batch_a3/items/cheese.png",
+      "dest": "items/cheese.png"
+    },
+    {
+      "role": "item",
+      "id": "cheese_count_2_8",
+      "source": "art/style05/batch_a3/items/cheese_count_2_8.png",
+      "dest": "items/cheese_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "cheese_count_9_plus",
+      "source": "art/style05/batch_a3/items/cheese_count_9_plus.png",
+      "dest": "items/cheese_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "smoked_meat",
+      "source": "art/style05/batch_a3/items/smoked_meat.png",
+      "dest": "items/smoked_meat.png"
+    },
+    {
+      "role": "item",
+      "id": "smoked_meat_count_2_8",
+      "source": "art/style05/batch_a3/items/smoked_meat_count_2_8.png",
+      "dest": "items/smoked_meat_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "smoked_meat_count_9_plus",
+      "source": "art/style05/batch_a3/items/smoked_meat_count_9_plus.png",
+      "dest": "items/smoked_meat_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "hoe",
+      "source": "art/style05/batch_a3/items/hoe.png",
+      "dest": "items/hoe.png"
+    },
+    {
+      "role": "item",
+      "id": "sickle",
+      "source": "art/style05/batch_a3/items/sickle.png",
+      "dest": "items/sickle.png"
+    },
+    {
+      "role": "item",
+      "id": "adze",
+      "source": "art/style05/batch_a3/items/adze.png",
+      "dest": "items/adze.png"
+    },
+    {
+      "role": "item",
+      "id": "bow",
+      "source": "art/style05/batch_a3/items/bow.png",
+      "dest": "items/bow.png"
+    },
+    {
+      "role": "item",
+      "id": "arrow",
+      "source": "art/style05/batch_a3/items/arrow.png",
+      "dest": "items/arrow.png"
+    },
+    {
+      "role": "item",
+      "id": "leather_armor",
+      "source": "art/style05/batch_a3/items/leather_armor.png",
+      "dest": "items/leather_armor.png"
+    },
+    {
+      "role": "item",
+      "id": "herbs",
+      "source": "art/style05/batch_a3/items/herbs.png",
+      "dest": "items/herbs.png"
+    },
+    {
+      "role": "item",
+      "id": "herbs_count_2_8",
+      "source": "art/style05/batch_a3/items/herbs_count_2_8.png",
+      "dest": "items/herbs_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "herbs_count_9_plus",
+      "source": "art/style05/batch_a3/items/herbs_count_9_plus.png",
+      "dest": "items/herbs_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "poultice",
+      "source": "art/style05/batch_a3/items/poultice.png",
+      "dest": "items/poultice.png"
+    },
+    {
+      "role": "item",
+      "id": "barley",
+      "source": "art/style05/batch_a3/items/barley.png",
+      "dest": "items/barley.png"
+    },
+    {
+      "role": "item",
+      "id": "barley_count_2_8",
+      "source": "art/style05/batch_a3/items/barley_count_2_8.png",
+      "dest": "items/barley_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "barley_count_9_plus",
+      "source": "art/style05/batch_a3/items/barley_count_9_plus.png",
+      "dest": "items/barley_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "barley_seed",
+      "source": "art/style05/batch_a3/items/barley_seed.png",
+      "dest": "items/barley_seed.png"
+    },
+    {
+      "role": "item",
+      "id": "barley_seed_count_2_8",
+      "source": "art/style05/batch_a3/items/barley_seed_count_2_8.png",
+      "dest": "items/barley_seed_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "barley_seed_count_9_plus",
+      "source": "art/style05/batch_a3/items/barley_seed_count_9_plus.png",
+      "dest": "items/barley_seed_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "rye",
+      "source": "art/style05/batch_a3/items/rye.png",
+      "dest": "items/rye.png"
+    },
+    {
+      "role": "item",
+      "id": "rye_count_2_8",
+      "source": "art/style05/batch_a3/items/rye_count_2_8.png",
+      "dest": "items/rye_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "rye_count_9_plus",
+      "source": "art/style05/batch_a3/items/rye_count_9_plus.png",
+      "dest": "items/rye_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "rye_seed",
+      "source": "art/style05/batch_a3/items/rye_seed.png",
+      "dest": "items/rye_seed.png"
+    },
+    {
+      "role": "item",
+      "id": "rye_seed_count_2_8",
+      "source": "art/style05/batch_a3/items/rye_seed_count_2_8.png",
+      "dest": "items/rye_seed_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "rye_seed_count_9_plus",
+      "source": "art/style05/batch_a3/items/rye_seed_count_9_plus.png",
+      "dest": "items/rye_seed_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "lentil",
+      "source": "art/style05/batch_a3/items/lentil.png",
+      "dest": "items/lentil.png"
+    },
+    {
+      "role": "item",
+      "id": "lentil_count_2_8",
+      "source": "art/style05/batch_a3/items/lentil_count_2_8.png",
+      "dest": "items/lentil_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "lentil_count_9_plus",
+      "source": "art/style05/batch_a3/items/lentil_count_9_plus.png",
+      "dest": "items/lentil_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "lentil_seed",
+      "source": "art/style05/batch_a3/items/lentil_seed.png",
+      "dest": "items/lentil_seed.png"
+    },
+    {
+      "role": "item",
+      "id": "lentil_seed_count_2_8",
+      "source": "art/style05/batch_a3/items/lentil_seed_count_2_8.png",
+      "dest": "items/lentil_seed_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "lentil_seed_count_9_plus",
+      "source": "art/style05/batch_a3/items/lentil_seed_count_9_plus.png",
+      "dest": "items/lentil_seed_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "pea",
+      "source": "art/style05/batch_a3/items/pea.png",
+      "dest": "items/pea.png"
+    },
+    {
+      "role": "item",
+      "id": "pea_count_2_8",
+      "source": "art/style05/batch_a3/items/pea_count_2_8.png",
+      "dest": "items/pea_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "pea_count_9_plus",
+      "source": "art/style05/batch_a3/items/pea_count_9_plus.png",
+      "dest": "items/pea_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "pea_seed",
+      "source": "art/style05/batch_a3/items/pea_seed.png",
+      "dest": "items/pea_seed.png"
+    },
+    {
+      "role": "item",
+      "id": "pea_seed_count_2_8",
+      "source": "art/style05/batch_a3/items/pea_seed_count_2_8.png",
+      "dest": "items/pea_seed_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "pea_seed_count_9_plus",
+      "source": "art/style05/batch_a3/items/pea_seed_count_9_plus.png",
+      "dest": "items/pea_seed_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "millet",
+      "source": "art/style05/batch_a3/items/millet.png",
+      "dest": "items/millet.png"
+    },
+    {
+      "role": "item",
+      "id": "millet_count_2_8",
+      "source": "art/style05/batch_a3/items/millet_count_2_8.png",
+      "dest": "items/millet_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "millet_count_9_plus",
+      "source": "art/style05/batch_a3/items/millet_count_9_plus.png",
+      "dest": "items/millet_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "millet_seed",
+      "source": "art/style05/batch_a3/items/millet_seed.png",
+      "dest": "items/millet_seed.png"
+    },
+    {
+      "role": "item",
+      "id": "millet_seed_count_2_8",
+      "source": "art/style05/batch_a3/items/millet_seed_count_2_8.png",
+      "dest": "items/millet_seed_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "millet_seed_count_9_plus",
+      "source": "art/style05/batch_a3/items/millet_seed_count_9_plus.png",
+      "dest": "items/millet_seed_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "apple",
+      "source": "art/style05/batch_a3/items/apple.png",
+      "dest": "items/apple.png"
+    },
+    {
+      "role": "item",
+      "id": "apple_count_2_8",
+      "source": "art/style05/batch_a3/items/apple_count_2_8.png",
+      "dest": "items/apple_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "apple_count_9_plus",
+      "source": "art/style05/batch_a3/items/apple_count_9_plus.png",
+      "dest": "items/apple_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "hay",
+      "source": "art/style05/batch_a3/items/hay.png",
+      "dest": "items/hay.png"
+    },
+    {
+      "role": "item",
+      "id": "hay_count_2_8",
+      "source": "art/style05/batch_a3/items/hay_count_2_8.png",
+      "dest": "items/hay_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "hay_count_9_plus",
+      "source": "art/style05/batch_a3/items/hay_count_9_plus.png",
+      "dest": "items/hay_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "goat_hide",
+      "source": "art/style05/batch_a3/items/goat_hide.png",
+      "dest": "items/goat_hide.png"
+    },
+    {
+      "role": "item",
+      "id": "butter",
+      "source": "art/style05/batch_a3/items/butter.png",
+      "dest": "items/butter.png"
+    },
+    {
+      "role": "item",
+      "id": "butter_count_2_8",
+      "source": "art/style05/batch_a3/items/butter_count_2_8.png",
+      "dest": "items/butter_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "butter_count_9_plus",
+      "source": "art/style05/batch_a3/items/butter_count_9_plus.png",
+      "dest": "items/butter_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "salt",
+      "source": "art/style05/batch_a3/items/salt.png",
+      "dest": "items/salt.png"
+    },
+    {
+      "role": "item",
+      "id": "salt_count_2_8",
+      "source": "art/style05/batch_a3/items/salt_count_2_8.png",
+      "dest": "items/salt_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "salt_count_9_plus",
+      "source": "art/style05/batch_a3/items/salt_count_9_plus.png",
+      "dest": "items/salt_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "fermented_milk",
+      "source": "art/style05/batch_a3/items/fermented_milk.png",
+      "dest": "items/fermented_milk.png"
+    },
+    {
+      "role": "item",
+      "id": "fermented_milk_empty",
+      "source": "art/style05/batch_a3/items/fermented_milk_empty.png",
+      "dest": "items/fermented_milk_empty.png"
+    },
+    {
+      "role": "item",
+      "id": "fermented_vegetables",
+      "source": "art/style05/batch_a3/items/fermented_vegetables.png",
+      "dest": "items/fermented_vegetables.png"
+    },
+    {
+      "role": "item",
+      "id": "fermented_vegetables_empty",
+      "source": "art/style05/batch_a3/items/fermented_vegetables_empty.png",
+      "dest": "items/fermented_vegetables_empty.png"
+    },
+    {
+      "role": "item",
+      "id": "tally_stick",
+      "source": "art/style05/batch_a3/items/tally_stick.png",
+      "dest": "items/tally_stick.png"
+    },
+    {
+      "role": "item",
+      "id": "dugout_canoe",
+      "source": "art/style05/batch_a3/items/dugout_canoe.png",
+      "dest": "items/dugout_canoe.png"
+    },
+    {
+      "role": "item",
+      "id": "wild_grain",
+      "source": "art/style05/batch_a3/items/wild_grain.png",
+      "dest": "items/wild_grain.png"
+    },
+    {
+      "role": "item",
+      "id": "wild_grain_count_2_8",
+      "source": "art/style05/batch_a3/items/wild_grain_count_2_8.png",
+      "dest": "items/wild_grain_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "wild_grain_count_9_plus",
+      "source": "art/style05/batch_a3/items/wild_grain_count_9_plus.png",
+      "dest": "items/wild_grain_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "emmer_seed",
+      "source": "art/style05/batch_a3/items/emmer_seed.png",
+      "dest": "items/emmer_seed.png"
+    },
+    {
+      "role": "item",
+      "id": "emmer_seed_count_2_8",
+      "source": "art/style05/batch_a3/items/emmer_seed_count_2_8.png",
+      "dest": "items/emmer_seed_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "emmer_seed_count_9_plus",
+      "source": "art/style05/batch_a3/items/emmer_seed_count_9_plus.png",
+      "dest": "items/emmer_seed_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "flax_seed",
+      "source": "art/style05/batch_a3/items/flax_seed.png",
+      "dest": "items/flax_seed.png"
+    },
+    {
+      "role": "item",
+      "id": "flax_seed_count_2_8",
+      "source": "art/style05/batch_a3/items/flax_seed_count_2_8.png",
+      "dest": "items/flax_seed_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "flax_seed_count_9_plus",
+      "source": "art/style05/batch_a3/items/flax_seed_count_9_plus.png",
+      "dest": "items/flax_seed_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "flax_stalks",
+      "source": "art/style05/batch_a3/items/flax_stalks.png",
+      "dest": "items/flax_stalks.png"
+    },
+    {
+      "role": "item",
+      "id": "flax_stalks_count_2_8",
+      "source": "art/style05/batch_a3/items/flax_stalks_count_2_8.png",
+      "dest": "items/flax_stalks_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "flax_stalks_count_9_plus",
+      "source": "art/style05/batch_a3/items/flax_stalks_count_9_plus.png",
+      "dest": "items/flax_stalks_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "flax_fibre",
+      "source": "art/style05/batch_a3/items/flax_fibre.png",
+      "dest": "items/flax_fibre.png"
+    },
+    {
+      "role": "item",
+      "id": "flax_fibre_count_2_8",
+      "source": "art/style05/batch_a3/items/flax_fibre_count_2_8.png",
+      "dest": "items/flax_fibre_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "flax_fibre_count_9_plus",
+      "source": "art/style05/batch_a3/items/flax_fibre_count_9_plus.png",
+      "dest": "items/flax_fibre_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "linen_thread",
+      "source": "art/style05/batch_a3/items/linen_thread.png",
+      "dest": "items/linen_thread.png"
+    },
+    {
+      "role": "item",
+      "id": "linen_thread_count_2_8",
+      "source": "art/style05/batch_a3/items/linen_thread_count_2_8.png",
+      "dest": "items/linen_thread_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "linen_thread_count_9_plus",
+      "source": "art/style05/batch_a3/items/linen_thread_count_9_plus.png",
+      "dest": "items/linen_thread_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "linen_cloth",
+      "source": "art/style05/batch_a3/items/linen_cloth.png",
+      "dest": "items/linen_cloth.png"
+    },
+    {
+      "role": "item",
+      "id": "linen_cloth_count_2_8",
+      "source": "art/style05/batch_a3/items/linen_cloth_count_2_8.png",
+      "dest": "items/linen_cloth_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "linen_cloth_count_9_plus",
+      "source": "art/style05/batch_a3/items/linen_cloth_count_9_plus.png",
+      "dest": "items/linen_cloth_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "hand_spindle",
+      "source": "art/style05/batch_a3/items/hand_spindle.png",
+      "dest": "items/hand_spindle.png"
+    },
+    {
+      "role": "item",
+      "id": "linen_tunic",
+      "source": "art/style05/batch_a3/items/linen_tunic.png",
+      "dest": "items/linen_tunic.png"
+    },
+    {
+      "role": "item",
+      "id": "linen_wrap",
+      "source": "art/style05/batch_a3/items/linen_wrap.png",
+      "dest": "items/linen_wrap.png"
+    },
+    {
+      "role": "item",
+      "id": "dyed_tunic",
+      "source": "art/style05/batch_a3/items/dyed_tunic.png",
+      "dest": "items/dyed_tunic.png"
+    },
+    {
+      "role": "item",
+      "id": "cord",
+      "source": "art/style05/batch_a3/items/cord.png",
+      "dest": "items/cord.png"
+    },
+    {
+      "role": "item",
+      "id": "basket",
+      "source": "art/style05/batch_a3/items/basket.png",
+      "dest": "items/basket.png"
+    },
+    {
+      "role": "item",
+      "id": "sling",
+      "source": "art/style05/batch_a3/items/sling.png",
+      "dest": "items/sling.png"
+    },
+    {
+      "role": "item",
+      "id": "bone_needle",
+      "source": "art/style05/batch_a3/items/bone_needle.png",
+      "dest": "items/bone_needle.png"
+    },
+    {
+      "role": "item",
+      "id": "fish",
+      "source": "art/style05/batch_a3/items/fish.png",
+      "dest": "items/fish.png"
+    },
+    {
+      "role": "item",
+      "id": "fish_count_2_8",
+      "source": "art/style05/batch_a3/items/fish_count_2_8.png",
+      "dest": "items/fish_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "fish_count_9_plus",
+      "source": "art/style05/batch_a3/items/fish_count_9_plus.png",
+      "dest": "items/fish_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "hazelnuts",
+      "source": "art/style05/batch_a3/items/hazelnuts.png",
+      "dest": "items/hazelnuts.png"
+    },
+    {
+      "role": "item",
+      "id": "hazelnuts_count_2_8",
+      "source": "art/style05/batch_a3/items/hazelnuts_count_2_8.png",
+      "dest": "items/hazelnuts_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "hazelnuts_count_9_plus",
+      "source": "art/style05/batch_a3/items/hazelnuts_count_9_plus.png",
+      "dest": "items/hazelnuts_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "roots",
+      "source": "art/style05/batch_a3/items/roots.png",
+      "dest": "items/roots.png"
+    },
+    {
+      "role": "item",
+      "id": "roots_count_2_8",
+      "source": "art/style05/batch_a3/items/roots_count_2_8.png",
+      "dest": "items/roots_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "roots_count_9_plus",
+      "source": "art/style05/batch_a3/items/roots_count_9_plus.png",
+      "dest": "items/roots_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "roast_meat",
+      "source": "art/style05/batch_a3/items/roast_meat.png",
+      "dest": "items/roast_meat.png"
+    },
+    {
+      "role": "item",
+      "id": "porridge",
+      "source": "art/style05/batch_a3/items/porridge.png",
+      "dest": "items/porridge.png"
+    },
+    {
+      "role": "item",
+      "id": "stew",
+      "source": "art/style05/batch_a3/items/stew.png",
+      "dest": "items/stew.png"
+    },
+    {
+      "role": "item",
+      "id": "dried_meat",
+      "source": "art/style05/batch_a3/items/dried_meat.png",
+      "dest": "items/dried_meat.png"
+    },
+    {
+      "role": "item",
+      "id": "dried_meat_count_2_8",
+      "source": "art/style05/batch_a3/items/dried_meat_count_2_8.png",
+      "dest": "items/dried_meat_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "dried_meat_count_9_plus",
+      "source": "art/style05/batch_a3/items/dried_meat_count_9_plus.png",
+      "dest": "items/dried_meat_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "dried_berries",
+      "source": "art/style05/batch_a3/items/dried_berries.png",
+      "dest": "items/dried_berries.png"
+    },
+    {
+      "role": "item",
+      "id": "dried_berries_count_2_8",
+      "source": "art/style05/batch_a3/items/dried_berries_count_2_8.png",
+      "dest": "items/dried_berries_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "dried_berries_count_9_plus",
+      "source": "art/style05/batch_a3/items/dried_berries_count_9_plus.png",
+      "dest": "items/dried_berries_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "roasted_roots",
+      "source": "art/style05/batch_a3/items/roasted_roots.png",
+      "dest": "items/roasted_roots.png"
+    },
+    {
+      "role": "item",
+      "id": "roasted_roots_count_2_8",
+      "source": "art/style05/batch_a3/items/roasted_roots_count_2_8.png",
+      "dest": "items/roasted_roots_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "roasted_roots_count_9_plus",
+      "source": "art/style05/batch_a3/items/roasted_roots_count_9_plus.png",
+      "dest": "items/roasted_roots_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "fruit_porridge",
+      "source": "art/style05/batch_a3/items/fruit_porridge.png",
+      "dest": "items/fruit_porridge.png"
+    },
+    {
+      "role": "item",
+      "id": "atlatl",
+      "source": "art/style05/batch_a3/items/atlatl.png",
+      "dest": "items/atlatl.png"
+    },
+    {
+      "role": "item",
+      "id": "bone_awl",
+      "source": "art/style05/batch_a3/items/bone_awl.png",
+      "dest": "items/bone_awl.png"
+    },
+    {
+      "role": "item",
+      "id": "iron_ore",
+      "source": "art/style05/batch_a3/items/iron_ore.png",
+      "dest": "items/iron_ore.png"
+    },
+    {
+      "role": "item",
+      "id": "iron_ore_count_2_8",
+      "source": "art/style05/batch_a3/items/iron_ore_count_2_8.png",
+      "dest": "items/iron_ore_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "iron_ore_count_9_plus",
+      "source": "art/style05/batch_a3/items/iron_ore_count_9_plus.png",
+      "dest": "items/iron_ore_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "iron_bloom",
+      "source": "art/style05/batch_a3/items/iron_bloom.png",
+      "dest": "items/iron_bloom.png"
+    },
+    {
+      "role": "item",
+      "id": "iron_bloom_count_2_8",
+      "source": "art/style05/batch_a3/items/iron_bloom_count_2_8.png",
+      "dest": "items/iron_bloom_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "iron_bloom_count_9_plus",
+      "source": "art/style05/batch_a3/items/iron_bloom_count_9_plus.png",
+      "dest": "items/iron_bloom_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "iron_ingot",
+      "source": "art/style05/batch_a3/items/iron_ingot.png",
+      "dest": "items/iron_ingot.png"
+    },
+    {
+      "role": "item",
+      "id": "iron_ingot_count_2_8",
+      "source": "art/style05/batch_a3/items/iron_ingot_count_2_8.png",
+      "dest": "items/iron_ingot_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "iron_ingot_count_9_plus",
+      "source": "art/style05/batch_a3/items/iron_ingot_count_9_plus.png",
+      "dest": "items/iron_ingot_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "iron_axe",
+      "source": "art/style05/batch_a3/items/iron_axe.png",
+      "dest": "items/iron_axe.png"
+    },
+    {
+      "role": "item",
+      "id": "iron_hoe",
+      "source": "art/style05/batch_a3/items/iron_hoe.png",
+      "dest": "items/iron_hoe.png"
+    },
+    {
+      "role": "item",
+      "id": "iron_sickle",
+      "source": "art/style05/batch_a3/items/iron_sickle.png",
+      "dest": "items/iron_sickle.png"
+    },
+    {
+      "role": "item",
+      "id": "iron_saw",
+      "source": "art/style05/batch_a3/items/iron_saw.png",
+      "dest": "items/iron_saw.png"
+    },
+    {
+      "role": "item",
+      "id": "iron_sword",
+      "source": "art/style05/batch_a3/items/iron_sword.png",
+      "dest": "items/iron_sword.png"
+    },
+    {
+      "role": "item",
+      "id": "iron_helmet",
+      "source": "art/style05/batch_a3/items/iron_helmet.png",
+      "dest": "items/iron_helmet.png"
+    },
+    {
+      "role": "item",
+      "id": "coin",
+      "source": "art/style05/batch_a3/items/coin.png",
+      "dest": "items/coin.png"
+    },
+    {
+      "role": "item",
+      "id": "coin_count_2_8",
+      "source": "art/style05/batch_a3/items/coin_count_2_8.png",
+      "dest": "items/coin_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "coin_count_9_plus",
+      "source": "art/style05/batch_a3/items/coin_count_9_plus.png",
+      "dest": "items/coin_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "record_book",
+      "source": "art/style05/batch_a3/items/record_book.png",
+      "dest": "items/record_book.png"
+    },
+    {
+      "role": "item",
+      "id": "composite_bow",
+      "source": "art/style05/batch_a3/items/composite_bow.png",
+      "dest": "items/composite_bow.png"
+    },
+    {
+      "role": "item",
+      "id": "cart",
+      "source": "art/style05/batch_a3/items/cart.png",
+      "dest": "items/cart.png"
+    },
+    {
+      "role": "item",
+      "id": "plough",
+      "source": "art/style05/batch_a3/items/plough.png",
+      "dest": "items/plough.png"
+    },
+    {
+      "role": "item",
+      "id": "reed_boat",
+      "source": "art/style05/batch_a3/items/reed_boat.png",
+      "dest": "items/reed_boat.png"
+    },
+    {
+      "role": "item",
+      "id": "sail",
+      "source": "art/style05/batch_a3/items/sail.png",
+      "dest": "items/sail.png"
+    },
+    {
+      "role": "item",
+      "id": "wine",
+      "source": "art/style05/batch_a3/items/wine.png",
+      "dest": "items/wine.png"
+    },
+    {
+      "role": "item",
+      "id": "wine_empty",
+      "source": "art/style05/batch_a3/items/wine_empty.png",
+      "dest": "items/wine_empty.png"
+    },
+    {
+      "role": "item",
+      "id": "olive_oil",
+      "source": "art/style05/batch_a3/items/olive_oil.png",
+      "dest": "items/olive_oil.png"
+    },
+    {
+      "role": "item",
+      "id": "olive_oil_empty",
+      "source": "art/style05/batch_a3/items/olive_oil_empty.png",
+      "dest": "items/olive_oil_empty.png"
+    },
+    {
+      "role": "item",
+      "id": "faience",
+      "source": "art/style05/batch_a3/items/faience.png",
+      "dest": "items/faience.png"
+    },
+    {
+      "role": "item",
+      "id": "drum",
+      "source": "art/style05/batch_a3/items/drum.png",
+      "dest": "items/drum.png"
+    },
+    {
+      "role": "item",
+      "id": "flute",
+      "source": "art/style05/batch_a3/items/flute.png",
+      "dest": "items/flute.png"
+    },
+    {
+      "role": "item",
+      "id": "ritual_mask",
+      "source": "art/style05/batch_a3/items/ritual_mask.png",
+      "dest": "items/ritual_mask.png"
+    },
+    {
+      "role": "item",
+      "id": "grape",
+      "source": "art/style05/batch_a3/items/grape.png",
+      "dest": "items/grape.png"
+    },
+    {
+      "role": "item",
+      "id": "grape_count_2_8",
+      "source": "art/style05/batch_a3/items/grape_count_2_8.png",
+      "dest": "items/grape_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "grape_count_9_plus",
+      "source": "art/style05/batch_a3/items/grape_count_9_plus.png",
+      "dest": "items/grape_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "olive",
+      "source": "art/style05/batch_a3/items/olive.png",
+      "dest": "items/olive.png"
+    },
+    {
+      "role": "item",
+      "id": "olive_count_2_8",
+      "source": "art/style05/batch_a3/items/olive_count_2_8.png",
+      "dest": "items/olive_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "olive_count_9_plus",
+      "source": "art/style05/batch_a3/items/olive_count_9_plus.png",
+      "dest": "items/olive_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "hemp",
+      "source": "art/style05/batch_a3/items/hemp.png",
+      "dest": "items/hemp.png"
+    },
+    {
+      "role": "item",
+      "id": "hemp_count_2_8",
+      "source": "art/style05/batch_a3/items/hemp_count_2_8.png",
+      "dest": "items/hemp_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "hemp_count_9_plus",
+      "source": "art/style05/batch_a3/items/hemp_count_9_plus.png",
+      "dest": "items/hemp_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "oats",
+      "source": "art/style05/batch_a3/items/oats.png",
+      "dest": "items/oats.png"
+    },
+    {
+      "role": "item",
+      "id": "oats_count_2_8",
+      "source": "art/style05/batch_a3/items/oats_count_2_8.png",
+      "dest": "items/oats_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "oats_count_9_plus",
+      "source": "art/style05/batch_a3/items/oats_count_9_plus.png",
+      "dest": "items/oats_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "iron_plough",
+      "source": "art/style05/batch_a3/items/iron_plough.png",
+      "dest": "items/iron_plough.png"
+    },
+    {
+      "role": "item",
+      "id": "silk",
+      "source": "art/style05/batch_a3/items/silk.png",
+      "dest": "items/silk.png"
+    },
+    {
+      "role": "item",
+      "id": "silk_count_2_8",
+      "source": "art/style05/batch_a3/items/silk_count_2_8.png",
+      "dest": "items/silk_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "silk_count_9_plus",
+      "source": "art/style05/batch_a3/items/silk_count_9_plus.png",
+      "dest": "items/silk_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "purple_cloth",
+      "source": "art/style05/batch_a3/items/purple_cloth.png",
+      "dest": "items/purple_cloth.png"
+    },
+    {
+      "role": "item",
+      "id": "purple_cloth_count_2_8",
+      "source": "art/style05/batch_a3/items/purple_cloth_count_2_8.png",
+      "dest": "items/purple_cloth_count_2_8.png"
+    },
+    {
+      "role": "item",
+      "id": "purple_cloth_count_9_plus",
+      "source": "art/style05/batch_a3/items/purple_cloth_count_9_plus.png",
+      "dest": "items/purple_cloth_count_9_plus.png"
+    },
+    {
+      "role": "item",
+      "id": "map",
+      "source": "art/style05/batch_a3/items/map.png",
+      "dest": "items/map.png"
+    },
+    {
+      "role": "item",
+      "id": "bronze_sword",
+      "source": "art/style05/batch_a3/items/bronze_sword.png",
+      "dest": "items/bronze_sword.png"
+    },
+    {
+      "role": "item",
+      "id": "iron_pickaxe",
+      "source": "art/style05/batch_a3/items/iron_pickaxe.png",
+      "dest": "items/iron_pickaxe.png"
+    },
+    {
+      "role": "item",
+      "id": "iron_chisel",
+      "source": "art/style05/batch_a3/items/iron_chisel.png",
+      "dest": "items/iron_chisel.png"
+    },
+    {
+      "role": "item",
+      "id": "iron_shield",
+      "source": "art/style05/batch_a3/items/iron_shield.png",
+      "dest": "items/iron_shield.png"
+    }
+  ]
+}

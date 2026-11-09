@@ -1,0 +1,1023 @@
+{
+  "status": "PROPOSED_NOT_RUNTIME_INPUT",
+  "reviewed_integration_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+  "base_items": [
+    {
+      "id": "charcoal",
+      "code": null,
+      "sim": null,
+      "assets": [
+        "charcoal",
+        "charcoal_count_2_8",
+        "charcoal_count_9_plus"
+      ],
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "copper_ore",
+      "code": null,
+      "sim": null,
+      "assets": [
+        "copper_ore",
+        "copper_ore_count_2_8",
+        "copper_ore_count_9_plus"
+      ],
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "tin_ore",
+      "code": null,
+      "sim": null,
+      "assets": [
+        "tin_ore",
+        "tin_ore_count_2_8",
+        "tin_ore_count_9_plus"
+      ],
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "copper_ingot",
+      "code": null,
+      "sim": null,
+      "assets": [
+        "copper_ingot",
+        "copper_ingot_count_2_8",
+        "copper_ingot_count_9_plus"
+      ],
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "tin_ingot",
+      "code": null,
+      "sim": null,
+      "assets": [
+        "tin_ingot",
+        "tin_ingot_count_2_8",
+        "tin_ingot_count_9_plus"
+      ],
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "bronze_ingot",
+      "code": null,
+      "sim": null,
+      "assets": [
+        "bronze_ingot",
+        "bronze_ingot_count_2_8",
+        "bronze_ingot_count_9_plus"
+      ],
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "clay_mould",
+      "code": null,
+      "sim": null,
+      "assets": [
+        "clay_mould",
+        "clay_mould_count_2_8",
+        "clay_mould_count_9_plus"
+      ],
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "mud_brick",
+      "code": null,
+      "sim": null,
+      "assets": [
+        "mud_brick",
+        "mud_brick_count_2_8",
+        "mud_brick_count_9_plus"
+      ],
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "lime",
+      "code": null,
+      "sim": null,
+      "assets": [
+        "lime",
+        "lime_count_2_8",
+        "lime_count_9_plus"
+      ],
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "copper_awl",
+      "code": null,
+      "sim": null,
+      "asset": "copper_awl",
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "copper_needle",
+      "code": null,
+      "sim": null,
+      "asset": "copper_needle",
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "copper_axe",
+      "code": null,
+      "sim": null,
+      "asset": "copper_axe",
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "bronze_axe",
+      "code": null,
+      "sim": null,
+      "asset": "bronze_axe",
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "bronze_sickle",
+      "code": null,
+      "sim": null,
+      "asset": "bronze_sickle",
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "bronze_hoe",
+      "code": null,
+      "sim": null,
+      "asset": "bronze_hoe",
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 2
+    },
+    {
+      "id": "bronze_spear",
+      "code": null,
+      "sim": null,
+      "asset": "bronze_spear",
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "bronze_dagger",
+      "code": null,
+      "sim": null,
+      "asset": "bronze_dagger",
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "honey",
+      "code": null,
+      "sim": null,
+      "asset": "honey",
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "beeswax",
+      "code": null,
+      "sim": null,
+      "assets": [
+        "beeswax",
+        "beeswax_count_2_8",
+        "beeswax_count_9_plus"
+      ],
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 2
+    },
+    {
+      "id": "wool_yarn",
+      "code": null,
+      "sim": null,
+      "assets": [
+        "wool_yarn",
+        "wool_yarn_count_2_8",
+        "wool_yarn_count_9_plus"
+      ],
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "wool_tunic",
+      "code": null,
+      "sim": null,
+      "asset": "wool_tunic",
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 2
+    },
+    {
+      "id": "wheel",
+      "code": null,
+      "sim": null,
+      "asset": "wheel",
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "seal",
+      "code": null,
+      "sim": null,
+      "asset": "seal",
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "tablet",
+      "code": null,
+      "sim": null,
+      "asset": "tablet",
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "glass_bead",
+      "code": null,
+      "sim": null,
+      "assets": [
+        "glass_bead",
+        "glass_bead_count_2_8",
+        "glass_bead_count_9_plus"
+      ],
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "C2 GOAL §3.3",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "butter",
+      "code": null,
+      "sim": null,
+      "assets": [
+        "butter",
+        "butter_count_2_8",
+        "butter_count_9_plus"
+      ],
+      "era": "neolithic",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "ART-BATCH brief A3 explicit list",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "salt",
+      "code": null,
+      "sim": null,
+      "assets": [
+        "salt",
+        "salt_count_2_8",
+        "salt_count_9_plus"
+      ],
+      "era": "neolithic",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "ART-BATCH brief A3 explicit list",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "fermented_milk",
+      "code": null,
+      "sim": null,
+      "asset": "fermented_milk",
+      "era": "neolithic",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2 explicit unlocks/list",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "fermented_vegetables",
+      "code": null,
+      "sim": null,
+      "asset": "fermented_vegetables",
+      "era": "neolithic",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2 explicit unlocks/list",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "tally_stick",
+      "code": null,
+      "sim": null,
+      "asset": "tally_stick",
+      "era": "neolithic",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2 explicit unlocks/list",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "dugout_canoe",
+      "code": null,
+      "sim": null,
+      "asset": "dugout_canoe",
+      "era": "neolithic",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.2 explicit unlocks/list",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "atlatl",
+      "code": null,
+      "sim": null,
+      "asset": "atlatl",
+      "era": "paleolithic",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.1 explicit unlocks/list",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "bone_awl",
+      "code": null,
+      "sim": null,
+      "asset": "bone_awl",
+      "era": "paleolithic",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.1 explicit unlocks/list",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "iron_ore",
+      "code": null,
+      "sim": null,
+      "assets": [
+        "iron_ore",
+        "iron_ore_count_2_8",
+        "iron_ore_count_9_plus"
+      ],
+      "era": "iron",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.3 three ores + §4.4 iron chain",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "iron_bloom",
+      "code": null,
+      "sim": null,
+      "assets": [
+        "iron_bloom",
+        "iron_bloom_count_2_8",
+        "iron_bloom_count_9_plus"
+      ],
+      "era": "iron",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 + ART-BATCH brief explicit list",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "iron_ingot",
+      "code": null,
+      "sim": null,
+      "assets": [
+        "iron_ingot",
+        "iron_ingot_count_2_8",
+        "iron_ingot_count_9_plus"
+      ],
+      "era": "iron",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 + ART-BATCH brief explicit list",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "iron_axe",
+      "code": null,
+      "sim": null,
+      "asset": "iron_axe",
+      "era": "iron",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 explicit named unlocks/list",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "iron_hoe",
+      "code": null,
+      "sim": null,
+      "asset": "iron_hoe",
+      "era": "iron",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 explicit named unlocks/list",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 2
+    },
+    {
+      "id": "iron_sickle",
+      "code": null,
+      "sim": null,
+      "asset": "iron_sickle",
+      "era": "iron",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 explicit named unlocks/list",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "iron_saw",
+      "code": null,
+      "sim": null,
+      "asset": "iron_saw",
+      "era": "iron",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 explicit named unlocks/list",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "iron_spear",
+      "code": null,
+      "sim": null,
+      "asset": "iron_spear",
+      "era": "iron",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 explicit named unlocks/list",
+      "art_status": "DEFERRED_REJECTED_NO_REPLACEMENT",
+      "selected_attempt": null
+    },
+    {
+      "id": "iron_sword",
+      "code": null,
+      "sim": null,
+      "asset": "iron_sword",
+      "era": "iron",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 explicit named unlocks/list",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "iron_helmet",
+      "code": null,
+      "sim": null,
+      "asset": "iron_helmet",
+      "era": "iron",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 explicit named unlocks/list",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "steel_edge",
+      "code": null,
+      "sim": null,
+      "asset": "steel_edge",
+      "era": "iron",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 explicit named unlocks/list",
+      "art_status": "DEFERRED_REJECTED_NO_REPLACEMENT",
+      "selected_attempt": null
+    },
+    {
+      "id": "coin",
+      "code": null,
+      "sim": null,
+      "assets": [
+        "coin",
+        "coin_count_2_8",
+        "coin_count_9_plus"
+      ],
+      "era": "iron",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 explicit named unlocks/list",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "record_book",
+      "code": null,
+      "sim": null,
+      "asset": "record_book",
+      "era": "iron",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 explicit named unlocks/list",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "composite_bow",
+      "code": null,
+      "sim": null,
+      "asset": "composite_bow",
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.3 explicit named objects/unlocks",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "cart",
+      "code": null,
+      "sim": null,
+      "asset": "cart",
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.3 explicit named objects/unlocks",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "plough",
+      "code": null,
+      "sim": null,
+      "asset": "plough",
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.3 explicit named objects/unlocks",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "reed_boat",
+      "code": null,
+      "sim": null,
+      "asset": "reed_boat",
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.3 explicit named objects/unlocks",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "sail",
+      "code": null,
+      "sim": null,
+      "asset": "sail",
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.3 explicit named objects/unlocks",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "wine",
+      "code": null,
+      "sim": null,
+      "asset": "wine",
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.3 explicit named objects/unlocks",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "olive_oil",
+      "code": null,
+      "sim": null,
+      "asset": "olive_oil",
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.3 explicit named objects/unlocks",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "faience",
+      "code": null,
+      "sim": null,
+      "asset": "faience",
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.3 explicit named objects/unlocks",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "drum",
+      "code": null,
+      "sim": null,
+      "asset": "drum",
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.3 explicit named objects/unlocks",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "flute",
+      "code": null,
+      "sim": null,
+      "asset": "flute",
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.3 explicit named objects/unlocks",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "ritual_mask",
+      "code": null,
+      "sim": null,
+      "asset": "ritual_mask",
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.3 explicit named objects/unlocks",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "grape",
+      "code": null,
+      "sim": null,
+      "assets": [
+        "grape",
+        "grape_count_2_8",
+        "grape_count_9_plus"
+      ],
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.5 crops",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "olive",
+      "code": null,
+      "sim": null,
+      "assets": [
+        "olive",
+        "olive_count_2_8",
+        "olive_count_9_plus"
+      ],
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.5 crops",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "hemp",
+      "code": null,
+      "sim": null,
+      "assets": [
+        "hemp",
+        "hemp_count_2_8",
+        "hemp_count_9_plus"
+      ],
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.5 crops",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "oats",
+      "code": null,
+      "sim": null,
+      "assets": [
+        "oats",
+        "oats_count_2_8",
+        "oats_count_9_plus"
+      ],
+      "era": "neolithic",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.5 crop table",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "iron_plough",
+      "code": null,
+      "sim": null,
+      "asset": "iron_plough",
+      "era": "iron",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 explicit named objects/unlocks",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 3
+    },
+    {
+      "id": "silk",
+      "code": null,
+      "sim": null,
+      "assets": [
+        "silk",
+        "silk_count_2_8",
+        "silk_count_9_plus"
+      ],
+      "era": "iron",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 explicit named objects/unlocks",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "purple_cloth",
+      "code": null,
+      "sim": null,
+      "assets": [
+        "purple_cloth",
+        "purple_cloth_count_2_8",
+        "purple_cloth_count_9_plus"
+      ],
+      "era": "iron",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 explicit named objects/unlocks",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "map",
+      "code": null,
+      "sim": null,
+      "asset": "map",
+      "era": "iron",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": false,
+      "source": "Bible §4.4 explicit named objects/unlocks",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "bronze_sword",
+      "code": null,
+      "sim": null,
+      "asset": "bronze_sword",
+      "era": "bronze",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": true,
+      "source": "Bible §4.3 says three bronze weapons but explicitly names only spear/dagger; sword is proposed third",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 2
+    },
+    {
+      "id": "iron_pickaxe",
+      "code": null,
+      "sim": null,
+      "asset": "iron_pickaxe",
+      "era": "iron",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": true,
+      "source": "Bible §4.4 says six tools/four weapons; proposed completion of unnamed two tools/one weapon",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "iron_chisel",
+      "code": null,
+      "sim": null,
+      "asset": "iron_chisel",
+      "era": "iron",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": true,
+      "source": "Bible §4.4 says six tools/four weapons; proposed completion of unnamed two tools/one weapon",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "iron_shield",
+      "code": null,
+      "sim": null,
+      "asset": "iron_shield",
+      "era": "iron",
+      "status": "PENDING_VERIFIED_SIM_IDENTITY",
+      "inferred_completion_candidate": true,
+      "source": "Bible §4.4 says six tools/four weapons; proposed completion of unnamed two tools/one weapon",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    }
+  ],
+  "empty_states": [
+    {
+      "id": "honey_empty",
+      "code": null,
+      "sim": null,
+      "asset": "honey_empty",
+      "parent_id": "honey",
+      "parent_sim_identity": null,
+      "status": "PENDING_CONTAINER_STATE_BINDING",
+      "reason": "Current stack_look chooses item code/count only; no empty-state selector. Do not assign the parent code to a second row.",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "beer_empty",
+      "code": null,
+      "sim": null,
+      "asset": "beer_empty",
+      "parent_id": "beer",
+      "parent_sim_identity": {
+        "code": 45,
+        "sim": "Beer"
+      },
+      "status": "PENDING_CONTAINER_STATE_BINDING",
+      "reason": "Current stack_look chooses item code/count only; no empty-state selector. Do not assign the parent code to a second row.",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "milk_empty",
+      "code": null,
+      "sim": null,
+      "asset": "milk_empty",
+      "parent_id": "milk",
+      "parent_sim_identity": {
+        "code": 46,
+        "sim": "Milk"
+      },
+      "status": "PENDING_CONTAINER_STATE_BINDING",
+      "reason": "Current stack_look chooses item code/count only; no empty-state selector. Do not assign the parent code to a second row.",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "fermented_milk_empty",
+      "code": null,
+      "sim": null,
+      "asset": "fermented_milk_empty",
+      "parent_id": "fermented_milk",
+      "parent_sim_identity": null,
+      "status": "PENDING_CONTAINER_STATE_BINDING",
+      "reason": "Current stack_look chooses item code/count only; no empty-state selector. Do not assign the parent code to a second row.",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "fermented_vegetables_empty",
+      "code": null,
+      "sim": null,
+      "asset": "fermented_vegetables_empty",
+      "parent_id": "fermented_vegetables",
+      "parent_sim_identity": null,
+      "status": "PENDING_CONTAINER_STATE_BINDING",
+      "reason": "Current stack_look chooses item code/count only; no empty-state selector. Do not assign the parent code to a second row.",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "wine_empty",
+      "code": null,
+      "sim": null,
+      "asset": "wine_empty",
+      "parent_id": "wine",
+      "parent_sim_identity": null,
+      "status": "PENDING_CONTAINER_STATE_BINDING",
+      "reason": "Current stack_look chooses item code/count only; no empty-state selector. Do not assign the parent code to a second row.",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    },
+    {
+      "id": "olive_oil_empty",
+      "code": null,
+      "sim": null,
+      "asset": "olive_oil_empty",
+      "parent_id": "olive_oil",
+      "parent_sim_identity": null,
+      "status": "PENDING_CONTAINER_STATE_BINDING",
+      "reason": "Current stack_look chooses item code/count only; no empty-state selector. Do not assign the parent code to a second row.",
+      "art_status": "ADOPTED_AT_PINNED_ASSET_COMMIT_NOT_IMPORTED",
+      "selected_attempt": 1
+    }
+  ],
+  "art_source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+}
