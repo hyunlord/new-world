@@ -1,8 +1,8 @@
 {
   "status": "DRAFT_NOT_APPLIED",
   "source_branch": "v8/art-batch-a4",
-  "source_commit": null,
-  "pinning_instruction": "Use the final remote-verified SHA in A4/REPORT.md.",
+  "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3",
+  "pinning_instruction": "Use this immutable source commit for all files and the matching metadata manifest; the branch head may include later handoff documentation.",
   "managed_dirs_to_add": [
     "ui"
   ],
@@ -1106,5 +1106,6 @@
     "Resolve legacy chapter6 versus planned first_copper by semantic ID.",
     "Implement state treatments from art/techmap/state_variants.json.",
     "Run importer and real-game visual checks in C2/C3."
-  ]
+  ],
+  "source_repository": "https://github.com/hyunlord/new-world"
 }

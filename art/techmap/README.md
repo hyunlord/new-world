@@ -6,7 +6,7 @@ The completed family contains 167 knowledge icons, four era banners and ten chap
 - [catalogue.json](catalogue.json): 167 concrete knowledge IDs, four eras and ten chapter illustrations including legacy `neolithic_village`.
 - [coverage.json](coverage.json): complete 167-node, four-era and ten-chapter coverage.
 - [manifest.json](manifest.json): selected images, prompts, raw/generated provenance, normalization and independent review evidence.
-- [art_import.draft.json](art_import.draft.json), [bindings.draft.json](bindings.draft.json): unapplied rows. Pin the final remote-verified art SHA before importing.
+- [art_import.draft.json](art_import.draft.json), [bindings.draft.json](bindings.draft.json): unapplied rows pinned to the immutable all-assets commit. Preserve `source_commit` when importing; the branch head can contain later handoff documentation.
 - Icon sheets: [bronze](../boards/techmap/bronze_icons.png), [neolithic](../boards/techmap/neolithic_icons.png), [iron](../boards/techmap/iron_icons.png), [paleolithic](../boards/techmap/paleolithic_icons.png).
 - [state_variants.json](state_variants.json): stable/endangered/unknown/inert UI treatments over canonical icons.
 - [ADR.md](ADR.md): decisions and integration boundaries.
