@@ -1,5 +1,10 @@
 # Changelog
 
+## ART-IMPORT — review branch, 2026-11-11 (not gated)
+
+### Added
+- Data-only import of round-1/B3 art bound to codes already on v8/main: goat, wild sheep, wild boar frames (A1) and B3's speckle-fixed reindeer; 115 A3 item icons with count buckets (37 items); A2 bread oven lit/unlit for ClayOven 16. Pen livestock draw their species' still frame from bindings, else the placeholder. Bronze/iron, cattle, tech-map/chapter art and stage sprites stay deferred (see the art-import inventory).
+
 ## C1-b — implemented, verification IN_PROGRESS, 2026-11-10 (not published)
 
 ### Added

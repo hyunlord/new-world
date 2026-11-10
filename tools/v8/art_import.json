@@ -636,12 +636,950 @@
       "id": "berry_basket",
       "source": "art/style05/polish/items/berry_basket_try1.png",
       "dest": "items/berry_basket.png"
+    },
+    {
+      "role": "item",
+      "id": "wool",
+      "source": "art/style05/batch_a3/items/wool.png",
+      "dest": "items/wool.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "wool_count_2_8",
+      "source": "art/style05/batch_a3/items/wool_count_2_8.png",
+      "dest": "items/wool_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "wool_count_9_plus",
+      "source": "art/style05/batch_a3/items/wool_count_9_plus.png",
+      "dest": "items/wool_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "flour",
+      "source": "art/style05/batch_a3/items/flour.png",
+      "dest": "items/flour.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "flour_count_2_8",
+      "source": "art/style05/batch_a3/items/flour_count_2_8.png",
+      "dest": "items/flour_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "flour_count_9_plus",
+      "source": "art/style05/batch_a3/items/flour_count_9_plus.png",
+      "dest": "items/flour_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "bread",
+      "source": "art/style05/batch_a3/items/bread.png",
+      "dest": "items/bread.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "bread_count_2_8",
+      "source": "art/style05/batch_a3/items/bread_count_2_8.png",
+      "dest": "items/bread_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "bread_count_9_plus",
+      "source": "art/style05/batch_a3/items/bread_count_9_plus.png",
+      "dest": "items/bread_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "beer",
+      "source": "art/style05/batch_a3/items/beer.png",
+      "dest": "items/beer.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "milk_item",
+      "source": "art/style05/batch_a3/items/milk.png",
+      "dest": "items/milk.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "cheese",
+      "source": "art/style05/batch_a3/items/cheese.png",
+      "dest": "items/cheese.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "cheese_count_2_8",
+      "source": "art/style05/batch_a3/items/cheese_count_2_8.png",
+      "dest": "items/cheese_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "cheese_count_9_plus",
+      "source": "art/style05/batch_a3/items/cheese_count_9_plus.png",
+      "dest": "items/cheese_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "smoked_meat",
+      "source": "art/style05/batch_a3/items/smoked_meat.png",
+      "dest": "items/smoked_meat.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "smoked_meat_count_2_8",
+      "source": "art/style05/batch_a3/items/smoked_meat_count_2_8.png",
+      "dest": "items/smoked_meat_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "smoked_meat_count_9_plus",
+      "source": "art/style05/batch_a3/items/smoked_meat_count_9_plus.png",
+      "dest": "items/smoked_meat_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "hoe",
+      "source": "art/style05/batch_a3/items/hoe.png",
+      "dest": "items/hoe.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "sickle",
+      "source": "art/style05/batch_a3/items/sickle.png",
+      "dest": "items/sickle.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "adze",
+      "source": "art/style05/batch_a3/items/adze.png",
+      "dest": "items/adze.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "bow",
+      "source": "art/style05/batch_a3/items/bow.png",
+      "dest": "items/bow.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "arrow",
+      "source": "art/style05/batch_a3/items/arrow.png",
+      "dest": "items/arrow.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "leather_armor",
+      "source": "art/style05/batch_a3/items/leather_armor.png",
+      "dest": "items/leather_armor.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "herbs",
+      "source": "art/style05/batch_a3/items/herbs.png",
+      "dest": "items/herbs.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "herbs_count_2_8",
+      "source": "art/style05/batch_a3/items/herbs_count_2_8.png",
+      "dest": "items/herbs_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "herbs_count_9_plus",
+      "source": "art/style05/batch_a3/items/herbs_count_9_plus.png",
+      "dest": "items/herbs_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "poultice",
+      "source": "art/style05/batch_a3/items/poultice.png",
+      "dest": "items/poultice.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "barley",
+      "source": "art/style05/batch_a3/items/barley.png",
+      "dest": "items/barley.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "barley_count_2_8",
+      "source": "art/style05/batch_a3/items/barley_count_2_8.png",
+      "dest": "items/barley_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "barley_count_9_plus",
+      "source": "art/style05/batch_a3/items/barley_count_9_plus.png",
+      "dest": "items/barley_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "barley_seed",
+      "source": "art/style05/batch_a3/items/barley_seed.png",
+      "dest": "items/barley_seed.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "barley_seed_count_2_8",
+      "source": "art/style05/batch_a3/items/barley_seed_count_2_8.png",
+      "dest": "items/barley_seed_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "barley_seed_count_9_plus",
+      "source": "art/style05/batch_a3/items/barley_seed_count_9_plus.png",
+      "dest": "items/barley_seed_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "rye",
+      "source": "art/style05/batch_a3/items/rye.png",
+      "dest": "items/rye.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "rye_count_2_8",
+      "source": "art/style05/batch_a3/items/rye_count_2_8.png",
+      "dest": "items/rye_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "rye_count_9_plus",
+      "source": "art/style05/batch_a3/items/rye_count_9_plus.png",
+      "dest": "items/rye_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "rye_seed",
+      "source": "art/style05/batch_a3/items/rye_seed.png",
+      "dest": "items/rye_seed.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "rye_seed_count_2_8",
+      "source": "art/style05/batch_a3/items/rye_seed_count_2_8.png",
+      "dest": "items/rye_seed_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "rye_seed_count_9_plus",
+      "source": "art/style05/batch_a3/items/rye_seed_count_9_plus.png",
+      "dest": "items/rye_seed_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "lentil",
+      "source": "art/style05/batch_a3/items/lentil.png",
+      "dest": "items/lentil.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "lentil_count_2_8",
+      "source": "art/style05/batch_a3/items/lentil_count_2_8.png",
+      "dest": "items/lentil_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "lentil_count_9_plus",
+      "source": "art/style05/batch_a3/items/lentil_count_9_plus.png",
+      "dest": "items/lentil_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "lentil_seed",
+      "source": "art/style05/batch_a3/items/lentil_seed.png",
+      "dest": "items/lentil_seed.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "lentil_seed_count_2_8",
+      "source": "art/style05/batch_a3/items/lentil_seed_count_2_8.png",
+      "dest": "items/lentil_seed_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "lentil_seed_count_9_plus",
+      "source": "art/style05/batch_a3/items/lentil_seed_count_9_plus.png",
+      "dest": "items/lentil_seed_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "pea",
+      "source": "art/style05/batch_a3/items/pea.png",
+      "dest": "items/pea.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "pea_count_2_8",
+      "source": "art/style05/batch_a3/items/pea_count_2_8.png",
+      "dest": "items/pea_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "pea_count_9_plus",
+      "source": "art/style05/batch_a3/items/pea_count_9_plus.png",
+      "dest": "items/pea_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "pea_seed",
+      "source": "art/style05/batch_a3/items/pea_seed.png",
+      "dest": "items/pea_seed.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "pea_seed_count_2_8",
+      "source": "art/style05/batch_a3/items/pea_seed_count_2_8.png",
+      "dest": "items/pea_seed_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "pea_seed_count_9_plus",
+      "source": "art/style05/batch_a3/items/pea_seed_count_9_plus.png",
+      "dest": "items/pea_seed_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "millet",
+      "source": "art/style05/batch_a3/items/millet.png",
+      "dest": "items/millet.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "millet_count_2_8",
+      "source": "art/style05/batch_a3/items/millet_count_2_8.png",
+      "dest": "items/millet_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "millet_count_9_plus",
+      "source": "art/style05/batch_a3/items/millet_count_9_plus.png",
+      "dest": "items/millet_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "millet_seed",
+      "source": "art/style05/batch_a3/items/millet_seed.png",
+      "dest": "items/millet_seed.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "millet_seed_count_2_8",
+      "source": "art/style05/batch_a3/items/millet_seed_count_2_8.png",
+      "dest": "items/millet_seed_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "millet_seed_count_9_plus",
+      "source": "art/style05/batch_a3/items/millet_seed_count_9_plus.png",
+      "dest": "items/millet_seed_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "apple",
+      "source": "art/style05/batch_a3/items/apple.png",
+      "dest": "items/apple.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "apple_count_2_8",
+      "source": "art/style05/batch_a3/items/apple_count_2_8.png",
+      "dest": "items/apple_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "apple_count_9_plus",
+      "source": "art/style05/batch_a3/items/apple_count_9_plus.png",
+      "dest": "items/apple_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "hay",
+      "source": "art/style05/batch_a3/items/hay.png",
+      "dest": "items/hay.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "hay_count_2_8",
+      "source": "art/style05/batch_a3/items/hay_count_2_8.png",
+      "dest": "items/hay_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "hay_count_9_plus",
+      "source": "art/style05/batch_a3/items/hay_count_9_plus.png",
+      "dest": "items/hay_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "goat_hide",
+      "source": "art/style05/batch_a3/items/goat_hide.png",
+      "dest": "items/goat_hide.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "wild_grain",
+      "source": "art/style05/batch_a3/items/wild_grain.png",
+      "dest": "items/wild_grain.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "wild_grain_count_2_8",
+      "source": "art/style05/batch_a3/items/wild_grain_count_2_8.png",
+      "dest": "items/wild_grain_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "wild_grain_count_9_plus",
+      "source": "art/style05/batch_a3/items/wild_grain_count_9_plus.png",
+      "dest": "items/wild_grain_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "emmer_seed",
+      "source": "art/style05/batch_a3/items/emmer_seed.png",
+      "dest": "items/emmer_seed.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "emmer_seed_count_2_8",
+      "source": "art/style05/batch_a3/items/emmer_seed_count_2_8.png",
+      "dest": "items/emmer_seed_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "emmer_seed_count_9_plus",
+      "source": "art/style05/batch_a3/items/emmer_seed_count_9_plus.png",
+      "dest": "items/emmer_seed_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "flax_seed",
+      "source": "art/style05/batch_a3/items/flax_seed.png",
+      "dest": "items/flax_seed.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "flax_seed_count_2_8",
+      "source": "art/style05/batch_a3/items/flax_seed_count_2_8.png",
+      "dest": "items/flax_seed_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "flax_seed_count_9_plus",
+      "source": "art/style05/batch_a3/items/flax_seed_count_9_plus.png",
+      "dest": "items/flax_seed_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "flax_stalks",
+      "source": "art/style05/batch_a3/items/flax_stalks.png",
+      "dest": "items/flax_stalks.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "flax_stalks_count_2_8",
+      "source": "art/style05/batch_a3/items/flax_stalks_count_2_8.png",
+      "dest": "items/flax_stalks_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "flax_stalks_count_9_plus",
+      "source": "art/style05/batch_a3/items/flax_stalks_count_9_plus.png",
+      "dest": "items/flax_stalks_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "flax_fibre",
+      "source": "art/style05/batch_a3/items/flax_fibre.png",
+      "dest": "items/flax_fibre.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "flax_fibre_count_2_8",
+      "source": "art/style05/batch_a3/items/flax_fibre_count_2_8.png",
+      "dest": "items/flax_fibre_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "flax_fibre_count_9_plus",
+      "source": "art/style05/batch_a3/items/flax_fibre_count_9_plus.png",
+      "dest": "items/flax_fibre_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "linen_thread",
+      "source": "art/style05/batch_a3/items/linen_thread.png",
+      "dest": "items/linen_thread.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "linen_thread_count_2_8",
+      "source": "art/style05/batch_a3/items/linen_thread_count_2_8.png",
+      "dest": "items/linen_thread_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "linen_thread_count_9_plus",
+      "source": "art/style05/batch_a3/items/linen_thread_count_9_plus.png",
+      "dest": "items/linen_thread_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "linen_cloth",
+      "source": "art/style05/batch_a3/items/linen_cloth.png",
+      "dest": "items/linen_cloth.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "linen_cloth_count_2_8",
+      "source": "art/style05/batch_a3/items/linen_cloth_count_2_8.png",
+      "dest": "items/linen_cloth_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "linen_cloth_count_9_plus",
+      "source": "art/style05/batch_a3/items/linen_cloth_count_9_plus.png",
+      "dest": "items/linen_cloth_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "hand_spindle",
+      "source": "art/style05/batch_a3/items/hand_spindle.png",
+      "dest": "items/hand_spindle.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "linen_tunic",
+      "source": "art/style05/batch_a3/items/linen_tunic.png",
+      "dest": "items/linen_tunic.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "linen_wrap",
+      "source": "art/style05/batch_a3/items/linen_wrap.png",
+      "dest": "items/linen_wrap.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "dyed_tunic",
+      "source": "art/style05/batch_a3/items/dyed_tunic.png",
+      "dest": "items/dyed_tunic.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "cord",
+      "source": "art/style05/batch_a3/items/cord.png",
+      "dest": "items/cord.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "basket",
+      "source": "art/style05/batch_a3/items/basket.png",
+      "dest": "items/basket.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "sling",
+      "source": "art/style05/batch_a3/items/sling.png",
+      "dest": "items/sling.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "bone_needle",
+      "source": "art/style05/batch_a3/items/bone_needle.png",
+      "dest": "items/bone_needle.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "fish",
+      "source": "art/style05/batch_a3/items/fish.png",
+      "dest": "items/fish.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "fish_count_2_8",
+      "source": "art/style05/batch_a3/items/fish_count_2_8.png",
+      "dest": "items/fish_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "fish_count_9_plus",
+      "source": "art/style05/batch_a3/items/fish_count_9_plus.png",
+      "dest": "items/fish_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "hazelnuts",
+      "source": "art/style05/batch_a3/items/hazelnuts.png",
+      "dest": "items/hazelnuts.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "hazelnuts_count_2_8",
+      "source": "art/style05/batch_a3/items/hazelnuts_count_2_8.png",
+      "dest": "items/hazelnuts_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "hazelnuts_count_9_plus",
+      "source": "art/style05/batch_a3/items/hazelnuts_count_9_plus.png",
+      "dest": "items/hazelnuts_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "roots",
+      "source": "art/style05/batch_a3/items/roots.png",
+      "dest": "items/roots.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "roots_count_2_8",
+      "source": "art/style05/batch_a3/items/roots_count_2_8.png",
+      "dest": "items/roots_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "roots_count_9_plus",
+      "source": "art/style05/batch_a3/items/roots_count_9_plus.png",
+      "dest": "items/roots_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "roast_meat",
+      "source": "art/style05/batch_a3/items/roast_meat.png",
+      "dest": "items/roast_meat.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "porridge",
+      "source": "art/style05/batch_a3/items/porridge.png",
+      "dest": "items/porridge.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "stew",
+      "source": "art/style05/batch_a3/items/stew.png",
+      "dest": "items/stew.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "dried_meat",
+      "source": "art/style05/batch_a3/items/dried_meat.png",
+      "dest": "items/dried_meat.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "dried_meat_count_2_8",
+      "source": "art/style05/batch_a3/items/dried_meat_count_2_8.png",
+      "dest": "items/dried_meat_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "dried_meat_count_9_plus",
+      "source": "art/style05/batch_a3/items/dried_meat_count_9_plus.png",
+      "dest": "items/dried_meat_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "dried_berries",
+      "source": "art/style05/batch_a3/items/dried_berries.png",
+      "dest": "items/dried_berries.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "dried_berries_count_2_8",
+      "source": "art/style05/batch_a3/items/dried_berries_count_2_8.png",
+      "dest": "items/dried_berries_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "dried_berries_count_9_plus",
+      "source": "art/style05/batch_a3/items/dried_berries_count_9_plus.png",
+      "dest": "items/dried_berries_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "roasted_roots",
+      "source": "art/style05/batch_a3/items/roasted_roots.png",
+      "dest": "items/roasted_roots.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "roasted_roots_count_2_8",
+      "source": "art/style05/batch_a3/items/roasted_roots_count_2_8.png",
+      "dest": "items/roasted_roots_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "roasted_roots_count_9_plus",
+      "source": "art/style05/batch_a3/items/roasted_roots_count_9_plus.png",
+      "dest": "items/roasted_roots_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "fruit_porridge",
+      "source": "art/style05/batch_a3/items/fruit_porridge.png",
+      "dest": "items/fruit_porridge.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "structure",
+      "id": "bread_oven_lit",
+      "source": "art/style05/struct/a2/neolithic/bread_oven_lit.png",
+      "dest": "structures/a2/neolithic/bread_oven_lit.png",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046"
+    },
+    {
+      "role": "structure",
+      "id": "bread_oven_unlit",
+      "source": "art/style05/struct/a2/neolithic/bread_oven_unlit.png",
+      "dest": "structures/a2/neolithic/bread_oven_unlit.png",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046"
     }
   ],
   "animals": {
     "species": [
       "wolf",
-      "deer"
+      "deer",
+      "goat",
+      "sheep_fleeced",
+      "wild_boar",
+      "reindeer"
     ],
     "facings": [
       "S",
@@ -661,11 +1599,51 @@
         "run",
         "graze",
         "dead"
+      ],
+      "goat": [
+        "stand",
+        "walk",
+        "run",
+        "graze",
+        "attack",
+        "dead"
+      ],
+      "sheep_fleeced": [
+        "stand",
+        "walk",
+        "run",
+        "graze",
+        "attack",
+        "dead"
+      ],
+      "wild_boar": [
+        "stand",
+        "walk",
+        "run",
+        "graze",
+        "attack",
+        "dead"
+      ],
+      "reindeer": [
+        "stand",
+        "walk",
+        "run",
+        "graze",
+        "attack",
+        "dead"
       ]
     },
-    "source": "art/animal/polish/{species}/try2/{facing}/{pose}.png",
+    "source": "art/animal/batch_a1/adopted/{species}/{facing}/{pose}.png",
     "dest": "animals/{species}/{facing}/{pose}.png",
-    "meta_source": "docs/v8/artpolish/animal_manifest.json"
+    "meta_source": "docs/v8/artbatch_a1/animal_manifest.json",
+    "from": "326822482b33edd1ac3bd4acefd0061f557756d6",
+    "species_sources": {
+      "reindeer": {
+        "from": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+        "source": "art/style05/batch_b3/animals/{species}/{facing}/{pose}.png",
+        "meta_source": "art/batch_b3/round3_animals/animal_manifest.json"
+      }
+    }
   },
   "meta_sources": {
     "structure": "docs/v8/artstruct/assets.json",
