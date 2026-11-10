@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "reviewer": "B3 animal_fixes independent bronze board review",
+  "reviewed_at_utc": "2026-11-10T22:56:08.188757+00:00",
+  "verdict": "REVISE_ONE_CANDIDATE",
+  "score": 88,
+  "scope": {
+    "boards": [
+      "art/batch_b3/stages_bronze/boards/bronze_1x.png",
+      "art/batch_b3/stages_bronze/boards/bronze_2x.png"
+    ],
+    "candidate_count": 24,
+    "coverage_status_counts": {
+      "ADOPTED_CANDIDATE": 24,
+      "REUSED": 9,
+      "GAP": 2
+    },
+    "parent_comparison": "Built A2 parent sprites shown in first column; copper_smelter correctly uses its rectangular B3 round3 replacement. Original casting bench also inspected separately at native size."
+  },
+  "blocking_findings": [
+    {
+      "id": "casting_bench_foundation",
+      "kind": "source_ground_span_identity",
+      "detail": "Selected try3 foundation contracts to46px opaque width versus62px built parent and61px half-built/damaged. Four footing positions therefore contract rather than retaining the declared original leg spacing. This is visible at1x as a narrower frame, not just removed tabletop contents.",
+      "requirement_evidence": "plan.json: exact four leg positions; all three saved foundation generation prompts specify62px width and14px height. self_review.json already identifies foundation width shrinkage.",
+      "measurements": {
+        "built": {
+          "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/bronze/casting_bench_empty.png",
+          "sha256": "21b6d3c83c4b04a99a256a3f65d5737f18c778a9146a83a0fa0a8b2006593fd8",
+          "opaque_bbox_alpha128": [
+            4,
+            4,
+            66,
+            40
+          ],
+          "width": 62,
+          "height": 36
+        },
+        "foundation": {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_bronze/casting_bench_foundation.png",
+          "sha256": "af7c5cba9cea842546515c3c719b301551727229ef4f7713400b8eb56414260a",
+          "opaque_bbox_alpha128": [
+            4,
+            4,
+            50,
+            18
+          ],
+          "width": 46,
+          "height": 14
+        }
+      },
+      "width_ratio": 0.7419354838709677,
+      "recommended_disposition": "Re-evaluate geometry acceptance. If the exact original ground span remains required, withhold this candidate as a capped gap; the selected attempt is already3. Do not stretch the sprite or relax the fixed target to manufacture a pass."
+    }
+  ],
+  "family_visual_checks": [
+    {
+      "family": "charcoal_clamp",
+      "result": "pass",
+      "detail": "Timber base, half-covered construction, small shell breach and collapsed blackened remains are distinct. Warm broken ink and upper-left wash light retain the built mound identity. Base width is somewhat smaller than full mound but its circular construction identity is coherent."
+    },
+    {
+      "family": "copper_smelter",
+      "result": "pass_with_existing_gap",
+      "detail": "Foundation and half-built shapes retain the new rectangular furnace and firing arch. Damaged upper edge/right-wall split is small but visible at1x. No return to clay-pot silhouette. Ruin correctly withheld."
+    },
+    {
+      "family": "casting_bench",
+      "result": "revise_foundation_only",
+      "detail": "Half tabletop/open right gap is clear; damage retains tools and splintered/sagging right end; collapsed planks read as ruins. Foundation width is the finding above."
+    },
+    {
+      "family": "bee_skep",
+      "result": "pass",
+      "detail": "Flat initial coil, open half-height straw basket, torn dark side opening and collapsed coils distinguish the stages. Small-scale woven marks stay controlled."
+    },
+    {
+      "family": "shrine",
+      "result": "pass",
+      "detail": "Low sockets versus tall menhir/tilted unbroken slab versus collapsed broken stones are distinct. Half-built could imply a displaced slab in isolation, but its no-bowls/no-cracks appearance and predeclared construction design support the intended state."
+    },
+    {
+      "family": "palisade",
+      "result": "pass",
+      "detail": "Low stumps, erected left half, inherited jagged breach and fallen timbers read at1x. Common vertical timber marks and light direction remain coherent."
+    },
+    {
+      "family": "palisade_gate",
+      "result": "pass_with_existing_gap",
+      "detail": "Low sill, empty tall frame and snapped leaf with transparent opening clearly separate foundation/construction/damage. Ruin correctly withheld."
+    }
+  ],
+  "style_and_light": "No additional gate-worthy ink-density, all-over speckle, material, projection or light-direction issue found on the board. This is a visual assessment, not a rerun of numeric gates.",
+  "known_gaps": [
+    "copper_smelter_ruined",
+    "palisade_gate_ruined"
+  ],
+  "board_sha256": {
+    "1x": "f17d1b64b1fb15115e7c69008fe85c11b1553b61833521aa227a746917830f43",
+    "2x": "0d94b20e75ca9c6aab18a518be24db4cd1cf3093af04859291379d58b9b43ef1"
+  },
+  "limits": [
+    "Numeric checks and provenance checks were not rerun.",
+    "No runtime import or lifecycle binding verified.",
+    "Adult reference is presentation context and was not treated as an asset defect.",
+    "No generation, image editing or repository edits performed; only this external review JSON was written."
+  ]
+}

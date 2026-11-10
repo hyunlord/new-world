@@ -1,0 +1,159 @@
+{
+  "record": {
+    "id": "shrine_ruined",
+    "lane": "stages_bronze",
+    "era": "bronze",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c798-db13-7ea2-ac75-d0b60491c959/exec-f911ec86-5c6f-4703-8d1e-0877cd4c3b73.png",
+    "prompt": "WorldSim style05 ink-and-tone bronze-age game sprite. Image1 is the exact built parent to preserve identity; images2 and3 are LOCKED STYLE ONLY anchors. Fine controlled brown-black pen ink over restrained natural earth-colour wash, outer/internal stroke ratio2:1. Material marks: wood3 broken longitudinal grain lines per principal plank; stone/clay3 short fracture groups per dominant mass; straw5 weave bands per major surface. Sparse single group of3 parallel / hatches, no dense crosshatching. Natural slight pigment variation with broad upper-left light and lower-right shade. Front three-quarter about20degrees down, front faces prominent; no isometric diamond, horizon or perspective ground. Keep original material colours, construction proportions, orientation and ground footprint. Generate ONE state only on true transparent RGBA, all outside pixels transparent. No ground patch, cast shadow, halo, scenery, text, borders, people, modern fittings, iron or dyed fabric. Do not copy reference backgrounds. Preserve empty margins on all sides. STATE: The shrine is ruined: menhir broken into two large sections lying behind, altar slab broken into two on the two low footings, only two small pottery shards. All ruins within original shrine width. No tall upright menhir. At game size visible body is 105px wide and 30px high. Preserve width and viewpoint of image1.",
+    "subject": "The shrine is ruined: menhir broken into two large sections lying behind, altar slab broken into two on the two low footings, only two small pottery shards. All ruins within original shrine width. No tall upright menhir.",
+    "references": [
+      "/Users/rexxa/work/art-batch/A2/bronze/raw/shrine_intact_try2.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png"
+    ],
+    "target_height": 30,
+    "projection_family": "shrine_ruined",
+    "height_band": [
+      28,
+      32
+    ],
+    "height_band_reason": "Predeclared B3 stage silhouette in plan.json; same footprint and width target.",
+    "footprint": [
+      3.0,
+      2.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-10T22:42:02.108Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/B3/stages_bronze/stages_bronze/raw/shrine_ruined_try1.png",
+  "raw_sha256": "e862158d8cfa4cef7037514911cccc23b5341d4268bc6483ab106abb2707352d",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A2/bronze/raw/shrine_intact_try2.png",
+      "sha256": "5a0bea56e5a31847d515d75feed5c05e01ead7aa9c42498633a0f061c34a9158"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/B3/stages_bronze/stages_bronze/normalized/shrine_ruined_try1.png",
+  "normalized_sha256": "8cd3c1513c2bc1c94557bc58e643f2fcee70eb3dabf45002922c7f9e5445a107",
+  "size": [
+    74,
+    38
+  ],
+  "anchor": [
+    37,
+    33
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (373, 64, 1758, 693)",
+    "uniform Lanczos scale: 0.048",
+    "transparent 4px padding; source-canvas anchor: (37, 33)"
+  ],
+  "projection": {
+    "family": "shrine_ruined",
+    "anchor": [
+      37,
+      33
+    ],
+    "height_band": [
+      28,
+      32
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1276,
+    "base_row": 33,
+    "base_error": 0,
+    "height": 30,
+    "gradient_x": -1.6128800653594775,
+    "gradient_y": -2.380176372712146,
+    "light_angle_degrees": 235.87723615138216,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/B3/stages_bronze/stages_bronze/raw/shrine_ruined_try1.png",
+    "sha256": "e862158d8cfa4cef7037514911cccc23b5341d4268bc6483ab106abb2707352d",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.20619718309859156,
+      "saturation_q25": 0.30239373343323855,
+      "saturation_q75": 0.3474281605724916,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.013202453573593608,
+      "foreground_pixels": 19247
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    37,
+    0,
+    2140,
+    696
+  ],
+  "raw_opaque_bbox": [
+    375,
+    66,
+    1756,
+    691
+  ],
+  "raw_faint_far_ratio": 0.0010851824842865575,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_CANDIDATE",
+  "failures": [],
+  "review": {
+    "score": 91,
+    "verdict": "pass",
+    "category_match": true,
+    "differences": [
+      "Two ruined states withheld because wash_flatness failed frozen gates in all3attempts.",
+      "Follow-up independent score88 rejected casting foundation: fourlegspan46px vs62pxbuilt; candidate pruned at cap."
+    ],
+    "suggestions": [
+      "Keep capped rejects out of the import draft; importer must retain explicit gaps.",
+      "See review_independent88.json and final_disposition.json; no further generation."
+    ],
+    "reasoning": "Root independently inspected the native1x board: charcoal woven halfshell, low foundations, casting unfinished frame, empty gatehalf and broken gatepanel are readable. Damage remains distinct while A2 identity is retained."
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "family": "shrine",
+  "state": "ruined",
+  "target_width": 105,
+  "independent_followup_review": "art/batch_b3/stages_bronze/review_independent88.json",
+  "final_disposition": "art/batch_b3/stages_bronze/final_disposition.json"
+}

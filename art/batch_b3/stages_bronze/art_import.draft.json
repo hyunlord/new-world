@@ -1,0 +1,148 @@
+{
+  "source_commit": "PENDING_ROOT_ASSET_COMMIT",
+  "files": [
+    {
+      "role": "structure",
+      "id": "charcoal_clamp_foundation",
+      "source": "art/style05/struct/b3/stages_bronze/charcoal_clamp_foundation.png",
+      "dest": "structures/b3/stages_bronze/charcoal_clamp_foundation.png"
+    },
+    {
+      "role": "structure",
+      "id": "charcoal_clamp_half_built",
+      "source": "art/style05/struct/b3/stages_bronze/charcoal_clamp_half_built.png",
+      "dest": "structures/b3/stages_bronze/charcoal_clamp_half_built.png"
+    },
+    {
+      "role": "structure",
+      "id": "charcoal_clamp_damaged",
+      "source": "art/style05/struct/b3/stages_bronze/charcoal_clamp_damaged.png",
+      "dest": "structures/b3/stages_bronze/charcoal_clamp_damaged.png"
+    },
+    {
+      "role": "structure",
+      "id": "charcoal_clamp_ruined",
+      "source": "art/style05/struct/b3/stages_bronze/charcoal_clamp_ruined.png",
+      "dest": "structures/b3/stages_bronze/charcoal_clamp_ruined.png"
+    },
+    {
+      "role": "structure",
+      "id": "copper_smelter_foundation",
+      "source": "art/style05/struct/b3/stages_bronze/copper_smelter_foundation.png",
+      "dest": "structures/b3/stages_bronze/copper_smelter_foundation.png"
+    },
+    {
+      "role": "structure",
+      "id": "copper_smelter_half_built",
+      "source": "art/style05/struct/b3/stages_bronze/copper_smelter_half_built.png",
+      "dest": "structures/b3/stages_bronze/copper_smelter_half_built.png"
+    },
+    {
+      "role": "structure",
+      "id": "copper_smelter_damaged",
+      "source": "art/style05/struct/b3/stages_bronze/copper_smelter_damaged.png",
+      "dest": "structures/b3/stages_bronze/copper_smelter_damaged.png"
+    },
+    {
+      "role": "structure",
+      "id": "casting_bench_half_built",
+      "source": "art/style05/struct/b3/stages_bronze/casting_bench_half_built.png",
+      "dest": "structures/b3/stages_bronze/casting_bench_half_built.png"
+    },
+    {
+      "role": "structure",
+      "id": "casting_bench_damaged",
+      "source": "art/style05/struct/b3/stages_bronze/casting_bench_damaged.png",
+      "dest": "structures/b3/stages_bronze/casting_bench_damaged.png"
+    },
+    {
+      "role": "structure",
+      "id": "casting_bench_ruined",
+      "source": "art/style05/struct/b3/stages_bronze/casting_bench_ruined.png",
+      "dest": "structures/b3/stages_bronze/casting_bench_ruined.png"
+    },
+    {
+      "role": "structure",
+      "id": "bee_skep_foundation",
+      "source": "art/style05/struct/b3/stages_bronze/bee_skep_foundation.png",
+      "dest": "structures/b3/stages_bronze/bee_skep_foundation.png"
+    },
+    {
+      "role": "structure",
+      "id": "bee_skep_half_built",
+      "source": "art/style05/struct/b3/stages_bronze/bee_skep_half_built.png",
+      "dest": "structures/b3/stages_bronze/bee_skep_half_built.png"
+    },
+    {
+      "role": "structure",
+      "id": "bee_skep_damaged",
+      "source": "art/style05/struct/b3/stages_bronze/bee_skep_damaged.png",
+      "dest": "structures/b3/stages_bronze/bee_skep_damaged.png"
+    },
+    {
+      "role": "structure",
+      "id": "bee_skep_ruined",
+      "source": "art/style05/struct/b3/stages_bronze/bee_skep_ruined.png",
+      "dest": "structures/b3/stages_bronze/bee_skep_ruined.png"
+    },
+    {
+      "role": "structure",
+      "id": "shrine_foundation",
+      "source": "art/style05/struct/b3/stages_bronze/shrine_foundation.png",
+      "dest": "structures/b3/stages_bronze/shrine_foundation.png"
+    },
+    {
+      "role": "structure",
+      "id": "shrine_half_built",
+      "source": "art/style05/struct/b3/stages_bronze/shrine_half_built.png",
+      "dest": "structures/b3/stages_bronze/shrine_half_built.png"
+    },
+    {
+      "role": "structure",
+      "id": "shrine_ruined",
+      "source": "art/style05/struct/b3/stages_bronze/shrine_ruined.png",
+      "dest": "structures/b3/stages_bronze/shrine_ruined.png"
+    },
+    {
+      "role": "structure",
+      "id": "palisade_foundation",
+      "source": "art/style05/struct/b3/stages_bronze/palisade_foundation.png",
+      "dest": "structures/b3/stages_bronze/palisade_foundation.png"
+    },
+    {
+      "role": "structure",
+      "id": "palisade_half_built",
+      "source": "art/style05/struct/b3/stages_bronze/palisade_half_built.png",
+      "dest": "structures/b3/stages_bronze/palisade_half_built.png"
+    },
+    {
+      "role": "structure",
+      "id": "palisade_ruined",
+      "source": "art/style05/struct/b3/stages_bronze/palisade_ruined.png",
+      "dest": "structures/b3/stages_bronze/palisade_ruined.png"
+    },
+    {
+      "role": "structure",
+      "id": "palisade_gate_foundation",
+      "source": "art/style05/struct/b3/stages_bronze/palisade_gate_foundation.png",
+      "dest": "structures/b3/stages_bronze/palisade_gate_foundation.png"
+    },
+    {
+      "role": "structure",
+      "id": "palisade_gate_half_built",
+      "source": "art/style05/struct/b3/stages_bronze/palisade_gate_half_built.png",
+      "dest": "structures/b3/stages_bronze/palisade_gate_half_built.png"
+    },
+    {
+      "role": "structure",
+      "id": "palisade_gate_damaged",
+      "source": "art/style05/struct/b3/stages_bronze/palisade_gate_damaged.png",
+      "dest": "structures/b3/stages_bronze/palisade_gate_damaged.png"
+    }
+  ],
+  "meta_sources": {
+    "structure": "art/batch_b3/stages_bronze/assets.json"
+  },
+  "status": "DRAFT_NOT_APPLIED",
+  "note": "Merge additional lifecycle structure rows with existing A2 metadata; do not replace whole adapter."
+}

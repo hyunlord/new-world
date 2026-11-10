@@ -1,0 +1,159 @@
+{
+  "record": {
+    "id": "casting_bench_damaged",
+    "lane": "stages_bronze",
+    "era": "bronze",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c798-db13-7ea2-ac75-d0b60491c959/exec-a74ae484-9f96-4a1f-8890-e5b99c307f8d.png",
+    "prompt": "WorldSim style05 ink-and-tone bronze-age game sprite. Image1 is the exact built parent to preserve identity; images2 and3 are LOCKED STYLE ONLY anchors. Fine controlled brown-black pen ink over restrained natural earth-colour wash, outer/internal stroke ratio2:1. Material marks: wood3 broken longitudinal grain lines per principal plank; stone/clay3 short fracture groups per dominant mass; straw5 weave bands per major surface. Sparse single group of3 parallel / hatches, no dense crosshatching. Natural slight pigment variation with broad upper-left light and lower-right shade. Front three-quarter about20degrees down, front faces prominent; no isometric diamond, horizon or perspective ground. Keep original material colours, construction proportions, orientation and ground footprint. Generate ONE state only on true transparent RGBA, all outside pixels transparent. No ground patch, cast shadow, halo, scenery, text, borders, people, modern fittings, iron or dyed fabric. Do not copy reference backgrounds. Preserve empty margins on all sides. STATE: Same casting bench; rightmost tabletop planks split and sagging, front-right leg splintered but still upright. Left clay mould remains, small crucible tipped sideways; readable structural damage. At game size visible body is 62px wide and 36px high. Preserve width and viewpoint of image1.",
+    "subject": "Same casting bench; rightmost tabletop planks split and sagging, front-right leg splintered but still upright. Left clay mould remains, small crucible tipped sideways; readable structural damage.",
+    "references": [
+      "/Users/rexxa/work/art-batch/A2/bronze/raw/casting_bench_empty_try1.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png"
+    ],
+    "target_height": 36,
+    "projection_family": "casting_bench_damaged",
+    "height_band": [
+      34,
+      38
+    ],
+    "height_band_reason": "Predeclared B3 stage silhouette in plan.json; same footprint and width target.",
+    "footprint": [
+      2.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-10T22:36:59.803Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/B3/stages_bronze/stages_bronze/raw/casting_bench_damaged_try1.png",
+  "raw_sha256": "8f3870c42788c5000e5fcbdb52e0a726fd200b1dd7032a351834b02bd91ad229",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A2/bronze/raw/casting_bench_empty_try1.png",
+      "sha256": "b4a41c1a1f819f8d5c9f1b3773cce1522761511a10423efa750a5910eed46319"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/B3/stages_bronze/stages_bronze/normalized/casting_bench_damaged_try1.png",
+  "normalized_sha256": "b4b49d5772dd459cc314241d285855e9107ac91397217345ab282f276cc84323",
+  "size": [
+    69,
+    44
+  ],
+  "anchor": [
+    34,
+    39
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (359, 134, 1411, 760)",
+    "uniform Lanczos scale: 0.05787781350482315",
+    "transparent 4px padding; source-canvas anchor: (34, 39)"
+  ],
+  "projection": {
+    "family": "casting_bench_damaged",
+    "anchor": [
+      34,
+      39
+    ],
+    "height_band": [
+      34,
+      38
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1425,
+    "base_row": 39,
+    "base_error": 0,
+    "height": 36,
+    "gradient_x": -0.8944124178232288,
+    "gradient_y": -1.0511930882352942,
+    "light_angle_degrees": 229.60705051794636,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/B3/stages_bronze/stages_bronze/raw/casting_bench_damaged_try1.png",
+    "sha256": "8f3870c42788c5000e5fcbdb52e0a726fd200b1dd7032a351834b02bd91ad229",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.24370282418793995,
+      "saturation_q25": 0.5084516583965277,
+      "saturation_q75": 0.5868446386151315,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.8284271247461903,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.47213595499958,
+      "wash_flatness": 0.01339806603020803,
+      "foreground_pixels": 25276
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    0,
+    1760,
+    887
+  ],
+  "raw_opaque_bbox": [
+    361,
+    136,
+    1409,
+    758
+  ],
+  "raw_faint_far_ratio": 0.006014975782529167,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_CANDIDATE",
+  "failures": [],
+  "review": {
+    "score": 91,
+    "verdict": "pass",
+    "category_match": true,
+    "differences": [
+      "Two ruined states withheld because wash_flatness failed frozen gates in all3attempts.",
+      "Follow-up independent score88 rejected casting foundation: fourlegspan46px vs62pxbuilt; candidate pruned at cap."
+    ],
+    "suggestions": [
+      "Keep capped rejects out of the import draft; importer must retain explicit gaps.",
+      "See review_independent88.json and final_disposition.json; no further generation."
+    ],
+    "reasoning": "Root independently inspected the native1x board: charcoal woven halfshell, low foundations, casting unfinished frame, empty gatehalf and broken gatepanel are readable. Damage remains distinct while A2 identity is retained."
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "family": "casting_bench",
+  "state": "damaged",
+  "target_width": 62,
+  "independent_followup_review": "art/batch_b3/stages_bronze/review_independent88.json",
+  "final_disposition": "art/batch_b3/stages_bronze/final_disposition.json"
+}

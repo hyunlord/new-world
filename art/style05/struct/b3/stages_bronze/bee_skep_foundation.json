@@ -1,0 +1,159 @@
+{
+  "record": {
+    "id": "bee_skep_foundation",
+    "lane": "stages_bronze",
+    "era": "bronze",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c798-db13-7ea2-ac75-d0b60491c959/exec-387be7dc-4482-4ea0-9ae3-eb714072929c.png",
+    "prompt": "WorldSim style05 ink-and-tone bronze-age game sprite. Image1 is the exact built parent to preserve identity; images2 and3 are LOCKED STYLE ONLY anchors. Fine controlled brown-black pen ink over restrained natural earth-colour wash, outer/internal stroke ratio2:1. Material marks: wood3 broken longitudinal grain lines per principal plank; stone/clay3 short fracture groups per dominant mass; straw5 weave bands per major surface. Sparse single group of3 parallel / hatches, no dense crosshatching. Natural slight pigment variation with broad upper-left light and lower-right shade. Front three-quarter about20degrees down, front faces prominent; no isometric diamond, horizon or perspective ground. Keep original material colours, construction proportions, orientation and ground footprint. Generate ONE state only on true transparent RGBA, all outside pixels transparent. No ground patch, cast shadow, halo, scenery, text, borders, people, modern fittings, iron or dyed fabric. Do not copy reference backgrounds. Preserve empty margins on all sides. STATE: Only the same square rough wooden base board with a SINGLE low woven straw ring around its center, open middle. No dome, no bees. Same base board width. At game size visible body is 31px wide and 10px high. Preserve width and viewpoint of image1.",
+    "subject": "Only the same square rough wooden base board with a SINGLE low woven straw ring around its center, open middle. No dome, no bees. Same base board width.",
+    "references": [
+      "/Users/rexxa/work/art-batch/A2/bronze/raw/bee_skep_empty_try3.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png"
+    ],
+    "target_height": 10,
+    "projection_family": "bee_skep_foundation",
+    "height_band": [
+      8,
+      12
+    ],
+    "height_band_reason": "Predeclared B3 stage silhouette in plan.json; same footprint and width target.",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-10T22:38:23.763Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/B3/stages_bronze/stages_bronze/raw/bee_skep_foundation_try1.png",
+  "raw_sha256": "e569fd3aa33e8d1b6e39a832ee2f167a30ea53dd77cfbd1839593053073f2d9c",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A2/bronze/raw/bee_skep_empty_try3.png",
+      "sha256": "ba000ab7dc3848a3b8a319e33d57018b851770fb22bfe6c4e7ca5ecf40b86cea"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/B3/stages_bronze/stages_bronze/normalized/bee_skep_foundation_try1.png",
+  "normalized_sha256": "73d9b01a63fb4e74fa6238d5729b7841d5703377b6daeea69a883c7192677123",
+  "size": [
+    34,
+    18
+  ],
+  "anchor": [
+    17,
+    13
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (209, 734, 1011, 1047)",
+    "uniform Lanczos scale: 0.032362459546925564",
+    "transparent 4px padding; source-canvas anchor: (17, 13)"
+  ],
+  "projection": {
+    "family": "bee_skep_foundation",
+    "anchor": [
+      17,
+      13
+    ],
+    "height_band": [
+      8,
+      12
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 188,
+    "base_row": 13,
+    "base_error": 0,
+    "height": 10,
+    "gradient_x": -1.069516571428571,
+    "gradient_y": -8.914785333333331,
+    "light_angle_degrees": 263.1588591334039,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/B3/stages_bronze/stages_bronze/raw/bee_skep_foundation_try1.png",
+    "sha256": "e569fd3aa33e8d1b6e39a832ee2f167a30ea53dd77cfbd1839593053073f2d9c",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.2767590618336887,
+      "saturation_q25": 0.44894075495975827,
+      "saturation_q75": 0.6056377352101798,
+      "stroke_q25": 2.0,
+      "stroke_q50": 4.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 6.0,
+      "wash_flatness": 0.011837308164066251,
+      "foreground_pixels": 18165
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    162,
+    37,
+    1136,
+    1212
+  ],
+  "raw_opaque_bbox": [
+    211,
+    736,
+    1009,
+    1045
+  ],
+  "raw_faint_far_ratio": 0.00259147977250778,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_CANDIDATE",
+  "failures": [],
+  "review": {
+    "score": 91,
+    "verdict": "pass",
+    "category_match": true,
+    "differences": [
+      "Two ruined states withheld because wash_flatness failed frozen gates in all3attempts.",
+      "Follow-up independent score88 rejected casting foundation: fourlegspan46px vs62pxbuilt; candidate pruned at cap."
+    ],
+    "suggestions": [
+      "Keep capped rejects out of the import draft; importer must retain explicit gaps.",
+      "See review_independent88.json and final_disposition.json; no further generation."
+    ],
+    "reasoning": "Root independently inspected the native1x board: charcoal woven halfshell, low foundations, casting unfinished frame, empty gatehalf and broken gatepanel are readable. Damage remains distinct while A2 identity is retained."
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "family": "bee_skep",
+  "state": "foundation",
+  "target_width": 31,
+  "independent_followup_review": "art/batch_b3/stages_bronze/review_independent88.json",
+  "final_disposition": "art/batch_b3/stages_bronze/final_disposition.json"
+}

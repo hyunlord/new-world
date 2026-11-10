@@ -1,0 +1,20 @@
+{
+  "score": 78,
+  "verdict": "revise",
+  "sheet_sha256": "1f11aeee889ce9a2e6dafc5560926bfbd46664b7a00de21c0b2080a44c1fafef",
+  "selected_weakest": [
+    "charcoal_clamp_ruined",
+    "casting_bench_foundation",
+    "palisade_gate_foundation",
+    "palisade_ruined",
+    "palisade_gate_ruined"
+  ],
+  "fraction": "5/26=19.2%",
+  "reasons": [
+    "four failed frozen wash_flatness",
+    "casting foundation shrunk width relative to built"
+  ],
+  "additional_identity_revision": "four copper smelter states follow new round3 rectangular furnace body",
+  "numeric_gates": "unchanged",
+  "reviewer": "bronze_work self-review"
+}

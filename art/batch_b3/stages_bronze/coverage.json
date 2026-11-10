@@ -1,0 +1,485 @@
+{
+  "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+  "rows": [
+    {
+      "family": "charcoal_clamp",
+      "state": "foundation",
+      "status": "ADOPTED_CANDIDATE",
+      "source": "art/style05/struct/b3/stages_bronze/charcoal_clamp_foundation.png",
+      "source_commit": "PENDING_ROOT_ASSET_COMMIT",
+      "sha256": "a3ebe5d72013baf2fa64c190605ce1a9d427277b0d6a813205ad4496f9905edc",
+      "attempts": 1,
+      "selected_attempt": 1,
+      "reasons": [
+        "Frozen numeric gates and independent root visual review91 pass."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_bronze/charcoal_clamp_foundation.png"
+    },
+    {
+      "family": "charcoal_clamp",
+      "state": "half_built",
+      "status": "ADOPTED_CANDIDATE",
+      "source": "art/style05/struct/b3/stages_bronze/charcoal_clamp_half_built.png",
+      "source_commit": "PENDING_ROOT_ASSET_COMMIT",
+      "sha256": "f1a200bbd79056e1b02ff957cc54f85f07ee4afac23d98b3235967dfd4a2e481",
+      "attempts": 1,
+      "selected_attempt": 1,
+      "reasons": [
+        "Frozen numeric gates and independent root visual review91 pass."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_bronze/charcoal_clamp_half_built.png"
+    },
+    {
+      "family": "charcoal_clamp",
+      "state": "built",
+      "status": "REUSED",
+      "source": "art/style05/struct/a2/bronze/charcoal_clamp_idle.png",
+      "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "sha256": "aabdce7698ec44bdcc97c284ea498e56a8b81da50d7feb7b891988b291e27af1",
+      "attempts": 0,
+      "reasons": [
+        "Accepted built or damaged parent reused unchanged."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/bronze/charcoal_clamp_idle.png"
+    },
+    {
+      "family": "charcoal_clamp",
+      "state": "damaged",
+      "status": "ADOPTED_CANDIDATE",
+      "source": "art/style05/struct/b3/stages_bronze/charcoal_clamp_damaged.png",
+      "source_commit": "PENDING_ROOT_ASSET_COMMIT",
+      "sha256": "ec175e34fe33326d0341d6bbb6e2fe547f3a69f62d7ea426e89b1cd58d61847b",
+      "attempts": 1,
+      "selected_attempt": 1,
+      "reasons": [
+        "Frozen numeric gates and independent root visual review91 pass."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_bronze/charcoal_clamp_damaged.png"
+    },
+    {
+      "family": "charcoal_clamp",
+      "state": "ruined",
+      "status": "ADOPTED_CANDIDATE",
+      "source": "art/style05/struct/b3/stages_bronze/charcoal_clamp_ruined.png",
+      "source_commit": "PENDING_ROOT_ASSET_COMMIT",
+      "sha256": "4874d9927e4a7ad7006de8b71cd104770a36cd06566f906470ef4c9473081414",
+      "attempts": 2,
+      "selected_attempt": 2,
+      "reasons": [
+        "Frozen numeric gates and independent root visual review91 pass."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_bronze/charcoal_clamp_ruined.png"
+    },
+    {
+      "family": "copper_smelter",
+      "state": "foundation",
+      "status": "ADOPTED_CANDIDATE",
+      "source": "art/style05/struct/b3/stages_bronze/copper_smelter_foundation.png",
+      "source_commit": "PENDING_ROOT_ASSET_COMMIT",
+      "sha256": "54debd44ebc5ca624f1db6d08599b322444acd8c1e29d7aa0615f2791e5bb598",
+      "attempts": 3,
+      "selected_attempt": 3,
+      "reasons": [
+        "Frozen numeric gates and independent root visual review91 pass."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_bronze/copper_smelter_foundation.png"
+    },
+    {
+      "family": "copper_smelter",
+      "state": "half_built",
+      "status": "ADOPTED_CANDIDATE",
+      "source": "art/style05/struct/b3/stages_bronze/copper_smelter_half_built.png",
+      "source_commit": "PENDING_ROOT_ASSET_COMMIT",
+      "sha256": "027801278c3d5b0fd1772af2a4e6d89b3852c8669bc0c2934e020a89f2370654",
+      "attempts": 2,
+      "selected_attempt": 2,
+      "reasons": [
+        "Frozen numeric gates and independent root visual review91 pass."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_bronze/copper_smelter_half_built.png"
+    },
+    {
+      "family": "copper_smelter",
+      "state": "built",
+      "status": "REUSED",
+      "source": "art/style05/struct/b3/round3_smelter/copper_smelter_unlit.png",
+      "source_commit": "18fde62b7cd03bf05fab4ab75bc46c1436a0a138",
+      "sha256": "96fb0edf959b80b9bc67c7a4893333ebb6c94740e68ef09afe2446066da99af7",
+      "attempts": 0,
+      "reasons": [
+        "Accepted built or damaged parent reused unchanged."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/round3_smelter/copper_smelter_unlit.png"
+    },
+    {
+      "family": "copper_smelter",
+      "state": "damaged",
+      "status": "ADOPTED_CANDIDATE",
+      "source": "art/style05/struct/b3/stages_bronze/copper_smelter_damaged.png",
+      "source_commit": "PENDING_ROOT_ASSET_COMMIT",
+      "sha256": "90c28d24dd577532c81beed50f2643bb70694d35987fe1ad5d0eaf2b4fcef499",
+      "attempts": 2,
+      "selected_attempt": 2,
+      "reasons": [
+        "Frozen numeric gates and independent root visual review91 pass."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_bronze/copper_smelter_damaged.png"
+    },
+    {
+      "family": "copper_smelter",
+      "state": "ruined",
+      "status": "GAP",
+      "source": null,
+      "source_commit": null,
+      "attempts": 3,
+      "reasons": [
+        "All3attempts failed frozen buildings wash_flatness; no metric override; withheld from assets/import draft."
+      ],
+      "evidence_path": null,
+      "rejection_status": "CAPPED_REJECTED_NUMERIC"
+    },
+    {
+      "family": "casting_bench",
+      "state": "foundation",
+      "status": "GAP",
+      "source": null,
+      "source_commit": null,
+      "attempts": 3,
+      "reasons": [
+        "Exact four leg positions contracted: selectedtry3 opaque width46px versus62pxbuilt/61pxhalf-built. All3attempts rejected at cap; no stretching or target waiver."
+      ],
+      "evidence_path": null,
+      "rejection_status": "CAPPED_REJECTED_VISUAL_GEOMETRY"
+    },
+    {
+      "family": "casting_bench",
+      "state": "half_built",
+      "status": "ADOPTED_CANDIDATE",
+      "source": "art/style05/struct/b3/stages_bronze/casting_bench_half_built.png",
+      "source_commit": "PENDING_ROOT_ASSET_COMMIT",
+      "sha256": "ac40470b6c07f5bf9f9f2ca50d9a4ccb38344cbb45a86316c8102c15426c7c7a",
+      "attempts": 1,
+      "selected_attempt": 1,
+      "reasons": [
+        "Frozen numeric gates and independent root visual review91 pass."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_bronze/casting_bench_half_built.png"
+    },
+    {
+      "family": "casting_bench",
+      "state": "built",
+      "status": "REUSED",
+      "source": "art/style05/struct/a2/bronze/casting_bench_empty.png",
+      "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "sha256": "21b6d3c83c4b04a99a256a3f65d5737f18c778a9146a83a0fa0a8b2006593fd8",
+      "attempts": 0,
+      "reasons": [
+        "Accepted built or damaged parent reused unchanged."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/bronze/casting_bench_empty.png"
+    },
+    {
+      "family": "casting_bench",
+      "state": "damaged",
+      "status": "ADOPTED_CANDIDATE",
+      "source": "art/style05/struct/b3/stages_bronze/casting_bench_damaged.png",
+      "source_commit": "PENDING_ROOT_ASSET_COMMIT",
+      "sha256": "b4b49d5772dd459cc314241d285855e9107ac91397217345ab282f276cc84323",
+      "attempts": 1,
+      "selected_attempt": 1,
+      "reasons": [
+        "Frozen numeric gates and independent root visual review91 pass."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_bronze/casting_bench_damaged.png"
+    },
+    {
+      "family": "casting_bench",
+      "state": "ruined",
+      "status": "ADOPTED_CANDIDATE",
+      "source": "art/style05/struct/b3/stages_bronze/casting_bench_ruined.png",
+      "source_commit": "PENDING_ROOT_ASSET_COMMIT",
+      "sha256": "83d22cca2c5d663504c40fd9e4648c9eb175070110e63015a36a885575f4dee7",
+      "attempts": 1,
+      "selected_attempt": 1,
+      "reasons": [
+        "Frozen numeric gates and independent root visual review91 pass."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_bronze/casting_bench_ruined.png"
+    },
+    {
+      "family": "bee_skep",
+      "state": "foundation",
+      "status": "ADOPTED_CANDIDATE",
+      "source": "art/style05/struct/b3/stages_bronze/bee_skep_foundation.png",
+      "source_commit": "PENDING_ROOT_ASSET_COMMIT",
+      "sha256": "73d9b01a63fb4e74fa6238d5729b7841d5703377b6daeea69a883c7192677123",
+      "attempts": 1,
+      "selected_attempt": 1,
+      "reasons": [
+        "Frozen numeric gates and independent root visual review91 pass."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_bronze/bee_skep_foundation.png"
+    },
+    {
+      "family": "bee_skep",
+      "state": "half_built",
+      "status": "ADOPTED_CANDIDATE",
+      "source": "art/style05/struct/b3/stages_bronze/bee_skep_half_built.png",
+      "source_commit": "PENDING_ROOT_ASSET_COMMIT",
+      "sha256": "678f8e70cd5d545cd974421f24275a101e942156475f73dc01c1c01391216425",
+      "attempts": 1,
+      "selected_attempt": 1,
+      "reasons": [
+        "Frozen numeric gates and independent root visual review91 pass."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_bronze/bee_skep_half_built.png"
+    },
+    {
+      "family": "bee_skep",
+      "state": "built",
+      "status": "REUSED",
+      "source": "art/style05/struct/a2/bronze/bee_skep_empty.png",
+      "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "sha256": "e29605000949a7ea561d685d512e42dce646aa06c14cd942abe44a0c2b6aa3a1",
+      "attempts": 0,
+      "reasons": [
+        "Accepted built or damaged parent reused unchanged."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/bronze/bee_skep_empty.png"
+    },
+    {
+      "family": "bee_skep",
+      "state": "damaged",
+      "status": "ADOPTED_CANDIDATE",
+      "source": "art/style05/struct/b3/stages_bronze/bee_skep_damaged.png",
+      "source_commit": "PENDING_ROOT_ASSET_COMMIT",
+      "sha256": "66b5a8c83561f9efc8815b5ad9f67b260af67108a3292dfbda3653cd0867fb36",
+      "attempts": 1,
+      "selected_attempt": 1,
+      "reasons": [
+        "Frozen numeric gates and independent root visual review91 pass."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_bronze/bee_skep_damaged.png"
+    },
+    {
+      "family": "bee_skep",
+      "state": "ruined",
+      "status": "ADOPTED_CANDIDATE",
+      "source": "art/style05/struct/b3/stages_bronze/bee_skep_ruined.png",
+      "source_commit": "PENDING_ROOT_ASSET_COMMIT",
+      "sha256": "a98f01fa631e2442badedab47142199848a56447207e520e7844cc7662c9f32d",
+      "attempts": 1,
+      "selected_attempt": 1,
+      "reasons": [
+        "Frozen numeric gates and independent root visual review91 pass."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_bronze/bee_skep_ruined.png"
+    },
+    {
+      "family": "shrine",
+      "state": "foundation",
+      "status": "ADOPTED_CANDIDATE",
+      "source": "art/style05/struct/b3/stages_bronze/shrine_foundation.png",
+      "source_commit": "PENDING_ROOT_ASSET_COMMIT",
+      "sha256": "0a533f39da4c744cc519808def4f63642510e7d59f8fc47bc9d9aef4c6f8f06f",
+      "attempts": 3,
+      "selected_attempt": 3,
+      "reasons": [
+        "Frozen numeric gates and independent root visual review91 pass."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_bronze/shrine_foundation.png"
+    },
+    {
+      "family": "shrine",
+      "state": "half_built",
+      "status": "ADOPTED_CANDIDATE",
+      "source": "art/style05/struct/b3/stages_bronze/shrine_half_built.png",
+      "source_commit": "PENDING_ROOT_ASSET_COMMIT",
+      "sha256": "d2bcb58dfaceb6acf8ff1f95203844acdb3046b34e331367457a8cbe7476f6d6",
+      "attempts": 1,
+      "selected_attempt": 1,
+      "reasons": [
+        "Frozen numeric gates and independent root visual review91 pass."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_bronze/shrine_half_built.png"
+    },
+    {
+      "family": "shrine",
+      "state": "built",
+      "status": "REUSED",
+      "source": "art/style05/struct/a2/bronze/shrine_intact.png",
+      "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "sha256": "8c5ef1301e80874f2f80732cfe2c1981a8309c75a62021c630de3a4b5577df2e",
+      "attempts": 0,
+      "reasons": [
+        "Accepted built or damaged parent reused unchanged."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/bronze/shrine_intact.png"
+    },
+    {
+      "family": "shrine",
+      "state": "damaged",
+      "status": "REUSED",
+      "source": "art/style05/struct/a2/bronze/shrine_damaged.png",
+      "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "sha256": "308e6ea4ee47f602c9d9683320890dad8bf74a654e262b79029e13f2415d922e",
+      "attempts": 0,
+      "reasons": [
+        "Accepted built or damaged parent reused unchanged."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/bronze/shrine_damaged.png"
+    },
+    {
+      "family": "shrine",
+      "state": "ruined",
+      "status": "ADOPTED_CANDIDATE",
+      "source": "art/style05/struct/b3/stages_bronze/shrine_ruined.png",
+      "source_commit": "PENDING_ROOT_ASSET_COMMIT",
+      "sha256": "8cd3c1513c2bc1c94557bc58e643f2fcee70eb3dabf45002922c7f9e5445a107",
+      "attempts": 1,
+      "selected_attempt": 1,
+      "reasons": [
+        "Frozen numeric gates and independent root visual review91 pass."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_bronze/shrine_ruined.png"
+    },
+    {
+      "family": "palisade",
+      "state": "foundation",
+      "status": "ADOPTED_CANDIDATE",
+      "source": "art/style05/struct/b3/stages_bronze/palisade_foundation.png",
+      "source_commit": "PENDING_ROOT_ASSET_COMMIT",
+      "sha256": "d6b0cb8e4b5d0cd9e8aa73f5038d6566677915c8f8e5f3d2f9d8968497e9af70",
+      "attempts": 1,
+      "selected_attempt": 1,
+      "reasons": [
+        "Frozen numeric gates and independent root visual review91 pass."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_bronze/palisade_foundation.png"
+    },
+    {
+      "family": "palisade",
+      "state": "half_built",
+      "status": "ADOPTED_CANDIDATE",
+      "source": "art/style05/struct/b3/stages_bronze/palisade_half_built.png",
+      "source_commit": "PENDING_ROOT_ASSET_COMMIT",
+      "sha256": "85f313da05b08e2ce059b646597d9c783ce5d3a4c2adb49f895d28fe6b37766c",
+      "attempts": 1,
+      "selected_attempt": 1,
+      "reasons": [
+        "Frozen numeric gates and independent root visual review91 pass."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_bronze/palisade_half_built.png"
+    },
+    {
+      "family": "palisade",
+      "state": "built",
+      "status": "REUSED",
+      "source": "art/style05/struct/a2/bronze/palisade_ew.png",
+      "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "sha256": "ef20ea34c508e4f9c9abdeb7fa3c06c9f2482777b5f8a855c16add6339bb5449",
+      "attempts": 0,
+      "reasons": [
+        "Accepted built or damaged parent reused unchanged."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/bronze/palisade_ew.png"
+    },
+    {
+      "family": "palisade",
+      "state": "damaged",
+      "status": "REUSED",
+      "source": "art/style05/struct/a2/bronze/palisade_damaged.png",
+      "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "sha256": "b5445a98c6683a12c4aec6afe1d7c26e864da0d35a3e066557263e53ac061ec5",
+      "attempts": 0,
+      "reasons": [
+        "Accepted built or damaged parent reused unchanged."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/bronze/palisade_damaged.png"
+    },
+    {
+      "family": "palisade",
+      "state": "ruined",
+      "status": "ADOPTED_CANDIDATE",
+      "source": "art/style05/struct/b3/stages_bronze/palisade_ruined.png",
+      "source_commit": "PENDING_ROOT_ASSET_COMMIT",
+      "sha256": "3c90764efe7475805162fc10c8244294067a98bd4f266399326c245a7ec72beb",
+      "attempts": 2,
+      "selected_attempt": 2,
+      "reasons": [
+        "Frozen numeric gates and independent root visual review91 pass."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_bronze/palisade_ruined.png"
+    },
+    {
+      "family": "palisade_gate",
+      "state": "foundation",
+      "status": "ADOPTED_CANDIDATE",
+      "source": "art/style05/struct/b3/stages_bronze/palisade_gate_foundation.png",
+      "source_commit": "PENDING_ROOT_ASSET_COMMIT",
+      "sha256": "589009b63f1259f7506e5c130cd768abed4bf12fde77190a3d4fba2c2c0894b2",
+      "attempts": 2,
+      "selected_attempt": 2,
+      "reasons": [
+        "Frozen numeric gates and independent root visual review91 pass."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_bronze/palisade_gate_foundation.png"
+    },
+    {
+      "family": "palisade_gate",
+      "state": "half_built",
+      "status": "ADOPTED_CANDIDATE",
+      "source": "art/style05/struct/b3/stages_bronze/palisade_gate_half_built.png",
+      "source_commit": "PENDING_ROOT_ASSET_COMMIT",
+      "sha256": "4528e1467a7cf885ae8f1cd0bf756f4780ee3f2073c03597ac90e9fdde3fc371",
+      "attempts": 1,
+      "selected_attempt": 1,
+      "reasons": [
+        "Frozen numeric gates and independent root visual review91 pass."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_bronze/palisade_gate_half_built.png"
+    },
+    {
+      "family": "palisade_gate",
+      "state": "built",
+      "status": "REUSED",
+      "source": "art/style05/struct/a2/bronze/palisade_gate_closed.png",
+      "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "sha256": "fe00d2e7d65cd8a0c4c44a7b2c53bd8bf424f9802a4f53b7aecf4656562d6f5d",
+      "attempts": 0,
+      "reasons": [
+        "Accepted built or damaged parent reused unchanged."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/bronze/palisade_gate_closed.png"
+    },
+    {
+      "family": "palisade_gate",
+      "state": "damaged",
+      "status": "ADOPTED_CANDIDATE",
+      "source": "art/style05/struct/b3/stages_bronze/palisade_gate_damaged.png",
+      "source_commit": "PENDING_ROOT_ASSET_COMMIT",
+      "sha256": "250c96aec69f1b2e96126050a334b9231057acb8ae889d3a32ff1690fbc8ddae",
+      "attempts": 1,
+      "selected_attempt": 1,
+      "reasons": [
+        "Frozen numeric gates and independent root visual review91 pass."
+      ],
+      "evidence_path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_bronze/palisade_gate_damaged.png"
+    },
+    {
+      "family": "palisade_gate",
+      "state": "ruined",
+      "status": "GAP",
+      "source": null,
+      "source_commit": null,
+      "attempts": 3,
+      "reasons": [
+        "All3attempts failed frozen buildings wash_flatness; no metric override; withheld from assets/import draft."
+      ],
+      "evidence_path": null,
+      "rejection_status": "CAPPED_REJECTED_NUMERIC"
+    }
+  ],
+  "not_applicable": [],
+  "note": "All7standalone families support all5physical states; blueprint is root-owned."
+}

@@ -1,0 +1,372 @@
+{
+  "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+  "round": "B3",
+  "numeric_gates": "Frozen A2 buildings judge and projection; stage-specific height +/-2 declared here before generation; target width checked visually against built parent.",
+  "style": "WorldSim style05 ink-and-tone bronze-age game sprite. Image1 is the exact built parent to preserve identity; images2 and3 are LOCKED STYLE ONLY anchors. Fine controlled brown-black pen ink over restrained natural earth-colour wash, outer/internal stroke ratio2:1. Material marks: wood3 broken longitudinal grain lines per principal plank; stone/clay3 short fracture groups per dominant mass; straw5 weave bands per major surface. Sparse single group of3 parallel / hatches, no dense crosshatching. Natural slight pigment variation with broad upper-left light and lower-right shade. Front three-quarter about20degrees down, front faces prominent; no isometric diamond, horizon or perspective ground. Keep original material colours, construction proportions, orientation and ground footprint. Generate ONE state only on true transparent RGBA, all outside pixels transparent. No ground patch, cast shadow, halo, scenery, text, borders, people, modern fittings, iron or dyed fabric. Do not copy reference backgrounds. Preserve empty margins on all sides. ",
+  "jobs": [
+    {
+      "id": "charcoal_clamp_foundation",
+      "family": "charcoal_clamp",
+      "state": "foundation",
+      "target_height": 32,
+      "target_width": 98,
+      "footprint": [
+        2,
+        2
+      ],
+      "subject": "A low circular base of radially laid timber billets only, two stacked low courses; no earthen dome and no fire. Preserve the complete mound base diameter.",
+      "source": "/Users/rexxa/work/art-batch/A2/bronze/raw/charcoal_clamp_idle_try3.png",
+      "base_height": 56
+    },
+    {
+      "id": "charcoal_clamp_half_built",
+      "family": "charcoal_clamp",
+      "state": "half_built",
+      "target_height": 50,
+      "target_width": 98,
+      "footprint": [
+        2,
+        2
+      ],
+      "subject": "The radial timber stack is built to nearly full dome height; only the LEFT HALF has earth covering, RIGHT HALF exposes intact close-packed wooden billets. Construction, no burning or charred material.",
+      "source": "/Users/rexxa/work/art-batch/A2/bronze/raw/charcoal_clamp_idle_try3.png",
+      "base_height": 56
+    },
+    {
+      "id": "charcoal_clamp_damaged",
+      "family": "charcoal_clamp",
+      "state": "damaged",
+      "target_height": 56,
+      "target_width": 98,
+      "footprint": [
+        2,
+        2
+      ],
+      "subject": "The same intact dome with a jagged missing chunk of earth on the upper RIGHT flank, exposing unburned logs beneath; original crest and lower base stay intact. No smoke.",
+      "source": "/Users/rexxa/work/art-batch/A2/bronze/raw/charcoal_clamp_idle_try3.png",
+      "base_height": 56
+    },
+    {
+      "id": "charcoal_clamp_ruined",
+      "family": "charcoal_clamp",
+      "state": "ruined",
+      "target_height": 28,
+      "target_width": 98,
+      "footprint": [
+        2,
+        2
+      ],
+      "subject": "Collapsed low remains of this clamp: broken earthen dome slabs and black spent timber in a compact low heap within its old base diameter. No tall intact dome or flames.",
+      "source": "/Users/rexxa/work/art-batch/A2/bronze/raw/charcoal_clamp_idle_try3.png",
+      "base_height": 56
+    },
+    {
+      "id": "copper_smelter_foundation",
+      "family": "copper_smelter",
+      "state": "foundation",
+      "target_height": 18,
+      "target_width": 41,
+      "footprint": [
+        1,
+        1
+      ],
+      "subject": "Only the bottom quarter of the furnace: a low circular hand-shaped orange clay wall ring with open center and a small front gap for the future firing mouth. No tall chimney or tuyere yet.",
+      "source": "/Users/rexxa/work/art-batch/A2/bronze/raw/copper_smelter_unlit_try2.png",
+      "base_height": 40
+    },
+    {
+      "id": "copper_smelter_half_built",
+      "family": "copper_smelter",
+      "state": "half_built",
+      "target_height": 28,
+      "target_width": 41,
+      "footprint": [
+        1,
+        1
+      ],
+      "subject": "The same furnace rising to half its eventual height: squat unfinished orange-clay walls, rough level upper rim, open top, front firing arch complete, no side tuyere installed.",
+      "source": "/Users/rexxa/work/art-batch/A2/bronze/raw/copper_smelter_unlit_try2.png",
+      "base_height": 40
+    },
+    {
+      "id": "copper_smelter_damaged",
+      "family": "copper_smelter",
+      "state": "damaged",
+      "target_height": 40,
+      "target_width": 41,
+      "footprint": [
+        1,
+        1
+      ],
+      "subject": "Same furnace silhouette with a broken top rim and one conspicuous vertical split on RIGHT wall, small missing upper-right clay wedge; front mouth and side tuyere survive. Cold and unlit.",
+      "source": "/Users/rexxa/work/art-batch/A2/bronze/raw/copper_smelter_unlit_try2.png",
+      "base_height": 40
+    },
+    {
+      "id": "copper_smelter_ruined",
+      "family": "copper_smelter",
+      "state": "ruined",
+      "target_height": 18,
+      "target_width": 41,
+      "footprint": [
+        1,
+        1
+      ],
+      "subject": "Only low shattered clay ring and three large collapsed orange fired-clay fragments inside its same footprint. Recognizable firing mouth arch now broken. No tall furnace.",
+      "source": "/Users/rexxa/work/art-batch/A2/bronze/raw/copper_smelter_unlit_try2.png",
+      "base_height": 40
+    },
+    {
+      "id": "casting_bench_foundation",
+      "family": "casting_bench",
+      "state": "foundation",
+      "target_height": 14,
+      "target_width": 62,
+      "footprint": [
+        2,
+        1
+      ],
+      "subject": "Only four SHORT squared timber footings arranged at the exact four leg positions plus two low connecting sill rails; open center, no tabletop, no tools, no tall legs.",
+      "source": "/Users/rexxa/work/art-batch/A2/bronze/raw/casting_bench_empty_try1.png",
+      "base_height": 36
+    },
+    {
+      "id": "casting_bench_half_built",
+      "family": "casting_bench",
+      "state": "half_built",
+      "target_height": 36,
+      "target_width": 62,
+      "footprint": [
+        2,
+        1
+      ],
+      "subject": "The exact four legs and front/back support rails, only the LEFT HALF of tabletop planks installed; open gap on right clearly shows unfinished construction. No mould or crucible.",
+      "source": "/Users/rexxa/work/art-batch/A2/bronze/raw/casting_bench_empty_try1.png",
+      "base_height": 36
+    },
+    {
+      "id": "casting_bench_damaged",
+      "family": "casting_bench",
+      "state": "damaged",
+      "target_height": 36,
+      "target_width": 62,
+      "footprint": [
+        2,
+        1
+      ],
+      "subject": "Same casting bench; rightmost tabletop planks split and sagging, front-right leg splintered but still upright. Left clay mould remains, small crucible tipped sideways; readable structural damage.",
+      "source": "/Users/rexxa/work/art-batch/A2/bronze/raw/casting_bench_empty_try1.png",
+      "base_height": 36
+    },
+    {
+      "id": "casting_bench_ruined",
+      "family": "casting_bench",
+      "state": "ruined",
+      "target_height": 18,
+      "target_width": 62,
+      "footprint": [
+        2,
+        1
+      ],
+      "subject": "The casting bench collapsed to a low pile: three large broken tabletop planks, two snapped legs and a broken clay mould, all within original table span. No standing table.",
+      "source": "/Users/rexxa/work/art-batch/A2/bronze/raw/casting_bench_empty_try1.png",
+      "base_height": 36
+    },
+    {
+      "id": "bee_skep_foundation",
+      "family": "bee_skep",
+      "state": "foundation",
+      "target_height": 10,
+      "target_width": 31,
+      "footprint": [
+        1,
+        1
+      ],
+      "subject": "Only the same square rough wooden base board with a SINGLE low woven straw ring around its center, open middle. No dome, no bees. Same base board width.",
+      "source": "/Users/rexxa/work/art-batch/A2/bronze/raw/bee_skep_empty_try3.png",
+      "base_height": 30
+    },
+    {
+      "id": "bee_skep_half_built",
+      "family": "bee_skep",
+      "state": "half_built",
+      "target_height": 22,
+      "target_width": 31,
+      "footprint": [
+        1,
+        1
+      ],
+      "subject": "Same base board with half-height unfinished straw skep, open broad circular top, exactly five coiled straw bands and loose upright ends near right rim. No closed dome, bees or tools.",
+      "source": "/Users/rexxa/work/art-batch/A2/bronze/raw/bee_skep_empty_try3.png",
+      "base_height": 30
+    },
+    {
+      "id": "bee_skep_damaged",
+      "family": "bee_skep",
+      "state": "damaged",
+      "target_height": 30,
+      "target_width": 31,
+      "footprint": [
+        1,
+        1
+      ],
+      "subject": "Same straw skep dome and base board with a torn hole in the RIGHT side, exposing dark hollow interior; three loose straw strands curl outward. Whole top and left side intact. No bees.",
+      "source": "/Users/rexxa/work/art-batch/A2/bronze/raw/bee_skep_empty_try3.png",
+      "base_height": 30
+    },
+    {
+      "id": "bee_skep_ruined",
+      "family": "bee_skep",
+      "state": "ruined",
+      "target_height": 14,
+      "target_width": 31,
+      "footprint": [
+        1,
+        1
+      ],
+      "subject": "Collapsed straw skep: flattened torn coil with a few large broken straw loops resting on the same base board. No standing dome, no bees.",
+      "source": "/Users/rexxa/work/art-batch/A2/bronze/raw/bee_skep_empty_try3.png",
+      "base_height": 30
+    },
+    {
+      "id": "shrine_foundation",
+      "family": "shrine",
+      "state": "foundation",
+      "target_height": 18,
+      "target_width": 105,
+      "footprint": [
+        3,
+        2
+      ],
+      "subject": "Only two low stone footings in front and a broad low rough stone socket behind on the LEFT for the future standing menhir. No tall menhir, no altar slab, no bowls. Low separated pieces spanning original shrine width.",
+      "source": "/Users/rexxa/work/art-batch/A2/bronze/raw/shrine_intact_try2.png",
+      "base_height": 80
+    },
+    {
+      "id": "shrine_half_built",
+      "family": "shrine",
+      "state": "half_built",
+      "target_height": 80,
+      "target_width": 105,
+      "footprint": [
+        3,
+        2
+      ],
+      "subject": "Same tall menhir on left, both low front supports installed, large altar slab tilted resting on only the left support with its right end down, no bowls. Read as staged building materials, no cracks or breakage.",
+      "source": "/Users/rexxa/work/art-batch/A2/bronze/raw/shrine_intact_try2.png",
+      "base_height": 80
+    },
+    {
+      "id": "shrine_ruined",
+      "family": "shrine",
+      "state": "ruined",
+      "target_height": 30,
+      "target_width": 105,
+      "footprint": [
+        3,
+        2
+      ],
+      "subject": "The shrine is ruined: menhir broken into two large sections lying behind, altar slab broken into two on the two low footings, only two small pottery shards. All ruins within original shrine width. No tall upright menhir.",
+      "source": "/Users/rexxa/work/art-batch/A2/bronze/raw/shrine_intact_try2.png",
+      "base_height": 80
+    },
+    {
+      "id": "palisade_foundation",
+      "family": "palisade",
+      "state": "foundation",
+      "target_height": 12,
+      "target_width": 70,
+      "footprint": [
+        1,
+        1
+      ],
+      "subject": "A straight E-W row of six VERY SHORT timber stump footings with flat cut tops and one horizontal low sill; all base positions and widths match the six original palisade stakes. No full upright stakes or ground patch.",
+      "source": "/Users/rexxa/work/art-batch/A2/bronze/raw/palisade_ew_try1.png",
+      "base_height": 60
+    },
+    {
+      "id": "palisade_half_built",
+      "family": "palisade",
+      "state": "half_built",
+      "target_height": 60,
+      "target_width": 70,
+      "footprint": [
+        1,
+        1
+      ],
+      "subject": "First three LEFT stakes erected to full original height and lashed; three RIGHT positions are only short flat-top timber footing stumps at base level. Full panel width and aligned base retained. No damage or splinters.",
+      "source": "/Users/rexxa/work/art-batch/A2/bronze/raw/palisade_ew_try1.png",
+      "base_height": 60
+    },
+    {
+      "id": "palisade_ruined",
+      "family": "palisade",
+      "state": "ruined",
+      "target_height": 22,
+      "target_width": 70,
+      "footprint": [
+        1,
+        1
+      ],
+      "subject": "Same E-W six-stake palisade utterly broken: six low jagged stump bases with the broken pointed upper timbers lying together just in front, within panel width. Broken natural rope. No standing full-height stakes.",
+      "source": "/Users/rexxa/work/art-batch/A2/bronze/raw/palisade_ew_try1.png",
+      "base_height": 60
+    },
+    {
+      "id": "palisade_gate_foundation",
+      "family": "palisade_gate",
+      "state": "foundation",
+      "target_height": 12,
+      "target_width": 71,
+      "footprint": [
+        1,
+        1
+      ],
+      "subject": "Only two very short square-topped timber post footings at original far-left and far-right positions, low timber sill connecting them. No full-height posts, lintel or gate leaves.",
+      "source": "/Users/rexxa/work/art-batch/A2/bronze/raw/palisade_gate_closed_try1.png",
+      "base_height": 60
+    },
+    {
+      "id": "palisade_gate_half_built",
+      "family": "palisade_gate",
+      "state": "half_built",
+      "target_height": 60,
+      "target_width": 71,
+      "footprint": [
+        1,
+        1
+      ],
+      "subject": "Only the two tall outer posts and their top crossbeam are installed, exact original gate dimensions. EMPTY opening, no door leaves, latch or hinges. Few short rope lashings; no lean or damage.",
+      "source": "/Users/rexxa/work/art-batch/A2/bronze/raw/palisade_gate_closed_try1.png",
+      "base_height": 60
+    },
+    {
+      "id": "palisade_gate_damaged",
+      "family": "palisade_gate",
+      "state": "damaged",
+      "target_height": 60,
+      "target_width": 71,
+      "footprint": [
+        1,
+        1
+      ],
+      "subject": "Same original two tall posts and top crossbeam. Left door leaf intact; RIGHT leaf snapped across its middle, upper half remains attached, lower half gone leaving obvious transparent gap. Wooden latch broken. No metal.",
+      "source": "/Users/rexxa/work/art-batch/A2/bronze/raw/palisade_gate_closed_try1.png",
+      "base_height": 60
+    },
+    {
+      "id": "palisade_gate_ruined",
+      "family": "palisade_gate",
+      "state": "ruined",
+      "target_height": 20,
+      "target_width": 71,
+      "footprint": [
+        1,
+        1
+      ],
+      "subject": "Gate collapsed into low pile: two snapped post stubs at ends with fallen crossbeam and two broken gate-leaf plank clusters between, within original gate width. No tall standing frame.",
+      "source": "/Users/rexxa/work/art-batch/A2/bronze/raw/palisade_gate_closed_try1.png",
+      "base_height": 60
+    }
+  ]
+}

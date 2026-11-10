@@ -1,0 +1,64 @@
+{
+  "symbolic_rows": [
+    {
+      "content_id": "charcoal_clamp",
+      "binding_shape": {
+        "foundation": "charcoal_clamp_foundation",
+        "half_built": "charcoal_clamp_half_built",
+        "damaged": "charcoal_clamp_damaged",
+        "ruined": "charcoal_clamp_ruined"
+      }
+    },
+    {
+      "content_id": "copper_smelter",
+      "binding_shape": {
+        "foundation": "copper_smelter_foundation",
+        "half_built": "copper_smelter_half_built",
+        "damaged": "copper_smelter_damaged"
+      }
+    },
+    {
+      "content_id": "casting_bench",
+      "binding_shape": {
+        "half_built": "casting_bench_half_built",
+        "damaged": "casting_bench_damaged",
+        "ruined": "casting_bench_ruined"
+      }
+    },
+    {
+      "content_id": "bee_skep",
+      "binding_shape": {
+        "foundation": "bee_skep_foundation",
+        "half_built": "bee_skep_half_built",
+        "damaged": "bee_skep_damaged",
+        "ruined": "bee_skep_ruined"
+      }
+    },
+    {
+      "content_id": "shrine",
+      "binding_shape": {
+        "foundation": "shrine_foundation",
+        "half_built": "shrine_half_built",
+        "ruined": "shrine_ruined"
+      }
+    },
+    {
+      "content_id": "palisade",
+      "binding_shape": {
+        "foundation": "palisade_foundation",
+        "half_built": "palisade_half_built",
+        "ruined": "palisade_ruined"
+      }
+    },
+    {
+      "content_id": "palisade_gate",
+      "binding_shape": {
+        "foundation": "palisade_gate_foundation",
+        "half_built": "palisade_gate_half_built",
+        "damaged": "palisade_gate_damaged"
+      }
+    }
+  ],
+  "runtime_rows_to_append": [],
+  "note": "Symbolic only; current content IDs and runtime numeric IDs require importer verification. Existing built/working/roof rows retained."
+}

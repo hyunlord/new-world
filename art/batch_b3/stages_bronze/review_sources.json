@@ -1,0 +1,20 @@
+{
+  "reviewer": "root independent visual review",
+  "score": 91,
+  "verdict": "pass",
+  "board": "/Users/rexxa/work/art-batch-b3/art/batch_b3/stages_bronze/boards/bronze_1x.png",
+  "board_sha256": "40e652ca55cfa227937bcb2127c5c5d3b2fd3f36d5b58e01cda53c153f1b674d",
+  "references": [
+    "art/style05/anchors/props.png",
+    "art/style05/anchors/scene.png",
+    "A2bronze exactbuilt anddamagedreuse pin227529c26307bc3a854eb7bf819e88d02af39046",
+    "R3smelter pin18fde62b7cd03bf05fab4ab75bc46c1436a0a138"
+  ],
+  "generated_at": "2026-11-10T22:55:36.502883+00:00",
+  "scope": "Final23adoptedexports;3capped gaps excluded. Initial root91 readability score and follow-up independent88 geometry finding are both retained; casting foundation pruned.",
+  "score_ledger": [
+    "review_initial_root91.json",
+    "review_independent88.json",
+    "final_disposition.json"
+  ]
+}

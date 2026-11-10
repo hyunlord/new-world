@@ -1,0 +1,159 @@
+{
+  "record": {
+    "id": "palisade_ruined",
+    "lane": "stages_bronze",
+    "era": "bronze",
+    "attempt": 2,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c798-db13-7ea2-ac75-d0b60491c959/exec-ac7a2605-23fd-4134-8772-0fe087ed1443.png",
+    "prompt": "WorldSim style05 ink-and-tone bronze-age game sprite. Image1 is the exact built parent to preserve identity; images2 and3 are LOCKED STYLE ONLY anchors. Fine controlled brown-black pen ink over restrained natural earth-colour wash, outer/internal stroke ratio2:1. Material marks: wood3 broken longitudinal grain lines per principal plank; stone/clay3 short fracture groups per dominant mass; straw5 weave bands per major surface. Sparse single group of3 parallel / hatches, no dense crosshatching. Natural slight pigment variation with broad upper-left light and lower-right shade. Front three-quarter about20degrees down, front faces prominent; no isometric diamond, horizon or perspective ground. Keep original material colours, construction proportions, orientation and ground footprint. Generate ONE state only on true transparent RGBA, all outside pixels transparent. No ground patch, cast shadow, halo, scenery, text, borders, people, modern fittings, iron or dyed fabric. Do not copy reference backgrounds. Preserve empty margins on all sides.  STATE: Same E-W six-stake palisade utterly broken: six low jagged stump bases with the broken pointed upper timbers lying together just in front, within panel width. Broken natural rope. No standing full-height stakes. Broad varied earth-tone watercolour pigment patches, medium visible tonal variation rather than uniform flat wood. No allover dots or grain noise. Broad UL highlights and LRshadows. Total silhouette 70px wide, 22px high at1x.",
+    "subject": "Same E-W six-stake palisade utterly broken: six low jagged stump bases with the broken pointed upper timbers lying together just in front, within panel width. Broken natural rope. No standing full-height stakes.",
+    "references": [
+      "/Users/rexxa/work/art-batch/A2/bronze/raw/palisade_ew_try1.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png"
+    ],
+    "target_height": 22,
+    "projection_family": "palisade_ruined",
+    "height_band": [
+      20,
+      24
+    ],
+    "height_band_reason": "Predeclared B3 stage silhouette unchanged; visual review retry.",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-10T22:51:00.490Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/B3/stages_bronze/stages_bronze/raw/palisade_ruined_try2.png",
+  "raw_sha256": "01333f1b105a1e0c688db61445bf0d40d3de27a080a6760e662bc9a347557baa",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A2/bronze/raw/palisade_ew_try1.png",
+      "sha256": "3205b908ba457dae29374cf227bd45dea3e83d0eb7a152d3d17c2a6469ccd03e"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/B3/stages_bronze/stages_bronze/normalized/palisade_ruined_try2.png",
+  "normalized_sha256": "3c90764efe7475805162fc10c8244294067a98bd4f266399326c245a7ec72beb",
+  "size": [
+    94,
+    30
+  ],
+  "anchor": [
+    47,
+    25
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (117, 132, 2062, 636)",
+    "uniform Lanczos scale: 0.044",
+    "transparent 4px padding; source-canvas anchor: (47, 25)"
+  ],
+  "projection": {
+    "family": "palisade_ruined",
+    "anchor": [
+      47,
+      25
+    ],
+    "height_band": [
+      20,
+      24
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1481,
+    "base_row": 25,
+    "base_error": 0,
+    "height": 22,
+    "gradient_x": -1.2861953125,
+    "gradient_y": -2.382721216509775,
+    "light_angle_degrees": 241.6397818248011,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/B3/stages_bronze/stages_bronze/raw/palisade_ruined_try2.png",
+    "sha256": "01333f1b105a1e0c688db61445bf0d40d3de27a080a6760e662bc9a347557baa",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.25280898876404495,
+      "saturation_q25": 0.5464983631608101,
+      "saturation_q75": 0.6058372846828798,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.020726124826799697,
+      "foreground_pixels": 13364
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    0,
+    2164,
+    709
+  ],
+  "raw_opaque_bbox": [
+    119,
+    134,
+    2060,
+    634
+  ],
+  "raw_faint_far_ratio": 0.013793731868175169,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_CANDIDATE",
+  "failures": [],
+  "review": {
+    "score": 91,
+    "verdict": "pass",
+    "category_match": true,
+    "differences": [
+      "Two ruined states withheld because wash_flatness failed frozen gates in all3attempts.",
+      "Follow-up independent score88 rejected casting foundation: fourlegspan46px vs62pxbuilt; candidate pruned at cap."
+    ],
+    "suggestions": [
+      "Keep capped rejects out of the import draft; importer must retain explicit gaps.",
+      "See review_independent88.json and final_disposition.json; no further generation."
+    ],
+    "reasoning": "Root independently inspected the native1x board: charcoal woven halfshell, low foundations, casting unfinished frame, empty gatehalf and broken gatepanel are readable. Damage remains distinct while A2 identity is retained."
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "family": "palisade",
+  "state": "ruined",
+  "target_width": 70,
+  "independent_followup_review": "art/batch_b3/stages_bronze/review_independent88.json",
+  "final_disposition": "art/batch_b3/stages_bronze/final_disposition.json"
+}

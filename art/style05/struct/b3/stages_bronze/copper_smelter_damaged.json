@@ -1,0 +1,159 @@
+{
+  "record": {
+    "id": "copper_smelter_damaged",
+    "lane": "stages_bronze",
+    "era": "bronze",
+    "attempt": 2,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c798-db13-7ea2-ac75-d0b60491c959/exec-b1a9f5ab-c47b-48a0-af89-4f4d4af5d9f1.png",
+    "prompt": "WorldSim style05 ink-and-tone bronze-age game sprite. Image1 is the NEW round3 rectangular furnace built parent to preserve identity; images2 and3 are LOCKED STYLE ONLY anchors. Fine controlled brown-black pen ink over restrained natural earth-colour wash, outer/internal stroke ratio2:1. Material marks: wood3 broken longitudinal grain lines per principal plank; stone/clay3 short fracture groups per dominant mass; straw5 weave bands per major surface. Sparse single group of3 parallel / hatches, no dense crosshatching. Natural slight pigment variation with broad upper-left light and lower-right shade. Front three-quarter about20degrees down, front faces prominent; no isometric diamond, horizon or perspective ground. Keep original material colours, construction proportions, orientation and ground footprint. Generate ONE state only on true transparent RGBA, all outside pixels transparent. No ground patch, cast shadow, halo, scenery, text, borders, people, modern fittings, iron or dyed fabric. Do not copy reference backgrounds. Preserve empty margins on all sides.  STATE: Same full-height RECTANGULAR shaft with squared chimney, large front firing arch, right tuyere and bellows. Conspicuous missing upper-right corner, one dark vertical crack and torn hole in right hide bellows. Preserve original overall width and highest left chimney corner. Cold charcoal, no glow. Keep total silhouette 41px wide, 40px high at1x. Very shallow low footprint where foundation/ruins. Preserve angular clay identity and right-side air-supply location. Restrained pigment variation across clay, no smooth uniform fills.",
+    "subject": "Same full-height RECTANGULAR shaft with squared chimney, large front firing arch, right tuyere and bellows. Conspicuous missing upper-right corner, one dark vertical crack and torn hole in right hide bellows. Preserve original overall width and highest left chimney corner. Cold charcoal, no glow.",
+    "references": [
+      "/Users/rexxa/.codex/generated_images/01a1c798-db13-7ea2-ac75-d0b60491c959/exec-0966aae9-c261-49a9-9679-9be2189fc77a.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png"
+    ],
+    "target_height": 40,
+    "projection_family": "copper_smelter_damaged",
+    "height_band": [
+      38,
+      42
+    ],
+    "height_band_reason": "Predeclared B3 stage silhouette in plan.json unchanged; round3 identity adaptation.",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-10T22:48:14.338Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/B3/stages_bronze/stages_bronze/raw/copper_smelter_damaged_try2.png",
+  "raw_sha256": "5c0dac72ec9af7624a03c29667c1434cabd24fd640bfa60b33af0bae3d784159",
+  "references": [
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c798-db13-7ea2-ac75-d0b60491c959/exec-0966aae9-c261-49a9-9679-9be2189fc77a.png",
+      "sha256": "bdf1bdca98341b85229a9531a80c2768f6e4d8135385bf983e261e09ca5db688"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/B3/stages_bronze/stages_bronze/normalized/copper_smelter_damaged_try2.png",
+  "normalized_sha256": "90c28d24dd577532c81beed50f2643bb70694d35987fe1ad5d0eaf2b4fcef499",
+  "size": [
+    63,
+    48
+  ],
+  "anchor": [
+    31,
+    43
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (54, 180, 1210, 1027)",
+    "uniform Lanczos scale: 0.04744958481613286",
+    "transparent 4px padding; source-canvas anchor: (31, 43)"
+  ],
+  "projection": {
+    "family": "copper_smelter_damaged",
+    "anchor": [
+      31,
+      43
+    ],
+    "height_band": [
+      38,
+      42
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1227,
+    "base_row": 43,
+    "base_error": 0,
+    "height": 40,
+    "gradient_x": -1.8975829787234042,
+    "gradient_y": -2.1476364888123927,
+    "light_angle_degrees": 228.53721339078126,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/B3/stages_bronze/stages_bronze/raw/copper_smelter_damaged_try2.png",
+    "sha256": "5c0dac72ec9af7624a03c29667c1434cabd24fd640bfa60b33af0bae3d784159",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.2264294892386765,
+      "saturation_q25": 0.5653868938198001,
+      "saturation_q75": 0.6421425990961828,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.013240098988283079,
+      "foreground_pixels": 26750
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    50,
+    19,
+    1248,
+    1239
+  ],
+  "raw_opaque_bbox": [
+    56,
+    182,
+    1208,
+    1025
+  ],
+  "raw_faint_far_ratio": 0.0022646062628447036,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_CANDIDATE",
+  "failures": [],
+  "review": {
+    "score": 91,
+    "verdict": "pass",
+    "category_match": true,
+    "differences": [
+      "Two ruined states withheld because wash_flatness failed frozen gates in all3attempts.",
+      "Follow-up independent score88 rejected casting foundation: fourlegspan46px vs62pxbuilt; candidate pruned at cap."
+    ],
+    "suggestions": [
+      "Keep capped rejects out of the import draft; importer must retain explicit gaps.",
+      "See review_independent88.json and final_disposition.json; no further generation."
+    ],
+    "reasoning": "Root independently inspected the native1x board: charcoal woven halfshell, low foundations, casting unfinished frame, empty gatehalf and broken gatepanel are readable. Damage remains distinct while A2 identity is retained."
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "family": "copper_smelter",
+  "state": "damaged",
+  "target_width": 41,
+  "independent_followup_review": "art/batch_b3/stages_bronze/review_independent88.json",
+  "final_disposition": "art/batch_b3/stages_bronze/final_disposition.json"
+}

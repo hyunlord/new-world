@@ -1,0 +1,13 @@
+{
+  "score": 78,
+  "verdict": "revise",
+  "category_match": true,
+  "differences": [
+    "four failed frozen wash_flatness",
+    "casting foundation shrunk width relative to built"
+  ],
+  "suggestions": [
+    "Regenerate selectedweak5/26(19.2%) with varied washes and corrected foundation width."
+  ],
+  "reasoning": "Initial native board found flatwash failures and a narrow casting foundation; frozen numeric gates remain unchanged."
+}

@@ -1,0 +1,418 @@
+{
+  "assets": [
+    {
+      "id": "charcoal_clamp_foundation",
+      "path": "art/style05/struct/b3/stages_bronze/charcoal_clamp_foundation.png",
+      "width": 89,
+      "height": 40,
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "anchor": [
+        44,
+        35
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "B3_ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "a3ebe5d72013baf2fa64c190605ce1a9d427277b0d6a813205ad4496f9905edc"
+    },
+    {
+      "id": "charcoal_clamp_half_built",
+      "path": "art/style05/struct/b3/stages_bronze/charcoal_clamp_half_built.png",
+      "width": 86,
+      "height": 58,
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "anchor": [
+        43,
+        53
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "B3_ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "f1a200bbd79056e1b02ff957cc54f85f07ee4afac23d98b3235967dfd4a2e481"
+    },
+    {
+      "id": "charcoal_clamp_damaged",
+      "path": "art/style05/struct/b3/stages_bronze/charcoal_clamp_damaged.png",
+      "width": 101,
+      "height": 64,
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "anchor": [
+        50,
+        59
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "B3_ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "ec175e34fe33326d0341d6bbb6e2fe547f3a69f62d7ea426e89b1cd58d61847b"
+    },
+    {
+      "id": "charcoal_clamp_ruined",
+      "path": "art/style05/struct/b3/stages_bronze/charcoal_clamp_ruined.png",
+      "width": 91,
+      "height": 36,
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "anchor": [
+        45,
+        31
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "B3_ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "4874d9927e4a7ad7006de8b71cd104770a36cd06566f906470ef4c9473081414"
+    },
+    {
+      "id": "copper_smelter_foundation",
+      "path": "art/style05/struct/b3/stages_bronze/copper_smelter_foundation.png",
+      "width": 60,
+      "height": 26,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        30,
+        21
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "B3_ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "54debd44ebc5ca624f1db6d08599b322444acd8c1e29d7aa0615f2791e5bb598"
+    },
+    {
+      "id": "copper_smelter_half_built",
+      "path": "art/style05/struct/b3/stages_bronze/copper_smelter_half_built.png",
+      "width": 70,
+      "height": 36,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        35,
+        31
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "B3_ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "027801278c3d5b0fd1772af2a4e6d89b3852c8669bc0c2934e020a89f2370654"
+    },
+    {
+      "id": "copper_smelter_damaged",
+      "path": "art/style05/struct/b3/stages_bronze/copper_smelter_damaged.png",
+      "width": 63,
+      "height": 48,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        31,
+        43
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "B3_ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "90c28d24dd577532c81beed50f2643bb70694d35987fe1ad5d0eaf2b4fcef499"
+    },
+    {
+      "id": "casting_bench_half_built",
+      "path": "art/style05/struct/b3/stages_bronze/casting_bench_half_built.png",
+      "width": 69,
+      "height": 44,
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "anchor": [
+        34,
+        39
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "B3_ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "ac40470b6c07f5bf9f9f2ca50d9a4ccb38344cbb45a86316c8102c15426c7c7a"
+    },
+    {
+      "id": "casting_bench_damaged",
+      "path": "art/style05/struct/b3/stages_bronze/casting_bench_damaged.png",
+      "width": 69,
+      "height": 44,
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "anchor": [
+        34,
+        39
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "B3_ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "b4b49d5772dd459cc314241d285855e9107ac91397217345ab282f276cc84323"
+    },
+    {
+      "id": "casting_bench_ruined",
+      "path": "art/style05/struct/b3/stages_bronze/casting_bench_ruined.png",
+      "width": 51,
+      "height": 26,
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "anchor": [
+        25,
+        21
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "B3_ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "83d22cca2c5d663504c40fd9e4648c9eb175070110e63015a36a885575f4dee7"
+    },
+    {
+      "id": "bee_skep_foundation",
+      "path": "art/style05/struct/b3/stages_bronze/bee_skep_foundation.png",
+      "width": 34,
+      "height": 18,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        17,
+        13
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "B3_ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "73d9b01a63fb4e74fa6238d5729b7841d5703377b6daeea69a883c7192677123"
+    },
+    {
+      "id": "bee_skep_half_built",
+      "path": "art/style05/struct/b3/stages_bronze/bee_skep_half_built.png",
+      "width": 35,
+      "height": 30,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        17,
+        25
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "B3_ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "678f8e70cd5d545cd974421f24275a101e942156475f73dc01c1c01391216425"
+    },
+    {
+      "id": "bee_skep_damaged",
+      "path": "art/style05/struct/b3/stages_bronze/bee_skep_damaged.png",
+      "width": 42,
+      "height": 38,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        21,
+        33
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "B3_ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "66b5a8c83561f9efc8815b5ad9f67b260af67108a3292dfbda3653cd0867fb36"
+    },
+    {
+      "id": "bee_skep_ruined",
+      "path": "art/style05/struct/b3/stages_bronze/bee_skep_ruined.png",
+      "width": 38,
+      "height": 22,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        19,
+        17
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "B3_ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "a98f01fa631e2442badedab47142199848a56447207e520e7844cc7662c9f32d"
+    },
+    {
+      "id": "shrine_foundation",
+      "path": "art/style05/struct/b3/stages_bronze/shrine_foundation.png",
+      "width": 98,
+      "height": 26,
+      "footprint": [
+        3.0,
+        2.0
+      ],
+      "anchor": [
+        49,
+        21
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "B3_ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "0a533f39da4c744cc519808def4f63642510e7d59f8fc47bc9d9aef4c6f8f06f"
+    },
+    {
+      "id": "shrine_half_built",
+      "path": "art/style05/struct/b3/stages_bronze/shrine_half_built.png",
+      "width": 111,
+      "height": 88,
+      "footprint": [
+        3.0,
+        2.0
+      ],
+      "anchor": [
+        55,
+        83
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "B3_ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "d2bcb58dfaceb6acf8ff1f95203844acdb3046b34e331367457a8cbe7476f6d6"
+    },
+    {
+      "id": "shrine_ruined",
+      "path": "art/style05/struct/b3/stages_bronze/shrine_ruined.png",
+      "width": 74,
+      "height": 38,
+      "footprint": [
+        3.0,
+        2.0
+      ],
+      "anchor": [
+        37,
+        33
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "B3_ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "8cd3c1513c2bc1c94557bc58e643f2fcee70eb3dabf45002922c7f9e5445a107"
+    },
+    {
+      "id": "palisade_foundation",
+      "path": "art/style05/struct/b3/stages_bronze/palisade_foundation.png",
+      "width": 67,
+      "height": 20,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        33,
+        15
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "B3_ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "d6b0cb8e4b5d0cd9e8aa73f5038d6566677915c8f8e5f3d2f9d8968497e9af70"
+    },
+    {
+      "id": "palisade_half_built",
+      "path": "art/style05/struct/b3/stages_bronze/palisade_half_built.png",
+      "width": 77,
+      "height": 68,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        38,
+        63
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "B3_ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "85f313da05b08e2ce059b646597d9c783ce5d3a4c2adb49f895d28fe6b37766c"
+    },
+    {
+      "id": "palisade_ruined",
+      "path": "art/style05/struct/b3/stages_bronze/palisade_ruined.png",
+      "width": 94,
+      "height": 30,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        47,
+        25
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "B3_ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "3c90764efe7475805162fc10c8244294067a98bd4f266399326c245a7ec72beb"
+    },
+    {
+      "id": "palisade_gate_foundation",
+      "path": "art/style05/struct/b3/stages_bronze/palisade_gate_foundation.png",
+      "width": 77,
+      "height": 20,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        38,
+        15
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "B3_ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "589009b63f1259f7506e5c130cd768abed4bf12fde77190a3d4fba2c2c0894b2"
+    },
+    {
+      "id": "palisade_gate_half_built",
+      "path": "art/style05/struct/b3/stages_bronze/palisade_gate_half_built.png",
+      "width": 79,
+      "height": 68,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        39,
+        63
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "B3_ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "4528e1467a7cf885ae8f1cd0bf756f4780ee3f2073c03597ac90e9fdde3fc371"
+    },
+    {
+      "id": "palisade_gate_damaged",
+      "path": "art/style05/struct/b3/stages_bronze/palisade_gate_damaged.png",
+      "width": 79,
+      "height": 68,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        39,
+        63
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "B3_ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "250c96aec69f1b2e96126050a334b9231057acb8ae889d3a32ff1690fbc8ddae"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "disposition": "ADOPT23_REUSE9_WITHHOLD3",
+  "scores_preserved": [
+    {
+      "review": "review_initial_root91.json",
+      "score": 91,
+      "scope": "Initial readability acceptance24states; geometry not waived."
+    },
+    {
+      "review": "review_independent88.json",
+      "score": 88,
+      "scope": "Follow-up review24states identifies casting foundation as sole blocker; other23pass."
+    }
+  ],
+  "resolution": "Rejected casting foundation at attempt3 and pruned PNG/sidecar/assets/import/binding rows; refreshedboards. No target change or sprite stretching.",
+  "adopted": 23,
+  "rejected": 18,
+  "generated": 41,
+  "reused": 9,
+  "gaps": [
+    "casting_bench_foundation",
+    "copper_smelter_ruined",
+    "palisade_gate_ruined"
+  ],
+  "board_sha256": {
+    "bronze_1x.png": "40e652ca55cfa227937bcb2127c5c5d3b2fd3f36d5b58e01cda53c153f1b674d",
+    "bronze_2x.png": "1cdc6c1002880a264e1f8ef5ab70b198c36c2fac005e59a1dd07deca48e736dc"
+  }
+}

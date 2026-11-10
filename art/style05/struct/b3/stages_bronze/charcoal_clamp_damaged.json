@@ -1,0 +1,159 @@
+{
+  "record": {
+    "id": "charcoal_clamp_damaged",
+    "lane": "stages_bronze",
+    "era": "bronze",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c2fb-c726-7860-a068-7686aedd8390/exec-d8175bfd-3cf0-42a1-a71d-eea051cd8a56.png",
+    "prompt": "WorldSim style05 ink-and-tone bronze-age game sprite. Image1 is the exact built parent to preserve identity; images2 and3 are LOCKED STYLE ONLY anchors. Fine controlled brown-black pen ink over restrained natural earth-colour wash, outer/internal stroke ratio2:1. Material marks: wood3 broken longitudinal grain lines per principal plank; stone/clay3 short fracture groups per dominant mass; straw5 weave bands per major surface. Sparse single group of3 parallel / hatches, no dense crosshatching. Natural slight pigment variation with broad upper-left light and lower-right shade. Front three-quarter about20degrees down, front faces prominent; no isometric diamond, horizon or perspective ground. Keep original material colours, construction proportions, orientation and ground footprint. Generate ONE state only on true transparent RGBA, all outside pixels transparent. No ground patch, cast shadow, halo, scenery, text, borders, people, modern fittings, iron or dyed fabric. Do not copy reference backgrounds. Preserve empty margins on all sides. STATE: The same intact dome with a jagged missing chunk of earth on the upper RIGHT flank, exposing unburned logs beneath; original crest and lower base stay intact. No smoke. At game size visible body width is 98px and height 56px; parent height 56px. Preserve original horizontal span.",
+    "subject": "The same intact dome with a jagged missing chunk of earth on the upper RIGHT flank, exposing unburned logs beneath; original crest and lower base stay intact. No smoke.",
+    "references": [
+      "/Users/rexxa/work/art-batch/A2/bronze/raw/charcoal_clamp_idle_try3.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png"
+    ],
+    "target_height": 56,
+    "projection_family": "charcoal_clamp_damaged",
+    "height_band": [
+      54,
+      58
+    ],
+    "height_band_reason": "Predeclared B3 construction stage silhouette; same footprint and width target, see art/batch_b3/stages_bronze/plan.json.",
+    "footprint": [
+      2.0,
+      2.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-10T01:12:07.574Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/B3/stages_bronze/stages_bronze/raw/charcoal_clamp_damaged_try1.png",
+  "raw_sha256": "39c054b4ab05d1c05e508474188803d9efc5503ede63b63ba966d7901c547072",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A2/bronze/raw/charcoal_clamp_idle_try3.png",
+      "sha256": "d8ac8eea5358b575f4df2290aa54b5e45c106c28d8b4b39b8fdc87a555d9eae4"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/B3/stages_bronze/stages_bronze/normalized/charcoal_clamp_damaged_try1.png",
+  "normalized_sha256": "ec175e34fe33326d0341d6bbb6e2fe547f3a69f62d7ea426e89b1cd58d61847b",
+  "size": [
+    101,
+    64
+  ],
+  "anchor": [
+    50,
+    59
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (247, 124, 1396, 817)",
+    "uniform Lanczos scale: 0.08127721335268505",
+    "transparent 4px padding; source-canvas anchor: (50, 59)"
+  ],
+  "projection": {
+    "family": "charcoal_clamp_damaged",
+    "anchor": [
+      50,
+      59
+    ],
+    "height_band": [
+      54,
+      58
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 3468,
+    "base_row": 59,
+    "base_error": 0,
+    "height": 56,
+    "gradient_x": -0.17841690636923985,
+    "gradient_y": -0.14032361481481456,
+    "light_angle_degrees": 218.18479614292156,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/B3/stages_bronze/stages_bronze/raw/charcoal_clamp_damaged_try1.png",
+    "sha256": "39c054b4ab05d1c05e508474188803d9efc5503ede63b63ba966d7901c547072",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.1836283185840708,
+      "saturation_q25": 0.44768475145180614,
+      "saturation_q75": 0.5170160202526095,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.47213595499958,
+      "wash_flatness": 0.013681097873156228,
+      "foreground_pixels": 26490
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    15,
+    1639,
+    948
+  ],
+  "raw_opaque_bbox": [
+    249,
+    126,
+    1394,
+    815
+  ],
+  "raw_faint_far_ratio": 0.007846039154911992,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_CANDIDATE",
+  "failures": [],
+  "review": {
+    "score": 91,
+    "verdict": "pass",
+    "category_match": true,
+    "differences": [
+      "Two ruined states withheld because wash_flatness failed frozen gates in all3attempts.",
+      "Follow-up independent score88 rejected casting foundation: fourlegspan46px vs62pxbuilt; candidate pruned at cap."
+    ],
+    "suggestions": [
+      "Keep capped rejects out of the import draft; importer must retain explicit gaps.",
+      "See review_independent88.json and final_disposition.json; no further generation."
+    ],
+    "reasoning": "Root independently inspected the native1x board: charcoal woven halfshell, low foundations, casting unfinished frame, empty gatehalf and broken gatepanel are readable. Damage remains distinct while A2 identity is retained."
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "family": "charcoal_clamp",
+  "state": "damaged",
+  "target_width": 98,
+  "independent_followup_review": "art/batch_b3/stages_bronze/review_independent88.json",
+  "final_disposition": "art/batch_b3/stages_bronze/final_disposition.json"
+}

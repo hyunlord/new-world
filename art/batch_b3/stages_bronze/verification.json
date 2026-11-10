@@ -1,0 +1,47 @@
+{
+  "result": "PASS",
+  "attempts": 41,
+  "unique_raw_hashes": 41,
+  "adopted": 23,
+  "reused": 9,
+  "gaps": 3,
+  "max_attempts": 3,
+  "normalization_reproduced": 23,
+  "projection_rechecked": 23,
+  "raw_and_reference_hashes": "PASS",
+  "frozen_calibration_hash": "PASS",
+  "per_family": {
+    "bee_skep": {
+      "ADOPTED_CANDIDATE": 4
+    },
+    "casting_bench": {
+      "REJECTED": 2,
+      "CAPPED_REJECTED_VISUAL_GEOMETRY": 1,
+      "ADOPTED_CANDIDATE": 3
+    },
+    "charcoal_clamp": {
+      "ADOPTED_CANDIDATE": 4,
+      "REJECTED": 1
+    },
+    "copper_smelter": {
+      "REJECTED": 7,
+      "ADOPTED_CANDIDATE": 3
+    },
+    "palisade": {
+      "ADOPTED_CANDIDATE": 3,
+      "REJECTED": 1
+    },
+    "palisade_gate": {
+      "REJECTED": 4,
+      "ADOPTED_CANDIDATE": 3
+    },
+    "shrine": {
+      "REJECTED": 2,
+      "ADOPTED_CANDIDATE": 3
+    }
+  },
+  "limits": [
+    "Historical A2 model score is MISSING; initial root91 and independent88 follow-up retained; geometry blocker pruned.",
+    "No runtime/Godot import: draft only."
+  ]
+}
