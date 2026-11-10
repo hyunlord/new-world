@@ -5,6 +5,24 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## ART-BATCH B1 — 2026-11-11
+
+### Added
+- 84 new wardrobe looks (840 frames), 504 matching portraits and 140 supplementary
+  tool/load frames, including weakest-sheet regeneration; candidates under `art/character/batch_b1/` and
+  `art/character/batch_b1_tools/`, with hash-bound source and review sidecars.
+- `art/batch_b1/`: a Route I adapter reusing the existing ownership,
+  normalization and structural checks; native/2× reference boards; six-cell
+  inspector portrait extraction; frozen style and coverage contracts.
+- Art-line ADR 0016 records complete-figure production and the pending game
+  integration of new appearance axes, portrait transforms and held-tool state.
+
+### Changed
+- B1 generation records enforce a three-attempt cap. Exact portrait identity
+  slots were restored after rejecting 14 generic plant-fibre portrait sheets.
+  Source-resolution numerical style diagnostics retain their actual outcome;
+  candidate adoption requires structure and a recorded visual review.
+
 ## M1-ART — 2026-10-21
 
 The colony view drawn like the mock-up: real ground, a canopy that reads as forest, buildings and log piles you can read, people you can find (`docs/v8/m1art/ART_GOAL.md`, report `docs/v8/m1art/ART_REPORT.md`). No simulation change (`rust/` untouched; identity, colony determinism and replay pass).

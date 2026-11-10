@@ -272,3 +272,16 @@ calls. UI text goes through `Locale.ltr("KEY")`; keys live in
 `localization/<lang>/<category>.json` (the source) and are compiled into
 `localization/compiled/<lang>.json` (what the game loads) by
 `python3 tools/localization_compile.py --project-root .`.
+
+## 8. B1 art candidate production (art branch only)
+
+`art/batch_b1/` reuses the adopted Route I ownership, normalization and
+whole-figure checks from `art/pipeline5/`. Its catalogue and style contract
+define new era wardrobes; reviewed candidates live in
+`art/character/batch_b1/`, supplementary work/load figures in
+`art/character/batch_b1_tools/`, and new inspector portraits in
+`art/portrait/batch_b1/`. The unapplied drafts in `art/batch_b1/drafts/`
+describe importer source patterns and appearance-grid order. Raw generations, failed attempts
+and measurements live outside the repository in the B1 evidence directory.
+Candidate selection does not activate garments or tool-state selection in
+the game; C2/C3 owns masks, measured face transforms and renderer integration.
