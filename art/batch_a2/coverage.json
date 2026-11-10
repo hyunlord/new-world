@@ -1,0 +1,1702 @@
+{
+  "source": "https://github.com/hyunlord/new-world/issues/690",
+  "variant_authority": "Full/depleted ores and crop growth stages explicit. Other named variants are production recommendations matching brief variant categories, not bible-mandated enum names. Count buckets apply to A3 loose item piles, not A2 buildings. Seasonal perennials are useful follow-up variants.",
+  "rows": [
+    {
+      "family": "charcoal_clamp",
+      "variant": "idle",
+      "asset_id": "charcoal_clamp_idle",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/bronze/charcoal_clamp_idle.png"
+    },
+    {
+      "family": "charcoal_clamp",
+      "variant": "burning",
+      "asset_id": "charcoal_clamp_burning",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/bronze/charcoal_clamp_burning.png"
+    },
+    {
+      "family": "charcoal_clamp",
+      "variant": "spent",
+      "asset_id": "charcoal_clamp_spent",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/bronze/charcoal_clamp_spent.png"
+    },
+    {
+      "family": "copper_smelter",
+      "variant": "unlit",
+      "asset_id": "copper_smelter_unlit",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/bronze/copper_smelter_unlit.png"
+    },
+    {
+      "family": "copper_smelter",
+      "variant": "lit",
+      "asset_id": "copper_smelter_lit",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/bronze/copper_smelter_lit.png"
+    },
+    {
+      "family": "casting_bench",
+      "variant": "empty",
+      "asset_id": "casting_bench_empty",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/bronze/casting_bench_empty.png"
+    },
+    {
+      "family": "casting_bench",
+      "variant": "working",
+      "asset_id": "casting_bench_working",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/bronze/casting_bench_working.png"
+    },
+    {
+      "family": "bee_skep",
+      "variant": "active",
+      "asset_id": "bee_skep_active",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/bronze/bee_skep_active.png"
+    },
+    {
+      "family": "bee_skep",
+      "variant": "empty",
+      "asset_id": "bee_skep_empty",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/bronze/bee_skep_empty.png"
+    },
+    {
+      "family": "mud_brick_house",
+      "variant": "intact",
+      "asset_id": "mudbrick_house_intact",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/mudbrick_house_intact/manifest.json"
+    },
+    {
+      "family": "mud_brick_house",
+      "variant": "damaged",
+      "asset_id": "mudbrick_house_damaged",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/mudbrick_house_damaged/manifest.json"
+    },
+    {
+      "family": "palisade",
+      "variant": "ew",
+      "asset_id": "palisade_ew",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/bronze/palisade_ew.png"
+    },
+    {
+      "family": "palisade",
+      "variant": "ns",
+      "asset_id": "palisade_ns",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "GENERATED_NOT_ADOPTED",
+      "attempts": 3,
+      "detail": "Upper-left lighting check failed."
+    },
+    {
+      "family": "palisade",
+      "variant": "corner",
+      "asset_id": "palisade_corner",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "GENERATED_NOT_ADOPTED",
+      "attempts": 3,
+      "detail": "Upper-left lighting check failed."
+    },
+    {
+      "family": "palisade",
+      "variant": "end",
+      "asset_id": "palisade_end",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/bronze/palisade_end.png"
+    },
+    {
+      "family": "palisade",
+      "variant": "damaged",
+      "asset_id": "palisade_damaged",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/bronze/palisade_damaged.png"
+    },
+    {
+      "family": "palisade_gate",
+      "variant": "closed",
+      "asset_id": "palisade_gate_closed",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/bronze/palisade_gate_closed.png"
+    },
+    {
+      "family": "palisade_gate",
+      "variant": "open",
+      "asset_id": "palisade_gate_open",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/bronze/palisade_gate_open.png"
+    },
+    {
+      "family": "copper_outcrop",
+      "variant": "full",
+      "asset_id": "copper_outcrop_full",
+      "era": "bronze",
+      "kind": "resource_node",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/ores/copper_outcrop_full.png"
+    },
+    {
+      "family": "copper_outcrop",
+      "variant": "depleted",
+      "asset_id": "copper_outcrop_depleted",
+      "era": "bronze",
+      "kind": "resource_node",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/ores/copper_outcrop_depleted.png"
+    },
+    {
+      "family": "tin_outcrop",
+      "variant": "full",
+      "asset_id": "tin_outcrop_full",
+      "era": "bronze",
+      "kind": "resource_node",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/ores/tin_outcrop_full.png"
+    },
+    {
+      "family": "tin_outcrop",
+      "variant": "depleted",
+      "asset_id": "tin_outcrop_depleted",
+      "era": "bronze",
+      "kind": "resource_node",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/ores/tin_outcrop_depleted.png"
+    },
+    {
+      "family": "iron_outcrop",
+      "variant": "full",
+      "asset_id": "iron_outcrop_full",
+      "era": "iron",
+      "kind": "resource_node",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/ores/iron_outcrop_full.png"
+    },
+    {
+      "family": "iron_outcrop",
+      "variant": "depleted",
+      "asset_id": "iron_outcrop_depleted",
+      "era": "iron",
+      "kind": "resource_node",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/ores/iron_outcrop_depleted.png"
+    },
+    {
+      "family": "bog_iron_outcrop",
+      "variant": "full",
+      "asset_id": "bog_iron_outcrop_full",
+      "era": "iron",
+      "kind": "resource_node",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/ores/bog_iron_outcrop_full.png"
+    },
+    {
+      "family": "bog_iron_outcrop",
+      "variant": "depleted",
+      "asset_id": "bog_iron_outcrop_depleted",
+      "era": "iron",
+      "kind": "resource_node",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/ores/bog_iron_outcrop_depleted.png"
+    },
+    {
+      "family": "mine_entrance",
+      "variant": "active",
+      "asset_id": "mine_entrance_active",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "GENERATED_NOT_ADOPTED",
+      "attempts": 3,
+      "detail": "Upper-left lighting check failed; earlier tone-wash failures."
+    },
+    {
+      "family": "mine_entrance",
+      "variant": "abandoned",
+      "asset_id": "mine_entrance_abandoned",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "GENERATED_NOT_ADOPTED",
+      "attempts": 3,
+      "detail": "Upper-left lighting check failed; earlier tone-wash failures."
+    },
+    {
+      "family": "stone_storehouse",
+      "variant": "empty",
+      "asset_id": "stone_storehouse_empty",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/stone_storehouse_empty/manifest.json"
+    },
+    {
+      "family": "stone_storehouse",
+      "variant": "filled",
+      "asset_id": "stone_storehouse_full",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/stone_storehouse_full/manifest.json"
+    },
+    {
+      "family": "chief_hall",
+      "variant": "intact",
+      "asset_id": "chief_hall_intact",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/chief_hall_intact/manifest.json"
+    },
+    {
+      "family": "chief_hall",
+      "variant": "damaged",
+      "asset_id": "chief_hall_damaged",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/chief_hall_damaged/manifest.json"
+    },
+    {
+      "family": "shrine",
+      "variant": "intact",
+      "asset_id": "shrine_intact",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/bronze/shrine_intact.png"
+    },
+    {
+      "family": "shrine",
+      "variant": "damaged",
+      "asset_id": "shrine_damaged",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/bronze/shrine_damaged.png"
+    },
+    {
+      "family": "trading_post",
+      "variant": "empty",
+      "asset_id": "trading_post_empty",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/trading_post_empty/manifest.json"
+    },
+    {
+      "family": "trading_post",
+      "variant": "stocked",
+      "asset_id": "trading_post_stocked",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/trading_post_stocked/manifest.json"
+    },
+    {
+      "family": "palisade_gatehouse",
+      "variant": "closed",
+      "asset_id": "palisade_gatehouse_closed",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/palisade_gatehouse_closed/manifest.json"
+    },
+    {
+      "family": "palisade_gatehouse",
+      "variant": "open",
+      "asset_id": "palisade_gatehouse_open",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/palisade_gatehouse_open/manifest.json"
+    },
+    {
+      "family": "cart_shed",
+      "variant": "empty",
+      "asset_id": "cart_shed_empty",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/cart_shed_empty/manifest.json"
+    },
+    {
+      "family": "cart_shed",
+      "variant": "occupied",
+      "asset_id": "cart_shed_occupied",
+      "era": "bronze",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/cart_shed_occupied/manifest.json"
+    },
+    {
+      "family": "irrigation_channel",
+      "variant": "dry",
+      "asset_id": "irrigation_channel_dry",
+      "era": "bronze",
+      "kind": "optional_extension",
+      "status": "GENERATED_NOT_ADOPTED",
+      "attempts": 3,
+      "detail": "Numeric-ready, but visibly contains reflective water in a declared dry state."
+    },
+    {
+      "family": "irrigation_channel",
+      "variant": "watered",
+      "asset_id": "irrigation_channel_watered",
+      "era": "bronze",
+      "kind": "optional_extension",
+      "status": "ADOPTED_GROUND_CANDIDATE",
+      "detail": "art/style05/env/ground/a2/bronze/irrigation_channel_watered.png"
+    },
+    {
+      "family": "terrace",
+      "variant": "empty",
+      "asset_id": "terrace_empty",
+      "era": "bronze",
+      "kind": "optional_extension",
+      "status": "GENERATED_NOT_ADOPTED",
+      "attempts": 3,
+      "detail": "Frozen ground stroke-width check failed."
+    },
+    {
+      "family": "terrace",
+      "variant": "cultivated",
+      "asset_id": "terrace_cultivated",
+      "era": "bronze",
+      "kind": "optional_extension",
+      "status": "ADOPTED_GROUND_CANDIDATE",
+      "detail": "art/style05/env/ground/a2/bronze/terrace_cultivated.png"
+    },
+    {
+      "family": "ditch",
+      "variant": "dry",
+      "asset_id": "ditch_dry",
+      "era": "bronze",
+      "kind": "optional_extension",
+      "status": "GENERATED_NOT_ADOPTED",
+      "attempts": 3,
+      "detail": "Frozen ground stroke-width and tone-wash checks failed."
+    },
+    {
+      "family": "ditch",
+      "variant": "watered",
+      "asset_id": "ditch_watered",
+      "era": "bronze",
+      "kind": "optional_extension",
+      "status": "ADOPTED_GROUND_CANDIDATE",
+      "detail": "art/style05/env/ground/a2/bronze/ditch_watered.png"
+    },
+    {
+      "family": "olive_press",
+      "variant": "empty",
+      "asset_id": "olive_press_empty",
+      "era": "bronze",
+      "kind": "optional_extension",
+      "status": "GENERATED_NOT_ADOPTED",
+      "attempts": 3,
+      "detail": "Numeric-ready, but smooth pale material and continuous timber grooves fail the locked broken-ink style; earlier linkage and contour failures."
+    },
+    {
+      "family": "olive_press",
+      "variant": "working",
+      "asset_id": "olive_press_working",
+      "era": "bronze",
+      "kind": "optional_extension",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/bronze/olive_press_working.png"
+    },
+    {
+      "family": "pen_fence",
+      "variant": "ew",
+      "asset_id": "pen_fence_straight",
+      "era": "neolithic",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/neolithic/pen_fence_straight.png"
+    },
+    {
+      "family": "pen_fence",
+      "variant": "ns",
+      "asset_id": "pen_fence_ns",
+      "era": "neolithic",
+      "kind": "structure",
+      "status": "GENERATED_NOT_ADOPTED",
+      "attempts": 3,
+      "detail": "Numeric-ready, but post stock, height, rail attachment and material do not match the E/W fence family."
+    },
+    {
+      "family": "pen_fence",
+      "variant": "corner",
+      "asset_id": "pen_fence_corner",
+      "era": "neolithic",
+      "kind": "structure",
+      "status": "GENERATED_NOT_ADOPTED",
+      "attempts": 3,
+      "detail": "Final tone-wash failure; earlier numeric-ready corner has a diagonal N/S arm rather than orthogonal plan."
+    },
+    {
+      "family": "pen_fence",
+      "variant": "end",
+      "asset_id": "pen_fence_end",
+      "era": "neolithic",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/neolithic/pen_fence_end.png"
+    },
+    {
+      "family": "pen_fence",
+      "variant": "damaged",
+      "asset_id": "pen_fence_damaged",
+      "era": "neolithic",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/neolithic/pen_fence_damaged.png"
+    },
+    {
+      "family": "pen_gate",
+      "variant": "closed",
+      "asset_id": "pen_gate_closed",
+      "era": "neolithic",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/neolithic/pen_gate_closed.png"
+    },
+    {
+      "family": "pen_gate",
+      "variant": "open",
+      "asset_id": "pen_gate_open",
+      "era": "neolithic",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/neolithic/pen_gate_open.png"
+    },
+    {
+      "family": "granary",
+      "variant": "empty",
+      "asset_id": "granary_empty",
+      "era": "neolithic",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/granary_empty/manifest.json"
+    },
+    {
+      "family": "granary",
+      "variant": "filled",
+      "asset_id": "granary_full",
+      "era": "neolithic",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/granary_full/manifest.json"
+    },
+    {
+      "family": "smokehouse",
+      "variant": "unlit",
+      "asset_id": "smokehouse_idle",
+      "era": "neolithic",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/neolithic/smokehouse_idle.png"
+    },
+    {
+      "family": "smokehouse",
+      "variant": "smoking",
+      "asset_id": "smokehouse_working",
+      "era": "neolithic",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/neolithic/smokehouse_working.png"
+    },
+    {
+      "family": "bread_oven",
+      "variant": "unlit",
+      "asset_id": "bread_oven_unlit",
+      "era": "neolithic",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/neolithic/bread_oven_unlit.png"
+    },
+    {
+      "family": "bread_oven",
+      "variant": "lit",
+      "asset_id": "bread_oven_lit",
+      "era": "neolithic",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/neolithic/bread_oven_lit.png"
+    },
+    {
+      "family": "potters_kiln",
+      "variant": "unlit",
+      "asset_id": "potter_kiln_unlit",
+      "era": "neolithic",
+      "kind": "structure",
+      "status": "GENERATED_NOT_ADOPTED",
+      "attempts": 3,
+      "detail": "Frozen edge-density check failed; earlier tone-wash failures."
+    },
+    {
+      "family": "potters_kiln",
+      "variant": "firing",
+      "asset_id": "potter_kiln_firing",
+      "era": "neolithic",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/neolithic/potter_kiln_firing.png"
+    },
+    {
+      "family": "loom",
+      "variant": "empty",
+      "asset_id": "loom_empty",
+      "era": "neolithic",
+      "kind": "structure",
+      "status": "GENERATED_NOT_ADOPTED",
+      "attempts": 3,
+      "detail": "Numeric-ready, but smooth cylindrical timber lacks the locked broken ink and irregular contours."
+    },
+    {
+      "family": "loom",
+      "variant": "working",
+      "asset_id": "loom_loaded",
+      "era": "neolithic",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/neolithic/loom_loaded.png"
+    },
+    {
+      "family": "well",
+      "variant": "normal",
+      "asset_id": "well",
+      "era": "neolithic",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/neolithic/well.png"
+    },
+    {
+      "family": "well",
+      "variant": "dry",
+      "asset_id": "well_dry",
+      "era": "neolithic",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/neolithic/well_dry.png"
+    },
+    {
+      "family": "log_house",
+      "variant": "intact",
+      "asset_id": "log_house_intact",
+      "era": "neolithic",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/log_house_intact/manifest.json"
+    },
+    {
+      "family": "log_house",
+      "variant": "damaged",
+      "asset_id": "log_house_damaged",
+      "era": "neolithic",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/log_house_damaged/manifest.json"
+    },
+    {
+      "family": "ritual_site",
+      "variant": "empty",
+      "asset_id": "ritual_site_empty",
+      "era": "neolithic",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/neolithic/ritual_site_empty.png"
+    },
+    {
+      "family": "ritual_site",
+      "variant": "furnished",
+      "asset_id": "ritual_site",
+      "era": "neolithic",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/neolithic/ritual_site.png"
+    },
+    {
+      "family": "megalith",
+      "variant": "upright",
+      "asset_id": "megalith",
+      "era": "neolithic",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/neolithic/megalith.png"
+    },
+    {
+      "family": "megalith",
+      "variant": "fallen",
+      "asset_id": "megalith_fallen",
+      "era": "neolithic",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/neolithic/megalith_fallen.png"
+    },
+    {
+      "family": "storehouse",
+      "variant": "empty",
+      "asset_id": "storehouse_empty",
+      "era": "neolithic",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/storehouse_empty/manifest.json"
+    },
+    {
+      "family": "storehouse",
+      "variant": "filled",
+      "asset_id": "storehouse_full",
+      "era": "neolithic",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/storehouse_full/manifest.json"
+    },
+    {
+      "family": "grinding_stone",
+      "variant": "normal",
+      "asset_id": "grinding_stone_normal",
+      "era": "neolithic",
+      "kind": "reuse",
+      "status": "REUSE_EXISTING",
+      "detail": "art/style05/struct/grinding_stone.png"
+    },
+    {
+      "family": "grazing_zone",
+      "variant": null,
+      "kind": "zone",
+      "status": "NO_SPRITE_REQUIRED",
+      "reason": "Zone, no standing sprite required; do not invent a building"
+    },
+    {
+      "family": "mud_brick_house_stage3",
+      "variant": null,
+      "kind": "decision",
+      "status": "NO_SPRITE_REQUIRED",
+      "reason": "Bible lists a neolithic stage3 and bronze stage4; brief explicitly reserves mud brick for bronze. Put generated mud-brick house in bronze and disclose conflict."
+    },
+    {
+      "family": "bloomery",
+      "variant": "unlit",
+      "asset_id": "bloomery_unlit",
+      "era": "iron",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/iron/bloomery_unlit.png"
+    },
+    {
+      "family": "bloomery",
+      "variant": "lit",
+      "asset_id": "bloomery_lit",
+      "era": "iron",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/iron/bloomery_lit.png"
+    },
+    {
+      "family": "forge",
+      "variant": "idle",
+      "asset_id": "forge_idle",
+      "era": "iron",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/iron/forge_idle.png"
+    },
+    {
+      "family": "forge",
+      "variant": "working",
+      "asset_id": "forge_working",
+      "era": "iron",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/iron/forge_working.png"
+    },
+    {
+      "family": "stone_house",
+      "variant": "intact",
+      "asset_id": "stone_house_intact",
+      "era": "iron",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/stone_house_intact/manifest.json"
+    },
+    {
+      "family": "stone_house",
+      "variant": "damaged",
+      "asset_id": "stone_house_damaged",
+      "era": "iron",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/stone_house_damaged/manifest.json"
+    },
+    {
+      "family": "warehouse",
+      "variant": "empty",
+      "asset_id": "warehouse_empty",
+      "era": "iron",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/warehouse_empty/manifest.json"
+    },
+    {
+      "family": "warehouse",
+      "variant": "filled",
+      "asset_id": "warehouse_full",
+      "era": "iron",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/warehouse_full/manifest.json"
+    },
+    {
+      "family": "market",
+      "variant": "empty",
+      "asset_id": "market_empty",
+      "era": "iron",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/market_empty/manifest.json"
+    },
+    {
+      "family": "market",
+      "variant": "stocked",
+      "asset_id": "market_stocked",
+      "era": "iron",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/market_stocked/manifest.json"
+    },
+    {
+      "family": "school",
+      "variant": "empty",
+      "asset_id": "school_empty",
+      "era": "iron",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/school_empty/manifest.json"
+    },
+    {
+      "family": "school",
+      "variant": "furnished",
+      "asset_id": "school_furnished",
+      "era": "iron",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/school_furnished/manifest.json"
+    },
+    {
+      "family": "temple",
+      "variant": "intact",
+      "asset_id": "temple_intact",
+      "era": "iron",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/temple_intact/manifest.json"
+    },
+    {
+      "family": "temple",
+      "variant": "damaged",
+      "asset_id": "temple_damaged",
+      "era": "iron",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/temple_damaged/manifest.json"
+    },
+    {
+      "family": "town_wall",
+      "variant": "ew",
+      "asset_id": "town_wall_drystone_ew",
+      "era": "iron",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/town_wall_drystone_ew/manifest.json"
+    },
+    {
+      "family": "town_wall",
+      "variant": "ns",
+      "asset_id": "town_wall_drystone_ns",
+      "era": "iron",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/town_wall_drystone_ns/manifest.json"
+    },
+    {
+      "family": "town_wall",
+      "variant": "corner",
+      "asset_id": "town_wall_drystone_corner",
+      "era": "iron",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/town_wall_drystone_corner/manifest.json"
+    },
+    {
+      "family": "town_wall",
+      "variant": "end",
+      "asset_id": "town_wall_drystone_end",
+      "era": "iron",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/town_wall_drystone_end/manifest.json"
+    },
+    {
+      "family": "town_wall",
+      "variant": "damaged",
+      "asset_id": "town_wall_drystone_damaged",
+      "era": "iron",
+      "kind": "structure",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/town_wall_drystone_damaged/manifest.json"
+    },
+    {
+      "family": "town_gate",
+      "variant": "closed",
+      "asset_id": "town_gate_closed",
+      "era": "iron",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/iron/town_gate_closed.png"
+    },
+    {
+      "family": "town_gate",
+      "variant": "open",
+      "asset_id": "town_gate_open",
+      "era": "iron",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/iron/town_gate_open.png"
+    },
+    {
+      "family": "watchtower",
+      "variant": "intact",
+      "asset_id": "watchtower",
+      "era": "iron",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/iron/watchtower.png"
+    },
+    {
+      "family": "watchtower",
+      "variant": "damaged",
+      "asset_id": "watchtower_damaged",
+      "era": "iron",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/iron/watchtower_damaged.png"
+    },
+    {
+      "family": "bridge",
+      "variant": "ew",
+      "asset_id": "timber_bridge_ew",
+      "era": "iron",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/iron/timber_bridge_ew.png"
+    },
+    {
+      "family": "bridge",
+      "variant": "ns",
+      "asset_id": "timber_bridge",
+      "era": "iron",
+      "kind": "structure",
+      "status": "GENERATED_NOT_ADOPTED",
+      "attempts": 3,
+      "detail": "Intact N/S bridge: final lighting failure; earlier physical span and two-axis geometry inadequate."
+    },
+    {
+      "family": "bridge",
+      "variant": "damaged",
+      "asset_id": "timber_bridge_damaged",
+      "era": "iron",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/iron/timber_bridge_damaged.png"
+    },
+    {
+      "family": "paved_road",
+      "variant": "straight_ew",
+      "asset_id": "paved_road_ew",
+      "era": "iron",
+      "kind": "structure",
+      "status": "ADOPTED_GROUND_CANDIDATE",
+      "detail": "art/style05/env/ground/a2/iron/paved_road_ew.png"
+    },
+    {
+      "family": "paved_road",
+      "variant": "straight_ns",
+      "asset_id": "paved_road",
+      "era": "iron",
+      "kind": "structure",
+      "status": "ADOPTED_GROUND_CANDIDATE",
+      "detail": "art/style05/env/ground/a2/iron/paved_road.png"
+    },
+    {
+      "family": "paved_road",
+      "variant": "corner",
+      "asset_id": "paved_road_corner",
+      "era": "iron",
+      "kind": "structure",
+      "status": "ADOPTED_GROUND_CANDIDATE",
+      "detail": "art/style05/env/ground/a2/iron/paved_road_corner.png"
+    },
+    {
+      "family": "paved_road",
+      "variant": "junction",
+      "asset_id": "paved_road_junction",
+      "era": "iron",
+      "kind": "structure",
+      "status": "ADOPTED_GROUND_CANDIDATE",
+      "detail": "art/style05/env/ground/a2/iron/paved_road_junction.png"
+    },
+    {
+      "family": "paved_road",
+      "variant": "damaged",
+      "asset_id": "paved_road_damaged",
+      "era": "iron",
+      "kind": "structure",
+      "status": "ADOPTED_GROUND_CANDIDATE",
+      "detail": "art/style05/env/ground/a2/iron/paved_road_damaged.png"
+    },
+    {
+      "family": "aqueduct",
+      "variant": "ew",
+      "asset_id": "aqueduct",
+      "era": "iron",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/iron/aqueduct.png"
+    },
+    {
+      "family": "aqueduct",
+      "variant": "ns",
+      "asset_id": "aqueduct_ns",
+      "era": "iron",
+      "kind": "structure",
+      "status": "GENERATED_NOT_ADOPTED",
+      "attempts": 3,
+      "detail": "Final lighting failure; earlier plan/support dimensions and wall convergence inadequate."
+    },
+    {
+      "family": "aqueduct",
+      "variant": "damaged",
+      "asset_id": "aqueduct_damaged",
+      "era": "iron",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/iron/aqueduct_damaged.png"
+    },
+    {
+      "family": "reservoir",
+      "variant": "dry",
+      "asset_id": "reservoir_empty",
+      "era": "iron",
+      "kind": "structure_extension",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/iron/reservoir_empty.png"
+    },
+    {
+      "family": "reservoir",
+      "variant": "filled",
+      "asset_id": "reservoir_full",
+      "era": "iron",
+      "kind": "structure_extension",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/iron/reservoir_full.png"
+    },
+    {
+      "family": "rotary_quern",
+      "variant": "idle",
+      "asset_id": "rotary_quern",
+      "era": "iron",
+      "kind": "structure_extension",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/iron/rotary_quern.png"
+    },
+    {
+      "family": "rotary_quern",
+      "variant": "working",
+      "asset_id": "rotary_quern_working",
+      "era": "iron",
+      "kind": "structure_extension",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/iron/rotary_quern_working.png"
+    },
+    {
+      "family": "watermill",
+      "variant": "idle",
+      "asset_id": "watermill_idle",
+      "era": "iron",
+      "kind": "structure_extension",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/watermill_idle/manifest.json"
+    },
+    {
+      "family": "watermill",
+      "variant": "working",
+      "asset_id": "watermill_working",
+      "era": "iron",
+      "kind": "structure_extension",
+      "status": "DERIVED_REVIEWED_RECIPE",
+      "detail": "/Users/rexxa/work/art-batch/A2/rooms/watermill_working/manifest.json"
+    },
+    {
+      "family": "sundial",
+      "variant": "normal",
+      "asset_id": "sundial",
+      "era": "iron",
+      "kind": "structure_extension",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/iron/sundial.png"
+    },
+    {
+      "family": "hearth",
+      "variant": "unlit",
+      "asset_id": "hearth_unlit",
+      "era": "paleolithic",
+      "kind": "reuse",
+      "status": "REUSE_EXISTING",
+      "detail": "art/style05/struct/hearth_unlit.png; hearth_1.png; hearth_pots.png"
+    },
+    {
+      "family": "hearth",
+      "variant": "lit",
+      "asset_id": "hearth_lit",
+      "era": "paleolithic",
+      "kind": "reuse",
+      "status": "REUSE_EXISTING",
+      "detail": "art/style05/struct/hearth_unlit.png; hearth_1.png; hearth_pots.png"
+    },
+    {
+      "family": "hearth",
+      "variant": "pots",
+      "asset_id": "hearth_pots",
+      "era": "paleolithic",
+      "kind": "reuse",
+      "status": "REUSE_EXISTING",
+      "detail": "art/style05/struct/hearth_unlit.png; hearth_1.png; hearth_pots.png"
+    },
+    {
+      "family": "lean_to",
+      "variant": "normal",
+      "asset_id": "lean_to_normal",
+      "era": "paleolithic",
+      "kind": "reuse",
+      "status": "REUSE_EXISTING",
+      "detail": "art/style05/struct/lean_to.png"
+    },
+    {
+      "family": "drying_rack",
+      "variant": "empty",
+      "asset_id": "drying_rack_empty",
+      "era": "paleolithic",
+      "kind": "reuse",
+      "status": "REUSE_EXISTING",
+      "detail": "art/style05/struct/drying_rack_empty.png; drying_rack_hide.png"
+    },
+    {
+      "family": "drying_rack",
+      "variant": "hide",
+      "asset_id": "drying_rack_hide",
+      "era": "paleolithic",
+      "kind": "reuse",
+      "status": "REUSE_EXISTING",
+      "detail": "art/style05/struct/drying_rack_empty.png; drying_rack_hide.png"
+    },
+    {
+      "family": "hut",
+      "variant": "normal",
+      "asset_id": "hut_normal",
+      "era": "paleolithic",
+      "kind": "reuse",
+      "status": "REUSE_EXISTING",
+      "detail": "material-system log wall ring + door + packed-earth floor"
+    },
+    {
+      "family": "windbreak",
+      "variant": "intact",
+      "asset_id": "windbreak",
+      "era": "paleolithic",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/neolithic/windbreak.png"
+    },
+    {
+      "family": "windbreak",
+      "variant": "damaged",
+      "asset_id": "windbreak_damaged",
+      "era": "paleolithic",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/neolithic/windbreak_damaged.png"
+    },
+    {
+      "family": "trap",
+      "variant": "set",
+      "asset_id": "trap_set",
+      "era": "paleolithic",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/neolithic/trap_set.png"
+    },
+    {
+      "family": "trap",
+      "variant": "sprung",
+      "asset_id": "trap_sprung",
+      "era": "paleolithic",
+      "kind": "structure",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/neolithic/trap_sprung.png"
+    },
+    {
+      "family": "fish_weir",
+      "variant": "empty",
+      "asset_id": "fish_weir_empty",
+      "era": "paleolithic",
+      "kind": "optional_extension",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/neolithic/fish_weir_empty.png"
+    },
+    {
+      "family": "fish_weir",
+      "variant": "catch",
+      "asset_id": "fish_weir_catch",
+      "era": "paleolithic",
+      "kind": "optional_extension",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/neolithic/fish_weir_catch.png"
+    },
+    {
+      "family": "wheat",
+      "variant": "seedling",
+      "asset_id": "wheat_seedling",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_grain/wheat_seedling.png"
+    },
+    {
+      "family": "wheat",
+      "variant": "growing",
+      "asset_id": "wheat_growing",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_grain/wheat_growing.png"
+    },
+    {
+      "family": "wheat",
+      "variant": "ripe",
+      "asset_id": "wheat_ripe",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_grain/wheat_ripe.png"
+    },
+    {
+      "family": "wheat",
+      "variant": "harvested",
+      "asset_id": "wheat_harvested",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_grain/wheat_harvested.png"
+    },
+    {
+      "family": "barley",
+      "variant": "seedling",
+      "asset_id": "barley_seedling",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_grain/barley_seedling.png"
+    },
+    {
+      "family": "barley",
+      "variant": "growing",
+      "asset_id": "barley_growing",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_grain/barley_growing.png"
+    },
+    {
+      "family": "barley",
+      "variant": "ripe",
+      "asset_id": "barley_ripe",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_grain/barley_ripe.png"
+    },
+    {
+      "family": "barley",
+      "variant": "harvested",
+      "asset_id": "barley_harvested",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_grain/barley_harvested.png"
+    },
+    {
+      "family": "rye",
+      "variant": "seedling",
+      "asset_id": "rye_seedling",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_grain/rye_seedling.png"
+    },
+    {
+      "family": "rye",
+      "variant": "growing",
+      "asset_id": "rye_growing",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_grain/rye_growing.png"
+    },
+    {
+      "family": "rye",
+      "variant": "ripe",
+      "asset_id": "rye_ripe",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_grain/rye_ripe.png"
+    },
+    {
+      "family": "rye",
+      "variant": "harvested",
+      "asset_id": "rye_harvested",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_grain/rye_harvested.png"
+    },
+    {
+      "family": "oats",
+      "variant": "seedling",
+      "asset_id": "oats_seedling",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_grain/oats_seedling.png"
+    },
+    {
+      "family": "oats",
+      "variant": "growing",
+      "asset_id": "oats_growing",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_grain/oats_growing.png"
+    },
+    {
+      "family": "oats",
+      "variant": "ripe",
+      "asset_id": "oats_ripe",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_grain/oats_ripe.png"
+    },
+    {
+      "family": "oats",
+      "variant": "harvested",
+      "asset_id": "oats_harvested",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_grain/oats_harvested.png"
+    },
+    {
+      "family": "lentil",
+      "variant": "seedling",
+      "asset_id": "lentil_seedling",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_orchard/lentil_seedling.png"
+    },
+    {
+      "family": "lentil",
+      "variant": "growing",
+      "asset_id": "lentil_growing",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_orchard/lentil_growing.png"
+    },
+    {
+      "family": "lentil",
+      "variant": "ripe",
+      "asset_id": "lentil_ripe",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_orchard/lentil_ripe.png"
+    },
+    {
+      "family": "lentil",
+      "variant": "harvested",
+      "asset_id": "lentil_harvested",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_orchard/lentil_harvested.png"
+    },
+    {
+      "family": "pea",
+      "variant": "seedling",
+      "asset_id": "pea_seedling",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_orchard/pea_seedling.png"
+    },
+    {
+      "family": "pea",
+      "variant": "growing",
+      "asset_id": "pea_growing",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_orchard/pea_growing.png"
+    },
+    {
+      "family": "pea",
+      "variant": "ripe",
+      "asset_id": "pea_ripe",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_orchard/pea_ripe.png"
+    },
+    {
+      "family": "pea",
+      "variant": "harvested",
+      "asset_id": "pea_harvested",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_orchard/pea_harvested.png"
+    },
+    {
+      "family": "millet",
+      "variant": "seedling",
+      "asset_id": "millet_seedling",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_grain/millet_seedling.png"
+    },
+    {
+      "family": "millet",
+      "variant": "growing",
+      "asset_id": "millet_growing",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_grain/millet_growing.png"
+    },
+    {
+      "family": "millet",
+      "variant": "ripe",
+      "asset_id": "millet_ripe",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_grain/millet_ripe.png"
+    },
+    {
+      "family": "millet",
+      "variant": "harvested",
+      "asset_id": "millet_harvested",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_grain/millet_harvested.png"
+    },
+    {
+      "family": "flax",
+      "variant": "seedling",
+      "asset_id": "flax_seedling",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_grain/flax_seedling.png"
+    },
+    {
+      "family": "flax",
+      "variant": "growing",
+      "asset_id": "flax_growing",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "GENERATED_NOT_ADOPTED",
+      "attempts": 3,
+      "detail": "Frozen plant tone-wash check failed; earlier edge-density failures."
+    },
+    {
+      "family": "flax",
+      "variant": "ripe",
+      "asset_id": "flax_ripe",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "GENERATED_NOT_ADOPTED",
+      "attempts": 3,
+      "detail": "Frozen plant tone-wash check failed; earlier edge-density failures."
+    },
+    {
+      "family": "flax",
+      "variant": "harvested",
+      "asset_id": "flax_harvested",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "GENERATED_NOT_ADOPTED",
+      "attempts": 3,
+      "detail": "Final tone-wash failure; earlier numeric-ready art contains clover-like weeds and broad leaves inconsistent with flax."
+    },
+    {
+      "family": "apple",
+      "variant": "young",
+      "asset_id": "apple_sapling",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_orchard/apple_sapling.png"
+    },
+    {
+      "family": "apple",
+      "variant": "mature",
+      "asset_id": "apple_leafy",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_orchard/apple_leafy.png"
+    },
+    {
+      "family": "apple",
+      "variant": "fruiting",
+      "asset_id": "apple_fruiting",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_orchard/apple_fruiting.png"
+    },
+    {
+      "family": "apple",
+      "variant": "dormant",
+      "asset_id": "apple_bare",
+      "era": "neolithic",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_orchard/apple_bare.png"
+    },
+    {
+      "family": "grape",
+      "variant": "young",
+      "asset_id": "grape_young",
+      "era": "bronze",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_orchard/grape_young.png"
+    },
+    {
+      "family": "grape",
+      "variant": "mature",
+      "asset_id": "grape_leafy",
+      "era": "bronze",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_orchard/grape_leafy.png"
+    },
+    {
+      "family": "grape",
+      "variant": "fruiting",
+      "asset_id": "grape_fruiting",
+      "era": "bronze",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_orchard/grape_fruiting.png"
+    },
+    {
+      "family": "grape",
+      "variant": "dormant",
+      "asset_id": "grape_bare",
+      "era": "bronze",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_orchard/grape_bare.png"
+    },
+    {
+      "family": "olive",
+      "variant": "young",
+      "asset_id": "olive_sapling",
+      "era": "bronze",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_orchard/olive_sapling.png"
+    },
+    {
+      "family": "olive",
+      "variant": "mature",
+      "asset_id": "olive_leafy",
+      "era": "bronze",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_orchard/olive_leafy.png"
+    },
+    {
+      "family": "olive",
+      "variant": "fruiting",
+      "asset_id": "olive_fruiting",
+      "era": "bronze",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_orchard/olive_fruiting.png"
+    },
+    {
+      "family": "olive",
+      "variant": "dormant",
+      "asset_id": "olive_dormant",
+      "era": "bronze",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_orchard/olive_dormant.png"
+    },
+    {
+      "family": "hemp",
+      "variant": "seedling",
+      "asset_id": "hemp_seedling",
+      "era": "bronze",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_orchard/hemp_seedling.png"
+    },
+    {
+      "family": "hemp",
+      "variant": "growing",
+      "asset_id": "hemp_growing",
+      "era": "bronze",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_orchard/hemp_growing.png"
+    },
+    {
+      "family": "hemp",
+      "variant": "ripe",
+      "asset_id": "hemp_ripe",
+      "era": "bronze",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_orchard/hemp_ripe.png"
+    },
+    {
+      "family": "hemp",
+      "variant": "harvested",
+      "asset_id": "hemp_harvested",
+      "era": "bronze",
+      "kind": "crop",
+      "status": "ADOPTED_CANDIDATE",
+      "detail": "art/style05/struct/a2/crops_orchard/hemp_harvested.png"
+    }
+  ],
+  "status_counts": {
+    "ADOPTED_CANDIDATE": 110,
+    "DERIVED_REVIEWED_RECIPE": 35,
+    "GENERATED_NOT_ADOPTED": 17,
+    "ADOPTED_GROUND_CANDIDATE": 8,
+    "REUSE_EXISTING": 8,
+    "NO_SPRITE_REQUIRED": 2
+  },
+  "generation_counts": {
+    "bronze": {
+      "generated": 62,
+      "adopted": 20,
+      "not_adopted": 42
+    },
+    "contents": {
+      "generated": 5,
+      "adopted": 5,
+      "not_adopted": 0
+    },
+    "crops_grain": {
+      "generated": 41,
+      "adopted": 21,
+      "not_adopted": 20
+    },
+    "crops_orchard": {
+      "generated": 35,
+      "adopted": 24,
+      "not_adopted": 11
+    },
+    "iron": {
+      "generated": 57,
+      "adopted": 26,
+      "not_adopted": 31
+    },
+    "neolithic": {
+      "generated": 47,
+      "adopted": 23,
+      "not_adopted": 24
+    },
+    "ores": {
+      "generated": 18,
+      "adopted": 14,
+      "not_adopted": 4
+    }
+  },
+  "distinct_generations": 265,
+  "adopted_sprites": 125,
+  "adopted_ground": 8,
+  "adopted_total": 133,
+  "derived_recipes": 40,
+  "counting_notes": [
+    "265 is the number of distinct preserved raw SHA256 values, not a claimed image-tool call count.",
+    "Nonselected generations include rejected, superseded and whole-room references.",
+    "The catalogue has170 new image/recipe slots,8 existing-asset reuse slots and2 no-sprite entries.",
+    "The133 adopted images also contain15 extra ore, furnishing or machinery sprites;40 recipes contain5 extra fired-brick wall variants.",
+    "No runtime import was applied."
+  ],
+  "generation_limit_per_state": 3,
+  "unattempted_slots": 0,
+  "capped_rejection_evidence": {
+    "path": "/Users/rexxa/work/art-batch/A2/checks/capped_gap_summary.json",
+    "sha256": "f268316d27d9ca4f6e567f925502f8752e201fe69fe9a367bd66c287b384c23e"
+  }
+}

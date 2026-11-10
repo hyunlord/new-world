@@ -5,6 +5,33 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## ART-BATCH A2 candidates — 2026-11-10
+
+Structures, resource nodes and crop states for the four-era content catalogue,
+produced on `v8/art-batch-a2`. These are reviewed art candidates; C2/C3 import
+and runtime validation remain separate. See `art/batch_a2/README.md`.
+Production totals: 265 distinct generations, 133 adopted images (125 standing,
+8 ground), and 40 derived room/wall recipes. Seventeen catalogue states remain
+rejected after three attempts; no catalogue slot remains unattempted.
+
+### Added
+- Transparent structure, workshop, ore and crop exports under
+  `art/style05/struct/a2/`, with exact prompts, reference/source hashes, anchors,
+  footprints, frozen numeric checks and independent visual review in sidecars.
+- Opaque 64/128 px ground textures with a separate manifest, full-frame source
+  provenance, repeat-seam checks and northwest-cell anchors.
+- `art/batch_a2/process.py`: a thin wrapper around existing STRUCT checks;
+  room recipes reuse the existing material resolver and wall compositor while
+  retaining individual layers and source hashes. Focused regression tests cover
+  normalization and room geometry/provenance.
+- Production style contract, family contact sheets, fence attachment data and
+  draft import/binding fragments. ADR 0016 records the art-only handoff boundary.
+
+### Changed
+- Append accepted A2 entries to the existing structure manifest. Raw generations,
+  rejected attempts and measurement evidence remain outside the repository.
+- Record saved-alpha and footprint-review lessons in `worldsim-pitfalls`.
+
 ## M1-ART — 2026-10-21
 
 The colony view drawn like the mock-up: real ground, a canopy that reads as forest, buildings and log piles you can read, people you can find (`docs/v8/m1art/ART_GOAL.md`, report `docs/v8/m1art/ART_REPORT.md`). No simulation change (`rust/` untouched; identity, colony determinism and replay pass).

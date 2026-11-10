@@ -1,4 +1,59 @@
-# A2 candidate exports
+# A2 structures, resource nodes and crop states
+
+Art-line candidates on `v8/art-batch-a2`, based on `v8/art-trees`. C2/C3 import
+these later. No runtime import, simulation change or game-play acceptance is
+claimed by this branch.
+
+Final production: **265 distinct raw generations; 133 adopted images** (125
+transparent sprites and 8 opaque ground tiles), plus **40 derived layered
+recipes**. The catalogue has no unattempted slots; **17 states remain rejected**
+at the existing three-attempt limit. [Coverage](coverage.json) lists every slot
+and the remaining gaps. The 132 nonselected generations include rejected,
+superseded and room-reference attempts; they are not 132 missing states.
+
+- Standing cutouts: `art/style05/struct/a2/<lane>/`, with full provenance and
+  independent review sidecars; catalogue: `docs/v8/artstruct/assets.json`.
+- Opaque ground textures: `art/style05/env/ground/a2/<lane>/`; separate catalogue:
+  [ground_assets.json](ground_assets.json). Every pixel is alpha 255; X/Y seams
+  and the frozen ground style instrument must pass independently.
+- Forty derived layouts: [rooms.json](rooms.json), [review summary](rooms.review.json).
+  The existing material compositor supplies floors and walls. These are layered
+  recipes, not forty newly generated sprites. [Fence connections](fence_connections.json)
+  record verified terminal placement offsets and their source hashes.
+- [Final standing contact sheets](boards/final/): 26 fixed 1x/2x pages next to
+  the existing adult and structure references. [Ground 1x](boards/ground_final_1x.png)
+  and [ground 2x](boards/ground_final_2x.png) show tile repeats. The seven
+  `boards/rooms_*.png` pages retain native 1x geometry. Earlier batch sheets are
+  historical checkpoints; the final indexes identify the current source hashes.
+- [Import rows](art_import.draft.json) and [binding proposals](bindings.draft.json)
+  are append-only drafts. Preserve the integration branch's other rows. Runtime
+  codes, growth/depletion thresholds and the room-layer adapter remain unresolved.
+- Raw generations, rejected attempts, measurements and the Korean report stay in
+  `/Users/rexxa/work/art-batch/A2/`, outside Git. Seed fields remain null where the
+  generation service did not expose a seed.
+
+The Korean handoff is `/Users/rexxa/work/art-batch/A2/REPORT.md`. Import drafts
+pin the asset commit and cover all 133 images, seven ore pairs, 45 crop stages,
+and all 40 room recipes. Binding proposals intentionally contain no fabricated
+runtime codes or thresholds. Ground placement and layered rooms need adapters.
+
+Remaining visual/integration limitations: the active skep has a weak activity
+cue; several pairs and fence directions are incomplete; the inherited N/S wall
+caps are broad and soft. Bridge footprints are 3x2 (E/W) and 2x3 (damaged N/S),
+with ragged bank edges and hidden post contacts documented in their reviews.
+Runtime occlusion, collision, room recognition and mechanical transmission
+require game integration tests. The 23 focused tests, lint and type checks pass;
+the docs check retains unrelated baseline binary/UID failures. The full game
+gate, identity and play checks were not run in this art-only task.
+
+The fixed [style contract](STYLE_CONTRACT.md) separates numeric readiness from
+visual acceptance. Stored judge results retain their original missing model-score
+fields; the independent visual scorecards are recorded separately, never invented
+inside the numeric judge. An earlier reviewed candidate can be withdrawn when the
+production-set comparison reveals a mismatch; rejected and superseded evidence
+remains intact. Capped failures are coverage gaps, not accepted art.
+
+## Export helper
 
 This helper reuses the STRUCT normalizer, projection instrument, and frozen v2
 style calibration. It writes only external evidence under
@@ -69,5 +124,12 @@ Checks:
 
 ```sh
 uv run --with pillow --with numpy --with pydantic --with scikit-image --with pytest \
-  python -m pytest art/batch_a2/test_process.py art/pipeline_struct/test_normalize.py
+  python -m pytest art/batch_a2/test_process.py art/batch_a2/test_rooms.py \
+  art/pipeline_struct/test_normalize.py
+```
+
+Rebuild the external room evidence from the committed recipes:
+
+```sh
+uv run --with pillow --with numpy --with pydantic python -m art.batch_a2.rooms
 ```

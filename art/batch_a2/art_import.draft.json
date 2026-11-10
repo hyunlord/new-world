@@ -1,0 +1,837 @@
+{
+  "schema_version": 1,
+  "status": "DRAFT_NOT_APPLIED",
+  "source_branch": "v8/art-batch-a2",
+  "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+  "source_commit_requirement": "Pinned to the commit containing every adopted image, sidecar, source manifest and reviewed room recipe. Preserve this exact revision during import review.",
+  "input_evidence": {
+    "adopted_manifest": "docs/v8/artstruct/assets.json",
+    "adopted_manifest_sha256": "4fafe382524a2e87efbf7b7d6c68e49ee2a947c5aa67743ac31efb4df7c775c7",
+    "room_recipes": "art/batch_a2/rooms.json",
+    "room_recipes_sha256": "e360bae6400eb96fc25c08520de723bb85e5539d8e6034c11074978062be7e4c",
+    "ground_manifest": "art/batch_a2/ground_assets.json",
+    "ground_manifest_present": true,
+    "ground_manifest_sha256": "7004e1427ed0d19aa5a080e4d2a1e9e6c768d3a2b05d8da4b9db95380de92c3a",
+    "baseline_art_import_sha256": "f54304de6711aaa9f04c415e2f1406a985f3ea2e4d700886f0c10eb12e186dd0",
+    "baseline_bindings_sha256": "02d0b931885357c1b66581318deb553a61fd6d66eae56a44279720fb8a46a40b"
+  },
+  "fragment_kind": "append_only_art_import_files",
+  "target": "tools/v8/art_import.json",
+  "merge_instruction": "Append files after checking IDs/destinations against the current integration config. Preserve every unrelated field and row. This document is not a full config replacement.",
+  "meta_sources": {
+    "structure": "docs/v8/artstruct/assets.json"
+  },
+  "meta_sources_instruction": "Retain the existing structure metadata source; merge this one key only.",
+  "files": [
+    {
+      "role": "structure",
+      "id": "apple_bare",
+      "source": "art/style05/struct/a2/crops_orchard/apple_bare.png",
+      "dest": "structures/a2/crops_orchard/apple_bare.png"
+    },
+    {
+      "role": "structure",
+      "id": "apple_fruiting",
+      "source": "art/style05/struct/a2/crops_orchard/apple_fruiting.png",
+      "dest": "structures/a2/crops_orchard/apple_fruiting.png"
+    },
+    {
+      "role": "structure",
+      "id": "apple_leafy",
+      "source": "art/style05/struct/a2/crops_orchard/apple_leafy.png",
+      "dest": "structures/a2/crops_orchard/apple_leafy.png"
+    },
+    {
+      "role": "structure",
+      "id": "apple_sapling",
+      "source": "art/style05/struct/a2/crops_orchard/apple_sapling.png",
+      "dest": "structures/a2/crops_orchard/apple_sapling.png"
+    },
+    {
+      "role": "structure",
+      "id": "aqueduct",
+      "source": "art/style05/struct/a2/iron/aqueduct.png",
+      "dest": "structures/a2/iron/aqueduct.png"
+    },
+    {
+      "role": "structure",
+      "id": "aqueduct_damaged",
+      "source": "art/style05/struct/a2/iron/aqueduct_damaged.png",
+      "dest": "structures/a2/iron/aqueduct_damaged.png"
+    },
+    {
+      "role": "structure",
+      "id": "barley_growing",
+      "source": "art/style05/struct/a2/crops_grain/barley_growing.png",
+      "dest": "structures/a2/crops_grain/barley_growing.png"
+    },
+    {
+      "role": "structure",
+      "id": "barley_harvested",
+      "source": "art/style05/struct/a2/crops_grain/barley_harvested.png",
+      "dest": "structures/a2/crops_grain/barley_harvested.png"
+    },
+    {
+      "role": "structure",
+      "id": "barley_ripe",
+      "source": "art/style05/struct/a2/crops_grain/barley_ripe.png",
+      "dest": "structures/a2/crops_grain/barley_ripe.png"
+    },
+    {
+      "role": "structure",
+      "id": "barley_seedling",
+      "source": "art/style05/struct/a2/crops_grain/barley_seedling.png",
+      "dest": "structures/a2/crops_grain/barley_seedling.png"
+    },
+    {
+      "role": "structure",
+      "id": "bee_skep_active",
+      "source": "art/style05/struct/a2/bronze/bee_skep_active.png",
+      "dest": "structures/a2/bronze/bee_skep_active.png"
+    },
+    {
+      "role": "structure",
+      "id": "bee_skep_empty",
+      "source": "art/style05/struct/a2/bronze/bee_skep_empty.png",
+      "dest": "structures/a2/bronze/bee_skep_empty.png"
+    },
+    {
+      "role": "structure",
+      "id": "bloomery_lit",
+      "source": "art/style05/struct/a2/iron/bloomery_lit.png",
+      "dest": "structures/a2/iron/bloomery_lit.png"
+    },
+    {
+      "role": "structure",
+      "id": "bloomery_unlit",
+      "source": "art/style05/struct/a2/iron/bloomery_unlit.png",
+      "dest": "structures/a2/iron/bloomery_unlit.png"
+    },
+    {
+      "role": "structure",
+      "id": "bog_iron_outcrop_depleted",
+      "source": "art/style05/struct/a2/ores/bog_iron_outcrop_depleted.png",
+      "dest": "structures/a2/ores/bog_iron_outcrop_depleted.png"
+    },
+    {
+      "role": "structure",
+      "id": "bog_iron_outcrop_full",
+      "source": "art/style05/struct/a2/ores/bog_iron_outcrop_full.png",
+      "dest": "structures/a2/ores/bog_iron_outcrop_full.png"
+    },
+    {
+      "role": "structure",
+      "id": "bread_oven_lit",
+      "source": "art/style05/struct/a2/neolithic/bread_oven_lit.png",
+      "dest": "structures/a2/neolithic/bread_oven_lit.png"
+    },
+    {
+      "role": "structure",
+      "id": "bread_oven_unlit",
+      "source": "art/style05/struct/a2/neolithic/bread_oven_unlit.png",
+      "dest": "structures/a2/neolithic/bread_oven_unlit.png"
+    },
+    {
+      "role": "structure",
+      "id": "casting_bench_empty",
+      "source": "art/style05/struct/a2/bronze/casting_bench_empty.png",
+      "dest": "structures/a2/bronze/casting_bench_empty.png"
+    },
+    {
+      "role": "structure",
+      "id": "casting_bench_working",
+      "source": "art/style05/struct/a2/bronze/casting_bench_working.png",
+      "dest": "structures/a2/bronze/casting_bench_working.png"
+    },
+    {
+      "role": "structure",
+      "id": "charcoal_clamp_burning",
+      "source": "art/style05/struct/a2/bronze/charcoal_clamp_burning.png",
+      "dest": "structures/a2/bronze/charcoal_clamp_burning.png"
+    },
+    {
+      "role": "structure",
+      "id": "charcoal_clamp_idle",
+      "source": "art/style05/struct/a2/bronze/charcoal_clamp_idle.png",
+      "dest": "structures/a2/bronze/charcoal_clamp_idle.png"
+    },
+    {
+      "role": "structure",
+      "id": "charcoal_clamp_spent",
+      "source": "art/style05/struct/a2/bronze/charcoal_clamp_spent.png",
+      "dest": "structures/a2/bronze/charcoal_clamp_spent.png"
+    },
+    {
+      "role": "structure",
+      "id": "chief_seat",
+      "source": "art/style05/struct/a2/contents/chief_seat.png",
+      "dest": "structures/a2/contents/chief_seat.png"
+    },
+    {
+      "role": "structure",
+      "id": "copper_outcrop_depleted",
+      "source": "art/style05/struct/a2/ores/copper_outcrop_depleted.png",
+      "dest": "structures/a2/ores/copper_outcrop_depleted.png"
+    },
+    {
+      "role": "structure",
+      "id": "copper_outcrop_full",
+      "source": "art/style05/struct/a2/ores/copper_outcrop_full.png",
+      "dest": "structures/a2/ores/copper_outcrop_full.png"
+    },
+    {
+      "role": "structure",
+      "id": "copper_smelter_lit",
+      "source": "art/style05/struct/a2/bronze/copper_smelter_lit.png",
+      "dest": "structures/a2/bronze/copper_smelter_lit.png"
+    },
+    {
+      "role": "structure",
+      "id": "copper_smelter_unlit",
+      "source": "art/style05/struct/a2/bronze/copper_smelter_unlit.png",
+      "dest": "structures/a2/bronze/copper_smelter_unlit.png"
+    },
+    {
+      "role": "structure",
+      "id": "fish_weir_catch",
+      "source": "art/style05/struct/a2/neolithic/fish_weir_catch.png",
+      "dest": "structures/a2/neolithic/fish_weir_catch.png"
+    },
+    {
+      "role": "structure",
+      "id": "fish_weir_empty",
+      "source": "art/style05/struct/a2/neolithic/fish_weir_empty.png",
+      "dest": "structures/a2/neolithic/fish_weir_empty.png"
+    },
+    {
+      "role": "structure",
+      "id": "flax_seedling",
+      "source": "art/style05/struct/a2/crops_grain/flax_seedling.png",
+      "dest": "structures/a2/crops_grain/flax_seedling.png"
+    },
+    {
+      "role": "structure",
+      "id": "forge_idle",
+      "source": "art/style05/struct/a2/iron/forge_idle.png",
+      "dest": "structures/a2/iron/forge_idle.png"
+    },
+    {
+      "role": "structure",
+      "id": "forge_working",
+      "source": "art/style05/struct/a2/iron/forge_working.png",
+      "dest": "structures/a2/iron/forge_working.png"
+    },
+    {
+      "role": "structure",
+      "id": "gold_outcrop_depleted",
+      "source": "art/style05/struct/a2/ores/gold_outcrop_depleted.png",
+      "dest": "structures/a2/ores/gold_outcrop_depleted.png"
+    },
+    {
+      "role": "structure",
+      "id": "gold_outcrop_full",
+      "source": "art/style05/struct/a2/ores/gold_outcrop_full.png",
+      "dest": "structures/a2/ores/gold_outcrop_full.png"
+    },
+    {
+      "role": "structure",
+      "id": "grain_bin_empty",
+      "source": "art/style05/struct/a2/contents/grain_bin_empty.png",
+      "dest": "structures/a2/contents/grain_bin_empty.png"
+    },
+    {
+      "role": "structure",
+      "id": "grain_bin_full",
+      "source": "art/style05/struct/a2/contents/grain_bin_full.png",
+      "dest": "structures/a2/contents/grain_bin_full.png"
+    },
+    {
+      "role": "structure",
+      "id": "grape_bare",
+      "source": "art/style05/struct/a2/crops_orchard/grape_bare.png",
+      "dest": "structures/a2/crops_orchard/grape_bare.png"
+    },
+    {
+      "role": "structure",
+      "id": "grape_fruiting",
+      "source": "art/style05/struct/a2/crops_orchard/grape_fruiting.png",
+      "dest": "structures/a2/crops_orchard/grape_fruiting.png"
+    },
+    {
+      "role": "structure",
+      "id": "grape_leafy",
+      "source": "art/style05/struct/a2/crops_orchard/grape_leafy.png",
+      "dest": "structures/a2/crops_orchard/grape_leafy.png"
+    },
+    {
+      "role": "structure",
+      "id": "grape_young",
+      "source": "art/style05/struct/a2/crops_orchard/grape_young.png",
+      "dest": "structures/a2/crops_orchard/grape_young.png"
+    },
+    {
+      "role": "structure",
+      "id": "hemp_growing",
+      "source": "art/style05/struct/a2/crops_orchard/hemp_growing.png",
+      "dest": "structures/a2/crops_orchard/hemp_growing.png"
+    },
+    {
+      "role": "structure",
+      "id": "hemp_harvested",
+      "source": "art/style05/struct/a2/crops_orchard/hemp_harvested.png",
+      "dest": "structures/a2/crops_orchard/hemp_harvested.png"
+    },
+    {
+      "role": "structure",
+      "id": "hemp_ripe",
+      "source": "art/style05/struct/a2/crops_orchard/hemp_ripe.png",
+      "dest": "structures/a2/crops_orchard/hemp_ripe.png"
+    },
+    {
+      "role": "structure",
+      "id": "hemp_seedling",
+      "source": "art/style05/struct/a2/crops_orchard/hemp_seedling.png",
+      "dest": "structures/a2/crops_orchard/hemp_seedling.png"
+    },
+    {
+      "role": "structure",
+      "id": "iron_outcrop_depleted",
+      "source": "art/style05/struct/a2/ores/iron_outcrop_depleted.png",
+      "dest": "structures/a2/ores/iron_outcrop_depleted.png"
+    },
+    {
+      "role": "structure",
+      "id": "iron_outcrop_full",
+      "source": "art/style05/struct/a2/ores/iron_outcrop_full.png",
+      "dest": "structures/a2/ores/iron_outcrop_full.png"
+    },
+    {
+      "role": "structure",
+      "id": "lead_outcrop_depleted",
+      "source": "art/style05/struct/a2/ores/lead_outcrop_depleted.png",
+      "dest": "structures/a2/ores/lead_outcrop_depleted.png"
+    },
+    {
+      "role": "structure",
+      "id": "lead_outcrop_full",
+      "source": "art/style05/struct/a2/ores/lead_outcrop_full.png",
+      "dest": "structures/a2/ores/lead_outcrop_full.png"
+    },
+    {
+      "role": "structure",
+      "id": "lentil_growing",
+      "source": "art/style05/struct/a2/crops_orchard/lentil_growing.png",
+      "dest": "structures/a2/crops_orchard/lentil_growing.png"
+    },
+    {
+      "role": "structure",
+      "id": "lentil_harvested",
+      "source": "art/style05/struct/a2/crops_orchard/lentil_harvested.png",
+      "dest": "structures/a2/crops_orchard/lentil_harvested.png"
+    },
+    {
+      "role": "structure",
+      "id": "lentil_ripe",
+      "source": "art/style05/struct/a2/crops_orchard/lentil_ripe.png",
+      "dest": "structures/a2/crops_orchard/lentil_ripe.png"
+    },
+    {
+      "role": "structure",
+      "id": "lentil_seedling",
+      "source": "art/style05/struct/a2/crops_orchard/lentil_seedling.png",
+      "dest": "structures/a2/crops_orchard/lentil_seedling.png"
+    },
+    {
+      "role": "structure",
+      "id": "loom_loaded",
+      "source": "art/style05/struct/a2/neolithic/loom_loaded.png",
+      "dest": "structures/a2/neolithic/loom_loaded.png"
+    },
+    {
+      "role": "structure",
+      "id": "megalith",
+      "source": "art/style05/struct/a2/neolithic/megalith.png",
+      "dest": "structures/a2/neolithic/megalith.png"
+    },
+    {
+      "role": "structure",
+      "id": "megalith_fallen",
+      "source": "art/style05/struct/a2/neolithic/megalith_fallen.png",
+      "dest": "structures/a2/neolithic/megalith_fallen.png"
+    },
+    {
+      "role": "structure",
+      "id": "millet_growing",
+      "source": "art/style05/struct/a2/crops_grain/millet_growing.png",
+      "dest": "structures/a2/crops_grain/millet_growing.png"
+    },
+    {
+      "role": "structure",
+      "id": "millet_harvested",
+      "source": "art/style05/struct/a2/crops_grain/millet_harvested.png",
+      "dest": "structures/a2/crops_grain/millet_harvested.png"
+    },
+    {
+      "role": "structure",
+      "id": "millet_ripe",
+      "source": "art/style05/struct/a2/crops_grain/millet_ripe.png",
+      "dest": "structures/a2/crops_grain/millet_ripe.png"
+    },
+    {
+      "role": "structure",
+      "id": "millet_seedling",
+      "source": "art/style05/struct/a2/crops_grain/millet_seedling.png",
+      "dest": "structures/a2/crops_grain/millet_seedling.png"
+    },
+    {
+      "role": "structure",
+      "id": "oats_growing",
+      "source": "art/style05/struct/a2/crops_grain/oats_growing.png",
+      "dest": "structures/a2/crops_grain/oats_growing.png"
+    },
+    {
+      "role": "structure",
+      "id": "oats_harvested",
+      "source": "art/style05/struct/a2/crops_grain/oats_harvested.png",
+      "dest": "structures/a2/crops_grain/oats_harvested.png"
+    },
+    {
+      "role": "structure",
+      "id": "oats_ripe",
+      "source": "art/style05/struct/a2/crops_grain/oats_ripe.png",
+      "dest": "structures/a2/crops_grain/oats_ripe.png"
+    },
+    {
+      "role": "structure",
+      "id": "oats_seedling",
+      "source": "art/style05/struct/a2/crops_grain/oats_seedling.png",
+      "dest": "structures/a2/crops_grain/oats_seedling.png"
+    },
+    {
+      "role": "structure",
+      "id": "olive_dormant",
+      "source": "art/style05/struct/a2/crops_orchard/olive_dormant.png",
+      "dest": "structures/a2/crops_orchard/olive_dormant.png"
+    },
+    {
+      "role": "structure",
+      "id": "olive_fruiting",
+      "source": "art/style05/struct/a2/crops_orchard/olive_fruiting.png",
+      "dest": "structures/a2/crops_orchard/olive_fruiting.png"
+    },
+    {
+      "role": "structure",
+      "id": "olive_leafy",
+      "source": "art/style05/struct/a2/crops_orchard/olive_leafy.png",
+      "dest": "structures/a2/crops_orchard/olive_leafy.png"
+    },
+    {
+      "role": "structure",
+      "id": "olive_press_working",
+      "source": "art/style05/struct/a2/bronze/olive_press_working.png",
+      "dest": "structures/a2/bronze/olive_press_working.png"
+    },
+    {
+      "role": "structure",
+      "id": "olive_sapling",
+      "source": "art/style05/struct/a2/crops_orchard/olive_sapling.png",
+      "dest": "structures/a2/crops_orchard/olive_sapling.png"
+    },
+    {
+      "role": "structure",
+      "id": "ox_cart_empty",
+      "source": "art/style05/struct/a2/contents/ox_cart_empty.png",
+      "dest": "structures/a2/contents/ox_cart_empty.png"
+    },
+    {
+      "role": "structure",
+      "id": "palisade_damaged",
+      "source": "art/style05/struct/a2/bronze/palisade_damaged.png",
+      "dest": "structures/a2/bronze/palisade_damaged.png"
+    },
+    {
+      "role": "structure",
+      "id": "palisade_end",
+      "source": "art/style05/struct/a2/bronze/palisade_end.png",
+      "dest": "structures/a2/bronze/palisade_end.png"
+    },
+    {
+      "role": "structure",
+      "id": "palisade_ew",
+      "source": "art/style05/struct/a2/bronze/palisade_ew.png",
+      "dest": "structures/a2/bronze/palisade_ew.png"
+    },
+    {
+      "role": "structure",
+      "id": "palisade_gate_closed",
+      "source": "art/style05/struct/a2/bronze/palisade_gate_closed.png",
+      "dest": "structures/a2/bronze/palisade_gate_closed.png"
+    },
+    {
+      "role": "structure",
+      "id": "palisade_gate_open",
+      "source": "art/style05/struct/a2/bronze/palisade_gate_open.png",
+      "dest": "structures/a2/bronze/palisade_gate_open.png"
+    },
+    {
+      "role": "structure",
+      "id": "pea_growing",
+      "source": "art/style05/struct/a2/crops_orchard/pea_growing.png",
+      "dest": "structures/a2/crops_orchard/pea_growing.png"
+    },
+    {
+      "role": "structure",
+      "id": "pea_harvested",
+      "source": "art/style05/struct/a2/crops_orchard/pea_harvested.png",
+      "dest": "structures/a2/crops_orchard/pea_harvested.png"
+    },
+    {
+      "role": "structure",
+      "id": "pea_ripe",
+      "source": "art/style05/struct/a2/crops_orchard/pea_ripe.png",
+      "dest": "structures/a2/crops_orchard/pea_ripe.png"
+    },
+    {
+      "role": "structure",
+      "id": "pea_seedling",
+      "source": "art/style05/struct/a2/crops_orchard/pea_seedling.png",
+      "dest": "structures/a2/crops_orchard/pea_seedling.png"
+    },
+    {
+      "role": "structure",
+      "id": "pen_fence_damaged",
+      "source": "art/style05/struct/a2/neolithic/pen_fence_damaged.png",
+      "dest": "structures/a2/neolithic/pen_fence_damaged.png"
+    },
+    {
+      "role": "structure",
+      "id": "pen_fence_end",
+      "source": "art/style05/struct/a2/neolithic/pen_fence_end.png",
+      "dest": "structures/a2/neolithic/pen_fence_end.png"
+    },
+    {
+      "role": "structure",
+      "id": "pen_fence_straight",
+      "source": "art/style05/struct/a2/neolithic/pen_fence_straight.png",
+      "dest": "structures/a2/neolithic/pen_fence_straight.png"
+    },
+    {
+      "role": "structure",
+      "id": "pen_gate_closed",
+      "source": "art/style05/struct/a2/neolithic/pen_gate_closed.png",
+      "dest": "structures/a2/neolithic/pen_gate_closed.png"
+    },
+    {
+      "role": "structure",
+      "id": "pen_gate_open",
+      "source": "art/style05/struct/a2/neolithic/pen_gate_open.png",
+      "dest": "structures/a2/neolithic/pen_gate_open.png"
+    },
+    {
+      "role": "structure",
+      "id": "potter_kiln_firing",
+      "source": "art/style05/struct/a2/neolithic/potter_kiln_firing.png",
+      "dest": "structures/a2/neolithic/potter_kiln_firing.png"
+    },
+    {
+      "role": "structure",
+      "id": "reservoir_empty",
+      "source": "art/style05/struct/a2/iron/reservoir_empty.png",
+      "dest": "structures/a2/iron/reservoir_empty.png"
+    },
+    {
+      "role": "structure",
+      "id": "reservoir_full",
+      "source": "art/style05/struct/a2/iron/reservoir_full.png",
+      "dest": "structures/a2/iron/reservoir_full.png"
+    },
+    {
+      "role": "structure",
+      "id": "ritual_site",
+      "source": "art/style05/struct/a2/neolithic/ritual_site.png",
+      "dest": "structures/a2/neolithic/ritual_site.png"
+    },
+    {
+      "role": "structure",
+      "id": "ritual_site_empty",
+      "source": "art/style05/struct/a2/neolithic/ritual_site_empty.png",
+      "dest": "structures/a2/neolithic/ritual_site_empty.png"
+    },
+    {
+      "role": "structure",
+      "id": "rotary_quern",
+      "source": "art/style05/struct/a2/iron/rotary_quern.png",
+      "dest": "structures/a2/iron/rotary_quern.png"
+    },
+    {
+      "role": "structure",
+      "id": "rotary_quern_working",
+      "source": "art/style05/struct/a2/iron/rotary_quern_working.png",
+      "dest": "structures/a2/iron/rotary_quern_working.png"
+    },
+    {
+      "role": "structure",
+      "id": "rye_growing",
+      "source": "art/style05/struct/a2/crops_grain/rye_growing.png",
+      "dest": "structures/a2/crops_grain/rye_growing.png"
+    },
+    {
+      "role": "structure",
+      "id": "rye_harvested",
+      "source": "art/style05/struct/a2/crops_grain/rye_harvested.png",
+      "dest": "structures/a2/crops_grain/rye_harvested.png"
+    },
+    {
+      "role": "structure",
+      "id": "rye_ripe",
+      "source": "art/style05/struct/a2/crops_grain/rye_ripe.png",
+      "dest": "structures/a2/crops_grain/rye_ripe.png"
+    },
+    {
+      "role": "structure",
+      "id": "rye_seedling",
+      "source": "art/style05/struct/a2/crops_grain/rye_seedling.png",
+      "dest": "structures/a2/crops_grain/rye_seedling.png"
+    },
+    {
+      "role": "structure",
+      "id": "school_desk",
+      "source": "art/style05/struct/a2/contents/school_desk.png",
+      "dest": "structures/a2/contents/school_desk.png"
+    },
+    {
+      "role": "structure",
+      "id": "shrine_damaged",
+      "source": "art/style05/struct/a2/bronze/shrine_damaged.png",
+      "dest": "structures/a2/bronze/shrine_damaged.png"
+    },
+    {
+      "role": "structure",
+      "id": "shrine_intact",
+      "source": "art/style05/struct/a2/bronze/shrine_intact.png",
+      "dest": "structures/a2/bronze/shrine_intact.png"
+    },
+    {
+      "role": "structure",
+      "id": "silver_outcrop_depleted",
+      "source": "art/style05/struct/a2/ores/silver_outcrop_depleted.png",
+      "dest": "structures/a2/ores/silver_outcrop_depleted.png"
+    },
+    {
+      "role": "structure",
+      "id": "silver_outcrop_full",
+      "source": "art/style05/struct/a2/ores/silver_outcrop_full.png",
+      "dest": "structures/a2/ores/silver_outcrop_full.png"
+    },
+    {
+      "role": "structure",
+      "id": "smokehouse_idle",
+      "source": "art/style05/struct/a2/neolithic/smokehouse_idle.png",
+      "dest": "structures/a2/neolithic/smokehouse_idle.png"
+    },
+    {
+      "role": "structure",
+      "id": "smokehouse_working",
+      "source": "art/style05/struct/a2/neolithic/smokehouse_working.png",
+      "dest": "structures/a2/neolithic/smokehouse_working.png"
+    },
+    {
+      "role": "structure",
+      "id": "sundial",
+      "source": "art/style05/struct/a2/iron/sundial.png",
+      "dest": "structures/a2/iron/sundial.png"
+    },
+    {
+      "role": "structure",
+      "id": "timber_bridge_damaged",
+      "source": "art/style05/struct/a2/iron/timber_bridge_damaged.png",
+      "dest": "structures/a2/iron/timber_bridge_damaged.png"
+    },
+    {
+      "role": "structure",
+      "id": "timber_bridge_ew",
+      "source": "art/style05/struct/a2/iron/timber_bridge_ew.png",
+      "dest": "structures/a2/iron/timber_bridge_ew.png"
+    },
+    {
+      "role": "structure",
+      "id": "tin_outcrop_depleted",
+      "source": "art/style05/struct/a2/ores/tin_outcrop_depleted.png",
+      "dest": "structures/a2/ores/tin_outcrop_depleted.png"
+    },
+    {
+      "role": "structure",
+      "id": "tin_outcrop_full",
+      "source": "art/style05/struct/a2/ores/tin_outcrop_full.png",
+      "dest": "structures/a2/ores/tin_outcrop_full.png"
+    },
+    {
+      "role": "structure",
+      "id": "town_gate_closed",
+      "source": "art/style05/struct/a2/iron/town_gate_closed.png",
+      "dest": "structures/a2/iron/town_gate_closed.png"
+    },
+    {
+      "role": "structure",
+      "id": "town_gate_open",
+      "source": "art/style05/struct/a2/iron/town_gate_open.png",
+      "dest": "structures/a2/iron/town_gate_open.png"
+    },
+    {
+      "role": "structure",
+      "id": "trap_set",
+      "source": "art/style05/struct/a2/neolithic/trap_set.png",
+      "dest": "structures/a2/neolithic/trap_set.png"
+    },
+    {
+      "role": "structure",
+      "id": "trap_sprung",
+      "source": "art/style05/struct/a2/neolithic/trap_sprung.png",
+      "dest": "structures/a2/neolithic/trap_sprung.png"
+    },
+    {
+      "role": "structure",
+      "id": "watchtower",
+      "source": "art/style05/struct/a2/iron/watchtower.png",
+      "dest": "structures/a2/iron/watchtower.png"
+    },
+    {
+      "role": "structure",
+      "id": "watchtower_damaged",
+      "source": "art/style05/struct/a2/iron/watchtower_damaged.png",
+      "dest": "structures/a2/iron/watchtower_damaged.png"
+    },
+    {
+      "role": "structure",
+      "id": "watermill_millstones_idle",
+      "source": "art/style05/struct/a2/iron/watermill_millstones_idle.png",
+      "dest": "structures/a2/iron/watermill_millstones_idle.png"
+    },
+    {
+      "role": "structure",
+      "id": "watermill_millstones_working",
+      "source": "art/style05/struct/a2/iron/watermill_millstones_working.png",
+      "dest": "structures/a2/iron/watermill_millstones_working.png"
+    },
+    {
+      "role": "structure",
+      "id": "waterwheel_idle",
+      "source": "art/style05/struct/a2/iron/waterwheel_idle.png",
+      "dest": "structures/a2/iron/waterwheel_idle.png"
+    },
+    {
+      "role": "structure",
+      "id": "waterwheel_working",
+      "source": "art/style05/struct/a2/iron/waterwheel_working.png",
+      "dest": "structures/a2/iron/waterwheel_working.png"
+    },
+    {
+      "role": "structure",
+      "id": "well",
+      "source": "art/style05/struct/a2/neolithic/well.png",
+      "dest": "structures/a2/neolithic/well.png"
+    },
+    {
+      "role": "structure",
+      "id": "well_dry",
+      "source": "art/style05/struct/a2/neolithic/well_dry.png",
+      "dest": "structures/a2/neolithic/well_dry.png"
+    },
+    {
+      "role": "structure",
+      "id": "wheat_growing",
+      "source": "art/style05/struct/a2/crops_grain/wheat_growing.png",
+      "dest": "structures/a2/crops_grain/wheat_growing.png"
+    },
+    {
+      "role": "structure",
+      "id": "wheat_harvested",
+      "source": "art/style05/struct/a2/crops_grain/wheat_harvested.png",
+      "dest": "structures/a2/crops_grain/wheat_harvested.png"
+    },
+    {
+      "role": "structure",
+      "id": "wheat_ripe",
+      "source": "art/style05/struct/a2/crops_grain/wheat_ripe.png",
+      "dest": "structures/a2/crops_grain/wheat_ripe.png"
+    },
+    {
+      "role": "structure",
+      "id": "wheat_seedling",
+      "source": "art/style05/struct/a2/crops_grain/wheat_seedling.png",
+      "dest": "structures/a2/crops_grain/wheat_seedling.png"
+    },
+    {
+      "role": "structure",
+      "id": "windbreak",
+      "source": "art/style05/struct/a2/neolithic/windbreak.png",
+      "dest": "structures/a2/neolithic/windbreak.png"
+    },
+    {
+      "role": "structure",
+      "id": "windbreak_damaged",
+      "source": "art/style05/struct/a2/neolithic/windbreak_damaged.png",
+      "dest": "structures/a2/neolithic/windbreak_damaged.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "ditch_watered",
+      "source": "art/style05/env/ground/a2/bronze/ditch_watered.png",
+      "dest": "ground/a2/bronze/ditch_watered.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "irrigation_channel_watered",
+      "source": "art/style05/env/ground/a2/bronze/irrigation_channel_watered.png",
+      "dest": "ground/a2/bronze/irrigation_channel_watered.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "paved_road",
+      "source": "art/style05/env/ground/a2/iron/paved_road.png",
+      "dest": "ground/a2/iron/paved_road.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "paved_road_corner",
+      "source": "art/style05/env/ground/a2/iron/paved_road_corner.png",
+      "dest": "ground/a2/iron/paved_road_corner.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "paved_road_damaged",
+      "source": "art/style05/env/ground/a2/iron/paved_road_damaged.png",
+      "dest": "ground/a2/iron/paved_road_damaged.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "paved_road_ew",
+      "source": "art/style05/env/ground/a2/iron/paved_road_ew.png",
+      "dest": "ground/a2/iron/paved_road_ew.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "paved_road_junction",
+      "source": "art/style05/env/ground/a2/iron/paved_road_junction.png",
+      "dest": "ground/a2/iron/paved_road_junction.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "terrace_cultivated",
+      "source": "art/style05/env/ground/a2/bronze/terrace_cultivated.png",
+      "dest": "ground/a2/bronze/terrace_cultivated.png"
+    }
+  ],
+  "ground_metadata_handoff": {
+    "source": "art/batch_a2/ground_assets.json",
+    "present": true,
+    "application": "Separate ground metadata; importer/placement adapter unresolved. Do not merge into meta_sources.structure or infer a new runtime metadata field.",
+    "anchor_convention": "Reference world base is NW occupied cell origin plus(32,43); paste origin=world_base-source_anchor."
+  },
+  "excluded": [
+    "Ground rows without explicit adopted status; opaque alpha255 validation belongs to the ground adoption gate.",
+    "Raw, rejected, unreviewed and merely numeric-ready candidates.",
+    "Derived room previews and wall composites: they are multilayer recipes, not flat structure sprites."
+  ],
+  "candidate_coverage": "art/batch_a2/coverage.json"
+}

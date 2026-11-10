@@ -1,0 +1,4629 @@
+{
+  "schema_version": 1,
+  "status": "DRAFT_NOT_APPLIED",
+  "source_branch": "v8/art-batch-a2",
+  "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+  "source_commit_requirement": "Pinned to the commit containing every adopted image, sidecar, source manifest and reviewed room recipe. Preserve this exact revision during import review.",
+  "input_evidence": {
+    "adopted_manifest": "docs/v8/artstruct/assets.json",
+    "adopted_manifest_sha256": "4fafe382524a2e87efbf7b7d6c68e49ee2a947c5aa67743ac31efb4df7c775c7",
+    "room_recipes": "art/batch_a2/rooms.json",
+    "room_recipes_sha256": "e360bae6400eb96fc25c08520de723bb85e5539d8e6034c11074978062be7e4c",
+    "ground_manifest": "art/batch_a2/ground_assets.json",
+    "ground_manifest_present": true,
+    "ground_manifest_sha256": "7004e1427ed0d19aa5a080e4d2a1e9e6c768d3a2b05d8da4b9db95380de92c3a",
+    "baseline_art_import_sha256": "f54304de6711aaa9f04c415e2f1406a985f3ea2e4d700886f0c10eb12e186dd0",
+    "baseline_bindings_sha256": "02d0b931885357c1b66581318deb553a61fd6d66eae56a44279720fb8a46a40b"
+  },
+  "fragment_kind": "append_only_symbolic_binding_proposals",
+  "target": "assets/v8art/bindings.json",
+  "merge_instruction": "Review each symbolic proposal against the integration branch's authoritative content and bridge contracts. Append resolved rows only; never replace existing bindings or fallback tables.",
+  "runtime_rows_to_append": [],
+  "runtime_code_policy": "No numerical code, simulation enum, yield index, growth threshold or depletion threshold is assigned. Empty runtime_rows_to_append means nothing is ready for blind application.",
+  "symbolic_proposals": {
+    "nodes": [
+      {
+        "content_id": "copper_ore",
+        "content_id_status": "proposed_node_identity; material key is documented by C2 section3.1",
+        "target_section": "nodes.codes",
+        "binding_shape": {
+          "structure": "copper_outcrop_full",
+          "depleted": "copper_outcrop_depleted"
+        },
+        "missing_assets": [],
+        "integration_required": [
+          "Confirm symbolic node/material identity and authoritative runtime code.",
+          "Use authored depletion state; no depletion threshold is supplied by this draft."
+        ]
+      },
+      {
+        "content_id": "tin_ore",
+        "content_id_status": "proposed_node_identity; material key is documented by C2 section3.1",
+        "target_section": "nodes.codes",
+        "binding_shape": {
+          "structure": "tin_outcrop_full",
+          "depleted": "tin_outcrop_depleted"
+        },
+        "missing_assets": [],
+        "integration_required": [
+          "Confirm symbolic node/material identity and authoritative runtime code.",
+          "Use authored depletion state; no depletion threshold is supplied by this draft."
+        ]
+      },
+      {
+        "content_id": "iron_ore",
+        "content_id_status": "proposed_node_identity; material key is documented by C2 section3.1",
+        "target_section": "nodes.codes",
+        "binding_shape": {
+          "structure": "iron_outcrop_full",
+          "depleted": "iron_outcrop_depleted"
+        },
+        "missing_assets": [],
+        "integration_required": [
+          "Confirm symbolic node/material identity and authoritative runtime code.",
+          "Use authored depletion state; no depletion threshold is supplied by this draft."
+        ]
+      },
+      {
+        "content_id": "bog_iron_ore",
+        "content_id_status": "proposal_only; distinct bog-iron runtime identity not confirmed",
+        "target_section": "nodes.codes",
+        "binding_shape": {
+          "structure": "bog_iron_outcrop_full",
+          "depleted": "bog_iron_outcrop_depleted"
+        },
+        "missing_assets": [],
+        "integration_required": [
+          "Confirm symbolic node/material identity and authoritative runtime code.",
+          "Use authored depletion state; no depletion threshold is supplied by this draft."
+        ]
+      },
+      {
+        "content_id": "lead_ore",
+        "content_id_status": "proposed_node_identity; material key is documented by C2 section3.1",
+        "target_section": "nodes.codes",
+        "binding_shape": {
+          "structure": "lead_outcrop_full",
+          "depleted": "lead_outcrop_depleted"
+        },
+        "missing_assets": [],
+        "integration_required": [
+          "Confirm symbolic node/material identity and authoritative runtime code.",
+          "Use authored depletion state; no depletion threshold is supplied by this draft."
+        ]
+      },
+      {
+        "content_id": "gold_ore",
+        "content_id_status": "proposed_node_identity; material key is documented by C2 section3.1",
+        "target_section": "nodes.codes",
+        "binding_shape": {
+          "structure": "gold_outcrop_full",
+          "depleted": "gold_outcrop_depleted"
+        },
+        "missing_assets": [],
+        "integration_required": [
+          "Confirm symbolic node/material identity and authoritative runtime code.",
+          "Use authored depletion state; no depletion threshold is supplied by this draft."
+        ]
+      },
+      {
+        "content_id": "silver_ore",
+        "content_id_status": "proposed_node_identity; material key is documented by C2 section3.1",
+        "target_section": "nodes.codes",
+        "binding_shape": {
+          "structure": "silver_outcrop_full",
+          "depleted": "silver_outcrop_depleted"
+        },
+        "missing_assets": [],
+        "integration_required": [
+          "Confirm symbolic node/material identity and authoritative runtime code.",
+          "Use authored depletion state; no depletion threshold is supplied by this draft."
+        ]
+      }
+    ],
+    "workshops": [
+      {
+        "content_id": "charcoal_clamp",
+        "content_id_status": "authoritative_symbolic_id_from_C2_section3.3",
+        "target_section": "workshops.codes",
+        "binding_shape": {
+          "structure": "charcoal_clamp_idle",
+          "working": "charcoal_clamp_burning"
+        },
+        "art_states": {
+          "idle": "charcoal_clamp_idle",
+          "burning": "charcoal_clamp_burning",
+          "spent": "charcoal_clamp_spent"
+        },
+        "missing_assets": [],
+        "integration_required": [
+          "Resolve the authoritative runtime code; no numerical code or simulation enum is proposed.",
+          "Confirm live state selection; extra states beyond structure/working require a selector adapter."
+        ]
+      },
+      {
+        "content_id": "smelter",
+        "content_id_status": "authoritative_symbolic_id_from_C2_section3.3",
+        "target_section": "workshops.codes",
+        "binding_shape": {
+          "structure": "copper_smelter_unlit",
+          "working": "copper_smelter_lit"
+        },
+        "art_states": {
+          "unlit": "copper_smelter_unlit",
+          "lit": "copper_smelter_lit"
+        },
+        "missing_assets": [],
+        "integration_required": [
+          "Resolve the authoritative runtime code; no numerical code or simulation enum is proposed.",
+          "Confirm live state selection; extra states beyond structure/working require a selector adapter."
+        ]
+      },
+      {
+        "content_id": "casting_bench",
+        "content_id_status": "authoritative_symbolic_id_from_C2_section3.3",
+        "target_section": "workshops.codes",
+        "binding_shape": {
+          "structure": "casting_bench_empty",
+          "working": "casting_bench_working"
+        },
+        "art_states": {
+          "empty": "casting_bench_empty",
+          "working": "casting_bench_working"
+        },
+        "missing_assets": [],
+        "integration_required": [
+          "Resolve the authoritative runtime code; no numerical code or simulation enum is proposed.",
+          "Confirm live state selection; extra states beyond structure/working require a selector adapter."
+        ]
+      },
+      {
+        "content_id": "bee_skep",
+        "content_id_status": "authoritative_symbolic_id_from_C2_section3.3",
+        "target_section": "workshops.codes",
+        "binding_shape": {
+          "structure": "bee_skep_empty",
+          "working": "bee_skep_active"
+        },
+        "art_states": {
+          "empty": "bee_skep_empty",
+          "active": "bee_skep_active"
+        },
+        "missing_assets": [],
+        "integration_required": [
+          "Resolve the authoritative runtime code; no numerical code or simulation enum is proposed.",
+          "Confirm live state selection; extra states beyond structure/working require a selector adapter."
+        ]
+      },
+      {
+        "content_id": "smokehouse",
+        "content_id_status": "proposal_only; confirm authored content identity",
+        "target_section": "workshops.codes",
+        "binding_shape": {
+          "structure": "smokehouse_idle",
+          "working": "smokehouse_working"
+        },
+        "art_states": {
+          "idle": "smokehouse_idle",
+          "working": "smokehouse_working"
+        },
+        "missing_assets": [],
+        "integration_required": [
+          "Resolve the authoritative runtime code; no numerical code or simulation enum is proposed.",
+          "Confirm live state selection; extra states beyond structure/working require a selector adapter."
+        ]
+      },
+      {
+        "content_id": "bread_oven",
+        "content_id_status": "proposal_only; confirm authored content identity",
+        "target_section": "workshops.codes",
+        "binding_shape": {
+          "structure": "bread_oven_unlit",
+          "working": "bread_oven_lit"
+        },
+        "art_states": {
+          "unlit": "bread_oven_unlit",
+          "lit": "bread_oven_lit"
+        },
+        "missing_assets": [],
+        "integration_required": [
+          "Resolve the authoritative runtime code; no numerical code or simulation enum is proposed.",
+          "Confirm live state selection; extra states beyond structure/working require a selector adapter."
+        ]
+      },
+      {
+        "content_id": "potter_kiln",
+        "content_id_status": "proposal_only; confirm authored content identity",
+        "target_section": "workshops.codes",
+        "binding_shape": {
+          "working": "potter_kiln_firing"
+        },
+        "art_states": {
+          "firing": "potter_kiln_firing"
+        },
+        "missing_assets": [
+          "potter_kiln_unlit"
+        ],
+        "integration_required": [
+          "Resolve the authoritative runtime code; no numerical code or simulation enum is proposed.",
+          "Confirm live state selection; extra states beyond structure/working require a selector adapter."
+        ]
+      },
+      {
+        "content_id": "loom",
+        "content_id_status": "proposal_only; confirm authored content identity",
+        "target_section": "workshops.codes",
+        "binding_shape": {
+          "working": "loom_loaded"
+        },
+        "art_states": {
+          "loaded": "loom_loaded"
+        },
+        "missing_assets": [
+          "loom_empty"
+        ],
+        "integration_required": [
+          "Resolve the authoritative runtime code; no numerical code or simulation enum is proposed.",
+          "Confirm live state selection; extra states beyond structure/working require a selector adapter."
+        ]
+      },
+      {
+        "content_id": "olive_press",
+        "content_id_status": "proposal_only; confirm authored content identity",
+        "target_section": "workshops.codes",
+        "binding_shape": {
+          "working": "olive_press_working"
+        },
+        "art_states": {
+          "working": "olive_press_working"
+        },
+        "missing_assets": [
+          "olive_press_empty"
+        ],
+        "integration_required": [
+          "Resolve the authoritative runtime code; no numerical code or simulation enum is proposed.",
+          "Confirm live state selection; extra states beyond structure/working require a selector adapter."
+        ]
+      },
+      {
+        "content_id": "bloomery",
+        "content_id_status": "proposal_only; confirm authored content identity",
+        "target_section": "workshops.codes",
+        "binding_shape": {
+          "structure": "bloomery_unlit",
+          "working": "bloomery_lit"
+        },
+        "art_states": {
+          "unlit": "bloomery_unlit",
+          "lit": "bloomery_lit"
+        },
+        "missing_assets": [],
+        "integration_required": [
+          "Resolve the authoritative runtime code; no numerical code or simulation enum is proposed.",
+          "Confirm live state selection; extra states beyond structure/working require a selector adapter."
+        ]
+      },
+      {
+        "content_id": "forge",
+        "content_id_status": "proposal_only; confirm authored content identity",
+        "target_section": "workshops.codes",
+        "binding_shape": {
+          "structure": "forge_idle",
+          "working": "forge_working"
+        },
+        "art_states": {
+          "idle": "forge_idle",
+          "working": "forge_working"
+        },
+        "missing_assets": [],
+        "integration_required": [
+          "Resolve the authoritative runtime code; no numerical code or simulation enum is proposed.",
+          "Confirm live state selection; extra states beyond structure/working require a selector adapter."
+        ]
+      },
+      {
+        "content_id": "rotary_quern",
+        "content_id_status": "proposal_only; confirm authored content identity",
+        "target_section": "workshops.codes",
+        "binding_shape": {
+          "structure": "rotary_quern",
+          "working": "rotary_quern_working"
+        },
+        "art_states": {
+          "idle": "rotary_quern",
+          "working": "rotary_quern_working"
+        },
+        "missing_assets": [],
+        "integration_required": [
+          "Resolve the authoritative runtime code; no numerical code or simulation enum is proposed.",
+          "Confirm live state selection; extra states beyond structure/working require a selector adapter."
+        ]
+      }
+    ],
+    "plants_by_id": [
+      {
+        "content_id": "wheat",
+        "content_id_status": "proposal_only; match authoritative crop identity during integration",
+        "target_section": "plants.by_id",
+        "stage_structure_ids": {
+          "seedling": "wheat_seedling",
+          "growing": "wheat_growing",
+          "ripe": "wheat_ripe",
+          "harvested": "wheat_harvested"
+        },
+        "missing_stages": [],
+        "runtime_support": "UNSUPPORTED_STAGE_SCHEMA_IN_REFERENCE; plants.by_id is empty in the reference, so this is a semantic map, not an established runtime row.",
+        "integration_required": [
+          "Define the crop/orchard stage adapter from authored simulation state; no growth, season or harvest thresholds are invented.",
+          "Use each stage's metadata anchor and footprint unchanged."
+        ],
+        "notes": []
+      },
+      {
+        "content_id": "barley",
+        "content_id_status": "proposal_only; match authoritative crop identity during integration",
+        "target_section": "plants.by_id",
+        "stage_structure_ids": {
+          "seedling": "barley_seedling",
+          "growing": "barley_growing",
+          "ripe": "barley_ripe",
+          "harvested": "barley_harvested"
+        },
+        "missing_stages": [],
+        "runtime_support": "UNSUPPORTED_STAGE_SCHEMA_IN_REFERENCE; plants.by_id is empty in the reference, so this is a semantic map, not an established runtime row.",
+        "integration_required": [
+          "Define the crop/orchard stage adapter from authored simulation state; no growth, season or harvest thresholds are invented.",
+          "Use each stage's metadata anchor and footprint unchanged."
+        ],
+        "notes": []
+      },
+      {
+        "content_id": "millet",
+        "content_id_status": "proposal_only; match authoritative crop identity during integration",
+        "target_section": "plants.by_id",
+        "stage_structure_ids": {
+          "seedling": "millet_seedling",
+          "growing": "millet_growing",
+          "ripe": "millet_ripe",
+          "harvested": "millet_harvested"
+        },
+        "missing_stages": [],
+        "runtime_support": "UNSUPPORTED_STAGE_SCHEMA_IN_REFERENCE; plants.by_id is empty in the reference, so this is a semantic map, not an established runtime row.",
+        "integration_required": [
+          "Define the crop/orchard stage adapter from authored simulation state; no growth, season or harvest thresholds are invented.",
+          "Use each stage's metadata anchor and footprint unchanged."
+        ],
+        "notes": []
+      },
+      {
+        "content_id": "oats",
+        "content_id_status": "proposal_only; match authoritative crop identity during integration",
+        "target_section": "plants.by_id",
+        "stage_structure_ids": {
+          "seedling": "oats_seedling",
+          "growing": "oats_growing",
+          "ripe": "oats_ripe",
+          "harvested": "oats_harvested"
+        },
+        "missing_stages": [],
+        "runtime_support": "UNSUPPORTED_STAGE_SCHEMA_IN_REFERENCE; plants.by_id is empty in the reference, so this is a semantic map, not an established runtime row.",
+        "integration_required": [
+          "Define the crop/orchard stage adapter from authored simulation state; no growth, season or harvest thresholds are invented.",
+          "Use each stage's metadata anchor and footprint unchanged."
+        ],
+        "notes": []
+      },
+      {
+        "content_id": "rye",
+        "content_id_status": "proposal_only; match authoritative crop identity during integration",
+        "target_section": "plants.by_id",
+        "stage_structure_ids": {
+          "seedling": "rye_seedling",
+          "growing": "rye_growing",
+          "ripe": "rye_ripe",
+          "harvested": "rye_harvested"
+        },
+        "missing_stages": [],
+        "runtime_support": "UNSUPPORTED_STAGE_SCHEMA_IN_REFERENCE; plants.by_id is empty in the reference, so this is a semantic map, not an established runtime row.",
+        "integration_required": [
+          "Define the crop/orchard stage adapter from authored simulation state; no growth, season or harvest thresholds are invented.",
+          "Use each stage's metadata anchor and footprint unchanged."
+        ],
+        "notes": []
+      },
+      {
+        "content_id": "flax",
+        "content_id_status": "proposal_only; match authoritative crop identity during integration",
+        "target_section": "plants.by_id",
+        "stage_structure_ids": {
+          "seedling": "flax_seedling"
+        },
+        "missing_stages": [
+          "growing",
+          "ripe",
+          "harvested"
+        ],
+        "runtime_support": "UNSUPPORTED_STAGE_SCHEMA_IN_REFERENCE; plants.by_id is empty in the reference, so this is a semantic map, not an established runtime row.",
+        "integration_required": [
+          "Define the crop/orchard stage adapter from authored simulation state; no growth, season or harvest thresholds are invented.",
+          "Use each stage's metadata anchor and footprint unchanged."
+        ],
+        "notes": []
+      },
+      {
+        "content_id": "lentil",
+        "content_id_status": "proposal_only; match authoritative crop identity during integration",
+        "target_section": "plants.by_id",
+        "stage_structure_ids": {
+          "seedling": "lentil_seedling",
+          "growing": "lentil_growing",
+          "ripe": "lentil_ripe",
+          "harvested": "lentil_harvested"
+        },
+        "missing_stages": [],
+        "runtime_support": "UNSUPPORTED_STAGE_SCHEMA_IN_REFERENCE; plants.by_id is empty in the reference, so this is a semantic map, not an established runtime row.",
+        "integration_required": [
+          "Define the crop/orchard stage adapter from authored simulation state; no growth, season or harvest thresholds are invented.",
+          "Use each stage's metadata anchor and footprint unchanged."
+        ],
+        "notes": []
+      },
+      {
+        "content_id": "pea",
+        "content_id_status": "proposal_only; match authoritative crop identity during integration",
+        "target_section": "plants.by_id",
+        "stage_structure_ids": {
+          "seedling": "pea_seedling",
+          "growing": "pea_growing",
+          "ripe": "pea_ripe",
+          "harvested": "pea_harvested"
+        },
+        "missing_stages": [],
+        "runtime_support": "UNSUPPORTED_STAGE_SCHEMA_IN_REFERENCE; plants.by_id is empty in the reference, so this is a semantic map, not an established runtime row.",
+        "integration_required": [
+          "Define the crop/orchard stage adapter from authored simulation state; no growth, season or harvest thresholds are invented.",
+          "Use each stage's metadata anchor and footprint unchanged."
+        ],
+        "notes": []
+      },
+      {
+        "content_id": "hemp",
+        "content_id_status": "proposal_only; match authoritative crop identity during integration",
+        "target_section": "plants.by_id",
+        "stage_structure_ids": {
+          "seedling": "hemp_seedling",
+          "growing": "hemp_growing",
+          "ripe": "hemp_ripe",
+          "harvested": "hemp_harvested"
+        },
+        "missing_stages": [],
+        "runtime_support": "UNSUPPORTED_STAGE_SCHEMA_IN_REFERENCE; plants.by_id is empty in the reference, so this is a semantic map, not an established runtime row.",
+        "integration_required": [
+          "Define the crop/orchard stage adapter from authored simulation state; no growth, season or harvest thresholds are invented.",
+          "Use each stage's metadata anchor and footprint unchanged."
+        ],
+        "notes": []
+      },
+      {
+        "content_id": "grape",
+        "content_id_status": "proposal_only; match authoritative crop identity during integration",
+        "target_section": "plants.by_id",
+        "stage_structure_ids": {
+          "young": "grape_young",
+          "leafy": "grape_leafy",
+          "fruiting": "grape_fruiting",
+          "bare": "grape_bare"
+        },
+        "missing_stages": [],
+        "runtime_support": "UNSUPPORTED_STAGE_SCHEMA_IN_REFERENCE; plants.by_id is empty in the reference, so this is a semantic map, not an established runtime row.",
+        "integration_required": [
+          "Define the crop/orchard stage adapter from authored simulation state; no growth, season or harvest thresholds are invented.",
+          "Use each stage's metadata anchor and footprint unchanged."
+        ],
+        "notes": []
+      },
+      {
+        "content_id": "olive",
+        "content_id_status": "proposal_only; match authoritative crop identity during integration",
+        "target_section": "plants.by_id",
+        "stage_structure_ids": {
+          "sapling": "olive_sapling",
+          "leafy": "olive_leafy",
+          "fruiting": "olive_fruiting",
+          "dormant": "olive_dormant"
+        },
+        "missing_stages": [],
+        "runtime_support": "UNSUPPORTED_STAGE_SCHEMA_IN_REFERENCE; plants.by_id is empty in the reference, so this is a semantic map, not an established runtime row.",
+        "integration_required": [
+          "Define the crop/orchard stage adapter from authored simulation state; no growth, season or harvest thresholds are invented.",
+          "Use each stage's metadata anchor and footprint unchanged."
+        ],
+        "notes": [
+          "Dormant olive remains evergreen; do not map it to a leafless state."
+        ]
+      },
+      {
+        "content_id": "apple",
+        "content_id_status": "proposal_only; match authoritative crop identity during integration",
+        "target_section": "plants.by_id",
+        "stage_structure_ids": {
+          "sapling": "apple_sapling",
+          "leafy": "apple_leafy",
+          "fruiting": "apple_fruiting",
+          "bare": "apple_bare"
+        },
+        "missing_stages": [],
+        "runtime_support": "UNSUPPORTED_STAGE_SCHEMA_IN_REFERENCE; plants.by_id is empty in the reference, so this is a semantic map, not an established runtime row.",
+        "integration_required": [
+          "Define the crop/orchard stage adapter from authored simulation state; no growth, season or harvest thresholds are invented.",
+          "Use each stage's metadata anchor and footprint unchanged."
+        ],
+        "notes": []
+      }
+    ],
+    "pieces": [
+      {
+        "content_id": "palisade",
+        "content_id_status": "proposal_only",
+        "art_states": {
+          "ew": "palisade_ew",
+          "end": "palisade_end",
+          "damaged": "palisade_damaged"
+        },
+        "missing_assets": [
+          "palisade_ns",
+          "palisade_corner"
+        ],
+        "runtime_support": "REQUIRES_ADJACENCY_AND_GATE_ADAPTER; these are standing sprites, not material wall textures.",
+        "connection_evidence": "art/batch_a2/fence_connections.json",
+        "integration_required": [
+          "Read connection evidence and its limitations; imported art does not prove seamless repeat or collision behavior.",
+          "Confirm directional selection and open/closed state without rotating source art."
+        ]
+      },
+      {
+        "content_id": "palisade_gate",
+        "content_id_status": "proposal_only",
+        "art_states": {
+          "closed": "palisade_gate_closed",
+          "open": "palisade_gate_open"
+        },
+        "missing_assets": [],
+        "runtime_support": "REQUIRES_ADJACENCY_AND_GATE_ADAPTER; these are standing sprites, not material wall textures.",
+        "connection_evidence": null,
+        "integration_required": [
+          "Read connection evidence and its limitations; imported art does not prove seamless repeat or collision behavior.",
+          "Confirm directional selection and open/closed state without rotating source art."
+        ]
+      },
+      {
+        "content_id": "pen_fence",
+        "content_id_status": "proposal_only",
+        "art_states": {
+          "straight": "pen_fence_straight",
+          "end": "pen_fence_end",
+          "damaged": "pen_fence_damaged"
+        },
+        "missing_assets": [
+          "pen_fence_ns",
+          "pen_fence_corner"
+        ],
+        "runtime_support": "REQUIRES_ADJACENCY_AND_GATE_ADAPTER; these are standing sprites, not material wall textures.",
+        "connection_evidence": "art/batch_a2/fence_connections.json",
+        "integration_required": [
+          "Read connection evidence and its limitations; imported art does not prove seamless repeat or collision behavior.",
+          "Confirm directional selection and open/closed state without rotating source art."
+        ]
+      },
+      {
+        "content_id": "pen_gate",
+        "content_id_status": "proposal_only",
+        "art_states": {
+          "closed": "pen_gate_closed",
+          "open": "pen_gate_open"
+        },
+        "missing_assets": [],
+        "runtime_support": "REQUIRES_ADJACENCY_AND_GATE_ADAPTER; these are standing sprites, not material wall textures.",
+        "connection_evidence": null,
+        "integration_required": [
+          "Read connection evidence and its limitations; imported art does not prove seamless repeat or collision behavior.",
+          "Confirm directional selection and open/closed state without rotating source art."
+        ]
+      },
+      {
+        "content_id": "town_gate",
+        "content_id_status": "proposal_only",
+        "art_states": {
+          "closed": "town_gate_closed",
+          "open": "town_gate_open"
+        },
+        "missing_assets": [],
+        "runtime_support": "REQUIRES_ADJACENCY_AND_GATE_ADAPTER; these are standing sprites, not material wall textures.",
+        "connection_evidence": null,
+        "integration_required": [
+          "Read connection evidence and its limitations; imported art does not prove seamless repeat or collision behavior.",
+          "Confirm directional selection and open/closed state without rotating source art."
+        ]
+      }
+    ],
+    "standalone_structures": [
+      {
+        "content_id": "shrine",
+        "content_id_status": "proposal_only",
+        "binding_shape": {
+          "structure": "shrine_intact"
+        },
+        "art_states": {
+          "intact": "shrine_intact",
+          "damaged": "shrine_damaged"
+        },
+        "missing_assets": [],
+        "runtime_support": "Confirm the authored building/resource/component family and state selector before binding."
+      },
+      {
+        "content_id": "well",
+        "content_id_status": "proposal_only",
+        "binding_shape": {
+          "structure": "well"
+        },
+        "art_states": {
+          "full": "well",
+          "dry": "well_dry"
+        },
+        "missing_assets": [],
+        "runtime_support": "Confirm the authored building/resource/component family and state selector before binding."
+      },
+      {
+        "content_id": "megalith",
+        "content_id_status": "proposal_only",
+        "binding_shape": {
+          "structure": "megalith"
+        },
+        "art_states": {
+          "standing": "megalith",
+          "fallen": "megalith_fallen"
+        },
+        "missing_assets": [],
+        "runtime_support": "Confirm the authored building/resource/component family and state selector before binding."
+      },
+      {
+        "content_id": "windbreak",
+        "content_id_status": "proposal_only",
+        "binding_shape": {
+          "structure": "windbreak"
+        },
+        "art_states": {
+          "intact": "windbreak",
+          "damaged": "windbreak_damaged"
+        },
+        "missing_assets": [],
+        "runtime_support": "Confirm the authored building/resource/component family and state selector before binding."
+      },
+      {
+        "content_id": "trap",
+        "content_id_status": "proposal_only",
+        "binding_shape": {
+          "structure": "trap_set"
+        },
+        "art_states": {
+          "set": "trap_set",
+          "sprung": "trap_sprung"
+        },
+        "missing_assets": [],
+        "runtime_support": "Confirm the authored building/resource/component family and state selector before binding."
+      },
+      {
+        "content_id": "ritual_site",
+        "content_id_status": "proposal_only",
+        "binding_shape": {
+          "structure": "ritual_site"
+        },
+        "art_states": {
+          "furnished": "ritual_site",
+          "empty": "ritual_site_empty"
+        },
+        "missing_assets": [],
+        "runtime_support": "Confirm the authored building/resource/component family and state selector before binding."
+      },
+      {
+        "content_id": "fish_weir",
+        "content_id_status": "proposal_only",
+        "binding_shape": {
+          "structure": "fish_weir_empty"
+        },
+        "art_states": {
+          "empty": "fish_weir_empty",
+          "catch": "fish_weir_catch"
+        },
+        "missing_assets": [],
+        "runtime_support": "Confirm the authored building/resource/component family and state selector before binding."
+      },
+      {
+        "content_id": "watchtower",
+        "content_id_status": "proposal_only",
+        "binding_shape": {
+          "structure": "watchtower"
+        },
+        "art_states": {
+          "intact": "watchtower",
+          "damaged": "watchtower_damaged"
+        },
+        "missing_assets": [],
+        "runtime_support": "Confirm the authored building/resource/component family and state selector before binding."
+      },
+      {
+        "content_id": "reservoir",
+        "content_id_status": "proposal_only",
+        "binding_shape": {
+          "structure": "reservoir_empty"
+        },
+        "art_states": {
+          "empty": "reservoir_empty",
+          "full": "reservoir_full"
+        },
+        "missing_assets": [],
+        "runtime_support": "Confirm the authored building/resource/component family and state selector before binding."
+      },
+      {
+        "content_id": "grain_bin",
+        "content_id_status": "proposal_only",
+        "binding_shape": {
+          "structure": "grain_bin_empty"
+        },
+        "art_states": {
+          "empty": "grain_bin_empty",
+          "full": "grain_bin_full"
+        },
+        "missing_assets": [],
+        "runtime_support": "Confirm the authored building/resource/component family and state selector before binding."
+      },
+      {
+        "content_id": "waterwheel",
+        "content_id_status": "proposal_only",
+        "binding_shape": {
+          "structure": "waterwheel_idle"
+        },
+        "art_states": {
+          "idle": "waterwheel_idle",
+          "working": "waterwheel_working"
+        },
+        "missing_assets": [],
+        "runtime_support": "Confirm the authored building/resource/component family and state selector before binding."
+      },
+      {
+        "content_id": "watermill_millstones",
+        "content_id_status": "proposal_only",
+        "binding_shape": {
+          "structure": "watermill_millstones_idle"
+        },
+        "art_states": {
+          "idle": "watermill_millstones_idle",
+          "working": "watermill_millstones_working"
+        },
+        "missing_assets": [],
+        "runtime_support": "Confirm the authored building/resource/component family and state selector before binding."
+      },
+      {
+        "content_id": "aqueduct",
+        "content_id_status": "asset-name proposal only",
+        "binding_shape": {
+          "structure": "aqueduct"
+        },
+        "runtime_support": "Unmapped standalone art or furnishing; no runtime code or content identity is asserted."
+      },
+      {
+        "content_id": "aqueduct_damaged",
+        "content_id_status": "asset-name proposal only",
+        "binding_shape": {
+          "structure": "aqueduct_damaged"
+        },
+        "runtime_support": "Unmapped standalone art or furnishing; no runtime code or content identity is asserted."
+      },
+      {
+        "content_id": "chief_seat",
+        "content_id_status": "asset-name proposal only",
+        "binding_shape": {
+          "structure": "chief_seat"
+        },
+        "runtime_support": "Unmapped standalone art or furnishing; no runtime code or content identity is asserted."
+      },
+      {
+        "content_id": "ox_cart_empty",
+        "content_id_status": "asset-name proposal only",
+        "binding_shape": {
+          "structure": "ox_cart_empty"
+        },
+        "runtime_support": "Unmapped standalone art or furnishing; no runtime code or content identity is asserted."
+      },
+      {
+        "content_id": "school_desk",
+        "content_id_status": "asset-name proposal only",
+        "binding_shape": {
+          "structure": "school_desk"
+        },
+        "runtime_support": "Unmapped standalone art or furnishing; no runtime code or content identity is asserted."
+      },
+      {
+        "content_id": "sundial",
+        "content_id_status": "asset-name proposal only",
+        "binding_shape": {
+          "structure": "sundial"
+        },
+        "runtime_support": "Unmapped standalone art or furnishing; no runtime code or content identity is asserted."
+      },
+      {
+        "content_id": "timber_bridge_damaged",
+        "content_id_status": "asset-name proposal only",
+        "binding_shape": {
+          "structure": "timber_bridge_damaged"
+        },
+        "runtime_support": "Unmapped standalone art or furnishing; no runtime code or content identity is asserted."
+      },
+      {
+        "content_id": "timber_bridge_ew",
+        "content_id_status": "asset-name proposal only",
+        "binding_shape": {
+          "structure": "timber_bridge_ew"
+        },
+        "runtime_support": "Unmapped standalone art or furnishing; no runtime code or content identity is asserted."
+      }
+    ],
+    "room_recipes": [
+      {
+        "content_id": "log_house",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "log_house_intact",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            3,
+            3
+          ],
+          "wall_style": "LogWall",
+          "floor_style": "PackedFloor",
+          "door": [
+            1,
+            2
+          ],
+          "door_style": "Door"
+        },
+        "art_wall_style_id": "log",
+        "art_material_id": "oak",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "door_open": true,
+        "contents": [
+          {
+            "source": "art/style05/struct/hearth_unlit.png",
+            "cell": [
+              1,
+              1
+            ],
+            "role": "domestic hearth",
+            "anchor": [
+              21,
+              23
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          }
+        ],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "log_house",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "log_house_damaged",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            3,
+            3
+          ],
+          "wall_style": "LogWall",
+          "floor_style": "PackedFloor",
+          "door": [
+            1,
+            2
+          ],
+          "door_style": "Door"
+        },
+        "art_wall_style_id": "log",
+        "art_material_id": "oak",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "door_open": true,
+        "contents": [
+          {
+            "source": "art/style05/struct/hearth_unlit.png",
+            "cell": [
+              1,
+              1
+            ],
+            "role": "domestic hearth",
+            "anchor": [
+              21,
+              23
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          },
+          {
+            "source": "art/style05/env/items/log_pile_small.png",
+            "cell": [
+              0,
+              2
+            ],
+            "role": "fallen wood",
+            "anchor": [
+              32,
+              32
+            ],
+            "offset": [
+              0,
+              -27
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          }
+        ],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "storehouse",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "storehouse_empty",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            4,
+            3
+          ],
+          "wall_style": "LogWall",
+          "floor_style": "PackedFloor",
+          "door": [
+            2,
+            2
+          ],
+          "door_style": "Door"
+        },
+        "art_wall_style_id": "log",
+        "art_material_id": "oak",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "door_open": true,
+        "contents": [],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "storehouse",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "storehouse_full",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            4,
+            3
+          ],
+          "wall_style": "LogWall",
+          "floor_style": "PackedFloor",
+          "door": [
+            2,
+            2
+          ],
+          "door_style": "Door"
+        },
+        "art_wall_style_id": "log",
+        "art_material_id": "oak",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "door_open": true,
+        "contents": [
+          {
+            "source": "art/style05/env/items/berry_basket.png",
+            "cell": [
+              1,
+              1
+            ],
+            "role": "stored berries",
+            "anchor": [
+              32,
+              32
+            ],
+            "offset": [
+              0,
+              -27
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          },
+          {
+            "source": "art/style05/env/items/log_pile_small.png",
+            "cell": [
+              2,
+              1
+            ],
+            "role": "stored timber",
+            "anchor": [
+              32,
+              32
+            ],
+            "offset": [
+              0,
+              -27
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          }
+        ],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "granary",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "granary_empty",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            3,
+            3
+          ],
+          "wall_style": "LogWall",
+          "floor_style": "PackedFloor",
+          "door": [
+            1,
+            2
+          ],
+          "door_style": "Door"
+        },
+        "art_wall_style_id": "log",
+        "art_material_id": "oak",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "door_open": true,
+        "contents": [
+          {
+            "source": "art/style05/struct/a2/contents/grain_bin_empty.png",
+            "cell": [
+              1,
+              1
+            ],
+            "role": "grain storage bin",
+            "anchor": null,
+            "offset": [
+              0,
+              0
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          }
+        ],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "granary",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "granary_full",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            3,
+            3
+          ],
+          "wall_style": "LogWall",
+          "floor_style": "PackedFloor",
+          "door": [
+            1,
+            2
+          ],
+          "door_style": "Door"
+        },
+        "art_wall_style_id": "log",
+        "art_material_id": "oak",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "door_open": true,
+        "contents": [
+          {
+            "source": "art/style05/struct/a2/contents/grain_bin_full.png",
+            "cell": [
+              1,
+              1
+            ],
+            "role": "grain storage bin",
+            "anchor": null,
+            "offset": [
+              0,
+              0
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          }
+        ],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "mud_brick_house",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "mudbrick_house_intact",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            3,
+            3
+          ],
+          "floor_style": "PackedFloor",
+          "door": [
+            1,
+            2
+          ],
+          "door_style": "Door"
+        },
+        "art_wall_style_id": "mud_brick",
+        "art_material_id": "clay",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "door_open": true,
+        "contents": [
+          {
+            "source": "art/style05/struct/hearth_unlit.png",
+            "cell": [
+              1,
+              1
+            ],
+            "role": "domestic hearth",
+            "anchor": [
+              21,
+              23
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          }
+        ],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "mud_brick_house",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "mudbrick_house_damaged",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            3,
+            3
+          ],
+          "floor_style": "PackedFloor",
+          "door": [
+            1,
+            2
+          ],
+          "door_style": "Door"
+        },
+        "art_wall_style_id": "mud_brick",
+        "art_material_id": "clay",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "door_open": true,
+        "contents": [
+          {
+            "source": "art/style05/struct/hearth_unlit.png",
+            "cell": [
+              1,
+              1
+            ],
+            "role": "domestic hearth",
+            "anchor": [
+              21,
+              23
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          },
+          {
+            "source": "art/style05/struct/items/stone_pile.png",
+            "cell": [
+              0,
+              2
+            ],
+            "role": "collapsed masonry",
+            "anchor": [
+              32,
+              43
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          }
+        ],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "stone_storehouse",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "stone_storehouse_empty",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            4,
+            3
+          ],
+          "wall_style": "StoneWall",
+          "floor_style": "PackedFloor",
+          "door": [
+            2,
+            2
+          ],
+          "door_style": "Door"
+        },
+        "art_wall_style_id": "drystone",
+        "art_material_id": "granite",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "door_open": true,
+        "contents": [],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "stone_storehouse",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "stone_storehouse_full",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            4,
+            3
+          ],
+          "wall_style": "StoneWall",
+          "floor_style": "PackedFloor",
+          "door": [
+            2,
+            2
+          ],
+          "door_style": "Door"
+        },
+        "art_wall_style_id": "drystone",
+        "art_material_id": "granite",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "door_open": true,
+        "contents": [
+          {
+            "source": "art/style05/struct/items/stone_pile.png",
+            "cell": [
+              1,
+              1
+            ],
+            "role": "stored stone",
+            "anchor": [
+              32,
+              43
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          },
+          {
+            "source": "art/style05/struct/a2/contents/grain_bin_full.png",
+            "cell": [
+              2,
+              1
+            ],
+            "role": "stored grain",
+            "anchor": null,
+            "offset": [
+              0,
+              0
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          }
+        ],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "chief_hall",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "chief_hall_intact",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            5,
+            4
+          ],
+          "floor_style": "PackedFloor",
+          "door": [
+            2,
+            3
+          ],
+          "door_style": "Door"
+        },
+        "art_wall_style_id": "mud_brick",
+        "art_material_id": "clay",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            4,
+            3
+          ]
+        ],
+        "door_open": true,
+        "contents": [
+          {
+            "source": "art/style05/struct/a2/contents/chief_seat.png",
+            "cell": [
+              2,
+              1
+            ],
+            "role": "chief seat",
+            "anchor": null,
+            "offset": [
+              0,
+              0
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          },
+          {
+            "source": "art/style05/struct/hearth_unlit.png",
+            "cell": [
+              2,
+              2
+            ],
+            "role": "domestic hearth",
+            "anchor": [
+              21,
+              23
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          }
+        ],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "chief_hall",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "chief_hall_damaged",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            5,
+            4
+          ],
+          "floor_style": "PackedFloor",
+          "door": [
+            2,
+            3
+          ],
+          "door_style": "Door"
+        },
+        "art_wall_style_id": "mud_brick",
+        "art_material_id": "clay",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            4,
+            3
+          ]
+        ],
+        "door_open": true,
+        "contents": [
+          {
+            "source": "art/style05/struct/a2/contents/chief_seat.png",
+            "cell": [
+              2,
+              1
+            ],
+            "role": "chief seat",
+            "anchor": null,
+            "offset": [
+              0,
+              0
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          },
+          {
+            "source": "art/style05/struct/hearth_unlit.png",
+            "cell": [
+              2,
+              2
+            ],
+            "role": "domestic hearth",
+            "anchor": [
+              21,
+              23
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          },
+          {
+            "source": "art/style05/struct/items/stone_pile.png",
+            "cell": [
+              0,
+              3
+            ],
+            "role": "collapsed masonry",
+            "anchor": [
+              32,
+              43
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          }
+        ],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "cart_shed",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "cart_shed_empty",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            4,
+            3
+          ],
+          "wall_style": "LogWall",
+          "floor_style": "PackedFloor",
+          "door": [
+            2,
+            2
+          ],
+          "door_style": "Door"
+        },
+        "art_wall_style_id": "log",
+        "art_material_id": "oak",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "door_open": true,
+        "contents": [],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "cart_shed",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "cart_shed_occupied",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            4,
+            3
+          ],
+          "wall_style": "LogWall",
+          "floor_style": "PackedFloor",
+          "door": [
+            2,
+            2
+          ],
+          "door_style": "Door"
+        },
+        "art_wall_style_id": "log",
+        "art_material_id": "oak",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "door_open": true,
+        "contents": [
+          {
+            "source": "art/style05/struct/a2/contents/ox_cart_empty.png",
+            "cell": [
+              1,
+              1
+            ],
+            "role": "unhitched wooden cart",
+            "anchor": null,
+            "offset": [
+              32,
+              0
+            ],
+            "footprint": [
+              2,
+              1
+            ]
+          }
+        ],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "trading_post",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "trading_post_empty",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            4,
+            3
+          ],
+          "floor_style": "PackedFloor",
+          "door": [
+            2,
+            2
+          ],
+          "door_style": "Door"
+        },
+        "art_wall_style_id": "mud_brick",
+        "art_material_id": "clay",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "door_open": true,
+        "contents": [],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "trading_post",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "trading_post_stocked",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            4,
+            3
+          ],
+          "floor_style": "PackedFloor",
+          "door": [
+            2,
+            2
+          ],
+          "door_style": "Door"
+        },
+        "art_wall_style_id": "mud_brick",
+        "art_material_id": "clay",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "door_open": true,
+        "contents": [
+          {
+            "source": "art/style05/env/items/berry_basket.png",
+            "cell": [
+              1,
+              1
+            ],
+            "role": "stored berries",
+            "anchor": [
+              32,
+              32
+            ],
+            "offset": [
+              0,
+              -27
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          },
+          {
+            "source": "art/style05/struct/a2/contents/grain_bin_full.png",
+            "cell": [
+              2,
+              1
+            ],
+            "role": "grain offered for trade",
+            "anchor": null,
+            "offset": [
+              0,
+              0
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          }
+        ],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "palisade_gatehouse",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "palisade_gatehouse_open",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            3,
+            3
+          ],
+          "wall_style": "LogWall",
+          "floor_style": "PackedFloor",
+          "door": [
+            1,
+            2
+          ],
+          "door_style": "Door"
+        },
+        "art_wall_style_id": "log",
+        "art_material_id": "oak",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "door_open": true,
+        "contents": [],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "palisade_gatehouse",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "palisade_gatehouse_closed",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            3,
+            3
+          ],
+          "wall_style": "LogWall",
+          "floor_style": "PackedFloor",
+          "door": [
+            1,
+            2
+          ],
+          "door_style": "Door"
+        },
+        "art_wall_style_id": "log",
+        "art_material_id": "oak",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "door_open": false,
+        "contents": [],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "stone_house",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "stone_house_intact",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            3,
+            3
+          ],
+          "wall_style": "StoneWall",
+          "floor_style": "PackedFloor",
+          "door": [
+            1,
+            2
+          ],
+          "door_style": "Door"
+        },
+        "art_wall_style_id": "drystone",
+        "art_material_id": "granite",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "door_open": true,
+        "contents": [
+          {
+            "source": "art/style05/struct/hearth_unlit.png",
+            "cell": [
+              1,
+              1
+            ],
+            "role": "domestic hearth",
+            "anchor": [
+              21,
+              23
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          }
+        ],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "stone_house",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "stone_house_damaged",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            3,
+            3
+          ],
+          "wall_style": "StoneWall",
+          "floor_style": "PackedFloor",
+          "door": [
+            1,
+            2
+          ],
+          "door_style": "Door"
+        },
+        "art_wall_style_id": "drystone",
+        "art_material_id": "granite",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "door_open": true,
+        "contents": [
+          {
+            "source": "art/style05/struct/hearth_unlit.png",
+            "cell": [
+              1,
+              1
+            ],
+            "role": "domestic hearth",
+            "anchor": [
+              21,
+              23
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          },
+          {
+            "source": "art/style05/struct/items/stone_pile.png",
+            "cell": [
+              0,
+              2
+            ],
+            "role": "collapsed masonry",
+            "anchor": [
+              32,
+              43
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          }
+        ],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "warehouse",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "warehouse_empty",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            4,
+            3
+          ],
+          "floor_style": "PackedFloor",
+          "door": [
+            2,
+            2
+          ],
+          "door_style": "Door"
+        },
+        "art_wall_style_id": "fired_brick",
+        "art_material_id": "clay",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "door_open": true,
+        "contents": [],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "warehouse",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "warehouse_full",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            4,
+            3
+          ],
+          "floor_style": "PackedFloor",
+          "door": [
+            2,
+            2
+          ],
+          "door_style": "Door"
+        },
+        "art_wall_style_id": "fired_brick",
+        "art_material_id": "clay",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "door_open": true,
+        "contents": [
+          {
+            "source": "art/style05/struct/a2/contents/grain_bin_full.png",
+            "cell": [
+              1,
+              1
+            ],
+            "role": "warehouse grain",
+            "anchor": null,
+            "offset": [
+              0,
+              0
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          },
+          {
+            "source": "art/style05/env/items/log_pile_small.png",
+            "cell": [
+              2,
+              1
+            ],
+            "role": "stored timber",
+            "anchor": [
+              32,
+              32
+            ],
+            "offset": [
+              0,
+              -27
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          }
+        ],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "school",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "school_empty",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            4,
+            3
+          ],
+          "floor_style": "PackedFloor",
+          "door": [
+            2,
+            2
+          ],
+          "door_style": "Door"
+        },
+        "art_wall_style_id": "mud_brick",
+        "art_material_id": "clay",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "door_open": true,
+        "contents": [],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "school",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "school_furnished",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            4,
+            3
+          ],
+          "floor_style": "PackedFloor",
+          "door": [
+            2,
+            2
+          ],
+          "door_style": "Door"
+        },
+        "art_wall_style_id": "mud_brick",
+        "art_material_id": "clay",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "door_open": true,
+        "contents": [
+          {
+            "source": "art/style05/struct/a2/contents/school_desk.png",
+            "cell": [
+              1,
+              1
+            ],
+            "role": "desk with clay learning tablets",
+            "anchor": null,
+            "offset": [
+              32,
+              0
+            ],
+            "footprint": [
+              2,
+              1
+            ]
+          }
+        ],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "temple",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "temple_intact",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            5,
+            4
+          ],
+          "wall_style": "StoneWall",
+          "floor_style": "PackedFloor",
+          "door": [
+            2,
+            3
+          ],
+          "door_style": "Door"
+        },
+        "art_wall_style_id": "drystone",
+        "art_material_id": "limestone",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            4,
+            3
+          ]
+        ],
+        "door_open": true,
+        "contents": [
+          {
+            "source": "art/style05/struct/a2/neolithic/ritual_site.png",
+            "cell": [
+              2,
+              2
+            ],
+            "role": "altar and offering stones",
+            "anchor": null,
+            "offset": [
+              0,
+              0
+            ],
+            "footprint": [
+              2,
+              2
+            ]
+          }
+        ],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "temple",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "temple_damaged",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            5,
+            4
+          ],
+          "wall_style": "StoneWall",
+          "floor_style": "PackedFloor",
+          "door": [
+            2,
+            3
+          ],
+          "door_style": "Door"
+        },
+        "art_wall_style_id": "drystone",
+        "art_material_id": "limestone",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            4,
+            3
+          ]
+        ],
+        "door_open": true,
+        "contents": [
+          {
+            "source": "art/style05/struct/a2/neolithic/ritual_site.png",
+            "cell": [
+              2,
+              2
+            ],
+            "role": "altar and offering stones",
+            "anchor": null,
+            "offset": [
+              0,
+              0
+            ],
+            "footprint": [
+              2,
+              2
+            ]
+          },
+          {
+            "source": "art/style05/struct/items/stone_pile.png",
+            "cell": [
+              0,
+              3
+            ],
+            "role": "collapsed masonry",
+            "anchor": [
+              32,
+              43
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          }
+        ],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "market",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "market_empty",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            4,
+            3
+          ],
+          "floor_style": "PackedFloor",
+          "door": [
+            2,
+            2
+          ],
+          "door_style": "Door"
+        },
+        "art_wall_style_id": "fired_brick",
+        "art_material_id": "clay",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "door_open": true,
+        "contents": [],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "market",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "market_stocked",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            4,
+            3
+          ],
+          "floor_style": "PackedFloor",
+          "door": [
+            2,
+            2
+          ],
+          "door_style": "Door"
+        },
+        "art_wall_style_id": "fired_brick",
+        "art_material_id": "clay",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "door_open": true,
+        "contents": [
+          {
+            "source": "art/style05/env/items/berry_basket.png",
+            "cell": [
+              1,
+              1
+            ],
+            "role": "stored berries",
+            "anchor": [
+              32,
+              32
+            ],
+            "offset": [
+              0,
+              -27
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          },
+          {
+            "source": "art/style05/struct/a2/contents/grain_bin_full.png",
+            "cell": [
+              2,
+              1
+            ],
+            "role": "market grain",
+            "anchor": null,
+            "offset": [
+              0,
+              0
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          }
+        ],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "town_wall_drystone_ew",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "town_wall_drystone_ew",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            3,
+            1
+          ],
+          "wall_style": "StoneWall"
+        },
+        "art_wall_style_id": "drystone",
+        "art_material_id": "granite",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "door_open": true,
+        "contents": [],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "town_wall_drystone_ns",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "town_wall_drystone_ns",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            1,
+            3
+          ],
+          "wall_style": "StoneWall"
+        },
+        "art_wall_style_id": "drystone",
+        "art_material_id": "granite",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ]
+        ],
+        "door_open": true,
+        "contents": [],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "town_wall_drystone_corner",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "town_wall_drystone_corner",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            2,
+            2
+          ],
+          "wall_style": "StoneWall"
+        },
+        "art_wall_style_id": "drystone",
+        "art_material_id": "granite",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "door_open": true,
+        "contents": [],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "town_wall_drystone_end",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "town_wall_drystone_end",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            1,
+            1
+          ],
+          "wall_style": "StoneWall"
+        },
+        "art_wall_style_id": "drystone",
+        "art_material_id": "granite",
+        "topology_cells": [
+          [
+            0,
+            0
+          ]
+        ],
+        "door_open": true,
+        "contents": [],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "town_wall_drystone",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "town_wall_drystone_damaged",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            3,
+            1
+          ],
+          "wall_style": "StoneWall"
+        },
+        "art_wall_style_id": "drystone",
+        "art_material_id": "granite",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "door_open": true,
+        "contents": [
+          {
+            "source": "art/style05/struct/items/stone_pile.png",
+            "cell": [
+              1,
+              0
+            ],
+            "role": "collapsed masonry",
+            "anchor": [
+              32,
+              43
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          }
+        ],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "town_wall_fired_brick_ew",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "town_wall_fired_brick_ew",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            3,
+            1
+          ]
+        },
+        "art_wall_style_id": "fired_brick",
+        "art_material_id": "clay",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "door_open": true,
+        "contents": [],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "town_wall_fired_brick_ns",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "town_wall_fired_brick_ns",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            1,
+            3
+          ]
+        },
+        "art_wall_style_id": "fired_brick",
+        "art_material_id": "clay",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ]
+        ],
+        "door_open": true,
+        "contents": [],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "town_wall_fired_brick_corner",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "town_wall_fired_brick_corner",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            2,
+            2
+          ]
+        },
+        "art_wall_style_id": "fired_brick",
+        "art_material_id": "clay",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "door_open": true,
+        "contents": [],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "town_wall_fired_brick_end",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "town_wall_fired_brick_end",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            1,
+            1
+          ]
+        },
+        "art_wall_style_id": "fired_brick",
+        "art_material_id": "clay",
+        "topology_cells": [
+          [
+            0,
+            0
+          ]
+        ],
+        "door_open": true,
+        "contents": [],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "town_wall_fired_brick",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "town_wall_fired_brick_damaged",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            3,
+            1
+          ]
+        },
+        "art_wall_style_id": "fired_brick",
+        "art_material_id": "clay",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "door_open": true,
+        "contents": [
+          {
+            "source": "art/style05/struct/items/stone_pile.png",
+            "cell": [
+              1,
+              0
+            ],
+            "role": "collapsed masonry",
+            "anchor": [
+              32,
+              43
+            ],
+            "offset": [
+              0,
+              0
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          }
+        ],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "watermill",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "watermill_idle",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            5,
+            4
+          ],
+          "wall_style": "StoneWall",
+          "floor_style": "PackedFloor",
+          "door": [
+            2,
+            3
+          ],
+          "door_style": "Door"
+        },
+        "art_wall_style_id": "drystone",
+        "art_material_id": "granite",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            3
+          ]
+        ],
+        "door_open": true,
+        "contents": [
+          {
+            "source": "art/style05/struct/a2/iron/waterwheel_idle.png",
+            "cell": [
+              4,
+              2
+            ],
+            "role": "east wall waterwheel",
+            "anchor": null,
+            "offset": [
+              0,
+              0
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          },
+          {
+            "source": "art/style05/struct/a2/iron/watermill_millstones_idle.png",
+            "cell": [
+              2,
+              2
+            ],
+            "role": "interior millstones and wooden drive",
+            "anchor": null,
+            "offset": [
+              0,
+              0
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          }
+        ],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      },
+      {
+        "content_id": "watermill",
+        "content_id_status": "proposal_only; confirm template identity",
+        "recipe_id": "watermill_working",
+        "recipe_source": "art/batch_a2/rooms.json",
+        "runtime_support": "UNSUPPORTED_MULTILAYER_RECIPE_REQUIRES_ADAPTER",
+        "ring_shape_proposal": {
+          "size": [
+            5,
+            4
+          ],
+          "wall_style": "StoneWall",
+          "floor_style": "PackedFloor",
+          "door": [
+            2,
+            3
+          ],
+          "door_style": "Door"
+        },
+        "art_wall_style_id": "drystone",
+        "art_material_id": "granite",
+        "topology_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            3
+          ]
+        ],
+        "door_open": true,
+        "contents": [
+          {
+            "source": "art/style05/struct/a2/iron/waterwheel_working.png",
+            "cell": [
+              4,
+              2
+            ],
+            "role": "east wall waterwheel",
+            "anchor": null,
+            "offset": [
+              0,
+              0
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          },
+          {
+            "source": "art/style05/struct/a2/iron/watermill_millstones_working.png",
+            "cell": [
+              2,
+              2
+            ],
+            "role": "interior millstones and wooden drive",
+            "anchor": null,
+            "offset": [
+              0,
+              0
+            ],
+            "footprint": [
+              1,
+              1
+            ]
+          }
+        ],
+        "missing_sources": [],
+        "integration_required": [
+          "Preserve the recipe's exact topology, source-canvas anchors, offsets and footprints; the ring shape alone is insufficient.",
+          "Draw floor layers first, then standing layers by world base y/x. No flattened preview is a structure import.",
+          "Resolve runtime wall blueprint/material names for art style IDs without an existing sim_blueprints mapping.",
+          "Implement damaged topology, door state and contents placement; runtime codes and template mapping remain unassigned."
+        ]
+      }
+    ],
+    "ground_variants": [
+      {
+        "content_id": "ditch_watered",
+        "content_id_status": "asset-name proposal only; authoritative runtime identity unresolved",
+        "ground_asset_id": "ditch_watered",
+        "metadata_manifest": "art/batch_a2/ground_assets.json",
+        "adopted_metadata": {
+          "id": "ditch_watered",
+          "path": "art/style05/env/ground/a2/bronze/ditch_watered.png",
+          "width": 64,
+          "height": 64,
+          "anchor": [
+            32,
+            43
+          ],
+          "footprint": [
+            1,
+            1
+          ],
+          "role": "ground_texture",
+          "status": "A2_ADOPTED_GROUND_CANDIDATE_NOT_IMPORTED"
+        },
+        "anchor_convention": "Reference world base is NW occupied cell origin plus(32,43); paste origin=world_base-source_anchor.",
+        "runtime_support": "REQUIRES_GROUND_PLACEMENT_AND_VARIANT_ADAPTER; no existing binding field is asserted.",
+        "integration_required": [
+          "Preserve the supplied variant identity, opaque canvas, footprint and northwest-tile-relative anchor.",
+          "Resolve content identity and runtime state selection without invented codes, enums or thresholds."
+        ]
+      },
+      {
+        "content_id": "irrigation_channel_watered",
+        "content_id_status": "asset-name proposal only; authoritative runtime identity unresolved",
+        "ground_asset_id": "irrigation_channel_watered",
+        "metadata_manifest": "art/batch_a2/ground_assets.json",
+        "adopted_metadata": {
+          "id": "irrigation_channel_watered",
+          "path": "art/style05/env/ground/a2/bronze/irrigation_channel_watered.png",
+          "width": 64,
+          "height": 64,
+          "anchor": [
+            32,
+            43
+          ],
+          "footprint": [
+            1,
+            1
+          ],
+          "role": "ground_texture",
+          "status": "A2_ADOPTED_GROUND_CANDIDATE_NOT_IMPORTED"
+        },
+        "anchor_convention": "Reference world base is NW occupied cell origin plus(32,43); paste origin=world_base-source_anchor.",
+        "runtime_support": "REQUIRES_GROUND_PLACEMENT_AND_VARIANT_ADAPTER; no existing binding field is asserted.",
+        "integration_required": [
+          "Preserve the supplied variant identity, opaque canvas, footprint and northwest-tile-relative anchor.",
+          "Resolve content identity and runtime state selection without invented codes, enums or thresholds."
+        ]
+      },
+      {
+        "content_id": "paved_road",
+        "content_id_status": "asset-name proposal only; authoritative runtime identity unresolved",
+        "ground_asset_id": "paved_road",
+        "metadata_manifest": "art/batch_a2/ground_assets.json",
+        "adopted_metadata": {
+          "id": "paved_road",
+          "path": "art/style05/env/ground/a2/iron/paved_road.png",
+          "width": 64,
+          "height": 64,
+          "anchor": [
+            32,
+            43
+          ],
+          "footprint": [
+            1,
+            1
+          ],
+          "role": "ground_texture",
+          "status": "A2_ADOPTED_GROUND_CANDIDATE_NOT_IMPORTED"
+        },
+        "anchor_convention": "Reference world base is NW occupied cell origin plus(32,43); paste origin=world_base-source_anchor.",
+        "runtime_support": "REQUIRES_GROUND_PLACEMENT_AND_VARIANT_ADAPTER; no existing binding field is asserted.",
+        "integration_required": [
+          "Preserve the supplied variant identity, opaque canvas, footprint and northwest-tile-relative anchor.",
+          "Resolve content identity and runtime state selection without invented codes, enums or thresholds."
+        ]
+      },
+      {
+        "content_id": "paved_road_corner",
+        "content_id_status": "asset-name proposal only; authoritative runtime identity unresolved",
+        "ground_asset_id": "paved_road_corner",
+        "metadata_manifest": "art/batch_a2/ground_assets.json",
+        "adopted_metadata": {
+          "id": "paved_road_corner",
+          "path": "art/style05/env/ground/a2/iron/paved_road_corner.png",
+          "width": 64,
+          "height": 64,
+          "anchor": [
+            32,
+            43
+          ],
+          "footprint": [
+            1,
+            1
+          ],
+          "role": "ground_texture",
+          "status": "A2_ADOPTED_GROUND_CANDIDATE_NOT_IMPORTED"
+        },
+        "anchor_convention": "Reference world base is NW occupied cell origin plus(32,43); paste origin=world_base-source_anchor.",
+        "runtime_support": "REQUIRES_GROUND_PLACEMENT_AND_VARIANT_ADAPTER; no existing binding field is asserted.",
+        "integration_required": [
+          "Preserve the supplied variant identity, opaque canvas, footprint and northwest-tile-relative anchor.",
+          "Resolve content identity and runtime state selection without invented codes, enums or thresholds."
+        ]
+      },
+      {
+        "content_id": "paved_road_damaged",
+        "content_id_status": "asset-name proposal only; authoritative runtime identity unresolved",
+        "ground_asset_id": "paved_road_damaged",
+        "metadata_manifest": "art/batch_a2/ground_assets.json",
+        "adopted_metadata": {
+          "id": "paved_road_damaged",
+          "path": "art/style05/env/ground/a2/iron/paved_road_damaged.png",
+          "width": 64,
+          "height": 64,
+          "anchor": [
+            32,
+            43
+          ],
+          "footprint": [
+            1,
+            1
+          ],
+          "role": "ground_texture",
+          "status": "A2_ADOPTED_GROUND_CANDIDATE_NOT_IMPORTED"
+        },
+        "anchor_convention": "Reference world base is NW occupied cell origin plus(32,43); paste origin=world_base-source_anchor.",
+        "runtime_support": "REQUIRES_GROUND_PLACEMENT_AND_VARIANT_ADAPTER; no existing binding field is asserted.",
+        "integration_required": [
+          "Preserve the supplied variant identity, opaque canvas, footprint and northwest-tile-relative anchor.",
+          "Resolve content identity and runtime state selection without invented codes, enums or thresholds."
+        ]
+      },
+      {
+        "content_id": "paved_road_ew",
+        "content_id_status": "asset-name proposal only; authoritative runtime identity unresolved",
+        "ground_asset_id": "paved_road_ew",
+        "metadata_manifest": "art/batch_a2/ground_assets.json",
+        "adopted_metadata": {
+          "id": "paved_road_ew",
+          "path": "art/style05/env/ground/a2/iron/paved_road_ew.png",
+          "width": 64,
+          "height": 64,
+          "anchor": [
+            32,
+            43
+          ],
+          "footprint": [
+            1,
+            1
+          ],
+          "role": "ground_texture",
+          "status": "A2_ADOPTED_GROUND_CANDIDATE_NOT_IMPORTED"
+        },
+        "anchor_convention": "Reference world base is NW occupied cell origin plus(32,43); paste origin=world_base-source_anchor.",
+        "runtime_support": "REQUIRES_GROUND_PLACEMENT_AND_VARIANT_ADAPTER; no existing binding field is asserted.",
+        "integration_required": [
+          "Preserve the supplied variant identity, opaque canvas, footprint and northwest-tile-relative anchor.",
+          "Resolve content identity and runtime state selection without invented codes, enums or thresholds."
+        ]
+      },
+      {
+        "content_id": "paved_road_junction",
+        "content_id_status": "asset-name proposal only; authoritative runtime identity unresolved",
+        "ground_asset_id": "paved_road_junction",
+        "metadata_manifest": "art/batch_a2/ground_assets.json",
+        "adopted_metadata": {
+          "id": "paved_road_junction",
+          "path": "art/style05/env/ground/a2/iron/paved_road_junction.png",
+          "width": 64,
+          "height": 64,
+          "anchor": [
+            32,
+            43
+          ],
+          "footprint": [
+            1,
+            1
+          ],
+          "role": "ground_texture",
+          "status": "A2_ADOPTED_GROUND_CANDIDATE_NOT_IMPORTED"
+        },
+        "anchor_convention": "Reference world base is NW occupied cell origin plus(32,43); paste origin=world_base-source_anchor.",
+        "runtime_support": "REQUIRES_GROUND_PLACEMENT_AND_VARIANT_ADAPTER; no existing binding field is asserted.",
+        "integration_required": [
+          "Preserve the supplied variant identity, opaque canvas, footprint and northwest-tile-relative anchor.",
+          "Resolve content identity and runtime state selection without invented codes, enums or thresholds."
+        ]
+      },
+      {
+        "content_id": "terrace_cultivated",
+        "content_id_status": "asset-name proposal only; authoritative runtime identity unresolved",
+        "ground_asset_id": "terrace_cultivated",
+        "metadata_manifest": "art/batch_a2/ground_assets.json",
+        "adopted_metadata": {
+          "id": "terrace_cultivated",
+          "path": "art/style05/env/ground/a2/bronze/terrace_cultivated.png",
+          "width": 128,
+          "height": 128,
+          "anchor": [
+            32,
+            43
+          ],
+          "footprint": [
+            2,
+            2
+          ],
+          "role": "ground_texture",
+          "status": "A2_ADOPTED_GROUND_CANDIDATE_NOT_IMPORTED"
+        },
+        "anchor_convention": "Reference world base is NW occupied cell origin plus(32,43); paste origin=world_base-source_anchor.",
+        "runtime_support": "REQUIRES_GROUND_PLACEMENT_AND_VARIANT_ADAPTER; no existing binding field is asserted.",
+        "integration_required": [
+          "Preserve the supplied variant identity, opaque canvas, footprint and northwest-tile-relative anchor.",
+          "Resolve content identity and runtime state selection without invented codes, enums or thresholds."
+        ]
+      }
+    ]
+  },
+  "coverage": {
+    "import_candidate_ids": [
+      "apple_bare",
+      "apple_fruiting",
+      "apple_leafy",
+      "apple_sapling",
+      "aqueduct",
+      "aqueduct_damaged",
+      "barley_growing",
+      "barley_harvested",
+      "barley_ripe",
+      "barley_seedling",
+      "bee_skep_active",
+      "bee_skep_empty",
+      "bloomery_lit",
+      "bloomery_unlit",
+      "bog_iron_outcrop_depleted",
+      "bog_iron_outcrop_full",
+      "bread_oven_lit",
+      "bread_oven_unlit",
+      "casting_bench_empty",
+      "casting_bench_working",
+      "charcoal_clamp_burning",
+      "charcoal_clamp_idle",
+      "charcoal_clamp_spent",
+      "chief_seat",
+      "copper_outcrop_depleted",
+      "copper_outcrop_full",
+      "copper_smelter_lit",
+      "copper_smelter_unlit",
+      "ditch_watered",
+      "fish_weir_catch",
+      "fish_weir_empty",
+      "flax_seedling",
+      "forge_idle",
+      "forge_working",
+      "gold_outcrop_depleted",
+      "gold_outcrop_full",
+      "grain_bin_empty",
+      "grain_bin_full",
+      "grape_bare",
+      "grape_fruiting",
+      "grape_leafy",
+      "grape_young",
+      "hemp_growing",
+      "hemp_harvested",
+      "hemp_ripe",
+      "hemp_seedling",
+      "iron_outcrop_depleted",
+      "iron_outcrop_full",
+      "irrigation_channel_watered",
+      "lead_outcrop_depleted",
+      "lead_outcrop_full",
+      "lentil_growing",
+      "lentil_harvested",
+      "lentil_ripe",
+      "lentil_seedling",
+      "loom_loaded",
+      "megalith",
+      "megalith_fallen",
+      "millet_growing",
+      "millet_harvested",
+      "millet_ripe",
+      "millet_seedling",
+      "oats_growing",
+      "oats_harvested",
+      "oats_ripe",
+      "oats_seedling",
+      "olive_dormant",
+      "olive_fruiting",
+      "olive_leafy",
+      "olive_press_working",
+      "olive_sapling",
+      "ox_cart_empty",
+      "palisade_damaged",
+      "palisade_end",
+      "palisade_ew",
+      "palisade_gate_closed",
+      "palisade_gate_open",
+      "paved_road",
+      "paved_road_corner",
+      "paved_road_damaged",
+      "paved_road_ew",
+      "paved_road_junction",
+      "pea_growing",
+      "pea_harvested",
+      "pea_ripe",
+      "pea_seedling",
+      "pen_fence_damaged",
+      "pen_fence_end",
+      "pen_fence_straight",
+      "pen_gate_closed",
+      "pen_gate_open",
+      "potter_kiln_firing",
+      "reservoir_empty",
+      "reservoir_full",
+      "ritual_site",
+      "ritual_site_empty",
+      "rotary_quern",
+      "rotary_quern_working",
+      "rye_growing",
+      "rye_harvested",
+      "rye_ripe",
+      "rye_seedling",
+      "school_desk",
+      "shrine_damaged",
+      "shrine_intact",
+      "silver_outcrop_depleted",
+      "silver_outcrop_full",
+      "smokehouse_idle",
+      "smokehouse_working",
+      "sundial",
+      "terrace_cultivated",
+      "timber_bridge_damaged",
+      "timber_bridge_ew",
+      "tin_outcrop_depleted",
+      "tin_outcrop_full",
+      "town_gate_closed",
+      "town_gate_open",
+      "trap_set",
+      "trap_sprung",
+      "watchtower",
+      "watchtower_damaged",
+      "watermill_millstones_idle",
+      "watermill_millstones_working",
+      "waterwheel_idle",
+      "waterwheel_working",
+      "well",
+      "well_dry",
+      "wheat_growing",
+      "wheat_harvested",
+      "wheat_ripe",
+      "wheat_seedling",
+      "windbreak",
+      "windbreak_damaged"
+    ],
+    "proposal_referenced_candidate_ids": [
+      "apple_bare",
+      "apple_fruiting",
+      "apple_leafy",
+      "apple_sapling",
+      "aqueduct",
+      "aqueduct_damaged",
+      "barley_growing",
+      "barley_harvested",
+      "barley_ripe",
+      "barley_seedling",
+      "bee_skep_active",
+      "bee_skep_empty",
+      "bloomery_lit",
+      "bloomery_unlit",
+      "bog_iron_outcrop_depleted",
+      "bog_iron_outcrop_full",
+      "bread_oven_lit",
+      "bread_oven_unlit",
+      "casting_bench_empty",
+      "casting_bench_working",
+      "charcoal_clamp_burning",
+      "charcoal_clamp_idle",
+      "charcoal_clamp_spent",
+      "chief_seat",
+      "copper_outcrop_depleted",
+      "copper_outcrop_full",
+      "copper_smelter_lit",
+      "copper_smelter_unlit",
+      "ditch_watered",
+      "fish_weir_catch",
+      "fish_weir_empty",
+      "flax_seedling",
+      "forge_idle",
+      "forge_working",
+      "gold_outcrop_depleted",
+      "gold_outcrop_full",
+      "grain_bin_empty",
+      "grain_bin_full",
+      "grape_bare",
+      "grape_fruiting",
+      "grape_leafy",
+      "grape_young",
+      "hemp_growing",
+      "hemp_harvested",
+      "hemp_ripe",
+      "hemp_seedling",
+      "iron_outcrop_depleted",
+      "iron_outcrop_full",
+      "irrigation_channel_watered",
+      "lead_outcrop_depleted",
+      "lead_outcrop_full",
+      "lentil_growing",
+      "lentil_harvested",
+      "lentil_ripe",
+      "lentil_seedling",
+      "loom_loaded",
+      "megalith",
+      "megalith_fallen",
+      "millet_growing",
+      "millet_harvested",
+      "millet_ripe",
+      "millet_seedling",
+      "oats_growing",
+      "oats_harvested",
+      "oats_ripe",
+      "oats_seedling",
+      "olive_dormant",
+      "olive_fruiting",
+      "olive_leafy",
+      "olive_press_working",
+      "olive_sapling",
+      "ox_cart_empty",
+      "palisade_damaged",
+      "palisade_end",
+      "palisade_ew",
+      "palisade_gate_closed",
+      "palisade_gate_open",
+      "paved_road",
+      "paved_road_corner",
+      "paved_road_damaged",
+      "paved_road_ew",
+      "paved_road_junction",
+      "pea_growing",
+      "pea_harvested",
+      "pea_ripe",
+      "pea_seedling",
+      "pen_fence_damaged",
+      "pen_fence_end",
+      "pen_fence_straight",
+      "pen_gate_closed",
+      "pen_gate_open",
+      "potter_kiln_firing",
+      "reservoir_empty",
+      "reservoir_full",
+      "ritual_site",
+      "ritual_site_empty",
+      "rotary_quern",
+      "rotary_quern_working",
+      "rye_growing",
+      "rye_harvested",
+      "rye_ripe",
+      "rye_seedling",
+      "school_desk",
+      "shrine_damaged",
+      "shrine_intact",
+      "silver_outcrop_depleted",
+      "silver_outcrop_full",
+      "smokehouse_idle",
+      "smokehouse_working",
+      "sundial",
+      "terrace_cultivated",
+      "timber_bridge_damaged",
+      "timber_bridge_ew",
+      "tin_outcrop_depleted",
+      "tin_outcrop_full",
+      "town_gate_closed",
+      "town_gate_open",
+      "trap_set",
+      "trap_sprung",
+      "watchtower",
+      "watchtower_damaged",
+      "watermill_millstones_idle",
+      "watermill_millstones_working",
+      "waterwheel_idle",
+      "waterwheel_working",
+      "well",
+      "well_dry",
+      "wheat_growing",
+      "wheat_harvested",
+      "wheat_ripe",
+      "wheat_seedling",
+      "windbreak",
+      "windbreak_damaged"
+    ],
+    "adopted_sprites": 133,
+    "standing_sprites": 125,
+    "ground_tiles": 8,
+    "ore_pairs": 7,
+    "crop_stage_sprites": 45,
+    "room_recipes": 40,
+    "rooms_with_missing_source_content": [],
+    "unadopted_ground_candidates_excluded": true
+  },
+  "reference_shape_checks": {
+    "nodes_support_structure_depleted": true,
+    "workshops_support_structure_working": true,
+    "plants_by_id_reference_is_empty": true,
+    "building_ring_exists": true
+  },
+  "candidate_coverage": "art/batch_a2/coverage.json"
+}

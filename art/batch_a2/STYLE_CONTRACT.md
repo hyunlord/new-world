@@ -23,6 +23,15 @@ C2/C3 import later. Work only on `v8/art-batch-a2`.
   added outlines or painterly image substitution. Generation uses built-in imagegen.
 - Buildings have **no roofs**. Rings, contents and south-facing entrances remain
   visible. House footprint is grid aligned, never an isometric diamond.
+- Whole rooms use the existing material compositor: exact 64 px cells and
+  60 px wall faces/caps. Generated room sketches are references, not substitutes
+  for grid geometry. Preserve floor, wall and furniture layers for later depth
+  sorting; flattened room PNGs are review previews only.
+- Review footprint occupancy beside the 56 px adult, independently of the
+  silhouette-height check. The 2x2 charcoal clamp uses a roughly 100 px body
+  span: idle height 56, burning 64 including smoke, spent 42. A compound wall
+  run declares ground depth separately from upright post height; an N/S run
+  does not qualify as a 60 px wall merely because its total image is 60 px.
 - Paleolithic/neolithic have no metal or dyed cloth. Bronze introduces copper,
   tin/bronze, wool/linen and mud brick; iron assets may use iron. Biblical early
   mud-brick milestone versus bronze finished houses is recorded explicitly.
@@ -32,10 +41,22 @@ C2/C3 import later. Work only on `v8/art-batch-a2`.
 - Generate one asset/state per call, true transparent RGBA background, no ground
   patch or cast-shadow puddle, no halo, text, border or clipped parts. Raw output,
   prompt and generation record stay in `/Users/rexxa/work/art-batch/A2/`.
+- Ground textures fill their entire rectangular canvas and therefore use opaque
+  full-frame generation. Export with the existing strip path's full-frame Lanczos
+  resize, without alpha editing. Require alpha 255 throughout, frozen ground-family
+  style checks and X/Y seam checks at the actual 64/128 px size. The earlier
+  transparent-component attempts remain recorded failures. For a 128 px ground
+  tile, `(32,43)` is relative to the northwest occupied cell, not the image centre.
+- Judge alpha from the saved RGBA composited over dark and light backgrounds.
+  The image-generation preview can expose invisible background RGB as a gold
+  halo. Keep the raw file unchanged; preview appearance alone is not a rejection.
 - Only the existing disclosed crop/Lanczos/transparent-padding export is allowed.
   Judge raw style; check unchanged exports for alpha/height/anchor/lighting.
   Numerical readiness and independent visual review are both required. Record
   rejects and retries; never present a failed candidate as adopted.
+- Preserve the existing production limit of three generations per asset/state,
+  including failed and superseded attempts. A capped rejection is a documented
+  coverage gap, never an accepted asset or a reason to weaken a check.
 - Existing assets are reused when already covered. New crops require growth
   stages; furnaces empty/unlit and working; stores empty/full; ore full/depleted;
   gates open/closed; perennials seasonal/bare. More variants only after coverage.
