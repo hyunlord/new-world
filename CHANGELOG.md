@@ -5,6 +5,22 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## B3 construction art — 2026-11-11
+
+### Added
+- Art-only construction lifecycle recipes and review sheets for twenty-two room
+  forms, with unchanged A2 material pixels and exact built-preview reuse
+  (`art/batch_b3/rooms/`, `art/batch_b3/boards/`).
+- Draft blueprint display recipes for all 55 A2 building families; missing
+  accepted sources remain explicit (`art/batch_b3/blueprints.json`).
+- Standalone lifecycle production, round-one retries and planner round-three
+  replacements are recorded per lane under `art/batch_b3/`; no runtime import.
+
+### Changed
+- Room damage review now excludes protected door cells when choosing a breach;
+  the regression test verifies an actual missing wall. ADR 0063 records the
+  layered construction decision.
+
 ## M1-ART — 2026-10-21
 
 The colony view drawn like the mock-up: real ground, a canopy that reads as forest, buildings and log piles you can read, people you can find (`docs/v8/m1art/ART_GOAL.md`, report `docs/v8/m1art/ART_REPORT.md`). No simulation change (`rust/` untouched; identity, colony determinism and replay pass).

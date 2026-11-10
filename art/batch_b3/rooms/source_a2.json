@@ -1264,6 +1264,130 @@
       "notes": [
         "Derived existing material texture assembly; review preview only."
       ]
+    },
+    {
+      "id": "town_wall_drystone_ns",
+      "era": "iron",
+      "footprint": [
+        1,
+        3
+      ],
+      "wall_style": "drystone",
+      "material": "granite",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "floor": false,
+      "door_cell": null,
+      "door_open": true,
+      "props": [],
+      "notes": [
+        "Derived existing wall topology; no new image generation."
+      ]
+    },
+    {
+      "id": "town_wall_drystone_corner",
+      "era": "iron",
+      "footprint": [
+        2,
+        2
+      ],
+      "wall_style": "drystone",
+      "material": "granite",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "floor": false,
+      "door_cell": null,
+      "door_open": true,
+      "props": [],
+      "notes": [
+        "Derived existing wall topology; no new image generation."
+      ]
+    },
+    {
+      "id": "town_wall_fired_brick_ns",
+      "era": "iron",
+      "footprint": [
+        1,
+        3
+      ],
+      "wall_style": "fired_brick",
+      "material": "clay",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "floor": false,
+      "door_cell": null,
+      "door_open": true,
+      "props": [],
+      "notes": [
+        "Derived existing wall topology; no new image generation."
+      ]
+    },
+    {
+      "id": "town_wall_fired_brick_corner",
+      "era": "iron",
+      "footprint": [
+        2,
+        2
+      ],
+      "wall_style": "fired_brick",
+      "material": "clay",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "floor": false,
+      "door_cell": null,
+      "door_open": true,
+      "props": [],
+      "notes": [
+        "Derived existing wall topology; no new image generation."
+      ]
     }
   ],
   "copied_props": {

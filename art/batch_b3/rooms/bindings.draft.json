@@ -1,0 +1,895 @@
+{
+  "schema_version": 1,
+  "status": "DRAFT_NOT_APPLIED",
+  "source_branch": "v8/art-batch-b3",
+  "source_commit": null,
+  "source_commit_requirement": "Pin the final B3 asset commit before applying. This fragment requires the A2 source227529c26307bc3a854eb7bf819e88d02af39046 and the B3 material dependencies.",
+  "runtime_rows_to_append": [],
+  "fragment_kind": "symbolic_lifecycle_binding_proposals",
+  "target": "assets/v8art/bindings.json",
+  "symbolic_proposals": [
+    {
+      "symbolic_family": "cart_shed",
+      "footprint": [
+        4,
+        3
+      ],
+      "runtime_building_code": null,
+      "runtime_blueprint_code": null,
+      "states": {
+        "foundation": "cart_shed_foundation",
+        "half_built": "cart_shed_half_built",
+        "built": "cart_shed_built",
+        "damaged": "cart_shed_damaged",
+        "ruined": "cart_shed_ruined"
+      },
+      "blueprint": {
+        "operator": "existing_site_ghost",
+        "source_recipe": "cart_shed_built"
+      }
+    },
+    {
+      "symbolic_family": "chief_hall",
+      "footprint": [
+        5,
+        4
+      ],
+      "runtime_building_code": null,
+      "runtime_blueprint_code": null,
+      "states": {
+        "foundation": "chief_hall_foundation",
+        "half_built": "chief_hall_half_built",
+        "built": "chief_hall_built",
+        "damaged": "chief_hall_damaged",
+        "ruined": "chief_hall_ruined"
+      },
+      "blueprint": {
+        "operator": "existing_site_ghost",
+        "source_recipe": "chief_hall_built"
+      }
+    },
+    {
+      "symbolic_family": "granary",
+      "footprint": [
+        3,
+        3
+      ],
+      "runtime_building_code": null,
+      "runtime_blueprint_code": null,
+      "states": {
+        "foundation": "granary_foundation",
+        "half_built": "granary_half_built",
+        "built": "granary_built",
+        "damaged": "granary_damaged",
+        "ruined": "granary_ruined"
+      },
+      "blueprint": {
+        "operator": "existing_site_ghost",
+        "source_recipe": "granary_built"
+      }
+    },
+    {
+      "symbolic_family": "hut",
+      "footprint": [
+        3,
+        3
+      ],
+      "runtime_building_code": null,
+      "runtime_blueprint_code": null,
+      "states": {
+        "foundation": "hut_foundation",
+        "half_built": "hut_half_built",
+        "built": "hut_built",
+        "damaged": "hut_damaged",
+        "ruined": "hut_ruined"
+      },
+      "blueprint": {
+        "operator": "existing_site_ghost",
+        "source_recipe": "hut_built"
+      }
+    },
+    {
+      "symbolic_family": "log_house",
+      "footprint": [
+        3,
+        3
+      ],
+      "runtime_building_code": null,
+      "runtime_blueprint_code": null,
+      "states": {
+        "foundation": "log_house_foundation",
+        "half_built": "log_house_half_built",
+        "built": "log_house_built",
+        "damaged": "log_house_damaged",
+        "ruined": "log_house_ruined"
+      },
+      "blueprint": {
+        "operator": "existing_site_ghost",
+        "source_recipe": "log_house_built"
+      }
+    },
+    {
+      "symbolic_family": "market",
+      "footprint": [
+        4,
+        3
+      ],
+      "runtime_building_code": null,
+      "runtime_blueprint_code": null,
+      "states": {
+        "foundation": "market_foundation",
+        "half_built": "market_half_built",
+        "built": "market_built",
+        "damaged": "market_damaged",
+        "ruined": "market_ruined"
+      },
+      "blueprint": {
+        "operator": "existing_site_ghost",
+        "source_recipe": "market_built"
+      }
+    },
+    {
+      "symbolic_family": "mud_brick_house",
+      "footprint": [
+        3,
+        3
+      ],
+      "runtime_building_code": null,
+      "runtime_blueprint_code": null,
+      "states": {
+        "foundation": "mud_brick_house_foundation",
+        "half_built": "mud_brick_house_half_built",
+        "built": "mud_brick_house_built",
+        "damaged": "mud_brick_house_damaged",
+        "ruined": "mud_brick_house_ruined"
+      },
+      "blueprint": {
+        "operator": "existing_site_ghost",
+        "source_recipe": "mud_brick_house_built"
+      }
+    },
+    {
+      "symbolic_family": "palisade_gatehouse",
+      "footprint": [
+        3,
+        3
+      ],
+      "runtime_building_code": null,
+      "runtime_blueprint_code": null,
+      "states": {
+        "foundation": "palisade_gatehouse_foundation",
+        "half_built": "palisade_gatehouse_half_built",
+        "built": "palisade_gatehouse_built",
+        "damaged": "palisade_gatehouse_damaged",
+        "ruined": "palisade_gatehouse_ruined"
+      },
+      "blueprint": {
+        "operator": "existing_site_ghost",
+        "source_recipe": "palisade_gatehouse_built"
+      }
+    },
+    {
+      "symbolic_family": "school",
+      "footprint": [
+        4,
+        3
+      ],
+      "runtime_building_code": null,
+      "runtime_blueprint_code": null,
+      "states": {
+        "foundation": "school_foundation",
+        "half_built": "school_half_built",
+        "built": "school_built",
+        "damaged": "school_damaged",
+        "ruined": "school_ruined"
+      },
+      "blueprint": {
+        "operator": "existing_site_ghost",
+        "source_recipe": "school_built"
+      }
+    },
+    {
+      "symbolic_family": "stone_house",
+      "footprint": [
+        3,
+        3
+      ],
+      "runtime_building_code": null,
+      "runtime_blueprint_code": null,
+      "states": {
+        "foundation": "stone_house_foundation",
+        "half_built": "stone_house_half_built",
+        "built": "stone_house_built",
+        "damaged": "stone_house_damaged",
+        "ruined": "stone_house_ruined"
+      },
+      "blueprint": {
+        "operator": "existing_site_ghost",
+        "source_recipe": "stone_house_built"
+      }
+    },
+    {
+      "symbolic_family": "stone_storehouse",
+      "footprint": [
+        4,
+        3
+      ],
+      "runtime_building_code": null,
+      "runtime_blueprint_code": null,
+      "states": {
+        "foundation": "stone_storehouse_foundation",
+        "half_built": "stone_storehouse_half_built",
+        "built": "stone_storehouse_built",
+        "damaged": "stone_storehouse_damaged",
+        "ruined": "stone_storehouse_ruined"
+      },
+      "blueprint": {
+        "operator": "existing_site_ghost",
+        "source_recipe": "stone_storehouse_built"
+      }
+    },
+    {
+      "symbolic_family": "storehouse",
+      "footprint": [
+        4,
+        3
+      ],
+      "runtime_building_code": null,
+      "runtime_blueprint_code": null,
+      "states": {
+        "foundation": "storehouse_foundation",
+        "half_built": "storehouse_half_built",
+        "built": "storehouse_built",
+        "damaged": "storehouse_damaged",
+        "ruined": "storehouse_ruined"
+      },
+      "blueprint": {
+        "operator": "existing_site_ghost",
+        "source_recipe": "storehouse_built"
+      }
+    },
+    {
+      "symbolic_family": "temple",
+      "footprint": [
+        5,
+        4
+      ],
+      "runtime_building_code": null,
+      "runtime_blueprint_code": null,
+      "states": {
+        "foundation": "temple_foundation",
+        "half_built": "temple_half_built",
+        "built": "temple_built",
+        "damaged": "temple_damaged",
+        "ruined": "temple_ruined"
+      },
+      "blueprint": {
+        "operator": "existing_site_ghost",
+        "source_recipe": "temple_built"
+      }
+    },
+    {
+      "symbolic_family": "town_wall_drystone",
+      "footprint": [
+        3,
+        1
+      ],
+      "runtime_building_code": null,
+      "runtime_blueprint_code": null,
+      "states": {
+        "foundation": "town_wall_drystone_foundation",
+        "half_built": "town_wall_drystone_half_built",
+        "built": "town_wall_drystone_built",
+        "damaged": "town_wall_drystone_damaged",
+        "ruined": "town_wall_drystone_ruined"
+      },
+      "blueprint": {
+        "operator": "existing_site_ghost",
+        "source_recipe": "town_wall_drystone_built"
+      }
+    },
+    {
+      "symbolic_family": "town_wall_drystone_corner",
+      "footprint": [
+        2,
+        2
+      ],
+      "runtime_building_code": null,
+      "runtime_blueprint_code": null,
+      "states": {
+        "foundation": "town_wall_drystone_corner_foundation",
+        "half_built": "town_wall_drystone_corner_half_built",
+        "built": "town_wall_drystone_corner_built",
+        "damaged": "town_wall_drystone_corner_damaged",
+        "ruined": "town_wall_drystone_corner_ruined"
+      },
+      "blueprint": {
+        "operator": "existing_site_ghost",
+        "source_recipe": "town_wall_drystone_corner_built"
+      }
+    },
+    {
+      "symbolic_family": "town_wall_drystone_ns",
+      "footprint": [
+        1,
+        3
+      ],
+      "runtime_building_code": null,
+      "runtime_blueprint_code": null,
+      "states": {
+        "foundation": "town_wall_drystone_ns_foundation",
+        "half_built": "town_wall_drystone_ns_half_built",
+        "built": "town_wall_drystone_ns_built",
+        "damaged": "town_wall_drystone_ns_damaged",
+        "ruined": "town_wall_drystone_ns_ruined"
+      },
+      "blueprint": {
+        "operator": "existing_site_ghost",
+        "source_recipe": "town_wall_drystone_ns_built"
+      }
+    },
+    {
+      "symbolic_family": "town_wall_fired_brick",
+      "footprint": [
+        3,
+        1
+      ],
+      "runtime_building_code": null,
+      "runtime_blueprint_code": null,
+      "states": {
+        "foundation": "town_wall_fired_brick_foundation",
+        "half_built": "town_wall_fired_brick_half_built",
+        "built": "town_wall_fired_brick_built",
+        "damaged": "town_wall_fired_brick_damaged",
+        "ruined": "town_wall_fired_brick_ruined"
+      },
+      "blueprint": {
+        "operator": "existing_site_ghost",
+        "source_recipe": "town_wall_fired_brick_built"
+      }
+    },
+    {
+      "symbolic_family": "town_wall_fired_brick_corner",
+      "footprint": [
+        2,
+        2
+      ],
+      "runtime_building_code": null,
+      "runtime_blueprint_code": null,
+      "states": {
+        "foundation": "town_wall_fired_brick_corner_foundation",
+        "half_built": "town_wall_fired_brick_corner_half_built",
+        "built": "town_wall_fired_brick_corner_built",
+        "damaged": "town_wall_fired_brick_corner_damaged",
+        "ruined": "town_wall_fired_brick_corner_ruined"
+      },
+      "blueprint": {
+        "operator": "existing_site_ghost",
+        "source_recipe": "town_wall_fired_brick_corner_built"
+      }
+    },
+    {
+      "symbolic_family": "town_wall_fired_brick_ns",
+      "footprint": [
+        1,
+        3
+      ],
+      "runtime_building_code": null,
+      "runtime_blueprint_code": null,
+      "states": {
+        "foundation": "town_wall_fired_brick_ns_foundation",
+        "half_built": "town_wall_fired_brick_ns_half_built",
+        "built": "town_wall_fired_brick_ns_built",
+        "damaged": "town_wall_fired_brick_ns_damaged",
+        "ruined": "town_wall_fired_brick_ns_ruined"
+      },
+      "blueprint": {
+        "operator": "existing_site_ghost",
+        "source_recipe": "town_wall_fired_brick_ns_built"
+      }
+    },
+    {
+      "symbolic_family": "trading_post",
+      "footprint": [
+        4,
+        3
+      ],
+      "runtime_building_code": null,
+      "runtime_blueprint_code": null,
+      "states": {
+        "foundation": "trading_post_foundation",
+        "half_built": "trading_post_half_built",
+        "built": "trading_post_built",
+        "damaged": "trading_post_damaged",
+        "ruined": "trading_post_ruined"
+      },
+      "blueprint": {
+        "operator": "existing_site_ghost",
+        "source_recipe": "trading_post_built"
+      }
+    },
+    {
+      "symbolic_family": "warehouse",
+      "footprint": [
+        4,
+        3
+      ],
+      "runtime_building_code": null,
+      "runtime_blueprint_code": null,
+      "states": {
+        "foundation": "warehouse_foundation",
+        "half_built": "warehouse_half_built",
+        "built": "warehouse_built",
+        "damaged": "warehouse_damaged",
+        "ruined": "warehouse_ruined"
+      },
+      "blueprint": {
+        "operator": "existing_site_ghost",
+        "source_recipe": "warehouse_built"
+      }
+    },
+    {
+      "symbolic_family": "watermill",
+      "footprint": [
+        5,
+        4
+      ],
+      "runtime_building_code": null,
+      "runtime_blueprint_code": null,
+      "states": {
+        "foundation": "watermill_foundation",
+        "half_built": "watermill_half_built",
+        "built": "watermill_built",
+        "damaged": "watermill_damaged",
+        "ruined": "watermill_ruined"
+      },
+      "blueprint": {
+        "operator": "existing_site_ghost",
+        "source_recipe": "watermill_built"
+      }
+    }
+  ],
+  "a2_variant_overlays": [
+    {
+      "a2_recipe": "log_house_intact",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "log_house",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "log_house_damaged",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "log_house",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "storehouse_empty",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "storehouse",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "storehouse_full",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "storehouse",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "granary_empty",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "granary",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "granary_full",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "granary",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "mudbrick_house_intact",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "mud_brick_house",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "mudbrick_house_damaged",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "mud_brick_house",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "stone_storehouse_empty",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "stone_storehouse",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "stone_storehouse_full",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "stone_storehouse",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "chief_hall_intact",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "chief_hall",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "chief_hall_damaged",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "chief_hall",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "cart_shed_empty",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "cart_shed",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "cart_shed_occupied",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "cart_shed",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "trading_post_empty",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "trading_post",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "trading_post_stocked",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "trading_post",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "palisade_gatehouse_open",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "palisade_gatehouse",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "palisade_gatehouse_closed",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "palisade_gatehouse",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "stone_house_intact",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "stone_house",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "stone_house_damaged",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "stone_house",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "warehouse_empty",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "warehouse",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "warehouse_full",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "warehouse",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "school_empty",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "school",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "school_furnished",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "school",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "temple_intact",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "temple",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "temple_damaged",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "temple",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "market_empty",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "market",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "market_stocked",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "market",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "town_wall_drystone_ew",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "town_wall_drystone",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "town_wall_drystone_ns",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "town_wall_drystone_ns",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "town_wall_drystone_corner",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "town_wall_drystone_corner",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "town_wall_drystone_end",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "town_wall_drystone",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": "Single-cell end cap is a component of its containing wall run; construction/damage selection belongs to that run."
+    },
+    {
+      "a2_recipe": "town_wall_drystone_damaged",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "town_wall_drystone",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "town_wall_fired_brick_ew",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "town_wall_fired_brick",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "town_wall_fired_brick_ns",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "town_wall_fired_brick_ns",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "town_wall_fired_brick_corner",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "town_wall_fired_brick_corner",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "town_wall_fired_brick_end",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "town_wall_fired_brick",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": "Single-cell end cap is a component of its containing wall run; construction/damage selection belongs to that run."
+    },
+    {
+      "a2_recipe": "town_wall_fired_brick_damaged",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "town_wall_fired_brick",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "watermill_idle",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "watermill",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    },
+    {
+      "a2_recipe": "watermill_working",
+      "a2_source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "lifecycle_family": "watermill",
+      "variant_fields": [
+        "props",
+        "door_open"
+      ],
+      "policy": "Reuse the exact A2 built or pre-existing damaged variant. For B3 damage retain the selected variant's existing furniture and door state; foundation/half-built/ruins omit contents. Preserve every source anchor.",
+      "end_cap_policy": null
+    }
+  ],
+  "selection_policy": "Use authoritative construction/damage state from C2/C3; this file defines no simulation enums, progress thresholds or runtime numerical codes."
+}

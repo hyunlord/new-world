@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "status": "DRAFT_NOT_APPLIED",
+  "source_branch": "v8/art-batch-b3",
+  "source_commit": null,
+  "source_commit_requirement": "Pin the final B3 asset commit before applying. This fragment requires the A2 source227529c26307bc3a854eb7bf819e88d02af39046 and the B3 material dependencies.",
+  "runtime_rows_to_append": [],
+  "fragment_kind": "layered_recipe_export_proposal",
+  "target": "tools/v8/art_import.json",
+  "files": [],
+  "recipes": "art/batch_b3/rooms/recipes.json",
+  "review": "art/batch_b3/rooms/review.json",
+  "export_index": "art/batch_b3/rooms/exports.json",
+  "reproduce_command": "uv run --with pillow --with numpy --with pydantic python -m art.batch_b3.rooms.render art/batch_b3/rooms/recipes.json OUTPUT_DIR",
+  "integration_required": [
+    "Export each floor/wall/prop separately using the published per-layer origin and anchor. Previews/contact sheets are not runtime source sprites.",
+    "Merge existing A2 material and prop metadata; adjacent sidecars are not automatically imported.",
+    "The current import adapter has no verified lifecycle-recipe input. Resolve that adapter and authoritative content codes in C2/C3 before adding files rows."
+  ],
+  "generated_originals": 0,
+  "reviewed_layered_compositions": 110
+}

@@ -8383,6 +8383,1778 @@
       ],
       "status": "RECIPE_VISUALLY_ACCEPTED",
       "export_evidence": "/Users/rexxa/work/art-batch/B3/rooms/rendered_final/hut_ruined"
+    },
+    {
+      "id": "town_wall_drystone_ns_foundation",
+      "family": "town_wall_drystone_ns",
+      "state": "foundation",
+      "preview_sha256": "5b8c088b425ffa61235f491fa2cc8929f9c1c101c9d256f571cb6773deb82f05",
+      "preview_anchor": [
+        32,
+        151
+      ],
+      "preview_origin": [
+        0,
+        20
+      ],
+      "layer_count": 3,
+      "source_hashes": [
+        {
+          "path": "art/batch_b3/rooms/layers.py",
+          "sha256": "75002edec422e611ad63cd6b948baad3fa2f4aa70ecc51ca23d19627500225e4"
+        },
+        {
+          "path": "art/batch_b3/rooms/render.py",
+          "sha256": "255de45fe38cc8163ac9742124de3e5edb83e3e71527d57d3099af4bca7c15c5"
+        },
+        {
+          "path": "art/compositor/legacy_walls.py",
+          "sha256": "67afc163df5b7e71bb78fefc10114a16504435c02e4e756bc207b54a78c2e88a"
+        },
+        {
+          "path": "art/compositor/walls.py",
+          "sha256": "1ae47c570dcc4dcef83e2e82bd68ed146277a59ec9a8b1d22dd91e2a6c0e135f"
+        },
+        {
+          "path": "art/materials/category_defaults.json",
+          "sha256": "c0f763cdc93cdbd1ba6f42891fb39fb0f45fcbcea2c790af3345446a7f19eaae"
+        },
+        {
+          "path": "art/materials/construction_styles.json",
+          "sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+        },
+        {
+          "path": "art/materials/material_looks.json",
+          "sha256": "a2aa8b157fcc65a795b3f35c106cd01bb07ee65c037cfe64b1cf0599741b486f"
+        },
+        {
+          "path": "art/materials/render.py",
+          "sha256": "9004df0455562f49e8c3e41a700743012f3f539aa2b9cf01a78d11c6d8655223"
+        },
+        {
+          "path": "art/materials/resolve.py",
+          "sha256": "d1b31e1cf624d45529870e95c369b979f3ca3a25e235b414c33f59d02a5db1a0"
+        },
+        {
+          "path": "art/materials/textures/drystone/door_closed.png",
+          "sha256": "5758040c4a94f9ad1f143e5f708f8f04c0941d4cb087c8dba108773791b61644"
+        },
+        {
+          "path": "art/materials/textures/drystone/door_open.png",
+          "sha256": "feb3d8a4b9471e041a9d9df593c57acb8380049e078e97472f57812f8381952a"
+        },
+        {
+          "path": "art/materials/textures/drystone/end.png",
+          "sha256": "e650e43d754dd224e0a7fe071c4cd4509085bda1ec5c1d85e093532a27223736"
+        },
+        {
+          "path": "art/materials/textures/drystone/face.png",
+          "sha256": "517c4f431303d3ae01362fb451a6757f77cc18797875760c0eabae945c73c682"
+        },
+        {
+          "path": "art/materials/textures/drystone/junction.png",
+          "sha256": "7f23847290dc8f0540c32acf456bdfee845e6aa5515ff900a135ac607f44d832"
+        },
+        {
+          "path": "art/materials/textures/drystone/top_ew.png",
+          "sha256": "da69983a6b11042dd1bfb6f492636f194b4142b78d9b2523c030f636234efd20"
+        },
+        {
+          "path": "art/materials/textures/drystone/top_ns.png",
+          "sha256": "31ba8122524c41166e55514cd62b7025b85ee975dbaa03c52379fa085b21758e"
+        },
+        {
+          "path": "art/materials/tone.py",
+          "sha256": "7d6c9dff9e66d03f2d35dfccef38da5f6ce5c95300e86fa5883cd9199fba4c19"
+        }
+      ],
+      "status": "RECIPE_VISUALLY_ACCEPTED",
+      "export_evidence": "/Users/rexxa/work/art-batch/B3/rooms/rendered_final/town_wall_drystone_ns_foundation"
+    },
+    {
+      "id": "town_wall_drystone_ns_half_built",
+      "family": "town_wall_drystone_ns",
+      "state": "half_built",
+      "preview_sha256": "9e550e621f080919f11cf566686c7930e9faf437004f45556b8f8bd020dd51fa",
+      "preview_anchor": [
+        32,
+        187
+      ],
+      "preview_origin": [
+        0,
+        -16
+      ],
+      "layer_count": 4,
+      "source_hashes": [
+        {
+          "path": "art/batch_b3/rooms/layers.py",
+          "sha256": "75002edec422e611ad63cd6b948baad3fa2f4aa70ecc51ca23d19627500225e4"
+        },
+        {
+          "path": "art/batch_b3/rooms/render.py",
+          "sha256": "255de45fe38cc8163ac9742124de3e5edb83e3e71527d57d3099af4bca7c15c5"
+        },
+        {
+          "path": "art/compositor/legacy_walls.py",
+          "sha256": "67afc163df5b7e71bb78fefc10114a16504435c02e4e756bc207b54a78c2e88a"
+        },
+        {
+          "path": "art/compositor/walls.py",
+          "sha256": "1ae47c570dcc4dcef83e2e82bd68ed146277a59ec9a8b1d22dd91e2a6c0e135f"
+        },
+        {
+          "path": "art/materials/category_defaults.json",
+          "sha256": "c0f763cdc93cdbd1ba6f42891fb39fb0f45fcbcea2c790af3345446a7f19eaae"
+        },
+        {
+          "path": "art/materials/construction_styles.json",
+          "sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+        },
+        {
+          "path": "art/materials/material_looks.json",
+          "sha256": "a2aa8b157fcc65a795b3f35c106cd01bb07ee65c037cfe64b1cf0599741b486f"
+        },
+        {
+          "path": "art/materials/render.py",
+          "sha256": "9004df0455562f49e8c3e41a700743012f3f539aa2b9cf01a78d11c6d8655223"
+        },
+        {
+          "path": "art/materials/resolve.py",
+          "sha256": "d1b31e1cf624d45529870e95c369b979f3ca3a25e235b414c33f59d02a5db1a0"
+        },
+        {
+          "path": "art/materials/textures/drystone/door_closed.png",
+          "sha256": "5758040c4a94f9ad1f143e5f708f8f04c0941d4cb087c8dba108773791b61644"
+        },
+        {
+          "path": "art/materials/textures/drystone/door_open.png",
+          "sha256": "feb3d8a4b9471e041a9d9df593c57acb8380049e078e97472f57812f8381952a"
+        },
+        {
+          "path": "art/materials/textures/drystone/end.png",
+          "sha256": "e650e43d754dd224e0a7fe071c4cd4509085bda1ec5c1d85e093532a27223736"
+        },
+        {
+          "path": "art/materials/textures/drystone/face.png",
+          "sha256": "517c4f431303d3ae01362fb451a6757f77cc18797875760c0eabae945c73c682"
+        },
+        {
+          "path": "art/materials/textures/drystone/junction.png",
+          "sha256": "7f23847290dc8f0540c32acf456bdfee845e6aa5515ff900a135ac607f44d832"
+        },
+        {
+          "path": "art/materials/textures/drystone/top_ew.png",
+          "sha256": "da69983a6b11042dd1bfb6f492636f194b4142b78d9b2523c030f636234efd20"
+        },
+        {
+          "path": "art/materials/textures/drystone/top_ns.png",
+          "sha256": "31ba8122524c41166e55514cd62b7025b85ee975dbaa03c52379fa085b21758e"
+        },
+        {
+          "path": "art/materials/tone.py",
+          "sha256": "7d6c9dff9e66d03f2d35dfccef38da5f6ce5c95300e86fa5883cd9199fba4c19"
+        }
+      ],
+      "status": "RECIPE_VISUALLY_ACCEPTED",
+      "export_evidence": "/Users/rexxa/work/art-batch/B3/rooms/rendered_final/town_wall_drystone_ns_half_built"
+    },
+    {
+      "id": "town_wall_drystone_ns_built",
+      "family": "town_wall_drystone_ns",
+      "state": "built",
+      "preview_sha256": "67a44a6670499e97ac5bfa1ce46f487f57415a040b76b7826105f9986a175dca",
+      "preview_anchor": [
+        32,
+        187
+      ],
+      "preview_origin": [
+        0,
+        -16
+      ],
+      "layer_count": 3,
+      "source_hashes": [
+        {
+          "path": "art/batch_b3/rooms/layers.py",
+          "sha256": "75002edec422e611ad63cd6b948baad3fa2f4aa70ecc51ca23d19627500225e4"
+        },
+        {
+          "path": "art/batch_b3/rooms/render.py",
+          "sha256": "255de45fe38cc8163ac9742124de3e5edb83e3e71527d57d3099af4bca7c15c5"
+        },
+        {
+          "path": "art/compositor/legacy_walls.py",
+          "sha256": "67afc163df5b7e71bb78fefc10114a16504435c02e4e756bc207b54a78c2e88a"
+        },
+        {
+          "path": "art/compositor/walls.py",
+          "sha256": "1ae47c570dcc4dcef83e2e82bd68ed146277a59ec9a8b1d22dd91e2a6c0e135f"
+        },
+        {
+          "path": "art/materials/category_defaults.json",
+          "sha256": "c0f763cdc93cdbd1ba6f42891fb39fb0f45fcbcea2c790af3345446a7f19eaae"
+        },
+        {
+          "path": "art/materials/construction_styles.json",
+          "sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+        },
+        {
+          "path": "art/materials/material_looks.json",
+          "sha256": "a2aa8b157fcc65a795b3f35c106cd01bb07ee65c037cfe64b1cf0599741b486f"
+        },
+        {
+          "path": "art/materials/render.py",
+          "sha256": "9004df0455562f49e8c3e41a700743012f3f539aa2b9cf01a78d11c6d8655223"
+        },
+        {
+          "path": "art/materials/resolve.py",
+          "sha256": "d1b31e1cf624d45529870e95c369b979f3ca3a25e235b414c33f59d02a5db1a0"
+        },
+        {
+          "path": "art/materials/textures/drystone/door_closed.png",
+          "sha256": "5758040c4a94f9ad1f143e5f708f8f04c0941d4cb087c8dba108773791b61644"
+        },
+        {
+          "path": "art/materials/textures/drystone/door_open.png",
+          "sha256": "feb3d8a4b9471e041a9d9df593c57acb8380049e078e97472f57812f8381952a"
+        },
+        {
+          "path": "art/materials/textures/drystone/end.png",
+          "sha256": "e650e43d754dd224e0a7fe071c4cd4509085bda1ec5c1d85e093532a27223736"
+        },
+        {
+          "path": "art/materials/textures/drystone/face.png",
+          "sha256": "517c4f431303d3ae01362fb451a6757f77cc18797875760c0eabae945c73c682"
+        },
+        {
+          "path": "art/materials/textures/drystone/junction.png",
+          "sha256": "7f23847290dc8f0540c32acf456bdfee845e6aa5515ff900a135ac607f44d832"
+        },
+        {
+          "path": "art/materials/textures/drystone/top_ew.png",
+          "sha256": "da69983a6b11042dd1bfb6f492636f194b4142b78d9b2523c030f636234efd20"
+        },
+        {
+          "path": "art/materials/textures/drystone/top_ns.png",
+          "sha256": "31ba8122524c41166e55514cd62b7025b85ee975dbaa03c52379fa085b21758e"
+        },
+        {
+          "path": "art/materials/tone.py",
+          "sha256": "7d6c9dff9e66d03f2d35dfccef38da5f6ce5c95300e86fa5883cd9199fba4c19"
+        }
+      ],
+      "status": "RECIPE_VISUALLY_ACCEPTED",
+      "export_evidence": "/Users/rexxa/work/art-batch/B3/rooms/rendered_final/town_wall_drystone_ns_built"
+    },
+    {
+      "id": "town_wall_drystone_ns_damaged",
+      "family": "town_wall_drystone_ns",
+      "state": "damaged",
+      "preview_sha256": "d7043e6e2a1262ca8815e043cf28b1eadd57fd3c4f57cd3ee4fbbb8356e0abd3",
+      "preview_anchor": [
+        32,
+        187
+      ],
+      "preview_origin": [
+        0,
+        -16
+      ],
+      "layer_count": 3,
+      "source_hashes": [
+        {
+          "path": "art/batch_b3/rooms/layers.py",
+          "sha256": "75002edec422e611ad63cd6b948baad3fa2f4aa70ecc51ca23d19627500225e4"
+        },
+        {
+          "path": "art/batch_b3/rooms/render.py",
+          "sha256": "255de45fe38cc8163ac9742124de3e5edb83e3e71527d57d3099af4bca7c15c5"
+        },
+        {
+          "path": "art/compositor/legacy_walls.py",
+          "sha256": "67afc163df5b7e71bb78fefc10114a16504435c02e4e756bc207b54a78c2e88a"
+        },
+        {
+          "path": "art/compositor/walls.py",
+          "sha256": "1ae47c570dcc4dcef83e2e82bd68ed146277a59ec9a8b1d22dd91e2a6c0e135f"
+        },
+        {
+          "path": "art/materials/category_defaults.json",
+          "sha256": "c0f763cdc93cdbd1ba6f42891fb39fb0f45fcbcea2c790af3345446a7f19eaae"
+        },
+        {
+          "path": "art/materials/construction_styles.json",
+          "sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+        },
+        {
+          "path": "art/materials/material_looks.json",
+          "sha256": "a2aa8b157fcc65a795b3f35c106cd01bb07ee65c037cfe64b1cf0599741b486f"
+        },
+        {
+          "path": "art/materials/render.py",
+          "sha256": "9004df0455562f49e8c3e41a700743012f3f539aa2b9cf01a78d11c6d8655223"
+        },
+        {
+          "path": "art/materials/resolve.py",
+          "sha256": "d1b31e1cf624d45529870e95c369b979f3ca3a25e235b414c33f59d02a5db1a0"
+        },
+        {
+          "path": "art/materials/textures/drystone/door_closed.png",
+          "sha256": "5758040c4a94f9ad1f143e5f708f8f04c0941d4cb087c8dba108773791b61644"
+        },
+        {
+          "path": "art/materials/textures/drystone/door_open.png",
+          "sha256": "feb3d8a4b9471e041a9d9df593c57acb8380049e078e97472f57812f8381952a"
+        },
+        {
+          "path": "art/materials/textures/drystone/end.png",
+          "sha256": "e650e43d754dd224e0a7fe071c4cd4509085bda1ec5c1d85e093532a27223736"
+        },
+        {
+          "path": "art/materials/textures/drystone/face.png",
+          "sha256": "517c4f431303d3ae01362fb451a6757f77cc18797875760c0eabae945c73c682"
+        },
+        {
+          "path": "art/materials/textures/drystone/junction.png",
+          "sha256": "7f23847290dc8f0540c32acf456bdfee845e6aa5515ff900a135ac607f44d832"
+        },
+        {
+          "path": "art/materials/textures/drystone/top_ew.png",
+          "sha256": "da69983a6b11042dd1bfb6f492636f194b4142b78d9b2523c030f636234efd20"
+        },
+        {
+          "path": "art/materials/textures/drystone/top_ns.png",
+          "sha256": "31ba8122524c41166e55514cd62b7025b85ee975dbaa03c52379fa085b21758e"
+        },
+        {
+          "path": "art/materials/tone.py",
+          "sha256": "7d6c9dff9e66d03f2d35dfccef38da5f6ce5c95300e86fa5883cd9199fba4c19"
+        },
+        {
+          "path": "art/style05/struct/items/stone_pile.png",
+          "sha256": "e307a7b6007564fab28ceb3b1a8dff4d0ddefe2924d3b2552f0242b7210aedb0"
+        }
+      ],
+      "status": "RECIPE_VISUALLY_ACCEPTED",
+      "export_evidence": "/Users/rexxa/work/art-batch/B3/rooms/rendered_final/town_wall_drystone_ns_damaged"
+    },
+    {
+      "id": "town_wall_drystone_ns_ruined",
+      "family": "town_wall_drystone_ns",
+      "state": "ruined",
+      "preview_sha256": "be8bc9795959e3f253d8141b1cbfec8cee2b49cf8a9c653fd7726d2927fea733",
+      "preview_anchor": [
+        32,
+        151
+      ],
+      "preview_origin": [
+        0,
+        20
+      ],
+      "layer_count": 3,
+      "source_hashes": [
+        {
+          "path": "art/batch_b3/rooms/layers.py",
+          "sha256": "75002edec422e611ad63cd6b948baad3fa2f4aa70ecc51ca23d19627500225e4"
+        },
+        {
+          "path": "art/batch_b3/rooms/render.py",
+          "sha256": "255de45fe38cc8163ac9742124de3e5edb83e3e71527d57d3099af4bca7c15c5"
+        },
+        {
+          "path": "art/compositor/legacy_walls.py",
+          "sha256": "67afc163df5b7e71bb78fefc10114a16504435c02e4e756bc207b54a78c2e88a"
+        },
+        {
+          "path": "art/compositor/walls.py",
+          "sha256": "1ae47c570dcc4dcef83e2e82bd68ed146277a59ec9a8b1d22dd91e2a6c0e135f"
+        },
+        {
+          "path": "art/materials/category_defaults.json",
+          "sha256": "c0f763cdc93cdbd1ba6f42891fb39fb0f45fcbcea2c790af3345446a7f19eaae"
+        },
+        {
+          "path": "art/materials/construction_styles.json",
+          "sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+        },
+        {
+          "path": "art/materials/material_looks.json",
+          "sha256": "a2aa8b157fcc65a795b3f35c106cd01bb07ee65c037cfe64b1cf0599741b486f"
+        },
+        {
+          "path": "art/materials/render.py",
+          "sha256": "9004df0455562f49e8c3e41a700743012f3f539aa2b9cf01a78d11c6d8655223"
+        },
+        {
+          "path": "art/materials/resolve.py",
+          "sha256": "d1b31e1cf624d45529870e95c369b979f3ca3a25e235b414c33f59d02a5db1a0"
+        },
+        {
+          "path": "art/materials/textures/drystone/door_closed.png",
+          "sha256": "5758040c4a94f9ad1f143e5f708f8f04c0941d4cb087c8dba108773791b61644"
+        },
+        {
+          "path": "art/materials/textures/drystone/door_open.png",
+          "sha256": "feb3d8a4b9471e041a9d9df593c57acb8380049e078e97472f57812f8381952a"
+        },
+        {
+          "path": "art/materials/textures/drystone/end.png",
+          "sha256": "e650e43d754dd224e0a7fe071c4cd4509085bda1ec5c1d85e093532a27223736"
+        },
+        {
+          "path": "art/materials/textures/drystone/face.png",
+          "sha256": "517c4f431303d3ae01362fb451a6757f77cc18797875760c0eabae945c73c682"
+        },
+        {
+          "path": "art/materials/textures/drystone/junction.png",
+          "sha256": "7f23847290dc8f0540c32acf456bdfee845e6aa5515ff900a135ac607f44d832"
+        },
+        {
+          "path": "art/materials/textures/drystone/top_ew.png",
+          "sha256": "da69983a6b11042dd1bfb6f492636f194b4142b78d9b2523c030f636234efd20"
+        },
+        {
+          "path": "art/materials/textures/drystone/top_ns.png",
+          "sha256": "31ba8122524c41166e55514cd62b7025b85ee975dbaa03c52379fa085b21758e"
+        },
+        {
+          "path": "art/materials/tone.py",
+          "sha256": "7d6c9dff9e66d03f2d35dfccef38da5f6ce5c95300e86fa5883cd9199fba4c19"
+        },
+        {
+          "path": "art/style05/struct/items/stone_pile.png",
+          "sha256": "e307a7b6007564fab28ceb3b1a8dff4d0ddefe2924d3b2552f0242b7210aedb0"
+        }
+      ],
+      "status": "RECIPE_VISUALLY_ACCEPTED",
+      "export_evidence": "/Users/rexxa/work/art-batch/B3/rooms/rendered_final/town_wall_drystone_ns_ruined"
+    },
+    {
+      "id": "town_wall_drystone_corner_foundation",
+      "family": "town_wall_drystone_corner",
+      "state": "foundation",
+      "preview_sha256": "1913a9bf38bdc43a3f12528ca785651b748a97ae8e7b972fa28f791666d26af5",
+      "preview_anchor": [
+        64,
+        87
+      ],
+      "preview_origin": [
+        0,
+        20
+      ],
+      "layer_count": 3,
+      "source_hashes": [
+        {
+          "path": "art/batch_b3/rooms/layers.py",
+          "sha256": "75002edec422e611ad63cd6b948baad3fa2f4aa70ecc51ca23d19627500225e4"
+        },
+        {
+          "path": "art/batch_b3/rooms/render.py",
+          "sha256": "255de45fe38cc8163ac9742124de3e5edb83e3e71527d57d3099af4bca7c15c5"
+        },
+        {
+          "path": "art/compositor/legacy_walls.py",
+          "sha256": "67afc163df5b7e71bb78fefc10114a16504435c02e4e756bc207b54a78c2e88a"
+        },
+        {
+          "path": "art/compositor/walls.py",
+          "sha256": "1ae47c570dcc4dcef83e2e82bd68ed146277a59ec9a8b1d22dd91e2a6c0e135f"
+        },
+        {
+          "path": "art/materials/category_defaults.json",
+          "sha256": "c0f763cdc93cdbd1ba6f42891fb39fb0f45fcbcea2c790af3345446a7f19eaae"
+        },
+        {
+          "path": "art/materials/construction_styles.json",
+          "sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+        },
+        {
+          "path": "art/materials/material_looks.json",
+          "sha256": "a2aa8b157fcc65a795b3f35c106cd01bb07ee65c037cfe64b1cf0599741b486f"
+        },
+        {
+          "path": "art/materials/render.py",
+          "sha256": "9004df0455562f49e8c3e41a700743012f3f539aa2b9cf01a78d11c6d8655223"
+        },
+        {
+          "path": "art/materials/resolve.py",
+          "sha256": "d1b31e1cf624d45529870e95c369b979f3ca3a25e235b414c33f59d02a5db1a0"
+        },
+        {
+          "path": "art/materials/textures/drystone/door_closed.png",
+          "sha256": "5758040c4a94f9ad1f143e5f708f8f04c0941d4cb087c8dba108773791b61644"
+        },
+        {
+          "path": "art/materials/textures/drystone/door_open.png",
+          "sha256": "feb3d8a4b9471e041a9d9df593c57acb8380049e078e97472f57812f8381952a"
+        },
+        {
+          "path": "art/materials/textures/drystone/end.png",
+          "sha256": "e650e43d754dd224e0a7fe071c4cd4509085bda1ec5c1d85e093532a27223736"
+        },
+        {
+          "path": "art/materials/textures/drystone/face.png",
+          "sha256": "517c4f431303d3ae01362fb451a6757f77cc18797875760c0eabae945c73c682"
+        },
+        {
+          "path": "art/materials/textures/drystone/junction.png",
+          "sha256": "7f23847290dc8f0540c32acf456bdfee845e6aa5515ff900a135ac607f44d832"
+        },
+        {
+          "path": "art/materials/textures/drystone/top_ew.png",
+          "sha256": "da69983a6b11042dd1bfb6f492636f194b4142b78d9b2523c030f636234efd20"
+        },
+        {
+          "path": "art/materials/textures/drystone/top_ns.png",
+          "sha256": "31ba8122524c41166e55514cd62b7025b85ee975dbaa03c52379fa085b21758e"
+        },
+        {
+          "path": "art/materials/tone.py",
+          "sha256": "7d6c9dff9e66d03f2d35dfccef38da5f6ce5c95300e86fa5883cd9199fba4c19"
+        }
+      ],
+      "status": "RECIPE_VISUALLY_ACCEPTED",
+      "export_evidence": "/Users/rexxa/work/art-batch/B3/rooms/rendered_final/town_wall_drystone_corner_foundation"
+    },
+    {
+      "id": "town_wall_drystone_corner_half_built",
+      "family": "town_wall_drystone_corner",
+      "state": "half_built",
+      "preview_sha256": "cb0ed14963e8fb1eb90d7f1cb679bdf587546ed3627d720afadaa3da633bca41",
+      "preview_anchor": [
+        64,
+        123
+      ],
+      "preview_origin": [
+        0,
+        -16
+      ],
+      "layer_count": 4,
+      "source_hashes": [
+        {
+          "path": "art/batch_b3/rooms/layers.py",
+          "sha256": "75002edec422e611ad63cd6b948baad3fa2f4aa70ecc51ca23d19627500225e4"
+        },
+        {
+          "path": "art/batch_b3/rooms/render.py",
+          "sha256": "255de45fe38cc8163ac9742124de3e5edb83e3e71527d57d3099af4bca7c15c5"
+        },
+        {
+          "path": "art/compositor/legacy_walls.py",
+          "sha256": "67afc163df5b7e71bb78fefc10114a16504435c02e4e756bc207b54a78c2e88a"
+        },
+        {
+          "path": "art/compositor/walls.py",
+          "sha256": "1ae47c570dcc4dcef83e2e82bd68ed146277a59ec9a8b1d22dd91e2a6c0e135f"
+        },
+        {
+          "path": "art/materials/category_defaults.json",
+          "sha256": "c0f763cdc93cdbd1ba6f42891fb39fb0f45fcbcea2c790af3345446a7f19eaae"
+        },
+        {
+          "path": "art/materials/construction_styles.json",
+          "sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+        },
+        {
+          "path": "art/materials/material_looks.json",
+          "sha256": "a2aa8b157fcc65a795b3f35c106cd01bb07ee65c037cfe64b1cf0599741b486f"
+        },
+        {
+          "path": "art/materials/render.py",
+          "sha256": "9004df0455562f49e8c3e41a700743012f3f539aa2b9cf01a78d11c6d8655223"
+        },
+        {
+          "path": "art/materials/resolve.py",
+          "sha256": "d1b31e1cf624d45529870e95c369b979f3ca3a25e235b414c33f59d02a5db1a0"
+        },
+        {
+          "path": "art/materials/textures/drystone/door_closed.png",
+          "sha256": "5758040c4a94f9ad1f143e5f708f8f04c0941d4cb087c8dba108773791b61644"
+        },
+        {
+          "path": "art/materials/textures/drystone/door_open.png",
+          "sha256": "feb3d8a4b9471e041a9d9df593c57acb8380049e078e97472f57812f8381952a"
+        },
+        {
+          "path": "art/materials/textures/drystone/end.png",
+          "sha256": "e650e43d754dd224e0a7fe071c4cd4509085bda1ec5c1d85e093532a27223736"
+        },
+        {
+          "path": "art/materials/textures/drystone/face.png",
+          "sha256": "517c4f431303d3ae01362fb451a6757f77cc18797875760c0eabae945c73c682"
+        },
+        {
+          "path": "art/materials/textures/drystone/junction.png",
+          "sha256": "7f23847290dc8f0540c32acf456bdfee845e6aa5515ff900a135ac607f44d832"
+        },
+        {
+          "path": "art/materials/textures/drystone/top_ew.png",
+          "sha256": "da69983a6b11042dd1bfb6f492636f194b4142b78d9b2523c030f636234efd20"
+        },
+        {
+          "path": "art/materials/textures/drystone/top_ns.png",
+          "sha256": "31ba8122524c41166e55514cd62b7025b85ee975dbaa03c52379fa085b21758e"
+        },
+        {
+          "path": "art/materials/tone.py",
+          "sha256": "7d6c9dff9e66d03f2d35dfccef38da5f6ce5c95300e86fa5883cd9199fba4c19"
+        }
+      ],
+      "status": "RECIPE_VISUALLY_ACCEPTED",
+      "export_evidence": "/Users/rexxa/work/art-batch/B3/rooms/rendered_final/town_wall_drystone_corner_half_built"
+    },
+    {
+      "id": "town_wall_drystone_corner_built",
+      "family": "town_wall_drystone_corner",
+      "state": "built",
+      "preview_sha256": "002a9262eeafae33fcb74b87edea23994114c8203b6b590401c1d8d16bf09b8a",
+      "preview_anchor": [
+        64,
+        123
+      ],
+      "preview_origin": [
+        0,
+        -16
+      ],
+      "layer_count": 3,
+      "source_hashes": [
+        {
+          "path": "art/batch_b3/rooms/layers.py",
+          "sha256": "75002edec422e611ad63cd6b948baad3fa2f4aa70ecc51ca23d19627500225e4"
+        },
+        {
+          "path": "art/batch_b3/rooms/render.py",
+          "sha256": "255de45fe38cc8163ac9742124de3e5edb83e3e71527d57d3099af4bca7c15c5"
+        },
+        {
+          "path": "art/compositor/legacy_walls.py",
+          "sha256": "67afc163df5b7e71bb78fefc10114a16504435c02e4e756bc207b54a78c2e88a"
+        },
+        {
+          "path": "art/compositor/walls.py",
+          "sha256": "1ae47c570dcc4dcef83e2e82bd68ed146277a59ec9a8b1d22dd91e2a6c0e135f"
+        },
+        {
+          "path": "art/materials/category_defaults.json",
+          "sha256": "c0f763cdc93cdbd1ba6f42891fb39fb0f45fcbcea2c790af3345446a7f19eaae"
+        },
+        {
+          "path": "art/materials/construction_styles.json",
+          "sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+        },
+        {
+          "path": "art/materials/material_looks.json",
+          "sha256": "a2aa8b157fcc65a795b3f35c106cd01bb07ee65c037cfe64b1cf0599741b486f"
+        },
+        {
+          "path": "art/materials/render.py",
+          "sha256": "9004df0455562f49e8c3e41a700743012f3f539aa2b9cf01a78d11c6d8655223"
+        },
+        {
+          "path": "art/materials/resolve.py",
+          "sha256": "d1b31e1cf624d45529870e95c369b979f3ca3a25e235b414c33f59d02a5db1a0"
+        },
+        {
+          "path": "art/materials/textures/drystone/door_closed.png",
+          "sha256": "5758040c4a94f9ad1f143e5f708f8f04c0941d4cb087c8dba108773791b61644"
+        },
+        {
+          "path": "art/materials/textures/drystone/door_open.png",
+          "sha256": "feb3d8a4b9471e041a9d9df593c57acb8380049e078e97472f57812f8381952a"
+        },
+        {
+          "path": "art/materials/textures/drystone/end.png",
+          "sha256": "e650e43d754dd224e0a7fe071c4cd4509085bda1ec5c1d85e093532a27223736"
+        },
+        {
+          "path": "art/materials/textures/drystone/face.png",
+          "sha256": "517c4f431303d3ae01362fb451a6757f77cc18797875760c0eabae945c73c682"
+        },
+        {
+          "path": "art/materials/textures/drystone/junction.png",
+          "sha256": "7f23847290dc8f0540c32acf456bdfee845e6aa5515ff900a135ac607f44d832"
+        },
+        {
+          "path": "art/materials/textures/drystone/top_ew.png",
+          "sha256": "da69983a6b11042dd1bfb6f492636f194b4142b78d9b2523c030f636234efd20"
+        },
+        {
+          "path": "art/materials/textures/drystone/top_ns.png",
+          "sha256": "31ba8122524c41166e55514cd62b7025b85ee975dbaa03c52379fa085b21758e"
+        },
+        {
+          "path": "art/materials/tone.py",
+          "sha256": "7d6c9dff9e66d03f2d35dfccef38da5f6ce5c95300e86fa5883cd9199fba4c19"
+        }
+      ],
+      "status": "RECIPE_VISUALLY_ACCEPTED",
+      "export_evidence": "/Users/rexxa/work/art-batch/B3/rooms/rendered_final/town_wall_drystone_corner_built"
+    },
+    {
+      "id": "town_wall_drystone_corner_damaged",
+      "family": "town_wall_drystone_corner",
+      "state": "damaged",
+      "preview_sha256": "ffd19181c4d846d3313338db7a5416f60e02430c5c605218429f7a4d9dc8d6c6",
+      "preview_anchor": [
+        64,
+        123
+      ],
+      "preview_origin": [
+        0,
+        -16
+      ],
+      "layer_count": 3,
+      "source_hashes": [
+        {
+          "path": "art/batch_b3/rooms/layers.py",
+          "sha256": "75002edec422e611ad63cd6b948baad3fa2f4aa70ecc51ca23d19627500225e4"
+        },
+        {
+          "path": "art/batch_b3/rooms/render.py",
+          "sha256": "255de45fe38cc8163ac9742124de3e5edb83e3e71527d57d3099af4bca7c15c5"
+        },
+        {
+          "path": "art/compositor/legacy_walls.py",
+          "sha256": "67afc163df5b7e71bb78fefc10114a16504435c02e4e756bc207b54a78c2e88a"
+        },
+        {
+          "path": "art/compositor/walls.py",
+          "sha256": "1ae47c570dcc4dcef83e2e82bd68ed146277a59ec9a8b1d22dd91e2a6c0e135f"
+        },
+        {
+          "path": "art/materials/category_defaults.json",
+          "sha256": "c0f763cdc93cdbd1ba6f42891fb39fb0f45fcbcea2c790af3345446a7f19eaae"
+        },
+        {
+          "path": "art/materials/construction_styles.json",
+          "sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+        },
+        {
+          "path": "art/materials/material_looks.json",
+          "sha256": "a2aa8b157fcc65a795b3f35c106cd01bb07ee65c037cfe64b1cf0599741b486f"
+        },
+        {
+          "path": "art/materials/render.py",
+          "sha256": "9004df0455562f49e8c3e41a700743012f3f539aa2b9cf01a78d11c6d8655223"
+        },
+        {
+          "path": "art/materials/resolve.py",
+          "sha256": "d1b31e1cf624d45529870e95c369b979f3ca3a25e235b414c33f59d02a5db1a0"
+        },
+        {
+          "path": "art/materials/textures/drystone/door_closed.png",
+          "sha256": "5758040c4a94f9ad1f143e5f708f8f04c0941d4cb087c8dba108773791b61644"
+        },
+        {
+          "path": "art/materials/textures/drystone/door_open.png",
+          "sha256": "feb3d8a4b9471e041a9d9df593c57acb8380049e078e97472f57812f8381952a"
+        },
+        {
+          "path": "art/materials/textures/drystone/end.png",
+          "sha256": "e650e43d754dd224e0a7fe071c4cd4509085bda1ec5c1d85e093532a27223736"
+        },
+        {
+          "path": "art/materials/textures/drystone/face.png",
+          "sha256": "517c4f431303d3ae01362fb451a6757f77cc18797875760c0eabae945c73c682"
+        },
+        {
+          "path": "art/materials/textures/drystone/junction.png",
+          "sha256": "7f23847290dc8f0540c32acf456bdfee845e6aa5515ff900a135ac607f44d832"
+        },
+        {
+          "path": "art/materials/textures/drystone/top_ew.png",
+          "sha256": "da69983a6b11042dd1bfb6f492636f194b4142b78d9b2523c030f636234efd20"
+        },
+        {
+          "path": "art/materials/textures/drystone/top_ns.png",
+          "sha256": "31ba8122524c41166e55514cd62b7025b85ee975dbaa03c52379fa085b21758e"
+        },
+        {
+          "path": "art/materials/tone.py",
+          "sha256": "7d6c9dff9e66d03f2d35dfccef38da5f6ce5c95300e86fa5883cd9199fba4c19"
+        },
+        {
+          "path": "art/style05/struct/items/stone_pile.png",
+          "sha256": "e307a7b6007564fab28ceb3b1a8dff4d0ddefe2924d3b2552f0242b7210aedb0"
+        }
+      ],
+      "status": "RECIPE_VISUALLY_ACCEPTED",
+      "export_evidence": "/Users/rexxa/work/art-batch/B3/rooms/rendered_final/town_wall_drystone_corner_damaged"
+    },
+    {
+      "id": "town_wall_drystone_corner_ruined",
+      "family": "town_wall_drystone_corner",
+      "state": "ruined",
+      "preview_sha256": "292586c715b36f90333b7a0d2c432fb2a414b972a430ec780a75764d5ece3df9",
+      "preview_anchor": [
+        64,
+        107
+      ],
+      "preview_origin": [
+        0,
+        0
+      ],
+      "layer_count": 3,
+      "source_hashes": [
+        {
+          "path": "art/batch_b3/rooms/layers.py",
+          "sha256": "75002edec422e611ad63cd6b948baad3fa2f4aa70ecc51ca23d19627500225e4"
+        },
+        {
+          "path": "art/batch_b3/rooms/render.py",
+          "sha256": "255de45fe38cc8163ac9742124de3e5edb83e3e71527d57d3099af4bca7c15c5"
+        },
+        {
+          "path": "art/compositor/legacy_walls.py",
+          "sha256": "67afc163df5b7e71bb78fefc10114a16504435c02e4e756bc207b54a78c2e88a"
+        },
+        {
+          "path": "art/compositor/walls.py",
+          "sha256": "1ae47c570dcc4dcef83e2e82bd68ed146277a59ec9a8b1d22dd91e2a6c0e135f"
+        },
+        {
+          "path": "art/materials/category_defaults.json",
+          "sha256": "c0f763cdc93cdbd1ba6f42891fb39fb0f45fcbcea2c790af3345446a7f19eaae"
+        },
+        {
+          "path": "art/materials/construction_styles.json",
+          "sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+        },
+        {
+          "path": "art/materials/material_looks.json",
+          "sha256": "a2aa8b157fcc65a795b3f35c106cd01bb07ee65c037cfe64b1cf0599741b486f"
+        },
+        {
+          "path": "art/materials/render.py",
+          "sha256": "9004df0455562f49e8c3e41a700743012f3f539aa2b9cf01a78d11c6d8655223"
+        },
+        {
+          "path": "art/materials/resolve.py",
+          "sha256": "d1b31e1cf624d45529870e95c369b979f3ca3a25e235b414c33f59d02a5db1a0"
+        },
+        {
+          "path": "art/materials/textures/drystone/door_closed.png",
+          "sha256": "5758040c4a94f9ad1f143e5f708f8f04c0941d4cb087c8dba108773791b61644"
+        },
+        {
+          "path": "art/materials/textures/drystone/door_open.png",
+          "sha256": "feb3d8a4b9471e041a9d9df593c57acb8380049e078e97472f57812f8381952a"
+        },
+        {
+          "path": "art/materials/textures/drystone/end.png",
+          "sha256": "e650e43d754dd224e0a7fe071c4cd4509085bda1ec5c1d85e093532a27223736"
+        },
+        {
+          "path": "art/materials/textures/drystone/face.png",
+          "sha256": "517c4f431303d3ae01362fb451a6757f77cc18797875760c0eabae945c73c682"
+        },
+        {
+          "path": "art/materials/textures/drystone/junction.png",
+          "sha256": "7f23847290dc8f0540c32acf456bdfee845e6aa5515ff900a135ac607f44d832"
+        },
+        {
+          "path": "art/materials/textures/drystone/top_ew.png",
+          "sha256": "da69983a6b11042dd1bfb6f492636f194b4142b78d9b2523c030f636234efd20"
+        },
+        {
+          "path": "art/materials/textures/drystone/top_ns.png",
+          "sha256": "31ba8122524c41166e55514cd62b7025b85ee975dbaa03c52379fa085b21758e"
+        },
+        {
+          "path": "art/materials/tone.py",
+          "sha256": "7d6c9dff9e66d03f2d35dfccef38da5f6ce5c95300e86fa5883cd9199fba4c19"
+        },
+        {
+          "path": "art/style05/struct/items/stone_pile.png",
+          "sha256": "e307a7b6007564fab28ceb3b1a8dff4d0ddefe2924d3b2552f0242b7210aedb0"
+        }
+      ],
+      "status": "RECIPE_VISUALLY_ACCEPTED",
+      "export_evidence": "/Users/rexxa/work/art-batch/B3/rooms/rendered_final/town_wall_drystone_corner_ruined"
+    },
+    {
+      "id": "town_wall_fired_brick_ns_foundation",
+      "family": "town_wall_fired_brick_ns",
+      "state": "foundation",
+      "preview_sha256": "3ec90749cff5b4cde88f99bd4dba1214e3469cd0a5f10a7f9fb139c894ff4481",
+      "preview_anchor": [
+        32,
+        151
+      ],
+      "preview_origin": [
+        0,
+        20
+      ],
+      "layer_count": 3,
+      "source_hashes": [
+        {
+          "path": "art/batch_b3/rooms/layers.py",
+          "sha256": "75002edec422e611ad63cd6b948baad3fa2f4aa70ecc51ca23d19627500225e4"
+        },
+        {
+          "path": "art/batch_b3/rooms/render.py",
+          "sha256": "255de45fe38cc8163ac9742124de3e5edb83e3e71527d57d3099af4bca7c15c5"
+        },
+        {
+          "path": "art/compositor/legacy_walls.py",
+          "sha256": "67afc163df5b7e71bb78fefc10114a16504435c02e4e756bc207b54a78c2e88a"
+        },
+        {
+          "path": "art/compositor/walls.py",
+          "sha256": "1ae47c570dcc4dcef83e2e82bd68ed146277a59ec9a8b1d22dd91e2a6c0e135f"
+        },
+        {
+          "path": "art/materials/category_defaults.json",
+          "sha256": "c0f763cdc93cdbd1ba6f42891fb39fb0f45fcbcea2c790af3345446a7f19eaae"
+        },
+        {
+          "path": "art/materials/construction_styles.json",
+          "sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+        },
+        {
+          "path": "art/materials/material_looks.json",
+          "sha256": "a2aa8b157fcc65a795b3f35c106cd01bb07ee65c037cfe64b1cf0599741b486f"
+        },
+        {
+          "path": "art/materials/render.py",
+          "sha256": "9004df0455562f49e8c3e41a700743012f3f539aa2b9cf01a78d11c6d8655223"
+        },
+        {
+          "path": "art/materials/resolve.py",
+          "sha256": "d1b31e1cf624d45529870e95c369b979f3ca3a25e235b414c33f59d02a5db1a0"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/door_closed.png",
+          "sha256": "3f4d999ecd53c868462a13dfb0833829da0a5a706103e31052b7f37faa0f3b81"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/door_open.png",
+          "sha256": "4559d039d0d5e980ef70c633d830f2cffd7a9341453054956bfadd8894e92dac"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/end.png",
+          "sha256": "9adef41bdd1e24a6d37d0d9bc6bf24a9ed88329adde2c72d5809628b303d804a"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/face.png",
+          "sha256": "77686d330384f994bd79a959ec4f243d53041687c76a811ea4cd6862a46d3683"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/junction.png",
+          "sha256": "7ffe232f4979e6af79dd63f3fa6c388a7c36685e66c62372c4b29d755c9738b3"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/top_ew.png",
+          "sha256": "df47bf04ee758ce51f0ec8f91506f29bcdf6abcaedbac878ab594153747d4faa"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/top_ns.png",
+          "sha256": "6fe819321f7ea4a793f278b09f5b0f037b4c2722f1b243008b435ee230a661bf"
+        },
+        {
+          "path": "art/materials/tone.py",
+          "sha256": "7d6c9dff9e66d03f2d35dfccef38da5f6ce5c95300e86fa5883cd9199fba4c19"
+        }
+      ],
+      "status": "RECIPE_VISUALLY_ACCEPTED",
+      "export_evidence": "/Users/rexxa/work/art-batch/B3/rooms/rendered_final/town_wall_fired_brick_ns_foundation"
+    },
+    {
+      "id": "town_wall_fired_brick_ns_half_built",
+      "family": "town_wall_fired_brick_ns",
+      "state": "half_built",
+      "preview_sha256": "8dbea4e15c7628756a6494c7983f6819748ecf78f40bd0daa398da8fc61c70c1",
+      "preview_anchor": [
+        32,
+        187
+      ],
+      "preview_origin": [
+        0,
+        -16
+      ],
+      "layer_count": 4,
+      "source_hashes": [
+        {
+          "path": "art/batch_b3/rooms/layers.py",
+          "sha256": "75002edec422e611ad63cd6b948baad3fa2f4aa70ecc51ca23d19627500225e4"
+        },
+        {
+          "path": "art/batch_b3/rooms/render.py",
+          "sha256": "255de45fe38cc8163ac9742124de3e5edb83e3e71527d57d3099af4bca7c15c5"
+        },
+        {
+          "path": "art/compositor/legacy_walls.py",
+          "sha256": "67afc163df5b7e71bb78fefc10114a16504435c02e4e756bc207b54a78c2e88a"
+        },
+        {
+          "path": "art/compositor/walls.py",
+          "sha256": "1ae47c570dcc4dcef83e2e82bd68ed146277a59ec9a8b1d22dd91e2a6c0e135f"
+        },
+        {
+          "path": "art/materials/category_defaults.json",
+          "sha256": "c0f763cdc93cdbd1ba6f42891fb39fb0f45fcbcea2c790af3345446a7f19eaae"
+        },
+        {
+          "path": "art/materials/construction_styles.json",
+          "sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+        },
+        {
+          "path": "art/materials/material_looks.json",
+          "sha256": "a2aa8b157fcc65a795b3f35c106cd01bb07ee65c037cfe64b1cf0599741b486f"
+        },
+        {
+          "path": "art/materials/render.py",
+          "sha256": "9004df0455562f49e8c3e41a700743012f3f539aa2b9cf01a78d11c6d8655223"
+        },
+        {
+          "path": "art/materials/resolve.py",
+          "sha256": "d1b31e1cf624d45529870e95c369b979f3ca3a25e235b414c33f59d02a5db1a0"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/door_closed.png",
+          "sha256": "3f4d999ecd53c868462a13dfb0833829da0a5a706103e31052b7f37faa0f3b81"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/door_open.png",
+          "sha256": "4559d039d0d5e980ef70c633d830f2cffd7a9341453054956bfadd8894e92dac"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/end.png",
+          "sha256": "9adef41bdd1e24a6d37d0d9bc6bf24a9ed88329adde2c72d5809628b303d804a"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/face.png",
+          "sha256": "77686d330384f994bd79a959ec4f243d53041687c76a811ea4cd6862a46d3683"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/junction.png",
+          "sha256": "7ffe232f4979e6af79dd63f3fa6c388a7c36685e66c62372c4b29d755c9738b3"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/top_ew.png",
+          "sha256": "df47bf04ee758ce51f0ec8f91506f29bcdf6abcaedbac878ab594153747d4faa"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/top_ns.png",
+          "sha256": "6fe819321f7ea4a793f278b09f5b0f037b4c2722f1b243008b435ee230a661bf"
+        },
+        {
+          "path": "art/materials/tone.py",
+          "sha256": "7d6c9dff9e66d03f2d35dfccef38da5f6ce5c95300e86fa5883cd9199fba4c19"
+        }
+      ],
+      "status": "RECIPE_VISUALLY_ACCEPTED",
+      "export_evidence": "/Users/rexxa/work/art-batch/B3/rooms/rendered_final/town_wall_fired_brick_ns_half_built"
+    },
+    {
+      "id": "town_wall_fired_brick_ns_built",
+      "family": "town_wall_fired_brick_ns",
+      "state": "built",
+      "preview_sha256": "7f40fa88d76a138d0db477aa9df4298be013c5b69538b46256d91b007b633dd5",
+      "preview_anchor": [
+        32,
+        187
+      ],
+      "preview_origin": [
+        0,
+        -16
+      ],
+      "layer_count": 3,
+      "source_hashes": [
+        {
+          "path": "art/batch_b3/rooms/layers.py",
+          "sha256": "75002edec422e611ad63cd6b948baad3fa2f4aa70ecc51ca23d19627500225e4"
+        },
+        {
+          "path": "art/batch_b3/rooms/render.py",
+          "sha256": "255de45fe38cc8163ac9742124de3e5edb83e3e71527d57d3099af4bca7c15c5"
+        },
+        {
+          "path": "art/compositor/legacy_walls.py",
+          "sha256": "67afc163df5b7e71bb78fefc10114a16504435c02e4e756bc207b54a78c2e88a"
+        },
+        {
+          "path": "art/compositor/walls.py",
+          "sha256": "1ae47c570dcc4dcef83e2e82bd68ed146277a59ec9a8b1d22dd91e2a6c0e135f"
+        },
+        {
+          "path": "art/materials/category_defaults.json",
+          "sha256": "c0f763cdc93cdbd1ba6f42891fb39fb0f45fcbcea2c790af3345446a7f19eaae"
+        },
+        {
+          "path": "art/materials/construction_styles.json",
+          "sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+        },
+        {
+          "path": "art/materials/material_looks.json",
+          "sha256": "a2aa8b157fcc65a795b3f35c106cd01bb07ee65c037cfe64b1cf0599741b486f"
+        },
+        {
+          "path": "art/materials/render.py",
+          "sha256": "9004df0455562f49e8c3e41a700743012f3f539aa2b9cf01a78d11c6d8655223"
+        },
+        {
+          "path": "art/materials/resolve.py",
+          "sha256": "d1b31e1cf624d45529870e95c369b979f3ca3a25e235b414c33f59d02a5db1a0"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/door_closed.png",
+          "sha256": "3f4d999ecd53c868462a13dfb0833829da0a5a706103e31052b7f37faa0f3b81"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/door_open.png",
+          "sha256": "4559d039d0d5e980ef70c633d830f2cffd7a9341453054956bfadd8894e92dac"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/end.png",
+          "sha256": "9adef41bdd1e24a6d37d0d9bc6bf24a9ed88329adde2c72d5809628b303d804a"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/face.png",
+          "sha256": "77686d330384f994bd79a959ec4f243d53041687c76a811ea4cd6862a46d3683"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/junction.png",
+          "sha256": "7ffe232f4979e6af79dd63f3fa6c388a7c36685e66c62372c4b29d755c9738b3"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/top_ew.png",
+          "sha256": "df47bf04ee758ce51f0ec8f91506f29bcdf6abcaedbac878ab594153747d4faa"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/top_ns.png",
+          "sha256": "6fe819321f7ea4a793f278b09f5b0f037b4c2722f1b243008b435ee230a661bf"
+        },
+        {
+          "path": "art/materials/tone.py",
+          "sha256": "7d6c9dff9e66d03f2d35dfccef38da5f6ce5c95300e86fa5883cd9199fba4c19"
+        }
+      ],
+      "status": "RECIPE_VISUALLY_ACCEPTED",
+      "export_evidence": "/Users/rexxa/work/art-batch/B3/rooms/rendered_final/town_wall_fired_brick_ns_built"
+    },
+    {
+      "id": "town_wall_fired_brick_ns_damaged",
+      "family": "town_wall_fired_brick_ns",
+      "state": "damaged",
+      "preview_sha256": "97809596b09ca4735a2032e41a8fdb1e07def425eafdfcb59370e29e2d5eaef8",
+      "preview_anchor": [
+        32,
+        187
+      ],
+      "preview_origin": [
+        0,
+        -16
+      ],
+      "layer_count": 3,
+      "source_hashes": [
+        {
+          "path": "art/batch_b3/rooms/layers.py",
+          "sha256": "75002edec422e611ad63cd6b948baad3fa2f4aa70ecc51ca23d19627500225e4"
+        },
+        {
+          "path": "art/batch_b3/rooms/render.py",
+          "sha256": "255de45fe38cc8163ac9742124de3e5edb83e3e71527d57d3099af4bca7c15c5"
+        },
+        {
+          "path": "art/compositor/legacy_walls.py",
+          "sha256": "67afc163df5b7e71bb78fefc10114a16504435c02e4e756bc207b54a78c2e88a"
+        },
+        {
+          "path": "art/compositor/walls.py",
+          "sha256": "1ae47c570dcc4dcef83e2e82bd68ed146277a59ec9a8b1d22dd91e2a6c0e135f"
+        },
+        {
+          "path": "art/materials/category_defaults.json",
+          "sha256": "c0f763cdc93cdbd1ba6f42891fb39fb0f45fcbcea2c790af3345446a7f19eaae"
+        },
+        {
+          "path": "art/materials/construction_styles.json",
+          "sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+        },
+        {
+          "path": "art/materials/material_looks.json",
+          "sha256": "a2aa8b157fcc65a795b3f35c106cd01bb07ee65c037cfe64b1cf0599741b486f"
+        },
+        {
+          "path": "art/materials/render.py",
+          "sha256": "9004df0455562f49e8c3e41a700743012f3f539aa2b9cf01a78d11c6d8655223"
+        },
+        {
+          "path": "art/materials/resolve.py",
+          "sha256": "d1b31e1cf624d45529870e95c369b979f3ca3a25e235b414c33f59d02a5db1a0"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/door_closed.png",
+          "sha256": "3f4d999ecd53c868462a13dfb0833829da0a5a706103e31052b7f37faa0f3b81"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/door_open.png",
+          "sha256": "4559d039d0d5e980ef70c633d830f2cffd7a9341453054956bfadd8894e92dac"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/end.png",
+          "sha256": "9adef41bdd1e24a6d37d0d9bc6bf24a9ed88329adde2c72d5809628b303d804a"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/face.png",
+          "sha256": "77686d330384f994bd79a959ec4f243d53041687c76a811ea4cd6862a46d3683"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/junction.png",
+          "sha256": "7ffe232f4979e6af79dd63f3fa6c388a7c36685e66c62372c4b29d755c9738b3"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/top_ew.png",
+          "sha256": "df47bf04ee758ce51f0ec8f91506f29bcdf6abcaedbac878ab594153747d4faa"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/top_ns.png",
+          "sha256": "6fe819321f7ea4a793f278b09f5b0f037b4c2722f1b243008b435ee230a661bf"
+        },
+        {
+          "path": "art/materials/tone.py",
+          "sha256": "7d6c9dff9e66d03f2d35dfccef38da5f6ce5c95300e86fa5883cd9199fba4c19"
+        },
+        {
+          "path": "art/style05/struct/items/stone_pile.png",
+          "sha256": "e307a7b6007564fab28ceb3b1a8dff4d0ddefe2924d3b2552f0242b7210aedb0"
+        }
+      ],
+      "status": "RECIPE_VISUALLY_ACCEPTED",
+      "export_evidence": "/Users/rexxa/work/art-batch/B3/rooms/rendered_final/town_wall_fired_brick_ns_damaged"
+    },
+    {
+      "id": "town_wall_fired_brick_ns_ruined",
+      "family": "town_wall_fired_brick_ns",
+      "state": "ruined",
+      "preview_sha256": "f1c52c489621f27011906caf4f8dc557c803ab746fa11dd710f70afd0c56d18a",
+      "preview_anchor": [
+        32,
+        151
+      ],
+      "preview_origin": [
+        0,
+        20
+      ],
+      "layer_count": 3,
+      "source_hashes": [
+        {
+          "path": "art/batch_b3/rooms/layers.py",
+          "sha256": "75002edec422e611ad63cd6b948baad3fa2f4aa70ecc51ca23d19627500225e4"
+        },
+        {
+          "path": "art/batch_b3/rooms/render.py",
+          "sha256": "255de45fe38cc8163ac9742124de3e5edb83e3e71527d57d3099af4bca7c15c5"
+        },
+        {
+          "path": "art/compositor/legacy_walls.py",
+          "sha256": "67afc163df5b7e71bb78fefc10114a16504435c02e4e756bc207b54a78c2e88a"
+        },
+        {
+          "path": "art/compositor/walls.py",
+          "sha256": "1ae47c570dcc4dcef83e2e82bd68ed146277a59ec9a8b1d22dd91e2a6c0e135f"
+        },
+        {
+          "path": "art/materials/category_defaults.json",
+          "sha256": "c0f763cdc93cdbd1ba6f42891fb39fb0f45fcbcea2c790af3345446a7f19eaae"
+        },
+        {
+          "path": "art/materials/construction_styles.json",
+          "sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+        },
+        {
+          "path": "art/materials/material_looks.json",
+          "sha256": "a2aa8b157fcc65a795b3f35c106cd01bb07ee65c037cfe64b1cf0599741b486f"
+        },
+        {
+          "path": "art/materials/render.py",
+          "sha256": "9004df0455562f49e8c3e41a700743012f3f539aa2b9cf01a78d11c6d8655223"
+        },
+        {
+          "path": "art/materials/resolve.py",
+          "sha256": "d1b31e1cf624d45529870e95c369b979f3ca3a25e235b414c33f59d02a5db1a0"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/door_closed.png",
+          "sha256": "3f4d999ecd53c868462a13dfb0833829da0a5a706103e31052b7f37faa0f3b81"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/door_open.png",
+          "sha256": "4559d039d0d5e980ef70c633d830f2cffd7a9341453054956bfadd8894e92dac"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/end.png",
+          "sha256": "9adef41bdd1e24a6d37d0d9bc6bf24a9ed88329adde2c72d5809628b303d804a"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/face.png",
+          "sha256": "77686d330384f994bd79a959ec4f243d53041687c76a811ea4cd6862a46d3683"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/junction.png",
+          "sha256": "7ffe232f4979e6af79dd63f3fa6c388a7c36685e66c62372c4b29d755c9738b3"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/top_ew.png",
+          "sha256": "df47bf04ee758ce51f0ec8f91506f29bcdf6abcaedbac878ab594153747d4faa"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/top_ns.png",
+          "sha256": "6fe819321f7ea4a793f278b09f5b0f037b4c2722f1b243008b435ee230a661bf"
+        },
+        {
+          "path": "art/materials/tone.py",
+          "sha256": "7d6c9dff9e66d03f2d35dfccef38da5f6ce5c95300e86fa5883cd9199fba4c19"
+        },
+        {
+          "path": "art/style05/struct/items/stone_pile.png",
+          "sha256": "e307a7b6007564fab28ceb3b1a8dff4d0ddefe2924d3b2552f0242b7210aedb0"
+        }
+      ],
+      "status": "RECIPE_VISUALLY_ACCEPTED",
+      "export_evidence": "/Users/rexxa/work/art-batch/B3/rooms/rendered_final/town_wall_fired_brick_ns_ruined"
+    },
+    {
+      "id": "town_wall_fired_brick_corner_foundation",
+      "family": "town_wall_fired_brick_corner",
+      "state": "foundation",
+      "preview_sha256": "2297c6582746a6410c4d220f0cf0ede4d5580cb0bb3a336dbc54c74a3e677c23",
+      "preview_anchor": [
+        64,
+        87
+      ],
+      "preview_origin": [
+        0,
+        20
+      ],
+      "layer_count": 3,
+      "source_hashes": [
+        {
+          "path": "art/batch_b3/rooms/layers.py",
+          "sha256": "75002edec422e611ad63cd6b948baad3fa2f4aa70ecc51ca23d19627500225e4"
+        },
+        {
+          "path": "art/batch_b3/rooms/render.py",
+          "sha256": "255de45fe38cc8163ac9742124de3e5edb83e3e71527d57d3099af4bca7c15c5"
+        },
+        {
+          "path": "art/compositor/legacy_walls.py",
+          "sha256": "67afc163df5b7e71bb78fefc10114a16504435c02e4e756bc207b54a78c2e88a"
+        },
+        {
+          "path": "art/compositor/walls.py",
+          "sha256": "1ae47c570dcc4dcef83e2e82bd68ed146277a59ec9a8b1d22dd91e2a6c0e135f"
+        },
+        {
+          "path": "art/materials/category_defaults.json",
+          "sha256": "c0f763cdc93cdbd1ba6f42891fb39fb0f45fcbcea2c790af3345446a7f19eaae"
+        },
+        {
+          "path": "art/materials/construction_styles.json",
+          "sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+        },
+        {
+          "path": "art/materials/material_looks.json",
+          "sha256": "a2aa8b157fcc65a795b3f35c106cd01bb07ee65c037cfe64b1cf0599741b486f"
+        },
+        {
+          "path": "art/materials/render.py",
+          "sha256": "9004df0455562f49e8c3e41a700743012f3f539aa2b9cf01a78d11c6d8655223"
+        },
+        {
+          "path": "art/materials/resolve.py",
+          "sha256": "d1b31e1cf624d45529870e95c369b979f3ca3a25e235b414c33f59d02a5db1a0"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/door_closed.png",
+          "sha256": "3f4d999ecd53c868462a13dfb0833829da0a5a706103e31052b7f37faa0f3b81"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/door_open.png",
+          "sha256": "4559d039d0d5e980ef70c633d830f2cffd7a9341453054956bfadd8894e92dac"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/end.png",
+          "sha256": "9adef41bdd1e24a6d37d0d9bc6bf24a9ed88329adde2c72d5809628b303d804a"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/face.png",
+          "sha256": "77686d330384f994bd79a959ec4f243d53041687c76a811ea4cd6862a46d3683"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/junction.png",
+          "sha256": "7ffe232f4979e6af79dd63f3fa6c388a7c36685e66c62372c4b29d755c9738b3"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/top_ew.png",
+          "sha256": "df47bf04ee758ce51f0ec8f91506f29bcdf6abcaedbac878ab594153747d4faa"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/top_ns.png",
+          "sha256": "6fe819321f7ea4a793f278b09f5b0f037b4c2722f1b243008b435ee230a661bf"
+        },
+        {
+          "path": "art/materials/tone.py",
+          "sha256": "7d6c9dff9e66d03f2d35dfccef38da5f6ce5c95300e86fa5883cd9199fba4c19"
+        }
+      ],
+      "status": "RECIPE_VISUALLY_ACCEPTED",
+      "export_evidence": "/Users/rexxa/work/art-batch/B3/rooms/rendered_final/town_wall_fired_brick_corner_foundation"
+    },
+    {
+      "id": "town_wall_fired_brick_corner_half_built",
+      "family": "town_wall_fired_brick_corner",
+      "state": "half_built",
+      "preview_sha256": "8b9e99b6c5d209d1e143891b281fea937c98ec7746543d3cad48838a63ac0466",
+      "preview_anchor": [
+        64,
+        123
+      ],
+      "preview_origin": [
+        0,
+        -16
+      ],
+      "layer_count": 4,
+      "source_hashes": [
+        {
+          "path": "art/batch_b3/rooms/layers.py",
+          "sha256": "75002edec422e611ad63cd6b948baad3fa2f4aa70ecc51ca23d19627500225e4"
+        },
+        {
+          "path": "art/batch_b3/rooms/render.py",
+          "sha256": "255de45fe38cc8163ac9742124de3e5edb83e3e71527d57d3099af4bca7c15c5"
+        },
+        {
+          "path": "art/compositor/legacy_walls.py",
+          "sha256": "67afc163df5b7e71bb78fefc10114a16504435c02e4e756bc207b54a78c2e88a"
+        },
+        {
+          "path": "art/compositor/walls.py",
+          "sha256": "1ae47c570dcc4dcef83e2e82bd68ed146277a59ec9a8b1d22dd91e2a6c0e135f"
+        },
+        {
+          "path": "art/materials/category_defaults.json",
+          "sha256": "c0f763cdc93cdbd1ba6f42891fb39fb0f45fcbcea2c790af3345446a7f19eaae"
+        },
+        {
+          "path": "art/materials/construction_styles.json",
+          "sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+        },
+        {
+          "path": "art/materials/material_looks.json",
+          "sha256": "a2aa8b157fcc65a795b3f35c106cd01bb07ee65c037cfe64b1cf0599741b486f"
+        },
+        {
+          "path": "art/materials/render.py",
+          "sha256": "9004df0455562f49e8c3e41a700743012f3f539aa2b9cf01a78d11c6d8655223"
+        },
+        {
+          "path": "art/materials/resolve.py",
+          "sha256": "d1b31e1cf624d45529870e95c369b979f3ca3a25e235b414c33f59d02a5db1a0"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/door_closed.png",
+          "sha256": "3f4d999ecd53c868462a13dfb0833829da0a5a706103e31052b7f37faa0f3b81"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/door_open.png",
+          "sha256": "4559d039d0d5e980ef70c633d830f2cffd7a9341453054956bfadd8894e92dac"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/end.png",
+          "sha256": "9adef41bdd1e24a6d37d0d9bc6bf24a9ed88329adde2c72d5809628b303d804a"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/face.png",
+          "sha256": "77686d330384f994bd79a959ec4f243d53041687c76a811ea4cd6862a46d3683"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/junction.png",
+          "sha256": "7ffe232f4979e6af79dd63f3fa6c388a7c36685e66c62372c4b29d755c9738b3"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/top_ew.png",
+          "sha256": "df47bf04ee758ce51f0ec8f91506f29bcdf6abcaedbac878ab594153747d4faa"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/top_ns.png",
+          "sha256": "6fe819321f7ea4a793f278b09f5b0f037b4c2722f1b243008b435ee230a661bf"
+        },
+        {
+          "path": "art/materials/tone.py",
+          "sha256": "7d6c9dff9e66d03f2d35dfccef38da5f6ce5c95300e86fa5883cd9199fba4c19"
+        }
+      ],
+      "status": "RECIPE_VISUALLY_ACCEPTED",
+      "export_evidence": "/Users/rexxa/work/art-batch/B3/rooms/rendered_final/town_wall_fired_brick_corner_half_built"
+    },
+    {
+      "id": "town_wall_fired_brick_corner_built",
+      "family": "town_wall_fired_brick_corner",
+      "state": "built",
+      "preview_sha256": "95745ed06f6d1237a1ce49aaf1e33f65bea8b476c9dd3cdf5da146a8fcc78e96",
+      "preview_anchor": [
+        64,
+        123
+      ],
+      "preview_origin": [
+        0,
+        -16
+      ],
+      "layer_count": 3,
+      "source_hashes": [
+        {
+          "path": "art/batch_b3/rooms/layers.py",
+          "sha256": "75002edec422e611ad63cd6b948baad3fa2f4aa70ecc51ca23d19627500225e4"
+        },
+        {
+          "path": "art/batch_b3/rooms/render.py",
+          "sha256": "255de45fe38cc8163ac9742124de3e5edb83e3e71527d57d3099af4bca7c15c5"
+        },
+        {
+          "path": "art/compositor/legacy_walls.py",
+          "sha256": "67afc163df5b7e71bb78fefc10114a16504435c02e4e756bc207b54a78c2e88a"
+        },
+        {
+          "path": "art/compositor/walls.py",
+          "sha256": "1ae47c570dcc4dcef83e2e82bd68ed146277a59ec9a8b1d22dd91e2a6c0e135f"
+        },
+        {
+          "path": "art/materials/category_defaults.json",
+          "sha256": "c0f763cdc93cdbd1ba6f42891fb39fb0f45fcbcea2c790af3345446a7f19eaae"
+        },
+        {
+          "path": "art/materials/construction_styles.json",
+          "sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+        },
+        {
+          "path": "art/materials/material_looks.json",
+          "sha256": "a2aa8b157fcc65a795b3f35c106cd01bb07ee65c037cfe64b1cf0599741b486f"
+        },
+        {
+          "path": "art/materials/render.py",
+          "sha256": "9004df0455562f49e8c3e41a700743012f3f539aa2b9cf01a78d11c6d8655223"
+        },
+        {
+          "path": "art/materials/resolve.py",
+          "sha256": "d1b31e1cf624d45529870e95c369b979f3ca3a25e235b414c33f59d02a5db1a0"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/door_closed.png",
+          "sha256": "3f4d999ecd53c868462a13dfb0833829da0a5a706103e31052b7f37faa0f3b81"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/door_open.png",
+          "sha256": "4559d039d0d5e980ef70c633d830f2cffd7a9341453054956bfadd8894e92dac"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/end.png",
+          "sha256": "9adef41bdd1e24a6d37d0d9bc6bf24a9ed88329adde2c72d5809628b303d804a"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/face.png",
+          "sha256": "77686d330384f994bd79a959ec4f243d53041687c76a811ea4cd6862a46d3683"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/junction.png",
+          "sha256": "7ffe232f4979e6af79dd63f3fa6c388a7c36685e66c62372c4b29d755c9738b3"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/top_ew.png",
+          "sha256": "df47bf04ee758ce51f0ec8f91506f29bcdf6abcaedbac878ab594153747d4faa"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/top_ns.png",
+          "sha256": "6fe819321f7ea4a793f278b09f5b0f037b4c2722f1b243008b435ee230a661bf"
+        },
+        {
+          "path": "art/materials/tone.py",
+          "sha256": "7d6c9dff9e66d03f2d35dfccef38da5f6ce5c95300e86fa5883cd9199fba4c19"
+        }
+      ],
+      "status": "RECIPE_VISUALLY_ACCEPTED",
+      "export_evidence": "/Users/rexxa/work/art-batch/B3/rooms/rendered_final/town_wall_fired_brick_corner_built"
+    },
+    {
+      "id": "town_wall_fired_brick_corner_damaged",
+      "family": "town_wall_fired_brick_corner",
+      "state": "damaged",
+      "preview_sha256": "c892bf3ef494b69aa208157453b83f813014f7a90758f79140a03f180aa710d3",
+      "preview_anchor": [
+        64,
+        123
+      ],
+      "preview_origin": [
+        0,
+        -16
+      ],
+      "layer_count": 3,
+      "source_hashes": [
+        {
+          "path": "art/batch_b3/rooms/layers.py",
+          "sha256": "75002edec422e611ad63cd6b948baad3fa2f4aa70ecc51ca23d19627500225e4"
+        },
+        {
+          "path": "art/batch_b3/rooms/render.py",
+          "sha256": "255de45fe38cc8163ac9742124de3e5edb83e3e71527d57d3099af4bca7c15c5"
+        },
+        {
+          "path": "art/compositor/legacy_walls.py",
+          "sha256": "67afc163df5b7e71bb78fefc10114a16504435c02e4e756bc207b54a78c2e88a"
+        },
+        {
+          "path": "art/compositor/walls.py",
+          "sha256": "1ae47c570dcc4dcef83e2e82bd68ed146277a59ec9a8b1d22dd91e2a6c0e135f"
+        },
+        {
+          "path": "art/materials/category_defaults.json",
+          "sha256": "c0f763cdc93cdbd1ba6f42891fb39fb0f45fcbcea2c790af3345446a7f19eaae"
+        },
+        {
+          "path": "art/materials/construction_styles.json",
+          "sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+        },
+        {
+          "path": "art/materials/material_looks.json",
+          "sha256": "a2aa8b157fcc65a795b3f35c106cd01bb07ee65c037cfe64b1cf0599741b486f"
+        },
+        {
+          "path": "art/materials/render.py",
+          "sha256": "9004df0455562f49e8c3e41a700743012f3f539aa2b9cf01a78d11c6d8655223"
+        },
+        {
+          "path": "art/materials/resolve.py",
+          "sha256": "d1b31e1cf624d45529870e95c369b979f3ca3a25e235b414c33f59d02a5db1a0"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/door_closed.png",
+          "sha256": "3f4d999ecd53c868462a13dfb0833829da0a5a706103e31052b7f37faa0f3b81"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/door_open.png",
+          "sha256": "4559d039d0d5e980ef70c633d830f2cffd7a9341453054956bfadd8894e92dac"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/end.png",
+          "sha256": "9adef41bdd1e24a6d37d0d9bc6bf24a9ed88329adde2c72d5809628b303d804a"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/face.png",
+          "sha256": "77686d330384f994bd79a959ec4f243d53041687c76a811ea4cd6862a46d3683"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/junction.png",
+          "sha256": "7ffe232f4979e6af79dd63f3fa6c388a7c36685e66c62372c4b29d755c9738b3"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/top_ew.png",
+          "sha256": "df47bf04ee758ce51f0ec8f91506f29bcdf6abcaedbac878ab594153747d4faa"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/top_ns.png",
+          "sha256": "6fe819321f7ea4a793f278b09f5b0f037b4c2722f1b243008b435ee230a661bf"
+        },
+        {
+          "path": "art/materials/tone.py",
+          "sha256": "7d6c9dff9e66d03f2d35dfccef38da5f6ce5c95300e86fa5883cd9199fba4c19"
+        },
+        {
+          "path": "art/style05/struct/items/stone_pile.png",
+          "sha256": "e307a7b6007564fab28ceb3b1a8dff4d0ddefe2924d3b2552f0242b7210aedb0"
+        }
+      ],
+      "status": "RECIPE_VISUALLY_ACCEPTED",
+      "export_evidence": "/Users/rexxa/work/art-batch/B3/rooms/rendered_final/town_wall_fired_brick_corner_damaged"
+    },
+    {
+      "id": "town_wall_fired_brick_corner_ruined",
+      "family": "town_wall_fired_brick_corner",
+      "state": "ruined",
+      "preview_sha256": "06c6cbc985bc8d1c94db137c3e61fe58a257d5558afcc8212bb28e60b4a8f0f7",
+      "preview_anchor": [
+        64,
+        107
+      ],
+      "preview_origin": [
+        0,
+        0
+      ],
+      "layer_count": 3,
+      "source_hashes": [
+        {
+          "path": "art/batch_b3/rooms/layers.py",
+          "sha256": "75002edec422e611ad63cd6b948baad3fa2f4aa70ecc51ca23d19627500225e4"
+        },
+        {
+          "path": "art/batch_b3/rooms/render.py",
+          "sha256": "255de45fe38cc8163ac9742124de3e5edb83e3e71527d57d3099af4bca7c15c5"
+        },
+        {
+          "path": "art/compositor/legacy_walls.py",
+          "sha256": "67afc163df5b7e71bb78fefc10114a16504435c02e4e756bc207b54a78c2e88a"
+        },
+        {
+          "path": "art/compositor/walls.py",
+          "sha256": "1ae47c570dcc4dcef83e2e82bd68ed146277a59ec9a8b1d22dd91e2a6c0e135f"
+        },
+        {
+          "path": "art/materials/category_defaults.json",
+          "sha256": "c0f763cdc93cdbd1ba6f42891fb39fb0f45fcbcea2c790af3345446a7f19eaae"
+        },
+        {
+          "path": "art/materials/construction_styles.json",
+          "sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+        },
+        {
+          "path": "art/materials/material_looks.json",
+          "sha256": "a2aa8b157fcc65a795b3f35c106cd01bb07ee65c037cfe64b1cf0599741b486f"
+        },
+        {
+          "path": "art/materials/render.py",
+          "sha256": "9004df0455562f49e8c3e41a700743012f3f539aa2b9cf01a78d11c6d8655223"
+        },
+        {
+          "path": "art/materials/resolve.py",
+          "sha256": "d1b31e1cf624d45529870e95c369b979f3ca3a25e235b414c33f59d02a5db1a0"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/door_closed.png",
+          "sha256": "3f4d999ecd53c868462a13dfb0833829da0a5a706103e31052b7f37faa0f3b81"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/door_open.png",
+          "sha256": "4559d039d0d5e980ef70c633d830f2cffd7a9341453054956bfadd8894e92dac"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/end.png",
+          "sha256": "9adef41bdd1e24a6d37d0d9bc6bf24a9ed88329adde2c72d5809628b303d804a"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/face.png",
+          "sha256": "77686d330384f994bd79a959ec4f243d53041687c76a811ea4cd6862a46d3683"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/junction.png",
+          "sha256": "7ffe232f4979e6af79dd63f3fa6c388a7c36685e66c62372c4b29d755c9738b3"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/top_ew.png",
+          "sha256": "df47bf04ee758ce51f0ec8f91506f29bcdf6abcaedbac878ab594153747d4faa"
+        },
+        {
+          "path": "art/materials/textures/fired_brick/top_ns.png",
+          "sha256": "6fe819321f7ea4a793f278b09f5b0f037b4c2722f1b243008b435ee230a661bf"
+        },
+        {
+          "path": "art/materials/tone.py",
+          "sha256": "7d6c9dff9e66d03f2d35dfccef38da5f6ce5c95300e86fa5883cd9199fba4c19"
+        },
+        {
+          "path": "art/style05/struct/items/stone_pile.png",
+          "sha256": "e307a7b6007564fab28ceb3b1a8dff4d0ddefe2924d3b2552f0242b7210aedb0"
+        }
+      ],
+      "status": "RECIPE_VISUALLY_ACCEPTED",
+      "export_evidence": "/Users/rexxa/work/art-batch/B3/rooms/rendered_final/town_wall_fired_brick_corner_ruined"
     }
   ]
 }

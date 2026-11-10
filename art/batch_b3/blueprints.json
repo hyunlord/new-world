@@ -1,0 +1,2364 @@
+{
+  "schema_version": 1,
+  "operator": {
+    "runtime_source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "runtime_source_path": "scripts/world/art/site_ghost.gd",
+    "preview_helper": "art/batch_b3/rooms/ghost.py",
+    "wash_alpha_permille": 250,
+    "solid_alpha_threshold": 96,
+    "outline_rgba": [
+      218,
+      222,
+      205,
+      230
+    ],
+    "outline": "one transparent-side pixel, four cardinal neighbours",
+    "canvas_anchor_footprint": "preserve source values exactly",
+    "generated_images": 0,
+    "caveat": "Display recipe; C2/C3 must bind real runtime blueprint codes. Pending built-source rows are not adopted sprites."
+  },
+  "families": [
+    {
+      "family": "aqueduct",
+      "era": "iron",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "aqueduct",
+        "path": "art/style05/struct/a2/iron/aqueduct.png",
+        "sha256": "d43acf874ad06b4979d6032bd0b88fc5b1aa6c814fb38aa3883527ebd944dd55",
+        "anchor": [
+          71,
+          63
+        ],
+        "footprint": [
+          2.0,
+          1.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "aqueduct",
+          "variant": "ew",
+          "asset_id": "aqueduct",
+          "era": "iron",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/iron/aqueduct.png"
+        },
+        {
+          "family": "aqueduct",
+          "variant": "ns",
+          "asset_id": "aqueduct_ns",
+          "era": "iron",
+          "kind": "structure",
+          "status": "GENERATED_NOT_ADOPTED",
+          "attempts": 3,
+          "detail": "Final lighting failure; earlier plan/support dimensions and wall convergence inadequate."
+        },
+        {
+          "family": "aqueduct",
+          "variant": "damaged",
+          "asset_id": "aqueduct_damaged",
+          "era": "iron",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/iron/aqueduct_damaged.png"
+        }
+      ]
+    },
+    {
+      "family": "bee_skep",
+      "era": "bronze",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "bee_skep_empty",
+        "path": "art/style05/struct/a2/bronze/bee_skep_empty.png",
+        "sha256": "e29605000949a7ea561d685d512e42dce646aa06c14cd942abe44a0c2b6aa3a1",
+        "anchor": [
+          19,
+          33
+        ],
+        "footprint": [
+          1.0,
+          1.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "bee_skep",
+          "variant": "active",
+          "asset_id": "bee_skep_active",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/bronze/bee_skep_active.png"
+        },
+        {
+          "family": "bee_skep",
+          "variant": "empty",
+          "asset_id": "bee_skep_empty",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/bronze/bee_skep_empty.png"
+        }
+      ]
+    },
+    {
+      "family": "bloomery",
+      "era": "iron",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "bloomery_unlit",
+        "path": "art/style05/struct/a2/iron/bloomery_unlit.png",
+        "sha256": "34d0c1f13298c2d625f7a217943310b5dda69450b16b807f0102360f3a6f5471",
+        "anchor": [
+          24,
+          59
+        ],
+        "footprint": [
+          1.0,
+          1.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "bloomery",
+          "variant": "unlit",
+          "asset_id": "bloomery_unlit",
+          "era": "iron",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/iron/bloomery_unlit.png"
+        },
+        {
+          "family": "bloomery",
+          "variant": "lit",
+          "asset_id": "bloomery_lit",
+          "era": "iron",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/iron/bloomery_lit.png"
+        }
+      ]
+    },
+    {
+      "family": "bread_oven",
+      "era": "neolithic",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "bread_oven_unlit",
+        "path": "art/style05/struct/a2/neolithic/bread_oven_unlit.png",
+        "sha256": "37a38b65f87013417b4e68c9473dfde5311b9bb565b1aa8ff63041f6608cef3f",
+        "anchor": [
+          23,
+          35
+        ],
+        "footprint": [
+          1.0,
+          1.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "bread_oven",
+          "variant": "unlit",
+          "asset_id": "bread_oven_unlit",
+          "era": "neolithic",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/neolithic/bread_oven_unlit.png"
+        },
+        {
+          "family": "bread_oven",
+          "variant": "lit",
+          "asset_id": "bread_oven_lit",
+          "era": "neolithic",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/neolithic/bread_oven_lit.png"
+        }
+      ]
+    },
+    {
+      "family": "bridge",
+      "era": "iron",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "timber_bridge_ew",
+        "path": "art/style05/struct/a2/iron/timber_bridge_ew.png",
+        "sha256": "044f9553eb5e7ba8b4ea19ab77deb6c93d89ba4b70a9c5101161d4663292200c",
+        "anchor": [
+          108,
+          157
+        ],
+        "footprint": [
+          3.0,
+          2.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "bridge",
+          "variant": "ew",
+          "asset_id": "timber_bridge_ew",
+          "era": "iron",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/iron/timber_bridge_ew.png"
+        },
+        {
+          "family": "bridge",
+          "variant": "ns",
+          "asset_id": "timber_bridge",
+          "era": "iron",
+          "kind": "structure",
+          "status": "GENERATED_NOT_ADOPTED",
+          "attempts": 3,
+          "detail": "Intact N/S bridge: final lighting failure; earlier physical span and two-axis geometry inadequate."
+        },
+        {
+          "family": "bridge",
+          "variant": "damaged",
+          "asset_id": "timber_bridge_damaged",
+          "era": "iron",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/iron/timber_bridge_damaged.png"
+        }
+      ]
+    },
+    {
+      "family": "cart_shed",
+      "era": "bronze",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "layered_recipe",
+        "path": "art/batch_b3/rooms/recipes.json",
+        "recipe": "cart_shed_built",
+        "sha256": "646e59ed6036f5ec3c8eede455d2db2beaea86dd568c7f7647def2035fa0c452",
+        "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
+        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "cart_shed",
+          "variant": "empty",
+          "asset_id": "cart_shed_empty",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/cart_shed_empty/manifest.json"
+        },
+        {
+          "family": "cart_shed",
+          "variant": "occupied",
+          "asset_id": "cart_shed_occupied",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/cart_shed_occupied/manifest.json"
+        }
+      ]
+    },
+    {
+      "family": "casting_bench",
+      "era": "bronze",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "casting_bench_empty",
+        "path": "art/style05/struct/a2/bronze/casting_bench_empty.png",
+        "sha256": "21b6d3c83c4b04a99a256a3f65d5737f18c778a9146a83a0fa0a8b2006593fd8",
+        "anchor": [
+          35,
+          39
+        ],
+        "footprint": [
+          2.0,
+          1.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "casting_bench",
+          "variant": "empty",
+          "asset_id": "casting_bench_empty",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/bronze/casting_bench_empty.png"
+        },
+        {
+          "family": "casting_bench",
+          "variant": "working",
+          "asset_id": "casting_bench_working",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/bronze/casting_bench_working.png"
+        }
+      ]
+    },
+    {
+      "family": "charcoal_clamp",
+      "era": "bronze",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "charcoal_clamp_idle",
+        "path": "art/style05/struct/a2/bronze/charcoal_clamp_idle.png",
+        "sha256": "aabdce7698ec44bdcc97c284ea498e56a8b81da50d7feb7b891988b291e27af1",
+        "anchor": [
+          53,
+          59
+        ],
+        "footprint": [
+          2.0,
+          2.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "charcoal_clamp",
+          "variant": "idle",
+          "asset_id": "charcoal_clamp_idle",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/bronze/charcoal_clamp_idle.png"
+        },
+        {
+          "family": "charcoal_clamp",
+          "variant": "burning",
+          "asset_id": "charcoal_clamp_burning",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/bronze/charcoal_clamp_burning.png"
+        },
+        {
+          "family": "charcoal_clamp",
+          "variant": "spent",
+          "asset_id": "charcoal_clamp_spent",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/bronze/charcoal_clamp_spent.png"
+        }
+      ]
+    },
+    {
+      "family": "chief_hall",
+      "era": "bronze",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "layered_recipe",
+        "path": "art/batch_b3/rooms/recipes.json",
+        "recipe": "chief_hall_built",
+        "sha256": "3951ebd25badd4c6dfb6c1b9941c355109b8f4d16baa2479ddd9aaeda45d1292",
+        "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
+        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "chief_hall",
+          "variant": "intact",
+          "asset_id": "chief_hall_intact",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/chief_hall_intact/manifest.json"
+        },
+        {
+          "family": "chief_hall",
+          "variant": "damaged",
+          "asset_id": "chief_hall_damaged",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/chief_hall_damaged/manifest.json"
+        }
+      ]
+    },
+    {
+      "family": "copper_smelter",
+      "era": "bronze",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "copper_smelter_unlit",
+        "path": "art/style05/struct/a2/bronze/copper_smelter_unlit.png",
+        "sha256": "34220aa01a089c2d09289aab2c220cb9006fbebfa8b3757ea7b439d317b22fe4",
+        "anchor": [
+          24,
+          43
+        ],
+        "footprint": [
+          1.0,
+          1.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "copper_smelter",
+          "variant": "unlit",
+          "asset_id": "copper_smelter_unlit",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/bronze/copper_smelter_unlit.png"
+        },
+        {
+          "family": "copper_smelter",
+          "variant": "lit",
+          "asset_id": "copper_smelter_lit",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/bronze/copper_smelter_lit.png"
+        }
+      ]
+    },
+    {
+      "family": "ditch",
+      "era": "bronze",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "ditch_watered",
+        "path": "art/style05/env/ground/a2/bronze/ditch_watered.png",
+        "sha256": "065eddab09b0369641dafa3f8ec7d832dcbb8195232718f16d1ba2b345eb21e6",
+        "anchor": [
+          32,
+          43
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "ditch",
+          "variant": "dry",
+          "asset_id": "ditch_dry",
+          "era": "bronze",
+          "kind": "optional_extension",
+          "status": "GENERATED_NOT_ADOPTED",
+          "attempts": 3,
+          "detail": "Frozen ground stroke-width and tone-wash checks failed."
+        },
+        {
+          "family": "ditch",
+          "variant": "watered",
+          "asset_id": "ditch_watered",
+          "era": "bronze",
+          "kind": "optional_extension",
+          "status": "ADOPTED_GROUND_CANDIDATE",
+          "detail": "art/style05/env/ground/a2/bronze/ditch_watered.png"
+        }
+      ]
+    },
+    {
+      "family": "drying_rack",
+      "era": "paleolithic",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "drying_rack_empty",
+        "path": "art/style05/struct/drying_rack_empty.png",
+        "sha256": "37034e95dd7ccd54bf1d2fdff87523f1220d360de3b515588a4898b5b055afd8",
+        "anchor": [
+          43.0,
+          51.0
+        ],
+        "footprint": [
+          2.0,
+          1.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "drying_rack",
+          "variant": "empty",
+          "asset_id": "drying_rack_empty",
+          "era": "paleolithic",
+          "kind": "reuse",
+          "status": "REUSE_EXISTING",
+          "detail": "art/style05/struct/drying_rack_empty.png; drying_rack_hide.png"
+        },
+        {
+          "family": "drying_rack",
+          "variant": "hide",
+          "asset_id": "drying_rack_hide",
+          "era": "paleolithic",
+          "kind": "reuse",
+          "status": "REUSE_EXISTING",
+          "detail": "art/style05/struct/drying_rack_empty.png; drying_rack_hide.png"
+        }
+      ]
+    },
+    {
+      "family": "fish_weir",
+      "era": "paleolithic",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "fish_weir_empty",
+        "path": "art/style05/struct/a2/neolithic/fish_weir_empty.png",
+        "sha256": "eb89f63f826892e9fbd968b941f8819034049379634965661f317703866bc5f2",
+        "anchor": [
+          53,
+          91
+        ],
+        "footprint": [
+          2.0,
+          2.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "fish_weir",
+          "variant": "empty",
+          "asset_id": "fish_weir_empty",
+          "era": "paleolithic",
+          "kind": "optional_extension",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/neolithic/fish_weir_empty.png"
+        },
+        {
+          "family": "fish_weir",
+          "variant": "catch",
+          "asset_id": "fish_weir_catch",
+          "era": "paleolithic",
+          "kind": "optional_extension",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/neolithic/fish_weir_catch.png"
+        }
+      ]
+    },
+    {
+      "family": "forge",
+      "era": "iron",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "forge_idle",
+        "path": "art/style05/struct/a2/iron/forge_idle.png",
+        "sha256": "6f7bce88ef5ae6de102ed09e7567ecb1f2f099e6bc98c14d750de1004e249e59",
+        "anchor": [
+          38,
+          41
+        ],
+        "footprint": [
+          2.0,
+          1.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "forge",
+          "variant": "idle",
+          "asset_id": "forge_idle",
+          "era": "iron",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/iron/forge_idle.png"
+        },
+        {
+          "family": "forge",
+          "variant": "working",
+          "asset_id": "forge_working",
+          "era": "iron",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/iron/forge_working.png"
+        }
+      ]
+    },
+    {
+      "family": "granary",
+      "era": "neolithic",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "layered_recipe",
+        "path": "art/batch_b3/rooms/recipes.json",
+        "recipe": "granary_built",
+        "sha256": "7c23830544127a1a7a6594bf1a46cee28cae823f952b6670c488c6415d8f33d4",
+        "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
+        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "granary",
+          "variant": "empty",
+          "asset_id": "granary_empty",
+          "era": "neolithic",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/granary_empty/manifest.json"
+        },
+        {
+          "family": "granary",
+          "variant": "filled",
+          "asset_id": "granary_full",
+          "era": "neolithic",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/granary_full/manifest.json"
+        }
+      ]
+    },
+    {
+      "family": "grinding_stone",
+      "era": "neolithic",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "grinding_stone_normal",
+        "path": "art/style05/struct/grinding_stone.png",
+        "sha256": "a5ce6f052a3d8ac25fa45aabac802c2dd9b8fdb2ef573a8b861279481d659b63",
+        "anchor": null,
+        "footprint": null,
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "grinding_stone",
+          "variant": "normal",
+          "asset_id": "grinding_stone_normal",
+          "era": "neolithic",
+          "kind": "reuse",
+          "status": "REUSE_EXISTING",
+          "detail": "art/style05/struct/grinding_stone.png"
+        }
+      ]
+    },
+    {
+      "family": "hearth",
+      "era": "paleolithic",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "hearth_unlit",
+        "path": "art/style05/struct/hearth_unlit.png",
+        "sha256": "465b7812fadb49ed466617a415a75b968cb5a43d58ea9b849dc6decb3d576704",
+        "anchor": [
+          21.0,
+          23.0
+        ],
+        "footprint": [
+          1.0,
+          1.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "hearth",
+          "variant": "unlit",
+          "asset_id": "hearth_unlit",
+          "era": "paleolithic",
+          "kind": "reuse",
+          "status": "REUSE_EXISTING",
+          "detail": "art/style05/struct/hearth_unlit.png; hearth_1.png; hearth_pots.png"
+        },
+        {
+          "family": "hearth",
+          "variant": "lit",
+          "asset_id": "hearth_lit",
+          "era": "paleolithic",
+          "kind": "reuse",
+          "status": "REUSE_EXISTING",
+          "detail": "art/style05/struct/hearth_unlit.png; hearth_1.png; hearth_pots.png"
+        },
+        {
+          "family": "hearth",
+          "variant": "pots",
+          "asset_id": "hearth_pots",
+          "era": "paleolithic",
+          "kind": "reuse",
+          "status": "REUSE_EXISTING",
+          "detail": "art/style05/struct/hearth_unlit.png; hearth_1.png; hearth_pots.png"
+        }
+      ]
+    },
+    {
+      "family": "hut",
+      "era": "paleolithic",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "layered_recipe",
+        "path": "art/batch_b3/rooms/recipes.json",
+        "recipe": "hut_built",
+        "sha256": "9f3932cd677140891d658f7b733f4d13ce2b4262ad5ac948b3cb402089366909",
+        "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
+        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "hut",
+          "variant": "normal",
+          "asset_id": "hut_normal",
+          "era": "paleolithic",
+          "kind": "reuse",
+          "status": "REUSE_EXISTING",
+          "detail": "material-system log wall ring + door + packed-earth floor"
+        }
+      ]
+    },
+    {
+      "family": "irrigation_channel",
+      "era": "bronze",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "irrigation_channel_watered",
+        "path": "art/style05/env/ground/a2/bronze/irrigation_channel_watered.png",
+        "sha256": "d1bcd2ae4aa562b94c0bf758e7a9553ace756c6b08e824b9dd9ffd112ab970d6",
+        "anchor": [
+          32,
+          43
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "irrigation_channel",
+          "variant": "dry",
+          "asset_id": "irrigation_channel_dry",
+          "era": "bronze",
+          "kind": "optional_extension",
+          "status": "GENERATED_NOT_ADOPTED",
+          "attempts": 3,
+          "detail": "Numeric-ready, but visibly contains reflective water in a declared dry state."
+        },
+        {
+          "family": "irrigation_channel",
+          "variant": "watered",
+          "asset_id": "irrigation_channel_watered",
+          "era": "bronze",
+          "kind": "optional_extension",
+          "status": "ADOPTED_GROUND_CANDIDATE",
+          "detail": "art/style05/env/ground/a2/bronze/irrigation_channel_watered.png"
+        }
+      ]
+    },
+    {
+      "family": "lean_to",
+      "era": "paleolithic",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "lean_to_normal",
+        "path": "art/style05/struct/lean_to.png",
+        "sha256": "58e5fe1b54fc3a8645c08c3da81b88322b4fcf0f35e657bcc5e381dfbd9e7108",
+        "anchor": null,
+        "footprint": null,
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "lean_to",
+          "variant": "normal",
+          "asset_id": "lean_to_normal",
+          "era": "paleolithic",
+          "kind": "reuse",
+          "status": "REUSE_EXISTING",
+          "detail": "art/style05/struct/lean_to.png"
+        }
+      ]
+    },
+    {
+      "family": "log_house",
+      "era": "neolithic",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "layered_recipe",
+        "path": "art/batch_b3/rooms/recipes.json",
+        "recipe": "log_house_built",
+        "sha256": "9f3932cd677140891d658f7b733f4d13ce2b4262ad5ac948b3cb402089366909",
+        "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
+        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "log_house",
+          "variant": "intact",
+          "asset_id": "log_house_intact",
+          "era": "neolithic",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/log_house_intact/manifest.json"
+        },
+        {
+          "family": "log_house",
+          "variant": "damaged",
+          "asset_id": "log_house_damaged",
+          "era": "neolithic",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/log_house_damaged/manifest.json"
+        }
+      ]
+    },
+    {
+      "family": "loom",
+      "era": "neolithic",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "loom_loaded",
+        "path": "art/style05/struct/a2/neolithic/loom_loaded.png",
+        "sha256": "049fef15873b5e5183abc25b48fdb2392dc38d01c8e2eb914f0a17df97567c9a",
+        "anchor": [
+          43,
+          59
+        ],
+        "footprint": [
+          2.0,
+          1.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "loom",
+          "variant": "empty",
+          "asset_id": "loom_empty",
+          "era": "neolithic",
+          "kind": "structure",
+          "status": "GENERATED_NOT_ADOPTED",
+          "attempts": 3,
+          "detail": "Numeric-ready, but smooth cylindrical timber lacks the locked broken ink and irregular contours."
+        },
+        {
+          "family": "loom",
+          "variant": "working",
+          "asset_id": "loom_loaded",
+          "era": "neolithic",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/neolithic/loom_loaded.png"
+        }
+      ]
+    },
+    {
+      "family": "market",
+      "era": "iron",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "layered_recipe",
+        "path": "art/batch_b3/rooms/recipes.json",
+        "recipe": "market_built",
+        "sha256": "e4e3a7b778fbaf8d97fa7dfec25f807407f92ec4d3e17d5dd66686d935a01ad9",
+        "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
+        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "market",
+          "variant": "empty",
+          "asset_id": "market_empty",
+          "era": "iron",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/market_empty/manifest.json"
+        },
+        {
+          "family": "market",
+          "variant": "stocked",
+          "asset_id": "market_stocked",
+          "era": "iron",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/market_stocked/manifest.json"
+        }
+      ]
+    },
+    {
+      "family": "megalith",
+      "era": "neolithic",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "megalith",
+        "path": "art/style05/struct/a2/neolithic/megalith.png",
+        "sha256": "5ff6065d2a6588cdb184b6f87ebc2f40d1632a152946b4c564717252b0190d23",
+        "anchor": [
+          30,
+          87
+        ],
+        "footprint": [
+          1.0,
+          1.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "megalith",
+          "variant": "upright",
+          "asset_id": "megalith",
+          "era": "neolithic",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/neolithic/megalith.png"
+        },
+        {
+          "family": "megalith",
+          "variant": "fallen",
+          "asset_id": "megalith_fallen",
+          "era": "neolithic",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/neolithic/megalith_fallen.png"
+        }
+      ]
+    },
+    {
+      "family": "mine_entrance",
+      "era": "bronze",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "WAITING_FOR_ACCEPTED_BUILT_SOURCE",
+      "source": null,
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "mine_entrance",
+          "variant": "active",
+          "asset_id": "mine_entrance_active",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "GENERATED_NOT_ADOPTED",
+          "attempts": 3,
+          "detail": "Upper-left lighting check failed; earlier tone-wash failures."
+        },
+        {
+          "family": "mine_entrance",
+          "variant": "abandoned",
+          "asset_id": "mine_entrance_abandoned",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "GENERATED_NOT_ADOPTED",
+          "attempts": 3,
+          "detail": "Upper-left lighting check failed; earlier tone-wash failures."
+        }
+      ]
+    },
+    {
+      "family": "mud_brick_house",
+      "era": "bronze",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "layered_recipe",
+        "path": "art/batch_b3/rooms/recipes.json",
+        "recipe": "mud_brick_house_built",
+        "sha256": "b35069a754ea97f2abaf48a35421c4ab11c1893ea7bb7f61b245dec5a2f4e882",
+        "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
+        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "mud_brick_house",
+          "variant": "intact",
+          "asset_id": "mudbrick_house_intact",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/mudbrick_house_intact/manifest.json"
+        },
+        {
+          "family": "mud_brick_house",
+          "variant": "damaged",
+          "asset_id": "mudbrick_house_damaged",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/mudbrick_house_damaged/manifest.json"
+        }
+      ]
+    },
+    {
+      "family": "olive_press",
+      "era": "bronze",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "olive_press_working",
+        "path": "art/style05/struct/a2/bronze/olive_press_working.png",
+        "sha256": "14f0bdb5cdb473cf4af5a027822f3a8cad4790cce8e110f7b289c6012a5cd9f6",
+        "anchor": [
+          65,
+          83
+        ],
+        "footprint": [
+          2.0,
+          2.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "olive_press",
+          "variant": "empty",
+          "asset_id": "olive_press_empty",
+          "era": "bronze",
+          "kind": "optional_extension",
+          "status": "GENERATED_NOT_ADOPTED",
+          "attempts": 3,
+          "detail": "Numeric-ready, but smooth pale material and continuous timber grooves fail the locked broken-ink style; earlier linkage and contour failures."
+        },
+        {
+          "family": "olive_press",
+          "variant": "working",
+          "asset_id": "olive_press_working",
+          "era": "bronze",
+          "kind": "optional_extension",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/bronze/olive_press_working.png"
+        }
+      ]
+    },
+    {
+      "family": "palisade",
+      "era": "bronze",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "palisade_ew",
+        "path": "art/style05/struct/a2/bronze/palisade_ew.png",
+        "sha256": "ef20ea34c508e4f9c9abdeb7fa3c06c9f2482777b5f8a855c16add6339bb5449",
+        "anchor": [
+          39,
+          63
+        ],
+        "footprint": [
+          1.0,
+          1.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "palisade",
+          "variant": "ew",
+          "asset_id": "palisade_ew",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/bronze/palisade_ew.png"
+        },
+        {
+          "family": "palisade",
+          "variant": "ns",
+          "asset_id": "palisade_ns",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "GENERATED_NOT_ADOPTED",
+          "attempts": 3,
+          "detail": "Upper-left lighting check failed."
+        },
+        {
+          "family": "palisade",
+          "variant": "corner",
+          "asset_id": "palisade_corner",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "GENERATED_NOT_ADOPTED",
+          "attempts": 3,
+          "detail": "Upper-left lighting check failed."
+        },
+        {
+          "family": "palisade",
+          "variant": "end",
+          "asset_id": "palisade_end",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/bronze/palisade_end.png"
+        },
+        {
+          "family": "palisade",
+          "variant": "damaged",
+          "asset_id": "palisade_damaged",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/bronze/palisade_damaged.png"
+        }
+      ]
+    },
+    {
+      "family": "palisade_gate",
+      "era": "bronze",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "palisade_gate_closed",
+        "path": "art/style05/struct/a2/bronze/palisade_gate_closed.png",
+        "sha256": "fe00d2e7d65cd8a0c4c44a7b2c53bd8bf424f9802a4f53b7aecf4656562d6f5d",
+        "anchor": [
+          39,
+          63
+        ],
+        "footprint": [
+          1.0,
+          1.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "palisade_gate",
+          "variant": "closed",
+          "asset_id": "palisade_gate_closed",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/bronze/palisade_gate_closed.png"
+        },
+        {
+          "family": "palisade_gate",
+          "variant": "open",
+          "asset_id": "palisade_gate_open",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/bronze/palisade_gate_open.png"
+        }
+      ]
+    },
+    {
+      "family": "palisade_gatehouse",
+      "era": "bronze",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "layered_recipe",
+        "path": "art/batch_b3/rooms/recipes.json",
+        "recipe": "palisade_gatehouse_built",
+        "sha256": "0734115d8d2f1a43afd03e08509e9d01fd6c97d0a31fb052cd11f9321c61806c",
+        "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
+        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "palisade_gatehouse",
+          "variant": "closed",
+          "asset_id": "palisade_gatehouse_closed",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/palisade_gatehouse_closed/manifest.json"
+        },
+        {
+          "family": "palisade_gatehouse",
+          "variant": "open",
+          "asset_id": "palisade_gatehouse_open",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/palisade_gatehouse_open/manifest.json"
+        }
+      ]
+    },
+    {
+      "family": "paved_road",
+      "era": "iron",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "paved_road_ew",
+        "path": "art/style05/env/ground/a2/iron/paved_road_ew.png",
+        "sha256": "0974ff43343bcfcbdadd41b1781c639adb8fdd1a901948ac29e2467a53635b25",
+        "anchor": [
+          32,
+          43
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "paved_road",
+          "variant": "straight_ew",
+          "asset_id": "paved_road_ew",
+          "era": "iron",
+          "kind": "structure",
+          "status": "ADOPTED_GROUND_CANDIDATE",
+          "detail": "art/style05/env/ground/a2/iron/paved_road_ew.png"
+        },
+        {
+          "family": "paved_road",
+          "variant": "straight_ns",
+          "asset_id": "paved_road",
+          "era": "iron",
+          "kind": "structure",
+          "status": "ADOPTED_GROUND_CANDIDATE",
+          "detail": "art/style05/env/ground/a2/iron/paved_road.png"
+        },
+        {
+          "family": "paved_road",
+          "variant": "corner",
+          "asset_id": "paved_road_corner",
+          "era": "iron",
+          "kind": "structure",
+          "status": "ADOPTED_GROUND_CANDIDATE",
+          "detail": "art/style05/env/ground/a2/iron/paved_road_corner.png"
+        },
+        {
+          "family": "paved_road",
+          "variant": "junction",
+          "asset_id": "paved_road_junction",
+          "era": "iron",
+          "kind": "structure",
+          "status": "ADOPTED_GROUND_CANDIDATE",
+          "detail": "art/style05/env/ground/a2/iron/paved_road_junction.png"
+        },
+        {
+          "family": "paved_road",
+          "variant": "damaged",
+          "asset_id": "paved_road_damaged",
+          "era": "iron",
+          "kind": "structure",
+          "status": "ADOPTED_GROUND_CANDIDATE",
+          "detail": "art/style05/env/ground/a2/iron/paved_road_damaged.png"
+        }
+      ]
+    },
+    {
+      "family": "pen_fence",
+      "era": "neolithic",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "pen_fence_straight",
+        "path": "art/style05/struct/a2/neolithic/pen_fence_straight.png",
+        "sha256": "93da3ddc08dfbab136a16d1c6ff842563d930bb2845e8b042b7632d546e416e5",
+        "anchor": [
+          40,
+          42
+        ],
+        "footprint": [
+          1.0,
+          1.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "pen_fence",
+          "variant": "ew",
+          "asset_id": "pen_fence_straight",
+          "era": "neolithic",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/neolithic/pen_fence_straight.png"
+        },
+        {
+          "family": "pen_fence",
+          "variant": "ns",
+          "asset_id": "pen_fence_ns",
+          "era": "neolithic",
+          "kind": "structure",
+          "status": "GENERATED_NOT_ADOPTED",
+          "attempts": 3,
+          "detail": "Numeric-ready, but post stock, height, rail attachment and material do not match the E/W fence family."
+        },
+        {
+          "family": "pen_fence",
+          "variant": "corner",
+          "asset_id": "pen_fence_corner",
+          "era": "neolithic",
+          "kind": "structure",
+          "status": "GENERATED_NOT_ADOPTED",
+          "attempts": 3,
+          "detail": "Final tone-wash failure; earlier numeric-ready corner has a diagonal N/S arm rather than orthogonal plan."
+        },
+        {
+          "family": "pen_fence",
+          "variant": "end",
+          "asset_id": "pen_fence_end",
+          "era": "neolithic",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/neolithic/pen_fence_end.png"
+        },
+        {
+          "family": "pen_fence",
+          "variant": "damaged",
+          "asset_id": "pen_fence_damaged",
+          "era": "neolithic",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/neolithic/pen_fence_damaged.png"
+        }
+      ]
+    },
+    {
+      "family": "pen_gate",
+      "era": "neolithic",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "pen_gate_closed",
+        "path": "art/style05/struct/a2/neolithic/pen_gate_closed.png",
+        "sha256": "1023719e46a811c48caefb878b1347075bfe1f233e8d580adc2d7538c59cbb92",
+        "anchor": [
+          40,
+          63
+        ],
+        "footprint": [
+          1.0,
+          1.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "pen_gate",
+          "variant": "closed",
+          "asset_id": "pen_gate_closed",
+          "era": "neolithic",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/neolithic/pen_gate_closed.png"
+        },
+        {
+          "family": "pen_gate",
+          "variant": "open",
+          "asset_id": "pen_gate_open",
+          "era": "neolithic",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/neolithic/pen_gate_open.png"
+        }
+      ]
+    },
+    {
+      "family": "potters_kiln",
+      "era": "neolithic",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "potter_kiln_firing",
+        "path": "art/style05/struct/a2/neolithic/potter_kiln_firing.png",
+        "sha256": "f5a84bfb6733abd5b8781a85879d332de0984c89d3c2810bcf94e110cc6dd135",
+        "anchor": [
+          27,
+          51
+        ],
+        "footprint": [
+          1.0,
+          1.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "potters_kiln",
+          "variant": "unlit",
+          "asset_id": "potter_kiln_unlit",
+          "era": "neolithic",
+          "kind": "structure",
+          "status": "GENERATED_NOT_ADOPTED",
+          "attempts": 3,
+          "detail": "Frozen edge-density check failed; earlier tone-wash failures."
+        },
+        {
+          "family": "potters_kiln",
+          "variant": "firing",
+          "asset_id": "potter_kiln_firing",
+          "era": "neolithic",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/neolithic/potter_kiln_firing.png"
+        }
+      ]
+    },
+    {
+      "family": "reservoir",
+      "era": "iron",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "reservoir_empty",
+        "path": "art/style05/struct/a2/iron/reservoir_empty.png",
+        "sha256": "595e5e7ee4183d2da9581ad1b915107bceac020c818e647c253230c20ac8de94",
+        "anchor": [
+          68,
+          132
+        ],
+        "footprint": [
+          2.0,
+          2.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "reservoir",
+          "variant": "dry",
+          "asset_id": "reservoir_empty",
+          "era": "iron",
+          "kind": "structure_extension",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/iron/reservoir_empty.png"
+        },
+        {
+          "family": "reservoir",
+          "variant": "filled",
+          "asset_id": "reservoir_full",
+          "era": "iron",
+          "kind": "structure_extension",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/iron/reservoir_full.png"
+        }
+      ]
+    },
+    {
+      "family": "ritual_site",
+      "era": "neolithic",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "ritual_site_empty",
+        "path": "art/style05/struct/a2/neolithic/ritual_site_empty.png",
+        "sha256": "683c1599ff96abbd8477bd63d976d15ee23d3477aab4813281f8dcfaea746edb",
+        "anchor": [
+          53,
+          87
+        ],
+        "footprint": [
+          2.0,
+          2.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "ritual_site",
+          "variant": "empty",
+          "asset_id": "ritual_site_empty",
+          "era": "neolithic",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/neolithic/ritual_site_empty.png"
+        },
+        {
+          "family": "ritual_site",
+          "variant": "furnished",
+          "asset_id": "ritual_site",
+          "era": "neolithic",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/neolithic/ritual_site.png"
+        }
+      ]
+    },
+    {
+      "family": "rotary_quern",
+      "era": "iron",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "rotary_quern",
+        "path": "art/style05/struct/a2/iron/rotary_quern.png",
+        "sha256": "77b95ba4a421cb72edb8928a41bf03b639ef9224729a0d52411a74ab024b3374",
+        "anchor": [
+          23,
+          37
+        ],
+        "footprint": [
+          1.0,
+          1.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "rotary_quern",
+          "variant": "idle",
+          "asset_id": "rotary_quern",
+          "era": "iron",
+          "kind": "structure_extension",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/iron/rotary_quern.png"
+        },
+        {
+          "family": "rotary_quern",
+          "variant": "working",
+          "asset_id": "rotary_quern_working",
+          "era": "iron",
+          "kind": "structure_extension",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/iron/rotary_quern_working.png"
+        }
+      ]
+    },
+    {
+      "family": "school",
+      "era": "iron",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "layered_recipe",
+        "path": "art/batch_b3/rooms/recipes.json",
+        "recipe": "school_built",
+        "sha256": "8603062da8b97ec4ca8d7f9b86815fc32d6beeaab3b3b23a388a3bb49b8460a7",
+        "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
+        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "school",
+          "variant": "empty",
+          "asset_id": "school_empty",
+          "era": "iron",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/school_empty/manifest.json"
+        },
+        {
+          "family": "school",
+          "variant": "furnished",
+          "asset_id": "school_furnished",
+          "era": "iron",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/school_furnished/manifest.json"
+        }
+      ]
+    },
+    {
+      "family": "shrine",
+      "era": "bronze",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "shrine_intact",
+        "path": "art/style05/struct/a2/bronze/shrine_intact.png",
+        "sha256": "8c5ef1301e80874f2f80732cfe2c1981a8309c75a62021c630de3a4b5577df2e",
+        "anchor": [
+          56,
+          83
+        ],
+        "footprint": [
+          3.0,
+          2.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "shrine",
+          "variant": "intact",
+          "asset_id": "shrine_intact",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/bronze/shrine_intact.png"
+        },
+        {
+          "family": "shrine",
+          "variant": "damaged",
+          "asset_id": "shrine_damaged",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/bronze/shrine_damaged.png"
+        }
+      ]
+    },
+    {
+      "family": "smokehouse",
+      "era": "neolithic",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "smokehouse_idle",
+        "path": "art/style05/struct/a2/neolithic/smokehouse_idle.png",
+        "sha256": "4902a850caed3a2f0dbc7708b27b0f613debde151ae642347e00e9315caf1c3d",
+        "anchor": [
+          48,
+          63
+        ],
+        "footprint": [
+          2.0,
+          2.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "smokehouse",
+          "variant": "unlit",
+          "asset_id": "smokehouse_idle",
+          "era": "neolithic",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/neolithic/smokehouse_idle.png"
+        },
+        {
+          "family": "smokehouse",
+          "variant": "smoking",
+          "asset_id": "smokehouse_working",
+          "era": "neolithic",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/neolithic/smokehouse_working.png"
+        }
+      ]
+    },
+    {
+      "family": "stone_house",
+      "era": "iron",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "layered_recipe",
+        "path": "art/batch_b3/rooms/recipes.json",
+        "recipe": "stone_house_built",
+        "sha256": "f2bdf825487237a2dc6773ae0564a1225786e6533e8e028bc36448b2720ca547",
+        "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
+        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "stone_house",
+          "variant": "intact",
+          "asset_id": "stone_house_intact",
+          "era": "iron",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/stone_house_intact/manifest.json"
+        },
+        {
+          "family": "stone_house",
+          "variant": "damaged",
+          "asset_id": "stone_house_damaged",
+          "era": "iron",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/stone_house_damaged/manifest.json"
+        }
+      ]
+    },
+    {
+      "family": "stone_storehouse",
+      "era": "bronze",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "layered_recipe",
+        "path": "art/batch_b3/rooms/recipes.json",
+        "recipe": "stone_storehouse_built",
+        "sha256": "3648dcfe8e209168501b1ec49d795fe2676712517a1b416139bb656ccd16bf99",
+        "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
+        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "stone_storehouse",
+          "variant": "empty",
+          "asset_id": "stone_storehouse_empty",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/stone_storehouse_empty/manifest.json"
+        },
+        {
+          "family": "stone_storehouse",
+          "variant": "filled",
+          "asset_id": "stone_storehouse_full",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/stone_storehouse_full/manifest.json"
+        }
+      ]
+    },
+    {
+      "family": "storehouse",
+      "era": "neolithic",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "layered_recipe",
+        "path": "art/batch_b3/rooms/recipes.json",
+        "recipe": "storehouse_built",
+        "sha256": "646e59ed6036f5ec3c8eede455d2db2beaea86dd568c7f7647def2035fa0c452",
+        "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
+        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "storehouse",
+          "variant": "empty",
+          "asset_id": "storehouse_empty",
+          "era": "neolithic",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/storehouse_empty/manifest.json"
+        },
+        {
+          "family": "storehouse",
+          "variant": "filled",
+          "asset_id": "storehouse_full",
+          "era": "neolithic",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/storehouse_full/manifest.json"
+        }
+      ]
+    },
+    {
+      "family": "sundial",
+      "era": "iron",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "sundial",
+        "path": "art/style05/struct/a2/iron/sundial.png",
+        "sha256": "cac341d7b351c6a365233a627e88c490a0d76dae83b33108dca3f79bc7ffd8ea",
+        "anchor": [
+          23,
+          35
+        ],
+        "footprint": [
+          1.0,
+          1.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "sundial",
+          "variant": "normal",
+          "asset_id": "sundial",
+          "era": "iron",
+          "kind": "structure_extension",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/iron/sundial.png"
+        }
+      ]
+    },
+    {
+      "family": "temple",
+      "era": "iron",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "layered_recipe",
+        "path": "art/batch_b3/rooms/recipes.json",
+        "recipe": "temple_built",
+        "sha256": "89016ecca650a671f1d467d5c26ab78f700bba486e253695365ace390aa89df9",
+        "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
+        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "temple",
+          "variant": "intact",
+          "asset_id": "temple_intact",
+          "era": "iron",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/temple_intact/manifest.json"
+        },
+        {
+          "family": "temple",
+          "variant": "damaged",
+          "asset_id": "temple_damaged",
+          "era": "iron",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/temple_damaged/manifest.json"
+        }
+      ]
+    },
+    {
+      "family": "terrace",
+      "era": "bronze",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "terrace_cultivated",
+        "path": "art/style05/env/ground/a2/bronze/terrace_cultivated.png",
+        "sha256": "ac76f28206a8ddedb64b162609cc9f63e18d18302551686dbbd5e64f4591e546",
+        "anchor": [
+          32,
+          43
+        ],
+        "footprint": [
+          2,
+          2
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "terrace",
+          "variant": "empty",
+          "asset_id": "terrace_empty",
+          "era": "bronze",
+          "kind": "optional_extension",
+          "status": "GENERATED_NOT_ADOPTED",
+          "attempts": 3,
+          "detail": "Frozen ground stroke-width check failed."
+        },
+        {
+          "family": "terrace",
+          "variant": "cultivated",
+          "asset_id": "terrace_cultivated",
+          "era": "bronze",
+          "kind": "optional_extension",
+          "status": "ADOPTED_GROUND_CANDIDATE",
+          "detail": "art/style05/env/ground/a2/bronze/terrace_cultivated.png"
+        }
+      ]
+    },
+    {
+      "family": "town_gate",
+      "era": "iron",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "town_gate_closed",
+        "path": "art/style05/struct/a2/iron/town_gate_closed.png",
+        "sha256": "f808880b1a8bc28576c7450f8dd3c0665097bffd41543f49c368a1596c2c5134",
+        "anchor": [
+          56,
+          63
+        ],
+        "footprint": [
+          2.0,
+          1.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "town_gate",
+          "variant": "closed",
+          "asset_id": "town_gate_closed",
+          "era": "iron",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/iron/town_gate_closed.png"
+        },
+        {
+          "family": "town_gate",
+          "variant": "open",
+          "asset_id": "town_gate_open",
+          "era": "iron",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/iron/town_gate_open.png"
+        }
+      ]
+    },
+    {
+      "family": "town_wall",
+      "era": "iron",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "layered_recipe",
+        "path": "art/batch_b3/rooms/recipes.json",
+        "recipe": "town_wall_drystone_built",
+        "sha256": "adb314a7cf985c5a2bc0b54f51d82981a68e1e80fe7d932435b9b2f896b96827",
+        "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
+        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "town_wall",
+          "variant": "ew",
+          "asset_id": "town_wall_drystone_ew",
+          "era": "iron",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/town_wall_drystone_ew/manifest.json"
+        },
+        {
+          "family": "town_wall",
+          "variant": "ns",
+          "asset_id": "town_wall_drystone_ns",
+          "era": "iron",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/town_wall_drystone_ns/manifest.json"
+        },
+        {
+          "family": "town_wall",
+          "variant": "corner",
+          "asset_id": "town_wall_drystone_corner",
+          "era": "iron",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/town_wall_drystone_corner/manifest.json"
+        },
+        {
+          "family": "town_wall",
+          "variant": "end",
+          "asset_id": "town_wall_drystone_end",
+          "era": "iron",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/town_wall_drystone_end/manifest.json"
+        },
+        {
+          "family": "town_wall",
+          "variant": "damaged",
+          "asset_id": "town_wall_drystone_damaged",
+          "era": "iron",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/town_wall_drystone_damaged/manifest.json"
+        }
+      ]
+    },
+    {
+      "family": "trading_post",
+      "era": "bronze",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "layered_recipe",
+        "path": "art/batch_b3/rooms/recipes.json",
+        "recipe": "trading_post_built",
+        "sha256": "27d7d01374b2c933e8130b1e93ae1d55d166134d8683b343c57a612ec78b3e60",
+        "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
+        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "trading_post",
+          "variant": "empty",
+          "asset_id": "trading_post_empty",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/trading_post_empty/manifest.json"
+        },
+        {
+          "family": "trading_post",
+          "variant": "stocked",
+          "asset_id": "trading_post_stocked",
+          "era": "bronze",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/trading_post_stocked/manifest.json"
+        }
+      ]
+    },
+    {
+      "family": "trap",
+      "era": "paleolithic",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "trap_set",
+        "path": "art/style05/struct/a2/neolithic/trap_set.png",
+        "sha256": "f3f56836a57a5ebb6d3a5bae2d4d984beeeb7299618e792e0e06fe8def5d574e",
+        "anchor": [
+          20,
+          27
+        ],
+        "footprint": [
+          1.0,
+          1.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "trap",
+          "variant": "set",
+          "asset_id": "trap_set",
+          "era": "paleolithic",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/neolithic/trap_set.png"
+        },
+        {
+          "family": "trap",
+          "variant": "sprung",
+          "asset_id": "trap_sprung",
+          "era": "paleolithic",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/neolithic/trap_sprung.png"
+        }
+      ]
+    },
+    {
+      "family": "warehouse",
+      "era": "iron",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "layered_recipe",
+        "path": "art/batch_b3/rooms/recipes.json",
+        "recipe": "warehouse_built",
+        "sha256": "e4e3a7b778fbaf8d97fa7dfec25f807407f92ec4d3e17d5dd66686d935a01ad9",
+        "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
+        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "warehouse",
+          "variant": "empty",
+          "asset_id": "warehouse_empty",
+          "era": "iron",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/warehouse_empty/manifest.json"
+        },
+        {
+          "family": "warehouse",
+          "variant": "filled",
+          "asset_id": "warehouse_full",
+          "era": "iron",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/warehouse_full/manifest.json"
+        }
+      ]
+    },
+    {
+      "family": "watchtower",
+      "era": "iron",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "watchtower",
+        "path": "art/style05/struct/a2/iron/watchtower.png",
+        "sha256": "357b49b92eda3d30c0a7b2281951bae58cd6367d92cb576cf6aa9705e5019016",
+        "anchor": [
+          42,
+          131
+        ],
+        "footprint": [
+          2.0,
+          2.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "watchtower",
+          "variant": "intact",
+          "asset_id": "watchtower",
+          "era": "iron",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/iron/watchtower.png"
+        },
+        {
+          "family": "watchtower",
+          "variant": "damaged",
+          "asset_id": "watchtower_damaged",
+          "era": "iron",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/iron/watchtower_damaged.png"
+        }
+      ]
+    },
+    {
+      "family": "watermill",
+      "era": "iron",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "layered_recipe",
+        "path": "art/batch_b3/rooms/recipes.json",
+        "recipe": "watermill_built",
+        "sha256": "14b071844e27f53809c98bd42c4e78ebb2427456cfba68d17137994b416214e6",
+        "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
+        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "watermill",
+          "variant": "idle",
+          "asset_id": "watermill_idle",
+          "era": "iron",
+          "kind": "structure_extension",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/watermill_idle/manifest.json"
+        },
+        {
+          "family": "watermill",
+          "variant": "working",
+          "asset_id": "watermill_working",
+          "era": "iron",
+          "kind": "structure_extension",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/watermill_working/manifest.json"
+        }
+      ]
+    },
+    {
+      "family": "well",
+      "era": "neolithic",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "well",
+        "path": "art/style05/struct/a2/neolithic/well.png",
+        "sha256": "aac1827c268a79d761f161073f08f7dc6f7d0e03fe39e2569d98cf03998799a3",
+        "anchor": [
+          32,
+          55
+        ],
+        "footprint": [
+          1.0,
+          1.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "well",
+          "variant": "normal",
+          "asset_id": "well",
+          "era": "neolithic",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/neolithic/well.png"
+        },
+        {
+          "family": "well",
+          "variant": "dry",
+          "asset_id": "well_dry",
+          "era": "neolithic",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/neolithic/well_dry.png"
+        }
+      ]
+    },
+    {
+      "family": "windbreak",
+      "era": "paleolithic",
+      "state": "blueprint",
+      "operation": "existing_site_ghost",
+      "status": "RECIPE_READY",
+      "source": {
+        "kind": "sprite",
+        "asset_id": "windbreak",
+        "path": "art/style05/struct/a2/neolithic/windbreak.png",
+        "sha256": "955cd58d9f3891c4c651a7a7bc2fb69da0a735e38f86679f2f24742ed01f8da9",
+        "anchor": [
+          48,
+          51
+        ],
+        "footprint": [
+          2.0,
+          1.0
+        ],
+        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+      },
+      "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
+      "round1_variants": [
+        {
+          "family": "windbreak",
+          "variant": "intact",
+          "asset_id": "windbreak",
+          "era": "paleolithic",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/neolithic/windbreak.png"
+        },
+        {
+          "family": "windbreak",
+          "variant": "damaged",
+          "asset_id": "windbreak_damaged",
+          "era": "paleolithic",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/neolithic/windbreak_damaged.png"
+        }
+      ]
+    }
+  ]
+}

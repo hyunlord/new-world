@@ -31,6 +31,12 @@ section 6), `assets/` (fonts, theme, atlas, terrain sheets), `shaders/`,
 capture, contact sheet, inventory, docs checks), `tools/play.sh` and `tools/play/` (play any version
 in its own worktree; the owner's double-click launchers), `docs/` (this file and the owner docs).
 
+Art-only B3 sources and import proposals live in `art/batch_b3/`. Its room
+helper (`art/batch_b3/rooms/`) calls the existing material compositor and
+exports independently sortable layers plus review previews. It does not
+participate in the runtime data flow; integration must resolve lifecycle
+selection and content codes separately (ADR 0063).
+
 ## 2. Data flow
 
 ```
