@@ -1,0 +1,11 @@
+{
+  "score": 91,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Clear child silhouettes, simple linen folds and subdued natural colours."
+  ],
+  "suggestions": [],
+  "reasoning": "Native1x and nearest2x board inspected. All10 connected figures correctly show S/E facings, hair identity, ancient slit-neck tied tunic and safe spindle task. Both sleep figures match costume; no visible clipping.",
+  "summary_sha256": "069dc12b9936e41ec64ab8f492b32c294063f77140f3b6bd39c3146d80019937"
+}

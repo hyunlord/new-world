@@ -1,0 +1,72 @@
+{
+  "look": "adult_M_bronze_earth_linen_short",
+  "age": "adult",
+  "attempt": 2,
+  "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_M_bronze_earth_linen_short/try2/trial/raw.png",
+  "raw_sha256": "c0dde63fb2f63d1e49bc16ae33e87023516bd5340a0bd163f56a180594fcb3e5",
+  "prompt_sha256": "0d39202904fef1ae11edc1d54cfef1c42059281620182db0bb2b434b64cff693",
+  "facing": "E",
+  "pose": "idle",
+  "check_pose": "idle",
+  "path": "E/idle.png",
+  "sha256": "defe819862b2835765de0ec4accdc4cfd039d0eb8be078dded4cec2a4cff5838",
+  "source_box": [
+    39,
+    522,
+    272,
+    1008
+  ],
+  "normalization": {
+    "scaled_size": [
+      28,
+      59
+    ],
+    "trim_box": [
+      2,
+      2,
+      21,
+      59
+    ],
+    "placement": [
+      30,
+      48
+    ],
+    "resized_to_canvas_offset": [
+      28,
+      46
+    ],
+    "visible_pixels": 793,
+    "rotation_degrees": 0,
+    "scale": 0.12173913043478261,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "passed": true,
+    "findings": [],
+    "coverage": 0.07879464285714285,
+    "component_count": 1,
+    "largest_hole": 0,
+    "contact_ok": true,
+    "sleep_axis_ok": true,
+    "opaque_height": 57,
+    "opaque_width": 19,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+    "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+    "visible_height": 57,
+    "visible_width": 19,
+    "visibility_threshold": 16
+  },
+  "standing_scale": 0.12173913043478261,
+  "sleep_scale": 0.14395886889460155,
+  "anchor": [
+    40,
+    104
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "template_version": 3
+}

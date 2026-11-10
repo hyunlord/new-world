@@ -1,43 +1,43 @@
 {
   "look": "adult_F_bronze_linen_long_tied",
   "age": "adult",
-  "attempt": 1,
-  "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_F_bronze_linen_long_tied/try1/trial/raw.png",
-  "raw_sha256": "8c403cd38c89ddd956348280588a8d0251fb71a2c59caf995f6cb44af33d54c2",
-  "prompt_sha256": "5cd9604d8cc395861feed7f845361c93cf1bfd9cd6d8c4c7a62f23d7edcb2174",
+  "attempt": 2,
+  "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_F_bronze_linen_long_tied/try2/trial/raw.png",
+  "raw_sha256": "b7c93a440943dc98886a13c9ba8dc95bb6b61839fd78056e8760e137ac97f2db",
+  "prompt_sha256": "6154c35669b0ebc71e486ae14f3e4ecf707bc283c67cc2f03aa9040eba787753",
   "facing": "S",
   "pose": "idle",
   "check_pose": "idle",
   "path": "S/idle.png",
-  "sha256": "af7c923d577ec4e0c98123f848ab3f02c8554387b953734abf37e49cdae04299",
+  "sha256": "5601c7dbc7006ddb1700d697b0cf4ab673ee5cc78eb3704dadb2f1291a2d833e",
   "source_box": [
     0,
-    14,
-    271,
-    541
+    21,
+    272,
+    528
   ],
   "normalization": {
     "scaled_size": [
       33,
-      64
+      62
     ],
     "trim_box": [
-      4,
+      6,
       0,
-      25,
-      57
+      26,
+      58
     ],
     "placement": [
-      29,
-      48
+      30,
+      47
     ],
     "resized_to_canvas_offset": [
-      25,
-      48
+      24,
+      47
     ],
-    "visible_pixels": 795,
+    "visible_pixels": 780,
     "rotation_degrees": 0,
-    "scale": 0.1206896551724138,
+    "scale": 0.12173913043478261,
     "discarded_pixels": 0,
     "discarded_max_alpha": 0,
     "visibility_threshold": 16
@@ -45,21 +45,21 @@
   "checks": {
     "passed": true,
     "findings": [],
-    "coverage": 0.07723214285714286,
+    "coverage": 0.07566964285714285,
     "component_count": 1,
     "largest_hole": 0,
     "contact_ok": true,
     "sleep_axis_ok": true,
-    "opaque_height": 57,
-    "opaque_width": 20,
+    "opaque_height": 56,
+    "opaque_width": 18,
     "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
     "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
-    "visible_height": 57,
-    "visible_width": 21,
+    "visible_height": 58,
+    "visible_width": 20,
     "visibility_threshold": 16
   },
-  "standing_scale": 0.1206896551724138,
-  "sleep_scale": 0.1258426966292135,
+  "standing_scale": 0.12173913043478261,
+  "sleep_scale": 0.12933025404157045,
   "anchor": [
     40,
     104

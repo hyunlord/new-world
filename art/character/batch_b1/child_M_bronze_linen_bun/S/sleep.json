@@ -1,0 +1,72 @@
+{
+  "look": "child_M_bronze_linen_bun",
+  "age": "child",
+  "attempt": 2,
+  "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze/child_M_bronze_linen_bun/try2/trial/raw.png",
+  "raw_sha256": "7e6e925d85f67054882a7d64f522daad87d80dfa723fcdafdc5a55e92ef488c0",
+  "prompt_sha256": "41cbb65240abe27500d7bfa3654e677e201b0888a3655bc0546094b21d5c6612",
+  "facing": "S",
+  "pose": "sleep",
+  "check_pose": "sleep",
+  "path": "S/sleep.png",
+  "sha256": "7b35731307d4a3b97e79a8ceed66cf794b6aa0908e8d3a6cafef63ca74bc9ccd",
+  "source_box": [
+    1103,
+    19,
+    1535,
+    590
+  ],
+  "normalization": {
+    "scaled_size": [
+      45,
+      59
+    ],
+    "trim_box": [
+      3,
+      23,
+      44,
+      37
+    ],
+    "placement": [
+      35,
+      59
+    ],
+    "resized_to_canvas_offset": [
+      32,
+      36
+    ],
+    "visible_pixels": 388,
+    "rotation_degrees": 0,
+    "scale": 0.1038961038961039,
+    "discarded_pixels": 79,
+    "discarded_max_alpha": 1,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "passed": true,
+    "findings": [],
+    "coverage": 0.037723214285714284,
+    "component_count": 1,
+    "largest_hole": 0,
+    "contact_ok": true,
+    "sleep_axis_ok": true,
+    "opaque_height": 13,
+    "opaque_width": 40,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+    "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+    "visible_height": 14,
+    "visible_width": 41,
+    "visibility_threshold": 16
+  },
+  "standing_scale": 0.09216589861751152,
+  "sleep_scale": 0.1038961038961039,
+  "anchor": [
+    56,
+    72
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "template_version": 3
+}

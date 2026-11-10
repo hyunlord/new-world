@@ -1,0 +1,745 @@
+{
+  "look": "adult_M_bronze_earth_linen_long_tied",
+  "age": "adult",
+  "attempt": 2,
+  "record_sha256": "51de80a31d7859c6eff594d093b3f281f7ee59a1b366e6f3179905dc950f3ad8",
+  "raw_sha256": "563199ca8efb882ff5261702b7d18453ee03a2279d6bfc31301dd3e7fe41ee92",
+  "prompt_sha256": "a3d042daf6a6f71ddaf76ea0b8cad4c4ffab294efb312ca4cb462bded8334640",
+  "passed": true,
+  "frames": [
+    {
+      "look": "adult_M_bronze_earth_linen_long_tied",
+      "age": "adult",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_M_bronze_earth_linen_long_tied/try2/trial/raw.png",
+      "raw_sha256": "563199ca8efb882ff5261702b7d18453ee03a2279d6bfc31301dd3e7fe41ee92",
+      "prompt_sha256": "a3d042daf6a6f71ddaf76ea0b8cad4c4ffab294efb312ca4cb462bded8334640",
+      "facing": "S",
+      "pose": "idle",
+      "check_pose": "idle",
+      "path": "S/idle.png",
+      "sha256": "f812d1f1f379e363434f2305f355a91248015ef171d2fe2116cd45e6784aeee3",
+      "source_box": [
+        0,
+        23,
+        305,
+        544
+      ],
+      "normalization": {
+        "scaled_size": [
+          38,
+          65
+        ],
+        "trim_box": [
+          8,
+          0,
+          30,
+          57
+        ],
+        "placement": [
+          29,
+          48
+        ],
+        "resized_to_canvas_offset": [
+          21,
+          48
+        ],
+        "visible_pixels": 844,
+        "rotation_degrees": 0,
+        "scale": 0.12556053811659193,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.08270089285714285,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 56,
+        "opaque_width": 22,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 57,
+        "visible_width": 22,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.12556053811659193,
+      "sleep_scale": 0.13559322033898305,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_bronze_earth_linen_long_tied",
+      "age": "adult",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_M_bronze_earth_linen_long_tied/try2/trial/raw.png",
+      "raw_sha256": "563199ca8efb882ff5261702b7d18453ee03a2279d6bfc31301dd3e7fe41ee92",
+      "prompt_sha256": "a3d042daf6a6f71ddaf76ea0b8cad4c4ffab294efb312ca4cb462bded8334640",
+      "facing": "S",
+      "pose": "walk_a",
+      "check_pose": "walk_a",
+      "path": "S/walk_a.png",
+      "sha256": "0042c7228c5d565b05f64ae1507a5f05dd5c1786a642573f479ff14b11eab03d",
+      "source_box": [
+        273,
+        9,
+        564,
+        515
+      ],
+      "normalization": {
+        "scaled_size": [
+          37,
+          64
+        ],
+        "trim_box": [
+          4,
+          2,
+          31,
+          60
+        ],
+        "placement": [
+          26,
+          47
+        ],
+        "resized_to_canvas_offset": [
+          22,
+          45
+        ],
+        "visible_pixels": 816,
+        "rotation_degrees": 0,
+        "scale": 0.12556053811659193,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.07767857142857143,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 56,
+        "opaque_width": 26,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 58,
+        "visible_width": 27,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.12556053811659193,
+      "sleep_scale": 0.13559322033898305,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_bronze_earth_linen_long_tied",
+      "age": "adult",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_M_bronze_earth_linen_long_tied/try2/trial/raw.png",
+      "raw_sha256": "563199ca8efb882ff5261702b7d18453ee03a2279d6bfc31301dd3e7fe41ee92",
+      "prompt_sha256": "a3d042daf6a6f71ddaf76ea0b8cad4c4ffab294efb312ca4cb462bded8334640",
+      "facing": "S",
+      "pose": "work_a",
+      "check_pose": "work_a",
+      "path": "S/work_a.png",
+      "sha256": "0929dd87afa64b8f91e8e8196cd9b9ec7ad1664f58bb231d615d77b3758c5a1e",
+      "source_box": [
+        497,
+        9,
+        852,
+        558
+      ],
+      "normalization": {
+        "scaled_size": [
+          45,
+          69
+        ],
+        "trim_box": [
+          6,
+          4,
+          41,
+          59
+        ],
+        "placement": [
+          22,
+          50
+        ],
+        "resized_to_canvas_offset": [
+          16,
+          46
+        ],
+        "visible_pixels": 947,
+        "rotation_degrees": 0,
+        "scale": 0.12556053811659193,
+        "discarded_pixels": 3,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.09520089285714285,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 54,
+        "opaque_width": 34,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 55,
+        "visible_width": 35,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.12556053811659193,
+      "sleep_scale": 0.13559322033898305,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_bronze_earth_linen_long_tied",
+      "age": "adult",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_M_bronze_earth_linen_long_tied/try2/trial/raw.png",
+      "raw_sha256": "563199ca8efb882ff5261702b7d18453ee03a2279d6bfc31301dd3e7fe41ee92",
+      "prompt_sha256": "a3d042daf6a6f71ddaf76ea0b8cad4c4ffab294efb312ca4cb462bded8334640",
+      "facing": "S",
+      "pose": "carry",
+      "check_pose": "carry",
+      "path": "S/carry.png",
+      "sha256": "f4a8321980aac2ecf876f4c1eaaa955bc28acef1b3896d14485fe21e329d31e0",
+      "source_box": [
+        824,
+        5,
+        1286,
+        540
+      ],
+      "normalization": {
+        "scaled_size": [
+          58,
+          67
+        ],
+        "trim_box": [
+          6,
+          3,
+          30,
+          59
+        ],
+        "placement": [
+          28,
+          49
+        ],
+        "resized_to_canvas_offset": [
+          22,
+          46
+        ],
+        "visible_pixels": 827,
+        "rotation_degrees": 0,
+        "scale": 0.12556053811659193,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.08180803571428572,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 54,
+        "opaque_width": 24,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 56,
+        "visible_width": 24,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.12556053811659193,
+      "sleep_scale": 0.13559322033898305,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_bronze_earth_linen_long_tied",
+      "age": "adult",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_M_bronze_earth_linen_long_tied/try2/trial/raw.png",
+      "raw_sha256": "563199ca8efb882ff5261702b7d18453ee03a2279d6bfc31301dd3e7fe41ee92",
+      "prompt_sha256": "a3d042daf6a6f71ddaf76ea0b8cad4c4ffab294efb312ca4cb462bded8334640",
+      "facing": "S",
+      "pose": "sleep",
+      "check_pose": "sleep",
+      "path": "S/sleep.png",
+      "sha256": "260502b3a059c6234c577b7fb0e869a7ddcdd90289652386736d6e4ab9f1ed78",
+      "source_box": [
+        1059,
+        17,
+        1533,
+        615
+      ],
+      "normalization": {
+        "scaled_size": [
+          64,
+          81
+        ],
+        "trim_box": [
+          5,
+          36,
+          62,
+          53
+        ],
+        "placement": [
+          27,
+          56
+        ],
+        "resized_to_canvas_offset": [
+          22,
+          20
+        ],
+        "visible_pixels": 711,
+        "rotation_degrees": 0,
+        "scale": 0.13559322033898305,
+        "discarded_pixels": 35,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.07131696428571428,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 15,
+        "opaque_width": 55,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 17,
+        "visible_width": 57,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.12556053811659193,
+      "sleep_scale": 0.13559322033898305,
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_bronze_earth_linen_long_tied",
+      "age": "adult",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_M_bronze_earth_linen_long_tied/try2/trial/raw.png",
+      "raw_sha256": "563199ca8efb882ff5261702b7d18453ee03a2279d6bfc31301dd3e7fe41ee92",
+      "prompt_sha256": "a3d042daf6a6f71ddaf76ea0b8cad4c4ffab294efb312ca4cb462bded8334640",
+      "facing": "E",
+      "pose": "idle",
+      "check_pose": "idle",
+      "path": "E/idle.png",
+      "sha256": "029b66113546582710e3c907a4b0deae1942346dae1047f4720e4757c473f05b",
+      "source_box": [
+        0,
+        498,
+        290,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          36,
+          66
+        ],
+        "trim_box": [
+          9,
+          5,
+          29,
+          63
+        ],
+        "placement": [
+          30,
+          47
+        ],
+        "resized_to_canvas_offset": [
+          21,
+          42
+        ],
+        "visible_pixels": 797,
+        "rotation_degrees": 0,
+        "scale": 0.12556053811659193,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.07723214285714286,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 57,
+        "opaque_width": 19,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 58,
+        "visible_width": 20,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.12556053811659193,
+      "sleep_scale": 0.13559322033898305,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_bronze_earth_linen_long_tied",
+      "age": "adult",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_M_bronze_earth_linen_long_tied/try2/trial/raw.png",
+      "raw_sha256": "563199ca8efb882ff5261702b7d18453ee03a2279d6bfc31301dd3e7fe41ee92",
+      "prompt_sha256": "a3d042daf6a6f71ddaf76ea0b8cad4c4ffab294efb312ca4cb462bded8334640",
+      "facing": "E",
+      "pose": "walk_a",
+      "check_pose": "walk_a",
+      "path": "E/walk_a.png",
+      "sha256": "2c487cb9cc101f149d04d1e524bd654687792ac8856040700000f5e79cc0588f",
+      "source_box": [
+        243,
+        507,
+        562,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          40,
+          65
+        ],
+        "trim_box": [
+          6,
+          4,
+          34,
+          61
+        ],
+        "placement": [
+          26,
+          48
+        ],
+        "resized_to_canvas_offset": [
+          20,
+          44
+        ],
+        "visible_pixels": 792,
+        "rotation_degrees": 0,
+        "scale": 0.12556053811659193,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.07678571428571429,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 56,
+        "opaque_width": 27,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 57,
+        "visible_width": 28,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.12556053811659193,
+      "sleep_scale": 0.13559322033898305,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_bronze_earth_linen_long_tied",
+      "age": "adult",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_M_bronze_earth_linen_long_tied/try2/trial/raw.png",
+      "raw_sha256": "563199ca8efb882ff5261702b7d18453ee03a2279d6bfc31301dd3e7fe41ee92",
+      "prompt_sha256": "a3d042daf6a6f71ddaf76ea0b8cad4c4ffab294efb312ca4cb462bded8334640",
+      "facing": "E",
+      "pose": "work_a",
+      "check_pose": "work_a",
+      "path": "E/work_a.png",
+      "sha256": "751f018e797b30c97f91328e376cf87c9e8c429784917df745dc1ad9a1155485",
+      "source_box": [
+        513,
+        493,
+        862,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          44,
+          67
+        ],
+        "trim_box": [
+          4,
+          7,
+          41,
+          64
+        ],
+        "placement": [
+          21,
+          48
+        ],
+        "resized_to_canvas_offset": [
+          17,
+          41
+        ],
+        "visible_pixels": 947,
+        "rotation_degrees": 0,
+        "scale": 0.12556053811659193,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.09241071428571429,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 56,
+        "opaque_width": 35,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 57,
+        "visible_width": 37,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.12556053811659193,
+      "sleep_scale": 0.13559322033898305,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_bronze_earth_linen_long_tied",
+      "age": "adult",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_M_bronze_earth_linen_long_tied/try2/trial/raw.png",
+      "raw_sha256": "563199ca8efb882ff5261702b7d18453ee03a2279d6bfc31301dd3e7fe41ee92",
+      "prompt_sha256": "a3d042daf6a6f71ddaf76ea0b8cad4c4ffab294efb312ca4cb462bded8334640",
+      "facing": "E",
+      "pose": "carry",
+      "check_pose": "carry",
+      "path": "E/carry.png",
+      "sha256": "9b7010408b84f79202fbe15c506261513fd94ec220fda84e39c364ec7290e29b",
+      "source_box": [
+        820,
+        497,
+        1234,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          52,
+          66
+        ],
+        "trim_box": [
+          7,
+          5,
+          30,
+          63
+        ],
+        "placement": [
+          28,
+          47
+        ],
+        "resized_to_canvas_offset": [
+          21,
+          42
+        ],
+        "visible_pixels": 833,
+        "rotation_degrees": 0,
+        "scale": 0.12556053811659193,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.08136160714285715,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 56,
+        "opaque_width": 22,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 58,
+        "visible_width": 23,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.12556053811659193,
+      "sleep_scale": 0.13559322033898305,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_bronze_earth_linen_long_tied",
+      "age": "adult",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_M_bronze_earth_linen_long_tied/try2/trial/raw.png",
+      "raw_sha256": "563199ca8efb882ff5261702b7d18453ee03a2279d6bfc31301dd3e7fe41ee92",
+      "prompt_sha256": "a3d042daf6a6f71ddaf76ea0b8cad4c4ffab294efb312ca4cb462bded8334640",
+      "facing": "E",
+      "pose": "sleep",
+      "check_pose": "sleep",
+      "path": "E/sleep.png",
+      "sha256": "15f257fbe261d0744c80aa38962907871b7722644311d7f6b010a664906c41c2",
+      "source_box": [
+        1057,
+        598,
+        1536,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          65,
+          58
+        ],
+        "trim_box": [
+          6,
+          27,
+          63,
+          44
+        ],
+        "placement": [
+          27,
+          56
+        ],
+        "resized_to_canvas_offset": [
+          21,
+          29
+        ],
+        "visible_pixels": 726,
+        "rotation_degrees": 0,
+        "scale": 0.13559322033898305,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.0734375,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 16,
+        "opaque_width": 56,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 17,
+        "visible_width": 57,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.12556053811659193,
+      "sleep_scale": 0.13559322033898305,
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    }
+  ],
+  "error": null,
+  "layout": "wardrobe",
+  "frame_ids": [
+    "idle",
+    "walk_a",
+    "work_a",
+    "carry",
+    "sleep"
+  ],
+  "template_version": 3,
+  "numeric_pass": false,
+  "numeric_passing_panels": 0,
+  "numeric_model_status": "MISSING",
+  "numeric_report_sha256": "d577eb7accdca08952c2021efc9748b88d74e30c98c2feec37c423053625e043"
+}

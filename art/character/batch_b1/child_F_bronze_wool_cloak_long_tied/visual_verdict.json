@@ -1,0 +1,11 @@
+{
+  "score": 93,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Self-review improves long tied hair silhouette behind neck while retaining restrained ink and clothing identity."
+  ],
+  "suggestions": [],
+  "reasoning": "Inspected native1x and nearest2x board. All ten figures preserve clothing, hairstyle and identity across S/E facings. Work/carry loads connected; both sleeping figures complete; no visible clipping or modern elements.",
+  "summary_sha256": "05a2107f34218763cbd0dde8d6086b581892b5ad68fea65dccda43c46c577652"
+}

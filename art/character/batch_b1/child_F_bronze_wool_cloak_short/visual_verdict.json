@@ -1,0 +1,11 @@
+{
+  "score": 91,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Natural proportions, restrained ink contours and simple ancient cloth; poses legible at native scale."
+  ],
+  "suggestions": [],
+  "reasoning": "Inspected native1x and nearest2x board. All ten figures preserve clothing, hairstyle and identity across S/E facings. Work/carry loads connected; both sleeping figures complete; no visible clipping or modern elements.",
+  "summary_sha256": "b48383387fd043a9c1fdf615e85ba0d54af0d3fe1dd3b1993eeb23c03491ed51"
+}

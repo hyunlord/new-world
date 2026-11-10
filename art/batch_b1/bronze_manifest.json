@@ -1,0 +1,451 @@
+{
+  "scope": "bronze wardrobes; earth portraits pending",
+  "body_looks": 36,
+  "body_frames": 360,
+  "self_review": {
+    "pool": 36,
+    "regenerated": 4,
+    "fraction": 0.1111111111111111,
+    "replaced": 3,
+    "retained_original": 1
+  },
+  "portrait_manifest_refs": [
+    "art/batch_b1/bronze_linen_portraits_manifest.json",
+    "art/batch_b1/bronze_cloak_portraits_manifest.json"
+  ],
+  "tops": {
+    "bronze_linen": {
+      "generated_sheets": 18,
+      "adopted_sheets": 12,
+      "rejected_sheets": 4,
+      "superseded_passing_sheets": 2,
+      "failed_calls": 0,
+      "final_frames": 120,
+      "max_attempt": 2
+    },
+    "bronze_wool_cloak": {
+      "generated_sheets": 16,
+      "adopted_sheets": 12,
+      "rejected_sheets": 3,
+      "superseded_passing_sheets": 1,
+      "failed_calls": 0,
+      "final_frames": 120,
+      "max_attempt": 3
+    },
+    "bronze_earth_linen": {
+      "generated_sheets": 15,
+      "adopted_sheets": 12,
+      "rejected_sheets": 3,
+      "superseded_passing_sheets": 0,
+      "failed_calls": 0,
+      "final_frames": 120,
+      "max_attempt": 2
+    }
+  },
+  "looks": [
+    {
+      "look": "adult_F_bronze_linen_bun",
+      "attempt": 1,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": false,
+      "numeric_passing_panels": 8,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_F_bronze_linen_bun/try1/trial"
+    },
+    {
+      "look": "adult_F_bronze_linen_long_tied",
+      "attempt": 2,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 93,
+      "numeric_pass": false,
+      "numeric_passing_panels": 5,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_F_bronze_linen_long_tied/try2/trial"
+    },
+    {
+      "look": "adult_F_bronze_linen_short",
+      "attempt": 2,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": false,
+      "numeric_passing_panels": 2,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_F_bronze_linen_short/try2/trial"
+    },
+    {
+      "look": "adult_M_bronze_linen_bun",
+      "attempt": 1,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": false,
+      "numeric_passing_panels": 3,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_M_bronze_linen_bun/try1/trial"
+    },
+    {
+      "look": "adult_M_bronze_linen_long_tied",
+      "attempt": 1,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": false,
+      "numeric_passing_panels": 8,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_M_bronze_linen_long_tied/try1/trial"
+    },
+    {
+      "look": "adult_M_bronze_linen_short",
+      "attempt": 2,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": true,
+      "numeric_passing_panels": 10,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_M_bronze_linen_short/try2/trial"
+    },
+    {
+      "look": "child_F_bronze_linen_bun",
+      "attempt": 1,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": false,
+      "numeric_passing_panels": 8,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/child_F_bronze_linen_bun/try1/trial"
+    },
+    {
+      "look": "child_F_bronze_linen_long_tied",
+      "attempt": 1,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": true,
+      "numeric_passing_panels": 10,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/child_F_bronze_linen_long_tied/try1/trial"
+    },
+    {
+      "look": "child_F_bronze_linen_short",
+      "attempt": 1,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": true,
+      "numeric_passing_panels": 10,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/child_F_bronze_linen_short/try1/trial"
+    },
+    {
+      "look": "child_M_bronze_linen_bun",
+      "attempt": 2,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": true,
+      "numeric_passing_panels": 10,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/child_M_bronze_linen_bun/try2/trial"
+    },
+    {
+      "look": "child_M_bronze_linen_long_tied",
+      "attempt": 2,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 93,
+      "numeric_pass": false,
+      "numeric_passing_panels": 9,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/child_M_bronze_linen_long_tied/try2/trial"
+    },
+    {
+      "look": "child_M_bronze_linen_short",
+      "attempt": 2,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": true,
+      "numeric_passing_panels": 10,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/child_M_bronze_linen_short/try2/trial"
+    },
+    {
+      "look": "adult_F_bronze_wool_cloak_bun",
+      "attempt": 3,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": false,
+      "numeric_passing_panels": 4,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_F_bronze_wool_cloak_bun/try3/trial"
+    },
+    {
+      "look": "adult_F_bronze_wool_cloak_long_tied",
+      "attempt": 1,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": false,
+      "numeric_passing_panels": 2,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_F_bronze_wool_cloak_long_tied/try1/trial"
+    },
+    {
+      "look": "adult_F_bronze_wool_cloak_short",
+      "attempt": 1,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": false,
+      "numeric_passing_panels": 0,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_F_bronze_wool_cloak_short/try1/trial"
+    },
+    {
+      "look": "adult_M_bronze_wool_cloak_bun",
+      "attempt": 1,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": false,
+      "numeric_passing_panels": 0,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_M_bronze_wool_cloak_bun/try1/trial"
+    },
+    {
+      "look": "adult_M_bronze_wool_cloak_long_tied",
+      "attempt": 1,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": false,
+      "numeric_passing_panels": 5,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_M_bronze_wool_cloak_long_tied/try1/trial"
+    },
+    {
+      "look": "adult_M_bronze_wool_cloak_short",
+      "attempt": 1,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": false,
+      "numeric_passing_panels": 8,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_M_bronze_wool_cloak_short/try1/trial"
+    },
+    {
+      "look": "child_F_bronze_wool_cloak_bun",
+      "attempt": 2,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": false,
+      "numeric_passing_panels": 0,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/child_F_bronze_wool_cloak_bun/try2/trial"
+    },
+    {
+      "look": "child_F_bronze_wool_cloak_long_tied",
+      "attempt": 2,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 93,
+      "numeric_pass": false,
+      "numeric_passing_panels": 2,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/child_F_bronze_wool_cloak_long_tied/try2/trial"
+    },
+    {
+      "look": "child_F_bronze_wool_cloak_short",
+      "attempt": 1,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": false,
+      "numeric_passing_panels": 8,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/child_F_bronze_wool_cloak_short/try1/trial"
+    },
+    {
+      "look": "child_M_bronze_wool_cloak_bun",
+      "attempt": 1,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": false,
+      "numeric_passing_panels": 2,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/child_M_bronze_wool_cloak_bun/try1/trial"
+    },
+    {
+      "look": "child_M_bronze_wool_cloak_long_tied",
+      "attempt": 1,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": false,
+      "numeric_passing_panels": 5,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/child_M_bronze_wool_cloak_long_tied/try1/trial"
+    },
+    {
+      "look": "child_M_bronze_wool_cloak_short",
+      "attempt": 1,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": false,
+      "numeric_passing_panels": 7,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/child_M_bronze_wool_cloak_short/try1/trial"
+    },
+    {
+      "look": "adult_F_bronze_earth_linen_bun",
+      "attempt": 1,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": false,
+      "numeric_passing_panels": 0,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_F_bronze_earth_linen_bun/try1/trial"
+    },
+    {
+      "look": "adult_F_bronze_earth_linen_long_tied",
+      "attempt": 1,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": false,
+      "numeric_passing_panels": 0,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_F_bronze_earth_linen_long_tied/try1/trial"
+    },
+    {
+      "look": "adult_F_bronze_earth_linen_short",
+      "attempt": 1,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": false,
+      "numeric_passing_panels": 0,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_F_bronze_earth_linen_short/try1/trial"
+    },
+    {
+      "look": "adult_M_bronze_earth_linen_bun",
+      "attempt": 1,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": false,
+      "numeric_passing_panels": 0,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_M_bronze_earth_linen_bun/try1/trial"
+    },
+    {
+      "look": "adult_M_bronze_earth_linen_long_tied",
+      "attempt": 2,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": false,
+      "numeric_passing_panels": 0,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_M_bronze_earth_linen_long_tied/try2/trial"
+    },
+    {
+      "look": "adult_M_bronze_earth_linen_short",
+      "attempt": 2,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": false,
+      "numeric_passing_panels": 2,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/adult_M_bronze_earth_linen_short/try2/trial"
+    },
+    {
+      "look": "child_F_bronze_earth_linen_bun",
+      "attempt": 1,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": false,
+      "numeric_passing_panels": 1,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/child_F_bronze_earth_linen_bun/try1/trial"
+    },
+    {
+      "look": "child_F_bronze_earth_linen_long_tied",
+      "attempt": 1,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": false,
+      "numeric_passing_panels": 2,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/child_F_bronze_earth_linen_long_tied/try1/trial"
+    },
+    {
+      "look": "child_F_bronze_earth_linen_short",
+      "attempt": 1,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": false,
+      "numeric_passing_panels": 3,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/child_F_bronze_earth_linen_short/try1/trial"
+    },
+    {
+      "look": "child_M_bronze_earth_linen_bun",
+      "attempt": 1,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": false,
+      "numeric_passing_panels": 6,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/child_M_bronze_earth_linen_bun/try1/trial"
+    },
+    {
+      "look": "child_M_bronze_earth_linen_long_tied",
+      "attempt": 1,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": false,
+      "numeric_passing_panels": 6,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/child_M_bronze_earth_linen_long_tied/try1/trial"
+    },
+    {
+      "look": "child_M_bronze_earth_linen_short",
+      "attempt": 1,
+      "frames": 10,
+      "structural_pass": true,
+      "visual_score": 91,
+      "numeric_pass": false,
+      "numeric_passing_panels": 0,
+      "numeric_model_status": "MISSING",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/bronze/child_M_bronze_earth_linen_short/try1/trial"
+    }
+  ],
+  "counts": {
+    "generated_sheets": 49,
+    "adopted_sheets": 36,
+    "rejected_sheets": 10,
+    "superseded_passing_sheets": 3,
+    "failed_calls": 0,
+    "final_frames": 360
+  }
+}

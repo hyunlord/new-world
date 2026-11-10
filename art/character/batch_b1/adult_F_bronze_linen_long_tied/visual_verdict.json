@@ -1,11 +1,11 @@
 {
-  "score": 91,
+  "score": 93,
   "verdict": "pass",
   "category_match": true,
   "differences": [
-    "Restrained linen folds and warm bronze edges read clearly at native size; narrow natural proportions remain coherent with I-1."
+    "Self-review improves long tied hair silhouette behind neck while retaining restrained ink and clothing identity."
   ],
   "suggestions": [],
-  "reasoning": "Viewed native 1x and nearest 2x contact board. Both facings and all five poses preserve person, hair and ancient cream linen costume. Connected tools and load are legible, no visible clipping, matching common standing scale.",
-  "summary_sha256": "a34ec0ee80fff4d1efab6e87b6afbdde5509d1dac907b805cfec6a034bd5e635"
+  "reasoning": "Inspected native1x and nearest2x board. All ten figures preserve clothing, hairstyle and identity across S/E facings. Work/carry loads connected; both sleeping figures complete; no visible clipping or modern elements.",
+  "summary_sha256": "4cb9d3858bb1e17f7103609cd08bf2c24e841212e0eb94c903633ee58aa6042d"
 }

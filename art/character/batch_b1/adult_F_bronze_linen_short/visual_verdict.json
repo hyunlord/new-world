@@ -1,0 +1,11 @@
+{
+  "score": 91,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Linen fabric subdued at native size; bronze axe and grain bag remain readable."
+  ],
+  "suggestions": [],
+  "reasoning": "Viewed native1x and nearest2x review. All ten frames preserve clothing and hairstyle, both facings legible, work and carry objects connected. Natural child/adult proportions fit style; no clipping.",
+  "summary_sha256": "b147ec1ef76f63d910a7768d65f99d216897990aff38e3350ebf7f13677471da"
+}

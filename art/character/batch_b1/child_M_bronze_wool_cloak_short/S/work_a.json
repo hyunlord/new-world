@@ -1,0 +1,72 @@
+{
+  "look": "child_M_bronze_wool_cloak_short",
+  "age": "child",
+  "attempt": 1,
+  "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze/child_M_bronze_wool_cloak_short/try1/trial/raw.png",
+  "raw_sha256": "9aa576ba7a34f852a824ed5a502ac76b1235d8ee4e52998b5b8ee8f8b44547af",
+  "prompt_sha256": "27cb01a44ee3e35c47e35e01550426d32ad40edccdfdea64924158fc36737d9e",
+  "facing": "S",
+  "pose": "work_a",
+  "check_pose": "work_a",
+  "path": "S/work_a.png",
+  "sha256": "599777b06eebfbb3b6ba62a7741eb26a166c65950f6f028994c6199ec06dfb0d",
+  "source_box": [
+    519,
+    17,
+    814,
+    522
+  ],
+  "normalization": {
+    "scaled_size": [
+      27,
+      46
+    ],
+    "trim_box": [
+      4,
+      0,
+      23,
+      42
+    ],
+    "placement": [
+      30,
+      63
+    ],
+    "resized_to_canvas_offset": [
+      26,
+      63
+    ],
+    "visible_pixels": 523,
+    "rotation_degrees": 0,
+    "scale": 0.09049773755656108,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "passed": true,
+    "findings": [],
+    "coverage": 0.05089285714285714,
+    "component_count": 1,
+    "largest_hole": 0,
+    "contact_ok": true,
+    "sleep_axis_ok": true,
+    "opaque_height": 40,
+    "opaque_width": 18,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+    "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+    "visible_height": 42,
+    "visible_width": 19,
+    "visibility_threshold": 16
+  },
+  "standing_scale": 0.09049773755656108,
+  "sleep_scale": 0.0936768149882904,
+  "anchor": [
+    40,
+    104
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "template_version": 3
+}
