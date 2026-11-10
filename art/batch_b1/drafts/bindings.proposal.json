@@ -1,0 +1,87 @@
+{
+  "status": "PROPOSAL_NOT_RUNTIME_ACTIVATION",
+  "reference_game_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+  "people": {
+    "about": "Look ids and variant pools come from manifest.json and people/face_variants.json; the bridge sends look_ids (index into manifest.looks) and variants (0-5).",
+    "pose_for_state": {
+      "sleep": "sleep",
+      "carry": "carry",
+      "work": "work_a",
+      "walk": "walk_a",
+      "idle": "idle"
+    },
+    "older_age_band": "older",
+    "grey_hair_rgb": [
+      160,
+      155,
+      140
+    ]
+  },
+  "tool_state_selector_proposal": {
+    "status": "pending_runtime_selector",
+    "catalog": "art/batch_b1/tools_manifest.json",
+    "source": "art/character/batch_b1_tools/{look}/{facing}/{tool_state}.png",
+    "fallback": "Retain people.pose_for_state until a job/tool selector is implemented.",
+    "job_code_mapping": null,
+    "era_rule": "Use per-activity era overrides: wooden_bow is neolithic even in paleo_food."
+  },
+  "top_code_mapping_proposal": {
+    "status": "pending_review_no_new_simulation_codes",
+    "reference": "rust/crates/sim-bridge/data/appearance.ron",
+    "current_bridge_top_codes": {
+      "0": 0,
+      "1": 1,
+      "2": 2,
+      "3": 1,
+      "4": 1,
+      "5": 1,
+      "6": 1
+    },
+    "current_items": {
+      "0": "loincloth",
+      "1": "hide_wrap",
+      "2": "fur_cloak",
+      "3": "linen_tunic",
+      "4": "linen_wrap",
+      "5": "dyed_tunic",
+      "6": "leather_armor"
+    },
+    "candidate_tops": [
+      {
+        "id": "neo_plant",
+        "grid_index": 3,
+        "simulation_code": null
+      },
+      {
+        "id": "neo_first_wool",
+        "grid_index": 4,
+        "simulation_code": null
+      },
+      {
+        "id": "bronze_linen",
+        "grid_index": 5,
+        "simulation_code": null
+      },
+      {
+        "id": "bronze_wool_cloak",
+        "grid_index": 6,
+        "simulation_code": null
+      },
+      {
+        "id": "bronze_earth_linen",
+        "grid_index": 7,
+        "simulation_code": null
+      },
+      {
+        "id": "iron_work",
+        "grid_index": 8,
+        "simulation_code": null
+      },
+      {
+        "id": "iron_winter",
+        "grid_index": 9,
+        "simulation_code": null
+      }
+    ]
+  }
+}

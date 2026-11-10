@@ -1,0 +1,223 @@
+{
+  "people": {
+    "looks": [
+      "child_M_loincloth_short",
+      "child_M_loincloth_long_tied",
+      "child_M_loincloth_bun",
+      "child_M_hide_wrap_short",
+      "child_M_hide_wrap_long_tied",
+      "child_M_hide_wrap_bun",
+      "child_M_fur_cloak_short",
+      "child_M_fur_cloak_long_tied",
+      "child_M_fur_cloak_bun",
+      "child_M_neo_plant_short",
+      "child_M_neo_plant_long_tied",
+      "child_M_neo_plant_bun",
+      "child_M_neo_first_wool_short",
+      "child_M_neo_first_wool_long_tied",
+      "child_M_neo_first_wool_bun",
+      "child_M_bronze_linen_short",
+      "child_M_bronze_linen_long_tied",
+      "child_M_bronze_linen_bun",
+      "child_M_bronze_wool_cloak_short",
+      "child_M_bronze_wool_cloak_long_tied",
+      "child_M_bronze_wool_cloak_bun",
+      "child_M_bronze_earth_linen_short",
+      "child_M_bronze_earth_linen_long_tied",
+      "child_M_bronze_earth_linen_bun",
+      "child_M_iron_work_short",
+      "child_M_iron_work_long_tied",
+      "child_M_iron_work_bun",
+      "child_M_iron_winter_short",
+      "child_M_iron_winter_long_tied",
+      "child_M_iron_winter_bun",
+      "child_F_loincloth_short",
+      "child_F_loincloth_long_tied",
+      "child_F_loincloth_bun",
+      "child_F_hide_wrap_short",
+      "child_F_hide_wrap_long_tied",
+      "child_F_hide_wrap_bun",
+      "child_F_fur_cloak_short",
+      "child_F_fur_cloak_long_tied",
+      "child_F_fur_cloak_bun",
+      "child_F_neo_plant_short",
+      "child_F_neo_plant_long_tied",
+      "child_F_neo_plant_bun",
+      "child_F_neo_first_wool_short",
+      "child_F_neo_first_wool_long_tied",
+      "child_F_neo_first_wool_bun",
+      "child_F_bronze_linen_short",
+      "child_F_bronze_linen_long_tied",
+      "child_F_bronze_linen_bun",
+      "child_F_bronze_wool_cloak_short",
+      "child_F_bronze_wool_cloak_long_tied",
+      "child_F_bronze_wool_cloak_bun",
+      "child_F_bronze_earth_linen_short",
+      "child_F_bronze_earth_linen_long_tied",
+      "child_F_bronze_earth_linen_bun",
+      "child_F_iron_work_short",
+      "child_F_iron_work_long_tied",
+      "child_F_iron_work_bun",
+      "child_F_iron_winter_short",
+      "child_F_iron_winter_long_tied",
+      "child_F_iron_winter_bun",
+      "adult_M_loincloth_short",
+      "adult_M_loincloth_long_tied",
+      "adult_M_loincloth_bun",
+      "adult_M_hide_wrap_short",
+      "adult_M_hide_wrap_bun",
+      "adult_M_fur_cloak_short",
+      "adult_M_fur_cloak_bun",
+      "adult_M_neo_plant_short",
+      "adult_M_neo_plant_long_tied",
+      "adult_M_neo_plant_bun",
+      "adult_M_neo_first_wool_short",
+      "adult_M_neo_first_wool_long_tied",
+      "adult_M_neo_first_wool_bun",
+      "adult_M_bronze_linen_short",
+      "adult_M_bronze_linen_long_tied",
+      "adult_M_bronze_linen_bun",
+      "adult_M_bronze_wool_cloak_short",
+      "adult_M_bronze_wool_cloak_long_tied",
+      "adult_M_bronze_wool_cloak_bun",
+      "adult_M_bronze_earth_linen_short",
+      "adult_M_bronze_earth_linen_long_tied",
+      "adult_M_bronze_earth_linen_bun",
+      "adult_M_iron_work_short",
+      "adult_M_iron_work_long_tied",
+      "adult_M_iron_work_bun",
+      "adult_M_iron_winter_short",
+      "adult_M_iron_winter_long_tied",
+      "adult_M_iron_winter_bun",
+      "adult_F_loincloth_short",
+      "adult_F_loincloth_long_tied",
+      "adult_F_loincloth_bun",
+      "adult_F_hide_wrap_short",
+      "adult_F_hide_wrap_long_tied",
+      "adult_F_hide_wrap_bun",
+      "adult_F_fur_cloak_short",
+      "adult_F_fur_cloak_long_tied",
+      "adult_F_fur_cloak_bun",
+      "adult_F_neo_plant_short",
+      "adult_F_neo_plant_long_tied",
+      "adult_F_neo_plant_bun",
+      "adult_F_neo_first_wool_short",
+      "adult_F_neo_first_wool_long_tied",
+      "adult_F_neo_first_wool_bun",
+      "adult_F_bronze_linen_short",
+      "adult_F_bronze_linen_long_tied",
+      "adult_F_bronze_linen_bun",
+      "adult_F_bronze_wool_cloak_short",
+      "adult_F_bronze_wool_cloak_long_tied",
+      "adult_F_bronze_wool_cloak_bun",
+      "adult_F_bronze_earth_linen_short",
+      "adult_F_bronze_earth_linen_long_tied",
+      "adult_F_bronze_earth_linen_bun",
+      "adult_F_iron_work_short",
+      "adult_F_iron_work_long_tied",
+      "adult_F_iron_work_bun",
+      "adult_F_iron_winter_short",
+      "adult_F_iron_winter_long_tied",
+      "adult_F_iron_winter_bun"
+    ],
+    "facings": [
+      "S",
+      "E"
+    ],
+    "poses": [
+      "idle",
+      "walk_a",
+      "work_a",
+      "carry",
+      "sleep"
+    ],
+    "variants": [
+      "v1",
+      "v2",
+      "v3",
+      "v4",
+      "v5",
+      "v6"
+    ],
+    "frame_source": "art/character/batch_b1/{look}/{facing}/{pose}.png",
+    "frame_dest": "people/frames/{look}/{facing}/{pose}.png",
+    "portrait_source": "art/portrait/batch_b1/{look}/{variant}.png",
+    "portrait_dest": "people/portraits/{look}/{variant}.png",
+    "upright": {
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ]
+    },
+    "sleep": {
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ]
+    },
+    "sleep_poses": [
+      "sleep"
+    ],
+    "data": [
+      {
+        "id": "route_i_manifest",
+        "source": "art/character/route_i/MANIFEST.json",
+        "dest": "people/route_i_manifest.json"
+      },
+      {
+        "id": "face_variants",
+        "source": "art/character/FACE_VARIANTS.json",
+        "dest": "people/face_variants.json"
+      },
+      {
+        "id": "variant_transforms",
+        "source": "art/character/variant_transforms.json",
+        "dest": "people/variant_transforms.json"
+      },
+      {
+        "id": "top_colours",
+        "source": "art/compositor/top_colours.json",
+        "dest": "people/top_colours.json"
+      }
+    ]
+  },
+  "look_grid": {
+    "ages": [
+      "child",
+      "adult"
+    ],
+    "sexes": [
+      "M",
+      "F"
+    ],
+    "tops": [
+      "loincloth",
+      "hide_wrap",
+      "fur_cloak",
+      "neo_plant",
+      "neo_first_wool",
+      "bronze_linen",
+      "bronze_wool_cloak",
+      "bronze_earth_linen",
+      "iron_work",
+      "iron_winter"
+    ],
+    "hairs": [
+      "short",
+      "long_tied",
+      "bun"
+    ],
+    "fallbacks": {
+      "adult_M_fur_cloak_long_tied": "adult_M_fur_cloak_bun",
+      "adult_M_hide_wrap_long_tied": "adult_M_hide_wrap_bun"
+    }
+  }
+}
