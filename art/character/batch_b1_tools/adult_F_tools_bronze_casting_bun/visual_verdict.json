@@ -1,0 +1,11 @@
+{
+  "score": 92,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Source stroke_q90 diagnostic misses in7 panels; at delivery scale the quieter cloth lines remain consistent with RouteI."
+  ],
+  "suggestions": [],
+  "reasoning": "Ten complete figures show wooden casting tongs with clay crucible, cavity mould, red copper hammer, black charcoal basket clearly. No iron or steel; consistent linen and bun across facings.",
+  "summary_sha256": "62cd14ef2c7357ff425b5464edec02e5f589674a962623b8103b04db8cc0ade8"
+}

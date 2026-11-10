@@ -1,0 +1,745 @@
+{
+  "look": "adult_M_tools_bronze_cutters_short",
+  "age": "adult",
+  "attempt": 1,
+  "record_sha256": "a7b08a1f58a96e4f0e9219b14c4cd901ebfca375a9f52108b00b76f683720052",
+  "raw_sha256": "6cca03363f0b7965b9d98b9c82d8434a4260ae1695c566a5ddf0488221cda3fe",
+  "prompt_sha256": "5bb6946cb88b143e184883e3a15e5c9ad0dd16881e3627108d9363b5a9c4e69b",
+  "passed": true,
+  "frames": [
+    {
+      "look": "adult_M_tools_bronze_cutters_short",
+      "age": "adult",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_cutters/try1/processed/raw.png",
+      "raw_sha256": "6cca03363f0b7965b9d98b9c82d8434a4260ae1695c566a5ddf0488221cda3fe",
+      "prompt_sha256": "5bb6946cb88b143e184883e3a15e5c9ad0dd16881e3627108d9363b5a9c4e69b",
+      "facing": "S",
+      "pose": "idle",
+      "check_pose": "idle",
+      "path": "S/idle.png",
+      "sha256": "86a28e47cfbcde69fa30032559630719564c39f56905a9ce9170a8ec12fa900b",
+      "source_box": [
+        0,
+        0,
+        310,
+        551
+      ],
+      "normalization": {
+        "scaled_size": [
+          36,
+          65
+        ],
+        "trim_box": [
+          5,
+          1,
+          31,
+          58
+        ],
+        "placement": [
+          27,
+          48
+        ],
+        "resized_to_canvas_offset": [
+          22,
+          47
+        ],
+        "visible_pixels": 994,
+        "rotation_degrees": 0,
+        "scale": 0.11715481171548117,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.09944196428571428,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 57,
+        "opaque_width": 26,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 57,
+        "visible_width": 26,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11715481171548117,
+      "sleep_scale": 0.11715481171548117,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_tools_bronze_cutters_short",
+      "age": "adult",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_cutters/try1/processed/raw.png",
+      "raw_sha256": "6cca03363f0b7965b9d98b9c82d8434a4260ae1695c566a5ddf0488221cda3fe",
+      "prompt_sha256": "5bb6946cb88b143e184883e3a15e5c9ad0dd16881e3627108d9363b5a9c4e69b",
+      "facing": "S",
+      "pose": "copper_axe",
+      "check_pose": "work_a",
+      "path": "S/copper_axe.png",
+      "sha256": "5ba926b311558f041d3db2036539574b030ccd7da108cff9575a2913c8d58f36",
+      "source_box": [
+        297,
+        0,
+        614,
+        560
+      ],
+      "normalization": {
+        "scaled_size": [
+          37,
+          66
+        ],
+        "trim_box": [
+          4,
+          1,
+          36,
+          58
+        ],
+        "placement": [
+          24,
+          48
+        ],
+        "resized_to_canvas_offset": [
+          20,
+          47
+        ],
+        "visible_pixels": 1018,
+        "rotation_degrees": 0,
+        "scale": 0.11715481171548117,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.10167410714285714,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 56,
+        "opaque_width": 32,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 57,
+        "visible_width": 32,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11715481171548117,
+      "sleep_scale": 0.11715481171548117,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_tools_bronze_cutters_short",
+      "age": "adult",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_cutters/try1/processed/raw.png",
+      "raw_sha256": "6cca03363f0b7965b9d98b9c82d8434a4260ae1695c566a5ddf0488221cda3fe",
+      "prompt_sha256": "5bb6946cb88b143e184883e3a15e5c9ad0dd16881e3627108d9363b5a9c4e69b",
+      "facing": "S",
+      "pose": "bronze_axe",
+      "check_pose": "work_a",
+      "path": "S/bronze_axe.png",
+      "sha256": "6fd1017a9d69aa295fcbfd06aa8c0af6dc359abaebb1d2aea80f5aae35c48396",
+      "source_box": [
+        593,
+        0,
+        912,
+        542
+      ],
+      "normalization": {
+        "scaled_size": [
+          37,
+          63
+        ],
+        "trim_box": [
+          4,
+          1,
+          36,
+          57
+        ],
+        "placement": [
+          24,
+          49
+        ],
+        "resized_to_canvas_offset": [
+          20,
+          48
+        ],
+        "visible_pixels": 965,
+        "rotation_degrees": 0,
+        "scale": 0.11715481171548117,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.09709821428571429,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 55,
+        "opaque_width": 31,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 56,
+        "visible_width": 32,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11715481171548117,
+      "sleep_scale": 0.11715481171548117,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_tools_bronze_cutters_short",
+      "age": "adult",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_cutters/try1/processed/raw.png",
+      "raw_sha256": "6cca03363f0b7965b9d98b9c82d8434a4260ae1695c566a5ddf0488221cda3fe",
+      "prompt_sha256": "5bb6946cb88b143e184883e3a15e5c9ad0dd16881e3627108d9363b5a9c4e69b",
+      "facing": "S",
+      "pose": "bronze_hoe",
+      "check_pose": "work_a",
+      "path": "S/bronze_hoe.png",
+      "sha256": "85bde1838bb677d21aa2848a7adf3543c3157ee795f728f9d299fe9e3064dcdb",
+      "source_box": [
+        893,
+        0,
+        1230,
+        569
+      ],
+      "normalization": {
+        "scaled_size": [
+          39,
+          67
+        ],
+        "trim_box": [
+          4,
+          1,
+          35,
+          58
+        ],
+        "placement": [
+          24,
+          48
+        ],
+        "resized_to_canvas_offset": [
+          20,
+          47
+        ],
+        "visible_pixels": 987,
+        "rotation_degrees": 0,
+        "scale": 0.11715481171548117,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.09720982142857143,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 55,
+        "opaque_width": 31,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 57,
+        "visible_width": 31,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11715481171548117,
+      "sleep_scale": 0.11715481171548117,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_tools_bronze_cutters_short",
+      "age": "adult",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_cutters/try1/processed/raw.png",
+      "raw_sha256": "6cca03363f0b7965b9d98b9c82d8434a4260ae1695c566a5ddf0488221cda3fe",
+      "prompt_sha256": "5bb6946cb88b143e184883e3a15e5c9ad0dd16881e3627108d9363b5a9c4e69b",
+      "facing": "S",
+      "pose": "bronze_sickle",
+      "check_pose": "work_a",
+      "path": "S/bronze_sickle.png",
+      "sha256": "81f5164df5390c4e97c879d0deb47bed6f2ea1a1a807eb9e7af5ee8c5f8edb33",
+      "source_box": [
+        1193,
+        7,
+        1530,
+        562
+      ],
+      "normalization": {
+        "scaled_size": [
+          39,
+          65
+        ],
+        "trim_box": [
+          7,
+          1,
+          34,
+          57
+        ],
+        "placement": [
+          26,
+          49
+        ],
+        "resized_to_canvas_offset": [
+          19,
+          48
+        ],
+        "visible_pixels": 979,
+        "rotation_degrees": 0,
+        "scale": 0.11715481171548117,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.096875,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 56,
+        "opaque_width": 26,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 56,
+        "visible_width": 27,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11715481171548117,
+      "sleep_scale": 0.11715481171548117,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_tools_bronze_cutters_short",
+      "age": "adult",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_cutters/try1/processed/raw.png",
+      "raw_sha256": "6cca03363f0b7965b9d98b9c82d8434a4260ae1695c566a5ddf0488221cda3fe",
+      "prompt_sha256": "5bb6946cb88b143e184883e3a15e5c9ad0dd16881e3627108d9363b5a9c4e69b",
+      "facing": "E",
+      "pose": "idle",
+      "check_pose": "idle",
+      "path": "E/idle.png",
+      "sha256": "fc10af2dcfaf327555567cfd4d5105089395631c3bdf5739c1e2dfb314c766ba",
+      "source_box": [
+        0,
+        493,
+        300,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          35,
+          62
+        ],
+        "trim_box": [
+          6,
+          3,
+          28,
+          61
+        ],
+        "placement": [
+          29,
+          47
+        ],
+        "resized_to_canvas_offset": [
+          23,
+          44
+        ],
+        "visible_pixels": 874,
+        "rotation_degrees": 0,
+        "scale": 0.11715481171548117,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.08761160714285714,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 57,
+        "opaque_width": 21,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 58,
+        "visible_width": 22,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11715481171548117,
+      "sleep_scale": 0.11715481171548117,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_tools_bronze_cutters_short",
+      "age": "adult",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_cutters/try1/processed/raw.png",
+      "raw_sha256": "6cca03363f0b7965b9d98b9c82d8434a4260ae1695c566a5ddf0488221cda3fe",
+      "prompt_sha256": "5bb6946cb88b143e184883e3a15e5c9ad0dd16881e3627108d9363b5a9c4e69b",
+      "facing": "E",
+      "pose": "copper_axe",
+      "check_pose": "work_a",
+      "path": "E/copper_axe.png",
+      "sha256": "2312851050452b49aa2efede7a2d85e94bbff583dce8020a44030532b3666da5",
+      "source_box": [
+        275,
+        501,
+        626,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          41,
+          61
+        ],
+        "trim_box": [
+          6,
+          2,
+          39,
+          60
+        ],
+        "placement": [
+          23,
+          47
+        ],
+        "resized_to_canvas_offset": [
+          17,
+          45
+        ],
+        "visible_pixels": 957,
+        "rotation_degrees": 0,
+        "scale": 0.11715481171548117,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.09352678571428572,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 57,
+        "opaque_width": 31,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 58,
+        "visible_width": 33,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11715481171548117,
+      "sleep_scale": 0.11715481171548117,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_tools_bronze_cutters_short",
+      "age": "adult",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_cutters/try1/processed/raw.png",
+      "raw_sha256": "6cca03363f0b7965b9d98b9c82d8434a4260ae1695c566a5ddf0488221cda3fe",
+      "prompt_sha256": "5bb6946cb88b143e184883e3a15e5c9ad0dd16881e3627108d9363b5a9c4e69b",
+      "facing": "E",
+      "pose": "bronze_axe",
+      "check_pose": "work_a",
+      "path": "E/bronze_axe.png",
+      "sha256": "d12a2c25ebe8c52737e0c87c7e95d0ef662de17d018812666b775d94c16d3c5d",
+      "source_box": [
+        569,
+        483,
+        918,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          41,
+          63
+        ],
+        "trim_box": [
+          7,
+          4,
+          39,
+          62
+        ],
+        "placement": [
+          24,
+          47
+        ],
+        "resized_to_canvas_offset": [
+          17,
+          43
+        ],
+        "visible_pixels": 952,
+        "rotation_degrees": 0,
+        "scale": 0.11715481171548117,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.09330357142857143,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 57,
+        "opaque_width": 30,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 58,
+        "visible_width": 32,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11715481171548117,
+      "sleep_scale": 0.11715481171548117,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_tools_bronze_cutters_short",
+      "age": "adult",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_cutters/try1/processed/raw.png",
+      "raw_sha256": "6cca03363f0b7965b9d98b9c82d8434a4260ae1695c566a5ddf0488221cda3fe",
+      "prompt_sha256": "5bb6946cb88b143e184883e3a15e5c9ad0dd16881e3627108d9363b5a9c4e69b",
+      "facing": "E",
+      "pose": "bronze_hoe",
+      "check_pose": "work_a",
+      "path": "E/bronze_hoe.png",
+      "sha256": "bf68fca632744f2b95391748a3bc3834f1f24507b5dfd9d8132bee75e1f72362",
+      "source_box": [
+        867,
+        483,
+        1234,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          43,
+          63
+        ],
+        "trim_box": [
+          6,
+          4,
+          40,
+          62
+        ],
+        "placement": [
+          23,
+          47
+        ],
+        "resized_to_canvas_offset": [
+          17,
+          43
+        ],
+        "visible_pixels": 985,
+        "rotation_degrees": 0,
+        "scale": 0.11715481171548117,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.09631696428571429,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 57,
+        "opaque_width": 33,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 58,
+        "visible_width": 34,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11715481171548117,
+      "sleep_scale": 0.11715481171548117,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_tools_bronze_cutters_short",
+      "age": "adult",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_cutters/try1/processed/raw.png",
+      "raw_sha256": "6cca03363f0b7965b9d98b9c82d8434a4260ae1695c566a5ddf0488221cda3fe",
+      "prompt_sha256": "5bb6946cb88b143e184883e3a15e5c9ad0dd16881e3627108d9363b5a9c4e69b",
+      "facing": "E",
+      "pose": "bronze_sickle",
+      "check_pose": "work_a",
+      "path": "E/bronze_sickle.png",
+      "sha256": "d889c8f981a23454e12fa8b3cab58cb54ec6926e41ec9fdeff6614d5a0121586",
+      "source_box": [
+        1191,
+        497,
+        1522,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          39,
+          62
+        ],
+        "trim_box": [
+          9,
+          3,
+          38,
+          61
+        ],
+        "placement": [
+          25,
+          47
+        ],
+        "resized_to_canvas_offset": [
+          16,
+          44
+        ],
+        "visible_pixels": 892,
+        "rotation_degrees": 0,
+        "scale": 0.11715481171548117,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.08928571428571429,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 57,
+        "opaque_width": 28,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 58,
+        "visible_width": 29,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11715481171548117,
+      "sleep_scale": 0.11715481171548117,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    }
+  ],
+  "error": null,
+  "layout": "tools",
+  "frame_ids": [
+    "idle",
+    "copper_axe",
+    "bronze_axe",
+    "bronze_hoe",
+    "bronze_sickle"
+  ],
+  "template_version": 3,
+  "numeric_pass": true,
+  "numeric_passing_panels": 10,
+  "numeric_model_status": "MISSING",
+  "numeric_report_sha256": "8d9a43c5c1391ac0140943ffabbdc81a78419116a99fdd368592a6dbc90b5f97"
+}

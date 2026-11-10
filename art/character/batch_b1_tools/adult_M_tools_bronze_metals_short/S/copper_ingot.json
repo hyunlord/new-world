@@ -1,0 +1,72 @@
+{
+  "look": "adult_M_tools_bronze_metals_short",
+  "age": "adult",
+  "attempt": 1,
+  "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_metals/try1/processed/raw.png",
+  "raw_sha256": "061fa54bff9df9abe8851d3f45144311cab5b507287eba21343ae33342583abd",
+  "prompt_sha256": "45d2c8e08f9d04e92c32a2b8769e70f2b124704ee9bdfad0e71df716ef43b26c",
+  "facing": "S",
+  "pose": "copper_ingot",
+  "check_pose": "work_a",
+  "path": "S/copper_ingot.png",
+  "sha256": "472fd04fa080c97610519e9bc7aa86d0ccbed3e45059f92600c8d3f74b6b9cf4",
+  "source_box": [
+    923,
+    14,
+    1232,
+    556
+  ],
+  "normalization": {
+    "scaled_size": [
+      36,
+      63
+    ],
+    "trim_box": [
+      6,
+      0,
+      31,
+      57
+    ],
+    "placement": [
+      27,
+      48
+    ],
+    "resized_to_canvas_offset": [
+      21,
+      48
+    ],
+    "visible_pixels": 939,
+    "rotation_degrees": 0,
+    "scale": 0.11570247933884298,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "passed": true,
+    "findings": [],
+    "coverage": 0.09408482142857143,
+    "component_count": 1,
+    "largest_hole": 0,
+    "contact_ok": true,
+    "sleep_axis_ok": true,
+    "opaque_height": 56,
+    "opaque_width": 24,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+    "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+    "visible_height": 57,
+    "visible_width": 25,
+    "visibility_threshold": 16
+  },
+  "standing_scale": 0.11570247933884298,
+  "sleep_scale": 0.11570247933884298,
+  "anchor": [
+    40,
+    104
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "template_version": 3
+}

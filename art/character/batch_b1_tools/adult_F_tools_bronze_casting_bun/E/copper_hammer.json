@@ -1,0 +1,72 @@
+{
+  "look": "adult_F_tools_bronze_casting_bun",
+  "age": "adult",
+  "attempt": 1,
+  "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_casting/try1/processed/raw.png",
+  "raw_sha256": "70242a1da9b1ccc734bd0ac3c3889dd057d4087728946082964c80f1f39352a2",
+  "prompt_sha256": "fc0dc86c30bee17ea7a750c6a861c007620147604a3809f4031ad955ecd1d92e",
+  "facing": "E",
+  "pose": "copper_hammer",
+  "check_pose": "work_a",
+  "path": "E/copper_hammer.png",
+  "sha256": "f59b276037a2c3ed0a5f1df8de42aa532e006a4c5d6479239838df6b8f01aeda",
+  "source_box": [
+    881,
+    510,
+    1214,
+    1024
+  ],
+  "normalization": {
+    "scaled_size": [
+      38,
+      58
+    ],
+    "trim_box": [
+      9,
+      1,
+      32,
+      58
+    ],
+    "placement": [
+      28,
+      48
+    ],
+    "resized_to_canvas_offset": [
+      19,
+      47
+    ],
+    "visible_pixels": 808,
+    "rotation_degrees": 0,
+    "scale": 0.11359026369168357,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "passed": true,
+    "findings": [],
+    "coverage": 0.07912946428571428,
+    "component_count": 1,
+    "largest_hole": 0,
+    "contact_ok": true,
+    "sleep_axis_ok": true,
+    "opaque_height": 55,
+    "opaque_width": 22,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+    "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+    "visible_height": 57,
+    "visible_width": 23,
+    "visibility_threshold": 16
+  },
+  "standing_scale": 0.11359026369168357,
+  "sleep_scale": 0.11359026369168357,
+  "anchor": [
+    40,
+    104
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "template_version": 3
+}

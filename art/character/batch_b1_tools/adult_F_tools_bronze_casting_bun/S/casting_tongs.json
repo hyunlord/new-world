@@ -1,0 +1,72 @@
+{
+  "look": "adult_F_tools_bronze_casting_bun",
+  "age": "adult",
+  "attempt": 1,
+  "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_casting/try1/processed/raw.png",
+  "raw_sha256": "70242a1da9b1ccc734bd0ac3c3889dd057d4087728946082964c80f1f39352a2",
+  "prompt_sha256": "fc0dc86c30bee17ea7a750c6a861c007620147604a3809f4031ad955ecd1d92e",
+  "facing": "S",
+  "pose": "casting_tongs",
+  "check_pose": "work_a",
+  "path": "S/casting_tongs.png",
+  "sha256": "f0e743fb70fd01e7cdd91c6ab843a5742d3b02ca6b4f0d9f6fbc9898b8225f51",
+  "source_box": [
+    297,
+    0,
+    632,
+    540
+  ],
+  "normalization": {
+    "scaled_size": [
+      38,
+      61
+    ],
+    "trim_box": [
+      6,
+      1,
+      33,
+      57
+    ],
+    "placement": [
+      26,
+      49
+    ],
+    "resized_to_canvas_offset": [
+      20,
+      48
+    ],
+    "visible_pixels": 907,
+    "rotation_degrees": 0,
+    "scale": 0.11359026369168357,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "passed": true,
+    "findings": [],
+    "coverage": 0.08984375,
+    "component_count": 1,
+    "largest_hole": 0,
+    "contact_ok": true,
+    "sleep_axis_ok": true,
+    "opaque_height": 56,
+    "opaque_width": 26,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+    "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+    "visible_height": 56,
+    "visible_width": 27,
+    "visibility_threshold": 16
+  },
+  "standing_scale": 0.11359026369168357,
+  "sleep_scale": 0.11359026369168357,
+  "anchor": [
+    40,
+    104
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "template_version": 3
+}

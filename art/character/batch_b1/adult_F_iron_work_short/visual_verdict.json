@@ -1,0 +1,11 @@
+{
+  "score": 91,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "The short-haired face reads as a young adult; sex is subtle at native scale."
+  ],
+  "suggestions": [],
+  "reasoning": "Complete female adult work outfit reads consistently in both facings and all five poses; fine line and warm neutral wash match the adopted family at native and 2x. Facial age reads young adult.",
+  "summary_sha256": "838da76ff00d725a9c60ae0a53de995288f45807062d78be4626607374bec2e9"
+}

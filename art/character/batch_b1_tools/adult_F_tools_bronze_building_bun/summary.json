@@ -1,0 +1,745 @@
+{
+  "look": "adult_F_tools_bronze_building_bun",
+  "age": "adult",
+  "attempt": 1,
+  "record_sha256": "ca62b831372e4e1a4fe46bdb0f999b74f2f9394f23b8ee023cadd2467aa4a666",
+  "raw_sha256": "db94c943cfa847910e49e7860270831d63a700aa2685f0ed1e9828e4f8e54ec1",
+  "prompt_sha256": "2a504b416cfca15c6ce57a9d780a247844eba66a78f7c7aa4960b30bfa75c65b",
+  "passed": true,
+  "frames": [
+    {
+      "look": "adult_F_tools_bronze_building_bun",
+      "age": "adult",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_building/try1/processed/raw.png",
+      "raw_sha256": "db94c943cfa847910e49e7860270831d63a700aa2685f0ed1e9828e4f8e54ec1",
+      "prompt_sha256": "2a504b416cfca15c6ce57a9d780a247844eba66a78f7c7aa4960b30bfa75c65b",
+      "facing": "S",
+      "pose": "idle",
+      "check_pose": "idle",
+      "path": "S/idle.png",
+      "sha256": "cceb942eeed0a79a8e3c84814c7312577e14084df199aaa5f5a7414ece07f239",
+      "source_box": [
+        15,
+        0,
+        329,
+        544
+      ],
+      "normalization": {
+        "scaled_size": [
+          37,
+          63
+        ],
+        "trim_box": [
+          5,
+          1,
+          30,
+          57
+        ],
+        "placement": [
+          27,
+          49
+        ],
+        "resized_to_canvas_offset": [
+          22,
+          48
+        ],
+        "visible_pixels": 932,
+        "rotation_degrees": 0,
+        "scale": 0.11642411642411643,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.09308035714285715,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 56,
+        "opaque_width": 24,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 56,
+        "visible_width": 25,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11642411642411643,
+      "sleep_scale": 0.11642411642411643,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_F_tools_bronze_building_bun",
+      "age": "adult",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_building/try1/processed/raw.png",
+      "raw_sha256": "db94c943cfa847910e49e7860270831d63a700aa2685f0ed1e9828e4f8e54ec1",
+      "prompt_sha256": "2a504b416cfca15c6ce57a9d780a247844eba66a78f7c7aa4960b30bfa75c65b",
+      "facing": "S",
+      "pose": "tin_ingot",
+      "check_pose": "work_a",
+      "path": "S/tin_ingot.png",
+      "sha256": "ea5e5adc37185f33bdb81b04f7d3347cdc734489d9c579b2e547a283846a4fc0",
+      "source_box": [
+        308,
+        0,
+        625,
+        532
+      ],
+      "normalization": {
+        "scaled_size": [
+          37,
+          62
+        ],
+        "trim_box": [
+          7,
+          1,
+          31,
+          58
+        ],
+        "placement": [
+          28,
+          48
+        ],
+        "resized_to_canvas_offset": [
+          21,
+          47
+        ],
+        "visible_pixels": 885,
+        "rotation_degrees": 0,
+        "scale": 0.11642411642411643,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.08872767857142858,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 56,
+        "opaque_width": 23,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 57,
+        "visible_width": 24,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11642411642411643,
+      "sleep_scale": 0.11642411642411643,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_F_tools_bronze_building_bun",
+      "age": "adult",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_building/try1/processed/raw.png",
+      "raw_sha256": "db94c943cfa847910e49e7860270831d63a700aa2685f0ed1e9828e4f8e54ec1",
+      "prompt_sha256": "2a504b416cfca15c6ce57a9d780a247844eba66a78f7c7aa4960b30bfa75c65b",
+      "facing": "S",
+      "pose": "brick_hod_full",
+      "check_pose": "work_a",
+      "path": "S/brick_hod_full.png",
+      "sha256": "a4259724752a8712d14a11de01cb8c6b07435bdb3583c9248887f675fa3ff6d8",
+      "source_box": [
+        582,
+        0,
+        949,
+        518
+      ],
+      "normalization": {
+        "scaled_size": [
+          43,
+          60
+        ],
+        "trim_box": [
+          6,
+          1,
+          36,
+          57
+        ],
+        "placement": [
+          25,
+          49
+        ],
+        "resized_to_canvas_offset": [
+          19,
+          48
+        ],
+        "visible_pixels": 1088,
+        "rotation_degrees": 0,
+        "scale": 0.11642411642411643,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.10926339285714286,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 55,
+        "opaque_width": 30,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 56,
+        "visible_width": 30,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11642411642411643,
+      "sleep_scale": 0.11642411642411643,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_F_tools_bronze_building_bun",
+      "age": "adult",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_building/try1/processed/raw.png",
+      "raw_sha256": "db94c943cfa847910e49e7860270831d63a700aa2685f0ed1e9828e4f8e54ec1",
+      "prompt_sha256": "2a504b416cfca15c6ce57a9d780a247844eba66a78f7c7aa4960b30bfa75c65b",
+      "facing": "S",
+      "pose": "brick_hod_empty",
+      "check_pose": "work_a",
+      "path": "S/brick_hod_empty.png",
+      "sha256": "1b1535a3ed8b6516076c65f0a1cb5eac7e62ddf7cadf3e6a6501bd7d6cc6c3c1",
+      "source_box": [
+        898,
+        0,
+        1252,
+        530
+      ],
+      "normalization": {
+        "scaled_size": [
+          41,
+          62
+        ],
+        "trim_box": [
+          5,
+          1,
+          36,
+          58
+        ],
+        "placement": [
+          24,
+          48
+        ],
+        "resized_to_canvas_offset": [
+          19,
+          47
+        ],
+        "visible_pixels": 1094,
+        "rotation_degrees": 0,
+        "scale": 0.11642411642411643,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.10959821428571428,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 56,
+        "opaque_width": 30,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 57,
+        "visible_width": 31,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11642411642411643,
+      "sleep_scale": 0.11642411642411643,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_F_tools_bronze_building_bun",
+      "age": "adult",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_building/try1/processed/raw.png",
+      "raw_sha256": "db94c943cfa847910e49e7860270831d63a700aa2685f0ed1e9828e4f8e54ec1",
+      "prompt_sha256": "2a504b416cfca15c6ce57a9d780a247844eba66a78f7c7aa4960b30bfa75c65b",
+      "facing": "S",
+      "pose": "loom_shuttle",
+      "check_pose": "work_a",
+      "path": "S/loom_shuttle.png",
+      "sha256": "6ce896c61600f3a39489d6d34e605db63ba5ecb7aa5d6911d899b76b095dd0d9",
+      "source_box": [
+        1221,
+        1,
+        1535,
+        541
+      ],
+      "normalization": {
+        "scaled_size": [
+          37,
+          63
+        ],
+        "trim_box": [
+          4,
+          1,
+          32,
+          58
+        ],
+        "placement": [
+          26,
+          48
+        ],
+        "resized_to_canvas_offset": [
+          22,
+          47
+        ],
+        "visible_pixels": 913,
+        "rotation_degrees": 0,
+        "scale": 0.11642411642411643,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.08984375,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 55,
+        "opaque_width": 26,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 57,
+        "visible_width": 28,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11642411642411643,
+      "sleep_scale": 0.11642411642411643,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_F_tools_bronze_building_bun",
+      "age": "adult",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_building/try1/processed/raw.png",
+      "raw_sha256": "db94c943cfa847910e49e7860270831d63a700aa2685f0ed1e9828e4f8e54ec1",
+      "prompt_sha256": "2a504b416cfca15c6ce57a9d780a247844eba66a78f7c7aa4960b30bfa75c65b",
+      "facing": "E",
+      "pose": "idle",
+      "check_pose": "idle",
+      "path": "E/idle.png",
+      "sha256": "23e5cf4c6f2f6752350752dd29fae73e3b94dcd8544ef84ad0d33bc5275cbf95",
+      "source_box": [
+        0,
+        491,
+        324,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          38,
+          62
+        ],
+        "trim_box": [
+          8,
+          4,
+          31,
+          61
+        ],
+        "placement": [
+          28,
+          48
+        ],
+        "resized_to_canvas_offset": [
+          20,
+          44
+        ],
+        "visible_pixels": 911,
+        "rotation_degrees": 0,
+        "scale": 0.11642411642411643,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.09029017857142857,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 56,
+        "opaque_width": 21,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 57,
+        "visible_width": 23,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11642411642411643,
+      "sleep_scale": 0.11642411642411643,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_F_tools_bronze_building_bun",
+      "age": "adult",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_building/try1/processed/raw.png",
+      "raw_sha256": "db94c943cfa847910e49e7860270831d63a700aa2685f0ed1e9828e4f8e54ec1",
+      "prompt_sha256": "2a504b416cfca15c6ce57a9d780a247844eba66a78f7c7aa4960b30bfa75c65b",
+      "facing": "E",
+      "pose": "tin_ingot",
+      "check_pose": "work_a",
+      "path": "E/tin_ingot.png",
+      "sha256": "7006e146f2aaf1221bff8d49b72ee9fc5806993139320cd133d211b8b48bd842",
+      "source_box": [
+        293,
+        495,
+        624,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          39,
+          62
+        ],
+        "trim_box": [
+          9,
+          3,
+          31,
+          61
+        ],
+        "placement": [
+          29,
+          47
+        ],
+        "resized_to_canvas_offset": [
+          20,
+          44
+        ],
+        "visible_pixels": 871,
+        "rotation_degrees": 0,
+        "scale": 0.11642411642411643,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.08705357142857142,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 56,
+        "opaque_width": 21,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 58,
+        "visible_width": 22,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11642411642411643,
+      "sleep_scale": 0.11642411642411643,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_F_tools_bronze_building_bun",
+      "age": "adult",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_building/try1/processed/raw.png",
+      "raw_sha256": "db94c943cfa847910e49e7860270831d63a700aa2685f0ed1e9828e4f8e54ec1",
+      "prompt_sha256": "2a504b416cfca15c6ce57a9d780a247844eba66a78f7c7aa4960b30bfa75c65b",
+      "facing": "E",
+      "pose": "brick_hod_full",
+      "check_pose": "work_a",
+      "path": "E/brick_hod_full.png",
+      "sha256": "627dc8a37790f8ed3f9b68ba7a92da8295e2a66f3a8caa44de798762865c6573",
+      "source_box": [
+        567,
+        473,
+        948,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          44,
+          64
+        ],
+        "trim_box": [
+          7,
+          5,
+          37,
+          63
+        ],
+        "placement": [
+          25,
+          47
+        ],
+        "resized_to_canvas_offset": [
+          18,
+          42
+        ],
+        "visible_pixels": 1062,
+        "rotation_degrees": 0,
+        "scale": 0.11642411642411643,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.10625,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 57,
+        "opaque_width": 29,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 58,
+        "visible_width": 30,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11642411642411643,
+      "sleep_scale": 0.11642411642411643,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_F_tools_bronze_building_bun",
+      "age": "adult",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_building/try1/processed/raw.png",
+      "raw_sha256": "db94c943cfa847910e49e7860270831d63a700aa2685f0ed1e9828e4f8e54ec1",
+      "prompt_sha256": "2a504b416cfca15c6ce57a9d780a247844eba66a78f7c7aa4960b30bfa75c65b",
+      "facing": "E",
+      "pose": "brick_hod_empty",
+      "check_pose": "work_a",
+      "path": "E/brick_hod_empty.png",
+      "sha256": "a70008cd402bed8ead51cdc86fa2728a2570eb2818f9f391c95755df25ce05b9",
+      "source_box": [
+        886,
+        469,
+        1240,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          41,
+          65
+        ],
+        "trim_box": [
+          5,
+          6,
+          35,
+          64
+        ],
+        "placement": [
+          25,
+          47
+        ],
+        "resized_to_canvas_offset": [
+          20,
+          41
+        ],
+        "visible_pixels": 1059,
+        "rotation_degrees": 0,
+        "scale": 0.11642411642411643,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.10725446428571428,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 58,
+        "opaque_width": 29,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 58,
+        "visible_width": 30,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11642411642411643,
+      "sleep_scale": 0.11642411642411643,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_F_tools_bronze_building_bun",
+      "age": "adult",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_building/try1/processed/raw.png",
+      "raw_sha256": "db94c943cfa847910e49e7860270831d63a700aa2685f0ed1e9828e4f8e54ec1",
+      "prompt_sha256": "2a504b416cfca15c6ce57a9d780a247844eba66a78f7c7aa4960b30bfa75c65b",
+      "facing": "E",
+      "pose": "loom_shuttle",
+      "check_pose": "work_a",
+      "path": "E/loom_shuttle.png",
+      "sha256": "a3f9f343ccabc54ba7895c0a9bac0c2b6488f6bc00039cd5efce6c41dd70a788",
+      "source_box": [
+        1213,
+        495,
+        1535,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          37,
+          62
+        ],
+        "trim_box": [
+          6,
+          3,
+          34,
+          61
+        ],
+        "placement": [
+          26,
+          47
+        ],
+        "resized_to_canvas_offset": [
+          20,
+          44
+        ],
+        "visible_pixels": 881,
+        "rotation_degrees": 0,
+        "scale": 0.11642411642411643,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.08660714285714285,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 56,
+        "opaque_width": 26,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 58,
+        "visible_width": 28,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11642411642411643,
+      "sleep_scale": 0.11642411642411643,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    }
+  ],
+  "error": null,
+  "layout": "tools",
+  "frame_ids": [
+    "idle",
+    "tin_ingot",
+    "brick_hod_full",
+    "brick_hod_empty",
+    "loom_shuttle"
+  ],
+  "template_version": 3,
+  "numeric_pass": false,
+  "numeric_passing_panels": 5,
+  "numeric_model_status": "MISSING",
+  "numeric_report_sha256": "9284688681aa20d74733796fb103c9b413fda65c0baf32dbac218b22dee22a7e"
+}

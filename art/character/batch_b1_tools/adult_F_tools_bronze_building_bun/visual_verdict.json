@@ -1,0 +1,12 @@
+{
+  "score": 91,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Tin ingot and shuttle are subtle at native scale; full versus empty hod remains readable.",
+    "Cloth wash slightly busier than the baseline hide reference."
+  ],
+  "suggestions": [],
+  "reasoning": "All ten figures retain warm ink wash, complete connected loads, readable S/E orientation and coherent body scale. Native and 2x review passes.",
+  "summary_sha256": "9613fa060d3f17c0b99be6b75cd55bb3df11dc75b568a7e6334f1cbbacbb9280"
+}

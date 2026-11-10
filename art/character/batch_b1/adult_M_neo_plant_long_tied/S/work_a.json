@@ -1,0 +1,72 @@
+{
+  "look": "adult_M_neo_plant_long_tied",
+  "age": "adult",
+  "attempt": 1,
+  "raw": "/Users/rexxa/work/art-batch/B1/trials/neolithic/adult_M_neo_plant_long_tied/try1/raw.png",
+  "raw_sha256": "84f7d410c723294f313a7f740bd565533d9439407b4c42ecfe121a1de008eed4",
+  "prompt_sha256": "a10d6a0495675204e3608a7e0f62c0cd3ae67803ca8526a599546c4441f71b4c",
+  "facing": "S",
+  "pose": "work_a",
+  "check_pose": "work_a",
+  "path": "S/work_a.png",
+  "sha256": "81d3396ddc541ff5c6330af4b4a4c3d6ef08d2d66b6b2471ac1458cd100e7567",
+  "source_box": [
+    500,
+    0,
+    831,
+    552
+  ],
+  "normalization": {
+    "scaled_size": [
+      39,
+      65
+    ],
+    "trim_box": [
+      7,
+      2,
+      35,
+      57
+    ],
+    "placement": [
+      26,
+      50
+    ],
+    "resized_to_canvas_offset": [
+      19,
+      48
+    ],
+    "visible_pixels": 917,
+    "rotation_degrees": 0,
+    "scale": 0.11839323467230443,
+    "discarded_pixels": 5,
+    "discarded_max_alpha": 3,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "passed": true,
+    "findings": [],
+    "coverage": 0.08883928571428572,
+    "component_count": 1,
+    "largest_hole": 0,
+    "contact_ok": true,
+    "sleep_axis_ok": true,
+    "opaque_height": 54,
+    "opaque_width": 26,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+    "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+    "visible_height": 55,
+    "visible_width": 28,
+    "visibility_threshold": 16
+  },
+  "standing_scale": 0.11839323467230443,
+  "sleep_scale": 0.13365155131264916,
+  "anchor": [
+    40,
+    104
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "template_version": 3
+}
