@@ -1,0 +1,772 @@
+{
+  "jobs": [
+    {
+      "code": 0,
+      "id": "none",
+      "actual_kind": false
+    },
+    {
+      "code": 1,
+      "id": "chop",
+      "actual_kind": true
+    },
+    {
+      "code": 2,
+      "id": "haul",
+      "actual_kind": true
+    },
+    {
+      "code": 3,
+      "id": "deliver",
+      "actual_kind": true
+    },
+    {
+      "code": 4,
+      "id": "build",
+      "actual_kind": true
+    },
+    {
+      "code": 5,
+      "id": "quarry",
+      "actual_kind": true
+    },
+    {
+      "code": 6,
+      "id": "supply",
+      "actual_kind": true
+    },
+    {
+      "code": 7,
+      "id": "craft",
+      "actual_kind": true
+    },
+    {
+      "code": 8,
+      "id": "gather",
+      "actual_kind": true
+    },
+    {
+      "code": 9,
+      "id": "dig",
+      "actual_kind": true
+    },
+    {
+      "code": 10,
+      "id": "deconstruct",
+      "actual_kind": true
+    },
+    {
+      "code": 11,
+      "id": "clear",
+      "actual_kind": true
+    },
+    {
+      "code": 12,
+      "id": "dig_clay",
+      "actual_kind": true
+    },
+    {
+      "code": 13,
+      "id": "teach",
+      "actual_kind": true
+    },
+    {
+      "code": 14,
+      "id": "learn",
+      "actual_kind": true
+    },
+    {
+      "code": 15,
+      "id": "hunt",
+      "actual_kind": true
+    },
+    {
+      "code": 16,
+      "id": "equip",
+      "actual_kind": true
+    },
+    {
+      "code": 17,
+      "id": "trade",
+      "actual_kind": true
+    },
+    {
+      "code": 18,
+      "id": "harvest",
+      "actual_kind": true
+    },
+    {
+      "code": 19,
+      "id": "till_field",
+      "actual_kind": true
+    },
+    {
+      "code": 20,
+      "id": "sow_field",
+      "actual_kind": true
+    },
+    {
+      "code": 21,
+      "id": "tend_field",
+      "actual_kind": true
+    },
+    {
+      "code": 22,
+      "id": "harvest_field",
+      "actual_kind": true
+    },
+    {
+      "code": 23,
+      "id": "capture",
+      "actual_kind": true
+    },
+    {
+      "code": 24,
+      "id": "milk",
+      "actual_kind": true
+    },
+    {
+      "code": 25,
+      "id": "slaughter",
+      "actual_kind": true
+    }
+  ],
+  "alerts": [
+    {
+      "id": "food_low",
+      "severity": "warning",
+      "jump_target": "tile"
+    },
+    {
+      "id": "firewood_low",
+      "severity": "warning",
+      "jump_target": "tile"
+    },
+    {
+      "id": "sleeping_outside",
+      "severity": "warning",
+      "jump_target": "person"
+    },
+    {
+      "id": "stockpile_missing",
+      "severity": "notice",
+      "jump_target": "tile"
+    },
+    {
+      "id": "storehouse_full",
+      "severity": "warning",
+      "jump_target": "room"
+    },
+    {
+      "id": "idle_adults",
+      "severity": "notice",
+      "jump_target": "person"
+    },
+    {
+      "id": "orders_unreachable",
+      "severity": "warning",
+      "jump_target": "tile"
+    },
+    {
+      "id": "knowledge_waiting",
+      "severity": "warning",
+      "jump_target": "technique"
+    },
+    {
+      "id": "technique_at_risk",
+      "severity": "warning",
+      "jump_target": "technique"
+    },
+    {
+      "id": "wolves_approaching",
+      "severity": "danger",
+      "jump_target": "animal"
+    },
+    {
+      "id": "migrants_waiting",
+      "severity": "notice",
+      "jump_target": "migrant"
+    },
+    {
+      "id": "trader_present",
+      "severity": "notice",
+      "jump_target": "trader"
+    },
+    {
+      "id": "person_sick",
+      "severity": "warning",
+      "jump_target": "person"
+    },
+    {
+      "id": "person_breakdown",
+      "severity": "danger",
+      "jump_target": "person"
+    },
+    {
+      "id": "person_injured",
+      "severity": "danger",
+      "jump_target": "person"
+    },
+    {
+      "id": "meat_spoiling",
+      "severity": "warning",
+      "jump_target": "tile"
+    },
+    {
+      "id": "newborn_without_bed",
+      "severity": "warning",
+      "jump_target": "person"
+    },
+    {
+      "id": "food_winter",
+      "severity": "warning",
+      "jump_target": "tile"
+    },
+    {
+      "id": "food_spoil",
+      "severity": "warning",
+      "jump_target": "tile"
+    }
+  ],
+  "cards": [
+    {
+      "id": "need_food",
+      "trigger": {
+        "kind": "alert",
+        "alert_id": "food_low"
+      },
+      "optional": false,
+      "test_only": false,
+      "enabled": true
+    },
+    {
+      "id": "need_warmth",
+      "trigger": {
+        "kind": "alert",
+        "alert_id": "firewood_low"
+      },
+      "optional": false,
+      "test_only": false,
+      "enabled": true
+    },
+    {
+      "id": "migrants",
+      "trigger": {
+        "kind": "alert",
+        "alert_id": "migrants_waiting"
+      },
+      "optional": false,
+      "test_only": false,
+      "enabled": true
+    },
+    {
+      "id": "trader",
+      "trigger": {
+        "kind": "alert",
+        "alert_id": "trader_present"
+      },
+      "optional": false,
+      "test_only": false,
+      "enabled": true
+    },
+    {
+      "id": "knowledge_risk",
+      "trigger": {
+        "kind": "alert",
+        "alert_id": "technique_at_risk"
+      },
+      "optional": false,
+      "test_only": false,
+      "enabled": true
+    },
+    {
+      "id": "tools_low",
+      "trigger": {
+        "kind": "bridge",
+        "read": "tools_below_need"
+      },
+      "optional": false,
+      "test_only": false,
+      "enabled": true
+    },
+    {
+      "id": "wolves",
+      "trigger": {
+        "kind": "alert",
+        "alert_id": "wolves_approaching"
+      },
+      "optional": false,
+      "test_only": false,
+      "enabled": true
+    },
+    {
+      "id": "idle_adults",
+      "trigger": {
+        "kind": "alert",
+        "alert_id": "idle_adults"
+      },
+      "optional": false,
+      "test_only": false,
+      "enabled": true
+    },
+    {
+      "id": "quarrel",
+      "trigger": {
+        "kind": "chronicle",
+        "chronicle_kind": 19
+      },
+      "optional": true,
+      "test_only": false,
+      "enabled": true
+    },
+    {
+      "id": "pressure",
+      "trigger": {
+        "kind": "chronicle",
+        "chronicle_kind": 29
+      },
+      "optional": true,
+      "test_only": false,
+      "enabled": true
+    },
+    {
+      "id": "storage",
+      "trigger": {
+        "kind": "alert",
+        "alert_id": "storehouse_full"
+      },
+      "optional": true,
+      "test_only": false,
+      "enabled": true
+    },
+    {
+      "id": "sick_person",
+      "trigger": {
+        "kind": "alert",
+        "alert_id": "person_sick"
+      },
+      "optional": false,
+      "test_only": true,
+      "enabled": true
+    },
+    {
+      "id": "sowing_window",
+      "trigger": {
+        "kind": "bridge",
+        "read": "sowing_window"
+      },
+      "optional": false,
+      "test_only": false,
+      "enabled": true
+    },
+    {
+      "id": "harvest_ready",
+      "trigger": {
+        "kind": "bridge",
+        "read": "harvest_ready"
+      },
+      "optional": false,
+      "test_only": false,
+      "enabled": true
+    },
+    {
+      "id": "cloth_short",
+      "trigger": {
+        "kind": "bridge",
+        "read": "cloth_short"
+      },
+      "optional": false,
+      "test_only": false,
+      "enabled": true
+    },
+    {
+      "id": "first_kid",
+      "trigger": {
+        "kind": "bridge",
+        "read": "first_livestock_kid"
+      },
+      "optional": false,
+      "test_only": false,
+      "enabled": true
+    }
+  ],
+  "mood_modifiers": [
+    {
+      "code": 0,
+      "id": "slept_roofed"
+    },
+    {
+      "code": 1,
+      "id": "slept_outside"
+    },
+    {
+      "code": 2,
+      "id": "fed"
+    },
+    {
+      "code": 3,
+      "id": "hungry"
+    },
+    {
+      "code": 4,
+      "id": "thirsty"
+    },
+    {
+      "code": 5,
+      "id": "cold"
+    },
+    {
+      "code": 6,
+      "id": "quarrelled"
+    },
+    {
+      "code": 7,
+      "id": "learned"
+    },
+    {
+      "code": 8,
+      "id": "discovered"
+    },
+    {
+      "code": 9,
+      "id": "grief"
+    },
+    {
+      "code": 10,
+      "id": "sick"
+    },
+    {
+      "code": 11,
+      "id": "crafted"
+    },
+    {
+      "code": 12,
+      "id": "drafted"
+    },
+    {
+      "code": 13,
+      "id": "pressure"
+    },
+    {
+      "code": 14,
+      "id": "food_varied"
+    },
+    {
+      "code": 15,
+      "id": "food_monotonous"
+    },
+    {
+      "code": 16,
+      "id": "clothing_comfort"
+    }
+  ],
+  "steward_rules": [
+    {
+      "rule_id": 1,
+      "proposed_art_id": "stockpile"
+    },
+    {
+      "rule_id": 2,
+      "proposed_art_id": "wood"
+    },
+    {
+      "rule_id": 3,
+      "proposed_art_id": "housing"
+    },
+    {
+      "rule_id": 4,
+      "proposed_art_id": "production"
+    },
+    {
+      "rule_id": 5,
+      "proposed_art_id": "hunt"
+    },
+    {
+      "rule_id": 7,
+      "proposed_art_id": "defence"
+    },
+    {
+      "rule_id": 8,
+      "proposed_art_id": "food_plan"
+    },
+    {
+      "rule_id": 9,
+      "proposed_art_id": "seasonal_fuel"
+    },
+    {
+      "rule_id": 10,
+      "proposed_art_id": "roofed_storehouse"
+    },
+    {
+      "rule_id": 11,
+      "proposed_art_id": "livestock"
+    }
+  ],
+  "chronicle_kinds": [
+    {
+      "code": 0,
+      "name": "Born"
+    },
+    {
+      "code": 1,
+      "name": "FoundingMember"
+    },
+    {
+      "code": 2,
+      "name": "Paired"
+    },
+    {
+      "code": 3,
+      "name": "CameOfAge"
+    },
+    {
+      "code": 4,
+      "name": "BecameElder"
+    },
+    {
+      "code": 5,
+      "name": "Departed"
+    },
+    {
+      "code": 6,
+      "name": "DepartureCancelled"
+    },
+    {
+      "code": 7,
+      "name": "Settled"
+    },
+    {
+      "code": 8,
+      "name": "Joined"
+    },
+    {
+      "code": 9,
+      "name": "LeftSettlement"
+    },
+    {
+      "code": 10,
+      "name": "Widowed"
+    },
+    {
+      "code": 11,
+      "name": "Died"
+    },
+    {
+      "code": 12,
+      "name": "SettlementFormed"
+    },
+    {
+      "code": 13,
+      "name": "FissionStarted"
+    },
+    {
+      "code": 14,
+      "name": "DaughterFounded"
+    },
+    {
+      "code": 15,
+      "name": "FissionCancelled"
+    },
+    {
+      "code": 16,
+      "name": "SettlementDissolved"
+    },
+    {
+      "code": 17,
+      "name": "PorterDeparted"
+    },
+    {
+      "code": 18,
+      "name": "PorterDelivered"
+    },
+    {
+      "code": 19,
+      "name": "Quarrel"
+    },
+    {
+      "code": 20,
+      "name": "VillagesEstranged"
+    },
+    {
+      "code": 21,
+      "name": "VillagesReconciled"
+    },
+    {
+      "code": 22,
+      "name": "HutBuilt"
+    },
+    {
+      "code": 23,
+      "name": "RoomFormed"
+    },
+    {
+      "code": 24,
+      "name": "ToolBroke"
+    },
+    {
+      "code": 25,
+      "name": "KnowledgeLearned"
+    },
+    {
+      "code": 26,
+      "name": "KnowledgeDiscovered"
+    },
+    {
+      "code": 27,
+      "name": "KnowledgeAtRisk"
+    },
+    {
+      "code": 28,
+      "name": "KnowledgeLost"
+    },
+    {
+      "code": 29,
+      "name": "PressureBegan"
+    },
+    {
+      "code": 30,
+      "name": "PressureEnded"
+    },
+    {
+      "code": 31,
+      "name": "Hunted"
+    },
+    {
+      "code": 32,
+      "name": "Fight"
+    },
+    {
+      "code": 33,
+      "name": "Breakdown"
+    },
+    {
+      "code": 34,
+      "name": "Drafted"
+    },
+    {
+      "code": 35,
+      "name": "WolfKilled"
+    },
+    {
+      "code": 36,
+      "name": "Sick"
+    },
+    {
+      "code": 37,
+      "name": "Recovered"
+    },
+    {
+      "code": 38,
+      "name": "MigrantsArrived"
+    },
+    {
+      "code": 39,
+      "name": "MigrantsJoined"
+    },
+    {
+      "code": 40,
+      "name": "MigrantsDeclined"
+    },
+    {
+      "code": 41,
+      "name": "TraderArrived"
+    },
+    {
+      "code": 42,
+      "name": "Traded"
+    },
+    {
+      "code": 43,
+      "name": "TraderLeft"
+    },
+    {
+      "code": 44,
+      "name": "Eureka"
+    },
+    {
+      "code": 45,
+      "name": "StewardAction"
+    },
+    {
+      "code": 46,
+      "name": "StewardDefence"
+    },
+    {
+      "code": 47,
+      "name": "MindChoice"
+    },
+    {
+      "code": 48,
+      "name": "FirstCookedMeal"
+    },
+    {
+      "code": 49,
+      "name": "FirstDriedStore"
+    },
+    {
+      "code": 50,
+      "name": "WinterFoodPlan"
+    },
+    {
+      "code": 51,
+      "name": "WinterStoredSurvived"
+    },
+    {
+      "code": 52,
+      "name": "HungerFoodChain"
+    },
+    {
+      "code": 53,
+      "name": "FoodOperation"
+    },
+    {
+      "code": 54,
+      "name": "FirstField"
+    },
+    {
+      "code": 55,
+      "name": "FirstHarvest"
+    },
+    {
+      "code": 56,
+      "name": "CropFailure"
+    },
+    {
+      "code": 57,
+      "name": "FirstCloth"
+    },
+    {
+      "code": 58,
+      "name": "FirstTunic"
+    },
+    {
+      "code": 59,
+      "name": "EraChanged"
+    },
+    {
+      "code": 60,
+      "name": "BuildingComplete"
+    },
+    {
+      "code": 61,
+      "name": "LivestockCaptured"
+    },
+    {
+      "code": 62,
+      "name": "LivestockBorn"
+    },
+    {
+      "code": 63,
+      "name": "LivestockMilk"
+    },
+    {
+      "code": 64,
+      "name": "LivestockSlaughtered"
+    },
+    {
+      "code": 65,
+      "name": "LivestockDied"
+    }
+  ],
+  "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+}

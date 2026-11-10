@@ -1,0 +1,192 @@
+{
+  "schema_version": 1,
+  "runtime_source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+  "a4_source_commit": "386248ffbab91993960145f59fbc3636890cea63",
+  "status": "planned_candidate_coverage_not_runtime_import",
+  "lanes": {
+    "jobs": {
+      "required_ids": [
+        "chop",
+        "haul",
+        "deliver",
+        "build",
+        "quarry",
+        "supply",
+        "craft",
+        "gather",
+        "dig",
+        "deconstruct",
+        "clear",
+        "dig_clay",
+        "teach",
+        "learn",
+        "hunt",
+        "equip",
+        "trade",
+        "harvest",
+        "till_field",
+        "sow_field",
+        "tend_field",
+        "harvest_field",
+        "capture",
+        "milk",
+        "slaughter"
+      ],
+      "variant_ids": [
+        "chop_bronze",
+        "chop_iron",
+        "craft_smelting_bronze",
+        "craft_casting_bronze",
+        "craft_forging_iron",
+        "dig_mining_bronze",
+        "hunt_bronze",
+        "hunt_iron"
+      ]
+    },
+    "cards": {
+      "required_ids": [
+        "need_food",
+        "need_warmth",
+        "migrants",
+        "trader",
+        "knowledge_risk",
+        "tools_low",
+        "wolves",
+        "idle_adults",
+        "quarrel",
+        "pressure",
+        "storage",
+        "sick_person",
+        "sowing_window",
+        "harvest_ready",
+        "cloth_short",
+        "first_kid"
+      ],
+      "variant_ids": [
+        "human_birth",
+        "raid",
+        "visitor",
+        "era_change_neolithic",
+        "era_change_bronze",
+        "era_change_iron",
+        "tin_shortage"
+      ]
+    },
+    "alerts": {
+      "required_ids": [
+        "food_low",
+        "firewood_low",
+        "sleeping_outside",
+        "stockpile_missing",
+        "storehouse_full",
+        "idle_adults",
+        "orders_unreachable",
+        "knowledge_waiting",
+        "technique_at_risk",
+        "wolves_approaching",
+        "migrants_waiting",
+        "trader_present",
+        "person_sick",
+        "person_breakdown",
+        "person_injured",
+        "meat_spoiling",
+        "newborn_without_bed",
+        "food_winter",
+        "food_spoil",
+        "birth",
+        "death",
+        "pairing",
+        "settlement",
+        "departure",
+        "discovery",
+        "trade_complete",
+        "building_complete",
+        "era_change",
+        "livestock_birth"
+      ],
+      "variant_ids": [
+        "severity_notice",
+        "severity_warning",
+        "severity_danger"
+      ]
+    },
+    "needs": {
+      "required_ids": [
+        "need_hunger",
+        "need_thirst",
+        "need_sleep",
+        "need_warmth",
+        "need_social",
+        "need_health",
+        "mood_low",
+        "mood_normal",
+        "mood_content",
+        "mood_breakdown",
+        "modifier_slept_roofed",
+        "modifier_slept_outside",
+        "modifier_fed",
+        "modifier_hungry",
+        "modifier_thirsty",
+        "modifier_cold",
+        "modifier_quarrelled",
+        "modifier_learned",
+        "modifier_discovered",
+        "modifier_grief",
+        "modifier_sick",
+        "modifier_crafted",
+        "modifier_drafted",
+        "modifier_pressure",
+        "modifier_food_varied",
+        "modifier_food_monotonous",
+        "modifier_clothing_comfort"
+      ],
+      "variant_ids": [
+        "need_hunger_critical",
+        "need_thirst_critical",
+        "need_sleep_critical",
+        "need_warmth_critical",
+        "need_social_critical",
+        "need_health_critical"
+      ]
+    },
+    "governance": {
+      "required_ids": [
+        "rule_stockpile",
+        "rule_wood",
+        "rule_housing",
+        "rule_production",
+        "rule_hunt",
+        "rule_defence",
+        "rule_food_plan",
+        "rule_seasonal_fuel",
+        "rule_roofed_storehouse",
+        "rule_livestock",
+        "category_dwelling",
+        "category_storage",
+        "category_workshop",
+        "category_utility",
+        "category_civic",
+        "category_trade",
+        "legend_unassigned",
+        "legend_bedroom",
+        "legend_storehouse",
+        "legend_workshop",
+        "legend_hall"
+      ],
+      "variant_ids": [
+        "panel_built",
+        "panel_available",
+        "panel_next",
+        "rule_smelter",
+        "rule_tool_upgrade",
+        "rule_forge"
+      ]
+    }
+  },
+  "notes": [
+    "Future cards and rule variants are proposed art IDs, not invented runtime identifiers.",
+    "none JobKind and mood band none are absence sentinels; no sprite.",
+    "Chronicle kinds share explicit semantic family artwork; every event mapping is documented separately.",
+    "Seasonal/count buckets and damaged world-object states do not apply to UI icons; need critical, material-era and panel-state variants are explicit."
+  ]
+}

@@ -5,6 +5,13 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## ART-BATCH B4 — 2026-11-10
+
+### Added
+- UI art production contract and 148-subject catalogue covering jobs, alerts, needs/moods, decision vignettes, steward rules, building categories and room legends (`art/ui_b4/`). Runtime source names are pinned to game commit `4a44336e7782f2b27615d942b5cd54dbfee89406`; proposed future identifiers remain explicit.
+- Existing A4 image normalization, comparison-sheet tools and eight regression tests reused unchanged in `art/techmap/`.
+- ADR 0016 records the art-only scope, canonical canvases and mandatory weakest-candidate regeneration pass. Production and verification results will be appended after selection.
+
 ## M1-ART — 2026-10-21
 
 The colony view drawn like the mock-up: real ground, a canopy that reads as forest, buildings and log piles you can read, people you can find (`docs/v8/m1art/ART_GOAL.md`, report `docs/v8/m1art/ART_REPORT.md`). No simulation change (`rust/` untouched; identity, colony determinism and replay pass).

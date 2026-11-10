@@ -1,0 +1,1008 @@
+{
+  "status": "DRAFT_NOT_APPLIED",
+  "runtime_source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+  "binding_schema_status": "Proposed new UI binding groups. Existing runtime IDs verified at source pin; image consumers not yet implemented.",
+  "ui_jobs": [
+    {
+      "code": 1,
+      "sim": "chop",
+      "asset": "b4_jobs_chop"
+    },
+    {
+      "code": 2,
+      "sim": "haul",
+      "asset": "b4_jobs_haul"
+    },
+    {
+      "code": 3,
+      "sim": "deliver",
+      "asset": "b4_jobs_deliver"
+    },
+    {
+      "code": 4,
+      "sim": "build",
+      "asset": "b4_jobs_build"
+    },
+    {
+      "code": 5,
+      "sim": "quarry",
+      "asset": "b4_jobs_quarry"
+    },
+    {
+      "code": 6,
+      "sim": "supply",
+      "asset": "b4_jobs_supply"
+    },
+    {
+      "code": 7,
+      "sim": "craft",
+      "asset": "b4_jobs_craft"
+    },
+    {
+      "code": 8,
+      "sim": "gather",
+      "asset": "b4_jobs_gather"
+    },
+    {
+      "code": 9,
+      "sim": "dig",
+      "asset": "b4_jobs_dig"
+    },
+    {
+      "code": 10,
+      "sim": "deconstruct",
+      "asset": "b4_jobs_deconstruct"
+    },
+    {
+      "code": 11,
+      "sim": "clear",
+      "asset": "b4_jobs_clear"
+    },
+    {
+      "code": 12,
+      "sim": "dig_clay",
+      "asset": "b4_jobs_dig_clay"
+    },
+    {
+      "code": 13,
+      "sim": "teach",
+      "asset": "b4_jobs_teach"
+    },
+    {
+      "code": 14,
+      "sim": "learn",
+      "asset": "b4_jobs_learn"
+    },
+    {
+      "code": 15,
+      "sim": "hunt",
+      "asset": "b4_jobs_hunt"
+    },
+    {
+      "code": 16,
+      "sim": "equip",
+      "asset": "b4_jobs_equip"
+    },
+    {
+      "code": 17,
+      "sim": "trade",
+      "asset": "b4_jobs_trade"
+    },
+    {
+      "code": 18,
+      "sim": "harvest",
+      "asset": "b4_jobs_harvest"
+    },
+    {
+      "code": 19,
+      "sim": "till_field",
+      "asset": "b4_jobs_till_field"
+    },
+    {
+      "code": 20,
+      "sim": "sow_field",
+      "asset": "b4_jobs_sow_field"
+    },
+    {
+      "code": 21,
+      "sim": "tend_field",
+      "asset": "b4_jobs_tend_field"
+    },
+    {
+      "code": 22,
+      "sim": "harvest_field",
+      "asset": "b4_jobs_harvest_field"
+    },
+    {
+      "code": 23,
+      "sim": "capture",
+      "asset": "b4_jobs_capture"
+    },
+    {
+      "code": 24,
+      "sim": "milk",
+      "asset": "b4_jobs_milk"
+    },
+    {
+      "code": 25,
+      "sim": "slaughter",
+      "asset": "b4_jobs_slaughter"
+    }
+  ],
+  "ui_alerts": {
+    "food_low": {
+      "asset": "b4_alerts_food_low",
+      "severity": "warning"
+    },
+    "firewood_low": {
+      "asset": "b4_alerts_firewood_low",
+      "severity": "warning"
+    },
+    "sleeping_outside": {
+      "asset": "b4_alerts_sleeping_outside",
+      "severity": "warning"
+    },
+    "stockpile_missing": {
+      "asset": "b4_alerts_stockpile_missing",
+      "severity": "notice"
+    },
+    "storehouse_full": {
+      "asset": "b4_alerts_storehouse_full",
+      "severity": "warning"
+    },
+    "idle_adults": {
+      "asset": "b4_alerts_idle_adults",
+      "severity": "notice"
+    },
+    "orders_unreachable": {
+      "asset": "b4_alerts_orders_unreachable",
+      "severity": "warning"
+    },
+    "knowledge_waiting": {
+      "asset": "b4_alerts_knowledge_waiting",
+      "severity": "warning"
+    },
+    "technique_at_risk": {
+      "asset": "b4_alerts_technique_at_risk",
+      "severity": "warning"
+    },
+    "wolves_approaching": {
+      "asset": "b4_alerts_wolves_approaching",
+      "severity": "danger"
+    },
+    "migrants_waiting": {
+      "asset": "b4_alerts_migrants_waiting",
+      "severity": "notice"
+    },
+    "trader_present": {
+      "asset": "b4_alerts_trader_present",
+      "severity": "notice"
+    },
+    "person_sick": {
+      "asset": "b4_alerts_person_sick",
+      "severity": "warning"
+    },
+    "person_breakdown": {
+      "asset": "b4_alerts_person_breakdown",
+      "severity": "danger"
+    },
+    "person_injured": {
+      "asset": "b4_alerts_person_injured",
+      "severity": "danger"
+    },
+    "meat_spoiling": {
+      "asset": "b4_alerts_meat_spoiling",
+      "severity": "warning"
+    },
+    "newborn_without_bed": {
+      "asset": "b4_alerts_newborn_without_bed",
+      "severity": "warning"
+    },
+    "food_winter": {
+      "asset": "b4_alerts_food_winter",
+      "severity": "warning"
+    },
+    "food_spoil": {
+      "asset": "b4_alerts_food_spoil",
+      "severity": "warning"
+    }
+  },
+  "ui_decision_cards": {
+    "need_food": {
+      "asset": "b4_cards_need_food",
+      "test_only": false,
+      "optional": false
+    },
+    "need_warmth": {
+      "asset": "b4_cards_need_warmth",
+      "test_only": false,
+      "optional": false
+    },
+    "migrants": {
+      "asset": "b4_cards_migrants",
+      "test_only": false,
+      "optional": false
+    },
+    "trader": {
+      "asset": "b4_cards_trader",
+      "test_only": false,
+      "optional": false
+    },
+    "knowledge_risk": {
+      "asset": "b4_cards_knowledge_risk",
+      "test_only": false,
+      "optional": false
+    },
+    "tools_low": {
+      "asset": "b4_cards_tools_low",
+      "test_only": false,
+      "optional": false
+    },
+    "wolves": {
+      "asset": "b4_cards_wolves",
+      "test_only": false,
+      "optional": false
+    },
+    "idle_adults": {
+      "asset": "b4_cards_idle_adults",
+      "test_only": false,
+      "optional": false
+    },
+    "quarrel": {
+      "asset": "b4_cards_quarrel",
+      "test_only": false,
+      "optional": true
+    },
+    "pressure": {
+      "asset": "b4_cards_pressure",
+      "test_only": false,
+      "optional": true
+    },
+    "storage": {
+      "asset": "b4_cards_storage",
+      "test_only": false,
+      "optional": true
+    },
+    "sick_person": {
+      "asset": "b4_cards_sick_person",
+      "test_only": true,
+      "optional": false
+    },
+    "sowing_window": {
+      "asset": "b4_cards_sowing_window",
+      "test_only": false,
+      "optional": false
+    },
+    "harvest_ready": {
+      "asset": "b4_cards_harvest_ready",
+      "test_only": false,
+      "optional": false
+    },
+    "cloth_short": {
+      "asset": "b4_cards_cloth_short",
+      "test_only": false,
+      "optional": false
+    },
+    "first_kid": {
+      "asset": "b4_cards_first_kid",
+      "test_only": false,
+      "optional": false
+    }
+  },
+  "ui_needs": {
+    "hunger": {
+      "asset": "b4_needs_need_hunger",
+      "critical_asset": "b4_needs_need_hunger_critical",
+      "existing_icon_role": true,
+      "state_selector": "Integration must use actual need semantics; no thresholds invented in art."
+    },
+    "thirst": {
+      "asset": "b4_needs_need_thirst",
+      "critical_asset": "b4_needs_need_thirst_critical",
+      "existing_icon_role": true,
+      "state_selector": "Integration must use actual need semantics; no thresholds invented in art."
+    },
+    "sleep": {
+      "asset": "b4_needs_need_sleep",
+      "critical_asset": "b4_needs_need_sleep_critical",
+      "existing_icon_role": true,
+      "state_selector": "Integration must use actual need semantics; no thresholds invented in art."
+    },
+    "warmth": {
+      "asset": "b4_needs_need_warmth",
+      "critical_asset": "b4_needs_need_warmth_critical",
+      "existing_icon_role": false,
+      "state_selector": "Integration must use actual need semantics; no thresholds invented in art."
+    },
+    "social": {
+      "asset": "b4_needs_need_social",
+      "critical_asset": "b4_needs_need_social_critical",
+      "existing_icon_role": false,
+      "state_selector": "Integration must use actual need semantics; no thresholds invented in art."
+    },
+    "health": {
+      "asset": "b4_needs_need_health",
+      "critical_asset": "b4_needs_need_health_critical",
+      "existing_icon_role": false,
+      "state_selector": "Integration must use actual need semantics; no thresholds invented in art."
+    }
+  },
+  "ui_mood_bands": [
+    {
+      "code": 0,
+      "name": "none",
+      "asset": null
+    },
+    {
+      "code": 1,
+      "name": "low",
+      "asset": "b4_needs_mood_low"
+    },
+    {
+      "code": 2,
+      "name": "normal",
+      "asset": "b4_needs_mood_normal"
+    },
+    {
+      "code": 3,
+      "name": "content",
+      "asset": "b4_needs_mood_content"
+    },
+    {
+      "code": 4,
+      "name": "breakdown",
+      "asset": "b4_needs_mood_breakdown"
+    }
+  ],
+  "ui_mood_modifiers": [
+    {
+      "code": 0,
+      "name": "slept_roofed",
+      "asset": "b4_needs_modifier_slept_roofed"
+    },
+    {
+      "code": 1,
+      "name": "slept_outside",
+      "asset": "b4_needs_modifier_slept_outside"
+    },
+    {
+      "code": 2,
+      "name": "fed",
+      "asset": "b4_needs_modifier_fed"
+    },
+    {
+      "code": 3,
+      "name": "hungry",
+      "asset": "b4_needs_modifier_hungry"
+    },
+    {
+      "code": 4,
+      "name": "thirsty",
+      "asset": "b4_needs_modifier_thirsty"
+    },
+    {
+      "code": 5,
+      "name": "cold",
+      "asset": "b4_needs_modifier_cold"
+    },
+    {
+      "code": 6,
+      "name": "quarrelled",
+      "asset": "b4_needs_modifier_quarrelled"
+    },
+    {
+      "code": 7,
+      "name": "learned",
+      "asset": "b4_needs_modifier_learned"
+    },
+    {
+      "code": 8,
+      "name": "discovered",
+      "asset": "b4_needs_modifier_discovered"
+    },
+    {
+      "code": 9,
+      "name": "grief",
+      "asset": "b4_needs_modifier_grief"
+    },
+    {
+      "code": 10,
+      "name": "sick",
+      "asset": "b4_needs_modifier_sick"
+    },
+    {
+      "code": 11,
+      "name": "crafted",
+      "asset": "b4_needs_modifier_crafted"
+    },
+    {
+      "code": 12,
+      "name": "drafted",
+      "asset": "b4_needs_modifier_drafted"
+    },
+    {
+      "code": 13,
+      "name": "pressure",
+      "asset": "b4_needs_modifier_pressure"
+    },
+    {
+      "code": 14,
+      "name": "food_varied",
+      "asset": "b4_needs_modifier_food_varied"
+    },
+    {
+      "code": 15,
+      "name": "food_monotonous",
+      "asset": "b4_needs_modifier_food_monotonous"
+    },
+    {
+      "code": 16,
+      "name": "clothing_comfort",
+      "asset": "b4_needs_modifier_clothing_comfort"
+    }
+  ],
+  "ui_steward_rules": [
+    {
+      "rule_id": 1,
+      "asset": "b4_governance_rule_stockpile"
+    },
+    {
+      "rule_id": 2,
+      "asset": "b4_governance_rule_wood"
+    },
+    {
+      "rule_id": 3,
+      "asset": "b4_governance_rule_housing"
+    },
+    {
+      "rule_id": 4,
+      "asset": "b4_governance_rule_production"
+    },
+    {
+      "rule_id": 5,
+      "asset": "b4_governance_rule_hunt"
+    },
+    {
+      "rule_id": 7,
+      "asset": "b4_governance_rule_defence"
+    },
+    {
+      "rule_id": 8,
+      "asset": "b4_governance_rule_food_plan"
+    },
+    {
+      "rule_id": 9,
+      "asset": "b4_governance_rule_seasonal_fuel"
+    },
+    {
+      "rule_id": 10,
+      "asset": "b4_governance_rule_roofed_storehouse"
+    },
+    {
+      "rule_id": 11,
+      "asset": "b4_governance_rule_livestock"
+    }
+  ],
+  "ui_building_categories": {
+    "dwelling": {
+      "asset": "b4_governance_category_dwelling"
+    },
+    "storage": {
+      "asset": "b4_governance_category_storage"
+    },
+    "workshop": {
+      "asset": "b4_governance_category_workshop"
+    },
+    "utility": {
+      "asset": "b4_governance_category_utility"
+    },
+    "civic": {
+      "asset": "b4_governance_category_civic"
+    },
+    "trade": {
+      "asset": "b4_governance_category_trade"
+    }
+  },
+  "ui_building_panel_groups": {
+    "built": {
+      "asset": "b4_governance_panel_built"
+    },
+    "available": {
+      "asset": "b4_governance_panel_available"
+    },
+    "next": {
+      "asset": "b4_governance_panel_next"
+    }
+  },
+  "ui_overlay_rooms": [
+    {
+      "code": 0,
+      "role": "unassigned",
+      "asset": "b4_governance_legend_unassigned"
+    },
+    {
+      "code": 1,
+      "role": "bedroom",
+      "asset": "b4_governance_legend_bedroom"
+    },
+    {
+      "code": 2,
+      "role": "storehouse",
+      "asset": "b4_governance_legend_storehouse"
+    },
+    {
+      "code": 3,
+      "role": "workshop",
+      "asset": "b4_governance_legend_workshop"
+    },
+    {
+      "code": 4,
+      "role": "hall",
+      "asset": "b4_governance_legend_hall"
+    }
+  ],
+  "ui_severities": {
+    "notice": {
+      "asset": "b4_alerts_severity_notice"
+    },
+    "warning": {
+      "asset": "b4_alerts_severity_warning"
+    },
+    "danger": {
+      "asset": "b4_alerts_severity_danger"
+    }
+  },
+  "proposed_future_cards": {
+    "human_birth": {
+      "asset": "b4_cards_human_birth",
+      "runtime_id": null
+    },
+    "raid": {
+      "asset": "b4_cards_raid",
+      "runtime_id": null
+    },
+    "visitor": {
+      "asset": "b4_cards_visitor",
+      "runtime_id": null
+    },
+    "era_change_neolithic": {
+      "asset": "b4_cards_era_change_neolithic",
+      "runtime_id": null
+    },
+    "era_change_bronze": {
+      "asset": "b4_cards_era_change_bronze",
+      "runtime_id": null
+    },
+    "era_change_iron": {
+      "asset": "b4_cards_era_change_iron",
+      "runtime_id": null
+    },
+    "tin_shortage": {
+      "asset": "b4_cards_tin_shortage",
+      "runtime_id": null
+    }
+  },
+  "proposed_future_steward_rules": {
+    "smelter": {
+      "asset": "b4_governance_rule_smelter",
+      "runtime_rule_id": null
+    },
+    "tool_upgrade": {
+      "asset": "b4_governance_rule_tool_upgrade",
+      "runtime_rule_id": null
+    },
+    "forge": {
+      "asset": "b4_governance_rule_forge",
+      "runtime_rule_id": null
+    }
+  },
+  "job_art_variants": {
+    "chop_bronze": {
+      "asset": "b4_jobs_chop_bronze",
+      "new_job_code": null,
+      "selector_status": "Proposal; choose by recipe/material/era only after integration verification."
+    },
+    "chop_iron": {
+      "asset": "b4_jobs_chop_iron",
+      "new_job_code": null,
+      "selector_status": "Proposal; choose by recipe/material/era only after integration verification."
+    },
+    "craft_smelting_bronze": {
+      "asset": "b4_jobs_craft_smelting_bronze",
+      "new_job_code": null,
+      "selector_status": "Proposal; choose by recipe/material/era only after integration verification."
+    },
+    "craft_casting_bronze": {
+      "asset": "b4_jobs_craft_casting_bronze",
+      "new_job_code": null,
+      "selector_status": "Proposal; choose by recipe/material/era only after integration verification."
+    },
+    "craft_forging_iron": {
+      "asset": "b4_jobs_craft_forging_iron",
+      "new_job_code": null,
+      "selector_status": "Proposal; choose by recipe/material/era only after integration verification."
+    },
+    "dig_mining_bronze": {
+      "asset": "b4_jobs_dig_mining_bronze",
+      "new_job_code": null,
+      "selector_status": "Proposal; choose by recipe/material/era only after integration verification."
+    },
+    "hunt_bronze": {
+      "asset": "b4_jobs_hunt_bronze",
+      "new_job_code": null,
+      "selector_status": "Proposal; choose by recipe/material/era only after integration verification."
+    },
+    "hunt_iron": {
+      "asset": "b4_jobs_hunt_iron",
+      "new_job_code": null,
+      "selector_status": "Proposal; choose by recipe/material/era only after integration verification."
+    }
+  },
+  "ui_chronicle_semantic_icons": [
+    {
+      "code": 0,
+      "name": "Born",
+      "asset": "b4_alerts_birth"
+    },
+    {
+      "code": 2,
+      "name": "Paired",
+      "asset": "b4_alerts_pairing"
+    },
+    {
+      "code": 5,
+      "name": "Departed",
+      "asset": "b4_alerts_departure"
+    },
+    {
+      "code": 11,
+      "name": "Died",
+      "asset": "b4_alerts_death"
+    },
+    {
+      "code": 12,
+      "name": "SettlementFormed",
+      "asset": "b4_alerts_settlement"
+    },
+    {
+      "code": 18,
+      "name": "PorterDelivered",
+      "asset": "b4_jobs_deliver"
+    },
+    {
+      "code": 19,
+      "name": "Quarrel",
+      "asset": "b4_needs_modifier_quarrelled"
+    },
+    {
+      "code": 22,
+      "name": "HutBuilt",
+      "asset": "b4_alerts_building_complete"
+    },
+    {
+      "code": 23,
+      "name": "RoomFormed",
+      "asset": "b4_alerts_building_complete"
+    },
+    {
+      "code": 25,
+      "name": "KnowledgeLearned",
+      "asset": "b4_needs_modifier_learned"
+    },
+    {
+      "code": 26,
+      "name": "KnowledgeDiscovered",
+      "asset": "b4_alerts_discovery"
+    },
+    {
+      "code": 27,
+      "name": "KnowledgeAtRisk",
+      "asset": "b4_alerts_technique_at_risk"
+    },
+    {
+      "code": 29,
+      "name": "PressureBegan",
+      "asset": "b4_needs_modifier_pressure"
+    },
+    {
+      "code": 31,
+      "name": "Hunted",
+      "asset": "b4_jobs_hunt"
+    },
+    {
+      "code": 33,
+      "name": "Breakdown",
+      "asset": "b4_needs_mood_breakdown"
+    },
+    {
+      "code": 34,
+      "name": "Drafted",
+      "asset": "b4_needs_modifier_drafted"
+    },
+    {
+      "code": 36,
+      "name": "Sick",
+      "asset": "b4_alerts_person_sick"
+    },
+    {
+      "code": 38,
+      "name": "MigrantsArrived",
+      "asset": "b4_alerts_migrants_waiting"
+    },
+    {
+      "code": 41,
+      "name": "TraderArrived",
+      "asset": "b4_alerts_trader_present"
+    },
+    {
+      "code": 42,
+      "name": "Traded",
+      "asset": "b4_alerts_trade_complete"
+    },
+    {
+      "code": 44,
+      "name": "Eureka",
+      "asset": "b4_alerts_discovery"
+    },
+    {
+      "code": 46,
+      "name": "StewardDefence",
+      "asset": "b4_governance_rule_defence"
+    },
+    {
+      "code": 50,
+      "name": "WinterFoodPlan",
+      "asset": "b4_governance_rule_food_plan"
+    },
+    {
+      "code": 52,
+      "name": "HungerFoodChain",
+      "asset": "b4_needs_modifier_hungry"
+    },
+    {
+      "code": 54,
+      "name": "FirstField",
+      "asset": "b4_jobs_till_field"
+    },
+    {
+      "code": 55,
+      "name": "FirstHarvest",
+      "asset": "b4_jobs_harvest_field"
+    },
+    {
+      "code": 57,
+      "name": "FirstCloth",
+      "asset": "b4_needs_modifier_clothing_comfort"
+    },
+    {
+      "code": 58,
+      "name": "FirstTunic",
+      "asset": "b4_needs_modifier_clothing_comfort"
+    },
+    {
+      "code": 59,
+      "name": "EraChanged",
+      "asset": "b4_alerts_era_change"
+    },
+    {
+      "code": 60,
+      "name": "BuildingComplete",
+      "asset": "b4_alerts_building_complete"
+    },
+    {
+      "code": 61,
+      "name": "LivestockCaptured",
+      "asset": "b4_jobs_capture"
+    },
+    {
+      "code": 62,
+      "name": "LivestockBorn",
+      "asset": "b4_alerts_livestock_birth"
+    },
+    {
+      "code": 63,
+      "name": "LivestockMilk",
+      "asset": "b4_jobs_milk"
+    },
+    {
+      "code": 64,
+      "name": "LivestockSlaughtered",
+      "asset": "b4_jobs_slaughter"
+    }
+  ],
+  "chronicle_note": "34 events have semantically matched pictures; the remaining32 share the generic notice indicator and retain their exact localized event text. All66 source kinds are accounted for; there are not66 unique notification drawings.",
+  "ui_chronicle_generic_notice": [
+    {
+      "code": 1,
+      "name": "FoundingMember",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 3,
+      "name": "CameOfAge",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 4,
+      "name": "BecameElder",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 6,
+      "name": "DepartureCancelled",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 7,
+      "name": "Settled",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 8,
+      "name": "Joined",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 9,
+      "name": "LeftSettlement",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 10,
+      "name": "Widowed",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 13,
+      "name": "FissionStarted",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 14,
+      "name": "DaughterFounded",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 15,
+      "name": "FissionCancelled",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 16,
+      "name": "SettlementDissolved",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 17,
+      "name": "PorterDeparted",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 20,
+      "name": "VillagesEstranged",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 21,
+      "name": "VillagesReconciled",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 24,
+      "name": "ToolBroke",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 28,
+      "name": "KnowledgeLost",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 30,
+      "name": "PressureEnded",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 32,
+      "name": "Fight",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 35,
+      "name": "WolfKilled",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 37,
+      "name": "Recovered",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 39,
+      "name": "MigrantsJoined",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 40,
+      "name": "MigrantsDeclined",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 43,
+      "name": "TraderLeft",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 45,
+      "name": "StewardAction",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 47,
+      "name": "MindChoice",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 48,
+      "name": "FirstCookedMeal",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 49,
+      "name": "FirstDriedStore",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 51,
+      "name": "WinterStoredSurvived",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 53,
+      "name": "FoodOperation",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 56,
+      "name": "CropFailure",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    },
+    {
+      "code": 65,
+      "name": "LivestockDied",
+      "asset": "b4_alerts_severity_notice",
+      "semantic": "generic notice indicator; event meaning comes from localized text"
+    }
+  ]
+}

@@ -272,3 +272,7 @@ calls. UI text goes through `Locale.ltr("KEY")`; keys live in
 `localization/<lang>/<category>.json` (the source) and are compiled into
 `localization/compiled/<lang>.json` (what the game loads) by
 `python3 tools/localization_compile.py --project-root .`.
+
+## B4 UI art branch pack
+
+`art/ui_b4/` holds the production contract, pinned runtime inventory and unapplied import/binding drafts. `art/techmap/` reuses A4's tested mechanical image normalization and contact-sheet tooling. This pack does not edit the simulation or game UI consumers; C2/C3 own integration. ADR: `docs/decisions/0016-b4-ui-art-candidates.md`.

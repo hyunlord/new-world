@@ -1,0 +1,905 @@
+{
+  "status": "DRAFT_NOT_APPLIED",
+  "source_branch": "v8/art-batch-b4",
+  "source_commit": null,
+  "pinning_instruction": "PENDING asset commit; source_commit will be pinned after selected images and metadata are committed. Do not run this draft as the complete importer config.",
+  "managed_dirs_to_add": [
+    "ui"
+  ],
+  "files": [
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_chop",
+      "source": "art/style05/ui_b4/jobs/chop.png",
+      "dest": "ui/b4/jobs/chop.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_haul",
+      "source": "art/style05/ui_b4/jobs/haul.png",
+      "dest": "ui/b4/jobs/haul.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_deliver",
+      "source": "art/style05/ui_b4/jobs/deliver.png",
+      "dest": "ui/b4/jobs/deliver.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_build",
+      "source": "art/style05/ui_b4/jobs/build.png",
+      "dest": "ui/b4/jobs/build.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_quarry",
+      "source": "art/style05/ui_b4/jobs/quarry.png",
+      "dest": "ui/b4/jobs/quarry.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_supply",
+      "source": "art/style05/ui_b4/jobs/supply.png",
+      "dest": "ui/b4/jobs/supply.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_craft",
+      "source": "art/style05/ui_b4/jobs/craft.png",
+      "dest": "ui/b4/jobs/craft.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_gather",
+      "source": "art/style05/ui_b4/jobs/gather.png",
+      "dest": "ui/b4/jobs/gather.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_dig",
+      "source": "art/style05/ui_b4/jobs/dig.png",
+      "dest": "ui/b4/jobs/dig.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_deconstruct",
+      "source": "art/style05/ui_b4/jobs/deconstruct.png",
+      "dest": "ui/b4/jobs/deconstruct.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_clear",
+      "source": "art/style05/ui_b4/jobs/clear.png",
+      "dest": "ui/b4/jobs/clear.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_dig_clay",
+      "source": "art/style05/ui_b4/jobs/dig_clay.png",
+      "dest": "ui/b4/jobs/dig_clay.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_teach",
+      "source": "art/style05/ui_b4/jobs/teach.png",
+      "dest": "ui/b4/jobs/teach.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_learn",
+      "source": "art/style05/ui_b4/jobs/learn.png",
+      "dest": "ui/b4/jobs/learn.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_hunt",
+      "source": "art/style05/ui_b4/jobs/hunt.png",
+      "dest": "ui/b4/jobs/hunt.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_equip",
+      "source": "art/style05/ui_b4/jobs/equip.png",
+      "dest": "ui/b4/jobs/equip.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_trade",
+      "source": "art/style05/ui_b4/jobs/trade.png",
+      "dest": "ui/b4/jobs/trade.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_harvest",
+      "source": "art/style05/ui_b4/jobs/harvest.png",
+      "dest": "ui/b4/jobs/harvest.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_till_field",
+      "source": "art/style05/ui_b4/jobs/till_field.png",
+      "dest": "ui/b4/jobs/till_field.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_sow_field",
+      "source": "art/style05/ui_b4/jobs/sow_field.png",
+      "dest": "ui/b4/jobs/sow_field.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_tend_field",
+      "source": "art/style05/ui_b4/jobs/tend_field.png",
+      "dest": "ui/b4/jobs/tend_field.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_harvest_field",
+      "source": "art/style05/ui_b4/jobs/harvest_field.png",
+      "dest": "ui/b4/jobs/harvest_field.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_capture",
+      "source": "art/style05/ui_b4/jobs/capture.png",
+      "dest": "ui/b4/jobs/capture.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_milk",
+      "source": "art/style05/ui_b4/jobs/milk.png",
+      "dest": "ui/b4/jobs/milk.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_slaughter",
+      "source": "art/style05/ui_b4/jobs/slaughter.png",
+      "dest": "ui/b4/jobs/slaughter.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_chop_bronze",
+      "source": "art/style05/ui_b4/jobs/chop_bronze.png",
+      "dest": "ui/b4/jobs/chop_bronze.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_chop_iron",
+      "source": "art/style05/ui_b4/jobs/chop_iron.png",
+      "dest": "ui/b4/jobs/chop_iron.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_craft_smelting_bronze",
+      "source": "art/style05/ui_b4/jobs/craft_smelting_bronze.png",
+      "dest": "ui/b4/jobs/craft_smelting_bronze.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_craft_casting_bronze",
+      "source": "art/style05/ui_b4/jobs/craft_casting_bronze.png",
+      "dest": "ui/b4/jobs/craft_casting_bronze.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_craft_forging_iron",
+      "source": "art/style05/ui_b4/jobs/craft_forging_iron.png",
+      "dest": "ui/b4/jobs/craft_forging_iron.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_dig_mining_bronze",
+      "source": "art/style05/ui_b4/jobs/dig_mining_bronze.png",
+      "dest": "ui/b4/jobs/dig_mining_bronze.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_hunt_bronze",
+      "source": "art/style05/ui_b4/jobs/hunt_bronze.png",
+      "dest": "ui/b4/jobs/hunt_bronze.png"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_hunt_iron",
+      "source": "art/style05/ui_b4/jobs/hunt_iron.png",
+      "dest": "ui/b4/jobs/hunt_iron.png"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_need_food",
+      "source": "art/style05/ui_b4/cards/need_food.png",
+      "dest": "ui/b4/cards/need_food.png"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_need_warmth",
+      "source": "art/style05/ui_b4/cards/need_warmth.png",
+      "dest": "ui/b4/cards/need_warmth.png"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_migrants",
+      "source": "art/style05/ui_b4/cards/migrants.png",
+      "dest": "ui/b4/cards/migrants.png"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_trader",
+      "source": "art/style05/ui_b4/cards/trader.png",
+      "dest": "ui/b4/cards/trader.png"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_knowledge_risk",
+      "source": "art/style05/ui_b4/cards/knowledge_risk.png",
+      "dest": "ui/b4/cards/knowledge_risk.png"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_tools_low",
+      "source": "art/style05/ui_b4/cards/tools_low.png",
+      "dest": "ui/b4/cards/tools_low.png"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_wolves",
+      "source": "art/style05/ui_b4/cards/wolves.png",
+      "dest": "ui/b4/cards/wolves.png"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_idle_adults",
+      "source": "art/style05/ui_b4/cards/idle_adults.png",
+      "dest": "ui/b4/cards/idle_adults.png"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_quarrel",
+      "source": "art/style05/ui_b4/cards/quarrel.png",
+      "dest": "ui/b4/cards/quarrel.png"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_pressure",
+      "source": "art/style05/ui_b4/cards/pressure.png",
+      "dest": "ui/b4/cards/pressure.png"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_storage",
+      "source": "art/style05/ui_b4/cards/storage.png",
+      "dest": "ui/b4/cards/storage.png"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_sick_person",
+      "source": "art/style05/ui_b4/cards/sick_person.png",
+      "dest": "ui/b4/cards/sick_person.png"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_sowing_window",
+      "source": "art/style05/ui_b4/cards/sowing_window.png",
+      "dest": "ui/b4/cards/sowing_window.png"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_harvest_ready",
+      "source": "art/style05/ui_b4/cards/harvest_ready.png",
+      "dest": "ui/b4/cards/harvest_ready.png"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_cloth_short",
+      "source": "art/style05/ui_b4/cards/cloth_short.png",
+      "dest": "ui/b4/cards/cloth_short.png"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_first_kid",
+      "source": "art/style05/ui_b4/cards/first_kid.png",
+      "dest": "ui/b4/cards/first_kid.png"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_human_birth",
+      "source": "art/style05/ui_b4/cards/human_birth.png",
+      "dest": "ui/b4/cards/human_birth.png"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_raid",
+      "source": "art/style05/ui_b4/cards/raid.png",
+      "dest": "ui/b4/cards/raid.png"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_visitor",
+      "source": "art/style05/ui_b4/cards/visitor.png",
+      "dest": "ui/b4/cards/visitor.png"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_era_change_neolithic",
+      "source": "art/style05/ui_b4/cards/era_change_neolithic.png",
+      "dest": "ui/b4/cards/era_change_neolithic.png"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_era_change_bronze",
+      "source": "art/style05/ui_b4/cards/era_change_bronze.png",
+      "dest": "ui/b4/cards/era_change_bronze.png"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_era_change_iron",
+      "source": "art/style05/ui_b4/cards/era_change_iron.png",
+      "dest": "ui/b4/cards/era_change_iron.png"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_tin_shortage",
+      "source": "art/style05/ui_b4/cards/tin_shortage.png",
+      "dest": "ui/b4/cards/tin_shortage.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_food_low",
+      "source": "art/style05/ui_b4/alerts/food_low.png",
+      "dest": "ui/b4/alerts/food_low.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_firewood_low",
+      "source": "art/style05/ui_b4/alerts/firewood_low.png",
+      "dest": "ui/b4/alerts/firewood_low.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_sleeping_outside",
+      "source": "art/style05/ui_b4/alerts/sleeping_outside.png",
+      "dest": "ui/b4/alerts/sleeping_outside.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_stockpile_missing",
+      "source": "art/style05/ui_b4/alerts/stockpile_missing.png",
+      "dest": "ui/b4/alerts/stockpile_missing.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_storehouse_full",
+      "source": "art/style05/ui_b4/alerts/storehouse_full.png",
+      "dest": "ui/b4/alerts/storehouse_full.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_idle_adults",
+      "source": "art/style05/ui_b4/alerts/idle_adults.png",
+      "dest": "ui/b4/alerts/idle_adults.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_orders_unreachable",
+      "source": "art/style05/ui_b4/alerts/orders_unreachable.png",
+      "dest": "ui/b4/alerts/orders_unreachable.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_knowledge_waiting",
+      "source": "art/style05/ui_b4/alerts/knowledge_waiting.png",
+      "dest": "ui/b4/alerts/knowledge_waiting.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_technique_at_risk",
+      "source": "art/style05/ui_b4/alerts/technique_at_risk.png",
+      "dest": "ui/b4/alerts/technique_at_risk.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_wolves_approaching",
+      "source": "art/style05/ui_b4/alerts/wolves_approaching.png",
+      "dest": "ui/b4/alerts/wolves_approaching.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_migrants_waiting",
+      "source": "art/style05/ui_b4/alerts/migrants_waiting.png",
+      "dest": "ui/b4/alerts/migrants_waiting.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_trader_present",
+      "source": "art/style05/ui_b4/alerts/trader_present.png",
+      "dest": "ui/b4/alerts/trader_present.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_person_sick",
+      "source": "art/style05/ui_b4/alerts/person_sick.png",
+      "dest": "ui/b4/alerts/person_sick.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_person_breakdown",
+      "source": "art/style05/ui_b4/alerts/person_breakdown.png",
+      "dest": "ui/b4/alerts/person_breakdown.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_person_injured",
+      "source": "art/style05/ui_b4/alerts/person_injured.png",
+      "dest": "ui/b4/alerts/person_injured.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_meat_spoiling",
+      "source": "art/style05/ui_b4/alerts/meat_spoiling.png",
+      "dest": "ui/b4/alerts/meat_spoiling.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_newborn_without_bed",
+      "source": "art/style05/ui_b4/alerts/newborn_without_bed.png",
+      "dest": "ui/b4/alerts/newborn_without_bed.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_food_winter",
+      "source": "art/style05/ui_b4/alerts/food_winter.png",
+      "dest": "ui/b4/alerts/food_winter.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_food_spoil",
+      "source": "art/style05/ui_b4/alerts/food_spoil.png",
+      "dest": "ui/b4/alerts/food_spoil.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_birth",
+      "source": "art/style05/ui_b4/alerts/birth.png",
+      "dest": "ui/b4/alerts/birth.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_death",
+      "source": "art/style05/ui_b4/alerts/death.png",
+      "dest": "ui/b4/alerts/death.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_pairing",
+      "source": "art/style05/ui_b4/alerts/pairing.png",
+      "dest": "ui/b4/alerts/pairing.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_settlement",
+      "source": "art/style05/ui_b4/alerts/settlement.png",
+      "dest": "ui/b4/alerts/settlement.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_departure",
+      "source": "art/style05/ui_b4/alerts/departure.png",
+      "dest": "ui/b4/alerts/departure.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_discovery",
+      "source": "art/style05/ui_b4/alerts/discovery.png",
+      "dest": "ui/b4/alerts/discovery.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_trade_complete",
+      "source": "art/style05/ui_b4/alerts/trade_complete.png",
+      "dest": "ui/b4/alerts/trade_complete.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_building_complete",
+      "source": "art/style05/ui_b4/alerts/building_complete.png",
+      "dest": "ui/b4/alerts/building_complete.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_era_change",
+      "source": "art/style05/ui_b4/alerts/era_change.png",
+      "dest": "ui/b4/alerts/era_change.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_livestock_birth",
+      "source": "art/style05/ui_b4/alerts/livestock_birth.png",
+      "dest": "ui/b4/alerts/livestock_birth.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_severity_notice",
+      "source": "art/style05/ui_b4/alerts/severity_notice.png",
+      "dest": "ui/b4/alerts/severity_notice.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_severity_warning",
+      "source": "art/style05/ui_b4/alerts/severity_warning.png",
+      "dest": "ui/b4/alerts/severity_warning.png"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_severity_danger",
+      "source": "art/style05/ui_b4/alerts/severity_danger.png",
+      "dest": "ui/b4/alerts/severity_danger.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_need_hunger",
+      "source": "art/style05/ui_b4/needs/need_hunger.png",
+      "dest": "ui/b4/needs/need_hunger.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_need_thirst",
+      "source": "art/style05/ui_b4/needs/need_thirst.png",
+      "dest": "ui/b4/needs/need_thirst.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_need_sleep",
+      "source": "art/style05/ui_b4/needs/need_sleep.png",
+      "dest": "ui/b4/needs/need_sleep.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_need_warmth",
+      "source": "art/style05/ui_b4/needs/need_warmth.png",
+      "dest": "ui/b4/needs/need_warmth.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_need_social",
+      "source": "art/style05/ui_b4/needs/need_social.png",
+      "dest": "ui/b4/needs/need_social.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_need_health",
+      "source": "art/style05/ui_b4/needs/need_health.png",
+      "dest": "ui/b4/needs/need_health.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_mood_low",
+      "source": "art/style05/ui_b4/needs/mood_low.png",
+      "dest": "ui/b4/needs/mood_low.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_mood_normal",
+      "source": "art/style05/ui_b4/needs/mood_normal.png",
+      "dest": "ui/b4/needs/mood_normal.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_mood_content",
+      "source": "art/style05/ui_b4/needs/mood_content.png",
+      "dest": "ui/b4/needs/mood_content.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_mood_breakdown",
+      "source": "art/style05/ui_b4/needs/mood_breakdown.png",
+      "dest": "ui/b4/needs/mood_breakdown.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_modifier_slept_roofed",
+      "source": "art/style05/ui_b4/needs/modifier_slept_roofed.png",
+      "dest": "ui/b4/needs/modifier_slept_roofed.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_modifier_slept_outside",
+      "source": "art/style05/ui_b4/needs/modifier_slept_outside.png",
+      "dest": "ui/b4/needs/modifier_slept_outside.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_modifier_fed",
+      "source": "art/style05/ui_b4/needs/modifier_fed.png",
+      "dest": "ui/b4/needs/modifier_fed.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_modifier_hungry",
+      "source": "art/style05/ui_b4/needs/modifier_hungry.png",
+      "dest": "ui/b4/needs/modifier_hungry.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_modifier_thirsty",
+      "source": "art/style05/ui_b4/needs/modifier_thirsty.png",
+      "dest": "ui/b4/needs/modifier_thirsty.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_modifier_cold",
+      "source": "art/style05/ui_b4/needs/modifier_cold.png",
+      "dest": "ui/b4/needs/modifier_cold.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_modifier_quarrelled",
+      "source": "art/style05/ui_b4/needs/modifier_quarrelled.png",
+      "dest": "ui/b4/needs/modifier_quarrelled.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_modifier_learned",
+      "source": "art/style05/ui_b4/needs/modifier_learned.png",
+      "dest": "ui/b4/needs/modifier_learned.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_modifier_discovered",
+      "source": "art/style05/ui_b4/needs/modifier_discovered.png",
+      "dest": "ui/b4/needs/modifier_discovered.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_modifier_grief",
+      "source": "art/style05/ui_b4/needs/modifier_grief.png",
+      "dest": "ui/b4/needs/modifier_grief.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_modifier_sick",
+      "source": "art/style05/ui_b4/needs/modifier_sick.png",
+      "dest": "ui/b4/needs/modifier_sick.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_modifier_crafted",
+      "source": "art/style05/ui_b4/needs/modifier_crafted.png",
+      "dest": "ui/b4/needs/modifier_crafted.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_modifier_drafted",
+      "source": "art/style05/ui_b4/needs/modifier_drafted.png",
+      "dest": "ui/b4/needs/modifier_drafted.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_modifier_pressure",
+      "source": "art/style05/ui_b4/needs/modifier_pressure.png",
+      "dest": "ui/b4/needs/modifier_pressure.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_modifier_food_varied",
+      "source": "art/style05/ui_b4/needs/modifier_food_varied.png",
+      "dest": "ui/b4/needs/modifier_food_varied.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_modifier_food_monotonous",
+      "source": "art/style05/ui_b4/needs/modifier_food_monotonous.png",
+      "dest": "ui/b4/needs/modifier_food_monotonous.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_modifier_clothing_comfort",
+      "source": "art/style05/ui_b4/needs/modifier_clothing_comfort.png",
+      "dest": "ui/b4/needs/modifier_clothing_comfort.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_need_hunger_critical",
+      "source": "art/style05/ui_b4/needs/need_hunger_critical.png",
+      "dest": "ui/b4/needs/need_hunger_critical.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_need_thirst_critical",
+      "source": "art/style05/ui_b4/needs/need_thirst_critical.png",
+      "dest": "ui/b4/needs/need_thirst_critical.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_need_sleep_critical",
+      "source": "art/style05/ui_b4/needs/need_sleep_critical.png",
+      "dest": "ui/b4/needs/need_sleep_critical.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_need_warmth_critical",
+      "source": "art/style05/ui_b4/needs/need_warmth_critical.png",
+      "dest": "ui/b4/needs/need_warmth_critical.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_need_social_critical",
+      "source": "art/style05/ui_b4/needs/need_social_critical.png",
+      "dest": "ui/b4/needs/need_social_critical.png"
+    },
+    {
+      "role": "ui_need_mood_icon",
+      "id": "b4_needs_need_health_critical",
+      "source": "art/style05/ui_b4/needs/need_health_critical.png",
+      "dest": "ui/b4/needs/need_health_critical.png"
+    },
+    {
+      "role": "ui_governance_icon",
+      "id": "b4_governance_rule_stockpile",
+      "source": "art/style05/ui_b4/governance/rule_stockpile.png",
+      "dest": "ui/b4/governance/rule_stockpile.png"
+    },
+    {
+      "role": "ui_governance_icon",
+      "id": "b4_governance_rule_wood",
+      "source": "art/style05/ui_b4/governance/rule_wood.png",
+      "dest": "ui/b4/governance/rule_wood.png"
+    },
+    {
+      "role": "ui_governance_icon",
+      "id": "b4_governance_rule_housing",
+      "source": "art/style05/ui_b4/governance/rule_housing.png",
+      "dest": "ui/b4/governance/rule_housing.png"
+    },
+    {
+      "role": "ui_governance_icon",
+      "id": "b4_governance_rule_production",
+      "source": "art/style05/ui_b4/governance/rule_production.png",
+      "dest": "ui/b4/governance/rule_production.png"
+    },
+    {
+      "role": "ui_governance_icon",
+      "id": "b4_governance_rule_hunt",
+      "source": "art/style05/ui_b4/governance/rule_hunt.png",
+      "dest": "ui/b4/governance/rule_hunt.png"
+    },
+    {
+      "role": "ui_governance_icon",
+      "id": "b4_governance_rule_defence",
+      "source": "art/style05/ui_b4/governance/rule_defence.png",
+      "dest": "ui/b4/governance/rule_defence.png"
+    },
+    {
+      "role": "ui_governance_icon",
+      "id": "b4_governance_rule_food_plan",
+      "source": "art/style05/ui_b4/governance/rule_food_plan.png",
+      "dest": "ui/b4/governance/rule_food_plan.png"
+    },
+    {
+      "role": "ui_governance_icon",
+      "id": "b4_governance_rule_seasonal_fuel",
+      "source": "art/style05/ui_b4/governance/rule_seasonal_fuel.png",
+      "dest": "ui/b4/governance/rule_seasonal_fuel.png"
+    },
+    {
+      "role": "ui_governance_icon",
+      "id": "b4_governance_rule_roofed_storehouse",
+      "source": "art/style05/ui_b4/governance/rule_roofed_storehouse.png",
+      "dest": "ui/b4/governance/rule_roofed_storehouse.png"
+    },
+    {
+      "role": "ui_governance_icon",
+      "id": "b4_governance_rule_livestock",
+      "source": "art/style05/ui_b4/governance/rule_livestock.png",
+      "dest": "ui/b4/governance/rule_livestock.png"
+    },
+    {
+      "role": "ui_governance_icon",
+      "id": "b4_governance_category_dwelling",
+      "source": "art/style05/ui_b4/governance/category_dwelling.png",
+      "dest": "ui/b4/governance/category_dwelling.png"
+    },
+    {
+      "role": "ui_governance_icon",
+      "id": "b4_governance_category_storage",
+      "source": "art/style05/ui_b4/governance/category_storage.png",
+      "dest": "ui/b4/governance/category_storage.png"
+    },
+    {
+      "role": "ui_governance_icon",
+      "id": "b4_governance_category_workshop",
+      "source": "art/style05/ui_b4/governance/category_workshop.png",
+      "dest": "ui/b4/governance/category_workshop.png"
+    },
+    {
+      "role": "ui_governance_icon",
+      "id": "b4_governance_category_utility",
+      "source": "art/style05/ui_b4/governance/category_utility.png",
+      "dest": "ui/b4/governance/category_utility.png"
+    },
+    {
+      "role": "ui_governance_icon",
+      "id": "b4_governance_category_civic",
+      "source": "art/style05/ui_b4/governance/category_civic.png",
+      "dest": "ui/b4/governance/category_civic.png"
+    },
+    {
+      "role": "ui_governance_icon",
+      "id": "b4_governance_category_trade",
+      "source": "art/style05/ui_b4/governance/category_trade.png",
+      "dest": "ui/b4/governance/category_trade.png"
+    },
+    {
+      "role": "ui_governance_icon",
+      "id": "b4_governance_legend_unassigned",
+      "source": "art/style05/ui_b4/governance/legend_unassigned.png",
+      "dest": "ui/b4/governance/legend_unassigned.png"
+    },
+    {
+      "role": "ui_governance_icon",
+      "id": "b4_governance_legend_bedroom",
+      "source": "art/style05/ui_b4/governance/legend_bedroom.png",
+      "dest": "ui/b4/governance/legend_bedroom.png"
+    },
+    {
+      "role": "ui_governance_icon",
+      "id": "b4_governance_legend_storehouse",
+      "source": "art/style05/ui_b4/governance/legend_storehouse.png",
+      "dest": "ui/b4/governance/legend_storehouse.png"
+    },
+    {
+      "role": "ui_governance_icon",
+      "id": "b4_governance_legend_workshop",
+      "source": "art/style05/ui_b4/governance/legend_workshop.png",
+      "dest": "ui/b4/governance/legend_workshop.png"
+    },
+    {
+      "role": "ui_governance_icon",
+      "id": "b4_governance_legend_hall",
+      "source": "art/style05/ui_b4/governance/legend_hall.png",
+      "dest": "ui/b4/governance/legend_hall.png"
+    },
+    {
+      "role": "ui_governance_icon",
+      "id": "b4_governance_panel_built",
+      "source": "art/style05/ui_b4/governance/panel_built.png",
+      "dest": "ui/b4/governance/panel_built.png"
+    },
+    {
+      "role": "ui_governance_icon",
+      "id": "b4_governance_panel_available",
+      "source": "art/style05/ui_b4/governance/panel_available.png",
+      "dest": "ui/b4/governance/panel_available.png"
+    },
+    {
+      "role": "ui_governance_icon",
+      "id": "b4_governance_panel_next",
+      "source": "art/style05/ui_b4/governance/panel_next.png",
+      "dest": "ui/b4/governance/panel_next.png"
+    },
+    {
+      "role": "ui_governance_icon",
+      "id": "b4_governance_rule_smelter",
+      "source": "art/style05/ui_b4/governance/rule_smelter.png",
+      "dest": "ui/b4/governance/rule_smelter.png"
+    },
+    {
+      "role": "ui_governance_icon",
+      "id": "b4_governance_rule_tool_upgrade",
+      "source": "art/style05/ui_b4/governance/rule_tool_upgrade.png",
+      "dest": "ui/b4/governance/rule_tool_upgrade.png"
+    },
+    {
+      "role": "ui_governance_icon",
+      "id": "b4_governance_rule_forge",
+      "source": "art/style05/ui_b4/governance/rule_forge.png",
+      "dest": "ui/b4/governance/rule_forge.png"
+    }
+  ],
+  "metadata_file": {
+    "role": "ui_art_metadata",
+    "id": "b4_manifest",
+    "source": "art/ui_b4/manifest.json",
+    "dest": "ui/b4_manifest.json"
+  }
+}
