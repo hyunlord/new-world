@@ -1,65 +1,65 @@
 {
   "look": "adult_M_neo_plant_long_tied",
   "age": "adult",
-  "attempt": 1,
-  "raw": "/Users/rexxa/work/art-batch/B1/trials/neolithic/adult_M_neo_plant_long_tied/try1/raw.png",
-  "raw_sha256": "84f7d410c723294f313a7f740bd565533d9439407b4c42ecfe121a1de008eed4",
-  "prompt_sha256": "a10d6a0495675204e3608a7e0f62c0cd3ae67803ca8526a599546c4441f71b4c",
+  "attempt": 2,
+  "raw": "/Users/rexxa/work/art-batch/B1/trials/neolithic/adult_M_neo_plant_long_tied/try2/raw.png",
+  "raw_sha256": "facfb7578376b9fb207b11f9793d4982b980ee8cdffea6940f22af059f2539a9",
+  "prompt_sha256": "71033562ca9504ee331b531851cf5e56c4732c36c433ef2060b954ad3f8c1299",
   "facing": "E",
   "pose": "sleep",
   "check_pose": "sleep",
   "path": "E/sleep.png",
-  "sha256": "99d2153684640dbfb3eec826bbca9eff451bdf4c48a151a8878e4b3984202499",
+  "sha256": "88d4b335ae4685cbe32b86cb73c3c6b21e1287044e9360724d3974749941e8b2",
   "source_box": [
-    1054,
-    511,
+    1061,
+    545,
     1536,
     1024
   ],
   "normalization": {
     "scaled_size": [
       63,
-      67
+      64
     ],
     "trim_box": [
-      5,
-      26,
-      62,
-      44
+      4,
+      25,
+      61,
+      43
     ],
     "placement": [
       27,
       55
     ],
     "resized_to_canvas_offset": [
-      22,
-      29
+      23,
+      30
     ],
-    "visible_pixels": 695,
+    "visible_pixels": 681,
     "rotation_degrees": 0,
-    "scale": 0.13145539906103287,
-    "discarded_pixels": 303,
-    "discarded_max_alpha": 2,
+    "scale": 0.13270142180094788,
+    "discarded_pixels": 10,
+    "discarded_max_alpha": 1,
     "visibility_threshold": 16
   },
   "checks": {
     "passed": true,
     "findings": [],
-    "coverage": 0.07075892857142857,
+    "coverage": 0.06796875,
     "component_count": 1,
     "largest_hole": 0,
     "contact_ok": true,
     "sleep_axis_ok": true,
-    "opaque_height": 17,
-    "opaque_width": 55,
+    "opaque_height": 18,
+    "opaque_width": 56,
     "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
     "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
     "visible_height": 18,
     "visible_width": 57,
     "visibility_threshold": 16
   },
-  "standing_scale": 0.11839323467230443,
-  "sleep_scale": 0.13145539906103287,
+  "standing_scale": 0.12253829321663019,
+  "sleep_scale": 0.13270142180094788,
   "anchor": [
     56,
     72

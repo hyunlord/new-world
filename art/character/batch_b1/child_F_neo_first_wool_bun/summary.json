@@ -1,0 +1,745 @@
+{
+  "look": "child_F_neo_first_wool_bun",
+  "age": "child",
+  "attempt": 1,
+  "record_sha256": "95046c0d6931fdf4e44229a4b04f3b4a4842a759e7c221b41e2b6e02e5e80c42",
+  "raw_sha256": "d2ddf1760092da39c22acf6bd35b3d48ce36538306a30baa9576cf0d35b8a0ff",
+  "prompt_sha256": "5f5cefc2910b41521f594c615b37603ac5e71abfdd9ebcdf31a766eb3e9d6b8f",
+  "passed": true,
+  "frames": [
+    {
+      "look": "child_F_neo_first_wool_bun",
+      "age": "child",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B1/trials/neolithic/child_F_neo_first_wool_bun/try1/raw.png",
+      "raw_sha256": "d2ddf1760092da39c22acf6bd35b3d48ce36538306a30baa9576cf0d35b8a0ff",
+      "prompt_sha256": "5f5cefc2910b41521f594c615b37603ac5e71abfdd9ebcdf31a766eb3e9d6b8f",
+      "facing": "S",
+      "pose": "idle",
+      "check_pose": "idle",
+      "path": "S/idle.png",
+      "sha256": "32643526b898f68e6b05520ec669c9226bb44a96787c93be4c37d24f7fa18035",
+      "source_box": [
+        0,
+        3,
+        312,
+        530
+      ],
+      "normalization": {
+        "scaled_size": [
+          28,
+          48
+        ],
+        "trim_box": [
+          6,
+          2,
+          22,
+          44
+        ],
+        "placement": [
+          32,
+          63
+        ],
+        "resized_to_canvas_offset": [
+          26,
+          61
+        ],
+        "visible_pixels": 464,
+        "rotation_degrees": 0,
+        "scale": 0.09070294784580499,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.044642857142857144,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 40,
+        "opaque_width": 15,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 42,
+        "visible_width": 16,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.09070294784580499,
+      "sleep_scale": 0.10025062656641603,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "child_F_neo_first_wool_bun",
+      "age": "child",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B1/trials/neolithic/child_F_neo_first_wool_bun/try1/raw.png",
+      "raw_sha256": "d2ddf1760092da39c22acf6bd35b3d48ce36538306a30baa9576cf0d35b8a0ff",
+      "prompt_sha256": "5f5cefc2910b41521f594c615b37603ac5e71abfdd9ebcdf31a766eb3e9d6b8f",
+      "facing": "S",
+      "pose": "walk_a",
+      "check_pose": "walk_a",
+      "path": "S/walk_a.png",
+      "sha256": "f4447f7724abe8ba5a121d33644d5376af3f34aaed58fcac4c4c5daa05a088fc",
+      "source_box": [
+        283,
+        7,
+        602,
+        524
+      ],
+      "normalization": {
+        "scaled_size": [
+          29,
+          47
+        ],
+        "trim_box": [
+          3,
+          2,
+          25,
+          43
+        ],
+        "placement": [
+          29,
+          64
+        ],
+        "resized_to_canvas_offset": [
+          26,
+          62
+        ],
+        "visible_pixels": 464,
+        "rotation_degrees": 0,
+        "scale": 0.09070294784580499,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.04296875,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 40,
+        "opaque_width": 21,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 41,
+        "visible_width": 22,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.09070294784580499,
+      "sleep_scale": 0.10025062656641603,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "child_F_neo_first_wool_bun",
+      "age": "child",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B1/trials/neolithic/child_F_neo_first_wool_bun/try1/raw.png",
+      "raw_sha256": "d2ddf1760092da39c22acf6bd35b3d48ce36538306a30baa9576cf0d35b8a0ff",
+      "prompt_sha256": "5f5cefc2910b41521f594c615b37603ac5e71abfdd9ebcdf31a766eb3e9d6b8f",
+      "facing": "S",
+      "pose": "work_a",
+      "check_pose": "work_a",
+      "path": "S/work_a.png",
+      "sha256": "f1b683d452bc2a65c406138ef7344176f16f71faef2142e817d62e92d64a2319",
+      "source_box": [
+        561,
+        0,
+        860,
+        523
+      ],
+      "normalization": {
+        "scaled_size": [
+          27,
+          47
+        ],
+        "trim_box": [
+          6,
+          3,
+          23,
+          44
+        ],
+        "placement": [
+          31,
+          64
+        ],
+        "resized_to_canvas_offset": [
+          25,
+          61
+        ],
+        "visible_pixels": 439,
+        "rotation_degrees": 0,
+        "scale": 0.09070294784580499,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.04330357142857143,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 40,
+        "opaque_width": 16,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 41,
+        "visible_width": 17,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.09070294784580499,
+      "sleep_scale": 0.10025062656641603,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "child_F_neo_first_wool_bun",
+      "age": "child",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B1/trials/neolithic/child_F_neo_first_wool_bun/try1/raw.png",
+      "raw_sha256": "d2ddf1760092da39c22acf6bd35b3d48ce36538306a30baa9576cf0d35b8a0ff",
+      "prompt_sha256": "5f5cefc2910b41521f594c615b37603ac5e71abfdd9ebcdf31a766eb3e9d6b8f",
+      "facing": "S",
+      "pose": "carry",
+      "check_pose": "carry",
+      "path": "S/carry.png",
+      "sha256": "b1b06f389a5ef5762a1701e9889ab56a8b391c92a19d421a3b00e0f67a599b30",
+      "source_box": [
+        819,
+        9,
+        1214,
+        534
+      ],
+      "normalization": {
+        "scaled_size": [
+          36,
+          48
+        ],
+        "trim_box": [
+          6,
+          2,
+          22,
+          44
+        ],
+        "placement": [
+          32,
+          63
+        ],
+        "resized_to_canvas_offset": [
+          26,
+          61
+        ],
+        "visible_pixels": 446,
+        "rotation_degrees": 0,
+        "scale": 0.09070294784580499,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.04352678571428571,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 41,
+        "opaque_width": 14,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 42,
+        "visible_width": 16,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.09070294784580499,
+      "sleep_scale": 0.10025062656641603,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "child_F_neo_first_wool_bun",
+      "age": "child",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B1/trials/neolithic/child_F_neo_first_wool_bun/try1/raw.png",
+      "raw_sha256": "d2ddf1760092da39c22acf6bd35b3d48ce36538306a30baa9576cf0d35b8a0ff",
+      "prompt_sha256": "5f5cefc2910b41521f594c615b37603ac5e71abfdd9ebcdf31a766eb3e9d6b8f",
+      "facing": "S",
+      "pose": "sleep",
+      "check_pose": "sleep",
+      "path": "S/sleep.png",
+      "sha256": "c3f16664e5a5608c33b702a030b7287f3bc5e007d5ec51664e42bab975c1807d",
+      "source_box": [
+        1081,
+        17,
+        1536,
+        597
+      ],
+      "normalization": {
+        "scaled_size": [
+          46,
+          58
+        ],
+        "trim_box": [
+          3,
+          20,
+          44,
+          37
+        ],
+        "placement": [
+          35,
+          56
+        ],
+        "resized_to_canvas_offset": [
+          32,
+          36
+        ],
+        "visible_pixels": 414,
+        "rotation_degrees": 0,
+        "scale": 0.10025062656641603,
+        "discarded_pixels": 72,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.03995535714285714,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 17,
+        "opaque_width": 40,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 17,
+        "visible_width": 41,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.09070294784580499,
+      "sleep_scale": 0.10025062656641603,
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "child_F_neo_first_wool_bun",
+      "age": "child",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B1/trials/neolithic/child_F_neo_first_wool_bun/try1/raw.png",
+      "raw_sha256": "d2ddf1760092da39c22acf6bd35b3d48ce36538306a30baa9576cf0d35b8a0ff",
+      "prompt_sha256": "5f5cefc2910b41521f594c615b37603ac5e71abfdd9ebcdf31a766eb3e9d6b8f",
+      "facing": "E",
+      "pose": "idle",
+      "check_pose": "idle",
+      "path": "E/idle.png",
+      "sha256": "fe77fd560807c231640323cddd8329d5945660d974f80952162bf906ad2a2df4",
+      "source_box": [
+        0,
+        498,
+        302,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          27,
+          48
+        ],
+        "trim_box": [
+          7,
+          3,
+          22,
+          46
+        ],
+        "placement": [
+          32,
+          62
+        ],
+        "resized_to_canvas_offset": [
+          25,
+          59
+        ],
+        "visible_pixels": 472,
+        "rotation_degrees": 0,
+        "scale": 0.09070294784580499,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.04642857142857143,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 42,
+        "opaque_width": 14,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 43,
+        "visible_width": 15,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.09070294784580499,
+      "sleep_scale": 0.09950248756218906,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "child_F_neo_first_wool_bun",
+      "age": "child",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B1/trials/neolithic/child_F_neo_first_wool_bun/try1/raw.png",
+      "raw_sha256": "d2ddf1760092da39c22acf6bd35b3d48ce36538306a30baa9576cf0d35b8a0ff",
+      "prompt_sha256": "5f5cefc2910b41521f594c615b37603ac5e71abfdd9ebcdf31a766eb3e9d6b8f",
+      "facing": "E",
+      "pose": "walk_a",
+      "check_pose": "walk_a",
+      "path": "E/walk_a.png",
+      "sha256": "59669e6a6a61a963ed808a4f30c5e290a43b6df55daa8da49c6347571b55a7db",
+      "source_box": [
+        271,
+        485,
+        602,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          30,
+          49
+        ],
+        "trim_box": [
+          5,
+          4,
+          26,
+          47
+        ],
+        "placement": [
+          29,
+          62
+        ],
+        "resized_to_canvas_offset": [
+          24,
+          58
+        ],
+        "visible_pixels": 485,
+        "rotation_degrees": 0,
+        "scale": 0.09070294784580499,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.04441964285714286,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 42,
+        "opaque_width": 20,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 43,
+        "visible_width": 21,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.09070294784580499,
+      "sleep_scale": 0.09950248756218906,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "child_F_neo_first_wool_bun",
+      "age": "child",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B1/trials/neolithic/child_F_neo_first_wool_bun/try1/raw.png",
+      "raw_sha256": "d2ddf1760092da39c22acf6bd35b3d48ce36538306a30baa9576cf0d35b8a0ff",
+      "prompt_sha256": "5f5cefc2910b41521f594c615b37603ac5e71abfdd9ebcdf31a766eb3e9d6b8f",
+      "facing": "E",
+      "pose": "work_a",
+      "check_pose": "work_a",
+      "path": "E/work_a.png",
+      "sha256": "fce43d1b2145ba78b4f0b09212d7df2210ae45b8408ef0485e1921522a7e8d0f",
+      "source_box": [
+        565,
+        497,
+        868,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          27,
+          48
+        ],
+        "trim_box": [
+          6,
+          3,
+          23,
+          46
+        ],
+        "placement": [
+          31,
+          62
+        ],
+        "resized_to_canvas_offset": [
+          25,
+          59
+        ],
+        "visible_pixels": 470,
+        "rotation_degrees": 0,
+        "scale": 0.09070294784580499,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.04542410714285714,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 42,
+        "opaque_width": 16,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 43,
+        "visible_width": 17,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.09070294784580499,
+      "sleep_scale": 0.09950248756218906,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "child_F_neo_first_wool_bun",
+      "age": "child",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B1/trials/neolithic/child_F_neo_first_wool_bun/try1/raw.png",
+      "raw_sha256": "d2ddf1760092da39c22acf6bd35b3d48ce36538306a30baa9576cf0d35b8a0ff",
+      "prompt_sha256": "5f5cefc2910b41521f594c615b37603ac5e71abfdd9ebcdf31a766eb3e9d6b8f",
+      "facing": "E",
+      "pose": "carry",
+      "check_pose": "carry",
+      "path": "E/carry.png",
+      "sha256": "746afd0f9aabb01dee9623b8cfdf3b5ba105bd5d0db303cbbb126516e18f2415",
+      "source_box": [
+        819,
+        487,
+        1196,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          34,
+          49
+        ],
+        "trim_box": [
+          6,
+          4,
+          22,
+          47
+        ],
+        "placement": [
+          32,
+          62
+        ],
+        "resized_to_canvas_offset": [
+          26,
+          58
+        ],
+        "visible_pixels": 465,
+        "rotation_degrees": 0,
+        "scale": 0.09070294784580499,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.04397321428571429,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 42,
+        "opaque_width": 16,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 43,
+        "visible_width": 16,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.09070294784580499,
+      "sleep_scale": 0.09950248756218906,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "child_F_neo_first_wool_bun",
+      "age": "child",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B1/trials/neolithic/child_F_neo_first_wool_bun/try1/raw.png",
+      "raw_sha256": "d2ddf1760092da39c22acf6bd35b3d48ce36538306a30baa9576cf0d35b8a0ff",
+      "prompt_sha256": "5f5cefc2910b41521f594c615b37603ac5e71abfdd9ebcdf31a766eb3e9d6b8f",
+      "facing": "E",
+      "pose": "sleep",
+      "check_pose": "sleep",
+      "path": "E/sleep.png",
+      "sha256": "8d247c139611ab91122b09800a1e849cefec0e77b26bd12184ea3aa307774922",
+      "source_box": [
+        1088,
+        547,
+        1536,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          45,
+          47
+        ],
+        "trim_box": [
+          2,
+          17,
+          43,
+          33
+        ],
+        "placement": [
+          35,
+          57
+        ],
+        "resized_to_canvas_offset": [
+          33,
+          40
+        ],
+        "visible_pixels": 402,
+        "rotation_degrees": 0,
+        "scale": 0.09950248756218906,
+        "discarded_pixels": 8,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.0390625,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 16,
+        "opaque_width": 40,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 16,
+        "visible_width": 41,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.09070294784580499,
+      "sleep_scale": 0.09950248756218906,
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    }
+  ],
+  "error": null,
+  "layout": "wardrobe",
+  "frame_ids": [
+    "idle",
+    "walk_a",
+    "work_a",
+    "carry",
+    "sleep"
+  ],
+  "template_version": 3,
+  "numeric_pass": true,
+  "numeric_passing_panels": 10,
+  "numeric_model_status": "MISSING",
+  "numeric_report_sha256": "8a81dfb8511dca883868645a1873b810bb2b8d4c36f1e31d077961640129fa4d"
+}

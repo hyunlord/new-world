@@ -1,43 +1,43 @@
 {
   "look": "adult_M_neo_plant_long_tied",
   "age": "adult",
-  "attempt": 1,
-  "raw": "/Users/rexxa/work/art-batch/B1/trials/neolithic/adult_M_neo_plant_long_tied/try1/raw.png",
-  "raw_sha256": "84f7d410c723294f313a7f740bd565533d9439407b4c42ecfe121a1de008eed4",
-  "prompt_sha256": "a10d6a0495675204e3608a7e0f62c0cd3ae67803ca8526a599546c4441f71b4c",
+  "attempt": 2,
+  "raw": "/Users/rexxa/work/art-batch/B1/trials/neolithic/adult_M_neo_plant_long_tied/try2/raw.png",
+  "raw_sha256": "facfb7578376b9fb207b11f9793d4982b980ee8cdffea6940f22af059f2539a9",
+  "prompt_sha256": "71033562ca9504ee331b531851cf5e56c4732c36c433ef2060b954ad3f8c1299",
   "facing": "S",
   "pose": "idle",
   "check_pose": "idle",
   "path": "S/idle.png",
-  "sha256": "ff46679ccd01e541f1225e7f5300e267d854f1585a0f10ada1bd7c0bfdfa9ae6",
+  "sha256": "ccb5794f420b5135f2b87009d16c045c5a5cd539aba2fe860c9f5829f8b8724a",
   "source_box": [
     0,
-    0,
-    299,
-    557
+    13,
+    296,
+    535
   ],
   "normalization": {
     "scaled_size": [
-      35,
-      66
+      36,
+      64
     ],
     "trim_box": [
-      3,
-      2,
-      28,
-      59
+      4,
+      0,
+      30,
+      57
     ],
     "placement": [
       27,
       48
     ],
     "resized_to_canvas_offset": [
-      24,
-      46
+      23,
+      48
     ],
-    "visible_pixels": 921,
+    "visible_pixels": 959,
     "rotation_degrees": 0,
-    "scale": 0.11839323467230443,
+    "scale": 0.12253829321663019,
     "discarded_pixels": 0,
     "discarded_max_alpha": 0,
     "visibility_threshold": 16
@@ -45,21 +45,21 @@
   "checks": {
     "passed": true,
     "findings": [],
-    "coverage": 0.09084821428571428,
+    "coverage": 0.09508928571428571,
     "component_count": 1,
     "largest_hole": 0,
     "contact_ok": true,
     "sleep_axis_ok": true,
     "opaque_height": 56,
-    "opaque_width": 23,
+    "opaque_width": 24,
     "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
     "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
     "visible_height": 57,
-    "visible_width": 25,
+    "visible_width": 26,
     "visibility_threshold": 16
   },
-  "standing_scale": 0.11839323467230443,
-  "sleep_scale": 0.13365155131264916,
+  "standing_scale": 0.12253829321663019,
+  "sleep_scale": 0.1330166270783848,
   "anchor": [
     40,
     104
