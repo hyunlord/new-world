@@ -1,0 +1,1278 @@
+{
+  "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+  "source_path": "art/batch_a2/rooms.json",
+  "source_sha256": "e360bae6400eb96fc25c08520de723bb85e5539d8e6034c11074978062be7e4c",
+  "selected": [
+    {
+      "id": "mudbrick_house_intact",
+      "era": "bronze",
+      "footprint": [
+        3,
+        3
+      ],
+      "wall_style": "mud_brick",
+      "material": "clay",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "floor": true,
+      "door_cell": [
+        1,
+        2
+      ],
+      "door_open": true,
+      "props": [
+        {
+          "source": "art/style05/struct/hearth_unlit.png",
+          "cell": [
+            1,
+            1
+          ],
+          "role": "domestic hearth",
+          "anchor": [
+            21,
+            23
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "footprint": [
+            1,
+            1
+          ]
+        }
+      ],
+      "notes": [
+        "Derived existing material texture assembly; review preview only."
+      ]
+    },
+    {
+      "id": "stone_storehouse_empty",
+      "era": "bronze",
+      "footprint": [
+        4,
+        3
+      ],
+      "wall_style": "drystone",
+      "material": "granite",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "floor": true,
+      "door_cell": [
+        2,
+        2
+      ],
+      "door_open": true,
+      "props": [],
+      "notes": [
+        "Derived existing material texture assembly; review preview only."
+      ]
+    },
+    {
+      "id": "chief_hall_intact",
+      "era": "bronze",
+      "footprint": [
+        5,
+        4
+      ],
+      "wall_style": "mud_brick",
+      "material": "clay",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          4,
+          3
+        ]
+      ],
+      "floor": true,
+      "door_cell": [
+        2,
+        3
+      ],
+      "door_open": true,
+      "props": [
+        {
+          "source": "art/style05/struct/a2/contents/chief_seat.png",
+          "cell": [
+            2,
+            1
+          ],
+          "role": "chief seat",
+          "anchor": null,
+          "offset": [
+            0,
+            0
+          ],
+          "footprint": [
+            1,
+            1
+          ]
+        },
+        {
+          "source": "art/style05/struct/hearth_unlit.png",
+          "cell": [
+            2,
+            2
+          ],
+          "role": "domestic hearth",
+          "anchor": [
+            21,
+            23
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "footprint": [
+            1,
+            1
+          ]
+        }
+      ],
+      "notes": [
+        "Derived existing material texture assembly; review preview only."
+      ]
+    },
+    {
+      "id": "trading_post_empty",
+      "era": "bronze",
+      "footprint": [
+        4,
+        3
+      ],
+      "wall_style": "mud_brick",
+      "material": "clay",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "floor": true,
+      "door_cell": [
+        2,
+        2
+      ],
+      "door_open": true,
+      "props": [],
+      "notes": [
+        "Derived existing material texture assembly; review preview only."
+      ]
+    },
+    {
+      "id": "palisade_gatehouse_open",
+      "era": "bronze",
+      "footprint": [
+        3,
+        3
+      ],
+      "wall_style": "log",
+      "material": "oak",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "floor": true,
+      "door_cell": [
+        1,
+        2
+      ],
+      "door_open": true,
+      "props": [],
+      "notes": [
+        "Derived existing material texture assembly; review preview only."
+      ]
+    },
+    {
+      "id": "cart_shed_empty",
+      "era": "bronze",
+      "footprint": [
+        4,
+        3
+      ],
+      "wall_style": "log",
+      "material": "oak",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "floor": true,
+      "door_cell": [
+        2,
+        2
+      ],
+      "door_open": true,
+      "props": [],
+      "notes": [
+        "Derived existing material texture assembly; review preview only."
+      ]
+    },
+    {
+      "id": "log_house_intact",
+      "era": "neolithic",
+      "footprint": [
+        3,
+        3
+      ],
+      "wall_style": "log",
+      "material": "oak",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "floor": true,
+      "door_cell": [
+        1,
+        2
+      ],
+      "door_open": true,
+      "props": [
+        {
+          "source": "art/style05/struct/hearth_unlit.png",
+          "cell": [
+            1,
+            1
+          ],
+          "role": "domestic hearth",
+          "anchor": [
+            21,
+            23
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "footprint": [
+            1,
+            1
+          ]
+        }
+      ],
+      "notes": [
+        "Derived existing material texture assembly; review preview only."
+      ]
+    },
+    {
+      "id": "storehouse_empty",
+      "era": "neolithic",
+      "footprint": [
+        4,
+        3
+      ],
+      "wall_style": "log",
+      "material": "oak",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "floor": true,
+      "door_cell": [
+        2,
+        2
+      ],
+      "door_open": true,
+      "props": [],
+      "notes": [
+        "Derived existing material texture assembly; review preview only."
+      ]
+    },
+    {
+      "id": "granary_empty",
+      "era": "neolithic",
+      "footprint": [
+        3,
+        3
+      ],
+      "wall_style": "log",
+      "material": "oak",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "floor": true,
+      "door_cell": [
+        1,
+        2
+      ],
+      "door_open": true,
+      "props": [
+        {
+          "source": "art/style05/struct/a2/contents/grain_bin_empty.png",
+          "cell": [
+            1,
+            1
+          ],
+          "role": "grain storage bin",
+          "anchor": null,
+          "offset": [
+            0,
+            0
+          ],
+          "footprint": [
+            1,
+            1
+          ]
+        }
+      ],
+      "notes": [
+        "Derived existing material texture assembly; review preview only."
+      ]
+    },
+    {
+      "id": "stone_house_intact",
+      "era": "iron",
+      "footprint": [
+        3,
+        3
+      ],
+      "wall_style": "drystone",
+      "material": "granite",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "floor": true,
+      "door_cell": [
+        1,
+        2
+      ],
+      "door_open": true,
+      "props": [
+        {
+          "source": "art/style05/struct/hearth_unlit.png",
+          "cell": [
+            1,
+            1
+          ],
+          "role": "domestic hearth",
+          "anchor": [
+            21,
+            23
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "footprint": [
+            1,
+            1
+          ]
+        }
+      ],
+      "notes": [
+        "Derived existing material texture assembly; review preview only."
+      ]
+    },
+    {
+      "id": "warehouse_empty",
+      "era": "iron",
+      "footprint": [
+        4,
+        3
+      ],
+      "wall_style": "fired_brick",
+      "material": "clay",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "floor": true,
+      "door_cell": [
+        2,
+        2
+      ],
+      "door_open": true,
+      "props": [],
+      "notes": [
+        "Derived existing material texture assembly; review preview only."
+      ]
+    },
+    {
+      "id": "school_furnished",
+      "era": "iron",
+      "footprint": [
+        4,
+        3
+      ],
+      "wall_style": "mud_brick",
+      "material": "clay",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "floor": true,
+      "door_cell": [
+        2,
+        2
+      ],
+      "door_open": true,
+      "props": [
+        {
+          "source": "art/style05/struct/a2/contents/school_desk.png",
+          "cell": [
+            1,
+            1
+          ],
+          "role": "desk with clay learning tablets",
+          "anchor": null,
+          "offset": [
+            32,
+            0
+          ],
+          "footprint": [
+            2,
+            1
+          ]
+        }
+      ],
+      "notes": [
+        "Derived existing material texture assembly; review preview only."
+      ]
+    },
+    {
+      "id": "temple_intact",
+      "era": "iron",
+      "footprint": [
+        5,
+        4
+      ],
+      "wall_style": "drystone",
+      "material": "limestone",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          4,
+          3
+        ]
+      ],
+      "floor": true,
+      "door_cell": [
+        2,
+        3
+      ],
+      "door_open": true,
+      "props": [
+        {
+          "source": "art/style05/struct/a2/neolithic/ritual_site.png",
+          "cell": [
+            2,
+            2
+          ],
+          "role": "altar and offering stones",
+          "anchor": null,
+          "offset": [
+            0,
+            0
+          ],
+          "footprint": [
+            2,
+            2
+          ]
+        }
+      ],
+      "notes": [
+        "Derived existing material texture assembly; review preview only."
+      ]
+    },
+    {
+      "id": "market_empty",
+      "era": "iron",
+      "footprint": [
+        4,
+        3
+      ],
+      "wall_style": "fired_brick",
+      "material": "clay",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "floor": true,
+      "door_cell": [
+        2,
+        2
+      ],
+      "door_open": true,
+      "props": [],
+      "notes": [
+        "Derived existing material texture assembly; review preview only."
+      ]
+    },
+    {
+      "id": "watermill_idle",
+      "era": "iron",
+      "footprint": [
+        5,
+        4
+      ],
+      "wall_style": "drystone",
+      "material": "granite",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          3
+        ]
+      ],
+      "floor": true,
+      "door_cell": [
+        2,
+        3
+      ],
+      "door_open": true,
+      "props": [
+        {
+          "source": "art/style05/struct/a2/iron/waterwheel_idle.png",
+          "cell": [
+            4,
+            2
+          ],
+          "role": "east wall waterwheel",
+          "anchor": null,
+          "offset": [
+            0,
+            0
+          ],
+          "footprint": [
+            1,
+            1
+          ]
+        },
+        {
+          "source": "art/style05/struct/a2/iron/watermill_millstones_idle.png",
+          "cell": [
+            2,
+            2
+          ],
+          "role": "interior millstones and wooden drive",
+          "anchor": null,
+          "offset": [
+            0,
+            0
+          ],
+          "footprint": [
+            1,
+            1
+          ]
+        }
+      ],
+      "notes": [
+        "East wall cell(4,2) is the wheel bay; machinery remains independently sorted.",
+        "Place east edge beside existing water at import; no generated water/ground included."
+      ]
+    },
+    {
+      "id": "town_wall_drystone_ew",
+      "era": "iron",
+      "footprint": [
+        3,
+        1
+      ],
+      "wall_style": "drystone",
+      "material": "granite",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "floor": false,
+      "door_cell": null,
+      "door_open": true,
+      "props": [],
+      "notes": [
+        "Derived existing wall topology; no new image generation."
+      ]
+    },
+    {
+      "id": "town_wall_fired_brick_ew",
+      "era": "iron",
+      "footprint": [
+        3,
+        1
+      ],
+      "wall_style": "fired_brick",
+      "material": "clay",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "floor": false,
+      "door_cell": null,
+      "door_open": true,
+      "props": [],
+      "notes": [
+        "Derived existing wall topology; no new image generation."
+      ]
+    },
+    {
+      "id": "log_house_intact",
+      "era": "neolithic",
+      "footprint": [
+        3,
+        3
+      ],
+      "wall_style": "log",
+      "material": "oak",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "floor": true,
+      "door_cell": [
+        1,
+        2
+      ],
+      "door_open": true,
+      "props": [
+        {
+          "source": "art/style05/struct/hearth_unlit.png",
+          "cell": [
+            1,
+            1
+          ],
+          "role": "domestic hearth",
+          "anchor": [
+            21,
+            23
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "footprint": [
+            1,
+            1
+          ]
+        }
+      ],
+      "notes": [
+        "Derived existing material texture assembly; review preview only."
+      ]
+    }
+  ],
+  "copied_props": {
+    "art/style05/struct/hearth_unlit.png": "465b7812fadb49ed466617a415a75b968cb5a43d58ea9b849dc6decb3d576704",
+    "art/style05/struct/a2/contents/chief_seat.png": "ac72043123c67506d4a775622e90c4324bb882a9f5e4ac17e603b9d1f3ee1995",
+    "art/style05/struct/a2/contents/grain_bin_empty.png": "4d464044f126a5f219203d68a8bb90f4f09d294a88e50f30eb2edc0a6f63f30b",
+    "art/style05/struct/a2/contents/school_desk.png": "a1a04f04bd3c41de80d3bf00a3050236d87a7ee1a17d75dc18ed91e64ba8ac7c",
+    "art/style05/struct/a2/neolithic/ritual_site.png": "0a9e4a0af88ce4d26cc4da67db516fda5d8073b021d89b096010b8d88d84075b",
+    "art/style05/struct/a2/iron/waterwheel_idle.png": "8b07636feb60b5aa8d617675f6e764c83fb617be10fdafc8c1ccbe9275070b2c",
+    "art/style05/struct/a2/iron/watermill_millstones_idle.png": "75bbf9faadbd82f33f030b8cc2202b17b9a2512daff05255e6d81d664da50993"
+  }
+}

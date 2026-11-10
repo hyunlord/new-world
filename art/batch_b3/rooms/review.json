@@ -1,0 +1,40 @@
+{
+  "verdict": {
+    "score": 91,
+    "verdict": "pass",
+    "category_match": true,
+    "differences": [
+      "Existing A2 N/S wall-cap blur and highly textured packed-earth floors are inherited unchanged.",
+      "The portable hut uses A2's documented existing log-wall material-ring reuse."
+    ],
+    "suggestions": [],
+    "reasoning": "All 18 lifecycle boards preserve adopted material pixels, anchors and family geometry. Foundation, stepped half-built, intact built, breached damage and sparse ruins are visually distinct; blueprint uses the existing ghost display recipe."
+  },
+  "reviewed_1x": [
+    "art/batch_b3/boards/rooms/cart_shed_1x.png",
+    "art/batch_b3/boards/rooms/chief_hall_1x.png",
+    "art/batch_b3/boards/rooms/granary_1x.png",
+    "art/batch_b3/boards/rooms/hut_1x.png",
+    "art/batch_b3/boards/rooms/log_house_1x.png",
+    "art/batch_b3/boards/rooms/market_1x.png",
+    "art/batch_b3/boards/rooms/mud_brick_house_1x.png",
+    "art/batch_b3/boards/rooms/palisade_gatehouse_1x.png",
+    "art/batch_b3/boards/rooms/school_1x.png",
+    "art/batch_b3/boards/rooms/stone_house_1x.png",
+    "art/batch_b3/boards/rooms/stone_storehouse_1x.png",
+    "art/batch_b3/boards/rooms/storehouse_1x.png",
+    "art/batch_b3/boards/rooms/temple_1x.png",
+    "art/batch_b3/boards/rooms/town_wall_drystone_1x.png",
+    "art/batch_b3/boards/rooms/town_wall_fired_brick_1x.png",
+    "art/batch_b3/boards/rooms/trading_post_1x.png",
+    "art/batch_b3/boards/rooms/warehouse_1x.png",
+    "art/batch_b3/boards/rooms/watermill_1x.png"
+  ],
+  "self_review": {
+    "initial_score": 82,
+    "weakest_set": "all 18 damaged recipes (20% of 90 physical compositions)",
+    "fix": "Exclude the protected doorway when selecting the visible south wall breach; place debris in that breach.",
+    "regression_test": "art/batch_b3/rooms/test_recipes.py::test_damage_removes_a_wall_but_preserves_door"
+  },
+  "numeric_gate": "Not standalone generations: unchanged material source pixels, topology, integer grid, alpha and anchor checks; no fabricated raw-generation score."
+}
