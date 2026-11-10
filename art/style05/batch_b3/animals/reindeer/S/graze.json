@@ -1,0 +1,122 @@
+{
+  "species": "reindeer",
+  "facing": "S",
+  "pose": "graze",
+  "attempt": 2,
+  "image": "art/style05/batch_b3/animals/reindeer/S/graze.png",
+  "image_sha256": "683ec09600df6ca77f96e08506b848738c519837667ea32ff3b014a01d2ccf06",
+  "canvas_px": [
+    96,
+    80
+  ],
+  "anchor_px": [
+    48,
+    72
+  ],
+  "footprint_tiles": [
+    1,
+    1
+  ],
+  "source_panel": "/Users/rexxa/work/art-batch/B3/round3_animals/raw/panels/reindeer_base_try2/S_graze.png",
+  "source_panel_sha256": "e5abdc60dde32e2b5c7032b376f9cfaf1277394084479b92dc8c88ae35241e37",
+  "source_box": [
+    905,
+    71,
+    1282,
+    588
+  ],
+  "raw": "/Users/rexxa/work/art-batch/B3/round3_animals/raw/reindeer_base_try2.png",
+  "raw_sha256": "88723e4e7e6f6424eaa42404400f6bf504ac18587d3552701c8a9881062c7d6b",
+  "prompt": "/Users/rexxa/work/art-batch/B3/round3_animals/raw/reindeer_base_try2.prompt.txt",
+  "prompt_sha256": "647fdc9d91a7a7accba57d4048f7b8501cea3a844c17be1f75910bd4a4be0945",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/B3/round3_animals/raw/reindeer_base_try1.png",
+      "sha256": "64b0bc7212bc30dd2d7a9d4f7f6adb4851c712e7c98c125d586184b300b517c8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "scale": 0.16806722689075632,
+  "upright_scale": 0.16806722689075632,
+  "normalization": {
+    "scaled_size": [
+      63,
+      87
+    ],
+    "trim_box": [
+      0,
+      25,
+      42,
+      70
+    ],
+    "placement": [
+      27,
+      28
+    ],
+    "resized_to_canvas_offset": [
+      27,
+      3
+    ],
+    "visible_pixels": 1196,
+    "rotation_degrees": 0,
+    "scale": 0.16806722689075632,
+    "discarded_pixels": 1,
+    "discarded_max_alpha": 1,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "alpha": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "structural_pass": true,
+  "projection_report_only": {
+    "family": "reindeer",
+    "anchor": [
+      48,
+      72
+    ],
+    "height_band": [
+      1,
+      72
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1070,
+    "base_row": 72,
+    "base_error": 0,
+    "height": 44,
+    "gradient_x": -1.1079872916666669,
+    "gradient_y": -0.4542761622156277,
+    "light_angle_degrees": 202.29368992586248,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+  "status": "ACCEPTED_ART_CANDIDATE",
+  "metadata": "art/style05/batch_b3/animals/reindeer/S/graze.json",
+  "replaces": {
+    "source_branch": "v8/art-batch-a1",
+    "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+    "path": "art/animal/batch_a1/adopted/reindeer/S/graze.png",
+    "sha256": "17c3346658f3b6ea17ba159a6b0745047cf3c65a6a35e21f898c9faa25d503bc"
+  },
+  "review": "art/batch_b3/round3_animals/self_review.json",
+  "independent_review": "art/batch_b3/round3_animals/root_review.json",
+  "independent_review_sha256": "09cb879290dbaf241ef326426002d3aa4ea34c1a4620911c134cb15b809a4983"
+}

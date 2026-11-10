@@ -1,0 +1,19 @@
+{
+  "score": 93,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Broad coat planes replace the old pepper-like dark marks; anatomical outlines, eyes, hooves and mane detail remain.",
+    "Warm and winter reindeer retain distinct coats. Aurochs retains dark mass and long horns, cattle the lighter domestic silhouette."
+  ],
+  "suggestions": [],
+  "reasoning": "All58old/new frame pairs were reviewed at native1x and nearest2x on the five species boards. Body marks are quieter while poses, species silhouettes, palette and line hierarchy remain consistent with the locked deer/wolf references.",
+  "reviewer": "root independent from production",
+  "boards": [
+    "art/batch_b3/round3_animals/boards/cattle.png",
+    "art/batch_b3/round3_animals/boards/aurochs.png",
+    "art/batch_b3/round3_animals/boards/horse.png",
+    "art/batch_b3/round3_animals/boards/reindeer.png",
+    "art/batch_b3/round3_animals/boards/reindeer_winter.png"
+  ]
+}

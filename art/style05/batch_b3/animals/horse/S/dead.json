@@ -1,0 +1,122 @@
+{
+  "species": "horse",
+  "facing": "S",
+  "pose": "dead",
+  "attempt": 1,
+  "image": "art/style05/batch_b3/animals/horse/S/dead.png",
+  "image_sha256": "28c18ee91ec4a7a631ac3737fb7bfb2529461e9672caa006b1a35b155ee6b7cd",
+  "canvas_px": [
+    96,
+    64
+  ],
+  "anchor_px": [
+    48,
+    56
+  ],
+  "footprint_tiles": [
+    1,
+    1
+  ],
+  "source_panel": "/Users/rexxa/work/art-batch/B3/round3_animals/raw/panels/horse_base_try1/S_dead.png",
+  "source_panel_sha256": "4523bedd02b4dafc52ff6340cb8cddcbce1033c0066eba57dffe75adbd0ae02b",
+  "source_box": [
+    1147,
+    61,
+    1518,
+    616
+  ],
+  "raw": "/Users/rexxa/work/art-batch/B3/round3_animals/raw/horse_base_try1.png",
+  "raw_sha256": "c0fc83ddc2edc0c75d9b337a7907b2bb8c6d58e8bee74d9ba84465084e9c48db",
+  "prompt": "/Users/rexxa/work/art-batch/B3/round3_animals/raw/horse_base_try1.prompt.txt",
+  "prompt_sha256": "b37fd859c0d91d3dbd699a4ebe0491037c869c50999bb67f448a3ab53c4e9147",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/horse/try2.png",
+      "sha256": "0a4250e44ba06886f33ed64724094d75b914231b6872f3efb5e9f24dc2260c04"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "scale": 0.21902017291066284,
+  "upright_scale": 0.1826086956521739,
+  "normalization": {
+    "scaled_size": [
+      81,
+      122
+    ],
+    "trim_box": [
+      4,
+      59,
+      80,
+      94
+    ],
+    "placement": [
+      10,
+      22
+    ],
+    "resized_to_canvas_offset": [
+      6,
+      -37
+    ],
+    "visible_pixels": 1766,
+    "rotation_degrees": 0,
+    "scale": 0.21902017291066284,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "alpha": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "structural_pass": true,
+  "projection_report_only": {
+    "family": "horse",
+    "anchor": [
+      48,
+      56
+    ],
+    "height_band": [
+      1,
+      56
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1614,
+    "base_row": 56,
+    "base_error": 0,
+    "height": 35,
+    "gradient_x": -0.10503021032504796,
+    "gradient_y": -0.026484996695306545,
+    "light_angle_degrees": 194.15295998773277,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+  "status": "ACCEPTED_ART_CANDIDATE",
+  "metadata": "art/style05/batch_b3/animals/horse/S/dead.json",
+  "replaces": {
+    "source_branch": "v8/art-batch-a1",
+    "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+    "path": "art/animal/batch_a1/adopted/horse/S/dead.png",
+    "sha256": "e87b617b9b71a3d797ac4fb4ea65a409fe92a1fc17100de44556de208a4535dc"
+  },
+  "review": "art/batch_b3/round3_animals/self_review.json",
+  "independent_review": "art/batch_b3/round3_animals/root_review.json",
+  "independent_review_sha256": "09cb879290dbaf241ef326426002d3aa4ea34c1a4620911c134cb15b809a4983"
+}

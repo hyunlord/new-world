@@ -1,0 +1,11 @@
+{
+  "score": 93,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Reindeer warm coat is naturally warmer and more textured than winter grey; the selected retry reduces fragmented wash.",
+    "Dark high-contrast body hatch dots are no longer conspicuous at1x or2x across the selected58frames."
+  ],
+  "suggestions": [],
+  "reasoning": "All poses and species silhouettes remain readable against A1 deer/wolf. Contours, upper-left light, restrained wash and subdued three-group coat marks stay in the same family; alpha geometry checks separately pass."
+}

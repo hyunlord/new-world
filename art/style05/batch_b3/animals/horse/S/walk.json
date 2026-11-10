@@ -1,0 +1,122 @@
+{
+  "species": "horse",
+  "facing": "S",
+  "pose": "walk",
+  "attempt": 1,
+  "image": "art/style05/batch_b3/animals/horse/S/walk.png",
+  "image_sha256": "f4dcccd610625d106ac2d42f3815b98f5fbee06bb5580ae8aaa6ba8b95dfbb45",
+  "canvas_px": [
+    96,
+    80
+  ],
+  "anchor_px": [
+    48,
+    72
+  ],
+  "footprint_tiles": [
+    1,
+    1
+  ],
+  "source_panel": "/Users/rexxa/work/art-batch/B3/round3_animals/raw/panels/horse_base_try1/S_walk.png",
+  "source_panel_sha256": "57959649ab27c15e6e2d586ea24352fa63466d07dfc00257f1c481a650118bba",
+  "source_box": [
+    203,
+    5,
+    596,
+    569
+  ],
+  "raw": "/Users/rexxa/work/art-batch/B3/round3_animals/raw/horse_base_try1.png",
+  "raw_sha256": "c0fc83ddc2edc0c75d9b337a7907b2bb8c6d58e8bee74d9ba84465084e9c48db",
+  "prompt": "/Users/rexxa/work/art-batch/B3/round3_animals/raw/horse_base_try1.prompt.txt",
+  "prompt_sha256": "b37fd859c0d91d3dbd699a4ebe0491037c869c50999bb67f448a3ab53c4e9147",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/horse/try2.png",
+      "sha256": "0a4250e44ba06886f33ed64724094d75b914231b6872f3efb5e9f24dc2260c04"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "scale": 0.1826086956521739,
+  "upright_scale": 0.1826086956521739,
+  "normalization": {
+    "scaled_size": [
+      72,
+      103
+    ],
+    "trim_box": [
+      16,
+      29,
+      66,
+      86
+    ],
+    "placement": [
+      23,
+      16
+    ],
+    "resized_to_canvas_offset": [
+      7,
+      -13
+    ],
+    "visible_pixels": 1534,
+    "rotation_degrees": 0,
+    "scale": 0.1826086956521739,
+    "discarded_pixels": 4,
+    "discarded_max_alpha": 1,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "alpha": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "structural_pass": true,
+  "projection_report_only": {
+    "family": "horse",
+    "anchor": [
+      48,
+      72
+    ],
+    "height_band": [
+      1,
+      72
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1359,
+    "base_row": 71,
+    "base_error": -1,
+    "height": 56,
+    "gradient_x": -1.0639260517799347,
+    "gradient_y": -0.24084556765163279,
+    "light_angle_degrees": 192.75531146178898,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+  "status": "ACCEPTED_ART_CANDIDATE",
+  "metadata": "art/style05/batch_b3/animals/horse/S/walk.json",
+  "replaces": {
+    "source_branch": "v8/art-batch-a1",
+    "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+    "path": "art/animal/batch_a1/adopted/horse/S/walk.png",
+    "sha256": "c41c1e4aff7655ca53f15145e84b001aa832e50a10cf7a1bf63fbd1a5c04baf4"
+  },
+  "review": "art/batch_b3/round3_animals/self_review.json",
+  "independent_review": "art/batch_b3/round3_animals/root_review.json",
+  "independent_review_sha256": "09cb879290dbaf241ef326426002d3aa4ea34c1a4620911c134cb15b809a4983"
+}

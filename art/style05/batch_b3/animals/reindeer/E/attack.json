@@ -1,0 +1,122 @@
+{
+  "species": "reindeer",
+  "facing": "E",
+  "pose": "attack",
+  "attempt": 1,
+  "image": "art/style05/batch_b3/animals/reindeer/E/attack.png",
+  "image_sha256": "1b76a80813adff73dd7e304444cecb83ca0d819f800928d2bfe5ba4bb4e81100",
+  "canvas_px": [
+    96,
+    80
+  ],
+  "anchor_px": [
+    48,
+    72
+  ],
+  "footprint_tiles": [
+    1,
+    1
+  ],
+  "source_panel": "/Users/rexxa/work/art-batch/B3/round3_animals/raw/panels/reindeer_attack_try1/E_attack.png",
+  "source_panel_sha256": "31426a686d1333cac56b9d385638e7178208f15e02eef275beb0e4270818d9ca",
+  "source_box": [
+    992,
+    0,
+    1984,
+    793
+  ],
+  "raw": "/Users/rexxa/work/art-batch/B3/round3_animals/raw/reindeer_attack_try1.png",
+  "raw_sha256": "163ee8d49fc1bc36912917413f69992a001c029cb00c9df406974c31d246465a",
+  "prompt": "/Users/rexxa/work/art-batch/B3/round3_animals/raw/reindeer_attack_try1.prompt.txt",
+  "prompt_sha256": "644f8a231152d55dc969e13fd1a68f5fb31f1042b0e1d0151e7e8c0b07f591ba",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/reindeer/attack_try2.png",
+      "sha256": "c646384432a57dc8cb0fa349512529a435f57214d7955711126e956f8de7d7d7"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "scale": 0.07092198581560284,
+  "upright_scale": 0.07092198581560284,
+  "normalization": {
+    "scaled_size": [
+      70,
+      56
+    ],
+    "trim_box": [
+      0,
+      12,
+      67,
+      50
+    ],
+    "placement": [
+      14,
+      35
+    ],
+    "resized_to_canvas_offset": [
+      14,
+      23
+    ],
+    "visible_pixels": 1437,
+    "rotation_degrees": 0,
+    "scale": 0.07092198581560284,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "alpha": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "structural_pass": true,
+  "projection_report_only": {
+    "family": "reindeer",
+    "anchor": [
+      48,
+      72
+    ],
+    "height_band": [
+      1,
+      72
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1285,
+    "base_row": 71,
+    "base_error": -1,
+    "height": 36,
+    "gradient_x": -0.6278870151770658,
+    "gradient_y": -2.720814563928874,
+    "light_angle_degrees": 257.0052486275549,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+  "status": "ACCEPTED_ART_CANDIDATE",
+  "metadata": "art/style05/batch_b3/animals/reindeer/E/attack.json",
+  "replaces": {
+    "source_branch": "v8/art-batch-a1",
+    "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+    "path": "art/animal/batch_a1/adopted/reindeer/E/attack.png",
+    "sha256": "96d58a0f4cac34341615e2461ebaf8df240ac61163731ab2ef6819620523ba1b"
+  },
+  "review": "art/batch_b3/round3_animals/self_review.json",
+  "independent_review": "art/batch_b3/round3_animals/root_review.json",
+  "independent_review_sha256": "09cb879290dbaf241ef326426002d3aa4ea34c1a4620911c134cb15b809a4983"
+}

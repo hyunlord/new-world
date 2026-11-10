@@ -1,0 +1,122 @@
+{
+  "species": "reindeer",
+  "facing": "S",
+  "pose": "walk",
+  "attempt": 2,
+  "image": "art/style05/batch_b3/animals/reindeer/S/walk.png",
+  "image_sha256": "7d35aed7ee905c9271cc2b80b8715a2719545832a3e3ff963a496f29b0aac2c5",
+  "canvas_px": [
+    96,
+    80
+  ],
+  "anchor_px": [
+    48,
+    72
+  ],
+  "footprint_tiles": [
+    1,
+    1
+  ],
+  "source_panel": "/Users/rexxa/work/art-batch/B3/round3_animals/raw/panels/reindeer_base_try2/S_walk.png",
+  "source_panel_sha256": "7f98d5c62f7abeee5b6423777ad079ec4a3a501f5541a81c64e1e3d0c726e2c1",
+  "source_box": [
+    241,
+    19,
+    590,
+    554
+  ],
+  "raw": "/Users/rexxa/work/art-batch/B3/round3_animals/raw/reindeer_base_try2.png",
+  "raw_sha256": "88723e4e7e6f6424eaa42404400f6bf504ac18587d3552701c8a9881062c7d6b",
+  "prompt": "/Users/rexxa/work/art-batch/B3/round3_animals/raw/reindeer_base_try2.prompt.txt",
+  "prompt_sha256": "647fdc9d91a7a7accba57d4048f7b8501cea3a844c17be1f75910bd4a4be0945",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/B3/round3_animals/raw/reindeer_base_try1.png",
+      "sha256": "64b0bc7212bc30dd2d7a9d4f7f6adb4851c712e7c98c125d586184b300b517c8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "scale": 0.16806722689075632,
+  "upright_scale": 0.16806722689075632,
+  "normalization": {
+    "scaled_size": [
+      59,
+      90
+    ],
+    "trim_box": [
+      9,
+      20,
+      53,
+      77
+    ],
+    "placement": [
+      26,
+      16
+    ],
+    "resized_to_canvas_offset": [
+      17,
+      -4
+    ],
+    "visible_pixels": 1339,
+    "rotation_degrees": 0,
+    "scale": 0.16806722689075632,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "alpha": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "structural_pass": true,
+  "projection_report_only": {
+    "family": "reindeer",
+    "anchor": [
+      48,
+      72
+    ],
+    "height_band": [
+      1,
+      72
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1175,
+    "base_row": 72,
+    "base_error": 0,
+    "height": 57,
+    "gradient_x": 0.21125529075309757,
+    "gradient_y": -1.0313667889908258,
+    "light_angle_degrees": 281.5758014553715,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": false,
+    "passed": false
+  },
+  "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+  "status": "ACCEPTED_ART_CANDIDATE",
+  "metadata": "art/style05/batch_b3/animals/reindeer/S/walk.json",
+  "replaces": {
+    "source_branch": "v8/art-batch-a1",
+    "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+    "path": "art/animal/batch_a1/adopted/reindeer/S/walk.png",
+    "sha256": "e038b3fa96935bae4e5f345d4f605b8d8ea2b8be727043448839d31f417114e2"
+  },
+  "review": "art/batch_b3/round3_animals/self_review.json",
+  "independent_review": "art/batch_b3/round3_animals/root_review.json",
+  "independent_review_sha256": "09cb879290dbaf241ef326426002d3aa4ea34c1a4620911c134cb15b809a4983"
+}

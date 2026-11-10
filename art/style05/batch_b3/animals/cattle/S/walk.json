@@ -1,0 +1,122 @@
+{
+  "species": "cattle",
+  "facing": "S",
+  "pose": "walk",
+  "attempt": 1,
+  "image": "art/style05/batch_b3/animals/cattle/S/walk.png",
+  "image_sha256": "2109d1c22eff18e9068a215cd584587a59c0862b59fa9db9ea0f51a051d07436",
+  "canvas_px": [
+    96,
+    80
+  ],
+  "anchor_px": [
+    48,
+    72
+  ],
+  "footprint_tiles": [
+    1,
+    1
+  ],
+  "source_panel": "/Users/rexxa/work/art-batch/B3/round3_animals/raw/panels/cattle_base_try1/S_walk.png",
+  "source_panel_sha256": "a40ced4832f77e51b173a0c975912f09687b983618ca311634f39d3e0dbe7aa0",
+  "source_box": [
+    203,
+    13,
+    578,
+    522
+  ],
+  "raw": "/Users/rexxa/work/art-batch/B3/round3_animals/raw/cattle_base_try1.png",
+  "raw_sha256": "8dbd4f4943425793de86a6ee85aa6dc0c299a7b9e2f8b3bacfe5cfb459867e73",
+  "prompt": "/Users/rexxa/work/art-batch/B3/round3_animals/raw/cattle_base_try1.prompt.txt",
+  "prompt_sha256": "246a9aec1ab11d90901cd481735d273468e972c4ad6c9dd491d1efce53e808f7",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/cattle/try4.png",
+      "sha256": "413dbe8aad5400e8ea9fde8516b0183584704b06f61d0b51d58e0f6a92f6aaa4"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "scale": 0.1694915254237288,
+  "upright_scale": 0.1694915254237288,
+  "normalization": {
+    "scaled_size": [
+      64,
+      86
+    ],
+    "trim_box": [
+      14,
+      25,
+      59,
+      74
+    ],
+    "placement": [
+      25,
+      24
+    ],
+    "resized_to_canvas_offset": [
+      11,
+      -1
+    ],
+    "visible_pixels": 1250,
+    "rotation_degrees": 0,
+    "scale": 0.1694915254237288,
+    "discarded_pixels": 2,
+    "discarded_max_alpha": 1,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "alpha": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "structural_pass": true,
+  "projection_report_only": {
+    "family": "cattle",
+    "anchor": [
+      48,
+      72
+    ],
+    "height_band": [
+      1,
+      72
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1113,
+    "base_row": 71,
+    "base_error": -1,
+    "height": 47,
+    "gradient_x": -1.6085315581854043,
+    "gradient_y": -0.9445065009560227,
+    "light_angle_degrees": 210.42084053678963,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+  "status": "ACCEPTED_ART_CANDIDATE",
+  "metadata": "art/style05/batch_b3/animals/cattle/S/walk.json",
+  "replaces": {
+    "source_branch": "v8/art-batch-a1",
+    "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+    "path": "art/animal/batch_a1/adopted/cattle/S/walk.png",
+    "sha256": "5da008a699e89754c80d2423c81339b6ce7fa33f8d1f38d77edfba5a19dd5421"
+  },
+  "review": "art/batch_b3/round3_animals/self_review.json",
+  "independent_review": "art/batch_b3/round3_animals/root_review.json",
+  "independent_review_sha256": "09cb879290dbaf241ef326426002d3aa4ea34c1a4620911c134cb15b809a4983"
+}

@@ -1,0 +1,933 @@
+{
+  "operation": "replace_matching_A1_frames_not_append",
+  "replacements": [
+    {
+      "id": "cattle/S/stand",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/cattle/S/stand.png",
+        "sha256": "dce5b5462d8c2d4189a90a8429e9f7c272c963f7e9f8a28e0952b1d97c7be2e8"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/cattle/S/stand.png",
+        "sha256": "b4477196d96c6c0928f92f674d685a89425a1fcd7d865dabad51c41cf4fbda55"
+      },
+      "dest": "animals/cattle/S/stand.png"
+    },
+    {
+      "id": "cattle/S/walk",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/cattle/S/walk.png",
+        "sha256": "5da008a699e89754c80d2423c81339b6ce7fa33f8d1f38d77edfba5a19dd5421"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/cattle/S/walk.png",
+        "sha256": "2109d1c22eff18e9068a215cd584587a59c0862b59fa9db9ea0f51a051d07436"
+      },
+      "dest": "animals/cattle/S/walk.png"
+    },
+    {
+      "id": "cattle/S/run",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/cattle/S/run.png",
+        "sha256": "2bfd8958587168bdb00b1733b8c1bb3ddd8169a375f95970b2049dcf50dc4aa2"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/cattle/S/run.png",
+        "sha256": "77b52eebd9e21ccb3607cc72b93be68d964dc71848aed8cc005dae5eedcc308f"
+      },
+      "dest": "animals/cattle/S/run.png"
+    },
+    {
+      "id": "cattle/S/graze",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/cattle/S/graze.png",
+        "sha256": "91c9f948d1aebda0e06c46f326b0ded74d5bfbcb67d6b5f39ab32ffb3b2763db"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/cattle/S/graze.png",
+        "sha256": "2b3d8e9d34c1dfd2b699d9ac33f28e6f85befa3ecb1e6720a14df79d5ea5add4"
+      },
+      "dest": "animals/cattle/S/graze.png"
+    },
+    {
+      "id": "cattle/S/dead",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/cattle/S/dead.png",
+        "sha256": "91b3eca68cacf2096b8dd240f747f2b21f8a0b974e0da01c6ae53ab2aaab5225"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/cattle/S/dead.png",
+        "sha256": "81e1fa4a35fc7469a97c0d9812f17d6ca190c6245bf383297f8b9560fb4aa762"
+      },
+      "dest": "animals/cattle/S/dead.png"
+    },
+    {
+      "id": "cattle/E/stand",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/cattle/E/stand.png",
+        "sha256": "960c0952612255ebb41ba38246c35efc0447c8ef51fd2c67ef6784e8bffcc5b1"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/cattle/E/stand.png",
+        "sha256": "d39cb555cc0965f8cb61b4bff7b9878d99faa66b343fbd7058010089ee01cfc2"
+      },
+      "dest": "animals/cattle/E/stand.png"
+    },
+    {
+      "id": "cattle/E/walk",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/cattle/E/walk.png",
+        "sha256": "b6caa41ac8d4452e310984472a5a11c19d419dd75eef0ca770f626df0c3bac7e"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/cattle/E/walk.png",
+        "sha256": "e9b25f005a3b9dc0eb5ea325ac2ed8b671f15300a4f33efe509ce0fbe76235d1"
+      },
+      "dest": "animals/cattle/E/walk.png"
+    },
+    {
+      "id": "cattle/E/run",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/cattle/E/run.png",
+        "sha256": "3deefae7d251fa6a20fb33aff69f44a71103ef30bd5135f9379d3ccf05485484"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/cattle/E/run.png",
+        "sha256": "acf83863c764568bc573cb37d6863487f2e726baf6823c59b740218ac1904045"
+      },
+      "dest": "animals/cattle/E/run.png"
+    },
+    {
+      "id": "cattle/E/graze",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/cattle/E/graze.png",
+        "sha256": "5dfcb8339725b879e8bc3b48db31f54a351efebcf2350715709f649ba6973742"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/cattle/E/graze.png",
+        "sha256": "e206128ffba074e50867805339e20ab2063278d98e120485aa039a055a988d43"
+      },
+      "dest": "animals/cattle/E/graze.png"
+    },
+    {
+      "id": "cattle/E/dead",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/cattle/E/dead.png",
+        "sha256": "893958dd15786175eedf1cd201faf33ac41441a7d5db6b0f6cc5a3815f852394"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/cattle/E/dead.png",
+        "sha256": "f8d25dce4689423cc84f733f677f87efa120998a1b2fcd7673e8440cf2b727ca"
+      },
+      "dest": "animals/cattle/E/dead.png"
+    },
+    {
+      "id": "aurochs/S/stand",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/aurochs/S/stand.png",
+        "sha256": "89404eb4fc9bb93ff6c97896d2e9a3a7d33c7a84c3272b14175d8bffef5ada4d"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/aurochs/S/stand.png",
+        "sha256": "df997743f4b0d77c86fcf3dd2f754f1ac5b450de43131823ce92068cf5fce37e"
+      },
+      "dest": "animals/aurochs/S/stand.png"
+    },
+    {
+      "id": "aurochs/S/walk",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/aurochs/S/walk.png",
+        "sha256": "d2dbd4f2b5897a56c196a1a5e1e3749c3ef90eadc4c16e787613299e38a9abc3"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/aurochs/S/walk.png",
+        "sha256": "fb2a9dc9a5f26dbe5bf66861904283da8a0d1ea4b13728c82df343bd5a297b62"
+      },
+      "dest": "animals/aurochs/S/walk.png"
+    },
+    {
+      "id": "aurochs/S/run",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/aurochs/S/run.png",
+        "sha256": "427365edf8e90e14961ef531bd351db5ebf08b2342b3c8123c2b60827b711c69"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/aurochs/S/run.png",
+        "sha256": "92f536ca63de2e84eda9be85bc61316853126bad76c7dbd06fff0d20faf13c6f"
+      },
+      "dest": "animals/aurochs/S/run.png"
+    },
+    {
+      "id": "aurochs/S/graze",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/aurochs/S/graze.png",
+        "sha256": "94e8deef5fa3e529e9da75505648c56570b574e55de4f9ca199c048477a2269e"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/aurochs/S/graze.png",
+        "sha256": "8f6bba174f94553af6cc89e9d3f4d46f493e3b9263c1ab7f3737d6e2309b3116"
+      },
+      "dest": "animals/aurochs/S/graze.png"
+    },
+    {
+      "id": "aurochs/S/dead",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/aurochs/S/dead.png",
+        "sha256": "6445211cac6aea224c8029d8f96caec5dac2ce645b1a795ccd754b39c4610a7e"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/aurochs/S/dead.png",
+        "sha256": "b7f1d5bf68b4bee5be0ed364f492ea3974869c37748d707297d5b6ff96073ae3"
+      },
+      "dest": "animals/aurochs/S/dead.png"
+    },
+    {
+      "id": "aurochs/E/stand",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/aurochs/E/stand.png",
+        "sha256": "0acf559acf361812a1e579710ea80e52b8b7e7a6aed8ea92773095ffc3fbff45"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/aurochs/E/stand.png",
+        "sha256": "10b6f16ccc200e247d50648b86aa502236c128ce9f264243825948b73bed83fa"
+      },
+      "dest": "animals/aurochs/E/stand.png"
+    },
+    {
+      "id": "aurochs/E/walk",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/aurochs/E/walk.png",
+        "sha256": "a0e1d49c41d5b593569adfbeb59da2b2459924d4dba73301c758bc817ff31ef2"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/aurochs/E/walk.png",
+        "sha256": "99c4b0f5b501d733da52cab0f11af6536eb040e3acef44bed38b0514cb52a91b"
+      },
+      "dest": "animals/aurochs/E/walk.png"
+    },
+    {
+      "id": "aurochs/E/run",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/aurochs/E/run.png",
+        "sha256": "725f3239e56a0c533bab5934de82004b2c6c0244eda9b29ed660c591fdffdb6b"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/aurochs/E/run.png",
+        "sha256": "5997cb1800e706b8a61f185e4035bb84c529d3995ab5aa7ad3b6ad0e07393662"
+      },
+      "dest": "animals/aurochs/E/run.png"
+    },
+    {
+      "id": "aurochs/E/graze",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/aurochs/E/graze.png",
+        "sha256": "10831293895c5959c621d7ec5d41e26e7e69ac7c9492fba5e5bccd75f931de58"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/aurochs/E/graze.png",
+        "sha256": "198fb1828b0f273cbc2e06aadb8cbb958c92995e1f91a7e64cb7792f0d7b853d"
+      },
+      "dest": "animals/aurochs/E/graze.png"
+    },
+    {
+      "id": "aurochs/E/dead",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/aurochs/E/dead.png",
+        "sha256": "053d8c4c083256601d73fa72eb19b6d62cdf377dc56371fb0c8d4203eb9db1ec"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/aurochs/E/dead.png",
+        "sha256": "22b49fbd894c65826b79e45d39ef74659ee0aa2c68f9d0c4e200a1e562a52cf3"
+      },
+      "dest": "animals/aurochs/E/dead.png"
+    },
+    {
+      "id": "aurochs/S/attack",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/aurochs/S/attack.png",
+        "sha256": "7e29d8be2d202cbe746c42cff8d6d47d2040be1d1fdb2b49876d5b27a7163d75"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/aurochs/S/attack.png",
+        "sha256": "5b9fafe2c6b93474bb325137438a4f39d22747039cd0dd3d30e2f3b3844508cd"
+      },
+      "dest": "animals/aurochs/S/attack.png"
+    },
+    {
+      "id": "aurochs/E/attack",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/aurochs/E/attack.png",
+        "sha256": "f750e254239b432d8c574f67cf158cb0bc651a1cebefde5c7259020196171077"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/aurochs/E/attack.png",
+        "sha256": "dfaf466e3574d9c9be4ed273c023c55ebeb7b43ea2ca86fc4c0e3f06ac86da32"
+      },
+      "dest": "animals/aurochs/E/attack.png"
+    },
+    {
+      "id": "horse/S/stand",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/horse/S/stand.png",
+        "sha256": "5392b911ae32b1a17891dfee70cedef68d2127ebeff79d7e2c1f35fb3b49c1e8"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/horse/S/stand.png",
+        "sha256": "5dc24f58e95a63c31a01ab17cbdd31b97c8485770ce6d32bfb8d5c23d9ec45ec"
+      },
+      "dest": "animals/horse/S/stand.png"
+    },
+    {
+      "id": "horse/S/walk",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/horse/S/walk.png",
+        "sha256": "c41c1e4aff7655ca53f15145e84b001aa832e50a10cf7a1bf63fbd1a5c04baf4"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/horse/S/walk.png",
+        "sha256": "f4dcccd610625d106ac2d42f3815b98f5fbee06bb5580ae8aaa6ba8b95dfbb45"
+      },
+      "dest": "animals/horse/S/walk.png"
+    },
+    {
+      "id": "horse/S/run",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/horse/S/run.png",
+        "sha256": "53afd513a513b437309c516b8303fa3142d00b2ad01ec6b582797c535d249621"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/horse/S/run.png",
+        "sha256": "f4b78c217399c94de8032649400f665d85920f9235d70cdc847bf16a423f34c9"
+      },
+      "dest": "animals/horse/S/run.png"
+    },
+    {
+      "id": "horse/S/graze",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/horse/S/graze.png",
+        "sha256": "bbf54b28ab7f97b73be1a58b0e0858757c067bb2471336d396b53761b9a70dab"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/horse/S/graze.png",
+        "sha256": "5ae9d811cc70af0a9721dcc573edcefaafe485f56f63d62a574a6d58452c5b3e"
+      },
+      "dest": "animals/horse/S/graze.png"
+    },
+    {
+      "id": "horse/S/dead",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/horse/S/dead.png",
+        "sha256": "e87b617b9b71a3d797ac4fb4ea65a409fe92a1fc17100de44556de208a4535dc"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/horse/S/dead.png",
+        "sha256": "28c18ee91ec4a7a631ac3737fb7bfb2529461e9672caa006b1a35b155ee6b7cd"
+      },
+      "dest": "animals/horse/S/dead.png"
+    },
+    {
+      "id": "horse/E/stand",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/horse/E/stand.png",
+        "sha256": "41d2e30d93ba6c2a25c643585100a5b7fe2a09f4fefc86d874c9d5edc68632ce"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/horse/E/stand.png",
+        "sha256": "9fc9f907fcc16fdcc35c84c58f3c2c7e944dccb345db00c945b7c0289d921ddd"
+      },
+      "dest": "animals/horse/E/stand.png"
+    },
+    {
+      "id": "horse/E/walk",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/horse/E/walk.png",
+        "sha256": "2a1b92d7a7952387694aa61a9973d5111d7134ae1df04e1326f8ab16a7529eef"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/horse/E/walk.png",
+        "sha256": "e66456db02399d1bac4a3b1284a976bd3ec36eb82a2cf52b7d0e7d8b97edacde"
+      },
+      "dest": "animals/horse/E/walk.png"
+    },
+    {
+      "id": "horse/E/run",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/horse/E/run.png",
+        "sha256": "a61a6172adc715f2be46c21235e1a481c379b0c84ef8e363cba8b26be2773b23"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/horse/E/run.png",
+        "sha256": "382a73fee7387d20512280be74a45a6b3cfbe21480a44ee40a44efca9094dc54"
+      },
+      "dest": "animals/horse/E/run.png"
+    },
+    {
+      "id": "horse/E/graze",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/horse/E/graze.png",
+        "sha256": "82f3031cb6674a46ed582672fc907ae0394d547f560ad653868716ef73e377d7"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/horse/E/graze.png",
+        "sha256": "90111a253d492b5731b47e1cb2b20378c819ecdd7499044c4e9d163386b530a5"
+      },
+      "dest": "animals/horse/E/graze.png"
+    },
+    {
+      "id": "horse/E/dead",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/horse/E/dead.png",
+        "sha256": "07f28d254173c260d2f245dfbfaddc9437dce95b3e69cdffeedff5c62c711ee4"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/horse/E/dead.png",
+        "sha256": "b5618f7e015bc8c8ee08626716f346790cfa4bc1d4c824707921a233023a53a7"
+      },
+      "dest": "animals/horse/E/dead.png"
+    },
+    {
+      "id": "horse/S/attack",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/horse/S/attack.png",
+        "sha256": "e97e35b18cd18a27437c8b333dd8c82b29293f7eb26d39e855450cfc2700cbfc"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/horse/S/attack.png",
+        "sha256": "c4dd807972cb95815c9dd56913729ebcd763840854ebf0f92c9ba5bb504a98f4"
+      },
+      "dest": "animals/horse/S/attack.png"
+    },
+    {
+      "id": "horse/E/attack",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/horse/E/attack.png",
+        "sha256": "d3788649fddf634dd5e8e3eadce4504b3590369ad3dcf5c39fb9f637d1260de4"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/horse/E/attack.png",
+        "sha256": "1422566591b2f570031690e76714a4c83e042ff22c1b6ccd115d82d525dc45db"
+      },
+      "dest": "animals/horse/E/attack.png"
+    },
+    {
+      "id": "reindeer/S/stand",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/reindeer/S/stand.png",
+        "sha256": "f093b48611eb39aa3702136a9f7cf1dd8c101343e3aa6d5c0a3b51a326e43cd0"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/reindeer/S/stand.png",
+        "sha256": "863660c3e462bbf82f52890c7b84933fcd6ff67cf2028b82e43b40154f13623f"
+      },
+      "dest": "animals/reindeer/S/stand.png"
+    },
+    {
+      "id": "reindeer/S/walk",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/reindeer/S/walk.png",
+        "sha256": "e038b3fa96935bae4e5f345d4f605b8d8ea2b8be727043448839d31f417114e2"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/reindeer/S/walk.png",
+        "sha256": "7d35aed7ee905c9271cc2b80b8715a2719545832a3e3ff963a496f29b0aac2c5"
+      },
+      "dest": "animals/reindeer/S/walk.png"
+    },
+    {
+      "id": "reindeer/S/run",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/reindeer/S/run.png",
+        "sha256": "bed5fe6a49dabc0061136445ee220f7476fe92c27749e709f61cb374a739aeca"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/reindeer/S/run.png",
+        "sha256": "3b3b8fc80d78a1ee5fb5431a2356cf58ae7cfafe2517ec4d59b74941c43f82ff"
+      },
+      "dest": "animals/reindeer/S/run.png"
+    },
+    {
+      "id": "reindeer/S/graze",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/reindeer/S/graze.png",
+        "sha256": "17c3346658f3b6ea17ba159a6b0745047cf3c65a6a35e21f898c9faa25d503bc"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/reindeer/S/graze.png",
+        "sha256": "683ec09600df6ca77f96e08506b848738c519837667ea32ff3b014a01d2ccf06"
+      },
+      "dest": "animals/reindeer/S/graze.png"
+    },
+    {
+      "id": "reindeer/S/dead",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/reindeer/S/dead.png",
+        "sha256": "bb14f454758d042f4e427e772efe679f068ad2ba5dfb23f60272348c9273cd30"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/reindeer/S/dead.png",
+        "sha256": "9e023892e15afe1747852ad84338362092d581487667566357ccc3a9272af226"
+      },
+      "dest": "animals/reindeer/S/dead.png"
+    },
+    {
+      "id": "reindeer/E/stand",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/reindeer/E/stand.png",
+        "sha256": "dbe6098b0609a1a05b1d55a914e10dcbfb66f3965dae5c4db7413726b11de435"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/reindeer/E/stand.png",
+        "sha256": "d49a6be5e960979216dd8667e30d805fc85ad3009a78275f2b0ff8df0b433e3e"
+      },
+      "dest": "animals/reindeer/E/stand.png"
+    },
+    {
+      "id": "reindeer/E/walk",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/reindeer/E/walk.png",
+        "sha256": "bd1ae6b3f3dbdecc2bf7489ed6e130e6674841079bada037e9ddfb085db8dcf2"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/reindeer/E/walk.png",
+        "sha256": "d4417b49e265031f13f325299d7458f63c48d44a4b6f4f69e1ec975ab7cdbfd8"
+      },
+      "dest": "animals/reindeer/E/walk.png"
+    },
+    {
+      "id": "reindeer/E/run",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/reindeer/E/run.png",
+        "sha256": "b66da6a16a89e4df1ec1ff01d10ff1ad7b9dfa1e292f40d73f00583f6b30d79f"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/reindeer/E/run.png",
+        "sha256": "79616ac9c38f4abec94bb6870dbba64c358d5d518cb0a6af1b81aaee67496e9b"
+      },
+      "dest": "animals/reindeer/E/run.png"
+    },
+    {
+      "id": "reindeer/E/graze",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/reindeer/E/graze.png",
+        "sha256": "681c4387ea5939524175a256e12903da5d501ada224bdee5b5628cc47b1644de"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/reindeer/E/graze.png",
+        "sha256": "b82bea288b7884f7daf8c9e1e0251bf3a19f1022f11d2f0d356d93f197c4a60b"
+      },
+      "dest": "animals/reindeer/E/graze.png"
+    },
+    {
+      "id": "reindeer/E/dead",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/reindeer/E/dead.png",
+        "sha256": "b6fb865e61539be524962be29ce48181a3bf4242ef53f081669ec209bb91a924"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/reindeer/E/dead.png",
+        "sha256": "90c871d9447454188ef78df453cc9cda425f5b69f88337847e00c9294a91330c"
+      },
+      "dest": "animals/reindeer/E/dead.png"
+    },
+    {
+      "id": "reindeer/S/attack",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/reindeer/S/attack.png",
+        "sha256": "5c9d95420606cbe549f1059d86d9b3b146a1468933d66843a094bc6a285d98d6"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/reindeer/S/attack.png",
+        "sha256": "f49c6c5dfee40c80abe28e355023dc29229dfa0ea8f227edc11f963404522cc0"
+      },
+      "dest": "animals/reindeer/S/attack.png"
+    },
+    {
+      "id": "reindeer/E/attack",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/reindeer/E/attack.png",
+        "sha256": "96d58a0f4cac34341615e2461ebaf8df240ac61163731ab2ef6819620523ba1b"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/reindeer/E/attack.png",
+        "sha256": "1b76a80813adff73dd7e304444cecb83ca0d819f800928d2bfe5ba4bb4e81100"
+      },
+      "dest": "animals/reindeer/E/attack.png"
+    },
+    {
+      "id": "reindeer_winter/S/stand",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/reindeer_winter/S/stand.png",
+        "sha256": "00e91b5b8bcf701f20096d5cd50f25ff0be58ee5f82759c42b2e4bf6eebecebc"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/reindeer_winter/S/stand.png",
+        "sha256": "e58a30e2c14a9590853b906f9e421934244c3b7f5938be614338d92524a0eb7e"
+      },
+      "dest": "animals/reindeer_winter/S/stand.png"
+    },
+    {
+      "id": "reindeer_winter/S/walk",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/reindeer_winter/S/walk.png",
+        "sha256": "096ad962f6de25b500a61d91ab5531eb7592b07a3e66a8ee9a63a049c9523222"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/reindeer_winter/S/walk.png",
+        "sha256": "5e6a9ab429e46815a1bb8f59ec8e330598358cf9987272ef6e5a7b4aefe5563f"
+      },
+      "dest": "animals/reindeer_winter/S/walk.png"
+    },
+    {
+      "id": "reindeer_winter/S/run",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/reindeer_winter/S/run.png",
+        "sha256": "83048b1f1d5afbda21375de7921d3a8ac7f27944f866bbc0ab6f8fd5aea172de"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/reindeer_winter/S/run.png",
+        "sha256": "9a18a2a31b5f2e4e0f2213061b8f812a016f5296be0da1d40dd273d675b068a9"
+      },
+      "dest": "animals/reindeer_winter/S/run.png"
+    },
+    {
+      "id": "reindeer_winter/S/graze",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/reindeer_winter/S/graze.png",
+        "sha256": "8dc73d678987babde6d1021c9fcfa67ea51dc422c4aedf4e3237a88221a36fd9"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/reindeer_winter/S/graze.png",
+        "sha256": "5cf122b3e5c0c0e8f53c07ac7c3c4ecb48064408a0dd9a32915eec8f4f2d6de8"
+      },
+      "dest": "animals/reindeer_winter/S/graze.png"
+    },
+    {
+      "id": "reindeer_winter/S/dead",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/reindeer_winter/S/dead.png",
+        "sha256": "b28c684305aae03e5a7970a73584d0862c4b64dd15d25bf109a3774e66d8058e"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/reindeer_winter/S/dead.png",
+        "sha256": "b6ddfaf043bdfcfe0432841687267855b20ae55b3279fc17640e4b23350dcfe2"
+      },
+      "dest": "animals/reindeer_winter/S/dead.png"
+    },
+    {
+      "id": "reindeer_winter/E/stand",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/reindeer_winter/E/stand.png",
+        "sha256": "60a0cca3805124f0b488c9a1fe9437e1041b6a0fdc92bc6f23ef4d1ba058f91f"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/reindeer_winter/E/stand.png",
+        "sha256": "67595c75af08feedd177c9a8f35ed1fac98cf02aa764509520e6be5bfd484b02"
+      },
+      "dest": "animals/reindeer_winter/E/stand.png"
+    },
+    {
+      "id": "reindeer_winter/E/walk",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/reindeer_winter/E/walk.png",
+        "sha256": "bea660a790ee2a99a47c8ed235a3a1db8f9516731c402a2baa308ac5c543eb79"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/reindeer_winter/E/walk.png",
+        "sha256": "6d1c57b3d7096e5897c00035c4a74f12bc60f375eebb619d3f8b8b1900f9978e"
+      },
+      "dest": "animals/reindeer_winter/E/walk.png"
+    },
+    {
+      "id": "reindeer_winter/E/run",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/reindeer_winter/E/run.png",
+        "sha256": "276bf3fe8d603e3409337a19ba422d86950e6302b74eb861ce94638813c93c11"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/reindeer_winter/E/run.png",
+        "sha256": "565b03ce467f5ebeafb846adf5058ecadcbec22d34f639f748a15a09541abcb7"
+      },
+      "dest": "animals/reindeer_winter/E/run.png"
+    },
+    {
+      "id": "reindeer_winter/E/graze",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/reindeer_winter/E/graze.png",
+        "sha256": "50c7633a38f054a045a560f3c40235a8b83d01deee6969e6918e0ad20bfe7973"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/reindeer_winter/E/graze.png",
+        "sha256": "7b05e72adc07f0d14c3f37920f1d3ebd37b8a0b57dd4f86c0a9a15e956f044f7"
+      },
+      "dest": "animals/reindeer_winter/E/graze.png"
+    },
+    {
+      "id": "reindeer_winter/E/dead",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/reindeer_winter/E/dead.png",
+        "sha256": "2601324e08a2c3af82c35d348764bc59744c7aa6a3365df106c03fbcca10627e"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/reindeer_winter/E/dead.png",
+        "sha256": "11772db659e0b650e4d808c09dd8517ec108d34698d2dca356e66229e6fe4245"
+      },
+      "dest": "animals/reindeer_winter/E/dead.png"
+    },
+    {
+      "id": "reindeer_winter/S/attack",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/reindeer_winter/S/attack.png",
+        "sha256": "dba796bcef8c78ad16c9c970b05d217d095dc88c633ec0a00bb0a447b784a3eb"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/reindeer_winter/S/attack.png",
+        "sha256": "dc02b70d9c80f56cf0a644c94b4d064d526c049b8fb0c88bf92d7d4ce39de975"
+      },
+      "dest": "animals/reindeer_winter/S/attack.png"
+    },
+    {
+      "id": "reindeer_winter/E/attack",
+      "operation": "replace",
+      "old": {
+        "source_branch": "v8/art-batch-a1",
+        "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+        "path": "art/animal/batch_a1/adopted/reindeer_winter/E/attack.png",
+        "sha256": "d8f48b6d059e66db2729651ef6e9cf6e7528709c3166563fe2a40b624b51d33d"
+      },
+      "new": {
+        "source_branch": "v8/art-batch-b3",
+        "path": "art/style05/batch_b3/animals/reindeer_winter/E/attack.png",
+        "sha256": "9a3ed2f9f9365795d5c27845966021083eeba48e037f0f68e339fce4e74401b8"
+      },
+      "dest": "animals/reindeer_winter/E/attack.png"
+    }
+  ]
+}

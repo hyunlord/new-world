@@ -1,0 +1,122 @@
+{
+  "species": "horse",
+  "facing": "E",
+  "pose": "attack",
+  "attempt": 1,
+  "image": "art/style05/batch_b3/animals/horse/E/attack.png",
+  "image_sha256": "1422566591b2f570031690e76714a4c83e042ff22c1b6ccd115d82d525dc45db",
+  "canvas_px": [
+    96,
+    80
+  ],
+  "anchor_px": [
+    48,
+    72
+  ],
+  "footprint_tiles": [
+    1,
+    1
+  ],
+  "source_panel": "/Users/rexxa/work/art-batch/B3/round3_animals/raw/panels/horse_attack_try1/E_attack.png",
+  "source_panel_sha256": "aabaf509dcf1ff9e0c15f141c7fc84471f6d19cb552630f0baed4163e43f6251",
+  "source_box": [
+    941,
+    0,
+    1882,
+    836
+  ],
+  "raw": "/Users/rexxa/work/art-batch/B3/round3_animals/raw/horse_attack_try1.png",
+  "raw_sha256": "560bd2fbfb3a32a68040fe95a1a163d9548733c0c795fe7c2e6661e6ba0f1e6f",
+  "prompt": "/Users/rexxa/work/art-batch/B3/round3_animals/raw/horse_attack_try1.prompt.txt",
+  "prompt_sha256": "395914e604b4e0bbd5f8467b231093a51c284ad373cc5f53d28deaab303f20bc",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/horse/attack_try2.png",
+      "sha256": "b5a505630014d8ad8b26de7209e2c5d0e494e2eabc7d2aeca6da42b70230c37c"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "scale": 0.10796915167095116,
+  "upright_scale": 0.10796915167095116,
+  "normalization": {
+    "scaled_size": [
+      102,
+      90
+    ],
+    "trim_box": [
+      4,
+      15,
+      92,
+      78
+    ],
+    "placement": [
+      4,
+      10
+    ],
+    "resized_to_canvas_offset": [
+      0,
+      -5
+    ],
+    "visible_pixels": 2124,
+    "rotation_degrees": 0,
+    "scale": 0.10796915167095116,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "alpha": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "structural_pass": true,
+  "projection_report_only": {
+    "family": "horse",
+    "anchor": [
+      48,
+      72
+    ],
+    "height_band": [
+      1,
+      72
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1936,
+    "base_row": 71,
+    "base_error": -1,
+    "height": 62,
+    "gradient_x": 0.075976276771005,
+    "gradient_y": -0.647444184752365,
+    "light_angle_degrees": 276.6929350369412,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": false,
+    "passed": false
+  },
+  "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+  "status": "ACCEPTED_ART_CANDIDATE",
+  "metadata": "art/style05/batch_b3/animals/horse/E/attack.json",
+  "replaces": {
+    "source_branch": "v8/art-batch-a1",
+    "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6",
+    "path": "art/animal/batch_a1/adopted/horse/E/attack.png",
+    "sha256": "d3788649fddf634dd5e8e3eadce4504b3590369ad3dcf5c39fb9f637d1260de4"
+  },
+  "review": "art/batch_b3/round3_animals/self_review.json",
+  "independent_review": "art/batch_b3/round3_animals/root_review.json",
+  "independent_review_sha256": "09cb879290dbaf241ef326426002d3aa4ea34c1a4620911c134cb15b809a4983"
+}

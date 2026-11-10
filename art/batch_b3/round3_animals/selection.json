@@ -1,0 +1,74 @@
+{
+  "selected": [
+    {
+      "species": "cattle",
+      "group": "base",
+      "manifest": "/Users/rexxa/work/art-batch/B3/round3_animals/work/art/animal/batch_a1/cattle/try1/MANIFEST.json",
+      "sha256": "af452a21a4ee15def144da1aca510933c7569d8b4961628af18722e426181670",
+      "attempt": 1
+    },
+    {
+      "species": "aurochs",
+      "group": "base",
+      "manifest": "/Users/rexxa/work/art-batch/B3/round3_animals/work/art/animal/batch_a1/aurochs/try1/MANIFEST.json",
+      "sha256": "5c2a77b80d6dce653947649e5d478b367ad8292242f76e94bfb66168a664ccbf",
+      "attempt": 1
+    },
+    {
+      "species": "aurochs",
+      "group": "attack",
+      "manifest": "/Users/rexxa/work/art-batch/B3/round3_animals/work/art/animal/batch_a1/aurochs/try1/ATTACK_MANIFEST.json",
+      "sha256": "745d71d5009c8d49c67cecbd414fa9e293f087abaa55a4e2e59f54466dafdc1b",
+      "attempt": 1
+    },
+    {
+      "species": "horse",
+      "group": "base",
+      "manifest": "/Users/rexxa/work/art-batch/B3/round3_animals/work/art/animal/batch_a1/horse/try1/MANIFEST.json",
+      "sha256": "b4da35871a768e3b60de445163ad158e52bcd8d1b546fc019b5d4a317077d217",
+      "attempt": 1
+    },
+    {
+      "species": "horse",
+      "group": "attack",
+      "manifest": "/Users/rexxa/work/art-batch/B3/round3_animals/work/art/animal/batch_a1/horse/try1/ATTACK_MANIFEST.json",
+      "sha256": "2f0f52fb2bd84159d65c238c73bb8f5f42cb1bb9db0e4b97366f586a5d7788cf",
+      "attempt": 1
+    },
+    {
+      "species": "reindeer",
+      "group": "base",
+      "manifest": "/Users/rexxa/work/art-batch/B3/round3_animals/work/art/animal/batch_a1/reindeer/try2/MANIFEST.json",
+      "sha256": "e38dc15cdb950a4cd59a7a39ce25d7ebd54e71faea06640124f579f70ef6fe2c",
+      "attempt": 2
+    },
+    {
+      "species": "reindeer",
+      "group": "attack",
+      "manifest": "/Users/rexxa/work/art-batch/B3/round3_animals/work/art/animal/batch_a1/reindeer/try1/ATTACK_MANIFEST.json",
+      "sha256": "70b14945658cdfb0b5d98186255da4b64afb67c168c9a92368cb90c3db9cd767",
+      "attempt": 1
+    },
+    {
+      "species": "reindeer_winter",
+      "group": "base",
+      "manifest": "/Users/rexxa/work/art-batch/B3/round3_animals/work/art/animal/batch_a1/reindeer_winter/try1/MANIFEST.json",
+      "sha256": "0b21e7a4f83ffa66dbc567333c19d8ebd84a67a77d464ed391eb62fc8ee807f4",
+      "attempt": 1
+    },
+    {
+      "species": "reindeer_winter",
+      "group": "attack",
+      "manifest": "/Users/rexxa/work/art-batch/B3/round3_animals/work/art/animal/batch_a1/reindeer_winter/try1/ATTACK_MANIFEST.json",
+      "sha256": "2d432a6685b9c14ab28a57f8169114afe11881bbfb61ef98929aec9c83f6a1d0",
+      "attempt": 1
+    }
+  ],
+  "generated_calls": 10,
+  "generated_frame_slots": 68,
+  "selected_frame_count": 58,
+  "rejected_frame_slots": 10,
+  "self_review_retried_frames": 10,
+  "self_review_fraction": 0.1724137931034483,
+  "rejection_reason": "Warm reindeer base try1 superseded by smoother self-review try2; all first-pass structural checks passed."
+}
