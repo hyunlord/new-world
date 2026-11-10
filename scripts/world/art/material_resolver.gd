@@ -75,11 +75,11 @@ func load_documents(construction: Dictionary, looks: Dictionary, defaults: Dicti
 	_check()
 
 
-## Load from the imported files under assets/v8art/materials/.
+## Load pinned imports plus authored look overrides from render_params.json.
 func load_imported() -> void:
 	var base: String = ArtData.ROOT + "materials/"
 	load_schema_defaults(_json(base + "construction_styles.schema.json"))
-	load_documents(ArtData.construction_styles(_json(base + "construction_styles.json")), _json(base + "material_looks.json"), _json(base + "category_defaults.json"))
+	load_documents(ArtData.construction_styles(_json(base + "construction_styles.json")), ArtData.material_looks(_json(base + "material_looks.json")), _json(base + "category_defaults.json"))
 
 
 func _json(path: String) -> Dictionary:

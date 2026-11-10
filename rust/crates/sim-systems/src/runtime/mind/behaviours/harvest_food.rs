@@ -95,7 +95,10 @@ pub(super) fn start(c: &mut EffectContext<'_>) -> EffectResult {
     let practice = c
         .world
         .get::<&sim_core::colony::knowledge::Knowledge>(c.entity)
-        .map_or(0, |knowledge| knowledge.practice());
+        .map_or(
+            sim_core::colony::knowledge::KnowledgeMask::ZERO,
+            |knowledge| knowledge.practice(),
+        );
     if sim_core::colony::knowledge::gates().designation(Designation::Harvest) & !practice != 0 {
         return Ok(EffectStatus::Finished);
     }

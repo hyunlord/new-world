@@ -19,6 +19,7 @@ enum CondRaw {
     Knows(String, u16),
     ClayBankNear(u32),
     Practice { job_kind: String, count: u32 },
+    Trades(u32),
 }
 
 #[derive(Deserialize, Serialize)]
@@ -80,7 +81,7 @@ fn designation_from_name(name: &str) -> Option<Designation> {
 fn raw_file(text: &str) -> Result<FileRaw, String> {
     let file: FileRaw = ron::from_str(text).map_err(|e| format!("knowledge.ron: {e}"))?;
     if file.schema_version != 1 || file.knowledge.len() > MAX_NODES {
-        return Err("knowledge.ron: expected schema 1 and at most 128 nodes".into());
+        return Err("knowledge.ron: expected schema 1 and at most 256 nodes".into());
     }
     Ok(file)
 }
@@ -92,7 +93,7 @@ pub(crate) fn merge_sources(base: &str, extension: &str) -> Result<String, Strin
     base.knowledge.extend(extension.knowledge);
     base.absent_markers.extend(extension.absent_markers);
     if base.knowledge.len() > MAX_NODES {
-        return Err("knowledge.ron: appended map exceeds 128 nodes".into());
+        return Err("knowledge.ron: appended map exceeds 256 nodes".into());
     }
     ron::to_string(&base).map_err(|e| format!("knowledge.ron merge: {e}"))
 }
@@ -148,6 +149,12 @@ pub(crate) fn parse_with_catalog(text: &str, catalog: &Catalog) -> Result<Knowle
                     ),
                     CondRaw::Knows(node, p) => Cond::Knows(id_of(node)?, *p),
                     CondRaw::ClayBankNear(d) => Cond::ClayBankNear(*d),
+                    CondRaw::Trades(count) => {
+                        if *count == 0 {
+                            return Err("Trades count must be positive".into());
+                        }
+                        Cond::Trades(*count)
+                    }
                     CondRaw::Practice { job_kind, count } => {
                         if *count == 0 {
                             return Err("Practice count must be positive".into());
@@ -258,7 +265,7 @@ pub(crate) fn parse_with_catalog(text: &str, catalog: &Catalog) -> Result<Knowle
 }
 
 fn validate_graph(defs: &KnowledgeDefs) -> Result<(), String> {
-    let mut complete = 0u128;
+    let mut complete = KnowledgeMask::ZERO;
     while complete.count_ones() < u32::try_from(defs.nodes.len()).unwrap_or(u32::MAX) {
         let before = complete;
         for node in &defs.nodes {

@@ -94,7 +94,7 @@ pub fn run_data_only(args: &[String]) -> Result<(), String> {
         {
             let mut index = sim_systems::runtime::jobs::harvest::HarvestIndex::default();
             let mut people: Vec<_> = engine.world.query::<(&Agent, &Position, &sim_core::components::AgentState, &sim_core::components::Hunger)>().iter().map(|(entity, (agent, pos, state, hunger))| {
-                let practice = engine.world.get::<&sim_core::colony::knowledge::Knowledge>(entity).map_or(0, |knowledge| knowledge.practice());
+                let practice = engine.world.get::<&sim_core::colony::knowledge::Knowledge>(entity).map_or(sim_core::colony::knowledge::KnowledgeMask::ZERO, |knowledge| knowledge.practice());
                 let candidate = sim_systems::runtime::jobs::harvest::pick(r, &mut index, sim_systems::runtime::jobs::harvest::HarvestQuery {practice, region: r.nav.region_of((pos.x,pos.y)), pos:(pos.x,pos.y), radius:32});
                 json!({"agent":agent.id,"state":format!("{state:?}"),"hunger":hunger.value,"tile":[pos.x,pos.y],"candidate":candidate,"job":engine.world.get::<&Job>(entity).ok().map(|j| *j)})
             }).collect();

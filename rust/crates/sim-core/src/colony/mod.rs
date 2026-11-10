@@ -33,6 +33,7 @@ pub mod mind_records;
 pub mod mind_state;
 pub mod neighbours;
 mod orders;
+pub mod ore;
 pub mod people;
 pub mod processing;
 pub mod requests;

@@ -17,6 +17,7 @@
 //! bill removed, suspended or done) are put down at the work tile (merge and
 //! spill), so nothing stays stranded on a shelf.
 use hecs::World;
+use sim_core::colony::knowledge::KnowledgeMask;
 use sim_core::colony::workshop::Recipe;
 use sim_core::colony::{BillMode, Carry, ItemKind, ItemSpec, Job, JobKind, ReserveKey, Workshop};
 use sim_engine::{RuntimeSystem, SimResources};
@@ -203,7 +204,7 @@ pub fn runnable(world: &World, res: &SimResources, shop: &Workshop, index: usize
                 super::craft_food::supplyable(res, shop, recipe, knowledge.practice())
             })
     } else {
-        super::craft_food::supplyable(res, shop, recipe, u128::MAX)
+        super::craft_food::supplyable(res, shop, recipe, KnowledgeMask::MAX)
     };
     if !food_allowed {
         return false;

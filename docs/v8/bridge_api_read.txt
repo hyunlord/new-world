@@ -83,6 +83,7 @@ func WorldSimNode.get_influence_overlay
 func WorldSimNode.get_knowledge_waits
 func WorldSimNode.get_livestock
 func WorldSimNode.get_neighbours
+func WorldSimNode.get_outcrops
 func WorldSimNode.get_person
 func WorldSimNode.get_person_chronicle
 func WorldSimNode.get_person_diagnosis

@@ -1,27 +1,12 @@
-# animal_layer.gd (ColonyView/AnimalLayer in scenes/main.tscn): the M5 animals and hunt zones (goal 3.2, 3.5) at
-#   64-px tiles (M-ART2 §3.5).
-# Each animal of get_animals is a pooled standing Sprite2D in the y-sorted ColonyView/World: the manifest frame
-#   `<species>/<S|E>/<pose>` (species and pose from bindings.json `animals`: the pose per state code `poses`, the
-#   row's `still` pose when a `moving` pose is shown on an animal that is not stepping), its anchor at the drawn base
-#   point (tile_left + 32, tile_top + 43), easing from tile to tile like the people. Facing: the last step east → E,
-#   west → E flipped, north or south → S (N = S, no back art; the 35° S rule is in the art).
-# Drawn by this node above the world layer (z 3): a deer that may be hunted (`huntable`) carries a yellow ring over
-#   its head (full for its own mark, dimmer when only a zone covers it); below 1× (`lod.people_below_zoom`) every
-#   animal is a filled triangle in its bindings `lod_colour` with a 1-px ink ring, `lod.animal_marker_px` SCREEN
-#   pixels for the nearest listed zoom ("0.5" → 10, "0.25" → 6), and the sprites are hidden. Under the mouse an
-#   animal shows "사슴 · 돌아다님 · 30" (kind, state, hit points) on a dark backing box (labels follow the camera). The
-#   hunt zones (`zones`, x0 y0 x1 y1 quadruples) are drawn flat by the child "Zones" (z −5, under the world layer)
-#   as an amber frame with a faint fill. A carcass is not an animal: the kill's meat and hide lie as ground stacks
-#   (OverlayLayer draws the dead frame).
-# The drawn rect (the frame's rect around its anchor, and the tile cell) is the click target (`animal_at`): the order
-#   tool's hunt click (F7-3) and the draft's right-click attack. `drawn_position` is the drawn tile cell's top-left.
-# M5.5: this node creates the visitor layer (ColonyView/VisitorLayer, visitor_layer.gd: migrant waves and caravans)
-#   beside itself.
-# Bridge methods: via SimReads get_animals, get_world_info; signal world_reset.
+# Wild species silhouettes, interpolated movement, hunt markers and hit targets.
+# Legacy manifest frame selectors remain available for carcass/binding compatibility.
+# Bridge methods: get_animals and get_world_info through SimReads; world_reset.
 extends Node2D
 
 const View = preload("res://scripts/world/colony/view.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
+const Content = preload("res://scripts/ui/content_context.gd")
+const Silhouette = preload("res://scripts/world/colony/animal_silhouette.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
 const VisitorLayer = preload("res://scripts/world/colony/visitor_layer.gd")
 const OverlayLayer = preload("res://scripts/world/colony/overlay_layer.gd")
@@ -44,6 +29,7 @@ var _frame: int = 0
 var _lod: bool = false
 var _zoom: float = 1.0
 var _drawn: bool = false
+var _art_version: int = -1
 
 
 class Animal:
@@ -65,6 +51,7 @@ class Animal:
 	var marked: bool = false
 	var body: Sprite2D
 	var frame_id: String = ""
+	var juvenile: bool = false
 
 
 func _ready() -> void:
@@ -72,6 +59,7 @@ func _ready() -> void:
 	z_index = 3
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_font = load(FONT_PATH) as Font
+	Silhouette.warmup()
 	_world = get_node_or_null("../World")
 	_zones = Node2D.new()
 	_zones.name = "Zones"
@@ -121,6 +109,9 @@ static func frame_id(kind: int, state: int, facing: int, moving: bool) -> String
 func _process(delta: float) -> void:
 	if _world_sim == null:
 		return
+	if _art_version != ArtData.params_version():
+		_art_version = ArtData.params_version()
+		Silhouette.warmup()
 	_frame += 1
 	_read = SimReads.read(_world_sim, "get_animals")
 	var ids: PackedInt64Array = _read.get("ids", PackedInt64Array())
@@ -130,6 +121,7 @@ func _process(delta: float) -> void:
 	var states: PackedInt32Array = _read.get("states", PackedInt32Array())
 	var huntable: PackedByteArray = _read.get("huntable", PackedByteArray())
 	var marked: PackedByteArray = _read.get("marked", PackedByteArray())
+	var ages: PackedInt64Array = _read.get("age_days", PackedInt64Array())
 	var n: int = mini(mini(ids.size(), kinds.size()), mini(xs.size(), ys.size()))
 	var duration: float = _step_seconds()
 	_zoom = get_viewport().get_canvas_transform().x.x
@@ -159,6 +151,7 @@ func _process(delta: float) -> void:
 			animal.elapsed = 0.0
 			animal.duration = duration
 		animal.kind = kinds[i]
+		animal.juvenile = Silhouette.is_juvenile(Content.row("animals", animal.kind), ages[i] if i < ages.size() else -1)
 		animal.state = states[i] if i < states.size() else 0
 		animal.seen = _frame
 		animal.huntable = i < huntable.size() and huntable[i] != 0
@@ -197,15 +190,10 @@ func _place(animal: Animal, lod: bool) -> void:
 		animal.body.centered = false
 		animal.body.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		_world.add_child(animal.body)
-	var fid: String = frame_id(animal.kind, animal.state, animal.facing, animal.elapsed < animal.duration)
-	if fid != animal.frame_id:
-		animal.frame_id = fid
-		animal.body.texture = ArtData.texture(fid)
-		animal.body.offset = -Vector2(ArtData.anchor(fid))
+	animal.frame_id = frame_id(animal.kind, animal.state, animal.facing, animal.elapsed < animal.duration)
+	animal.body.texture = Silhouette.texture(Content.row("animals", animal.kind), animal.juvenile)
+	animal.body.offset = Vector2(-animal.body.texture.get_width() * 0.5, -animal.body.texture.get_height())
 	animal.body.flip_h = animal.flip
-	if animal.flip and animal.body.texture != null:
-		# Flipping mirrors the canvas: keep the anchor on the base point.
-		animal.body.offset.x = -float(animal.body.texture.get_width() - ArtData.anchor(fid).x)
 	animal.body.position = animal.position + Vector2(View.BASE)
 	animal.body.visible = not lod
 
@@ -341,7 +329,7 @@ func marked_shown(id: int) -> bool:
 	return animal != null and animal.huntable
 
 
-## The manifest frame drawn for animal `id` ("" when not drawn; for tests and tools).
+## The legacy manifest fallback associated with animal `id` (empty when absent).
 func frame_of(id: int) -> String:
 	var animal: Animal = _animals.get(id)
 	return animal.frame_id if animal != null else ""

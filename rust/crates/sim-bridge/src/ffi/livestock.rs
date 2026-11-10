@@ -288,7 +288,13 @@ pub(super) fn livestock_chronicle_rows_to_dict(
         .iter()
         .map(|i| evidence_to_dict(res, u32::try_from(*i).ok()))
         .collect();
+    let ore: Array<VarDictionary> = rows
+        .index
+        .iter()
+        .map(|i| super::ore::evidence_to_dict(res, u32::try_from(*i).ok()))
+        .collect();
     let mut out = super::food::food_chronicle_rows_to_dict(rows, page, res);
+    out.set("ore_evidence", ore);
     out.set("livestock_evidence", evidence);
     out
 }
@@ -311,7 +317,23 @@ pub(super) fn livestock_why_to_dict(
             )
         })
         .collect();
+    let ore: Array<VarDictionary> = rows
+        .link
+        .iter()
+        .zip(&rows.code)
+        .map(|(link, code)| {
+            super::ore::evidence_to_dict(
+                res,
+                if matches!(link, 0 | 5) {
+                    u32::try_from(*code).ok()
+                } else {
+                    None
+                },
+            )
+        })
+        .collect();
     let mut out = super::food::food_why_to_dict(rows, res);
+    out.set("ore_evidence", ore);
     out.set("livestock_evidence", evidence);
     out
 }

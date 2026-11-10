@@ -161,6 +161,8 @@ pub(super) fn build(
         flora,
         crops: Vec::new(),
         crop_index: Index::default(),
+        outcrops: Vec::new(),
+        outcrop_index: Index::default(),
         plants: Vec::new(),
         plant_index: Index::default(),
         animals: Vec::new(),
@@ -265,6 +267,7 @@ pub(super) fn build(
     }
     validate::knowledge_refs(&catalog)?;
     load_plants::load(&mut catalog, &base, &extension)?;
+    super::load_outcrops::load(&mut catalog, &base, &extension)?;
     load_crops::load(&mut catalog, &base, &extension)?;
     let building_extension = extension
         .contains_key("buildings.ron")

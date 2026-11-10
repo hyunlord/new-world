@@ -49,7 +49,13 @@ pub(super) fn append(hash: &mut u64, engine: &SimEngine) -> Result<(), String> {
             carried,
         ),
     )
-    .map_err(|error| format!("food fingerprint serialization failed: {error}"))
+    .map_err(|error| format!("food fingerprint serialization failed: {error}"))?;
+    if !engine.resources.ore.is_empty() {
+        super::fingerprint::feed(hash, b"\0C2-surface-ore-v1\0");
+        ron::ser::to_writer(HashWriter(hash), &engine.resources.ore)
+            .map_err(|error| format!("ore fingerprint serialization failed: {error}"))?;
+    }
+    Ok(())
 }
 
 #[cfg(test)]

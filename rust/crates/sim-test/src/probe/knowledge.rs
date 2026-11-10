@@ -57,7 +57,7 @@ fn stalled(engine: &SimEngine) -> bool {
     let res = &engine.resources;
     let c = &res.colony;
     let g = gates();
-    let known_once = |mask: u128| {
+    let known_once = |mask: knowledge::KnowledgeMask| {
         knowledge::ids_of(mask).any(|id| {
             c.tech
                 .states
@@ -65,7 +65,7 @@ fn stalled(engine: &SimEngine) -> bool {
                 .is_some_and(|s| s.status != TechStatus::Unknown)
         })
     };
-    let missing = |mask: u128| {
+    let missing = |mask: knowledge::KnowledgeMask| {
         mask != 0
             && known_once(mask)
             && !sim_systems::runtime::knowledge::anyone_practises(&engine.world, mask)
@@ -164,9 +164,12 @@ impl KnowledgeWatch {
             "raw_pots": res.colony.item_ledger.crafted_of(ItemKind::RawPot),
             "clay": res.colony.item_ledger.created_of(ItemKind::Clay),
             "ground_axes": res.colony.item_ledger.crafted_of(ItemKind::GroundAxe),
-            "conditions": conditions as u64,
+            "conditions": conditions.words()[0],
         });
-        let conditions_high = (conditions >> 64) as u64;
+        if conditions.upper() != [0, 0] {
+            daily["conditions_upper"] = json!(conditions.upper());
+        }
+        let conditions_high = conditions.words()[1];
         if conditions_high != 0 {
             daily["conditions_high"] = json!(conditions_high);
         }
@@ -260,13 +263,17 @@ mod c1_json_tests {
         );
         let expected =
             sim_systems::runtime::knowledge::discover::conditions(&engine.world, &engine.resources);
-        assert!(expected > u128::from(u64::MAX));
+        assert!(expected > knowledge::KnowledgeMask::from(u128::from(u64::MAX)));
         assert_ne!(expected & knowledge::bit(leather), 0);
         watch.after_tick(&engine);
         let report = watch.report(&engine);
         let sampled = &report["daily"][1];
-        let reconstructed = u128::from(sampled["conditions"].as_u64().expect("low word"))
-            | (u128::from(sampled["conditions_high"].as_u64().expect("high word")) << 64);
+        let reconstructed = knowledge::KnowledgeMask::from_words([
+            sampled["conditions"].as_u64().expect("low word"),
+            sampled["conditions_high"].as_u64().unwrap_or(0),
+            sampled["conditions_upper"][0].as_u64().unwrap_or(0),
+            sampled["conditions_upper"][1].as_u64().unwrap_or(0),
+        ]);
         assert_eq!(reconstructed, expected);
         let bytes = serde_json::to_vec(&report).expect("complete sampled report JSON");
         let reloaded: Value = serde_json::from_slice(&bytes).expect("JSON readback");

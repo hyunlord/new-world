@@ -213,3 +213,19 @@ card and debt in both languages before freezing the publication gate.
 When appending authored recipes, run the existing economy bridge collector test:
 its exact ordered table intentionally pins every historical code and workshop.
 Append the new expected row rather than weakening the table to a prefix check.
+
+### Knowledge masks past 128 and immutable reads (C2, 2026-11-10)
+Preserve every authoritative bit when a catalogue crosses a mask boundary. A
+legacy low-word cache must be rebuilt from lossless entries, while standalone
+masks and neighbour rumours need an explicit versioned upper-word tail. Exercise
+63/64/127/128/191/192/255 through real saves and UI readers; widening Rust alone
+does not widen GDScript or reporting consumers. Source:
+`rust/crates/sim-core/src/colony/knowledge/mask.rs`;
+`rust/crates/sim-systems/src/save/knowledge_upper.rs`;
+`tools/v8/spine_tech_test.gd`.
+
+SimReads cache dictionaries are immutable: replace a retained reference with a
+fresh dictionary on reset instead of clearing it. Compare JSON-parsed numeric
+fixtures in the same numeric domain; integer-versus-float Dictionary equality
+can fail despite identical printed values. Source:
+`scripts/world/colony/outcrop_layer.gd`; `tools/v8/mart2_ground_test.gd`.

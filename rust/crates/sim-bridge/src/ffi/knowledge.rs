@@ -11,6 +11,7 @@
 //! `knowledge.ron`), workshops and bills their colony ids. Every read returns
 //! its empty form in the baseline world and under rules without knowledge.
 use godot::prelude::*;
+use sim_core::colony::knowledge::KnowledgeMask;
 use sim_core::colony::knowledge::{
     self, defs, era_label, gates, Cond, ContentStatus, Gate, Knowledge, KnowledgeId, Lore,
     TechStatus,
@@ -305,6 +306,7 @@ pub fn collect_tech_node(world: &hecs::World, res: &SimResources, node: i64) -> 
                     met,
                 ),
                 Cond::ClayBankNear(d) => (3, String::new(), i64::from(d), met),
+                Cond::Trades(count) => (5, String::new(), i64::from(count), met),
                 Cond::Practice(job, count) => (
                     4,
                     JobKind::NAMES
@@ -507,13 +509,13 @@ pub fn collect_knowledge_waits(world: &hecs::World, res: &SimResources) -> Vec<W
     if !enabled(res) {
         return Vec::new();
     }
-    let practised: u128 = world
+    let practised: KnowledgeMask = world
         .query::<&Knowledge>()
         .without::<&Child>()
         .iter()
-        .fold(0, |m, (_, k)| m | k.practice());
+        .fold(KnowledgeMask::ZERO, |m, (_, k)| m | k.practice());
     // A gate is open when one adult practises all of it; for the line, the first node no adult practises.
-    let blocked = |mask: u128| -> Option<u8> {
+    let blocked = |mask: KnowledgeMask| -> Option<u8> {
         if mask == 0 || sim_systems::runtime::knowledge::anyone_practises(world, mask) {
             return None;
         }

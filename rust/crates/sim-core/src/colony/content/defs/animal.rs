@@ -32,9 +32,12 @@ pub struct AnimalDef<I = ItemKind> {
     /// Optional domestication policy; absent species remain purely wild.
     #[serde(default)]
     pub tameable: Option<TameableDef<I>>,
+    /// Optional owned-animal label; presentation falls back to the livestock category.
+    #[serde(default)]
+    pub domestic_name_key: Option<String>,
     /// Data-selected placeholder geometry and tint, with a category fallback.
-    #[serde(default = "animal_art_default")]
-    pub art: super::ItemArt,
+    #[serde(default)]
+    pub art: AnimalArt,
     /// Mechanic.
     pub mechanic: AnimalMechanic,
     /// Huntable.
@@ -123,8 +126,51 @@ pub struct HideLoot<I = ItemKind> {
     pub enabled: RuleBool,
 }
 
-fn animal_art_default() -> super::ItemArt {
-    super::ItemArt::for_category("animal")
+/// Normalized silhouette dimensions; the renderer chooses its own pixel resolution.
+#[derive(Debug, Clone, PartialEq, Eq, serde::Deserialize)]
+#[serde(default, deny_unknown_fields)]
+pub struct AnimalArt {
+    /// Legacy icon selector retained for selected content packs.
+    pub shape: super::ItemShape,
+    /// Material-derived species tint.
+    pub tint_material: String,
+    /// Body length relative to the presentation canvas, in permille.
+    pub body_length_permille: u16,
+    /// Body height relative to the presentation canvas, in permille.
+    pub body_height_permille: u16,
+    /// Leg height relative to the presentation canvas, in permille.
+    pub leg_height_permille: u16,
+    /// Supported quadruped geometry.
+    pub leg_count: u8,
+    /// Authored head direction: -1 left, 1 right.
+    pub head_direction: i8,
+    /// Curved horns on the head.
+    pub horns: bool,
+    /// Branched antlers on the head.
+    pub antlers: bool,
+    /// Tail length relative to the presentation canvas, in permille.
+    pub tail_length_permille: u16,
+    /// Juvenile size relative to an adult, in permille.
+    pub juvenile_scale_permille: u16,
+}
+
+impl Default for AnimalArt {
+    fn default() -> Self {
+        let icon = super::ItemArt::for_category("animal");
+        Self {
+            shape: icon.shape,
+            tint_material: icon.tint_material,
+            body_length_permille: 600,
+            body_height_permille: 280,
+            leg_height_permille: 250,
+            leg_count: 4,
+            head_direction: 1,
+            horns: false,
+            antlers: false,
+            tail_length_permille: 100,
+            juvenile_scale_permille: 600,
+        }
+    }
 }
 
 /// Data-only policy interpreted by the capture jobs and single livestock system.
@@ -159,7 +205,7 @@ pub struct TameableDef<I = ItemKind> {
     pub starvation_days: u32,
     /// Whole days between consuming and regenerating a forage cell.
     pub grass_regrow_days: u32,
-    /// Work duration for a physical milk yield.
+    /// Work duration for a physical recurring milk or wool yield.
     pub milk_work_ticks: u32,
     /// Work duration for an explicitly ordered slaughter.
     pub slaughter_work_ticks: u32,
@@ -173,7 +219,7 @@ pub struct TameableDef<I = ItemKind> {
 pub struct LivestockProducts<I = ItemKind> {
     /// One milk item per committed recurring yield.
     pub milk: Option<RecurringProduct<I>>,
-    /// Reserved recurring wool policy; absent until its processing pass.
+    /// One wool item per committed recurring yield, from either adult sex.
     pub wool: Option<RecurringProduct<I>>,
     /// Food output of a slaughter.
     pub meat: (I, u16),

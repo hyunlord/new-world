@@ -1,7 +1,10 @@
 // Species share existing mechanics; numeric identities remain stable.
+// C2 silhouette geometry is tile-relative permille, juvenile600; appearance-only starting values.
+// Species body/leg/tail proportions and horn/antler selectors are documented in BALANCE_DEBT.
 (schema_version: 1, roles: {"default_grazer":"deer", "default_predator":"wolf"}, animals: [
 (
     identity: (code: 0, id: "wolf", name_key: "M5_ANIMAL_WOLF", serde_name: "Wolf", serde_aliases: [], resolver_aliases: []),
+    art: (shape: Lump, tint_material: "granite", body_length_permille: 720, body_height_permille: 220, leg_height_permille: 260, leg_count: 4, head_direction: 1, horns: false, antlers: false, tail_length_permille: 260, juvenile_scale_permille: 600),
     origin: (climate: [Mild, Neutral, Harsh], terrain: [plain, forest, mountain, hill, river, coast, desert, tundra, swamp, cave], elevation: None),
     category: "predator",
     mechanic: Predator,
@@ -25,6 +28,7 @@
 ),
 (
     identity: (code: 1, id: "deer", name_key: "M5_ANIMAL_DEER", serde_name: "Deer", serde_aliases: [], resolver_aliases: []),
+    art: (shape: Rod, tint_material: "oak", body_length_permille: 620, body_height_permille: 250, leg_height_permille: 330, leg_count: 4, head_direction: 1, horns: false, antlers: true, tail_length_permille: 80, juvenile_scale_permille: 600),
     origin: (climate: [Mild, Neutral, Harsh], terrain: [plain, forest, mountain, hill, river, coast, desert, tundra, swamp, cave], elevation: None),
     category: "grazer",
     mechanic: Grazer,
@@ -56,11 +60,12 @@
 // C1 initial herd 2–4; one replacement every 8 days, radius12. Starting design, M-BAL debt.
 (
     identity: (code: 2, id: "wild_goat", name_key: "ANIMAL_WILD_GOAT", serde_name: "WildGoat", serde_aliases: [], resolver_aliases: []),
-    art: (shape: Lump, tint_material: "oak"),
+    art: (shape: Lump, tint_material: "oak", body_length_permille: 580, body_height_permille: 280, leg_height_permille: 260, leg_count: 4, head_direction: 1, horns: true, antlers: false, tail_length_permille: 100, juvenile_scale_permille: 600),
+    domestic_name_key: Some("C2_ANIMAL_GOAT"),
     // C1-b starting design; no outcome tuning. Range40, work60, chance700/1000, retry1d.
     // Initial biological age0..29, adulthood30d, breeding20d, lifespan1800d.
     // Feed3cells/head/day, starvation3unfed days, regrowth1d; milk45/slaughter90ticks.
-    // Milk is one physical item/day; wool processing remains C2 debt.
+    // Milk is one physical item/day; this species has no wool yield.
     tameable: Some((capture_knowledge: "animal_taming", capture_tool: Some("cord"), capture_job: "capture",
         capture_range_tiles: 40, capture_work_ticks: 60, capture_success_permille: 700, capture_retry_days: 1,
         initial_age_days: (0, 29), kid_age_days: 30, breeding_interval_days: 20, max_age_days: 1800,
@@ -78,16 +83,17 @@
 // C1 initial herd 2–4; one replacement every 8 days, radius12. Starting design, M-BAL debt.
 (
     identity: (code: 3, id: "wild_sheep", name_key: "ANIMAL_WILD_SHEEP", serde_name: "WildSheep", serde_aliases: [], resolver_aliases: []),
-    art: (shape: Cloth, tint_material: "limestone"),
+    art: (shape: Cloth, tint_material: "limestone", body_length_permille: 620, body_height_permille: 390, leg_height_permille: 190, leg_count: 4, head_direction: 1, horns: true, antlers: false, tail_length_permille: 70, juvenile_scale_permille: 600),
+    domestic_name_key: Some("C2_ANIMAL_SHEEP"),
     // C1-b starting design; no outcome tuning. Range40, work60, chance700/1000, retry1d.
     // Initial biological age0..29, adulthood30d, breeding20d, lifespan1800d.
     // Feed3cells/head/day, starvation3unfed days, regrowth1d; milk45/slaughter90ticks.
-    // Milk is one physical item/day; wool processing remains C2 debt.
+    // C2: one fleece per fed adult every4days; existing recurring work45ticks, M-BAL design debt.
     tameable: Some((capture_knowledge: "animal_taming", capture_tool: Some("cord"), capture_job: "capture",
         capture_range_tiles: 40, capture_work_ticks: 60, capture_success_permille: 700, capture_retry_days: 1,
         initial_age_days: (0, 29), kid_age_days: 30, breeding_interval_days: 20, max_age_days: 1800,
         graze_tiles_per_head: 3, starvation_days: 3, grass_regrow_days: 1, milk_work_ticks: 45, slaughter_work_ticks: 90,
-        products: (milk: Some((item: "milk", every_days: 1, requires_knowledge: "dairy")), wool: None,
+        products: (milk: Some((item: "milk", every_days: 1, requires_knowledge: "dairy")), wool: Some((item: "wool", every_days: 4, requires_knowledge: "wool_spinning")),
             meat: ("meat", 3), hide: ("hide", 1)))),
     category: "grazer", mechanic: Grazer, huntable: true,
     origin: (climate: [Mild, Neutral, Harsh], terrain: [plain, forest], elevation: Some((160, 255))),
@@ -100,6 +106,7 @@
 // C1 initial herd 2–4; one replacement every 8 days, radius12. Starting design, M-BAL debt.
 (
     identity: (code: 4, id: "wild_boar", name_key: "ANIMAL_WILD_BOAR", serde_name: "WildBoar", serde_aliases: [], resolver_aliases: []),
+    art: (shape: Lump, tint_material: "granite", body_length_permille: 740, body_height_permille: 350, leg_height_permille: 150, leg_count: 4, head_direction: 1, horns: false, antlers: false, tail_length_permille: 80, juvenile_scale_permille: 600),
     // C1 crash detector one allowed Inert switch: seed5 collapse; numbers retained.
     status: Inert, debt: Some("M-BAL: crash detector seed5 starvation after resident-boar labour disruption; disabled by the one allowed fallback."),
     category: "predator", mechanic: Predator, huntable: true,
@@ -113,11 +120,12 @@
 // C1 initial herd 2–4; one replacement every 8 days, radius12. Starting design, M-BAL debt.
 (
     identity: (code: 5, id: "reindeer", name_key: "ANIMAL_REINDEER", serde_name: "Reindeer", serde_aliases: [], resolver_aliases: []),
-    art: (shape: Rod, tint_material: "birch"),
+    art: (shape: Rod, tint_material: "birch", body_length_permille: 660, body_height_permille: 300, leg_height_permille: 300, leg_count: 4, head_direction: 1, horns: false, antlers: true, tail_length_permille: 80, juvenile_scale_permille: 600),
+    domestic_name_key: Some("ANIMAL_REINDEER"),
     // C1-b starting design; no outcome tuning. Range40, work60, chance700/1000, retry1d.
     // Initial biological age0..29, adulthood30d, breeding20d, lifespan1800d.
     // Feed3cells/head/day, starvation3unfed days, regrowth1d; milk45/slaughter90ticks.
-    // Milk is one physical item/day; wool processing remains C2 debt.
+    // Milk is one physical item/day; this species has no wool yield.
     tameable: Some((capture_knowledge: "animal_taming", capture_tool: Some("cord"), capture_job: "capture",
         capture_range_tiles: 40, capture_work_ticks: 60, capture_success_permille: 700, capture_retry_days: 1,
         initial_age_days: (0, 29), kid_age_days: 30, breeding_interval_days: 20, max_age_days: 1800,
@@ -126,6 +134,29 @@
             meat: ("meat", 3), hide: ("hide", 1)))),
     category: "grazer", mechanic: Grazer, huntable: true,
     origin: (climate: [Harsh], terrain: [plain], elevation: None),
+    population: Some((initial: (2, 4), respawn_days: 8, herd_tiles: 12)),
+    hp: (value: 30, rule: None),
+    grazer: Some((flee: (value: true, rule: None), flee_tiles: (value: 6, rule: None), flee_speed: (value: 2, rule: None), flee_steps: (value: 4, rule: None), rest_steps: (value: 40, rule: None), home_tiles: (value: 12, rule: None), min_hearth_distance: (value: 20, rule: None))),
+    predator: None,
+    loot: (meat: Some((item: "meat", with_cutter: (value: 3, rule: None), without_cutter: (value: 2, rule: None))), hide: Some((item: "hide", count: 1, enabled: (value: true, rule: None)))),
+),
+// C2 cattle source: plain terrain, existing capture/livestock mechanics; no outcome tuning.
+(
+    identity: (code: 6, id: "aurochs", name_key: "C2_ANIMAL_AUROCHS", serde_name: "Aurochs", serde_aliases: [], resolver_aliases: []),
+    art: (shape: Lump, tint_material: "oak", body_length_permille: 680, body_height_permille: 370, leg_height_permille: 260, leg_count: 4, head_direction: 1, horns: true, antlers: false, tail_length_permille: 100, juvenile_scale_permille: 600),
+    domestic_name_key: Some("C2_ANIMAL_CATTLE"),
+    // C2 cattle reuses the C1 lifecycle design; no outcome tuning. Range40, work60, chance700/1000, retry1d.
+    // Initial biological age0..29, adulthood30d, breeding20d, lifespan1800d.
+    // Feed3cells/head/day, starvation3unfed days, regrowth1d; milk45/slaughter90ticks.
+    // Milk is one physical item/day; this species has no wool yield.
+    tameable: Some((capture_knowledge: "cattle", capture_tool: Some("cord"), capture_job: "capture",
+        capture_range_tiles: 40, capture_work_ticks: 60, capture_success_permille: 700, capture_retry_days: 1,
+        initial_age_days: (0, 29), kid_age_days: 30, breeding_interval_days: 20, max_age_days: 1800,
+        graze_tiles_per_head: 3, starvation_days: 3, grass_regrow_days: 1, milk_work_ticks: 45, slaughter_work_ticks: 90,
+        products: (milk: Some((item: "milk", every_days: 1, requires_knowledge: "dairy")), wool: None,
+            meat: ("meat", 3), hide: ("hide", 1)))),
+    category: "grazer", mechanic: Grazer, huntable: true,
+    origin: (climate: [Mild, Neutral, Harsh], terrain: [plain], elevation: None),
     population: Some((initial: (2, 4), respawn_days: 8, herd_tiles: 12)),
     hp: (value: 30, rule: None),
     grazer: Some((flee: (value: true, rule: None), flee_tiles: (value: 6, rule: None), flee_speed: (value: 2, rule: None), flee_steps: (value: 4, rule: None), rest_steps: (value: 40, rule: None), home_tiles: (value: 12, rule: None), min_hearth_distance: (value: 20, rule: None))),

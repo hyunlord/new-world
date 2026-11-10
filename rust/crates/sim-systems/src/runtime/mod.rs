@@ -29,6 +29,7 @@ pub mod mood;
 pub mod nav;
 pub mod needs;
 pub mod neighbours;
+pub mod ore;
 pub mod resource_regen;
 pub mod rooms;
 pub mod settlement;

@@ -178,7 +178,7 @@ func chapter_line() -> String:
 		if cond is Dictionary and _condition_met(cond):
 			met += 1
 	return _loc("LOOP_PLAQUE_CHAPTER_FMT").format({
-		"n": _current_index + 1, "title": _loc(str(chapter.get("title_key", ""))),
+		"n": int(chapter.get("number", 0)), "title": _loc(str(chapter.get("title_key", ""))),
 		"met": met, "total": conditions.size()})
 
 

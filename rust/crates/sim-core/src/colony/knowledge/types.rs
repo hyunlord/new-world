@@ -160,6 +160,8 @@ pub enum Cond {
     ClayBankNear(u32),
     /// Someone completed this many jobs of the authored work type.
     Practice(u8, u32),
+    /// The settlement completed this many exchanges that delivered incoming goods.
+    Trades(u32),
 }
 
 /// The apprenticeship and oral channels a node may unlock.

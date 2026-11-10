@@ -19,6 +19,7 @@
 use hecs::{Entity, World};
 use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
 use sim_core::colony::knowledge::gates;
+use sim_core::colony::knowledge::KnowledgeMask;
 use sim_core::colony::people::{Apparel, Top};
 use sim_core::colony::wildlife::AnimalKind;
 use sim_core::colony::{
@@ -63,7 +64,7 @@ fn put_job(world: &mut World, entity: Entity, job: Job) {
 /// `(animal, its tile)`.
 pub fn pick(
     res: &SimResources,
-    practice: u128,
+    practice: KnowledgeMask,
     region: u32,
     pos: (u32, u32),
     radius: u32,

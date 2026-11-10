@@ -375,7 +375,7 @@ mod tests {
         );
         let codes: Vec<u32> = ItemKind::all().map(|k| k.code()).collect();
         assert_eq!(&codes[..32], &(0..32).collect::<Vec<_>>());
-        assert_eq!(codes, (0..72).collect::<Vec<_>>());
+        assert_eq!(codes, (0..101).collect::<Vec<_>>());
         let historical = [
             ItemKind::Log,
             ItemKind::Firewood,

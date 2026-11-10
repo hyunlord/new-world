@@ -84,6 +84,7 @@ fn known_system_additions_preserve_registration_order() {
             food: true,
             buildings: false,
             livestock: false,
+            ore: false,
             diagnosis: true,
         },
     )
@@ -98,6 +99,7 @@ fn known_system_additions_preserve_registration_order() {
             food: true,
             buildings: false,
             livestock: false,
+            ore: false,
             diagnosis: true,
         }
     )

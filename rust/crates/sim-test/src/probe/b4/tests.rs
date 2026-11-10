@@ -28,6 +28,7 @@ fn candidate() -> CraftEvent {
         knowledge_enabled: true,
         gate_mask: 1,
         gate_mask_high: 0,
+        gate_mask_upper: [0, 0],
         gating_nodes: vec![GatingNode {
             node_id: 0,
             entry_present: true,

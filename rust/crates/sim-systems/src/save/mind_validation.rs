@@ -133,6 +133,7 @@ fn validate_source_at(
         MindFactSource::Chronicle(
             CauseRef::Entry(index)
             | CauseRef::Livestock { witness: index }
+            | CauseRef::Ore { witness: index }
             | CauseRef::Pressure {
                 entry: Some(index), ..
             }

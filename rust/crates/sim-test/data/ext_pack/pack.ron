@@ -1,5 +1,5 @@
 (schema_version:1,id:"seven_family_fixture",revision:"1",sources:{
-"plants":"plants.ron","crops":"crops.ron",
+"outcrops":"outcrops.ron","plants":"plants.ron","crops":"crops.ron",
 "items":"items.ron","recipes":"recipes.ron","blueprints":"blueprints.ron",
 "knowledge":"knowledge.ron","eras":"eras.ron","buildings":"buildings.ron","pressures":"pressures.ron","animals":"animals.ron",
 "alerts":"alerts.json","lessons":"lessons.json","locale_en":"locale_en.json",

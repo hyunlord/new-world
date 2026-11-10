@@ -342,6 +342,7 @@ func _configure() -> void:
 	_walls.sets.clear()
 	if _wall_cache_version != ArtData.params_version():
 		_wall_cache_version = ArtData.params_version()
+		_resolver.load_imported()
 		_walls.clear_prepared_sets()
 		_wall_warm_pending = true
 	_door_tex.clear()

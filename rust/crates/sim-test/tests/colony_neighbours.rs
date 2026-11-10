@@ -4,6 +4,7 @@
 //! or unanswered wave leaves and its neighbour cools; caravans never come during a major pressure or before day 6;
 //! barter follows the 80 % / 120 % rule and keeps the ledger exact through `traded_in` / `traded_out`; an artifact
 //! hints at the node that makes it (eureka).
+use sim_core::colony::knowledge::KnowledgeMask;
 
 mod colony_support;
 
@@ -34,7 +35,7 @@ fn two_neighbours_on_different_edges_are_drawn_from_the_seed() {
         .nodes
         .iter()
         .filter(|n| n.lane == sim_core::colony::knowledge::Lane::Pottery)
-        .fold(0u128, |m, n| m | knowledge::bit(n.id));
+        .fold(KnowledgeMask::ZERO, |m, n| m | knowledge::bit(n.id));
     let rule = NeighbourRule::m5_5().expect("neighbours.ron");
     let neo: Vec<u8> = neighbours::neolithic();
     let mut pottery_worlds = 0;
@@ -467,6 +468,12 @@ fn barter_follows_the_balance_rule_and_the_ledger_holds_through_the_hand_over() 
             "one blade short is refused"
         );
     }
+    let exchanged = sim_core::colony::knowledge::Cond::Trades(1);
+    assert!(!sim_systems::runtime::knowledge::discover::holds(
+        &engine.world,
+        &engine.resources,
+        exchanged,
+    ));
     let attitude = engine
         .resources
         .colony
@@ -495,6 +502,11 @@ fn barter_follows_the_balance_rule_and_the_ledger_holds_through_the_hand_over() 
         Some(need)
     );
     assert_eq!(engine.resources.colony.item_ledger.traded_in_of(g.kind), 1);
+    assert!(sim_systems::runtime::knowledge::discover::holds(
+        &engine.world,
+        &engine.resources,
+        exchanged,
+    ));
     // Haulers carry the blades to the caravan's spot; the ledger holds every tick.
     let mut handed = false;
     for _ in 0..DAY / 2 {

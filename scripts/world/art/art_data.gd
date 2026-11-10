@@ -374,6 +374,25 @@ static func construction_styles(document: Dictionary, extension: Variant = null)
 	return result
 
 
+## Authored material looks extend the pinned import; existing identity fields remain unless explicitly overridden.
+static func material_looks(document: Dictionary, additions: Variant = null) -> Dictionary:
+	var authored: Dictionary = param("material_looks", {}) if additions == null else additions
+	var result: Dictionary = document.duplicate(true)
+	var rows: Array = result.get("materials", [])
+	for key: String in authored:
+		var row: Dictionary = {}
+		for existing: Dictionary in rows:
+			if str(existing.get("id", "")) == key:
+				row = existing
+				break
+		if row.is_empty():
+			row = {"id": key}
+			rows.append(row)
+		row.merge(authored[key], true)
+	result["materials"] = rows
+	return result
+
+
 ## Species phase overrides category phase; an absent binding retains the phase placeholder.
 static func plant_asset(definition: Dictionary, phase: int) -> String:
 	var plants: Dictionary = bindings().get("plants", {})

@@ -31,7 +31,7 @@
     tops: ["loincloth", "hide_wrap", "fur_cloak"],
     // Snapshot `tops` code (`Top::code`) -> top index.
     // New garments reuse the existing wrap silhouette; renderer data recolours clothing only.
-    top_codes: {0: 0, 1: 1, 2: 2, 3: 1, 4: 1, 5: 1, 6: 1},
+    top_codes: {0: 0, 1: 1, 2: 2, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1},
     // The top index of an unknown top code.
     default_top: 0,
     // Hair styles of the look list, by index.

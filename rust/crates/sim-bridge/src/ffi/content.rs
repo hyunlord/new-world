@@ -108,10 +108,63 @@ pub fn catalog_to_dict(catalog: &Catalog) -> VarDictionary {
         row.set("hp", i64::from(def.hp.value));
         row.set("art_shape", def.art.shape.name());
         row.set("art_tint_material", def.art.tint_material.as_str());
+        row.set(
+            "art_body_length_permille",
+            i64::from(def.art.body_length_permille),
+        );
+        row.set(
+            "art_body_height_permille",
+            i64::from(def.art.body_height_permille),
+        );
+        row.set(
+            "art_leg_height_permille",
+            i64::from(def.art.leg_height_permille),
+        );
+        row.set("art_leg_count", i64::from(def.art.leg_count));
+        row.set("art_head_direction", i64::from(def.art.head_direction));
+        row.set("art_horns", def.art.horns);
+        row.set("art_antlers", def.art.antlers);
+        row.set(
+            "art_tail_length_permille",
+            i64::from(def.art.tail_length_permille),
+        );
+        row.set(
+            "art_juvenile_scale_permille",
+            i64::from(def.art.juvenile_scale_permille),
+        );
+        row.set(
+            "domestic_name_key",
+            def.domestic_name_key
+                .as_deref()
+                .unwrap_or("C2_ANIMAL_LIVESTOCK_GENERIC"),
+        );
+        row.set(
+            "kid_age_days",
+            i64::from(def.tameable.as_ref().map_or(0, |p| p.kid_age_days)),
+        );
         row.set("tameable", def.tameable.is_some());
         animals.push(&row);
     }
     out.set("animals", animals);
+    let mut outcrops: Array<VarDictionary> = Array::new();
+    for def in catalog.outcrops() {
+        let mut row = identity(&def.identity);
+        row.set("category", def.category.as_str());
+        row.set("art_shape", def.art.shape.name());
+        row.set("art_tint_material", def.art.tint_material.as_str());
+        row.set("glyph", def.glyph.as_str());
+        row.set(
+            "connected",
+            def.status == sim_core::colony::knowledge::ContentStatus::Connected,
+        );
+        row.set("debt", def.debt.as_deref().unwrap_or(""));
+        row.set("yield_item", i64::from(def.yield_item.code()));
+        row.set("units", i64::from(def.units));
+        row.set("reveal_radius", i64::from(def.reveal_radius));
+        row.set("quarry_radius", i64::from(def.quarry_radius));
+        outcrops.push(&row);
+    }
+    out.set("outcrops", outcrops);
     let mut plants: Array<VarDictionary> = Array::new();
     for def in catalog.plants() {
         let mut row = identity(&def.identity);

@@ -101,6 +101,8 @@ pub struct CraftEvent {
     pub gate_mask: u64,
     #[serde(skip_serializing_if = "zero_word")]
     pub gate_mask_high: u64,
+    #[serde(skip_serializing_if = "zero_upper")]
+    pub gate_mask_upper: [u64; 2],
     pub gating_nodes: Vec<GateRow>,
     pub recipe_quality_add: i32,
     pub material_term: MaterialTerm,
@@ -164,4 +166,8 @@ pub struct CraftRow {
 
 fn zero_word(value: &u64) -> bool {
     *value == 0
+}
+
+fn zero_upper(value: &[u64; 2]) -> bool {
+    *value == [0, 0]
 }

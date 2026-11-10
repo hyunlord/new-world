@@ -12,6 +12,7 @@
 //! Every system returns at once without `ColonyRule::knowledge`, so the
 //! baseline world and the M1–M3 colony rules never run any of it.
 use hecs::{Entity, World};
+use sim_core::colony::knowledge::KnowledgeMask;
 use sim_core::colony::knowledge::{Knowledge, Source};
 use sim_core::components::{Agent, AgentId, Child, Life, Lineage, Position, Temperament};
 use sim_core::rules::KnowledgeRule;
@@ -103,13 +104,15 @@ pub fn store(world: &mut World, entity: Entity, knowledge: Knowledge) {
 }
 
 /// The practitioner bitset of `entity` (0 without the component).
-pub fn practice_of(world: &World, entity: Entity) -> u128 {
-    world.get::<&Knowledge>(entity).map_or(0, |k| k.practice())
+pub fn practice_of(world: &World, entity: Entity) -> KnowledgeMask {
+    world
+        .get::<&Knowledge>(entity)
+        .map_or(KnowledgeMask::ZERO, |k| k.practice())
 }
 
 /// A completed gated job (goal 3.2): every node of `mask` the worker holds
 /// gains the rule's `use_gain` ‰ and is stamped used. Nothing without the rule.
-pub fn used(world: &mut World, res: &SimResources, entity: Entity, mask: u128) {
+pub fn used(world: &mut World, res: &SimResources, entity: Entity, mask: KnowledgeMask) {
     let Some(rule) = rule(res) else {
         return;
     };
@@ -125,7 +128,7 @@ pub fn used(world: &mut World, res: &SimResources, entity: Entity, mask: u128) {
 
 /// The lowest proficiency among the nodes of `mask` the worker holds (the
 /// craft's quality cap reads it; 1000 for an empty mask).
-pub fn proficiency_of(world: &World, entity: Entity, mask: u128) -> u16 {
+pub fn proficiency_of(world: &World, entity: Entity, mask: KnowledgeMask) -> u16 {
     let k = world.get::<&Knowledge>(entity).ok();
     sim_core::colony::knowledge::ids_of(mask)
         .map(|id| k.as_ref().map_or(0, |k| k.proficiency(id)))
@@ -146,7 +149,7 @@ pub fn open_to_any_builder(world: &World, res: &SimResources, entity: Entity) ->
 }
 
 /// Whether some living adult practises every node of `mask` (a gated order can run).
-pub fn anyone_practises(world: &World, mask: u128) -> bool {
+pub fn anyone_practises(world: &World, mask: KnowledgeMask) -> bool {
     if mask == 0 {
         return true;
     }

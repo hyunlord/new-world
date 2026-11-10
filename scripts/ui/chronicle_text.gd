@@ -33,7 +33,7 @@ const Content = preload("res://scripts/ui/content_context.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
 const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
 ## MindChoice (47) records only entry into the critical band; its node slot is not a display name.
-const LAST_KIND: int = 65
+const LAST_KIND: int = 66
 static var steward_labels: Dictionary = {}
 static var food_chronicle: Dictionary = {}
 ## M5 adds `index` (the entry's chronicle index) and its "→" link columns (absent in older reads: -1).
@@ -66,6 +66,8 @@ static func rows(packed: Dictionary) -> Array[Dictionary]:
 		row["food_evidence"] = metadata[index] if index < metadata.size() and metadata[index] is Dictionary else {}
 		var livestock: Array = packed.get("livestock_evidence", [])
 		row["livestock_evidence"] = livestock[index] if index < livestock.size() and livestock[index] is Dictionary else {}
+		var ore: Array = packed.get("ore_evidence", [])
+		row["ore_evidence"] = ore[index] if index < ore.size() and ore[index] is Dictionary else {}
 		result.append(row)
 	return result
 
@@ -176,6 +178,7 @@ static func sentence(row: Dictionary, viewed: int, locale: Node, info: Dictionar
 			return loc(locale, "CHRONICLE_ERA_CHANGED_FMT").format({"era": era_name})
 		60: return building_complete_sentence(row, locale)
 		61, 62, 63, 64, 65: return livestock_sentence(row.get("livestock_evidence", {}), locale)
+		66: return ore_sentence(row.get("ore_evidence", {}), locale)
 		54, 55, 56:
 			var crop: Dictionary = preload("res://scripts/ui/content_context.gd").row("crops", value)
 			var key: String = ["S1_CHRON_SOWN", "S1_CHRON_HARVEST", "S1_CHRON_FROST"][kind - 54]
@@ -314,6 +317,8 @@ static func why_lines(read: Dictionary, locale: Node, info: Dictionary) -> Array
 				row["food_evidence"] = metadata[i] if i < metadata.size() and metadata[i] is Dictionary else {}
 				var livestock: Array = read.get("livestock_evidence", [])
 				row["livestock_evidence"] = livestock[i] if i < livestock.size() and livestock[i] is Dictionary else {}
+				var ore: Array = read.get("ore_evidence", [])
+				row["ore_evidence"] = ore[i] if i < ore.size() and ore[i] is Dictionary else {}
 				text = line(row, -1, locale, info, true)
 				if text.is_empty():
 					text = loc(locale, "UI_UNKNOWN")
@@ -327,6 +332,9 @@ static func why_lines(read: Dictionary, locale: Node, info: Dictionary) -> Array
 			4:
 				var livestock: Array = read.get("livestock_evidence", [])
 				text = livestock_cause(livestock[i] if i < livestock.size() and livestock[i] is Dictionary else {}, locale)
+			5:
+				var ore: Array = read.get("ore_evidence", [])
+				text = ore_cause(ore[i] if i < ore.size() and ore[i] is Dictionary else {}, locale)
 			_: text = loc(locale, "UI_UNKNOWN")
 		out.append(text if i == 0 else "→ " + text)
 	return out
@@ -458,10 +466,12 @@ static func livestock_sentence(evidence: Dictionary, locale: Node) -> String:
 	var event: String = str(evidence.get("event", ""))
 	var keys: Dictionary = {"captured": "C1_CHRON_CAPTURE", "born": "C1_CHRON_BORN", "milk": "C1_CHRON_MILK", "slaughter": "C1_CHRON_SLAUGHTER", "died": "C1_CHRON_DIED"}
 	var species: Dictionary = Content.row("animals", int(evidence.get("species", -1)))
-	var animal: String = loc(locale, str(species.get("name_key", "UI_UNKNOWN")))
+	var name_key: String = str(species.get("name_key", "UI_UNKNOWN")) if event == "captured" else str(species.get("domestic_name_key", "C2_ANIMAL_LIVESTOCK_GENERIC"))
+	var animal: String = loc(locale, name_key)
 	if event == "slaughter": animal = KnowledgeText.with_object(locale, animal)
 	elif event == "died": animal = KnowledgeText.with_subject(locale, animal)
-	var text: String = loc(locale, str(keys.get(event, "UI_UNKNOWN"))).format({"animal": animal, "id": int(evidence.get("livestock", -1))})
+	var product: String = KnowledgeText.with_object(locale, EconomyText.item(locale, int(evidence.get("product", -1)))) if event == "milk" else ""
+	var text: String = loc(locale, str(keys.get(event, "UI_UNKNOWN"))).format({"animal": animal, "id": int(evidence.get("livestock", -1)), "product": product})
 	return text
 
 
@@ -477,3 +487,15 @@ static func livestock_cause(evidence: Dictionary, locale: Node) -> String:
 	if event == "died":
 		return loc(locale, "C1_WHY_STARVATION" if str(evidence.get("reason", "")) == "starvation" else "C1_WHY_OLD_AGE")
 	return loc(locale, "UI_UNKNOWN")
+
+
+## The discovered kind and admitted work are immutable witness fields, not live map guesses.
+static func ore_sentence(evidence: Dictionary, locale: Node) -> String:
+	if evidence.is_empty(): return loc(locale, "UI_UNKNOWN")
+	return loc(locale, "C2_ORE_DISCOVERED").format({"ore": loc(locale, str(evidence.get("name_key", "UI_UNKNOWN")))})
+
+
+static func ore_cause(evidence: Dictionary, locale: Node) -> String:
+	if evidence.is_empty(): return loc(locale, "UI_UNKNOWN")
+	var key: String = "C2_ORE_CAUSE_QUARRY" if str(evidence.get("method", "")) == "quarry" else "C2_ORE_CAUSE_PROSPECTING"
+	return loc(locale, key).format({"knowledge": KnowledgeText.node_name(locale, int(evidence.get("knowledge", -1))), "worker": person(int(evidence.get("worker", -1)), locale)})

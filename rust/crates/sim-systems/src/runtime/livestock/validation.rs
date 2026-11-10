@@ -105,14 +105,16 @@ pub fn validate_state_at_boundary(
                 }
             }
             LivestockEvent::Milk { knowledge, product } => {
-                let milk = policy
+                let recurring = policy
                     .products
                     .milk
-                    .as_ref()
-                    .ok_or("milk witness without policy")?;
-                validate_knowledge(knowledge, &milk.requires_knowledge)?;
-                if entry.subject.is_none() || product.item.kind != milk.item || product.count != 1 {
-                    return Err("invalid milk production witness".into());
+                    .iter()
+                    .chain(policy.products.wool.iter())
+                    .find(|p| p.item == product.item.kind)
+                    .ok_or("recurring product witness without policy")?;
+                validate_knowledge(knowledge, &recurring.requires_knowledge)?;
+                if entry.subject.is_none() || product.count != 1 {
+                    return Err("invalid recurring production witness".into());
                 }
                 existing_subject(res, witness, &creations, &closed)?;
             }
@@ -154,6 +156,9 @@ pub fn validate_state_at_boundary(
     }
     if state.first_capture != first_capture || state.first_kid_id != first_kid {
         return Err("first livestock facts are not pinned to earliest events".into());
+    }
+    if state.wool_last_day != super::wool_days(res) {
+        return Err("livestock wool cooldown cache differs from witnesses".into());
     }
     for (&id, animal) in &state.animals {
         let creation = creations

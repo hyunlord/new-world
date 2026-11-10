@@ -18,6 +18,7 @@
 //!   multiplies its chance by `eureka_permille` / 1,000 for adults who practise its prerequisites.
 use hecs::World;
 use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
+use sim_core::colony::knowledge::KnowledgeMask;
 use sim_core::colony::knowledge::{bit, Knowledge};
 use sim_core::colony::neighbours::{Caravan, VisitState};
 use sim_core::colony::values::value;
@@ -42,11 +43,11 @@ pub fn producing_nodes(kind: ItemKind) -> Vec<u8> {
 }
 
 /// The nodes some living colonist practises (bit `i` = node `i`).
-pub fn colony_practice(world: &World) -> u128 {
+pub fn colony_practice(world: &World) -> KnowledgeMask {
     world
         .query::<&Knowledge>()
         .iter()
-        .fold(0, |m, (_, k)| m | k.practice())
+        .fold(KnowledgeMask::ZERO, |m, (_, k)| m | k.practice())
 }
 
 /// Items of `kind` the colony holds anywhere (created + traded in − consumed − traded out).
@@ -279,7 +280,7 @@ pub const fn balanced(rule: &NeighbourRule, give: u64, take: u64) -> bool {
 /// the colony practises now (the unknown artifacts bought are counted, F8).
 pub fn trade(
     res: &mut SimResources,
-    practice: u128,
+    practice: KnowledgeMask,
     caravan: u32,
     give: &[((u32, u32), u16)],
     take: &[(u16, u16)],

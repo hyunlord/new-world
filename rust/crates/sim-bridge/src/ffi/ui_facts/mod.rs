@@ -44,6 +44,8 @@ pub struct UiFacts {
     pub migrant_waves_arrived: u64,
     /// First calendar year has ended with no death during that year; later deaths do not revoke it.
     pub first_winter_all_alive: bool,
+    /// A copper-tagged ingot has actually been crafted in this settlement.
+    pub first_copper_ingot: bool,
     /// Actual food-chain storage and winter demand.
     pub food: Option<super::food::FoodSummaryView>,
     /// People sorted by AgentId.
@@ -99,6 +101,12 @@ pub fn collect_ui_facts(world: &hecs::World, res: &SimResources) -> UiFacts {
                 && sim_systems::runtime::resource_regen::day_index_at(res, entry.tick) < year_days
         });
     out.food = super::food::collect_food_summary(world, res);
+    out.first_copper_ingot = res.colony.item_ledger.crafted.iter().any(|(kind, count)| {
+        let tags = &kind.definition().tags;
+        *count > 0
+            && tags.iter().any(|tag| tag == "metal_copper")
+            && tags.iter().any(|tag| tag == "ingot")
+    });
     out.people = people::collect(world, res);
     out.settlements = economy::collect(world, res);
     out.stockpile_tiles = places::storage(res);

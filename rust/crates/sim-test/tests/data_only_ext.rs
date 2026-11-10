@@ -31,6 +31,7 @@ fn selected_pack_runs_all_simulation_families_and_rejects_bad_boundaries() {
         "craft_build_learn",
         "pressure",
         "animal",
+        "ore",
         "duplicate",
         "malformed",
         "missing",
@@ -60,13 +61,14 @@ fn selected_pack_child() {
     match case.as_str() {
         "base_before" | "base_after" => bundled_pack(),
         "duplicate" | "malformed" | "missing" | "overflow" => invalid_pack(&case),
-        "craft_build_learn" | "pressure" | "animal" | "spine" => {
+        "craft_build_learn" | "pressure" | "animal" | "spine" | "ore" => {
             sim_test::content_boot::from_environment().expect("real host selected-pack bootstrap");
             match case.as_str() {
                 "craft_build_learn" => craft_build_learn(),
                 "spine" => spine_extension(),
                 "pressure" => pressure(),
                 "animal" => animal(),
+                "ore" => ore_extension(),
                 _ => unreachable!(),
             }
         }
@@ -513,6 +515,23 @@ fn animal() {
         .expect("selected tameable policy");
     assert_eq!(selected.art.shape.name(), "cloth");
     assert_eq!(selected.art.tint_material, "limestone");
+    assert_eq!(selected.art.body_length_permille, 510);
+    assert_eq!(selected.art.head_direction, -1);
+    assert!(selected.art.antlers);
+    assert_eq!(selected.art.juvenile_scale_permille, 600);
+    assert_eq!(
+        selected.domestic_name_key.as_deref(),
+        Some("EXT_DOMESTIC_ANIMAL")
+    );
+    assert_eq!(
+        policy
+            .products
+            .wool
+            .as_ref()
+            .expect("data-only recurring product")
+            .item,
+        item
+    );
     assert_eq!(policy.capture_knowledge, "animal_taming");
     assert_eq!(policy.capture_tool.map(|tool| tool.name()), Some("cord"));
     assert_eq!(
@@ -772,4 +791,106 @@ fn spine_template_extension(catalog: &content::Catalog) {
         restored.resources.content_state.completed[&key].style_id,
         "test_mudbrick"
     );
+}
+
+/// New mineral, deposit and ingot recipe use the same generators, discovery and craft pipeline.
+fn ore_extension() {
+    let catalog = content::installed().expect("selected pack");
+    let kind = catalog
+        .outcrop_by_name("test_outcrop")
+        .expect("data-only ore kind");
+    let def = catalog.outcrop(kind).expect("definition");
+    assert_eq!(kind.code(), 65543);
+    assert_eq!(
+        def.material,
+        sim_core::material::MaterialId::from_str_hash("test_ore")
+    );
+    assert_eq!(
+        catalog.resolve_outcrop("future_unknown_ore", "ore"),
+        catalog.outcrop_ids().next()
+    );
+    let mut generated = sim_test::colony_engine(0);
+    let tile = generated
+        .resources
+        .ore
+        .deposits
+        .iter()
+        .find(|(_, d)| d.kind == kind)
+        .map(|(t, _)| *t)
+        .expect("extension generated");
+    let person = generated
+        .world
+        .query::<&Agent>()
+        .iter()
+        .min_by_key(|(_, a)| a.id)
+        .map(|(e, _)| e)
+        .expect("founder");
+    *generated
+        .world
+        .get::<&mut sim_core::components::Position>(person)
+        .expect("position") = sim_core::components::Position::new(tile.0, tile.1);
+    know(&mut generated, person, &["prospecting"]);
+    sim_systems::runtime::ore::discover(&generated.world, &mut generated.resources);
+    assert!(sim_bridge::ffi::ore::collect_outcrops(&generated.resources)
+        .iter()
+        .any(|row| row.kind == 65543));
+    let bytes = save::save(&mut generated).expect("selected ore save");
+    assert_eq!(
+        save::load(&bytes).expect("selected ore load").resources.ore,
+        generated.resources.ore
+    );
+
+    let mut engine = job_world_m2(32, 32);
+    let person = worker(&mut engine, 6, 6);
+    engine.resources.rules.colony = Some(ColonyRule::M4);
+    engine
+        .resources
+        .building_kinds
+        .insert((10, 10), sim_core::components::BuildingKind::Hearth);
+    know(
+        &mut engine,
+        person,
+        &["copper_smelting", "test_hide_craft", "stone_quarrying"],
+    );
+    let smelter = catalog
+        .blueprint_by_name("smelter")
+        .expect("existing smelting capability");
+    let shop = build_workshop(&mut engine, smelter, (12, 12), (4, 4));
+    let recipe = catalog
+        .recipe_by_name("test_smelt")
+        .expect("data-only recipe");
+    let ingot = catalog
+        .item_by_name("test_ingot")
+        .expect("data-only output");
+    let charcoal = catalog.item_by_name("charcoal").expect("fuel");
+    drop_items(
+        &mut engine,
+        (15, 15),
+        ItemSpec::raw(def.yield_item, Some(def.material)),
+        2,
+    );
+    drop_items(&mut engine, (16, 15), ItemSpec::raw(charcoal, None), 1);
+    assert!(
+        submit(
+            &mut engine,
+            Command::AddBill {
+                workshop: shop,
+                recipe,
+                mode: BillMode::Make(1)
+            }
+        )
+        .accepted
+    );
+    assert!(
+        run_until(&mut engine, 3000, |e| e
+            .resources
+            .colony
+            .item_ledger
+            .crafted_of(ingot)
+            == 1)
+            < 3000
+    );
+    assert_eq!(engine.resources.colony.item_ledger.crafted_of(ingot), 1);
+    sim_systems::runtime::jobs::invariants::check(&engine.world, &engine.resources)
+        .expect("exact extension ledger");
 }

@@ -1,4 +1,5 @@
 //! Calendar growth and persistent soil; only jobs create or consume items.
+use sim_core::colony::knowledge::KnowledgeMask;
 pub mod commands;
 use sim_core::colony::content::{installed_or_bundled, CropKind};
 use sim_core::colony::cultivation::FieldPhase;
@@ -109,11 +110,11 @@ pub fn update(res: &mut SimResources) {
 mod tests;
 
 /// The exact practitioner gate used by field assignment and completion.
-pub fn knowledge_mask(crop: CropKind) -> u128 {
+pub fn knowledge_mask(crop: CropKind) -> KnowledgeMask {
     installed_or_bundled()
         .crop(crop)
         .and_then(|def| def.knowledge)
-        .map_or(0, |code| 1u128.checked_shl(u32::from(code)).unwrap_or(0))
+        .map_or(KnowledgeMask::ZERO, sim_core::colony::knowledge::bit)
 }
 /// Ownership is the same nearest-home rule used when designating fields.
 pub fn seed_belongs_to(

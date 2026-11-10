@@ -50,13 +50,17 @@ fn c1_knowledge_validator() {
     let catalog = Catalog::from_sources(RawSources::bundled(), None).expect("C1 catalogue");
     let defs = catalog.knowledge_defs();
     // The historical 43-node prefix is retained; every requested new node is distinct.
-    assert_eq!(defs.nodes.len(), 43 + ADDED.len());
+    assert_eq!(defs.nodes.len(), 43 + ADDED.len() + 47);
     assert_eq!(defs.id_of("weather_lore"), Some(42));
     for (offset, name) in ADDED.into_iter().enumerate() {
         let id = defs.id_of(name).expect(name);
         assert_eq!(usize::from(id), 43 + offset, "stable ordinal: {name}");
         let node = defs.get(id).expect(name);
-        assert_eq!(node.era.code(), 1, "neolithic: {name}");
+        assert_eq!(
+            node.era.code(),
+            if name == "mud_brick" { 2 } else { 1 },
+            "authored era: {name}"
+        );
         assert_eq!(node.seed, Seeding::Nobody, "normal-world seed: {name}");
         assert!(!node.discover.is_empty(), "discovery cause: {name}");
         assert!((1..=4).contains(&node.tier), "authored tier: {name}");
@@ -145,8 +149,6 @@ fn c1_partial_content_debt_keeps_connected_effects_distinct_from_inert() {
     for (id, kind, status, pass) in [
         ("hoe", "knowledge", "Connected", "M-BAL"),
         ("hoe", "item", "Connected", "M-BAL"),
-        ("wool", "item", "Connected", "C2"),
-        ("barter", "knowledge", "Inert", "M7"),
         ("herbalism", "knowledge", "Inert", "M9"),
         ("wild_boar", "animal", "Inert", "M-BAL"),
     ] {
@@ -184,6 +186,8 @@ fn c1_partial_content_debt_keeps_connected_effects_distinct_from_inert() {
         ("dairy", "knowledge"),
         ("herding", "knowledge"),
         ("milk", "item"),
+        ("wool", "item"),
+        ("barter", "knowledge"),
         ("pen", "template"),
     ] {
         let prefix = format!("| {id} | {kind} | ");

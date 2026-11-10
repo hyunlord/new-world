@@ -7,8 +7,10 @@ const Content = preload("res://scripts/ui/content_context.gd")
 const ItemIcons = preload("res://scripts/ui/item_icons.gd")
 const STAGES: Array[String] = ["00placed", "01half", "02complete", "03zonegrown", "04upgraded"]
 var _out: String = ""
+var _screens: String = ""
 var _saves: String = ""
 var _livestock_saves: bool = false
+var _c2_ui: bool = false
 var _size := Vector2i.ZERO
 var _main: Node
 var _world: Node
@@ -25,8 +27,10 @@ var _pacing: Dictionary = {}
 
 func _init() -> void:
 	var args: PackedStringArray = OS.get_cmdline_user_args()
+	_c2_ui = args.has("--c2-ui")
 	for i: int in args.size() - 1:
 		if args[i] == "--out": _out = args[i + 1]
+		elif args[i] == "--screens": _screens = args[i + 1]
 		elif args[i] == "--saves": _saves = args[i + 1]
 		elif args[i] == "--livestock-saves":
 			_saves = args[i + 1]
@@ -91,18 +95,27 @@ func _tile(tile: Vector2i, click: bool = true) -> void:
 	await _point(_camera.get_canvas_transform() * View.tile_centre(tile), click)
 
 func _capture(label: String) -> void:
+	await _wait_for_minimap()
+	await _frames()
 	await RenderingServer.frame_post_draw
 	var image: Image = root.get_texture().get_image()
-	_check("capture " + label, image != null and image.save_png(_out.path_join(label + ".png")) == OK)
+	var saved: bool = image != null and image.save_png(_out.path_join(label + ".png")) == OK
+	if saved and not _screens.is_empty():
+		var time: Dictionary = Time.get_time_dict_from_system()
+		var screen_label: String = label + "_rerender" if _livestock_saves and not label.ends_with("_rerender") else label
+		saved = image.save_png(_screens.path_join("%02d%02d_%s.png" % [time["hour"], time["minute"], screen_label])) == OK
+	_check("capture " + label, saved)
 
 func _run() -> void:
 	var settings: String = OS.get_environment("WORLDSIM_TEST_SETTINGS_DIR")
 	var valid: bool = DisplayServer.get_name() != "headless" and _out.is_absolute_path() and _saves.is_absolute_path()
 	valid = valid and not _out.begins_with(ProjectSettings.globalize_path("res://")) and settings.is_absolute_path() and DirAccess.dir_exists_absolute(settings)
 	valid = valid and _size in [Vector2i(1920, 1080), Vector2i(1440, 900)]
+	valid = valid and (_screens.is_empty() or (_screens.is_absolute_path() and not _screens.begins_with(ProjectSettings.globalize_path("res://"))))
 	_check("realwindow external paths and requested supported size", valid)
 	if not valid: _finish(); return
 	DirAccess.make_dir_recursive_absolute(_out)
+	if not _screens.is_empty(): DirAccess.make_dir_recursive_absolute(_screens)
 	_main = (load("res://scenes/main.tscn") as PackedScene).instantiate()
 	root.add_child(_main)
 	await _frames(20)
@@ -116,6 +129,10 @@ func _run() -> void:
 	_panel = _main.get_node_or_null("UI/BuildPanel") as Control
 	_check("integrated actual BuildPanel exists", _panel != null)
 	if _panel == null: _finish(); return
+	if _c2_ui:
+		await _c2_ui_checks()
+		_finish()
+		return
 	if _livestock_saves:
 		await _livestock()
 		_finish()
@@ -153,6 +170,114 @@ func _run() -> void:
 			await _pace(language)
 		await _cord_world(language)
 	_finish()
+
+# C2: same real C1 save rerendered with current presentation; no new outcome claim.
+func _c2_ui_checks() -> void:
+	_c2_job_labels()
+	var hud: Node = _main.get_node("UI/MuxHud")
+	var why: Control = _main.get_node("UI/WhyPanel") as Control
+	for variant: Dictionary in [{"language": "ko", "scale": 1.0}, {"language": "en", "scale": 1.0}, {"language": "en", "scale": 1.25}]:
+		var language: String = variant["language"]
+		var factor: float = variant["scale"]
+		var label: String = "%s_%.2f" % [language, factor]
+		_locale.call("set_language", language)
+		_check(label + " requested scale accepted", bool(hud.get("store").call("set_value", "ui_scale", factor)))
+		if not (await _load("05-slaughter")): continue
+		_main.get_node("UI/MuxHud/Goals").hide()
+		var ui: Dictionary = _manifests["05-slaughter"]["ui"]
+		var anchor: Array = ui["pen_anchor"]
+		_camera.position = View.tile_centre(Vector2i(int(anchor[0]) + 2, int(anchor[1]) + 2))
+		_camera.zoom = Vector2(2, 2)
+		_camera.force_update_scroll()
+		var commands: Dictionary = _world.call("get_command_log", 0)
+		for event: String in ["capture", "birth", "milk"]:
+			var entry: int = int(ui[event + "_entry"])
+			var witness: Dictionary = _world.call("get_chronicle_why", entry)
+			_check(label + " actual Why " + event, bool(why.call("open", entry)))
+			await _frames(8)
+			var body: RichTextLabel = why.get("_body") as RichTextLabel
+			var plain: String = str(why.call("plain_text")).replace("\u2060", "")
+			var evidence: Dictionary = witness.get("livestock_evidence", [])[0]
+			_check(label + " short content fits " + event, body.size.y >= body.get_content_height() and body.size.y - body.get_content_height() <= 8.0 and why.size.y < 260.0, {"panel": str(why.size), "body": str(body.size), "text_height": body.get_content_height(), "text": plain})
+			_check(label + " requested scale and screen bounds " + event, why.scale.is_equal_approx(Vector2.ONE * factor) and root.get_visible_rect().encloses(why.get_global_rect()), {"rect": str(why.get_global_rect()), "scale": str(why.scale)})
+			if event == "capture":
+				_check(label + " exact proficiency and admission threshold", plain.contains(str(evidence["proficiency"]) + "‰") and plain.contains(str(evidence["required"]) + "‰") and not plain.contains("%s/%s" % [evidence["proficiency"], evidence["required"]]))
+			else:
+				var species: Dictionary = Content.row("animals", int(evidence["species"]))
+				_check(label + " domestic event name " + event, plain.contains(str(_locale.call("ltr", species.get("domestic_name_key", "C2_ANIMAL_LIVESTOCK_GENERIC")))) and not plain.contains(str(_locale.call("ltr", species["name_key"]))))
+			_check(label + " presentation preserves witness " + event, _world.call("get_chronicle_why", entry) == witness)
+			await _capture(label + "_" + event + "_why_rerender")
+			await _click(why.find_child("Close", true, false) as Button)
+			_check(label + " native close " + event, not why.visible)
+		await _long_why_layout(why, int(ui["capture_entry"]), label)
+		await _capture(label + "_minimap_ready_rerender")
+		_minimap_pixels(label)
+		_check(label + " read-only UI retains commands and tick", _world.call("get_command_log", 0) == commands and int(_world.call("get_time_snapshot")["tick"]) == int(_manifests["05-slaughter"]["tick"]))
+
+# Stable native task codes are mechanics; immutable classifier DTOs do not stage world outcomes.
+func _c2_job_labels() -> void:
+	var activity: Script = load("res://scripts/ui/panels/current_activity_text.gd") as Script
+	var inspector: Script = load("res://scripts/ui/panels/agent_inspector_panel.gd") as Script
+	var keys: Array[String] = ["C2_JOB_TILL_FIELD", "C2_JOB_SOW_FIELD", "C2_JOB_TEND_FIELD", "C2_JOB_HARVEST_FIELD", "C2_JOB_CAPTURE", "C2_JOB_LIVESTOCK_PRODUCT", "C2_JOB_SLAUGHTER"]
+	for language: String in ["ko", "en"]:
+		_locale.call("set_language", language)
+		for offset: int in keys.size():
+			var code: int = offset + 19
+			var people: Dictionary = {"ids": PackedInt64Array([1]), "states": PackedByteArray([3]), "target_kinds": PackedByteArray([9]), "fleeing": PackedByteArray([0]), "drafted": PackedByteArray([0]), "jobs": PackedByteArray([code])}
+			var snapshot: Dictionary = people.duplicate(true)
+			var result: Dictionary = activity.call("summarize", people, {}, 60)
+			_check(language + " task label " + str(code), result.get("counts") == {"WORK:" + keys[offset]: 1} and inspector.call("job_name_key", code) == keys[offset] and str(_locale.call("ltr", keys[offset])) != keys[offset] and people == snapshot)
+		_check(language + " unknown inspector task stays unknown", inspector.call("job_name_key", 255) == "UI_UNKNOWN")
+
+# Layout-only stress text repeats a real rendered chain; it never writes a simulation witness.
+func _long_why_layout(why: Control, entry: int, label: String) -> void:
+	why.call("open", entry)
+	var body: RichTextLabel = why.get("_body") as RichTextLabel
+	var original: String = body.text
+	body.text = original.replace("\n\n", " ").repeat(2) + "\n\n" + original.repeat(12)
+	why.call("_queue_fit")
+	await _frames(8)
+	var scroll: VScrollBar = body.get_v_scroll_bar()
+	_check(label + " layout-only wrapped chain scrolls within bounds", body.get_content_height() > body.size.y and scroll.visible and why.size.y <= 480.0 and root.get_visible_rect().encloses(why.get_global_rect()), {"panel": str(why.size), "content": body.get_content_height(), "body": str(body.size)})
+	await _point(body.get_global_rect().get_center(), false)
+	for _i: int in 6:
+		for pressed: bool in [true, false]:
+			var wheel := InputEventMouseButton.new()
+			wheel.position = root.get_final_transform() * body.get_global_rect().get_center()
+			wheel.button_index = MOUSE_BUTTON_WHEEL_DOWN
+			wheel.pressed = pressed
+			Input.parse_input_event(wheel)
+		await process_frame
+	_check(label + " native wheel reaches later cause lines", scroll.value > 0.0, {"scroll": scroll.value})
+	await _capture(label + "_long_layout_only")
+	await _key(KEY_ESCAPE)
+	_check(label + " long chain escape closes", not why.visible)
+	why.call("open", entry)
+	await _frames(8)
+	_check(label + " reopening short chain shrinks and resets scroll", why.size.y < 260.0 and scroll.value == 0.0)
+	why.call("close")
+
+# Minimap publishes incrementally across real frames; elapsed frame count is not readiness.
+func _wait_for_minimap() -> void:
+	var minimap: Node = _main.get_node("UI/MuxHud/MapDock/Minimap")
+	var deadline: int = Time.get_ticks_msec() + 10000
+	while (minimap.call("map_image") == null or bool(minimap.call("is_building"))) and Time.get_ticks_msec() < deadline:
+		await process_frame
+	var published: Image = minimap.call("map_image")
+	_check("capture minimap published", published != null and not published.is_empty() and not bool(minimap.call("is_building")), minimap.call("performance_stats"))
+
+func _minimap_pixels(label: String) -> void:
+	var minimap: Control = _main.get_node("UI/MuxHud/MapDock/Minimap") as Control
+	var canvas: Control = minimap.get("_canvas") as Control
+	var map_rect: Rect2 = minimap.call("_map_rect")
+	var screenshot: Image = root.get_texture().get_image()
+	var colors: Dictionary = {}
+	for y: int in range(1, 8):
+		for x: int in range(1, 8):
+			var point: Vector2 = canvas.get_global_transform() * (map_rect.position + map_rect.size * Vector2(x, y) / 8.0)
+			if Rect2(Vector2.ZERO, screenshot.get_size()).has_point(point):
+				colors[screenshot.get_pixelv(Vector2i(point)).to_rgba32()] = true
+	_check(label + " rendered minimap has terrain pixels", canvas.is_visible_in_tree() and colors.size() > 4, {"sampled_colors": colors.size(), "map_rect": str(map_rect), "canvas": str(canvas.get_global_rect())})
 
 func _reserved_zones(language: String) -> void:
 	var zones: Array = _world.call("get_content_catalog").get("building_zones", [])
@@ -546,7 +671,8 @@ func _livestock() -> void:
 			goals.hide()
 			if ids.size() > 0:
 				var livestock_body: Sprite2D = (renderer.get("_bodies") as Dictionary).get(ids[0])
-				_check(stage + " actual32px sprite rect", livestock_body != null and livestock_body.get_rect() == Rect2(-16, -32, 32, 32))
+				var texture_size: Vector2 = livestock_body.texture.get_size() if livestock_body != null and livestock_body.texture != null else Vector2.ZERO
+				_check(stage + " actual age-sized sprite rect", texture_size.x > 0 and texture_size.x <= View.TILE and livestock_body.get_rect() == Rect2(Vector2(-texture_size.x * 0.5, -texture_size.y), texture_size))
 				_check(stage + " actual sprite centre picks identity", livestock_body != null and int(renderer.call("livestock_at", livestock_body.to_global(livestock_body.get_rect().get_center()))) == ids[0])
 				var xs: PackedInt64Array = read["xs"]
 				var ys: PackedInt64Array = read["ys"]

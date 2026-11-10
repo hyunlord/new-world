@@ -1,6 +1,7 @@
 //! Frozen placement, seasonal transitions and atomic harvest ownership.
 use sim_core::colony::content::{installed_or_bundled, PlantPhase};
 use sim_core::colony::food::PlantState;
+use sim_core::colony::knowledge::KnowledgeMask;
 use sim_core::colony::{Designation, ReserveKey};
 use sim_core::rules::CalendarRule;
 use sim_systems::runtime::food::plants;
@@ -157,14 +158,14 @@ fn harvest_respects_reservation_and_creates_each_yield_exactly_once() {
     res.colony.touch(false);
     let mut index = HarvestIndex::default();
     let query = HarvestQuery {
-        practice: u128::MAX,
+        practice: KnowledgeMask::MAX,
         region,
         pos: tile,
         radius: 0,
     };
     let job = harvest::pick(res, &mut index, query).expect("ripe marked plant");
-    assert_eq!(harvest::work_ticks(res, tile, u128::MAX), 40);
-    assert_eq!(harvest::work_ticks(res, tile, 0), 60);
+    assert_eq!(harvest::work_ticks(res, tile, KnowledgeMask::MAX), 40);
+    assert_eq!(harvest::work_ticks(res, tile, KnowledgeMask::ZERO), 60);
     res.colony.reservations.insert(ReserveKey::Plant(tile), 999);
     assert!(harvest::pick(res, &mut index, query).is_none());
     res.colony.reservations.remove(&ReserveKey::Plant(tile));

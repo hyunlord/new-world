@@ -7,10 +7,10 @@ use sim_engine::SimResources;
 use std::collections::{BTreeMap, BTreeSet};
 
 pub(super) fn discovery_materials(world: &World, policy: &FoodPlan) -> BTreeMap<ItemKind, u32> {
-    let practice = world
-        .query::<&Knowledge>()
-        .iter()
-        .fold(0, |mask, (_, knowledge)| mask | knowledge.practice());
+    let practice = world.query::<&Knowledge>().iter().fold(
+        sim_core::colony::knowledge::KnowledgeMask::ZERO,
+        |mask, (_, knowledge)| mask | knowledge.practice(),
+    );
     let mut pending = Vec::new();
     for &(recipe, _) in &policy.vessel_recipes {
         let mask = knowledge::gates().recipe(recipe);

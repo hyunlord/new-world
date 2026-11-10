@@ -12,7 +12,7 @@ fn family() -> (Catalog, TemplateCatalog) {
 }
 
 #[test]
-fn c1_templates_resolve_ten_connected_and_keep_thirteen_future_buildings_visible() {
+fn c2_templates_resolve_fifteen_connected_and_keep_nine_future_buildings_visible() {
     // Given the bundled template family, including future missing blueprint identities.
     let (_, templates) = family();
     // When its explicit connection states are counted.
@@ -26,8 +26,8 @@ fn c1_templates_resolve_ten_connected_and_keep_thirteen_future_buildings_visible
         .iter()
         .filter(|t| t.status == ContentStatus::Inert)
         .count();
-    // C1 connects three reserved plans and appends the oven house; remaining grey plans retain debt.
-    assert_eq!((connected, inert), (10, 13));
+    // C2 connects five reserved plans and retains the unsupported hive as explicit future data.
+    assert_eq!((connected, inert), (15, 9));
     assert!(templates
         .buildings
         .iter()

@@ -390,6 +390,7 @@ fn register_runtime_systems_with_decision(engine: &mut SimEngine, decision: fn(&
     register_story_systems(engine);
     if engine.resources.rules.colony.is_some() {
         engine.register_system(Box::new(runtime::livestock::LivestockSystem::new()));
+        engine.register_system(Box::new(runtime::ore::OreDiscoverySystem));
     }
     register_diagnosis_systems(engine);
 }

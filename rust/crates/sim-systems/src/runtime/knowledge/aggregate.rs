@@ -149,7 +149,8 @@ pub fn compute(
     out.current_era = d.eras.current(&out.era_progress);
     // The historical scalar remains the first post-founder era's progress.
     out.progress_permille = out.era_progress.get(1).copied().unwrap_or(0);
-    if out.current_era != prev.current_era {
+    // The first measurement establishes an era; only later measurements can change it.
+    if !prev.era_progress.is_empty() && out.current_era != prev.current_era {
         events.push(
             ChronicleEntry::new(tick, ChronicleKind::EraChanged)
                 .cause(u32::from(out.current_era.1))

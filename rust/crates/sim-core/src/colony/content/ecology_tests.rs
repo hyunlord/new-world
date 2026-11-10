@@ -19,7 +19,7 @@ fn ecology_base_codes_schedule_and_per_world_overrides_are_exact() {
     let c = Catalog::from_sources(RawSources::bundled(), None).expect("catalog");
     assert_eq!(
         c.animals().map(|d| d.identity.code).collect::<Vec<_>>(),
-        vec![0, 1, 2, 3, 4, 5]
+        vec![0, 1, 2, 3, 4, 5, 6]
     );
     assert_eq!(
         c.pressures().map(|d| d.identity.code).collect::<Vec<_>>(),
@@ -266,6 +266,10 @@ fn tameable_data_only_species_resolves_renamed_products_and_category_art() {
                 name: "items.ron".into(),
                 bytes: items.into_bytes(),
             },
+            NamedSource {
+                name: "blueprints.ron".into(),
+                bytes: include_bytes!("../../../../sim-test/data/ext_pack/blueprints.ron").to_vec(),
+            },
         ],
     };
     let catalog =
@@ -282,14 +286,100 @@ fn tameable_data_only_species_resolves_renamed_products_and_category_art() {
     assert_eq!(policy.products.hide.1, 1);
     assert_eq!(animal.art.shape, ItemShape::Cloth);
     assert_eq!(animal.art.tint_material, "limestone");
+    assert_eq!(animal.art.body_length_permille, 510);
+    assert_eq!(animal.art.head_direction, -1);
+    assert!(animal.art.antlers);
+    assert_eq!(animal.art.juvenile_scale_permille, 600);
+    assert_eq!(
+        animal.domestic_name_key.as_deref(),
+        Some("EXT_DOMESTIC_ANIMAL")
+    );
+    assert_eq!(
+        policy.products.wool.as_ref().expect("novel fleece").item,
+        policy.products.hide.0
+    );
     let old_species = catalog.animal_by_code(1).expect("old species");
     assert!(old_species.tameable.is_none());
-    assert_eq!(old_species.art, ItemArt::for_category("animal"));
+    assert!(old_species.art.antlers);
+    assert_eq!(
+        ron::from_str::<AnimalArt>("()").expect("category fallback"),
+        AnimalArt::default()
+    );
+}
+
+#[test]
+fn animal_silhouettes_reject_unrenderable_geometry_and_empty_owned_names() {
+    for (old, new) in [
+        ("body_length_permille: 720", "body_length_permille: 0"),
+        ("leg_count: 4", "leg_count: 9"),
+        ("head_direction: 1", "head_direction: 0"),
+        ("juvenile_scale_permille: 600", "juvenile_scale_permille: 0"),
+        (
+            "domestic_name_key: Some(\"C2_ANIMAL_GOAT\")",
+            "domestic_name_key: Some(\"\")",
+        ),
+    ] {
+        let error = Catalog::from_sources(altered("animals.ron", old, new), None)
+            .expect_err("invalid silhouette");
+        assert!(error.to_string().contains("silhouette"), "{error}");
+    }
+}
+
+#[test]
+fn cattle_is_a_plain_origin_and_sheep_has_independent_wool_policy() {
+    let catalog = Catalog::from_sources(RawSources::bundled(), None).expect("catalog");
+    let cattle = catalog
+        .animal_by_name("aurochs")
+        .expect("plain wild source");
+    let cattle = catalog.animal(cattle).expect("cattle definition");
+    assert_eq!(
+        cattle.domestic_name_key.as_deref(),
+        Some("C2_ANIMAL_CATTLE")
+    );
+    assert_eq!(
+        cattle
+            .tameable
+            .as_ref()
+            .expect("capture policy")
+            .capture_knowledge,
+        "cattle"
+    );
+    assert_eq!(cattle.origin.terrain, vec![crate::TerrainType::Plain]);
+    let sheep = catalog
+        .animal_by_code(3)
+        .expect("sheep")
+        .tameable
+        .as_ref()
+        .expect("livestock");
+    assert!(sheep.products.milk.is_some());
+    assert_eq!(
+        sheep
+            .products
+            .wool
+            .as_ref()
+            .expect("wool")
+            .requires_knowledge,
+        "wool_spinning"
+    );
+    assert_eq!(
+        catalog.animal_by_code(4).expect("boar").status,
+        crate::colony::knowledge::ContentStatus::Inert
+    );
 }
 
 #[test]
 fn tameable_rejects_bad_tools_products_knowledge_jobs_and_numeric_policy() {
     for (old, new, expected) in [
+        (
+            "item: \"wool\", every_days: 4",
+            "item: \"milk\", every_days: 4",
+            "ambiguous recurring livestock products",
+        ),
+        (
+            "item: \"wool\", every_days: 4",
+            "item: \"log\", every_days: 4",
+            "wool output conflicts with legacy milk placeholder",
+        ),
         (
             "capture_tool: Some(\"cord\")",
             "capture_tool: Some(\"missing\")",

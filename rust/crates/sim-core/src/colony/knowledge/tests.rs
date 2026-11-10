@@ -4,9 +4,9 @@ use crate::colony::{BlueprintKind, Designation, ItemKind, RecipeKind};
 const KNOWLEDGE_RON: &str = include_str!("../../../data/colony/knowledge.ron");
 
 #[test]
-fn the_map_parses_to_82_nodes_with_an_acyclic_prereq_graph() {
+fn the_map_parses_to_129_nodes_with_an_acyclic_prereq_graph() {
     let d = defs();
-    assert_eq!(d.nodes.len(), 82);
+    assert_eq!(d.nodes.len(), 129);
     assert_eq!(
         d.nodes[42].name, "weather_lore",
         "historical prefix remains stable"
@@ -51,10 +51,10 @@ fn the_map_parses_to_82_nodes_with_an_acyclic_prereq_graph() {
             vec![Cond::Stockpile(ItemKind::RawPot, 2)]
         ))
     );
-    // Historical markers total14; the connected C1 pen adds animal_taming weight2.
-    assert_eq!(d.marker_total(), 16);
+    // Neolithic markers total16; C2 adds eleven bronze marker weights.
+    assert_eq!(d.marker_total(), 27);
     let present: u32 = d.nodes.iter().map(|n| u32::from(n.marker_weight)).sum();
-    assert_eq!(present, 16);
+    assert_eq!(present, 27);
     assert!(parse_defs("(schema_version: 2, absent_markers: [], knowledge: [])").is_none());
     let bad = KNOWLEDGE_RON.replace("Recipe(\"haft_axe\")", "Recipe(\"bronze\")");
     assert!(parse_defs(&bad).is_none());
@@ -65,7 +65,7 @@ fn the_map_parses_to_82_nodes_with_an_acyclic_prereq_graph() {
 #[test]
 fn gate_masks_cover_the_goal_table() {
     let g = gates();
-    let b = |name: &str| id(name).map_or(0, bit);
+    let b = |name: &str| id(name).map_or(KnowledgeMask::ZERO, bit);
     assert_eq!(g.recipe(RecipeKind::KnapBlade), b("flint_knapping"));
     assert_eq!(g.recipe(RecipeKind::HaftAxe), b("hafting"));
     assert_eq!(g.recipe(RecipeKind::FirePot), b("pot_firing"));
@@ -123,8 +123,8 @@ fn entries_stay_sorted_and_the_bitset_follows_the_thresholds() {
     );
     assert_eq!(k.entries().len(), k.entries().iter().count());
     assert_eq!(std::mem::size_of::<KnowledgeEntry>(), 8);
-    // A boxed-slice fat pointer (16 bytes) plus the C1 128-bit mask (16 bytes).
-    assert_eq!(std::mem::size_of::<Knowledge>(), 32);
+    // A boxed-slice fat pointer (16 bytes) plus the C2 256-bit mask (32 bytes).
+    assert_eq!(std::mem::size_of::<Knowledge>(), 48);
     // Observation stops at its cap.
     assert!(k.observe(knap, 5, 250, 900));
     for _ in 0..100 {
@@ -178,7 +178,7 @@ fn a_load_rebuilds_high_practitioner_bits_without_aliasing_low_nodes() {
     let loaded: Knowledge = ron::from_str(&text).expect("load full-width knowledge");
     assert_eq!(loaded, k);
     // Corrupt both saved words. Entries, not either cached word, determine the result.
-    let saved_mask = format!("practice:({},{})", expected as u64, (expected >> 64) as u64);
+    let saved_mask = format!("practice:({},{})", expected.words()[0], expected.words()[1]);
     let tampered = text.replace(&saved_mask, "practice:(0,0)");
     assert_ne!(tampered, text, "both mask words were present in RON");
     let rebuilt: Knowledge = ron::from_str(&tampered).expect("rebuild full-width knowledge");
@@ -282,11 +282,11 @@ fn cultivation_is_discovered_not_seeded_and_replaces_the_farming_marker() {
             id("grain_parching").expect("grain")
         ]
     );
-    assert_eq!(d.marker_total(), 16);
+    assert_eq!(d.marker_total(), 27);
     assert_eq!(
         d.nodes
             .iter()
-            .filter(|node| node.name != "animal_taming")
+            .filter(|node| node.era == Era::Neolithic && node.name != "animal_taming")
             .map(|node| u32::from(node.marker_weight))
             .sum::<u32>(),
         14,

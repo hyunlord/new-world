@@ -86,6 +86,19 @@ pub fn render(catalog: &Catalog) -> String {
             );
         }
     }
+    for ore in catalog.outcrops() {
+        if has_debt(ore.status, ore.debt.as_deref()) {
+            row(
+                &mut out,
+                &ore.identity.id,
+                "outcrops",
+                "",
+                "",
+                ore.status,
+                ore.debt.as_deref(),
+            );
+        }
+    }
     for animal in catalog.animals() {
         if has_debt(animal.status, animal.debt.as_deref()) {
             row(

@@ -52,7 +52,7 @@ pub(super) fn complete(
     }
     match job.kind {
         JobKind::Capture { animal, pen } => capture(world, res, owner, entity, animal, pen),
-        JobKind::Milk { animal, at } => milk(world, res, owner, entity, animal, at),
+        JobKind::Milk { animal, at } => milk(world, res, owner, entity, animal, at, job.item),
         JobKind::Slaughter { animal, at } => slaughter(world, res, owner, animal, at),
         _ => Outcome::Cancel,
     }
@@ -176,6 +176,7 @@ fn milk(
     entity: Entity,
     id: LivestockId,
     at: Tile,
+    requested_item: ItemKind,
 ) -> Outcome {
     let Some(animal) = res.livestock.animals.get(&id).cloned() else {
         return Outcome::Cancel;
@@ -183,25 +184,18 @@ fn milk(
     let Some(policy) = animal.species.definition().tameable.as_ref() else {
         return Outcome::Cancel;
     };
-    let Some(milk) = policy.products.milk.as_ref() else {
+    let Some((recurring, wool)) = recurring_product(policy, requested_item) else {
         return Outcome::Cancel;
     };
-    let Some(knows) = knowledge(world, entity, &milk.requires_knowledge) else {
+    let Some(knows) = knowledge(world, entity, &recurring.requires_knowledge) else {
         return Outcome::Cancel;
     };
     let today = day(res);
-    if !animal.sex.female
-        || !animal.milk_ready
-        || animal.hunger_days != 0
-        || animal.created_day >= today
-        || today.saturating_sub(animal.last_milk_day) < milk.every_days
-        || current_age(&animal, res.current_tick, res.ticks_per_day) < policy.kid_age_days
-        || res.livestock.slaughter_orders.contains_key(&id)
-    {
+    if !product_ready(res, &animal, requested_item) {
         return Outcome::Cancel;
     }
     let product = LivestockYield {
-        item: ItemSpec::raw(milk.item, None),
+        item: ItemSpec::raw(recurring.item, None),
         count: 1,
     };
     let Ok(batch) = items::new_batch(product.item, product.count, today) else {
@@ -210,7 +204,7 @@ fn milk(
     if items::create_ground_batches(res, at, &[batch], today, items::FoodSource::Harvest).is_err() {
         return Outcome::Retry;
     }
-    if let Some(a) = res.livestock.animals.get_mut(&id) {
+    if let Some(a) = res.livestock.animals.get_mut(&id).filter(|_| !wool) {
         a.milk_ready = false;
         a.last_milk_day = today;
     }

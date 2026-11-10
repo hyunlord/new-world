@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://v7init"]
+[gd_scene load_steps=25 format=3 uid="uid://v7init"]
 
 [ext_resource type="Script" path="res://scripts/core/sim_reads.gd" id="1_sim_reads"]
 [ext_resource type="Script" path="res://scripts/world/colony/ground_layer.gd" id="2_ground"]
@@ -27,6 +27,7 @@
 [ext_resource type="Script" path="res://scripts/ui/panels/world_marker.gd" id="24_world_marker"]
 
 [ext_resource type="Script" path="res://scripts/world/colony/livestock_layer.gd" id="25_livestock"]
+[ext_resource type="Script" path="res://scripts/world/colony/outcrop_layer.gd" id="26_outcrop"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("19_boot")
@@ -60,6 +61,9 @@ script = ExtResource("6_agents")
 
 [node name="AnimalLayer" type="Node2D" parent="ColonyView"]
 script = ExtResource("17_animals")
+
+[node name="OutcropLayer" type="Node2D" parent="ColonyView"]
+script = ExtResource("26_outcrop")
 
 [node name="LivestockLayer" type="Node2D" parent="ColonyView"]
 script = ExtResource("25_livestock")

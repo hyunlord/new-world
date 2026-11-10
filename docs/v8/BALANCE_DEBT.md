@@ -234,3 +234,218 @@ These are design values authored in `animals.ron`, not acceptance thresholds or 
 | Herding discovery | animal_taming300 plus one completed capture; threshold300, difficulty1 unchanged | Natural learning after actual capture; connected grazing/breeding | Knowledge social/adoption balance deferred |
 | Steward livestock | authored rule11, Food scope,360tick successful-action cooldown | Ordinary pen request followed by ordinary capture designation | Never a second job scheduler; path/source/tool/knowledge admission shared with jobs |
 | Colony mind | one work-band livestock owner node, score0/hysteresis0/everytick; existing do_job lifecycle | Explain capture/milk ownership without replacing needs priority | Needs and duty bands retain their authored precedence |
+
+
+## C2-a bronze content starting values
+
+All values are authored design inputs, not smoke/calibration acceptance. Recipe skill reuse, inventory handling and workshop contention are unbalanced. All recipes use craft, quality_add0, material_termNone and no automatic bill.
+
+| Feature | Tunable/current value | Intended effect | Suspected issue |
+| --- | --- | --- | --- |
+| burn_charcoal | [("log", 4)], output: ("charcoal", 3), 120, skill: "pottery", work: "craft", quality_add: 0, material_term: None, | Physical transformation at its authored station | Supply, skill reuse and throughput unbalanced |
+| smelt_copper | [("copper_ore", 2), ("charcoal", 2)], output: ("copper_ingot", 1), 120, skill: "pottery", work: "craft", quality_add: 0, material_term: None, | Physical transformation at its authored station | Supply, skill reuse and throughput unbalanced |
+| smelt_tin | [("tin_ore", 2), ("charcoal", 2)], output: ("tin_ingot", 1), 120, skill: "pottery", work: "craft", quality_add: 0, material_term: None, | Physical transformation at its authored station | Supply, skill reuse and throughput unbalanced |
+| alloy_bronze | [("copper_ingot", 3), ("tin_ingot", 1), ("charcoal", 2)], output: ("bronze_ingot", 3), 120, skill: "pottery", work: "craft", quality_add: 0, material_term: None, | Physical transformation at its authored station | Supply, skill reuse and throughput unbalanced |
+| make_mould | [("clay", 2)], output: ("clay_mould", 1), 60, skill: "pottery", work: "craft", quality_add: 0, material_term: None, | Physical transformation at its authored station | Supply, skill reuse and throughput unbalanced |
+| cast_copper_axe | [("copper_ingot", 1), ("clay_mould", 1), ("log", 1)], output: ("copper_axe", 1), 120, skill: "pottery", work: "craft", quality_add: 0, material_term: None, | Physical transformation at its authored station | Supply, skill reuse and throughput unbalanced |
+| cast_bronze_axe | [("bronze_ingot", 1), ("clay_mould", 1), ("log", 1)], output: ("bronze_axe", 1), 120, skill: "pottery", work: "craft", quality_add: 0, material_term: None, | Physical transformation at its authored station | Supply, skill reuse and throughput unbalanced |
+| cast_bronze_sickle | [("bronze_ingot", 1), ("clay_mould", 1), ("log", 1)], output: ("bronze_sickle", 1), 120, skill: "pottery", work: "craft", quality_add: 0, material_term: None, | Physical transformation at its authored station | Supply, skill reuse and throughput unbalanced |
+| cast_bronze_hoe | [("bronze_ingot", 1), ("clay_mould", 1), ("log", 1)], output: ("bronze_hoe", 1), 120, skill: "pottery", work: "craft", quality_add: 0, material_term: None, | Physical transformation at its authored station | Supply, skill reuse and throughput unbalanced |
+| cast_bronze_spear | [("bronze_ingot", 1), ("clay_mould", 1), ("log", 1)], output: ("bronze_spear", 1), 120, skill: "pottery", work: "craft", quality_add: 0, material_term: None, | Physical transformation at its authored station | Supply, skill reuse and throughput unbalanced |
+| cast_bronze_dagger | [("bronze_ingot", 1), ("clay_mould", 1), ("log", 1)], output: ("bronze_dagger", 1), 120, skill: "pottery", work: "craft", quality_add: 0, material_term: None, | Physical transformation at its authored station | Supply, skill reuse and throughput unbalanced |
+| hammer_awl | [("copper_ingot", 1)], output: ("copper_awl", 2), 60, skill: "woodwork", work: "craft", quality_add: 0, material_term: None, | Physical transformation at its authored station | Supply, skill reuse and throughput unbalanced |
+| hammer_needle | [("copper_ingot", 1)], output: ("copper_needle", 2), 60, skill: "woodwork", work: "craft", quality_add: 0, material_term: None, | Physical transformation at its authored station | Supply, skill reuse and throughput unbalanced |
+| spin_wool | [("wool", 2)], output: ("wool_yarn", 2), 60, skill: "woodwork", work: "craft", quality_add: 0, material_term: None, | Physical transformation at its authored station | Supply, skill reuse and throughput unbalanced |
+| weave_wool | [("wool_yarn", 2)], output: ("wool_cloth", 1), 90, skill: "woodwork", work: "craft", quality_add: 0, material_term: None, | Physical transformation at its authored station | Supply, skill reuse and throughput unbalanced |
+| sew_wool_tunic | [("wool_cloth", 2)], output: ("wool_tunic", 1), 120, skill: "woodwork", work: "craft", quality_add: 0, material_term: None, | Physical transformation at its authored station | Supply, skill reuse and throughput unbalanced |
+| make_mud_brick | [("clay", 2), ("flax_stalks", 1)], output: ("mud_brick", 2), 60, skill: "pottery", work: "craft", quality_add: 0, material_term: None, | Physical transformation at its authored station | Supply, skill reuse and throughput unbalanced |
+| burn_lime | [("limestone", 2), ("charcoal", 2)], output: ("lime", 1), 120, skill: "pottery", work: "craft", quality_add: 0, material_term: None, | Physical transformation at its authored station | Supply, skill reuse and throughput unbalanced |
+| make_wheel | [("log", 2)], output: ("wheel", 1), 90, skill: "woodwork", work: "craft", quality_add: 0, material_term: None, | Physical transformation at its authored station | Supply, skill reuse and throughput unbalanced |
+| make_composite_bow | [("log", 1), ("cord", 2), ("cured_hide", 1)], output: ("composite_bow", 1), 120, skill: "woodwork", work: "craft", quality_add: 0, material_term: None, | Physical transformation at its authored station | Supply, skill reuse and throughput unbalanced |
+
+| Item | Stack / carry / value and mechanics | Intended effect | Suspected issue |
+| --- | --- | --- | --- |
+| charcoal | 30/10/4; fuel_units=Some(1) | Authored physical inventory/tool tier | No balance claim; Inert entries remain unavailable |
+| copper_ore | 30/10/5; no extra mechanic | Authored physical inventory/tool tier | No balance claim; Inert entries remain unavailable |
+| tin_ore | 30/10/6; no extra mechanic | Authored physical inventory/tool tier | No balance claim; Inert entries remain unavailable |
+| iron_ore | 30/10/5; no extra mechanic | Authored physical inventory/tool tier | No balance claim; Inert entries remain unavailable |
+| copper_ingot | 30/10/12; no extra mechanic | Authored physical inventory/tool tier | No balance claim; Inert entries remain unavailable |
+| tin_ingot | 30/10/14; no extra mechanic | Authored physical inventory/tool tier | No balance claim; Inert entries remain unavailable |
+| bronze_ingot | 30/10/18; no extra mechanic | Authored physical inventory/tool tier | No balance claim; Inert entries remain unavailable |
+| clay_mould | 30/10/4; no extra mechanic | Authored physical inventory/tool tier | No balance claim; Inert entries remain unavailable |
+| copper_awl | 5/2/10; no extra mechanic | Authored physical inventory/tool tier | No balance claim; Inert entries remain unavailable |
+| copper_needle | 5/2/10; no extra mechanic | Authored physical inventory/tool tier | No balance claim; Inert entries remain unavailable |
+| copper_axe | 5/2/26; chop=Some((quality_permille: (400, 390, 380, 370, 360, 350, 340, 330, 320, 310, 300), wear_rule: None, wear_default: 240, break_return: None, preserve_return_material: false)); weapon=Some((damage: 11, damage_rule: None, wear_rule: None, wear_default: 0, draft_rank: Some(4), hunt_rank: None, hunt_hit_bonus: false, break_tally: None)) | Authored physical inventory/tool tier | No balance claim; Inert entries remain unavailable |
+| bronze_axe | 5/2/32; chop=Some((quality_permille: (350, 340, 330, 320, 310, 300, 290, 280, 270, 260, 250), wear_rule: None, wear_default: 320, break_return: None, preserve_return_material: false)); weapon=Some((damage: 13, damage_rule: None, wear_rule: None, wear_default: 0, draft_rank: Some(5), hunt_rank: None, hunt_hit_bonus: false, break_tally: None)) | Authored physical inventory/tool tier | No balance claim; Inert entries remain unavailable |
+| bronze_sickle | 5/2/26; no extra mechanic | Authored physical inventory/tool tier | No balance claim; Inert entries remain unavailable |
+| bronze_hoe | 5/2/26; no extra mechanic | Authored physical inventory/tool tier | No balance claim; Inert entries remain unavailable |
+| bronze_spear | 5/2/30; weapon=Some((damage: 16, damage_rule: None, wear_rule: None, wear_default: 60, draft_rank: Some(6), hunt_rank: Some(2), hunt_hit_bonus: true, break_tally: None)) | Authored physical inventory/tool tier | No balance claim; Inert entries remain unavailable |
+| bronze_dagger | 5/2/28; weapon=Some((damage: 13, damage_rule: None, wear_rule: None, wear_default: 48, draft_rank: Some(5), hunt_rank: None, hunt_hit_bonus: false, break_tally: None)); cutter=Some((wear_rule: None, wear_default: 16, break_tally: None)) | Authored physical inventory/tool tier | No balance claim; Inert entries remain unavailable |
+| honey | 30/10/5; no extra mechanic | Authored physical inventory/tool tier | No balance claim; Inert entries remain unavailable |
+| beeswax | 30/10/5; no extra mechanic | Authored physical inventory/tool tier | No balance claim; Inert entries remain unavailable |
+| wool_yarn | 30/10/4; no extra mechanic | Authored physical inventory/tool tier | No balance claim; Inert entries remain unavailable |
+| wool_cloth | 30/10/8; no extra mechanic | Authored physical inventory/tool tier | No balance claim; Inert entries remain unavailable |
+| wool_tunic | 5/1/20; no extra mechanic | Authored physical inventory/tool tier | No balance claim; Inert entries remain unavailable |
+| wheel | 30/10/12; no extra mechanic | Authored physical inventory/tool tier | No balance claim; Inert entries remain unavailable |
+| mud_brick | 30/10/3; no extra mechanic | Authored physical inventory/tool tier | No balance claim; Inert entries remain unavailable |
+| lime | 30/10/4; no extra mechanic | Authored physical inventory/tool tier | No balance claim; Inert entries remain unavailable |
+| seal | 30/10/8; no extra mechanic | Authored physical inventory/tool tier | No balance claim; Inert entries remain unavailable |
+| tablet | 30/10/5; no extra mechanic | Authored physical inventory/tool tier | No balance claim; Inert entries remain unavailable |
+| glass_bead | 30/10/8; no extra mechanic | Authored physical inventory/tool tier | No balance claim; Inert entries remain unavailable |
+| composite_bow | 5/2/24; no extra mechanic | Authored physical inventory/tool tier | No balance claim; Inert entries remain unavailable |
+| limestone | 30/10/2; no extra mechanic | Authored physical inventory/tool tier | No balance claim; Inert entries remain unavailable |
+
+| Piece | Footprint / needs / work | Intended effect | Suspected issue |
+| --- | --- | --- | --- |
+| charcoal_clamp | (2, 2); [(item: "clay", count: 4, count_rule: None), (item: "stone", count: 2, count_rule: None)]; 120ticks | Existing construction and work-tile mechanics | Placement and labour unbalanced |
+| smelter | (1, 1); [(item: "clay", count: 6, count_rule: None), (item: "stone", count: 2, count_rule: None)]; 120ticks | Existing construction and work-tile mechanics | Placement and labour unbalanced |
+| casting_bench | (2, 1); [(item: "log", count: 4, count_rule: None), (item: "stone", count: 2, count_rule: None)]; 120ticks | Existing construction and work-tile mechanics | Placement and labour unbalanced |
+| mud_brick_wall | (1, 1); [(item: "mud_brick", count: 3, count_rule: None)]; 60ticks | Existing construction and work-tile mechanics | Placement and labour unbalanced |
+| palisade | (1, 1); [(item: "log", count: 3, count_rule: None)]; 60ticks | Existing construction and work-tile mechanics | Placement and labour unbalanced |
+| kiln | (1, 1); [(item: "clay", count: 6, count_rule: None), (item: "stone", count: 2, count_rule: None)]; 120ticks | Existing construction and work-tile mechanics | Placement and labour unbalanced |
+| stone_masonry_wall | (1, 1); [(item: "stone", count: 4, count_rule: None)]; 90ticks | Existing construction and work-tile mechanics | Placement and labour unbalanced |
+
+| Template | Current footprint, tier and materials | Intended effect | Suspected issue |
+| --- | --- | --- | --- |
+| charcoal_clamp | 3×3/tier1; clay4+stone2; Open | 2×2 earthen station with a south work tile | No fire/temperature subsystem |
+| smelter | 4×4/tier2; log23+clay6+stone2; Roofed | Enclosed smelting station | Station and stock traffic unbalanced |
+| casting_bench | 4×4/tier3; log27+stone2; Roofed | Enclosed casting bench | Station and stock traffic unbalanced |
+| mud_brick_house | 4×4/tier4; mud_brick33+log3; 2beds | Replace11 log walls and retain floor/door/beds | Existing roof warmth only; no new thermal mechanics |
+| kiln | 3×3/tier2; clay6+stone2; Open | Existing firing recipe compatibility | No temperature curve |
+| bee_skep | 1×1/tier2; Inert | Visible authored future utility | M-GROW dual food/nonfood hive timer absent |
+| wool garment art | top_code7→wrap silhouette; RGB192/180/155 | Distinct clothing colour without a new asset | Placeholder visual only |
+
+### C2-a geological and livestock starting policy
+
+Fixed before the64-seed origin census and smoke outcomes; no value below is a
+balance acceptance threshold. The original outcrop data/hash is retained in
+external c2-data/outcrops-initial-authored.ron.
+
+| Feature | Tunable/current value | Intended effect | Suspected issue |
+| --- | --- | --- | --- |
+| Copper origins | all3climates; hill/mountain; no extra elevation bound; presence1000‰;1–3clusters,1–3tiles; camp radius60 | Physical nearby highland copper | Coverage is measured once on seeds0–63; no post-outcome tuning |
+| Tin origins | same habitat/radius; independent presence500‰;0–1cluster,1–2tiles | About25% intended tin worlds; trade otherwise | Actual64-seed percentage is evidence, not a tuning target |
+| Iron origins | Inert/C3; presence1000‰;1–2clusters,1–3tiles, radius60 | Reserve authored iron family | No active iron deposits or production |
+| Deposit quantity |24units/tile for each authored family | Finite physical extraction capacity | Mining yield/labour balance deferred to M-BAL |
+| Discovery | practitioner radius4; completed quarry radius1; every8ticks at offset3 | Real knowledge or quarry cause reveals terrain | Visibility/travel latency unbalanced; no knowledge granted by reveal |
+| Aurochs source | plain terrain;2–4animals, respawn8days, radius12 | Natural cattle source through existing capture | Habitat/feed competition unbalanced |
+| Cattle livestock | reused C1 capture700‰/60ticks/retry1day; grazing3cells/day; starvation3days; breed20days; kid30days; max age1800days | Same physical capture, feeding and parent witnesses | No new husbandry efficacy or supplementary fodder |
+| Sheep wool |1wool/4days,45ticks; adult fed either sex; wool_spinning practitioner | Existing recurring product work | Cooldown independent of milk; throughput and garment warmth unbalanced |
+| Animal art | shared tile raster; authored body/leg/head/horn/antler/tail; juvenile600‰ | Distinguishable species and small offspring | Presentation only; exact per-species values live in animals.ron |
+| Material art | render_params.material_looks Lab deltas and existing categories | Copper/tin/bronze and earth distinguishable in shared placeholders | Presentation only; does not change material efficacy |
+
+# C2-a 지식 수치 기록 — BALANCE_DEBT 병합용
+
+2026-11-10. 현재 `knowledge.ron`을 읽어 추출했다. 새 47개와 기존 승격·표지 변경 2개를 모두 포함한다. 수치 조정, 자연 채택률 평가, held-out 재실행은 하지 않았다. 원본은 `rust/crates/sim-core/data/colony/knowledge.ron`이며 표의 ID는 영구 배열 인덱스이다.
+
+## 의미·의도·확인할 문제
+
+- `threshold`는 개인이 실천자로 인정되는 숙련도(‰), `difficulty`는 기존 발견 확률 등급, `seed`는 창립자 초기 보유, `marker_weight`는 해당 시대 진척 가중치다. `discover` 조건은 모두 AND이며 prerequisite 보유 검사와 함께 적용된다.
+- 새 47개는 threshold 300 / seed None이다. 난이도는 tier 1→1, 2→2, 3·4→3을 초기 설계값으로 택했다. 목적은 선행 지식과 실제 작업·재고 뒤에 연결 기능을 발견하도록 하는 것이다. 실제 도달 속도·시대 진입 시점은 아직 균형 검증하지 않았다.
+- `Practice`는 완료된 직업 누계, `Stockpile`은 실제 재고, `Knows`는 개인 숙련, `Trades`는 실제 성공 교환 누계를 읽는다. 의심할 문제는 누계가 많은 기존 마을에서 빠르게 연속 발견되거나 희귀 투입 재고 때문에 발견이 늦어질 가능성이다. 이 패스는 결과 기반 조정을 하지 않는다.
+- Inert 노드의 발견 조건은 미래 연결용 저작 데이터이며 현재 런타임에서 발견·실천·시대 표지를 만들지 않는다. 이를 현재 작동하는 기능으로 해석하지 않는다.
+- 청동 표지 합계 11: mud_brick 1, copper_smelting 3, mould_casting 2, bronze_alloy 3, wheel 2. 기존 신석기 표지 합계 16은 유지된다. wheel은 제작 아이템만 연결되며 운반 효과는 M-GROW 부채이다.
+
+## 새 47개 및 승격·표지 변경 2개
+
+| 인덱스 / 노드 | 상태 / 시대 / tier | threshold | difficulty | seed | marker_weight | prereqs | discover 현재 값 |
+|---|---|---:|---:|---|---:|---|---|
+| 65 `mud_brick` (L274) | Connected / bronze / 3 | 300 | 2 | None | 1 | `["clay_prep", "oven"]` | `[Practice(job_kind: "craft", count: 3), Stockpile("clay", 4)]` |
+| 73 `barter` (L313) | Connected / neolithic / 1 | 300 | 1 | None | 0 | `["storytelling"]` | `[Knows("storytelling", 300), Trades(1)]` |
+| 82 `charcoal` (L362) | Connected / bronze / 1 | 300 | 1 | None | 0 | `["fire_keeping", "digging"]` | `[Practice(job_kind: "craft", count: 2), Stockpile("log", 4)]` |
+| 83 `prospecting` (L366) | Connected / bronze / 1 | 300 | 1 | None | 0 | `["stone_quarrying"]` | `[Practice(job_kind: "quarry", count: 2), Stockpile("stone", 4)]` |
+| 84 `mining` (L370) | Connected / bronze / 1 | 300 | 1 | None | 0 | `["prospecting", "pressure_flaking"]` | `[Practice(job_kind: "quarry", count: 3), Knows("prospecting", 300)]` |
+| 85 `copper_smelting` (L374) | Connected / bronze / 2 | 300 | 2 | None | 3 | `["charcoal", "mining", "pot_firing"]` | `[Practice(job_kind: "craft", count: 3), Stockpile("copper_ore", 2)]` |
+| 86 `cold_hammering` (L378) | Connected / bronze / 2 | 300 | 2 | None | 0 | `["copper_smelting"]` | `[Practice(job_kind: "craft", count: 3), Stockpile("copper_ingot", 1)]` |
+| 87 `mould_casting` (L382) | Connected / bronze / 3 | 300 | 3 | None | 2 | `["copper_smelting", "clay_prep"]` | `[Practice(job_kind: "craft", count: 4), Stockpile("copper_ingot", 1), Stockpile("clay", 2)]` |
+| 88 `tin_sourcing` (L386) | Connected / bronze / 3 | 300 | 3 | None | 0 | `["prospecting", "barter"]` | `[Trades(1), Knows("prospecting", 300)]` |
+| 89 `bronze_alloy` (L391) | Connected / bronze / 4 | 300 | 3 | None | 3 | `["mould_casting", "tin_sourcing"]` | `[Practice(job_kind: "craft", count: 5), Stockpile("copper_ingot", 3)]` |
+| 90 `annealing` (L395) | Inert / bronze / 4 | 300 | 3 | None | 0 | `["bronze_alloy"]` | `[Practice(job_kind: "craft", count: 5), Knows("bronze_alloy", 300)]` |
+| 91 `lost_wax` (L399) | Inert / bronze / 4 | 300 | 3 | None | 0 | `["bronze_alloy", "beekeeping"]` | `[Practice(job_kind: "craft", count: 5), Knows("bronze_alloy", 300)]` |
+| 92 `beekeeping` (L403) | Inert / bronze / 2 | 300 | 2 | None | 0 | `["foraging"]` | `[Practice(job_kind: "harvest", count: 3), Knows("foraging", 300)]` |
+| 93 `wheel` (L407) | Connected / bronze / 2 | 300 | 2 | None | 2 | `["adze"]` | `[Practice(job_kind: "craft", count: 3), Stockpile("log", 2)]` |
+| 94 `cart` (L411) | Inert / bronze / 3 | 300 | 3 | None | 0 | `["wheel", "herding"]` | `[Practice(job_kind: "craft", count: 4), Knows("wheel", 300)]` |
+| 95 `cattle` (L415) | Connected / bronze / 2 | 300 | 2 | None | 0 | `["herding"]` | `[Practice(job_kind: "capture", count: 2), Knows("herding", 300)]` |
+| 96 `plough` (L419) | Inert / bronze / 3 | 300 | 3 | None | 0 | `["cattle", "adze"]` | `[Practice(job_kind: "sow_field", count: 3), Knows("cattle", 300)]` |
+| 97 `irrigation` (L423) | Inert / bronze / 3 | 300 | 3 | None | 0 | `["digging", "cultivation"]` | `[Practice(job_kind: "dig", count: 3), Knows("cultivation", 300)]` |
+| 98 `terrace` (L427) | Inert / bronze / 4 | 300 | 3 | None | 0 | `["irrigation", "stone_walling"]` | `[Practice(job_kind: "build", count: 4), Knows("irrigation", 300)]` |
+| 99 `wool_spinning` (L431) | Connected / bronze / 2 | 300 | 2 | None | 0 | `["herding", "spinning"]` | `[Practice(job_kind: "craft", count: 3), Knows("spinning", 300)]` |
+| 100 `mud_brick_house` (L435) | Connected / bronze / 1 | 300 | 1 | None | 0 | `["mud_brick"]` | `[Practice(job_kind: "build", count: 2), Knows("mud_brick", 300)]` |
+| 101 `lime_plaster` (L439) | Inert / bronze / 2 | 300 | 2 | None | 0 | `["oven", "stone_quarrying"]` | `[Practice(job_kind: "craft", count: 3), Knows("oven", 300)]` |
+| 102 `stone_masonry` (L443) | Connected / bronze / 3 | 300 | 3 | None | 0 | `["stone_walling", "bronze_alloy"]` | `[Practice(job_kind: "build", count: 4), Stockpile("stone", 8)]` |
+| 103 `chief_hall` (L447) | Inert / bronze / 2 | 300 | 2 | None | 0 | `["elder_council", "mud_brick_house"]` | `[Practice(job_kind: "build", count: 3), Knows("elder_council", 300)]` |
+| 104 `chieftainship` (L451) | Inert / bronze / 3 | 300 | 3 | None | 0 | `["chief_hall"]` | `[Knows("chief_hall", 300), Practice(job_kind: "build", count: 4)]` |
+| 105 `shrine` (L455) | Inert / bronze / 2 | 300 | 2 | None | 0 | `["ritual", "mud_brick"]` | `[Practice(job_kind: "build", count: 3), Knows("ritual", 300)]` |
+| 106 `marriage_alliance` (L459) | Inert / bronze / 3 | 300 | 3 | None | 0 | `["kinship", "barter"]` | `[Trades(2), Knows("kinship", 300)]` |
+| 107 `palisade` (L463) | Connected / bronze / 1 | 300 | 1 | None | 0 | `["timber_wall"]` | `[Practice(job_kind: "build", count: 2), Stockpile("log", 4)]` |
+| 108 `ditch` (L467) | Inert / bronze / 2 | 300 | 2 | None | 0 | `["digging"]` | `[Practice(job_kind: "dig", count: 3), Knows("digging", 300)]` |
+| 109 `bronze_weapons` (L471) | Connected / bronze / 4 | 300 | 3 | None | 0 | `["bronze_alloy"]` | `[Practice(job_kind: "craft", count: 5), Stockpile("bronze_ingot", 1)]` |
+| 110 `composite_bow` (L475) | Connected / bronze / 3 | 300 | 3 | None | 0 | `["bow", "hide_working"]` | `[Practice(job_kind: "craft", count: 4), Knows("bow", 300)]` |
+| 111 `caravan` (L479) | Inert / bronze / 3 | 300 | 3 | None | 0 | `["cart", "barter"]` | `[Trades(2), Knows("cart", 300)]` |
+| 112 `trading_post` (L483) | Inert / bronze / 2 | 300 | 2 | None | 0 | `["barter", "granary"]` | `[Trades(2), Practice(job_kind: "build", count: 3)]` |
+| 113 `seal_stamp` (L487) | Inert / bronze / 2 | 300 | 2 | None | 0 | `["tally", "clay_prep"]` | `[Practice(job_kind: "craft", count: 3), Knows("tally", 300)]` |
+| 114 `proto_writing` (L491) | Inert / bronze / 3 | 300 | 3 | None | 0 | `["seal_stamp"]` | `[Practice(job_kind: "craft", count: 4), Knows("seal_stamp", 300)]` |
+| 115 `standard_weights` (L495) | Inert / bronze / 3 | 300 | 3 | None | 0 | `["tally"]` | `[Trades(2), Knows("tally", 300)]` |
+| 116 `solar_calendar` (L499) | Inert / bronze / 3 | 300 | 3 | None | 0 | `["lunar_calendar"]` | `[Practice(job_kind: "sow_field", count: 3), Knows("lunar_calendar", 300)]` |
+| 117 `reed_boat` (L503) | Inert / bronze / 3 | 300 | 3 | None | 0 | `["cordage", "weaving"]` | `[Practice(job_kind: "craft", count: 4), Knows("weaving", 300)]` |
+| 118 `sail` (L507) | Inert / bronze / 3 | 300 | 3 | None | 0 | `["cordage", "weaving"]` | `[Practice(job_kind: "craft", count: 4), Knows("weaving", 300)]` |
+| 119 `wine` (L511) | Inert / bronze / 3 | 300 | 3 | None | 0 | `["fermentation", "orchard"]` | `[Practice(job_kind: "craft", count: 4), Knows("fermentation", 300)]` |
+| 120 `olive_press` (L515) | Inert / bronze / 3 | 300 | 3 | None | 0 | `["fermentation", "orchard"]` | `[Practice(job_kind: "craft", count: 4), Knows("orchard", 300)]` |
+| 121 `glass_beads` (L519) | Inert / bronze / 4 | 300 | 3 | None | 0 | `["bronze_alloy"]` | `[Practice(job_kind: "craft", count: 5), Knows("bronze_alloy", 300)]` |
+| 122 `faience` (L523) | Inert / bronze / 4 | 300 | 3 | None | 0 | `["bronze_alloy"]` | `[Practice(job_kind: "craft", count: 5), Knows("bronze_alloy", 300)]` |
+| 123 `trepanation` (L527) | Inert / bronze / 4 | 300 | 3 | None | 0 | `["bone_setting", "bronze_weapons"]` | `[Knows("bone_setting", 300), Knows("bronze_weapons", 300)]` |
+| 124 `surgery` (L531) | Inert / bronze / 4 | 300 | 3 | None | 0 | `["bone_setting", "bronze_weapons"]` | `[Knows("bone_setting", 300), Knows("bronze_weapons", 300)]` |
+| 125 `drum` (L535) | Inert / bronze / 1 | 300 | 1 | None | 0 | `["ritual"]` | `[Practice(job_kind: "craft", count: 2), Knows("ritual", 300)]` |
+| 126 `flute` (L539) | Inert / bronze / 1 | 300 | 1 | None | 0 | `["ritual"]` | `[Practice(job_kind: "craft", count: 2), Knows("ritual", 300)]` |
+| 127 `mask` (L543) | Inert / bronze / 2 | 300 | 2 | None | 0 | `["ritual"]` | `[Practice(job_kind: "craft", count: 3), Knows("ritual", 300)]` |
+| 128 `tattoo` (L547) | Inert / bronze / 2 | 300 | 2 | None | 0 | `["ritual"]` | `[Practice(job_kind: "craft", count: 3), Knows("ritual", 300)]` |
+
+## 그 밖의 기존 노드 변경
+
+- `pot_firing` (인덱스 19, L74): kiln Workshop gate 추가만 있다. 기존 수치 threshold 400, difficulty 2, seed None, marker_weight 3, discover `[Stockpile("raw_pot", 2)]`는 BASE와 같다.
+- `mud_brick`: 기존 ID 65와 threshold 300, difficulty 2, seed None, 발견 craft 3회 + clay 4는 유지한다. era neolithic→bronze, Inert→Connected, marker_weight 0→1, 실제 make_mud_brick·mud_brick_wall gate를 추가했다.
+- `barter`: 기존 ID 73와 threshold 300, difficulty 1, seed None, marker_weight 0을 유지한다. Inert→Connected이며 발견 조건 중 `Practice(job_kind: "craft", count: 2)`를 `Trades(1)`로 바꾸어 실제 거래 증거를 연결했다. Knows(storytelling, 300)은 유지한다.
+- `spinning`: 데이터 수치·gate 변경 없음. Bible의 flax_retting은 기존 ret_flax/retting_pit gate로 이미 연결되므로 별도 중복 노드를 만들지 않는 주석과 회귀 단언만 추가했다.
+
+## 주석 범위와 잔여 검증
+
+- 파일 상단 L5–17은 threshold·difficulty·discover·marker·seed 의미와 Trades 성공 교환을 설명한다. L169–171 C1 주석은 기존 승격 대상의 300‰·난이도·작업 누계 초기값 의도를 설명한다. L358–361 C2 주석은 초기 설계값임을 밝히고 threshold 300‰, difficulty=tier(최대 3), seed None, 완료 작업 2–5회, 실물 재고 1–8개, 청동 표지별 가중치를 설명한다.
+- 개별 노드의 debt 문자열은 기능이 빠진 이유와 C3/M8/M9/M-GROW 등의 후속 패스를 명시한다. 모든 새 노드에 개별 수치별 근거 주석이 있는 것은 아니다. 공통 난이도 tier 규칙과 표지 수치의 초기 설계 의도는 데이터 공통 주석과 이 기록에 명시되어 있다. seed None·threshold 300·5개 표지의 실제 값은 해당 회귀 시험에서도 확인한다.
+- 광맥·레시피·동물 수치는 각 담당 표에 포함하며 이 표가 중복 소유하지 않는다. 미연결 실제 채광·주석 요청·청동 도구 사용 사실은 C2-b 인계 항목이다.
+- 추출 확인: 전체 129, 새 47 = Connected 16 / Inert 31, 이 표 49행. BASE 대비 기존 데이터 변경은 pot_firing·mud_brick·barter 3개뿐임을 비교했다. 모든 신규 발견 조건이 비어 있지 않음은 c2_knowledge 시험에서 단언한다.
+
+## Freeze 전 인과 순환 교정
+
+`bronze_alloy`에서 `Stockpile("tin_ingot", 1)` 발견 조건만 제거했다. 첫 주석 요청 카드가 bronze_alloy 보유를 요구하므로, 주석을 먼저 요구하면 카드로 첫 주석을 얻는 경로가 순환하기 때문이다. craft 5회·copper_ingot 3개, Bible의 mould_casting+tin_sourcing 선행, threshold/difficulty/seed/marker는 그대로다. 실제 합금 레시피의 주석 투입도 유지한다. 데이터 주석 및 `D-C2-KNOWLEDGE.md`에 근거를 남겼다. 조건 회귀의 수정 전 실패 로그는 `a-knowledge-regression-red.log`이며 채택률·생존 결과에 맞춘 수치 조정이 아니다.
+
+### C2-a complete presentation and cattle parameter inventory
+
+Art values are appearance controls only. They were not derived from smoke or
+performance results. All geometry lengths/scales are permille of the shared tile.
+
+| Species | Current authored art values | Intended effect | Suspected issue |
+| --- | --- | --- | --- |
+| wolf | `shape: Lump, tint_material: "granite", body_length_permille: 720, body_height_permille: 220, leg_height_permille: 260, leg_count: 4, head_direction: 1, horns: false, antlers: false, tail_length_permille: 260, juvenile_scale_permille: 600` | Species silhouette readability | Placeholder geometry, no biological-scale claim |
+| deer | `shape: Rod, tint_material: "oak", body_length_permille: 620, body_height_permille: 250, leg_height_permille: 330, leg_count: 4, head_direction: 1, horns: false, antlers: true, tail_length_permille: 80, juvenile_scale_permille: 600` | Species silhouette readability | Placeholder geometry, no biological-scale claim |
+| wild_goat | `shape: Lump, tint_material: "oak", body_length_permille: 580, body_height_permille: 280, leg_height_permille: 260, leg_count: 4, head_direction: 1, horns: true, antlers: false, tail_length_permille: 100, juvenile_scale_permille: 600` | Species silhouette readability | Placeholder geometry, no biological-scale claim |
+| wild_sheep | `shape: Cloth, tint_material: "limestone", body_length_permille: 620, body_height_permille: 390, leg_height_permille: 190, leg_count: 4, head_direction: 1, horns: true, antlers: false, tail_length_permille: 70, juvenile_scale_permille: 600` | Species silhouette readability | Placeholder geometry, no biological-scale claim |
+| wild_boar | `shape: Lump, tint_material: "granite", body_length_permille: 740, body_height_permille: 350, leg_height_permille: 150, leg_count: 4, head_direction: 1, horns: false, antlers: false, tail_length_permille: 80, juvenile_scale_permille: 600` | Species silhouette readability | Placeholder geometry, no biological-scale claim |
+| reindeer | `shape: Rod, tint_material: "birch", body_length_permille: 660, body_height_permille: 300, leg_height_permille: 300, leg_count: 4, head_direction: 1, horns: false, antlers: true, tail_length_permille: 80, juvenile_scale_permille: 600` | Species silhouette readability | Placeholder geometry, no biological-scale claim |
+| aurochs | `shape: Lump, tint_material: "oak", body_length_permille: 680, body_height_permille: 370, leg_height_permille: 260, leg_count: 4, head_direction: 1, horns: true, antlers: false, tail_length_permille: 100, juvenile_scale_permille: 600` | Species silhouette readability | Placeholder geometry, no biological-scale claim |
+
+| Cattle policy | Current value | Intended effect | Suspected issue |
+| --- | --- | --- | --- |
+| Source and escape | all3climates, plain, elevationNone; population2–4, respawn8days, herd12; hp30; flee true, distance6, speed2, steps4, rest40, home12, min hearth20 | Ordinary physical grazer source | Starting C1-style values, no habitat balance |
+| Capture and age | cattle+cord; range40, work60, success700‰, retry1day; initial age0–29, adult30, breed20days, max age1800 | Existing livestock lifecycle | No new cattle-specific efficacy |
+| Feed and products | graze3cells/day, starve3days, regrow1day; milk1/day with dairy, work45; slaughter90; meat3, hide1; wild meat3withcutter/2without, hide1 | Existing exact physical products | Food and labour competition unbalanced |
+
+| Material look | Current Lab delta / category / stable code | Intended effect | Suspected issue |
+| --- | --- | --- | --- |
+| copper_ore | `{"tint":{"dL":-8,"da":-12,"db":4}}` | Shared placeholder colour | Presentation only, no material efficacy |
+| tin_ore | `{"tint":{"dL":-9,"da":-2,"db":-10}}` | Shared placeholder colour | Presentation only, no material efficacy |
+| iron_ore | `{"tint":{"dL":-18,"da":4,"db":2}}` | Shared placeholder colour | Presentation only, no material efficacy |
+| copper | `{"category":"Mineral","sim_id":4142247758,"tint":{"dL":-5,"da":24,"db":25}}` | Shared placeholder colour | Presentation only, no material efficacy |
+| tin | `{"category":"Mineral","sim_id":193506896,"tint":{"dL":8,"da":-2,"db":-8}}` | Shared placeholder colour | Presentation only, no material efficacy |
+| bronze | `{"category":"Mineral","sim_id":4106632693,"tint":{"dL":-8,"da":10,"db":29}}` | Shared placeholder colour | Presentation only, no material efficacy |
+| mud_brick | `{"category":"Mineral","sim_id":2075554421,"tint":{"dL":-15,"da":10,"db":17}}` | Shared placeholder colour | Presentation only, no material efficacy |
+| packed_earth | `{"category":"Mineral","sim_id":3087221664,"tint":{"dL":-22,"da":5,"db":12}}` | Shared placeholder colour | Presentation only, no material efficacy |

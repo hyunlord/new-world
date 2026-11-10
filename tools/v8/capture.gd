@@ -1915,7 +1915,7 @@ func _m55_tech(world: Node, tech: Node, notes: Dictionary) -> void:
 	var node: int = -1
 	var clues: PackedInt32Array = nb.get("clue_nodes", PackedInt32Array())
 	for row: Dictionary in NeighbourText.neighbours(nb):
-		for n: int in NeighbourText.rumoured_nodes(int(row["rumoured"])):
+		for n: int in NeighbourText.rumoured_nodes(int(row["rumoured"]), int(row.get("rumoured_high", 0)), int(row.get("rumoured_upper_low", 0)), int(row.get("rumoured_upper_high", 0))):
 			if node < 0 or (clues.has(n) and not clues.has(node)):
 				node = n
 	await _key(KEY_T)

@@ -43,7 +43,8 @@ fn t_generation_counts_future_use_saturated_days_and_missing_components() {
     holder(&mut e, node, threshold, u16::MAX - 1, false, true);
     assert_eq!(knowledge::day_of(e.resources.current_tick), u16::MAX);
     assert_eq!(
-        trade::generation_inputs(&e.world, &e.resources, 0).practitioners[usize::from(node)],
+        trade::generation_inputs(&e.world, &e.resources, knowledge::KnowledgeMask::ZERO)
+            .practitioners[usize::from(node)],
         1
     );
 }

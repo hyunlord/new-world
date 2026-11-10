@@ -1,4 +1,7 @@
 (schema_version:1,roles:{},recipes:[(
 identity:(code:65538,id:"test_hide_recipe",name_key:"EXT_RECIPE",serde_name:"TestHideRecipe",serde_aliases:[],resolver_aliases:[]),
 workshop:"drying_rack",workshop_tags:["hideworking"],inputs:[("hide",1)],output:("test_hide",2),
-work_ticks:7,skill:"knap",work:"craft",quality_add:3,material_term:None,tool:None,auto_bill_role:None)])
+work_ticks:7,skill:"knap",work:"craft",quality_add:3,material_term:None,tool:None,auto_bill_role:None),(
+identity:(code:65542,id:"test_smelt",name_key:"EXT_ORE_RECIPE",serde_name:"TestSmelt",serde_aliases:[],resolver_aliases:[]),
+workshop:"smelter",workshop_tags:["smelting"],inputs:[("test_ore",2),("charcoal",1)],output:("test_ingot",1),
+work_ticks:30,skill:"knap",work:"craft",quality_add:0,material_term:None,tool:None,auto_bill_role:None)])

@@ -348,3 +348,27 @@ fn first_winter_completion_uses_retained_death_dates_not_cumulative_deaths() {
         .push(ChronicleEntry::new(boundary - 1, ChronicleKind::Died).subject(100));
     assert!(!collect_ui_facts(&engine.world, &engine.resources).first_winter_all_alive);
 }
+
+#[test]
+fn first_copper_chapter_requires_an_actual_crafted_ingot() {
+    let mut engine = sim_test::colony_engine(0);
+    let copper = ItemKind::from_name("copper_ingot").expect("copper ingot");
+    let bronze = ItemKind::from_name("bronze_ingot").expect("bronze ingot");
+    assert!(!collect_ui_facts(&engine.world, &engine.resources).first_copper_ingot);
+    engine.resources.colony.item_ledger.trade_in(copper, 1);
+    engine
+        .resources
+        .colony
+        .item_ledger
+        .craft_end(&[(bronze, 1)]);
+    assert!(
+        !collect_ui_facts(&engine.world, &engine.resources).first_copper_ingot,
+        "a traded ingot or a different alloy does not prove copper smelting"
+    );
+    engine
+        .resources
+        .colony
+        .item_ledger
+        .craft_end(&[(copper, 1)]);
+    assert!(collect_ui_facts(&engine.world, &engine.resources).first_copper_ingot);
+}

@@ -3,6 +3,7 @@
 mod camp;
 pub mod colony;
 mod noise;
+pub mod ore;
 pub mod plants;
 mod terrain;
 use sim_core::{rules::WorldRules, MaterialRegistry};
@@ -255,6 +256,7 @@ fn build_world_with_registrar(
             .unwrap_or_else(|error| panic!("colony plant generation failed: {error}"));
         // Legacy food affected the frozen camp and deadwood placement above;
         // only the generated plant table supplies colony food from here on.
+        ore::populate(&mut engine.resources);
         engine.resources.food_tiles.clear();
         engine.resources.food_source_max.clear();
         engine.resources.food_regen_acc = 0;

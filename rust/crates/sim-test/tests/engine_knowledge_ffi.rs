@@ -70,8 +70,8 @@ fn the_tech_view_lists_every_node_in_id_order_with_the_aggregate() {
         "the badge counts the at-risk rows"
     );
     // Two of ten founders know timber walls (weight2 of16 including unseeded taming):25 permille.
-    assert_eq!(defs().marker_total(), 16);
-    assert_eq!(tech.nodes.len(), 82);
+    assert_eq!(defs().marker_total(), 27);
+    assert_eq!(tech.nodes.len(), 129);
     assert_eq!(tech.progress, 25);
     let door = &tech.nodes[usize::from(id("doorway"))];
     assert_eq!((door.status, door.holders), (TechStatus::AtRisk.code(), 1));
@@ -96,7 +96,8 @@ fn node_and_person_views_agree_with_the_component() {
         !node.gates.is_empty(),
         "the doorway gates the door blueprint"
     );
-    assert!(!collect_tech_node(&engine.world, &engine.resources, 99).found);
+    let absent = i64::try_from(defs().nodes.len()).expect("knowledge count fits i64");
+    assert!(!collect_tech_node(&engine.world, &engine.resources, absent).found);
 
     let view = collect_agent_knowledge(&engine.world, &engine.resources, holder as i64);
     assert!(view.found);

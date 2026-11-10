@@ -699,6 +699,7 @@ pub fn collect_chronicle_why(chronicle: &Chronicle, index: i64) -> WhyRows {
     for link in mood::why_chain(chronicle, i) {
         let (kind, code, entry, building) = match link {
             Link::Entry(e) => (0, i64::from(e), chronicle.entry(e), None),
+            Link::Ore { witness } => (5, i64::from(witness), None, None),
             Link::Livestock { witness } => (4, i64::from(witness), None, None),
             Link::Modifier(c) => (1, i64::from(c), None, None),
             Link::Pressure(c) => (2, i64::from(c), None, None),
@@ -783,6 +784,7 @@ pub fn cause_link(chronicle: &Chronicle, index: u32) -> (i32, i64, i64) {
         Some(CauseRef::Entry(e)) => (0, i64::from(e), -1),
         // Building IDs stay in dedicated WhyRows columns; neither is an entry/code.
         Some(CauseRef::Building { .. }) => (3, -1, -1),
+        Some(CauseRef::Ore { witness }) => (5, -1, i64::from(witness)),
         Some(CauseRef::Livestock { witness }) => (4, -1, i64::from(witness)),
         Some(CauseRef::Modifier { code, entry }) => {
             (1, entry.map_or(-1, i64::from), i64::from(code))

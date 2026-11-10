@@ -18,7 +18,10 @@ pub(super) fn plan(world: &World, res: &SimResources) -> Vec<Command> {
         .filter(|animal| animal.status == ContentStatus::Connected)
         .filter_map(|animal| animal.tameable.as_ref())
         .filter_map(|policy| catalog.knowledge_defs().id_of(&policy.capture_knowledge))
-        .fold(0, |mask, id| mask | knowledge::bit(id));
+        .fold(
+            sim_core::colony::knowledge::KnowledgeMask::ZERO,
+            |mask, id| mask | knowledge::bit(id),
+        );
     if capture_mask == 0 {
         return Vec::new();
     }

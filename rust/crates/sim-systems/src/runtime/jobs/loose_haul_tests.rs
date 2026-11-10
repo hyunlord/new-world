@@ -1,5 +1,6 @@
 //! Actual loose-haul regression and frozen pre-repair output oracle.
 use super::*;
+use sim_core::colony::knowledge::KnowledgeMask;
 use sim_core::colony::{ItemStack, Zone, ZoneKind};
 use sim_core::nav::CostMap;
 use sim_core::rules::WorldRules;
@@ -59,7 +60,7 @@ fn run(
         gather_short: &std::cell::Cell::new(None),
         hearth: &std::cell::OnceCell::new(),
         region: res.nav.region_of(pos),
-        practice: u128::MAX,
+        practice: KnowledgeMask::MAX,
         agent: 0,
     };
     if frozen {

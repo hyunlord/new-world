@@ -59,15 +59,18 @@ fn appended_nodes_keep_base_indices_and_use_the_last_bit() {
         .find("(id: \"spinning\"")
         .expect("first textile node");
     let predecessor = format!("{}])", &BUNDLED[..cutoff]);
-    let merged = merge_sources(&predecessor, &extension(100)).expect("merge");
-    let defs = parse_with_catalog(&merged, &catalog).expect("128 nodes");
+    let merged = merge_sources(&predecessor, &extension(228)).expect("merge");
+    let defs = parse_with_catalog(&merged, &catalog).expect("256 nodes");
     assert_eq!(&defs.nodes[..28], &base.nodes[..28]);
     assert_eq!(defs.nodes.len(), MAX_NODES);
-    assert_eq!(defs.id_of("extension_99"), Some(127));
+    assert_eq!(defs.id_of("extension_227"), Some(255));
     let masks = gates_with_catalog(&defs, &catalog).expect("masks");
     let recipe = catalog.recipe_by_name("knap_blade").expect("recipe");
-    assert_eq!(masks.recipe(recipe), bit(3) | (u128::MAX << 28));
-    assert!(merge_sources(&predecessor, &extension(101)).is_err());
+    assert_eq!(
+        masks.recipe(recipe),
+        (28..=255).fold(bit(3), |mask, id| mask | bit(id))
+    );
+    assert!(merge_sources(&predecessor, &extension(229)).is_err());
 }
 
 #[test]

@@ -18,6 +18,11 @@
     "EXT_BUILDING_SCREEN": "시험 흙벽돌 가림벽",
     "EXT_BUILDING_TOWER": "시험 망루",
     "EXT_PLANT_PULSE": "시험 야생 콩",
-    "EXT_CROP_PULSE": "시험 콩"
+    "EXT_CROP_PULSE": "시험 콩",
+    "EXT_ORE": "시험 광석",
+    "EXT_ORE_INGOT": "시험 주괴",
+    "EXT_ORE_RECIPE": "시험 제련",
+    "EXT_ORE_OUTCROP": "시험 광맥",
+    "EXT_DOMESTIC_ANIMAL": "시험 가축"
   }
 }

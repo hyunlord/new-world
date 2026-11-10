@@ -2,4 +2,12 @@
 identity:(code:65537,id:"test_hide",name_key:"EXT_HIDE",serde_name:"TestHide",serde_aliases:[],resolver_aliases:[]),
 category:"material",material_format_key:"",tags:["carcass"],stack_max:10,carry:5,
 stack_rule:None,carry_rule:None,value:11,made_by:Some("test_hide_craft"),clue_nodes:["test_hide_craft"],
+chop:None,weapon:None,cutter:None,food:None,fuel_units:None,apparel:None),(
+identity:(code:65540,id:"test_ore",name_key:"EXT_ORE",serde_name:"TestOre",serde_aliases:[],resolver_aliases:[]),
+category:"ore",art:(shape:Ore,tint_material:"test_ore"),material_format_key:"",tags:[],stack_max:20,carry:10,
+stack_rule:None,carry_rule:None,value:12,made_by:None,clue_nodes:[],
+chop:None,weapon:None,cutter:None,food:None,fuel_units:None,apparel:None),(
+identity:(code:65541,id:"test_ingot",name_key:"EXT_ORE_INGOT",serde_name:"TestIngot",serde_aliases:[],resolver_aliases:[]),
+category:"ingot",art:(shape:Ingot,tint_material:"test_ore"),material_format_key:"",tags:[],stack_max:20,carry:10,
+stack_rule:None,carry_rule:None,value:12,made_by:None,clue_nodes:[],
 chop:None,weapon:None,cutter:None,food:None,fuel_units:None,apparel:None)])

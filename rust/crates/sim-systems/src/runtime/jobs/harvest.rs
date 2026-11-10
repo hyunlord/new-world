@@ -3,6 +3,7 @@
 //! Writes: plant availability, designation, ground items and food/item ledgers.
 use sim_core::colony::content::installed_or_bundled;
 use sim_core::colony::knowledge::gates;
+use sim_core::colony::knowledge::KnowledgeMask;
 use sim_core::colony::{Designation, ItemSpec, Job, JobKind, JobStage, ReserveKey};
 use sim_core::spatial::{chebyshev, ChunkIndex};
 use sim_engine::SimResources;
@@ -58,7 +59,7 @@ impl HarvestIndex {
 #[derive(Debug, Clone, Copy)]
 pub struct HarvestQuery {
     /// Cached knowledge-practitioner bits.
-    pub practice: u128,
+    pub practice: KnowledgeMask,
     /// Current navigation component.
     pub region: u32,
     /// Current standing tile.
@@ -144,18 +145,17 @@ fn pick_filtered(
 }
 
 /// Knowledge whose actual use speeds this species' harvest.
-pub fn knowledge_mask(res: &SimResources, tile: (u32, u32)) -> u128 {
+pub fn knowledge_mask(res: &SimResources, tile: (u32, u32)) -> KnowledgeMask {
     res.food
         .plants
         .get(&tile)
         .and_then(|plant| installed_or_bundled().plant(plant.species))
         .and_then(|def| def.knowledge)
-        .and_then(|code| 1u128.checked_shl(u32::from(code)))
-        .unwrap_or(0)
+        .map_or(KnowledgeMask::ZERO, sim_core::colony::knowledge::bit)
 }
 
 /// Authored work duration, with a practitioner's authored knowledge speed.
-pub fn work_ticks(res: &SimResources, tile: (u32, u32), practice: u128) -> u32 {
+pub fn work_ticks(res: &SimResources, tile: (u32, u32), practice: KnowledgeMask) -> u32 {
     let Some(def) = res
         .food
         .plants

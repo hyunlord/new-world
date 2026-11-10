@@ -2,6 +2,7 @@
 use sim_core::colony::content::installed_or_bundled;
 use sim_core::colony::cultivation::{FieldPhase, FieldWork};
 use sim_core::colony::knowledge::Knowledge;
+use sim_core::colony::knowledge::KnowledgeMask;
 use sim_core::components::{Agent, AgentId, Child, Position};
 use sim_engine::SimResources;
 
@@ -33,9 +34,9 @@ pub(super) fn collect(world: &hecs::World, res: &SimResources) -> Facts {
                 agent.id,
                 (pos.x, pos.y),
                 if rule.knowledge.is_some() {
-                    knowledge.map_or(0, Knowledge::practice)
+                    knowledge.map_or(KnowledgeMask::ZERO, Knowledge::practice)
                 } else {
-                    u128::MAX
+                    KnowledgeMask::MAX
                 },
             )
         })
@@ -54,7 +55,7 @@ pub(super) fn collect(world: &hecs::World, res: &SimResources) -> Facts {
         let farmers: Vec<_> = adults
             .iter()
             .filter(|(id, _, practice)| {
-                mask & !practice == 0
+                mask & !*practice == 0
                     && res
                         .settlements
                         .get(&field.owner)

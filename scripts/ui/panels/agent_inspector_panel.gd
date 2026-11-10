@@ -174,7 +174,7 @@ var _job_label: Label
 # M3 adds 9 dig, 10 deconstruct, 11 clear (haul-away).
 # M4 adds 12 dig clay, 13 teach, 14 learn.
 const JOB_KEYS: Array[String] = ["UI_JOB_NONE", "UI_JOB_CHOP", "UI_JOB_HAUL", "UI_JOB_DELIVER", "UI_JOB_BUILD", "UI_JOB_QUARRY", "UI_JOB_SUPPLY", "UI_JOB_CRAFT", "UI_JOB_GATHER", "UI_JOB_DIG", "UI_JOB_DECONSTRUCT", "UI_JOB_CLEAR",
-	"UI_JOB_DIG_CLAY", "UI_JOB_TEACH", "UI_JOB_LEARN", "M5_JOB_HUNT", "M5_JOB_EQUIP", "M55_JOB_TRADE", "M6A_JOB_HARVEST"]
+	"UI_JOB_DIG_CLAY", "UI_JOB_TEACH", "UI_JOB_LEARN", "M5_JOB_HUNT", "M5_JOB_EQUIP", "M55_JOB_TRADE", "M6A_JOB_HARVEST", "C2_JOB_TILL_FIELD", "C2_JOB_SOW_FIELD", "C2_JOB_TEND_FIELD", "C2_JOB_HARVEST_FIELD", "C2_JOB_CAPTURE", "C2_JOB_LIVESTOCK_PRODUCT", "C2_JOB_SLAUGHTER"]
 const RoomLayer = preload("res://scripts/world/colony/room_layer.gd")
 ## BuildingKind code of a hut in get_building_snapshot.
 const HUT_KIND: int = 3
@@ -202,6 +202,11 @@ var _family_heading: Label
 var _family_sex: Label
 var _family_children: Label
 var _family_buttons: Array[Button] = []
+
+
+## Unknown future task codes remain unknown rather than borrowing the last known job label.
+static func job_name_key(code: int) -> String:
+	return JOB_KEYS[code] if code >= 0 and code < JOB_KEYS.size() else "UI_UNKNOWN"
 
 
 func _ready() -> void:
@@ -482,8 +487,8 @@ func display_agent(detail: Dictionary) -> void:
 	_label_target.text = _loc("INSPECTOR_TARGET_FMT") % _target_text(target_kind, activity)
 	if target_kind == 9:
 		# M1: a colony job's target is the job itself.
-		var job_code: int = clampi(_carried_amount_byte(agent_id, "jobs"), 0, JOB_KEYS.size() - 1)
-		_label_target.text = _loc("INSPECTOR_TARGET_FMT") % _loc(JOB_KEYS[job_code])
+		var job_code: int = _carried_amount_byte(agent_id, "jobs")
+		_label_target.text = _loc("INSPECTOR_TARGET_FMT") % _loc(job_name_key(job_code))
 	_refresh_porter_status()
 	_hunger_bar.value = hunger
 	_thirst_bar.value = thirst
@@ -497,8 +502,8 @@ func display_agent(detail: Dictionary) -> void:
 	_update_portrait(agent_id)
 	var carried_wood: int = _carried_amount(agent_id, "carried_woods")
 	_carried_label.text = (_loc("INSPECTOR_CARRYING_WOOD_FMT") % carried_wood) if carried_wood > 0 else (_loc("INSPECTOR_CARRYING_FMT") % _carried_food(agent_id))
-	var job: int = clampi(_carried_amount_byte(agent_id, "jobs"), 0, JOB_KEYS.size() - 1)
-	_job_label.text = "%s: %s" % [_loc("UI_INSPECT_NOW"), _loc(JOB_KEYS[job])]
+	var job: int = _carried_amount_byte(agent_id, "jobs")
+	_job_label.text = "%s: %s" % [_loc("UI_INSPECT_NOW"), _loc(job_name_key(job))]
 	var logs: int = _carried_amount(agent_id, "carry_counts")
 	if logs > 0:
 		_carried_label.text = "%s: %s %d" % [_loc("UI_INSPECT_CARRYING"), _loc("ITEM_LOG"), logs]

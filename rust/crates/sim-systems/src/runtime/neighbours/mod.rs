@@ -22,6 +22,7 @@
 //! A visitor appears at its neighbour's edge (the reachable tile nearest the
 //! edge's middle) and `VisitorSystem` walks it.
 use hecs::World;
+use sim_core::colony::knowledge::KnowledgeMask;
 use sim_core::colony::knowledge::{bit, defs, Era};
 use sim_core::colony::neighbours::{Edge, MigrantSpec, Neighbour, VisitState, Wave};
 use sim_core::components::Agent;
@@ -90,7 +91,7 @@ pub fn neolithic() -> Vec<u8> {
 }
 
 /// The bits of every Paleolithic node.
-pub fn paleolithic_mask() -> u128 {
+pub fn paleolithic_mask() -> KnowledgeMask {
     defs()
         .nodes
         .iter()
@@ -98,7 +99,7 @@ pub fn paleolithic_mask() -> u128 {
             n.era == Era::Paleolithic
                 && n.status == sim_core::colony::knowledge::ContentStatus::Connected
         })
-        .fold(0, |m, n| m | bit(n.id))
+        .fold(KnowledgeMask::ZERO, |m, n| m | bit(n.id))
 }
 
 /// The two neighbours of world `seed` (pure in `(seed, rule)`; see the module header). Subject 0x4E = the

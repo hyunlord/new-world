@@ -14,7 +14,8 @@ fn worker(world: &mut World, species: AnimalKind, at: Tile) -> Entity {
     for name in std::iter::once(p.capture_knowledge.as_str()).chain(
         p.products
             .milk
-            .as_ref()
+            .iter()
+            .chain(p.products.wool.iter())
             .map(|m| m.requires_knowledge.as_str()),
     ) {
         knows.set(
@@ -297,19 +298,154 @@ fn milk_waits_atomically_on_full_map_then_commits_once() {
 }
 
 #[test]
+fn wool_from_a_male_waits_for_space_and_restores_cooldown_from_saved_witnesses() {
+    let (mut world, mut res, site, _) = fixture(0);
+    let species = sim_core::colony::content::installed_or_bundled()
+        .animal_by_name("wild_sheep")
+        .expect("sheep");
+    let policy = species.definition().tameable.as_ref().expect("policy");
+    let wool = policy.products.wool.as_ref().expect("wool");
+    let id = add_captured(&mut res, site, species, false, policy.kid_age_days - 1);
+    let gate = pen_layout(&res, site).expect("pen").gates[0];
+    let entity = worker(&mut world, species, gate);
+    let practice = world
+        .get::<&Knowledge>(entity)
+        .expect("knowledge")
+        .practice();
+    res.current_tick = u64::from(wool.every_days - 1) * res.ticks_per_day;
+    assert!(pick_milk(&res, practice, res.nav.region_of(gate), gate, u32::MAX).is_none());
+    res.current_tick += res.ticks_per_day;
+    let offer =
+        pick_milk(&res, practice, res.nav.region_of(gate), gate, u32::MAX).expect("male fleece");
+    assert_eq!(offer.item, wool.item);
+    assert!(start(&mut world, &mut res, entity, Offer::Milk(offer)));
+    full_map(&mut res);
+    let before = res.livestock.clone();
+    finished_step(&mut world, &mut res, entity);
+    assert_eq!(
+        res.livestock, before,
+        "blocked output cannot consume readiness"
+    );
+    assert_eq!(res.colony.item_ledger.created_of(wool.item), 0);
+    free_tile(&mut res, (8, 8));
+    finished_step(&mut world, &mut res, entity);
+    assert_eq!(res.colony.item_ledger.created_of(wool.item), 1);
+    assert_eq!(res.livestock.animals[&id].last_milk_day, 0);
+    assert!(!res.livestock.animals[&id].milk_ready);
+    assert_eq!(res.livestock.wool_last_day[&id], wool.every_days);
+    assert!(pick_milk(&res, practice, res.nav.region_of(gate), gate, u32::MAX).is_none());
+    let committed = res.livestock.clone();
+    let bytes = bincode::serialize(&committed).expect("saved livestock");
+    res.livestock = bincode::deserialize(&bytes).expect("restored livestock");
+    assert!(
+        res.livestock.wool_last_day.is_empty(),
+        "derived cache is not serialized"
+    );
+    crate::runtime::livestock::rebuild_product_cache(&mut res);
+    assert_eq!(res.livestock, committed);
+    assert!(pick_milk(&res, practice, res.nav.region_of(gate), gate, u32::MAX).is_none());
+    crate::runtime::livestock::validate_state_at_boundary(&world, &res, res.current_tick)
+        .expect("restored facts and cache");
+    res.current_tick += u64::from(wool.every_days) * res.ticks_per_day;
+    assert!(pick_milk(&res, practice, res.nav.region_of(gate), gate, u32::MAX).is_some());
+    super::super::invariants::check(&world, &res).expect("exact recurring yield accounting");
+}
+
+#[test]
+fn wool_and_milk_readiness_are_independent_and_require_actual_knowledge() {
+    let (mut world, mut res, site, _) = fixture(0);
+    let species = sim_core::colony::content::installed_or_bundled()
+        .animal_by_name("wild_sheep")
+        .expect("sheep");
+    let policy = species.definition().tameable.as_ref().expect("policy");
+    let milk = policy.products.milk.as_ref().expect("milk");
+    let wool = policy.products.wool.as_ref().expect("wool");
+    let id = add_captured(&mut res, site, species, true, policy.kid_age_days - 1);
+    res.current_tick = u64::from(wool.every_days) * res.ticks_per_day;
+    res.livestock
+        .animals
+        .get_mut(&id)
+        .expect("animal")
+        .milk_ready = true;
+    let gate = pen_layout(&res, site).expect("pen").gates[0];
+    let entity = worker(&mut world, species, gate);
+    let wool_mask = bit(defs()
+        .id_of(&wool.requires_knowledge)
+        .expect("wool knowledge"));
+    let offer = pick_milk(&res, wool_mask, res.nav.region_of(gate), gate, u32::MAX)
+        .expect("wool-only practitioner");
+    assert_eq!(offer.item, wool.item);
+    // Use actual knowledge at commit: losing it after assignment cancels the yield.
+    let practice = world
+        .get::<&Knowledge>(entity)
+        .expect("knowledge")
+        .practice();
+    let offer =
+        pick_milk(&res, practice, res.nav.region_of(gate), gate, u32::MAX).expect("milk first");
+    assert_eq!(offer.item, milk.item);
+    assert!(start(&mut world, &mut res, entity, Offer::Milk(offer)));
+    finished_step(&mut world, &mut res, entity);
+    assert_eq!(res.colony.item_ledger.created_of(milk.item), 1);
+    let offer = pick_milk(&res, practice, res.nav.region_of(gate), gate, u32::MAX)
+        .expect("wool remains ready");
+    assert_eq!(offer.item, wool.item);
+    assert!(start(&mut world, &mut res, entity, Offer::Milk(offer)));
+    world
+        .insert_one(entity, Knowledge::default())
+        .expect("lose practitioner knowledge");
+    finished_step(&mut world, &mut res, entity);
+    assert_eq!(res.colony.item_ledger.created_of(wool.item), 0);
+    assert!(res.livestock.wool_last_day.is_empty());
+    assert!(world.get::<&Job>(entity).is_err());
+}
+
+#[test]
+fn recurring_selector_preserves_legacy_milk_and_authored_wool() {
+    let species = sim_core::colony::content::installed_or_bundled()
+        .animal_by_name("wild_sheep")
+        .expect("sheep");
+    let policy = species.definition().tameable.as_ref().expect("policy");
+    let placeholder = ItemKind::role("default_placeholder");
+    assert!(
+        !recurring_product(policy, placeholder)
+            .expect("legacy milk job")
+            .1
+    );
+    let wool = policy.products.wool.as_ref().expect("wool").item;
+    assert!(
+        recurring_product(policy, wool)
+            .expect("authored nonfood output")
+            .1
+    );
+}
+
+#[test]
 fn slaughter_requires_command_and_waits_for_both_products() {
     let (mut w, mut r, site, species) = fixture(0);
     let id = add_captured(&mut r, site, species, true, 30);
     let gate = pen_layout(&r, site).expect("pen").gates[0];
     let e = worker(&mut w, species, gate);
-    assert!(pick_slaughter(&r, u128::MAX, r.nav.region_of(gate), gate, u32::MAX).is_none());
+    assert!(pick_slaughter(
+        &r,
+        sim_core::colony::knowledge::KnowledgeMask::MAX,
+        r.nav.region_of(gate),
+        gate,
+        u32::MAX
+    )
+    .is_none());
     assert!(
         !crate::commands::apply_command(&mut w, &mut r, Command::DesignateSlaughter { animal: id })
             .accepted
     );
     command(&mut w, &mut r, Command::DesignateSlaughter { animal: id });
-    let offer = pick_slaughter(&r, u128::MAX, r.nav.region_of(gate), gate, u32::MAX)
-        .expect("explicit offer");
+    let offer = pick_slaughter(
+        &r,
+        sim_core::colony::knowledge::KnowledgeMask::MAX,
+        r.nav.region_of(gate),
+        gate,
+        u32::MAX,
+    )
+    .expect("explicit offer");
     assert!(start(&mut w, &mut r, e, Offer::Slaughter(offer)));
     full_map(&mut r);
     free_tile(&mut r, (8, 8));
@@ -392,8 +528,14 @@ fn broken_pen_does_not_prevent_cancel_area_withdrawing_retained_intent() {
     let gate = pen_layout(&r, site).expect("pen").gates[0];
     let e = worker(&mut w, species, gate);
     command(&mut w, &mut r, Command::DesignateSlaughter { animal: id });
-    let offer =
-        pick_slaughter(&r, u128::MAX, r.nav.region_of(gate), gate, u32::MAX).expect("offer");
+    let offer = pick_slaughter(
+        &r,
+        sim_core::colony::knowledge::KnowledgeMask::MAX,
+        r.nav.region_of(gate),
+        gate,
+        u32::MAX,
+    )
+    .expect("offer");
     assert!(start(&mut w, &mut r, e, Offer::Slaughter(offer)));
     let piece = r.colony.buildings.sites[&site]
         .pieces
@@ -516,7 +658,14 @@ fn capture_admission_rejects_missing_practice_tool_maturity_damage_and_duplicate
     );
     tool(&mut r, species, at);
     assert!(
-        pick_capture(&r, 0, region, at, u32::MAX).is_none(),
+        pick_capture(
+            &r,
+            sim_core::colony::knowledge::KnowledgeMask::ZERO,
+            region,
+            at,
+            u32::MAX
+        )
+        .is_none(),
         "actual practice is required"
     );
     r.current_tick = r.ticks_per_day * 30;

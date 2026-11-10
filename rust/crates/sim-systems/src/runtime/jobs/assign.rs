@@ -28,6 +28,7 @@
 //! A worker leaving leisure keeps its `Activity` component for one tick:
 //! the routine's own cleanup at 125 records it as interrupted.
 use hecs::{Entity, World};
+use sim_core::colony::knowledge::KnowledgeMask;
 use sim_core::colony::{
     BillMode, ItemKind, ItemSpec, Job, JobKind, JobStage, ReserveKey, SkillKind, Skills, Tool,
     WorkPriorities, WorkType,
@@ -352,7 +353,7 @@ struct Exhausted {
     open_cell: BTreeMap<ItemSpec, Memo>,
     /// M6a harvest designations, per (nav region, practitioner bits): both change what passes
     /// `harvest::pick`'s predicate, so neither may share another key's "empty" (R2-3).
-    harvest: BTreeMap<(u32, u128), Memo>,
+    harvest: BTreeMap<(u32, KnowledgeMask), Memo>,
 }
 
 impl Exhausted {
@@ -442,7 +443,7 @@ struct Ctx<'a> {
     region: u32,
     agent: AgentId,
     /// The agent's practitioner bitset (M4; all bits without the knowledge rule).
-    practice: u128,
+    practice: KnowledgeMask,
 }
 
 /// A picked job: kind, amount, item.
@@ -1422,7 +1423,7 @@ impl RuntimeSystem for JobAssignSystem {
             WorkPriorities,
             bool,
             Skills,
-            u128,
+            KnowledgeMask,
         );
         let knowledge_rule = rule.knowledge;
         let gating = knowledge_rule.is_some();
@@ -1468,9 +1469,9 @@ impl RuntimeSystem for JobAssignSystem {
                         .unwrap_or(WorkPriorities::defaults(elder.is_some()));
                     let skills = skills.copied().unwrap_or_default();
                     let practice = if gating {
-                        knowledge.map_or(0, |k| k.practice())
+                        knowledge.map_or(KnowledgeMask::ZERO, |k| k.practice())
                     } else {
-                        u128::MAX
+                        KnowledgeMask::MAX
                     };
                     (
                         agent.id,

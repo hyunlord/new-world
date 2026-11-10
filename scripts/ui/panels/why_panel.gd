@@ -13,7 +13,10 @@ const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
 const BuildingCauseText = preload("res://scripts/ui/building_cause_text.gd")
-const PANEL_RECT: Rect2 = Rect2(648, 300, 880, 360)
+const PANEL_ORIGIN: Vector2 = Vector2(648, 300)
+const MIN_WIDTH: float = 320.0
+const MAX_WIDTH: float = 640.0
+const MAX_HEIGHT: float = 480.0
 
 var _world: Node = null
 var _locale: Node = null
@@ -22,6 +25,10 @@ var _body: RichTextLabel
 var _close: Button
 var _index: int = -1
 var _lines: Array[String] = []
+var _panel: PanelContainer
+var _column: VBoxContainer
+var _available_height: float = MAX_HEIGHT
+var _fit_queued: bool = false
 
 
 func _ready() -> void:
@@ -31,15 +38,14 @@ func _ready() -> void:
 		_world.connect("world_reset", close)
 	visible = false
 	mouse_filter = Control.MOUSE_FILTER_STOP
-	position = PANEL_RECT.position
-	size = PANEL_RECT.size
-	var panel: PanelContainer = ArtUI.panel(self, Rect2(Vector2.ZERO, PANEL_RECT.size))
-	panel.mouse_filter = Control.MOUSE_FILTER_STOP
-	var column: VBoxContainer = VBoxContainer.new()
-	column.add_theme_constant_override("separation", 8)
-	panel.add_child(column)
+	position = PANEL_ORIGIN
+	_panel = ArtUI.panel(self, Rect2())
+	_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	_column = VBoxContainer.new()
+	_column.add_theme_constant_override("separation", 8)
+	_panel.add_child(_column)
 	var head: HBoxContainer = HBoxContainer.new()
-	column.add_child(head)
+	_column.add_child(head)
 	_title = Label.new()
 	_title.theme_type_variation = &"Heading"
 	_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -53,11 +59,12 @@ func _ready() -> void:
 	_body = RichTextLabel.new()
 	_body.name = "Chain"
 	_body.bbcode_enabled = true
-	_body.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_body.meta_clicked.connect(_follow_link)
+	_body.resized.connect(_queue_fit)
 	Names.prepare_rich_text(_body)
-	column.add_child(_body)
+	_column.add_child(_body)
 
 
 ## Open the chain of chronicle entry `index`; returns whether the entry exists.
@@ -78,7 +85,9 @@ func open(index: int) -> bool:
 		shown.append(Chronicle.loc(_locale, "M5_WHY_NONE"))
 	_body.bbcode_enabled = true
 	_body.text = "\n\n".join(shown)
+	_body.get_v_scroll_bar().value = 0
 	visible = true
+	_queue_fit()
 	return true
 
 
@@ -95,8 +104,45 @@ func open_building(site: int, record: int) -> bool:
 	_close.text = Chronicle.loc(_locale, "UI_CLOSE")
 	_body.bbcode_enabled = false
 	_body.text = "\n\n".join(_lines)
+	_body.get_v_scroll_bar().value = 0
 	visible = true
+	_queue_fit()
 	return bool(read.get("valid", false))
+
+
+## LegacyLayout owns position and scale; only the content's natural extent changes here.
+func set_available_height(height: float) -> void:
+	var bounded: float = minf(height, MAX_HEIGHT)
+	if not is_equal_approx(_available_height, bounded):
+		_available_height = bounded
+		_queue_fit()
+
+
+func _queue_fit() -> void:
+	if not visible or _fit_queued:
+		return
+	_fit_queued = true
+	_fit.call_deferred()
+
+
+func _fit() -> void:
+	_fit_queued = false
+	if not visible:
+		return
+	var margins: Vector2 = _panel.get_theme_stylebox("panel").get_minimum_size()
+	var heading: Vector2 = (_title.get_parent() as Control).get_combined_minimum_size()
+	var text_width: float = 0.0
+	var font_size: int = _body.get_theme_font_size("normal_font_size")
+	for text_line: String in _body.get_parsed_text().split("\n"):
+		for font_name: String in ["normal_font", "bold_font"]:
+			text_width = maxf(text_width, _body.get_theme_font(font_name).get_string_size(text_line, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x)
+	var width: float = clampf(maxf(text_width + 20.0, heading.x) + margins.x, MIN_WIDTH, MAX_WIDTH)
+	_body.custom_minimum_size.x = width - margins.x
+	_body.size.x = _body.custom_minimum_size.x
+	var chrome: float = margins.y + heading.y + _column.get_theme_constant("separation")
+	_body.custom_minimum_size.y = minf(float(_body.get_content_height()) + 4.0, maxf(40.0, _available_height - chrome))
+	_panel.size = Vector2(width, 0)
+	size = _panel.size
 
 
 func close() -> void:

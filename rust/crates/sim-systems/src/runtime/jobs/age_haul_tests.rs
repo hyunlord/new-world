@@ -1,6 +1,7 @@
 //! Real haul selection and arrival must not age young food when separate capacity exists.
 use super::*;
 use crate::runtime::food::{items as food, storage};
+use sim_core::colony::knowledge::KnowledgeMask;
 use sim_core::colony::Carry;
 use sim_core::colony::{
     food::{FoodOwner, FoodStackKey},
@@ -48,7 +49,7 @@ fn pick(res: &SimResources, pos: (u32, u32), ex: &mut Exhausted) -> Option<Pick>
         gather_short: &std::cell::Cell::new(None),
         hearth: &std::cell::OnceCell::new(),
         region: res.nav.region_of(pos),
-        practice: u128::MAX,
+        practice: KnowledgeMask::MAX,
         agent: 0,
     };
     loose_haul(res, &ctx, pos, ex, false)

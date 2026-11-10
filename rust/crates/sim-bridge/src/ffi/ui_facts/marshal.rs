@@ -91,6 +91,7 @@ pub(in crate::ffi) fn ui_facts_to_dict(v: &UiFacts) -> VarDictionary {
     d.set("wolves_spawned", tick(v.wolves_spawned));
     d.set("migrant_waves_arrived", tick(v.migrant_waves_arrived));
     d.set("first_winter_all_alive", v.first_winter_all_alive);
+    d.set("first_copper_ingot", v.first_copper_ingot);
     d.set(
         "food_chain",
         super::super::food::summary_to_dict(v.food.as_ref()),

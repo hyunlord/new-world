@@ -194,11 +194,13 @@ pub enum ChronicleKind {
     LivestockSlaughtered = 64,
     /// A livestock animal died of its recorded biological cause.
     LivestockDied = 65,
+    /// A practitioner found a physical surface mineral deposit.
+    OreDiscovered = 66,
 }
 
 impl ChronicleKind {
     /// Every kind in discriminant order.
-    pub const ALL: [ChronicleKind; 66] = [
+    pub const ALL: [ChronicleKind; 67] = [
         Self::Born,
         Self::FoundingMember,
         Self::Paired,
@@ -265,6 +267,7 @@ impl ChronicleKind {
         Self::LivestockMilk,
         Self::LivestockSlaughtered,
         Self::LivestockDied,
+        Self::OreDiscovered,
     ];
 
     /// Stable numeric discriminant.
@@ -341,6 +344,7 @@ impl ChronicleKind {
             Self::LivestockMilk => "livestock_milk",
             Self::LivestockSlaughtered => "livestock_slaughtered",
             Self::LivestockDied => "livestock_died",
+            Self::OreDiscovered => "ore_discovered",
         }
     }
 }
@@ -553,6 +557,11 @@ pub enum CauseRef {
     /// Immutable livestock evidence, in the livestock witness namespace.
     Livestock {
         /// Exact chronicle append index whose typed facts are retained in the sidecar.
+        witness: u32,
+    },
+    /// Immutable surface ore discovery evidence.
+    Ore {
+        /// Original Chronicle append index in the ore witness table.
         witness: u32,
     },
 }
@@ -827,7 +836,7 @@ mod tests {
         assert_eq!(ChronicleKind::LivestockMilk.as_u8(), 63);
         assert_eq!(ChronicleKind::LivestockSlaughtered.as_u8(), 64);
         assert_eq!(ChronicleKind::LivestockDied.as_u8(), 65);
-        assert_eq!(ChronicleKind::ALL.len(), 66);
+        assert_eq!(ChronicleKind::ALL.len(), 67);
         let names: std::collections::BTreeSet<&str> =
             ChronicleKind::ALL.iter().map(|k| k.as_str()).collect();
         assert_eq!(names.len(), 66);

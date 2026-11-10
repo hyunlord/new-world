@@ -28,6 +28,7 @@
 //! counted in `neighbours.tallies.eurekas`.
 use hecs::World;
 use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
+use sim_core::colony::knowledge::KnowledgeMask;
 use sim_core::colony::knowledge::{bit, defs, Cond, Knowledge, Source};
 use sim_core::colony::{ItemKind, NodeKind, Skills};
 use sim_core::rng::{keyed_below, STREAM_KNOWLEDGE};
@@ -76,6 +77,7 @@ pub fn holds(world: &World, res: &SimResources, cond: Cond) -> bool {
             .iter()
             .any(|(_, k)| k.proficiency(id) >= p),
         Cond::ClayBankNear(d) => clay_bank_near(res, d),
+        Cond::Trades(count) => res.colony.neighbours.tallies.trades >= u64::from(count),
         Cond::Practice(code, count) => world.query::<&Skills>().iter().any(|(_, skills)| {
             skills
                 .completed
@@ -87,12 +89,12 @@ pub fn holds(world: &World, res: &SimResources, cond: Cond) -> bool {
 
 /// The nodes whose discovery conditions all hold now (bit `i` = node `i`;
 /// a node without conditions is never set: it is not discovered).
-pub fn conditions(world: &World, res: &SimResources) -> u128 {
-    conditions_with(world, res, 0)
+pub fn conditions(world: &World, res: &SimResources) -> KnowledgeMask {
+    conditions_with(world, res, KnowledgeMask::ZERO)
 }
 
 /// [`conditions`] where the nodes of `clues` (M5.5 eureka) count their stockpile conditions as met.
-pub fn conditions_with(world: &World, res: &SimResources, clues: u128) -> u128 {
+pub fn conditions_with(world: &World, res: &SimResources, clues: KnowledgeMask) -> KnowledgeMask {
     defs()
         .nodes
         .iter()
@@ -104,7 +106,7 @@ pub fn conditions_with(world: &World, res: &SimResources, clues: u128) -> u128 {
                         || holds(world, res, *c)
                 })
         })
-        .fold(0, |m, n| m | bit(n.id))
+        .fold(KnowledgeMask::ZERO, |m, n| m | bit(n.id))
 }
 
 impl RuntimeSystem for DiscoverySystem {
@@ -155,7 +157,7 @@ impl RuntimeSystem for DiscoverySystem {
         } else {
             std::collections::BTreeMap::new()
         };
-        let clue_mask = clues.keys().fold(0, |m, id| m | bit(*id));
+        let clue_mask = clues.keys().fold(KnowledgeMask::ZERO, |m, id| m | bit(*id));
         let eureka = neighbours.map_or(1000, |r| r.eureka_permille);
         let open = conditions_with(world, resources, clue_mask);
         if open == 0 {
@@ -165,7 +167,7 @@ impl RuntimeSystem for DiscoverySystem {
         let plain = if clue_mask == 0 {
             open
         } else {
-            conditions_with(world, resources, 0)
+            conditions_with(world, resources, KnowledgeMask::ZERO)
         };
         let d = defs();
         for p in candidates {

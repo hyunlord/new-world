@@ -122,7 +122,7 @@ pub enum LivestockEvent {
         /// Father's livestock identity.
         father: LivestockId,
     },
-    /// Ready milk was placed in the physical item world.
+    /// A ready recurring product was placed physically; the historic wire tag is retained.
     Milk {
         /// Committing worker's knowledge facts.
         knowledge: KnowledgeWitness,
@@ -156,7 +156,7 @@ pub struct LivestockEventWitness {
     pub event: LivestockEvent,
 }
 
-/// Entire ordered, serialized livestock sidecar.
+/// Ordered livestock sidecar, with a rebuilt nonserialized product index.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct LivestockState {
     /// Living owned animals in stable identity order.
@@ -179,6 +179,9 @@ pub struct LivestockState {
     pub first_kid_id: Option<LivestockId>,
     /// Immutable facts, keyed by their Chronicle entry index.
     pub witnesses: BTreeMap<LivestockWitnessId, LivestockEventWitness>,
+    /// Derived last wool-yield days, rebuilt from immutable witnesses after loading.
+    #[serde(skip)]
+    pub wool_last_day: BTreeMap<LivestockId, u32>,
     /// Physical capture tools consumed as losses on worker death.
     pub lost_capture_tools: BTreeMap<ItemKind, u64>,
     /// Mutation version used by read-side caches.
@@ -198,6 +201,7 @@ impl Default for LivestockState {
             first_capture: None,
             first_kid_id: None,
             witnesses: BTreeMap::new(),
+            wool_last_day: BTreeMap::new(),
             lost_capture_tools: BTreeMap::new(),
             version: 0,
         }

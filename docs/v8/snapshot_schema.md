@@ -52,6 +52,22 @@ C1-b additive nested fields:
 
 | key | type | meaning |
 |---|---|---|
+| `outcrops` | Array[Dictionary] | surface-deposit definitions, including visible Inert/debt metadata |
+| `glyph` | String | outcrop marker resolved through existing glyph data |
+| `units` | int | outcrop initial extractable units |
+| `reveal_radius` | int | outcrop qualified-practitioner reveal radius in tiles |
+| `quarry_radius` | int | outcrop reveal distance from actual completed quarry work |
+| `domestic_name_key` | String | animal livestock name; category fallback when absent |
+| `kid_age_days` | int | animal authored juvenile-to-adult age boundary |
+| `art_body_length_permille` | int | animal silhouette body length relative to shared raster |
+| `art_body_height_permille` | int | animal silhouette body height relative to shared raster |
+| `art_leg_height_permille` | int | animal silhouette leg length relative to shared raster |
+| `art_leg_count` | int | animal silhouette authored leg count |
+| `art_head_direction` | int | animal silhouette authored facing direction |
+| `art_horns` | bool | animal silhouette has horns |
+| `art_antlers` | bool | animal silhouette has antlers |
+| `art_tail_length_permille` | int | animal silhouette tail length relative to shared raster |
+| `art_juvenile_scale_permille` | int | juvenile silhouette scale, authored600‰ |
 | `tameable` | PackedByteArray / bool | Selected domestic policy exists (nested animal row / content row). |
 
 `WorldSimNode.get_content_catalog() -> Dictionary`, backed by `content::catalog_to_dict(&Catalog)`.
@@ -471,6 +487,7 @@ C1-b additive nested fields:
 
 | key | type | meaning |
 |---|---|---|
+| `ore_evidence` | Array[Dictionary] | aligned immutable geological witness metadata; empty dictionary when absent |
 | `attempt` | int | Committed keyed capture attempt. |
 | `count` | int | Nested pen population or committed milk yield quantity. |
 | `counts` | PackedInt64Array | Slaughter quantities aligned with products. |
@@ -527,6 +544,7 @@ C1-b additive nested fields:
 
 | key | type | meaning |
 |---|---|---|
+| `ore_evidence` | Array[Dictionary] | aligned immutable geological witness metadata; empty dictionary when absent |
 | `attempt` | int | Committed keyed capture attempt. |
 | `count` | int | Nested pen population or committed milk yield quantity. |
 | `counts` | PackedInt64Array | Slaughter quantities aligned with products. |
@@ -583,6 +601,7 @@ C1-b additive nested fields:
 
 | key | type | meaning |
 |---|---|---|
+| `ore_evidence` | Array[Dictionary] | aligned immutable geological witness metadata; empty dictionary when absent |
 | `attempt` | int | Committed keyed capture attempt. |
 | `count` | int | Nested pen population or committed milk yield quantity. |
 | `counts` | PackedInt64Array | Slaughter quantities aligned with products. |
@@ -1180,9 +1199,9 @@ the node id. Not in `SimReads.GETTERS` (it takes an argument). People in `AgentI
 | `holder_instruction` | PackedInt64Array | 1 = the holder knows instruction (teaches at full fidelity) |
 | `learner_ids` | PackedInt64Array | `AgentId` of each person who could learn it (adults and children of 10+ years below the threshold) |
 | `learner_proficiency` | PackedInt64Array | their proficiency ‰ (0 = none) |
-| `cond_kinds` | PackedInt64Array | discovery condition: 0 stockpile, 1 skill, 2 knows, 3 clay bank near, 4 completed jobs |
+| `cond_kinds` | PackedInt64Array | discovery condition: 0 stockpile, 1 skill, 2 knows, 3 clay bank near, 4 completed jobs, 5 completed settlement trades |
 | `cond_names` | PackedStringArray | item, skill, node or job-kind name (empty for a clay bank) |
-| `cond_amounts` | PackedInt64Array | items, skill level, ‰, tiles, or completed-job count |
+| `cond_amounts` | PackedInt64Array | items, skill level, ‰, tiles, completed-job count, or completed-trade count |
 | `cond_met` | PackedInt64Array | 1 = the condition holds now |
 | `gate_kinds` | PackedInt64Array | what it gates: 0 recipe, 1 blueprint, 2 workshop, 3 designation, 4 channel, 5 lore |
 | `gate_names` | PackedStringArray | recipe, blueprint, designation, channel or lore name |
@@ -1345,6 +1364,7 @@ C1-b additive nested fields:
 
 | key | type | meaning |
 |---|---|---|
+| `ore_evidence` | Array[Dictionary] | aligned immutable geological witness metadata; empty dictionary when absent |
 | `attempt` | int | Committed keyed capture attempt. |
 | `count` | int | Nested pen population or committed milk yield quantity. |
 | `counts` | PackedInt64Array | Slaughter quantities aligned with products. |
@@ -1435,6 +1455,8 @@ caravans by number (the gone ones stay), clues by node id. In `SimReads.GETTERS`
 
 | key | type | meaning |
 |---|---|---|
+| `rumoured_upper_low` | PackedInt64Array | optional neighbour bits128–191, signed bit patterns; both upper columns omitted when all upper bits are zero |
+| `rumoured_upper_high` | PackedInt64Array | optional neighbour bits192–255, aligned with neighbour ids |
 | `version` | int | `Neighbours::version` (bumped when anything shown changes) |
 | `now` | int | the current tick |
 | `ids` | PackedInt32Array | neighbour id (0, 1) |
@@ -1551,6 +1573,9 @@ C1-b additive nested fields:
 
 | key | type | meaning |
 |---|---|---|
+| `first_copper_ingot` | bool | actual crafted ledger contains an ingot tagged metal_copper; chapter6 fact |
+| `rumoured_upper_low` | PackedInt64Array | optional neighbour bits128–191, signed bit patterns; both upper columns omitted when all upper bits are zero |
+| `rumoured_upper_high` | PackedInt64Array | optional neighbour bits192–255, aligned with neighbour ids |
 | `age_days` | PackedInt64Array | Nested animal row current pure whole-day age; -1 non-tameable wild animal. |
 | `available_grass` | int | Nested pen row currently regrown grazeable cells. |
 | `capacity` | int | Nested pen row authored occupancy limit. |
@@ -2387,3 +2412,29 @@ C1-b additive nested fields:
 `cmd_designate_capture(wild AnimalId)` and `cmd_slaughter_livestock(LivestockId)` use checked u32 IDs and ordinary recorded native commands, returning accepted/count/reason. They never mutate animal state directly.
 
 Animal content rows append `art_shape`, `art_tint_material` and `tameable`; all shapes/tints come from selected data. Chronicle page/person/settlement reads append aligned `livestock_evidence` dictionaries; Why reads append the same metadata for entry links and terminal link4. Link4 `codes` is a witness index, never a recursive Entry link. The immutable evidence records species/livestock/pen plus event-specific source wild and attempt, actual knowledge/proficiency/threshold, real command/steward provenance, parent IDs, physical product quantities, or natural-death reason. Empty dictionary means no livestock event. It survives source removal and save/load. Chronicle kinds append61 capture,62 birth,63 milk,64 slaughter,65 death; human subject fields retain AgentId semantics.
+
+
+## Surface ore (C2-a)
+
+### `get_outcrops`
+
+Read-only, no-argument projection of the ordered ore sidecar. Hidden and fully
+exhausted deposits are omitted. Baseline worlds return disabled empty columns.
+The renderer caches the getter per tick through SimReads and culls by viewport.
+
+| key | type | meaning |
+|---|---|---|
+| `schema_version` | int | DTO version1 |
+| `enabled` | bool | world has colony rules |
+| `tick` | int | current simulation tick |
+| `version` | int | sidecar revision for visible changes |
+| `xs` | PackedInt64Array | physical tile x in ordered tile traversal |
+| `ys` | PackedInt64Array | corresponding physical tile y |
+| `kinds` | PackedInt64Array | registry outcrop code |
+| `remaining` | PackedInt64Array | remaining physical extractable units |
+
+Chronicle kind66 is OreDiscovered. Chronicle/Why ore evidence keeps the event,
+registry identity/name key, real worker/tile/tick, knowledge/proficiency/required
+threshold and method. A quarry cause additionally keeps its real quarry tile.
+Why terminal link5 resolves this evidence; its code is a witness index, never a
+recursive entry link. A disappeared deposit does not erase its discovery cause.

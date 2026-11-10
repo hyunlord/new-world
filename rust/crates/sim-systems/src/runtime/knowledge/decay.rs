@@ -13,6 +13,7 @@
 //! removed. A practitioner bit lost here is counted in
 //! `ColonyTallies::forgotten` (and `forgotten_seeded` for seeded entries).
 use hecs::World;
+use sim_core::colony::knowledge::KnowledgeMask;
 use sim_core::colony::knowledge::{bit, gates, ids_of, Knowledge, Lore, Source};
 use sim_core::components::{Agent, AgentState, TargetKind};
 use sim_engine::{RuntimeSystem, SimResources};
@@ -63,17 +64,17 @@ impl RuntimeSystem for KnowledgeDecaySystem {
             let lore = match state.and_then(|s| s.target()) {
                 Some(TargetKind::Food | TargetKind::GatherFood) => forage,
                 Some(TargetKind::Water) => water,
-                _ => 0,
+                _ => KnowledgeMask::ZERO,
             };
             for id in ids_of(lore) {
                 k.touch(id, tick);
             }
             let held = k.practice();
-            let seeded: u128 = k
+            let seeded: KnowledgeMask = k
                 .entries()
                 .iter()
                 .filter(|e| e.source() == Source::Seeded)
-                .fold(0, |m, e| m | bit(e.id()));
+                .fold(KnowledgeMask::ZERO, |m, e| m | bit(e.id()));
             if k.decay(tick, unused, |s| rule.decay_of(s), |s| rule.floor_of(s)) {
                 let lost = held & !k.practice();
                 forgotten += u64::from(lost.count_ones());

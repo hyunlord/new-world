@@ -28,18 +28,54 @@ fn missing_knowledge_can_plan_a_vessel_but_execution_waits_for_its_arrival() {
     let pot = ItemKind::all()
         .find(|kind| kind.definition().pot_capacity > 0)
         .unwrap();
-    assert!(!craft_food::supplyable(&res, &shop, &recipe, 0));
+    assert!(!craft_food::supplyable(
+        &res,
+        &shop,
+        &recipe,
+        sim_core::colony::knowledge::KnowledgeMask::ZERO
+    ));
     res.colony
         .ground_items
         .insert((3, 3), ItemStack::of(ItemSpec::raw(pot, None), 1));
-    assert_eq!(craft_food::pot_need(&res, &shop, &recipe, 0), Some(pot));
-    assert!(craft_food::supplyable(&res, &shop, &recipe, 0));
-    assert!(!craft_food::permitted(&res, &shop, &recipe, 0));
-    let practiced = 1_u128 << recipe.food_requirements.knowledge_any[0];
+    assert_eq!(
+        craft_food::pot_need(
+            &res,
+            &shop,
+            &recipe,
+            sim_core::colony::knowledge::KnowledgeMask::ZERO
+        ),
+        Some(pot)
+    );
+    assert!(craft_food::supplyable(
+        &res,
+        &shop,
+        &recipe,
+        sim_core::colony::knowledge::KnowledgeMask::ZERO
+    ));
+    assert!(!craft_food::permitted(
+        &res,
+        &shop,
+        &recipe,
+        sim_core::colony::knowledge::KnowledgeMask::ZERO
+    ));
+    let practiced = sim_core::colony::knowledge::bit(recipe.food_requirements.knowledge_any[0]);
     assert_eq!(craft_food::pot_need(&res, &shop, &recipe, practiced), None);
     assert!(craft_food::permitted(&res, &shop, &recipe, practiced));
     shop.shelf
         .push(res.colony.ground_items.remove(&(3, 3)).unwrap());
-    assert_eq!(craft_food::pot_need(&res, &shop, &recipe, 0), None);
-    assert!(craft_food::permitted(&res, &shop, &recipe, 0));
+    assert_eq!(
+        craft_food::pot_need(
+            &res,
+            &shop,
+            &recipe,
+            sim_core::colony::knowledge::KnowledgeMask::ZERO
+        ),
+        None
+    );
+    assert!(craft_food::permitted(
+        &res,
+        &shop,
+        &recipe,
+        sim_core::colony::knowledge::KnowledgeMask::ZERO
+    ));
 }

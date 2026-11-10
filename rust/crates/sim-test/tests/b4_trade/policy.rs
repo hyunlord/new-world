@@ -109,7 +109,12 @@ fn t_unknown_technique_missing_producer_and_empty_table_are_not_fabricated_offer
     assert!(!trade::draw_goods(0, &data.rule, 1, &rows).is_empty());
 }
 
-fn independent_legacy(seed: u64, id: u32, known: u128, practice: u128) -> Vec<Goods> {
+fn independent_legacy(
+    seed: u64,
+    id: u32,
+    known: knowledge::KnowledgeMask,
+    practice: knowledge::KnowledgeMask,
+) -> Vec<Goods> {
     let data = neighbour_data().expect("data");
     let rule = data.rule;
     let table: Vec<_> = data
@@ -172,14 +177,14 @@ fn t_absent_policy_preserves_exact_legacy_vectors_and_uniform_scaling() {
                 (u128::from(u32::MAX), 0x5555),
             ] {
                 assert_eq!(
-                    trade::goods(seed, &data.rule, id, known, practice),
-                    independent_legacy(seed, id, known, practice)
+                    trade::goods(seed, &data.rule, id, known.into(), practice.into()),
+                    independent_legacy(seed, id, known.into(), practice.into())
                 );
             }
         }
     }
     let inputs = trade::GoodsInputs {
-        known: u128::MAX,
+        known: knowledge::KnowledgeMask::MAX,
         ..Default::default()
     };
     let mut rows = trade::eligible_goods(

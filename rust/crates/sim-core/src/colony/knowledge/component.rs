@@ -1,5 +1,5 @@
 //! Personal knowledge entries and full-width cached practitioner bits.
-use super::{bit, day_of, defs, KnowledgeDefs, KnowledgeId, Source};
+use super::{bit, day_of, defs, KnowledgeDefs, KnowledgeId, KnowledgeMask, Source};
 use serde::{Deserialize, Serialize};
 
 /// One thing a person knows (goal 3.2). Historical fields remain in order; an
@@ -66,7 +66,7 @@ impl KnowledgeEntry {
 pub struct Knowledge {
     entries: Box<[KnowledgeEntry]>,
     #[serde(serialize_with = "super::mask_serde::serialize")]
-    practice: u128,
+    practice: KnowledgeMask,
 }
 
 /// The saved form of [`Knowledge`] (the same fields).
@@ -77,7 +77,7 @@ struct SavedKnowledge {
         rename = "practice",
         deserialize_with = "super::mask_serde::deserialize"
     )]
-    _practice: u128,
+    _practice: KnowledgeMask,
 }
 
 impl TryFrom<SavedKnowledge> for Knowledge {
@@ -112,18 +112,18 @@ impl Knowledge {
     }
 
     /// The practitioner bitset (bit `i` = at or above node `i`'s threshold).
-    pub const fn practice(&self) -> u128 {
+    pub const fn practice(&self) -> KnowledgeMask {
         self.practice
     }
 
     /// Whether the person practises every node of `mask`.
-    pub const fn practises_all(&self, mask: u128) -> bool {
-        self.practice & mask == mask
+    pub const fn practises_all(&self, mask: KnowledgeMask) -> bool {
+        self.practice.contains_all(mask)
     }
 
     /// Whether the person practises node `id`.
     pub const fn practises(&self, id: KnowledgeId) -> bool {
-        self.practice & bit(id) != 0
+        self.practice.contains_all(bit(id))
     }
 
     fn refresh(&mut self) {
@@ -135,7 +135,7 @@ impl Knowledge {
             .entries
             .iter()
             .filter(|e| e.proficiency >= defs.threshold(e.id()))
-            .fold(0, |m, e| m | bit(e.id()));
+            .fold(KnowledgeMask::ZERO, |m, e| m | bit(e.id()));
     }
 
     /// Knowledge holding exactly `entries` (sorted here by id; a node listed
@@ -153,7 +153,7 @@ impl Knowledge {
         entries.shrink_to_fit();
         let mut k = Self {
             entries: entries.into_boxed_slice(),
-            practice: 0,
+            practice: KnowledgeMask::ZERO,
         };
         k.refresh_with_defs(defs);
         k
@@ -210,7 +210,7 @@ impl Knowledge {
 
     /// A completed gated job (goal 3.2): every node of `mask` the person holds
     /// gains `gain` ‰ and is stamped used at `tick`.
-    pub fn use_mask(&mut self, mask: u128, gain: u16, tick: u64) {
+    pub fn use_mask(&mut self, mask: KnowledgeMask, gain: u16, tick: u64) {
         for e in self.entries.iter_mut().filter(|e| mask & bit(e.id()) != 0) {
             e.proficiency = e.proficiency.saturating_add(gain).min(1000);
             e.last_used = day_of(tick);

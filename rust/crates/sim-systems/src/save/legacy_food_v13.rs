@@ -82,6 +82,8 @@ impl From<LegacyBodyV13> for Body {
             processing: Default::default(),
             buildings: Default::default(),
             livestock: Default::default(),
+            neighbour_upper: Default::default(),
+            ore: Default::default(),
         }
     }
 }

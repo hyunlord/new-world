@@ -15,6 +15,7 @@
 mod aggregate;
 mod component;
 mod gate_masks;
+mod mask;
 pub(crate) mod mask_serde;
 mod parse;
 mod types;
@@ -23,6 +24,7 @@ pub use aggregate::*;
 pub use component::*;
 pub(crate) use gate_masks::gates_with_catalog;
 pub use gate_masks::Gates;
+pub use mask::KnowledgeMask;
 pub(crate) use parse::merge_sources;
 pub(crate) use parse::parse_with_catalog;
 pub use types::*;
@@ -30,8 +32,8 @@ pub use types::*;
 /// A node of the knowledge map: its index in `knowledge.ron` (file order).
 pub type KnowledgeId = u8;
 
-/// Most nodes the map may hold (the practitioner bitset is a `u128`).
-pub const MAX_NODES: usize = 128;
+/// Most nodes the map may hold, matching every stable u8 ordinal.
+pub const MAX_NODES: usize = 256;
 
 /// The quality ceiling of a craft by proficiency decile (goal 3.2): the VISION's
 /// `0.3 + 0.7·p²` shape as an integer table, index `proficiency / 100`.
@@ -65,11 +67,8 @@ pub fn id(name: &str) -> Option<KnowledgeId> {
 }
 
 /// The bit of node `id` in a practitioner bitset.
-pub const fn bit(id: KnowledgeId) -> u128 {
-    match 1u128.checked_shl(id as u32) {
-        Some(mask) => mask,
-        None => 0,
-    }
+pub const fn bit(id: KnowledgeId) -> KnowledgeMask {
+    KnowledgeMask::bit(id)
 }
 
 /// The selected immutable catalog's derived gate masks.
@@ -78,8 +77,8 @@ pub fn gates() -> &'static Gates {
 }
 
 /// The ids set in `mask`, ascending.
-pub fn ids_of(mask: u128) -> impl Iterator<Item = KnowledgeId> {
-    (0..128u8).filter(move |i| mask & bit(*i) != 0)
+pub fn ids_of(mask: KnowledgeMask) -> impl Iterator<Item = KnowledgeId> {
+    (0..=u8::MAX).filter(move |i| mask & bit(*i) != 0)
 }
 
 /// Ticks per day of the knowledge clock (1 tick = 1 minute in every world).

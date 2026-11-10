@@ -8,6 +8,7 @@
 //! numbers, nodes `KnowledgeId`, items `ItemKind::code`. Every read returns its empty form in the baseline world and
 //! under rules without neighbours.
 use godot::prelude::*;
+use sim_core::colony::knowledge::KnowledgeMask;
 use sim_core::colony::knowledge::{bit, defs, Era};
 use sim_core::colony::neighbours::{VisitState, WaveAnswer};
 use sim_core::colony::people::Fleeing;
@@ -19,8 +20,8 @@ use sim_systems::commands::submit;
 use sim_systems::runtime::neighbours::{self, trade};
 
 /// One neighbour row: (id, name key index, edge code, distance days, population, attitude, last contact day or −1,
-/// Neolithic nodes known as low/high64-bit words).
-pub type NeighbourRow = (u8, u8, u8, u8, u16, u8, i64, i64, i64);
+/// Neolithic nodes known as four little-endian64-bit words).
+pub type NeighbourRow = (u8, u8, u8, u8, u16, u8, i64, i64, i64, i64, i64);
 /// One wave row: (id, neighbour, state code, x, y, size, deadline tick or −1, answer −1/0/1/2).
 pub type WaveRow = (u32, u8, u8, u32, u32, u32, i64, i32);
 /// One caravan row: (id, neighbour, state code, x, y, leaving tick or −1, trades).
@@ -72,7 +73,7 @@ pub fn collect_neighbours(world: &hecs::World, res: &SimResources) -> Neighbours
         .nodes
         .iter()
         .filter(|n| n.era == Era::Neolithic)
-        .fold(0u128, |m, n| m | bit(n.id));
+        .fold(KnowledgeMask::ZERO, |m, n| m | bit(n.id));
     let mut list = nb.list.clone();
     list.sort_by_key(|n| n.id);
     NeighboursView {
@@ -90,8 +91,10 @@ pub fn collect_neighbours(world: &hecs::World, res: &SimResources) -> Neighbours
                     n.attitude,
                     n.last_contact_day.map_or(-1, i64::from),
                     // Godot ints carry the full mask bit pattern, including knowledge id63.
-                    (n.known & neo) as i64,
-                    ((n.known & neo) >> 64) as i64,
+                    (n.known & neo).words()[0] as i64,
+                    (n.known & neo).words()[1] as i64,
+                    (n.known & neo).words()[2] as i64,
+                    (n.known & neo).words()[3] as i64,
                 )
             })
             .collect(),
@@ -171,6 +174,18 @@ pub(super) fn neighbours_to_dict(v: &NeighboursView) -> VarDictionary {
     d.set("rumoured", PackedInt64Array::from(rumoured.as_slice()));
     let high: Vec<i64> = v.neighbours.iter().map(|r| r.8).collect();
     d.set("rumoured_high", PackedInt64Array::from(high.as_slice()));
+    if v.neighbours.iter().any(|row| row.9 != 0 || row.10 != 0) {
+        let upper_low: Vec<i64> = v.neighbours.iter().map(|row| row.9).collect();
+        let upper_high: Vec<i64> = v.neighbours.iter().map(|row| row.10).collect();
+        d.set(
+            "rumoured_upper_low",
+            PackedInt64Array::from(upper_low.as_slice()),
+        );
+        d.set(
+            "rumoured_upper_high",
+            PackedInt64Array::from(upper_high.as_slice()),
+        );
+    }
     let w = v.waves.len();
     d.set("wave_ids", i32s(&|i| v.waves[i].0 as i32, w));
     d.set("wave_neighbours", i32s(&|i| i32::from(v.waves[i].1), w));

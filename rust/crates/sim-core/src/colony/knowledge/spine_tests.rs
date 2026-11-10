@@ -54,7 +54,7 @@ fn spine_high_node_identity_does_not_alias_a_seeded_entry() {
     // Then masks and personal-entry lookup keep the nodes independent.
     assert_eq!(bit(3) & bit(35), 0);
     assert_eq!(ids_of(bit(3) | bit(35)).collect::<Vec<_>>(), [3, 35]);
-    assert_eq!(bit(128), 0, "foreign ids never wrap onto a live node");
+    assert_ne!(bit(128), bit(0), "upper ids never alias a low node");
 }
 
 #[test]
@@ -92,5 +92,19 @@ fn c1_high_node_cache_and_entry_ids_survive_every_word_boundary() {
         assert_eq!(knowledge.get(id).expect("independent entry").id(), id);
         assert!(knowledge.practises(id));
     }
-    assert_eq!(bit(128), 0);
+    assert_ne!(bit(128), 0);
+}
+
+#[test]
+fn c2_upper_half_nodes_remain_distinct_practitioner_bits() {
+    // Given authored ordinals beyond the historical 128-bit capacity.
+    let ids = [0, 63, 64, 127, 128, 191, 192, 255];
+    let entries = ids
+        .iter()
+        .map(|&id| KnowledgeEntry::new(id, Source::Migrant, 1000, 17))
+        .collect();
+    // When the practitioner cache is built from the authoritative entries.
+    let knowledge = Knowledge::from_entries(entries);
+    // Then every ordinal survives independently, including the final u8 id.
+    assert_eq!(ids_of(knowledge.practice()).collect::<Vec<_>>(), ids);
 }

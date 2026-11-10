@@ -61,14 +61,20 @@ def validate(value, schema, where="record") -> None:
     """Small closed-schema parser: every key and numeric width is explicit."""
     if isinstance(schema, dict):
         require(type(value) is dict, f"{where}: expected object")
-        require(set(value) == set(schema), f"{where}: fields differ: {sorted(set(value) ^ set(schema))}")
+        required = {key for key, field in schema.items()
+                    if not (isinstance(field, tuple) and field[0] == "omittable")}
+        require(required <= set(value) <= set(schema),
+                f"{where}: fields differ: {sorted((required - set(value)) | (set(value) - set(schema)))}")
         for key, field in schema.items():
-            validate(value[key], field, f"{where}.{key}")
+            if key in value:
+                validate(value[key], field, f"{where}.{key}")
     elif isinstance(schema, tuple):
         tag, inner = schema
         if tag == "nullable":
             if value is not None:
                 validate(value, inner, where)
+        elif tag == "omittable":
+            validate(value, inner, where)
         elif tag == "enum":
             require(type(value) is str and value in inner, f"{where}: invalid enum")
         elif tag == "list":
@@ -89,6 +95,9 @@ def validate(value, schema, where="record") -> None:
     elif schema == "hash":
         require(type(value) is str and re.fullmatch(r"[0-9a-f]{64}", value) is not None,
                 f"{where}: expected SHA256")
+    elif schema == "upper_words":
+        validate(value, array("u64"), where)
+        require(len(value) == 2, f"{where}: expected two upper words")
     elif schema == "material_term":
         require(type(value) is dict, f"{where}: material descriptor")
         if value.get("kind") == "none":
@@ -112,6 +121,17 @@ def optional(schema):
     return ("nullable", schema)
 
 
+def mask_schema(field: str) -> dict[str, str | tuple[str, str]]:
+    return {field: "u64", field + "_high": ("omittable", "u64"),
+            field + "_upper": ("omittable", "upper_words")}
+
+
+def knowledge_mask(row: Record, field: str) -> int:
+    """Reconstruct a validated mask; omitted historical words are zero."""
+    words = [row[field], row.get(field + "_high", 0), *row.get(field + "_upper", [0, 0])]
+    return sum(word << (64 * index) for index, word in enumerate(words))
+
+
 REF = {"path": "str", "sha256": "hash"}
 REASON = {"code": "str", "executed_tick": optional("u64"), "agent_id": optional("u64"), "detail": "str"}
 STATUS = ("enum", ("VALID", "OBSERVER_INVALID", "NOT_MEASURED", "NOT_RUN"))
@@ -126,7 +146,7 @@ CRAFT = {
     "skill_code": "u8", "skill_present": "bool", "xp_before": "u32", "level_before": "u8",
     "material_id": optional("u32"), "material_hardness": optional("u16"),
     "hardness_percent": optional("i32"), "temperament_present": "bool", "persistence": optional("u16"),
-    "knowledge_enabled": "bool", "gate_mask": "u32", "gating_nodes": array(GATE),
+    "knowledge_enabled": "bool", **mask_schema("gate_mask"), "gating_nodes": array(GATE),
     "recipe_quality_add": "i32", "material_term": "material_term",
     **dict.fromkeys(("tally_before_count", "tally_after_count", "tally_before_quality_sum",
                     "tally_after_quality_sum", "completion_count_delta"), "u64"),
@@ -207,7 +227,7 @@ def craft_formula(row: Record, arithmetic: Record) -> Record:
     raw = arithmetic["quality_base"] + arithmetic["quality_per_level"] * row["level_before"]
     base = max(0, min(100, raw + bonus + row["recipe_quality_add"] + material + temperament))
     cap = 100
-    if row["knowledge_enabled"] and row["gate_mask"]:
+    if row["knowledge_enabled"] and knowledge_mask(row, "gate_mask"):
         proficiency = min(node["proficiency"] for node in row["gating_nodes"])
         cap = arithmetic["qual_cap"][min(proficiency // 100, 10)]
     return {"quality": min(base, cap), "base": base, "cap": cap,
@@ -233,7 +253,8 @@ def check_craft(row: Record, arithmetic: Record, metadata: Record, *, controlled
     if row["material_hardness"] is not None:
         require(row["material_id"] is not None and row["hardness_percent"] == row["material_hardness"] // 10,
                 "material raw hardness mismatch")
-    bits = [i for i in range(32) if row["gate_mask"] & (1 << i)]
+    gate = knowledge_mask(row, "gate_mask")
+    bits = [i for i in range(256) if gate & (1 << i)]
     require([n["node_id"] for n in row["gating_nodes"]] == bits, "gating node coverage/order")
     nodes = {n["node_id"]: n for n in arithmetic["knowledge_nodes"]}
     for node in row["gating_nodes"]:
@@ -245,8 +266,9 @@ def check_craft(row: Record, arithmetic: Record, metadata: Record, *, controlled
     if row["recipe_code"] == primary["code"]:
         for event_key, manifest_key in [("recipe_identity", "identity"), ("output_item_code", "output_item_code"),
                 ("output_count", "output_count"), ("skill_code", "skill_code"),
-                ("recipe_quality_add", "quality_add"), ("material_term", "material_term"), ("gate_mask", "gate_mask")]:
+                ("recipe_quality_add", "quality_add"), ("material_term", "material_term")]:
             require(row[event_key] == primary[manifest_key], f"primary recipe {event_key} mismatch")
+        require(gate == knowledge_mask(primary, "gate_mask"), "primary recipe gate_mask mismatch")
     result = craft_formula(row, arithmetic)
     require(row["actual_quality"] == result["quality"], "craft arithmetic mismatch")
     return result
@@ -296,7 +318,7 @@ ELIGIBLE = {"authored_index": "u32", "item_code": "u32", "made_by": optional("u8
             "classification": ("enum", ("staple", "lacked", "scarce", "rare")), "weight": "u32",
             "count_min": "u16", "count_max": "u16"}
 CARAVAN = {"caravan_id": "u32", "neighbour_id": "u8", "executed_tick": "u64", "policy": META_SCHEMA["policy"],
-           "neighbour_known_mask": "u32", "old_all_knowledge_practice_mask": "u32",
+           **mask_schema("neighbour_known_mask"), **mask_schema("old_all_knowledge_practice_mask"),
            "tech_progress_permille": "u16", "practice_days": "u64",
            "practitioner_rows": array({"node_id": "u8", "count": "u64"}),
            "practitioner_inputs": array({"agent_id": "u64", "is_child": "bool",
@@ -362,10 +384,10 @@ ARITHMETIC = {
     "rng": {"algorithm": "str", "below": "str", "add": "u64", "mul1": "u64", "mul2": "u64"},
     "primary_recipe": {"code": "u32", "identity": "str", "output_item_code": "u32", "output_count": "u16",
         "input_item_code": "u32", "input_count": "u16", "work_ticks": "u32", "skill_code": "u8",
-        "quality_add": "i32", "material_term": "material_term", "gate_mask": "u32",
+        "quality_add": "i32", "material_term": "material_term", **mask_schema("gate_mask"),
         "material_id": "u32", "material_hardness": "u16"},
     "garments": array({"garment_arm": ("enum", ("hide_wrap", "fur_cloak")), "item_code": "u32", "cold_permille": "u32"}),
-    "knowledge_nodes": array({"node_id": "u8", "threshold": "u16", "era": ("enum", ("paleolithic", "neolithic"))}),
+    "knowledge_nodes": array({"node_id": "u8", "threshold": "u16", "era": ("enum", ("paleolithic", "neolithic", "bronze", "iron"))}),
     "trade": {"goods": array({"authored_index": "u32", "item_code": "u32", "made_by": optional("u8"),
         "tag": ("enum", ("lacked", "staple")), "count_min": "u16", "count_max": "u16"}),
         "stacks_min": "u16", "stacks_max": "u16", "quality_min": "u8", "quality_max": "u8", "practice_days": "u64"},
@@ -389,14 +411,14 @@ def check_arithmetic(data: Record, base: Path) -> None:
         "work_ticks": 45, "quality_add": 0, "material_hardness": 700,
         "material_term": {"kind": "hardness", "offset": 50, "divisor": 5}}.items():
         require(p[key] == expected, f"unregistered primary recipe {key}")
-    require(p["gate_mask"] != 0, "primary gate missing")
+    require(knowledge_mask(p, "gate_mask") != 0, "primary gate missing")
     check_coverage([g["garment_arm"] for g in data["garments"]], ["hide_wrap", "fur_cloak"], "garment arm")
     require(len({g["item_code"] for g in data["garments"]}) == 2, "duplicate garment code")
     for g in data["garments"]:
         require(g["cold_permille"] == {"hide_wrap": 700, "fur_cloak": 500}[g["garment_arm"]], "unregistered garment multiplier")
     nodes = data["knowledge_nodes"]
     ids = [n["node_id"] for n in nodes]
-    require(ids == sorted(set(ids)) and ids and max(ids) < 32, "knowledge node order/width")
+    require(ids == sorted(set(ids)) and ids and max(ids) < 256, "knowledge node order/width")
     require(all(0 < n["threshold"] <= 1000 for n in nodes), "knowledge threshold range")
     trade = data["trade"]
     for prefix in ("stacks", "quality"):
@@ -440,15 +462,17 @@ def check_caravan(row: Record, seed: int, arithmetic: Record, metadata: Record) 
         for k in p["knowledge"]) for p in inputs) for n in nodes}
     require(row["practitioner_rows"] == [{"node_id": n, "count": counts[n]} for n in ids], "fresh practitioner counts mismatch")
     eras = {n["node_id"]: n["era"] for n in nodes}
+    known = knowledge_mask(row, "neighbour_known_mask")
+    practice = knowledge_mask(row, "old_all_knowledge_practice_mask")
     eligible = []
     for good in arithmetic["trade"]["goods"]:
         node = good["made_by"]
         classification = None
         if good["tag"] == "staple":
             classification = "staple"
-        elif node is not None and row["neighbour_known_mask"] & (1 << node):
+        elif node is not None and known & (1 << node):
             if row["policy"] == "old_3_1":
-                if not row["old_all_knowledge_practice_mask"] & (1 << node):
+                if not practice & (1 << node):
                     classification = "lacked"
             elif eras[node] == "neolithic" and row["tech_progress_permille"] < 750 and counts[node] == 0:
                 classification = "rare"
@@ -718,7 +742,7 @@ def check_craft_fixture(data, arithmetic, metadata, manifest_hash, seeds):
     primary = arithmetic["primary_recipe"]
     pairs = {}
     for row in rows:
-        raw = {k: row[k] for k in CRAFT}
+        raw = {k: row[k] for k in CRAFT if k in row}
         result = check_craft(raw, arithmetic, metadata, controlled=True)
         require(row["agent_id"] == row["bill_id"] == 1 and row["executed_tick"] == 27360, "controlled craft keyed identity")
         require(row["recipe_code"] == primary["code"] and row["material_id"] == primary["material_id"]

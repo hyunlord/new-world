@@ -13,7 +13,9 @@ static var _presentation: Dictionary = {}
 static func validate(dto: Dictionary) -> String:
 	if dto.get("schema_version") != 1 or not dto.get("registry_revision") is String or str(dto.get("registry_revision", "")).is_empty():
 		return "content catalog: invalid schema/revision"
-	for family: String in ["items", "blueprints", "recipes", "pressures", "animals"]:
+	var families: Array[String] = ["items", "blueprints", "recipes", "pressures", "animals"]
+	if dto.has("outcrops"): families.append("outcrops")
+	for family: String in families:
 		if not dto.get(family) is Array:
 			return "content catalog: missing " + family
 		var codes: Dictionary = {}
@@ -46,7 +48,7 @@ static func install(dto: Dictionary, presentation: Dictionary) -> String:
 	var revision: String = dto["registry_revision"]
 	if not _revision.is_empty():
 		return "" if _revision == revision else "content catalog already installed"
-	for family: String in ["items", "blueprints", "recipes", "materials", "knowledge", "pressures", "animals", "plants", "crops", "eras", "lanes", "buildings"]:
+	for family: String in ["items", "blueprints", "recipes", "materials", "knowledge", "pressures", "animals", "plants", "outcrops", "crops", "eras", "lanes", "buildings"]:
 		var rows: Dictionary = {}
 		var names: Dictionary = {}
 		for value: Variant in dto.get(family, []):

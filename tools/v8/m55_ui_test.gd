@@ -480,7 +480,7 @@ func _neighbours_panel() -> void:
 	for i: int in mini(rows.size(), cards.size()):
 		var card: String = str(cards[i])
 		ok = ok and card.contains(NeighbourText.direction(_locale, int(rows[i]["edge"]))) and card.contains(NeighbourText.name_of_key(_locale, String(rows[i]["name_key"])))
-		for node: int in NeighbourText.rumoured_nodes(int(rows[i]["rumoured"])):
+		for node: int in NeighbourText.rumoured_nodes(int(rows[i]["rumoured"]), int(rows[i].get("rumoured_high", 0)), int(rows[i].get("rumoured_upper_low", 0)), int(rows[i].get("rumoured_upper_high", 0))):
 			ok = ok and card.contains(KnowledgeText.node_name(_locale, node))
 	_check("n_panel", ok, " || ".join(cards) + " || " + str(texts["tally"]))
 	await _key(KEY_N)
@@ -494,7 +494,7 @@ func _tech_map() -> void:
 	var node: int = -1
 	var holder: int = -1
 	for row: Dictionary in rows:
-		var nodes: Array[int] = NeighbourText.rumoured_nodes(int(row["rumoured"]))
+		var nodes: Array[int] = NeighbourText.rumoured_nodes(int(row["rumoured"]), int(row.get("rumoured_high", 0)), int(row.get("rumoured_upper_low", 0)), int(row.get("rumoured_upper_high", 0)))
 		if node < 0 and not nodes.is_empty():
 			node = nodes[0]
 			holder = int(row["id"])

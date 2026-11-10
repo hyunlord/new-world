@@ -163,6 +163,7 @@ content_id!(
     [Wolf = 0, Deer = 1]
 );
 
+content_id!(OutcropKind, outcrop_by_code, outcrop_by_serde_name, []);
 content_id!(PlantKind, plant_by_code, plant_by_serde_name, []);
 
 content_id!(CropKind, crop_by_code, crop_by_serde_name, []);

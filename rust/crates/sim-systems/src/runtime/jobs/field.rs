@@ -1,4 +1,5 @@
 //! Field job selection and physical prerequisites shared by assignment/execution.
+use sim_core::colony::knowledge::KnowledgeMask;
 pub(super) mod execute;
 use sim_core::colony::content::installed_or_bundled;
 use sim_core::colony::cultivation::{FieldPhase, FieldWork};
@@ -69,7 +70,7 @@ pub(super) fn target_exists(res: &SimResources, id: AgentId, job: &Job) -> bool 
 pub(super) fn pick(
     res: &SimResources,
     id: AgentId,
-    practice: u128,
+    practice: KnowledgeMask,
     region: u32,
     pos: (u32, u32),
     radius: u32,

@@ -40,7 +40,7 @@ func _run() -> void:
 	# --- Test 6: Cards.json parses and has required cards ---
 	_test_cards_data()
 
-	# --- Test 7: Chapters.json parses and has 5 chapters ---
+	# --- Test 7: Chapters.json parses and has the authored chapter count ---
 	_test_chapters_data()
 
 	# --- Test 8: Chapter condition check ---
@@ -237,11 +237,17 @@ func _test_chapters_data() -> void:
 	if not parsed is Dictionary:
 		return
 	var chapters: Array = parsed.get("chapters", [])
-	_assert(chapters.size() == 6, "has 6 chapters")
+	_assert(chapters.size() == 8, "has five chapters, retained milestone and two bronze chapters")
 	if chapters.size() >= 6:
 		_assert(str(chapters[4].get("id", "")) == "pens_and_livestock", "chapter 5 is livestock")
 		_assert(chapters[4].get("conditions", [])[0].get("fact", "") == "first_livestock_captured", "livestock chapter requires a real capture")
 		_assert(str(chapters[5].get("id", "")) == "neolithic_village", "neolithic village milestone remains after livestock")
+		_assert(int(chapters[5].get("number", -1)) == 0, "retained milestone is unnumbered")
+	if chapters.size() == 8:
+		_assert(str(chapters[6].get("id", "")) == "first_copper" and int(chapters[6].get("number", 0)) == 6, "first copper is chapter 6")
+		_assert(str(chapters[7].get("id", "")) == "bronze_village" and int(chapters[7].get("number", 0)) == 7, "bronze village is chapter 7")
+		_assert(chapters[6].get("unlock_fact", "") == "first_copper_ingot", "copper unlock is independent of population")
+		_assert(chapters[7].get("unlock_fact", "") == "first_bronze_tool_used", "bronze unlock requires actual tool use")
 	# Farming is available; clothing remains a required later-stage condition.
 	if chapters.size() >= 4:
 		_assert(not bool(chapters[3].get("locked", true)), "chapter 4 farming is unlocked")
@@ -268,6 +274,19 @@ func _test_chapter_conditions(main: Node) -> void:
 	# At game start, chapter 0 should be current and have unmet conditions.
 	var ch: int = goals.call("current_chapter")
 	_assert(ch == 0, "starts at chapter 0")
+	# Authoritative bridge facts can expose later chapters without meeting population 40.
+	var saved_facts: Dictionary = (goals.get("_facts") as Dictionary).duplicate(true)
+	var progress: Dictionary = {"population": 2, "first_copper_ingot": true}
+	goals.call("update_facts", progress)
+	_assert(goals.call("available_chapters").has(6), "copper chapter is reachable before the population milestone")
+	_assert(not goals.call("available_chapters").has(7), "a copper ingot does not invent bronze tool use")
+	progress["first_bronze_tool_used"] = true
+	goals.call("update_facts", progress)
+	_assert(goals.call("select_chapter", 7), "an actual bronze-use fact exposes chapter 7 independently")
+	_assert(str((goals.call("displayed_chapter") as Dictionary).get("id", "")) == "bronze_village", "selected chapter retains its authored identity")
+	_assert(int(goals.call("current_chapter")) == 0, "browsing never completes earlier chapters")
+	goals.set("_view_index", -1)
+	goals.call("update_facts", saved_facts)
 
 
 ## Test 9: chronicle panel loads notable_kinds from schema 2.

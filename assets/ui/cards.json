@@ -317,6 +317,35 @@
       "tags": [
         "livestock"
       ]
+    },
+    {
+      "id": "tin_shortage",
+      "enabled": false,
+      "trigger": {
+        "kind": "bridge",
+        "read": "tin_shortage"
+      },
+      "title_key": "C2_CARD_TIN",
+      "body_key": "C2_CARD_TIN_BODY",
+      "options": [
+        {
+          "text_key": "C2_CARD_TIN_WAIT",
+          "command": "none",
+          "recommended": true
+        },
+        {
+          "text_key": "C2_CARD_TIN_TRADE",
+          "command": "open_trade",
+          "recommended": false
+        }
+      ],
+      "default": "none",
+      "expires_hours": 24,
+      "priority": 6,
+      "tags": [
+        "metal",
+        "trade"
+      ]
     }
   ]
 }

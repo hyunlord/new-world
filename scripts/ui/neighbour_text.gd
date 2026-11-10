@@ -100,23 +100,26 @@ static func hours_left(deadline: int, now: int, info: Dictionary) -> int:
 	return maxi(0, ceili(float(deadline - now) / per_hour))
 
 
-## Neolithic node ids from the low/high 64-bit rumour words, ascending.
-static func rumoured_nodes(mask: int, high: int = 0) -> Array[int]:
+## Node ids from four signed bridge words, preserving each sign bit as bit63.
+static func rumoured_nodes(mask: int, high: int = 0, upper_low: int = 0, upper_high: int = 0) -> Array[int]:
 	var out: Array[int] = []
-	for bit: int in 128:
-		var word: int = mask if bit < 64 else high
-		if (word >> (bit % 64)) & 1 == 1:
-			out.append(bit)
+	var words: Array[int] = [mask, high, upper_low, upper_high]
+	for word_index: int in words.size():
+		for bit: int in 64:
+			if (words[word_index] >> bit) & 1 == 1:
+				out.append(word_index * 64 + bit)
 	return out
 
 
 ## The neighbours of a get_neighbours read that know node `node` by rumour, as their ids.
 static func rumour_holders(read: Dictionary, node: int) -> Array[int]:
 	var out: Array[int] = []
-	if node < 0 or node >= 128:
+	if node < 0 or node >= 256:
 		return out
 	var ids: PackedInt32Array = read.get("ids", PackedInt32Array())
-	var masks: PackedInt64Array = read.get("rumoured" if node < 64 else "rumoured_high", PackedInt64Array())
+	var columns: Array[String] = ["rumoured", "rumoured_high", "rumoured_upper_low", "rumoured_upper_high"]
+	var column: int = node >> 6
+	var masks: PackedInt64Array = read.get(columns[column], PackedInt64Array())
 	for i: int in mini(ids.size(), masks.size()):
 		if (int(masks[i]) >> (node % 64)) & 1 == 1:
 			out.append(int(ids[i]))
@@ -128,7 +131,7 @@ static func rumour_line(locale: Node, read: Dictionary, id: int) -> String:
 	return trf(locale, "M55_TECH_RUMOUR_FMT", {"neighbour": KnowledgeText.with_subject(locale, name_in(locale, read, id))})
 
 
-## Rows of a get_neighbours read: [{id, name_key, edge, days, population, attitude, last_contact, rumoured, rumoured_high}].
+## Rows of a get_neighbours read, including four rumour words; absent upper columns read as zero.
 static func neighbours(read: Dictionary) -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
 	var ids: PackedInt32Array = read.get("ids", PackedInt32Array())
@@ -140,11 +143,15 @@ static func neighbours(read: Dictionary) -> Array[Dictionary]:
 	var contacts: PackedInt32Array = read.get("last_contact", PackedInt32Array())
 	var masks: PackedInt64Array = read.get("rumoured", PackedInt64Array())
 	var high: PackedInt64Array = read.get("rumoured_high", PackedInt64Array())
+	var upper_low: PackedInt64Array = read.get("rumoured_upper_low", PackedInt64Array())
+	var upper_high: PackedInt64Array = read.get("rumoured_upper_high", PackedInt64Array())
 	var n: int = mini(mini(ids.size(), keys.size()), mini(edges.size(), days.size()))
 	n = mini(n, mini(mini(pops.size(), atts.size()), mini(contacts.size(), masks.size())))
 	for i: int in n:
 		out.append({"id": int(ids[i]), "name_key": String(keys[i]), "edge": int(edges[i]), "days": int(days[i]), "population": int(pops[i]),
-			"attitude": int(atts[i]), "last_contact": int(contacts[i]), "rumoured": int(masks[i]), "rumoured_high": int(high[i]) if i < high.size() else 0})
+			"attitude": int(atts[i]), "last_contact": int(contacts[i]), "rumoured": int(masks[i]), "rumoured_high": int(high[i]) if i < high.size() else 0,
+			"rumoured_upper_low": int(upper_low[i]) if i < upper_low.size() else 0,
+			"rumoured_upper_high": int(upper_high[i]) if i < upper_high.size() else 0})
 	return out
 
 

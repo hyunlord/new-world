@@ -164,8 +164,11 @@ pub const STREAM_PLANTS: u64 = 0x504C_414E_5453_5631;
 /// M6a: raw-food sickness, keyed by lineage and completed meal.
 pub const STREAM_FOOD_SICK: u64 = 0x464F_4F44_5349_434B;
 
+/// Independent keyed surface mineral origin stream; never consumes an actor RNG.
+pub const STREAM_ORE_ORIGIN: u64 = 0x4F52_455F_4F52_4731;
+
 /// Every stream constant, for the distinctness test and the inventory.
-pub const STREAMS: [u64; 42] = [
+pub const STREAMS: [u64; 43] = [
     STREAM_MOVE_PAUSE,
     STREAM_MOVE_DX,
     STREAM_MOVE_DY,
@@ -202,6 +205,7 @@ pub const STREAMS: [u64; 42] = [
     STREAM_STORY,
     STREAM_WILDLIFE,
     STREAM_SPECIES_ORIGIN,
+    STREAM_ORE_ORIGIN,
     STREAM_QUARREL,
     STREAM_APPAREL,
     STREAM_NEIGHBOURS,

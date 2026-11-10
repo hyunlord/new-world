@@ -34,6 +34,8 @@ pub(super) fn decode_body(payload: &[u8]) -> Result<Body, SaveError> {
         processing: old.processing,
         buildings: Default::default(),
         livestock: Default::default(),
+        neighbour_upper: Default::default(),
+        ore: Default::default(),
     })
 }
 
@@ -98,7 +100,10 @@ pub(super) fn old_knowledge_column(bytes: &[u8]) -> Result<Vec<u8>, String> {
     let old = current
         .into_iter()
         .map(|knowledge| {
-            let practice = u32::try_from(knowledge.practice())
+            if knowledge.practice().upper() != [0, 0] {
+                return Err("new knowledge mask cannot fit format17".to_owned());
+            }
+            let practice = u32::try_from(knowledge.practice().low128())
                 .map_err(|_| "new knowledge mask cannot fit format17".to_owned())?;
             let entries = knowledge
                 .entries()

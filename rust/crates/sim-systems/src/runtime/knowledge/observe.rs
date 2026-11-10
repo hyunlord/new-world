@@ -14,6 +14,7 @@
 //! past the threshold − 50 (watching alone never makes a practitioner).
 //! Watchers in `AgentId` order; each gains at most once per check per node.
 use hecs::World;
+use sim_core::colony::knowledge::KnowledgeMask;
 use sim_core::colony::knowledge::{defs, gates, ids_of};
 use sim_core::colony::{Designation, Job, JobKind, JobStage};
 use sim_core::components::{Agent, Position};
@@ -29,7 +30,7 @@ pub const OBSERVATION_PRIORITY: u32 = 161;
 pub struct ObservationSystem;
 
 /// The gate mask of `job` (0 for ungated work).
-pub fn job_gate(world: &World, res: &SimResources, job: &Job) -> u128 {
+pub fn job_gate(world: &World, res: &SimResources, job: &Job) -> KnowledgeMask {
     let g = gates();
     match job.kind {
         JobKind::Craft { workshop, bill, .. } => res
@@ -37,14 +38,14 @@ pub fn job_gate(world: &World, res: &SimResources, job: &Job) -> u128 {
             .workshops
             .get(&workshop)
             .and_then(|s| s.bill(bill))
-            .map_or(0, |b| g.recipe(b.recipe)),
+            .map_or(KnowledgeMask::ZERO, |b| g.recipe(b.recipe)),
         JobKind::Build { site } => crate::runtime::jobs::items::colony_sites(world)
             .get(&site)
-            .map_or(0, |v| g.build(v.site.kind)),
+            .map_or(KnowledgeMask::ZERO, |v| g.build(v.site.kind)),
         JobKind::Quarry { .. } => g.designation(Designation::Quarry),
         JobKind::Dig { .. } => g.designation(Designation::Dig),
         JobKind::DigClay { .. } => g.designation(Designation::ClayPit),
-        _ => 0,
+        _ => KnowledgeMask::ZERO,
     }
 }
 
@@ -84,13 +85,13 @@ impl RuntimeSystem for ObservationSystem {
         }
         workers.sort_by_key(|w| w.0);
         // Practitioners at gated work: (tile, gate).
-        let mut shown: Vec<((u32, u32), u128)> = Vec::new();
+        let mut shown: Vec<((u32, u32), KnowledgeMask)> = Vec::new();
         for (_, entity, tile, working) in &workers {
             if !working {
                 continue;
             }
             let job = world.get::<&Job>(*entity).map(|j| *j).ok();
-            let gate = job.map_or(0, |j| job_gate(world, resources, &j));
+            let gate = job.map_or(KnowledgeMask::ZERO, |j| job_gate(world, resources, &j));
             if gate != 0 && practice_of(world, *entity) & gate == gate {
                 shown.push((*tile, gate));
             }
@@ -101,12 +102,12 @@ impl RuntimeSystem for ObservationSystem {
         let d = defs();
         let mut gained = 0u64;
         for (_, entity, tile, _) in &workers {
-            let mut mask = 0u128;
+            let mut mask = KnowledgeMask::ZERO;
             for (at, gate) in &shown {
                 if at != tile
                     && crate::runtime::jobs::items::chebyshev(*at, *tile) <= rule.observation_radius
                 {
-                    mask |= gate;
+                    mask |= *gate;
                 }
             }
             let mut k = knowledge_of(world, *entity);

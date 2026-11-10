@@ -34,7 +34,7 @@ Primary membership is manifest-pinned bundled KnapBlade code0, identity `knap_bl
 
 `TallyRow = {agent_id:U64, recipe_code:U32, completed_count:U64, quality_sum:U64}`. Actual source is `ColonyTallies::craft_quality: BTreeMap<(AgentId,u32),(u64,u64)>` (`sim-core/src/colony/mod.rs:89–90`). It counts crafts, not output units. Retain the entire previous/current maps, including deceased agents, and emit full maps at day checkpoints and run endpoints. Do not filter by ECS survivors, primary recipe or current jobs before computing deltas.
 
-CraftEvent fields (all required):
+CraftEvent fields (required unless marked optional):
 
 | Field | Type / actual source |
 |---|---|
@@ -47,7 +47,8 @@ CraftEvent fields (all required):
 | skill_code, skill_present, xp_before, level_before | U8 / bool / U32 / U8; Skills::get returns Skill {xp,level}; missing skill uses actual zero semantics, presence retained |
 | material_id, material_hardness, hardness_percent | U32|null / U16|null / I32|null; MaterialId.raw(), MaterialStats.hardness, hardness_percent=hardness/10 |
 | temperament_present, persistence | bool / U16|null; Temperament.p, absent is not fabricated500 |
-| knowledge_enabled, gate_mask | bool / U32 from knowledge::rule and gates().recipe |
+| knowledge_enabled, gate_mask | bool / low U64 from knowledge::rule and gates().recipe |
+| gate_mask_high, gate_mask_upper | optional U64 for bits64–127 / `[U64,U64]` for bits128–255; omitted words are zero |
 | gating_nodes | ordered array `{node_id:U8,entry_present:bool,proficiency:U16,last_used:U16|null,admission_threshold:U16}` for exactly every set bit; absent entry proficiency0 |
 | recipe_quality_add | I32 |
 | material_term | tagged `{kind:"none"}` or `{kind:"hardness",offset:I32,divisor:I32}`; positive divisor |
@@ -63,6 +64,8 @@ Diff union of all old/new tally keys after tick. Missing new key, negative count
 ## 3. Independent arithmetic manifest and scorer
 
 Manifest carries full numeric XP_TABLE[21] U32, QUALITY_BONUS_TABLE[26] U32, QUAL_CAP[11] U8, QUALITY_BASE I32=30, QUALITY_PER_LEVEL I32=3, STREAM_QUALITY U64=0x5155414c4954595f and STREAM_APPAREL U64=0x4150504152454c21, plus hash-bound source excerpts of rng.rs, skills.rs, knowledge.rs and installed recipe/material/apparel data. Hash alone is insufficient: scorer must have actual tables/algorithm inputs. Retain the native level_before and independently verify it against raw XP thresholds.
+
+Knowledge masks use four little-endian U64 words: the existing mask field, optional `_high`, and optional `_upper` containing exactly two U64s. This applies to primary-recipe gates and caravan `neighbour_known_mask` / `old_all_knowledge_practice_mask` as well as craft events. Reconstruct all 256 bits before checking coverage, caps or trade eligibility; legacy low-only records remain valid.
 
 Implement splitmix64 independently with wrapping at 64bits after addition/multiplication:
 `z=x+0x9e3779b97f4a7c15; z=(z^(z>>30))*0xbf58476d1ce4e5b9; z=(z^(z>>27))*0x94d049bb133111eb; return z^(z>>31)`.

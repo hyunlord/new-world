@@ -93,6 +93,8 @@ pub(super) fn decode_published_v14(payload: &[u8]) -> Result<super::Body, super:
         processing: Default::default(),
         buildings: Default::default(),
         livestock: Default::default(),
+        neighbour_upper: Default::default(),
+        ore: Default::default(),
     })
 }
 

@@ -13,6 +13,7 @@ mod load;
 mod load_crops;
 mod load_ecology;
 mod load_flora;
+mod load_outcrops;
 mod load_plants;
 mod raw_blueprint;
 mod raw_item;
@@ -33,7 +34,9 @@ use crate::material::MaterialId;
 pub use boot::{bootstrap, installed, installed_or_bundled, BootSelection};
 pub use defs::*;
 pub use error::{BootError, CatalogAccessError, CatalogError};
-pub use ids::{AnimalKind, BlueprintKind, CropKind, ItemKind, PlantKind, PressureKind, RecipeKind};
+pub use ids::{
+    AnimalKind, BlueprintKind, CropKind, ItemKind, OutcropKind, PlantKind, PressureKind, RecipeKind,
+};
 use index::Index;
 pub use sources::{NamedSource, RawSources};
 use std::collections::{BTreeMap, BTreeSet};
@@ -44,6 +47,8 @@ pub struct Catalog {
     flora: FloraCatalog,
     crops: Vec<CropDef>,
     crop_index: Index,
+    outcrops: Vec<OutcropDef>,
+    outcrop_index: Index,
     plants: Vec<PlantDef>,
     plant_index: Index,
     animals: Vec<AnimalDef>,
@@ -141,6 +146,28 @@ impl Catalog {
         crops,
         crop_ids
     );
+    family_access!(
+        OutcropKind,
+        OutcropDef,
+        outcrops,
+        outcrop_index,
+        outcrop,
+        outcrop_by_code,
+        outcrop_by_name,
+        outcrop_by_serde_name,
+        require_outcrop,
+        outcrops,
+        outcrop_ids
+    );
+    /// Resolve a named outcrop, falling back to the first stable-code member of its category.
+    pub fn resolve_outcrop(&self, name: &str, category: &str) -> Option<OutcropKind> {
+        self.outcrop_by_name(name).or_else(|| {
+            self.outcrops
+                .iter()
+                .find(|d| d.category == category)
+                .map(|d| OutcropKind::from_validated(d.identity.code))
+        })
+    }
     family_access!(
         PlantKind,
         PlantDef,

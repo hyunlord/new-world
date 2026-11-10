@@ -27,6 +27,7 @@
 //!
 //! Under debug assertions the 7.6 invariants are checked after every tick.
 use hecs::{Entity, World};
+use sim_core::colony::knowledge::KnowledgeMask;
 use sim_core::colony::materials::OAK;
 use sim_core::colony::{
     CancelReason, Carry, Designation, ItemKind, ItemSpec, ItemStack, Job, JobKind, JobStage,
@@ -330,9 +331,9 @@ fn step(
                     let practice = if rule.knowledge.is_some() {
                         world
                             .get::<&sim_core::colony::knowledge::Knowledge>(entity)
-                            .map_or(0, |k| k.practice())
+                            .map_or(KnowledgeMask::ZERO, |k| k.practice())
                     } else {
-                        u128::MAX
+                        KnowledgeMask::MAX
                     };
                     let ticks = super::harvest::work_ticks(res, plant, practice);
                     let ticks =
@@ -474,7 +475,7 @@ fn step(
                     let mask = super::harvest::knowledge_mask(res, plant);
                     let practiced = world
                         .get::<&sim_core::colony::knowledge::Knowledge>(entity)
-                        .map_or(0, |knowledge| knowledge.practice() & mask);
+                        .map_or(KnowledgeMask::ZERO, |knowledge| knowledge.practice() & mask);
                     let Some(placements) =
                         super::harvest::complete_observed_placements(res, plant, id, job.taken_at)
                     else {
@@ -497,7 +498,9 @@ fn step(
                     }
                 }
                 JobKind::Quarry { node } => {
-                    quarry_batch(res, rule, node, pos);
+                    if quarry_batch(res, rule, node, pos) {
+                        crate::runtime::ore::reveal_from_quarry(world, res, entity, node);
+                    }
                     craft::train(world, entity, SkillKind::Quarry, u32::from(job.amount));
                     let mask =
                         sim_core::colony::knowledge::gates().designation(Designation::Quarry);
@@ -836,10 +839,15 @@ fn gather_batch(
 /// yield and material land on its tile (M3: at the quarrier's tile when the
 /// node's tile cannot hold items, e.g. a boulder on undug hill); an exhausted
 /// node is removed with its mark.
-fn quarry_batch(res: &mut SimResources, rule: &ColonyRule, node: (u32, u32), at: (u32, u32)) {
+fn quarry_batch(
+    res: &mut SimResources,
+    rule: &ColonyRule,
+    node: (u32, u32),
+    at: (u32, u32),
+) -> bool {
     let batch = rule.economy.map_or(4, |e| e.quarry_batch).max(1);
     let Some(found) = res.colony.nodes.get_mut(&node) else {
-        return;
+        return false;
     };
     let n = found.left.min(batch);
     found.left -= n;
@@ -863,6 +871,7 @@ fn quarry_batch(res: &mut SimResources, rule: &ColonyRule, node: (u32, u32), at:
         };
         put_items(res, drop, spec, u16::from(n));
     }
+    n > 0
 }
 
 /// Work ticks of one clay batch at skill level 5 (M4 goal 3.5: 60).

@@ -16,20 +16,20 @@ pub(super) fn check(
             .expect("log template"),
     )
     .expect("small catalogue");
-    let stone_value = i64::try_from(
+    let brick_value = i64::try_from(
         catalog
             .building_templates()
             .buildings
             .iter()
-            .position(|template| template.id == "stone_house")
-            .expect("stone template"),
+            .position(|template| template.id == "mud_brick_house")
+            .expect("mud-brick template"),
     )
     .expect("small catalogue");
     let original_entry = original.completion_entry.expect("original completion");
     assert_eq!(
         engine.resources.chronicle.entries()[original_entry as usize].value,
         log_value,
-        "old log house completion retains its name after current site becomes stone"
+        "old log house completion retains its name after current site becomes mud brick"
     );
     let new = &engine.resources.colony.buildings.sites[&id];
     assert_ne!(new.completion_entry, original.completion_entry);
@@ -55,7 +55,7 @@ pub(super) fn check(
     let upgraded_entry = new.completion_entry.expect("upgraded completion");
     assert_eq!(
         engine.resources.chronicle.entries()[upgraded_entry as usize].value,
-        stone_value
+        brick_value
     );
     assert_eq!(
         engine.resources.chronicle.cause_of(upgraded_entry),
@@ -81,6 +81,6 @@ pub(super) fn check(
     );
     assert_eq!(
         loaded.resources.chronicle.entries()[upgraded_entry as usize].value,
-        stone_value
+        brick_value
     );
 }

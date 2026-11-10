@@ -169,7 +169,13 @@ fn food_import_receives_age_and_a_full_map_trade_keeps_its_goods_and_payment() {
         }
         let before = res.colony.neighbours.caravans[0].clone();
         let ledger = res.colony.item_ledger.clone();
-        let result = neighbours::trade::trade(&mut res, 0, 1, &[((2, 2), 20)], &[(0, 2)]);
+        let result = neighbours::trade::trade(
+            &mut res,
+            sim_core::colony::knowledge::KnowledgeMask::ZERO,
+            1,
+            &[((2, 2), 20)],
+            &[(0, 2)],
+        );
         if full {
             assert!(result.is_err());
             assert_eq!(res.colony.neighbours.caravans[0], before);

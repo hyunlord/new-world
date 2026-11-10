@@ -8,6 +8,7 @@
 //! The output's material is the first input's (a blade's flint; an axe's
 //! blade). Called only from `JobExecuteSystem`, in `AgentId` order.
 use hecs::{Entity, World};
+use sim_core::colony::knowledge::KnowledgeMask;
 use sim_core::colony::skills::{
     craft_quality, material_term, quality_bonus, scaled_ticks, temperament_quality,
     temperament_ticks,
@@ -56,9 +57,9 @@ pub(super) fn can_continue(world: &World, res: &SimResources, entity: Entity, jo
     {
         world
             .get::<&sim_core::colony::knowledge::Knowledge>(entity)
-            .map_or(0, |knowledge| knowledge.practice())
+            .map_or(KnowledgeMask::ZERO, |knowledge| knowledge.practice())
     } else {
-        u128::MAX
+        KnowledgeMask::MAX
     };
     super::craft_food::permitted(res, shop, recipe, practice)
         && super::processing::permitted(res, shop, recipe)
@@ -97,9 +98,9 @@ pub fn start(
     {
         world
             .get::<&sim_core::colony::knowledge::Knowledge>(entity)
-            .map_or(0, |k| k.practice())
+            .map_or(KnowledgeMask::ZERO, |k| k.practice())
     } else {
-        u128::MAX
+        KnowledgeMask::MAX
     };
     if !super::craft_food::permitted(res, shop, recipe, practice)
         || !super::processing::permitted(res, shop, recipe)

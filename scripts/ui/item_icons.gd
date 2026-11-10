@@ -13,6 +13,7 @@ static var _textures: Dictionary = {}
 static var _glyphs: Dictionary = {}
 static var _appearance: Dictionary = {}
 static var _resolver: MaterialResolver = null
+static var _params_version: int = -1
 static var _glyphs_loaded: bool = false
 
 
@@ -77,9 +78,11 @@ static func _load_appearance() -> void:
 
 static func material_color(name: String) -> Color:
 	_load_appearance()
-	if _resolver == null:
+	if _resolver == null or _params_version != ArtData.params_version():
+		_params_version = ArtData.params_version()
 		_resolver = MaterialResolver.new()
 		_resolver.load_imported()
+		_textures.clear()
 	var resolved: Dictionary = _resolver.resolve("", name)
 	var category: String = str(resolved.get("category", ""))
 	var token: String = str(_appearance.get("material_category_tokens", {}).get(category, "Label"))
@@ -89,6 +92,20 @@ static func material_color(name: String) -> Color:
 	lab += Vector3(float(tint.get("dL", 0)), float(tint.get("da", 0)), float(tint.get("db", 0)))
 	var rgb: Vector3 = Tone.lab_to_rgb(lab)
 	return Color(clampf(rgb.x, 0.0, 1.0), clampf(rgb.y, 0.0, 1.0), clampf(rgb.z, 0.0, 1.0), 1.0)
+
+
+## Prepare the selected catalogue through the same dimension guards and cache as actual consumers.
+static func warmup_catalog(tile_px: int) -> void:
+	if tile_px <= 0: return
+	for row: Dictionary in Content.rows("items"):
+		if uses_placeholder(int(row.get("code", -1))): item_texture(row)
+	for row: Dictionary in Content.rows("outcrops"):
+		item_texture(row)
+	for row: Dictionary in Content.rows("buildings"):
+		var pixels: Vector2i = Vector2i(int(row.get("width", 0)), int(row.get("height", 0))) * tile_px
+		building_texture(row, pixels, true)
+		if pixels.x != pixels.y: building_texture(row, Vector2i(pixels.y, pixels.x), true)
+		building_texture(row, Vector2i(48, 40), true)
 
 
 static func item_texture(row: Dictionary) -> Texture2D:

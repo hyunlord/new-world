@@ -472,7 +472,10 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
             let Some(node) = knowledge::id(knowledge) else {
                 return Vec::new();
             };
-            if !crate::runtime::knowledge::anyone_practises(world, 1u128 << node) {
+            if !crate::runtime::knowledge::anyone_practises(
+                world,
+                sim_core::colony::knowledge::bit(node),
+            ) {
                 return Vec::new();
             }
             let Some(target) = res

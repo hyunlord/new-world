@@ -35,11 +35,13 @@ mod evidence_tests;
 mod food_catalog;
 #[cfg(test)]
 mod food_tests;
+mod knowledge_upper;
 mod legacy_buildings_v18;
 mod legacy_food_v13;
 mod legacy_food_v16;
 mod legacy_knowledge_v19;
 mod legacy_livestock_v20;
+mod legacy_ore_v21;
 mod legacy_spine_v17;
 mod legacy_steward;
 mod legacy_steward_v14;
@@ -71,7 +73,7 @@ use sim_engine::{SimEngine, SimResources};
 /// The first eight bytes of every save file.
 pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 
-/// Save format version; historical versions 6 through 20 are migrated. Bump it
+/// Save format version; historical versions 6 through 21 are migrated. Bump it
 /// whenever a saved type or the layout changes. 2 = M2 (item specs, nodes,
 /// workshops and bills, multi-line material needs, tools, skills, priorities);
 /// 3 = M3 (door and dug tile columns, navigation paths, space sites, rooms);
@@ -94,7 +96,8 @@ pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 /// 19 = persisted template building sites, selected stations and housing zones.
 /// 20 = 128-node practitioner and neighbour masks (lower-word varints unchanged).
 /// 21 = livestock sidecar, immutable event witnesses and 26 completed-job counters.
-pub const FORMAT_VERSION: u32 = 21;
+/// 22 = 256-node knowledge upper words and explicit ore deposits/witnesses.
+pub const FORMAT_VERSION: u32 = 22;
 mod cultivation_catalog;
 mod cultivation_validation;
 mod legacy_cultivation_v15;
@@ -175,6 +178,8 @@ struct BodyRef<'a> {
     processing: &'a sim_core::colony::processing::ProcessingState,
     buildings: &'a sim_core::colony::building_site::BuildingState,
     livestock: &'a sim_core::colony::livestock::LivestockState,
+    neighbour_upper: &'a knowledge_upper::UpperWords,
+    ore: &'a sim_core::colony::ore::OreState,
 }
 
 /// The body after the header, as read (same fields, same order).
@@ -250,6 +255,9 @@ struct Body {
     processing: sim_core::colony::processing::ProcessingState,
     buildings: sim_core::colony::building_site::BuildingState,
     livestock: sim_core::colony::livestock::LivestockState,
+    #[serde(deserialize_with = "knowledge_upper::deserialize")]
+    neighbour_upper: knowledge_upper::UpperWords,
+    ore: sim_core::colony::ore::OreState,
 }
 
 /// Exact format12 body, before independently persisted food state.
@@ -313,6 +321,9 @@ pub fn save(engine: &mut SimEngine) -> Result<Vec<u8>, SaveError> {
         command_boundary,
     )
     .map_err(SaveError::Encode)?;
+    crate::runtime::ore::validate_state_at_boundary(&engine.resources)
+        .map_err(SaveError::Encode)?;
+    let neighbour_upper = knowledge_upper::capture(&engine.resources).map_err(SaveError::Encode)?;
     let world = world::capture(&engine.world).map_err(SaveError::World)?;
     let systems = engine.system_states().map_err(SaveError::Systems)?;
     let body = BodyRef {
@@ -328,6 +339,8 @@ pub fn save(engine: &mut SimEngine) -> Result<Vec<u8>, SaveError> {
         processing: &engine.resources.processing,
         buildings: &engine.resources.colony.buildings,
         livestock: &engine.resources.livestock,
+        neighbour_upper: &neighbour_upper,
+        ore: &engine.resources.ore,
     };
     let mut out = Vec::with_capacity(1 << 20);
     out.extend_from_slice(&MAGIC);
@@ -381,6 +394,7 @@ pub fn load_with(
     let legacy_v18 = source_version == 18;
     let legacy_v19 = source_version == 19;
     let legacy_v20 = source_version == 20;
+    let legacy_v21 = source_version == 21;
     let legacy_spine = source_version < 18;
     let legacy_items = source_version < 17;
     // Format13 already owns physical food and its FoodDailySystem slot.
@@ -405,6 +419,8 @@ pub fn load_with(
             processing: Default::default(),
             buildings: Default::default(),
             livestock: Default::default(),
+            neighbour_upper: Default::default(),
+            ore: Default::default(),
         }
     } else if legacy_v7 {
         let old: LegacyBodyV7 = decode(encoded).map_err(SaveError::Decode)?;
@@ -421,6 +437,8 @@ pub fn load_with(
             processing: Default::default(),
             buildings: Default::default(),
             livestock: Default::default(),
+            neighbour_upper: Default::default(),
+            ore: Default::default(),
         }
     } else {
         let envelope: Envelope = decode(encoded).map_err(SaveError::Decode)?;
@@ -447,6 +465,8 @@ pub fn load_with(
                 processing: Default::default(),
                 buildings: Default::default(),
                 livestock: Default::default(),
+                neighbour_upper: Default::default(),
+                ore: Default::default(),
             }
         } else if legacy_v9 {
             if envelope.revision != legacy_v9::REVISION {
@@ -470,12 +490,16 @@ pub fn load_with(
                 processing: Default::default(),
                 buildings: Default::default(),
                 livestock: Default::default(),
+                neighbour_upper: Default::default(),
+                ore: Default::default(),
             }
         } else {
             // These predecessors receive schema/system migrations only after
             // their exact published revision and identity prefixes authenticate.
             // A current revision on an old header does not identify an old body.
-            let catalog_accepted = if legacy_v20 {
+            let catalog_accepted = if legacy_v21 {
+                legacy_ore_v21::accepts_catalog(&envelope.revision, catalog)?
+            } else if legacy_v20 {
                 legacy_livestock_v20::accepts_catalog(&envelope.revision, catalog)?
             } else if legacy_v19 {
                 legacy_knowledge_v19::accepts_catalog(&envelope.revision, catalog)?
@@ -513,6 +537,8 @@ pub fn load_with(
                     processing: Default::default(),
                     buildings: Default::default(),
                     livestock: Default::default(),
+                    neighbour_upper: Default::default(),
+                    ore: Default::default(),
                 }
             } else if legacy_v11 {
                 let old: LegacyBodyV11 = decode(&envelope.payload).map_err(SaveError::Decode)?;
@@ -529,6 +555,8 @@ pub fn load_with(
                     processing: Default::default(),
                     buildings: Default::default(),
                     livestock: Default::default(),
+                    neighbour_upper: Default::default(),
+                    ore: Default::default(),
                 }
             } else if legacy_v12 {
                 let old: LegacyBodyV12 = decode(&envelope.payload).map_err(SaveError::Decode)?;
@@ -545,11 +573,15 @@ pub fn load_with(
                     processing: Default::default(),
                     buildings: Default::default(),
                     livestock: Default::default(),
+                    neighbour_upper: Default::default(),
+                    ore: Default::default(),
                 }
             } else if legacy_v13 {
                 let old: legacy_food_v13::LegacyBodyV13 =
                     decode(&envelope.payload).map_err(SaveError::Decode)?;
                 old.into()
+            } else if legacy_v21 {
+                legacy_ore_v21::decode_body(&envelope.payload)?
             } else if legacy_v19 || legacy_v20 {
                 legacy_livestock_v20::decode_body(&envelope.payload)?
             } else if legacy_v18 {
@@ -576,6 +608,10 @@ pub fn load_with(
     resources.processing = body.processing;
     resources.colony.buildings = body.buildings;
     resources.livestock = body.livestock;
+    crate::runtime::livestock::rebuild_product_cache(&mut resources);
+    resources.ore = body.ore;
+    knowledge_upper::restore(&mut resources, body.neighbour_upper).map_err(SaveError::Decode)?;
+    crate::runtime::ore::validate_state_at_boundary(&resources).map_err(SaveError::Decode)?;
     building_validation::validate(&resources.colony.buildings).map_err(SaveError::Decode)?;
     if legacy
         || legacy_v7
@@ -656,6 +692,7 @@ pub fn load_with(
             food: legacy_food && resources.rules.colony.is_some(),
             buildings: source_version <= 18 && resources.rules.colony.is_some(),
             livestock: source_version <= 20 && resources.rules.colony.is_some(),
+            ore: source_version <= 21 && resources.rules.colony.is_some(),
             diagnosis: true, // M-READ: always add presentation-only systems
         },
     )?;
@@ -678,6 +715,8 @@ struct LegacySystemAdditions {
     buildings: bool,
     /// Authenticated predecessor colony-only slot introduced in format21.
     livestock: bool,
+    /// Authenticated predecessor colony-only slot introduced in format22.
+    ore: bool,
     /// M-READ: presentation-only diagnosis and requests systems (no saved state).
     diagnosis: bool,
 }
@@ -696,6 +735,7 @@ fn insert_legacy_systems(
             "FoodDailySystem" => additions.food,
             "BuildingTemplateSystem" => additions.buildings,
             "LivestockSystem" => additions.livestock,
+            "OreDiscoverySystem" => additions.ore,
             "DiagnosisSystem" | "RequestsSystem" => additions.diagnosis,
             _ => false,
         };
@@ -789,6 +829,7 @@ fn read_header(bytes: &[u8]) -> Result<&[u8], SaveError> {
         && found != 18
         && found != 19
         && found != 20
+        && found != 21
     {
         return Err(SaveError::Version {
             found,

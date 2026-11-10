@@ -1,4 +1,4 @@
-//! Width, authenticated historical slots and actual published20 regression tests.
+//! Livestock save continuity, width, historical slots and published20 regressions.
 use super::*;
 use sim_core::colony::knowledge::Knowledge;
 use sim_core::colony::livestock::{CaptureAttempt, GrassState, LivestockOrderCause};
@@ -7,6 +7,245 @@ use sim_core::colony::{SkillKind, Skills};
 fn bootstrap() {
     sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
         .expect("bundled catalog");
+}
+
+fn recurring_engine(female: bool) -> (sim_engine::SimEngine, hecs::Entity, u32, (u32, u32)) {
+    use crate::runtime::livestock::tests::{add_captured, fixture};
+    use sim_core::colony::building_site::BuildingStatus;
+    use sim_core::colony::knowledge::Source;
+    use sim_core::colony::{Command, CommandRecord, CommandResult};
+    use sim_core::components::{
+        Agent, AgentState, BodyHealth, Hunger, Inventory, Lineage, Memory, Position, Sleep, Social,
+        Temperament, Thirst,
+    };
+
+    bootstrap();
+    let (mut world, mut resources, site, _) = fixture(0);
+    resources.ticks_per_day = 240;
+    resources.rules.clock_offset_ticks = 120;
+    resources.colony.command_log.push(CommandRecord {
+        tick: 0,
+        command: Command::BuildTemplate {
+            id: "pen".into(),
+            anchor: (2, 2),
+            rotation: 0,
+            station: None,
+        },
+        result: CommandResult::ok(1),
+    });
+    // The shared fixture supplies physical pieces; the real lifecycle records completion.
+    resources
+        .colony
+        .buildings
+        .sites
+        .get_mut(&site)
+        .expect("pen")
+        .status = BuildingStatus::Building;
+    crate::runtime::building_templates::advance(&mut world, &mut resources);
+    assert!(resources.colony.buildings.sites[&site]
+        .completion_entry
+        .is_some());
+    let species = sim_core::colony::content::installed_or_bundled()
+        .animal_by_name("wild_sheep")
+        .expect("sheep");
+    let policy = species.definition().tameable.as_ref().expect("policy");
+    let animal = add_captured(
+        &mut resources,
+        site,
+        species,
+        female,
+        policy.kid_age_days - 1,
+    );
+    let gate = crate::runtime::livestock::pen_layout(&resources, site)
+        .expect("pen")
+        .gates[0];
+    let mut knowledge = Knowledge::default();
+    for product in policy
+        .products
+        .milk
+        .iter()
+        .chain(policy.products.wool.iter())
+    {
+        knowledge.set(
+            sim_core::colony::knowledge::defs()
+                .id_of(&product.requires_knowledge)
+                .expect("knowledge"),
+            1000,
+            Source::Seeded,
+            0,
+        );
+    }
+    let worker = world.spawn((
+        Agent { id: 7 },
+        Position {
+            x: gate.0,
+            y: gate.1,
+        },
+        AgentState::Idle,
+        knowledge,
+        crate::runtime::agent::movement::MovementRng::new(7),
+        Hunger::new(0.0, 0.05),
+        Thirst::new(0.0, 0.08),
+        Sleep::new(0.0, 0.03),
+        Social::new(0.0, 0.04),
+        Memory::new(),
+        BodyHealth::new(),
+        Inventory::default(),
+        Lineage { key: 7, births: 0 },
+        Temperament::from_axes([500; 4]),
+    ));
+    resources.current_tick = u64::from(policy.products.wool.as_ref().expect("wool").every_days)
+        * resources.ticks_per_day
+        - resources.rules.clock_offset_ticks;
+    let tick = resources.current_tick;
+    let mut engine = sim_engine::SimEngine::new(1, 1, sim_core::MaterialRegistry::new());
+    engine
+        .install_saved(world, resources, tick, &[])
+        .expect("fixture clock");
+    crate::register_world_runtime_systems(&mut engine, sim_engine::registration::WorldKind::Colony);
+    (engine, worker, animal, gate)
+}
+
+fn start_recurring(engine: &mut sim_engine::SimEngine, worker: hecs::Entity, gate: (u32, u32)) {
+    use crate::runtime::jobs::livestock::{pick_milk, start, Offer};
+    let practice = engine
+        .world
+        .get::<&Knowledge>(worker)
+        .expect("knowledge")
+        .practice();
+    let offer = pick_milk(
+        &engine.resources,
+        practice,
+        engine.resources.nav.region_of(gate),
+        gate,
+        u32::MAX,
+    )
+    .expect("ready recurring product");
+    assert!(start(
+        &mut engine.world,
+        &mut engine.resources,
+        worker,
+        Offer::Milk(offer)
+    ));
+}
+
+fn finish_recurring(engine: &mut sim_engine::SimEngine, worker: hecs::Entity, gate: (u32, u32)) {
+    use sim_core::colony::{Job, JobStage};
+    let mut job = *engine.world.get::<&Job>(worker).expect("job");
+    job.stage = JobStage::Working { ticks_left: 0 };
+    engine
+        .world
+        .insert_one(worker, job)
+        .expect("completed work duration");
+    crate::runtime::jobs::livestock::step(
+        &mut engine.world,
+        &mut engine.resources,
+        7,
+        worker,
+        job,
+        gate,
+    );
+    assert!(engine.world.get::<&Job>(worker).is_err());
+}
+
+#[test]
+fn recurring_wool_full_save_restores_omitted_cooldown_before_continuation() {
+    let (mut engine, worker, animal, gate) = recurring_engine(false);
+    let wool = engine.resources.livestock.animals[&animal]
+        .species
+        .definition()
+        .tameable
+        .as_ref()
+        .expect("policy")
+        .products
+        .wool
+        .as_ref()
+        .expect("wool")
+        .item;
+    start_recurring(&mut engine, worker, gate);
+    finish_recurring(&mut engine, worker, gate);
+    let cooldown = engine.resources.livestock.wool_last_day[&animal];
+    assert!(cooldown > 0);
+    assert_eq!(engine.resources.colony.item_ledger.created_of(wool), 1);
+    let bytes = super::super::save(&mut engine).expect("full save with wool witness");
+    let envelope: super::super::Envelope = super::super::decode(&bytes[12..]).expect("envelope");
+    let body: super::super::Body = super::super::decode(&envelope.payload).expect("saved body");
+    assert!(
+        body.livestock.wool_last_day.is_empty(),
+        "cache is omitted from actual save"
+    );
+    assert!(!body.livestock.witnesses.is_empty());
+    let mut loaded = super::super::load(&bytes).expect("official full load");
+    assert_eq!(loaded.resources.livestock, engine.resources.livestock);
+    assert_eq!(
+        super::super::save(&mut loaded).expect("immediate roundtrip"),
+        bytes
+    );
+    let practice = loaded
+        .world
+        .get::<&Knowledge>(worker)
+        .expect("restored knowledge")
+        .practice();
+    for _ in 0..60 {
+        assert!(
+            crate::runtime::jobs::livestock::pick_milk(
+                &loaded.resources,
+                practice,
+                loaded.resources.nav.region_of(gate),
+                gate,
+                u32::MAX,
+            )
+            .is_none(),
+            "restored wool cannot repeat before its cooldown"
+        );
+        engine.tick();
+        loaded.tick();
+        assert_eq!(loaded.resources.colony.item_ledger.created_of(wool), 1);
+        assert_eq!(loaded.resources.livestock.wool_last_day[&animal], cooldown);
+    }
+    assert_eq!(
+        super::super::save(&mut loaded).expect("continued restored save"),
+        super::super::save(&mut engine).expect("continued original save")
+    );
+}
+
+#[test]
+fn recurring_legacy_milk_placeholder_survives_full_save_and_completes_as_milk() {
+    use sim_core::colony::{ItemKind, Job};
+    let (mut engine, worker, animal, gate) = recurring_engine(true);
+    let milk = engine.resources.livestock.animals[&animal]
+        .species
+        .definition()
+        .tameable
+        .as_ref()
+        .expect("policy")
+        .products
+        .milk
+        .as_ref()
+        .expect("milk")
+        .item;
+    engine
+        .resources
+        .livestock
+        .animals
+        .get_mut(&animal)
+        .expect("animal")
+        .milk_ready = true;
+    start_recurring(&mut engine, worker, gate);
+    // Reproduce the persisted pre-C2 Milk job field while retaining real admission/reservations.
+    let placeholder = ItemKind::role("default_placeholder");
+    engine.world.get::<&mut Job>(worker).expect("job").item = placeholder;
+    let bytes = super::super::save(&mut engine).expect("legacy job full save");
+    let mut loaded = super::super::load(&bytes).expect("legacy job full load");
+    assert_eq!(
+        loaded.world.get::<&Job>(worker).expect("restored job").item,
+        placeholder
+    );
+    finish_recurring(&mut loaded, worker, gate);
+    assert_eq!(loaded.resources.colony.item_ledger.created_of(milk), 1);
+    assert!(loaded.resources.livestock.wool_last_day.is_empty());
+    assert!(!loaded.resources.livestock.animals[&animal].milk_ready);
+    super::super::save(&mut loaded).expect("completed milk remains save-valid");
 }
 
 #[test]
@@ -81,6 +320,7 @@ fn additions(livestock: bool) -> super::super::LegacySystemAdditions {
         food: false,
         buildings: false,
         livestock,
+        ore: false,
         diagnosis: false,
     }
 }
@@ -257,7 +497,7 @@ fn genuine_published_a20_keeps_counters_upper_masks_physical_state_and_slots() {
         );
         let old_slots = registered
             .iter()
-            .filter(|row| row.0 != "LivestockSystem")
+            .filter(|row| row.0 != "LivestockSystem" && row.0 != "OreDiscoverySystem")
             .cloned()
             .collect::<Vec<_>>();
         assert_eq!(
@@ -297,7 +537,9 @@ fn genuine_published_a20_keeps_counters_upper_masks_physical_state_and_slots() {
                                     .expect("same knowledge"),
                                 original
                             );
-                            upper_mask |= original.practice() >> 64 != 0;
+                            upper_mask |= original.practice().words()[1..]
+                                .iter()
+                                .any(|word| *word != 0);
                         }
                     }
                     _ => {}
@@ -329,7 +571,7 @@ fn genuine_published_a20_keeps_counters_upper_masks_physical_state_and_slots() {
             );
         }
         let current = super::super::save(&mut loaded).expect("migrated21 save");
-        assert_eq!(&current[8..12], &21_u32.to_le_bytes());
+        assert_eq!(&current[8..12], &super::super::FORMAT_VERSION.to_le_bytes());
         let mut roundtrip = super::super::load(&current).expect("current21 load");
         assert_eq!(
             super::super::save(&mut roundtrip).expect("immediate21 roundtrip"),

@@ -18,6 +18,11 @@
     "EXT_BUILDING_SCREEN": "Fixture mudbrick screen",
     "EXT_BUILDING_TOWER": "Fixture future tower",
     "EXT_PLANT_PULSE": "Test wild pulse",
-    "EXT_CROP_PULSE": "Test pulse"
+    "EXT_CROP_PULSE": "Test pulse",
+    "EXT_ORE": "Test ore",
+    "EXT_ORE_INGOT": "Test ingot",
+    "EXT_ORE_RECIPE": "Test smelting",
+    "EXT_ORE_OUTCROP": "Test outcrop",
+    "EXT_DOMESTIC_ANIMAL": "test livestock"
   }
 }

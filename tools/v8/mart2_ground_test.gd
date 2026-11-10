@@ -50,6 +50,8 @@ const Tone = preload("res://scripts/world/art/tone.gd")
 const GroundBaker = preload("res://scripts/world/art/ground_baker.gd")
 const WallBaker = preload("res://scripts/world/art/wall_baker.gd")
 const MaterialResolver = preload("res://scripts/world/art/material_resolver.gd")
+const ItemIcons = preload("res://scripts/ui/item_icons.gd")
+const SiteGhost = preload("res://scripts/world/art/site_ghost.gd")
 const Daylight = preload("res://scripts/world/daylight_controller.gd")
 const HASHES: String = "res://tools/v8/mart2_chunk_hashes.json"
 const TILE: int = View.TILE
@@ -116,6 +118,7 @@ func _run() -> void:
 	_check_mask_cache_isolation()
 	_check_hills_synthetic()
 	_check_water(layer, world, map, size)
+	await _check_material_reload(layer)
 	if OS.get_cmdline_user_args().has("--rendered"):
 		if DisplayServer.get_name() == "headless":
 			_check("rendered_backend", false, "--rendered requires a window and GPU; the headless renderer supplies no pixels")
@@ -588,8 +591,18 @@ func _check_data_only() -> void:
 	var styles: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(base + "construction_styles.json"))
 	var looks: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(base + "material_looks.json"))
 	var defaults: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(base + "category_defaults.json"))
-	for m: Variant in fixture.get("materials", []):
-		(looks["materials"] as Array).append(m)
+	var additions: Dictionary = {}
+	for m: Dictionary in fixture.get("materials", []):
+		additions[str(m["id"])] = m
+	var original: Dictionary = looks.duplicate(true)
+	var extended: Dictionary = ArtData.material_looks(looks, additions)
+	_check("data_only_looks_preserve_import", looks == original and extended["materials"].size() == looks["materials"].size() + additions.size(), "authored material additions leave the pinned document unchanged")
+	var existing: Dictionary = original["materials"][0]
+	var tint: Dictionary = {"dL": -25, "da": 12, "db": 18}
+	var overridden: Dictionary = ArtData.material_looks(original, {str(existing["id"]): {"tint": tint}})
+	var first: Dictionary = overridden["materials"][0]
+	_check("data_only_looks_override_keeps_identity", overridden["materials"].size() == original["materials"].size() and first["id"] == existing["id"] and first["sim_id"] == existing["sim_id"] and first["category"] == existing["category"] and first["tint"] == tint and original == looks, "an existing material gains a tint without changing identity or its source")
+	looks = extended
 	var added: Dictionary = fixture.get("blueprints", {})
 	for s: Variant in styles.get("styles", []):
 		var d: Dictionary = s
@@ -1038,3 +1051,36 @@ func _check_water_steps(layer: Node, map: GroundBaker.GroundMap, size: int, chun
 						worst = maxi(worst, _longest_step_run(img, start, (along - run_start) * TILE, vertical))
 						run_start = -1
 	_check("water_edges_not_square", runs > 0 and worst <= 24, "%d water-edge runs in %d river chunks (composited over the darkened water): longest identical luminance step run %d px (bar 24)" % [runs, mini(6, chunks.size()), worst])
+
+
+# Exercise the same parameter reload used by F12 against already-warm material consumers.
+func _check_material_reload(layer: Node) -> void:
+	var original_path: String = ArtData.params_path
+	var original: Dictionary = ArtData.params().duplicate(true)
+	var look: Dictionary = (layer.get("_resolver") as MaterialResolver).materials[0]
+	var key: String = str(look["id"])
+	var before: Color = ItemIcons.material_color(key)
+	var old_resolver: MaterialResolver = SiteGhost.resolver()
+	var changed: Dictionary = original.duplicate(true)
+	var additions: Dictionary = changed.get("material_looks", {}).duplicate(true)
+	var tint: Dictionary = {"dL": -25.0, "da": 12.0, "db": 18.0}
+	additions[key] = {"tint": tint}
+	changed["material_looks"] = additions
+	var temporary: String = "user://c2-material-reload-%d.json" % OS.get_process_id()
+	var file: FileAccess = FileAccess.open(temporary, FileAccess.WRITE)
+	_check("material_reload_fixture", file != null, "isolated temporary render parameters")
+	if file == null: return
+	file.store_string(JSON.stringify(changed))
+	file.close()
+	ArtData.params_path = temporary
+	_check("material_reload_accepted", ArtData.reload_params(), "the ordinary F12 reload accepts changed authored tint")
+	await process_frame
+	await process_frame
+	var current: MaterialResolver = layer.get("_resolver") as MaterialResolver
+	_check("material_reload_all_consumers", current.material(key).get("tint", {}) == tint and SiteGhost.resolver() != old_resolver and SiteGhost.resolver().material(key).get("tint", {}) == tint and ItemIcons.material_color(key) != before, JSON.stringify({"ground_tint": current.material(key).get("tint", {}), "preview_tint": SiteGhost.resolver().material(key).get("tint", {}), "preview_replaced": SiteGhost.resolver() != old_resolver, "before": str(before), "after": str(ItemIcons.material_color(key)), "params_version": ArtData.params_version(), "ground_version": layer.get("_wall_cache_version"), "processing": layer.is_processing(), "can_process": layer.can_process()}))
+	ArtData.params_path = original_path
+	_check("material_reload_restore", ArtData.reload_params(), "restore authored parameters")
+	await process_frame
+	await process_frame
+	_check("material_reload_original_color", ItemIcons.material_color(key).is_equal_approx(before), "the restored item appearance matches its original color")
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(temporary))

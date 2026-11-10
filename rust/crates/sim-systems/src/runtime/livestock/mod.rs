@@ -53,6 +53,40 @@ pub fn day(res: &SimResources) -> u32 {
     u32::try_from(crate::runtime::resource_regen::day_index(res)).unwrap_or(u32::MAX)
 }
 
+/// Restore the derived product cooldown index after chronicle and livestock load.
+pub fn rebuild_product_cache(res: &mut SimResources) {
+    res.livestock.wool_last_day = wool_days(res);
+}
+
+fn wool_days(res: &SimResources) -> BTreeMap<u32, u32> {
+    res.livestock
+        .witnesses
+        .iter()
+        .filter_map(|(&index, witness)| {
+            let LivestockEvent::Milk { product, .. } = &witness.event else {
+                return None;
+            };
+            let wool = witness
+                .species
+                .definition()
+                .tameable
+                .as_ref()?
+                .products
+                .wool
+                .as_ref()?;
+            if product.item.kind != wool.item {
+                return None;
+            }
+            let entry = res.chronicle.entry(index)?;
+            let day = u32::try_from(crate::runtime::resource_regen::day_index_at(
+                res, entry.tick,
+            ))
+            .unwrap_or(u32::MAX);
+            Some((witness.livestock, day))
+        })
+        .collect()
+}
+
 /// The next usable witness index; call before any irreversible physical commit.
 pub fn next_event_index(res: &SimResources) -> Option<u32> {
     u32::try_from(res.chronicle.len())
@@ -71,6 +105,15 @@ pub(crate) fn emit_event(
     let actual = res
         .chronicle
         .push_caused(entry, Some(CauseRef::Livestock { witness: index }));
+    if matches!(&witness.event, LivestockEvent::Milk { product, .. }
+        if witness.species.definition().tameable.as_ref()
+            .and_then(|p| p.products.wool.as_ref())
+            .is_some_and(|wool| wool.item == product.item.kind))
+    {
+        res.livestock
+            .wool_last_day
+            .insert(witness.livestock, day(res));
+    }
     res.livestock.witnesses.insert(actual, witness);
     res.livestock.touch();
     actual

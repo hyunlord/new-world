@@ -1,0 +1,24 @@
+// C2 initial geological design values; balance work is deferred.
+(schema_version:1,outcrops:[
+    (identity:(code:1,id:"copper_outcrop",name_key:"OUTCROP_COPPER",serde_name:"CopperOutcrop",serde_aliases:[],resolver_aliases:[]),
+     category:"ore",tags:["surface_ore"],status:Connected,debt:None,
+     origin:(climate:[Mild,Neutral,Harsh],terrain:[hill,mountain],elevation:None,per_world:(1, 3),cluster:(1, 3)),
+     // Independent keyed admission: connected copper is present when habitat is reachable.
+     presence_permille:1000,camp_radius:60,units:24,material:"copper_ore",yield_item:"copper_ore",
+     knowledge:"prospecting",quarry_knowledge:"stone_quarrying",reveal_radius:4,quarry_radius:1,
+     art:Some((shape:Ore,tint_material:"copper_ore")),glyph:"Cu"),
+    (identity:(code:2,id:"tin_outcrop",name_key:"OUTCROP_TIN",serde_name:"TinOutcrop",serde_aliases:[],resolver_aliases:[]),
+     category:"ore",tags:["surface_ore"],status:Connected,debt:None,
+     origin:(climate:[Mild,Neutral,Harsh],terrain:[hill,mountain],elevation:None,per_world:(0, 1),cluster:(1, 2)),
+     // Independent keyed world admission; tin's 0..1 count and 500 permille give 25% intended presence.
+     presence_permille:500,camp_radius:60,units:24,material:"tin_ore",yield_item:"tin_ore",
+     knowledge:"prospecting",quarry_knowledge:"stone_quarrying",reveal_radius:4,quarry_radius:1,
+     art:Some((shape:Ore,tint_material:"tin_ore")),glyph:"Sn"),
+    (identity:(code:3,id:"iron_outcrop",name_key:"OUTCROP_IRON",serde_name:"IronOutcrop",serde_aliases:[],resolver_aliases:[]),
+     category:"ore",tags:["surface_ore"],status:Inert,debt:Some("C3: iron mining and smelting"),
+     origin:(climate:[Mild,Neutral,Harsh],terrain:[hill,mountain],elevation:None,per_world:(1, 2),cluster:(1, 3)),
+     // Inert iron never populates; these values are reserved for C3.
+     presence_permille:1000,camp_radius:60,units:24,material:"iron_ore",yield_item:"iron_ore",
+     knowledge:"prospecting",quarry_knowledge:"stone_quarrying",reveal_radius:4,quarry_radius:1,
+     art:Some((shape:Ore,tint_material:"iron_ore")),glyph:"Fe"),
+])

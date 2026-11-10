@@ -188,6 +188,7 @@ static func condition(locale: Node, node: Dictionary, i: int) -> String:
 			return trf(locale, COND_KEYS[2], {"node": with_object(locale, node_name(locale, node_id(name))), "percent": percent})
 		3: return trf(locale, COND_KEYS[3], {"amount": amount})
 		4: return trf(locale, "TECH_COND_PRACTICE_FMT", {"skill": EconomyText.work(locale, name), "amount": amount})
+		5: return trf(locale, "C2_COND_TRADES_FMT", {"amount": amount})
 	return ltr(locale, "UI_UNKNOWN")
 
 

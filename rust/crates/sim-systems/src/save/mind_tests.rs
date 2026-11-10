@@ -152,6 +152,8 @@ fn invalid_saved_policy_is_rejected_before_registration() {
         processing: &body.processing,
         buildings: &body.buildings,
         livestock: &body.livestock,
+        neighbour_upper: &body.neighbour_upper,
+        ore: &body.ore,
     })
     .expect("malformed fixture");
     let mut corrupt = MAGIC.to_vec();
@@ -405,7 +407,10 @@ fn switch_v11_bytes(engine: &mut SimEngine) -> Vec<u8> {
             .filter(|entry| {
                 !matches!(
                     entry.0.as_str(),
-                    "FoodDailySystem" | "BuildingTemplateSystem" | "LivestockSystem"
+                    "FoodDailySystem"
+                        | "BuildingTemplateSystem"
+                        | "LivestockSystem"
+                        | "OreDiscoverySystem"
                 )
             })
             .collect(),
@@ -470,7 +475,7 @@ fn switch_v11_colony_migrates_only_the_legacy_decision_slot() {
     assert!(!old.systems.iter().any(|(name, _)| {
         matches!(
             name.as_str(),
-            "FoodDailySystem" | "BuildingTemplateSystem" | "LivestockSystem"
+            "FoodDailySystem" | "BuildingTemplateSystem" | "LivestockSystem" | "OreDiscoverySystem"
         )
     }));
     let retained: Vec<_> = old
@@ -493,7 +498,10 @@ fn switch_v11_colony_migrates_only_the_legacy_decision_slot() {
         .filter(|(name, _)| {
             !matches!(
                 name.as_str(),
-                "FoodDailySystem" | "BuildingTemplateSystem" | "LivestockSystem"
+                "FoodDailySystem"
+                    | "BuildingTemplateSystem"
+                    | "LivestockSystem"
+                    | "OreDiscoverySystem"
             )
         })
         .collect();

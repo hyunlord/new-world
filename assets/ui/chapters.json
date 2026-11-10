@@ -78,8 +78,8 @@
     },
     {
       "id": "neolithic_village",
-      "number": 6,
-      "title_key": "LOOP_CH5_TITLE",
+      "number": 0,
+      "title_key": "C2_NEO_MILESTONE_TITLE",
       "year_hint_key": "LOOP_CH5_YEAR",
       "conditions": [
         {"id": "era", "fact": "era_progress_permille", "threshold": 600, "text_key": "LOOP_CH5_COND_ERA"},
@@ -87,6 +87,40 @@
       ],
       "reward_text_key": "LOOP_CH5_REWARD",
       "next_preview_key": "LOOP_CH5_NEXT"
+    },
+    {
+      "id": "first_copper",
+      "number": 6,
+      "title_key": "C2_CH6_TITLE",
+      "year_hint_key": "C2_CH6_YEAR",
+      "conditions": [
+        {
+          "id": "smelted",
+          "fact": "first_copper_ingot",
+          "text_key": "C2_CH6_COND"
+        }
+      ],
+      "locked": false,
+      "unlock_fact": "first_copper_ingot",
+      "reward_text_key": "C2_CH6_REWARD",
+      "next_preview_key": "C2_CH6_NEXT"
+    },
+    {
+      "id": "bronze_village",
+      "number": 7,
+      "title_key": "C2_CH7_TITLE",
+      "year_hint_key": "C2_CH7_YEAR",
+      "conditions": [
+        {
+          "id": "used",
+          "fact": "first_bronze_tool_used",
+          "text_key": "C2_CH7_COND"
+        }
+      ],
+      "locked": false,
+      "unlock_fact": "first_bronze_tool_used",
+      "reward_text_key": "C2_CH7_REWARD",
+      "next_preview_key": "C2_CH7_NEXT"
     }
   ]
 }

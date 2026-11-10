@@ -98,7 +98,7 @@ func prepare(dto: Dictionary, selected: Dictionary) -> Dictionary:
 		if not found:
 			return {"ok": false, "error": "Missing animal category fallback: " + str(animal["category"])}
 	var labels: Array[String] = []
-	for family: String in ["items", "materials", "blueprints", "recipes", "knowledge", "pressures", "animals"]:
+	for family: String in ["items", "materials", "blueprints", "recipes", "knowledge", "pressures", "animals", "outcrops"]:
 		for row: Dictionary in dto.get(family, []):
 			labels.append(str(row["name_key"]))
 			if not str(row.get("material_format_key", "")).is_empty():

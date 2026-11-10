@@ -26,5 +26,7 @@ pub(super) fn decode_body(payload: &[u8]) -> Result<super::Body, super::SaveErro
         processing: Default::default(),
         buildings: Default::default(),
         livestock: Default::default(),
+        neighbour_upper: Default::default(),
+        ore: Default::default(),
     })
 }

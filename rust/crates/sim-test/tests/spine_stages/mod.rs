@@ -1,5 +1,6 @@
 //! Sequential chain stages, operating on the same live production engine.
 mod history;
+mod mud_bricks;
 use super::spine_support::*;
 use sim_core::chronicle::CauseRef;
 use sim_core::colony::building_site::BuildCause;
@@ -149,43 +150,7 @@ pub fn upgrade_house(engine: &mut SimEngine, id: u32) {
     let original = engine.resources.colony.buildings.sites[&id].clone();
     let floors = engine.resources.tile_grid.floor_material.clone();
     let beds = engine.resources.colony.beds.clone();
-    let nodes: Vec<_> = engine
-        .resources
-        .colony
-        .nodes
-        .iter()
-        .filter(|(_, node)| node.kind == sim_core::colony::NodeKind::Boulder)
-        .map(|(&tile, _)| tile)
-        .filter(|&tile| sim_systems::commands::camp_reaches(&engine.resources, tile))
-        .take(16)
-        .collect();
-    assert!(!nodes.is_empty());
-    for tile in nodes {
-        command(
-            engine,
-            Command::DesignateQuarry {
-                x0: tile.0,
-                y0: tile.1,
-                x1: tile.0,
-                y1: tile.1,
-            },
-        );
-    }
-    until(engine, "stone from quarry jobs", |engine| {
-        engine
-            .resources
-            .colony
-            .ground_total(sim_core::colony::ItemKind::Stone)
-            >= 33
-            && sim_systems::runtime::building_templates::materials::available_materials(
-                &engine.world,
-                &engine.resources,
-            )
-            .get(&sim_core::colony::ItemKind::Stone)
-            .copied()
-            .unwrap_or(0)
-                >= 33
-    });
+    mud_bricks::craft(engine);
     sim_systems::runtime::building_templates::upgrade::check(&engine.world, &engine.resources, id)
         .expect("authoritative read-only upgrade admission");
     let needs = sim_systems::runtime::building_templates::upgrade::material_requirements(
@@ -194,7 +159,10 @@ pub fn upgrade_house(engine: &mut SimEngine, id: u32) {
         id,
     )
     .expect("changed wall costs");
-    assert_eq!(needs.get(&sim_core::colony::ItemKind::Stone), Some(&33));
+    assert_eq!(
+        needs.get(&sim_core::colony::ItemKind::from_name("mud_brick").expect("brick")),
+        Some(&33)
+    );
     assert!(
         !needs.contains_key(&sim_core::colony::ItemKind::Log),
         "retained doors, floor and beds must not be priced again"
@@ -215,8 +183,8 @@ pub fn upgrade_house(engine: &mut SimEngine, id: u32) {
         restored.current_tick(),
     )
     .expect("restored replacement provenance and old-wall witnesses");
-    until(engine, "stone house", |engine| complete(engine, id));
-    until(&mut restored, "restored stone house", |engine| {
+    until(engine, "mud-brick house", |engine| complete(engine, id));
+    until(&mut restored, "restored mud-brick house", |engine| {
         complete(engine, id)
     });
     assert_eq!(
@@ -235,7 +203,7 @@ pub fn upgrade_house(engine: &mut SimEngine, id: u32) {
     checkpoint(engine, "04upgraded", Some(id));
     assert_eq!(
         engine.resources.colony.buildings.sites[&id].template,
-        "stone_house"
+        "mud_brick_house"
     );
     assert_eq!(engine.resources.colony.beds, beds);
     assert_eq!(engine.resources.tile_grid.floor_material, floors);

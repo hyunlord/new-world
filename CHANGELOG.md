@@ -1,6 +1,24 @@
 # Changelog
 
-## C1-b — implemented, verification IN_PROGRESS, 2026-11-10 (not published)
+## C2-a — implementation IN_PROGRESS, 2026-11-10 (not published)
+
+### Added
+- Registry-backed surface ore origins and factual discovery, Bronze knowledge/items/recipes/templates, and data-only extension coverage. Mining and the full tin-to-bronze chain remain C2-b.
+- Authored animal silhouettes, juvenile scale and pen markers; recurring physical wool production reuses livestock jobs and ledger placement.
+- Content-sized Why panels with explicit proficiency/threshold text and domestic birth wording; native capture readiness checks wait for the actual completed minimap.
+
+### Changed
+- Typed256 knowledge masks preserve old ordinals and lower128 wire fields; format22 records ore and authoritative upper neighbour words. Genuine C1-b format21 input was preserved before editing.
+- Authored material-look overlays color new metal and mud-brick placeholders through the existing renderer without modifying pinned imported art.
+- Frozen prechecks precede every full gate; the start C1-b binaries remain both smoke comparisons' BASE. Exact publication receipts are external and remain pending.
+
+### Removed
+- No content family or historical fixture is removed. The128-node capacity ceiling is replaced without renumbering.
+
+## C1-b — published 4a44336e7, 2026-11-10
+
+### Publication
+- Published exact `4a44336e7782f2b27615d942b5cd54dbfee89406` through v8/wip then v8/main after B4 full49/49 PASS. External C1-b-publication.json binds the gate and remote SHA checks. The focused/pending statements below are retained historical checkpoints.
 
 ### Added
 - Data-driven livestock sidecar, ordinary capture/milk/slaughter jobs, physical pen feeding, biological age, breeding and typed immutable event causes. One colony-only system reuses existing work, reservations and atomic product placement.

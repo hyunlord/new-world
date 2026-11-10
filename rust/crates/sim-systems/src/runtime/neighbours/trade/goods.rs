@@ -1,6 +1,7 @@
 //! Fresh generation inputs and authored-order goods selection; no persistent state.
 use hecs::World;
 use sim_core::colony::content::Catalog;
+use sim_core::colony::knowledge::KnowledgeMask;
 use sim_core::colony::knowledge::{bit, day_of, Knowledge};
 use sim_core::colony::neighbours::Goods;
 use sim_core::colony::ItemKind;
@@ -13,9 +14,9 @@ use sim_engine::SimResources;
 #[derive(Debug, Clone, Copy)]
 pub struct GoodsInputs {
     /// Knowledge practiced by the source neighbour.
-    pub known: u128,
+    pub known: KnowledgeMask,
     /// Historical all-Knowledge practice mask, used only by legacy policy.
-    pub legacy_practice: u128,
+    pub legacy_practice: KnowledgeMask,
     /// Current live adult practitioner counts by knowledge ID.
     pub practitioners: [u32; sim_core::colony::knowledge::MAX_NODES],
     /// Actual stored era progress at generation.
@@ -25,8 +26,8 @@ pub struct GoodsInputs {
 impl Default for GoodsInputs {
     fn default() -> Self {
         Self {
-            known: 0,
-            legacy_practice: 0,
+            known: KnowledgeMask::ZERO,
+            legacy_practice: KnowledgeMask::ZERO,
             practitioners: [0; sim_core::colony::knowledge::MAX_NODES],
             progress_permille: 0,
         }
@@ -45,7 +46,7 @@ pub struct WeightedGoods {
 }
 
 /// Count current adult holders whose proficiency and inclusive day recency meet the rules.
-pub fn generation_inputs(world: &World, res: &SimResources, known: u128) -> GoodsInputs {
+pub fn generation_inputs(world: &World, res: &SimResources, known: KnowledgeMask) -> GoodsInputs {
     let mut inputs = GoodsInputs {
         known,
         legacy_practice: super::colony_practice(world),
@@ -173,7 +174,13 @@ pub fn draw_goods(seed: u64, rule: &NeighbourRule, id: u32, table: &[WeightedGoo
 }
 
 /// Legacy pure entry point: absent policy uses the saved rule's historical weights.
-pub fn goods(seed: u64, rule: &NeighbourRule, id: u32, known: u128, practice: u128) -> Vec<Goods> {
+pub fn goods(
+    seed: u64,
+    rule: &NeighbourRule,
+    id: u32,
+    known: KnowledgeMask,
+    practice: KnowledgeMask,
+) -> Vec<Goods> {
     let catalog = sim_core::colony::content::installed_or_bundled();
     let entries = sim_core::rules::neighbour_data().map_or(&[][..], |data| data.goods.as_slice());
     let inputs = GoodsInputs {

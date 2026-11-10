@@ -68,9 +68,10 @@ pub struct Neighbour {
     pub population: u16,
     /// Its attitude toward the colony, 0–100 (starts 40–60).
     pub attitude: u8,
-    /// The knowledge nodes it knows (bit `i` = node `i`).
+    /// The knowledge nodes it knows (bit `i` = node `i`). Binary nested resources
+    /// retain low128; format22's explicit neighbour tail preserves the upper128.
     #[serde(with = "super::knowledge::mask_serde")]
-    pub known: u128,
+    pub known: super::knowledge::KnowledgeMask,
     /// The display day of the last contact (a wave or a caravan reached the hearth), if any.
     pub last_contact_day: Option<u32>,
 }

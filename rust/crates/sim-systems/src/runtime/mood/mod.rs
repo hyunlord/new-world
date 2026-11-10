@@ -558,6 +558,7 @@ pub fn check_cause(
         None => Err("no cause"),
         Some(CauseRef::Building { .. }) => Err("a building order is not a quarrel cause"),
         Some(CauseRef::Livestock { .. }) => Err("livestock evidence is not a quarrel cause"),
+        Some(CauseRef::Ore { .. }) => Err("ore evidence is not a quarrel cause"),
         Some(CauseRef::Entry(e)) => entry_ok(e, Expect::Any),
         Some(CauseRef::Modifier {
             code,
@@ -613,6 +614,11 @@ pub enum Link {
         /// Immutable original request identity.
         origin: sim_core::colony::BuildCause,
     },
+    /// Immutable deposit discovery evidence, terminal in the ore namespace.
+    Ore {
+        /// Original Chronicle index.
+        witness: u32,
+    },
     /// Immutable livestock evidence is a terminal fact, not a recursive entry edge.
     Livestock {
         /// Index in the livestock state's immutable witness map.
@@ -630,6 +636,10 @@ pub fn why_chain(chronicle: &sim_core::chronicle::Chronicle, index: u32) -> Vec<
         let next = match chronicle.cause_of(at) {
             None => break,
             Some(CauseRef::Entry(e)) => Some(e),
+            Some(CauseRef::Ore { witness }) => {
+                out.push(Link::Ore { witness });
+                None
+            }
             Some(CauseRef::Livestock { witness }) => {
                 out.push(Link::Livestock { witness });
                 None

@@ -1,8 +1,8 @@
-//! Ordinary capture, milking and explicit slaughter admission and provenance.
+//! Ordinary capture, recurring livestock yield and explicit slaughter admission.
 //! Reads: selected tameable data, live animals, knowledge, pens and navigation.
 //! Writes: ordinary jobs/reservations and accepted livestock command intents.
 use hecs::{Entity, World};
-use sim_core::colony::content::AnimalMechanic;
+use sim_core::colony::content::{AnimalMechanic, RecurringProduct, TameableDef};
 use sim_core::colony::knowledge::ContentStatus;
 use sim_core::colony::knowledge::{bit, defs, Knowledge};
 use sim_core::colony::livestock::{current_age, LivestockId, LivestockOrderCause};
@@ -36,12 +36,14 @@ pub struct CaptureOffer {
     pub from_tool: Option<Tile>,
 }
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-/// Read-only ready milk target.
+/// Read-only recurring-product target; serialized job kind remains compatible.
 pub struct MilkOffer {
     /// Domesticated animal identity.
     pub animal: LivestockId,
     /// Reachable physical gate.
     pub gate: Tile,
+    /// Selected authored recurring product.
+    pub item: ItemKind,
 }
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 /// Read-only target of an accepted slaughter command.
@@ -56,7 +58,7 @@ pub struct SlaughterOffer {
 pub enum Offer {
     /// Convert a real wild source.
     Capture(CaptureOffer),
-    /// Harvest one ready milk product.
+    /// Harvest one ready milk or wool product.
     Milk(MilkOffer),
     /// Execute an explicit slaughter order.
     Slaughter(SlaughterOffer),
@@ -65,17 +67,17 @@ pub enum Offer {
 pub(super) fn day(res: &SimResources) -> u32 {
     u32::try_from(crate::runtime::resource_regen::day_index(res)).unwrap_or(u32::MAX)
 }
-pub(super) fn knowledge_mask(name: &str) -> Option<u128> {
+pub(super) fn knowledge_mask(name: &str) -> Option<sim_core::colony::knowledge::KnowledgeMask> {
     Some(bit(defs().id_of(name)?))
 }
-fn practises(practice: u128, name: &str) -> bool {
+fn practises(practice: sim_core::colony::knowledge::KnowledgeMask, name: &str) -> bool {
     knowledge_mask(name).is_some_and(|m| m & practice == m)
 }
 
 /// Pure source admission, shared by ordinary jobs and a steward before its command.
 pub fn capture_candidate(
     res: &SimResources,
-    practice: u128,
+    practice: sim_core::colony::knowledge::KnowledgeMask,
     region: u32,
     pos: Tile,
     radius: u32,
@@ -141,17 +143,77 @@ pub fn capture_candidate(
 /// Pick an ordered capturable kid in stable distance/tile/id order.
 pub fn pick_capture(
     res: &SimResources,
-    practice: u128,
+    practice: sim_core::colony::knowledge::KnowledgeMask,
     region: u32,
     pos: Tile,
     radius: u32,
 ) -> Option<CaptureOffer> {
     capture_candidate(res, practice, region, pos, radius, true)
 }
-/// Pick a nourished ready female using its selected knowledge/product policy.
+fn recurring_product(policy: &TameableDef, item: ItemKind) -> Option<(&RecurringProduct, bool)> {
+    if let Some(milk) = policy
+        .products
+        .milk
+        .as_ref()
+        .filter(|milk| item == milk.item)
+    {
+        return Some((milk, false));
+    }
+    if let Some(wool) = policy
+        .products
+        .wool
+        .as_ref()
+        .filter(|wool| item == wool.item)
+    {
+        return Some((wool, true));
+    }
+    // Older saved milk jobs used the ordinary placeholder item.
+    policy
+        .products
+        .milk
+        .as_ref()
+        .filter(|_| item == ItemKind::role("default_placeholder"))
+        .map(|milk| (milk, false))
+}
+
+fn product_ready(
+    res: &SimResources,
+    animal: &sim_core::colony::livestock::Livestock,
+    item: ItemKind,
+) -> bool {
+    let Some(policy) = animal.species.definition().tameable.as_ref() else {
+        return false;
+    };
+    let Some((product, wool)) = recurring_product(policy, item) else {
+        return false;
+    };
+    let today = day(res);
+    if animal.hunger_days != 0
+        || animal.created_day >= today
+        || current_age(animal, res.current_tick, res.ticks_per_day) < policy.kid_age_days
+        || res.livestock.slaughter_orders.contains_key(&animal.id)
+    {
+        return false;
+    }
+    let last_day = if wool {
+        res.livestock
+            .wool_last_day
+            .get(&animal.id)
+            .copied()
+            .unwrap_or(animal.created_day)
+    } else {
+        if !animal.sex.female || !animal.milk_ready {
+            return false;
+        }
+        animal.last_milk_day
+    };
+    today.saturating_sub(last_day) >= product.every_days
+}
+
+/// Pick a nourished adult's ready product using its selected knowledge policy.
 pub fn pick_milk(
     res: &SimResources,
-    practice: u128,
+    practice: sim_core::colony::knowledge::KnowledgeMask,
     region: u32,
     pos: Tile,
     radius: u32,
@@ -161,18 +223,19 @@ pub fn pick_milk(
         .values()
         .filter_map(|a| {
             let p = a.species.definition().tameable.as_ref()?;
-            let milk = p.products.milk.as_ref()?;
-            if !a.sex.female
-                || !a.milk_ready
-                || a.hunger_days != 0
-                || a.created_day >= day(res)
-                || current_age(a, res.current_tick, res.ticks_per_day) < p.kid_age_days
-                || !practises(practice, &milk.requires_knowledge)
-                || res.livestock.slaughter_orders.contains_key(&a.id)
-                || res
-                    .colony
-                    .reservations
-                    .contains_key(&ReserveKey::Livestock(a.id))
+            let product = p
+                .products
+                .milk
+                .iter()
+                .chain(p.products.wool.iter())
+                .find(|product| {
+                    practises(practice, &product.requires_knowledge)
+                        && product_ready(res, a, product.item)
+                })?;
+            if res
+                .colony
+                .reservations
+                .contains_key(&ReserveKey::Livestock(a.id))
             {
                 return None;
             }
@@ -184,7 +247,11 @@ pub fn pick_milk(
                 .min_by_key(|t| (chebyshev(pos, *t), t.1, t.0))?;
             Some((
                 (chebyshev(pos, gate), gate.1, gate.0, a.id),
-                MilkOffer { animal: a.id, gate },
+                MilkOffer {
+                    animal: a.id,
+                    gate,
+                    item: product.item,
+                },
             ))
         })
         .min_by_key(|row| row.0)
@@ -193,7 +260,7 @@ pub fn pick_milk(
 /// Pick a living, explicitly ordered slaughter target.
 pub fn pick_slaughter(
     res: &SimResources,
-    _practice: u128,
+    _practice: sim_core::colony::knowledge::KnowledgeMask,
     region: u32,
     pos: Tile,
     radius: u32,
@@ -262,7 +329,11 @@ pub fn start(world: &mut World, res: &mut SimResources, entity: Entity, offer: O
     {
         return false;
     }
-    let practice = world.get::<&Knowledge>(entity).map_or(0, |k| k.practice());
+    let practice = world
+        .get::<&Knowledge>(entity)
+        .map_or(sim_core::colony::knowledge::KnowledgeMask::ZERO, |k| {
+            k.practice()
+        });
     let region = res.nav.region_of(pos);
     let current = match offer {
         Offer::Capture(_) => pick_capture(res, practice, region, pos, u32::MAX).map(Offer::Capture),
@@ -352,7 +423,7 @@ fn job_fields(res: &SimResources, offer: Offer) -> Option<JobFields> {
                 at: o.gate,
             },
             None,
-            placeholder,
+            o.item,
             0,
             o.gate,
         ),

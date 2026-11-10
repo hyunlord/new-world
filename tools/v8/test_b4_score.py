@@ -173,6 +173,99 @@ class ArithmeticTests(unittest.TestCase):
         self.assertEqual(score.rate(0, 8)["status"], "VALID")
 
 
+def mask_words(field, node):
+    words = [(1 << node) >> (64 * index) & (2**64 - 1) for index in range(4)]
+    return {field: words[0], **({field + "_high": words[1]} if words[1] else {}),
+            **({field + "_upper": words[2:]} if any(words[2:]) else {})}
+
+
+class KnowledgeMaskTests(unittest.TestCase):
+    def test_arithmetic_accepts_four_authored_eras_and_rejects_unknown(self):
+        data = arithmetic()
+        for era in ("paleolithic", "neolithic", "bronze", "iron"):
+            with self.subTest(era=era):
+                data["knowledge_nodes"][0]["era"] = era
+                score.validate(data, score.ARITHMETIC, "arithmetic manifest")
+        data["knowledge_nodes"][0]["era"] = "unknown"
+        with self.assertRaises(score.Invalid):
+            score.validate(data, score.ARITHMETIC, "arithmetic manifest")
+
+    def test_arithmetic_manifest_accepts_full_width_gate_and_node(self):
+        data = arithmetic()
+        data["primary_recipe"].update(mask_words("gate_mask", 255))
+        data["knowledge_nodes"][0]["node_id"] = 255
+        data["trade"]["goods"][0]["made_by"] = 255
+        suffixes = ("rng.rs", "colony/skills.rs", "colony/knowledge.rs", "colony/recipes.ron",
+                    "colony/items.ron", "colony/knowledge.ron", "colony/neighbours.ron", "stone/flint.ron",
+                    "jobs/craft.rs", "settlement/fire.rs", "neighbours/trade.rs")
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / "source.txt"
+            source.write_bytes(b"synthetic source\n")
+            data["sources"] = [{"commit": "0" * 40, "repo_path": "src/" + suffix,
+                                "line_start": 1, "line_end": 1,
+                                "sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+                                "artifact_path": source.name} for suffix in suffixes]
+            score.check_arithmetic(data, Path(directory))
+
+    def test_craft_coverage_and_cap_use_every_word(self):
+        for node in (32, 63, 64, 127, 128, 191, 192, 255):
+            with self.subTest(node=node):
+                row, data = event(level=6, proficiency=300), arithmetic()
+                row.update(mask_words("gate_mask", node))
+                row["gating_nodes"][0]["node_id"] = node
+                data["primary_recipe"].update(mask_words("gate_mask", node))
+                data["knowledge_nodes"][0]["node_id"] = node
+                result = score.check_craft(row, data, META)
+                self.assertEqual(result["quality"], 45)
+                self.assertEqual(result["cap"], 45)
+
+    def test_primary_gate_difference_in_upper_word_is_rejected(self):
+        row, data = event(level=6, proficiency=300), arithmetic()
+        row.update(mask_words("gate_mask", 255))
+        row["gating_nodes"][0]["node_id"] = 255
+        data["primary_recipe"].update(mask_words("gate_mask", 128))
+        data["knowledge_nodes"][0]["node_id"] = 255
+        with self.assertRaisesRegex(score.Invalid, "primary recipe gate_mask mismatch"):
+            score.check_craft(row, data, META)
+
+    def test_optional_words_remain_strict(self):
+        for field, value in [("gate_mask_high", True), ("gate_mask_high", 2**64),
+                             ("gate_mask_upper", None), ("gate_mask_upper", [1]),
+                             ("gate_mask_upper", [1, 2, 3]), ("gate_mask_upper", [True, 0]),
+                             ("gate_mask_upper", [-1, 0]), ("gate_mask_upper", [0, 2**64])]:
+            row = event()
+            row[field] = value
+            with self.subTest(field=field, value=value), self.assertRaises(score.Invalid):
+                score.check_craft(row, arithmetic(), META)
+
+    def test_caravan_known_and_practice_use_every_word(self):
+        for node in (63, 64, 127, 128, 191, 192, 255):
+            for practiced in (False, True):
+                with self.subTest(node=node, practiced=practiced):
+                    data = arithmetic()
+                    data["knowledge_nodes"][0]["node_id"] = node
+                    goods = [{"authored_index": 0, "item_code": 5, "made_by": node,
+                              "tag": "lacked", "count_min": 1, "count_max": 1},
+                             {"authored_index": 1, "item_code": 5, "made_by": None,
+                              "tag": "staple", "count_min": 1, "count_max": 1}]
+                    data["trade"].update(goods=goods, stacks_min=1, stacks_max=1,
+                                         quality_min=20, quality_max=20)
+                    eligible = [{**{k: v for k, v in good.items() if k != "tag"},
+                                 "classification": good["tag"],
+                                 "weight": 1 if good["tag"] == "staple" else 3}
+                                for good in goods if not practiced or good["tag"] == "staple"]
+                    row = {"caravan_id": 1, "neighbour_id": 1, "executed_tick": 1440,
+                           "policy": "old_3_1", **mask_words("neighbour_known_mask", node),
+                           "old_all_knowledge_practice_mask": 0, "tech_progress_permille": 0,
+                           "practice_days": 6, "practitioner_rows": [{"node_id": node, "count": 0}],
+                           "practitioner_inputs": [], "eligible_rows": eligible,
+                           "initial_goods": [{"item_code": 5, "count": 1, "quality": 20}]}
+                    if practiced:
+                        row.update(mask_words("old_all_knowledge_practice_mask", node))
+                    result = score.check_caravan(row, 0, data, META)
+                    self.assertEqual(result["total_weight"], 1 if practiced else 4)
+
+
 class NaturalTests(unittest.TestCase):
     def check(self, report):
         return score.check_natural(report, arithmetic(), META, HASH, require_steward=False)
@@ -304,7 +397,7 @@ class FixtureTests(unittest.TestCase):
         result = score.check_craft_fixture(fixture, arithmetic(), META, HASH, [0])
         self.assertTrue(result["pass"])
         self.assertEqual(result["completions"], 4)
-        raw = {key: fixture["rows"][0][key] for key in score.CRAFT}
+        raw = {key: fixture["rows"][0][key] for key in score.CRAFT if key in fixture["rows"][0]}
         with self.assertRaises(score.Invalid):
             score.check_craft(raw, arithmetic(), META)
 

@@ -165,7 +165,7 @@ func _card(row: Dictionary, waves: Array[Dictionary], caravans: Array[Dictionary
 	var rumour_head: Label = _line(box, NeighbourText.ltr(_locale, "M55_NB_RUMOUR_HEAD"), TEXT, lines)
 	rumour_head.theme_type_variation = &"Heading"
 	var names: Array[String] = []
-	for node: int in NeighbourText.rumoured_nodes(int(row["rumoured"]), int(row.get("rumoured_high", 0))):
+	for node: int in NeighbourText.rumoured_nodes(int(row["rumoured"]), int(row.get("rumoured_high", 0)), int(row.get("rumoured_upper_low", 0)), int(row.get("rumoured_upper_high", 0))):
 		names.append(KnowledgeText.node_name(_locale, node))
 	_line(box, ", ".join(names) if not names.is_empty() else NeighbourText.ltr(_locale, "M55_NB_RUMOUR_NONE"), MUTED, lines)
 	_card_texts.append(" | ".join(lines))

@@ -48,9 +48,13 @@ pub struct CaravanGeneration {
     pub neighbour_known_mask: u64,
     #[serde(skip_serializing_if = "super::types::zero_word")]
     pub neighbour_known_mask_high: u64,
+    #[serde(skip_serializing_if = "super::types::zero_upper")]
+    pub neighbour_known_mask_upper: [u64; 2],
     pub old_all_knowledge_practice_mask: u64,
     #[serde(skip_serializing_if = "super::types::zero_word")]
     pub old_all_knowledge_practice_mask_high: u64,
+    #[serde(skip_serializing_if = "super::types::zero_upper")]
+    pub old_all_knowledge_practice_mask_upper: [u64; 2],
     pub tech_progress_permille: u16,
     pub practice_days: u64,
     pub practitioner_rows: Vec<PractitionerRow>,
@@ -129,7 +133,9 @@ pub fn capture(e: &SimEngine, id: u32, config: &Config) -> Result<CaravanGenerat
         .world
         .query::<&Knowledge>()
         .iter()
-        .fold(0, |mask, (_, k)| mask | k.practice());
+        .fold(knowledge::KnowledgeMask::ZERO, |mask, (_, k)| {
+            mask | k.practice()
+        });
     let window = sim_systems::runtime::knowledge::rule(r).map_or(0, |k| k.practice_days);
     let today = knowledge::day_of(r.current_tick);
     let mut inputs: Vec<_> = e
@@ -224,10 +230,12 @@ pub fn capture(e: &SimEngine, id: u32, config: &Config) -> Result<CaravanGenerat
         neighbour_id: c.neighbour,
         executed_tick: r.current_tick,
         policy: config.manifest.policy,
-        neighbour_known_mask: known as u64,
-        neighbour_known_mask_high: (known >> 64) as u64,
-        old_all_knowledge_practice_mask: practice as u64,
-        old_all_knowledge_practice_mask_high: (practice >> 64) as u64,
+        neighbour_known_mask: known.words()[0],
+        neighbour_known_mask_high: known.words()[1],
+        neighbour_known_mask_upper: known.upper(),
+        old_all_knowledge_practice_mask: practice.words()[0],
+        old_all_knowledge_practice_mask_high: practice.words()[1],
+        old_all_knowledge_practice_mask_upper: practice.upper(),
         tech_progress_permille: r.colony.tech.progress_permille,
         practice_days: window,
         practitioner_rows: counts,
@@ -249,8 +257,10 @@ mod c1_json_tests {
             policy: Policy::Old3_1,
             neighbour_known_mask: u64::MAX,
             neighbour_known_mask_high: 0,
+            neighbour_known_mask_upper: [0, 0],
             old_all_knowledge_practice_mask: u64::MAX,
             old_all_knowledge_practice_mask_high: 0,
+            old_all_knowledge_practice_mask_upper: [0, 0],
             tech_progress_permille: 0,
             practice_days: 1,
             practitioner_rows: vec![],

@@ -2,19 +2,19 @@
 use std::collections::BTreeMap;
 use std::fmt;
 
-use super::{bit, Channel, Gate, KnowledgeDefs, Lore, MAX_NODES};
+use super::{bit, Channel, Gate, KnowledgeDefs, KnowledgeMask, Lore, MAX_NODES};
 use crate::colony::content::Catalog;
 use crate::colony::{BlueprintKind, Designation, RecipeKind};
 
 /// Practitioner masks for recipes, construction, designations and channels.
 #[derive(Clone, Default, PartialEq, Eq)]
 pub struct Gates {
-    recipe: BTreeMap<u32, u128>,
-    build: BTreeMap<u32, u128>,
-    designation: Vec<u128>,
-    apprenticeship: u128,
-    oral: u128,
-    lore: [u128; 3],
+    recipe: BTreeMap<u32, KnowledgeMask>,
+    build: BTreeMap<u32, KnowledgeMask>,
+    designation: Vec<KnowledgeMask>,
+    apprenticeship: KnowledgeMask,
+    oral: KnowledgeMask,
+    lore: [KnowledgeMask; 3],
 }
 
 impl fmt::Debug for Gates {
@@ -34,12 +34,18 @@ impl fmt::Debug for Gates {
 /// Validate family membership and derive masks without reading installed state.
 pub(crate) fn gates_with_catalog(defs: &KnowledgeDefs, catalog: &Catalog) -> Result<Gates, String> {
     if defs.nodes.len() > MAX_NODES {
-        return Err("knowledge gates: more than 128 nodes".into());
+        return Err("knowledge gates: more than 256 nodes".into());
     }
     let mut masks = Gates {
-        recipe: catalog.recipes().map(|r| (r.identity.code, 0)).collect(),
-        build: catalog.blueprints().map(|b| (b.identity.code, 0)).collect(),
-        designation: vec![0; 8],
+        recipe: catalog
+            .recipes()
+            .map(|r| (r.identity.code, KnowledgeMask::ZERO))
+            .collect(),
+        build: catalog
+            .blueprints()
+            .map(|b| (b.identity.code, KnowledgeMask::ZERO))
+            .collect(),
+        designation: vec![KnowledgeMask::ZERO; 8],
         ..Gates::default()
     };
     for (index, node) in defs.nodes.iter().enumerate() {
@@ -84,38 +90,41 @@ pub(crate) fn gates_with_catalog(defs: &KnowledgeDefs, catalog: &Catalog) -> Res
 
 impl Gates {
     /// Required nodes for a registered recipe; foreign-catalog IDs require every bit.
-    pub fn recipe(&self, recipe: RecipeKind) -> u128 {
+    pub fn recipe(&self, recipe: RecipeKind) -> KnowledgeMask {
         self.recipe
             .get(&recipe.code())
             .copied()
-            .unwrap_or(u128::MAX)
+            .unwrap_or(KnowledgeMask::MAX)
     }
 
     /// Required nodes for a registered blueprint or workshop.
-    pub fn build(&self, kind: BlueprintKind) -> u128 {
-        self.build.get(&kind.code()).copied().unwrap_or(u128::MAX)
+    pub fn build(&self, kind: BlueprintKind) -> KnowledgeMask {
+        self.build
+            .get(&kind.code())
+            .copied()
+            .unwrap_or(KnowledgeMask::MAX)
     }
 
     /// Nodes gating work on a designation.
-    pub fn designation(&self, d: Designation) -> u128 {
+    pub fn designation(&self, d: Designation) -> KnowledgeMask {
         self.designation
             .get(usize::from(d.code()))
             .copied()
-            .unwrap_or(0)
+            .unwrap_or(KnowledgeMask::ZERO)
     }
 
     /// Required nodes for teaching at full fidelity.
-    pub const fn apprenticeship(&self) -> u128 {
+    pub const fn apprenticeship(&self) -> KnowledgeMask {
         self.apprenticeship
     }
 
     /// Required nodes for improved evening telling.
-    pub const fn oral(&self) -> u128 {
+    pub const fn oral(&self) -> KnowledgeMask {
         self.oral
     }
 
     /// Nodes standing for everyday lore.
-    pub const fn lore(&self, lore: Lore) -> u128 {
+    pub const fn lore(&self, lore: Lore) -> KnowledgeMask {
         self.lore[lore as usize]
     }
 }

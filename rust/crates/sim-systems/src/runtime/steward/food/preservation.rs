@@ -30,10 +30,10 @@ pub(super) fn budget(
     if !facts.preparing {
         return out;
     }
-    let practice = world
-        .query::<&Knowledge>()
-        .iter()
-        .fold(0, |mask, (_, k)| mask | k.practice());
+    let practice = world.query::<&Knowledge>().iter().fold(
+        sim_core::colony::knowledge::KnowledgeMask::ZERO,
+        |mask, (_, k)| mask | k.practice(),
+    );
     let mut outputs = BTreeSet::new();
     let recipes: Vec<_> = policy
         .recipes

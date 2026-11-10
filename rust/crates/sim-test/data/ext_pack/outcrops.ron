@@ -1,0 +1,8 @@
+// A new material, output and deposit kind resolved only from this selected pack.
+(schema_version:1,outcrops:[(
+identity:(code:65543,id:"test_outcrop",name_key:"EXT_ORE_OUTCROP",serde_name:"TestOutcrop",serde_aliases:[],resolver_aliases:[]),
+category:"ore",tags:["surface_ore"],status:Connected,debt:None,
+origin:(climate:[Mild,Neutral,Harsh],terrain:[plain,forest,hill,mountain],elevation:None,per_world:(1,1),cluster:(1,1)),
+presence_permille:1000,camp_radius:60,units:13,material:"test_ore",yield_item:"test_ore",
+knowledge:"prospecting",quarry_knowledge:"stone_quarrying",reveal_radius:3,quarry_radius:1,
+art:None,glyph:"X")])

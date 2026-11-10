@@ -56,6 +56,7 @@ pub(super) fn animal(c: &Catalog, raw: AnimalDef<String>) -> Result<AnimalDef, C
         origin: raw.origin,
         population: raw.population,
         tameable,
+        domestic_name_key: raw.domestic_name_key,
         art: raw.art,
         mechanic: raw.mechanic,
         huntable: raw.huntable,
@@ -91,7 +92,7 @@ fn resolve_tameable(
                 requires_knowledge: product.requires_knowledge,
             })
         };
-    Ok(TameableDef {
+    let resolved = TameableDef {
         capture_knowledge: raw.capture_knowledge,
         capture_tool: raw
             .capture_tool
@@ -117,7 +118,20 @@ fn resolve_tameable(
             meat: (item(&raw.products.meat.0, true)?, raw.products.meat.1),
             hide: (item(&raw.products.hide.0, false)?, raw.products.hide.1),
         },
-    })
+    };
+    if resolved.products.milk.is_some()
+        && resolved
+            .products
+            .wool
+            .as_ref()
+            .is_some_and(|wool| Some(wool.item) == c.item_role("default_placeholder"))
+    {
+        return Err(CatalogError::new(
+            context,
+            "wool output conflicts with legacy milk placeholder",
+        ));
+    }
+    Ok(resolved)
 }
 pub(super) fn pressure(c: &Catalog, raw: PressureDef<String>) -> Result<PressureDef, CatalogError> {
     validate_ecology::pressure(&raw)?;

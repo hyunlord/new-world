@@ -20,6 +20,15 @@ pub fn validate_source(
             .and_then(|i| resources.colony.command_log.get(i))
             .is_some_and(|record| record.result.accepted && record.tick <= tick),
         MindFactSource::Chronicle(cause) => match cause {
+            CauseRef::Ore { witness } => {
+                resources.ore.witnesses.get(&witness).is_some_and(|facts| {
+                    facts.tick <= tick
+                        && resources.chronicle.cause_of(witness) == Some(cause)
+                        && resources.chronicle.entry(witness).is_some_and(|entry| {
+                            entry.tick == facts.tick && entry.kind == ChronicleKind::OreDiscovered
+                        })
+                })
+            }
             CauseRef::Livestock { witness } => resources
                 .livestock
                 .witnesses

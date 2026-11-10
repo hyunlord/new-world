@@ -1,6 +1,7 @@
 //! Small standing cooking bills share one daily food budget and respect player edits.
 use super::FoodSummary;
 use hecs::World;
+use sim_core::colony::knowledge::KnowledgeMask;
 use sim_core::colony::knowledge::{self, Knowledge};
 use sim_core::colony::steward::{FoodPlan, Target};
 use sim_core::colony::{BillMode, ColonySite, Command, Job, JobKind, RecipeKind};
@@ -11,7 +12,7 @@ pub(super) fn has_practitioner(
     world: &World,
     res: &SimResources,
     recipe: &sim_core::colony::workshop::Recipe,
-    accepts: impl Fn(u128) -> bool,
+    accepts: impl Fn(KnowledgeMask) -> bool,
 ) -> bool {
     let gated = crate::runtime::knowledge::rule(res).is_some();
     let primary = knowledge::gates().recipe(recipe.id);
@@ -21,9 +22,9 @@ pub(super) fn has_practitioner(
         .iter()
         .any(|(_, (_, known))| {
             let practice = if gated {
-                known.map_or(0, |known| known.practice())
+                known.map_or(KnowledgeMask::ZERO, |known| known.practice())
             } else {
-                u128::MAX
+                KnowledgeMask::MAX
             };
             primary & !practice == 0 && accepts(practice)
         })

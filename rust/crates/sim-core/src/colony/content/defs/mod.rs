@@ -45,5 +45,7 @@ pub use plant::*;
 
 mod crop;
 pub use crop::*;
+mod outcrop;
+pub use outcrop::*;
 mod origin;
 pub use origin::*;

@@ -349,6 +349,7 @@ static func texture_variant_ids(bindings: Dictionary) -> Array[String]:
 ## Load resources through the ordinary cache; this deliberately does not claim to issue a GPU draw.
 static func warm_texture_variants(bindings: Dictionary, max_textures: int = 64, max_pixels: int = 4194304) -> Dictionary:
 	var started: int = Time.get_ticks_usec()
+	PlaceholderArt.warmup_catalog(TILE)
 	var ids: Array[String] = texture_variant_ids(bindings)
 	var requested: Array[String] = []
 	var missing: Array[String] = []

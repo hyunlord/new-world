@@ -1197,6 +1197,12 @@ impl WorldSimNode {
         ))
     }
 
+    /// C2: revealed surface deposits in stable tile order.
+    #[func]
+    fn get_outcrops(&self) -> VarDictionary {
+        super::ore::outcrops_to_dict(&self.engine.resources)
+    }
+
     /// C1: designate a real wild kid for ordinary physical capture.
     #[func]
     fn cmd_designate_capture(&mut self, animal: i64) -> VarDictionary {

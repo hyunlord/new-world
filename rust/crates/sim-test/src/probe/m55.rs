@@ -280,9 +280,12 @@ impl M55Watch {
 
 fn neighbour_json(n: &sim_core::colony::neighbours::Neighbour) -> Value {
     let mut row = json!({"id": n.id, "edge": n.edge.name(), "distance_days": n.distance_days,
-        "population": n.population, "attitude": n.attitude, "known": n.known as u64,
+        "population": n.population, "attitude": n.attitude, "known": n.known.words()[0],
         "last_contact_day": n.last_contact_day});
-    let high = (n.known >> 64) as u64;
+    if n.known.upper() != [0, 0] {
+        row["known_upper"] = json!(n.known.upper());
+    }
+    let high = n.known.words()[1];
     if high != 0 {
         row["known_high"] = json!(high);
     }
@@ -302,15 +305,21 @@ mod c1_json_tests {
             distance_days: 1,
             population: 1,
             attitude: 50,
-            known: u128::from(u64::MAX),
+            known: u128::from(u64::MAX).into(),
             last_contact_day: None,
         };
         let low = neighbour_json(&neighbour);
         assert_eq!(low["known"].as_u64(), Some(u64::MAX));
         assert!(low.get("known_high").is_none());
-        neighbour.known |= (1_u128 << 64) | (1_u128 << 127);
+        neighbour.known |=
+            sim_core::colony::knowledge::bit(64) | sim_core::colony::knowledge::bit(127);
         let high = neighbour_json(&neighbour);
         assert_eq!(high["known"].as_u64(), Some(u64::MAX));
         assert_eq!(high["known_high"].as_u64(), Some((1_u64 << 63) | 1));
+        assert!(high.get("known_upper").is_none());
+        neighbour.known |=
+            sim_core::colony::knowledge::bit(128) | sim_core::colony::knowledge::bit(255);
+        let full = neighbour_json(&neighbour);
+        assert_eq!(full["known_upper"], json!([1, 1_u64 << 63]));
     }
 }

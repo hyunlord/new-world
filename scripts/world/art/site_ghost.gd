@@ -35,6 +35,7 @@ static var _floors: Dictionary = {}
 static func _fresh() -> void:
 	if _params_version != ArtData.params_version():
 		_params_version = ArtData.params_version()
+		_resolver = null
 		_ghosts.clear()
 		_finished.clear()
 		_sets.clear()
@@ -44,6 +45,7 @@ static func _fresh() -> void:
 
 ## The shared material resolver (loaded once from the imported documents).
 static func resolver() -> MaterialResolver:
+	_fresh()
 	if _resolver == null:
 		_resolver = MaterialResolver.new()
 		_resolver.load_imported()
@@ -181,6 +183,7 @@ static func _wall_set(style: String) -> Dictionary:
 ## {row (tile y): {image: strip 64 px tall whose top is 16 px above the row, x0: the tile x of its left edge}}.
 ## Tiles may be anywhere; the bake runs in a local frame aligned to 4 tiles so textures keep their world phase.
 static func wall_rows(cells: Dictionary, doors: Dictionary) -> Dictionary:
+	_fresh()
 	if cells.is_empty():
 		return {}
 	var all: Dictionary = cells.duplicate()

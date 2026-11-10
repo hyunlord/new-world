@@ -147,6 +147,7 @@ fn slot_additions(buildings: bool) -> super::super::LegacySystemAdditions {
         steward: false,
         defence: false,
         food: false,
+        ore: false,
         diagnosis: false,
         buildings,
         livestock: false,
