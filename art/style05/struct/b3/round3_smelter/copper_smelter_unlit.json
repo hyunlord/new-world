@@ -1,0 +1,158 @@
+{
+  "record": {
+    "id": "copper_smelter_unlit",
+    "lane": "round3_smelter",
+    "era": "bronze",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c798-db13-7ea2-ac75-d0b60491c959/exec-0966aae9-c261-49a9-9679-9be2189fc77a.png",
+    "prompt": "Edit image1 into the UNLIT state of exactly this bronze-age copper furnace. Preserve exact rectangular battered shaft, narrow squared chimney, firing arch, clay tuyere connection, hide-and-timber bellows on right, every outer silhouette position, scale, proportions, colours and original upperleft daylight. Change ONLY the bright orange fire/embers inside the front opening to cold dark charcoal grey and remove warm orange spill inside its rim; preserve visible dark charcoal lumps. No flames or smoke anywhere. Do not change the body, open chimney or bellows. Ink-and-tone sepia fine2:1 line, restrained ochre wash with slight pigment variation,3 clay cracks,3 timbergrain marks,one3-mark / hatchgroup. True transparentRGBA, no backdrop/halo/ground/shadow/scenery/text. One isolated unlit furnace only; nativeheight40px within1x1tile, retain widthnear60px.",
+    "subject": null,
+    "references": [
+      "/Users/rexxa/.codex/generated_images/01a1c798-db13-7ea2-ac75-d0b60491c959/exec-e40a73f4-3513-4a8c-a88c-f728aa40d1a1.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png"
+    ],
+    "target_height": 40,
+    "projection_family": "copper_smelter",
+    "height_band": [
+      38,
+      42
+    ],
+    "height_band_reason": "Frozen A2 built furnace height band unchanged",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-10T22:45:00.518Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/B3/round3_smelter/raw/copper_smelter_unlit_try1.png",
+  "raw_sha256": "bdf1bdca98341b85229a9531a80c2768f6e4d8135385bf983e261e09ca5db688",
+  "references": [
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c798-db13-7ea2-ac75-d0b60491c959/exec-e40a73f4-3513-4a8c-a88c-f728aa40d1a1.png",
+      "sha256": "7c3131a36e8d88ee38dacdd722f34f771673451aa4dd768e9c5ea66c1110b83b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/B3/round3_smelter/normalized/copper_smelter_unlit_try1.png",
+  "normalized_sha256": "96fb0edf959b80b9bc67c7a4893333ebb6c94740e68ef09afe2446066da99af7",
+  "size": [
+    67,
+    48
+  ],
+  "anchor": [
+    33,
+    43
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (200, 94, 1391, 900)",
+    "uniform Lanczos scale: 0.04987531172069826",
+    "transparent 4px padding; source-canvas anchor: (33, 43)"
+  ],
+  "projection": {
+    "family": "copper_smelter",
+    "anchor": [
+      33,
+      43
+    ],
+    "height_band": [
+      38,
+      42
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1301,
+    "base_row": 43,
+    "base_error": 0,
+    "height": 40,
+    "gradient_x": -2.1401672025723473,
+    "gradient_y": -2.161415733982157,
+    "light_angle_degrees": 225.2830216891173,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/B3/round3_smelter/raw/copper_smelter_unlit_try1.png",
+    "sha256": "bdf1bdca98341b85229a9531a80c2768f6e4d8135385bf983e261e09ca5db688",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.2210168893592627,
+      "saturation_q25": 0.5760486614141375,
+      "saturation_q75": 0.6488551092155161,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.01293366877592434,
+      "foreground_pixels": 24403
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 254,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    20,
+    1506,
+    1000
+  ],
+  "raw_opaque_bbox": [
+    202,
+    96,
+    1389,
+    898
+  ],
+  "raw_faint_far_ratio": 0.0014763487447326251,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_CANDIDATE",
+  "failures": [],
+  "review": {
+    "score": 93,
+    "verdict": "pass",
+    "category_match": true,
+    "differences": [
+      "Rectangular shaft and dark lower firing arch replace the round pot silhouette.",
+      "The attached side tuyere and hide bellows remain visible at native1x; orange heat is confined to the lit arch."
+    ],
+    "suggestions": [],
+    "reasoning": "Both smelters read as a furnace assembly at native40px height while retaining restrained earth wash, warm ink, upper-left light and coherent lit/unlit geometry.",
+    "reviewer": "root independent from generation",
+    "board": "art/batch_b3/round3_smelter/old_new_1x.png"
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "replaces": {
+    "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+    "path": "art/style05/struct/a2/bronze/copper_smelter_unlit.png",
+    "sha256": "34220aa01a089c2d09289aab2c220cb9006fbebfa8b3757ea7b439d317b22fe4"
+  }
+}

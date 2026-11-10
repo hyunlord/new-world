@@ -1,0 +1,10 @@
+{
+  "authority": "Planner round3 note2026-11-11: copper smelter reads as clay pot at1x; furnace, tuyere/bellows and glow must read",
+  "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+  "replaces": ["art/style05/struct/a2/bronze/copper_smelter_lit.png", "art/style05/struct/a2/bronze/copper_smelter_unlit.png"],
+  "footprint": [1,1],
+  "height_band": [38,42],
+  "target_height": 40,
+  "numeric_gates": "Unchanged A2 buildings calibration and projection; uniform crop/Lanczos/padding only",
+  "composition": "Vertical battered rectangular clay furnace shaft, narrow chimney throat, broad front firing arch; prominent side horizontal clay tuyere connected to hide-and-timber bellows. Furnace body near40px high and bellows within1x1tile. Light upperleft; same body lit/unlit; orange core only lit."
+}

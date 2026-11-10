@@ -1,0 +1,158 @@
+{
+  "record": {
+    "id": "copper_smelter_lit",
+    "lane": "round3_smelter",
+    "era": "bronze",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c798-db13-7ea2-ac75-d0b60491c959/exec-e40a73f4-3513-4a8c-a88c-f728aa40d1a1.png",
+    "prompt": "WorldSim style05 bronze-age copper smelting FURNACE replacement for image1, which currently reads as a clay pot. Keep ink-and-tone medium and orange clay palette from image1; images2/3 lock rendering style only. Redesign as a compact vertical battered RECTANGULAR clay/mud-brick furnace shaft with flat broad front face, angular shoulders and a narrow squared chimney throat, NOT a round vessel. A large dark arched firing mouth occupies lower front; a strong orange-red ember core clearly fills it and casts a small warm light only onto its inner rim. At RIGHT a prominent horizontal clay tuyere visibly joins the furnace wall to a separate low hide-and-wood double bellows; two handle sticks and tan hide bag make air supply readable at64px. No large round bowl rim, cooking pot, handles on furnace, roof, workers, metal pipe, modern fittings. The furnace40px high at native64px tile; bellows to right within same tile-width, total silhouette near60px wide. Front3/4 about20degrees down; upperleft light, darker right face. Fine broken sepia pen outlines2:1 main/detail,3 short clay crack groups,3 broken timber grain accents, one group3 / hatches; broad restrained ochre wash with slight pigment variation, no speckles/dense crosshatching. TransparentRGBA margins, no ground patch, cast shadow, halo, scenery, text or grid. One isolated working/lit furnace only. Glow must read as orange inside mouth at1x.",
+    "subject": null,
+    "references": [
+      "/Users/rexxa/work/art-batch/A2/bronze/raw/smelter_lit_try1.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png"
+    ],
+    "target_height": 40,
+    "projection_family": "copper_smelter",
+    "height_band": [
+      38,
+      42
+    ],
+    "height_band_reason": "Frozen A2 built furnace height band unchanged",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-10T22:43:57.450Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/B3/round3_smelter/raw/copper_smelter_lit_try1.png",
+  "raw_sha256": "7c3131a36e8d88ee38dacdd722f34f771673451aa4dd768e9c5ea66c1110b83b",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A2/bronze/raw/smelter_lit_try1.png",
+      "sha256": "35d3652da6f782b8255d33290679ab2016d8e53eae7e78ae2fb8cb6775bc87f6"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/B3/round3_smelter/normalized/copper_smelter_lit_try1.png",
+  "normalized_sha256": "6aa6542405f0ac2c2802d6052e25a46705ac707ff6b63aded68bad42b28326bf",
+  "size": [
+    67,
+    48
+  ],
+  "anchor": [
+    33,
+    43
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (200, 95, 1389, 900)",
+    "uniform Lanczos scale: 0.049937578027465665",
+    "transparent 4px padding; source-canvas anchor: (33, 43)"
+  ],
+  "projection": {
+    "family": "copper_smelter",
+    "anchor": [
+      33,
+      43
+    ],
+    "height_band": [
+      38,
+      42
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1300,
+    "base_row": 43,
+    "base_error": 0,
+    "height": 40,
+    "gradient_x": -2.2912692926045017,
+    "gradient_y": -2.0377126623376625,
+    "light_angle_degrees": 221.64790803226904,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/B3/round3_smelter/raw/copper_smelter_lit_try1.png",
+    "sha256": "7c3131a36e8d88ee38dacdd722f34f771673451aa4dd768e9c5ea66c1110b83b",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.21756363956663438,
+      "saturation_q25": 0.6052371040610315,
+      "saturation_q75": 0.6795276148504973,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.01477603066764033,
+      "foreground_pixels": 24429
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    17,
+    1516,
+    1024
+  ],
+  "raw_opaque_bbox": [
+    202,
+    97,
+    1387,
+    898
+  ],
+  "raw_faint_far_ratio": 0.00408519224053671,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_CANDIDATE",
+  "failures": [],
+  "review": {
+    "score": 93,
+    "verdict": "pass",
+    "category_match": true,
+    "differences": [
+      "Rectangular shaft and dark lower firing arch replace the round pot silhouette.",
+      "The attached side tuyere and hide bellows remain visible at native1x; orange heat is confined to the lit arch."
+    ],
+    "suggestions": [],
+    "reasoning": "Both smelters read as a furnace assembly at native40px height while retaining restrained earth wash, warm ink, upper-left light and coherent lit/unlit geometry.",
+    "reviewer": "root independent from generation",
+    "board": "art/batch_b3/round3_smelter/old_new_1x.png"
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "replaces": {
+    "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+    "path": "art/style05/struct/a2/bronze/copper_smelter_lit.png",
+    "sha256": "8b13d194b2a6426bc6334b10c38f8b24b239e6e8b53802d3175a4661b16f2636"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "source_commit": "PENDING_ROOT_ASSET_COMMIT",
+  "files": [
+    {
+      "role": "structure",
+      "id": "copper_smelter_unlit",
+      "source": "art/style05/struct/b3/round3_smelter/copper_smelter_unlit.png",
+      "dest": "structures/b3/round3_smelter/copper_smelter_unlit.png"
+    },
+    {
+      "role": "structure",
+      "id": "copper_smelter_lit",
+      "source": "art/style05/struct/b3/round3_smelter/copper_smelter_lit.png",
+      "dest": "structures/b3/round3_smelter/copper_smelter_lit.png"
+    }
+  ],
+  "note": "Additional draft only; pin source commit and merge structure metadata. Not applied.",
+  "status": "DRAFT_NOT_APPLIED",
+  "operation": "replace_matching_A2_structure_rows",
+  "meta_sources": {
+    "structure": "art/batch_b3/round3_smelter/assets.json"
+  },
+  "merge_instruction": "Replace the two matching structure IDs and merge their geometry metadata into the existing structure adapter; preserve every unrelated A2 row. These are not duplicate append-only IDs."
+}

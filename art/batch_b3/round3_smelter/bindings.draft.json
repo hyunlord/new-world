@@ -1,0 +1,13 @@
+{
+  "symbolic_rows": [
+    {
+      "content_id": "smelter",
+      "binding_shape": {
+        "structure": "copper_smelter_unlit",
+        "working": "copper_smelter_lit"
+      }
+    }
+  ],
+  "runtime_rows_to_append": [],
+  "note": "Replaces A2 built smelter states; numeric runtime ID unverified; merge existing current bindings by importer."
+}

@@ -1,0 +1,13 @@
+{
+  "score": 93,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Rectangular shaft and dark lower firing arch replace the round pot silhouette.",
+    "The attached side tuyere and hide bellows remain visible at native1x; orange heat is confined to the lit arch."
+  ],
+  "suggestions": [],
+  "reasoning": "Both smelters read as a furnace assembly at native40px height while retaining restrained earth wash, warm ink, upper-left light and coherent lit/unlit geometry.",
+  "reviewer": "root independent from generation",
+  "board": "art/batch_b3/round3_smelter/old_new_1x.png"
+}

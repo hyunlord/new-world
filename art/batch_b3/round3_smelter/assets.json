@@ -1,0 +1,40 @@
+{
+  "assets": [
+    {
+      "id": "copper_smelter_unlit",
+      "path": "art/style05/struct/b3/round3_smelter/copper_smelter_unlit.png",
+      "width": 67,
+      "height": 48,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        33,
+        43
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "B3_ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "96fb0edf959b80b9bc67c7a4893333ebb6c94740e68ef09afe2446066da99af7"
+    },
+    {
+      "id": "copper_smelter_lit",
+      "path": "art/style05/struct/b3/round3_smelter/copper_smelter_lit.png",
+      "width": 67,
+      "height": 48,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        33,
+        43
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "B3_ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "6aa6542405f0ac2c2802d6052e25a46705ac707ff6b63aded68bad42b28326bf"
+    }
+  ]
+}
