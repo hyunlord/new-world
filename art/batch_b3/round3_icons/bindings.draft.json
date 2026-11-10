@@ -1,0 +1,30 @@
+{
+  "status": "draft_not_applied",
+  "ui_knowledge": {
+    "mud_brick_house": {
+      "asset": "tech_mud_brick_house",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "chief_hall": {
+      "asset": "tech_chief_hall",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    }
+  },
+  "metadata": "art/batch_b3/round3_icons/manifest.json",
+  "states": "Reuse A4 state_variants.json stable/endangered/unknown/inert treatments",
+  "operation": "replace_matching_A4_ui_knowledge_rows"
+}

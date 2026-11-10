@@ -1,0 +1,420 @@
+{
+  "schema_version": 1,
+  "assets": [
+    {
+      "id": "mud_brick_house",
+      "family": "icon",
+      "era": "bronze",
+      "path": "art/style05/batch_b3/icons/mud_brick_house-01.png",
+      "sha256": "e0794a19bcd8c57e025eb9b8fa831603336e15b7377fc9efdd2b71604fd72472",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "status": "SELECTED_CANDIDATE_NOT_GAME_IMPORTED",
+      "attempt": 1,
+      "replaces": {
+        "branch": "v8/art-batch-a4",
+        "commit": "6e8576a8247378d77eac8c1bee64c37598be69f3",
+        "path": "art/style05/techmap/icons/bronze/mud_brick_house.png",
+        "sha256": "ccff3f3bf11bb27578330255809f37d5da427d16dcd2bad2381a8a1331bdb9af"
+      },
+      "generation_record": "/Users/rexxa/work/art-batch/B3/round3_icons/records/mud_brick_house_try1.json",
+      "material": "mud brick wall; reed/thatch roof and timber, no fired roof tiles",
+      "self_review": {
+        "score": 93,
+        "verdict": "pass",
+        "medium": 5,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "reason": "Broad roof covers entire dwelling/hall; earthen wall and dark doorway remain visible; clear roofed silhouette at32/48/64px."
+      },
+      "independent_review": "art/batch_b3/round3_icons/independent_review.json",
+      "generation": {
+        "id": "mud_brick_house",
+        "family": "icon",
+        "attempt": 1,
+        "prompt": "Use case: precise-object-edit. Redraw the supplied roofless round-one building as a readable roofed knowledge icon: compact rectangular earthen mud-brick dwelling with a broad clearly visible low pitched roof of ochre reeds on timber beams. The continuous sloping roof covers the entire building and occupies the upper half of the silhouette; show front wall, a dark doorway and side wall below roof eaves. No open courtyard or exposed roofless room. Match the reference WorldSim concept05 fine brown-black ink and restrained ochre earth watercolor; outer to interior line weight 2:1, upper-left lighting, front three-quarter view about20degrees down. Three short wood grain groups per major beam, three subtle clay facets, three parallel straw bundles per roof plane; one group of3 short diagonal shadow hatches maximum. Sparse marks, no speckle or dense crosshatching. Must read as a roofed building at32px. Isolated complete object with generous genuinely transparent margin, no ground patch, no cast-shadow puddle, labels, frame, people, scenery or surrounding paper. Preserve historical bronze-era materials; no metal roof or modern hardware.",
+        "seed": null,
+        "backend": "built-in imagegen",
+        "references": [
+          {
+            "path": "/Users/rexxa/work/art-batch/A4/raw/mud_brick_house-01.png",
+            "sha256": "bfefb23c105bbf9b0f5c20c94732d133c34a2611edddc9041bb097009124d1bc"
+          },
+          {
+            "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+            "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+          }
+        ],
+        "raw_path": "/Users/rexxa/work/art-batch/B3/round3_icons/raw/mud_brick_house_try1.png",
+        "raw_sha256": "4891fe321e40b69eb7bab60dea592cce07ff93eb9bca1571eabce437ccf29901",
+        "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c799-32eb-7b82-b59d-e08146989b3f/exec-e54a142d-da10-4da3-a523-0a36c13a22a5.png",
+        "generated_at": "2026-11-10T22:36:42.784596+00:00",
+        "tool_output_hint": "Generated images saved under 01a1c799-32eb-7b82-b59d-e08146989b3f",
+        "reference_delivery": "explicit referenced_image_paths"
+      },
+      "structural_check": {
+        "raw": {
+          "path": "/Users/rexxa/work/art-batch/B3/round3_icons/raw/mud_brick_house_try1.png",
+          "sha256": "4891fe321e40b69eb7bab60dea592cce07ff93eb9bca1571eabce437ccf29901",
+          "canvas": [
+            1312,
+            1199
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            0,
+            19,
+            1292,
+            1199
+          ],
+          "bbox16": [
+            115,
+            196,
+            1223,
+            1045
+          ],
+          "bbox128": [
+            116,
+            197,
+            1223,
+            1044
+          ],
+          "opaque_pixels": 623432,
+          "occupancy": 0.3963109501820623,
+          "border_alpha_max": 1,
+          "expected_canvas": null,
+          "canvas_matches": true,
+          "expected_sha256": "4891fe321e40b69eb7bab60dea592cce07ff93eb9bca1571eabce437ccf29901",
+          "hash_matches": true,
+          "passed": true
+        },
+        "output": {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/batch_b3/icons/mud_brick_house-01.png",
+          "sha256": "e0794a19bcd8c57e025eb9b8fa831603336e15b7377fc9efdd2b71604fd72472",
+          "canvas": [
+            64,
+            64
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            3,
+            10,
+            61,
+            54
+          ],
+          "bbox16": [
+            3,
+            10,
+            61,
+            54
+          ],
+          "bbox128": [
+            3,
+            10,
+            61,
+            54
+          ],
+          "opaque_pixels": 1684,
+          "occupancy": 0.4111328125,
+          "border_alpha_max": 0,
+          "expected_canvas": [
+            64,
+            64
+          ],
+          "canvas_matches": true,
+          "expected_sha256": null,
+          "hash_matches": null,
+          "passed": true
+        },
+        "crop": [
+          114,
+          195,
+          1225,
+          1046
+        ],
+        "scale": 0.052205220522052204,
+        "resized": [
+          58,
+          44
+        ],
+        "offset": [
+          3,
+          10
+        ],
+        "anchor": [
+          32,
+          32
+        ],
+        "discarded_alpha_pixels": 3395,
+        "discarded_alpha_max": 4,
+        "footprint": null,
+        "operations": [
+          "preserve generated alpha; no repainting",
+          "alpha>=128 bounds plus 2px fringe; discarded fringe measured",
+          "uniform LANCZOS fit; integer raster rounding",
+          "center on transparent canvas"
+        ],
+        "status": "numeric_checked_visual_review_pending"
+      },
+      "legacy_numeric_diagnostic": {
+        "candidate": "/Users/rexxa/work/art-batch/B3/round3_icons/raw/mud_brick_house_try1.png",
+        "sha256": "4891fe321e40b69eb7bab60dea592cce07ff93eb9bca1571eabce437ccf29901",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.22817051065691607,
+          "saturation_q25": 0.654876496720179,
+          "saturation_q75": 0.709253833573451,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.016416812378326512,
+          "foreground_pixels": 33356
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "runtime_asset_id": "tech_mud_brick_house"
+    },
+    {
+      "id": "chief_hall",
+      "family": "icon",
+      "era": "bronze",
+      "path": "art/style05/batch_b3/icons/chief_hall-01.png",
+      "sha256": "1141be05971561fe4425fd46c92b7bbd1b1464e1fcdc7e4082abc32b68266e2b",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "status": "SELECTED_CANDIDATE_NOT_GAME_IMPORTED",
+      "attempt": 1,
+      "replaces": {
+        "branch": "v8/art-batch-a4",
+        "commit": "6e8576a8247378d77eac8c1bee64c37598be69f3",
+        "path": "art/style05/techmap/icons/bronze/chief_hall.png",
+        "sha256": "921c417865746b8d64cc3475d2fe933858b95bd290cbef33e19f4d403ffaf4e9"
+      },
+      "generation_record": "/Users/rexxa/work/art-batch/B3/round3_icons/records/chief_hall_try1.json",
+      "material": "mud brick wall; reed/thatch roof and timber, no fired roof tiles",
+      "self_review": {
+        "score": 93,
+        "verdict": "pass",
+        "medium": 5,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "reason": "Broad roof covers entire dwelling/hall; earthen wall and dark doorway remain visible; clear roofed silhouette at32/48/64px."
+      },
+      "independent_review": "art/batch_b3/round3_icons/independent_review.json",
+      "generation": {
+        "id": "chief_hall",
+        "family": "icon",
+        "attempt": 1,
+        "prompt": "Use case: precise-object-edit. Redraw the supplied roofless round-one building as a readable roofed knowledge icon: large bronze-age mud-brick chief hall with a broad conspicuous pitched thatched roof covering the whole hall, projecting eaves and a raised roof ridge. Show two timber porch posts at its entrance, front doorway and side earthen wall beneath the roof. A hall, no throne, no human, no open courtyard or roofless box. Match the reference WorldSim concept05 fine brown-black ink and restrained ochre earth watercolor; outer to interior line weight 2:1, upper-left lighting, front three-quarter view about20degrees down. Three short wood grain groups per major beam, three subtle clay facets, three parallel straw bundles per roof plane; one group of3 short diagonal shadow hatches maximum. Sparse marks, no speckle or dense crosshatching. Must read as a roofed building at32px. Isolated complete object with generous genuinely transparent margin, no ground patch, no cast-shadow puddle, labels, frame, people, scenery or surrounding paper. Preserve historical bronze-era materials; no metal roof or modern hardware.",
+        "seed": null,
+        "backend": "built-in imagegen",
+        "references": [
+          {
+            "path": "/Users/rexxa/work/art-batch/A4/raw/chief_hall-01.png",
+            "sha256": "048560af467b2b4d3727c99f2cbd6147e9d84c8491b9b2655fb60c011a0c0164"
+          },
+          {
+            "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+            "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+          }
+        ],
+        "raw_path": "/Users/rexxa/work/art-batch/B3/round3_icons/raw/chief_hall_try1.png",
+        "raw_sha256": "df8bd9d1ad11b8000e217f783c8c8c9e3a94b106f95094a533ba841be49a7dc7",
+        "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c799-32eb-7b82-b59d-e08146989b3f/exec-24b22c91-df16-49aa-80eb-772c8392b6c1.png",
+        "generated_at": "2026-11-10T22:36:42.786417+00:00",
+        "tool_output_hint": "Generated images saved under 01a1c799-32eb-7b82-b59d-e08146989b3f",
+        "reference_delivery": "explicit referenced_image_paths"
+      },
+      "structural_check": {
+        "raw": {
+          "path": "/Users/rexxa/work/art-batch/B3/round3_icons/raw/chief_hall_try1.png",
+          "sha256": "df8bd9d1ad11b8000e217f783c8c8c9e3a94b106f95094a533ba841be49a7dc7",
+          "canvas": [
+            1254,
+            1254
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            0,
+            23,
+            1238,
+            1254
+          ],
+          "bbox16": [
+            55,
+            149,
+            1213,
+            1075
+          ],
+          "bbox128": [
+            56,
+            151,
+            1212,
+            1074
+          ],
+          "opaque_pixels": 661412,
+          "occupancy": 0.42060748507487367,
+          "border_alpha_max": 1,
+          "expected_canvas": null,
+          "canvas_matches": true,
+          "expected_sha256": "df8bd9d1ad11b8000e217f783c8c8c9e3a94b106f95094a533ba841be49a7dc7",
+          "hash_matches": true,
+          "passed": true
+        },
+        "output": {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/batch_b3/icons/chief_hall-01.png",
+          "sha256": "1141be05971561fe4425fd46c92b7bbd1b1464e1fcdc7e4082abc32b68266e2b",
+          "canvas": [
+            64,
+            64
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            3,
+            9,
+            61,
+            55
+          ],
+          "bbox16": [
+            3,
+            9,
+            61,
+            55
+          ],
+          "bbox128": [
+            3,
+            9,
+            61,
+            55
+          ],
+          "opaque_pixels": 1644,
+          "occupancy": 0.4013671875,
+          "border_alpha_max": 0,
+          "expected_canvas": [
+            64,
+            64
+          ],
+          "canvas_matches": true,
+          "expected_sha256": null,
+          "hash_matches": null,
+          "passed": true
+        },
+        "crop": [
+          54,
+          149,
+          1214,
+          1076
+        ],
+        "scale": 0.05,
+        "resized": [
+          58,
+          46
+        ],
+        "offset": [
+          3,
+          9
+        ],
+        "anchor": [
+          32,
+          32
+        ],
+        "discarded_alpha_pixels": 1457,
+        "discarded_alpha_max": 5,
+        "footprint": null,
+        "operations": [
+          "preserve generated alpha; no repainting",
+          "alpha>=128 bounds plus 2px fringe; discarded fringe measured",
+          "uniform LANCZOS fit; integer raster rounding",
+          "center on transparent canvas"
+        ],
+        "status": "numeric_checked_visual_review_pending"
+      },
+      "legacy_numeric_diagnostic": {
+        "candidate": "/Users/rexxa/work/art-batch/B3/round3_icons/raw/chief_hall_try1.png",
+        "sha256": "df8bd9d1ad11b8000e217f783c8c8c9e3a94b106f95094a533ba841be49a7dc7",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.2491155850003216,
+          "saturation_q25": 0.6105771595780086,
+          "saturation_q75": 0.6694559196415185,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.014623061270230985,
+          "foreground_pixels": 32365
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "runtime_asset_id": "tech_chief_hall"
+    }
+  ],
+  "status": "not imported",
+  "generated": 2,
+  "selected_candidates": 2,
+  "rejected": 0,
+  "variants": "Reuse A4 state_variants.json UI treatments; no extra raster variants.",
+  "self_review": {
+    "weakest": "chief_hall roof detail at32px",
+    "action": "reviewed existing roofed replacement at32/48/64 on both backgrounds; retained after independent93 verdict. No redundant extra generation."
+  }
+}

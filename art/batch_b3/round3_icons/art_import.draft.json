@@ -1,0 +1,28 @@
+{
+  "status": "DRAFT_NOT_APPLIED",
+  "source_branch": "v8/art-batch-b3",
+  "source_commit": null,
+  "files": [
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_mud_brick_house",
+      "source": "art/style05/batch_b3/icons/mud_brick_house-01.png",
+      "dest": "ui/knowledge/mud_brick_house.png",
+      "sha256": "e0794a19bcd8c57e025eb9b8fa831603336e15b7377fc9efdd2b71604fd72472"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_chief_hall",
+      "source": "art/style05/batch_b3/icons/chief_hall-01.png",
+      "dest": "ui/knowledge/chief_hall.png",
+      "sha256": "1141be05971561fe4425fd46c92b7bbd1b1464e1fcdc7e4082abc32b68266e2b"
+    }
+  ],
+  "operation": "replace_matching_A4_file_rows",
+  "metadata_patch_source": "art/batch_b3/round3_icons/manifest.json",
+  "integration_required": [
+    "Replace only the two matching A4 file rows; preserve all other icons and destinations.",
+    "Merge the two canvas/anchor/hash metadata entries into the existing A4 metadata adapter; do not overwrite its other181assets.",
+    "Reuse A4 state_variants.json UI treatments and verify the real tech-map consumer in C2/C3."
+  ]
+}
