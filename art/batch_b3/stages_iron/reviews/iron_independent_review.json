@@ -1,0 +1,425 @@
+{
+  "schema_version": 1,
+  "reviewer": "B3 animal_fixes independent iron visual review",
+  "snapshot_at_utc": "2026-11-10T22:58:21.930811+00:00",
+  "verdict": "REVISE_THREE_FOUNDATIONS",
+  "score": 85,
+  "scope": {
+    "families": [
+      "bloomery",
+      "forge",
+      "town_gate",
+      "watchtower",
+      "bridge",
+      "aqueduct",
+      "reservoir",
+      "sundial",
+      "rotary_quern"
+    ],
+    "scales": [
+      1,
+      2
+    ],
+    "selected_candidates": 28,
+    "reviewed": "All nine family board pairs, including light/dark background presentations, selected candidates and A2 built references. Rejected attempts were not visually evaluated."
+  },
+  "blocking_findings": [
+    {
+      "id": "aqueduct_foundation",
+      "severity": "blocker",
+      "kind": "source_ground_span_identity",
+      "detail": "Foundation203px versus built134px: pair of isolated footings is spread about51% wider. Bases would sit outside the original trough support locations.",
+      "basis": "catalog: bases spaced to support the original trough. Selected try2 explicitly requests same original128px world width and7:1 width:height;203:18 instead gives11.28:1.",
+      "selected_attempt": 2,
+      "source_measurements": {
+        "built": {
+          "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/aqueduct.png",
+          "sha256": "d43acf874ad06b4979d6032bd0b88fc5b1aa6c814fb38aa3883527ebd944dd55",
+          "opaque_bbox_alpha128": [
+            4,
+            4,
+            138,
+            64
+          ],
+          "opaque_size": [
+            134,
+            60
+          ]
+        },
+        "foundation": {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_iron/aqueduct_foundation.png",
+          "sha256": "99d2f96d9ed247bda4b45fbbec98a41cc10ef76242d25ff710e241d4290116a3",
+          "opaque_bbox_alpha128": [
+            4,
+            4,
+            207,
+            22
+          ],
+          "opaque_size": [
+            203,
+            18
+          ]
+        }
+      },
+      "recommended_disposition": "Revise this candidate within the existing three-attempt cap or withhold it. Keep existing target height, footprint, style and source geometry fixed; do not stretch pixels or relax the target."
+    },
+    {
+      "id": "forge_foundation",
+      "severity": "blocker",
+      "kind": "source_ground_span_identity",
+      "detail": "Foundation91px versus built68px: hearth/footing span expands about34%. The laid hearth is visibly longer than the original forge installation.",
+      "basis": "Selected try2 requests exact original occupied base dimensions, same station width and4.5:1 width:height. At14px height that requests approximately63px, not91px.",
+      "selected_attempt": 2,
+      "source_measurements": {
+        "built": {
+          "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/forge_idle.png",
+          "sha256": "6f7bce88ef5ae6de102ed09e7567ecb1f2f099e6bc98c14d750de1004e249e59",
+          "opaque_bbox_alpha128": [
+            4,
+            4,
+            72,
+            42
+          ],
+          "opaque_size": [
+            68,
+            38
+          ]
+        },
+        "foundation": {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_iron/forge_foundation.png",
+          "sha256": "1da2cf7cacef293090a675e52d1f646b605d6e2af0b139d2d077862a3eeea047",
+          "opaque_bbox_alpha128": [
+            4,
+            4,
+            95,
+            18
+          ],
+          "opaque_size": [
+            91,
+            14
+          ]
+        }
+      },
+      "recommended_disposition": "Revise this candidate within the existing three-attempt cap or withhold it. Keep existing target height, footprint, style and source geometry fixed; do not stretch pixels or relax the target."
+    },
+    {
+      "id": "town_gate_foundation",
+      "severity": "blocker",
+      "kind": "source_ground_span_identity",
+      "detail": "Foundation128px versus built105px: pier bases and their central spacing widen about22%. Parent stone feet do not overhang beyond the built frame enough to explain the difference.",
+      "basis": "catalog and saved generation requests explicitly require two pier footings spaced exactly as the original gateway.",
+      "selected_attempt": 2,
+      "source_measurements": {
+        "built": {
+          "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/town_gate_closed.png",
+          "sha256": "f808880b1a8bc28576c7450f8dd3c0665097bffd41543f49c368a1596c2c5134",
+          "opaque_bbox_alpha128": [
+            4,
+            4,
+            109,
+            64
+          ],
+          "opaque_size": [
+            105,
+            60
+          ]
+        },
+        "foundation": {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_iron/town_gate_foundation.png",
+          "sha256": "98e06198274bb757c72178fc3a8a0fb032a3f40dc8618ba42c3cd26f5c9f25a5",
+          "opaque_bbox_alpha128": [
+            4,
+            4,
+            132,
+            24
+          ],
+          "opaque_size": [
+            128,
+            20
+          ]
+        }
+      },
+      "recommended_disposition": "Revise this candidate within the existing three-attempt cap or withhold it. Keep existing target height, footprint, style and source geometry fixed; do not stretch pixels or relax the target."
+    }
+  ],
+  "foundation_measurements": {
+    "bloomery_foundation": {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_iron/bloomery_foundation.png",
+      "sha256": "290270599adea938f5fdae682a987553b87f90af9e9c70e7c0a5c6c4949f329f",
+      "opaque_bbox_alpha128": [
+        4,
+        4,
+        37,
+        22
+      ],
+      "opaque_size": [
+        33,
+        18
+      ]
+    },
+    "bloomery_built": {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/bloomery_unlit.png",
+      "sha256": "34d0c1f13298c2d625f7a217943310b5dda69450b16b807f0102360f3a6f5471",
+      "opaque_bbox_alpha128": [
+        4,
+        4,
+        45,
+        60
+      ],
+      "opaque_size": [
+        41,
+        56
+      ]
+    },
+    "forge_foundation": {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_iron/forge_foundation.png",
+      "sha256": "1da2cf7cacef293090a675e52d1f646b605d6e2af0b139d2d077862a3eeea047",
+      "opaque_bbox_alpha128": [
+        4,
+        4,
+        95,
+        18
+      ],
+      "opaque_size": [
+        91,
+        14
+      ]
+    },
+    "forge_built": {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/forge_idle.png",
+      "sha256": "6f7bce88ef5ae6de102ed09e7567ecb1f2f099e6bc98c14d750de1004e249e59",
+      "opaque_bbox_alpha128": [
+        4,
+        4,
+        72,
+        42
+      ],
+      "opaque_size": [
+        68,
+        38
+      ]
+    },
+    "town_gate_foundation": {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_iron/town_gate_foundation.png",
+      "sha256": "98e06198274bb757c72178fc3a8a0fb032a3f40dc8618ba42c3cd26f5c9f25a5",
+      "opaque_bbox_alpha128": [
+        4,
+        4,
+        132,
+        24
+      ],
+      "opaque_size": [
+        128,
+        20
+      ]
+    },
+    "town_gate_built": {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/town_gate_closed.png",
+      "sha256": "f808880b1a8bc28576c7450f8dd3c0665097bffd41543f49c368a1596c2c5134",
+      "opaque_bbox_alpha128": [
+        4,
+        4,
+        109,
+        64
+      ],
+      "opaque_size": [
+        105,
+        60
+      ]
+    },
+    "watchtower_foundation": {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_iron/watchtower_foundation.png",
+      "sha256": "66f8a322c3850ad01823c4ccb63d3c47b35087d72a8df137809124689b9164fe",
+      "opaque_bbox_alpha128": [
+        4,
+        4,
+        60,
+        34
+      ],
+      "opaque_size": [
+        56,
+        30
+      ]
+    },
+    "watchtower_built": {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/watchtower.png",
+      "sha256": "357b49b92eda3d30c0a7b2281951bae58cd6367d92cb576cf6aa9705e5019016",
+      "opaque_bbox_alpha128": [
+        4,
+        4,
+        81,
+        132
+      ],
+      "opaque_size": [
+        77,
+        128
+      ]
+    },
+    "bridge_built": {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/timber_bridge_ew.png",
+      "sha256": "044f9553eb5e7ba8b4ea19ab77deb6c93d89ba4b70a9c5101161d4663292200c",
+      "opaque_bbox_alpha128": [
+        4,
+        4,
+        212,
+        158
+      ],
+      "opaque_size": [
+        208,
+        154
+      ]
+    },
+    "aqueduct_foundation": {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_iron/aqueduct_foundation.png",
+      "sha256": "99d2f96d9ed247bda4b45fbbec98a41cc10ef76242d25ff710e241d4290116a3",
+      "opaque_bbox_alpha128": [
+        4,
+        4,
+        207,
+        22
+      ],
+      "opaque_size": [
+        203,
+        18
+      ]
+    },
+    "aqueduct_built": {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/aqueduct.png",
+      "sha256": "d43acf874ad06b4979d6032bd0b88fc5b1aa6c814fb38aa3883527ebd944dd55",
+      "opaque_bbox_alpha128": [
+        4,
+        4,
+        138,
+        64
+      ],
+      "opaque_size": [
+        134,
+        60
+      ]
+    },
+    "reservoir_built": {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/reservoir_empty.png",
+      "sha256": "595e5e7ee4183d2da9581ad1b915107bceac020c818e647c253230c20ac8de94",
+      "opaque_bbox_alpha128": [
+        4,
+        4,
+        133,
+        133
+      ],
+      "opaque_size": [
+        129,
+        129
+      ]
+    },
+    "rotary_quern_built": {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/rotary_quern.png",
+      "sha256": "77b95ba4a421cb72edb8928a41bf03b639ef9224729a0d52411a74ab024b3374",
+      "opaque_bbox_alpha128": [
+        4,
+        4,
+        42,
+        38
+      ],
+      "opaque_size": [
+        38,
+        34
+      ]
+    },
+    "sundial_built": {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/sundial.png",
+      "sha256": "cac341d7b351c6a365233a627e88c490a0d76dae83b33108dca3f79bc7ffd8ea",
+      "opaque_bbox_alpha128": [
+        4,
+        4,
+        42,
+        36
+      ],
+      "opaque_size": [
+        38,
+        32
+      ]
+    }
+  },
+  "family_checks": [
+    {
+      "family": "bloomery",
+      "verdict": "pass",
+      "detail": "Low base, short open construction shaft, chipped full-height shaft and collapsed ring are distinct. Stone base shrink relative to full silhouette is explained by absent projecting tuyere and upper mass."
+    },
+    {
+      "family": "forge",
+      "verdict": "revise_foundation",
+      "detail": "Construction frame, damaged lever and compact ruined station read as their states. Foundation expansion is the blocking issue."
+    },
+    {
+      "family": "town_gate",
+      "verdict": "revise_foundation",
+      "detail": "Half-height empty doorway and damaged split door remain readable. Foundation pier spacing is the blocking issue."
+    },
+    {
+      "family": "watchtower",
+      "verdict": "pass",
+      "detail": "Foundation masonry56px versus full silhouette77px is substantially explained by omitted ladder and wider upper rail; it does not present the obvious mismatched spread seen in aqueduct. Empty low ring, unfinished tower and rubble pile read coherently."
+    },
+    {
+      "family": "bridge",
+      "verdict": "pass_selected_with_gap",
+      "detail": "Clean partial plank installation differs from torn hole and sparse remaining ruined boards. Horizontal orientation/material identity retained. Foundation correctly shown as capped rejection."
+    },
+    {
+      "family": "aqueduct",
+      "verdict": "revise_foundation",
+      "detail": "Partial slab construction and broken trough remains read correctly. Selected foundation spacing is the blocking issue."
+    },
+    {
+      "family": "reservoir",
+      "verdict": "pass_selected_with_gap",
+      "detail": "Incomplete front/side courses, breached curb and broken low ring retain recognizable steps and dry basin. Foundation correctly shown as capped rejection."
+    },
+    {
+      "family": "sundial",
+      "verdict": "pass",
+      "detail": "Small chipped disk versus broken fragments is readable at native size. Foundation/half-built are honestly N/A."
+    },
+    {
+      "family": "rotary_quern",
+      "verdict": "pass",
+      "detail": "Chipped upper stone retains handle identity; ruined fragments form a distinct low state. Foundation/half-built are honestly N/A."
+    }
+  ],
+  "related_nonblocking_observations": [
+    "Aqueduct and town-gate half-built silhouettes are also narrower than their full parents(105vs134 and84vs105px), while their foundations are wider. This review does not certify exact support-point registration for those half-built states; check it when resolving the family foundation geometry. Missing elevated components can reduce total extent, so total width alone is not used as a second automatic rejection.",
+    "Forge half-built and ruins are compact relative to the built station because components are omitted/collapsed; assess occupied component positions rather than uniformly scaling them to parent width."
+  ],
+  "style_light_review": "No additional gate-worthy dense hatching, speckle, palette or upper-left-light issue found visually. Fine sepia outlines and broad natural wash remain coherent with A2 parents on light and dark backgrounds.",
+  "existing_gaps": [
+    "bridge_foundation",
+    "reservoir_foundation"
+  ],
+  "board_sha256": {
+    "bloomery_1x.png": "11ceefcd8790aaf486d68f04f3963356e0e514e5b758ef65588bf7ac559b1265",
+    "bloomery_2x.png": "b738b95b95aeff6b237510d7e929b751f524dd7250e607d7a933d5aafab67b4f",
+    "forge_1x.png": "42f46e55067cbe1a214f0cd364c296563b10852f4921ffad88b85fd67b624ed5",
+    "forge_2x.png": "119d1f1b4599af4bbee1b1632cc900fc90263b76742647558f08107bb8224dcd",
+    "town_gate_1x.png": "7bbd90ea2bc088649532798153e02cb06e806c5ae3e9f2072888aa7ab71a198e",
+    "town_gate_2x.png": "c0c61dfea4e57da9b69ba374d58998f681c481bab9986af00851413257515546",
+    "watchtower_1x.png": "5c3adc8542ae3b95a3a13db94fd0d665583c6e958741f12e7df1e9cfa8079ef7",
+    "watchtower_2x.png": "6b171c067ff35e0639b1854828e12d6d8e48769e0e43d287ebfb45c2a185871a",
+    "bridge_1x.png": "aa03d70c92ade576e46be29498d3cde5ffd75b58cb91310c17e7fa2104472ed5",
+    "bridge_2x.png": "489f0e575f3ff7fbab5c637c6d6285af1787d20618c1cae4eed12345ccb3b946",
+    "aqueduct_1x.png": "7d25d4586ff2c77cc42ca7ee2ed25a8d415c337760cee49c4a5af1c3c845274f",
+    "aqueduct_2x.png": "fa2f53c09770611f96b6de9c51e572b3b3bf324c8f204f8a9084efbd4bb431e6",
+    "reservoir_1x.png": "f653e1f4b709d9b70f9e286392793dc6e6651fba577eaf348e58f359e79a7659",
+    "reservoir_2x.png": "e8a7360ffe0e7f65ec6fa6aa33d447f0dde14891e51d3ed197de6afdb344e42c",
+    "sundial_1x.png": "3124440ef939a960e75bf1f9a6cc385ed62591b557f79e227e68dc73b55a8c98",
+    "sundial_2x.png": "9911be8153c24d2e78db0612a765b3334a9fde4a1afe62ab47b9cc887d666bf8",
+    "rotary_quern_1x.png": "52cc1b2c4f7adeafe7c259a1c782da7c1e500efd6ac9c39621e0610f6952d38f",
+    "rotary_quern_2x.png": "30f43542dc56eb44a252f4a193e8b93c755047ece9f40c2038cbaa937a205d04"
+  },
+  "limits": [
+    "Frozen numeric tests were not rerun; this is an independent visual/identity audit.",
+    "No runtime integration or authoritative lifecycle mapping verified.",
+    "Review records the selected board snapshot; root may subsequently prune or replace rejected candidates.",
+    "No generation, image editing or repository edits performed; only this external review JSON was written."
+  ]
+}

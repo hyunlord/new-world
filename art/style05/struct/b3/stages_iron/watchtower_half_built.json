@@ -1,0 +1,148 @@
+{
+  "record": {
+    "id": "watchtower_half_built",
+    "lane": "stages_iron",
+    "era": "iron",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c798-fbc9-76f3-8f29-323bd0f2fd82/exec-e9c2db5f-1428-4e91-84b9-5a2a429f2815.png",
+    "prompt": "Use case: precise-object-edit. Make ONE isolated construction-stage game sprite. Inputs1+2 are locked ink-and-tone style references; input3 is the exact built design to preserve. Genuine transparent background; generous margins; no ground patch, shadow puddle, text, roof, border or scenery. Same front three-quarter camera about20degrees down; light upper-left, darker right/lower shade. Fine broken sepia-charcoal ink, main/detail2:1; quiet broad earth wash, no dense texture or3D bevel. Stone3 selective crack/facet groups per dominant rock; wood3 broken longitudinal grain lines per principal beam; clay3 short crack groups; hatching one group of3 parallel / marks. Physical footprint unchanged. The same square stone tower only half its final height, unfinished upper masonry courses, open top and south doorway; one temporary raw timber crosspiece at top, no finished wooden lookout rail. Ladder reaches unfinished rim. Intended game opaque height70px, footprint[2, 2]; preserve material and component identity at1x.",
+    "subject": null,
+    "references": [
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/watchtower.png"
+    ],
+    "target_height": 70,
+    "projection_family": "watchtower_half_built",
+    "height_band": [
+      68,
+      72
+    ],
+    "height_band_reason": "Predeclared B3 construction or damaged silhouette; original occupied footprint unchanged.",
+    "footprint": [
+      2.0,
+      2.0
+    ],
+    "style_family": "buildings",
+    "generation_id": "exec-e9c2db5f-1428-4e91-84b9-5a2a429f2815",
+    "seed": null,
+    "generated_at": "2026-11-10T22:39:54.121Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/watchtower_half_built_try1.png",
+  "raw_sha256": "ba2bb32ba396577c7d00ebb932c834bc1dcb0b99c847f94d4e68eb93c7a121b1",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/watchtower.png",
+      "sha256": "357b49b92eda3d30c0a7b2281951bae58cd6367d92cb576cf6aa9705e5019016"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/B3/stages_iron/normalized/watchtower_half_built_try1.png",
+  "normalized_sha256": "170d2f51781e9e0f30ebfe49613dde456d6116aab86453db2c14ec8ae42bf609",
+  "size": [
+    72,
+    78
+  ],
+  "anchor": [
+    36,
+    73
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (476, 220, 1066, 865)",
+    "uniform Lanczos scale: 0.10920436817472699",
+    "transparent 4px padding; source-canvas anchor: (36, 73)"
+  ],
+  "projection": {
+    "family": "watchtower_half_built",
+    "anchor": [
+      36,
+      73
+    ],
+    "height_band": [
+      68,
+      72
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 3611,
+    "base_row": 73,
+    "base_error": 0,
+    "height": 70,
+    "gradient_x": -0.7111657223796034,
+    "gradient_y": -0.7298854154889769,
+    "light_angle_degrees": 225.7442477620089,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/watchtower_half_built_try1.png",
+    "sha256": "ba2bb32ba396577c7d00ebb932c834bc1dcb0b99c847f94d4e68eb93c7a121b1",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.24674553703939278,
+      "saturation_q25": 0.4101709233355519,
+      "saturation_q75": 0.5771896022660276,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.013284127401435584,
+      "foreground_pixels": 48968
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 254,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    0,
+    1506,
+    1024
+  ],
+  "raw_opaque_bbox": [
+    478,
+    222,
+    1064,
+    863
+  ],
+  "raw_faint_far_ratio": 0.006889506194249391,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+  "failures": [],
+  "review": {
+    "reviewer": "iron_work self review",
+    "verdict": "pass",
+    "score": 90,
+    "reason": "Same materials/camera and distinct physical-stage silhouette at1x and2x; no visible halo on light/dark RGBA composites.",
+    "independent_review": "root + animal_fixes review; five geometry states withheld"
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_path": "art/style05/struct/b3/stages_iron/watchtower_half_built.png"
+}

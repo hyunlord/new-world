@@ -1,0 +1,148 @@
+{
+  "record": {
+    "id": "bridge_damaged",
+    "lane": "stages_iron",
+    "era": "iron",
+    "attempt": 2,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c798-fbc9-76f3-8f29-323bd0f2fd82/exec-d221e207-2529-4a8c-a1ee-d3e827722a78.png",
+    "prompt": "Use case: precise-object-edit. Make ONE isolated construction-stage game sprite. Inputs1+2 are locked ink-and-tone style references; input3 is the exact built design to preserve. Genuine transparent background; generous margins; no ground patch, shadow puddle, text, roof, border or scenery. Same front three-quarter camera about20degrees down; light upper-left, darker right/lower shade. Fine broken sepia-charcoal ink, main/detail2:1; quiet broad earth wash, no dense texture or3D bevel. Stone3 selective crack/facet groups per dominant rock; wood3 broken longitudinal grain lines per principal beam; clay3 short crack groups; hatching one group of3 parallel / marks. Physical footprint unchanged. Same east-west bridge in orthogonal192x128px plan, front/back horizontal rails and deck planks run vertically. Three neighboring central planks broken out leaving obvious gap, right front rail split, all corner posts retained. No water or landscape. Intended game opaque height154px, footprint[3, 2]; preserve material and component identity at1x. CRITICAL lighting repair: top-left surfaces pale light tan, lower-right faces clearly DARK brown, broad strong upper-left-to-lower-right luminance gradient. Preserve orthogonal rectangular plan and central missing planks.",
+    "subject": null,
+    "references": [
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/timber_bridge_ew.png"
+    ],
+    "target_height": 154,
+    "projection_family": "bridge_damaged",
+    "height_band": [
+      152,
+      156
+    ],
+    "height_band_reason": "Predeclared B3 construction or damaged silhouette; original occupied footprint unchanged.",
+    "footprint": [
+      3.0,
+      2.0
+    ],
+    "style_family": "buildings",
+    "generation_id": "exec-d221e207-2529-4a8c-a1ee-d3e827722a78",
+    "seed": null,
+    "generated_at": "2026-11-10T22:51:23.779Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/bridge_damaged_try2.png",
+  "raw_sha256": "5fe4bf24efd1c9e72e37556f70646cdb810758f7cea9314282abf32137572561",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/timber_bridge_ew.png",
+      "sha256": "044f9553eb5e7ba8b4ea19ab77deb6c93d89ba4b70a9c5101161d4663292200c"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/B3/stages_iron/normalized/bridge_damaged_try2.png",
+  "normalized_sha256": "803583a1e4278517740002f62bdf209fa8f70922730d74b2e49cbbd771aa4fb7",
+  "size": [
+    229,
+    163
+  ],
+  "anchor": [
+    114,
+    158
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (153, 70, 1383, 931)",
+    "uniform Lanczos scale: 0.17969661610268378",
+    "transparent 4px padding; source-canvas anchor: (114, 158)"
+  ],
+  "projection": {
+    "family": "bridge_damaged",
+    "anchor": [
+      114,
+      158
+    ],
+    "height_band": [
+      152,
+      156
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 23155,
+    "base_row": 158,
+    "base_error": 0,
+    "height": 155,
+    "gradient_x": -0.2289543831951936,
+    "gradient_y": -0.2823600910603275,
+    "light_angle_degrees": 230.96280142295618,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/bridge_damaged_try2.png",
+    "sha256": "5fe4bf24efd1c9e72e37556f70646cdb810758f7cea9314282abf32137572561",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.26696596366673625,
+      "saturation_q25": 0.5090668994138935,
+      "saturation_q75": 0.6504946240739722,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.47213595499958,
+      "wash_flatness": 0.016870490067113768,
+      "foreground_pixels": 31217
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 254,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    4,
+    1536,
+    1024
+  ],
+  "raw_opaque_bbox": [
+    155,
+    72,
+    1381,
+    929
+  ],
+  "raw_faint_far_ratio": 0.03914906928651924,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+  "failures": [],
+  "review": {
+    "reviewer": "iron_work self review",
+    "verdict": "pass",
+    "score": 90,
+    "reason": "Try1 failed frozen light gradient; try2 passes with broken central planks readable.",
+    "independent_review": "root + animal_fixes review; five geometry states withheld"
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_path": "art/style05/struct/b3/stages_iron/bridge_damaged.png"
+}

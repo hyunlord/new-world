@@ -1,0 +1,567 @@
+{
+  "lane": "stages_iron",
+  "rows": [
+    {
+      "family": "bloomery",
+      "state": "blueprint",
+      "status": "ROOT_DISPLAY_RECIPE",
+      "source": null,
+      "attempts": 0,
+      "reasons": [
+        "Root owns existing blueprint ghost display recipe; no generated sprite required."
+      ]
+    },
+    {
+      "family": "bloomery",
+      "state": "foundation",
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "source": "art/style05/struct/b3/stages_iron/bloomery_foundation.png",
+      "attempts": 1,
+      "reasons": [
+        "Distinct state; all unchanged numeric checks pass."
+      ]
+    },
+    {
+      "family": "bloomery",
+      "state": "half_built",
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "source": "art/style05/struct/b3/stages_iron/bloomery_half_built.png",
+      "attempts": 1,
+      "reasons": [
+        "Distinct state; all unchanged numeric checks pass."
+      ]
+    },
+    {
+      "family": "bloomery",
+      "state": "built",
+      "status": "REUSED_A2",
+      "source": "art/style05/struct/a2/iron/bloomery_unlit.png",
+      "attempts": 0,
+      "reasons": [
+        "Existing accepted A2 physical state reused byte-for-byte."
+      ],
+      "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "sha256": "34d0c1f13298c2d625f7a217943310b5dda69450b16b807f0102360f3a6f5471"
+    },
+    {
+      "family": "bloomery",
+      "state": "damaged",
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "source": "art/style05/struct/b3/stages_iron/bloomery_damaged.png",
+      "attempts": 1,
+      "reasons": [
+        "Distinct state; all unchanged numeric checks pass."
+      ]
+    },
+    {
+      "family": "bloomery",
+      "state": "ruined",
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "source": "art/style05/struct/b3/stages_iron/bloomery_ruined.png",
+      "attempts": 1,
+      "reasons": [
+        "Distinct state; all unchanged numeric checks pass."
+      ]
+    },
+    {
+      "family": "forge",
+      "state": "blueprint",
+      "status": "ROOT_DISPLAY_RECIPE",
+      "source": null,
+      "attempts": 0,
+      "reasons": [
+        "Root owns existing blueprint ghost display recipe; no generated sprite required."
+      ]
+    },
+    {
+      "family": "forge",
+      "state": "foundation",
+      "status": "REJECTED_CAPPED",
+      "source": null,
+      "attempts": 3,
+      "reasons": [
+        "Three attempts failed source geometry: try3 includes raised timbers, opaque25 vs built68px, and wash_flatness fails."
+      ]
+    },
+    {
+      "family": "forge",
+      "state": "half_built",
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "source": "art/style05/struct/b3/stages_iron/forge_half_built.png",
+      "attempts": 1,
+      "reasons": [
+        "Distinct state; all unchanged numeric checks pass."
+      ]
+    },
+    {
+      "family": "forge",
+      "state": "built",
+      "status": "REUSED_A2",
+      "source": "art/style05/struct/a2/iron/forge_idle.png",
+      "attempts": 0,
+      "reasons": [
+        "Existing accepted A2 physical state reused byte-for-byte."
+      ],
+      "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "sha256": "6f7bce88ef5ae6de102ed09e7567ecb1f2f099e6bc98c14d750de1004e249e59"
+    },
+    {
+      "family": "forge",
+      "state": "damaged",
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "source": "art/style05/struct/b3/stages_iron/forge_damaged.png",
+      "attempts": 1,
+      "reasons": [
+        "Distinct state; all unchanged numeric checks pass."
+      ]
+    },
+    {
+      "family": "forge",
+      "state": "ruined",
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "source": "art/style05/struct/b3/stages_iron/forge_ruined.png",
+      "attempts": 1,
+      "reasons": [
+        "Distinct state; all unchanged numeric checks pass."
+      ]
+    },
+    {
+      "family": "town_gate",
+      "state": "blueprint",
+      "status": "ROOT_DISPLAY_RECIPE",
+      "source": null,
+      "attempts": 0,
+      "reasons": [
+        "Root owns existing blueprint ghost display recipe; no generated sprite required."
+      ]
+    },
+    {
+      "family": "town_gate",
+      "state": "foundation",
+      "status": "REJECTED_CAPPED",
+      "source": null,
+      "attempts": 3,
+      "reasons": [
+        "Three attempts failed exact original pier spacing; try3 tall multi-course piers opaque63 vs built105px."
+      ]
+    },
+    {
+      "family": "town_gate",
+      "state": "half_built",
+      "status": "REJECTED_BOUNDED",
+      "source": null,
+      "attempts": 2,
+      "reasons": [
+        "Two attempts failed original pier registration; try2 opaque113 vs built105px. Bounded rejection, one unused attempt."
+      ]
+    },
+    {
+      "family": "town_gate",
+      "state": "built",
+      "status": "REUSED_A2",
+      "source": "art/style05/struct/a2/iron/town_gate_closed.png",
+      "attempts": 0,
+      "reasons": [
+        "Existing accepted A2 physical state reused byte-for-byte."
+      ],
+      "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "sha256": "f808880b1a8bc28576c7450f8dd3c0665097bffd41543f49c368a1596c2c5134"
+    },
+    {
+      "family": "town_gate",
+      "state": "damaged",
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "source": "art/style05/struct/b3/stages_iron/town_gate_damaged.png",
+      "attempts": 1,
+      "reasons": [
+        "Distinct state; all unchanged numeric checks pass."
+      ]
+    },
+    {
+      "family": "town_gate",
+      "state": "ruined",
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "source": "art/style05/struct/b3/stages_iron/town_gate_ruined.png",
+      "attempts": 1,
+      "reasons": [
+        "Distinct state; all unchanged numeric checks pass."
+      ]
+    },
+    {
+      "family": "watchtower",
+      "state": "blueprint",
+      "status": "ROOT_DISPLAY_RECIPE",
+      "source": null,
+      "attempts": 0,
+      "reasons": [
+        "Root owns existing blueprint ghost display recipe; no generated sprite required."
+      ]
+    },
+    {
+      "family": "watchtower",
+      "state": "foundation",
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "source": "art/style05/struct/b3/stages_iron/watchtower_foundation.png",
+      "attempts": 2,
+      "reasons": [
+        "Try1 foundation looked too narrow and retained lintel; try2 low wide open-doorway ring."
+      ]
+    },
+    {
+      "family": "watchtower",
+      "state": "half_built",
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "source": "art/style05/struct/b3/stages_iron/watchtower_half_built.png",
+      "attempts": 1,
+      "reasons": [
+        "Distinct state; all unchanged numeric checks pass."
+      ]
+    },
+    {
+      "family": "watchtower",
+      "state": "built",
+      "status": "REUSED_A2",
+      "source": "art/style05/struct/a2/iron/watchtower.png",
+      "attempts": 0,
+      "reasons": [
+        "Existing accepted A2 physical state reused byte-for-byte."
+      ],
+      "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "sha256": "357b49b92eda3d30c0a7b2281951bae58cd6367d92cb576cf6aa9705e5019016"
+    },
+    {
+      "family": "watchtower",
+      "state": "damaged",
+      "status": "REUSED_A2",
+      "source": "art/style05/struct/a2/iron/watchtower_damaged.png",
+      "attempts": 0,
+      "reasons": [
+        "Existing accepted A2 physical state reused byte-for-byte."
+      ],
+      "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "sha256": "a7f37cbcb47205d01b80126846e285eed9093e76e43420fdbb1f15ca07c6e387"
+    },
+    {
+      "family": "watchtower",
+      "state": "ruined",
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "source": "art/style05/struct/b3/stages_iron/watchtower_ruined.png",
+      "attempts": 2,
+      "reasons": [
+        "Try1 retained doorway leaf and too much standing wall; try2 low broken ring and fallen beams."
+      ]
+    },
+    {
+      "family": "bridge",
+      "state": "blueprint",
+      "status": "ROOT_DISPLAY_RECIPE",
+      "source": null,
+      "attempts": 0,
+      "reasons": [
+        "Root owns existing blueprint ghost display recipe; no generated sprite required."
+      ]
+    },
+    {
+      "family": "bridge",
+      "state": "foundation",
+      "status": "REJECTED_CAPPED",
+      "source": null,
+      "attempts": 3,
+      "reasons": [
+        "Three attempts failed frozen wash_flatness; no adoption."
+      ]
+    },
+    {
+      "family": "bridge",
+      "state": "half_built",
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "source": "art/style05/struct/b3/stages_iron/bridge_half_built.png",
+      "attempts": 1,
+      "reasons": [
+        "Distinct state; all unchanged numeric checks pass."
+      ]
+    },
+    {
+      "family": "bridge",
+      "state": "built",
+      "status": "REUSED_A2",
+      "source": "art/style05/struct/a2/iron/timber_bridge_ew.png",
+      "attempts": 0,
+      "reasons": [
+        "Existing accepted A2 physical state reused byte-for-byte."
+      ],
+      "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "sha256": "044f9553eb5e7ba8b4ea19ab77deb6c93d89ba4b70a9c5101161d4663292200c"
+    },
+    {
+      "family": "bridge",
+      "state": "damaged",
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "source": "art/style05/struct/b3/stages_iron/bridge_damaged.png",
+      "attempts": 2,
+      "reasons": [
+        "Try1 failed frozen light gradient; try2 passes with broken central planks readable."
+      ]
+    },
+    {
+      "family": "bridge",
+      "state": "ruined",
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "source": "art/style05/struct/b3/stages_iron/bridge_ruined.png",
+      "attempts": 2,
+      "reasons": [
+        "Try1 wash and skew failed; try2 square outer frame with fallen interior planks."
+      ]
+    },
+    {
+      "family": "aqueduct",
+      "state": "blueprint",
+      "status": "ROOT_DISPLAY_RECIPE",
+      "source": null,
+      "attempts": 0,
+      "reasons": [
+        "Root owns existing blueprint ghost display recipe; no generated sprite required."
+      ]
+    },
+    {
+      "family": "aqueduct",
+      "state": "foundation",
+      "status": "REJECTED_CAPPED",
+      "source": null,
+      "attempts": 3,
+      "reasons": [
+        "Three attempts failed original support span registration (try3 opaque176 vs built134px)."
+      ]
+    },
+    {
+      "family": "aqueduct",
+      "state": "half_built",
+      "status": "REJECTED_BOUNDED",
+      "source": null,
+      "attempts": 2,
+      "reasons": [
+        "Two attempts failed original pier registration; try2 opaque148 vs built134px and blue water violates empty trough. Bounded rejection, one unused attempt."
+      ]
+    },
+    {
+      "family": "aqueduct",
+      "state": "built",
+      "status": "REUSED_A2",
+      "source": "art/style05/struct/a2/iron/aqueduct.png",
+      "attempts": 0,
+      "reasons": [
+        "Existing accepted A2 physical state reused byte-for-byte."
+      ],
+      "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "sha256": "d43acf874ad06b4979d6032bd0b88fc5b1aa6c814fb38aa3883527ebd944dd55"
+    },
+    {
+      "family": "aqueduct",
+      "state": "damaged",
+      "status": "REUSED_A2",
+      "source": "art/style05/struct/a2/iron/aqueduct_damaged.png",
+      "attempts": 0,
+      "reasons": [
+        "Existing accepted A2 physical state reused byte-for-byte."
+      ],
+      "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "sha256": "fbf6c5d8969a54faebfbdf250497df0d5de1882031015994f24818092611199c"
+    },
+    {
+      "family": "aqueduct",
+      "state": "ruined",
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "source": "art/style05/struct/b3/stages_iron/aqueduct_ruined.png",
+      "attempts": 1,
+      "reasons": [
+        "Distinct state; all unchanged numeric checks pass."
+      ]
+    },
+    {
+      "family": "reservoir",
+      "state": "blueprint",
+      "status": "ROOT_DISPLAY_RECIPE",
+      "source": null,
+      "attempts": 0,
+      "reasons": [
+        "Root owns existing blueprint ghost display recipe; no generated sprite required."
+      ]
+    },
+    {
+      "family": "reservoir",
+      "state": "foundation",
+      "status": "REJECTED_CAPPED",
+      "source": null,
+      "attempts": 3,
+      "reasons": [
+        "Try1 read as built; try2 failed wash_flatness; try3 failed edge_density and wash_flatness. No adoption."
+      ]
+    },
+    {
+      "family": "reservoir",
+      "state": "half_built",
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "source": "art/style05/struct/b3/stages_iron/reservoir_half_built.png",
+      "attempts": 2,
+      "reasons": [
+        "Try1 too similar to built; try2 south/east curb gaps expose incomplete earth retaining edge."
+      ]
+    },
+    {
+      "family": "reservoir",
+      "state": "built",
+      "status": "REUSED_A2",
+      "source": "art/style05/struct/a2/iron/reservoir_empty.png",
+      "attempts": 0,
+      "reasons": [
+        "Existing accepted A2 physical state reused byte-for-byte."
+      ],
+      "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "sha256": "595e5e7ee4183d2da9581ad1b915107bceac020c818e647c253230c20ac8de94"
+    },
+    {
+      "family": "reservoir",
+      "state": "damaged",
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "source": "art/style05/struct/b3/stages_iron/reservoir_damaged.png",
+      "attempts": 1,
+      "reasons": [
+        "Distinct state; all unchanged numeric checks pass."
+      ]
+    },
+    {
+      "family": "reservoir",
+      "state": "ruined",
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "source": "art/style05/struct/b3/stages_iron/reservoir_ruined.png",
+      "attempts": 1,
+      "reasons": [
+        "Distinct state; all unchanged numeric checks pass."
+      ]
+    },
+    {
+      "family": "rotary_quern",
+      "state": "blueprint",
+      "status": "ROOT_DISPLAY_RECIPE",
+      "source": null,
+      "attempts": 0,
+      "reasons": [
+        "Root owns existing blueprint ghost display recipe; no generated sprite required."
+      ]
+    },
+    {
+      "family": "rotary_quern",
+      "state": "foundation",
+      "status": "NOT_APPLICABLE",
+      "source": null,
+      "attempts": 0,
+      "reasons": [
+        "Bible4.4 describes a rotary hand-quern technology and portable working station; A2 drawing is a two-disc movable hand mill, not a building foundation. Construction staging would invent masonry."
+      ]
+    },
+    {
+      "family": "rotary_quern",
+      "state": "half_built",
+      "status": "NOT_APPLICABLE",
+      "source": null,
+      "attempts": 0,
+      "reasons": [
+        "Bible4.4 describes a rotary hand-quern technology and portable working station; A2 drawing is a two-disc movable hand mill, not a building foundation. Construction staging would invent masonry."
+      ]
+    },
+    {
+      "family": "rotary_quern",
+      "state": "built",
+      "status": "REUSED_A2",
+      "source": "art/style05/struct/a2/iron/rotary_quern.png",
+      "attempts": 0,
+      "reasons": [
+        "Existing accepted A2 physical state reused byte-for-byte."
+      ],
+      "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "sha256": "77b95ba4a421cb72edb8928a41bf03b639ef9224729a0d52411a74ab024b3374"
+    },
+    {
+      "family": "rotary_quern",
+      "state": "damaged",
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "source": "art/style05/struct/b3/stages_iron/rotary_quern_damaged.png",
+      "attempts": 1,
+      "reasons": [
+        "Distinct state; all unchanged numeric checks pass."
+      ]
+    },
+    {
+      "family": "rotary_quern",
+      "state": "ruined",
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "source": "art/style05/struct/b3/stages_iron/rotary_quern_ruined.png",
+      "attempts": 1,
+      "reasons": [
+        "Distinct state; all unchanged numeric checks pass."
+      ]
+    },
+    {
+      "family": "sundial",
+      "state": "blueprint",
+      "status": "ROOT_DISPLAY_RECIPE",
+      "source": null,
+      "attempts": 0,
+      "reasons": [
+        "Root owns existing blueprint ghost display recipe; no generated sprite required."
+      ]
+    },
+    {
+      "family": "sundial",
+      "state": "foundation",
+      "status": "NOT_APPLICABLE",
+      "source": null,
+      "attempts": 0,
+      "reasons": [
+        "Bible4.4 geometry/sundial knowledge names an instrument; A2 is a small movable circular dial on loose stones, no authored structural building phases. Physical damage variants still supplied."
+      ]
+    },
+    {
+      "family": "sundial",
+      "state": "half_built",
+      "status": "NOT_APPLICABLE",
+      "source": null,
+      "attempts": 0,
+      "reasons": [
+        "Bible4.4 geometry/sundial knowledge names an instrument; A2 is a small movable circular dial on loose stones, no authored structural building phases. Physical damage variants still supplied."
+      ]
+    },
+    {
+      "family": "sundial",
+      "state": "built",
+      "status": "REUSED_A2",
+      "source": "art/style05/struct/a2/iron/sundial.png",
+      "attempts": 0,
+      "reasons": [
+        "Existing accepted A2 physical state reused byte-for-byte."
+      ],
+      "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "sha256": "cac341d7b351c6a365233a627e88c490a0d76dae83b33108dca3f79bc7ffd8ea"
+    },
+    {
+      "family": "sundial",
+      "state": "damaged",
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "source": "art/style05/struct/b3/stages_iron/sundial_damaged.png",
+      "attempts": 1,
+      "reasons": [
+        "Distinct state; all unchanged numeric checks pass."
+      ]
+    },
+    {
+      "family": "sundial",
+      "state": "ruined",
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "source": "art/style05/struct/b3/stages_iron/sundial_ruined.png",
+      "attempts": 1,
+      "reasons": [
+        "Distinct state; all unchanged numeric checks pass."
+      ]
+    }
+  ]
+}

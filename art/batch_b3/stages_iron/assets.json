@@ -1,0 +1,418 @@
+{
+  "assets": [
+    {
+      "id": "aqueduct_ruined",
+      "path": "art/style05/struct/b3/stages_iron/aqueduct_ruined.png",
+      "width": 101,
+      "height": 32,
+      "anchor": [
+        50,
+        27
+      ],
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "sha256": "e632ead932d2a5f07313fd816b199d87db23529ac4ae2db7c527b2da849a90d1",
+      "count_buckets": [],
+      "family": "buildings"
+    },
+    {
+      "id": "bloomery_damaged",
+      "path": "art/style05/struct/b3/stages_iron/bloomery_damaged.png",
+      "width": 50,
+      "height": 64,
+      "anchor": [
+        25,
+        59
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "sha256": "5ab9480972e02857212c942465c98cec9ecd67e9db96ecb213165a0017df023d",
+      "count_buckets": [],
+      "family": "buildings"
+    },
+    {
+      "id": "bloomery_foundation",
+      "path": "art/style05/struct/b3/stages_iron/bloomery_foundation.png",
+      "width": 41,
+      "height": 26,
+      "anchor": [
+        20,
+        21
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "sha256": "290270599adea938f5fdae682a987553b87f90af9e9c70e7c0a5c6c4949f329f",
+      "count_buckets": [],
+      "family": "buildings"
+    },
+    {
+      "id": "bloomery_half_built",
+      "path": "art/style05/struct/b3/stages_iron/bloomery_half_built.png",
+      "width": 44,
+      "height": 42,
+      "anchor": [
+        22,
+        37
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "sha256": "9d308854f34093a8a74bfbface1b88f9c88f3e0d4ca6b5f80e074e94ea823fe2",
+      "count_buckets": [],
+      "family": "buildings"
+    },
+    {
+      "id": "bloomery_ruined",
+      "path": "art/style05/struct/b3/stages_iron/bloomery_ruined.png",
+      "width": 41,
+      "height": 28,
+      "anchor": [
+        20,
+        23
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "sha256": "ddd76371060f8e32092658424a0913c60e254d1e5d35d5ec56da116078bfc769",
+      "count_buckets": [],
+      "family": "buildings"
+    },
+    {
+      "id": "bridge_damaged",
+      "path": "art/style05/struct/b3/stages_iron/bridge_damaged.png",
+      "width": 229,
+      "height": 163,
+      "anchor": [
+        114,
+        158
+      ],
+      "footprint": [
+        3.0,
+        2.0
+      ],
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "sha256": "803583a1e4278517740002f62bdf209fa8f70922730d74b2e49cbbd771aa4fb7",
+      "count_buckets": [],
+      "family": "buildings"
+    },
+    {
+      "id": "bridge_half_built",
+      "path": "art/style05/struct/b3/stages_iron/bridge_half_built.png",
+      "width": 222,
+      "height": 153,
+      "anchor": [
+        111,
+        148
+      ],
+      "footprint": [
+        3.0,
+        2.0
+      ],
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "sha256": "9751eba8b2262dedb392dbf95ee096a41a5b9da96fd161560aa6a257786f6484",
+      "count_buckets": [],
+      "family": "buildings"
+    },
+    {
+      "id": "bridge_ruined",
+      "path": "art/style05/struct/b3/stages_iron/bridge_ruined.png",
+      "width": 239,
+      "height": 149,
+      "anchor": [
+        119,
+        144
+      ],
+      "footprint": [
+        3.0,
+        2.0
+      ],
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "sha256": "33ddefc740f4481dfb67d920dcb4c13f971c57858d0c71d7e2a31c901d234f85",
+      "count_buckets": [],
+      "family": "buildings"
+    },
+    {
+      "id": "forge_damaged",
+      "path": "art/style05/struct/b3/stages_iron/forge_damaged.png",
+      "width": 69,
+      "height": 46,
+      "anchor": [
+        34,
+        41
+      ],
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "sha256": "796e4aab76adfb986e49472ab5edc3628a505409ba55ba6da0017b5d56d675b4",
+      "count_buckets": [],
+      "family": "buildings"
+    },
+    {
+      "id": "forge_half_built",
+      "path": "art/style05/struct/b3/stages_iron/forge_half_built.png",
+      "width": 55,
+      "height": 34,
+      "anchor": [
+        27,
+        29
+      ],
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "sha256": "633932db1c1b4ea7b07e2aebe21020ec9ffd4e03f38641798cf11e1c712c3e08",
+      "count_buckets": [],
+      "family": "buildings"
+    },
+    {
+      "id": "forge_ruined",
+      "path": "art/style05/struct/b3/stages_iron/forge_ruined.png",
+      "width": 39,
+      "height": 26,
+      "anchor": [
+        19,
+        21
+      ],
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "sha256": "529a2f7ad1f9a1cbe523f336b7b82e1e107bede6e9d8914d00aac9a7a0496230",
+      "count_buckets": [],
+      "family": "buildings"
+    },
+    {
+      "id": "reservoir_damaged",
+      "path": "art/style05/struct/b3/stages_iron/reservoir_damaged.png",
+      "width": 142,
+      "height": 137,
+      "anchor": [
+        71,
+        132
+      ],
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "sha256": "94b3ff3a06d76d1d2a8f49dd757e44484751e1476b9bc418e0e9edb9744d1789",
+      "count_buckets": [],
+      "family": "buildings"
+    },
+    {
+      "id": "reservoir_half_built",
+      "path": "art/style05/struct/b3/stages_iron/reservoir_half_built.png",
+      "width": 137,
+      "height": 137,
+      "anchor": [
+        68,
+        132
+      ],
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "sha256": "99e32a2b34423b6fc2e7efee79cd0010fffba9b1b833ebf954dca24a43b97ab3",
+      "count_buckets": [],
+      "family": "buildings"
+    },
+    {
+      "id": "reservoir_ruined",
+      "path": "art/style05/struct/b3/stages_iron/reservoir_ruined.png",
+      "width": 162,
+      "height": 137,
+      "anchor": [
+        81,
+        132
+      ],
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "sha256": "314b70bbcccaee32be1f8f073acc41c67b1672b57d4df2ce46dc90a9cd4a1578",
+      "count_buckets": [],
+      "family": "buildings"
+    },
+    {
+      "id": "rotary_quern_damaged",
+      "path": "art/style05/struct/b3/stages_iron/rotary_quern_damaged.png",
+      "width": 43,
+      "height": 42,
+      "anchor": [
+        21,
+        37
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "sha256": "9f5893f76c81eab95e81c5704fd19a60a45d7b9da3378493ea85915a196821f1",
+      "count_buckets": [],
+      "family": "buildings"
+    },
+    {
+      "id": "rotary_quern_ruined",
+      "path": "art/style05/struct/b3/stages_iron/rotary_quern_ruined.png",
+      "width": 30,
+      "height": 24,
+      "anchor": [
+        15,
+        19
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "sha256": "3a213f4d35ab6f8917fedc136a12e17529b3e612b0f18efe38c18c9b69bab741",
+      "count_buckets": [],
+      "family": "buildings"
+    },
+    {
+      "id": "sundial_damaged",
+      "path": "art/style05/struct/b3/stages_iron/sundial_damaged.png",
+      "width": 43,
+      "height": 40,
+      "anchor": [
+        21,
+        35
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "sha256": "94721d5859bc0fce5ac8c3c0f492df83fe5a8709dfd10cc7c41c64df7a7ed457",
+      "count_buckets": [],
+      "family": "buildings"
+    },
+    {
+      "id": "sundial_ruined",
+      "path": "art/style05/struct/b3/stages_iron/sundial_ruined.png",
+      "width": 27,
+      "height": 22,
+      "anchor": [
+        13,
+        17
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "sha256": "47d261a3752df4893483419f7c25eb94cb48a085e6fd4975cf076bd6abc06507",
+      "count_buckets": [],
+      "family": "buildings"
+    },
+    {
+      "id": "town_gate_damaged",
+      "path": "art/style05/struct/b3/stages_iron/town_gate_damaged.png",
+      "width": 110,
+      "height": 68,
+      "anchor": [
+        55,
+        63
+      ],
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "sha256": "bf906a8f1cef1948ccb13bf196c017c3443159234724ca165b833ab966e23cef",
+      "count_buckets": [],
+      "family": "buildings"
+    },
+    {
+      "id": "town_gate_ruined",
+      "path": "art/style05/struct/b3/stages_iron/town_gate_ruined.png",
+      "width": 69,
+      "height": 32,
+      "anchor": [
+        34,
+        27
+      ],
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "sha256": "c536724eea96a12a92939cd8b4801945e80753f88c8f10533743b207b1dd8e4e",
+      "count_buckets": [],
+      "family": "buildings"
+    },
+    {
+      "id": "watchtower_foundation",
+      "path": "art/style05/struct/b3/stages_iron/watchtower_foundation.png",
+      "width": 64,
+      "height": 38,
+      "anchor": [
+        32,
+        33
+      ],
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "sha256": "66f8a322c3850ad01823c4ccb63d3c47b35087d72a8df137809124689b9164fe",
+      "count_buckets": [],
+      "family": "buildings"
+    },
+    {
+      "id": "watchtower_half_built",
+      "path": "art/style05/struct/b3/stages_iron/watchtower_half_built.png",
+      "width": 72,
+      "height": 78,
+      "anchor": [
+        36,
+        73
+      ],
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "sha256": "170d2f51781e9e0f30ebfe49613dde456d6116aab86453db2c14ec8ae42bf609",
+      "count_buckets": [],
+      "family": "buildings"
+    },
+    {
+      "id": "watchtower_ruined",
+      "path": "art/style05/struct/b3/stages_iron/watchtower_ruined.png",
+      "width": 83,
+      "height": 44,
+      "anchor": [
+        41,
+        39
+      ],
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "sha256": "dcf4796ae22cf694536cb54b96f985ae9b60dd9e26a4d725985a7cfe159ea2f1",
+      "count_buckets": [],
+      "family": "buildings"
+    }
+  ]
+}

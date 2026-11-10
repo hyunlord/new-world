@@ -1,0 +1,148 @@
+{
+  "record": {
+    "id": "bloomery_damaged",
+    "lane": "stages_iron",
+    "era": "iron",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c2fc-1dfc-7510-bcd2-36b7b46419d7/exec-d904197a-2760-42f6-88c5-faeb50f39f03.png",
+    "prompt": "Use case: precise-object-edit. ONE isolated WorldSim style05 iron-age game sprite: bloomery_damaged. Inputs1/2 are locked style anchors props.png and scene.png; input3 is the completed object whose identity/materials/footprint must remain. SUBJECT: The same completed clay furnace with a distinct vertical structural crack and one missing upper rim wedge. Keep the whole standing shaft, stone footings and right tuyere. No fire. CAMERA: front three-quarter about20 degrees down; ground plan orthogonal, no isometric diamond. Original footprint 1x1 64px tiles. Declared final opaque height 56px, deliberately lower only where this stage removes upper construction. Match original base width, not a smaller model. Fine sepia-charcoal ink on restrained earth/ochre/slate wash, main contour:secondary line2:1. Material marks: wood3 broken longitudinal marks per principal timber; stone3 selective crack/facet groups per dominant block; clay3 short cracks; one group of3 parallel / hatch strokes. Broad quiet base wash with distinct darker right/lower planes, upper-left light. No smooth3D plastic, dense all-over hatching, photorealism, roofs, people, labels, letters, border, scenic ground patch, cast-shadow puddle. Entire object with generous margins on genuine alpha-zero transparent background. Render this ONE state only.",
+    "subject": null,
+    "references": [
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/bloomery_unlit.png"
+    ],
+    "target_height": 56,
+    "projection_family": "bloomery_damaged",
+    "height_band": [
+      54,
+      58
+    ],
+    "height_band_reason": "Preregistered B3 damaged geometry: The same completed clay furnace with a distinct vertical structural crack and one missing upper rim wedge. Keep the whole standing shaft, stone footings and right tuyere. No fire. Original occupied footprint 1x1 remains.",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-10T01:06:59.510Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/bloomery_damaged_try1.png",
+  "raw_sha256": "6840c1e5638659c18093d96af81a503aad00dcf4c3352ecb4f37fa1cda632722",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/bloomery_unlit.png",
+      "sha256": "34d0c1f13298c2d625f7a217943310b5dda69450b16b807f0102360f3a6f5471"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/B3/stages_iron/normalized/bloomery_damaged_try1.png",
+  "normalized_sha256": "5ab9480972e02857212c942465c98cec9ecd67e9db96ecb213165a0017df023d",
+  "size": [
+    50,
+    64
+  ],
+  "anchor": [
+    25,
+    59
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (349, 200, 929, 984)",
+    "uniform Lanczos scale: 0.07179487179487179",
+    "transparent 4px padding; source-canvas anchor: (25, 59)"
+  ],
+  "projection": {
+    "family": "bloomery_damaged",
+    "anchor": [
+      25,
+      59
+    ],
+    "height_band": [
+      54,
+      58
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1601,
+    "base_row": 59,
+    "base_error": 0,
+    "height": 56,
+    "gradient_x": -1.0609047989623865,
+    "gradient_y": -0.716612588310854,
+    "light_angle_degrees": 214.03796548166568,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/bloomery_damaged_try1.png",
+    "sha256": "6840c1e5638659c18093d96af81a503aad00dcf4c3352ecb4f37fa1cda632722",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.27641533224057496,
+      "saturation_q25": 0.5327550219285939,
+      "saturation_q75": 0.6528995234752548,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.009445241438561937,
+      "foreground_pixels": 33197
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    0,
+    1266,
+    1176
+  ],
+  "raw_opaque_bbox": [
+    351,
+    202,
+    927,
+    982
+  ],
+  "raw_faint_far_ratio": 0.004846587825472353,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+  "failures": [],
+  "review": {
+    "reviewer": "iron_work self review",
+    "verdict": "pass",
+    "score": 90,
+    "reason": "Same materials/camera and distinct physical-stage silhouette at1x and2x; no visible halo on light/dark RGBA composites.",
+    "independent_review": "root + animal_fixes review; five geometry states withheld"
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_path": "art/style05/struct/b3/stages_iron/bloomery_damaged.png"
+}

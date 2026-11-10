@@ -1,0 +1,28 @@
+{
+  "verdict": "PASS",
+  "assets": 23,
+  "originals": 47,
+  "rejected_or_superseded_originals": 24,
+  "coverage": {
+    "ROOT_DISPLAY_RECIPE": 9,
+    "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW": 23,
+    "REUSED_A2": 11,
+    "REJECTED_CAPPED": 5,
+    "REJECTED_BOUNDED": 2,
+    "NOT_APPLICABLE": 4
+  },
+  "max_attempts": 3,
+  "boards": 18,
+  "numeric_gate": "frozen A2 unchanged",
+  "checks": [
+    "asset/raw/normalized SHA256",
+    "RGBA dimensions and geometry",
+    "all selected numeric gates",
+    "A2 reuse hash",
+    "three-attempt cap",
+    "54 unique coverage states",
+    "no pending states",
+    "draft role/id/source/dest and assets metadata",
+    "18 native/nearest2x boards"
+  ]
+}

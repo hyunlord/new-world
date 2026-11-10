@@ -1,0 +1,148 @@
+{
+  "record": {
+    "id": "sundial_damaged",
+    "lane": "stages_iron",
+    "era": "iron",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c798-fbc9-76f3-8f29-323bd0f2fd82/exec-ff580d7f-80ab-4a96-9406-99868607e0d1.png",
+    "prompt": "Use case: precise-object-edit. Make ONE isolated construction-stage game sprite. Inputs1+2 are locked ink-and-tone style references; input3 is the exact built design to preserve. Genuine transparent background; generous margins; no ground patch, shadow puddle, text, roof, border or scenery. Same front three-quarter camera about20degrees down; light upper-left, darker right/lower shade. Fine broken sepia-charcoal ink, main/detail2:1; quiet broad earth wash, no dense texture or3D bevel. Stone3 selective crack/facet groups per dominant rock; wood3 broken longitudinal grain lines per principal beam; clay3 short crack groups; hatching one group of3 parallel / marks. Physical footprint unchanged. Same circular stone sundial on low stone base; one broad cracked sector but intact circular face, triangular gnomon bent/chipped halfway. Original sparse engraved radial marks preserved, no text or numerals. Intended game opaque height32px, footprint[1, 1]; preserve material and component identity at1x.",
+    "subject": null,
+    "references": [
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/sundial.png"
+    ],
+    "target_height": 32,
+    "projection_family": "sundial_damaged",
+    "height_band": [
+      30,
+      34
+    ],
+    "height_band_reason": "Predeclared B3 construction or damaged silhouette; original occupied footprint unchanged.",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": "exec-ff580d7f-80ab-4a96-9406-99868607e0d1",
+    "seed": null,
+    "generated_at": "2026-11-10T22:45:47.730Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/sundial_damaged_try1.png",
+  "raw_sha256": "9361909eb528794caa4756def492b206a599880fe818206dfde3f8dfb7dde851",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/sundial.png",
+      "sha256": "cac341d7b351c6a365233a627e88c490a0d76dae83b33108dca3f79bc7ffd8ea"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/B3/stages_iron/normalized/sundial_damaged_try1.png",
+  "normalized_sha256": "94721d5859bc0fce5ac8c3c0f492df83fe5a8709dfd10cc7c41c64df7a7ed457",
+  "size": [
+    43,
+    40
+  ],
+  "anchor": [
+    21,
+    35
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (220, 193, 1065, 976)",
+    "uniform Lanczos scale: 0.0410783055198973",
+    "transparent 4px padding; source-canvas anchor: (21, 35)"
+  ],
+  "projection": {
+    "family": "sundial_damaged",
+    "anchor": [
+      21,
+      35
+    ],
+    "height_band": [
+      30,
+      34
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 815,
+    "base_row": 35,
+    "base_error": 0,
+    "height": 32,
+    "gradient_x": -1.6069128991060022,
+    "gradient_y": -2.995596907216494,
+    "light_angle_degrees": 241.7897813589801,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/sundial_damaged_try1.png",
+    "sha256": "9361909eb528794caa4756def492b206a599880fe818206dfde3f8dfb7dde851",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.19248211697601572,
+      "saturation_q25": 0.30532456752670983,
+      "saturation_q75": 0.416837188020765,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.47213595499958,
+      "wash_flatness": 0.01835254817365254,
+      "foreground_pixels": 44316
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    20,
+    1298,
+    1199
+  ],
+  "raw_opaque_bbox": [
+    222,
+    195,
+    1063,
+    974
+  ],
+  "raw_faint_far_ratio": 0.004135450270598743,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+  "failures": [],
+  "review": {
+    "reviewer": "iron_work self review",
+    "verdict": "pass",
+    "score": 90,
+    "reason": "Same materials/camera and distinct physical-stage silhouette at1x and2x; no visible halo on light/dark RGBA composites.",
+    "independent_review": "root + animal_fixes review; five geometry states withheld"
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_path": "art/style05/struct/b3/stages_iron/sundial_damaged.png"
+}

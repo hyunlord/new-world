@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "reviewer": "B3 animal_fixes bounded support-registration review",
+  "snapshot_at_utc": "2026-11-10T22:59:10.319282+00:00",
+  "verdict": "WITHHOLD_BOTH_CURRENT_HALF_BUILT_CANDIDATES",
+  "results": [
+    {
+      "id": "aqueduct_half_built",
+      "verdict": "WITHHOLD_SELECTED_TRY1",
+      "issue": "contracted_ground_support_registration",
+      "detail": "Both bottom support blocks move inward: bottom12px runs are built[-65,-29] and[28,64], half-built[-52,-26] and[23,52]. Outer ground-support span contracts130px to105px, with support centres moving inward approximately8-9px per side. Missing upper channel cannot explain lower support movement.",
+      "source_comparison": {
+        "built": {
+          "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/aqueduct.png",
+          "sha256": "d43acf874ad06b4979d6032bd0b88fc5b1aa6c814fb38aa3883527ebd944dd55",
+          "anchor": [
+            71,
+            63
+          ],
+          "bottom_strip_world_x_runs": {
+            "4": [
+              [
+                -65,
+                -30
+              ],
+              [
+                29,
+                64
+              ]
+            ],
+            "12": [
+              [
+                -65,
+                -29
+              ],
+              [
+                28,
+                64
+              ]
+            ]
+          }
+        },
+        "half_built": {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_iron/aqueduct_half_built.png",
+          "sha256": "d10dd0ebe1aa5efa46561b4d2ab1ce7805cdfc8232b22246b599b1d41fe90900",
+          "anchor": [
+            56,
+            43
+          ],
+          "bottom_strip_world_x_runs": {
+            "4": [
+              [
+                -52,
+                -26
+              ],
+              [
+                23,
+                51
+              ]
+            ],
+            "12": [
+              [
+                -52,
+                -26
+              ],
+              [
+                23,
+                52
+              ]
+            ]
+          }
+        }
+      },
+      "declared_basis": "Saved try1 request: exact built design to preserve, physical footprint unchanged, preserve material/component identity. Catalog: same two aqueduct piers, or two gate piers/central empty doorway. Source anchor coordinates retained in comparison.",
+      "recommendation": "Withhold current candidate unless a new candidate within the existing per-asset3-attempt cap preserves parent ground support locations. Do not resize, stretch or change the declared geometry to adopt this candidate."
+    },
+    {
+      "id": "town_gate_half_built",
+      "verdict": "WITHHOLD_SELECTED_TRY1",
+      "issue": "contracted_ground_support_registration",
+      "detail": "Bottom12px outer masonry extent contracts from[-52,52](105px) to[-42,41](84px). Bottom4px left footing moves from[-51,-25] to[-42,-19]; right footing moves from[19,43] to[11,35]. Door pixels between the built footings are excluded when identifying these two bottom4px pier runs. Both support centres move inward; missing upper lintel does not explain this ground-level contraction.",
+      "source_comparison": {
+        "built": {
+          "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/town_gate_closed.png",
+          "sha256": "f808880b1a8bc28576c7450f8dd3c0665097bffd41543f49c368a1596c2c5134",
+          "anchor": [
+            56,
+            63
+          ],
+          "bottom_strip_world_x_runs": {
+            "4": [
+              [
+                -51,
+                -25
+              ],
+              [
+                -5,
+                -4
+              ],
+              [
+                6,
+                12
+              ],
+              [
+                14,
+                16
+              ],
+              [
+                19,
+                43
+              ]
+            ],
+            "12": [
+              [
+                -52,
+                52
+              ]
+            ]
+          }
+        },
+        "half_built": {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/struct/b3/stages_iron/town_gate_half_built.png",
+          "sha256": "45a76443ddb56345e3cfe1e8cba31c1023c9cd16d1c6880f66ae89de6d568692",
+          "anchor": [
+            46,
+            41
+          ],
+          "bottom_strip_world_x_runs": {
+            "4": [
+              [
+                -42,
+                -19
+              ],
+              [
+                11,
+                35
+              ]
+            ],
+            "12": [
+              [
+                -42,
+                -18
+              ],
+              [
+                10,
+                41
+              ]
+            ]
+          }
+        }
+      },
+      "declared_basis": "Saved try1 request: exact built design to preserve, physical footprint unchanged, preserve material/component identity. Catalog: same two aqueduct piers, or two gate piers/central empty doorway. Source anchor coordinates retained in comparison.",
+      "recommendation": "Withhold current candidate unless a new candidate within the existing per-asset3-attempt cap preserves parent ground support locations. Do not resize, stretch or change the declared geometry to adopt this candidate."
+    }
+  ],
+  "method": "Read-only alpha>=128 occupancy analysis of bottom4px and12px strips ending at recorded source anchor.y. X is world-relative(source x minus anchor.x). This tests lower standing supports, independent of missing elevated overhangs. Individual source sprites and original selected boards were visually compared.",
+  "related_NS_retry_note": "Planner/parent reports aqueduct_ns_try3 withheld for79px measured versus64px target; this bounded review did not re-audit that lane. pen_fence_ns_try3 remains in flight; no verdict inferred.",
+  "limits": [
+    "No broader geometry-audit refresh performed.",
+    "No numerical style-gate rerun, generation or image/repository edit.",
+    "Only this external review JSON was written."
+  ]
+}

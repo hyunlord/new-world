@@ -1,0 +1,148 @@
+{
+  "record": {
+    "id": "aqueduct_ruined",
+    "lane": "stages_iron",
+    "era": "iron",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c798-fbc9-76f3-8f29-323bd0f2fd82/exec-5574ed72-ad5a-4200-9045-07408b09d36d.png",
+    "prompt": "Use case: precise-object-edit. Make ONE isolated construction-stage game sprite. Inputs1+2 are locked ink-and-tone style references; input3 is the exact built design to preserve. Genuine transparent background; generous margins; no ground patch, shadow puddle, text, roof, border or scenery. Same front three-quarter camera about20degrees down; light upper-left, darker right/lower shade. Fine broken sepia-charcoal ink, main/detail2:1; quiet broad earth wash, no dense texture or3D bevel. Stone3 selective crack/facet groups per dominant rock; wood3 broken longitudinal grain lines per principal beam; clay3 short crack groups; hatching one group of3 parallel / marks. Physical footprint unchanged. The same two aqueduct piers collapsed into low square stubs; broken long trough fragments lie horizontally between them, no intact elevated span, no water. Maintain same broad2x1 silhouette. Intended game opaque height24px, footprint[2, 1]; preserve material and component identity at1x.",
+    "subject": null,
+    "references": [
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/aqueduct.png"
+    ],
+    "target_height": 24,
+    "projection_family": "aqueduct_ruined",
+    "height_band": [
+      22,
+      26
+    ],
+    "height_band_reason": "Predeclared B3 construction or damaged silhouette; original occupied footprint unchanged.",
+    "footprint": [
+      2.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": "exec-5574ed72-ad5a-4200-9045-07408b09d36d",
+    "seed": null,
+    "generated_at": "2026-11-10T22:42:21.901Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/aqueduct_ruined_try1.png",
+  "raw_sha256": "8d031498e7ab1063595016f2bcb1e8ae8eb201e9a6c0d8dc494b7fa5a00db203",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/aqueduct.png",
+      "sha256": "d43acf874ad06b4979d6032bd0b88fc5b1aa6c814fb38aa3883527ebd944dd55"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/B3/stages_iron/normalized/aqueduct_ruined_try1.png",
+  "normalized_sha256": "e632ead932d2a5f07313fd816b199d87db23529ac4ae2db7c527b2da849a90d1",
+  "size": [
+    101,
+    32
+  ],
+  "anchor": [
+    50,
+    27
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (202, 267, 1572, 624)",
+    "uniform Lanczos scale: 0.0679886685552408",
+    "transparent 4px padding; source-canvas anchor: (50, 27)"
+  ],
+  "projection": {
+    "family": "aqueduct_ruined",
+    "anchor": [
+      50,
+      27
+    ],
+    "height_band": [
+      22,
+      26
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1264,
+    "base_row": 27,
+    "base_error": 0,
+    "height": 24,
+    "gradient_x": -1.6157802489626556,
+    "gradient_y": -5.007999316239317,
+    "light_angle_degrees": 252.1182299417745,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/aqueduct_ruined_try1.png",
+    "sha256": "8d031498e7ab1063595016f2bcb1e8ae8eb201e9a6c0d8dc494b7fa5a00db203",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.22560386473429953,
+      "saturation_q25": 0.3441416617282422,
+      "saturation_q75": 0.4381954552223295,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.021757809784499302,
+      "foreground_pixels": 9634
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    101,
+    1742,
+    846
+  ],
+  "raw_opaque_bbox": [
+    204,
+    269,
+    1570,
+    622
+  ],
+  "raw_faint_far_ratio": 0.008747799295774648,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+  "failures": [],
+  "review": {
+    "reviewer": "iron_work self review",
+    "verdict": "pass",
+    "score": 90,
+    "reason": "Same materials/camera and distinct physical-stage silhouette at1x and2x; no visible halo on light/dark RGBA composites.",
+    "independent_review": "root + animal_fixes review; five geometry states withheld"
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_path": "art/style05/struct/b3/stages_iron/aqueduct_ruined.png"
+}

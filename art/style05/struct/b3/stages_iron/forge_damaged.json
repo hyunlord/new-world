@@ -1,0 +1,148 @@
+{
+  "record": {
+    "id": "forge_damaged",
+    "lane": "stages_iron",
+    "era": "iron",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c2fc-1dfc-7510-bcd2-36b7b46419d7/exec-11eb0d8e-77e1-4da5-b333-830ac69deebb.png",
+    "prompt": "Use case: precise-object-edit. ONE isolated WorldSim style05 iron-age game sprite. Inputs1/2 are locked style anchors props.png and scene.png; input3 is completed object design to preserve. Fine sepia-charcoal ink on restrained earth/ochre/slate wash. Main contour:secondary line2:1; wood3 broken grain marks per timber, stone3 selective crack/facet groups per block, clay3 short crack groups. One group of3 parallel / hatching marks. Broad quiet base wash and darker right/lower shade. Upper-left light. Front three-quarter about20-degree-down camera, orthogonal ground footprint, no isometric diamond. No roofs, people, text, border, ground patch, cast-shadow puddle, glow, dense hatching, photorealism or 3D render. Generous genuinely transparent margins, entire object inside frame. Preserve exact original occupied base dimensions, not a miniature model. SUBJECT forge_damaged: The same complete small smithing hearth and bellows station; broken upper bellows lever, slack torn leather and one chipped hearth corner. Keep the same arrangement and anvil block at right; no fire. Output final opaque height38px; footprint2x164px tiles. Generate ONE state.",
+    "subject": null,
+    "references": [
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/forge_idle.png"
+    ],
+    "target_height": 38,
+    "projection_family": "forge_damaged",
+    "height_band": [
+      36,
+      40
+    ],
+    "height_band_reason": "Preregistered B3 stage geometry: The same complete small smithing hearth and bellows station; broken upper bellows lever, slack torn leather and one chipped hearth corner. Keep the same arrangement and anvil block at right; no fire.",
+    "footprint": [
+      2.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-10T01:11:12.040Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/forge_damaged_try1.png",
+  "raw_sha256": "0f4e9aa71a884bb0fe4d01b4e5fcf4621df10f510952e5e5a90a24bce0e31f96",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/forge_idle.png",
+      "sha256": "6f7bce88ef5ae6de102ed09e7567ecb1f2f099e6bc98c14d750de1004e249e59"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/B3/stages_iron/normalized/forge_damaged_try1.png",
+  "normalized_sha256": "796e4aab76adfb986e49472ab5edc3628a505409ba55ba6da0017b5d56d675b4",
+  "size": [
+    69,
+    46
+  ],
+  "anchor": [
+    34,
+    41
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (130, 55, 1496, 907)",
+    "uniform Lanczos scale: 0.04481132075471698",
+    "transparent 4px padding; source-canvas anchor: (34, 41)"
+  ],
+  "projection": {
+    "family": "forge_damaged",
+    "anchor": [
+      34,
+      41
+    ],
+    "height_band": [
+      36,
+      40
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1426,
+    "base_row": 41,
+    "base_error": 0,
+    "height": 38,
+    "gradient_x": -1.6677948604992656,
+    "gradient_y": -2.907577744807121,
+    "light_angle_degrees": 240.1612950864002,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/forge_damaged_try1.png",
+    "sha256": "0f4e9aa71a884bb0fe4d01b4e5fcf4621df10f510952e5e5a90a24bce0e31f96",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.2751617076326003,
+      "saturation_q25": 0.365303528210738,
+      "saturation_q75": 0.5419499891928186,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.012509880618770996,
+      "foreground_pixels": 25178
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    0,
+    1600,
+    976
+  ],
+  "raw_opaque_bbox": [
+    132,
+    57,
+    1494,
+    905
+  ],
+  "raw_faint_far_ratio": 0.00496948538158644,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+  "failures": [],
+  "review": {
+    "reviewer": "iron_work self review",
+    "verdict": "pass",
+    "score": 90,
+    "reason": "Same materials/camera and distinct physical-stage silhouette at1x and2x; no visible halo on light/dark RGBA composites.",
+    "independent_review": "root + animal_fixes review; five geometry states withheld"
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_path": "art/style05/struct/b3/stages_iron/forge_damaged.png"
+}

@@ -1,0 +1,148 @@
+{
+  "record": {
+    "id": "reservoir_ruined",
+    "lane": "stages_iron",
+    "era": "iron",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c798-fbc9-76f3-8f29-323bd0f2fd82/exec-14369fe9-1e9c-4bc3-a0c5-0735dbdd2de4.png",
+    "prompt": "Use case: precise-object-edit. Make ONE isolated construction-stage game sprite. Inputs1+2 are locked ink-and-tone style references; input3 is the exact built design to preserve. Genuine transparent background; generous margins; no ground patch, shadow puddle, text, roof, border or scenery. Same front three-quarter camera about20degrees down; light upper-left, darker right/lower shade. Fine broken sepia-charcoal ink, main/detail2:1; quiet broad earth wash, no dense texture or3D bevel. Stone3 selective crack/facet groups per dominant rock; wood3 broken longitudinal grain lines per principal beam; clay3 short crack groups; hatching one group of3 parallel / marks. Physical footprint unchanged. Same square reservoir ruined: scattered low curb remnants outlining the original orthogonal2x2 square, four large fallen blocks and cracked dry basin. Most enclosure missing, right steps collapsed. No water, plants or ground outside footprint. Intended game opaque height128px, footprint[2, 2]; preserve material and component identity at1x.",
+    "subject": null,
+    "references": [
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/reservoir_empty.png"
+    ],
+    "target_height": 128,
+    "projection_family": "reservoir_ruined",
+    "height_band": [
+      126,
+      130
+    ],
+    "height_band_reason": "Predeclared B3 construction or damaged silhouette; original occupied footprint unchanged.",
+    "footprint": [
+      2.0,
+      2.0
+    ],
+    "style_family": "buildings",
+    "generation_id": "exec-14369fe9-1e9c-4bc3-a0c5-0735dbdd2de4",
+    "seed": null,
+    "generated_at": "2026-11-10T22:46:18.375Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/reservoir_ruined_try1.png",
+  "raw_sha256": "0d65d0065b4ace69e95bfd47f37af4a3a78973715aa296e27b88c71d37236212",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/reservoir_empty.png",
+      "sha256": "595e5e7ee4183d2da9581ad1b915107bceac020c818e647c253230c20ac8de94"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/B3/stages_iron/normalized/reservoir_ruined_try1.png",
+  "normalized_sha256": "314b70bbcccaee32be1f8f073acc41c67b1672b57d4df2ce46dc90a9cd4a1578",
+  "size": [
+    162,
+    137
+  ],
+  "anchor": [
+    81,
+    132
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (358, 166, 1129, 812)",
+    "uniform Lanczos scale: 0.19937694704049844",
+    "transparent 4px padding; source-canvas anchor: (81, 132)"
+  ],
+  "projection": {
+    "family": "reservoir_ruined",
+    "anchor": [
+      81,
+      132
+    ],
+    "height_band": [
+      126,
+      130
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 17277,
+    "base_row": 132,
+    "base_error": 0,
+    "height": 129,
+    "gradient_x": -0.21437417168234674,
+    "gradient_y": -0.29949566438476405,
+    "light_angle_degrees": 234.4055230413818,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/reservoir_ruined_try1.png",
+    "sha256": "0d65d0065b4ace69e95bfd47f37af4a3a78973715aa296e27b88c71d37236212",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.1954431798585963,
+      "saturation_q25": 0.3536595354357266,
+      "saturation_q75": 0.4850203101333647,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.01271283366651339,
+      "foreground_pixels": 48234
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 254,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    9,
+    1522,
+    1024
+  ],
+  "raw_opaque_bbox": [
+    360,
+    168,
+    1127,
+    810
+  ],
+  "raw_faint_far_ratio": 0.0076621866633404465,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+  "failures": [],
+  "review": {
+    "reviewer": "iron_work self review",
+    "verdict": "pass",
+    "score": 90,
+    "reason": "Same materials/camera and distinct physical-stage silhouette at1x and2x; no visible halo on light/dark RGBA composites.",
+    "independent_review": "root + animal_fixes review; five geometry states withheld"
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_path": "art/style05/struct/b3/stages_iron/reservoir_ruined.png"
+}

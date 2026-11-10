@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "verdict": "PASS_SELECTED_WITH_DOCUMENTED_GAPS",
+  "score": 90,
+  "selected_count": 23,
+  "generated": 47,
+  "rejected_originals": 24,
+  "capped_foundations": 5,
+  "bounded_half_built_gaps": 2,
+  "self_review": {
+    "planned_weak_states": [
+      "forge_foundation",
+      "watchtower_foundation",
+      "watchtower_ruined",
+      "aqueduct_foundation",
+      "bridge_foundation",
+      "bridge_ruined"
+    ],
+    "fraction": 0.2,
+    "additional_repairs": [
+      "bridge_damaged numeric light failure",
+      "reservoir_foundation and half_built semantic similarity"
+    ],
+    "note": "Six of30 weakstates retried; necessary numeric and semantic repairs also retained. No asset exceeds3 generations."
+  },
+  "independent_review": [
+    "reviews/iron_independent_review.json",
+    "reviews/iron_half_built_registration_review.json"
+  ],
+  "final_disposition": "Root agreed withholding five foundation states plus two half-built states after bounded correction, and adopting remaining23 unchanged selected assets.",
+  "limits": [
+    "No runtime integration; draft only.",
+    "Historical model judge unavailable in frozen A2 process; adopted numeric plus human-readable self and independent review."
+  ]
+}

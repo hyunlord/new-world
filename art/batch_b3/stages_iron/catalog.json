@@ -1,0 +1,385 @@
+{
+  "round": "B3",
+  "authority": "BRIEF2.md; A2 frozen STYLE_CONTRACT.md",
+  "rule": "All heights predeclared before candidate measurement; lower construction states and ruin silhouettes have distinct geometry. Source unchanged footprint. Blueprint handled by root.",
+  "families": [
+    {
+      "family": "bloomery",
+      "source": "bloomery_unlit",
+      "footprint": [
+        1,
+        1
+      ],
+      "states": [
+        {
+          "state": "foundation",
+          "target_height": 18,
+          "height_band": [
+            16,
+            20
+          ],
+          "description": "Original preregistered bloomery low circular clay-and-stone base ring, front arch just beginning; no shaft/fire/smoke. See immutable pre-stop attempt1 request."
+        },
+        {
+          "state": "half_built",
+          "target_height": 34,
+          "height_band": [
+            32,
+            36
+          ],
+          "description": "The same red-ochre clay shaft furnace built only to half its final height. Open broad rough unfinished rim; front extraction opening complete; right tuyere hole empty. No fire."
+        },
+        {
+          "state": "damaged",
+          "target_height": 56,
+          "height_band": [
+            54,
+            58
+          ],
+          "description": "The same completed clay furnace with a distinct vertical structural crack and one missing upper rim wedge. Keep the whole standing shaft, stone footings and right tuyere. No fire."
+        },
+        {
+          "state": "ruined",
+          "target_height": 20,
+          "height_band": [
+            18,
+            22
+          ],
+          "description": "The same furnace collapsed into a low broken circular red-clay ring with three large curved terracotta shaft fragments and its stone footings. Hollow cold interior. No standing shaft."
+        }
+      ]
+    },
+    {
+      "family": "forge",
+      "source": "forge_idle",
+      "footprint": [
+        2,
+        1
+      ],
+      "states": [
+        {
+          "state": "foundation",
+          "target_height": 14,
+          "height_band": [
+            12,
+            16
+          ],
+          "description": "Only the laid rectangular stone hearth base and two short timber footings for the bellows frame. No assembled bellows, anvil or raised frame. Very low horizontal installation."
+        },
+        {
+          "state": "half_built",
+          "target_height": 26,
+          "height_band": [
+            24,
+            28
+          ],
+          "description": "Stone hearth partly built, with incomplete upright timber bellows frame, crossbeam absent, leather bellows not fitted; a rough anvil block waiting at right. No tools or fire."
+        },
+        {
+          "state": "damaged",
+          "target_height": 38,
+          "height_band": [
+            36,
+            40
+          ],
+          "description": "The same complete small smithing hearth and bellows station; broken upper bellows lever, slack torn leather and one chipped hearth corner. Keep the same arrangement and anvil block at right; no fire."
+        },
+        {
+          "state": "ruined",
+          "target_height": 18,
+          "height_band": [
+            16,
+            20
+          ],
+          "description": "Collapsed forge station: broken low stone hearth ring at left, collapsed two wooden bellows timbers at right and detached flat leather bellows, one cold anvil stone. A compact low rubble silhouette."
+        }
+      ]
+    },
+    {
+      "family": "town_gate",
+      "source": "town_gate_closed",
+      "footprint": [
+        2,
+        1
+      ],
+      "states": [
+        {
+          "state": "foundation",
+          "target_height": 20,
+          "height_band": [
+            18,
+            22
+          ],
+          "description": "Only the two broad low stone pier footings, spaced exactly as the original gateway. One stone course high, clean central empty passage, no door leaves or lintel."
+        },
+        {
+          "state": "half_built",
+          "target_height": 38,
+          "height_band": [
+            36,
+            40
+          ],
+          "description": "Two stone piers at half height with flat unfinished upper courses, central empty doorway and separate rough timber lintel resting low behind them. No doors fitted."
+        },
+        {
+          "state": "damaged",
+          "target_height": 60,
+          "height_band": [
+            58,
+            62
+          ],
+          "description": "The same standing gateway with two stone piers and timber lintel; left door leaf visibly split and hanging askew, right door intact, a few cracked left pier blocks. Keep frame mostly standing."
+        },
+        {
+          "state": "ruined",
+          "target_height": 24,
+          "height_band": [
+            22,
+            26
+          ],
+          "description": "The same gateway collapsed to two low stone-pier stubs with the snapped long timber lintel lying between them and broken door planks. Central passage visible through rubble; no tall frame."
+        }
+      ]
+    },
+    {
+      "family": "watchtower",
+      "source": "watchtower",
+      "footprint": [
+        2,
+        2
+      ],
+      "states": [
+        {
+          "state": "foundation",
+          "target_height": 30,
+          "height_band": [
+            28,
+            32
+          ],
+          "description": "Only the square low stone tower foundation with clear south doorway gap, top-down square footprint matching tower base. Two courses high; empty interior visible; no platform, ladder, doorway leaf or upper story."
+        },
+        {
+          "state": "half_built",
+          "target_height": 70,
+          "height_band": [
+            68,
+            72
+          ],
+          "description": "The same square stone tower only half its final height, unfinished upper masonry courses, open top and south doorway; one temporary raw timber crosspiece at top, no finished wooden lookout rail. Ladder reaches unfinished rim."
+        },
+        {
+          "state": "ruined",
+          "target_height": 36,
+          "height_band": [
+            34,
+            38
+          ],
+          "description": "The same tower collapsed to a low broken stone ring with south doorway remnant and fallen timber platform beams within the2x2 footprint. Upper lookout and tall shaft absent; compact rubble, no scenery."
+        }
+      ]
+    },
+    {
+      "family": "bridge",
+      "source": "timber_bridge_ew",
+      "footprint": [
+        3,
+        2
+      ],
+      "states": [
+        {
+          "state": "foundation",
+          "target_height": 132,
+          "height_band": [
+            130,
+            134
+          ],
+          "description": "An east-west timber bridge under construction on the same exact orthogonal plan footprint192wide x128deep at game scale: only two long parallel horizontal longitudinal beams and four short corner piles, no deck planks or railings. Parallel horizontal screen x banks and screen vertical y crossmembers, never diagonal/isometric."
+        },
+        {
+          "state": "half_built",
+          "target_height": 144,
+          "height_band": [
+            142,
+            146
+          ],
+          "description": "Same east-west timber bridge192px wide x128px plan depth. Parallel horizontal stringers span left to right; exactly left half of deck has front-to-back planks, right half visibly open between stringers. Corner piles in place, upper and lower rails only halfway fitted. Orthogonal rectangular plan, no diamond/perspective narrowing."
+        },
+        {
+          "state": "damaged",
+          "target_height": 154,
+          "height_band": [
+            152,
+            156
+          ],
+          "description": "Same east-west bridge in orthogonal192x128px plan, front/back horizontal rails and deck planks run vertically. Three neighboring central planks broken out leaving obvious gap, right front rail split, all corner posts retained. No water or landscape."
+        },
+        {
+          "state": "ruined",
+          "target_height": 140,
+          "height_band": [
+            138,
+            142
+          ],
+          "description": "Same east-west rectangular bridge footprint192x128px plan. Two long horizontal broken stringers and four low surviving corner stumps, five snapped deck planks fallen within the rectangle. Most deck absent, no upright intact rails; orthogonal plan not diamond."
+        }
+      ]
+    },
+    {
+      "family": "aqueduct",
+      "source": "aqueduct",
+      "footprint": [
+        2,
+        1
+      ],
+      "states": [
+        {
+          "state": "foundation",
+          "target_height": 18,
+          "height_band": [
+            16,
+            20
+          ],
+          "description": "Only two low broad square stone pier bases, far left and far right, spaced to support the original horizontal aqueduct trough. No elevated channel, no water. Very wide and low silhouette."
+        },
+        {
+          "state": "half_built",
+          "target_height": 40,
+          "height_band": [
+            38,
+            42
+          ],
+          "description": "The same two stone aqueduct piers built to half height, unfinished top courses; a short partial horizontal channel slab reaches from left pier halfway toward right. Empty central gap, no water."
+        },
+        {
+          "state": "ruined",
+          "target_height": 24,
+          "height_band": [
+            22,
+            26
+          ],
+          "description": "The same two aqueduct piers collapsed into low square stubs; broken long trough fragments lie horizontally between them, no intact elevated span, no water. Maintain same broad2x1 silhouette."
+        }
+      ]
+    },
+    {
+      "family": "reservoir",
+      "source": "reservoir_empty",
+      "footprint": [
+        2,
+        2
+      ],
+      "states": [
+        {
+          "state": "foundation",
+          "target_height": 128,
+          "height_band": [
+            126,
+            130
+          ],
+          "description": "Same orthogonal square2x2 reservoir basin footprint, straight-down plan ground with shallow front-face cheat. Foundation only: one low course of stone curb around an empty compacted-earth square, three initial low step blocks on inside right. Flat unfinished curb, no water."
+        },
+        {
+          "state": "half_built",
+          "target_height": 128,
+          "height_band": [
+            126,
+            130
+          ],
+          "description": "Same square reservoir, halfway constructed: rear and left stone curb complete, front and right curb only one course high with unfinished tops; right interior steps half built. Empty dry earthen basin. Keep exact orthogonal128x128px occupied square, no converging walls."
+        },
+        {
+          "state": "damaged",
+          "target_height": 128,
+          "height_band": [
+            126,
+            130
+          ],
+          "description": "Same square reservoir, completed but damaged: front-left curb breach of two blocks and clear cracked dry lining, two fallen curb blocks inside. Retain right interior steps and other three sides, no water."
+        },
+        {
+          "state": "ruined",
+          "target_height": 128,
+          "height_band": [
+            126,
+            130
+          ],
+          "description": "Same square reservoir ruined: scattered low curb remnants outlining the original orthogonal2x2 square, four large fallen blocks and cracked dry basin. Most enclosure missing, right steps collapsed. No water, plants or ground outside footprint."
+        }
+      ]
+    },
+    {
+      "family": "rotary_quern",
+      "source": "rotary_quern",
+      "footprint": [
+        1,
+        1
+      ],
+      "states": [
+        {
+          "state": "damaged",
+          "target_height": 34,
+          "height_band": [
+            32,
+            36
+          ],
+          "description": "Same two-disc stone rotary hand quern, upper disc cracked into two still touching halves and wooden peg snapped short. Keep the lower round stone and central grain hole recognizable."
+        },
+        {
+          "state": "ruined",
+          "target_height": 16,
+          "height_band": [
+            14,
+            18
+          ],
+          "description": "Same hand quern destroyed: lower stone disk split, upper stone in three large angular round-edged fragments, short broken wooden handle beside. Low compact pile within1x1; no extra grain."
+        }
+      ]
+    },
+    {
+      "family": "sundial",
+      "source": "sundial",
+      "footprint": [
+        1,
+        1
+      ],
+      "states": [
+        {
+          "state": "damaged",
+          "target_height": 32,
+          "height_band": [
+            30,
+            34
+          ],
+          "description": "Same circular stone sundial on low stone base; one broad cracked sector but intact circular face, triangular gnomon bent/chipped halfway. Original sparse engraved radial marks preserved, no text or numerals."
+        },
+        {
+          "state": "ruined",
+          "target_height": 14,
+          "height_band": [
+            12,
+            16
+          ],
+          "description": "Same circular stone sundial destroyed into three broad round-edged flat stone fragments, separated broken triangular gnomon at center. Low stone rubble on transparent background; no upright pedestal."
+        }
+      ]
+    }
+  ],
+  "not_applicable": [
+    {
+      "family": "rotary_quern",
+      "states": [
+        "foundation",
+        "half_built"
+      ],
+      "reason": "Bible4.4 describes a rotary hand-quern technology and portable working station; A2 drawing is a two-disc movable hand mill, not a building foundation. Construction staging would invent masonry."
+    },
+    {
+      "family": "sundial",
+      "states": [
+        "foundation",
+        "half_built"
+      ],
+      "reason": "Bible4.4 geometry/sundial knowledge names an instrument; A2 is a small movable circular dial on loose stones, no authored structural building phases. Physical damage variants still supplied."
+    }
+  ]
+}

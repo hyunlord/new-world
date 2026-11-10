@@ -1,0 +1,148 @@
+{
+  "record": {
+    "id": "bloomery_foundation",
+    "lane": "stages_iron",
+    "era": "iron",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c2fc-1dfc-7510-bcd2-36b7b46419d7/exec-aa1d0c8b-579a-4d7b-95dc-7e467c0cf31e.png",
+    "prompt": "Use case: precise-object-edit. Create ONE construction-stage game sprite of the attached small iron-age bloomery, FOUNDATION only. Input 1 and 2 are locked style reference props.png and scene.png; input 3 is the bloomery design to preserve. Show only its very low circular clay-and-stone base ring with the front arch just beginning: no upper shaft, no fire, no smoke. Retain exactly the bloomery footprint width, warm terracotta and grey stone materials, south/front opening, and same front three-quarter about20-degree-down camera. This is a placed component on genuine transparent background, no ground patch or cast shadow puddle. Whole subject has generous transparent margins. Intended opaque size about40px wide by18px high at game scale, illustrating the initial lower courses of the56px-high source. Ink-and-tone field-guide art: fine sepia-charcoal broken contours, main-to-secondary line ratio2:1; clay3 short crack groups, stone3 selective facet groups, one group of3 parallel / hatch strokes. Restrained broad earth wash plus distinct darker right/lower shadow, light upper-left. Do not use photoreal texture, dense crosshatching, smooth3D bevels, roof, text, border or scenery. Generate only this foundation state, one object.",
+    "subject": null,
+    "references": [
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/bloomery_unlit.png"
+    ],
+    "target_height": 18,
+    "projection_family": "bloomery_foundation",
+    "height_band": [
+      16,
+      20
+    ],
+    "height_band_reason": "Construction lower courses are 18px high versus the 56px completed bloomery; unchanged 1x1 footprint.",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-10T01:05:44.561Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/bloomery_foundation_try1.png",
+  "raw_sha256": "0ce4066834f7b5577ee016572c26c9cd3dc96fe460888990226cde8895e370c5",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/bloomery_unlit.png",
+      "sha256": "34d0c1f13298c2d625f7a217943310b5dda69450b16b807f0102360f3a6f5471"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/B3/stages_iron/normalized/bloomery_foundation_try1.png",
+  "normalized_sha256": "290270599adea938f5fdae682a987553b87f90af9e9c70e7c0a5c6c4949f329f",
+  "size": [
+    41,
+    26
+  ],
+  "anchor": [
+    20,
+    21
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (579, 308, 1173, 640)",
+    "uniform Lanczos scale: 0.054878048780487805",
+    "transparent 4px padding; source-canvas anchor: (20, 21)"
+  ],
+  "projection": {
+    "family": "bloomery_foundation",
+    "anchor": [
+      20,
+      21
+    ],
+    "height_band": [
+      16,
+      20
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 440,
+    "base_row": 21,
+    "base_error": 0,
+    "height": 18,
+    "gradient_x": -0.6939052380952384,
+    "gradient_y": -4.151040294840295,
+    "light_angle_degrees": 260.50994515393387,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/bloomery_foundation_try1.png",
+    "sha256": "0ce4066834f7b5577ee016572c26c9cd3dc96fe460888990226cde8895e370c5",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.2164849138761512,
+      "saturation_q25": 0.5145541650517451,
+      "saturation_q75": 0.5945478409982289,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.8284271247461903,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.019166097977073977,
+      "foreground_pixels": 27187
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    25,
+    20,
+    1625,
+    831
+  ],
+  "raw_opaque_bbox": [
+    581,
+    310,
+    1171,
+    638
+  ],
+  "raw_faint_far_ratio": 0.0024079075150660514,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+  "failures": [],
+  "review": {
+    "reviewer": "iron_work self review",
+    "verdict": "pass",
+    "score": 90,
+    "reason": "Same materials/camera and distinct physical-stage silhouette at1x and2x; no visible halo on light/dark RGBA composites.",
+    "independent_review": "root + animal_fixes review; five geometry states withheld"
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_path": "art/style05/struct/b3/stages_iron/bloomery_foundation.png"
+}

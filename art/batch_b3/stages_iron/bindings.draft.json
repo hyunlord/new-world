@@ -1,0 +1,166 @@
+{
+  "status": "DRAFT_NOT_APPLIED",
+  "rows": [
+    {
+      "semantic_asset": "aqueduct_ruined",
+      "building_code": null,
+      "state_selector": "ruined",
+      "source": "art/style05/struct/b3/stages_iron/aqueduct_ruined.png",
+      "note": "C2/C3 map verified building code and implement lifecycle read selector."
+    },
+    {
+      "semantic_asset": "bloomery_damaged",
+      "building_code": null,
+      "state_selector": "damaged",
+      "source": "art/style05/struct/b3/stages_iron/bloomery_damaged.png",
+      "note": "C2/C3 map verified building code and implement lifecycle read selector."
+    },
+    {
+      "semantic_asset": "bloomery_foundation",
+      "building_code": null,
+      "state_selector": "foundation",
+      "source": "art/style05/struct/b3/stages_iron/bloomery_foundation.png",
+      "note": "C2/C3 map verified building code and implement lifecycle read selector."
+    },
+    {
+      "semantic_asset": "bloomery_half_built",
+      "building_code": null,
+      "state_selector": "half_built",
+      "source": "art/style05/struct/b3/stages_iron/bloomery_half_built.png",
+      "note": "C2/C3 map verified building code and implement lifecycle read selector."
+    },
+    {
+      "semantic_asset": "bloomery_ruined",
+      "building_code": null,
+      "state_selector": "ruined",
+      "source": "art/style05/struct/b3/stages_iron/bloomery_ruined.png",
+      "note": "C2/C3 map verified building code and implement lifecycle read selector."
+    },
+    {
+      "semantic_asset": "bridge_damaged",
+      "building_code": null,
+      "state_selector": "damaged",
+      "source": "art/style05/struct/b3/stages_iron/bridge_damaged.png",
+      "note": "C2/C3 map verified building code and implement lifecycle read selector."
+    },
+    {
+      "semantic_asset": "bridge_half_built",
+      "building_code": null,
+      "state_selector": "half_built",
+      "source": "art/style05/struct/b3/stages_iron/bridge_half_built.png",
+      "note": "C2/C3 map verified building code and implement lifecycle read selector."
+    },
+    {
+      "semantic_asset": "bridge_ruined",
+      "building_code": null,
+      "state_selector": "ruined",
+      "source": "art/style05/struct/b3/stages_iron/bridge_ruined.png",
+      "note": "C2/C3 map verified building code and implement lifecycle read selector."
+    },
+    {
+      "semantic_asset": "forge_damaged",
+      "building_code": null,
+      "state_selector": "damaged",
+      "source": "art/style05/struct/b3/stages_iron/forge_damaged.png",
+      "note": "C2/C3 map verified building code and implement lifecycle read selector."
+    },
+    {
+      "semantic_asset": "forge_half_built",
+      "building_code": null,
+      "state_selector": "half_built",
+      "source": "art/style05/struct/b3/stages_iron/forge_half_built.png",
+      "note": "C2/C3 map verified building code and implement lifecycle read selector."
+    },
+    {
+      "semantic_asset": "forge_ruined",
+      "building_code": null,
+      "state_selector": "ruined",
+      "source": "art/style05/struct/b3/stages_iron/forge_ruined.png",
+      "note": "C2/C3 map verified building code and implement lifecycle read selector."
+    },
+    {
+      "semantic_asset": "reservoir_damaged",
+      "building_code": null,
+      "state_selector": "damaged",
+      "source": "art/style05/struct/b3/stages_iron/reservoir_damaged.png",
+      "note": "C2/C3 map verified building code and implement lifecycle read selector."
+    },
+    {
+      "semantic_asset": "reservoir_half_built",
+      "building_code": null,
+      "state_selector": "half_built",
+      "source": "art/style05/struct/b3/stages_iron/reservoir_half_built.png",
+      "note": "C2/C3 map verified building code and implement lifecycle read selector."
+    },
+    {
+      "semantic_asset": "reservoir_ruined",
+      "building_code": null,
+      "state_selector": "ruined",
+      "source": "art/style05/struct/b3/stages_iron/reservoir_ruined.png",
+      "note": "C2/C3 map verified building code and implement lifecycle read selector."
+    },
+    {
+      "semantic_asset": "rotary_quern_damaged",
+      "building_code": null,
+      "state_selector": "damaged",
+      "source": "art/style05/struct/b3/stages_iron/rotary_quern_damaged.png",
+      "note": "C2/C3 map verified building code and implement lifecycle read selector."
+    },
+    {
+      "semantic_asset": "rotary_quern_ruined",
+      "building_code": null,
+      "state_selector": "ruined",
+      "source": "art/style05/struct/b3/stages_iron/rotary_quern_ruined.png",
+      "note": "C2/C3 map verified building code and implement lifecycle read selector."
+    },
+    {
+      "semantic_asset": "sundial_damaged",
+      "building_code": null,
+      "state_selector": "damaged",
+      "source": "art/style05/struct/b3/stages_iron/sundial_damaged.png",
+      "note": "C2/C3 map verified building code and implement lifecycle read selector."
+    },
+    {
+      "semantic_asset": "sundial_ruined",
+      "building_code": null,
+      "state_selector": "ruined",
+      "source": "art/style05/struct/b3/stages_iron/sundial_ruined.png",
+      "note": "C2/C3 map verified building code and implement lifecycle read selector."
+    },
+    {
+      "semantic_asset": "town_gate_damaged",
+      "building_code": null,
+      "state_selector": "damaged",
+      "source": "art/style05/struct/b3/stages_iron/town_gate_damaged.png",
+      "note": "C2/C3 map verified building code and implement lifecycle read selector."
+    },
+    {
+      "semantic_asset": "town_gate_ruined",
+      "building_code": null,
+      "state_selector": "ruined",
+      "source": "art/style05/struct/b3/stages_iron/town_gate_ruined.png",
+      "note": "C2/C3 map verified building code and implement lifecycle read selector."
+    },
+    {
+      "semantic_asset": "watchtower_foundation",
+      "building_code": null,
+      "state_selector": "foundation",
+      "source": "art/style05/struct/b3/stages_iron/watchtower_foundation.png",
+      "note": "C2/C3 map verified building code and implement lifecycle read selector."
+    },
+    {
+      "semantic_asset": "watchtower_half_built",
+      "building_code": null,
+      "state_selector": "half_built",
+      "source": "art/style05/struct/b3/stages_iron/watchtower_half_built.png",
+      "note": "C2/C3 map verified building code and implement lifecycle read selector."
+    },
+    {
+      "semantic_asset": "watchtower_ruined",
+      "building_code": null,
+      "state_selector": "ruined",
+      "source": "art/style05/struct/b3/stages_iron/watchtower_ruined.png",
+      "note": "C2/C3 map verified building code and implement lifecycle read selector."
+    }
+  ]
+}

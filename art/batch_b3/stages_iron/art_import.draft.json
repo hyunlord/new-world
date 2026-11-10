@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "status": "DRAFT_NOT_APPLIED",
+  "source_branch": "v8/art-batch-b3",
+  "source_commit": null,
+  "source_commit_requirement": "Root pins final source commit after batch commit.",
+  "fragment_kind": "append_only_art_import_files",
+  "target": "tools/v8/art_import.json",
+  "meta_sources": {
+    "structure": "art/batch_b3/stages_iron/assets.json"
+  },
+  "files": [
+    {
+      "role": "structure",
+      "id": "aqueduct_ruined",
+      "source": "art/style05/struct/b3/stages_iron/aqueduct_ruined.png",
+      "dest": "structures/b3/stages_iron/aqueduct_ruined.png"
+    },
+    {
+      "role": "structure",
+      "id": "bloomery_damaged",
+      "source": "art/style05/struct/b3/stages_iron/bloomery_damaged.png",
+      "dest": "structures/b3/stages_iron/bloomery_damaged.png"
+    },
+    {
+      "role": "structure",
+      "id": "bloomery_foundation",
+      "source": "art/style05/struct/b3/stages_iron/bloomery_foundation.png",
+      "dest": "structures/b3/stages_iron/bloomery_foundation.png"
+    },
+    {
+      "role": "structure",
+      "id": "bloomery_half_built",
+      "source": "art/style05/struct/b3/stages_iron/bloomery_half_built.png",
+      "dest": "structures/b3/stages_iron/bloomery_half_built.png"
+    },
+    {
+      "role": "structure",
+      "id": "bloomery_ruined",
+      "source": "art/style05/struct/b3/stages_iron/bloomery_ruined.png",
+      "dest": "structures/b3/stages_iron/bloomery_ruined.png"
+    },
+    {
+      "role": "structure",
+      "id": "bridge_damaged",
+      "source": "art/style05/struct/b3/stages_iron/bridge_damaged.png",
+      "dest": "structures/b3/stages_iron/bridge_damaged.png"
+    },
+    {
+      "role": "structure",
+      "id": "bridge_half_built",
+      "source": "art/style05/struct/b3/stages_iron/bridge_half_built.png",
+      "dest": "structures/b3/stages_iron/bridge_half_built.png"
+    },
+    {
+      "role": "structure",
+      "id": "bridge_ruined",
+      "source": "art/style05/struct/b3/stages_iron/bridge_ruined.png",
+      "dest": "structures/b3/stages_iron/bridge_ruined.png"
+    },
+    {
+      "role": "structure",
+      "id": "forge_damaged",
+      "source": "art/style05/struct/b3/stages_iron/forge_damaged.png",
+      "dest": "structures/b3/stages_iron/forge_damaged.png"
+    },
+    {
+      "role": "structure",
+      "id": "forge_half_built",
+      "source": "art/style05/struct/b3/stages_iron/forge_half_built.png",
+      "dest": "structures/b3/stages_iron/forge_half_built.png"
+    },
+    {
+      "role": "structure",
+      "id": "forge_ruined",
+      "source": "art/style05/struct/b3/stages_iron/forge_ruined.png",
+      "dest": "structures/b3/stages_iron/forge_ruined.png"
+    },
+    {
+      "role": "structure",
+      "id": "reservoir_damaged",
+      "source": "art/style05/struct/b3/stages_iron/reservoir_damaged.png",
+      "dest": "structures/b3/stages_iron/reservoir_damaged.png"
+    },
+    {
+      "role": "structure",
+      "id": "reservoir_half_built",
+      "source": "art/style05/struct/b3/stages_iron/reservoir_half_built.png",
+      "dest": "structures/b3/stages_iron/reservoir_half_built.png"
+    },
+    {
+      "role": "structure",
+      "id": "reservoir_ruined",
+      "source": "art/style05/struct/b3/stages_iron/reservoir_ruined.png",
+      "dest": "structures/b3/stages_iron/reservoir_ruined.png"
+    },
+    {
+      "role": "structure",
+      "id": "rotary_quern_damaged",
+      "source": "art/style05/struct/b3/stages_iron/rotary_quern_damaged.png",
+      "dest": "structures/b3/stages_iron/rotary_quern_damaged.png"
+    },
+    {
+      "role": "structure",
+      "id": "rotary_quern_ruined",
+      "source": "art/style05/struct/b3/stages_iron/rotary_quern_ruined.png",
+      "dest": "structures/b3/stages_iron/rotary_quern_ruined.png"
+    },
+    {
+      "role": "structure",
+      "id": "sundial_damaged",
+      "source": "art/style05/struct/b3/stages_iron/sundial_damaged.png",
+      "dest": "structures/b3/stages_iron/sundial_damaged.png"
+    },
+    {
+      "role": "structure",
+      "id": "sundial_ruined",
+      "source": "art/style05/struct/b3/stages_iron/sundial_ruined.png",
+      "dest": "structures/b3/stages_iron/sundial_ruined.png"
+    },
+    {
+      "role": "structure",
+      "id": "town_gate_damaged",
+      "source": "art/style05/struct/b3/stages_iron/town_gate_damaged.png",
+      "dest": "structures/b3/stages_iron/town_gate_damaged.png"
+    },
+    {
+      "role": "structure",
+      "id": "town_gate_ruined",
+      "source": "art/style05/struct/b3/stages_iron/town_gate_ruined.png",
+      "dest": "structures/b3/stages_iron/town_gate_ruined.png"
+    },
+    {
+      "role": "structure",
+      "id": "watchtower_foundation",
+      "source": "art/style05/struct/b3/stages_iron/watchtower_foundation.png",
+      "dest": "structures/b3/stages_iron/watchtower_foundation.png"
+    },
+    {
+      "role": "structure",
+      "id": "watchtower_half_built",
+      "source": "art/style05/struct/b3/stages_iron/watchtower_half_built.png",
+      "dest": "structures/b3/stages_iron/watchtower_half_built.png"
+    },
+    {
+      "role": "structure",
+      "id": "watchtower_ruined",
+      "source": "art/style05/struct/b3/stages_iron/watchtower_ruined.png",
+      "dest": "structures/b3/stages_iron/watchtower_ruined.png"
+    }
+  ],
+  "note": "Lifecycle mapping requires C2/C3; draft not applied."
+}

@@ -1,0 +1,148 @@
+{
+  "record": {
+    "id": "town_gate_damaged",
+    "lane": "stages_iron",
+    "era": "iron",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c798-fbc9-76f3-8f29-323bd0f2fd82/exec-f4ab7309-77dd-4858-b45e-e5992daf1de2.png",
+    "prompt": "Use case: precise-object-edit. Make ONE isolated construction-stage game sprite. Inputs1+2 are locked ink-and-tone style references; input3 is the exact built design to preserve. Genuine transparent background; generous margins; no ground patch, shadow puddle, text, roof, border or scenery. Same front three-quarter camera about20degrees down; light upper-left, darker right/lower shade. Fine broken sepia-charcoal ink, main/detail2:1; quiet broad earth wash, no dense texture or3D bevel. Stone3 selective crack/facet groups per dominant rock; wood3 broken longitudinal grain lines per principal beam; clay3 short crack groups; hatching one group of3 parallel / marks. Physical footprint unchanged. The same standing gateway with two stone piers and timber lintel; left door leaf visibly split and hanging askew, right door intact, a few cracked left pier blocks. Keep frame mostly standing. Intended game opaque height60px, footprint[2, 1]; preserve material and component identity at1x.",
+    "subject": null,
+    "references": [
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/town_gate_closed.png"
+    ],
+    "target_height": 60,
+    "projection_family": "town_gate_damaged",
+    "height_band": [
+      58,
+      62
+    ],
+    "height_band_reason": "Predeclared B3 construction or damaged silhouette; original occupied footprint unchanged.",
+    "footprint": [
+      2.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": "exec-f4ab7309-77dd-4858-b45e-e5992daf1de2",
+    "seed": null,
+    "generated_at": "2026-11-10T22:36:59.014Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/town_gate_damaged_try1.png",
+  "raw_sha256": "f36b50c0af37dc9cdcfa631f3f594b08c429dde8e22fd11e6ce35d3a54e3e83a",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/town_gate_closed.png",
+      "sha256": "f808880b1a8bc28576c7450f8dd3c0665097bffd41543f49c368a1596c2c5134"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/B3/stages_iron/normalized/town_gate_damaged_try1.png",
+  "normalized_sha256": "bf906a8f1cef1948ccb13bf196c017c3443159234724ca165b833ab966e23cef",
+  "size": [
+    110,
+    68
+  ],
+  "anchor": [
+    55,
+    63
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (313, 102, 1449, 774)",
+    "uniform Lanczos scale: 0.08982035928143713",
+    "transparent 4px padding; source-canvas anchor: (55, 63)"
+  ],
+  "projection": {
+    "family": "town_gate_damaged",
+    "anchor": [
+      55,
+      63
+    ],
+    "height_band": [
+      58,
+      62
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 4989,
+    "base_row": 63,
+    "base_error": 0,
+    "height": 60,
+    "gradient_x": -0.6882879868798687,
+    "gradient_y": -0.8205062346185397,
+    "light_angle_degrees": 230.00813473386415,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/town_gate_damaged_try1.png",
+    "sha256": "f36b50c0af37dc9cdcfa631f3f594b08c429dde8e22fd11e6ce35d3a54e3e83a",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.24377892548125293,
+      "saturation_q25": 0.40649217935405113,
+      "saturation_q75": 0.5383711308489175,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.01574720664500398,
+      "foreground_pixels": 31755
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    27,
+    28,
+    1754,
+    869
+  ],
+  "raw_opaque_bbox": [
+    315,
+    104,
+    1447,
+    772
+  ],
+  "raw_faint_far_ratio": 0.001505295078434618,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+  "failures": [],
+  "review": {
+    "reviewer": "iron_work self review",
+    "verdict": "pass",
+    "score": 90,
+    "reason": "Same materials/camera and distinct physical-stage silhouette at1x and2x; no visible halo on light/dark RGBA composites.",
+    "independent_review": "root + animal_fixes review; five geometry states withheld"
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_path": "art/style05/struct/b3/stages_iron/town_gate_damaged.png"
+}

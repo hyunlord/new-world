@@ -1,0 +1,1026 @@
+{
+  "lane": "stages_iron",
+  "authority": "B3 frozen A2 numeric gates; self review and independent leader review passed for selected assets",
+  "counts": {
+    "generated": 47,
+    "adopted": 23,
+    "rejected_or_superseded_originals": 24,
+    "capped_state_gaps": 5,
+    "bounded_state_gaps": 2
+  },
+  "assets": [
+    {
+      "id": "aqueduct_ruined",
+      "path": "art/style05/struct/b3/stages_iron/aqueduct_ruined.png",
+      "sha256": "e632ead932d2a5f07313fd816b199d87db23529ac4ae2db7c527b2da849a90d1",
+      "width": 101,
+      "height": 32,
+      "anchor": [
+        50,
+        27
+      ],
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "state": "ruined",
+      "attempt": 1,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW"
+    },
+    {
+      "id": "bloomery_damaged",
+      "path": "art/style05/struct/b3/stages_iron/bloomery_damaged.png",
+      "sha256": "5ab9480972e02857212c942465c98cec9ecd67e9db96ecb213165a0017df023d",
+      "width": 50,
+      "height": 64,
+      "anchor": [
+        25,
+        59
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "state": "damaged",
+      "attempt": 1,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW"
+    },
+    {
+      "id": "bloomery_foundation",
+      "path": "art/style05/struct/b3/stages_iron/bloomery_foundation.png",
+      "sha256": "290270599adea938f5fdae682a987553b87f90af9e9c70e7c0a5c6c4949f329f",
+      "width": 41,
+      "height": 26,
+      "anchor": [
+        20,
+        21
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "state": "foundation",
+      "attempt": 1,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW"
+    },
+    {
+      "id": "bloomery_half_built",
+      "path": "art/style05/struct/b3/stages_iron/bloomery_half_built.png",
+      "sha256": "9d308854f34093a8a74bfbface1b88f9c88f3e0d4ca6b5f80e074e94ea823fe2",
+      "width": 44,
+      "height": 42,
+      "anchor": [
+        22,
+        37
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "state": "half_built",
+      "attempt": 1,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW"
+    },
+    {
+      "id": "bloomery_ruined",
+      "path": "art/style05/struct/b3/stages_iron/bloomery_ruined.png",
+      "sha256": "ddd76371060f8e32092658424a0913c60e254d1e5d35d5ec56da116078bfc769",
+      "width": 41,
+      "height": 28,
+      "anchor": [
+        20,
+        23
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "state": "ruined",
+      "attempt": 1,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW"
+    },
+    {
+      "id": "bridge_damaged",
+      "path": "art/style05/struct/b3/stages_iron/bridge_damaged.png",
+      "sha256": "803583a1e4278517740002f62bdf209fa8f70922730d74b2e49cbbd771aa4fb7",
+      "width": 229,
+      "height": 163,
+      "anchor": [
+        114,
+        158
+      ],
+      "footprint": [
+        3.0,
+        2.0
+      ],
+      "state": "damaged",
+      "attempt": 2,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW"
+    },
+    {
+      "id": "bridge_half_built",
+      "path": "art/style05/struct/b3/stages_iron/bridge_half_built.png",
+      "sha256": "9751eba8b2262dedb392dbf95ee096a41a5b9da96fd161560aa6a257786f6484",
+      "width": 222,
+      "height": 153,
+      "anchor": [
+        111,
+        148
+      ],
+      "footprint": [
+        3.0,
+        2.0
+      ],
+      "state": "half_built",
+      "attempt": 1,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW"
+    },
+    {
+      "id": "bridge_ruined",
+      "path": "art/style05/struct/b3/stages_iron/bridge_ruined.png",
+      "sha256": "33ddefc740f4481dfb67d920dcb4c13f971c57858d0c71d7e2a31c901d234f85",
+      "width": 239,
+      "height": 149,
+      "anchor": [
+        119,
+        144
+      ],
+      "footprint": [
+        3.0,
+        2.0
+      ],
+      "state": "ruined",
+      "attempt": 2,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW"
+    },
+    {
+      "id": "forge_damaged",
+      "path": "art/style05/struct/b3/stages_iron/forge_damaged.png",
+      "sha256": "796e4aab76adfb986e49472ab5edc3628a505409ba55ba6da0017b5d56d675b4",
+      "width": 69,
+      "height": 46,
+      "anchor": [
+        34,
+        41
+      ],
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "state": "damaged",
+      "attempt": 1,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW"
+    },
+    {
+      "id": "forge_half_built",
+      "path": "art/style05/struct/b3/stages_iron/forge_half_built.png",
+      "sha256": "633932db1c1b4ea7b07e2aebe21020ec9ffd4e03f38641798cf11e1c712c3e08",
+      "width": 55,
+      "height": 34,
+      "anchor": [
+        27,
+        29
+      ],
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "state": "half_built",
+      "attempt": 1,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW"
+    },
+    {
+      "id": "forge_ruined",
+      "path": "art/style05/struct/b3/stages_iron/forge_ruined.png",
+      "sha256": "529a2f7ad1f9a1cbe523f336b7b82e1e107bede6e9d8914d00aac9a7a0496230",
+      "width": 39,
+      "height": 26,
+      "anchor": [
+        19,
+        21
+      ],
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "state": "ruined",
+      "attempt": 1,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW"
+    },
+    {
+      "id": "reservoir_damaged",
+      "path": "art/style05/struct/b3/stages_iron/reservoir_damaged.png",
+      "sha256": "94b3ff3a06d76d1d2a8f49dd757e44484751e1476b9bc418e0e9edb9744d1789",
+      "width": 142,
+      "height": 137,
+      "anchor": [
+        71,
+        132
+      ],
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "state": "damaged",
+      "attempt": 1,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW"
+    },
+    {
+      "id": "reservoir_half_built",
+      "path": "art/style05/struct/b3/stages_iron/reservoir_half_built.png",
+      "sha256": "99e32a2b34423b6fc2e7efee79cd0010fffba9b1b833ebf954dca24a43b97ab3",
+      "width": 137,
+      "height": 137,
+      "anchor": [
+        68,
+        132
+      ],
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "state": "half_built",
+      "attempt": 2,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW"
+    },
+    {
+      "id": "reservoir_ruined",
+      "path": "art/style05/struct/b3/stages_iron/reservoir_ruined.png",
+      "sha256": "314b70bbcccaee32be1f8f073acc41c67b1672b57d4df2ce46dc90a9cd4a1578",
+      "width": 162,
+      "height": 137,
+      "anchor": [
+        81,
+        132
+      ],
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "state": "ruined",
+      "attempt": 1,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW"
+    },
+    {
+      "id": "rotary_quern_damaged",
+      "path": "art/style05/struct/b3/stages_iron/rotary_quern_damaged.png",
+      "sha256": "9f5893f76c81eab95e81c5704fd19a60a45d7b9da3378493ea85915a196821f1",
+      "width": 43,
+      "height": 42,
+      "anchor": [
+        21,
+        37
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "state": "damaged",
+      "attempt": 1,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW"
+    },
+    {
+      "id": "rotary_quern_ruined",
+      "path": "art/style05/struct/b3/stages_iron/rotary_quern_ruined.png",
+      "sha256": "3a213f4d35ab6f8917fedc136a12e17529b3e612b0f18efe38c18c9b69bab741",
+      "width": 30,
+      "height": 24,
+      "anchor": [
+        15,
+        19
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "state": "ruined",
+      "attempt": 1,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW"
+    },
+    {
+      "id": "sundial_damaged",
+      "path": "art/style05/struct/b3/stages_iron/sundial_damaged.png",
+      "sha256": "94721d5859bc0fce5ac8c3c0f492df83fe5a8709dfd10cc7c41c64df7a7ed457",
+      "width": 43,
+      "height": 40,
+      "anchor": [
+        21,
+        35
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "state": "damaged",
+      "attempt": 1,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW"
+    },
+    {
+      "id": "sundial_ruined",
+      "path": "art/style05/struct/b3/stages_iron/sundial_ruined.png",
+      "sha256": "47d261a3752df4893483419f7c25eb94cb48a085e6fd4975cf076bd6abc06507",
+      "width": 27,
+      "height": 22,
+      "anchor": [
+        13,
+        17
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "state": "ruined",
+      "attempt": 1,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW"
+    },
+    {
+      "id": "town_gate_damaged",
+      "path": "art/style05/struct/b3/stages_iron/town_gate_damaged.png",
+      "sha256": "bf906a8f1cef1948ccb13bf196c017c3443159234724ca165b833ab966e23cef",
+      "width": 110,
+      "height": 68,
+      "anchor": [
+        55,
+        63
+      ],
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "state": "damaged",
+      "attempt": 1,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW"
+    },
+    {
+      "id": "town_gate_ruined",
+      "path": "art/style05/struct/b3/stages_iron/town_gate_ruined.png",
+      "sha256": "c536724eea96a12a92939cd8b4801945e80753f88c8f10533743b207b1dd8e4e",
+      "width": 69,
+      "height": 32,
+      "anchor": [
+        34,
+        27
+      ],
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "state": "ruined",
+      "attempt": 1,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW"
+    },
+    {
+      "id": "watchtower_foundation",
+      "path": "art/style05/struct/b3/stages_iron/watchtower_foundation.png",
+      "sha256": "66f8a322c3850ad01823c4ccb63d3c47b35087d72a8df137809124689b9164fe",
+      "width": 64,
+      "height": 38,
+      "anchor": [
+        32,
+        33
+      ],
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "state": "foundation",
+      "attempt": 2,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW"
+    },
+    {
+      "id": "watchtower_half_built",
+      "path": "art/style05/struct/b3/stages_iron/watchtower_half_built.png",
+      "sha256": "170d2f51781e9e0f30ebfe49613dde456d6116aab86453db2c14ec8ae42bf609",
+      "width": 72,
+      "height": 78,
+      "anchor": [
+        36,
+        73
+      ],
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "state": "half_built",
+      "attempt": 1,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW"
+    },
+    {
+      "id": "watchtower_ruined",
+      "path": "art/style05/struct/b3/stages_iron/watchtower_ruined.png",
+      "sha256": "dcf4796ae22cf694536cb54b96f985ae9b60dd9e26a4d725985a7cfe159ea2f1",
+      "width": 83,
+      "height": 44,
+      "anchor": [
+        41,
+        39
+      ],
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "state": "ruined",
+      "attempt": 2,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW"
+    }
+  ],
+  "attempts": [
+    {
+      "id": "aqueduct_foundation",
+      "attempt": 1,
+      "numeric_ready": true,
+      "selected": false,
+      "status": "REJECTED_OR_SUPERSEDED",
+      "reason": "Try1 retained full trough; try2 contains two disconnected low footing pads.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/aqueduct_foundation_try1.png",
+      "raw_sha256": "16ecdc1f6eee7a5a244e3ad1e0bb120173b1d01382a234733a8500b5994e111d",
+      "normalized_sha256": "c32760f4a46d06883a0d1baf19adf1087265a9737bb248b8f096bbabcfe30341"
+    },
+    {
+      "id": "aqueduct_foundation",
+      "attempt": 2,
+      "numeric_ready": true,
+      "selected": false,
+      "status": "REJECTED_OR_SUPERSEDED",
+      "reason": "Try1 retained full trough; try2 contains two disconnected low footing pads.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/aqueduct_foundation_try2.png",
+      "raw_sha256": "dac9861c78f0c0d4e016d3c1ff637904faccb882116f791fd9b0d3f728557eb0",
+      "normalized_sha256": "99d2f96d9ed247bda4b45fbbec98a41cc10ef76242d25ff710e241d4290116a3"
+    },
+    {
+      "id": "aqueduct_foundation",
+      "attempt": 3,
+      "numeric_ready": true,
+      "selected": false,
+      "status": "REJECTED_OR_SUPERSEDED",
+      "reason": "Try1 retained full trough; try2 contains two disconnected low footing pads.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/aqueduct_foundation_try3.png",
+      "raw_sha256": "23ecd8de85d9a046a78024ffb9f7faa27c21f63a9cafac4fcf08da8f4b7daa6c",
+      "normalized_sha256": "c5868811ea34469331a73a3846afee2d067e14a18670ad8a3c70cfc8e60b1c72"
+    },
+    {
+      "id": "aqueduct_half_built",
+      "attempt": 1,
+      "numeric_ready": true,
+      "selected": false,
+      "status": "REJECTED_OR_SUPERSEDED",
+      "reason": "Two attempts failed original pier registration; try2 opaque148 vs built134px and blue water violates empty trough. Bounded rejection, one unused attempt.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/aqueduct_half_built_try1.png",
+      "raw_sha256": "dc819a3b085fc6ba655221f9bc26adae25e81c0aa745362385319f95c9492a50",
+      "normalized_sha256": "d10dd0ebe1aa5efa46561b4d2ab1ce7805cdfc8232b22246b599b1d41fe90900"
+    },
+    {
+      "id": "aqueduct_half_built",
+      "attempt": 2,
+      "numeric_ready": true,
+      "selected": false,
+      "status": "REJECTED_OR_SUPERSEDED",
+      "reason": "Two attempts failed original pier registration; try2 opaque148 vs built134px and blue water violates empty trough. Bounded rejection, one unused attempt.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/aqueduct_half_built_try2.png",
+      "raw_sha256": "fd4f6f20cb32c000c9c740461690390ffa72945d6133ec1f8cb5d0bc9be0f165",
+      "normalized_sha256": "91eb7af7fe39a86c7bd114388abfca3e8948564803ffc83c901f1ae0b0eb133b"
+    },
+    {
+      "id": "aqueduct_ruined",
+      "attempt": 1,
+      "numeric_ready": true,
+      "selected": true,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "reason": "Family contact-sheet review: source identity, stage silhouette, light/dark alpha backgrounds and sparse ink at1x/2x.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/aqueduct_ruined_try1.png",
+      "raw_sha256": "8d031498e7ab1063595016f2bcb1e8ae8eb201e9a6c0d8dc494b7fa5a00db203",
+      "normalized_sha256": "e632ead932d2a5f07313fd816b199d87db23529ac4ae2db7c527b2da849a90d1"
+    },
+    {
+      "id": "bloomery_damaged",
+      "attempt": 1,
+      "numeric_ready": true,
+      "selected": true,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "reason": "Family contact-sheet review: source identity, stage silhouette, light/dark alpha backgrounds and sparse ink at1x/2x.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/bloomery_damaged_try1.png",
+      "raw_sha256": "6840c1e5638659c18093d96af81a503aad00dcf4c3352ecb4f37fa1cda632722",
+      "normalized_sha256": "5ab9480972e02857212c942465c98cec9ecd67e9db96ecb213165a0017df023d"
+    },
+    {
+      "id": "bloomery_foundation",
+      "attempt": 1,
+      "numeric_ready": true,
+      "selected": true,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "reason": "Family contact-sheet review: source identity, stage silhouette, light/dark alpha backgrounds and sparse ink at1x/2x.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/bloomery_foundation_try1.png",
+      "raw_sha256": "0ce4066834f7b5577ee016572c26c9cd3dc96fe460888990226cde8895e370c5",
+      "normalized_sha256": "290270599adea938f5fdae682a987553b87f90af9e9c70e7c0a5c6c4949f329f"
+    },
+    {
+      "id": "bloomery_half_built",
+      "attempt": 1,
+      "numeric_ready": true,
+      "selected": true,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "reason": "Family contact-sheet review: source identity, stage silhouette, light/dark alpha backgrounds and sparse ink at1x/2x.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/bloomery_half_built_try1.png",
+      "raw_sha256": "f75c6e62ce34d0283f697b06d0df191225e952e34f33c1bccb8b6c88bcf92d69",
+      "normalized_sha256": "9d308854f34093a8a74bfbface1b88f9c88f3e0d4ca6b5f80e074e94ea823fe2"
+    },
+    {
+      "id": "bloomery_ruined",
+      "attempt": 1,
+      "numeric_ready": true,
+      "selected": true,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "reason": "Family contact-sheet review: source identity, stage silhouette, light/dark alpha backgrounds and sparse ink at1x/2x.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/bloomery_ruined_try1.png",
+      "raw_sha256": "2a8960634ee122a9517686a4a567e419d1176efd6959380aaf4bb3f87ff78e8e",
+      "normalized_sha256": "ddd76371060f8e32092658424a0913c60e254d1e5d35d5ec56da116078bfc769"
+    },
+    {
+      "id": "bridge_damaged",
+      "attempt": 1,
+      "numeric_ready": false,
+      "selected": false,
+      "status": "REJECTED_OR_SUPERSEDED",
+      "reason": "Try1 failed frozen light gradient; try2 passes with broken central planks readable.",
+      "failures": [
+        "projection upper-left luminance gradient failed"
+      ],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/bridge_damaged_try1.png",
+      "raw_sha256": "20dae773b03d9ac0cf46e1121c5e7df7d00f5494dc48dd685ac674b66679aa19",
+      "normalized_sha256": "de59454a28e792df59b806672db7a66d7c931dd3aa7896b70124c52b4a13242f"
+    },
+    {
+      "id": "bridge_damaged",
+      "attempt": 2,
+      "numeric_ready": true,
+      "selected": true,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "reason": "Try1 failed frozen light gradient; try2 passes with broken central planks readable.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/bridge_damaged_try2.png",
+      "raw_sha256": "5fe4bf24efd1c9e72e37556f70646cdb810758f7cea9314282abf32137572561",
+      "normalized_sha256": "803583a1e4278517740002f62bdf209fa8f70922730d74b2e49cbbd771aa4fb7"
+    },
+    {
+      "id": "bridge_foundation",
+      "attempt": 1,
+      "numeric_ready": false,
+      "selected": false,
+      "status": "REJECTED_OR_SUPERSEDED",
+      "reason": "Three attempts failed frozen wash_flatness; no adoption.",
+      "failures": [
+        "style metric: wash_flatness"
+      ],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/bridge_foundation_try1.png",
+      "raw_sha256": "1894aab3fcf191d469e682bf130d01fa0b0abe936c68db22d8e7648e39e0434a",
+      "normalized_sha256": "3f825ac4e7be43d93c07870ec4645d36f432d11489adc1c2b12db2a046772167"
+    },
+    {
+      "id": "bridge_foundation",
+      "attempt": 2,
+      "numeric_ready": false,
+      "selected": false,
+      "status": "REJECTED_OR_SUPERSEDED",
+      "reason": "Three attempts failed frozen wash_flatness; no adoption.",
+      "failures": [
+        "style metric: wash_flatness"
+      ],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/bridge_foundation_try2.png",
+      "raw_sha256": "18eeadf92841d3e4fdbc15c107682cf4d7d8e0aa835231710e69fe17d7f58821",
+      "normalized_sha256": "34a802e59d54540647993201205c7dd8a63d8c2b8be30bf0fc2d8f9076f86a9c"
+    },
+    {
+      "id": "bridge_foundation",
+      "attempt": 3,
+      "numeric_ready": false,
+      "selected": false,
+      "status": "REJECTED_OR_SUPERSEDED",
+      "reason": "Three attempts failed frozen wash_flatness; no adoption.",
+      "failures": [
+        "style metric: wash_flatness"
+      ],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/bridge_foundation_try3.png",
+      "raw_sha256": "ca9103c62676ce5de586a21a38d02081f67f9f3d7a709a914425f5715263d4c4",
+      "normalized_sha256": "1293abd09f00660ff1c3b076a63a0886d775881f491d6d58eb4de739ec2f40ce"
+    },
+    {
+      "id": "bridge_half_built",
+      "attempt": 1,
+      "numeric_ready": true,
+      "selected": true,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "reason": "Family contact-sheet review: source identity, stage silhouette, light/dark alpha backgrounds and sparse ink at1x/2x.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/bridge_half_built_try1.png",
+      "raw_sha256": "045899286322e7b3a69d7ce1bc596dbe745e531e9dc637f28afc93368d3ddb43",
+      "normalized_sha256": "9751eba8b2262dedb392dbf95ee096a41a5b9da96fd161560aa6a257786f6484"
+    },
+    {
+      "id": "bridge_ruined",
+      "attempt": 1,
+      "numeric_ready": false,
+      "selected": false,
+      "status": "REJECTED_OR_SUPERSEDED",
+      "reason": "Try1 wash and skew failed; try2 square outer frame with fallen interior planks.",
+      "failures": [
+        "style metric: wash_flatness"
+      ],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/bridge_ruined_try1.png",
+      "raw_sha256": "bd9d1ef59969fbb2c8c35d4539fbbc9684f05e8c522045e143f9cbe791ec04de",
+      "normalized_sha256": "56409f406771759c570649d0616ac18f310672e6e57febfe6990f462370bc281"
+    },
+    {
+      "id": "bridge_ruined",
+      "attempt": 2,
+      "numeric_ready": true,
+      "selected": true,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "reason": "Try1 wash and skew failed; try2 square outer frame with fallen interior planks.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/bridge_ruined_try2.png",
+      "raw_sha256": "3206b337a5a2fd49834ba99d421ac56e7318f81a26d0ade81c41e501a7349a2a",
+      "normalized_sha256": "33ddefc740f4481dfb67d920dcb4c13f971c57858d0c71d7e2a31c901d234f85"
+    },
+    {
+      "id": "forge_damaged",
+      "attempt": 1,
+      "numeric_ready": true,
+      "selected": true,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "reason": "Family contact-sheet review: source identity, stage silhouette, light/dark alpha backgrounds and sparse ink at1x/2x.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/forge_damaged_try1.png",
+      "raw_sha256": "0f4e9aa71a884bb0fe4d01b4e5fcf4621df10f510952e5e5a90a24bce0e31f96",
+      "normalized_sha256": "796e4aab76adfb986e49472ab5edc3628a505409ba55ba6da0017b5d56d675b4"
+    },
+    {
+      "id": "forge_foundation",
+      "attempt": 1,
+      "numeric_ready": true,
+      "selected": false,
+      "status": "REJECTED_OR_SUPERSEDED",
+      "reason": "Try1 station width too small; try2 restores broad low station.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/forge_foundation_try1.png",
+      "raw_sha256": "13d40f7ca969d33626adad6c5350cd14f7955bcba2e8a431f28fd017f5578860",
+      "normalized_sha256": "058a5728e9e8fdfa5b186086ab3b0bd9c128bced21c9b8cf73a1f2d44be96c72"
+    },
+    {
+      "id": "forge_foundation",
+      "attempt": 2,
+      "numeric_ready": true,
+      "selected": false,
+      "status": "REJECTED_OR_SUPERSEDED",
+      "reason": "Try1 station width too small; try2 restores broad low station.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/forge_foundation_try2.png",
+      "raw_sha256": "180f8435b1e7075243bb16836b406d6c964122f5b23a80468c686d5f46fed600",
+      "normalized_sha256": "1da2cf7cacef293090a675e52d1f646b605d6e2af0b139d2d077862a3eeea047"
+    },
+    {
+      "id": "forge_foundation",
+      "attempt": 3,
+      "numeric_ready": false,
+      "selected": false,
+      "status": "REJECTED_OR_SUPERSEDED",
+      "reason": "Try1 station width too small; try2 restores broad low station.",
+      "failures": [
+        "style metric: wash_flatness"
+      ],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/forge_foundation_try3.png",
+      "raw_sha256": "41703071cf3e8753d451a95023341e113c29ebd5a70bf497a99e318ebdccfdd5",
+      "normalized_sha256": "52ab354a94d451bdfbe761c20d5b335fc9d5caf4ead735be701b8c0e27d88aaf"
+    },
+    {
+      "id": "forge_half_built",
+      "attempt": 1,
+      "numeric_ready": true,
+      "selected": true,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "reason": "Family contact-sheet review: source identity, stage silhouette, light/dark alpha backgrounds and sparse ink at1x/2x.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/forge_half_built_try1.png",
+      "raw_sha256": "dc3b136a05a338a5110d00b4a58a5546001811bc781bb958350535ccaec1026a",
+      "normalized_sha256": "633932db1c1b4ea7b07e2aebe21020ec9ffd4e03f38641798cf11e1c712c3e08"
+    },
+    {
+      "id": "forge_ruined",
+      "attempt": 1,
+      "numeric_ready": true,
+      "selected": true,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "reason": "Family contact-sheet review: source identity, stage silhouette, light/dark alpha backgrounds and sparse ink at1x/2x.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/forge_ruined_try1.png",
+      "raw_sha256": "de11bc9691d8e95a1afbdf91ee8bcbc3425dea1920306aa04b04eae518d571db",
+      "normalized_sha256": "529a2f7ad1f9a1cbe523f336b7b82e1e107bede6e9d8914d00aac9a7a0496230"
+    },
+    {
+      "id": "reservoir_damaged",
+      "attempt": 1,
+      "numeric_ready": true,
+      "selected": true,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "reason": "Family contact-sheet review: source identity, stage silhouette, light/dark alpha backgrounds and sparse ink at1x/2x.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/reservoir_damaged_try1.png",
+      "raw_sha256": "13d449eec8624506fb865f4ec4d210e9e822825b1db13a7a97aa519d0e52c7ba",
+      "normalized_sha256": "94b3ff3a06d76d1d2a8f49dd757e44484751e1476b9bc418e0e9edb9744d1789"
+    },
+    {
+      "id": "reservoir_foundation",
+      "attempt": 1,
+      "numeric_ready": true,
+      "selected": false,
+      "status": "REJECTED_OR_SUPERSEDED",
+      "reason": "Try1 read as built; try2 failed wash_flatness; try3 failed edge_density and wash_flatness. No adoption.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/reservoir_foundation_try1.png",
+      "raw_sha256": "8c68dffdca1a5e152dde135ddf187b8ef9efd0b755a0a7dd87eb1b5f9f212ac9",
+      "normalized_sha256": "df3cfb38244cf6550e8583f07b1a5aaa4b2e812dbd0ea910654ecf0fc0cd7dae"
+    },
+    {
+      "id": "reservoir_foundation",
+      "attempt": 2,
+      "numeric_ready": false,
+      "selected": false,
+      "status": "REJECTED_OR_SUPERSEDED",
+      "reason": "Try1 read as built; try2 failed wash_flatness; try3 failed edge_density and wash_flatness. No adoption.",
+      "failures": [
+        "style metric: wash_flatness"
+      ],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/reservoir_foundation_try2.png",
+      "raw_sha256": "c094a2a90af3089d7ce95697d890952d3aabb0215673237967b90eeb55b95c60",
+      "normalized_sha256": "dfa5e58c6d174dd1fbad2f4316285e6ade21b8059444b376625d4cc4e67d8f6b"
+    },
+    {
+      "id": "reservoir_foundation",
+      "attempt": 3,
+      "numeric_ready": false,
+      "selected": false,
+      "status": "REJECTED_OR_SUPERSEDED",
+      "reason": "Try1 read as built; try2 failed wash_flatness; try3 failed edge_density and wash_flatness. No adoption.",
+      "failures": [
+        "style metric: edge_density",
+        "style metric: wash_flatness"
+      ],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/reservoir_foundation_try3.png",
+      "raw_sha256": "ee5147c48458a41a5534669747d375c896d7a344326b316ad19f6eaa10963297",
+      "normalized_sha256": "4f3b31be8b8f52f1fc47c33f2da98558a269dc7764c6e6e9decae0ff9be3ddc8"
+    },
+    {
+      "id": "reservoir_half_built",
+      "attempt": 1,
+      "numeric_ready": true,
+      "selected": false,
+      "status": "REJECTED_OR_SUPERSEDED",
+      "reason": "Try1 too similar to built; try2 south/east curb gaps expose incomplete earth retaining edge.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/reservoir_half_built_try1.png",
+      "raw_sha256": "162c2d862541a301a0268d7dd332b44648cb6c21186ecd36e19bd623046da21a",
+      "normalized_sha256": "689be3d0a3c6bd5596f8b3e0e8fa77c8f159ffddc13ce7f971e797d50a2151c4"
+    },
+    {
+      "id": "reservoir_half_built",
+      "attempt": 2,
+      "numeric_ready": true,
+      "selected": true,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "reason": "Try1 too similar to built; try2 south/east curb gaps expose incomplete earth retaining edge.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/reservoir_half_built_try2.png",
+      "raw_sha256": "e2e9236e3b66a5be57aca1cb5558220504d1f588d241d8844531b64f5640ff62",
+      "normalized_sha256": "99e32a2b34423b6fc2e7efee79cd0010fffba9b1b833ebf954dca24a43b97ab3"
+    },
+    {
+      "id": "reservoir_ruined",
+      "attempt": 1,
+      "numeric_ready": true,
+      "selected": true,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "reason": "Family contact-sheet review: source identity, stage silhouette, light/dark alpha backgrounds and sparse ink at1x/2x.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/reservoir_ruined_try1.png",
+      "raw_sha256": "0d65d0065b4ace69e95bfd47f37af4a3a78973715aa296e27b88c71d37236212",
+      "normalized_sha256": "314b70bbcccaee32be1f8f073acc41c67b1672b57d4df2ce46dc90a9cd4a1578"
+    },
+    {
+      "id": "rotary_quern_damaged",
+      "attempt": 1,
+      "numeric_ready": true,
+      "selected": true,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "reason": "Family contact-sheet review: source identity, stage silhouette, light/dark alpha backgrounds and sparse ink at1x/2x.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/rotary_quern_damaged_try1.png",
+      "raw_sha256": "dd26ae08f5e5e6e18fa2c8ce378102b8a73decd1f2cf42b13f6fb01ad456723a",
+      "normalized_sha256": "9f5893f76c81eab95e81c5704fd19a60a45d7b9da3378493ea85915a196821f1"
+    },
+    {
+      "id": "rotary_quern_ruined",
+      "attempt": 1,
+      "numeric_ready": true,
+      "selected": true,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "reason": "Family contact-sheet review: source identity, stage silhouette, light/dark alpha backgrounds and sparse ink at1x/2x.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/rotary_quern_ruined_try1.png",
+      "raw_sha256": "dd14fee29b754dd9f7517db0b59300064c832aac90b9d215a21943f59848de80",
+      "normalized_sha256": "3a213f4d35ab6f8917fedc136a12e17529b3e612b0f18efe38c18c9b69bab741"
+    },
+    {
+      "id": "sundial_damaged",
+      "attempt": 1,
+      "numeric_ready": true,
+      "selected": true,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "reason": "Family contact-sheet review: source identity, stage silhouette, light/dark alpha backgrounds and sparse ink at1x/2x.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/sundial_damaged_try1.png",
+      "raw_sha256": "9361909eb528794caa4756def492b206a599880fe818206dfde3f8dfb7dde851",
+      "normalized_sha256": "94721d5859bc0fce5ac8c3c0f492df83fe5a8709dfd10cc7c41c64df7a7ed457"
+    },
+    {
+      "id": "sundial_ruined",
+      "attempt": 1,
+      "numeric_ready": true,
+      "selected": true,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "reason": "Family contact-sheet review: source identity, stage silhouette, light/dark alpha backgrounds and sparse ink at1x/2x.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/sundial_ruined_try1.png",
+      "raw_sha256": "93129c12ba06e81677f3f1957b6460e4ab5de7507c88d5545ac3cf5046164437",
+      "normalized_sha256": "47d261a3752df4893483419f7c25eb94cb48a085e6fd4975cf076bd6abc06507"
+    },
+    {
+      "id": "town_gate_damaged",
+      "attempt": 1,
+      "numeric_ready": true,
+      "selected": true,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "reason": "Family contact-sheet review: source identity, stage silhouette, light/dark alpha backgrounds and sparse ink at1x/2x.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/town_gate_damaged_try1.png",
+      "raw_sha256": "f36b50c0af37dc9cdcfa631f3f594b08c429dde8e22fd11e6ce35d3a54e3e83a",
+      "normalized_sha256": "bf906a8f1cef1948ccb13bf196c017c3443159234724ca165b833ab966e23cef"
+    },
+    {
+      "id": "town_gate_foundation",
+      "attempt": 1,
+      "numeric_ready": true,
+      "selected": false,
+      "status": "REJECTED_OR_SUPERSEDED",
+      "reason": "Try1 read as tall piers; try2 has squat footings.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/town_gate_foundation_try1.png",
+      "raw_sha256": "16d31d2869a4c2a53aeeb6b6ccab47f8fd19fea38fea2ab51f7137bd783f46d7",
+      "normalized_sha256": "af1b1f0f7746694638726d8c0cbf8a2579c46d66c4121dc09ea53a98fca4621a"
+    },
+    {
+      "id": "town_gate_foundation",
+      "attempt": 2,
+      "numeric_ready": true,
+      "selected": false,
+      "status": "REJECTED_OR_SUPERSEDED",
+      "reason": "Try1 read as tall piers; try2 has squat footings.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/town_gate_foundation_try2.png",
+      "raw_sha256": "f06167a40485a0151b62f69bb9ed16e6590863b9de8f908d5c1ee5a79da75deb",
+      "normalized_sha256": "98e06198274bb757c72178fc3a8a0fb032a3f40dc8618ba42c3cd26f5c9f25a5"
+    },
+    {
+      "id": "town_gate_foundation",
+      "attempt": 3,
+      "numeric_ready": true,
+      "selected": false,
+      "status": "REJECTED_OR_SUPERSEDED",
+      "reason": "Try1 read as tall piers; try2 has squat footings.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/town_gate_foundation_try3.png",
+      "raw_sha256": "93f3eca06ec0329e52053c6830c7cef08b28b54b7d550e942d8d59186e69f1b9",
+      "normalized_sha256": "3504da040054d61c25e8c6ee766e7b4741594c8e91925686f1479b9d5b709030"
+    },
+    {
+      "id": "town_gate_half_built",
+      "attempt": 1,
+      "numeric_ready": true,
+      "selected": false,
+      "status": "REJECTED_OR_SUPERSEDED",
+      "reason": "Two attempts failed original pier registration; try2 opaque113 vs built105px. Bounded rejection, one unused attempt.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/town_gate_half_built_try1.png",
+      "raw_sha256": "af3036807103e96bea6a4e8b5d006a98bf38e6993bff5a1682459e2cd499869f",
+      "normalized_sha256": "45a76443ddb56345e3cfe1e8cba31c1023c9cd16d1c6880f66ae89de6d568692"
+    },
+    {
+      "id": "town_gate_half_built",
+      "attempt": 2,
+      "numeric_ready": true,
+      "selected": false,
+      "status": "REJECTED_OR_SUPERSEDED",
+      "reason": "Two attempts failed original pier registration; try2 opaque113 vs built105px. Bounded rejection, one unused attempt.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/town_gate_half_built_try2.png",
+      "raw_sha256": "40ed17754bd597fe40399017353b9ed2bb1f5959cd99ad9fda08d02a24cd35e3",
+      "normalized_sha256": "e12cbc5e7b278c1631d6e27148982004de90423230e34c3d81e89f805d7004fc"
+    },
+    {
+      "id": "town_gate_ruined",
+      "attempt": 1,
+      "numeric_ready": true,
+      "selected": true,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "reason": "Family contact-sheet review: source identity, stage silhouette, light/dark alpha backgrounds and sparse ink at1x/2x.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/town_gate_ruined_try1.png",
+      "raw_sha256": "b2f847f4df813d8f1c91436329039b95053c6dbb0c27ca3df01b275b1847fde2",
+      "normalized_sha256": "c536724eea96a12a92939cd8b4801945e80753f88c8f10533743b207b1dd8e4e"
+    },
+    {
+      "id": "watchtower_foundation",
+      "attempt": 1,
+      "numeric_ready": true,
+      "selected": false,
+      "status": "REJECTED_OR_SUPERSEDED",
+      "reason": "Try1 foundation looked too narrow and retained lintel; try2 low wide open-doorway ring.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/watchtower_foundation_try1.png",
+      "raw_sha256": "06833c789736235938af03e8d76670389b896ac522c53c08516e0cf58935300e",
+      "normalized_sha256": "5166282de70d0a362da36d8ca7e5ee6bfe569a96cd209ef107ad939c4fe086da"
+    },
+    {
+      "id": "watchtower_foundation",
+      "attempt": 2,
+      "numeric_ready": true,
+      "selected": true,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "reason": "Try1 foundation looked too narrow and retained lintel; try2 low wide open-doorway ring.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/watchtower_foundation_try2.png",
+      "raw_sha256": "479a524e0e937f633c1bedd53d62a9bf3537148132b07e1c735ff3776c23643f",
+      "normalized_sha256": "66f8a322c3850ad01823c4ccb63d3c47b35087d72a8df137809124689b9164fe"
+    },
+    {
+      "id": "watchtower_half_built",
+      "attempt": 1,
+      "numeric_ready": true,
+      "selected": true,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "reason": "Family contact-sheet review: source identity, stage silhouette, light/dark alpha backgrounds and sparse ink at1x/2x.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/watchtower_half_built_try1.png",
+      "raw_sha256": "ba2bb32ba396577c7d00ebb932c834bc1dcb0b99c847f94d4e68eb93c7a121b1",
+      "normalized_sha256": "170d2f51781e9e0f30ebfe49613dde456d6116aab86453db2c14ec8ae42bf609"
+    },
+    {
+      "id": "watchtower_ruined",
+      "attempt": 1,
+      "numeric_ready": true,
+      "selected": false,
+      "status": "REJECTED_OR_SUPERSEDED",
+      "reason": "Try1 retained doorway leaf and too much standing wall; try2 low broken ring and fallen beams.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/watchtower_ruined_try1.png",
+      "raw_sha256": "870df5b7057af49d1f9c3049e8abd69155582d82e20d0dc85a22ed2f305bacb9",
+      "normalized_sha256": "2c959d51d44d8a65d657269b2f6dc2a20b18faffd23be42f26070d03ebfde5cc"
+    },
+    {
+      "id": "watchtower_ruined",
+      "attempt": 2,
+      "numeric_ready": true,
+      "selected": true,
+      "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+      "reason": "Try1 retained doorway leaf and too much standing wall; try2 low broken ring and fallen beams.",
+      "failures": [],
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_iron/raw/watchtower_ruined_try2.png",
+      "raw_sha256": "11c5059ef1e6978dddbbbe607f232a97846a6416c1378c73c11e5d4e1222066d",
+      "normalized_sha256": "dcf4796ae22cf694536cb54b96f985ae9b60dd9e26a4d725985a7cfe159ea2f1"
+    }
+  ],
+  "self_review": {
+    "planned_weak_states": [
+      "forge_foundation",
+      "watchtower_foundation",
+      "watchtower_ruined",
+      "aqueduct_foundation",
+      "bridge_foundation",
+      "bridge_ruined"
+    ],
+    "fraction": 0.2,
+    "additional_repairs": [
+      "bridge_damaged numeric light failure",
+      "reservoir_foundation and half_built semantic similarity"
+    ],
+    "note": "Six of30 weakstates retried; necessary numeric and semantic repairs also retained. No asset exceeds3 generations."
+  }
+}

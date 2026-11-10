@@ -1,0 +1,106 @@
+{
+  "score": 90,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Five capped foundations and two bounded half-built registration gaps remain withheld."
+  ],
+  "suggestions": [],
+  "reasoning": "Final23 selected states preserve family identity and coherent ink/light with clear lifecycle silhouettes. All9native family boards reviewed; independent reviewer inspected all18native/2x boards and support registration. Geometry findings were withheld; no gate exceptions.",
+  "selected_assets": [
+    {
+      "id": "aqueduct_ruined",
+      "sha256": "e632ead932d2a5f07313fd816b199d87db23529ac4ae2db7c527b2da849a90d1"
+    },
+    {
+      "id": "bloomery_damaged",
+      "sha256": "5ab9480972e02857212c942465c98cec9ecd67e9db96ecb213165a0017df023d"
+    },
+    {
+      "id": "bloomery_foundation",
+      "sha256": "290270599adea938f5fdae682a987553b87f90af9e9c70e7c0a5c6c4949f329f"
+    },
+    {
+      "id": "bloomery_half_built",
+      "sha256": "9d308854f34093a8a74bfbface1b88f9c88f3e0d4ca6b5f80e074e94ea823fe2"
+    },
+    {
+      "id": "bloomery_ruined",
+      "sha256": "ddd76371060f8e32092658424a0913c60e254d1e5d35d5ec56da116078bfc769"
+    },
+    {
+      "id": "bridge_damaged",
+      "sha256": "803583a1e4278517740002f62bdf209fa8f70922730d74b2e49cbbd771aa4fb7"
+    },
+    {
+      "id": "bridge_half_built",
+      "sha256": "9751eba8b2262dedb392dbf95ee096a41a5b9da96fd161560aa6a257786f6484"
+    },
+    {
+      "id": "bridge_ruined",
+      "sha256": "33ddefc740f4481dfb67d920dcb4c13f971c57858d0c71d7e2a31c901d234f85"
+    },
+    {
+      "id": "forge_damaged",
+      "sha256": "796e4aab76adfb986e49472ab5edc3628a505409ba55ba6da0017b5d56d675b4"
+    },
+    {
+      "id": "forge_half_built",
+      "sha256": "633932db1c1b4ea7b07e2aebe21020ec9ffd4e03f38641798cf11e1c712c3e08"
+    },
+    {
+      "id": "forge_ruined",
+      "sha256": "529a2f7ad1f9a1cbe523f336b7b82e1e107bede6e9d8914d00aac9a7a0496230"
+    },
+    {
+      "id": "reservoir_damaged",
+      "sha256": "94b3ff3a06d76d1d2a8f49dd757e44484751e1476b9bc418e0e9edb9744d1789"
+    },
+    {
+      "id": "reservoir_half_built",
+      "sha256": "99e32a2b34423b6fc2e7efee79cd0010fffba9b1b833ebf954dca24a43b97ab3"
+    },
+    {
+      "id": "reservoir_ruined",
+      "sha256": "314b70bbcccaee32be1f8f073acc41c67b1672b57d4df2ce46dc90a9cd4a1578"
+    },
+    {
+      "id": "rotary_quern_damaged",
+      "sha256": "9f5893f76c81eab95e81c5704fd19a60a45d7b9da3378493ea85915a196821f1"
+    },
+    {
+      "id": "rotary_quern_ruined",
+      "sha256": "3a213f4d35ab6f8917fedc136a12e17529b3e612b0f18efe38c18c9b69bab741"
+    },
+    {
+      "id": "sundial_damaged",
+      "sha256": "94721d5859bc0fce5ac8c3c0f492df83fe5a8709dfd10cc7c41c64df7a7ed457"
+    },
+    {
+      "id": "sundial_ruined",
+      "sha256": "47d261a3752df4893483419f7c25eb94cb48a085e6fd4975cf076bd6abc06507"
+    },
+    {
+      "id": "town_gate_damaged",
+      "sha256": "bf906a8f1cef1948ccb13bf196c017c3443159234724ca165b833ab966e23cef"
+    },
+    {
+      "id": "town_gate_ruined",
+      "sha256": "c536724eea96a12a92939cd8b4801945e80753f88c8f10533743b207b1dd8e4e"
+    },
+    {
+      "id": "watchtower_foundation",
+      "sha256": "66f8a322c3850ad01823c4ccb63d3c47b35087d72a8df137809124689b9164fe"
+    },
+    {
+      "id": "watchtower_half_built",
+      "sha256": "170d2f51781e9e0f30ebfe49613dde456d6116aab86453db2c14ec8ae42bf609"
+    },
+    {
+      "id": "watchtower_ruined",
+      "sha256": "dcf4796ae22cf694536cb54b96f985ae9b60dd9e26a4d725985a7cfe159ea2f1"
+    }
+  ],
+  "numeric_verification": "Root reproduced23 exports with unchanged A2 processor; verify_final.py PASS.",
+  "scope": "Art candidates, no runtime import."
+}
