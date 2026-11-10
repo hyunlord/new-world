@@ -1,5 +1,5 @@
-# chronicle_panel.gd (UI/ChroniclePanel in scenes/main.tscn): C-toggled world chronicle feed; pages new entries once
-#   per tick (even while hidden), merges porter groups, keeps the last 60 visible notable rows; links go to the inspector.
+# chronicle_panel.gd (UI/ChroniclePanel in scenes/main.tscn): C-toggled world chronicle feed; pages new entries on
+#   tick changes and drains backlog one page per frame, even hidden; keeps the last 60 visible notable rows.
 #   assets/ui/chronicle_feed.json controls kind visibility before retention; personal records and Why remain unfiltered.
 #   NOTABLE lists every kind the feed supports (M3 adds 23 RoomFormed; M4 adds 24 ToolBroke, 25 KnowledgeLearned,
 #   26 KnowledgeDiscovered, 27 KnowledgeAtRisk, 28 KnowledgeLost).
@@ -147,10 +147,10 @@ func _process(_delta: float) -> void:
 		return
 	var clock: Dictionary = SimReads.read(_world, "get_time_snapshot")
 	var now: int = int(clock.get("tick", 0))
-	var changed: bool = now != _tick
+	var changed: bool = now != _tick or _next < _total
 	if changed:
 		_tick = now
-		# One page per tick, even when hidden. Preserve the delivered cursor.
+		# One page per frame while behind, including paused loads. Preserve the delivered cursor.
 		var page: Dictionary = _world.call("get_chronicle_since", _next, 512)
 		_next = int(page.get("next", _next))
 		_total = int(page.get("total", _next))

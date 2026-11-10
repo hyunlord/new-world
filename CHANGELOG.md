@@ -10,6 +10,7 @@
 ### Changed
 - Typed256 knowledge masks preserve old ordinals and lower128 wire fields; format22 records ore and authoritative upper neighbour words. Genuine C1-b format21 input was preserved before editing.
 - Authored material-look overlays color new metal and mud-brick placeholders through the existing renderer without modifying pinned imported art.
+- Paused chronicle views drain all existing pages so later birth and discovery causes remain visible without simulation ticks.
 - Frozen prechecks precede every full gate; the start C1-b binaries remain both smoke comparisons' BASE. Exact publication receipts are external and remain pending.
 
 ### Removed

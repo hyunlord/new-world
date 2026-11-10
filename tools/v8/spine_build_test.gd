@@ -682,6 +682,16 @@ func _livestock() -> void:
 			await _capture(language + "_" + stage)
 			cards.modulate = cards_color
 			var before: Dictionary = _world.call("get_command_log", 0)
+			var feed: Control = _main.get_node("UI/ChroniclePanel") as Control
+			await _key(KEY_C)
+			await _frames()
+			_check(stage + " paused default feed caught up", feed.visible and int(feed.get("_next")) == int(feed.get("_total")), {"cursor": feed.get("_next"), "total": feed.get("_total")})
+			if stage == "03-kid":
+				var birth: Dictionary = preload("res://scripts/ui/chronicle_text.gd").rows(_world.call("get_chronicle_since", int(ui["birth_entry"]), 1))[0]
+				var line: String = preload("res://scripts/ui/chronicle_text.gd").line(birth, -1, _locale, _world.call("get_world_info"), true, true)
+				_check(language + " paused default feed actual birth link", (feed.find_child("NotableFilter", true, false) as Button).button_pressed and (feed.get("_body") as RichTextLabel).text.contains(line) and line.contains("why:" + str(int(ui["birth_entry"]))))
+				await _capture(language + "_03-kid_default_feed")
+			await _key(KEY_C)
 			var current_chapter: int = int(goals.call("current_chapter"))
 			var has_capture: bool = int(read.get("first_capture", -1)) >= 0
 			_check(stage + " capture fact controls chapter availability", (goals.call("available_chapters") as Array).has(4) == has_capture)
