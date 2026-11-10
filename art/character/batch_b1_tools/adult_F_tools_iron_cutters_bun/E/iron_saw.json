@@ -1,0 +1,72 @@
+{
+  "look": "adult_F_tools_iron_cutters_bun",
+  "age": "adult",
+  "attempt": 1,
+  "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/iron_cutters/try1/processed/raw.png",
+  "raw_sha256": "de7fb0db0a6fad4f7b003988e1e3e30801b09d546742388644c1d42aa17a1ce7",
+  "prompt_sha256": "a5daedaf8db7f13118088a9fa7e2bbc2a30d1ba5cbe7befe58a2e9e67312739c",
+  "facing": "E",
+  "pose": "iron_saw",
+  "check_pose": "work_a",
+  "path": "E/iron_saw.png",
+  "sha256": "431d4ec20fbbe910333a4e2f0678da2328ac76ee0f91e6283a724d4e8055ad89",
+  "source_box": [
+    1168,
+    488,
+    1535,
+    1024
+  ],
+  "normalization": {
+    "scaled_size": [
+      42,
+      61
+    ],
+    "trim_box": [
+      7,
+      4,
+      38,
+      60
+    ],
+    "placement": [
+      24,
+      49
+    ],
+    "resized_to_canvas_offset": [
+      17,
+      45
+    ],
+    "visible_pixels": 898,
+    "rotation_degrees": 0,
+    "scale": 0.11451942740286299,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "passed": true,
+    "findings": [],
+    "coverage": 0.08828125,
+    "component_count": 1,
+    "largest_hole": 0,
+    "contact_ok": true,
+    "sleep_axis_ok": true,
+    "opaque_height": 55,
+    "opaque_width": 31,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+    "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+    "visible_height": 56,
+    "visible_width": 31,
+    "visibility_threshold": 16
+  },
+  "standing_scale": 0.11451942740286299,
+  "sleep_scale": 0.11451942740286299,
+  "anchor": [
+    40,
+    104
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "template_version": 3
+}

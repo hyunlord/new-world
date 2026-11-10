@@ -1,0 +1,72 @@
+{
+  "look": "adult_F_tools_neo_field_bun",
+  "age": "adult",
+  "attempt": 3,
+  "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/neo_field/try3/processed/raw.png",
+  "raw_sha256": "a6389f58e912366b8f540e1f4677ca08801785b32c73ec678ee4b66e5f504490",
+  "prompt_sha256": "fe633b51c8b66073abbb979044b8c43e3f2ab72988865b593329e0c5e6182b86",
+  "facing": "S",
+  "pose": "saddle_quern",
+  "check_pose": "work_a",
+  "path": "S/saddle_quern.png",
+  "sha256": "429993a3985d0f4b7faafe74a2a4f3f69cedd263173899548745e8f341301f08",
+  "source_box": [
+    883,
+    13,
+    1242,
+    583
+  ],
+  "normalization": {
+    "scaled_size": [
+      42,
+      66
+    ],
+    "trim_box": [
+      6,
+      6,
+      37,
+      56
+    ],
+    "placement": [
+      24,
+      55
+    ],
+    "resized_to_canvas_offset": [
+      18,
+      49
+    ],
+    "visible_pixels": 1003,
+    "rotation_degrees": 0,
+    "scale": 0.11594202898550725,
+    "discarded_pixels": 8,
+    "discarded_max_alpha": 1,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "passed": true,
+    "findings": [],
+    "coverage": 0.103125,
+    "component_count": 1,
+    "largest_hole": 0,
+    "contact_ok": true,
+    "sleep_axis_ok": true,
+    "opaque_height": 49,
+    "opaque_width": 30,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+    "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+    "visible_height": 50,
+    "visible_width": 31,
+    "visibility_threshold": 16
+  },
+  "standing_scale": 0.11594202898550725,
+  "sleep_scale": 0.11594202898550725,
+  "anchor": [
+    40,
+    104
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "template_version": 3
+}

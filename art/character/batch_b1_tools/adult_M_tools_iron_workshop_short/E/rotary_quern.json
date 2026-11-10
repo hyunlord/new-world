@@ -1,0 +1,72 @@
+{
+  "look": "adult_M_tools_iron_workshop_short",
+  "age": "adult",
+  "attempt": 2,
+  "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/iron_workshop/try2/processed/raw.png",
+  "raw_sha256": "b88d185d316671e566b0d10413749b67285b60b38d82ad12fd2d46b1980a963d",
+  "prompt_sha256": "01ba6b0a1f54b0878ce3fd3c3d6093c5f8b7bdef14e99974a03c0840a9a113db",
+  "facing": "E",
+  "pose": "rotary_quern",
+  "check_pose": "work_a",
+  "path": "E/rotary_quern.png",
+  "sha256": "ce4336b7b549f22350aa7f45c345c49ba3a75b06a9326a7a325c204a68f4c3d2",
+  "source_box": [
+    1181,
+    545,
+    1514,
+    1013
+  ],
+  "normalization": {
+    "scaled_size": [
+      38,
+      54
+    ],
+    "trim_box": [
+      5,
+      5,
+      36,
+      54
+    ],
+    "placement": [
+      24,
+      56
+    ],
+    "resized_to_canvas_offset": [
+      19,
+      51
+    ],
+    "visible_pixels": 1050,
+    "rotation_degrees": 0,
+    "scale": 0.1154639175257732,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "passed": true,
+    "findings": [],
+    "coverage": 0.10680803571428571,
+    "component_count": 1,
+    "largest_hole": 0,
+    "contact_ok": true,
+    "sleep_axis_ok": true,
+    "opaque_height": 48,
+    "opaque_width": 30,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+    "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+    "visible_height": 49,
+    "visible_width": 31,
+    "visibility_threshold": 16
+  },
+  "standing_scale": 0.1154639175257732,
+  "sleep_scale": 0.1154639175257732,
+  "anchor": [
+    40,
+    104
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "template_version": 3
+}

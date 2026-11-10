@@ -1,43 +1,43 @@
 {
   "look": "adult_M_tools_bronze_metals_short",
   "age": "adult",
-  "attempt": 1,
-  "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_metals/try1/processed/raw.png",
-  "raw_sha256": "061fa54bff9df9abe8851d3f45144311cab5b507287eba21343ae33342583abd",
-  "prompt_sha256": "45d2c8e08f9d04e92c32a2b8769e70f2b124704ee9bdfad0e71df716ef43b26c",
+  "attempt": 2,
+  "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_metals/try2/processed/raw.png",
+  "raw_sha256": "dcd75431d023bd8da9895ef2516554b3098fd7b74874653e60fd377951d4abdb",
+  "prompt_sha256": "321d76ba17936f3f17734b7206da0ed152f3f219a5ca8e834285027db87e8e60",
   "facing": "E",
   "pose": "tin_ore_basket",
   "check_pose": "work_a",
   "path": "E/tin_ore_basket.png",
-  "sha256": "e21ea7c9ae0c492338059ec0dce039007df586f7f72d30f1fec906a1d006ce40",
+  "sha256": "15db3d34c04b3cce368ba999a57c6422251abc404a84a001f6426a0d99f5e797",
   "source_box": [
-    609,
-    511,
-    916,
+    607,
+    527,
+    936,
     1024
   ],
   "normalization": {
     "scaled_size": [
-      36,
-      59
+      38,
+      57
     ],
     "trim_box": [
-      8,
-      1,
+      7,
+      0,
       34,
-      58
+      56
     ],
     "placement": [
-      27,
-      48
+      26,
+      49
     ],
     "resized_to_canvas_offset": [
       19,
-      47
+      49
     ],
-    "visible_pixels": 922,
+    "visible_pixels": 894,
     "rotation_degrees": 0,
-    "scale": 0.11570247933884298,
+    "scale": 0.11498973305954825,
     "discarded_pixels": 0,
     "discarded_max_alpha": 0,
     "visibility_threshold": 16
@@ -45,21 +45,21 @@
   "checks": {
     "passed": true,
     "findings": [],
-    "coverage": 0.09241071428571429,
+    "coverage": 0.09017857142857143,
     "component_count": 1,
     "largest_hole": 0,
     "contact_ok": true,
     "sleep_axis_ok": true,
-    "opaque_height": 55,
+    "opaque_height": 54,
     "opaque_width": 26,
     "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
     "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
-    "visible_height": 57,
-    "visible_width": 26,
+    "visible_height": 56,
+    "visible_width": 27,
     "visibility_threshold": 16
   },
-  "standing_scale": 0.11570247933884298,
-  "sleep_scale": 0.11570247933884298,
+  "standing_scale": 0.11498973305954825,
+  "sleep_scale": 0.11498973305954825,
   "anchor": [
     40,
     104

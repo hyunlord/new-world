@@ -1,0 +1,72 @@
+{
+  "look": "adult_F_tools_paleo_food_bun",
+  "age": "adult",
+  "attempt": 2,
+  "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/paleo_food/try2/processed/raw.png",
+  "raw_sha256": "cb9e629ef519c517cb496ae40c4127abad505c2c6b2bfee5f9f7c8c00a701af9",
+  "prompt_sha256": "a62ce681228165471dafb36a39a1ce64569981e0e0530559239ed36cbe07ffa0",
+  "facing": "E",
+  "pose": "forage_basket",
+  "check_pose": "work_a",
+  "path": "E/forage_basket.png",
+  "sha256": "978fa8351050e2f0c7f09a1a5dc84fcbebb880f002fe32835c016be547d15aaa",
+  "source_box": [
+    1219,
+    498,
+    1536,
+    1024
+  ],
+  "normalization": {
+    "scaled_size": [
+      37,
+      61
+    ],
+    "trim_box": [
+      8,
+      4,
+      31,
+      60
+    ],
+    "placement": [
+      28,
+      49
+    ],
+    "resized_to_canvas_offset": [
+      20,
+      45
+    ],
+    "visible_pixels": 848,
+    "rotation_degrees": 0,
+    "scale": 0.11691022964509394,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "passed": true,
+    "findings": [],
+    "coverage": 0.08392857142857142,
+    "component_count": 1,
+    "largest_hole": 0,
+    "contact_ok": true,
+    "sleep_axis_ok": true,
+    "opaque_height": 56,
+    "opaque_width": 21,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+    "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+    "visible_height": 56,
+    "visible_width": 23,
+    "visibility_threshold": 16
+  },
+  "standing_scale": 0.11691022964509394,
+  "sleep_scale": 0.11691022964509394,
+  "anchor": [
+    40,
+    104
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "template_version": 3
+}

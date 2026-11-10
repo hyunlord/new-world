@@ -1,0 +1,72 @@
+{
+  "look": "adult_F_tools_paleo_food_bun",
+  "age": "adult",
+  "attempt": 2,
+  "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/paleo_food/try2/processed/raw.png",
+  "raw_sha256": "cb9e629ef519c517cb496ae40c4127abad505c2c6b2bfee5f9f7c8c00a701af9",
+  "prompt_sha256": "a62ce681228165471dafb36a39a1ce64569981e0e0530559239ed36cbe07ffa0",
+  "facing": "S",
+  "pose": "fishing_rod",
+  "check_pose": "work_a",
+  "path": "S/fishing_rod.png",
+  "sha256": "a075f686e2710ff024984611f9fd1886ed12b8e3e7195f9869fd795fbe51437e",
+  "source_box": [
+    274,
+    0,
+    627,
+    545
+  ],
+  "normalization": {
+    "scaled_size": [
+      41,
+      64
+    ],
+    "trim_box": [
+      6,
+      1,
+      34,
+      58
+    ],
+    "placement": [
+      26,
+      48
+    ],
+    "resized_to_canvas_offset": [
+      20,
+      47
+    ],
+    "visible_pixels": 976,
+    "rotation_degrees": 0,
+    "scale": 0.11691022964509394,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "passed": true,
+    "findings": [],
+    "coverage": 0.09017857142857143,
+    "component_count": 1,
+    "largest_hole": 0,
+    "contact_ok": true,
+    "sleep_axis_ok": true,
+    "opaque_height": 56,
+    "opaque_width": 27,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+    "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+    "visible_height": 57,
+    "visible_width": 28,
+    "visibility_threshold": 16
+  },
+  "standing_scale": 0.11691022964509394,
+  "sleep_scale": 0.11691022964509394,
+  "anchor": [
+    40,
+    104
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "template_version": 3
+}

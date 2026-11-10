@@ -1,0 +1,72 @@
+{
+  "look": "adult_F_tools_iron_loads_bun",
+  "age": "adult",
+  "attempt": 1,
+  "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/iron_loads/try1/processed/raw.png",
+  "raw_sha256": "586bfc06a935580dcc1b45b2cb937e4b8861e86c1a1d18cdd7367dac01f8d035",
+  "prompt_sha256": "b99c562e388a6ab49b2a48b1bcd4d3f3cbd2a9d3f9532c9e704712884e630504",
+  "facing": "E",
+  "pose": "brick_stack",
+  "check_pose": "work_a",
+  "path": "E/brick_stack.png",
+  "sha256": "83e1237acb4e6998a7f3ed2f2f04f86ec55c58362e8378e897f6897afc3a9603",
+  "source_box": [
+    1211,
+    513,
+    1526,
+    1024
+  ],
+  "normalization": {
+    "scaled_size": [
+      36,
+      58
+    ],
+    "trim_box": [
+      9,
+      1,
+      33,
+      58
+    ],
+    "placement": [
+      28,
+      48
+    ],
+    "resized_to_canvas_offset": [
+      19,
+      47
+    ],
+    "visible_pixels": 878,
+    "rotation_degrees": 0,
+    "scale": 0.11428571428571428,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "passed": true,
+    "findings": [],
+    "coverage": 0.08761160714285714,
+    "component_count": 1,
+    "largest_hole": 0,
+    "contact_ok": true,
+    "sleep_axis_ok": true,
+    "opaque_height": 55,
+    "opaque_width": 23,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+    "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+    "visible_height": 57,
+    "visible_width": 24,
+    "visibility_threshold": 16
+  },
+  "standing_scale": 0.11428571428571428,
+  "sleep_scale": 0.11428571428571428,
+  "anchor": [
+    40,
+    104
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "template_version": 3
+}

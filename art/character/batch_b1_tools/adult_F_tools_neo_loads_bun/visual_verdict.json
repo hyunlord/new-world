@@ -1,0 +1,11 @@
+{
+  "score": 93,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Pail interiors are small but white versus dark states read clearly."
+  ],
+  "suggestions": [],
+  "reasoning": "All ten structural checks pass. Native and 2x show clear full and empty sack/pail states with warm unmetallic material treatment.",
+  "summary_sha256": "9f996d71ecca236108b6f3ddcc64ad2762a2278cf85019b36eefd483066533c7"
+}

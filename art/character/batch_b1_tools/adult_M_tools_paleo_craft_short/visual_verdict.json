@@ -1,0 +1,11 @@
+{
+  "score": 92,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Bone needle is only a small light stroke at native size; attached hide sewing posture carries reading."
+  ],
+  "suggestions": [],
+  "reasoning": "Stone axe, knapping core/hammer, scraper and sewing hide are era-correct with connected components. Baseline hide wash and anatomy agree at native and2x; all ten structural checks pass.",
+  "summary_sha256": "35d18576166ef4896acc3bc274c9967e0f29a8847ba575c652ef28fb3bd189bd"
+}

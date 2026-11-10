@@ -1,0 +1,1166 @@
+{
+  "schema_version": 1,
+  "family": "B1 people tools and loads",
+  "delivery_mode": "Complete whole-person frame alternatives, no overlays or runtime job selector",
+  "canvas": [
+    80,
+    112
+  ],
+  "anchor": [
+    40,
+    104
+  ],
+  "standing_scale": "One S-idle calibration per sheet; no per-pose scale edits",
+  "sets_count": 14,
+  "frames_count": 140,
+  "activities_count": 56,
+  "structural_frames_passed": 140,
+  "visual_threshold": 90,
+  "numeric_passing_panels": 99,
+  "numeric_total_panels": 140,
+  "numeric_model_status": "MISSING",
+  "numeric_role": "Legacy source-resolution diagnostic only, not structural or native visual acceptance",
+  "historical_coverage_note": "Wooden bow is neolithic-only despite paleo_food legacy container id. Paleo and neo contain no metals. Bronze uses copper/bronze/tin; iron tools are in iron sets only.",
+  "wardrobe_scope": "Adult M/F alternating tool sheets reuse baseline hide or undyed tunic working wardrobes; cross-product of every age, sex, hairstyle and wardrobe is not implied. Main wardrobe matrix is separate.",
+  "self_review": {
+    "sets": [
+      "bronze_metals",
+      "bronze_records"
+    ],
+    "fraction": 0.14285714285714285,
+    "selected_attempts": [
+      2,
+      2
+    ],
+    "prior_attempts_preserved": true,
+    "outcome": "Both improved in native readability and replace try1 whole sheets."
+  },
+  "known_limits": [
+    "Small needles, cords, tablet marks and load interiors need labels or 2x inspection.",
+    "No semantic limb masks; limb correctness assessed visually.",
+    "Runtime character job/tool selection integration remains pending.",
+    "Some numeric stroke diagnostics fail; model weights missing."
+  ],
+  "sets": [
+    {
+      "id": "bronze_cutters",
+      "look": "adult_M_tools_bronze_cutters_short",
+      "era": "bronze",
+      "era_note": null,
+      "age": "adult",
+      "sex": "M",
+      "hair": "short",
+      "frame_ids": [
+        "idle",
+        "copper_axe",
+        "bronze_axe",
+        "bronze_hoe",
+        "bronze_sickle"
+      ],
+      "selected_attempt": 1,
+      "attempts_used": 1,
+      "delivery": "art/character/batch_b1_tools/adult_M_tools_bronze_cutters_short",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_cutters/try1/processed",
+      "review": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_cutters/try1/processed/review.png",
+      "summary_sha256": "c5baf46e5e9e8db659a4a32fc740b7f55ee6a36ca9cc8e858d83787ec5c961ef",
+      "visual_score": 92,
+      "structural_frames_passed": 10,
+      "numeric_passing_panels": 10,
+      "numeric_model_status": "MISSING",
+      "activities": [
+        {
+          "id": "copper_axe",
+          "era": "bronze",
+          "description": "a copper flat axe with warm red-orange head on wooden haft, held at waist ready to chop",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_M_tools_bronze_cutters_short/S/copper_axe.png",
+            "E": "art/character/batch_b1_tools/adult_M_tools_bronze_cutters_short/E/copper_axe.png"
+          }
+        },
+        {
+          "id": "bronze_axe",
+          "era": "bronze",
+          "description": "a bronze socket axe with dull ochre-gold head on wooden haft, held diagonally with both hands",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_M_tools_bronze_cutters_short/S/bronze_axe.png",
+            "E": "art/character/batch_b1_tools/adult_M_tools_bronze_cutters_short/E/bronze_axe.png"
+          }
+        },
+        {
+          "id": "bronze_hoe",
+          "era": "bronze",
+          "description": "a bronze hoe, small dull gold blade at right angle to long wooden shaft, held angled down",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_M_tools_bronze_cutters_short/S/bronze_hoe.png",
+            "E": "art/character/batch_b1_tools/adult_M_tools_bronze_cutters_short/E/bronze_hoe.png"
+          }
+        },
+        {
+          "id": "bronze_sickle",
+          "era": "bronze",
+          "description": "a bronze sickle with strongly curved dull gold blade on short wooden handle, cutting grip",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_M_tools_bronze_cutters_short/S/bronze_sickle.png",
+            "E": "art/character/batch_b1_tools/adult_M_tools_bronze_cutters_short/E/bronze_sickle.png"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bronze_casting",
+      "look": "adult_F_tools_bronze_casting_bun",
+      "era": "bronze",
+      "era_note": null,
+      "age": "adult",
+      "sex": "F",
+      "hair": "bun",
+      "frame_ids": [
+        "idle",
+        "casting_tongs",
+        "clay_mould",
+        "copper_hammer",
+        "charcoal_basket"
+      ],
+      "selected_attempt": 1,
+      "attempts_used": 1,
+      "delivery": "art/character/batch_b1_tools/adult_F_tools_bronze_casting_bun",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_casting/try1/processed",
+      "review": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_casting/try1/processed/review.png",
+      "summary_sha256": "62cd14ef2c7357ff425b5464edec02e5f589674a962623b8103b04db8cc0ade8",
+      "visual_score": 92,
+      "structural_frames_passed": 10,
+      "numeric_passing_panels": 3,
+      "numeric_model_status": "MISSING",
+      "activities": [
+        {
+          "id": "casting_tongs",
+          "era": "bronze",
+          "description": "long WOODEN paired casting tongs gripping a small rough clay crucible; no iron, no modern steel",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_F_tools_bronze_casting_bun/S/casting_tongs.png",
+            "E": "art/character/batch_b1_tools/adult_F_tools_bronze_casting_bun/E/casting_tongs.png"
+          }
+        },
+        {
+          "id": "clay_mould",
+          "era": "bronze",
+          "description": "an open fired-clay two-piece axe mould carried together in hands, incised axe cavity visible",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_F_tools_bronze_casting_bun/S/clay_mould.png",
+            "E": "art/character/batch_b1_tools/adult_F_tools_bronze_casting_bun/E/clay_mould.png"
+          }
+        },
+        {
+          "id": "copper_hammer",
+          "era": "bronze",
+          "description": "a compact red-orange copper hammer on a short wooden haft in working grip",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_F_tools_bronze_casting_bun/S/copper_hammer.png",
+            "E": "art/character/batch_b1_tools/adult_F_tools_bronze_casting_bun/E/copper_hammer.png"
+          }
+        },
+        {
+          "id": "charcoal_basket",
+          "era": "bronze",
+          "description": "a woven basket filled with irregular matte black charcoal lumps, held with both hands",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_F_tools_bronze_casting_bun/S/charcoal_basket.png",
+            "E": "art/character/batch_b1_tools/adult_F_tools_bronze_casting_bun/E/charcoal_basket.png"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bronze_metals",
+      "look": "adult_M_tools_bronze_metals_short",
+      "era": "bronze",
+      "era_note": null,
+      "age": "adult",
+      "sex": "M",
+      "hair": "short",
+      "frame_ids": [
+        "idle",
+        "copper_ore_basket",
+        "tin_ore_basket",
+        "copper_ingot",
+        "bronze_ingot"
+      ],
+      "selected_attempt": 2,
+      "attempts_used": 2,
+      "delivery": "art/character/batch_b1_tools/adult_M_tools_bronze_metals_short",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_metals/try2/processed",
+      "review": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_metals/try2/processed/review.png",
+      "summary_sha256": "03dcf7f493f6dd2dc0bd6bcc0c7b12068b1294b5d7610bd3301532979fa9901d",
+      "visual_score": 94,
+      "structural_frames_passed": 10,
+      "numeric_passing_panels": 10,
+      "numeric_model_status": "MISSING",
+      "activities": [
+        {
+          "id": "copper_ore_basket",
+          "era": "bronze",
+          "description": "a deep wicker ore basket visibly heaped with green-streaked dark copper rocks",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_M_tools_bronze_metals_short/S/copper_ore_basket.png",
+            "E": "art/character/batch_b1_tools/adult_M_tools_bronze_metals_short/E/copper_ore_basket.png"
+          }
+        },
+        {
+          "id": "tin_ore_basket",
+          "era": "bronze",
+          "description": "a deep wicker ore basket visibly heaped with grey-brown tin ore pebbles",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_M_tools_bronze_metals_short/S/tin_ore_basket.png",
+            "E": "art/character/batch_b1_tools/adult_M_tools_bronze_metals_short/E/tin_ore_basket.png"
+          }
+        },
+        {
+          "id": "copper_ingot",
+          "era": "bronze",
+          "description": "a single squat red-orange copper ingot held across both palms",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_M_tools_bronze_metals_short/S/copper_ingot.png",
+            "E": "art/character/batch_b1_tools/adult_M_tools_bronze_metals_short/E/copper_ingot.png"
+          }
+        },
+        {
+          "id": "bronze_ingot",
+          "era": "bronze",
+          "description": "a single squat dull golden bronze ingot held across both palms",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_M_tools_bronze_metals_short/S/bronze_ingot.png",
+            "E": "art/character/batch_b1_tools/adult_M_tools_bronze_metals_short/E/bronze_ingot.png"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bronze_building",
+      "look": "adult_F_tools_bronze_building_bun",
+      "era": "bronze",
+      "era_note": null,
+      "age": "adult",
+      "sex": "F",
+      "hair": "bun",
+      "frame_ids": [
+        "idle",
+        "tin_ingot",
+        "brick_hod_full",
+        "brick_hod_empty",
+        "loom_shuttle"
+      ],
+      "selected_attempt": 1,
+      "attempts_used": 1,
+      "delivery": "art/character/batch_b1_tools/adult_F_tools_bronze_building_bun",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_building/try1/processed",
+      "review": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_building/try1/processed/review.png",
+      "summary_sha256": "9613fa060d3f17c0b99be6b75cd55bb3df11dc75b568a7e6334f1cbbacbb9280",
+      "visual_score": 91,
+      "structural_frames_passed": 10,
+      "numeric_passing_panels": 5,
+      "numeric_model_status": "MISSING",
+      "activities": [
+        {
+          "id": "tin_ingot",
+          "era": "bronze",
+          "description": "a single small matte silver-grey tin ingot held in palms, soft unpolished metal",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_F_tools_bronze_building_bun/S/tin_ingot.png",
+            "E": "art/character/batch_b1_tools/adult_F_tools_bronze_building_bun/E/tin_ingot.png"
+          }
+        },
+        {
+          "id": "brick_hod_full",
+          "era": "bronze",
+          "description": "a wooden brick hod with four broad mud bricks carried upright at shoulder, no steel fittings",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_F_tools_bronze_building_bun/S/brick_hod_full.png",
+            "E": "art/character/batch_b1_tools/adult_F_tools_bronze_building_bun/E/brick_hod_full.png"
+          }
+        },
+        {
+          "id": "brick_hod_empty",
+          "era": "bronze",
+          "description": "the SAME wooden brick hod now EMPTY, open interior clearly visible, carried upright at shoulder",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_F_tools_bronze_building_bun/S/brick_hod_empty.png",
+            "E": "art/character/batch_b1_tools/adult_F_tools_bronze_building_bun/E/brick_hod_empty.png"
+          }
+        },
+        {
+          "id": "loom_shuttle",
+          "era": "bronze",
+          "description": "a carved wooden loom shuttle wrapped in off-white linen yarn, both hands weaving gesture",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_F_tools_bronze_building_bun/S/loom_shuttle.png",
+            "E": "art/character/batch_b1_tools/adult_F_tools_bronze_building_bun/E/loom_shuttle.png"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bronze_records",
+      "look": "adult_M_tools_bronze_records_short",
+      "era": "bronze",
+      "era_note": null,
+      "age": "adult",
+      "sex": "M",
+      "hair": "short",
+      "frame_ids": [
+        "idle",
+        "clay_tablet_blank",
+        "clay_tablet_marked",
+        "honey_pot_full",
+        "honey_pot_empty"
+      ],
+      "selected_attempt": 2,
+      "attempts_used": 2,
+      "delivery": "art/character/batch_b1_tools/adult_M_tools_bronze_records_short",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_records/try2/processed",
+      "review": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_records/try2/processed/review.png",
+      "summary_sha256": "ddc88a4a0590676250315b0daf527bcd0443713a1eea85d63ad548a7e33afcf7",
+      "visual_score": 93,
+      "structural_frames_passed": 10,
+      "numeric_passing_panels": 4,
+      "numeric_model_status": "MISSING",
+      "activities": [
+        {
+          "id": "clay_tablet_blank",
+          "era": "bronze",
+          "description": "a blank damp clay tablet and short reed stylus, tablet tilted toward viewer",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_M_tools_bronze_records_short/S/clay_tablet_blank.png",
+            "E": "art/character/batch_b1_tools/adult_M_tools_bronze_records_short/E/clay_tablet_blank.png"
+          }
+        },
+        {
+          "id": "clay_tablet_marked",
+          "era": "bronze",
+          "description": "the SAME clay tablet with a few simple impressed tally marks and reed stylus, NO modern writing",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_M_tools_bronze_records_short/S/clay_tablet_marked.png",
+            "E": "art/character/batch_b1_tools/adult_M_tools_bronze_records_short/E/clay_tablet_marked.png"
+          }
+        },
+        {
+          "id": "honey_pot_full",
+          "era": "bronze",
+          "description": "a round unglazed honey pot with lid held off and amber honey surface visibly inside",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_M_tools_bronze_records_short/S/honey_pot_full.png",
+            "E": "art/character/batch_b1_tools/adult_M_tools_bronze_records_short/E/honey_pot_full.png"
+          }
+        },
+        {
+          "id": "honey_pot_empty",
+          "era": "bronze",
+          "description": "the SAME round unglazed pot visibly empty, dark interior, lid held off",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_M_tools_bronze_records_short/S/honey_pot_empty.png",
+            "E": "art/character/batch_b1_tools/adult_M_tools_bronze_records_short/E/honey_pot_empty.png"
+          }
+        }
+      ]
+    },
+    {
+      "id": "neo_field",
+      "look": "adult_F_tools_neo_field_bun",
+      "era": "neo",
+      "era_note": null,
+      "age": "adult",
+      "sex": "F",
+      "hair": "bun",
+      "frame_ids": [
+        "idle",
+        "stone_hoe",
+        "flint_sickle",
+        "saddle_quern",
+        "hand_spindle"
+      ],
+      "selected_attempt": 3,
+      "attempts_used": 3,
+      "delivery": "art/character/batch_b1_tools/adult_F_tools_neo_field_bun",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/tools/neo_field/try3/processed",
+      "review": "/Users/rexxa/work/art-batch/B1/raw/tools/neo_field/try3/processed/review.png",
+      "summary_sha256": "c1db9036d64ae5dce3182cc70806f06a2c5755ef9e4fdf5a9e251d99dd497e8a",
+      "visual_score": 92,
+      "structural_frames_passed": 10,
+      "numeric_passing_panels": 10,
+      "numeric_model_status": "MISSING",
+      "activities": [
+        {
+          "id": "stone_hoe",
+          "era": "neo",
+          "description": "a stone hoe with GREY stone blade lashed to long wooden shaft, working grip",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_F_tools_neo_field_bun/S/stone_hoe.png",
+            "E": "art/character/batch_b1_tools/adult_F_tools_neo_field_bun/E/stone_hoe.png"
+          }
+        },
+        {
+          "id": "flint_sickle",
+          "era": "neo",
+          "description": "a short curved wooden sickle fitted with tiny dark FLINT teeth, no metal",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_F_tools_neo_field_bun/S/flint_sickle.png",
+            "E": "art/character/batch_b1_tools/adult_F_tools_neo_field_bun/E/flint_sickle.png"
+          }
+        },
+        {
+          "id": "saddle_quern",
+          "era": "neo",
+          "description": "a small grey saddle quern touching lap and both hands pushing its handstone, bent-knee working pose but feet on baseline",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_F_tools_neo_field_bun/S/saddle_quern.png",
+            "E": "art/character/batch_b1_tools/adult_F_tools_neo_field_bun/E/saddle_quern.png"
+          }
+        },
+        {
+          "id": "hand_spindle",
+          "era": "neo",
+          "description": "a drop spindle, wooden shaft and round clay whorl with undyed cream yarn, clearly held between two hands",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_F_tools_neo_field_bun/S/hand_spindle.png",
+            "E": "art/character/batch_b1_tools/adult_F_tools_neo_field_bun/E/hand_spindle.png"
+          }
+        }
+      ]
+    },
+    {
+      "id": "neo_wood",
+      "look": "adult_M_tools_neo_wood_short",
+      "era": "neo",
+      "era_note": null,
+      "age": "adult",
+      "sex": "M",
+      "hair": "short",
+      "frame_ids": [
+        "idle",
+        "stone_adze",
+        "shepherd_staff",
+        "wooden_ard",
+        "basket_weaving"
+      ],
+      "selected_attempt": 2,
+      "attempts_used": 2,
+      "delivery": "art/character/batch_b1_tools/adult_M_tools_neo_wood_short",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/tools/neo_wood/try2/processed",
+      "review": "/Users/rexxa/work/art-batch/B1/raw/tools/neo_wood/try2/processed/review.png",
+      "summary_sha256": "9b2b0236bf9d8e49b9a7d24845d9c8e293dfabb193e1a5e279a84d18df0e6d41",
+      "visual_score": 92,
+      "structural_frames_passed": 10,
+      "numeric_passing_panels": 8,
+      "numeric_model_status": "MISSING",
+      "activities": [
+        {
+          "id": "stone_adze",
+          "era": "neo",
+          "description": "a grey polished stone adze with transverse edge lashed to curved wooden haft, working grip",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_M_tools_neo_wood_short/S/stone_adze.png",
+            "E": "art/character/batch_b1_tools/adult_M_tools_neo_wood_short/E/stone_adze.png"
+          }
+        },
+        {
+          "id": "shepherd_staff",
+          "era": "neo",
+          "description": "a simple long wooden shepherd staff with curved natural top, held upright",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_M_tools_neo_wood_short/S/shepherd_staff.png",
+            "E": "art/character/batch_b1_tools/adult_M_tools_neo_wood_short/E/shepherd_staff.png"
+          }
+        },
+        {
+          "id": "wooden_ard",
+          "era": "neo",
+          "description": "a small wooden ard plough with plain wooden point, carried on shoulder, no metal",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_M_tools_neo_wood_short/S/wooden_ard.png",
+            "E": "art/character/batch_b1_tools/adult_M_tools_neo_wood_short/E/wooden_ard.png"
+          }
+        },
+        {
+          "id": "basket_weaving",
+          "era": "neo",
+          "description": "a half-finished wicker basket held against waist with loose reed ends under both hands",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_M_tools_neo_wood_short/S/basket_weaving.png",
+            "E": "art/character/batch_b1_tools/adult_M_tools_neo_wood_short/E/basket_weaving.png"
+          }
+        }
+      ]
+    },
+    {
+      "id": "neo_loads",
+      "look": "adult_F_tools_neo_loads_bun",
+      "era": "neo",
+      "era_note": null,
+      "age": "adult",
+      "sex": "F",
+      "hair": "bun",
+      "frame_ids": [
+        "idle",
+        "grain_sack_full",
+        "grain_sack_empty",
+        "milk_pail_full",
+        "milk_pail_empty"
+      ],
+      "selected_attempt": 2,
+      "attempts_used": 2,
+      "delivery": "art/character/batch_b1_tools/adult_F_tools_neo_loads_bun",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/tools/neo_loads/try2/processed",
+      "review": "/Users/rexxa/work/art-batch/B1/raw/tools/neo_loads/try2/processed/review.png",
+      "summary_sha256": "9f996d71ecca236108b6f3ddcc64ad2762a2278cf85019b36eefd483066533c7",
+      "visual_score": 93,
+      "structural_frames_passed": 10,
+      "numeric_passing_panels": 7,
+      "numeric_model_status": "MISSING",
+      "activities": [
+        {
+          "id": "grain_sack_full",
+          "era": "neo",
+          "description": "a full coarse undyed plant-fibre grain sack bulging against chest, gathered neck secured with cord",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_F_tools_neo_loads_bun/S/grain_sack_full.png",
+            "E": "art/character/batch_b1_tools/adult_F_tools_neo_loads_bun/E/grain_sack_full.png"
+          }
+        },
+        {
+          "id": "grain_sack_empty",
+          "era": "neo",
+          "description": "the SAME coarse cloth sack EMPTY, collapsed soft folded fabric hanging from both hands",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_F_tools_neo_loads_bun/S/grain_sack_empty.png",
+            "E": "art/character/batch_b1_tools/adult_F_tools_neo_loads_bun/E/grain_sack_empty.png"
+          }
+        },
+        {
+          "id": "milk_pail_full",
+          "era": "neo",
+          "description": "a wooden stave pail with wooden handle and WHITE MILK surface visible near rim, no metal hoops",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_F_tools_neo_loads_bun/S/milk_pail_full.png",
+            "E": "art/character/batch_b1_tools/adult_F_tools_neo_loads_bun/E/milk_pail_full.png"
+          }
+        },
+        {
+          "id": "milk_pail_empty",
+          "era": "neo",
+          "description": "the SAME wooden pail EMPTY, dark inside clearly visible, no metal hoops",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_F_tools_neo_loads_bun/S/milk_pail_empty.png",
+            "E": "art/character/batch_b1_tools/adult_F_tools_neo_loads_bun/E/milk_pail_empty.png"
+          }
+        }
+      ]
+    },
+    {
+      "id": "neo_home",
+      "look": "adult_M_tools_neo_home_short",
+      "era": "neo",
+      "era_note": null,
+      "age": "adult",
+      "sex": "M",
+      "hair": "short",
+      "frame_ids": [
+        "idle",
+        "water_jar_full",
+        "water_jar_empty",
+        "herb_bundle",
+        "wool_bundle"
+      ],
+      "selected_attempt": 1,
+      "attempts_used": 1,
+      "delivery": "art/character/batch_b1_tools/adult_M_tools_neo_home_short",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/tools/neo_home/try1/processed",
+      "review": "/Users/rexxa/work/art-batch/B1/raw/tools/neo_home/try1/processed/review.png",
+      "summary_sha256": "7650e356ddc96bb52b7d898b1555d170467d96ec86b6776c7f3f87cb61310b74",
+      "visual_score": 92,
+      "structural_frames_passed": 10,
+      "numeric_passing_panels": 4,
+      "numeric_model_status": "MISSING",
+      "activities": [
+        {
+          "id": "water_jar_full",
+          "era": "neo",
+          "description": "a round unglazed water jar carried tilted just enough to show pale reflective water surface inside neck",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_M_tools_neo_home_short/S/water_jar_full.png",
+            "E": "art/character/batch_b1_tools/adult_M_tools_neo_home_short/E/water_jar_full.png"
+          }
+        },
+        {
+          "id": "water_jar_empty",
+          "era": "neo",
+          "description": "the SAME unglazed jar EMPTY with dark dry interior visible",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_M_tools_neo_home_short/S/water_jar_empty.png",
+            "E": "art/character/batch_b1_tools/adult_M_tools_neo_home_short/E/water_jar_empty.png"
+          }
+        },
+        {
+          "id": "herb_bundle",
+          "era": "neo",
+          "description": "a small bound bundle of sage-green medicinal herb stems held in hands",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_M_tools_neo_home_short/S/herb_bundle.png",
+            "E": "art/character/batch_b1_tools/adult_M_tools_neo_home_short/E/herb_bundle.png"
+          }
+        },
+        {
+          "id": "wool_bundle",
+          "era": "neo",
+          "description": "an armful of loose undyed cream sheep fleece with soft coarse locks, no spun luxury fabric",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_M_tools_neo_home_short/S/wool_bundle.png",
+            "E": "art/character/batch_b1_tools/adult_M_tools_neo_home_short/E/wool_bundle.png"
+          }
+        }
+      ]
+    },
+    {
+      "id": "iron_cutters",
+      "look": "adult_F_tools_iron_cutters_bun",
+      "era": "iron",
+      "era_note": null,
+      "age": "adult",
+      "sex": "F",
+      "hair": "bun",
+      "frame_ids": [
+        "idle",
+        "iron_axe",
+        "iron_hoe",
+        "iron_sickle",
+        "iron_saw"
+      ],
+      "selected_attempt": 1,
+      "attempts_used": 1,
+      "delivery": "art/character/batch_b1_tools/adult_F_tools_iron_cutters_bun",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/tools/iron_cutters/try1/processed",
+      "review": "/Users/rexxa/work/art-batch/B1/raw/tools/iron_cutters/try1/processed/review.png",
+      "summary_sha256": "50d59f6662abcfff7bc5bcd6bd5740c191d425d1fb24f9f6ab13343390e21540",
+      "visual_score": 92,
+      "structural_frames_passed": 10,
+      "numeric_passing_panels": 10,
+      "numeric_model_status": "MISSING",
+      "activities": [
+        {
+          "id": "iron_axe",
+          "era": "iron",
+          "description": "a dark charcoal-grey iron axe with one pale cutting edge on wooden haft, working grip",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_F_tools_iron_cutters_bun/S/iron_axe.png",
+            "E": "art/character/batch_b1_tools/adult_F_tools_iron_cutters_bun/E/iron_axe.png"
+          }
+        },
+        {
+          "id": "iron_hoe",
+          "era": "iron",
+          "description": "a dark forged iron hoe head on a long wooden shaft, angled down working grip",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_F_tools_iron_cutters_bun/S/iron_hoe.png",
+            "E": "art/character/batch_b1_tools/adult_F_tools_iron_cutters_bun/E/iron_hoe.png"
+          }
+        },
+        {
+          "id": "iron_sickle",
+          "era": "iron",
+          "description": "a dark forged iron sickle with curved blade and one pale edge on wood handle",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_F_tools_iron_cutters_bun/S/iron_sickle.png",
+            "E": "art/character/batch_b1_tools/adult_F_tools_iron_cutters_bun/E/iron_sickle.png"
+          }
+        },
+        {
+          "id": "iron_saw",
+          "era": "iron",
+          "description": "a short dark iron saw with visibly toothed edge and simple wooden grip, two hands sawing gesture",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_F_tools_iron_cutters_bun/S/iron_saw.png",
+            "E": "art/character/batch_b1_tools/adult_F_tools_iron_cutters_bun/E/iron_saw.png"
+          }
+        }
+      ]
+    },
+    {
+      "id": "iron_workshop",
+      "look": "adult_M_tools_iron_workshop_short",
+      "era": "iron",
+      "era_note": null,
+      "age": "adult",
+      "sex": "M",
+      "hair": "short",
+      "frame_ids": [
+        "idle",
+        "forge_tongs",
+        "forge_hammer",
+        "iron_plough_share",
+        "rotary_quern"
+      ],
+      "selected_attempt": 2,
+      "attempts_used": 2,
+      "delivery": "art/character/batch_b1_tools/adult_M_tools_iron_workshop_short",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/tools/iron_workshop/try2/processed",
+      "review": "/Users/rexxa/work/art-batch/B1/raw/tools/iron_workshop/try2/processed/review.png",
+      "summary_sha256": "4a55eb12a96edede34cd5216adcb099d66cb0c2cc213958dbc8f3ff180112bea",
+      "visual_score": 92,
+      "structural_frames_passed": 10,
+      "numeric_passing_panels": 10,
+      "numeric_model_status": "MISSING",
+      "activities": [
+        {
+          "id": "forge_tongs",
+          "era": "iron",
+          "description": "long dark forged iron tongs grasping a small dull red iron bloom, no modern grips",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_M_tools_iron_workshop_short/S/forge_tongs.png",
+            "E": "art/character/batch_b1_tools/adult_M_tools_iron_workshop_short/E/forge_tongs.png"
+          }
+        },
+        {
+          "id": "forge_hammer",
+          "era": "iron",
+          "description": "a compact dark iron forging hammer on wooden handle, working grip",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_M_tools_iron_workshop_short/S/forge_hammer.png",
+            "E": "art/character/batch_b1_tools/adult_M_tools_iron_workshop_short/E/forge_hammer.png"
+          }
+        },
+        {
+          "id": "iron_plough_share",
+          "era": "iron",
+          "description": "a broad triangular dark iron PLOUGH SHARE with socket, carried in both hands, not a whole plough",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_M_tools_iron_workshop_short/S/iron_plough_share.png",
+            "E": "art/character/batch_b1_tools/adult_M_tools_iron_workshop_short/E/iron_plough_share.png"
+          }
+        },
+        {
+          "id": "rotary_quern",
+          "era": "iron",
+          "description": "a small grey rotary quern set touching knees, upright short wooden crank in hand, bent-knee work pose feet retained",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_M_tools_iron_workshop_short/S/rotary_quern.png",
+            "E": "art/character/batch_b1_tools/adult_M_tools_iron_workshop_short/E/rotary_quern.png"
+          }
+        }
+      ]
+    },
+    {
+      "id": "iron_loads",
+      "look": "adult_F_tools_iron_loads_bun",
+      "era": "iron",
+      "era_note": null,
+      "age": "adult",
+      "sex": "F",
+      "hair": "bun",
+      "frame_ids": [
+        "idle",
+        "iron_ore_basket",
+        "iron_ingot",
+        "iron_bloom",
+        "brick_stack"
+      ],
+      "selected_attempt": 1,
+      "attempts_used": 1,
+      "delivery": "art/character/batch_b1_tools/adult_F_tools_iron_loads_bun",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/tools/iron_loads/try1/processed",
+      "review": "/Users/rexxa/work/art-batch/B1/raw/tools/iron_loads/try1/processed/review.png",
+      "summary_sha256": "a8a61b392682c7c6ec31c1f1d8625120337fd9c2978e3f1a5bd6e6326579daf0",
+      "visual_score": 92,
+      "structural_frames_passed": 10,
+      "numeric_passing_panels": 2,
+      "numeric_model_status": "MISSING",
+      "activities": [
+        {
+          "id": "iron_ore_basket",
+          "era": "iron",
+          "description": "a wicker basket filled with rusty dark red iron ore lumps held with both hands",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_F_tools_iron_loads_bun/S/iron_ore_basket.png",
+            "E": "art/character/batch_b1_tools/adult_F_tools_iron_loads_bun/E/iron_ore_basket.png"
+          }
+        },
+        {
+          "id": "iron_ingot",
+          "era": "iron",
+          "description": "a dark charcoal-grey rectangular iron ingot held across both palms",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_F_tools_iron_loads_bun/S/iron_ingot.png",
+            "E": "art/character/batch_b1_tools/adult_F_tools_iron_loads_bun/E/iron_ingot.png"
+          }
+        },
+        {
+          "id": "iron_bloom",
+          "era": "iron",
+          "description": "a rough porous dark iron bloom with mottled slag surface held in a wood carrying scoop",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_F_tools_iron_loads_bun/S/iron_bloom.png",
+            "E": "art/character/batch_b1_tools/adult_F_tools_iron_loads_bun/E/iron_bloom.png"
+          }
+        },
+        {
+          "id": "brick_stack",
+          "era": "iron",
+          "description": "three large sun-dried mud bricks stacked against chest in both arms",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_F_tools_iron_loads_bun/S/brick_stack.png",
+            "E": "art/character/batch_b1_tools/adult_F_tools_iron_loads_bun/E/brick_stack.png"
+          }
+        }
+      ]
+    },
+    {
+      "id": "paleo_craft",
+      "look": "adult_M_tools_paleo_craft_short",
+      "era": "paleo",
+      "era_note": null,
+      "age": "adult",
+      "sex": "M",
+      "hair": "short",
+      "frame_ids": [
+        "idle",
+        "stone_axe",
+        "flint_knapping",
+        "hide_scraper",
+        "bone_needle"
+      ],
+      "selected_attempt": 3,
+      "attempts_used": 3,
+      "delivery": "art/character/batch_b1_tools/adult_M_tools_paleo_craft_short",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/tools/paleo_craft/try3/processed",
+      "review": "/Users/rexxa/work/art-batch/B1/raw/tools/paleo_craft/try3/processed/review.png",
+      "summary_sha256": "35d18576166ef4896acc3bc274c9967e0f29a8847ba575c652ef28fb3bd189bd",
+      "visual_score": 92,
+      "structural_frames_passed": 10,
+      "numeric_passing_panels": 6,
+      "numeric_model_status": "MISSING",
+      "activities": [
+        {
+          "id": "stone_axe",
+          "era": "paleo",
+          "description": "a grey chipped stone axe head tied with rawhide to wood haft, working grip",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_M_tools_paleo_craft_short/S/stone_axe.png",
+            "E": "art/character/batch_b1_tools/adult_M_tools_paleo_craft_short/E/stone_axe.png"
+          }
+        },
+        {
+          "id": "flint_knapping",
+          "era": "paleo",
+          "description": "a dark flint core in one hand and rounded pale hammerstone in the other, flint-knapping gesture, no detached chips",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_M_tools_paleo_craft_short/S/flint_knapping.png",
+            "E": "art/character/batch_b1_tools/adult_M_tools_paleo_craft_short/E/flint_knapping.png"
+          }
+        },
+        {
+          "id": "hide_scraper",
+          "era": "paleo",
+          "description": "a small pale stone scraper pressed to a folded animal hide draped over forearm",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_M_tools_paleo_craft_short/S/hide_scraper.png",
+            "E": "art/character/batch_b1_tools/adult_M_tools_paleo_craft_short/E/hide_scraper.png"
+          }
+        },
+        {
+          "id": "bone_needle",
+          "era": "paleo",
+          "description": "a thin bone needle and pale sinew thread, sewing a folded hide held at chest, thread must connect to hand",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_M_tools_paleo_craft_short/S/bone_needle.png",
+            "E": "art/character/batch_b1_tools/adult_M_tools_paleo_craft_short/E/bone_needle.png"
+          }
+        }
+      ]
+    },
+    {
+      "id": "paleo_food",
+      "look": "adult_F_tools_paleo_food_bun",
+      "era": "paleo",
+      "era_note": "Legacy paleo_food container: wooden_bow is neolithic-only; hide wardrobe is era neutral.",
+      "age": "adult",
+      "sex": "F",
+      "hair": "bun",
+      "frame_ids": [
+        "idle",
+        "fishing_rod",
+        "digging_stick",
+        "wooden_bow",
+        "forage_basket"
+      ],
+      "selected_attempt": 2,
+      "attempts_used": 2,
+      "delivery": "art/character/batch_b1_tools/adult_F_tools_paleo_food_bun",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/tools/paleo_food/try2/processed",
+      "review": "/Users/rexxa/work/art-batch/B1/raw/tools/paleo_food/try2/processed/review.png",
+      "summary_sha256": "38f5d6b4e609e7b988ed76facf427f5d0c3860dec833fe889787e251e7a30902",
+      "visual_score": 92,
+      "structural_frames_passed": 10,
+      "numeric_passing_panels": 10,
+      "numeric_model_status": "MISSING",
+      "activities": [
+        {
+          "id": "fishing_rod",
+          "era": "paleo",
+          "description": "a short bent wooden fishing rod with attached line kept alongside body and bone hook held in opposite hand, no detached pieces",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_F_tools_paleo_food_bun/S/fishing_rod.png",
+            "E": "art/character/batch_b1_tools/adult_F_tools_paleo_food_bun/E/fishing_rod.png"
+          }
+        },
+        {
+          "id": "digging_stick",
+          "era": "paleo",
+          "description": "a plain pointed wooden digging stick, working grip angled down",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_F_tools_paleo_food_bun/S/digging_stick.png",
+            "E": "art/character/batch_b1_tools/adult_F_tools_paleo_food_bun/E/digging_stick.png"
+          }
+        },
+        {
+          "id": "wooden_bow",
+          "era": "neolithic",
+          "description": "a modest curved wooden bow with taut sinew string, held vertically, no metal arrows",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_F_tools_paleo_food_bun/S/wooden_bow.png",
+            "E": "art/character/batch_b1_tools/adult_F_tools_paleo_food_bun/E/wooden_bow.png"
+          }
+        },
+        {
+          "id": "forage_basket",
+          "era": "paleo",
+          "description": "a woven gathering basket full of dark berries and beige nuts held against waist",
+          "facings": [
+            "S",
+            "E"
+          ],
+          "frames": {
+            "S": "art/character/batch_b1_tools/adult_F_tools_paleo_food_bun/S/forage_basket.png",
+            "E": "art/character/batch_b1_tools/adult_F_tools_paleo_food_bun/E/forage_basket.png"
+          }
+        }
+      ]
+    }
+  ]
+}

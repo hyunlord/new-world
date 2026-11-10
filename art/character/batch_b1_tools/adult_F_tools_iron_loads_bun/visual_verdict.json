@@ -1,0 +1,11 @@
+{
+  "score": 92,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Ore and porous bloom rely on basket versus scoop and dark/rust values at native size."
+  ],
+  "suggestions": [],
+  "reasoning": "All ten structural checks pass. Ingot, brick stack and mineral carriers retain clear connected silhouettes and warm baseline ink-wash rendering in native and2x views.",
+  "summary_sha256": "a8a61b392682c7c6ec31c1f1d8625120337fd9c2978e3f1a5bd6e6326579daf0"
+}

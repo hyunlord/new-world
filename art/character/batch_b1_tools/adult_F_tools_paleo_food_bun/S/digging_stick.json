@@ -1,0 +1,72 @@
+{
+  "look": "adult_F_tools_paleo_food_bun",
+  "age": "adult",
+  "attempt": 2,
+  "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/paleo_food/try2/processed/raw.png",
+  "raw_sha256": "cb9e629ef519c517cb496ae40c4127abad505c2c6b2bfee5f9f7c8c00a701af9",
+  "prompt_sha256": "a62ce681228165471dafb36a39a1ce64569981e0e0530559239ed36cbe07ffa0",
+  "facing": "S",
+  "pose": "digging_stick",
+  "check_pose": "work_a",
+  "path": "S/digging_stick.png",
+  "sha256": "707a483309a5089963bc1da903d2baef98664be63fd025d29db3abb1e3165d5c",
+  "source_box": [
+    602,
+    0,
+    928,
+    562
+  ],
+  "normalization": {
+    "scaled_size": [
+      38,
+      66
+    ],
+    "trim_box": [
+      5,
+      1,
+      32,
+      58
+    ],
+    "placement": [
+      26,
+      48
+    ],
+    "resized_to_canvas_offset": [
+      21,
+      47
+    ],
+    "visible_pixels": 964,
+    "rotation_degrees": 0,
+    "scale": 0.11691022964509394,
+    "discarded_pixels": 2,
+    "discarded_max_alpha": 2,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "passed": true,
+    "findings": [],
+    "coverage": 0.09453125,
+    "component_count": 1,
+    "largest_hole": 0,
+    "contact_ok": true,
+    "sleep_axis_ok": true,
+    "opaque_height": 56,
+    "opaque_width": 26,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+    "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+    "visible_height": 57,
+    "visible_width": 27,
+    "visibility_threshold": 16
+  },
+  "standing_scale": 0.11691022964509394,
+  "sleep_scale": 0.11691022964509394,
+  "anchor": [
+    40,
+    104
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "template_version": 3
+}

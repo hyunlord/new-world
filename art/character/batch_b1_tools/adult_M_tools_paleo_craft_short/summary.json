@@ -1,0 +1,745 @@
+{
+  "look": "adult_M_tools_paleo_craft_short",
+  "age": "adult",
+  "attempt": 3,
+  "record_sha256": "ee6644edb3252187696f6ee86bb21beb6baa186e6c7f914c1853d5dd2db7d1d7",
+  "raw_sha256": "e8453c17120ce7ec5d7831f24669a7d724af3a61004e22baf75498b4c322f2d0",
+  "prompt_sha256": "9dc8d99cac076429b7d5a98c308be7433e9b5b5bdb3a8fc7283cb2106513aa07",
+  "passed": true,
+  "frames": [
+    {
+      "look": "adult_M_tools_paleo_craft_short",
+      "age": "adult",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/paleo_craft/try3/processed/raw.png",
+      "raw_sha256": "e8453c17120ce7ec5d7831f24669a7d724af3a61004e22baf75498b4c322f2d0",
+      "prompt_sha256": "9dc8d99cac076429b7d5a98c308be7433e9b5b5bdb3a8fc7283cb2106513aa07",
+      "facing": "S",
+      "pose": "idle",
+      "check_pose": "idle",
+      "path": "S/idle.png",
+      "sha256": "5048499ad1096badf29d51f31e3362a126f08e1cdbb4b3a3f3359ff6105c5b3b",
+      "source_box": [
+        0,
+        16,
+        320,
+        563
+      ],
+      "normalization": {
+        "scaled_size": [
+          37,
+          64
+        ],
+        "trim_box": [
+          4,
+          0,
+          33,
+          57
+        ],
+        "placement": [
+          25,
+          48
+        ],
+        "resized_to_canvas_offset": [
+          21,
+          48
+        ],
+        "visible_pixels": 1066,
+        "rotation_degrees": 0,
+        "scale": 0.11618257261410789,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.10613839285714285,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 56,
+        "opaque_width": 27,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 57,
+        "visible_width": 29,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11618257261410789,
+      "sleep_scale": 0.11618257261410789,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_tools_paleo_craft_short",
+      "age": "adult",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/paleo_craft/try3/processed/raw.png",
+      "raw_sha256": "e8453c17120ce7ec5d7831f24669a7d724af3a61004e22baf75498b4c322f2d0",
+      "prompt_sha256": "9dc8d99cac076429b7d5a98c308be7433e9b5b5bdb3a8fc7283cb2106513aa07",
+      "facing": "S",
+      "pose": "stone_axe",
+      "check_pose": "work_a",
+      "path": "S/stone_axe.png",
+      "sha256": "3b4964e697bdec6e99747665a78f2f3910e16c17f0f9703fe66820e1af26caf7",
+      "source_box": [
+        301,
+        15,
+        608,
+        570
+      ],
+      "normalization": {
+        "scaled_size": [
+          36,
+          64
+        ],
+        "trim_box": [
+          4,
+          0,
+          36,
+          57
+        ],
+        "placement": [
+          24,
+          48
+        ],
+        "resized_to_canvas_offset": [
+          20,
+          48
+        ],
+        "visible_pixels": 1040,
+        "rotation_degrees": 0,
+        "scale": 0.11618257261410789,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.10424107142857143,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 55,
+        "opaque_width": 31,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 57,
+        "visible_width": 32,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11618257261410789,
+      "sleep_scale": 0.11618257261410789,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_tools_paleo_craft_short",
+      "age": "adult",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/paleo_craft/try3/processed/raw.png",
+      "raw_sha256": "e8453c17120ce7ec5d7831f24669a7d724af3a61004e22baf75498b4c322f2d0",
+      "prompt_sha256": "9dc8d99cac076429b7d5a98c308be7433e9b5b5bdb3a8fc7283cb2106513aa07",
+      "facing": "S",
+      "pose": "flint_knapping",
+      "check_pose": "work_a",
+      "path": "S/flint_knapping.png",
+      "sha256": "55e20be716ed679533295c28339567124a4d890904d4111ce1453de0a7394187",
+      "source_box": [
+        623,
+        16,
+        906,
+        554
+      ],
+      "normalization": {
+        "scaled_size": [
+          33,
+          63
+        ],
+        "trim_box": [
+          1,
+          0,
+          30,
+          57
+        ],
+        "placement": [
+          25,
+          48
+        ],
+        "resized_to_canvas_offset": [
+          24,
+          48
+        ],
+        "visible_pixels": 1032,
+        "rotation_degrees": 0,
+        "scale": 0.11618257261410789,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.10412946428571429,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 56,
+        "opaque_width": 29,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 57,
+        "visible_width": 29,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11618257261410789,
+      "sleep_scale": 0.11618257261410789,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_tools_paleo_craft_short",
+      "age": "adult",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/paleo_craft/try3/processed/raw.png",
+      "raw_sha256": "e8453c17120ce7ec5d7831f24669a7d724af3a61004e22baf75498b4c322f2d0",
+      "prompt_sha256": "9dc8d99cac076429b7d5a98c308be7433e9b5b5bdb3a8fc7283cb2106513aa07",
+      "facing": "S",
+      "pose": "hide_scraper",
+      "check_pose": "work_a",
+      "path": "S/hide_scraper.png",
+      "sha256": "c332c3e37abece2ebdb8db0810be1ea4ac8abb6f89362b6f0342b57cec9cc12a",
+      "source_box": [
+        907,
+        17,
+        1214,
+        536
+      ],
+      "normalization": {
+        "scaled_size": [
+          36,
+          60
+        ],
+        "trim_box": [
+          3,
+          0,
+          32,
+          57
+        ],
+        "placement": [
+          25,
+          48
+        ],
+        "resized_to_canvas_offset": [
+          22,
+          48
+        ],
+        "visible_pixels": 1077,
+        "rotation_degrees": 0,
+        "scale": 0.11618257261410789,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.10904017857142857,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 55,
+        "opaque_width": 29,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 57,
+        "visible_width": 29,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11618257261410789,
+      "sleep_scale": 0.11618257261410789,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_tools_paleo_craft_short",
+      "age": "adult",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/paleo_craft/try3/processed/raw.png",
+      "raw_sha256": "e8453c17120ce7ec5d7831f24669a7d724af3a61004e22baf75498b4c322f2d0",
+      "prompt_sha256": "9dc8d99cac076429b7d5a98c308be7433e9b5b5bdb3a8fc7283cb2106513aa07",
+      "facing": "S",
+      "pose": "bone_needle",
+      "check_pose": "work_a",
+      "path": "S/bone_needle.png",
+      "sha256": "3864771837bfc1874cc0bfb5a3332130f45368ccabb486143e9a5bbd4a8183b5",
+      "source_box": [
+        1211,
+        17,
+        1496,
+        551
+      ],
+      "normalization": {
+        "scaled_size": [
+          33,
+          62
+        ],
+        "trim_box": [
+          2,
+          0,
+          33,
+          57
+        ],
+        "placement": [
+          24,
+          48
+        ],
+        "resized_to_canvas_offset": [
+          22,
+          48
+        ],
+        "visible_pixels": 1064,
+        "rotation_degrees": 0,
+        "scale": 0.11618257261410789,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.10736607142857142,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 55,
+        "opaque_width": 29,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 57,
+        "visible_width": 31,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11618257261410789,
+      "sleep_scale": 0.11618257261410789,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_tools_paleo_craft_short",
+      "age": "adult",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/paleo_craft/try3/processed/raw.png",
+      "raw_sha256": "e8453c17120ce7ec5d7831f24669a7d724af3a61004e22baf75498b4c322f2d0",
+      "prompt_sha256": "9dc8d99cac076429b7d5a98c308be7433e9b5b5bdb3a8fc7283cb2106513aa07",
+      "facing": "E",
+      "pose": "idle",
+      "check_pose": "idle",
+      "path": "E/idle.png",
+      "sha256": "8125d0a980b992fd116d966d4f555bfc7830831bd3bae603780a860e62ff95a4",
+      "source_box": [
+        33,
+        537,
+        306,
+        1010
+      ],
+      "normalization": {
+        "scaled_size": [
+          32,
+          55
+        ],
+        "trim_box": [
+          2,
+          0,
+          26,
+          54
+        ],
+        "placement": [
+          28,
+          51
+        ],
+        "resized_to_canvas_offset": [
+          26,
+          51
+        ],
+        "visible_pixels": 872,
+        "rotation_degrees": 0,
+        "scale": 0.11618257261410789,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.08772321428571428,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 53,
+        "opaque_width": 24,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 54,
+        "visible_width": 24,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11618257261410789,
+      "sleep_scale": 0.11618257261410789,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_tools_paleo_craft_short",
+      "age": "adult",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/paleo_craft/try3/processed/raw.png",
+      "raw_sha256": "e8453c17120ce7ec5d7831f24669a7d724af3a61004e22baf75498b4c322f2d0",
+      "prompt_sha256": "9dc8d99cac076429b7d5a98c308be7433e9b5b5bdb3a8fc7283cb2106513aa07",
+      "facing": "E",
+      "pose": "stone_axe",
+      "check_pose": "work_a",
+      "path": "E/stone_axe.png",
+      "sha256": "7bc9f790c5c4479a9def849658248606b98de0e789d26a169d502761d40a9e5f",
+      "source_box": [
+        297,
+        542,
+        626,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          38,
+          56
+        ],
+        "trim_box": [
+          5,
+          0,
+          34,
+          54
+        ],
+        "placement": [
+          25,
+          51
+        ],
+        "resized_to_canvas_offset": [
+          20,
+          51
+        ],
+        "visible_pixels": 860,
+        "rotation_degrees": 0,
+        "scale": 0.11618257261410789,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.08515625,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 52,
+        "opaque_width": 28,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 54,
+        "visible_width": 29,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11618257261410789,
+      "sleep_scale": 0.11618257261410789,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_tools_paleo_craft_short",
+      "age": "adult",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/paleo_craft/try3/processed/raw.png",
+      "raw_sha256": "e8453c17120ce7ec5d7831f24669a7d724af3a61004e22baf75498b4c322f2d0",
+      "prompt_sha256": "9dc8d99cac076429b7d5a98c308be7433e9b5b5bdb3a8fc7283cb2106513aa07",
+      "facing": "E",
+      "pose": "flint_knapping",
+      "check_pose": "work_a",
+      "path": "E/flint_knapping.png",
+      "sha256": "3c16c17cae44a627caac04d2a70b2391e0c6e6bb74cb707af795bb0c46be3b8e",
+      "source_box": [
+        601,
+        543,
+        898,
+        1008
+      ],
+      "normalization": {
+        "scaled_size": [
+          35,
+          54
+        ],
+        "trim_box": [
+          5,
+          0,
+          30,
+          53
+        ],
+        "placement": [
+          27,
+          52
+        ],
+        "resized_to_canvas_offset": [
+          22,
+          52
+        ],
+        "visible_pixels": 840,
+        "rotation_degrees": 0,
+        "scale": 0.11618257261410789,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.08381696428571428,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 52,
+        "opaque_width": 23,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 53,
+        "visible_width": 25,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11618257261410789,
+      "sleep_scale": 0.11618257261410789,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_tools_paleo_craft_short",
+      "age": "adult",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/paleo_craft/try3/processed/raw.png",
+      "raw_sha256": "e8453c17120ce7ec5d7831f24669a7d724af3a61004e22baf75498b4c322f2d0",
+      "prompt_sha256": "9dc8d99cac076429b7d5a98c308be7433e9b5b5bdb3a8fc7283cb2106513aa07",
+      "facing": "E",
+      "pose": "hide_scraper",
+      "check_pose": "work_a",
+      "path": "E/hide_scraper.png",
+      "sha256": "6a06b3e09b2589ce418a3f871655493b3c00c3f01dc79213aa3c15d7f85ee5e7",
+      "source_box": [
+        893,
+        543,
+        1224,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          38,
+          56
+        ],
+        "trim_box": [
+          7,
+          0,
+          33,
+          54
+        ],
+        "placement": [
+          27,
+          51
+        ],
+        "resized_to_canvas_offset": [
+          20,
+          51
+        ],
+        "visible_pixels": 910,
+        "rotation_degrees": 0,
+        "scale": 0.11618257261410789,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.09107142857142857,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 52,
+        "opaque_width": 25,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 54,
+        "visible_width": 26,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11618257261410789,
+      "sleep_scale": 0.11618257261410789,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_tools_paleo_craft_short",
+      "age": "adult",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/paleo_craft/try3/processed/raw.png",
+      "raw_sha256": "e8453c17120ce7ec5d7831f24669a7d724af3a61004e22baf75498b4c322f2d0",
+      "prompt_sha256": "9dc8d99cac076429b7d5a98c308be7433e9b5b5bdb3a8fc7283cb2106513aa07",
+      "facing": "E",
+      "pose": "bone_needle",
+      "check_pose": "work_a",
+      "path": "E/bone_needle.png",
+      "sha256": "885df293b4211660b6ab3323e89a159815f8c2aff0a016c6d6bf809d677250f1",
+      "source_box": [
+        1207,
+        543,
+        1498,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          34,
+          56
+        ],
+        "trim_box": [
+          6,
+          0,
+          33,
+          54
+        ],
+        "placement": [
+          26,
+          51
+        ],
+        "resized_to_canvas_offset": [
+          20,
+          51
+        ],
+        "visible_pixels": 918,
+        "rotation_degrees": 0,
+        "scale": 0.11618257261410789,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.09263392857142858,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 52,
+        "opaque_width": 27,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 54,
+        "visible_width": 27,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11618257261410789,
+      "sleep_scale": 0.11618257261410789,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    }
+  ],
+  "error": null,
+  "layout": "tools",
+  "frame_ids": [
+    "idle",
+    "stone_axe",
+    "flint_knapping",
+    "hide_scraper",
+    "bone_needle"
+  ],
+  "template_version": 3,
+  "numeric_pass": false,
+  "numeric_passing_panels": 6,
+  "numeric_model_status": "MISSING",
+  "numeric_report_sha256": "e82c899af710a22413bd0718ffaff7e0a2469d210d0bc1dd54cdc7a095c4f0b2"
+}

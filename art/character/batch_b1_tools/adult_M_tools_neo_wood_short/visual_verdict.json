@@ -1,0 +1,11 @@
+{
+  "score": 92,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Basket pose is a compact rim-working gesture rather than extended loose weaving."
+  ],
+  "suggestions": [],
+  "reasoning": "Native and 2x views retain clear staff, adze and ard silhouettes, stocky baseline anatomy and warm hide wash. All ten structural checks pass.",
+  "summary_sha256": "9b2b0236bf9d8e49b9a7d24845d9c8e293dfabb193e1a5e279a84d18df0e6d41"
+}

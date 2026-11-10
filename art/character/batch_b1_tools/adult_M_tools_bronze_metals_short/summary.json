@@ -1,52 +1,52 @@
 {
   "look": "adult_M_tools_bronze_metals_short",
   "age": "adult",
-  "attempt": 1,
-  "record_sha256": "a51c99da46e20b6216ee220dfeb1ca9a9540dd3766db7f080a6e46faa9a9bc1f",
-  "raw_sha256": "061fa54bff9df9abe8851d3f45144311cab5b507287eba21343ae33342583abd",
-  "prompt_sha256": "45d2c8e08f9d04e92c32a2b8769e70f2b124704ee9bdfad0e71df716ef43b26c",
+  "attempt": 2,
+  "record_sha256": "1172a1ec8c61ae5de334ae3b9bf51f5f2c686296784055af31f661df459c554b",
+  "raw_sha256": "dcd75431d023bd8da9895ef2516554b3098fd7b74874653e60fd377951d4abdb",
+  "prompt_sha256": "321d76ba17936f3f17734b7206da0ed152f3f219a5ca8e834285027db87e8e60",
   "passed": true,
   "frames": [
     {
       "look": "adult_M_tools_bronze_metals_short",
       "age": "adult",
-      "attempt": 1,
-      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_metals/try1/processed/raw.png",
-      "raw_sha256": "061fa54bff9df9abe8851d3f45144311cab5b507287eba21343ae33342583abd",
-      "prompt_sha256": "45d2c8e08f9d04e92c32a2b8769e70f2b124704ee9bdfad0e71df716ef43b26c",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_metals/try2/processed/raw.png",
+      "raw_sha256": "dcd75431d023bd8da9895ef2516554b3098fd7b74874653e60fd377951d4abdb",
+      "prompt_sha256": "321d76ba17936f3f17734b7206da0ed152f3f219a5ca8e834285027db87e8e60",
       "facing": "S",
       "pose": "idle",
       "check_pose": "idle",
       "path": "S/idle.png",
-      "sha256": "c1d3506f843d53fa41f065887098336e52c31c9b26e282511acf8c9e6d5f8d7c",
+      "sha256": "b7c1e8610674b31e20db24a31407b7f685fdf961f26551add8f877b674233a00",
       "source_box": [
         0,
-        13,
-        338,
-        552
+        4,
+        323,
+        536
       ],
       "normalization": {
         "scaled_size": [
-          39,
-          62
+          37,
+          61
         ],
         "trim_box": [
           7,
-          0,
-          34,
-          56
+          1,
+          32,
+          57
         ],
         "placement": [
-          26,
+          27,
           49
         ],
         "resized_to_canvas_offset": [
-          19,
-          49
+          20,
+          48
         ],
-        "visible_pixels": 977,
+        "visible_pixels": 953,
         "rotation_degrees": 0,
-        "scale": 0.11570247933884298,
+        "scale": 0.11498973305954825,
         "discarded_pixels": 0,
         "discarded_max_alpha": 0,
         "visibility_threshold": 16
@@ -54,21 +54,21 @@
       "checks": {
         "passed": true,
         "findings": [],
-        "coverage": 0.09698660714285715,
+        "coverage": 0.09564732142857142,
         "component_count": 1,
         "largest_hole": 0,
         "contact_ok": true,
         "sleep_axis_ok": true,
         "opaque_height": 56,
-        "opaque_width": 26,
+        "opaque_width": 25,
         "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
         "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
         "visible_height": 56,
-        "visible_width": 27,
+        "visible_width": 25,
         "visibility_threshold": 16
       },
-      "standing_scale": 0.11570247933884298,
-      "sleep_scale": 0.11570247933884298,
+      "standing_scale": 0.11498973305954825,
+      "sleep_scale": 0.11498973305954825,
       "anchor": [
         40,
         104
@@ -82,30 +82,30 @@
     {
       "look": "adult_M_tools_bronze_metals_short",
       "age": "adult",
-      "attempt": 1,
-      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_metals/try1/processed/raw.png",
-      "raw_sha256": "061fa54bff9df9abe8851d3f45144311cab5b507287eba21343ae33342583abd",
-      "prompt_sha256": "45d2c8e08f9d04e92c32a2b8769e70f2b124704ee9bdfad0e71df716ef43b26c",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_metals/try2/processed/raw.png",
+      "raw_sha256": "dcd75431d023bd8da9895ef2516554b3098fd7b74874653e60fd377951d4abdb",
+      "prompt_sha256": "321d76ba17936f3f17734b7206da0ed152f3f219a5ca8e834285027db87e8e60",
       "facing": "S",
       "pose": "copper_ore_basket",
       "check_pose": "work_a",
       "path": "S/copper_ore_basket.png",
-      "sha256": "57a4d046e3b94f93823cfa4096b9c5316dc32aa8ff8e029825f037cecbf6bc34",
+      "sha256": "18e200729fb65de949222f4534582bbc931c152e1001d5a6abe444838ce086e5",
       "source_box": [
-        325,
-        14,
-        630,
-        563
+        317,
+        10,
+        634,
+        546
       ],
       "normalization": {
         "scaled_size": [
-          35,
-          64
+          36,
+          62
         ],
         "trim_box": [
-          4,
+          5,
           0,
-          31,
+          32,
           57
         ],
         "placement": [
@@ -113,12 +113,12 @@
           48
         ],
         "resized_to_canvas_offset": [
-          22,
+          21,
           48
         ],
-        "visible_pixels": 969,
+        "visible_pixels": 987,
         "rotation_degrees": 0,
-        "scale": 0.11570247933884298,
+        "scale": 0.11498973305954825,
         "discarded_pixels": 0,
         "discarded_max_alpha": 0,
         "visibility_threshold": 16
@@ -126,7 +126,7 @@
       "checks": {
         "passed": true,
         "findings": [],
-        "coverage": 0.09854910714285714,
+        "coverage": 0.09910714285714285,
         "component_count": 1,
         "largest_hole": 0,
         "contact_ok": true,
@@ -139,8 +139,8 @@
         "visible_width": 27,
         "visibility_threshold": 16
       },
-      "standing_scale": 0.11570247933884298,
-      "sleep_scale": 0.11570247933884298,
+      "standing_scale": 0.11498973305954825,
+      "sleep_scale": 0.11498973305954825,
       "anchor": [
         40,
         104
@@ -154,43 +154,43 @@
     {
       "look": "adult_M_tools_bronze_metals_short",
       "age": "adult",
-      "attempt": 1,
-      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_metals/try1/processed/raw.png",
-      "raw_sha256": "061fa54bff9df9abe8851d3f45144311cab5b507287eba21343ae33342583abd",
-      "prompt_sha256": "45d2c8e08f9d04e92c32a2b8769e70f2b124704ee9bdfad0e71df716ef43b26c",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_metals/try2/processed/raw.png",
+      "raw_sha256": "dcd75431d023bd8da9895ef2516554b3098fd7b74874653e60fd377951d4abdb",
+      "prompt_sha256": "321d76ba17936f3f17734b7206da0ed152f3f219a5ca8e834285027db87e8e60",
       "facing": "S",
       "pose": "tin_ore_basket",
       "check_pose": "work_a",
       "path": "S/tin_ore_basket.png",
-      "sha256": "9c132049ebac2c2757305b4df9f2e98ef13ae60271d54ea4e4a9609469eb24b9",
+      "sha256": "1bc2fac699a16744caa7419a7608c7805659a992f0d610215424186fa43c411d",
       "source_box": [
-        625,
-        14,
-        934,
-        528
+        623,
+        9,
+        938,
+        544
       ],
       "normalization": {
         "scaled_size": [
           36,
-          59
+          62
         ],
         "trim_box": [
           4,
           0,
           31,
-          56
+          57
         ],
         "placement": [
           26,
-          49
+          48
         ],
         "resized_to_canvas_offset": [
           22,
-          49
+          48
         ],
-        "visible_pixels": 962,
+        "visible_pixels": 993,
         "rotation_degrees": 0,
-        "scale": 0.11570247933884298,
+        "scale": 0.11498973305954825,
         "discarded_pixels": 0,
         "discarded_max_alpha": 0,
         "visibility_threshold": 16
@@ -198,21 +198,21 @@
       "checks": {
         "passed": true,
         "findings": [],
-        "coverage": 0.096875,
+        "coverage": 0.10089285714285715,
         "component_count": 1,
         "largest_hole": 0,
         "contact_ok": true,
         "sleep_axis_ok": true,
         "opaque_height": 56,
-        "opaque_width": 25,
+        "opaque_width": 27,
         "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
         "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
-        "visible_height": 56,
+        "visible_height": 57,
         "visible_width": 27,
         "visibility_threshold": 16
       },
-      "standing_scale": 0.11570247933884298,
-      "sleep_scale": 0.11570247933884298,
+      "standing_scale": 0.11498973305954825,
+      "sleep_scale": 0.11498973305954825,
       "anchor": [
         40,
         104
@@ -226,30 +226,30 @@
     {
       "look": "adult_M_tools_bronze_metals_short",
       "age": "adult",
-      "attempt": 1,
-      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_metals/try1/processed/raw.png",
-      "raw_sha256": "061fa54bff9df9abe8851d3f45144311cab5b507287eba21343ae33342583abd",
-      "prompt_sha256": "45d2c8e08f9d04e92c32a2b8769e70f2b124704ee9bdfad0e71df716ef43b26c",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_metals/try2/processed/raw.png",
+      "raw_sha256": "dcd75431d023bd8da9895ef2516554b3098fd7b74874653e60fd377951d4abdb",
+      "prompt_sha256": "321d76ba17936f3f17734b7206da0ed152f3f219a5ca8e834285027db87e8e60",
       "facing": "S",
       "pose": "copper_ingot",
       "check_pose": "work_a",
       "path": "S/copper_ingot.png",
-      "sha256": "472fd04fa080c97610519e9bc7aa86d0ccbed3e45059f92600c8d3f74b6b9cf4",
+      "sha256": "55bd0ceca363ec24e82e0c2c10890224ad40a796d1bf5b2ea2af31f4a4a94aa9",
       "source_box": [
-        923,
-        14,
-        1232,
-        556
+        919,
+        10,
+        1224,
+        554
       ],
       "normalization": {
         "scaled_size": [
-          36,
+          35,
           63
         ],
         "trim_box": [
-          6,
+          5,
           0,
-          31,
+          30,
           57
         ],
         "placement": [
@@ -257,12 +257,12 @@
           48
         ],
         "resized_to_canvas_offset": [
-          21,
+          22,
           48
         ],
-        "visible_pixels": 939,
+        "visible_pixels": 946,
         "rotation_degrees": 0,
-        "scale": 0.11570247933884298,
+        "scale": 0.11498973305954825,
         "discarded_pixels": 0,
         "discarded_max_alpha": 0,
         "visibility_threshold": 16
@@ -270,7 +270,7 @@
       "checks": {
         "passed": true,
         "findings": [],
-        "coverage": 0.09408482142857143,
+        "coverage": 0.09609375,
         "component_count": 1,
         "largest_hole": 0,
         "contact_ok": true,
@@ -283,8 +283,8 @@
         "visible_width": 25,
         "visibility_threshold": 16
       },
-      "standing_scale": 0.11570247933884298,
-      "sleep_scale": 0.11570247933884298,
+      "standing_scale": 0.11498973305954825,
+      "sleep_scale": 0.11498973305954825,
       "anchor": [
         40,
         104
@@ -298,30 +298,30 @@
     {
       "look": "adult_M_tools_bronze_metals_short",
       "age": "adult",
-      "attempt": 1,
-      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_metals/try1/processed/raw.png",
-      "raw_sha256": "061fa54bff9df9abe8851d3f45144311cab5b507287eba21343ae33342583abd",
-      "prompt_sha256": "45d2c8e08f9d04e92c32a2b8769e70f2b124704ee9bdfad0e71df716ef43b26c",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_metals/try2/processed/raw.png",
+      "raw_sha256": "dcd75431d023bd8da9895ef2516554b3098fd7b74874653e60fd377951d4abdb",
+      "prompt_sha256": "321d76ba17936f3f17734b7206da0ed152f3f219a5ca8e834285027db87e8e60",
       "facing": "S",
       "pose": "bronze_ingot",
       "check_pose": "work_a",
       "path": "S/bronze_ingot.png",
-      "sha256": "27a2b794729446d395fa7f85404e835edcafb0cf72dcc901f8fe0be78c569e0f",
+      "sha256": "6c07ca8351457ebae116118184e5d90932933b099a964f3522687acc4914a0df",
       "source_box": [
-        1223,
-        14,
-        1514,
-        534
+        1215,
+        11,
+        1522,
+        552
       ],
       "normalization": {
         "scaled_size": [
-          34,
-          60
+          35,
+          62
         ],
         "trim_box": [
-          6,
+          5,
           0,
-          31,
+          30,
           56
         ],
         "placement": [
@@ -329,12 +329,12 @@
           49
         ],
         "resized_to_canvas_offset": [
-          21,
+          22,
           49
         ],
-        "visible_pixels": 942,
+        "visible_pixels": 944,
         "rotation_degrees": 0,
-        "scale": 0.11570247933884298,
+        "scale": 0.11498973305954825,
         "discarded_pixels": 0,
         "discarded_max_alpha": 0,
         "visibility_threshold": 16
@@ -342,21 +342,21 @@
       "checks": {
         "passed": true,
         "findings": [],
-        "coverage": 0.09542410714285714,
+        "coverage": 0.09587053571428572,
         "component_count": 1,
         "largest_hole": 0,
         "contact_ok": true,
         "sleep_axis_ok": true,
-        "opaque_height": 56,
-        "opaque_width": 25,
+        "opaque_height": 55,
+        "opaque_width": 24,
         "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
         "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
         "visible_height": 56,
         "visible_width": 25,
         "visibility_threshold": 16
       },
-      "standing_scale": 0.11570247933884298,
-      "sleep_scale": 0.11570247933884298,
+      "standing_scale": 0.11498973305954825,
+      "sleep_scale": 0.11498973305954825,
       "anchor": [
         40,
         104
@@ -370,43 +370,43 @@
     {
       "look": "adult_M_tools_bronze_metals_short",
       "age": "adult",
-      "attempt": 1,
-      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_metals/try1/processed/raw.png",
-      "raw_sha256": "061fa54bff9df9abe8851d3f45144311cab5b507287eba21343ae33342583abd",
-      "prompt_sha256": "45d2c8e08f9d04e92c32a2b8769e70f2b124704ee9bdfad0e71df716ef43b26c",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_metals/try2/processed/raw.png",
+      "raw_sha256": "dcd75431d023bd8da9895ef2516554b3098fd7b74874653e60fd377951d4abdb",
+      "prompt_sha256": "321d76ba17936f3f17734b7206da0ed152f3f219a5ca8e834285027db87e8e60",
       "facing": "E",
       "pose": "idle",
       "check_pose": "idle",
       "path": "E/idle.png",
-      "sha256": "9ef6c71da062a2340d31cf93cac77423e301ae45b514b7ba3a60a120ca1ab954",
+      "sha256": "08151c4bb8a5a2689e037d91322d76f5b3fd0f37cd59a8074b7eaedae701a627",
       "source_box": [
-        0,
-        513,
-        320,
+        25,
+        527,
+        310,
         1024
       ],
       "normalization": {
         "scaled_size": [
-          37,
-          59
+          33,
+          57
         ],
         "trim_box": [
-          8,
-          1,
-          31,
-          58
+          5,
+          0,
+          28,
+          56
         ],
         "placement": [
           28,
-          48
+          49
         ],
         "resized_to_canvas_offset": [
-          20,
-          47
+          23,
+          49
         ],
-        "visible_pixels": 891,
+        "visible_pixels": 871,
         "rotation_degrees": 0,
-        "scale": 0.11570247933884298,
+        "scale": 0.11498973305954825,
         "discarded_pixels": 0,
         "discarded_max_alpha": 0,
         "visibility_threshold": 16
@@ -414,21 +414,21 @@
       "checks": {
         "passed": true,
         "findings": [],
-        "coverage": 0.08828125,
+        "coverage": 0.0859375,
         "component_count": 1,
         "largest_hole": 0,
         "contact_ok": true,
         "sleep_axis_ok": true,
-        "opaque_height": 56,
-        "opaque_width": 23,
+        "opaque_height": 54,
+        "opaque_width": 21,
         "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
         "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
-        "visible_height": 57,
+        "visible_height": 56,
         "visible_width": 23,
         "visibility_threshold": 16
       },
-      "standing_scale": 0.11570247933884298,
-      "sleep_scale": 0.11570247933884298,
+      "standing_scale": 0.11498973305954825,
+      "sleep_scale": 0.11498973305954825,
       "anchor": [
         40,
         104
@@ -442,187 +442,43 @@
     {
       "look": "adult_M_tools_bronze_metals_short",
       "age": "adult",
-      "attempt": 1,
-      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_metals/try1/processed/raw.png",
-      "raw_sha256": "061fa54bff9df9abe8851d3f45144311cab5b507287eba21343ae33342583abd",
-      "prompt_sha256": "45d2c8e08f9d04e92c32a2b8769e70f2b124704ee9bdfad0e71df716ef43b26c",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_metals/try2/processed/raw.png",
+      "raw_sha256": "dcd75431d023bd8da9895ef2516554b3098fd7b74874653e60fd377951d4abdb",
+      "prompt_sha256": "321d76ba17936f3f17734b7206da0ed152f3f219a5ca8e834285027db87e8e60",
       "facing": "E",
       "pose": "copper_ore_basket",
       "check_pose": "work_a",
       "path": "E/copper_ore_basket.png",
-      "sha256": "26c2a36d7354b30363b384af2373d8fa3760a45517c7e0c080c8dd549ea19cd2",
+      "sha256": "1a95bc0213db7489ac00b1da7f57c04c78f72a6627695871f341f97cb44fbef9",
       "source_box": [
-        313,
-        518,
-        624,
-        1024
-      ],
-      "normalization": {
-        "scaled_size": [
-          36,
-          59
-        ],
-        "trim_box": [
-          6,
-          0,
-          33,
-          58
-        ],
-        "placement": [
-          26,
-          47
-        ],
-        "resized_to_canvas_offset": [
-          20,
-          47
-        ],
-        "visible_pixels": 934,
-        "rotation_degrees": 0,
-        "scale": 0.11570247933884298,
-        "discarded_pixels": 0,
-        "discarded_max_alpha": 0,
-        "visibility_threshold": 16
-      },
-      "checks": {
-        "passed": true,
-        "findings": [],
-        "coverage": 0.09363839285714286,
-        "component_count": 1,
-        "largest_hole": 0,
-        "contact_ok": true,
-        "sleep_axis_ok": true,
-        "opaque_height": 56,
-        "opaque_width": 25,
-        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
-        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
-        "visible_height": 58,
-        "visible_width": 27,
-        "visibility_threshold": 16
-      },
-      "standing_scale": 0.11570247933884298,
-      "sleep_scale": 0.11570247933884298,
-      "anchor": [
-        40,
-        104
-      ],
-      "footprint": [
-        1,
-        1
-      ],
-      "template_version": 3
-    },
-    {
-      "look": "adult_M_tools_bronze_metals_short",
-      "age": "adult",
-      "attempt": 1,
-      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_metals/try1/processed/raw.png",
-      "raw_sha256": "061fa54bff9df9abe8851d3f45144311cab5b507287eba21343ae33342583abd",
-      "prompt_sha256": "45d2c8e08f9d04e92c32a2b8769e70f2b124704ee9bdfad0e71df716ef43b26c",
-      "facing": "E",
-      "pose": "tin_ore_basket",
-      "check_pose": "work_a",
-      "path": "E/tin_ore_basket.png",
-      "sha256": "e21ea7c9ae0c492338059ec0dce039007df586f7f72d30f1fec906a1d006ce40",
-      "source_box": [
-        609,
-        511,
-        916,
-        1024
-      ],
-      "normalization": {
-        "scaled_size": [
-          36,
-          59
-        ],
-        "trim_box": [
-          8,
-          1,
-          34,
-          58
-        ],
-        "placement": [
-          27,
-          48
-        ],
-        "resized_to_canvas_offset": [
-          19,
-          47
-        ],
-        "visible_pixels": 922,
-        "rotation_degrees": 0,
-        "scale": 0.11570247933884298,
-        "discarded_pixels": 0,
-        "discarded_max_alpha": 0,
-        "visibility_threshold": 16
-      },
-      "checks": {
-        "passed": true,
-        "findings": [],
-        "coverage": 0.09241071428571429,
-        "component_count": 1,
-        "largest_hole": 0,
-        "contact_ok": true,
-        "sleep_axis_ok": true,
-        "opaque_height": 55,
-        "opaque_width": 26,
-        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
-        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
-        "visible_height": 57,
-        "visible_width": 26,
-        "visibility_threshold": 16
-      },
-      "standing_scale": 0.11570247933884298,
-      "sleep_scale": 0.11570247933884298,
-      "anchor": [
-        40,
-        104
-      ],
-      "footprint": [
-        1,
-        1
-      ],
-      "template_version": 3
-    },
-    {
-      "look": "adult_M_tools_bronze_metals_short",
-      "age": "adult",
-      "attempt": 1,
-      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_metals/try1/processed/raw.png",
-      "raw_sha256": "061fa54bff9df9abe8851d3f45144311cab5b507287eba21343ae33342583abd",
-      "prompt_sha256": "45d2c8e08f9d04e92c32a2b8769e70f2b124704ee9bdfad0e71df716ef43b26c",
-      "facing": "E",
-      "pose": "copper_ingot",
-      "check_pose": "work_a",
-      "path": "E/copper_ingot.png",
-      "sha256": "f41ca9e28ebaec2167292716e4b359818bfbd5f692f9aaa81c81bf923cf1e4fc",
-      "source_box": [
-        911,
-        513,
-        1230,
+        309,
+        527,
+        632,
         1024
       ],
       "normalization": {
         "scaled_size": [
           37,
-          59
+          57
         ],
         "trim_box": [
           7,
-          1,
-          32,
-          58
+          0,
+          34,
+          56
         ],
         "placement": [
-          27,
-          48
+          26,
+          49
         ],
         "resized_to_canvas_offset": [
-          20,
-          47
+          19,
+          49
         ],
-        "visible_pixels": 891,
+        "visible_pixels": 898,
         "rotation_degrees": 0,
-        "scale": 0.11570247933884298,
+        "scale": 0.11498973305954825,
         "discarded_pixels": 0,
         "discarded_max_alpha": 0,
         "visibility_threshold": 16
@@ -630,21 +486,21 @@
       "checks": {
         "passed": true,
         "findings": [],
-        "coverage": 0.08716517857142857,
+        "coverage": 0.09029017857142857,
         "component_count": 1,
         "largest_hole": 0,
         "contact_ok": true,
         "sleep_axis_ok": true,
-        "opaque_height": 56,
-        "opaque_width": 24,
+        "opaque_height": 54,
+        "opaque_width": 25,
         "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
         "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
-        "visible_height": 57,
-        "visible_width": 25,
+        "visible_height": 56,
+        "visible_width": 27,
         "visibility_threshold": 16
       },
-      "standing_scale": 0.11570247933884298,
-      "sleep_scale": 0.11570247933884298,
+      "standing_scale": 0.11498973305954825,
+      "sleep_scale": 0.11498973305954825,
       "anchor": [
         40,
         104
@@ -658,43 +514,43 @@
     {
       "look": "adult_M_tools_bronze_metals_short",
       "age": "adult",
-      "attempt": 1,
-      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_metals/try1/processed/raw.png",
-      "raw_sha256": "061fa54bff9df9abe8851d3f45144311cab5b507287eba21343ae33342583abd",
-      "prompt_sha256": "45d2c8e08f9d04e92c32a2b8769e70f2b124704ee9bdfad0e71df716ef43b26c",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_metals/try2/processed/raw.png",
+      "raw_sha256": "dcd75431d023bd8da9895ef2516554b3098fd7b74874653e60fd377951d4abdb",
+      "prompt_sha256": "321d76ba17936f3f17734b7206da0ed152f3f219a5ca8e834285027db87e8e60",
       "facing": "E",
-      "pose": "bronze_ingot",
+      "pose": "tin_ore_basket",
       "check_pose": "work_a",
-      "path": "E/bronze_ingot.png",
-      "sha256": "92ac4bd33660bb36b8ae2be8cae27cf66c77e4e51340a9dc2c52c50d0ea1151a",
+      "path": "E/tin_ore_basket.png",
+      "sha256": "15db3d34c04b3cce368ba999a57c6422251abc404a84a001f6426a0d99f5e797",
       "source_box": [
-        1213,
-        515,
-        1518,
+        607,
+        527,
+        936,
         1024
       ],
       "normalization": {
         "scaled_size": [
-          35,
-          59
+          38,
+          57
         ],
         "trim_box": [
           7,
-          1,
-          32,
-          58
+          0,
+          34,
+          56
         ],
         "placement": [
-          27,
-          48
+          26,
+          49
         ],
         "resized_to_canvas_offset": [
-          20,
-          47
+          19,
+          49
         ],
-        "visible_pixels": 896,
+        "visible_pixels": 894,
         "rotation_degrees": 0,
-        "scale": 0.11570247933884298,
+        "scale": 0.11498973305954825,
         "discarded_pixels": 0,
         "discarded_max_alpha": 0,
         "visibility_threshold": 16
@@ -702,21 +558,165 @@
       "checks": {
         "passed": true,
         "findings": [],
-        "coverage": 0.08850446428571429,
+        "coverage": 0.09017857142857143,
         "component_count": 1,
         "largest_hole": 0,
         "contact_ok": true,
         "sleep_axis_ok": true,
-        "opaque_height": 56,
-        "opaque_width": 25,
+        "opaque_height": 54,
+        "opaque_width": 26,
         "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
         "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
-        "visible_height": 57,
+        "visible_height": 56,
+        "visible_width": 27,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11498973305954825,
+      "sleep_scale": 0.11498973305954825,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_tools_bronze_metals_short",
+      "age": "adult",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_metals/try2/processed/raw.png",
+      "raw_sha256": "dcd75431d023bd8da9895ef2516554b3098fd7b74874653e60fd377951d4abdb",
+      "prompt_sha256": "321d76ba17936f3f17734b7206da0ed152f3f219a5ca8e834285027db87e8e60",
+      "facing": "E",
+      "pose": "copper_ingot",
+      "check_pose": "work_a",
+      "path": "E/copper_ingot.png",
+      "sha256": "8c7311d29235bf9f52b42a29519111c08098d53f9b3d70009e39d28d6858bf89",
+      "source_box": [
+        904,
+        526,
+        1228,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          37,
+          57
+        ],
+        "trim_box": [
+          7,
+          1,
+          32,
+          56
+        ],
+        "placement": [
+          27,
+          50
+        ],
+        "resized_to_canvas_offset": [
+          20,
+          49
+        ],
+        "visible_pixels": 841,
+        "rotation_degrees": 0,
+        "scale": 0.11498973305954825,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.08370535714285714,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 54,
+        "opaque_width": 24,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 55,
         "visible_width": 25,
         "visibility_threshold": 16
       },
-      "standing_scale": 0.11570247933884298,
-      "sleep_scale": 0.11570247933884298,
+      "standing_scale": 0.11498973305954825,
+      "sleep_scale": 0.11498973305954825,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_tools_bronze_metals_short",
+      "age": "adult",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_metals/try2/processed/raw.png",
+      "raw_sha256": "dcd75431d023bd8da9895ef2516554b3098fd7b74874653e60fd377951d4abdb",
+      "prompt_sha256": "321d76ba17936f3f17734b7206da0ed152f3f219a5ca8e834285027db87e8e60",
+      "facing": "E",
+      "pose": "bronze_ingot",
+      "check_pose": "work_a",
+      "path": "E/bronze_ingot.png",
+      "sha256": "2b34431a573b8cf97e78122bda2984d5e480cded0a5de6524166ac62bc3a3e93",
+      "source_box": [
+        1201,
+        526,
+        1522,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          37,
+          57
+        ],
+        "trim_box": [
+          7,
+          1,
+          33,
+          56
+        ],
+        "placement": [
+          27,
+          50
+        ],
+        "resized_to_canvas_offset": [
+          20,
+          49
+        ],
+        "visible_pixels": 855,
+        "rotation_degrees": 0,
+        "scale": 0.11498973305954825,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.08493303571428572,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 54,
+        "opaque_width": 25,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 55,
+        "visible_width": 26,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11498973305954825,
+      "sleep_scale": 0.11498973305954825,
       "anchor": [
         40,
         104
@@ -738,8 +738,8 @@
     "bronze_ingot"
   ],
   "template_version": 3,
-  "numeric_pass": false,
-  "numeric_passing_panels": 7,
+  "numeric_pass": true,
+  "numeric_passing_panels": 10,
   "numeric_model_status": "MISSING",
-  "numeric_report_sha256": "45c65cab8451b8367b80b0a086df02804c559afb606b54ebf993c170fe2a8be0"
+  "numeric_report_sha256": "4f8ae89f87165870e7cb055296e78237d747eb013934f55213c5a03f14be4f6a"
 }

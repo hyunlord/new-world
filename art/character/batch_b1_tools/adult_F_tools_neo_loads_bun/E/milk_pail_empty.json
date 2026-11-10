@@ -1,0 +1,72 @@
+{
+  "look": "adult_F_tools_neo_loads_bun",
+  "age": "adult",
+  "attempt": 2,
+  "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/neo_loads/try2/processed/raw.png",
+  "raw_sha256": "3a4709139c78fbbafbbe44811189f56ba2d5c606d78a4b23308e7c3b2bef54dc",
+  "prompt_sha256": "22e0bef62e815d76005c6aeb3abb9df0829908e512578c50d2b7250751d6b7b8",
+  "facing": "E",
+  "pose": "milk_pail_empty",
+  "check_pose": "work_a",
+  "path": "E/milk_pail_empty.png",
+  "sha256": "27c72662a3232865a6ff9294fde2730e97796213a3a9aaf93d46ed63fb3aa8e4",
+  "source_box": [
+    1209,
+    526,
+    1508,
+    1024
+  ],
+  "normalization": {
+    "scaled_size": [
+      34,
+      57
+    ],
+    "trim_box": [
+      8,
+      0,
+      28,
+      56
+    ],
+    "placement": [
+      30,
+      49
+    ],
+    "resized_to_canvas_offset": [
+      22,
+      49
+    ],
+    "visible_pixels": 816,
+    "rotation_degrees": 0,
+    "scale": 0.11498973305954825,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "passed": true,
+    "findings": [],
+    "coverage": 0.08203125,
+    "component_count": 1,
+    "largest_hole": 0,
+    "contact_ok": true,
+    "sleep_axis_ok": true,
+    "opaque_height": 55,
+    "opaque_width": 19,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+    "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+    "visible_height": 56,
+    "visible_width": 20,
+    "visibility_threshold": 16
+  },
+  "standing_scale": 0.11498973305954825,
+  "sleep_scale": 0.11498973305954825,
+  "anchor": [
+    40,
+    104
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "template_version": 3
+}

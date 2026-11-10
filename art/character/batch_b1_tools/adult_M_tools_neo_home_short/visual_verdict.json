@@ -1,0 +1,11 @@
+{
+  "score": 92,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Water versus empty mouth difference is small at native scale, clearer at2x."
+  ],
+  "suggestions": [],
+  "reasoning": "Connected clay, herb and wool load silhouettes remain readable in both facings, baseline hide anatomy and warm ink wash preserved. All ten structural checks pass.",
+  "summary_sha256": "7650e356ddc96bb52b7d898b1555d170467d96ec86b6776c7f3f87cb61310b74"
+}

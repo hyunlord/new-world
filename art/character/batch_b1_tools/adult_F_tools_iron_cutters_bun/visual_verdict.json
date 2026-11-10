@@ -1,0 +1,11 @@
+{
+  "score": 92,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Saw teeth reduce to a dark edge at native size."
+  ],
+  "suggestions": [],
+  "reasoning": "All ten structural checks pass. Axe hoe sickle and saw silhouettes read in S/E, dark iron distinct from earlier bronze with restrained edge highlights.",
+  "summary_sha256": "50d59f6662abcfff7bc5bcd6bd5740c191d425d1fb24f9f6ab13343390e21540"
+}

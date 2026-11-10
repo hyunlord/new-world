@@ -1,0 +1,11 @@
+{
+  "score": 93,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Tablet marks remain small at native but stronger at2x. Garment has extra hatch group beyond intended minimal strokes."
+  ],
+  "suggestions": [],
+  "reasoning": "Self-review improvement: four broad wedge impressions separate marked and blank tablets, honey gold versus dark empty pot now readable at native and2x. All ten structural checks pass; whole-sheet replacement retained better readability.",
+  "summary_sha256": "ddc88a4a0590676250315b0daf527bcd0443713a1eea85d63ad548a7e33afcf7"
+}

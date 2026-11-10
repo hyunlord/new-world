@@ -1,0 +1,72 @@
+{
+  "look": "adult_M_tools_neo_wood_short",
+  "age": "adult",
+  "attempt": 2,
+  "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/neo_wood/try2/processed/raw.png",
+  "raw_sha256": "a9c7302046718b7eb1c655801ad50f7a5d3393400f94138b4969ca2629cddae8",
+  "prompt_sha256": "387eb3b08ddddc819458d152fffb563779058524ec1b1e516cd7a42ef64e2913",
+  "facing": "E",
+  "pose": "wooden_ard",
+  "check_pose": "work_a",
+  "path": "E/wooden_ard.png",
+  "sha256": "94a38a49869ec6bf6b31bcc832ab0d507e65b121018c22f71625201f98f34562",
+  "source_box": [
+    866,
+    495,
+    1275,
+    1024
+  ],
+  "normalization": {
+    "scaled_size": [
+      47,
+      60
+    ],
+    "trim_box": [
+      5,
+      4,
+      41,
+      59
+    ],
+    "placement": [
+      22,
+      50
+    ],
+    "resized_to_canvas_offset": [
+      17,
+      46
+    ],
+    "visible_pixels": 1002,
+    "rotation_degrees": 0,
+    "scale": 0.11405295315682282,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "passed": true,
+    "findings": [],
+    "coverage": 0.09676339285714286,
+    "component_count": 1,
+    "largest_hole": 0,
+    "contact_ok": true,
+    "sleep_axis_ok": true,
+    "opaque_height": 54,
+    "opaque_width": 35,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+    "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+    "visible_height": 55,
+    "visible_width": 36,
+    "visibility_threshold": 16
+  },
+  "standing_scale": 0.11405295315682282,
+  "sleep_scale": 0.11405295315682282,
+  "anchor": [
+    40,
+    104
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "template_version": 3
+}

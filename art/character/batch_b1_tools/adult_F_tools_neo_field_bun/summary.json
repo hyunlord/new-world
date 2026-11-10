@@ -1,0 +1,745 @@
+{
+  "look": "adult_F_tools_neo_field_bun",
+  "age": "adult",
+  "attempt": 3,
+  "record_sha256": "53fbd3e348bbdfbcc41f31884293f1d2d3d7d5ef03ae3835aa85bc98694bb04e",
+  "raw_sha256": "a6389f58e912366b8f540e1f4677ca08801785b32c73ec678ee4b66e5f504490",
+  "prompt_sha256": "fe633b51c8b66073abbb979044b8c43e3f2ab72988865b593329e0c5e6182b86",
+  "passed": true,
+  "frames": [
+    {
+      "look": "adult_F_tools_neo_field_bun",
+      "age": "adult",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/neo_field/try3/processed/raw.png",
+      "raw_sha256": "a6389f58e912366b8f540e1f4677ca08801785b32c73ec678ee4b66e5f504490",
+      "prompt_sha256": "fe633b51c8b66073abbb979044b8c43e3f2ab72988865b593329e0c5e6182b86",
+      "facing": "S",
+      "pose": "idle",
+      "check_pose": "idle",
+      "path": "S/idle.png",
+      "sha256": "f0c3face545549808211e046075b2c174ede2a75ec07cc5c2a6e2840850f0110",
+      "source_box": [
+        0,
+        12,
+        313,
+        557
+      ],
+      "normalization": {
+        "scaled_size": [
+          36,
+          63
+        ],
+        "trim_box": [
+          6,
+          0,
+          31,
+          57
+        ],
+        "placement": [
+          27,
+          48
+        ],
+        "resized_to_canvas_offset": [
+          21,
+          48
+        ],
+        "visible_pixels": 922,
+        "rotation_degrees": 0,
+        "scale": 0.11594202898550725,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.09241071428571429,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 56,
+        "opaque_width": 24,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 57,
+        "visible_width": 25,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11594202898550725,
+      "sleep_scale": 0.11594202898550725,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_F_tools_neo_field_bun",
+      "age": "adult",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/neo_field/try3/processed/raw.png",
+      "raw_sha256": "a6389f58e912366b8f540e1f4677ca08801785b32c73ec678ee4b66e5f504490",
+      "prompt_sha256": "fe633b51c8b66073abbb979044b8c43e3f2ab72988865b593329e0c5e6182b86",
+      "facing": "S",
+      "pose": "stone_hoe",
+      "check_pose": "work_a",
+      "path": "S/stone_hoe.png",
+      "sha256": "98a0d68a982a266dd287cbc852dfb3086033b2f0b39bb2ce4256f69b49bc945c",
+      "source_box": [
+        293,
+        15,
+        625,
+        561
+      ],
+      "normalization": {
+        "scaled_size": [
+          38,
+          63
+        ],
+        "trim_box": [
+          6,
+          0,
+          34,
+          56
+        ],
+        "placement": [
+          26,
+          49
+        ],
+        "resized_to_canvas_offset": [
+          20,
+          49
+        ],
+        "visible_pixels": 938,
+        "rotation_degrees": 0,
+        "scale": 0.11594202898550725,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.09397321428571428,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 54,
+        "opaque_width": 26,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 56,
+        "visible_width": 28,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11594202898550725,
+      "sleep_scale": 0.11594202898550725,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_F_tools_neo_field_bun",
+      "age": "adult",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/neo_field/try3/processed/raw.png",
+      "raw_sha256": "a6389f58e912366b8f540e1f4677ca08801785b32c73ec678ee4b66e5f504490",
+      "prompt_sha256": "fe633b51c8b66073abbb979044b8c43e3f2ab72988865b593329e0c5e6182b86",
+      "facing": "S",
+      "pose": "flint_sickle",
+      "check_pose": "work_a",
+      "path": "S/flint_sickle.png",
+      "sha256": "809144960c15f898d991966bc8d6c18edffd4164393696afe36322b0b1caf19f",
+      "source_box": [
+        588,
+        15,
+        944,
+        558
+      ],
+      "normalization": {
+        "scaled_size": [
+          41,
+          63
+        ],
+        "trim_box": [
+          6,
+          0,
+          36,
+          56
+        ],
+        "placement": [
+          25,
+          49
+        ],
+        "resized_to_canvas_offset": [
+          19,
+          49
+        ],
+        "visible_pixels": 962,
+        "rotation_degrees": 0,
+        "scale": 0.11594202898550725,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.09475446428571428,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 55,
+        "opaque_width": 28,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 56,
+        "visible_width": 30,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11594202898550725,
+      "sleep_scale": 0.11594202898550725,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_F_tools_neo_field_bun",
+      "age": "adult",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/neo_field/try3/processed/raw.png",
+      "raw_sha256": "a6389f58e912366b8f540e1f4677ca08801785b32c73ec678ee4b66e5f504490",
+      "prompt_sha256": "fe633b51c8b66073abbb979044b8c43e3f2ab72988865b593329e0c5e6182b86",
+      "facing": "S",
+      "pose": "saddle_quern",
+      "check_pose": "work_a",
+      "path": "S/saddle_quern.png",
+      "sha256": "429993a3985d0f4b7faafe74a2a4f3f69cedd263173899548745e8f341301f08",
+      "source_box": [
+        883,
+        13,
+        1242,
+        583
+      ],
+      "normalization": {
+        "scaled_size": [
+          42,
+          66
+        ],
+        "trim_box": [
+          6,
+          6,
+          37,
+          56
+        ],
+        "placement": [
+          24,
+          55
+        ],
+        "resized_to_canvas_offset": [
+          18,
+          49
+        ],
+        "visible_pixels": 1003,
+        "rotation_degrees": 0,
+        "scale": 0.11594202898550725,
+        "discarded_pixels": 8,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.103125,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 49,
+        "opaque_width": 30,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 50,
+        "visible_width": 31,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11594202898550725,
+      "sleep_scale": 0.11594202898550725,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_F_tools_neo_field_bun",
+      "age": "adult",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/neo_field/try3/processed/raw.png",
+      "raw_sha256": "a6389f58e912366b8f540e1f4677ca08801785b32c73ec678ee4b66e5f504490",
+      "prompt_sha256": "fe633b51c8b66073abbb979044b8c43e3f2ab72988865b593329e0c5e6182b86",
+      "facing": "S",
+      "pose": "hand_spindle",
+      "check_pose": "work_a",
+      "path": "S/hand_spindle.png",
+      "sha256": "43180269f8527f59548dd4fd9a77d7d02a81400fcf3cd33643cf0cf341b1ee37",
+      "source_box": [
+        1224,
+        1,
+        1520,
+        549
+      ],
+      "normalization": {
+        "scaled_size": [
+          34,
+          64
+        ],
+        "trim_box": [
+          6,
+          1,
+          31,
+          58
+        ],
+        "placement": [
+          27,
+          48
+        ],
+        "resized_to_canvas_offset": [
+          21,
+          47
+        ],
+        "visible_pixels": 883,
+        "rotation_degrees": 0,
+        "scale": 0.11594202898550725,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.08861607142857143,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 56,
+        "opaque_width": 24,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 57,
+        "visible_width": 25,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11594202898550725,
+      "sleep_scale": 0.11594202898550725,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_F_tools_neo_field_bun",
+      "age": "adult",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/neo_field/try3/processed/raw.png",
+      "raw_sha256": "a6389f58e912366b8f540e1f4677ca08801785b32c73ec678ee4b66e5f504490",
+      "prompt_sha256": "fe633b51c8b66073abbb979044b8c43e3f2ab72988865b593329e0c5e6182b86",
+      "facing": "E",
+      "pose": "idle",
+      "check_pose": "idle",
+      "path": "E/idle.png",
+      "sha256": "d5c8bd5ddd90408321881b626963289709ff9140eef7e21b21611596103314cb",
+      "source_box": [
+        0,
+        527,
+        298,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          35,
+          58
+        ],
+        "trim_box": [
+          8,
+          1,
+          28,
+          56
+        ],
+        "placement": [
+          30,
+          50
+        ],
+        "resized_to_canvas_offset": [
+          22,
+          49
+        ],
+        "visible_pixels": 753,
+        "rotation_degrees": 0,
+        "scale": 0.11594202898550725,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.07578125,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 55,
+        "opaque_width": 18,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 55,
+        "visible_width": 20,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11594202898550725,
+      "sleep_scale": 0.11594202898550725,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_F_tools_neo_field_bun",
+      "age": "adult",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/neo_field/try3/processed/raw.png",
+      "raw_sha256": "a6389f58e912366b8f540e1f4677ca08801785b32c73ec678ee4b66e5f504490",
+      "prompt_sha256": "fe633b51c8b66073abbb979044b8c43e3f2ab72988865b593329e0c5e6182b86",
+      "facing": "E",
+      "pose": "stone_hoe",
+      "check_pose": "work_a",
+      "path": "E/stone_hoe.png",
+      "sha256": "1cb45f59558dfb44daa7239e231215b9a5dcd319fad618636f16eae890fe5749",
+      "source_box": [
+        271,
+        508,
+        618,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          40,
+          60
+        ],
+        "trim_box": [
+          6,
+          5,
+          36,
+          58
+        ],
+        "placement": [
+          25,
+          52
+        ],
+        "resized_to_canvas_offset": [
+          19,
+          47
+        ],
+        "visible_pixels": 884,
+        "rotation_degrees": 0,
+        "scale": 0.11594202898550725,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.08660714285714285,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 53,
+        "opaque_width": 29,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 53,
+        "visible_width": 30,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11594202898550725,
+      "sleep_scale": 0.11594202898550725,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_F_tools_neo_field_bun",
+      "age": "adult",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/neo_field/try3/processed/raw.png",
+      "raw_sha256": "a6389f58e912366b8f540e1f4677ca08801785b32c73ec678ee4b66e5f504490",
+      "prompt_sha256": "fe633b51c8b66073abbb979044b8c43e3f2ab72988865b593329e0c5e6182b86",
+      "facing": "E",
+      "pose": "flint_sickle",
+      "check_pose": "work_a",
+      "path": "E/flint_sickle.png",
+      "sha256": "2aa0563ccc0f91c57ff22c4898c5f0ecc8644c40b746ef29ace4b4d9b55c6184",
+      "source_box": [
+        567,
+        527,
+        930,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          42,
+          58
+        ],
+        "trim_box": [
+          8,
+          2,
+          37,
+          56
+        ],
+        "placement": [
+          25,
+          51
+        ],
+        "resized_to_canvas_offset": [
+          17,
+          49
+        ],
+        "visible_pixels": 898,
+        "rotation_degrees": 0,
+        "scale": 0.11594202898550725,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.08671875,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 53,
+        "opaque_width": 27,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 54,
+        "visible_width": 29,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11594202898550725,
+      "sleep_scale": 0.11594202898550725,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_F_tools_neo_field_bun",
+      "age": "adult",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/neo_field/try3/processed/raw.png",
+      "raw_sha256": "a6389f58e912366b8f540e1f4677ca08801785b32c73ec678ee4b66e5f504490",
+      "prompt_sha256": "fe633b51c8b66073abbb979044b8c43e3f2ab72988865b593329e0c5e6182b86",
+      "facing": "E",
+      "pose": "saddle_quern",
+      "check_pose": "work_a",
+      "path": "E/saddle_quern.png",
+      "sha256": "a803623005c4e095debb0b473f0c14116679c6924ff520d7fc9fdd9943f54284",
+      "source_box": [
+        871,
+        523,
+        1230,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          42,
+          58
+        ],
+        "trim_box": [
+          7,
+          8,
+          36,
+          56
+        ],
+        "placement": [
+          25,
+          57
+        ],
+        "resized_to_canvas_offset": [
+          18,
+          49
+        ],
+        "visible_pixels": 877,
+        "rotation_degrees": 0,
+        "scale": 0.11594202898550725,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.08816964285714286,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 48,
+        "opaque_width": 29,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 48,
+        "visible_width": 29,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11594202898550725,
+      "sleep_scale": 0.11594202898550725,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_F_tools_neo_field_bun",
+      "age": "adult",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/neo_field/try3/processed/raw.png",
+      "raw_sha256": "a6389f58e912366b8f540e1f4677ca08801785b32c73ec678ee4b66e5f504490",
+      "prompt_sha256": "fe633b51c8b66073abbb979044b8c43e3f2ab72988865b593329e0c5e6182b86",
+      "facing": "E",
+      "pose": "hand_spindle",
+      "check_pose": "work_a",
+      "path": "E/hand_spindle.png",
+      "sha256": "ee4fe1f00d44662e163a489d3bff10157b6a994040a8f475a6f363f073a9130a",
+      "source_box": [
+        1205,
+        509,
+        1535,
+        1008
+      ],
+      "normalization": {
+        "scaled_size": [
+          38,
+          58
+        ],
+        "trim_box": [
+          8,
+          4,
+          31,
+          58
+        ],
+        "placement": [
+          28,
+          51
+        ],
+        "resized_to_canvas_offset": [
+          20,
+          47
+        ],
+        "visible_pixels": 795,
+        "rotation_degrees": 0,
+        "scale": 0.11594202898550725,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.07522321428571428,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 52,
+        "opaque_width": 21,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 54,
+        "visible_width": 23,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11594202898550725,
+      "sleep_scale": 0.11594202898550725,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    }
+  ],
+  "error": null,
+  "layout": "tools",
+  "frame_ids": [
+    "idle",
+    "stone_hoe",
+    "flint_sickle",
+    "saddle_quern",
+    "hand_spindle"
+  ],
+  "template_version": 3,
+  "numeric_pass": true,
+  "numeric_passing_panels": 10,
+  "numeric_model_status": "MISSING",
+  "numeric_report_sha256": "2deafe003fbf03191913a1b32b52f52d09001cd1b8eff9ee7fcb7ca28a0d01c1"
+}

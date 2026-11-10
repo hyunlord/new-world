@@ -1,0 +1,745 @@
+{
+  "look": "adult_M_tools_bronze_records_short",
+  "age": "adult",
+  "attempt": 2,
+  "record_sha256": "16cd89a0aa5719104e0576a0cd9577c1c70dfc0793c1e5f02e71824a4a8471bf",
+  "raw_sha256": "3b83d463900be4cd7537ffcf2975c91caffb678bdef71db869a13e7364c2b3d1",
+  "prompt_sha256": "bcaf616473843826ccf7e079a1411e7d032053067f88c12c3f53ae185aafdcfe",
+  "passed": true,
+  "frames": [
+    {
+      "look": "adult_M_tools_bronze_records_short",
+      "age": "adult",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_records/try2/processed/raw.png",
+      "raw_sha256": "3b83d463900be4cd7537ffcf2975c91caffb678bdef71db869a13e7364c2b3d1",
+      "prompt_sha256": "bcaf616473843826ccf7e079a1411e7d032053067f88c12c3f53ae185aafdcfe",
+      "facing": "S",
+      "pose": "idle",
+      "check_pose": "idle",
+      "path": "S/idle.png",
+      "sha256": "6dec751672209d05b069b1d1a2e0147222e55e56d753f8d0b3437545a1ce5132",
+      "source_box": [
+        0,
+        0,
+        332,
+        546
+      ],
+      "normalization": {
+        "scaled_size": [
+          38,
+          63
+        ],
+        "trim_box": [
+          6,
+          1,
+          33,
+          58
+        ],
+        "placement": [
+          26,
+          48
+        ],
+        "resized_to_canvas_offset": [
+          20,
+          47
+        ],
+        "visible_pixels": 1009,
+        "rotation_degrees": 0,
+        "scale": 0.11475409836065574,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.09988839285714286,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 56,
+        "opaque_width": 27,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 57,
+        "visible_width": 27,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11475409836065574,
+      "sleep_scale": 0.11475409836065574,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_tools_bronze_records_short",
+      "age": "adult",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_records/try2/processed/raw.png",
+      "raw_sha256": "3b83d463900be4cd7537ffcf2975c91caffb678bdef71db869a13e7364c2b3d1",
+      "prompt_sha256": "bcaf616473843826ccf7e079a1411e7d032053067f88c12c3f53ae185aafdcfe",
+      "facing": "S",
+      "pose": "clay_tablet_blank",
+      "check_pose": "work_a",
+      "path": "S/clay_tablet_blank.png",
+      "sha256": "f853e1375d8baa20f7325b21c0b66199d475276fcf178ceef5879d397a53f63e",
+      "source_box": [
+        315,
+        1,
+        626,
+        556
+      ],
+      "normalization": {
+        "scaled_size": [
+          36,
+          64
+        ],
+        "trim_box": [
+          4,
+          1,
+          31,
+          58
+        ],
+        "placement": [
+          26,
+          48
+        ],
+        "resized_to_canvas_offset": [
+          22,
+          47
+        ],
+        "visible_pixels": 977,
+        "rotation_degrees": 0,
+        "scale": 0.11475409836065574,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.09877232142857142,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 55,
+        "opaque_width": 26,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 57,
+        "visible_width": 27,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11475409836065574,
+      "sleep_scale": 0.11475409836065574,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_tools_bronze_records_short",
+      "age": "adult",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_records/try2/processed/raw.png",
+      "raw_sha256": "3b83d463900be4cd7537ffcf2975c91caffb678bdef71db869a13e7364c2b3d1",
+      "prompt_sha256": "bcaf616473843826ccf7e079a1411e7d032053067f88c12c3f53ae185aafdcfe",
+      "facing": "S",
+      "pose": "clay_tablet_marked",
+      "check_pose": "work_a",
+      "path": "S/clay_tablet_marked.png",
+      "sha256": "81e24862f8bed01939973c502eb2f8d133e7b80c0f589e6ac88e6e54f02abb58",
+      "source_box": [
+        619,
+        1,
+        914,
+        562
+      ],
+      "normalization": {
+        "scaled_size": [
+          34,
+          64
+        ],
+        "trim_box": [
+          4,
+          1,
+          31,
+          57
+        ],
+        "placement": [
+          26,
+          49
+        ],
+        "resized_to_canvas_offset": [
+          22,
+          48
+        ],
+        "visible_pixels": 970,
+        "rotation_degrees": 0,
+        "scale": 0.11475409836065574,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.09732142857142857,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 56,
+        "opaque_width": 26,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 56,
+        "visible_width": 27,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11475409836065574,
+      "sleep_scale": 0.11475409836065574,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_tools_bronze_records_short",
+      "age": "adult",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_records/try2/processed/raw.png",
+      "raw_sha256": "3b83d463900be4cd7537ffcf2975c91caffb678bdef71db869a13e7364c2b3d1",
+      "prompt_sha256": "bcaf616473843826ccf7e079a1411e7d032053067f88c12c3f53ae185aafdcfe",
+      "facing": "S",
+      "pose": "honey_pot_full",
+      "check_pose": "work_a",
+      "path": "S/honey_pot_full.png",
+      "sha256": "bcbab23fb3d7ec45f1abe409c144337b2f62d37fbfaa20906be249033c7bec5a",
+      "source_box": [
+        911,
+        7,
+        1216,
+        552
+      ],
+      "normalization": {
+        "scaled_size": [
+          35,
+          63
+        ],
+        "trim_box": [
+          3,
+          0,
+          32,
+          57
+        ],
+        "placement": [
+          25,
+          48
+        ],
+        "resized_to_canvas_offset": [
+          22,
+          48
+        ],
+        "visible_pixels": 987,
+        "rotation_degrees": 0,
+        "scale": 0.11475409836065574,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.09955357142857142,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 56,
+        "opaque_width": 28,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 57,
+        "visible_width": 29,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11475409836065574,
+      "sleep_scale": 0.11475409836065574,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_tools_bronze_records_short",
+      "age": "adult",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_records/try2/processed/raw.png",
+      "raw_sha256": "3b83d463900be4cd7537ffcf2975c91caffb678bdef71db869a13e7364c2b3d1",
+      "prompt_sha256": "bcaf616473843826ccf7e079a1411e7d032053067f88c12c3f53ae185aafdcfe",
+      "facing": "S",
+      "pose": "honey_pot_empty",
+      "check_pose": "work_a",
+      "path": "S/honey_pot_empty.png",
+      "sha256": "5cfac37e674fd299d2cb446fe97c95a0b40f24a9301c1ad3b6c498c1ef784aea",
+      "source_box": [
+        1215,
+        10,
+        1502,
+        554
+      ],
+      "normalization": {
+        "scaled_size": [
+          33,
+          62
+        ],
+        "trim_box": [
+          2,
+          0,
+          32,
+          56
+        ],
+        "placement": [
+          25,
+          49
+        ],
+        "resized_to_canvas_offset": [
+          23,
+          49
+        ],
+        "visible_pixels": 979,
+        "rotation_degrees": 0,
+        "scale": 0.11475409836065574,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.09866071428571428,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 55,
+        "opaque_width": 28,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 56,
+        "visible_width": 30,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11475409836065574,
+      "sleep_scale": 0.11475409836065574,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_tools_bronze_records_short",
+      "age": "adult",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_records/try2/processed/raw.png",
+      "raw_sha256": "3b83d463900be4cd7537ffcf2975c91caffb678bdef71db869a13e7364c2b3d1",
+      "prompt_sha256": "bcaf616473843826ccf7e079a1411e7d032053067f88c12c3f53ae185aafdcfe",
+      "facing": "E",
+      "pose": "idle",
+      "check_pose": "idle",
+      "path": "E/idle.png",
+      "sha256": "4e915ee509c583444cc62f01785ba5eef93a702209b46b5209085205abc83513",
+      "source_box": [
+        0,
+        497,
+        324,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          37,
+          60
+        ],
+        "trim_box": [
+          8,
+          3,
+          30,
+          59
+        ],
+        "placement": [
+          29,
+          49
+        ],
+        "resized_to_canvas_offset": [
+          21,
+          46
+        ],
+        "visible_pixels": 853,
+        "rotation_degrees": 0,
+        "scale": 0.11475409836065574,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.08604910714285714,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 55,
+        "opaque_width": 21,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 56,
+        "visible_width": 22,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11475409836065574,
+      "sleep_scale": 0.11475409836065574,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_tools_bronze_records_short",
+      "age": "adult",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_records/try2/processed/raw.png",
+      "raw_sha256": "3b83d463900be4cd7537ffcf2975c91caffb678bdef71db869a13e7364c2b3d1",
+      "prompt_sha256": "bcaf616473843826ccf7e079a1411e7d032053067f88c12c3f53ae185aafdcfe",
+      "facing": "E",
+      "pose": "clay_tablet_blank",
+      "check_pose": "work_a",
+      "path": "E/clay_tablet_blank.png",
+      "sha256": "6f4836cc76fe3323080756ada62387d04d0aaa887716520a870dac6fd5320aa6",
+      "source_box": [
+        309,
+        525,
+        630,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          37,
+          57
+        ],
+        "trim_box": [
+          7,
+          0,
+          33,
+          57
+        ],
+        "placement": [
+          27,
+          48
+        ],
+        "resized_to_canvas_offset": [
+          20,
+          48
+        ],
+        "visible_pixels": 887,
+        "rotation_degrees": 0,
+        "scale": 0.11475409836065574,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.08850446428571429,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 55,
+        "opaque_width": 25,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 57,
+        "visible_width": 26,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11475409836065574,
+      "sleep_scale": 0.11475409836065574,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_tools_bronze_records_short",
+      "age": "adult",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_records/try2/processed/raw.png",
+      "raw_sha256": "3b83d463900be4cd7537ffcf2975c91caffb678bdef71db869a13e7364c2b3d1",
+      "prompt_sha256": "bcaf616473843826ccf7e079a1411e7d032053067f88c12c3f53ae185aafdcfe",
+      "facing": "E",
+      "pose": "clay_tablet_marked",
+      "check_pose": "work_a",
+      "path": "E/clay_tablet_marked.png",
+      "sha256": "5faa0bf47d99ec5598d7b5b8fd0b8fe15628055da89c66d6dacac76417f11d45",
+      "source_box": [
+        605,
+        526,
+        935,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          38,
+          57
+        ],
+        "trim_box": [
+          7,
+          0,
+          33,
+          57
+        ],
+        "placement": [
+          27,
+          48
+        ],
+        "resized_to_canvas_offset": [
+          20,
+          48
+        ],
+        "visible_pixels": 890,
+        "rotation_degrees": 0,
+        "scale": 0.11475409836065574,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.08895089285714286,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 56,
+        "opaque_width": 25,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 57,
+        "visible_width": 26,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11475409836065574,
+      "sleep_scale": 0.11475409836065574,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_tools_bronze_records_short",
+      "age": "adult",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_records/try2/processed/raw.png",
+      "raw_sha256": "3b83d463900be4cd7537ffcf2975c91caffb678bdef71db869a13e7364c2b3d1",
+      "prompt_sha256": "bcaf616473843826ccf7e079a1411e7d032053067f88c12c3f53ae185aafdcfe",
+      "facing": "E",
+      "pose": "honey_pot_full",
+      "check_pose": "work_a",
+      "path": "E/honey_pot_full.png",
+      "sha256": "989a5979cabd9afc84e25b3a4b17784dca0b3d5e89f3ad7248d165ecf884b272",
+      "source_box": [
+        905,
+        526,
+        1216,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          36,
+          57
+        ],
+        "trim_box": [
+          7,
+          0,
+          34,
+          56
+        ],
+        "placement": [
+          26,
+          49
+        ],
+        "resized_to_canvas_offset": [
+          19,
+          49
+        ],
+        "visible_pixels": 922,
+        "rotation_degrees": 0,
+        "scale": 0.11475409836065574,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.09296875,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 56,
+        "opaque_width": 27,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 56,
+        "visible_width": 27,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11475409836065574,
+      "sleep_scale": 0.11475409836065574,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "adult_M_tools_bronze_records_short",
+      "age": "adult",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_records/try2/processed/raw.png",
+      "raw_sha256": "3b83d463900be4cd7537ffcf2975c91caffb678bdef71db869a13e7364c2b3d1",
+      "prompt_sha256": "bcaf616473843826ccf7e079a1411e7d032053067f88c12c3f53ae185aafdcfe",
+      "facing": "E",
+      "pose": "honey_pot_empty",
+      "check_pose": "work_a",
+      "path": "E/honey_pot_empty.png",
+      "sha256": "7750dfd9f3839ff84e734eb045fa4ead4b4a9bf18b4da4ad8a1aaac534dba7f7",
+      "source_box": [
+        1213,
+        527,
+        1522,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          35,
+          57
+        ],
+        "trim_box": [
+          6,
+          0,
+          32,
+          56
+        ],
+        "placement": [
+          27,
+          49
+        ],
+        "resized_to_canvas_offset": [
+          21,
+          49
+        ],
+        "visible_pixels": 895,
+        "rotation_degrees": 0,
+        "scale": 0.11475409836065574,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.08939732142857143,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 55,
+        "opaque_width": 25,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 56,
+        "visible_width": 26,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.11475409836065574,
+      "sleep_scale": 0.11475409836065574,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    }
+  ],
+  "error": null,
+  "layout": "tools",
+  "frame_ids": [
+    "idle",
+    "clay_tablet_blank",
+    "clay_tablet_marked",
+    "honey_pot_full",
+    "honey_pot_empty"
+  ],
+  "template_version": 3,
+  "numeric_pass": false,
+  "numeric_passing_panels": 4,
+  "numeric_model_status": "MISSING",
+  "numeric_report_sha256": "3a8e7dfe1acbd42dabfc9641a4669b2fd096911ce1cd74e7a6600247791336aa"
+}

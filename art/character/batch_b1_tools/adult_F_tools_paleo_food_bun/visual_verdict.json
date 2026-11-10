@@ -1,0 +1,11 @@
+{
+  "score": 92,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Fishing cord and bone hook reduce at native scale, but straight pole now distinct from bow."
+  ],
+  "suggestions": [],
+  "reasoning": "Both facings clearly separate rigid fishing pole, digging stick, curved bow and forage basket. Connected components pass all ten structural checks. Bow is explicitly neolithic-only in manifest despite legacy set id.",
+  "summary_sha256": "38f5d6b4e609e7b988ed76facf427f5d0c3860dec833fe889787e251e7a30902"
+}

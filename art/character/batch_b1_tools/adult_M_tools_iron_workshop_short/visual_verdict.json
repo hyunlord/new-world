@@ -1,0 +1,11 @@
+{
+  "score": 92,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Hammer head small at native size; held ploughshare is oversized for readability."
+  ],
+  "suggestions": [],
+  "reasoning": "Forge tongs hold connected bloom, iron hammer/share and rotary stone quern distinguish S/E activities. Warm hide treatment matches baseline; all ten structural checks pass.",
+  "summary_sha256": "4a55eb12a96edede34cd5216adcb099d66cb0c2cc213958dbc8f3ff180112bea"
+}

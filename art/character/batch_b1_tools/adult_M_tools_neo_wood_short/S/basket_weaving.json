@@ -1,0 +1,72 @@
+{
+  "look": "adult_M_tools_neo_wood_short",
+  "age": "adult",
+  "attempt": 2,
+  "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/neo_wood/try2/processed/raw.png",
+  "raw_sha256": "a9c7302046718b7eb1c655801ad50f7a5d3393400f94138b4969ca2629cddae8",
+  "prompt_sha256": "387eb3b08ddddc819458d152fffb563779058524ec1b1e516cd7a42ef64e2913",
+  "facing": "S",
+  "pose": "basket_weaving",
+  "check_pose": "work_a",
+  "path": "S/basket_weaving.png",
+  "sha256": "402a0ba5c9a3ee4db5f75ddb41aea203c9179533c8b3034e2f280670e1ead395",
+  "source_box": [
+    1208,
+    0,
+    1536,
+    554
+  ],
+  "normalization": {
+    "scaled_size": [
+      37,
+      63
+    ],
+    "trim_box": [
+      6,
+      1,
+      33,
+      58
+    ],
+    "placement": [
+      26,
+      48
+    ],
+    "resized_to_canvas_offset": [
+      20,
+      47
+    ],
+    "visible_pixels": 959,
+    "rotation_degrees": 0,
+    "scale": 0.11405295315682282,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "passed": true,
+    "findings": [],
+    "coverage": 0.09642857142857143,
+    "component_count": 1,
+    "largest_hole": 0,
+    "contact_ok": true,
+    "sleep_axis_ok": true,
+    "opaque_height": 55,
+    "opaque_width": 26,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+    "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+    "visible_height": 57,
+    "visible_width": 27,
+    "visibility_threshold": 16
+  },
+  "standing_scale": 0.11405295315682282,
+  "sleep_scale": 0.11405295315682282,
+  "anchor": [
+    40,
+    104
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "template_version": 3
+}

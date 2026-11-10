@@ -1,0 +1,72 @@
+{
+  "look": "adult_M_tools_paleo_craft_short",
+  "age": "adult",
+  "attempt": 3,
+  "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/paleo_craft/try3/processed/raw.png",
+  "raw_sha256": "e8453c17120ce7ec5d7831f24669a7d724af3a61004e22baf75498b4c322f2d0",
+  "prompt_sha256": "9dc8d99cac076429b7d5a98c308be7433e9b5b5bdb3a8fc7283cb2106513aa07",
+  "facing": "S",
+  "pose": "idle",
+  "check_pose": "idle",
+  "path": "S/idle.png",
+  "sha256": "5048499ad1096badf29d51f31e3362a126f08e1cdbb4b3a3f3359ff6105c5b3b",
+  "source_box": [
+    0,
+    16,
+    320,
+    563
+  ],
+  "normalization": {
+    "scaled_size": [
+      37,
+      64
+    ],
+    "trim_box": [
+      4,
+      0,
+      33,
+      57
+    ],
+    "placement": [
+      25,
+      48
+    ],
+    "resized_to_canvas_offset": [
+      21,
+      48
+    ],
+    "visible_pixels": 1066,
+    "rotation_degrees": 0,
+    "scale": 0.11618257261410789,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "passed": true,
+    "findings": [],
+    "coverage": 0.10613839285714285,
+    "component_count": 1,
+    "largest_hole": 0,
+    "contact_ok": true,
+    "sleep_axis_ok": true,
+    "opaque_height": 56,
+    "opaque_width": 27,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+    "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+    "visible_height": 57,
+    "visible_width": 29,
+    "visibility_threshold": 16
+  },
+  "standing_scale": 0.11618257261410789,
+  "sleep_scale": 0.11618257261410789,
+  "anchor": [
+    40,
+    104
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "template_version": 3
+}

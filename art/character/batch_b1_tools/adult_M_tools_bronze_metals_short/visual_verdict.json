@@ -1,12 +1,11 @@
 {
-  "score": 91,
+  "score": 94,
   "verdict": "pass",
   "category_match": true,
   "differences": [
-    "Source stroke_q90 diagnostic misses in3 panels.",
-    "Basket contents differ mostly in colour at native scale; green copper and grey tin remain legible at2x."
+    "Ore basket texture and ingot highlights remain slightly busy at source resolution."
   ],
   "suggestions": [],
-  "reasoning": "The four loads retain readable silhouettes and coherent hand contacts. Red copper and gold bronze ingots are differentiated; source wash and final outlines match the existing family.",
-  "summary_sha256": "d2627a612e7ed7d5d5ea3139e075e9368e7aeffb802f8476174ecb6f34388a3d"
+  "reasoning": "Self-review improvement: broad copper green/orange versus tin grey and copper red versus bronze ochre now distinguish at native and2x. All ten structural checks pass; replaces weaker try1 whole sheet with provenance preserved.",
+  "summary_sha256": "03dcf7f493f6dd2dc0bd6bcc0c7b12068b1294b5d7610bd3301532979fa9901d"
 }

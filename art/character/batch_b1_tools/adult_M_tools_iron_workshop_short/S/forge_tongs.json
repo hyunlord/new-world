@@ -1,0 +1,72 @@
+{
+  "look": "adult_M_tools_iron_workshop_short",
+  "age": "adult",
+  "attempt": 2,
+  "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/iron_workshop/try2/processed/raw.png",
+  "raw_sha256": "b88d185d316671e566b0d10413749b67285b60b38d82ad12fd2d46b1980a963d",
+  "prompt_sha256": "01ba6b0a1f54b0878ce3fd3c3d6093c5f8b7bdef14e99974a03c0840a9a113db",
+  "facing": "S",
+  "pose": "forge_tongs",
+  "check_pose": "work_a",
+  "path": "S/forge_tongs.png",
+  "sha256": "03d566dee67244dee797a77c101ca7c1328bad3dd40df4b8fc5f9a79419589ee",
+  "source_box": [
+    306,
+    5,
+    612,
+    557
+  ],
+  "normalization": {
+    "scaled_size": [
+      35,
+      64
+    ],
+    "trim_box": [
+      4,
+      1,
+      32,
+      58
+    ],
+    "placement": [
+      26,
+      48
+    ],
+    "resized_to_canvas_offset": [
+      22,
+      47
+    ],
+    "visible_pixels": 1030,
+    "rotation_degrees": 0,
+    "scale": 0.1154639175257732,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "passed": true,
+    "findings": [],
+    "coverage": 0.10323660714285714,
+    "component_count": 1,
+    "largest_hole": 0,
+    "contact_ok": true,
+    "sleep_axis_ok": true,
+    "opaque_height": 56,
+    "opaque_width": 28,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+    "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+    "visible_height": 57,
+    "visible_width": 28,
+    "visibility_threshold": 16
+  },
+  "standing_scale": 0.1154639175257732,
+  "sleep_scale": 0.1154639175257732,
+  "anchor": [
+    40,
+    104
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "template_version": 3
+}

@@ -1,0 +1,72 @@
+{
+  "look": "adult_M_tools_neo_wood_short",
+  "age": "adult",
+  "attempt": 2,
+  "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/neo_wood/try2/processed/raw.png",
+  "raw_sha256": "a9c7302046718b7eb1c655801ad50f7a5d3393400f94138b4969ca2629cddae8",
+  "prompt_sha256": "387eb3b08ddddc819458d152fffb563779058524ec1b1e516cd7a42ef64e2913",
+  "facing": "S",
+  "pose": "idle",
+  "check_pose": "idle",
+  "path": "S/idle.png",
+  "sha256": "4ddcd2140b2ee4e13b5ecfdf3afccc679d887fdb4747f04d5b8cd397b55ff299",
+  "source_box": [
+    0,
+    0,
+    332,
+    560
+  ],
+  "normalization": {
+    "scaled_size": [
+      38,
+      64
+    ],
+    "trim_box": [
+      5,
+      1,
+      32,
+      58
+    ],
+    "placement": [
+      26,
+      48
+    ],
+    "resized_to_canvas_offset": [
+      21,
+      47
+    ],
+    "visible_pixels": 981,
+    "rotation_degrees": 0,
+    "scale": 0.11405295315682282,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "passed": true,
+    "findings": [],
+    "coverage": 0.0984375,
+    "component_count": 1,
+    "largest_hole": 0,
+    "contact_ok": true,
+    "sleep_axis_ok": true,
+    "opaque_height": 55,
+    "opaque_width": 25,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+    "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+    "visible_height": 57,
+    "visible_width": 27,
+    "visibility_threshold": 16
+  },
+  "standing_scale": 0.11405295315682282,
+  "sleep_scale": 0.11405295315682282,
+  "anchor": [
+    40,
+    104
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "template_version": 3
+}

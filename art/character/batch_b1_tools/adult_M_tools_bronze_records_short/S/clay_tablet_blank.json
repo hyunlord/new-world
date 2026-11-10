@@ -1,0 +1,72 @@
+{
+  "look": "adult_M_tools_bronze_records_short",
+  "age": "adult",
+  "attempt": 2,
+  "raw": "/Users/rexxa/work/art-batch/B1/raw/tools/bronze_records/try2/processed/raw.png",
+  "raw_sha256": "3b83d463900be4cd7537ffcf2975c91caffb678bdef71db869a13e7364c2b3d1",
+  "prompt_sha256": "bcaf616473843826ccf7e079a1411e7d032053067f88c12c3f53ae185aafdcfe",
+  "facing": "S",
+  "pose": "clay_tablet_blank",
+  "check_pose": "work_a",
+  "path": "S/clay_tablet_blank.png",
+  "sha256": "f853e1375d8baa20f7325b21c0b66199d475276fcf178ceef5879d397a53f63e",
+  "source_box": [
+    315,
+    1,
+    626,
+    556
+  ],
+  "normalization": {
+    "scaled_size": [
+      36,
+      64
+    ],
+    "trim_box": [
+      4,
+      1,
+      31,
+      58
+    ],
+    "placement": [
+      26,
+      48
+    ],
+    "resized_to_canvas_offset": [
+      22,
+      47
+    ],
+    "visible_pixels": 977,
+    "rotation_degrees": 0,
+    "scale": 0.11475409836065574,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "passed": true,
+    "findings": [],
+    "coverage": 0.09877232142857142,
+    "component_count": 1,
+    "largest_hole": 0,
+    "contact_ok": true,
+    "sleep_axis_ok": true,
+    "opaque_height": 55,
+    "opaque_width": 26,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+    "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+    "visible_height": 57,
+    "visible_width": 27,
+    "visibility_threshold": 16
+  },
+  "standing_scale": 0.11475409836065574,
+  "sleep_scale": 0.11475409836065574,
+  "anchor": [
+    40,
+    104
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "template_version": 3
+}
