@@ -1,0 +1,18 @@
+{
+  "status": "DRAFT_NOT_APPLIED_PENDING_SOURCE_PIN",
+  "source_commit": null,
+  "files": [
+    {
+      "role": "item",
+      "id": "iron_spear",
+      "source": "art/style05/batch_b3/items/iron_spear.png",
+      "dest": "items/iron_spear.png"
+    }
+  ],
+  "meta_sources": {
+    "item": "art/batch_b3/items/items_manifest.json"
+  },
+  "withheld": [
+    "steel_edge"
+  ]
+}

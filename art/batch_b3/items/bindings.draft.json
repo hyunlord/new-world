@@ -1,0 +1,18 @@
+{
+  "status": "PROPOSED_NOT_APPLIED",
+  "items": {
+    "codes": []
+  },
+  "pending": [
+    {
+      "id": "iron_spear",
+      "sim": null,
+      "code": null,
+      "asset": "iron_spear",
+      "reason": "No verified numeric runtime identity in A3 catalogue; C3 to connect."
+    }
+  ],
+  "withheld": [
+    "steel_edge"
+  ]
+}

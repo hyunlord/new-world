@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "status": "SELECTED_CANDIDATE_ADAPTER_PENDING",
+  "about": "Append this assets row to the integration item metadata adapter; do not replace other item rows.",
+  "assets": [
+    {
+      "id": "iron_spear",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ]
+    }
+  ],
+  "independent_review": "art/batch_b3/items/independent_review.json"
+}

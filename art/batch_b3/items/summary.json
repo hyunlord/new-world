@@ -1,0 +1,75 @@
+{
+  "generated_originals": 2,
+  "candidate_selected": 1,
+  "rejected_originals": 1,
+  "input_blocked_requests": 1,
+  "variants_required": 0,
+  "variants_reason": "Both A3 catalogue rows have empty count_buckets and container_states.",
+  "candidate": "iron_spear",
+  "withheld": "steel_edge",
+  "rejects": [
+    {
+      "id": "iron_spear",
+      "attempt": 1,
+      "reasons": [
+        "edge_density",
+        "saturation_q25",
+        "32px head readability"
+      ],
+      "record": "/Users/rexxa/work/art-batch/B3/items/reviews/iron_spear_try1.json"
+    },
+    {
+      "id": "steel_edge",
+      "attempt": 1,
+      "type": "INPUT_SAFETY_REJECTION_NO_IMAGE",
+      "record": "/Users/rexxa/work/art-batch/B3/items/records/steel_edge_try1.failure.json",
+      "request_id": "f69e1e6b-1e51-4125-aad5-4ecb18ee36fc"
+    }
+  ],
+  "checks": {
+    "integrity_geometry_failures": [],
+    "selected_numeric_pass": true,
+    "selected_projection_pass": true,
+    "historical_model_judge_status": "MISSING"
+  },
+  "provenance": [
+    {
+      "id": "iron_spear",
+      "attempt": 1,
+      "record": "/Users/rexxa/work/art-batch/B3/items/records/iron_spear_try1.json",
+      "record_sha256": "dc416703b0644e9af9ab2b1e7bc189ad8ea1b5f3394da330a48b380e0773abb7",
+      "raw": "/Users/rexxa/work/art-batch/B3/items/raw/iron_spear_try1.png",
+      "raw_sha256": "d38a048db656c4e2dc83be67438865025ea7160b93e4dd1682b8948e8dcad02f",
+      "original_source": "/Users/rexxa/.codex/generated_images/01a1c2fa-fa87-7c52-ae0a-356d8802d5f7/exec-4536884e-d60b-4258-b635-9e95b4bb442a.png",
+      "original_source_sha256": "d38a048db656c4e2dc83be67438865025ea7160b93e4dd1682b8948e8dcad02f",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A3/metal/bronze_spear_try1_raw.png",
+          "sha256": "fc0087dcca883b57b8865877a4a85ca877cf8f62531ca3bb2c0dd6b210690cff"
+        }
+      ]
+    },
+    {
+      "id": "iron_spear",
+      "attempt": 2,
+      "record": "/Users/rexxa/work/art-batch/B3/items/records/iron_spear_try2.json",
+      "record_sha256": "208047592b05a167aef6840b2074fe2f5df239dcb5feaae30d9d18e027c9e89e",
+      "raw": "/Users/rexxa/work/art-batch/B3/items/raw/iron_spear_try2.png",
+      "raw_sha256": "f47bcd558ca327096d17172a410db84524ad3d7b57ee9e5199161a7e3b66f87c",
+      "original_source": "/Users/rexxa/.codex/generated_images/01a1c2fa-fa87-7c52-ae0a-356d8802d5f7/exec-56d58195-e701-40b3-b1f1-614702838b50.png",
+      "original_source_sha256": "f47bcd558ca327096d17172a410db84524ad3d7b57ee9e5199161a7e3b66f87c",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B3/items/raw/iron_spear_try1.png",
+          "sha256": "d38a048db656c4e2dc83be67438865025ea7160b93e4dd1682b8948e8dcad02f"
+        }
+      ]
+    }
+  ],
+  "self_review_regeneration": {
+    "selected_weakest": "iron_spear_try1",
+    "regenerated_as": "iron_spear_try2",
+    "steel_edge_unavailable": true
+  },
+  "source_frozen": false
+}

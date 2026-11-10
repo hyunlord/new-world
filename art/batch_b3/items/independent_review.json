@@ -1,0 +1,12 @@
+{
+  "reviewer": "/root/icons_and_remainder",
+  "method": "Independent general vision native64 and32px comparison to imported item references",
+  "score": 92,
+  "verdict": "pass",
+  "medium": 5,
+  "line": 4,
+  "light": 4,
+  "palette": 5,
+  "category_match": true,
+  "reason": "Diagonal spear has visible broad grey iron head at32px and a straight wooden shaft, with restrained warm ink matching adjacent A3 items. No detached visible background. Frozen numeric/projection already pass in preserved candidate metadata. Historical model judge remains MISSING."
+}
