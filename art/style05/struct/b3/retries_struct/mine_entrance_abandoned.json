@@ -1,0 +1,150 @@
+{
+  "record": {
+    "id": "mine_entrance_abandoned",
+    "lane": "retries_struct",
+    "era": "bronze",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c799-0bfa-7130-b45c-bc8d689bddc2/exec-77209f74-8c10-40f5-a913-524c90595c30.png",
+    "prompt": "Use case: precise-object-edit. A shallow dark mine adit in low irregular grey rock face. Two BROKEN timber braces, low fallen stones partly obstructing opening. Two-tile-wide1tiledeep. No rails metal or door. WorldSim style05 illustrated ink and restrained earth-tone wash. Reference1 design/material; locked hut and scene references2/3 style. Strong irregular sepia outer ink twice finer inner pen, wood3brokenlongitudinal grain marks perprincipalpole, stone3facet/crackgroups perdominantrock, onegroup3parallel / hatches. Quiet broad matte base wash with modest natural variation and lower-rightshadow; no speckles, flakedwatercolor, alloverhatching or vectorplastic. Upper-left light. Frontthreequarter about20degreesdown. True transparentbackground, fullobject isolated generousmargins andgaps; noground/shadowpuddle/halo/people/text/roof. Bronze materials no metal/dyedcloth.",
+    "subject": "one shallow dark mine adit in irregular grey rock face, two broken timber braces, low fallen stone blocks partly obstruct entrance, no modern rails/metal fixtures",
+    "references": [
+      "/Users/rexxa/work/art-batch/A2/bronze/raw/mine_entrance_abandoned_try3.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/hut.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png"
+    ],
+    "target_height": 64,
+    "projection_family": "mine_entrance",
+    "height_band": [
+      62,
+      66
+    ],
+    "height_band_reason": "Family target predeclared in bronze/tasks.json relative to adult56px and footprint; unchanged by checks.",
+    "footprint": [
+      2.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": "exec-77209f74-8c10-40f5-a913-524c90595c30",
+    "seed": null,
+    "generated_at": "2026-11-10T22:41:12.510Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/B3/retries_struct/raw/mine_entrance_abandoned_try1.png",
+  "raw_sha256": "4571fcee4e7d41c4f76f6ac97af821f7be1f54e31f09328bfaeaf8000027a8b6",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A2/bronze/raw/mine_entrance_abandoned_try3.png",
+      "sha256": "0081b0e4b7dbdaaff12a02924e3777cfa2011d32ecf835864f081861a256fd23"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/hut.png",
+      "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/B3/retries_struct/normalized/mine_entrance_abandoned_try1.png",
+  "normalized_sha256": "04814ecd603d222f9aacb2878eff338caab16e81f2d92ef383b5fef6d692dd20",
+  "size": [
+    102,
+    72
+  ],
+  "anchor": [
+    51,
+    67
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (284, 77, 1398, 839)",
+    "uniform Lanczos scale: 0.08443271767810026",
+    "transparent 4px padding; source-canvas anchor: (51, 67)"
+  ],
+  "projection": {
+    "family": "mine_entrance",
+    "anchor": [
+      51,
+      67
+    ],
+    "height_band": [
+      62,
+      66
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 4468,
+    "base_row": 67,
+    "base_error": 0,
+    "height": 64,
+    "gradient_x": -0.03356003641329081,
+    "gradient_y": -0.017426989935955945,
+    "light_angle_degrees": 207.4418611951836,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/B3/retries_struct/raw/mine_entrance_abandoned_try1.png",
+    "sha256": "4571fcee4e7d41c4f76f6ac97af821f7be1f54e31f09328bfaeaf8000027a8b6",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.1877791563275434,
+      "saturation_q25": 0.2536705370069814,
+      "saturation_q75": 0.4734636957516098,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.015735796975187805,
+      "foreground_pixels": 33582
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    12,
+    1627,
+    935
+  ],
+  "raw_opaque_bbox": [
+    286,
+    79,
+    1396,
+    837
+  ],
+  "raw_faint_far_ratio": 0.005148670379545638,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": null,
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "provenance_note": "A2 geometry copied; generation timestamp taken only from B3 tool receipt, otherwise unknown.",
+  "export_path": "art/style05/struct/b3/retries_struct/mine_entrance_abandoned.png",
+  "export_sha256": "04814ecd603d222f9aacb2878eff338caab16e81f2d92ef383b5fef6d692dd20",
+  "visual_review": {
+    "source": "B3 self review",
+    "score": 90,
+    "model_judge_status": "MISSING",
+    "limitations": "No external model judge or runtime import."
+  }
+}

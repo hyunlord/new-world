@@ -1,0 +1,511 @@
+{
+  "schema_version": 1,
+  "a2_source_pin": "227529c26307bc3a854eb7bf819e88d02af39046",
+  "max_attempts": 3,
+  "assets": [
+    {
+      "id": "loom_empty",
+      "attempt": 2,
+      "path": "art/style05/struct/b3/retries_struct/loom_empty.png",
+      "sha256": "a2c5777aedf338e8fb591c3bcbf6e131bd57a9282b15710a9212a9a6d23863c6",
+      "sidecar": "art/style05/struct/b3/retries_struct/loom_empty.json",
+      "anchor": [
+        42,
+        59
+      ],
+      "size": [
+        85,
+        64
+      ],
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "replaces_round1": "loom_empty",
+      "role": "structure",
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "mine_entrance_abandoned",
+      "attempt": 1,
+      "path": "art/style05/struct/b3/retries_struct/mine_entrance_abandoned.png",
+      "sha256": "04814ecd603d222f9aacb2878eff338caab16e81f2d92ef383b5fef6d692dd20",
+      "sidecar": "art/style05/struct/b3/retries_struct/mine_entrance_abandoned.json",
+      "anchor": [
+        51,
+        67
+      ],
+      "size": [
+        102,
+        72
+      ],
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "replaces_round1": "mine_entrance_abandoned",
+      "role": "structure",
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "olive_press_empty",
+      "attempt": 1,
+      "path": "art/style05/struct/b3/retries_struct/olive_press_empty.png",
+      "sha256": "ce6b9f601544b4005367e285e11e1f08af2968dcf11999c074babb720c582cfa",
+      "sidecar": "art/style05/struct/b3/retries_struct/olive_press_empty.json",
+      "anchor": [
+        60,
+        83
+      ],
+      "size": [
+        121,
+        88
+      ],
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "replaces_round1": "olive_press_empty",
+      "role": "structure",
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "potter_kiln_unlit",
+      "attempt": 2,
+      "path": "art/style05/struct/b3/retries_struct/potter_kiln_unlit.png",
+      "sha256": "f50a7905e9a6ccae12eb8fb7cd9b6b39d7157575be4bdd5f6d1183bfb23b70e9",
+      "sidecar": "art/style05/struct/b3/retries_struct/potter_kiln_unlit.json",
+      "anchor": [
+        26,
+        51
+      ],
+      "size": [
+        52,
+        56
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "replaces_round1": "potter_kiln_unlit",
+      "role": "structure",
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "timber_bridge",
+      "attempt": 1,
+      "path": "art/style05/struct/b3/retries_struct/timber_bridge.png",
+      "sha256": "2c5d5f108cdafdccc78c0216400678c5054f3247ac003cb2cccd83db17704be5",
+      "sidecar": "art/style05/struct/b3/retries_struct/timber_bridge.json",
+      "anchor": [
+        76,
+        220
+      ],
+      "size": [
+        152,
+        225
+      ],
+      "footprint": [
+        2.0,
+        3.0
+      ],
+      "replaces_round1": "timber_bridge",
+      "role": "structure",
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED"
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "aqueduct_ns",
+      "attempts": 3,
+      "status": "CAPPED_REJECTED",
+      "accepted_path": null,
+      "reason": "Try3 numeric pass but opaque width ~79px exceeds exact64px declared width; capped geometry reject."
+    },
+    {
+      "id": "loom_empty",
+      "attempts": 2,
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "accepted_path": "art/style05/struct/b3/retries_struct/loom_empty.png",
+      "reason": "Frozen numeric and visual gates pass."
+    },
+    {
+      "id": "mine_entrance_abandoned",
+      "attempts": 1,
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "accepted_path": "art/style05/struct/b3/retries_struct/mine_entrance_abandoned.png",
+      "reason": "Frozen numeric and visual gates pass."
+    },
+    {
+      "id": "mine_entrance_active",
+      "attempts": 3,
+      "status": "CAPPED_REJECTED",
+      "accepted_path": null,
+      "reason": "All three fail frozen wash-flatness; no built substitute."
+    },
+    {
+      "id": "olive_press_empty",
+      "attempts": 1,
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "accepted_path": "art/style05/struct/b3/retries_struct/olive_press_empty.png",
+      "reason": "Frozen numeric and visual gates pass."
+    },
+    {
+      "id": "palisade_corner",
+      "attempts": 3,
+      "status": "CAPPED_REJECTED",
+      "accepted_path": null,
+      "reason": "Try3 wash-flatness fails; prior attempts wrong north arm geometry."
+    },
+    {
+      "id": "palisade_ns",
+      "attempts": 3,
+      "status": "CAPPED_REJECTED",
+      "accepted_path": null,
+      "reason": "Try3 numeric pass but nearest pole too tall and smooth vector wash; visual reject."
+    },
+    {
+      "id": "pen_fence_corner",
+      "attempts": 3,
+      "status": "CAPPED_REJECTED",
+      "accepted_path": null,
+      "reason": "All three fail frozen wash-flatness."
+    },
+    {
+      "id": "pen_fence_ns",
+      "attempts": 3,
+      "status": "CAPPED_REJECTED",
+      "accepted_path": null,
+      "reason": "Try2 front post ~45px vs exact40px nominal; final call returned HTTP400 moderation_blocked with no image. Geometry not waived."
+    },
+    {
+      "id": "potter_kiln_unlit",
+      "attempts": 2,
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "accepted_path": "art/style05/struct/b3/retries_struct/potter_kiln_unlit.png",
+      "reason": "Frozen numeric and visual gates pass."
+    },
+    {
+      "id": "timber_bridge",
+      "attempts": 1,
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "accepted_path": "art/style05/struct/b3/retries_struct/timber_bridge.png",
+      "reason": "Frozen numeric and visual gates pass."
+    }
+  ],
+  "attempt_history": [
+    {
+      "id": "aqueduct_ns",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_struct/raw/aqueduct_ns_try1.png",
+      "raw_sha256": "7a49811b935a6fc700da554afa00c4ff15045050996103dc5d6e00a6bc9b9844",
+      "numeric_ready": true,
+      "failures": [],
+      "status": "REJECTED",
+      "reason": "Try3 numeric pass but opaque width ~79px exceeds exact64px declared width; capped geometry reject.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_struct/normalized/aqueduct_ns_try1.json"
+    },
+    {
+      "id": "aqueduct_ns",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_struct/raw/aqueduct_ns_try2.png",
+      "raw_sha256": "b029d30624c4eeb20ba1b3a83866290b264d90e14ce6b9d70bbeb7a2f7d882e7",
+      "numeric_ready": true,
+      "failures": [],
+      "status": "REJECTED",
+      "reason": "Try3 numeric pass but opaque width ~79px exceeds exact64px declared width; capped geometry reject.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_struct/normalized/aqueduct_ns_try2.json"
+    },
+    {
+      "id": "aqueduct_ns",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_struct/raw/aqueduct_ns_try3.png",
+      "raw_sha256": "2cc0a521500c025973bc83c5fc9ca63248c51b1cac05825165e79d36e045fa47",
+      "numeric_ready": true,
+      "failures": [],
+      "status": "REJECTED",
+      "reason": "Try3 numeric pass but opaque width ~79px exceeds exact64px declared width; capped geometry reject.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_struct/normalized/aqueduct_ns_try3.json"
+    },
+    {
+      "id": "loom_empty",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_struct/raw/loom_empty_try1.png",
+      "raw_sha256": "f44052868de2f7cbf2b6fd5f6b7b5a44822a2f029b61c851e44609f8da27a0da",
+      "numeric_ready": false,
+      "failures": [
+        "style metric: wash_flatness"
+      ],
+      "status": "REJECTED",
+      "reason": "Superseded during self-review: geometry or frozen numeric gate failed.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_struct/normalized/loom_empty_try1.json"
+    },
+    {
+      "id": "loom_empty",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_struct/raw/loom_empty_try2.png",
+      "raw_sha256": "a9cf2d756d91f6e99e301c22bd07a58ebbd087ef801713f7fb95bf4849b1fcdd",
+      "numeric_ready": true,
+      "failures": [],
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "reason": "Frozen numeric + visual pass; no runtime import.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_struct/normalized/loom_empty_try2.json"
+    },
+    {
+      "id": "mine_entrance_abandoned",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_struct/raw/mine_entrance_abandoned_try1.png",
+      "raw_sha256": "4571fcee4e7d41c4f76f6ac97af821f7be1f54e31f09328bfaeaf8000027a8b6",
+      "numeric_ready": true,
+      "failures": [],
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "reason": "Frozen numeric + visual pass; no runtime import.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_struct/normalized/mine_entrance_abandoned_try1.json"
+    },
+    {
+      "id": "mine_entrance_active",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_struct/raw/mine_entrance_active_try1.png",
+      "raw_sha256": "a4f7f4bb6a09f64899088dea9959e8c972d4bc44f7f457f4f499f467cb692381",
+      "numeric_ready": false,
+      "failures": [
+        "projection upper-left luminance gradient failed",
+        "style metric: wash_flatness"
+      ],
+      "status": "REJECTED",
+      "reason": "All three fail frozen wash-flatness; no built substitute.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_struct/normalized/mine_entrance_active_try1.json"
+    },
+    {
+      "id": "mine_entrance_active",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_struct/raw/mine_entrance_active_try2.png",
+      "raw_sha256": "3f045b5641414626ae03f0203113fa5c1a4bdbcf3ac5613d7a9e9414a86f4c29",
+      "numeric_ready": false,
+      "failures": [
+        "style metric: wash_flatness"
+      ],
+      "status": "REJECTED",
+      "reason": "All three fail frozen wash-flatness; no built substitute.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_struct/normalized/mine_entrance_active_try2.json"
+    },
+    {
+      "id": "mine_entrance_active",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_struct/raw/mine_entrance_active_try3.png",
+      "raw_sha256": "931242d90cdacd99786f2073df8d390f5da97f4bf9c16788c7733b0bdb6fafc9",
+      "numeric_ready": false,
+      "failures": [
+        "style metric: wash_flatness"
+      ],
+      "status": "REJECTED",
+      "reason": "All three fail frozen wash-flatness; no built substitute.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_struct/normalized/mine_entrance_active_try3.json"
+    },
+    {
+      "id": "olive_press_empty",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_struct/raw/olive_press_empty_try1.png",
+      "raw_sha256": "3a0d25b54efd8ed3a588883ca38390f1ee7ec5f1c4c5dfd44688e47aca2f3e58",
+      "numeric_ready": true,
+      "failures": [],
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "reason": "Frozen numeric + visual pass; no runtime import.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_struct/normalized/olive_press_empty_try1.json"
+    },
+    {
+      "id": "palisade_corner",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_struct/raw/palisade_corner_try1.png",
+      "raw_sha256": "6def3223e06188394eaa3a4bf747f6d0b0afafa0e8237003a9138b95705f7110",
+      "numeric_ready": true,
+      "failures": [],
+      "status": "REJECTED",
+      "reason": "Try3 wash-flatness fails; prior attempts wrong north arm geometry.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_struct/normalized/palisade_corner_try1.json"
+    },
+    {
+      "id": "palisade_corner",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_struct/raw/palisade_corner_try2.png",
+      "raw_sha256": "09fdc89a8057549dc11053e37d3c8b2767fd395ee30caa10ec03dbbd0b90a3dc",
+      "numeric_ready": true,
+      "failures": [],
+      "status": "REJECTED",
+      "reason": "Try3 wash-flatness fails; prior attempts wrong north arm geometry.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_struct/normalized/palisade_corner_try2.json"
+    },
+    {
+      "id": "palisade_corner",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_struct/raw/palisade_corner_try3.png",
+      "raw_sha256": "bffee163b390ca8717dd9c74819c40fa338d09f1c334638e6efe9c7e14f63c24",
+      "numeric_ready": false,
+      "failures": [
+        "style metric: wash_flatness"
+      ],
+      "status": "REJECTED",
+      "reason": "Try3 wash-flatness fails; prior attempts wrong north arm geometry.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_struct/normalized/palisade_corner_try3.json"
+    },
+    {
+      "id": "palisade_ns",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_struct/raw/palisade_ns_try1.png",
+      "raw_sha256": "67d75c603347b740fe5252be8e4ba492595fd76b8969b8c131bb27dfc7874f49",
+      "numeric_ready": false,
+      "failures": [
+        "style metric: wash_flatness"
+      ],
+      "status": "REJECTED",
+      "reason": "Try3 numeric pass but nearest pole too tall and smooth vector wash; visual reject.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_struct/normalized/palisade_ns_try1.json"
+    },
+    {
+      "id": "palisade_ns",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_struct/raw/palisade_ns_try2.png",
+      "raw_sha256": "5bd4161a4051eea0aa23fcbbff9222e68e88610f7d28d9e0fbe6f25fe55ffb98",
+      "numeric_ready": false,
+      "failures": [
+        "style metric: wash_flatness"
+      ],
+      "status": "REJECTED",
+      "reason": "Try3 numeric pass but nearest pole too tall and smooth vector wash; visual reject.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_struct/normalized/palisade_ns_try2.json"
+    },
+    {
+      "id": "palisade_ns",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_struct/raw/palisade_ns_try3.png",
+      "raw_sha256": "33fc6fa65b515b69f65c14bc7112597e8db8e81e10e315a3730ab6d4b682b934",
+      "numeric_ready": true,
+      "failures": [],
+      "status": "REJECTED",
+      "reason": "Try3 numeric pass but nearest pole too tall and smooth vector wash; visual reject.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_struct/normalized/palisade_ns_try3.json"
+    },
+    {
+      "id": "pen_fence_corner",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_struct/raw/pen_fence_corner_try1.png",
+      "raw_sha256": "14fa29506f4fe7d9c738b8f9941bbd259768d94d8af74dffd0c17888f4c7d8b2",
+      "numeric_ready": false,
+      "failures": [
+        "style metric: wash_flatness"
+      ],
+      "status": "REJECTED",
+      "reason": "All three fail frozen wash-flatness.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_struct/normalized/pen_fence_corner_try1.json"
+    },
+    {
+      "id": "pen_fence_corner",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_struct/raw/pen_fence_corner_try2.png",
+      "raw_sha256": "012717427cb70415fb264f02758bea9b960c2b4eb7ea8ca7bd12d405715d9d7d",
+      "numeric_ready": false,
+      "failures": [
+        "style metric: wash_flatness"
+      ],
+      "status": "REJECTED",
+      "reason": "All three fail frozen wash-flatness.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_struct/normalized/pen_fence_corner_try2.json"
+    },
+    {
+      "id": "pen_fence_corner",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_struct/raw/pen_fence_corner_try3.png",
+      "raw_sha256": "de4dcead732a6057de64c138e2a6deceeeb5b68f8ea958de51394561a8ba182a",
+      "numeric_ready": false,
+      "failures": [
+        "style metric: wash_flatness"
+      ],
+      "status": "REJECTED",
+      "reason": "All three fail frozen wash-flatness.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_struct/normalized/pen_fence_corner_try3.json"
+    },
+    {
+      "id": "pen_fence_ns",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_struct/raw/pen_fence_ns_try1.png",
+      "raw_sha256": "af35237f204581792bdcf860cf61d305d765c24ed00c325f43770d34cfd06715",
+      "numeric_ready": false,
+      "failures": [
+        "style metric: wash_flatness"
+      ],
+      "status": "REJECTED",
+      "reason": "Try2 front post ~45px vs exact40px nominal; final call returned HTTP400 moderation_blocked with no image. Geometry not waived.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_struct/normalized/pen_fence_ns_try1.json"
+    },
+    {
+      "id": "pen_fence_ns",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_struct/raw/pen_fence_ns_try2.png",
+      "raw_sha256": "d7bd27e8c5a1cca4528ea9aad1ce1c60862431e5428395d26da616ef091a4c72",
+      "numeric_ready": true,
+      "failures": [],
+      "status": "REJECTED",
+      "reason": "Try2 front post ~45px vs exact40px nominal; final call returned HTTP400 moderation_blocked with no image. Geometry not waived.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_struct/normalized/pen_fence_ns_try2.json"
+    },
+    {
+      "id": "potter_kiln_unlit",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_struct/raw/potter_kiln_unlit_try1.png",
+      "raw_sha256": "592ecd17adbc469133f5fb8a438dfabfca476c07810db3ce729f53a87d6dd84c",
+      "numeric_ready": false,
+      "failures": [
+        "style metric: edge_density"
+      ],
+      "status": "REJECTED",
+      "reason": "Superseded during self-review: geometry or frozen numeric gate failed.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_struct/normalized/potter_kiln_unlit_try1.json"
+    },
+    {
+      "id": "potter_kiln_unlit",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_struct/raw/potter_kiln_unlit_try2.png",
+      "raw_sha256": "a45e8ede482cff40262d47ac61a6ff228a4ddf3bd27d5fabec629144ed2cf199",
+      "numeric_ready": true,
+      "failures": [],
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "reason": "Frozen numeric + visual pass; no runtime import.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_struct/normalized/potter_kiln_unlit_try2.json"
+    },
+    {
+      "id": "timber_bridge",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_struct/raw/timber_bridge_try1.png",
+      "raw_sha256": "d2cb9c59a281a3662607ebbaa18011fa2e59e558ba9f5762f9b465bbc702aa59",
+      "numeric_ready": true,
+      "failures": [],
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "reason": "Frozen numeric + visual pass; no runtime import.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_struct/normalized/timber_bridge_try1.json"
+    }
+  ],
+  "import_draft": {
+    "filter": "nearest",
+    "mipmaps": false,
+    "runtime_changes": false
+  },
+  "self_review": {
+    "weakest_reviewed": [
+      "loom_empty",
+      "potter_kiln_unlit",
+      "aqueduct_ns"
+    ],
+    "method": "Regenerated weakest candidates, retained unchanged A2 thresholds, rejected final failures.",
+    "external_model_judge": "MISSING"
+  },
+  "request_counts": {
+    "successful_image_outputs": 24,
+    "tool_errors_without_image": 1,
+    "total_requests": 25
+  },
+  "independent_review": {
+    "reviewer": "root",
+    "score": 90,
+    "result": "PASS accepted subset at native size; pen_fence_ns and aqueduct_ns withheld for exact geometry."
+  }
+}

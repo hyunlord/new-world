@@ -1,0 +1,72 @@
+{
+  "status": "DRAFT_NOT_APPLIED",
+  "runtime_numeric_ids": null,
+  "structures": {
+    "loom_empty": {
+      "sprite": "structures/b3/retries_struct/loom_empty.png",
+      "anchor": [
+        42,
+        59
+      ],
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "state_key": "loom_empty",
+      "runtime_numeric_id": null
+    },
+    "mine_entrance_abandoned": {
+      "sprite": "structures/b3/retries_struct/mine_entrance_abandoned.png",
+      "anchor": [
+        51,
+        67
+      ],
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "state_key": "mine_entrance_abandoned",
+      "runtime_numeric_id": null
+    },
+    "olive_press_empty": {
+      "sprite": "structures/b3/retries_struct/olive_press_empty.png",
+      "anchor": [
+        60,
+        83
+      ],
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "state_key": "olive_press_empty",
+      "runtime_numeric_id": null
+    },
+    "potter_kiln_unlit": {
+      "sprite": "structures/b3/retries_struct/potter_kiln_unlit.png",
+      "anchor": [
+        26,
+        51
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "state_key": "potter_kiln_unlit",
+      "runtime_numeric_id": null
+    },
+    "timber_bridge": {
+      "sprite": "structures/b3/retries_struct/timber_bridge.png",
+      "anchor": [
+        76,
+        220
+      ],
+      "footprint": [
+        2.0,
+        3.0
+      ],
+      "state_key": "timber_bridge",
+      "runtime_numeric_id": null
+    }
+  },
+  "note": "Symbolic retry state keys only; integrator must map actual selectors. No simulation IDs invented."
+}

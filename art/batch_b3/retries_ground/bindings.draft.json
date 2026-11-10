@@ -1,0 +1,46 @@
+{
+  "status": "DRAFT_NOT_APPLIED",
+  "runtime_numeric_ids": null,
+  "terrain": {
+    "ditch_dry": {
+      "sprite": "ground/b3/retries_ground/ditch_dry.png",
+      "anchor": [
+        32,
+        43
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "state_key": "ditch_dry",
+      "runtime_numeric_id": null
+    },
+    "irrigation_channel_dry": {
+      "sprite": "ground/b3/retries_ground/irrigation_channel_dry.png",
+      "anchor": [
+        32,
+        43
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "state_key": "irrigation_channel_dry",
+      "runtime_numeric_id": null
+    },
+    "terrace_empty": {
+      "sprite": "ground/b3/retries_ground/terrace_empty.png",
+      "anchor": [
+        32,
+        43
+      ],
+      "footprint": [
+        2,
+        2
+      ],
+      "state_key": "terrace_empty",
+      "runtime_numeric_id": null
+    }
+  },
+  "note": "Symbolic retry state keys only; integrator must map actual selectors. No simulation IDs invented."
+}

@@ -1,0 +1,15 @@
+{
+  "score": 90,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Rejected directional geometry and flax states remain unavailable; no tolerance relaxed."
+  ],
+  "suggestions": [],
+  "reasoning": "Final selected native and nearest2x boards retain coherent ink, earth wash, light and category identity. Fresh numeric/normalization checks pass for5structures;3opaque terrain tiles pass both-axis frozen seam metrics.",
+  "reviewed_boards": [
+    "art/batch_b3/retries_struct/contact_1x.png",
+    "art/batch_b3/retries_struct/contact_2x.png"
+  ],
+  "scope": "Selected candidates only, not nine rejected states; no runtime import."
+}

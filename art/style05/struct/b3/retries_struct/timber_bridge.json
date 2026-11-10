@@ -1,0 +1,150 @@
+{
+  "record": {
+    "id": "timber_bridge",
+    "lane": "retries_struct",
+    "era": "iron",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c799-0bfa-7130-b45c-bc8d689bddc2/exec-9fee9e76-028a-40ce-9ca6-4e297ef9f10d.png",
+    "prompt": "Use case: precise-object-edit. NORTH SOUTH variant of reference primitive timber bridge, exactly screen vertical deck192pxlong128pxwide at1x, total216pxhigh including24pxrail. Broad rectangular deck with parallel x-constant rail edges, timber bank supports. No diagonal/isometric, no modern metal. WorldSim style05 illustrated ink and restrained earth-tone wash. Reference1 design/material; locked hut and scene references2/3 style. Strong irregular sepia outer ink twice finer inner pen, wood3brokenlongitudinal grain marks perprincipalpole, stone3facet/crackgroups perdominantrock, onegroup3parallel / hatches. Quiet broad matte base wash with modest natural variation and lower-rightshadow; no speckles, flakedwatercolor, alloverhatching or vectorplastic. Upper-left light. Frontthreequarter about20degreesdown. True transparentbackground, fullobject isolated generousmargins andgaps; noground/shadowpuddle/halo/people/text/roof. Bronze materials no metal/dyedcloth.",
+    "subject": null,
+    "references": [
+      "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/timber_bridge_ew.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/hut.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png"
+    ],
+    "target_height": 216,
+    "projection_family": "bridge",
+    "height_band": [
+      214,
+      218
+    ],
+    "height_band_reason": "Revision before generation after first attempt failed physical path coverage: exact NS deck192px (3tiles) plus24px total rail/top/front-face overhang, width128px (2tiles), adult56px. Existing bridge family unlisted; landmark deck must be checked separately.",
+    "footprint": [
+      2.0,
+      3.0
+    ],
+    "style_family": "buildings",
+    "generation_id": "exec-9fee9e76-028a-40ce-9ca6-4e297ef9f10d",
+    "seed": null,
+    "generated_at": "2026-11-10T22:42:46.016Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/B3/retries_struct/raw/timber_bridge_try1.png",
+  "raw_sha256": "d2cb9c59a281a3662607ebbaa18011fa2e59e558ba9f5762f9b465bbc702aa59",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/iron/timber_bridge_ew.png",
+      "sha256": "044f9553eb5e7ba8b4ea19ab77deb6c93d89ba4b70a9c5101161d4663292200c"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/hut.png",
+      "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/B3/retries_struct/normalized/timber_bridge_try1.png",
+  "normalized_sha256": "2c5d5f108cdafdccc78c0216400678c5054f3247ac003cb2cccd83db17704be5",
+  "size": [
+    152,
+    225
+  ],
+  "anchor": [
+    76,
+    220
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (207, 56, 991, 1239)",
+    "uniform Lanczos scale: 0.183206106870229",
+    "transparent 4px padding; source-canvas anchor: (76, 220)"
+  ],
+  "projection": {
+    "family": "bridge",
+    "anchor": [
+      76,
+      220
+    ],
+    "height_band": [
+      214,
+      218
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 24042,
+    "base_row": 220,
+    "base_error": 0,
+    "height": 217,
+    "gradient_x": -0.21337180360974375,
+    "gradient_y": -0.21895556674217634,
+    "light_angle_degrees": 225.73996766290838,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/B3/retries_struct/raw/timber_bridge_try1.png",
+    "sha256": "d2cb9c59a281a3662607ebbaa18011fa2e59e558ba9f5762f9b465bbc702aa59",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.2772314555908134,
+      "saturation_q25": 0.3945635238316276,
+      "saturation_q75": 0.5224057106903561,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.013734785145624913,
+      "foreground_pixels": 33575
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    17,
+    1183,
+    1312
+  ],
+  "raw_opaque_bbox": [
+    209,
+    58,
+    989,
+    1237
+  ],
+  "raw_faint_far_ratio": 0.003255331644576105,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": null,
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "provenance_note": "A2 geometry copied; generation timestamp taken only from B3 tool receipt, otherwise unknown.",
+  "export_path": "art/style05/struct/b3/retries_struct/timber_bridge.png",
+  "export_sha256": "2c5d5f108cdafdccc78c0216400678c5054f3247ac003cb2cccd83db17704be5",
+  "visual_review": {
+    "source": "B3 self review",
+    "score": 90,
+    "model_judge_status": "MISSING",
+    "limitations": "No external model judge or runtime import."
+  }
+}

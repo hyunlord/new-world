@@ -1,0 +1,41 @@
+{
+  "source_commit": "PENDING_ROOT_ASSET_COMMIT",
+  "files": [
+    {
+      "role": "structure",
+      "id": "loom_empty",
+      "source": "art/style05/struct/b3/retries_struct/loom_empty.png",
+      "dest": "structures/b3/retries_struct/loom_empty.png"
+    },
+    {
+      "role": "structure",
+      "id": "mine_entrance_abandoned",
+      "source": "art/style05/struct/b3/retries_struct/mine_entrance_abandoned.png",
+      "dest": "structures/b3/retries_struct/mine_entrance_abandoned.png"
+    },
+    {
+      "role": "structure",
+      "id": "olive_press_empty",
+      "source": "art/style05/struct/b3/retries_struct/olive_press_empty.png",
+      "dest": "structures/b3/retries_struct/olive_press_empty.png"
+    },
+    {
+      "role": "structure",
+      "id": "potter_kiln_unlit",
+      "source": "art/style05/struct/b3/retries_struct/potter_kiln_unlit.png",
+      "dest": "structures/b3/retries_struct/potter_kiln_unlit.png"
+    },
+    {
+      "role": "structure",
+      "id": "timber_bridge",
+      "source": "art/style05/struct/b3/retries_struct/timber_bridge.png",
+      "dest": "structures/b3/retries_struct/timber_bridge.png"
+    }
+  ],
+  "meta_sources": {
+    "structure": "art/batch_b3/retries_struct/assets.json"
+  },
+  "status": "DRAFT_NOT_APPLIED",
+  "operation": "append_previously_rejected_A2_ids_only",
+  "note": "Merge selected symbolic IDs and geometry metadata; keep unrelated A2 rows. No import applied."
+}

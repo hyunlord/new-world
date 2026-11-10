@@ -1,0 +1,132 @@
+{
+  "id": "terrace_empty",
+  "attempt": 3,
+  "record": {
+    "id": "terrace_empty",
+    "attempt": 3,
+    "prompt": "Use case: precise-object-edit. Preserve reference1 empty terrace EXACT full-frame square top-down layout and opposite-edge matching. Keep two low stone retaining strips crossing at same y on both edges and three empty tilled soil beds. Add a small amount of natural uneven wash variation inside the earth: subtle softly irregular dark umber granular patches between furrows and gentle pale dry-ochre patches on the lit upper-left soil ridges. Preserve existing fine broken ink contours and little scattered grain. Reference2 ground and reference3 scene show organic wash variation. No crop plants, new edge clumps, vignette, global left-right lighting gradient, text or border. All pixels opaque, entire canvas terrain, seamless opposing edges. Logical128x128 covering2x2tiles.",
+    "refs": [
+      "/Users/rexxa/work/art-batch/B3/retries_ground/raw/terrace_empty_try2.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/ground.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png"
+    ],
+    "transparent_background": false,
+    "round": "B3",
+    "seed": null,
+    "tool": "built-in image_gen",
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c799-0bfa-7130-b45c-bc8d689bddc2/exec-6f895b7b-9100-4776-8478-ba4951a91286.png",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c799-0bfa-7130-b45c-bc8d689bddc2 as /Users/rexxa/.codex/generated_images/01a1c799-0bfa-7130-b45c-bc8d689bddc2/exec-6f895b7b-9100-4776-8478-ba4951a91286.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "created_at": "2026-11-10T22:37:45.447Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/B3/retries_ground/raw/terrace_empty_try3.png",
+  "raw_sha256": "bbbbb63b0c9ba580e66bf13cc4cc18cfa0226a905f5d66edc1a0f79a3fda4feb",
+  "normalized": "/Users/rexxa/work/art-batch/B3/retries_ground/normalized/terrace_empty_try3.png",
+  "normalized_sha256": "85482a47d3e8921754452236cc73d3acf982dca305b8235d2a869df898c53802",
+  "size": [
+    128,
+    128
+  ],
+  "anchor": [
+    32,
+    43
+  ],
+  "footprint": [
+    2,
+    2
+  ],
+  "operations": [
+    "full-frame RGBA preserving generated pixels",
+    "global Lanczos resize 128x128, no crop/padding/repaint"
+  ],
+  "seam_x": {
+    "width": 128,
+    "height": 128,
+    "interior_p95": 12.690104166666663,
+    "join_columns": [
+      128,
+      256,
+      384
+    ],
+    "join_mad": [
+      9.953125,
+      9.953125,
+      9.953125
+    ],
+    "limit": 14.593619791666661,
+    "passed": true
+  },
+  "seam_y": {
+    "width": 128,
+    "height": 128,
+    "interior_p95": 43.40182291666665,
+    "join_columns": [
+      128,
+      256,
+      384
+    ],
+    "join_mad": [
+      18.013020833333332,
+      18.013020833333332,
+      18.013020833333332
+    ],
+    "limit": 49.91209635416665,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/.codex/generated_images/01a1c799-0bfa-7130-b45c-bc8d689bddc2/exec-6f895b7b-9100-4776-8478-ba4951a91286.png",
+    "sha256": "bbbbb63b0c9ba580e66bf13cc4cc18cfa0226a905f5d66edc1a0f79a3fda4feb",
+    "family": "ground",
+    "metrics": {
+      "edge_density": 0.2540312421264802,
+      "saturation_q25": 0.573178653567782,
+      "saturation_q75": 0.602153704178276,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.004045255980872587,
+      "foreground_pixels": 65536
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "numeric_ready": true,
+  "failures": [],
+  "alpha_min": 255,
+  "export_path": "art/style05/struct/b3/retries_ground/terrace_empty.png",
+  "export_sha256": "85482a47d3e8921754452236cc73d3acf982dca305b8235d2a869df898c53802",
+  "status": "ADOPTED_CANDIDATE_NOT_IMPORTED",
+  "visual_review": {
+    "source": "B3 self review",
+    "score": 90,
+    "model_judge_status": "MISSING",
+    "limitations": "No external model judge or runtime import."
+  },
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/B3/retries_ground/raw/terrace_empty_try2.png",
+      "sha256": "6c77572b0b49474ee7f70f1c001fe586f332c31b63176df4213a6ed3da85f952"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/ground.png",
+      "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd"
+}

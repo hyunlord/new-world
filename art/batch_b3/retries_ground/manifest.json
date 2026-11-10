@@ -1,0 +1,320 @@
+{
+  "schema_version": 1,
+  "a2_source_pin": "227529c26307bc3a854eb7bf819e88d02af39046",
+  "max_attempts": 3,
+  "assets": [
+    {
+      "id": "ditch_dry",
+      "attempt": 1,
+      "path": "art/style05/struct/b3/retries_ground/ditch_dry.png",
+      "sha256": "6de89a6c96f81214324b69e652f042fffb65e0e23d7c77ac8f08c705e61afed6",
+      "sidecar": "art/style05/struct/b3/retries_ground/ditch_dry.json",
+      "anchor": [
+        32,
+        43
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "replaces_round1": "ditch_dry",
+      "role": "ground_texture",
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "irrigation_channel_dry",
+      "attempt": 1,
+      "path": "art/style05/struct/b3/retries_ground/irrigation_channel_dry.png",
+      "sha256": "888f1d34e7ef6e12b172142a9dc3c43f1ffff098366e90dc368ccd459b840f9c",
+      "sidecar": "art/style05/struct/b3/retries_ground/irrigation_channel_dry.json",
+      "anchor": [
+        32,
+        43
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "replaces_round1": "irrigation_channel_dry",
+      "role": "ground_texture",
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "terrace_empty",
+      "attempt": 3,
+      "path": "art/style05/struct/b3/retries_ground/terrace_empty.png",
+      "sha256": "85482a47d3e8921754452236cc73d3acf982dca305b8235d2a869df898c53802",
+      "sidecar": "art/style05/struct/b3/retries_ground/terrace_empty.json",
+      "anchor": [
+        32,
+        43
+      ],
+      "size": [
+        128,
+        128
+      ],
+      "footprint": [
+        2,
+        2
+      ],
+      "replaces_round1": "terrace_empty",
+      "role": "ground_texture",
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED"
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "ditch_dry",
+      "attempts": 1,
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "accepted_path": "art/style05/struct/b3/retries_ground/ditch_dry.png",
+      "reason": "Frozen numeric and visual gates pass."
+    },
+    {
+      "id": "flax_growing",
+      "attempts": 3,
+      "status": "CAPPED_REJECTED",
+      "accepted_path": null,
+      "reason": "All three fail frozen edge density."
+    },
+    {
+      "id": "flax_harvested",
+      "attempts": 3,
+      "status": "CAPPED_REJECTED",
+      "accepted_path": null,
+      "reason": "Try2 numeric pass but seed capsules and long leaves wrong for harvested state; try3 wash-flatness fails."
+    },
+    {
+      "id": "flax_ripe",
+      "attempts": 3,
+      "status": "CAPPED_REJECTED",
+      "accepted_path": null,
+      "reason": "All three fail frozen edge density; final raw border contact."
+    },
+    {
+      "id": "irrigation_channel_dry",
+      "attempts": 1,
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "accepted_path": "art/style05/struct/b3/retries_ground/irrigation_channel_dry.png",
+      "reason": "Frozen numeric and visual gates pass."
+    },
+    {
+      "id": "terrace_empty",
+      "attempts": 3,
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "accepted_path": "art/style05/struct/b3/retries_ground/terrace_empty.png",
+      "reason": "Frozen numeric and visual gates pass."
+    }
+  ],
+  "attempt_history": [
+    {
+      "id": "ditch_dry",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_ground/raw/ditch_dry_try1.png",
+      "raw_sha256": "54b485b59760f54564de1e3c946d73ea48e6c77f5c1d5b8e4d1e83bf0af8f5dc",
+      "numeric_ready": true,
+      "failures": [],
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "reason": "Frozen numeric + visual pass; no runtime import.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_ground/checks/ditch_dry_try1.json"
+    },
+    {
+      "id": "flax_growing",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_ground/raw/flax_growing_try1.png",
+      "raw_sha256": "6fdcbf61f425556f1d4f8d8e3fd6463c2aa24074a151edb6327380fbc3c05384",
+      "numeric_ready": false,
+      "failures": [
+        "style metric: edge_density",
+        "style metric: stroke_q90"
+      ],
+      "status": "REJECTED",
+      "reason": "All three fail frozen edge density.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_ground/normalized/flax_growing_try1.json"
+    },
+    {
+      "id": "flax_growing",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_ground/raw/flax_growing_try2.png",
+      "raw_sha256": "9baab550339e54f18d7d56a7fa252cfac661c76c043ba663f1826f2e9f54d9bd",
+      "numeric_ready": false,
+      "failures": [
+        "style metric: edge_density"
+      ],
+      "status": "REJECTED",
+      "reason": "All three fail frozen edge density.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_ground/normalized/flax_growing_try2.json"
+    },
+    {
+      "id": "flax_growing",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_ground/raw/flax_growing_try3.png",
+      "raw_sha256": "1f6a20d64a1080a0532b0518623463afcdfca797ccf9faa3590fe41f24fd7f8d",
+      "numeric_ready": false,
+      "failures": [
+        "style metric: edge_density"
+      ],
+      "status": "REJECTED",
+      "reason": "All three fail frozen edge density.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_ground/normalized/flax_growing_try3.json"
+    },
+    {
+      "id": "flax_harvested",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_ground/raw/flax_harvested_try1.png",
+      "raw_sha256": "02cb3c7ccda1283e3555d133ad3c87df6f470b3bf32a9915f16628fa67fee1ac",
+      "numeric_ready": false,
+      "failures": [
+        "projection height outside declared band",
+        "style metric: edge_density"
+      ],
+      "status": "REJECTED",
+      "reason": "Try2 numeric pass but seed capsules and long leaves wrong for harvested state; try3 wash-flatness fails.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_ground/normalized/flax_harvested_try1.json"
+    },
+    {
+      "id": "flax_harvested",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_ground/raw/flax_harvested_try2.png",
+      "raw_sha256": "1d9cc142e0baca4f3da3e367aadbf980497e7bc5c16bd7451e6620e02af1d371",
+      "numeric_ready": true,
+      "failures": [],
+      "status": "REJECTED",
+      "reason": "Try2 numeric pass but seed capsules and long leaves wrong for harvested state; try3 wash-flatness fails.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_ground/normalized/flax_harvested_try2.json"
+    },
+    {
+      "id": "flax_harvested",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_ground/raw/flax_harvested_try3.png",
+      "raw_sha256": "47b086deddfd25006bac876fbaf6f81cdf5a63f1ba43c26e1b40fd14a799190d",
+      "numeric_ready": false,
+      "failures": [
+        "style metric: wash_flatness"
+      ],
+      "status": "REJECTED",
+      "reason": "Try2 numeric pass but seed capsules and long leaves wrong for harvested state; try3 wash-flatness fails.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_ground/normalized/flax_harvested_try3.json"
+    },
+    {
+      "id": "flax_ripe",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_ground/raw/flax_ripe_try1.png",
+      "raw_sha256": "b65c4c85dd59eb3ec1fda42e3d81f75247b64af6e1148d6b2c90851812645f6c",
+      "numeric_ready": false,
+      "failures": [
+        "style metric: edge_density",
+        "style metric: stroke_q90"
+      ],
+      "status": "REJECTED",
+      "reason": "All three fail frozen edge density; final raw border contact.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_ground/normalized/flax_ripe_try1.json"
+    },
+    {
+      "id": "flax_ripe",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_ground/raw/flax_ripe_try2.png",
+      "raw_sha256": "7de51b5c797bf2613944cfe863779a76293e657d8e0837768808cfb8e606603c",
+      "numeric_ready": false,
+      "failures": [
+        "style metric: edge_density"
+      ],
+      "status": "REJECTED",
+      "reason": "All three fail frozen edge density; final raw border contact.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_ground/normalized/flax_ripe_try2.json"
+    },
+    {
+      "id": "flax_ripe",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_ground/raw/flax_ripe_try3.png",
+      "raw_sha256": "38b7450d4fc5e0928261c5ba5d8c3b7cec09df00e883cce60091beadd9091dee",
+      "numeric_ready": false,
+      "failures": [
+        "raw subject touches image border",
+        "style metric: edge_density"
+      ],
+      "status": "REJECTED",
+      "reason": "All three fail frozen edge density; final raw border contact.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_ground/normalized/flax_ripe_try3.json"
+    },
+    {
+      "id": "irrigation_channel_dry",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_ground/raw/irrigation_channel_dry_try1.png",
+      "raw_sha256": "e4bf11c539bfb4e01d82eb7645ec610c5a1af448d39bf18a29dc52c0061f9729",
+      "numeric_ready": true,
+      "failures": [],
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "reason": "Frozen numeric + visual pass; no runtime import.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_ground/checks/irrigation_channel_dry_try1.json"
+    },
+    {
+      "id": "terrace_empty",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_ground/raw/terrace_empty_try1.png",
+      "raw_sha256": "650c36727d25682fa70cd10a43c7ce42ea67829b0bd7def55e23fcffd3848145",
+      "numeric_ready": false,
+      "failures": [
+        "X seam"
+      ],
+      "status": "REJECTED",
+      "reason": "Superseded during self-review: geometry or frozen numeric gate failed.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_ground/checks/terrace_empty_try1.json"
+    },
+    {
+      "id": "terrace_empty",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_ground/raw/terrace_empty_try2.png",
+      "raw_sha256": "6c77572b0b49474ee7f70f1c001fe586f332c31b63176df4213a6ed3da85f952",
+      "numeric_ready": false,
+      "failures": [
+        "style wash_flatness"
+      ],
+      "status": "REJECTED",
+      "reason": "Superseded during self-review: geometry or frozen numeric gate failed.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_ground/checks/terrace_empty_try2.json"
+    },
+    {
+      "id": "terrace_empty",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B3/retries_ground/raw/terrace_empty_try3.png",
+      "raw_sha256": "bbbbb63b0c9ba580e66bf13cc4cc18cfa0226a905f5d66edc1a0f79a3fda4feb",
+      "numeric_ready": true,
+      "failures": [],
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "reason": "Frozen numeric + visual pass; no runtime import.",
+      "evidence": "/Users/rexxa/work/art-batch/B3/retries_ground/checks/terrace_empty_try3.json"
+    }
+  ],
+  "import_draft": {
+    "filter": "nearest",
+    "mipmaps": false,
+    "runtime_changes": false
+  },
+  "self_review": {
+    "weakest_reviewed": [
+      "terrace_empty",
+      "flax_harvested"
+    ],
+    "method": "Regenerated weakest candidates, retained unchanged A2 thresholds, rejected final failures.",
+    "external_model_judge": "MISSING"
+  },
+  "request_counts": {
+    "successful_image_outputs": 14,
+    "tool_errors_without_image": 0,
+    "total_requests": 14
+  },
+  "independent_review": {
+    "reviewer": "root",
+    "score": 91,
+    "result": "PASS accepted subset at native size; pen_fence_ns and aqueduct_ns withheld for exact geometry."
+  }
+}

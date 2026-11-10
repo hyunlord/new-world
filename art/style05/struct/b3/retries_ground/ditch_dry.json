@@ -1,0 +1,134 @@
+{
+  "id": "ditch_dry",
+  "attempt": 1,
+  "round": "B3",
+  "record": {
+    "id": "ditch_dry",
+    "prompt": "Use case: precise-object-edit. WorldSim illustrated ink-and-tone terrain. Reference 1 is the exact adopted A2 terrain identity and layout to preserve. References 2 and 3 are locked ground and scene style originals. Keep every existing ink edge, color wash, scale, lighting, full-frame square crop and tiling relationship apart from the specified state change. Preserve fine irregular sepia contours twice inner lines, three restrained surface marks per material group, upper-left light, ochre earth, muted stone. Fully opaque image from edge to edge, no margins, UI, border, text, perspective or isometric camera. Strict orthographic top-down texture. Change ONLY the narrow water ribbon at the floor of the deep north-south ditch into exposed dry crumbly warm ochre soil: a few matte cracked mud plates and tiny loose grit. Keep deep cut earthy sidewalls, roots, bank silhouette and bank vegetation, original tonal variation and fine irregular ink unchanged. No blue water, reflective slivers, ripples or wet mud anywhere. Exposed bed remains lighter than the shadow under the overhanging left bank so the trench depth reads. Output one seamless square terrain tile to become 64x64 logical pixels.",
+    "refs": [
+      "/Users/rexxa/work/art-batch/A2/bronze/raw/ditch_watered_try3.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/ground.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png"
+    ],
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c2fb-514a-7570-b52d-005801b38861/exec-5b8c7115-05e5-4f41-8df3-d8b62276d4a5.png",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c2fb-514a-7570-b52d-005801b38861 as /Users/rexxa/.codex/generated_images/01a1c2fb-514a-7570-b52d-005801b38861/exec-5b8c7115-05e5-4f41-8df3-d8b62276d4a5.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "seed": null,
+    "round": "B3",
+    "tool": "built-in image_gen",
+    "transparent_background": false,
+    "created_at": "2026-11-10T01:06:43.522Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/B3/retries_ground/raw/ditch_dry_try1.png",
+  "raw_sha256": "54b485b59760f54564de1e3c946d73ea48e6c77f5c1d5b8e4d1e83bf0af8f5dc",
+  "normalized": "/Users/rexxa/work/art-batch/B3/retries_ground/normalized/ditch_dry_try1.png",
+  "normalized_sha256": "6de89a6c96f81214324b69e652f042fffb65e0e23d7c77ac8f08c705e61afed6",
+  "size": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    43
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A2/bronze/raw/ditch_watered_try3.png",
+      "sha256": "4b2f41b9efba2b8dfbe4caeb5709472436f9fe44715ce745bcee02d9dbce0bd3"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/ground.png",
+      "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "operations": [
+    "full-frame RGBA conversion preserving generated RGB/alpha",
+    "global Lanczos resize to declared ground canvas; no crop, padding, alpha editing or repainting"
+  ],
+  "projection": "strict top-down ground; standing light/height gate not applicable",
+  "alpha_min": 255,
+  "seam_x": {
+    "width": 64,
+    "height": 64,
+    "interior_p95": 24.625520833333333,
+    "join_columns": [
+      64,
+      128,
+      192
+    ],
+    "join_mad": [
+      17.817708333333332,
+      17.817708333333332,
+      17.817708333333332
+    ],
+    "limit": 28.31934895833333,
+    "passed": true
+  },
+  "seam_y": {
+    "width": 64,
+    "height": 64,
+    "interior_p95": 18.090625,
+    "join_columns": [
+      64,
+      128,
+      192
+    ],
+    "join_mad": [
+      17.578125,
+      17.578125,
+      17.578125
+    ],
+    "limit": 20.804218749999997,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/B3/retries_ground/raw/ditch_dry_try1.png",
+    "sha256": "54b485b59760f54564de1e3c946d73ea48e6c77f5c1d5b8e4d1e83bf0af8f5dc",
+    "family": "ground",
+    "metrics": {
+      "edge_density": 0.273226883345931,
+      "saturation_q25": 0.6616112917513949,
+      "saturation_q75": 0.7443792930467069,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.008274332198531372,
+      "foreground_pixels": 65536
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "numeric_ready": true,
+  "failures": [],
+  "export_path": "art/style05/struct/b3/retries_ground/ditch_dry.png",
+  "export_sha256": "6de89a6c96f81214324b69e652f042fffb65e0e23d7c77ac8f08c705e61afed6",
+  "status": "ADOPTED_CANDIDATE_NOT_IMPORTED",
+  "visual_review": {
+    "source": "B3 self review",
+    "score": 90,
+    "model_judge_status": "MISSING",
+    "limitations": "No external model judge or runtime import."
+  }
+}

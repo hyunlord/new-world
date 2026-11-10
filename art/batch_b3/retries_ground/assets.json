@@ -1,0 +1,59 @@
+{
+  "assets": [
+    {
+      "id": "ditch_dry",
+      "path": "art/style05/struct/b3/retries_ground/ditch_dry.png",
+      "width": 64,
+      "height": 64,
+      "anchor": [
+        32,
+        43
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "count_buckets": [],
+      "family": "ground",
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "6de89a6c96f81214324b69e652f042fffb65e0e23d7c77ac8f08c705e61afed6"
+    },
+    {
+      "id": "irrigation_channel_dry",
+      "path": "art/style05/struct/b3/retries_ground/irrigation_channel_dry.png",
+      "width": 64,
+      "height": 64,
+      "anchor": [
+        32,
+        43
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "count_buckets": [],
+      "family": "ground",
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "888f1d34e7ef6e12b172142a9dc3c43f1ffff098366e90dc368ccd459b840f9c"
+    },
+    {
+      "id": "terrace_empty",
+      "path": "art/style05/struct/b3/retries_ground/terrace_empty.png",
+      "width": 128,
+      "height": 128,
+      "anchor": [
+        32,
+        43
+      ],
+      "footprint": [
+        2,
+        2
+      ],
+      "count_buckets": [],
+      "family": "ground",
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "85482a47d3e8921754452236cc73d3acf982dca305b8235d2a869df898c53802"
+    }
+  ],
+  "status": "DRAFT_NOT_IMPORTED"
+}

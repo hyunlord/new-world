@@ -1,0 +1,95 @@
+{
+  "assets": [
+    {
+      "id": "loom_empty",
+      "path": "art/style05/struct/b3/retries_struct/loom_empty.png",
+      "width": 85,
+      "height": 64,
+      "anchor": [
+        42,
+        59
+      ],
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "a2c5777aedf338e8fb591c3bcbf6e131bd57a9282b15710a9212a9a6d23863c6"
+    },
+    {
+      "id": "mine_entrance_abandoned",
+      "path": "art/style05/struct/b3/retries_struct/mine_entrance_abandoned.png",
+      "width": 102,
+      "height": 72,
+      "anchor": [
+        51,
+        67
+      ],
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "04814ecd603d222f9aacb2878eff338caab16e81f2d92ef383b5fef6d692dd20"
+    },
+    {
+      "id": "olive_press_empty",
+      "path": "art/style05/struct/b3/retries_struct/olive_press_empty.png",
+      "width": 121,
+      "height": 88,
+      "anchor": [
+        60,
+        83
+      ],
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "ce6b9f601544b4005367e285e11e1f08af2968dcf11999c074babb720c582cfa"
+    },
+    {
+      "id": "potter_kiln_unlit",
+      "path": "art/style05/struct/b3/retries_struct/potter_kiln_unlit.png",
+      "width": 52,
+      "height": 56,
+      "anchor": [
+        26,
+        51
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "f50a7905e9a6ccae12eb8fb7cd9b6b39d7157575be4bdd5f6d1183bfb23b70e9"
+    },
+    {
+      "id": "timber_bridge",
+      "path": "art/style05/struct/b3/retries_struct/timber_bridge.png",
+      "width": 152,
+      "height": 225,
+      "anchor": [
+        76,
+        220
+      ],
+      "footprint": [
+        2.0,
+        3.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_CANDIDATE_NOT_IMPORTED",
+      "sha256": "2c5d5f108cdafdccc78c0216400678c5054f3247ac003cb2cccd83db17704be5"
+    }
+  ],
+  "status": "DRAFT_NOT_IMPORTED"
+}

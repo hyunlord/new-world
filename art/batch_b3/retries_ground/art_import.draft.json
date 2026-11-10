@@ -1,0 +1,29 @@
+{
+  "source_commit": "PENDING_ROOT_ASSET_COMMIT",
+  "files": [
+    {
+      "role": "ground",
+      "id": "ditch_dry",
+      "source": "art/style05/struct/b3/retries_ground/ditch_dry.png",
+      "dest": "ground/b3/retries_ground/ditch_dry.png"
+    },
+    {
+      "role": "ground",
+      "id": "irrigation_channel_dry",
+      "source": "art/style05/struct/b3/retries_ground/irrigation_channel_dry.png",
+      "dest": "ground/b3/retries_ground/irrigation_channel_dry.png"
+    },
+    {
+      "role": "ground",
+      "id": "terrace_empty",
+      "source": "art/style05/struct/b3/retries_ground/terrace_empty.png",
+      "dest": "ground/b3/retries_ground/terrace_empty.png"
+    }
+  ],
+  "meta_sources": {
+    "ground": "art/batch_b3/retries_ground/assets.json"
+  },
+  "status": "DRAFT_NOT_APPLIED",
+  "operation": "append_previously_rejected_A2_ids_only",
+  "note": "Merge selected symbolic IDs and geometry metadata; keep unrelated A2 rows. No import applied."
+}
