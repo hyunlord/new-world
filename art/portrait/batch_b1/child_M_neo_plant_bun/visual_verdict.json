@@ -1,0 +1,11 @@
+{
+  "score": 94,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Tiny freckles soften at native128px"
+  ],
+  "suggestions": [],
+  "reasoning": "Native and2x review against exact FacePlan and try2: three prescribed skin tones and black/dark-brown/auburn placement retained; scars/freckles, face shapes and heavy eyebrow hair remain identifiable. Softer cheeks, smaller noses and relaxed mouths/brows give stronger child8-11 reading than scowling angular try2. Same low-tail or bun silhouette, beige woven plant-fiber neckline and ink/parchment medium. Select try3 over preserved passing try2.",
+  "summary_sha256": "9707500957865e405d4090ea32b66b9dc24e1495ebdc60dbab996c0652e4803a"
+}

@@ -1,0 +1,211 @@
+{
+  "schema_version": 1,
+  "scope": "Only6adult neo_plant corrected FacePlan portraits; childcorrection ownedresume_tools; rootcombinesmanifests",
+  "generated_sheets": 13,
+  "adopted_sheets": 6,
+  "adopted_portraits": 36,
+  "identity_rejected_sheets": 7,
+  "structural_rejected_sheets": 0,
+  "max_attempt": 3,
+  "failed_calls": 0,
+  "exact_identity_contract": "Copied unchanged Cell1..6 descriptions from matching root bronze_linen prompt; only wardrobe andasset/ref3swap.",
+  "cause": "/Users/rexxa/work/art-batch/B1/identity_correction/neolithic_adult/cause.md",
+  "native_contact": "/Users/rexxa/work/art-batch/B1/identity_correction/neolithic_adult/adult_corrected_native.png",
+  "contact_2x": "/Users/rexxa/work/art-batch/B1/identity_correction/neolithic_adult/adult_corrected_2x.png",
+  "self_review": "Pending root selection afterall12corrected contact; try3Mshort cannotregenerate.",
+  "adopted": [
+    {
+      "look": "adult_M_neo_plant_short",
+      "attempt": 3,
+      "delivery": "art/portrait/batch_b1/adult_M_neo_plant_short",
+      "summary_sha256": "86e30bcf42b0506ec89af4f4e5310b9b8dacada157a4400f990abd5e9c2c879d",
+      "visual_score": 94,
+      "identity_audit": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/adult_M_neo_plant_short/try3/identity_audit.json"
+    },
+    {
+      "look": "adult_M_neo_plant_long_tied",
+      "attempt": 2,
+      "delivery": "art/portrait/batch_b1/adult_M_neo_plant_long_tied",
+      "summary_sha256": "cc2ad1fea7c8f25ed1419d08cccb88b751fb4578b560d653f468de676a66aaa0",
+      "visual_score": 94,
+      "identity_audit": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/adult_M_neo_plant_long_tied/try2/identity_audit.json"
+    },
+    {
+      "look": "adult_M_neo_plant_bun",
+      "attempt": 2,
+      "delivery": "art/portrait/batch_b1/adult_M_neo_plant_bun",
+      "summary_sha256": "76e3d727ea22fa729d074e8819cbde9c132718824f104db5c77043da4bddbf08",
+      "visual_score": 94,
+      "identity_audit": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/adult_M_neo_plant_bun/try2/identity_audit.json"
+    },
+    {
+      "look": "adult_F_neo_plant_short",
+      "attempt": 2,
+      "delivery": "art/portrait/batch_b1/adult_F_neo_plant_short",
+      "summary_sha256": "ce9f08f5179204b51b9ec19071ec3ec4cc2271934686a1b45fb23e305bb96505",
+      "visual_score": 94,
+      "identity_audit": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/adult_F_neo_plant_short/try2/identity_audit.json"
+    },
+    {
+      "look": "adult_F_neo_plant_long_tied",
+      "attempt": 2,
+      "delivery": "art/portrait/batch_b1/adult_F_neo_plant_long_tied",
+      "summary_sha256": "d5e16a802279357ad22ef0d730df96a2b77405d2a819b9726f8d5ef8a115d8c1",
+      "visual_score": 94,
+      "identity_audit": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/adult_F_neo_plant_long_tied/try2/identity_audit.json"
+    },
+    {
+      "look": "adult_F_neo_plant_bun",
+      "attempt": 2,
+      "delivery": "art/portrait/batch_b1/adult_F_neo_plant_bun",
+      "summary_sha256": "49fad0485ac4d57219233afa768339895f2970ce7eb835c94e67225b4e7aa29b",
+      "visual_score": 94,
+      "identity_audit": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/adult_F_neo_plant_bun/try2/identity_audit.json"
+    }
+  ],
+  "records": [
+    {
+      "look": "adult_M_neo_plant_short",
+      "attempt": 1,
+      "status": "identity_rejected",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_M_neo_plant_short/try1/raw.png",
+      "raw_sha256": "e033720f9a584d04d937c08800ea55a882fa837860fda9216ac4d3e6a8188416",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_M_neo_plant_short/try1/record.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_M_neo_plant_short/try1/tool_return.json",
+      "summary_sha256": "ca8ca166c2daa6707c8e30700c929bd4ef0ea2ae2db09bb31e90b2d97fd4dbcb",
+      "identity_audit": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/adult_M_neo_plant_short/try1/identity_rejection.json"
+    },
+    {
+      "look": "adult_M_neo_plant_short",
+      "attempt": 2,
+      "status": "identity_rejected",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_M_neo_plant_short/try2/raw.png",
+      "raw_sha256": "e7bc1ee6f8d89d6801700e49d6770e4b15f2a3d1f01d98e6f1b41f1cc1db8844",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_M_neo_plant_short/try2/record.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_M_neo_plant_short/try2/tool_return.json",
+      "summary_sha256": "042130c0b149733c7ce84227c6ae57ab7a9678bef7d146790db915ad8a71b032",
+      "identity_audit": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/adult_M_neo_plant_short/try2/identity_rejection.json"
+    },
+    {
+      "look": "adult_M_neo_plant_short",
+      "attempt": 3,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_M_neo_plant_short/try3/raw.png",
+      "raw_sha256": "521bf856a5545b50d02d00f81e380a5b2bd98dd26f7b7d65fa09c21733a0c788",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_M_neo_plant_short/try3/record.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_M_neo_plant_short/try3/tool_return.json",
+      "summary_sha256": "86e30bcf42b0506ec89af4f4e5310b9b8dacada157a4400f990abd5e9c2c879d",
+      "identity_audit": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/adult_M_neo_plant_short/try3/identity_audit.json"
+    },
+    {
+      "look": "adult_M_neo_plant_long_tied",
+      "attempt": 1,
+      "status": "identity_rejected",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_M_neo_plant_long_tied/try1/raw.png",
+      "raw_sha256": "e5eb85409a3a19167e57444e841594306ac8c5baa4bc1a711710ca5577de6e89",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_M_neo_plant_long_tied/try1/record.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_M_neo_plant_long_tied/try1/tool_return.json",
+      "summary_sha256": "0b42a14101349e0cf7b8a2dccc57e6f2232967cf9efdeed30aec37f1a4013e05",
+      "identity_audit": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/adult_M_neo_plant_long_tied/try1/identity_rejection.json"
+    },
+    {
+      "look": "adult_M_neo_plant_long_tied",
+      "attempt": 2,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_M_neo_plant_long_tied/try2/raw.png",
+      "raw_sha256": "6940086a49d59404689b7e4eee20bc90edc2d77d3a8a33175324147c5be74f00",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_M_neo_plant_long_tied/try2/record.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_M_neo_plant_long_tied/try2/tool_return.json",
+      "summary_sha256": "cc2ad1fea7c8f25ed1419d08cccb88b751fb4578b560d653f468de676a66aaa0",
+      "identity_audit": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/adult_M_neo_plant_long_tied/try2/identity_audit.json"
+    },
+    {
+      "look": "adult_M_neo_plant_bun",
+      "attempt": 1,
+      "status": "identity_rejected",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_M_neo_plant_bun/try1/raw.png",
+      "raw_sha256": "732843a99d8c8f6b2ef06666c2776a2daf1b948903e7f57668fe1ee01cccc7fe",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_M_neo_plant_bun/try1/record.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_M_neo_plant_bun/try1/tool_return.json",
+      "summary_sha256": "abadc6c4d3a0394ab6dceae120ceb0998938be6aacd4c6d93fa1e4c43d8c9267",
+      "identity_audit": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/adult_M_neo_plant_bun/try1/identity_rejection.json"
+    },
+    {
+      "look": "adult_M_neo_plant_bun",
+      "attempt": 2,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_M_neo_plant_bun/try2/raw.png",
+      "raw_sha256": "2fbf0bd9065dc8d49a34def122b5389aeba9f7fbbc1fc583bd16973053516afd",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_M_neo_plant_bun/try2/record.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_M_neo_plant_bun/try2/tool_return.json",
+      "summary_sha256": "76e3d727ea22fa729d074e8819cbde9c132718824f104db5c77043da4bddbf08",
+      "identity_audit": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/adult_M_neo_plant_bun/try2/identity_audit.json"
+    },
+    {
+      "look": "adult_F_neo_plant_short",
+      "attempt": 1,
+      "status": "identity_rejected",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_F_neo_plant_short/try1/raw.png",
+      "raw_sha256": "d4a119da11e4f692adcfcee4cf2aa1859fbbc83b53d96f9e2892c03c7446dc09",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_F_neo_plant_short/try1/record.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_F_neo_plant_short/try1/tool_return.json",
+      "summary_sha256": "0a0d18cb6080659b5fe9d43cee443119d52db8023182860146a681d6d427eedc",
+      "identity_audit": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/adult_F_neo_plant_short/try1/identity_rejection.json"
+    },
+    {
+      "look": "adult_F_neo_plant_short",
+      "attempt": 2,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_F_neo_plant_short/try2/raw.png",
+      "raw_sha256": "b365668d1382783596b4ee077b76a65009d7cab43792babdc031e276b0742122",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_F_neo_plant_short/try2/record.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_F_neo_plant_short/try2/tool_return.json",
+      "summary_sha256": "ce9f08f5179204b51b9ec19071ec3ec4cc2271934686a1b45fb23e305bb96505",
+      "identity_audit": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/adult_F_neo_plant_short/try2/identity_audit.json"
+    },
+    {
+      "look": "adult_F_neo_plant_long_tied",
+      "attempt": 1,
+      "status": "identity_rejected",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_F_neo_plant_long_tied/try1/raw.png",
+      "raw_sha256": "7646b200de8d5ca9b2651a5a691c957d3386ed1405bdc0a0c34eaa1f91a5aaa7",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_F_neo_plant_long_tied/try1/record.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_F_neo_plant_long_tied/try1/tool_return.json",
+      "summary_sha256": "998d4bcdfa13dd5f09f009062f336c923f5b931cf4d0f299ca16f28e1e011b06",
+      "identity_audit": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/adult_F_neo_plant_long_tied/try1/identity_rejection.json"
+    },
+    {
+      "look": "adult_F_neo_plant_long_tied",
+      "attempt": 2,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_F_neo_plant_long_tied/try2/raw.png",
+      "raw_sha256": "81895697223e15a2d6812e945cfec6c0d029feec963c38e9bb35bf52be5b2e53",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_F_neo_plant_long_tied/try2/record.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_F_neo_plant_long_tied/try2/tool_return.json",
+      "summary_sha256": "d5e16a802279357ad22ef0d730df96a2b77405d2a819b9726f8d5ef8a115d8c1",
+      "identity_audit": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/adult_F_neo_plant_long_tied/try2/identity_audit.json"
+    },
+    {
+      "look": "adult_F_neo_plant_bun",
+      "attempt": 1,
+      "status": "identity_rejected",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_F_neo_plant_bun/try1/raw.png",
+      "raw_sha256": "61df2db4cf530d91d9e00b1ae055f48aa6c7f0614db70de779e9a5555b60f573",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_F_neo_plant_bun/try1/record.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_F_neo_plant_bun/try1/tool_return.json",
+      "summary_sha256": "27e65665ee891fbbadd7fd688183ca652baa948252005f70d86080c30f1e7c01",
+      "identity_audit": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/adult_F_neo_plant_bun/try1/identity_rejection.json"
+    },
+    {
+      "look": "adult_F_neo_plant_bun",
+      "attempt": 2,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_F_neo_plant_bun/try2/raw.png",
+      "raw_sha256": "735ef3d6b26cd0af50ab02c59b9b50bce081fd643f3a6b98cd4aa4680586e42f",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_F_neo_plant_bun/try2/record.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/adult_F_neo_plant_bun/try2/tool_return.json",
+      "summary_sha256": "49fad0485ac4d57219233afa768339895f2970ce7eb835c94e67225b4e7aa29b",
+      "identity_audit": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/adult_F_neo_plant_bun/try2/identity_audit.json"
+    }
+  ]
+}

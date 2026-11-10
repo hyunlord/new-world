@@ -1,0 +1,11 @@
+{
+  "score": 92,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Fine freckles and scars soften at native 128px; prescribed skin/hair ordering remains clear."
+  ],
+  "suggestions": [],
+  "reasoning": "Viewed six native cells in exact FacePlan slot legend contact and each full 2x sheet. v1 light black round freckles; v2 mid dark-brown narrow heavy brows; v3 deep auburn broad nose freckles; v4 light auburn narrow scar; v5 mid black broad nose heavy brows; v6 deep dark-brown round scar. All six age8-11 with prescribed hair silhouette and beige undyed plant-fiber neckline, no elder/grey/beard substitutions. Warm brown ink/parchment category matches existing portrait anchors.",
+  "summary_sha256": "7faa3b552fe056f7fc2e9e50adefd822d641f467889a0f64f21ef6464d60f9b6"
+}

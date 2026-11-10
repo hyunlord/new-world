@@ -1,0 +1,9 @@
+{
+  "score": 94,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [],
+  "suggestions": [],
+  "reasoning": "Native and2x exactFacePlan audit: row-major skin light/mid/deep/light/mid/deep, hair darkbrown/black/auburn/grey/auburn/darkbrown, eldersv4/v5, prescribed face features and scar/freckle slots; men clean/full/short/full/short/clean beard. Matching hairstyle and undyed plant-fibre neckline.",
+  "summary_sha256": "86e30bcf42b0506ec89af4f4e5310b9b8dacada157a4400f990abd5e9c2c879d"
+}

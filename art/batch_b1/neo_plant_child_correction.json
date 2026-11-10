@@ -1,0 +1,166 @@
+{
+  "scope": "Six child neo_plant portrait identity corrections",
+  "looks": 6,
+  "portraits": 36,
+  "new_generations": 8,
+  "contact_sheet": "art/batch_b1/sheets/neo_plant_child_corrected_native.png",
+  "identity_plan": "Exact matching root bronze_linen try1 prompt six FacePlan identities; only era/garment/reference3 changed",
+  "entries": [
+    {
+      "look": "child_F_neo_plant_bun",
+      "selected_attempt": 2,
+      "portraits": 6,
+      "visual_score": 94,
+      "status": "selected",
+      "trial": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/child_F_neo_plant_bun/try2",
+      "evidence": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/child_F_neo_plant_bun/try2",
+      "generation": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/child_F_neo_plant_bun/try2/generation.json",
+      "summary": "art/portrait/batch_b1/child_F_neo_plant_bun/summary.json",
+      "summary_sha256": "12b2713f129e3391d1065f12c2c5ffc8e653f8efbe40a7ed510570e9d004bc4f",
+      "prior_adopted": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/child_F_neo_plant_bun/identity_rejected_prior_adopted",
+      "delivered_hashes_pass": true,
+      "max_actual_attempt": 2
+    },
+    {
+      "look": "child_F_neo_plant_long_tied",
+      "selected_attempt": 2,
+      "portraits": 6,
+      "visual_score": 92,
+      "status": "selected",
+      "trial": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/child_F_neo_plant_long_tied/try2",
+      "evidence": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/child_F_neo_plant_long_tied/try2",
+      "generation": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/child_F_neo_plant_long_tied/try2/generation.json",
+      "summary": "art/portrait/batch_b1/child_F_neo_plant_long_tied/summary.json",
+      "summary_sha256": "7faa3b552fe056f7fc2e9e50adefd822d641f467889a0f64f21ef6464d60f9b6",
+      "prior_adopted": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/child_F_neo_plant_long_tied/identity_rejected_prior_adopted",
+      "delivered_hashes_pass": true,
+      "max_actual_attempt": 2
+    },
+    {
+      "look": "child_F_neo_plant_short",
+      "selected_attempt": 2,
+      "portraits": 6,
+      "visual_score": 93,
+      "status": "selected",
+      "trial": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/child_F_neo_plant_short/try2",
+      "evidence": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/child_F_neo_plant_short/try2",
+      "generation": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/child_F_neo_plant_short/try2/generation.json",
+      "summary": "art/portrait/batch_b1/child_F_neo_plant_short/summary.json",
+      "summary_sha256": "e22b875c81ae31f9d06256e1b3dd36aeed47c7615194f603a7f7b09cef9bbc6d",
+      "prior_adopted": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/child_F_neo_plant_short/identity_rejected_prior_adopted",
+      "delivered_hashes_pass": true,
+      "max_actual_attempt": 2
+    },
+    {
+      "look": "child_M_neo_plant_bun",
+      "selected_attempt": 3,
+      "portraits": 6,
+      "visual_score": 94,
+      "status": "selected",
+      "trial": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/child_M_neo_plant_bun/try3",
+      "evidence": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/child_M_neo_plant_bun/try3",
+      "generation": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/child_M_neo_plant_bun/try3/generation.json",
+      "summary": "art/portrait/batch_b1/child_M_neo_plant_bun/summary.json",
+      "summary_sha256": "9707500957865e405d4090ea32b66b9dc24e1495ebdc60dbab996c0652e4803a",
+      "prior_adopted": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/child_M_neo_plant_bun/identity_rejected_prior_adopted",
+      "delivered_hashes_pass": true,
+      "max_actual_attempt": 3,
+      "selfreview_prior_adopted": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/child_M_neo_plant_bun/selfreview_prior_adopted_try2"
+    },
+    {
+      "look": "child_M_neo_plant_long_tied",
+      "selected_attempt": 3,
+      "portraits": 6,
+      "visual_score": 94,
+      "status": "selected",
+      "trial": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/child_M_neo_plant_long_tied/try3",
+      "evidence": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/child_M_neo_plant_long_tied/try3",
+      "generation": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/child_M_neo_plant_long_tied/try3/generation.json",
+      "summary": "art/portrait/batch_b1/child_M_neo_plant_long_tied/summary.json",
+      "summary_sha256": "87b8773998b693e521a6b50ca18d513dafd32d1ea72969c4aaa5c51118971fd8",
+      "prior_adopted": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/child_M_neo_plant_long_tied/identity_rejected_prior_adopted",
+      "delivered_hashes_pass": true,
+      "max_actual_attempt": 3,
+      "selfreview_prior_adopted": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/child_M_neo_plant_long_tied/selfreview_prior_adopted_try2"
+    },
+    {
+      "look": "child_M_neo_plant_short",
+      "selected_attempt": 3,
+      "portraits": 6,
+      "visual_score": 94,
+      "status": "selected",
+      "trial": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/child_M_neo_plant_short/try3",
+      "evidence": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/child_M_neo_plant_short/try3",
+      "generation": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/child_M_neo_plant_short/try3/generation.json",
+      "summary": "art/portrait/batch_b1/child_M_neo_plant_short/summary.json",
+      "summary_sha256": "30699be4b805e9b6864d658d1c1eae8b5b6b8c1d64d0eb1780aafea7cf3dd10c",
+      "prior_adopted": "/Users/rexxa/work/art-batch/B1/raw/neolithic_portraits/child_M_neo_plant_short/identity_rejected_prior_adopted",
+      "delivered_hashes_pass": true,
+      "max_actual_attempt": 3
+    }
+  ],
+  "identity_rejected_prior_trials": [
+    {
+      "look": "child_F_neo_plant_bun",
+      "attempt": 1,
+      "trial": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/child_F_neo_plant_bun/try1",
+      "status": "identity_rejected",
+      "reason": "Generic face/skin/hair plan differs from exact six FacePlan slots; prior visual pass does not establish identity acceptance"
+    },
+    {
+      "look": "child_F_neo_plant_long_tied",
+      "attempt": 1,
+      "trial": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/child_F_neo_plant_long_tied/try1",
+      "status": "identity_rejected",
+      "reason": "Generic face/skin/hair plan differs from exact six FacePlan slots; prior visual pass does not establish identity acceptance"
+    },
+    {
+      "look": "child_F_neo_plant_short",
+      "attempt": 1,
+      "trial": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/child_F_neo_plant_short/try1",
+      "status": "identity_rejected",
+      "reason": "Generic face/skin/hair plan differs from exact six FacePlan slots; prior visual pass does not establish identity acceptance"
+    },
+    {
+      "look": "child_M_neo_plant_bun",
+      "attempt": 1,
+      "trial": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/child_M_neo_plant_bun/try1",
+      "status": "identity_rejected",
+      "reason": "Generic face/skin/hair plan differs from exact six FacePlan slots; prior visual pass does not establish identity acceptance"
+    },
+    {
+      "look": "child_M_neo_plant_long_tied",
+      "attempt": 1,
+      "trial": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/child_M_neo_plant_long_tied/try1",
+      "status": "identity_rejected",
+      "reason": "Generic face/skin/hair plan differs from exact six FacePlan slots; prior visual pass does not establish identity acceptance"
+    },
+    {
+      "look": "child_M_neo_plant_short",
+      "attempt": 1,
+      "trial": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/child_M_neo_plant_short/try1",
+      "status": "identity_rejected",
+      "reason": "Generic face/skin/hair plan differs from exact six FacePlan slots; prior visual pass does not establish identity acceptance"
+    },
+    {
+      "look": "child_M_neo_plant_short",
+      "attempt": 2,
+      "trial": "/Users/rexxa/work/art-batch/B1/trials/neolithic_portraits/child_M_neo_plant_short/try2",
+      "status": "identity_rejected",
+      "reason": "Generic face/skin/hair plan differs from exact six FacePlan slots; prior visual pass does not establish identity acceptance"
+    }
+  ],
+  "remaining_self_review": "Complete: two of twelve corrected sheets regenerated, both try3 selected",
+  "passed": true,
+  "self_review": {
+    "pool": 12,
+    "regenerated": 2,
+    "fraction": 0.16666666666666666,
+    "looks": [
+      "child_M_neo_plant_long_tied",
+      "child_M_neo_plant_bun"
+    ],
+    "outcome": "Both try3 replacements improve child age reading; exact identities retained; try2 passing versions preserved",
+    "comparison_sheet": "art/batch_b1/sheets/neo_plant_child_self_review.png"
+  }
+}

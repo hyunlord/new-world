@@ -1,0 +1,20 @@
+{
+  "variant": "v5",
+  "path": "v5.png",
+  "sha256": "98779e43ed852ba4cee1bff08771fdaddc829a768f0e33895d47b70c0da4ec11",
+  "source_box": [
+    512,
+    512,
+    1024,
+    1024
+  ],
+  "canvas": [
+    128,
+    128
+  ],
+  "anchor": [
+    64,
+    64
+  ],
+  "footprint": null
+}
