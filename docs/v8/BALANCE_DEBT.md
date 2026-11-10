@@ -420,18 +420,8 @@ external c2-data/outcrops-initial-authored.ron.
 
 ### C2-a complete presentation and cattle parameter inventory
 
-Art values are appearance controls only. They were not derived from smoke or
-performance results. All geometry lengths/scales are permille of the shared tile.
-
-| Species | Current authored art values | Intended effect | Suspected issue |
-| --- | --- | --- | --- |
-| wolf | `shape: Lump, tint_material: "granite", body_length_permille: 720, body_height_permille: 220, leg_height_permille: 260, leg_count: 4, head_direction: 1, horns: false, antlers: false, tail_length_permille: 260, juvenile_scale_permille: 600` | Species silhouette readability | Placeholder geometry, no biological-scale claim |
-| deer | `shape: Rod, tint_material: "oak", body_length_permille: 620, body_height_permille: 250, leg_height_permille: 330, leg_count: 4, head_direction: 1, horns: false, antlers: true, tail_length_permille: 80, juvenile_scale_permille: 600` | Species silhouette readability | Placeholder geometry, no biological-scale claim |
-| wild_goat | `shape: Lump, tint_material: "oak", body_length_permille: 580, body_height_permille: 280, leg_height_permille: 260, leg_count: 4, head_direction: 1, horns: true, antlers: false, tail_length_permille: 100, juvenile_scale_permille: 600` | Species silhouette readability | Placeholder geometry, no biological-scale claim |
-| wild_sheep | `shape: Cloth, tint_material: "limestone", body_length_permille: 620, body_height_permille: 390, leg_height_permille: 190, leg_count: 4, head_direction: 1, horns: true, antlers: false, tail_length_permille: 70, juvenile_scale_permille: 600` | Species silhouette readability | Placeholder geometry, no biological-scale claim |
-| wild_boar | `shape: Lump, tint_material: "granite", body_length_permille: 740, body_height_permille: 350, leg_height_permille: 150, leg_count: 4, head_direction: 1, horns: false, antlers: false, tail_length_permille: 80, juvenile_scale_permille: 600` | Species silhouette readability | Placeholder geometry, no biological-scale claim |
-| reindeer | `shape: Rod, tint_material: "birch", body_length_permille: 660, body_height_permille: 300, leg_height_permille: 300, leg_count: 4, head_direction: 1, horns: false, antlers: true, tail_length_permille: 80, juvenile_scale_permille: 600` | Species silhouette readability | Placeholder geometry, no biological-scale claim |
-| aurochs | `shape: Lump, tint_material: "oak", body_length_permille: 680, body_height_permille: 370, leg_height_permille: 260, leg_count: 4, head_direction: 1, horns: true, antlers: false, tail_length_permille: 100, juvenile_scale_permille: 600` | Species silhouette readability | Placeholder geometry, no biological-scale claim |
+D-C2-1 defers custom species geometry to the separate art-import branch.
+C2 retains category/manifest art and the following unchanged biological data.
 
 | Cattle policy | Current value | Intended effect | Suspected issue |
 | --- | --- | --- | --- |

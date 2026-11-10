@@ -59,15 +59,6 @@ C1-b additive nested fields:
 | `quarry_radius` | int | outcrop reveal distance from actual completed quarry work |
 | `domestic_name_key` | String | animal livestock name; category fallback when absent |
 | `kid_age_days` | int | animal authored juvenile-to-adult age boundary |
-| `art_body_length_permille` | int | animal silhouette body length relative to shared raster |
-| `art_body_height_permille` | int | animal silhouette body height relative to shared raster |
-| `art_leg_height_permille` | int | animal silhouette leg length relative to shared raster |
-| `art_leg_count` | int | animal silhouette authored leg count |
-| `art_head_direction` | int | animal silhouette authored facing direction |
-| `art_horns` | bool | animal silhouette has horns |
-| `art_antlers` | bool | animal silhouette has antlers |
-| `art_tail_length_permille` | int | animal silhouette tail length relative to shared raster |
-| `art_juvenile_scale_permille` | int | juvenile silhouette scale, authored600‰ |
 | `tameable` | PackedByteArray / bool | Selected domestic policy exists (nested animal row / content row). |
 
 `WorldSimNode.get_content_catalog() -> Dictionary`, backed by `content::catalog_to_dict(&Catalog)`.

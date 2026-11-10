@@ -4,7 +4,7 @@
 
 ### Added
 - Registry-backed surface ore origins and factual discovery, Bronze knowledge/items/recipes/templates, and data-only extension coverage. Mining and the full tin-to-bronze chain remain C2-b.
-- Authored animal silhouettes, juvenile scale and pen markers; recurring physical wool production reuses livestock jobs and ledger placement.
+- Recurring physical wool production reuses livestock jobs and ledger placement.
 - Content-sized Why panels with explicit proficiency/threshold text and domestic birth wording; native capture readiness checks wait for the actual completed minimap.
 
 ### Changed
@@ -14,6 +14,7 @@
 - Frozen prechecks precede every full gate; the start C1-b binaries remain both smoke comparisons' BASE. Exact publication receipts are external and remain pending.
 
 ### Removed
+- C2 custom animal silhouette rendering/schema is deferred to the separate art-import branch under D-C2-1; existing species/state codes and manifest fallbacks remain stable.
 - No content family or historical fixture is removed. The128-node capacity ceiling is replaced without renumbering.
 
 ## C1-b — published 4a44336e7, 2026-11-10

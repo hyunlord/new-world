@@ -1,4 +1,4 @@
-//! C1-b: one fixed-source, ordinary-command livestock chain, with physical prerequisites.
+//! C1-b: one deterministic-source, ordinary-command livestock chain, with physical prerequisites.
 //! Evidence is external and append-only. No intermediate items, traits or knowledge are injected.
 use std::collections::BTreeMap;
 use std::io::Write;
@@ -245,7 +245,7 @@ fn admit(out: &Path) -> (SimEngine, [u32; 2], usize, Value) {
                 &out.join("source-binding.json"),
                 json!({"seed":seed,"pair":pair,
                 "first_admission_evidence":"/Users/rexxa/work/c1-data/scene/chain-41172-1794161240877036000/seed-admission-05.json",
-                "binding":"initial admission counterexample retained; actual capture sources follow prospective D15 and sequential D17"}),
+                "binding":"initial admission counterexample retained; actual capture commands follow D-C2-1"}),
             );
             return (e, pair, habitat, initialization);
         }
@@ -260,6 +260,8 @@ struct Scene {
     initial_pair: [u32; 2],
     capture_sources: Vec<u32>,
     hunting: bool,
+    deadline_day: u64,
+    cancellations: Vec<Value>,
     habitat: usize,
     initialization: Value,
     pen: Option<u32>,
@@ -277,7 +279,8 @@ impl Scene {
         assert!(actual.accepted, "ordinary command {command:?}: {actual:?}");
     }
     fn limit(&self) -> u64 {
-        60 * self.e.resources.ticks_per_day
+        self.deadline_day * self.e.resources.ticks_per_day
+            - self.e.resources.rules.clock_offset_ticks
     }
     fn known(&self, name: &str) -> bool {
         sim_systems::runtime::knowledge::anyone_practises(&self.e.world, knowledge::bit(node(name)))
@@ -475,7 +478,7 @@ impl Scene {
     fn tick(&mut self) {
         assert!(
             self.e.current_tick() < self.limit(),
-            "absolute60day deadline"
+            "display-day step deadline"
         );
         if self.hunting && self.e.resources.livestock.animals.len() < 2 {
             let goat = installed_or_bundled()
@@ -540,41 +543,6 @@ impl Scene {
     fn until(&mut self, label: &str, ready: impl Fn(&SimEngine) -> bool) {
         println!("C1_WAIT {label} tick={}", self.e.current_tick());
         while self.e.current_tick() < self.limit() && !ready(&self.e) {
-            if !self.capture_sources.is_empty() {
-                let expired = self.capture_sources.iter().any(|id| {
-                    let Some(a) = self.e.resources.colony.wildlife.animals.get(id) else {
-                        return false; // A successfully captured frozen target is no longer wild.
-                    };
-                    let policy = a
-                        .kind
-                        .definition()
-                        .tameable
-                        .as_ref()
-                        .expect("source policy");
-                    wild_demographics(
-                        self.e.resources.world_seed,
-                        a,
-                        policy,
-                        self.e.current_tick(),
-                        self.e.resources.ticks_per_day,
-                    )
-                    .age_days
-                        >= policy.kid_age_days
-                });
-                if expired {
-                    let bytes =
-                        sim_systems::save::save(&mut self.e).expect("actual failed world save");
-                    fresh(&self.out.join("expired-preparation.wsave"), &bytes);
-                    document(
-                        &self.out.join("expired-preparation.json"),
-                        self.manifest(label),
-                    );
-                    panic!(
-                        "fixed source expired during {label}; evidence={}",
-                        self.out.display()
-                    );
-                }
-            }
             self.tick();
         }
         if !ready(&self.e) {
@@ -584,7 +552,8 @@ impl Scene {
         }
         assert!(
             ready(&self.e),
-            "{label} failed at absolute60days; evidence={}",
+            "{label} failed at display-day step deadline; causes={:?}; evidence={}",
+            self.cancellations,
             self.out.display()
         );
     }
@@ -643,8 +612,8 @@ impl Scene {
         json!({"label":label,"seed":self.e.resources.world_seed,"tick":self.e.current_tick(),
             "display_day":sim_systems::runtime::resource_regen::day_index(&self.e.resources),"absolute_deadline":self.limit(),
             "habitat_tiles":self.habitat,"initial_admission_pair":self.initial_pair,"actual_capture_pair":self.capture_sources,
-            "source_policy":"D15 mature-only hunting/natural replacement; D17 bind each current kid sequentially by stable ID, second opposite-sex; born_tick is appearance, not biological birth", "source_profiles":source_rows(&self.e,goat),
-            "initializer":self.initialization,"steward":{"enabled":self.e.resources.steward.enabled,
+            "source_policy":"D-C2-1 nearest eligible reachable young goat to pen at each command tick, ties ID; second opposite-sex; at most six reissues", "source_profiles":source_rows(&self.e,goat),
+            "cancellations":self.cancellations,"initializer":self.initialization,"steward":{"enabled":self.e.resources.steward.enabled,
                 "scope":self.e.resources.steward.scope,"defence_enabled":self.e.resources.steward.defence.enabled},"pen":self.pen,"selected_site":self.pen,
             "livestock":{"animals":animals,"grass":grass,"witnesses":self.e.resources.livestock.witnesses,
                 "first_capture":self.e.resources.livestock.first_capture,"first_kid_id":self.e.resources.livestock.first_kid_id,
@@ -776,6 +745,8 @@ fn c1_chain_goat() {
         initial_pair: pair,
         capture_sources: Vec::new(),
         hunting: false,
+        deadline_day: 30,
+        cancellations: Vec::new(),
         habitat,
         initialization,
         pen: None,
@@ -1099,312 +1070,354 @@ fn c1_chain_goat() {
             prioritize(&mut s, person.id, WorkType::Build, 3);
         }
     }
+    s.deadline_day = 60;
     let current_source = |e: &SimEngine, first_sex: Option<bool>| {
         let goat = installed_or_bundled()
             .animal_by_name("wild_goat")
             .expect("goat");
-        let mut kids: Vec<_> = source_rows(e, goat)
-            .into_iter()
-            .filter(|row| {
-                row["kid"].as_bool() == Some(true)
-                    && row["reachable"].as_bool() == Some(true)
-                    && first_sex.is_none_or(|sex| row["female"].as_bool() != Some(sex))
+        let policy = goat.definition().tameable.as_ref().expect("goat policy");
+        e.resources
+            .colony
+            .wildlife
+            .animals
+            .values()
+            .filter(|a| {
+                let profile = wild_demographics(
+                    e.resources.world_seed,
+                    a,
+                    policy,
+                    e.current_tick(),
+                    e.resources.ticks_per_day,
+                );
+                a.kind == goat
+                    && a.hp > 0
+                    && profile.age_days < policy.kid_age_days
+                    && first_sex.is_none_or(|sex| profile.sex.female != sex)
+                    && e.resources.nav.reachable(anchor, a.pos)
+                    && e.resources.livestock.capture_ready(
+                        a.id,
+                        u32::try_from(sim_systems::runtime::resource_regen::day_index(
+                            &e.resources,
+                        ))
+                        .unwrap_or(u32::MAX),
+                    )
             })
-            .map(|row| u32::try_from(row["id"].as_u64().expect("actual ID")).expect("wild ID"))
-            .collect();
-        kids.sort_unstable();
-        kids.first().copied()
+            .min_by_key(|a| (chebyshev(a.pos, anchor), a.id))
+            .map(|a| a.id)
     };
     let mut first_sex = None;
     for index in 0..2 {
-        s.until("current natural kid for sequential capture", |e| {
-            current_source(e, first_sex).is_some()
-        });
-        let wild = current_source(&s.e, first_sex).expect("current natural kid");
-        s.capture_sources.push(wild); // Freeze before dispatch; never replace a failed target.
-        if index == 1 {
-            document(
-                &s.out.join("actual-capture-pair.json"),
-                s.manifest("D17 sequential pair frozen before second capture"),
-            );
-            document(
-                &s.out.join("capture-order.json"),
-                json!({"bound_pair":s.capture_sources,"capture_order":s.capture_sources,
-                    "rule":"D17 stable first current kid; after success stable first current opposite-sex kid"}),
-            );
-        }
-        let source =
-            s.e.resources
-                .colony
-                .wildlife
-                .animals
-                .get(&wild)
-                .expect("admitted natural source still exists")
-                .clone();
-        let policy = source
-            .kind
-            .definition()
-            .tameable
-            .as_ref()
-            .expect("tameable");
-        let p = wild_demographics(
-            s.e.resources.world_seed,
-            &source,
-            policy,
-            s.e.resources.current_tick,
-            s.e.resources.ticks_per_day,
-        );
-        if index == 0 {
-            first_sex = Some(p.sex.female);
-        } else {
-            assert_ne!(first_sex, Some(p.sex.female));
-        }
-        document(
-            &s.out.join(format!("capture-source-{index}.json")),
-            json!({"source":wild,"appearance_tick":source.born_tick,"appearance_is_not_biological_birth":true,"profile_age":p.age_days,"female":p.sex.female,"tick":s.e.current_tick(),"all_sources":source_rows(&s.e,source.kind)}),
-        );
-        assert!(
-            p.age_days < policy.kid_age_days,
-            "accepted source expired during ordinary preparation; do not replace seed/age"
-        );
-        let consumed = s.e.resources.colony.item_ledger.consumed_of(item("cord"));
-        let capture_owner = |e: &SimEngine| {
-            people(&e.world, &e.resources).into_iter().find(|person| {
-                e.world.get::<&Job>(person.entity).is_ok_and(
-                    |job| matches!(job.kind, JobKind::Capture { animal, .. } if animal == wild),
-                )
-            })
-        };
-        let captured = |e: &SimEngine| {
-            e.resources
-                .livestock
-                .witnesses
-                .values()
-                .any(|w| matches!(w.event,LivestockEvent::Captured{wild:id,..}if id==wild))
-        };
-        let mut staged_tamer = None;
-        let mut last_operator = None;
-        let mut locked_operator = None;
-        let mut seen_capture = false;
+        s.deadline_day = if index == 0 { 60 } else { 120 };
+        let mut reissues = 0;
         loop {
-            if captured(&s.e) {
-                break;
-            }
-            if let Some(owner) = capture_owner(&s.e) {
-                seen_capture = true;
-                last_operator = Some(owner.id);
-                if index == 1 && s.twin.is_none() && s.e.world.get::<&Job>(owner.entity)
-                    .is_ok_and(|job| matches!(job.stage, JobStage::Working { ticks_left } if ticks_left > 0))
-                {
-                    s.twin();
-                    document(&s.out.join("mid-second-capture.json"), s.manifest("actual second capture Working"));
-                }
-            } else if seen_capture || !s.e.resources.livestock.capture_orders.contains_key(&wild) {
-                if let Some((agent, craft, haul)) = staged_tamer.take() {
-                    prioritize(&mut s, agent, WorkType::Haul, haul);
-                    prioritize(&mut s, agent, WorkType::Craft, craft);
-                }
-                if locked_operator.is_none()
-                    && s.e
-                        .resources
-                        .livestock
-                        .capture_attempts
-                        .get(&wild)
-                        .is_some_and(|attempt| attempt.completed_attempts > 0)
-                {
-                    locked_operator = last_operator;
-                }
-                seen_capture = false;
-                s.until("same source natural capture cooldown", |e| {
-                    capture_owner(e).is_some()
-                        || e.resources.livestock.capture_ready(
-                            wild,
-                            u32::try_from(sim_systems::runtime::resource_regen::day_index(
-                                &e.resources,
-                            ))
-                            .unwrap_or(u32::MAX),
-                        )
-                });
-                if capture_owner(&s.e).is_some() {
-                    continue;
-                }
-                let ready = |e: &SimEngine, person: &sim_systems::runtime::knowledge::Person| {
-                    person.adult
-                        && locked_operator.is_none_or(|id| person.id == id)
-                        && travel_ready(e, person.entity)
-                        && knowledge_of(&e.world, person.entity)
-                            .practises(node(&policy.capture_knowledge))
-                        && policy.capture_tool.is_none_or(|tool| {
-                            sim_systems::runtime::jobs::hunt::nearest_stack(
-                                &e.resources,
-                                person.pos,
-                                u32::MAX,
-                                &[tool],
-                                true,
-                            )
-                            .is_some()
-                        })
-                };
-                s.until(
-                    "current ready adult capture practitioner and stockpile tool",
-                    |e| {
-                        capture_owner(e).is_some()
-                            || people(&e.world, &e.resources)
-                                .iter()
-                                .any(|person| ready(e, person))
-                    },
-                );
-                if capture_owner(&s.e).is_some() {
-                    continue;
-                }
-                let tamer = people(&s.e.world, &s.e.resources)
-                    .into_iter()
-                    .filter(|person| ready(&s.e, person))
-                    .min_by_key(|person| person.id)
-                    .expect("current adult capture practitioner and stockpile tool");
-                let capture_at = |e: &SimEngine, at: Tile| {
-                    let r = &e.resources;
-                    sim_systems::runtime::jobs::livestock::capture_candidate(
-                        r,
-                        knowledge_of(&e.world, tamer.entity).practice(),
-                        r.nav.region_of(at),
-                        at,
-                        r.rules.colony.expect("colony rules").job_scan_radius,
-                        r.livestock.capture_orders.contains_key(&wild),
-                    )
-                    .is_some_and(|offer| offer.wild == wild && offer.from_tool.is_some())
-                };
-                loop {
-                    s.until(
-                        "ordinary needs recovery and free stockpile tool before movement",
-                        |e| {
-                            capture_owner(e).is_some()
-                                || people(&e.world, &e.resources)
-                                    .iter()
-                                    .any(|person| person.id == tamer.id && ready(e, person))
-                        },
-                    );
-                    if capture_owner(&s.e).is_some() {
-                        break;
-                    }
-                    let from = people(&s.e.world, &s.e.resources)
-                        .into_iter()
-                        .find(|person| person.id == tamer.id)
-                        .expect("same living tamer")
-                        .pos;
-                    // Admission is relative to the worker, not source-to-tool distance.
-                    let r = &s.e.resources;
-                    let at = (0..r.tile_grid.height)
-                        .flat_map(|y| (0..r.tile_grid.width).map(move |x| (x, y)))
-                        .filter(|&tile| {
-                            r.nav.passable(tile)
-                                && r.nav.reachable(from, tile)
-                                && capture_at(&s.e, tile)
-                        })
-                        .min_by_key(|&tile| (chebyshev(from, tile), tile.1, tile.0))
-                        .expect("reachable staging tile admits the same source and real tool");
-                    s.send(Command::SetDrafted {
-                        agent: tamer.id,
-                        drafted: true,
-                    });
-                    s.send(Command::DraftMove {
-                        agent: tamer.id,
-                        x: at.0,
-                        y: at.1,
-                    });
-                    s.until("ordinary walk or critical-need release", |e| {
-                        people(&e.world, &e.resources).into_iter().any(|person| {
-                            capture_owner(e).is_some()
-                                || person.id == tamer.id
-                                    && (e.resources.nav.arrived(person.pos, at)
-                                        || e.world.get::<&Drafted>(person.entity).is_err())
-                        })
-                    });
-                    if let Some(owner) = capture_owner(&s.e) {
-                        if owner.id != tamer.id && s.e.world.get::<&Drafted>(tamer.entity).is_ok() {
-                            s.send(Command::SetDrafted {
-                                agent: tamer.id,
-                                drafted: false,
-                            });
-                        }
-                        break;
-                    }
-                    let person = people(&s.e.world, &s.e.resources)
-                        .into_iter()
-                        .find(|person| person.id == tamer.id)
-                        .expect("same living tamer");
-                    s.send(Command::SetDrafted {
-                        agent: tamer.id,
-                        drafted: false,
-                    });
-                    if s.e.resources.nav.arrived(person.pos, at)
-                        && travel_ready(&s.e, tamer.entity)
-                        && capture_at(&s.e, person.pos)
-                    {
-                        // Ordinary assignment: keep stock-foraging from taking the staged tamer.
-                        let haul = prioritize(&mut s, tamer.id, WorkType::Haul, 0);
-                        // Lessons precede work rounds; keep their progress while the tamer is busy.
-                        let craft = prioritize(&mut s, tamer.id, WorkType::Craft, 0);
-                        staged_tamer = Some((tamer.id, craft, haul));
-                        break;
-                    }
-                    // Let real needs resolve after any interrupted or unfinished excursion.
-                }
-
-                if !s.e.resources.livestock.capture_orders.contains_key(&wild) {
-                    s.send(Command::DesignateCapture { animal: wild });
-                }
-            }
-            let checkpoint = index == 1 && s.twin.is_none();
-            s.until("same bound source capture lifecycle", |e| {
-                captured(e) || match capture_owner(e) {
-                    None => seen_capture,
-                    Some(owner) => !seen_capture || checkpoint && e.world.get::<&Job>(owner.entity)
-                        .is_ok_and(|job| matches!(job.stage, JobStage::Working { ticks_left } if ticks_left > 0)),
-                }
+            s.until("current natural kid for sequential capture", |e| {
+                current_source(e, first_sex).is_some()
             });
-        }
-        if let Some((agent, craft, haul)) = staged_tamer {
-            prioritize(&mut s, agent, WorkType::Haul, haul);
-            prioritize(&mut s, agent, WorkType::Craft, craft);
-        }
-        assert!(
-            index == 0 || s.twin.is_some(),
-            "second actual capture Working checkpoint"
-        );
-        let witness =
-            s.e.resources
-                .livestock
-                .witnesses
-                .values()
-                .find(|w| matches!(w.event,LivestockEvent::Captured{wild:id,..}if id==wild))
-                .expect("capture witness");
-        let live = &s.e.resources.livestock.animals[&witness.livestock];
-        let now = wild_demographics(
-            s.e.resources.world_seed,
-            &source,
-            policy,
-            s.e.resources.current_tick,
-            s.e.resources.ticks_per_day,
-        );
-        assert_eq!(
-            (
-                current_age(
-                    live,
-                    s.e.resources.current_tick,
-                    s.e.resources.ticks_per_day
+            let wild = current_source(&s.e, first_sex).expect("current natural kid");
+            let source =
+                s.e.resources
+                    .colony
+                    .wildlife
+                    .animals
+                    .get(&wild)
+                    .expect("admitted natural source still exists")
+                    .clone();
+            let policy = source
+                .kind
+                .definition()
+                .tameable
+                .as_ref()
+                .expect("tameable");
+            let p = wild_demographics(
+                s.e.resources.world_seed,
+                &source,
+                policy,
+                s.e.resources.current_tick,
+                s.e.resources.ticks_per_day,
+            );
+            if index != 0 {
+                assert_ne!(first_sex, Some(p.sex.female));
+            }
+            let consumed = s.e.resources.colony.item_ledger.consumed_of(item("cord"));
+            let capture_owner = |e: &SimEngine| {
+                people(&e.world, &e.resources).into_iter().find(|person| {
+                    e.world.get::<&Job>(person.entity).is_ok_and(
+                        |job| matches!(job.kind, JobKind::Capture { animal, .. } if animal == wild),
+                    )
+                })
+            };
+            let captured = |e: &SimEngine| {
+                e.resources
+                    .livestock
+                    .witnesses
+                    .values()
+                    .any(|w| matches!(w.event,LivestockEvent::Captured{wild:id,..}if id==wild))
+            };
+            // Prepare the actual operator before dispatch, so unrelated workers cannot spend retries travelling thirsty.
+            let ready = |e: &SimEngine, p: &sim_systems::runtime::knowledge::Person| {
+                p.adult
+                    && travel_ready(e, p.entity)
+                    && knowledge_of(&e.world, p.entity).practises(node(&policy.capture_knowledge))
+                    && policy.capture_tool.is_none_or(|tool| {
+                        sim_systems::runtime::jobs::hunt::nearest_stack(
+                            &e.resources,
+                            p.pos,
+                            u32::MAX,
+                            &[tool],
+                            true,
+                        )
+                        .is_some()
+                    })
+            };
+            s.until("ordinary operator needs recovery and physical tool", |e| {
+                current_source(e, first_sex) != Some(wild)
+                    || people(&e.world, &e.resources).iter().any(|p| ready(e, p))
+            });
+            if current_source(&s.e, first_sex) != Some(wild) {
+                continue;
+            }
+            let tamer = people(&s.e.world, &s.e.resources)
+                .into_iter()
+                .filter(|p| ready(&s.e, p))
+                .min_by(|a, b| {
+                    let need = |p: &sim_systems::runtime::knowledge::Person| {
+                        let hunger =
+                            s.e.world
+                                .get::<&Hunger>(p.entity)
+                                .map_or(0.0, |v| f64::from(v.value));
+                        let thirst = s.e.world.get::<&Thirst>(p.entity).map_or(0.0, |v| v.value);
+                        let fatigue = s.e.world.get::<&Sleep>(p.entity).map_or(0.0, |v| v.fatigue);
+                        hunger.max(thirst).max(fatigue)
+                    };
+                    need(a).total_cmp(&need(b)).then_with(|| a.id.cmp(&b.id))
+                })
+                .expect("ready adult practitioner with lowest current needs, ties ID");
+            let capture_at = |e: &SimEngine, at: Tile| {
+                let r = &e.resources;
+                sim_systems::runtime::jobs::livestock::capture_candidate(
+                    r,
+                    knowledge_of(&e.world, tamer.entity).practice(),
+                    r.nav.region_of(at),
+                    at,
+                    r.rules.colony.expect("colony").job_scan_radius,
+                    false,
+                )
+                .is_some_and(|offer| offer.wild == wild && offer.from_tool.is_some())
+            };
+            let r = &s.e.resources;
+            let at = (0..r.tile_grid.height)
+                .flat_map(|y| (0..r.tile_grid.width).map(move |x| (x, y)))
+                .filter(|&at| {
+                    r.nav.passable(at) && r.nav.reachable(tamer.pos, at) && capture_at(&s.e, at)
+                })
+                .min_by_key(|&at| (chebyshev(tamer.pos, at), at.1, at.0));
+            let Some(at) = at else {
+                s.tick();
+                continue;
+            };
+            s.send(Command::SetDrafted {
+                agent: tamer.id,
+                drafted: true,
+            });
+            s.send(Command::DraftMove {
+                agent: tamer.id,
+                x: at.0,
+                y: at.1,
+            });
+            s.until("ordinary operator walk or needs release", |e| {
+                current_source(e, first_sex) != Some(wild)
+                    || people(&e.world, &e.resources).into_iter().any(|p| {
+                        p.id == tamer.id
+                            && (e.resources.nav.arrived(p.pos, at)
+                                || e.world.get::<&Drafted>(p.entity).is_err())
+                    })
+            });
+            s.send(Command::SetDrafted {
+                agent: tamer.id,
+                drafted: false,
+            });
+            let position = people(&s.e.world, &s.e.resources)
+                .into_iter()
+                .find(|p| p.id == tamer.id)
+                .expect("living prepared operator")
+                .pos;
+            if current_source(&s.e, first_sex) != Some(wild)
+                || !s.e.resources.nav.arrived(position, at)
+                || !travel_ready(&s.e, tamer.entity)
+                || !capture_at(&s.e, position)
+            {
+                continue;
+            }
+            let mut hunts = Vec::new();
+            for p in people(&s.e.world, &s.e.resources)
+                .into_iter()
+                .filter(|p| p.adult)
+            {
+                hunts.push((
+                    p.id,
+                    prioritize(&mut s, p.id, WorkType::Hunt, u8::from(p.id == tamer.id)),
+                ));
+            }
+            let haul = prioritize(&mut s, tamer.id, WorkType::Haul, 0);
+            let craft = prioritize(&mut s, tamer.id, WorkType::Craft, 0);
+            document(
+                &s.out
+                    .join(format!("capture-source-{index}-{reissues}.json")),
+                json!({"source":wild,"operator":tamer.id,"tick":s.e.current_tick(),
+                "reason":"nearest eligible reachable young goat to pen at command tick; ties ID; second opposite sex","pen_anchor":anchor,"all_sources":source_rows(&s.e,source.kind)}),
+            );
+            println!("C1_TARGET step={index} reissue={reissues} wild={wild} tick={} nearest eligible kid to pen, ties ID", s.e.current_tick());
+            s.send(Command::DesignateCapture { animal: wild });
+            let mut previous_owner = None;
+            let attempts_before =
+                s.e.resources
+                    .livestock
+                    .capture_attempts
+                    .get(&wild)
+                    .map_or(0, |a| a.completed_attempts);
+            loop {
+                if captured(&s.e) {
+                    break;
+                }
+                let owner = capture_owner(&s.e);
+                if let Some(person) = owner {
+                    if index == 1 && s.twin.is_none() && s.e.world.get::<&Job>(person.entity)
+                        .is_ok_and(|job| matches!(job.stage, JobStage::Working { ticks_left } if ticks_left > 0)) {
+                        s.twin();
+                        document(&s.out.join("mid-second-capture.json"), s.manifest("actual second capture Working"));
+                    }
+                }
+                let eligible =
+                    s.e.resources
+                        .colony
+                        .wildlife
+                        .animals
+                        .get(&wild)
+                        .is_some_and(|a| {
+                            a.hp > 0
+                                && wild_demographics(
+                                    s.e.resources.world_seed,
+                                    a,
+                                    policy,
+                                    s.e.current_tick(),
+                                    s.e.resources.ticks_per_day,
+                                )
+                                .age_days
+                                    < policy.kid_age_days
+                        });
+                if previous_owner.is_some() && owner.is_none() || !eligible {
+                    let choice = previous_owner.and_then(|id| {
+                        let history=s.e.resources.mind.history.as_ref()?;
+                        let record=history.latest(id)?.decode_display(history.dictionary()).expect("native retained choice");
+                        (record.agent==id && record.tick.saturating_add(1)==s.e.current_tick()).then(||json!({"event":record.id,"agent":record.agent,"tick":record.tick,
+                            "selected":record.selected.labels.name,"behaviour":record.selected.labels.behaviour,
+                            "facts":record.facts.iter().map(|f|json!({"name":f.name,"value":f.value,"cause":f.cause})).collect::<Vec<_>>() }))
+                    });
+                    let attempt_advanced =
+                        s.e.resources
+                            .livestock
+                            .capture_attempts
+                            .get(&wild)
+                            .is_some_and(|a| a.completed_attempts > attempts_before);
+                    let fleeing = previous_owner.is_some_and(|id| {
+                        people(&s.e.world, &s.e.resources)
+                            .iter()
+                            .any(|p| p.id == id && s.e.world.get::<&Fleeing>(p.entity).is_ok())
+                    });
+                    assert!(!eligible || attempt_advanced || fleeing || choice.is_some(),"capture loss needs a target/attempt/flight or same-actor same-tick native choice witness");
+                    let cause = json!({"wild":wild,"step":index,"reissue":reissues,"operator":previous_owner,"tick":s.e.current_tick(),
+                        "native_choice_witness":choice,"attempt_advanced":attempt_advanced,"chronicle":s.e.resources.chronicle.entries(),"witnesses":s.e.resources.livestock.witnesses,
+                        "capture_attempts":s.e.resources.livestock.capture_attempts,"source_profiles":source_rows(&s.e,source.kind),"target":s.e.resources.colony.wildlife.animals.get(&wild),
+                        "people":people(&s.e.world,&s.e.resources).into_iter().filter(|p|Some(p.id)==previous_owner).map(|p|json!({"id":p.id,
+                            "health":s.e.world.get::<&BodyHealth>(p.entity).ok().map(|v|*v),"fleeing":s.e.world.get::<&Fleeing>(p.entity).ok().map(|v|*v),"hunger":s.e.world.get::<&Hunger>(p.entity).ok().map(|v|*v),
+                            "thirst":s.e.world.get::<&Thirst>(p.entity).ok().map(|v|*v),"sleep":s.e.world.get::<&Sleep>(p.entity).ok().map(|v|*v)})).collect::<Vec<_>>(),
+                        "causal_log":s.e.resources.causal_log.iter().flat_map(|(_,ring)|ring.iter()).filter(|event|event.tick().saturating_add(1)>=s.e.current_tick()).collect::<Vec<_>>(),"eligible":eligible,"cancels":s.e.resources.colony.tallies.cancels});
+                    println!("C1_CAPTURE_CANCEL {cause}");
+                    document(
+                        &s.out
+                            .join(format!("capture-cancel-{index}-{reissues}.json")),
+                        cause.clone(),
+                    );
+                    s.cancellations.push(cause);
+                    break;
+                }
+                previous_owner = owner.map(|p| p.id);
+                if s.e.current_tick() >= s.limit() {
+                    s.until(
+                        "capture step deadline with real cancellation causes",
+                        captured,
+                    );
+                }
+                s.tick();
+            }
+            prioritize(&mut s, tamer.id, WorkType::Haul, haul);
+            prioritize(&mut s, tamer.id, WorkType::Craft, craft);
+            for (id, level) in hunts {
+                prioritize(&mut s, id, WorkType::Hunt, level);
+            }
+            if !captured(&s.e) {
+                if let Some(a) = s.e.resources.colony.wildlife.animals.get(&wild) {
+                    let (x, y) = a.pos;
+                    if s.e.resources.livestock.capture_orders.contains_key(&wild) {
+                        s.send(Command::CancelArea {
+                            x0: x,
+                            y0: y,
+                            x1: x,
+                            y1: y,
+                        });
+                    }
+                }
+                assert!(
+                    reissues < 6,
+                    "capture reissues exhausted: {:?}",
+                    s.cancellations
+                );
+                reissues += 1;
+                continue;
+            }
+            s.capture_sources.push(wild);
+            if index == 0 {
+                first_sex = Some(p.sex.female);
+            }
+            assert!(
+                index == 0 || s.twin.is_some(),
+                "second actual capture Working checkpoint"
+            );
+            let witness =
+                s.e.resources
+                    .livestock
+                    .witnesses
+                    .values()
+                    .find(|w| matches!(w.event,LivestockEvent::Captured{wild:id,..}if id==wild))
+                    .expect("capture witness");
+            let live = &s.e.resources.livestock.animals[&witness.livestock];
+            let now = wild_demographics(
+                s.e.resources.world_seed,
+                &source,
+                policy,
+                s.e.resources.current_tick,
+                s.e.resources.ticks_per_day,
+            );
+            assert_eq!(
+                (
+                    current_age(
+                        live,
+                        s.e.resources.current_tick,
+                        s.e.resources.ticks_per_day
+                    ),
+                    live.sex
                 ),
-                live.sex
-            ),
-            (now.age_days, now.sex)
-        );
-        assert!(!s.e.resources.colony.wildlife.animals.contains_key(&wild));
-        assert_eq!(
-            s.e.resources.colony.item_ledger.consumed_of(item("cord")),
-            consumed + 1
-        );
-        if index == 0 {
-            s.checkpoint("01-capture");
+                (now.age_days, now.sex)
+            );
+            assert!(!s.e.resources.colony.wildlife.animals.contains_key(&wild));
+            assert_eq!(
+                s.e.resources.colony.item_ledger.consumed_of(item("cord")),
+                consumed + 1
+            );
+            if index == 0 {
+                s.checkpoint("01-capture");
+            }
+            break;
         }
     }
     for person in people(&s.e.world, &s.e.resources)
@@ -1417,6 +1430,7 @@ fn c1_chain_goat() {
         prioritize(&mut s, person.id, WorkType::Split, 3);
     }
     s.bill(bench, "split_firewood", 16);
+    s.deadline_day = 120;
     let parents: Vec<_> = s.e.resources.livestock.animals.keys().copied().collect();
     assert_eq!(parents.len(), 2);
     s.until("two opposite-sex same-pen adults", |e| {
@@ -1439,7 +1453,7 @@ fn c1_chain_goat() {
             })
     });
     s.checkpoint("02-two-adults");
-    s.until("ordinary birth by absolute60days", |e| {
+    s.until("ordinary birth by display day120", |e| {
         e.resources.livestock.first_kid_id.is_some()
     });
     let kid =
@@ -1453,6 +1467,7 @@ fn c1_chain_goat() {
         LivestockEvent::Born { .. }
     ));
     s.checkpoint("03-kid");
+    s.deadline_day = 150;
     let after_birth = s.e.current_tick();
     let milk_before = s.e.resources.colony.item_ledger.created_of(item("milk"));
     s.until("fresh real milk commit after birth", |e| {
@@ -1474,6 +1489,7 @@ fn c1_chain_goat() {
     let hide = products.hide;
     let before_meat = s.e.resources.colony.item_ledger.created_of(meat.0);
     let before_hide = s.e.resources.colony.item_ledger.created_of(hide.0);
+    s.deadline_day = 170;
     s.send(Command::DesignateSlaughter { animal: kid });
     s.until("ordinary atomic meat+hide slaughter", |e| {
         !e.resources.livestock.animals.contains_key(&kid)
@@ -1535,7 +1551,7 @@ fn c1_chain_goat() {
         &s.out.join("complete.json"),
         json!({"complete":true,"seed":s.e.resources.world_seed,"tick":final_tick,
         "deadline":s.limit(),"checkpoints":6,"mid_second_capture_roundtrip":true,"future_command_twins":true,
-        "full_command_replay":true,"command_count":log.len(),"first_kid":kid}),
+        "full_command_replay":true,"command_count":log.len(),"first_kid":kid,"capture_sources":s.capture_sources,"cancellation_count":s.cancellations.len(),"display_day":sim_systems::runtime::resource_regen::day_index(&s.e.resources)}),
     );
     println!(
         "C1_CHAIN_COMPLETE seed={} tick={final_tick} evidence={}",

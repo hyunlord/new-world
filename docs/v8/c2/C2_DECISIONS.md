@@ -141,3 +141,20 @@ Authority: `/Users/rexxa/work/c2-data/GOAL.md`, including its planner addendum.
     Do not invent another timing/actor patch or launch a known-red full gate.
     The allowed ordinary preparation scope is pending planner decision D-C2-1;
     this is not a GOAL STOP verdict and neither C2 stage is published.
+29. Planner D-C2-1 resolves D28: replace executor-fixed target/minute constraints
+    with ordinary preparation, nearest-pen current eligible young targets (id ties),
+    visible real cancellation causes, at most six reissues and display-day step
+    deadlines30/60/120/150/170. Preserve seed, grants, physical work and technical
+    assertions. ADR0064 records the contract and defers species silhouettes to
+    the separate art-import branch; historical failures remain unchanged.
+30. D-C2-1 focused V2/V3 exhausted the unchanged six-reissue cap: actual needs,
+    wolf flight, aging and failed capture rolls remained visible. Prepare before
+    dispatch with ordinary movement and temporary Hunt priorities; choose the
+    ready practitioner with lowest current max(hunger, thirst, fatigue), then id.
+    Re-evaluate nearest eligible source at the actual command tick. Assert each
+    loss has target/attempt/flight evidence or the same actor/tick native choice
+    witness; do not call aggregate cancellation totals an actor-specific cause.
+    V4 passed seed5 through slaughter88417/UI-day62 (manifest day_index61), sources23/32, five
+    cancellations,625-command byte-exact replay, actual second-Working roundtrip
+    and future twins. Evidence: external dc21-chain-v4/chain-13838-1794353550530900000/complete.json.
+    Focused success is not a frozen pre-gate or publication verdict.

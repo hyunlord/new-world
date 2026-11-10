@@ -1,6 +1,6 @@
 (schema_version:1,roles:{},animals:[(
 identity:(code:4294967293,id:"test_grazer",name_key:"EXT_ANIMAL",serde_name:"TestGrazer",serde_aliases:[],resolver_aliases:[]),
-art:(shape:Cloth,tint_material:"limestone",body_length_permille:510,body_height_permille:310,leg_height_permille:270,leg_count:4,head_direction:-1,horns:false,antlers:true,tail_length_permille:140,juvenile_scale_permille:600),
+art:(shape:Cloth,tint_material:"limestone"),
 domestic_name_key:Some("EXT_DOMESTIC_ANIMAL"),
     // C1-b starting design; no outcome tuning. Range40, work60, chance700/1000, retry1d.
     // Initial biological age0..29, adulthood30d, breeding20d, lifespan1800d.

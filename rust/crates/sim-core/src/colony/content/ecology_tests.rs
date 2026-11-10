@@ -286,10 +286,6 @@ fn tameable_data_only_species_resolves_renamed_products_and_category_art() {
     assert_eq!(policy.products.hide.1, 1);
     assert_eq!(animal.art.shape, ItemShape::Cloth);
     assert_eq!(animal.art.tint_material, "limestone");
-    assert_eq!(animal.art.body_length_permille, 510);
-    assert_eq!(animal.art.head_direction, -1);
-    assert!(animal.art.antlers);
-    assert_eq!(animal.art.juvenile_scale_permille, 600);
     assert_eq!(
         animal.domestic_name_key.as_deref(),
         Some("EXT_DOMESTIC_ANIMAL")
@@ -300,29 +296,21 @@ fn tameable_data_only_species_resolves_renamed_products_and_category_art() {
     );
     let old_species = catalog.animal_by_code(1).expect("old species");
     assert!(old_species.tameable.is_none());
-    assert!(old_species.art.antlers);
-    assert_eq!(
-        ron::from_str::<AnimalArt>("()").expect("category fallback"),
-        AnimalArt::default()
-    );
+    assert_eq!(old_species.art, ItemArt::for_category("animal"));
 }
 
 #[test]
-fn animal_silhouettes_reject_unrenderable_geometry_and_empty_owned_names() {
-    for (old, new) in [
-        ("body_length_permille: 720", "body_length_permille: 0"),
-        ("leg_count: 4", "leg_count: 9"),
-        ("head_direction: 1", "head_direction: 0"),
-        ("juvenile_scale_permille: 600", "juvenile_scale_permille: 0"),
-        (
+fn animal_rejects_empty_owned_name() {
+    let error = Catalog::from_sources(
+        altered(
+            "animals.ron",
             "domestic_name_key: Some(\"C2_ANIMAL_GOAT\")",
             "domestic_name_key: Some(\"\")",
         ),
-    ] {
-        let error = Catalog::from_sources(altered("animals.ron", old, new), None)
-            .expect_err("invalid silhouette");
-        assert!(error.to_string().contains("silhouette"), "{error}");
-    }
+        None,
+    )
+    .expect_err("invalid domestic label");
+    assert!(error.to_string().contains("domestic label"), "{error}");
 }
 
 #[test]

@@ -109,30 +109,6 @@ pub fn catalog_to_dict(catalog: &Catalog) -> VarDictionary {
         row.set("art_shape", def.art.shape.name());
         row.set("art_tint_material", def.art.tint_material.as_str());
         row.set(
-            "art_body_length_permille",
-            i64::from(def.art.body_length_permille),
-        );
-        row.set(
-            "art_body_height_permille",
-            i64::from(def.art.body_height_permille),
-        );
-        row.set(
-            "art_leg_height_permille",
-            i64::from(def.art.leg_height_permille),
-        );
-        row.set("art_leg_count", i64::from(def.art.leg_count));
-        row.set("art_head_direction", i64::from(def.art.head_direction));
-        row.set("art_horns", def.art.horns);
-        row.set("art_antlers", def.art.antlers);
-        row.set(
-            "art_tail_length_permille",
-            i64::from(def.art.tail_length_permille),
-        );
-        row.set(
-            "art_juvenile_scale_permille",
-            i64::from(def.art.juvenile_scale_permille),
-        );
-        row.set(
             "domestic_name_key",
             def.domestic_name_key
                 .as_deref()

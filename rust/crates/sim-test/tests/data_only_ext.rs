@@ -515,10 +515,6 @@ fn animal() {
         .expect("selected tameable policy");
     assert_eq!(selected.art.shape.name(), "cloth");
     assert_eq!(selected.art.tint_material, "limestone");
-    assert_eq!(selected.art.body_length_permille, 510);
-    assert_eq!(selected.art.head_direction, -1);
-    assert!(selected.art.antlers);
-    assert_eq!(selected.art.juvenile_scale_permille, 600);
     assert_eq!(
         selected.domestic_name_key.as_deref(),
         Some("EXT_DOMESTIC_ANIMAL")

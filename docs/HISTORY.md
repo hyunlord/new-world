@@ -1,6 +1,6 @@
 # WorldSim 역사
+- 2026-11-11 — C2 검토본의 동물 실루엣 스크립트·uid 2파일을 제거하고 별도 아트 라인으로 이월했다. 원본은 `ebb04ee3d:scripts/world/colony/animal_silhouette.gd`에 보존한다. C1 사슬은 일반 명령 준비·현재 적격 대상 재선택·실제 취소 증거 계약으로 재검증하며 미게시다([ADR0064](decisions/0064-scripted-chain-preparation.md)).
 - 2026-11-08 — C1-a 원산지·신석기 지식82개·물리 조리법·곡식 창고/우리/훈제집/화덕집을 통합했다. 실제 format19→20 저장 재개, 신규 focused 검사와 한·영 화면 검증을 수행했다. 가축 사슬은 C1-b 대기이며 고정 SHA 전체 게이트·게시는 아직 대기다([보고](v8/c1/C1_REPORT.md), [ADR0062](decisions/0062-neolithic-origins-and-livestock.md)). 이전 M-SPINE 화면은 d30dbfc5b Git 이력에 보존하고 현재 시트를 교체했다.
-
 - 2026-11-08 — M-SPINE-b 전체 게이트3 `437f9b6`은 실제49단계 중48PASS/1FAIL(exit1)이었다. step41의 첫 바닥 tick565에서 지면 준비357–373ms로377/396ms 프레임이 발생했다. 지면 변환 결과 캐시·데이터 기반 기본 바닥 사전 준비로 픽셀/인덱스/게임 수치를 유지했다. 실제 렌더134검사·strict86/FFI79 통과, 같은300초×2줌 재검사는 기존 면제 PASS(60ms 초과0), 해당 준비5.6ms다. 필수 계측 변수를 누락한 별도 실행은 INVALID_ACCEPTANCE로 보존한다. 크래시8×48일은 양쪽 KnowledgeLost0·새 전멸0; Inert 전환0. 새 SHA의 전체 게이트·게시는 대기다.
 
 - 2026-11-08 — M-SPINE-b 전체 게이트2 `d575f90`은 DEBUG·RELEASE·baseline identity 등15단계 통과 뒤 Python597개 중 renderer의 고정16px 검사1실패로 중단했다. 미사용 preview 속성/설정을 제거하고 아이템 anchor를 실제 texture 크기로 계산해 기존32×32 위치를 유지했다. 원본과 RELEASE 교차 출력 계수기 `inf`를 보존한다. 최종 native 수치는1895 assertions+비검사 receipt2행이며1897 assertions가 아니다. 새 고정 SHA 전체 게이트·게시는 대기다.

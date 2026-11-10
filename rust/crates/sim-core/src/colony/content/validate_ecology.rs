@@ -19,24 +19,11 @@ fn number(v: &RuleU32, allowed: &[&str], context: &str) -> Result<(), CatalogErr
 }
 pub(super) fn animal(a: &AnimalDef<String>) -> Result<(), CatalogError> {
     let ctx = &a.identity.id;
-    let art = &a.art;
     if a.domestic_name_key
         .as_ref()
         .is_some_and(|key| key.trim().is_empty())
-        || !(100..=800).contains(&art.body_length_permille)
-        || !(100..=500).contains(&art.body_height_permille)
-        || !(100..=400).contains(&art.leg_height_permille)
-        || art.body_height_permille + art.leg_height_permille > 800
-        || art.leg_count != 4
-        || ![-1, 1].contains(&art.head_direction)
-        || (art.horns && art.antlers)
-        || art.tail_length_permille > 300
-        || !(100..=1000).contains(&art.juvenile_scale_permille)
     {
-        return Err(CatalogError::new(
-            ctx,
-            "invalid animal silhouette or domestic label",
-        ));
+        return Err(CatalogError::new(ctx, "invalid animal domestic label"));
     }
     if let Some(policy) = &a.tameable {
         if policy
