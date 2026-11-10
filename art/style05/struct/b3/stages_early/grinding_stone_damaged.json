@@ -1,0 +1,168 @@
+{
+  "record": {
+    "id": "grinding_stone_damaged",
+    "lane": "early",
+    "era": "neolithic",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c798-eb77-7151-b3ab-c5d349df0cb2/exec-8eb0fc0f-52fa-4a72-9418-622685ad0722.png",
+    "prompt": "Use case: stylized-concept. Asset type: a single WorldSim construction-state sprite. Transparent background, no ground plane, cast shadow, text, labels, border, or cropped object. References 1 and 2 are locked style anchors props.png and scene.png; reference 3 is the precise built-state design to preserve. Fine warm brown-black ink over quiet earth-colour wash, broad base plus distinct darker right/lower shadow tone. Outer contours twice secondary lines. Wood has 3 broken longitudinal marks per principal pole; clay 3 short crack groups; stone 3 facet/crack groups; straw 5 bundle marks. One parallel / hatching group of3, no dense all-over hatching. Strong common light upper-left; top and left surfaces lighter, right/lower faces darker. Camera front three-quarter about20 degrees down, horizontal base, orthogonal world geometry, not isometric. Paleolithic/neolithic: no metal, no dyed cloth, no people. Draw a single whole object with ample transparent margin, source shapes recognizable at game scale.\nPrimary request: Referenced saddle quern with one large chipped corner and cracked handstone resting in worn channel. Silhouette height32px, width proportional to referenced object. No extra objects.",
+    "subject": "grinding_stone_damaged",
+    "references": [
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "/Users/rexxa/work/art-batch-a2/art/style05/struct/grinding_stone.png"
+    ],
+    "target_height": 32,
+    "projection_family": "b3_grinding_stone_damaged",
+    "height_band": [
+      30,
+      34
+    ],
+    "height_band_reason": "State geometry predeclared in stages_early/plan.json",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": "exec-8eb0fc0f-52fa-4a72-9418-622685ad0722.png",
+    "seed": null,
+    "generated_at": "2026-11-10T22:41:53.695Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/B3/stages_early/early/raw/grinding_stone_damaged_try1.png",
+  "raw_sha256": "1fa2ece5f1b0d64c403306b839c3ed206cfd6c1e45b0db5176364ff48cb789d6",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/grinding_stone.png",
+      "sha256": "a5ce6f052a3d8ac25fa45aabac802c2dd9b8fdb2ef573a8b861279481d659b63"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/B3/stages_early/early/normalized/grinding_stone_damaged_try1.png",
+  "normalized_sha256": "354e115d0686a0576139fbe4973b58500fcce2b070c6e64fd2bf208c1c32bd4b",
+  "size": [
+    57,
+    40
+  ],
+  "anchor": [
+    28,
+    35
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (382, 113, 1358, 748)",
+    "uniform Lanczos scale: 0.05071315372424723",
+    "transparent 4px padding; source-canvas anchor: (28, 35)"
+  ],
+  "projection": {
+    "family": "b3_grinding_stone_damaged",
+    "anchor": [
+      28,
+      35
+    ],
+    "height_band": [
+      30,
+      34
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1172,
+    "base_row": 35,
+    "base_error": 0,
+    "height": 32,
+    "gradient_x": -0.6286094736842104,
+    "gradient_y": -1.5575177203918074,
+    "light_angle_degrees": 248.02114504677928,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/B3/stages_early/early/raw/grinding_stone_damaged_try1.png",
+    "sha256": "1fa2ece5f1b0d64c403306b839c3ed206cfd6c1e45b0db5176364ff48cb789d6",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.25117524157743537,
+      "saturation_q25": 0.38495282073618153,
+      "saturation_q75": 0.4806224282586573,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.015068359090121785,
+      "foreground_pixels": 31930
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    0,
+    1762,
+    887
+  ],
+  "raw_opaque_bbox": [
+    384,
+    115,
+    1356,
+    746
+  ],
+  "raw_faint_far_ratio": 0.03416481789893949,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_NUMERIC_VISUAL",
+  "failures": [],
+  "review": {
+    "id": "grinding_stone_damaged",
+    "attempt": 1,
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "numeric_pass": true,
+    "visual_score": 91,
+    "visual_pass": true,
+    "visual_findings": [
+      "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+    ],
+    "reasons": [],
+    "model_judge_status": "MISSING",
+    "full_judge_v2_pass": false,
+    "normalized_sha256": "354e115d0686a0576139fbe4973b58500fcce2b070c6e64fd2bf208c1c32bd4b",
+    "raw_sha256": "1fa2ece5f1b0d64c403306b839c3ed206cfd6c1e45b0db5176364ff48cb789d6",
+    "boards": [
+      "art/batch_b3/stages_early/boards/early_1_1x.png",
+      "art/batch_b3/stages_early/boards/early_1_2x.png",
+      "art/batch_b3/stages_early/boards/early_2_1x.png",
+      "art/batch_b3/stages_early/boards/early_2_2x.png",
+      "art/batch_b3/stages_early/boards/early_3_1x.png",
+      "art/batch_b3/stages_early/boards/early_3_2x.png",
+      "art/batch_b3/stages_early/boards/early_4_1x.png",
+      "art/batch_b3/stages_early/boards/early_4_2x.png"
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "source_round": "B3",
+  "runtime_imported": false
+}

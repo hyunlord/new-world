@@ -1,0 +1,197 @@
+{
+  "lane": "stages_early",
+  "draft_only": true,
+  "source_commit": "ROOT_TO_FILL_AFTER_COMMIT",
+  "runtime_binding_status": "UNRESOLVED; no simulation enum invented",
+  "files": [
+    {
+      "from": "art/style05/struct/b3/stages_early/bread_oven_foundation.png",
+      "to": "art/style05/struct/b3/stages_early/bread_oven_foundation.png",
+      "sha256": "5799dd21581d73d8f3fc8e266d41dfbaaa9395435cc1172623f76ea135a3027c",
+      "family": "bread_oven",
+      "state": "foundation"
+    },
+    {
+      "from": "art/style05/struct/b3/stages_early/bread_oven_half_built.png",
+      "to": "art/style05/struct/b3/stages_early/bread_oven_half_built.png",
+      "sha256": "6bdd98277088390fd58f561b4e19ea15378eb5b97fd72581b8c04fe28800dc0d",
+      "family": "bread_oven",
+      "state": "half_built"
+    },
+    {
+      "from": "art/style05/struct/b3/stages_early/bread_oven_damaged.png",
+      "to": "art/style05/struct/b3/stages_early/bread_oven_damaged.png",
+      "sha256": "800b0341ba515eb0fc787baa2af3d660e36839cd4f62d90b188bfcae0a8e12b3",
+      "family": "bread_oven",
+      "state": "damaged"
+    },
+    {
+      "from": "art/style05/struct/b3/stages_early/bread_oven_ruined.png",
+      "to": "art/style05/struct/b3/stages_early/bread_oven_ruined.png",
+      "sha256": "76ce6113e1177553abebdbea58d4227cd8357e4172c300dfc024a9d607e01a4d",
+      "family": "bread_oven",
+      "state": "ruined"
+    },
+    {
+      "from": "art/style05/struct/b3/stages_early/potters_kiln_foundation.png",
+      "to": "art/style05/struct/b3/stages_early/potters_kiln_foundation.png",
+      "sha256": "691054b728c1e228447d67b46b2afce3cc5b6402542abd7007f49017e8d8683c",
+      "family": "potters_kiln",
+      "state": "foundation"
+    },
+    {
+      "from": "art/style05/struct/b3/stages_early/potters_kiln_half_built.png",
+      "to": "art/style05/struct/b3/stages_early/potters_kiln_half_built.png",
+      "sha256": "3088be920dd415b480f9f8c6255bd218ffbf8b2a32c45388cef48b65891e4931",
+      "family": "potters_kiln",
+      "state": "half_built"
+    },
+    {
+      "from": "art/style05/struct/b3/stages_early/potters_kiln_damaged.png",
+      "to": "art/style05/struct/b3/stages_early/potters_kiln_damaged.png",
+      "sha256": "ab43160acc9c451410a4853bf473ef20e38c3722e88d9bb512b5f2d5bce90edd",
+      "family": "potters_kiln",
+      "state": "damaged"
+    },
+    {
+      "from": "art/style05/struct/b3/stages_early/potters_kiln_ruined.png",
+      "to": "art/style05/struct/b3/stages_early/potters_kiln_ruined.png",
+      "sha256": "2041f1cbdbd4f850a2de3391151b9e4052117d75d0295f08acf7c62fb5fe55c9",
+      "family": "potters_kiln",
+      "state": "ruined"
+    },
+    {
+      "from": "art/style05/struct/b3/stages_early/smokehouse_half_built.png",
+      "to": "art/style05/struct/b3/stages_early/smokehouse_half_built.png",
+      "sha256": "704a5e34428113875be1ae08ae3fef0570b626ee25520ef5a1db432fbc7f8294",
+      "family": "smokehouse",
+      "state": "half_built"
+    },
+    {
+      "from": "art/style05/struct/b3/stages_early/smokehouse_damaged.png",
+      "to": "art/style05/struct/b3/stages_early/smokehouse_damaged.png",
+      "sha256": "e9a7613a3a292a840213d198d200013c5878683d63a5be39b1357dcaf56c6e29",
+      "family": "smokehouse",
+      "state": "damaged"
+    },
+    {
+      "from": "art/style05/struct/b3/stages_early/smokehouse_ruined.png",
+      "to": "art/style05/struct/b3/stages_early/smokehouse_ruined.png",
+      "sha256": "d7d0aa9391eda56544fec1c9149228dd5a44301d653d636cd504cb4010731e9b",
+      "family": "smokehouse",
+      "state": "ruined"
+    },
+    {
+      "from": "art/style05/struct/b3/stages_early/well_foundation.png",
+      "to": "art/style05/struct/b3/stages_early/well_foundation.png",
+      "sha256": "04062dcaa1a8ff9a5ea201643f2dc4e5c797ceb5cce05b8473555c2e2a5b6886",
+      "family": "well",
+      "state": "foundation"
+    },
+    {
+      "from": "art/style05/struct/b3/stages_early/well_half_built.png",
+      "to": "art/style05/struct/b3/stages_early/well_half_built.png",
+      "sha256": "4c1d571af476c3452e0d8bb1706f5323f047fa5f82de113a59714d523d14bc46",
+      "family": "well",
+      "state": "half_built"
+    },
+    {
+      "from": "art/style05/struct/b3/stages_early/well_damaged.png",
+      "to": "art/style05/struct/b3/stages_early/well_damaged.png",
+      "sha256": "edd79edf1829cadd354b91852f3b6917b25e2de08356bdc6267a9d6cd767c2e7",
+      "family": "well",
+      "state": "damaged"
+    },
+    {
+      "from": "art/style05/struct/b3/stages_early/grinding_stone_damaged.png",
+      "to": "art/style05/struct/b3/stages_early/grinding_stone_damaged.png",
+      "sha256": "354e115d0686a0576139fbe4973b58500fcce2b070c6e64fd2bf208c1c32bd4b",
+      "family": "grinding_stone",
+      "state": "damaged"
+    },
+    {
+      "from": "art/style05/struct/b3/stages_early/grinding_stone_ruined.png",
+      "to": "art/style05/struct/b3/stages_early/grinding_stone_ruined.png",
+      "sha256": "10210463c9fab99c9ff9a2bee40cdcd8fdc589a3805745de524432a41b8164cd",
+      "family": "grinding_stone",
+      "state": "ruined"
+    },
+    {
+      "from": "art/style05/struct/b3/stages_early/loom_damaged.png",
+      "to": "art/style05/struct/b3/stages_early/loom_damaged.png",
+      "sha256": "265a3a7d8eab2cf86e8a35fc338c01fc95f7911ec78df442c869ba85edf8c165",
+      "family": "loom",
+      "state": "damaged"
+    },
+    {
+      "from": "art/style05/struct/b3/stages_early/megalith_foundation.png",
+      "to": "art/style05/struct/b3/stages_early/megalith_foundation.png",
+      "sha256": "7a0d62b5a2b65502d1ea47cf2bcb8d98a601c3ded613466c5b2e7eaab2b3a6f9",
+      "family": "megalith",
+      "state": "foundation"
+    },
+    {
+      "from": "art/style05/struct/b3/stages_early/megalith_damaged.png",
+      "to": "art/style05/struct/b3/stages_early/megalith_damaged.png",
+      "sha256": "71123a7e6f571896a872f065fe3f161b9f9d0460caf459fa617bf14d1694bc5e",
+      "family": "megalith",
+      "state": "damaged"
+    },
+    {
+      "from": "art/style05/struct/b3/stages_early/megalith_ruined.png",
+      "to": "art/style05/struct/b3/stages_early/megalith_ruined.png",
+      "sha256": "aa372c5c9bb1dbb47c694557d959609f3238d03fa1bc609f2b07bc40d8af4ddf",
+      "family": "megalith",
+      "state": "ruined"
+    },
+    {
+      "from": "art/style05/struct/b3/stages_early/pen_fence_foundation.png",
+      "to": "art/style05/struct/b3/stages_early/pen_fence_foundation.png",
+      "sha256": "4042c003e9217d7a8dde95295767ebde4096e91b153fe5123694b2a289e37c34",
+      "family": "pen_fence",
+      "state": "foundation"
+    },
+    {
+      "from": "art/style05/struct/b3/stages_early/drying_rack_foundation.png",
+      "to": "art/style05/struct/b3/stages_early/drying_rack_foundation.png",
+      "sha256": "0d8659940f98100c6706e660cedac51d981e6c35875bd3ca5862f23baf04d55c",
+      "family": "drying_rack",
+      "state": "foundation"
+    },
+    {
+      "from": "art/style05/struct/b3/stages_early/fish_weir_damaged.png",
+      "to": "art/style05/struct/b3/stages_early/fish_weir_damaged.png",
+      "sha256": "27bf3f7b69d33d5fba3199d008d7b0ac33ceec5ed721c7cd9d5b5cfa13fffe72",
+      "family": "fish_weir",
+      "state": "damaged"
+    },
+    {
+      "from": "art/style05/struct/b3/stages_early/hearth_damaged.png",
+      "to": "art/style05/struct/b3/stages_early/hearth_damaged.png",
+      "sha256": "24983cc69405dd199705d5e9e7f46f338ba880dc9635a0ac80493c6d9b322eec",
+      "family": "hearth",
+      "state": "damaged"
+    },
+    {
+      "from": "art/style05/struct/b3/stages_early/lean_to_damaged.png",
+      "to": "art/style05/struct/b3/stages_early/lean_to_damaged.png",
+      "sha256": "20a021ad2c662072248bdde2f67a04abcf17231a9d8de423259b785c2f5c065f",
+      "family": "lean_to",
+      "state": "damaged"
+    },
+    {
+      "from": "art/style05/struct/b3/stages_early/trap_damaged.png",
+      "to": "art/style05/struct/b3/stages_early/trap_damaged.png",
+      "sha256": "60066f7bb607657ac593486f01ea58e3a86ef549f52de8d02ed7ae7f8edba325",
+      "family": "trap",
+      "state": "damaged"
+    },
+    {
+      "from": "art/style05/struct/b3/stages_early/trap_ruined.png",
+      "to": "art/style05/struct/b3/stages_early/trap_ruined.png",
+      "sha256": "d97f015740046b55b4b6d32a594073c09aea93a71d92ce0aa605fd60be2bc993",
+      "family": "trap",
+      "state": "ruined"
+    }
+  ]
+}

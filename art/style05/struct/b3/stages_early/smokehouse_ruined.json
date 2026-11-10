@@ -1,0 +1,168 @@
+{
+  "record": {
+    "id": "smokehouse_ruined",
+    "lane": "early",
+    "era": "neolithic",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c798-eb77-7151-b3ab-c5d349df0cb2/exec-b9111952-2c94-42e7-bd0a-b113f39f98b6.png",
+    "prompt": "Use case: stylized-concept. Asset type: a single WorldSim construction-state sprite. Transparent background, no ground plane, cast shadow, text, labels, border, or cropped object. References 1 and 2 are locked style anchors props.png and scene.png; reference 3 is the precise built-state design to preserve. Fine warm brown-black ink over quiet earth-colour wash, broad base plus distinct darker right/lower shadow tone. Outer contours twice secondary lines. Wood has 3 broken longitudinal marks per principal pole; clay 3 short crack groups; stone 3 facet/crack groups; straw 5 bundle marks. One parallel / hatching group of3, no dense all-over hatching. Strong common light upper-left; top and left surfaces lighter, right/lower faces darker. Camera front three-quarter about20 degrees down, horizontal base, orthogonal world geometry, not isometric. Neolithic: no metal, no dyed cloth, no people. Draw a single whole object with ample transparent margin, source shapes recognizable at game scale.\nPrimary request: Ruined referenced smokehouse: collapsed timber beams and wattle screen panels within its original footprint, low broken uprights and stone hearth ring remain; no standing overhead beam. Width89px height20px. Keep width to height proportion strictly as specified, matching the built object. No extra objects.",
+    "subject": "smokehouse_ruined",
+    "references": [
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/neolithic/smokehouse_idle.png"
+    ],
+    "target_height": 20,
+    "projection_family": "b3_smokehouse_ruined",
+    "height_band": [
+      18,
+      22
+    ],
+    "height_band_reason": "State geometry predeclared in stages_early/plan.json",
+    "footprint": [
+      2.0,
+      2.0
+    ],
+    "style_family": "buildings",
+    "generation_id": "exec-b9111952-2c94-42e7-bd0a-b113f39f98b6.png",
+    "seed": null,
+    "generated_at": "2026-11-10T22:39:40.063Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/B3/stages_early/early/raw/smokehouse_ruined_try1.png",
+  "raw_sha256": "abab1136403189cfce5104838b8a24e154fd3b8d7cb7742f6834f86878ad7456",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/neolithic/smokehouse_idle.png",
+      "sha256": "4902a850caed3a2f0dbc7708b27b0f613debde151ae642347e00e9315caf1c3d"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/B3/stages_early/early/normalized/smokehouse_ruined_try1.png",
+  "normalized_sha256": "d7d0aa9391eda56544fec1c9149228dd5a44301d653d636cd504cb4010731e9b",
+  "size": [
+    55,
+    28
+  ],
+  "anchor": [
+    27,
+    23
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (308, 145, 1602, 698)",
+    "uniform Lanczos scale: 0.03642987249544627",
+    "transparent 4px padding; source-canvas anchor: (27, 23)"
+  ],
+  "projection": {
+    "family": "b3_smokehouse_ruined",
+    "anchor": [
+      27,
+      23
+    ],
+    "height_band": [
+      18,
+      22
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 573,
+    "base_row": 23,
+    "base_error": 0,
+    "height": 20,
+    "gradient_x": -3.0786714285714285,
+    "gradient_y": -2.6643302681992336,
+    "light_angle_degrees": 220.87342323341284,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/B3/stages_early/early/raw/smokehouse_ruined_try1.png",
+    "sha256": "abab1136403189cfce5104838b8a24e154fd3b8d7cb7742f6834f86878ad7456",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.27949039540563736,
+      "saturation_q25": 0.4407909126885056,
+      "saturation_q75": 0.5297477772680187,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.019816015059911315,
+      "foreground_pixels": 17009
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    33,
+    10,
+    1959,
+    793
+  ],
+  "raw_opaque_bbox": [
+    310,
+    147,
+    1600,
+    696
+  ],
+  "raw_faint_far_ratio": 0.0038532760553022178,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_NUMERIC_VISUAL",
+  "failures": [],
+  "review": {
+    "id": "smokehouse_ruined",
+    "attempt": 1,
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "numeric_pass": true,
+    "visual_score": 91,
+    "visual_pass": true,
+    "visual_findings": [
+      "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+    ],
+    "reasons": [],
+    "model_judge_status": "MISSING",
+    "full_judge_v2_pass": false,
+    "normalized_sha256": "d7d0aa9391eda56544fec1c9149228dd5a44301d653d636cd504cb4010731e9b",
+    "raw_sha256": "abab1136403189cfce5104838b8a24e154fd3b8d7cb7742f6834f86878ad7456",
+    "boards": [
+      "art/batch_b3/stages_early/boards/early_1_1x.png",
+      "art/batch_b3/stages_early/boards/early_1_2x.png",
+      "art/batch_b3/stages_early/boards/early_2_1x.png",
+      "art/batch_b3/stages_early/boards/early_2_2x.png",
+      "art/batch_b3/stages_early/boards/early_3_1x.png",
+      "art/batch_b3/stages_early/boards/early_3_2x.png",
+      "art/batch_b3/stages_early/boards/early_4_1x.png",
+      "art/batch_b3/stages_early/boards/early_4_2x.png"
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "source_round": "B3",
+  "runtime_imported": false
+}

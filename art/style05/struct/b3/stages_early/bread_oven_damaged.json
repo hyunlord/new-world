@@ -1,0 +1,168 @@
+{
+  "record": {
+    "id": "bread_oven_damaged",
+    "lane": "early",
+    "era": "neolithic",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c2fb-fe6b-7c71-9e6d-63b556c303f4/exec-2231a1e8-6040-4ffd-9231-5b858430c57b.png",
+    "prompt": "Use case: stylized-concept. Asset type: a single WorldSim construction-state sprite. Transparent background, no ground plane, cast shadow, text, labels, border, or cropped object. References 1 and 2 are locked style anchors props.png and scene.png; reference 3 is the precise built-state design to preserve. Fine warm brown-black ink over quiet earth-colour wash, broad base plus distinct darker right/lower shadow tone. Outer contours twice secondary lines. Wood has 3 broken longitudinal marks per principal pole; clay 3 short crack groups; stone 3 facet/crack groups; straw 5 bundle marks. One parallel / hatching group of3, no dense all-over hatching. Strong common light upper-left; top and left surfaces lighter, right/lower faces darker. Camera front three-quarter about20 degrees down, horizontal base, orthogonal world geometry, not isometric. Neolithic: no metal, no dyed cloth, no people. Draw a single whole object with ample transparent margin, source shapes recognizable at game scale.\nPrimary request: Damaged but still standing referenced bread oven: one fist-size breach in upper right clay dome, fractured edge and one small fallen clay chunk at base. Front arch retained; unlit. Width39px height30px.\nDo not transfer rope or decorative bindings from the style reference onto clay. Preserve the plain smooth clay structure in reference 3.",
+    "subject": "bread_oven_damaged",
+    "references": [
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/neolithic/bread_oven_unlit.png"
+    ],
+    "target_height": 30,
+    "projection_family": "b3_bread_oven_damaged",
+    "height_band": [
+      28,
+      32
+    ],
+    "height_band_reason": "Construction or damage stage explicitly lower than complete building, height predeclared in plan.json; same footprint.",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": "exec-2231a1e8-6040-4ffd-9231-5b858430c57b.png",
+    "seed": null,
+    "generated_at": "2026-11-10T01:08:24.522Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/B3/stages_early/early/raw/bread_oven_damaged_try1.png",
+  "raw_sha256": "2c173ed2c4e84ff305a0d587a3758cc077ef3ff646f71cec69dd7d388ce9c0b0",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/neolithic/bread_oven_unlit.png",
+      "sha256": "37a38b65f87013417b4e68c9473dfde5311b9bb565b1aa8ff63041f6608cef3f"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/B3/stages_early/early/normalized/bread_oven_damaged_try1.png",
+  "normalized_sha256": "800b0341ba515eb0fc787baa2af3d660e36839cd4f62d90b188bfcae0a8e12b3",
+  "size": [
+    45,
+    38
+  ],
+  "anchor": [
+    22,
+    33
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (232, 155, 1189, 944)",
+    "uniform Lanczos scale: 0.03821656050955414",
+    "transparent 4px padding; source-canvas anchor: (22, 33)"
+  ],
+  "projection": {
+    "family": "b3_bread_oven_damaged",
+    "anchor": [
+      22,
+      33
+    ],
+    "height_band": [
+      28,
+      32
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 871,
+    "base_row": 33,
+    "base_error": 0,
+    "height": 30,
+    "gradient_x": -1.1460988095238098,
+    "gradient_y": -0.6742824940047956,
+    "light_angle_degrees": 210.46950853934374,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/B3/stages_early/early/raw/bread_oven_damaged_try1.png",
+    "sha256": "2c173ed2c4e84ff305a0d587a3758cc077ef3ff646f71cec69dd7d388ce9c0b0",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.1794022361337783,
+      "saturation_q25": 0.4864204855243851,
+      "saturation_q75": 0.5833227465456793,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.47213595499958,
+      "wash_flatness": 0.012407022747287985,
+      "foreground_pixels": 42485
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    0,
+    1411,
+    1100
+  ],
+  "raw_opaque_bbox": [
+    234,
+    157,
+    1187,
+    942
+  ],
+  "raw_faint_far_ratio": 0.01373765718765027,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_NUMERIC_VISUAL",
+  "failures": [],
+  "review": {
+    "id": "bread_oven_damaged",
+    "attempt": 1,
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "numeric_pass": true,
+    "visual_score": 91,
+    "visual_pass": true,
+    "visual_findings": [
+      "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+    ],
+    "reasons": [],
+    "model_judge_status": "MISSING",
+    "full_judge_v2_pass": false,
+    "normalized_sha256": "800b0341ba515eb0fc787baa2af3d660e36839cd4f62d90b188bfcae0a8e12b3",
+    "raw_sha256": "2c173ed2c4e84ff305a0d587a3758cc077ef3ff646f71cec69dd7d388ce9c0b0",
+    "boards": [
+      "art/batch_b3/stages_early/boards/early_1_1x.png",
+      "art/batch_b3/stages_early/boards/early_1_2x.png",
+      "art/batch_b3/stages_early/boards/early_2_1x.png",
+      "art/batch_b3/stages_early/boards/early_2_2x.png",
+      "art/batch_b3/stages_early/boards/early_3_1x.png",
+      "art/batch_b3/stages_early/boards/early_3_2x.png",
+      "art/batch_b3/stages_early/boards/early_4_1x.png",
+      "art/batch_b3/stages_early/boards/early_4_2x.png"
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "source_round": "B3",
+  "runtime_imported": false
+}

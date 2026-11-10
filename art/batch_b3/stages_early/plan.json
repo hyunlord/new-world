@@ -1,0 +1,487 @@
+{
+  "round": "B3",
+  "state_cap": 3,
+  "common": "Use case: stylized-concept. Asset type: a single WorldSim construction-state sprite. Transparent background, no ground plane, cast shadow, text, labels, border, or cropped object. References 1 and 2 are locked style anchors props.png and scene.png; reference 3 is the precise built-state design to preserve. Fine warm brown-black ink over quiet earth-colour wash, broad base plus distinct darker right/lower shadow tone. Outer contours twice secondary lines. Wood has 3 broken longitudinal marks per principal pole; clay 3 short crack groups; stone 3 facet/crack groups; straw 5 bundle marks. One parallel / hatching group of3, no dense all-over hatching. Strong common light upper-left; top and left surfaces lighter, right/lower faces darker. Camera front three-quarter about20 degrees down, horizontal base, orthogonal world geometry, not isometric. Neolithic: no metal, no dyed cloth, no people. Draw a single whole object with ample transparent margin, source shapes recognizable at game scale.",
+  "families": [
+    {
+      "family": "bread_oven",
+      "base": "bread_oven_unlit",
+      "era": "neolithic",
+      "footprint": [
+        1,
+        1
+      ],
+      "states": [
+        [
+          "foundation",
+          12,
+          "Only the first low circular clay-and-stone footing of the referenced small dome bread oven. Front opening faces the viewer; no dome yet. At final game scale width about39px and height12px."
+        ],
+        [
+          "half_built",
+          22,
+          "Half-built version of the referenced clay bread oven: incomplete knee-high dome rising from its same circular base, open crown with rough construction edge and clearly formed low front arch. No fire. Width39px height22px."
+        ],
+        [
+          "damaged",
+          30,
+          "Damaged but still standing referenced bread oven: one fist-size breach in upper right clay dome, fractured edge and one small fallen clay chunk at base. Front arch retained; unlit. Width39px height30px."
+        ],
+        [
+          "ruined",
+          12,
+          "Collapsed referenced bread oven, a shallow crescent of baked-clay wall and a few large dome fragments inside the same circular base. Open front arch gone. Width39px height12px."
+        ]
+      ]
+    },
+    {
+      "family": "potters_kiln",
+      "base": "potter_kiln_firing",
+      "era": "neolithic",
+      "footprint": [
+        1,
+        1
+      ],
+      "states": [
+        [
+          "foundation",
+          14,
+          "First circular stone-and-clay footing of the referenced tall tapered potter kiln. Only a low ring and the first front stoke opening; no chimney or fire. Width47px height14px."
+        ],
+        [
+          "half_built",
+          28,
+          "Half-built referenced tapering pottery kiln: lower clay cone with stoke arch finished but upper cone and flue unfinished and open, rough clear top lip. No flame. Width47px height28px."
+        ],
+        [
+          "damaged",
+          42,
+          "Referenced tapered pottery kiln after damage: still recognizable tall cone and small top flue, one broken side wall opening on right, short cracks and two large clay chips at base; unlit. Width47px height42px."
+        ],
+        [
+          "ruined",
+          16,
+          "Ruined referenced pottery kiln: low broken circular clay base, collapsed cone in three large curved fragments, empty front opening. No fire or smoke. Width47px height16px."
+        ]
+      ]
+    },
+    {
+      "family": "smokehouse",
+      "base": "smokehouse_idle",
+      "era": "neolithic",
+      "footprint": [
+        2,
+        2
+      ],
+      "states": [
+        [
+          "foundation",
+          18,
+          "Construction foundation of the referenced roofless smokehouse: four short log post stubs placed in the same rectangular footprint, and unfinished low stone hearth ring, no tall uprights, horizontal rails or woven screens. Width89px height18px."
+        ],
+        [
+          "half_built",
+          46,
+          "Half-built referenced roofless smokehouse: four full uprights and top front beam, lower back woven screen half finished, no food hanging. Same rectangular footprint and log diameters. Width89px height46px."
+        ],
+        [
+          "damaged",
+          54,
+          "Damaged referenced smokehouse: left front upright and top beam still standing, right front upper beam broken and sagged, torn back wattle screen with visible gap. Stone hearth retained, no meat/fire. Width89px height54px."
+        ],
+        [
+          "ruined",
+          20,
+          "Ruined referenced smokehouse: collapsed timber beams and wattle screen panels within its original footprint, low broken uprights and stone hearth ring remain; no standing overhead beam. Width89px height20px."
+        ]
+      ]
+    },
+    {
+      "family": "well",
+      "base": "well",
+      "era": "neolithic",
+      "footprint": [
+        1,
+        1
+      ],
+      "states": [
+        [
+          "foundation",
+          18,
+          "Well foundation: only the first low circular ring of rough grey-brown stones, dark open shaft in center, matching referenced well circumference. No posts, crossbeam, rope or pail. Width56px height18px."
+        ],
+        [
+          "half_built",
+          34,
+          "Half-built well: referenced circular stone curb completed, two timber supports only halfway raised, no crossbeam or pail yet. Same stone spacing and wood design. Width56px height34px."
+        ],
+        [
+          "damaged",
+          48,
+          "Damaged referenced well: broken right support and hanging crossbeam tilted downward, one missing stone in front-right curb, empty rope, pail absent. Stone well ring still stable. Width56px height48px."
+        ],
+        [
+          "ruined",
+          20,
+          "Ruined referenced well: broken stone curb around dark open shaft with two fallen support timbers resting beside it within original footprint; no standing posts or crossbeam. Width56px height20px."
+        ]
+      ]
+    },
+    {
+      "family": "grinding_stone",
+      "base": "grinding_stone",
+      "era": "neolithic",
+      "footprint": [
+        1,
+        1
+      ],
+      "states": [
+        [
+          "damaged",
+          32,
+          "Referenced saddle quern with one large chipped corner and cracked handstone resting in worn channel. Silhouette height32px, width proportional to referenced object. No extra objects."
+        ],
+        [
+          "ruined",
+          10,
+          "Saddle quern split into two broad stone halves and one broken handstone. Low flat pile. Silhouette height10px, width proportional to referenced object. No extra objects."
+        ]
+      ],
+      "placement_only": true,
+      "source_path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/grinding_stone.png"
+    },
+    {
+      "family": "loom",
+      "base": "loom_loaded",
+      "era": "neolithic",
+      "footprint": [
+        2,
+        1
+      ],
+      "states": [
+        [
+          "damaged",
+          56,
+          "Upright wooden loom with broken right crossbrace and torn undyed cloth warp, frame still recognizable. Silhouette height56px, width proportional to referenced object. No extra objects."
+        ],
+        [
+          "ruined",
+          17,
+          "Collapsed wooden loom frame with broad broken uprights and loose undyed warp bundle lying within footprint. Silhouette height17px, width proportional to referenced object. No extra objects."
+        ]
+      ],
+      "placement_only": true,
+      "source_path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/neolithic/loom_loaded.png"
+    },
+    {
+      "family": "megalith",
+      "base": "megalith",
+      "era": "neolithic",
+      "footprint": [
+        1,
+        1
+      ],
+      "states": [
+        [
+          "foundation",
+          21,
+          "Prepared shallow socket edged with three small packing stones; the tall monolith is absent. No artificial masonry. Silhouette height21px, width proportional to referenced object. No extra objects."
+        ],
+        [
+          "half_built",
+          50,
+          "Referenced monolith being raised, one continuous stone slab tilted at45degrees and held by two plain timber braces. No ropes, people or machinery. Silhouette height50px, width proportional to referenced object. No extra objects."
+        ],
+        [
+          "damaged",
+          84,
+          "Damaged referenced megalith: still recognizable standing/placed form, one large broken area or visible breach and two fragments touching base. Retain overall footprint. Silhouette width52px height84px."
+        ],
+        [
+          "ruined",
+          25,
+          "Same stone monolith cracked into two broad pieces resting inside the original1x1cell, no long horizontal out-of-footprint fallen slab. Silhouette height25px, width proportional to referenced object. No extra objects."
+        ]
+      ],
+      "placement_only": false,
+      "source_path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/neolithic/megalith.png"
+    },
+    {
+      "family": "pen_fence",
+      "base": "pen_fence_straight",
+      "era": "neolithic",
+      "footprint": [
+        1,
+        1
+      ],
+      "states": [
+        [
+          "foundation",
+          10,
+          "First construction footing of referenced pen_fence: only low post stubs or first stone course in identical footprint. No complete tall structure. Silhouette width73px height10px."
+        ],
+        [
+          "half_built",
+          23,
+          "Half-built referenced pen_fence, incomplete structure: half height timber uprights or stone courses and uncompleted top. Same materials and footprint. Silhouette width73px height23px."
+        ],
+        [
+          "damaged",
+          39,
+          "Damaged referenced pen_fence: still recognizable standing/placed form, one large broken area or visible breach and two fragments touching base. Retain overall footprint. Silhouette width73px height39px."
+        ],
+        [
+          "ruined",
+          12,
+          "Ruined referenced pen_fence, collapsed-in-place large broken fragments inside SAME original footprint, no intact standing structure. No extra objects, fire or smoke. Silhouette width73px height12px."
+        ]
+      ],
+      "placement_only": false,
+      "source_path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/neolithic/pen_fence_straight.png"
+    },
+    {
+      "family": "pen_gate",
+      "base": "pen_gate_closed",
+      "era": "neolithic",
+      "footprint": [
+        1,
+        1
+      ],
+      "states": [
+        [
+          "foundation",
+          15,
+          "First construction footing of referenced pen_gate: only low post stubs or first stone course in identical footprint. No complete tall structure. Silhouette width72px height15px."
+        ],
+        [
+          "half_built",
+          36,
+          "Half-built referenced pen_gate, incomplete structure: half height timber uprights or stone courses and uncompleted top. Same materials and footprint. Silhouette width72px height36px."
+        ],
+        [
+          "damaged",
+          60,
+          "Damaged referenced pen_gate: still recognizable standing/placed form, one large broken area or visible breach and two fragments touching base. Retain overall footprint. Silhouette width72px height60px."
+        ],
+        [
+          "ruined",
+          18,
+          "Ruined referenced pen_gate, collapsed-in-place large broken fragments inside SAME original footprint, no intact standing structure. No extra objects, fire or smoke. Silhouette width72px height18px."
+        ]
+      ],
+      "placement_only": false,
+      "source_path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/neolithic/pen_gate_closed.png"
+    },
+    {
+      "family": "ritual_site",
+      "base": "ritual_site_empty",
+      "era": "neolithic",
+      "footprint": [
+        2,
+        2
+      ],
+      "states": [
+        [
+          "foundation",
+          21,
+          "Only three low stone sockets and central low altar slab, upright standing-stones absent. Silhouette height21px, width proportional to referenced object. No extra objects."
+        ],
+        [
+          "half_built",
+          50,
+          "Central altar slab and two of four standing stones already erected, remaining sockets empty. Silhouette height50px, width proportional to referenced object. No extra objects."
+        ],
+        [
+          "damaged",
+          84,
+          "Damaged referenced ritual_site: still recognizable standing/placed form, one large broken area or visible breach and two fragments touching base. Retain overall footprint. Silhouette width99px height84px."
+        ],
+        [
+          "ruined",
+          25,
+          "Ruined referenced ritual_site, collapsed-in-place large broken fragments inside SAME original footprint, no intact standing structure. No extra objects, fire or smoke. Silhouette width99px height25px."
+        ]
+      ],
+      "placement_only": false,
+      "source_path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/neolithic/ritual_site_empty.png"
+    },
+    {
+      "family": "drying_rack",
+      "base": "drying_rack_empty",
+      "era": "paleolithic",
+      "footprint": [
+        2,
+        1
+      ],
+      "states": [
+        [
+          "foundation",
+          12,
+          "First construction footing of referenced drying_rack: only low post stubs or first stone course in identical footprint. No complete tall structure. Silhouette width78px height12px."
+        ],
+        [
+          "half_built",
+          29,
+          "Half-built referenced drying_rack, incomplete structure: half height timber uprights or stone courses and uncompleted top. Same materials and footprint. Silhouette width78px height29px."
+        ],
+        [
+          "damaged",
+          48,
+          "Damaged referenced drying_rack: still recognizable standing/placed form, one large broken area or visible breach and two fragments touching base. Retain overall footprint. Silhouette width78px height48px."
+        ],
+        [
+          "ruined",
+          14,
+          "Ruined referenced drying_rack, collapsed-in-place large broken fragments inside SAME original footprint, no intact standing structure. No extra objects, fire or smoke. Silhouette width78px height14px."
+        ]
+      ],
+      "placement_only": false,
+      "source_path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/drying_rack_empty.png"
+    },
+    {
+      "family": "fish_weir",
+      "base": "fish_weir_empty",
+      "era": "paleolithic",
+      "footprint": [
+        2,
+        2
+      ],
+      "states": [
+        [
+          "foundation",
+          22,
+          "First construction footing of referenced fish_weir: only low post stubs or first stone course in identical footprint. No complete tall structure. Silhouette width98px height22px."
+        ],
+        [
+          "half_built",
+          53,
+          "Half-built referenced fish_weir, incomplete structure: half height timber uprights or stone courses and uncompleted top. Same materials and footprint. Silhouette width98px height53px."
+        ],
+        [
+          "damaged",
+          88,
+          "Damaged referenced fish_weir: still recognizable standing/placed form, one large broken area or visible breach and two fragments touching base. Retain overall footprint. Silhouette width98px height88px."
+        ],
+        [
+          "ruined",
+          26,
+          "Ruined referenced fish_weir, collapsed-in-place large broken fragments inside SAME original footprint, no intact standing structure. No extra objects, fire or smoke. Silhouette width98px height26px."
+        ]
+      ],
+      "placement_only": false,
+      "source_path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/neolithic/fish_weir_empty.png"
+    },
+    {
+      "family": "hearth",
+      "base": "hearth_unlit",
+      "era": "paleolithic",
+      "footprint": [
+        1,
+        1
+      ],
+      "states": [
+        [
+          "damaged",
+          20,
+          "Unlit stone fire ring with one large gap in near side and cold charcoal inside. No flames or smoke. Silhouette height20px, width proportional to referenced object. No extra objects."
+        ],
+        [
+          "ruined",
+          10,
+          "Scattered low incomplete cold fire-ring crescent of three stones and sparse ash. No fire or smoke. Silhouette height10px, width proportional to referenced object. No extra objects."
+        ]
+      ],
+      "placement_only": true,
+      "source_path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/hearth_unlit.png"
+    },
+    {
+      "family": "lean_to",
+      "base": "lean_to",
+      "era": "paleolithic",
+      "footprint": [
+        2,
+        2
+      ],
+      "states": [
+        [
+          "foundation",
+          16,
+          "First construction footing of referenced lean_to: only low post stubs or first stone course in identical footprint. No complete tall structure. Silhouette width83px height16px."
+        ],
+        [
+          "half_built",
+          38,
+          "Half-built referenced lean_to, incomplete structure: half height timber uprights or stone courses and uncompleted top. Same materials and footprint. Silhouette width83px height38px."
+        ],
+        [
+          "damaged",
+          64,
+          "Damaged referenced lean_to: still recognizable standing/placed form, one large broken area or visible breach and two fragments touching base. Retain overall footprint. Silhouette width83px height64px."
+        ],
+        [
+          "ruined",
+          19,
+          "Ruined referenced lean_to, collapsed-in-place large broken fragments inside SAME original footprint, no intact standing structure. No extra objects, fire or smoke. Silhouette width83px height19px."
+        ]
+      ],
+      "placement_only": false,
+      "source_path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/lean_to.png"
+    },
+    {
+      "family": "trap",
+      "base": "trap_set",
+      "era": "paleolithic",
+      "footprint": [
+        1,
+        1
+      ],
+      "states": [
+        [
+          "damaged",
+          24,
+          "Referenced small woven wicker box trap, top cracked open in one large hole; empty and sprung. Silhouette height24px, width proportional to referenced object. No extra objects."
+        ],
+        [
+          "ruined",
+          10,
+          "Collapsed wicker trap box, two broad woven panels folded flat and broken ribs. Silhouette height10px, width proportional to referenced object. No extra objects."
+        ]
+      ],
+      "placement_only": true,
+      "source_path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/neolithic/trap_set.png"
+    },
+    {
+      "family": "windbreak",
+      "base": "windbreak",
+      "era": "paleolithic",
+      "footprint": [
+        2,
+        1
+      ],
+      "states": [
+        [
+          "foundation",
+          12,
+          "First construction footing of referenced windbreak: only low post stubs or first stone course in identical footprint. No complete tall structure. Silhouette width88px height12px."
+        ],
+        [
+          "half_built",
+          29,
+          "Half-built referenced windbreak, incomplete structure: half height timber uprights or stone courses and uncompleted top. Same materials and footprint. Silhouette width88px height29px."
+        ],
+        [
+          "damaged",
+          48,
+          "Damaged referenced windbreak: still recognizable standing/placed form, one large broken area or visible breach and two fragments touching base. Retain overall footprint. Silhouette width88px height48px."
+        ],
+        [
+          "ruined",
+          14,
+          "Ruined referenced windbreak, collapsed-in-place large broken fragments inside SAME original footprint, no intact standing structure. No extra objects, fire or smoke. Silhouette width88px height14px."
+        ]
+      ],
+      "placement_only": false,
+      "source_path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/neolithic/windbreak.png"
+    }
+  ]
+}

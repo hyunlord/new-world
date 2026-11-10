@@ -1,0 +1,168 @@
+{
+  "record": {
+    "id": "megalith_foundation",
+    "lane": "early",
+    "era": "neolithic",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c798-eb77-7151-b3ab-c5d349df0cb2/exec-5e96a5d1-9d04-414a-bae0-01ff7ad832e4.png",
+    "prompt": "Use case: stylized-concept. Asset type: a single WorldSim construction-state sprite. Transparent background, no ground plane, cast shadow, text, labels, border, or cropped object. References 1 and 2 are locked style anchors props.png and scene.png; reference 3 is the precise built-state design to preserve. Fine warm brown-black ink over quiet earth-colour wash, broad base plus distinct darker right/lower shadow tone. Outer contours twice secondary lines. Wood has 3 broken longitudinal marks per principal pole; clay 3 short crack groups; stone 3 facet/crack groups; straw 5 bundle marks. One parallel / hatching group of3, no dense all-over hatching. Strong common light upper-left; top and left surfaces lighter, right/lower faces darker. Camera front three-quarter about20 degrees down, horizontal base, orthogonal world geometry, not isometric. Neolithic: no metal, no dyed cloth, no people. Draw a single whole object with ample transparent margin, source shapes recognizable at game scale.\nPrimary request: Prepared shallow socket edged with three small packing stones; the tall monolith is absent. No artificial masonry. Silhouette height21px, width proportional to referenced object. No extra objects. Quiet broad wash patches; avoid stipple/granulated all-over surface noise.",
+    "subject": "megalith_foundation",
+    "references": [
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/neolithic/megalith.png"
+    ],
+    "target_height": 21,
+    "projection_family": "b3_megalith_foundation",
+    "height_band": [
+      19,
+      23
+    ],
+    "height_band_reason": "State geometry predeclared in stages_early/plan.json",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": "exec-5e96a5d1-9d04-414a-bae0-01ff7ad832e4.png",
+    "seed": null,
+    "generated_at": "2026-11-10T22:44:09.802Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/B3/stages_early/early/raw/megalith_foundation_try1.png",
+  "raw_sha256": "25d14663f1eef4ef8a2dd657c83dbc6a88b520615bd34f56db3b0cb02fc2bbe2",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/neolithic/megalith.png",
+      "sha256": "5ff6065d2a6588cdb184b6f87ebc2f40d1632a152946b4c564717252b0190d23"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/B3/stages_early/early/normalized/megalith_foundation_try1.png",
+  "normalized_sha256": "7a0d62b5a2b65502d1ea47cf2bcb8d98a601c3ded613466c5b2e7eaab2b3a6f9",
+  "size": [
+    46,
+    29
+  ],
+  "anchor": [
+    23,
+    24
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (374, 359, 1134, 778)",
+    "uniform Lanczos scale: 0.05060240963855422",
+    "transparent 4px padding; source-canvas anchor: (23, 24)"
+  ],
+  "projection": {
+    "family": "b3_megalith_foundation",
+    "anchor": [
+      23,
+      24
+    ],
+    "height_band": [
+      19,
+      23
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 563,
+    "base_row": 24,
+    "base_error": 0,
+    "height": 21,
+    "gradient_x": -1.8565892791127543,
+    "gradient_y": -3.864410285714285,
+    "light_angle_degrees": 244.3388455774052,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/B3/stages_early/early/raw/megalith_foundation_try1.png",
+    "sha256": "25d14663f1eef4ef8a2dd657c83dbc6a88b520615bd34f56db3b0cb02fc2bbe2",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.218915745576744,
+      "saturation_q25": 0.35327478252268885,
+      "saturation_q75": 0.5241855351795801,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 5.656854249492381,
+      "wash_flatness": 0.014322892144945679,
+      "foreground_pixels": 25877
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 254,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    37,
+    1516,
+    1024
+  ],
+  "raw_opaque_bbox": [
+    376,
+    361,
+    1132,
+    776
+  ],
+  "raw_faint_far_ratio": 0.027618019104067776,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_NUMERIC_VISUAL",
+  "failures": [],
+  "review": {
+    "id": "megalith_foundation",
+    "attempt": 1,
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "numeric_pass": true,
+    "visual_score": 91,
+    "visual_pass": true,
+    "visual_findings": [
+      "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+    ],
+    "reasons": [],
+    "model_judge_status": "MISSING",
+    "full_judge_v2_pass": false,
+    "normalized_sha256": "7a0d62b5a2b65502d1ea47cf2bcb8d98a601c3ded613466c5b2e7eaab2b3a6f9",
+    "raw_sha256": "25d14663f1eef4ef8a2dd657c83dbc6a88b520615bd34f56db3b0cb02fc2bbe2",
+    "boards": [
+      "art/batch_b3/stages_early/boards/early_1_1x.png",
+      "art/batch_b3/stages_early/boards/early_1_2x.png",
+      "art/batch_b3/stages_early/boards/early_2_1x.png",
+      "art/batch_b3/stages_early/boards/early_2_2x.png",
+      "art/batch_b3/stages_early/boards/early_3_1x.png",
+      "art/batch_b3/stages_early/boards/early_3_2x.png",
+      "art/batch_b3/stages_early/boards/early_4_1x.png",
+      "art/batch_b3/stages_early/boards/early_4_2x.png"
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "source_round": "B3",
+  "runtime_imported": false
+}

@@ -1,0 +1,168 @@
+{
+  "record": {
+    "id": "well_half_built",
+    "lane": "early",
+    "era": "neolithic",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c798-eb77-7151-b3ab-c5d349df0cb2/exec-c25508fa-9730-48d4-a7ef-9b963ba934be.png",
+    "prompt": "Use case: stylized-concept. Asset type: a single WorldSim construction-state sprite. Transparent background, no ground plane, cast shadow, text, labels, border, or cropped object. References 1 and 2 are locked style anchors props.png and scene.png; reference 3 is the precise built-state design to preserve. Fine warm brown-black ink over quiet earth-colour wash, broad base plus distinct darker right/lower shadow tone. Outer contours twice secondary lines. Wood has 3 broken longitudinal marks per principal pole; clay 3 short crack groups; stone 3 facet/crack groups; straw 5 bundle marks. One parallel / hatching group of3, no dense all-over hatching. Strong common light upper-left; top and left surfaces lighter, right/lower faces darker. Camera front three-quarter about20 degrees down, horizontal base, orthogonal world geometry, not isometric. Neolithic: no metal, no dyed cloth, no people. Draw a single whole object with ample transparent margin, source shapes recognizable at game scale.\nPrimary request: Half-built well: referenced circular stone curb completed, two timber supports only halfway raised, no crossbeam or pail yet. Same stone spacing and wood design. Width56px height34px. Keep width to height proportion strictly as specified, matching the built object. No extra objects.",
+    "subject": "well_half_built",
+    "references": [
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/neolithic/well.png"
+    ],
+    "target_height": 34,
+    "projection_family": "b3_well_half_built",
+    "height_band": [
+      32,
+      36
+    ],
+    "height_band_reason": "State geometry predeclared in stages_early/plan.json",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": "exec-c25508fa-9730-48d4-a7ef-9b963ba934be.png",
+    "seed": null,
+    "generated_at": "2026-11-10T22:40:05.248Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/B3/stages_early/early/raw/well_half_built_try1.png",
+  "raw_sha256": "1bc70f1949708b315f972709d1f151c16fb780c0e30143097c1df55109ba14ff",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/neolithic/well.png",
+      "sha256": "aac1827c268a79d761f161073f08f7dc6f7d0e03fe39e2569d98cf03998799a3"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/B3/stages_early/early/normalized/well_half_built_try1.png",
+  "normalized_sha256": "4c1d571af476c3452e0d8bb1706f5323f047fa5f82de113a59714d523d14bc46",
+  "size": [
+    56,
+    42
+  ],
+  "anchor": [
+    28,
+    37
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (383, 257, 1223, 858)",
+    "uniform Lanczos scale: 0.05695142378559464",
+    "transparent 4px padding; source-canvas anchor: (28, 37)"
+  ],
+  "projection": {
+    "family": "b3_well_half_built",
+    "anchor": [
+      28,
+      37
+    ],
+    "height_band": [
+      32,
+      36
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1128,
+    "base_row": 37,
+    "base_error": 0,
+    "height": 34,
+    "gradient_x": -1.7178734012974977,
+    "gradient_y": -3.2520542246982354,
+    "light_angle_degrees": 242.15507992909454,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/B3/stages_early/early/raw/well_half_built_try1.png",
+    "sha256": "1bc70f1949708b315f972709d1f151c16fb780c0e30143097c1df55109ba14ff",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.23228079247600272,
+      "saturation_q25": 0.4152925541973268,
+      "saturation_q75": 0.511554136185456,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.8284271247461903,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.47213595499958,
+      "wash_flatness": 0.013131602917924114,
+      "foreground_pixels": 32653
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    33,
+    9,
+    1572,
+    978
+  ],
+  "raw_opaque_bbox": [
+    385,
+    259,
+    1221,
+    856
+  ],
+  "raw_faint_far_ratio": 0.010149621321935717,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_NUMERIC_VISUAL",
+  "failures": [],
+  "review": {
+    "id": "well_half_built",
+    "attempt": 1,
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "numeric_pass": true,
+    "visual_score": 91,
+    "visual_pass": true,
+    "visual_findings": [
+      "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+    ],
+    "reasons": [],
+    "model_judge_status": "MISSING",
+    "full_judge_v2_pass": false,
+    "normalized_sha256": "4c1d571af476c3452e0d8bb1706f5323f047fa5f82de113a59714d523d14bc46",
+    "raw_sha256": "1bc70f1949708b315f972709d1f151c16fb780c0e30143097c1df55109ba14ff",
+    "boards": [
+      "art/batch_b3/stages_early/boards/early_1_1x.png",
+      "art/batch_b3/stages_early/boards/early_1_2x.png",
+      "art/batch_b3/stages_early/boards/early_2_1x.png",
+      "art/batch_b3/stages_early/boards/early_2_2x.png",
+      "art/batch_b3/stages_early/boards/early_3_1x.png",
+      "art/batch_b3/stages_early/boards/early_3_2x.png",
+      "art/batch_b3/stages_early/boards/early_4_1x.png",
+      "art/batch_b3/stages_early/boards/early_4_2x.png"
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "source_round": "B3",
+  "runtime_imported": false
+}

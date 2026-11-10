@@ -1,0 +1,168 @@
+{
+  "record": {
+    "id": "potters_kiln_damaged",
+    "lane": "early",
+    "era": "neolithic",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c798-eb77-7151-b3ab-c5d349df0cb2/exec-850c1316-17e0-4ca3-8539-956ce8143ba3.png",
+    "prompt": "Use case: precise-object-edit. Single WorldSim damaged neolithic pottery kiln sprite. Preserve reference3 tapered baked-clay kiln, front stoke arch, small top flue, camera front three-quarter20 degrees down, upper-left lighting and sparse warm-brown ink/earth wash matching references1/2. Change only damage: one broken opening in right cone wall, three short crack groups, two large fallen clay chips touching base; no flame or smoke. Cone remains standing. Outer ink twice secondary. Broad quiet base plus darker right tone, no all-over hatching. Width47 to height42 silhouette ratio. Single whole object centered with transparent margin, genuinely transparent background, no ground/shadow/text/people/metal.",
+    "subject": "potters_kiln_damaged",
+    "references": [
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/neolithic/potter_kiln_firing.png"
+    ],
+    "target_height": 42,
+    "projection_family": "b3_potters_kiln_damaged",
+    "height_band": [
+      40,
+      44
+    ],
+    "height_band_reason": "State geometry predeclared in stages_early/plan.json",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": "exec-850c1316-17e0-4ca3-8539-956ce8143ba3.png",
+    "seed": null,
+    "generated_at": "2026-11-10T22:35:36.904Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/B3/stages_early/early/raw/potters_kiln_damaged_try1.png",
+  "raw_sha256": "56279eb445b6337a3c6d0c1aeb12d7321239f38e45e91bbd355c7d5a3017e68f",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/neolithic/potter_kiln_firing.png",
+      "sha256": "f5a84bfb6733abd5b8781a85879d332de0984c89d3c2810bcf94e110cc6dd135"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/B3/stages_early/early/normalized/potters_kiln_damaged_try1.png",
+  "normalized_sha256": "ab43160acc9c451410a4853bf473ef20e38c3722e88d9bb512b5f2d5bce90edd",
+  "size": [
+    48,
+    50
+  ],
+  "anchor": [
+    24,
+    45
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (168, 76, 1133, 1089)",
+    "uniform Lanczos scale: 0.04162537165510406",
+    "transparent 4px padding; source-canvas anchor: (24, 45)"
+  ],
+  "projection": {
+    "family": "b3_potters_kiln_damaged",
+    "anchor": [
+      24,
+      45
+    ],
+    "height_band": [
+      40,
+      44
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1172,
+    "base_row": 45,
+    "base_error": 0,
+    "height": 42,
+    "gradient_x": -1.1620382639503983,
+    "gradient_y": -0.1328356890459359,
+    "light_angle_degrees": 186.52132591598874,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/B3/stages_early/early/raw/potters_kiln_damaged_try1.png",
+    "sha256": "56279eb445b6337a3c6d0c1aeb12d7321239f38e45e91bbd355c7d5a3017e68f",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.17375283446712017,
+      "saturation_q25": 0.5653260495191055,
+      "saturation_q75": 0.6567974889159713,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.014652499242452337,
+      "foreground_pixels": 43806
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    7,
+    1326,
+    1185
+  ],
+  "raw_opaque_bbox": [
+    170,
+    78,
+    1131,
+    1087
+  ],
+  "raw_faint_far_ratio": 0.006867728550701597,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_NUMERIC_VISUAL",
+  "failures": [],
+  "review": {
+    "id": "potters_kiln_damaged",
+    "attempt": 1,
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "numeric_pass": true,
+    "visual_score": 91,
+    "visual_pass": true,
+    "visual_findings": [
+      "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+    ],
+    "reasons": [],
+    "model_judge_status": "MISSING",
+    "full_judge_v2_pass": false,
+    "normalized_sha256": "ab43160acc9c451410a4853bf473ef20e38c3722e88d9bb512b5f2d5bce90edd",
+    "raw_sha256": "56279eb445b6337a3c6d0c1aeb12d7321239f38e45e91bbd355c7d5a3017e68f",
+    "boards": [
+      "art/batch_b3/stages_early/boards/early_1_1x.png",
+      "art/batch_b3/stages_early/boards/early_1_2x.png",
+      "art/batch_b3/stages_early/boards/early_2_1x.png",
+      "art/batch_b3/stages_early/boards/early_2_2x.png",
+      "art/batch_b3/stages_early/boards/early_3_1x.png",
+      "art/batch_b3/stages_early/boards/early_3_2x.png",
+      "art/batch_b3/stages_early/boards/early_4_1x.png",
+      "art/batch_b3/stages_early/boards/early_4_2x.png"
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "source_round": "B3",
+  "runtime_imported": false
+}

@@ -1,0 +1,15 @@
+{
+  "checked_attempts": 60,
+  "unique_coverage_rows": 96,
+  "accepted_png_hashes": 27,
+  "raw_reference_normalized_hashes": "all pass",
+  "transparent_alpha_min": "all zero",
+  "raw_alpha_max": {
+    "254": 6,
+    "255": 54
+  },
+  "unclipped_border": "all pass",
+  "frozen_calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "full_model_judge": "MISSING, not counted as pass",
+  "no_pending_rows": true
+}

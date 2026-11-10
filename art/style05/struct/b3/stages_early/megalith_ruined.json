@@ -1,0 +1,168 @@
+{
+  "record": {
+    "id": "megalith_ruined",
+    "lane": "early",
+    "era": "neolithic",
+    "attempt": 2,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c798-eb77-7151-b3ab-c5d349df0cb2/exec-cda09ff5-b88d-407e-a8cf-5b09dfae0728.png",
+    "prompt": "Use case: stylized-concept. Asset type: a single WorldSim construction-state sprite. Transparent background, no ground plane, cast shadow, text, labels, border, or cropped object. References 1 and 2 are locked style anchors props.png and scene.png; reference 3 is the precise built-state design to preserve. Fine warm brown-black ink over quiet earth-colour wash, broad base plus distinct darker right/lower shadow tone. Outer contours twice secondary lines. Wood has 3 broken longitudinal marks per principal pole; clay 3 short crack groups; stone 3 facet/crack groups; straw 5 bundle marks. One parallel / hatching group of3, no dense all-over hatching. Strong common light upper-left; top and left surfaces lighter, right/lower faces darker. Camera front three-quarter about20 degrees down, horizontal base, orthogonal world geometry, not isometric. Neolithic: no metal, no dyed cloth, no people. Draw a single whole object with ample transparent margin, source shapes recognizable at game scale.\nPrimary request: Same stone monolith cracked into two broad pieces resting inside the original1x1cell, no long horizontal out-of-footprint fallen slab. Silhouette height25px, width proportional to referenced object. No extra objects. Quiet broad wash patches; avoid stipple/granulated all-over surface noise.\nTargeted self-review correction: Two broad FLAT stone fragments lying SIDE BY SIDE in original1x1cell. ABSOLUTELY NO standing stone, no upright pointed silhouette. Width52:height25. Same grey stone wash. No ground patch or halo.",
+    "subject": "megalith_ruined",
+    "references": [
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/neolithic/megalith.png"
+    ],
+    "target_height": 25,
+    "projection_family": "b3_megalith_ruined",
+    "height_band": [
+      23,
+      27
+    ],
+    "height_band_reason": "State geometry predeclared in stages_early/plan.json",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": "exec-cda09ff5-b88d-407e-a8cf-5b09dfae0728.png",
+    "seed": null,
+    "generated_at": "2026-11-10T22:52:27.951Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/B3/stages_early/early/raw/megalith_ruined_try2.png",
+  "raw_sha256": "e527b5b89637fde0a94738f5ddc5a80c23541e84f061e751c06c86f0eac183e4",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/a2/neolithic/megalith.png",
+      "sha256": "5ff6065d2a6588cdb184b6f87ebc2f40d1632a152946b4c564717252b0190d23"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/B3/stages_early/early/normalized/megalith_ruined_try2.png",
+  "normalized_sha256": "aa372c5c9bb1dbb47c694557d959609f3238d03fa1bc609f2b07bc40d8af4ddf",
+  "size": [
+    85,
+    33
+  ],
+  "anchor": [
+    42,
+    28
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (153, 204, 1633, 691)",
+    "uniform Lanczos scale: 0.051759834368530024",
+    "transparent 4px padding; source-canvas anchor: (42, 28)"
+  ],
+  "projection": {
+    "family": "b3_megalith_ruined",
+    "anchor": [
+      42,
+      28
+    ],
+    "height_band": [
+      23,
+      27
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1420,
+    "base_row": 28,
+    "base_error": 0,
+    "height": 25,
+    "gradient_x": -0.5752974656046342,
+    "gradient_y": -2.536788516032811,
+    "light_angle_degrees": 257.2224833021264,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/B3/stages_early/early/raw/megalith_ruined_try2.png",
+    "sha256": "e527b5b89637fde0a94738f5ddc5a80c23541e84f061e751c06c86f0eac183e4",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.2,
+      "saturation_q25": 0.2507097124111323,
+      "saturation_q75": 0.34758491685692156,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.0169000109187163,
+      "foreground_pixels": 16044
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    19,
+    1785,
+    870
+  ],
+  "raw_opaque_bbox": [
+    155,
+    206,
+    1631,
+    689
+  ],
+  "raw_faint_far_ratio": 0.007693189906738732,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_NUMERIC_VISUAL",
+  "failures": [],
+  "review": {
+    "id": "megalith_ruined",
+    "attempt": 2,
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "numeric_pass": true,
+    "visual_score": 91,
+    "visual_pass": true,
+    "visual_findings": [
+      "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+    ],
+    "reasons": [],
+    "model_judge_status": "MISSING",
+    "full_judge_v2_pass": false,
+    "normalized_sha256": "aa372c5c9bb1dbb47c694557d959609f3238d03fa1bc609f2b07bc40d8af4ddf",
+    "raw_sha256": "e527b5b89637fde0a94738f5ddc5a80c23541e84f061e751c06c86f0eac183e4",
+    "boards": [
+      "art/batch_b3/stages_early/boards/early_1_1x.png",
+      "art/batch_b3/stages_early/boards/early_1_2x.png",
+      "art/batch_b3/stages_early/boards/early_2_1x.png",
+      "art/batch_b3/stages_early/boards/early_2_2x.png",
+      "art/batch_b3/stages_early/boards/early_3_1x.png",
+      "art/batch_b3/stages_early/boards/early_3_2x.png",
+      "art/batch_b3/stages_early/boards/early_4_1x.png",
+      "art/batch_b3/stages_early/boards/early_4_2x.png"
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "source_round": "B3",
+  "runtime_imported": false
+}

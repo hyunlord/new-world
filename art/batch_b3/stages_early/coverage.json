@@ -1,0 +1,2590 @@
+[
+  {
+    "family": "bread_oven",
+    "state": "blueprint",
+    "status": "ROOT_RECIPE",
+    "path": null,
+    "reason": "Shared neutral blueprint recipe owned by root; physical footprint retained.",
+    "footprint": [
+      1,
+      1
+    ],
+    "attempts": []
+  },
+  {
+    "family": "bread_oven",
+    "state": "built",
+    "status": "REUSED_A2",
+    "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+    "source_path": "art/style05/struct/a2/neolithic/bread_oven_unlit.png",
+    "sha256": "37a38b65f87013417b4e68c9473dfde5311b9bb565b1aa8ff63041f6608cef3f",
+    "attempts": []
+  },
+  {
+    "family": "bread_oven",
+    "state": "foundation",
+    "attempts": [
+      {
+        "id": "bread_oven_foundation",
+        "attempt": 1,
+        "status": "REJECTED",
+        "numeric_pass": true,
+        "visual_score": 85,
+        "visual_pass": false,
+        "visual_findings": [
+          "Foundation too narrow relative to A2 built; try2 restores broad low footprint."
+        ],
+        "reasons": [
+          "Foundation too narrow relative to A2 built; try2 restores broad low footprint."
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "83e39a003dc6ce19d362da82087d63d78304a061d69b17f7b7e93a94c804c7c4",
+        "raw_sha256": "0528d4c1ee4673ce784ee068e56bc6b05db403b691cf3a69d4b2392e41eb3966",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      },
+      {
+        "id": "bread_oven_foundation",
+        "attempt": 2,
+        "status": "ADOPTED_NUMERIC_VISUAL",
+        "numeric_pass": true,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "5799dd21581d73d8f3fc8e266d41dfbaaa9395435cc1172623f76ea135a3027c",
+        "raw_sha256": "136e4f88e07523c4695d13895edb173e573ac7f593257f0667e8bb4a75e0f6db",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "path": "art/style05/struct/b3/stages_early/bread_oven_foundation.png",
+    "sha256": "5799dd21581d73d8f3fc8e266d41dfbaaa9395435cc1172623f76ea135a3027c",
+    "selected_attempt": 2,
+    "model_judge_status": "MISSING"
+  },
+  {
+    "family": "bread_oven",
+    "state": "half_built",
+    "attempts": [
+      {
+        "id": "bread_oven_half_built",
+        "attempt": 1,
+        "status": "ADOPTED_NUMERIC_VISUAL",
+        "numeric_pass": true,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "6bdd98277088390fd58f561b4e19ea15378eb5b97fd72581b8c04fe28800dc0d",
+        "raw_sha256": "eccab43ceb7ae265c4e5f0b479192adb85f3d62ec5b1c8b959fd5b6669ff46e6",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "path": "art/style05/struct/b3/stages_early/bread_oven_half_built.png",
+    "sha256": "6bdd98277088390fd58f561b4e19ea15378eb5b97fd72581b8c04fe28800dc0d",
+    "selected_attempt": 1,
+    "model_judge_status": "MISSING"
+  },
+  {
+    "family": "bread_oven",
+    "state": "damaged",
+    "attempts": [
+      {
+        "id": "bread_oven_damaged",
+        "attempt": 1,
+        "status": "ADOPTED_NUMERIC_VISUAL",
+        "numeric_pass": true,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "800b0341ba515eb0fc787baa2af3d660e36839cd4f62d90b188bfcae0a8e12b3",
+        "raw_sha256": "2c173ed2c4e84ff305a0d587a3758cc077ef3ff646f71cec69dd7d388ce9c0b0",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "path": "art/style05/struct/b3/stages_early/bread_oven_damaged.png",
+    "sha256": "800b0341ba515eb0fc787baa2af3d660e36839cd4f62d90b188bfcae0a8e12b3",
+    "selected_attempt": 1,
+    "model_judge_status": "MISSING"
+  },
+  {
+    "family": "bread_oven",
+    "state": "ruined",
+    "attempts": [
+      {
+        "id": "bread_oven_ruined",
+        "attempt": 1,
+        "status": "REJECTED",
+        "numeric_pass": true,
+        "visual_score": 85,
+        "visual_pass": false,
+        "visual_findings": [
+          "Ruin too narrow and upright; try2 is broad collapsed crescent."
+        ],
+        "reasons": [
+          "Ruin too narrow and upright; try2 is broad collapsed crescent."
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "932d3475e03092801f94e3cb2faf4a971b272adb8ae5294cbc50fca7fc42da84",
+        "raw_sha256": "d4b926b9de6046856599f02272066fce83cb9299aaab9ad02fc4e808b098550b",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      },
+      {
+        "id": "bread_oven_ruined",
+        "attempt": 2,
+        "status": "ADOPTED_NUMERIC_VISUAL",
+        "numeric_pass": true,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "76ce6113e1177553abebdbea58d4227cd8357e4172c300dfc024a9d607e01a4d",
+        "raw_sha256": "c1d58fd422660b430695ec001b0e96306eb44dea63aeffe7cf644605d225d1ae",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "path": "art/style05/struct/b3/stages_early/bread_oven_ruined.png",
+    "sha256": "76ce6113e1177553abebdbea58d4227cd8357e4172c300dfc024a9d607e01a4d",
+    "selected_attempt": 2,
+    "model_judge_status": "MISSING"
+  },
+  {
+    "family": "potters_kiln",
+    "state": "blueprint",
+    "status": "ROOT_RECIPE",
+    "path": null,
+    "reason": "Shared neutral blueprint recipe owned by root; physical footprint retained.",
+    "footprint": [
+      1,
+      1
+    ],
+    "attempts": []
+  },
+  {
+    "family": "potters_kiln",
+    "state": "built",
+    "status": "REUSED_A2",
+    "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+    "source_path": "art/style05/struct/a2/neolithic/potter_kiln_firing.png",
+    "sha256": "f5a84bfb6733abd5b8781a85879d332de0984c89d3c2810bcf94e110cc6dd135",
+    "attempts": []
+  },
+  {
+    "family": "potters_kiln",
+    "state": "foundation",
+    "attempts": [
+      {
+        "id": "potters_kiln_foundation",
+        "attempt": 1,
+        "status": "ADOPTED_NUMERIC_VISUAL",
+        "numeric_pass": true,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "691054b728c1e228447d67b46b2afce3cc5b6402542abd7007f49017e8d8683c",
+        "raw_sha256": "d28f7b5bc0242dc7f7bb2e90249945067a2fdf38b3a078660d1109f0ca7bc25d",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "path": "art/style05/struct/b3/stages_early/potters_kiln_foundation.png",
+    "sha256": "691054b728c1e228447d67b46b2afce3cc5b6402542abd7007f49017e8d8683c",
+    "selected_attempt": 1,
+    "model_judge_status": "MISSING"
+  },
+  {
+    "family": "potters_kiln",
+    "state": "half_built",
+    "attempts": [
+      {
+        "id": "potters_kiln_half_built",
+        "attempt": 1,
+        "status": "ADOPTED_NUMERIC_VISUAL",
+        "numeric_pass": true,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "3088be920dd415b480f9f8c6255bd218ffbf8b2a32c45388cef48b65891e4931",
+        "raw_sha256": "126969e678fd219233639cd36b15e297cdbd2312b816c32f3351aae05af034b3",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "path": "art/style05/struct/b3/stages_early/potters_kiln_half_built.png",
+    "sha256": "3088be920dd415b480f9f8c6255bd218ffbf8b2a32c45388cef48b65891e4931",
+    "selected_attempt": 1,
+    "model_judge_status": "MISSING"
+  },
+  {
+    "family": "potters_kiln",
+    "state": "damaged",
+    "attempts": [
+      {
+        "id": "potters_kiln_damaged",
+        "attempt": 1,
+        "status": "ADOPTED_NUMERIC_VISUAL",
+        "numeric_pass": true,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "ab43160acc9c451410a4853bf473ef20e38c3722e88d9bb512b5f2d5bce90edd",
+        "raw_sha256": "56279eb445b6337a3c6d0c1aeb12d7321239f38e45e91bbd355c7d5a3017e68f",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "path": "art/style05/struct/b3/stages_early/potters_kiln_damaged.png",
+    "sha256": "ab43160acc9c451410a4853bf473ef20e38c3722e88d9bb512b5f2d5bce90edd",
+    "selected_attempt": 1,
+    "model_judge_status": "MISSING"
+  },
+  {
+    "family": "potters_kiln",
+    "state": "ruined",
+    "attempts": [
+      {
+        "id": "potters_kiln_ruined",
+        "attempt": 1,
+        "status": "SUPERSEDED",
+        "numeric_pass": false,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [
+          "style metric: wash_flatness",
+          "Stronger targeted retry selected."
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "b6cd9739b1c77e3f808cfed6224aa9baff817fdd99ea6edd84f3bd17c9bf2dc5",
+        "raw_sha256": "23edd2c38811b90ed4b79f551d314d951687f082547e80dddf6f4b72b526c607",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      },
+      {
+        "id": "potters_kiln_ruined",
+        "attempt": 2,
+        "status": "ADOPTED_NUMERIC_VISUAL",
+        "numeric_pass": true,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "2041f1cbdbd4f850a2de3391151b9e4052117d75d0295f08acf7c62fb5fe55c9",
+        "raw_sha256": "427790b7d731453a451f57190220e6cea004e1410a01eb44c0dbca20fea09bae",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "path": "art/style05/struct/b3/stages_early/potters_kiln_ruined.png",
+    "sha256": "2041f1cbdbd4f850a2de3391151b9e4052117d75d0295f08acf7c62fb5fe55c9",
+    "selected_attempt": 2,
+    "model_judge_status": "MISSING"
+  },
+  {
+    "family": "smokehouse",
+    "state": "blueprint",
+    "status": "ROOT_RECIPE",
+    "path": null,
+    "reason": "Shared neutral blueprint recipe owned by root; physical footprint retained.",
+    "footprint": [
+      2,
+      2
+    ],
+    "attempts": []
+  },
+  {
+    "family": "smokehouse",
+    "state": "built",
+    "status": "REUSED_A2",
+    "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+    "source_path": "art/style05/struct/a2/neolithic/smokehouse_idle.png",
+    "sha256": "4902a850caed3a2f0dbc7708b27b0f613debde151ae642347e00e9315caf1c3d",
+    "attempts": []
+  },
+  {
+    "family": "smokehouse",
+    "state": "foundation",
+    "attempts": [
+      {
+        "id": "smokehouse_foundation",
+        "attempt": 1,
+        "status": "REJECTED",
+        "numeric_pass": false,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [
+          "style metric: wash_flatness"
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "792667e58445281dfe0c5d511bbf3e09891c1be87aa19ad38d0b7b2d4358fe26",
+        "raw_sha256": "7db01fc9346f57b637a6d107d0420ea49d3e86028b1cf46c34fe11a358313624",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "UNAVAILABLE_REJECTED",
+    "path": null,
+    "reason": "Frozen numeric or visual gate rejected available attempts. Economical adopt-or-reject; no threshold changes or cleanup."
+  },
+  {
+    "family": "smokehouse",
+    "state": "half_built",
+    "attempts": [
+      {
+        "id": "smokehouse_half_built",
+        "attempt": 1,
+        "status": "SUPERSEDED",
+        "numeric_pass": false,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [
+          "style metric: wash_flatness",
+          "Stronger targeted retry selected."
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "ce76ccbdcc5196798ad925d5acb713a7d22928e41d23de9a1bdf78a50ec89a18",
+        "raw_sha256": "e8aa73a37808224a7af536af80db2807f2d0f543c858fcc80def727bf2306c71",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      },
+      {
+        "id": "smokehouse_half_built",
+        "attempt": 2,
+        "status": "ADOPTED_NUMERIC_VISUAL",
+        "numeric_pass": true,
+        "visual_score": 90,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "704a5e34428113875be1ae08ae3fef0570b626ee25520ef5a1db432fbc7f8294",
+        "raw_sha256": "17669e1dec680f7840d1341a31eb4cc5a2fda62d1f5899f87fbb14663986e257",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "path": "art/style05/struct/b3/stages_early/smokehouse_half_built.png",
+    "sha256": "704a5e34428113875be1ae08ae3fef0570b626ee25520ef5a1db432fbc7f8294",
+    "selected_attempt": 2,
+    "model_judge_status": "MISSING"
+  },
+  {
+    "family": "smokehouse",
+    "state": "damaged",
+    "attempts": [
+      {
+        "id": "smokehouse_damaged",
+        "attempt": 1,
+        "status": "ADOPTED_NUMERIC_VISUAL",
+        "numeric_pass": true,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "e9a7613a3a292a840213d198d200013c5878683d63a5be39b1357dcaf56c6e29",
+        "raw_sha256": "2593e19d8967399d58f5d12b5436d0474b450ba8ff8709f2b3b8a85a9bb57b58",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "path": "art/style05/struct/b3/stages_early/smokehouse_damaged.png",
+    "sha256": "e9a7613a3a292a840213d198d200013c5878683d63a5be39b1357dcaf56c6e29",
+    "selected_attempt": 1,
+    "model_judge_status": "MISSING"
+  },
+  {
+    "family": "smokehouse",
+    "state": "ruined",
+    "attempts": [
+      {
+        "id": "smokehouse_ruined",
+        "attempt": 1,
+        "status": "ADOPTED_NUMERIC_VISUAL",
+        "numeric_pass": true,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "d7d0aa9391eda56544fec1c9149228dd5a44301d653d636cd504cb4010731e9b",
+        "raw_sha256": "abab1136403189cfce5104838b8a24e154fd3b8d7cb7742f6834f86878ad7456",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "path": "art/style05/struct/b3/stages_early/smokehouse_ruined.png",
+    "sha256": "d7d0aa9391eda56544fec1c9149228dd5a44301d653d636cd504cb4010731e9b",
+    "selected_attempt": 1,
+    "model_judge_status": "MISSING"
+  },
+  {
+    "family": "well",
+    "state": "blueprint",
+    "status": "ROOT_RECIPE",
+    "path": null,
+    "reason": "Shared neutral blueprint recipe owned by root; physical footprint retained.",
+    "footprint": [
+      1,
+      1
+    ],
+    "attempts": []
+  },
+  {
+    "family": "well",
+    "state": "built",
+    "status": "REUSED_A2",
+    "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+    "source_path": "art/style05/struct/a2/neolithic/well.png",
+    "sha256": "aac1827c268a79d761f161073f08f7dc6f7d0e03fe39e2569d98cf03998799a3",
+    "attempts": []
+  },
+  {
+    "family": "well",
+    "state": "foundation",
+    "attempts": [
+      {
+        "id": "well_foundation",
+        "attempt": 1,
+        "status": "ADOPTED_NUMERIC_VISUAL",
+        "numeric_pass": true,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "04062dcaa1a8ff9a5ea201643f2dc4e5c797ceb5cce05b8473555c2e2a5b6886",
+        "raw_sha256": "e62a21cc727bc1d954522102f269b8173021a447a0b37058c94a870ab1f80f1c",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "path": "art/style05/struct/b3/stages_early/well_foundation.png",
+    "sha256": "04062dcaa1a8ff9a5ea201643f2dc4e5c797ceb5cce05b8473555c2e2a5b6886",
+    "selected_attempt": 1,
+    "model_judge_status": "MISSING"
+  },
+  {
+    "family": "well",
+    "state": "half_built",
+    "attempts": [
+      {
+        "id": "well_half_built",
+        "attempt": 1,
+        "status": "ADOPTED_NUMERIC_VISUAL",
+        "numeric_pass": true,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "4c1d571af476c3452e0d8bb1706f5323f047fa5f82de113a59714d523d14bc46",
+        "raw_sha256": "1bc70f1949708b315f972709d1f151c16fb780c0e30143097c1df55109ba14ff",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "path": "art/style05/struct/b3/stages_early/well_half_built.png",
+    "sha256": "4c1d571af476c3452e0d8bb1706f5323f047fa5f82de113a59714d523d14bc46",
+    "selected_attempt": 1,
+    "model_judge_status": "MISSING"
+  },
+  {
+    "family": "well",
+    "state": "damaged",
+    "attempts": [
+      {
+        "id": "well_damaged",
+        "attempt": 1,
+        "status": "ADOPTED_NUMERIC_VISUAL",
+        "numeric_pass": true,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "edd79edf1829cadd354b91852f3b6917b25e2de08356bdc6267a9d6cd767c2e7",
+        "raw_sha256": "ecd2c7d5917f56293ffa09fd211833999dabaa19a6803d1502554370486a9278",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "path": "art/style05/struct/b3/stages_early/well_damaged.png",
+    "sha256": "edd79edf1829cadd354b91852f3b6917b25e2de08356bdc6267a9d6cd767c2e7",
+    "selected_attempt": 1,
+    "model_judge_status": "MISSING"
+  },
+  {
+    "family": "well",
+    "state": "ruined",
+    "attempts": [
+      {
+        "id": "well_ruined",
+        "attempt": 1,
+        "status": "REJECTED",
+        "numeric_pass": false,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [
+          "style metric: wash_flatness"
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "05236ba152b4ae4394fc9f513735a76f5b2b52b9cd700df4d33ba5ccd34cb311",
+        "raw_sha256": "38eafddb2f4609f1f4cf0434b178068d06e932c3f8100b6dc816ec2747ac9354",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "UNAVAILABLE_REJECTED",
+    "path": null,
+    "reason": "Frozen numeric or visual gate rejected available attempts. Economical adopt-or-reject; no threshold changes or cleanup."
+  },
+  {
+    "family": "grinding_stone",
+    "state": "blueprint",
+    "status": "ROOT_RECIPE",
+    "path": null,
+    "reason": "Shared neutral blueprint recipe owned by root; physical footprint retained.",
+    "footprint": [
+      1,
+      1
+    ],
+    "attempts": []
+  },
+  {
+    "family": "grinding_stone",
+    "state": "built",
+    "status": "REUSED_A2",
+    "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+    "source_path": "art/style05/struct/grinding_stone.png",
+    "sha256": "a5ce6f052a3d8ac25fa45aabac802c2dd9b8fdb2ef573a8b861279481d659b63",
+    "attempts": []
+  },
+  {
+    "family": "grinding_stone",
+    "state": "foundation",
+    "attempts": [],
+    "status": "NOT_APPLICABLE",
+    "path": null,
+    "reason": "Portable/placed object has no staged construction: place complete object; damage and ruin are supplied separately."
+  },
+  {
+    "family": "grinding_stone",
+    "state": "half_built",
+    "attempts": [],
+    "status": "NOT_APPLICABLE",
+    "path": null,
+    "reason": "Portable/placed object has no staged construction: place complete object; damage and ruin are supplied separately."
+  },
+  {
+    "family": "grinding_stone",
+    "state": "damaged",
+    "attempts": [
+      {
+        "id": "grinding_stone_damaged",
+        "attempt": 1,
+        "status": "ADOPTED_NUMERIC_VISUAL",
+        "numeric_pass": true,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "354e115d0686a0576139fbe4973b58500fcce2b070c6e64fd2bf208c1c32bd4b",
+        "raw_sha256": "1fa2ece5f1b0d64c403306b839c3ed206cfd6c1e45b0db5176364ff48cb789d6",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "path": "art/style05/struct/b3/stages_early/grinding_stone_damaged.png",
+    "sha256": "354e115d0686a0576139fbe4973b58500fcce2b070c6e64fd2bf208c1c32bd4b",
+    "selected_attempt": 1,
+    "model_judge_status": "MISSING"
+  },
+  {
+    "family": "grinding_stone",
+    "state": "ruined",
+    "attempts": [
+      {
+        "id": "grinding_stone_ruined",
+        "attempt": 1,
+        "status": "ADOPTED_NUMERIC_VISUAL",
+        "numeric_pass": true,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "10210463c9fab99c9ff9a2bee40cdcd8fdc589a3805745de524432a41b8164cd",
+        "raw_sha256": "026fb5794fca122fbdce8e16e02ffc0863cf74237328213991e5f0b0f757daf2",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "path": "art/style05/struct/b3/stages_early/grinding_stone_ruined.png",
+    "sha256": "10210463c9fab99c9ff9a2bee40cdcd8fdc589a3805745de524432a41b8164cd",
+    "selected_attempt": 1,
+    "model_judge_status": "MISSING"
+  },
+  {
+    "family": "loom",
+    "state": "blueprint",
+    "status": "ROOT_RECIPE",
+    "path": null,
+    "reason": "Shared neutral blueprint recipe owned by root; physical footprint retained.",
+    "footprint": [
+      2,
+      1
+    ],
+    "attempts": []
+  },
+  {
+    "family": "loom",
+    "state": "built",
+    "status": "REUSED_A2",
+    "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+    "source_path": "art/style05/struct/a2/neolithic/loom_loaded.png",
+    "sha256": "049fef15873b5e5183abc25b48fdb2392dc38d01c8e2eb914f0a17df97567c9a",
+    "attempts": []
+  },
+  {
+    "family": "loom",
+    "state": "foundation",
+    "attempts": [],
+    "status": "NOT_APPLICABLE",
+    "path": null,
+    "reason": "Portable/placed object has no staged construction: place complete object; damage and ruin are supplied separately."
+  },
+  {
+    "family": "loom",
+    "state": "half_built",
+    "attempts": [],
+    "status": "NOT_APPLICABLE",
+    "path": null,
+    "reason": "Portable/placed object has no staged construction: place complete object; damage and ruin are supplied separately."
+  },
+  {
+    "family": "loom",
+    "state": "damaged",
+    "attempts": [
+      {
+        "id": "loom_damaged",
+        "attempt": 1,
+        "status": "SUPERSEDED",
+        "numeric_pass": false,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [
+          "style metric: wash_flatness",
+          "Stronger targeted retry selected."
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "f81c18386cfb192c5c5a8db3dc71ddd3fa085063a236f4b4679fb48840a12c7d",
+        "raw_sha256": "96342868a688e011dc39d180c6308c4efed6fec399060850f3413d57cf8c4984",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      },
+      {
+        "id": "loom_damaged",
+        "attempt": 2,
+        "status": "ADOPTED_NUMERIC_VISUAL",
+        "numeric_pass": true,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "265a3a7d8eab2cf86e8a35fc338c01fc95f7911ec78df442c869ba85edf8c165",
+        "raw_sha256": "f65d882f7f7c8294d6e287efc13def89d5022a886b91b0e34d145732004afa26",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "path": "art/style05/struct/b3/stages_early/loom_damaged.png",
+    "sha256": "265a3a7d8eab2cf86e8a35fc338c01fc95f7911ec78df442c869ba85edf8c165",
+    "selected_attempt": 2,
+    "model_judge_status": "MISSING"
+  },
+  {
+    "family": "loom",
+    "state": "ruined",
+    "attempts": [
+      {
+        "id": "loom_ruined",
+        "attempt": 1,
+        "status": "REJECTED",
+        "numeric_pass": false,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [
+          "style metric: wash_flatness"
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "135c9dbf644602e8d9c30a6327247cc6f3f858749999684fa841dba08dccc605",
+        "raw_sha256": "0b0246bf171769d67c17ba072554c84cfd9a812a1a84b240bcd1f2326ab8c39d",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "UNAVAILABLE_REJECTED",
+    "path": null,
+    "reason": "Frozen numeric or visual gate rejected available attempts. Economical adopt-or-reject; no threshold changes or cleanup."
+  },
+  {
+    "family": "megalith",
+    "state": "blueprint",
+    "status": "ROOT_RECIPE",
+    "path": null,
+    "reason": "Shared neutral blueprint recipe owned by root; physical footprint retained.",
+    "footprint": [
+      1,
+      1
+    ],
+    "attempts": []
+  },
+  {
+    "family": "megalith",
+    "state": "built",
+    "status": "REUSED_A2",
+    "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+    "source_path": "art/style05/struct/a2/neolithic/megalith.png",
+    "sha256": "5ff6065d2a6588cdb184b6f87ebc2f40d1632a152946b4c564717252b0190d23",
+    "attempts": []
+  },
+  {
+    "family": "megalith",
+    "state": "foundation",
+    "attempts": [
+      {
+        "id": "megalith_foundation",
+        "attempt": 1,
+        "status": "ADOPTED_NUMERIC_VISUAL",
+        "numeric_pass": true,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "7a0d62b5a2b65502d1ea47cf2bcb8d98a601c3ded613466c5b2e7eaab2b3a6f9",
+        "raw_sha256": "25d14663f1eef4ef8a2dd657c83dbc6a88b520615bd34f56db3b0cb02fc2bbe2",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "path": "art/style05/struct/b3/stages_early/megalith_foundation.png",
+    "sha256": "7a0d62b5a2b65502d1ea47cf2bcb8d98a601c3ded613466c5b2e7eaab2b3a6f9",
+    "selected_attempt": 1,
+    "model_judge_status": "MISSING"
+  },
+  {
+    "family": "megalith",
+    "state": "half_built",
+    "attempts": [
+      {
+        "id": "megalith_half_built",
+        "attempt": 1,
+        "status": "REJECTED",
+        "numeric_pass": false,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [
+          "style metric: wash_flatness"
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "0326fa49c70880528f38a6fb867044f6d9a17c20e2b611e8fd2f795db5d107f4",
+        "raw_sha256": "d16777e8173ec8f4247855b573228a12947c61c86a6329c1e1929b1985f3ff8f",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "UNAVAILABLE_REJECTED",
+    "path": null,
+    "reason": "Frozen numeric or visual gate rejected available attempts. Economical adopt-or-reject; no threshold changes or cleanup."
+  },
+  {
+    "family": "megalith",
+    "state": "damaged",
+    "attempts": [
+      {
+        "id": "megalith_damaged",
+        "attempt": 1,
+        "status": "ADOPTED_NUMERIC_VISUAL",
+        "numeric_pass": true,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "71123a7e6f571896a872f065fe3f161b9f9d0460caf459fa617bf14d1694bc5e",
+        "raw_sha256": "fd9d9f9f63a5b25d391b6b3dce70f8eb1f048663c22b0425f757bc46fcaa612e",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "path": "art/style05/struct/b3/stages_early/megalith_damaged.png",
+    "sha256": "71123a7e6f571896a872f065fe3f161b9f9d0460caf459fa617bf14d1694bc5e",
+    "selected_attempt": 1,
+    "model_judge_status": "MISSING"
+  },
+  {
+    "family": "megalith",
+    "state": "ruined",
+    "attempts": [
+      {
+        "id": "megalith_ruined",
+        "attempt": 1,
+        "status": "REJECTED",
+        "numeric_pass": true,
+        "visual_score": 85,
+        "visual_pass": false,
+        "visual_findings": [
+          "Still upright, fails ruined-state readability despite numeric pass."
+        ],
+        "reasons": [
+          "Still upright, fails ruined-state readability despite numeric pass."
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "29bdc256cc574dda8377890014a72feb569e3861de3e8ba371fbe16e24517d55",
+        "raw_sha256": "437aaba9642198096177e577c1b3187b91d09bf162cfa02d4035fa1f14e84946",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      },
+      {
+        "id": "megalith_ruined",
+        "attempt": 2,
+        "status": "ADOPTED_NUMERIC_VISUAL",
+        "numeric_pass": true,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "aa372c5c9bb1dbb47c694557d959609f3238d03fa1bc609f2b07bc40d8af4ddf",
+        "raw_sha256": "e527b5b89637fde0a94738f5ddc5a80c23541e84f061e751c06c86f0eac183e4",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "path": "art/style05/struct/b3/stages_early/megalith_ruined.png",
+    "sha256": "aa372c5c9bb1dbb47c694557d959609f3238d03fa1bc609f2b07bc40d8af4ddf",
+    "selected_attempt": 2,
+    "model_judge_status": "MISSING"
+  },
+  {
+    "family": "pen_fence",
+    "state": "blueprint",
+    "status": "ROOT_RECIPE",
+    "path": null,
+    "reason": "Shared neutral blueprint recipe owned by root; physical footprint retained.",
+    "footprint": [
+      1,
+      1
+    ],
+    "attempts": []
+  },
+  {
+    "family": "pen_fence",
+    "state": "built",
+    "status": "REUSED_A2",
+    "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+    "source_path": "art/style05/struct/a2/neolithic/pen_fence_straight.png",
+    "sha256": "93da3ddc08dfbab136a16d1c6ff842563d930bb2845e8b042b7632d546e416e5",
+    "attempts": []
+  },
+  {
+    "family": "pen_fence",
+    "state": "foundation",
+    "attempts": [
+      {
+        "id": "pen_fence_foundation",
+        "attempt": 1,
+        "status": "ADOPTED_NUMERIC_VISUAL",
+        "numeric_pass": true,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "4042c003e9217d7a8dde95295767ebde4096e91b153fe5123694b2a289e37c34",
+        "raw_sha256": "62e184c81f001d32aeadd08fc97df0c595d1caa2d15e1cc7fdd038e6130646d2",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "path": "art/style05/struct/b3/stages_early/pen_fence_foundation.png",
+    "sha256": "4042c003e9217d7a8dde95295767ebde4096e91b153fe5123694b2a289e37c34",
+    "selected_attempt": 1,
+    "model_judge_status": "MISSING"
+  },
+  {
+    "family": "pen_fence",
+    "state": "half_built",
+    "attempts": [
+      {
+        "id": "pen_fence_half_built",
+        "attempt": 1,
+        "status": "REJECTED",
+        "numeric_pass": false,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [
+          "style metric: wash_flatness"
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "97f728d972b33c6850a2541c8da3f78e1d6e1d395308ff6813b1a74621740e46",
+        "raw_sha256": "e39c4a6d275595d0d82d1b04dee6bbab51bb338e3c51caa30ac8452e1dcde411",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "UNAVAILABLE_REJECTED",
+    "path": null,
+    "reason": "Frozen numeric or visual gate rejected available attempts. Economical adopt-or-reject; no threshold changes or cleanup."
+  },
+  {
+    "family": "pen_fence",
+    "state": "damaged",
+    "attempts": [],
+    "status": "REUSED_A2",
+    "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+    "source_path": "art/style05/struct/a2/neolithic/pen_fence_damaged.png",
+    "sha256": "e827eb2791c9e978c0ca9eb5f7c5342f0dd6f6bd2e857172fd1c325faca61123"
+  },
+  {
+    "family": "pen_fence",
+    "state": "ruined",
+    "attempts": [
+      {
+        "id": "pen_fence_ruined",
+        "attempt": 1,
+        "status": "REJECTED",
+        "numeric_pass": false,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [
+          "style metric: wash_flatness"
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "70025e3f2b775acd2933cada2d45cfefd7f4e7671930d8fa461ea09645a1d9b4",
+        "raw_sha256": "f001dc02de072deb713b41268c8c1cad96d9c213dbd219482c39897318c578f6",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "UNAVAILABLE_REJECTED",
+    "path": null,
+    "reason": "Frozen numeric or visual gate rejected available attempts. Economical adopt-or-reject; no threshold changes or cleanup."
+  },
+  {
+    "family": "pen_gate",
+    "state": "blueprint",
+    "status": "ROOT_RECIPE",
+    "path": null,
+    "reason": "Shared neutral blueprint recipe owned by root; physical footprint retained.",
+    "footprint": [
+      1,
+      1
+    ],
+    "attempts": []
+  },
+  {
+    "family": "pen_gate",
+    "state": "built",
+    "status": "REUSED_A2",
+    "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+    "source_path": "art/style05/struct/a2/neolithic/pen_gate_closed.png",
+    "sha256": "1023719e46a811c48caefb878b1347075bfe1f233e8d580adc2d7538c59cbb92",
+    "attempts": []
+  },
+  {
+    "family": "pen_gate",
+    "state": "foundation",
+    "attempts": [
+      {
+        "id": "pen_gate_foundation",
+        "attempt": 1,
+        "status": "REJECTED",
+        "numeric_pass": false,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [
+          "style metric: wash_flatness"
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "1156cd1898572132a3bcbec459a2ec5b789b0c7fe4df0280e4eab3a9ab12a6fc",
+        "raw_sha256": "78ecfa312a8b6128719ce361a7ddc3aead84d753652dcbc57271c0205cce1955",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "UNAVAILABLE_REJECTED",
+    "path": null,
+    "reason": "Frozen numeric or visual gate rejected available attempts. Economical adopt-or-reject; no threshold changes or cleanup."
+  },
+  {
+    "family": "pen_gate",
+    "state": "half_built",
+    "attempts": [
+      {
+        "id": "pen_gate_half_built",
+        "attempt": 1,
+        "status": "REJECTED",
+        "numeric_pass": false,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [
+          "style metric: wash_flatness"
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "4ee1dd733db1f45d8d9fc6f456c038e0e046c099ce1948078d494626a9f95d09",
+        "raw_sha256": "bc35f743a4eb75207d93a4340c39bcc5a8f6dcb99479e0fe4574bf3a664c3503",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "UNAVAILABLE_REJECTED",
+    "path": null,
+    "reason": "Frozen numeric or visual gate rejected available attempts. Economical adopt-or-reject; no threshold changes or cleanup."
+  },
+  {
+    "family": "pen_gate",
+    "state": "damaged",
+    "attempts": [
+      {
+        "id": "pen_gate_damaged",
+        "attempt": 1,
+        "status": "REJECTED",
+        "numeric_pass": false,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [
+          "style metric: wash_flatness"
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "a127ca6ed3bc6f1645e10533f7c30db0bfff7de2cc13ccc206766d7433d1cca9",
+        "raw_sha256": "15793bccc8d6ec2b23422fdbe74534eeccb04ea6a3222afd82f5c2ff7800c693",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "UNAVAILABLE_REJECTED",
+    "path": null,
+    "reason": "Frozen numeric or visual gate rejected available attempts. Economical adopt-or-reject; no threshold changes or cleanup."
+  },
+  {
+    "family": "pen_gate",
+    "state": "ruined",
+    "attempts": [
+      {
+        "id": "pen_gate_ruined",
+        "attempt": 1,
+        "status": "REJECTED",
+        "numeric_pass": false,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [
+          "style metric: wash_flatness"
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "f30bcb8b7e0d2b91306b485a1a172b15192012b527330aefc605a42b8c73e5a6",
+        "raw_sha256": "91c9dd9d60527305798643ff3fdcd21b2cb90b5fc9a6adaccde8a609adfd8235",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "UNAVAILABLE_REJECTED",
+    "path": null,
+    "reason": "Frozen numeric or visual gate rejected available attempts. Economical adopt-or-reject; no threshold changes or cleanup."
+  },
+  {
+    "family": "ritual_site",
+    "state": "blueprint",
+    "status": "ROOT_RECIPE",
+    "path": null,
+    "reason": "Shared neutral blueprint recipe owned by root; physical footprint retained.",
+    "footprint": [
+      2,
+      2
+    ],
+    "attempts": []
+  },
+  {
+    "family": "ritual_site",
+    "state": "built",
+    "status": "REUSED_A2",
+    "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+    "source_path": "art/style05/struct/a2/neolithic/ritual_site_empty.png",
+    "sha256": "683c1599ff96abbd8477bd63d976d15ee23d3477aab4813281f8dcfaea746edb",
+    "attempts": []
+  },
+  {
+    "family": "ritual_site",
+    "state": "foundation",
+    "attempts": [
+      {
+        "id": "ritual_site_foundation",
+        "attempt": 1,
+        "status": "REJECTED",
+        "numeric_pass": true,
+        "visual_score": 85,
+        "visual_pass": false,
+        "visual_findings": [
+          "Only three footing positions and about half built-ring width: fails original five-upright-plus-altar layout and footprint identity. Withheld after independent root review."
+        ],
+        "reasons": [
+          "Only three footing positions and about half built-ring width: fails original five-upright-plus-altar layout and footprint identity. Withheld after independent root review."
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "80fab34de3b5959b5037799e2d4bd092e77e0a7af38f183d8ecef2c59c892405",
+        "raw_sha256": "a742459ee8033f013603f12c65935815ac73bbc6a277b3e5bb45141b89cef7ba",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "UNAVAILABLE_REJECTED",
+    "path": null,
+    "reason": "Frozen numeric or visual gate rejected available attempts. Economical adopt-or-reject; no threshold changes or cleanup."
+  },
+  {
+    "family": "ritual_site",
+    "state": "half_built",
+    "attempts": [
+      {
+        "id": "ritual_site_half_built",
+        "attempt": 1,
+        "status": "REJECTED",
+        "numeric_pass": false,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [
+          "style metric: wash_flatness"
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "204111f03d0b34f57c713afa393cd0a1962c0ef53716a5848e2f811984f629e3",
+        "raw_sha256": "5491088114a2cf53bb4e78a2646b8f33da21d62f3e0cee0982be4e131e21045e",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "UNAVAILABLE_REJECTED",
+    "path": null,
+    "reason": "Frozen numeric or visual gate rejected available attempts. Economical adopt-or-reject; no threshold changes or cleanup."
+  },
+  {
+    "family": "ritual_site",
+    "state": "damaged",
+    "attempts": [
+      {
+        "id": "ritual_site_damaged",
+        "attempt": 1,
+        "status": "REJECTED",
+        "numeric_pass": false,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [
+          "projection upper-left luminance gradient failed",
+          "style metric: wash_flatness"
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "a063343a939d7ac8f59afd74f3e11f43fb3f14f4a37ef4d5c95c745607dd9908",
+        "raw_sha256": "5647402e45bf8d729b560178d039427bddc3f989de11e507a234309d0f631cbb",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "UNAVAILABLE_REJECTED",
+    "path": null,
+    "reason": "Frozen numeric or visual gate rejected available attempts. Economical adopt-or-reject; no threshold changes or cleanup."
+  },
+  {
+    "family": "ritual_site",
+    "state": "ruined",
+    "attempts": [
+      {
+        "id": "ritual_site_ruined",
+        "attempt": 1,
+        "status": "REJECTED",
+        "numeric_pass": false,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [
+          "style metric: wash_flatness"
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "8478ff8f9bbd87024d607e94a4f0a72a7e2497c713e2434c137c238f6497d7fd",
+        "raw_sha256": "ec270a91823f483268caa7ef5a3350f87f6941d5deba26254d543c42cff1bae0",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "UNAVAILABLE_REJECTED",
+    "path": null,
+    "reason": "Frozen numeric or visual gate rejected available attempts. Economical adopt-or-reject; no threshold changes or cleanup."
+  },
+  {
+    "family": "drying_rack",
+    "state": "blueprint",
+    "status": "ROOT_RECIPE",
+    "path": null,
+    "reason": "Shared neutral blueprint recipe owned by root; physical footprint retained.",
+    "footprint": [
+      2,
+      1
+    ],
+    "attempts": []
+  },
+  {
+    "family": "drying_rack",
+    "state": "built",
+    "status": "REUSED_A2",
+    "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+    "source_path": "art/style05/struct/drying_rack_empty.png",
+    "sha256": "37034e95dd7ccd54bf1d2fdff87523f1220d360de3b515588a4898b5b055afd8",
+    "attempts": []
+  },
+  {
+    "family": "drying_rack",
+    "state": "foundation",
+    "attempts": [
+      {
+        "id": "drying_rack_foundation",
+        "attempt": 1,
+        "status": "ADOPTED_NUMERIC_VISUAL",
+        "numeric_pass": true,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "0d8659940f98100c6706e660cedac51d981e6c35875bd3ca5862f23baf04d55c",
+        "raw_sha256": "659fdbce724712b3f8cff9036d580d2ce6f63e49db6a4596ac32d7813d23746b",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "path": "art/style05/struct/b3/stages_early/drying_rack_foundation.png",
+    "sha256": "0d8659940f98100c6706e660cedac51d981e6c35875bd3ca5862f23baf04d55c",
+    "selected_attempt": 1,
+    "model_judge_status": "MISSING"
+  },
+  {
+    "family": "drying_rack",
+    "state": "half_built",
+    "attempts": [
+      {
+        "id": "drying_rack_half_built",
+        "attempt": 1,
+        "status": "REJECTED",
+        "numeric_pass": false,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [
+          "style metric: wash_flatness"
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "52ecf275b69ff2002e008abd03acfb7103842cad87d24408ecedbde9a2e7215a",
+        "raw_sha256": "d5474718fcd5f7333ef6e86a8454f97b68675e96f9575e851bab45ab36a52fd5",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "UNAVAILABLE_REJECTED",
+    "path": null,
+    "reason": "Frozen numeric or visual gate rejected available attempts. Economical adopt-or-reject; no threshold changes or cleanup."
+  },
+  {
+    "family": "drying_rack",
+    "state": "damaged",
+    "attempts": [
+      {
+        "id": "drying_rack_damaged",
+        "attempt": 1,
+        "status": "REJECTED",
+        "numeric_pass": false,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [
+          "style metric: wash_flatness"
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "5ae6df8c31b5fe4a1c7a0bf274b861edb60e5036075bb71131b636daed2d004a",
+        "raw_sha256": "b6004d099eaf50f1dff01ab147c2e964f2ee5baee62e78ca40a81ac421b61ead",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "UNAVAILABLE_REJECTED",
+    "path": null,
+    "reason": "Frozen numeric or visual gate rejected available attempts. Economical adopt-or-reject; no threshold changes or cleanup."
+  },
+  {
+    "family": "drying_rack",
+    "state": "ruined",
+    "attempts": [
+      {
+        "id": "drying_rack_ruined",
+        "attempt": 1,
+        "status": "REJECTED",
+        "numeric_pass": false,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [
+          "style metric: wash_flatness"
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "6d961853cbe4c2321292aaba78fe6a5b9bcd0aed2fc2264b50b4095d522b7922",
+        "raw_sha256": "631b63504060f981675c7ca607b264d969284153b4254da37da8c4b883dcc25a",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "UNAVAILABLE_REJECTED",
+    "path": null,
+    "reason": "Frozen numeric or visual gate rejected available attempts. Economical adopt-or-reject; no threshold changes or cleanup."
+  },
+  {
+    "family": "fish_weir",
+    "state": "blueprint",
+    "status": "ROOT_RECIPE",
+    "path": null,
+    "reason": "Shared neutral blueprint recipe owned by root; physical footprint retained.",
+    "footprint": [
+      2,
+      2
+    ],
+    "attempts": []
+  },
+  {
+    "family": "fish_weir",
+    "state": "built",
+    "status": "REUSED_A2",
+    "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+    "source_path": "art/style05/struct/a2/neolithic/fish_weir_empty.png",
+    "sha256": "eb89f63f826892e9fbd968b941f8819034049379634965661f317703866bc5f2",
+    "attempts": []
+  },
+  {
+    "family": "fish_weir",
+    "state": "foundation",
+    "attempts": [
+      {
+        "id": "fish_weir_foundation",
+        "attempt": 1,
+        "status": "REJECTED",
+        "numeric_pass": false,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [
+          "style metric: wash_flatness"
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "2968e825d84cd7970052d6c469c276dd2f78a57c0857eb4867de784b2ae306ab",
+        "raw_sha256": "46785337f156b2a9d0218f82bf95f02a58bf7173dab0d374acc49ffe61b1b525",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "UNAVAILABLE_REJECTED",
+    "path": null,
+    "reason": "Frozen numeric or visual gate rejected available attempts. Economical adopt-or-reject; no threshold changes or cleanup."
+  },
+  {
+    "family": "fish_weir",
+    "state": "half_built",
+    "attempts": [
+      {
+        "id": "fish_weir_half_built",
+        "attempt": 1,
+        "status": "REJECTED",
+        "numeric_pass": false,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [
+          "style metric: wash_flatness"
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "35e2c2bc2b6cc6457784e053c21496d5a6b83f90084d69e87e9d5f5105531174",
+        "raw_sha256": "733311eed7b806353ff70bf8d3082bf42d3b6aa708d55c7fe70916fb8dd30d04",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "UNAVAILABLE_REJECTED",
+    "path": null,
+    "reason": "Frozen numeric or visual gate rejected available attempts. Economical adopt-or-reject; no threshold changes or cleanup."
+  },
+  {
+    "family": "fish_weir",
+    "state": "damaged",
+    "attempts": [
+      {
+        "id": "fish_weir_damaged",
+        "attempt": 1,
+        "status": "ADOPTED_NUMERIC_VISUAL",
+        "numeric_pass": true,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "27bf3f7b69d33d5fba3199d008d7b0ac33ceec5ed721c7cd9d5b5cfa13fffe72",
+        "raw_sha256": "aeff398256d42dd71935b8487a911fb6dcebc6cc8e5a6a53a1d74031b4a7d41c",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "path": "art/style05/struct/b3/stages_early/fish_weir_damaged.png",
+    "sha256": "27bf3f7b69d33d5fba3199d008d7b0ac33ceec5ed721c7cd9d5b5cfa13fffe72",
+    "selected_attempt": 1,
+    "model_judge_status": "MISSING"
+  },
+  {
+    "family": "fish_weir",
+    "state": "ruined",
+    "attempts": [
+      {
+        "id": "fish_weir_ruined",
+        "attempt": 1,
+        "status": "REJECTED",
+        "numeric_pass": false,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [
+          "style metric: wash_flatness"
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "9e3218bca52ee4e56a527a8272807a81c339e58a14f2ffc21c17a3dae79f294a",
+        "raw_sha256": "4ee5d2c1d31e473e103adc4e572ce5eff74278d7f247aa8f42014f7ade56eba0",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "UNAVAILABLE_REJECTED",
+    "path": null,
+    "reason": "Frozen numeric or visual gate rejected available attempts. Economical adopt-or-reject; no threshold changes or cleanup."
+  },
+  {
+    "family": "hearth",
+    "state": "blueprint",
+    "status": "ROOT_RECIPE",
+    "path": null,
+    "reason": "Shared neutral blueprint recipe owned by root; physical footprint retained.",
+    "footprint": [
+      1,
+      1
+    ],
+    "attempts": []
+  },
+  {
+    "family": "hearth",
+    "state": "built",
+    "status": "REUSED_A2",
+    "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+    "source_path": "art/style05/struct/hearth_unlit.png",
+    "sha256": "465b7812fadb49ed466617a415a75b968cb5a43d58ea9b849dc6decb3d576704",
+    "attempts": []
+  },
+  {
+    "family": "hearth",
+    "state": "foundation",
+    "attempts": [],
+    "status": "NOT_APPLICABLE",
+    "path": null,
+    "reason": "Portable/placed object has no staged construction: place complete object; damage and ruin are supplied separately."
+  },
+  {
+    "family": "hearth",
+    "state": "half_built",
+    "attempts": [],
+    "status": "NOT_APPLICABLE",
+    "path": null,
+    "reason": "Portable/placed object has no staged construction: place complete object; damage and ruin are supplied separately."
+  },
+  {
+    "family": "hearth",
+    "state": "damaged",
+    "attempts": [
+      {
+        "id": "hearth_damaged",
+        "attempt": 1,
+        "status": "ADOPTED_NUMERIC_VISUAL",
+        "numeric_pass": true,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "24983cc69405dd199705d5e9e7f46f338ba880dc9635a0ac80493c6d9b322eec",
+        "raw_sha256": "b138aa8ff15a74c38106d7c511554f7018c5bee07c524887b483e7a37e0fa96d",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "path": "art/style05/struct/b3/stages_early/hearth_damaged.png",
+    "sha256": "24983cc69405dd199705d5e9e7f46f338ba880dc9635a0ac80493c6d9b322eec",
+    "selected_attempt": 1,
+    "model_judge_status": "MISSING"
+  },
+  {
+    "family": "hearth",
+    "state": "ruined",
+    "attempts": [
+      {
+        "id": "hearth_ruined",
+        "attempt": 1,
+        "status": "REJECTED",
+        "numeric_pass": false,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [
+          "style metric: wash_flatness"
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "44ebc60f77baaf646a265fe48aef057c1cffb47623973a610531b16c804d8ea5",
+        "raw_sha256": "5d32262d8e5769fe01d5fbfde85a050afc4c32e4724b5143909fb1607950cc02",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "UNAVAILABLE_REJECTED",
+    "path": null,
+    "reason": "Frozen numeric or visual gate rejected available attempts. Economical adopt-or-reject; no threshold changes or cleanup."
+  },
+  {
+    "family": "lean_to",
+    "state": "blueprint",
+    "status": "ROOT_RECIPE",
+    "path": null,
+    "reason": "Shared neutral blueprint recipe owned by root; physical footprint retained.",
+    "footprint": [
+      2,
+      2
+    ],
+    "attempts": []
+  },
+  {
+    "family": "lean_to",
+    "state": "built",
+    "status": "REUSED_A2",
+    "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+    "source_path": "art/style05/struct/lean_to.png",
+    "sha256": "58e5fe1b54fc3a8645c08c3da81b88322b4fcf0f35e657bcc5e381dfbd9e7108",
+    "attempts": []
+  },
+  {
+    "family": "lean_to",
+    "state": "foundation",
+    "attempts": [
+      {
+        "id": "lean_to_foundation",
+        "attempt": 1,
+        "status": "REJECTED",
+        "numeric_pass": false,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [
+          "style metric: wash_flatness"
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "66076b99be978a45c260dbaf3e4150ff450f1e5851fca3f280cb3c79aca56a30",
+        "raw_sha256": "f7e7faae2bec8491bb87dd1feea4d96dd4c61423eb87fefed74eae5defa801d5",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "UNAVAILABLE_REJECTED",
+    "path": null,
+    "reason": "Frozen numeric or visual gate rejected available attempts. Economical adopt-or-reject; no threshold changes or cleanup."
+  },
+  {
+    "family": "lean_to",
+    "state": "half_built",
+    "attempts": [
+      {
+        "id": "lean_to_half_built",
+        "attempt": 1,
+        "status": "REJECTED",
+        "numeric_pass": false,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [
+          "style metric: wash_flatness"
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "d2054b6c14e864ef5b3b15454b113ddda6f37ad31b1f76257ca08d32cfb43ee9",
+        "raw_sha256": "4cbd48ac23fb53ded66a3d4a554b924d3dd57ff682cbbeefd326e8f2b01214a7",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "UNAVAILABLE_REJECTED",
+    "path": null,
+    "reason": "Frozen numeric or visual gate rejected available attempts. Economical adopt-or-reject; no threshold changes or cleanup."
+  },
+  {
+    "family": "lean_to",
+    "state": "damaged",
+    "attempts": [
+      {
+        "id": "lean_to_damaged",
+        "attempt": 1,
+        "status": "ADOPTED_NUMERIC_VISUAL",
+        "numeric_pass": true,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "20a021ad2c662072248bdde2f67a04abcf17231a9d8de423259b785c2f5c065f",
+        "raw_sha256": "4fe355a583fac9e433fd21562e2e2675aaba3f5f50e990bd3cf04062dadbe937",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "path": "art/style05/struct/b3/stages_early/lean_to_damaged.png",
+    "sha256": "20a021ad2c662072248bdde2f67a04abcf17231a9d8de423259b785c2f5c065f",
+    "selected_attempt": 1,
+    "model_judge_status": "MISSING"
+  },
+  {
+    "family": "lean_to",
+    "state": "ruined",
+    "attempts": [
+      {
+        "id": "lean_to_ruined",
+        "attempt": 1,
+        "status": "REJECTED",
+        "numeric_pass": false,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [
+          "style metric: wash_flatness"
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "999268e763030e503bd3b47d1071f5f9ad553641871531aae97ecfcf59190d26",
+        "raw_sha256": "b16e2943c3120d34dae7cab62657625907bc4e3ae908cbef45d304c603486eed",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "UNAVAILABLE_REJECTED",
+    "path": null,
+    "reason": "Frozen numeric or visual gate rejected available attempts. Economical adopt-or-reject; no threshold changes or cleanup."
+  },
+  {
+    "family": "trap",
+    "state": "blueprint",
+    "status": "ROOT_RECIPE",
+    "path": null,
+    "reason": "Shared neutral blueprint recipe owned by root; physical footprint retained.",
+    "footprint": [
+      1,
+      1
+    ],
+    "attempts": []
+  },
+  {
+    "family": "trap",
+    "state": "built",
+    "status": "REUSED_A2",
+    "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+    "source_path": "art/style05/struct/a2/neolithic/trap_set.png",
+    "sha256": "f3f56836a57a5ebb6d3a5bae2d4d984beeeb7299618e792e0e06fe8def5d574e",
+    "attempts": []
+  },
+  {
+    "family": "trap",
+    "state": "foundation",
+    "attempts": [],
+    "status": "NOT_APPLICABLE",
+    "path": null,
+    "reason": "Portable/placed object has no staged construction: place complete object; damage and ruin are supplied separately."
+  },
+  {
+    "family": "trap",
+    "state": "half_built",
+    "attempts": [],
+    "status": "NOT_APPLICABLE",
+    "path": null,
+    "reason": "Portable/placed object has no staged construction: place complete object; damage and ruin are supplied separately."
+  },
+  {
+    "family": "trap",
+    "state": "damaged",
+    "attempts": [
+      {
+        "id": "trap_damaged",
+        "attempt": 1,
+        "status": "ADOPTED_NUMERIC_VISUAL",
+        "numeric_pass": true,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "60066f7bb607657ac593486f01ea58e3a86ef549f52de8d02ed7ae7f8edba325",
+        "raw_sha256": "1405ab21a2cb060a211c48908a3db1aad9522aaafe8648179dfb8e19efc81486",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "path": "art/style05/struct/b3/stages_early/trap_damaged.png",
+    "sha256": "60066f7bb607657ac593486f01ea58e3a86ef549f52de8d02ed7ae7f8edba325",
+    "selected_attempt": 1,
+    "model_judge_status": "MISSING"
+  },
+  {
+    "family": "trap",
+    "state": "ruined",
+    "attempts": [
+      {
+        "id": "trap_ruined",
+        "attempt": 1,
+        "status": "ADOPTED_NUMERIC_VISUAL",
+        "numeric_pass": true,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "d97f015740046b55b4b6d32a594073c09aea93a71d92ce0aa605fd60be2bc993",
+        "raw_sha256": "c117c972364baea143343b688e3a1ce414b6bcc925ea0a6bce7eca39b16b1cc1",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "ADOPTED_NUMERIC_VISUAL",
+    "path": "art/style05/struct/b3/stages_early/trap_ruined.png",
+    "sha256": "d97f015740046b55b4b6d32a594073c09aea93a71d92ce0aa605fd60be2bc993",
+    "selected_attempt": 1,
+    "model_judge_status": "MISSING"
+  },
+  {
+    "family": "windbreak",
+    "state": "blueprint",
+    "status": "ROOT_RECIPE",
+    "path": null,
+    "reason": "Shared neutral blueprint recipe owned by root; physical footprint retained.",
+    "footprint": [
+      2,
+      1
+    ],
+    "attempts": []
+  },
+  {
+    "family": "windbreak",
+    "state": "built",
+    "status": "REUSED_A2",
+    "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+    "source_path": "art/style05/struct/a2/neolithic/windbreak.png",
+    "sha256": "955cd58d9f3891c4c651a7a7bc2fb69da0a735e38f86679f2f24742ed01f8da9",
+    "attempts": []
+  },
+  {
+    "family": "windbreak",
+    "state": "foundation",
+    "attempts": [
+      {
+        "id": "windbreak_foundation",
+        "attempt": 1,
+        "status": "REJECTED",
+        "numeric_pass": false,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [
+          "style metric: wash_flatness"
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "0ec1620e591e2e61e9375100f622aef11108bf63e802d6a5a091914c5dc0b6b6",
+        "raw_sha256": "da67d1cfcaaf27fd431c1d5aa958b2982a9a5df8b697204a8e8dfd3e87dedc6c",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "UNAVAILABLE_REJECTED",
+    "path": null,
+    "reason": "Frozen numeric or visual gate rejected available attempts. Economical adopt-or-reject; no threshold changes or cleanup."
+  },
+  {
+    "family": "windbreak",
+    "state": "half_built",
+    "attempts": [
+      {
+        "id": "windbreak_half_built",
+        "attempt": 1,
+        "status": "REJECTED",
+        "numeric_pass": false,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [
+          "style metric: wash_flatness"
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "f213f0a3e775d947cb974851356a5c2f7ac57e1545afc4441774077d6b85490e",
+        "raw_sha256": "628a13b173b6afff1ae316dd16d39721a0b9f013e2f03414682b5c13d0201276",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "UNAVAILABLE_REJECTED",
+    "path": null,
+    "reason": "Frozen numeric or visual gate rejected available attempts. Economical adopt-or-reject; no threshold changes or cleanup."
+  },
+  {
+    "family": "windbreak",
+    "state": "damaged",
+    "attempts": [],
+    "status": "REUSED_A2",
+    "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+    "source_path": "art/style05/struct/a2/neolithic/windbreak_damaged.png",
+    "sha256": "a5d48b3eaf0db259dfa879c0a143aa26179b5afb8e530975630eca181878fecb"
+  },
+  {
+    "family": "windbreak",
+    "state": "ruined",
+    "attempts": [
+      {
+        "id": "windbreak_ruined",
+        "attempt": 1,
+        "status": "REJECTED",
+        "numeric_pass": false,
+        "visual_score": 91,
+        "visual_pass": true,
+        "visual_findings": [
+          "Native and nearest-neighbour 2x reviewed against adjacent exact A2 built sprite; material, light, ink, silhouette and stage remain readable."
+        ],
+        "reasons": [
+          "style metric: wash_flatness"
+        ],
+        "model_judge_status": "MISSING",
+        "full_judge_v2_pass": false,
+        "normalized_sha256": "71f9c87790fe67aacb930a04c18814c62b2bdb631be946d63af78422fadc5507",
+        "raw_sha256": "513426203a985e1cc83c4d820ee2c71c013c15e7e800ce3369c3195c6d21c70a",
+        "boards": [
+          "art/batch_b3/stages_early/boards/early_1_1x.png",
+          "art/batch_b3/stages_early/boards/early_1_2x.png",
+          "art/batch_b3/stages_early/boards/early_2_1x.png",
+          "art/batch_b3/stages_early/boards/early_2_2x.png",
+          "art/batch_b3/stages_early/boards/early_3_1x.png",
+          "art/batch_b3/stages_early/boards/early_3_2x.png",
+          "art/batch_b3/stages_early/boards/early_4_1x.png",
+          "art/batch_b3/stages_early/boards/early_4_2x.png"
+        ]
+      }
+    ],
+    "status": "UNAVAILABLE_REJECTED",
+    "path": null,
+    "reason": "Frozen numeric or visual gate rejected available attempts. Economical adopt-or-reject; no threshold changes or cleanup."
+  }
+]

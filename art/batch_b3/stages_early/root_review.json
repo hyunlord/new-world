@@ -1,0 +1,11 @@
+{
+  "verdict": "PASS",
+  "score": 90,
+  "reviewed": "All four native boards plus nearest 2x page2",
+  "accepted": 27,
+  "withheld": [
+    "ritual_site_foundation_try1"
+  ],
+  "reason": "Ritual footing loses original five-upright-plus-altar layout and footprint. Historical numeric pass remains unchanged. All other final numeric pass selections read clearly with coherent ink and light.",
+  "numeric_failures_never_adopted": true
+}
