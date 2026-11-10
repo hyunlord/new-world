@@ -17,7 +17,7 @@
     "outcome": "Child M winter long_tied try2 improves native material and spindle separation, replaces try1; other2 regenerated attempts regress and prior passing best retained.",
     "prior_attempts_preserved": true
   },
-  "portrait_scope": "Iron work portraits owned by resume_delivery; iron winter portraits in progress",
+  "portrait_scope": "Iron work and winter portraits complete; see separate manifests.",
   "looks": [
     {
       "look": "adult_F_iron_winter_bun",
@@ -330,6 +330,83 @@
       "visual_score": 91,
       "structural_frames_passed": 10,
       "numeric_passing_panels": 10
+    }
+  ],
+  "portrait_manifests": [
+    "art/batch_b1/iron_work_portraits_manifest.json",
+    "art/batch_b1/iron_winter_portraits_manifest.json"
+  ],
+  "generation_counts": {
+    "iron_work": {
+      "generated_sheets": 14,
+      "selected_sheets": 12,
+      "rejected_sheets": 2,
+      "superseded_passing_sheets": 0
+    },
+    "iron_winter": {
+      "generated_sheets": 17,
+      "selected_sheets": 12,
+      "rejected_sheets": 4,
+      "superseded_passing_sheets": 1
+    },
+    "total": {
+      "generated_sheets": 31,
+      "selected_sheets": 24,
+      "rejected_sheets": 6,
+      "superseded_passing_sheets": 1,
+      "failed_calls": 0,
+      "max_attempt": 2
+    }
+  },
+  "nonselected_attempts": [
+    {
+      "look": "adult_M_iron_work_long_tied",
+      "attempt": 1,
+      "status": "rejected",
+      "reason": "Breeches silhouette did not follow intended ankle-length tunic.",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/iron/adult_M_iron_work_long_tied/trial1"
+    },
+    {
+      "look": "adult_F_iron_work_long_tied",
+      "attempt": 2,
+      "status": "rejected",
+      "reason": "Self-review E idle structure score59; prior passing best retained.",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/iron/adult_F_iron_work_long_tied/trial2"
+    },
+    {
+      "look": "adult_F_iron_winter_short",
+      "attempt": 1,
+      "status": "rejected",
+      "reason": "E idle structure score59.",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/iron/adult_F_iron_winter_short/trial1"
+    },
+    {
+      "look": "adult_F_iron_winter_bun",
+      "attempt": 1,
+      "status": "rejected",
+      "reason": "E idle structure score59.",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/iron/adult_F_iron_winter_bun/trial1"
+    },
+    {
+      "look": "child_F_iron_winter_long_tied",
+      "attempt": 1,
+      "status": "rejected",
+      "reason": "Detached spindle invalid prop continuity.",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/iron/child_F_iron_winter_long_tied/trial1"
+    },
+    {
+      "look": "adult_M_iron_winter_long_tied",
+      "attempt": 2,
+      "status": "rejected",
+      "reason": "Self-review four-log regression; prior passing best retained.",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/iron/adult_M_iron_winter_long_tied/trial2"
+    },
+    {
+      "look": "child_M_iron_winter_long_tied",
+      "attempt": 1,
+      "status": "superseded_passing",
+      "reason": "Self-review try2 improves native material and spindle separation,90 to93.",
+      "evidence": "/Users/rexxa/work/art-batch/B1/raw/iron/child_M_iron_winter_long_tied/trial1"
     }
   ]
 }

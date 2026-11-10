@@ -1,0 +1,11 @@
+{
+  "score": 94,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Fine freckles and scars read best at2x; full head silhouettes and identities remain clear at128px."
+  ],
+  "suggestions": [],
+  "reasoning": "Source and normalized2x reviewed: allsix full heads/ears visible inside cells, correct crop/highbun and wool cloak neckline, six planned skin/hair/beard identities; v4grey and v5auburn visibly older with face lines. Bun has less top breathing room and is a self-review candidate. No accessories/props.",
+  "summary_sha256": "8b17690483ed18cdbf58be717e289691ae45778ea2049bb2e348e7b09fee4991"
+}

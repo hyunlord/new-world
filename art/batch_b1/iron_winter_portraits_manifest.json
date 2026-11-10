@@ -1,0 +1,459 @@
+{
+  "schema_version": 1,
+  "scope": "iron_winter portraits only; reviewed artwork, no runtime activation",
+  "generated_sheets": 14,
+  "generated_portrait_cells": 84,
+  "adopted_sheets": 12,
+  "adopted_portraits": 72,
+  "rejected_sheets": 0,
+  "superseded_passing_sheets": 2,
+  "failed_calls": 0,
+  "max_attempt": 2,
+  "tool": "builtin image_gen",
+  "self_review": {
+    "weakest_regenerated": 2,
+    "base_sheets": 12,
+    "fraction": 0.16666666666666666,
+    "looks": [
+      "adult_M_iron_winter_bun",
+      "adult_F_iron_winter_bun"
+    ],
+    "selected_attempts": {
+      "adult_M_iron_winter_bun": 2,
+      "adult_F_iron_winter_bun": 2
+    },
+    "reason": "Try2 increases blank top margin around full high buns while preserving exact FacePlan and older v4/v5; native visual scores91 to95. Both prior adoptions preserved externally.",
+    "comparison_sheet": "art/batch_b1/sheets/iron_winter_portraits_self_review.png"
+  },
+  "native_sheets": [
+    "art/batch_b1/sheets/iron_winter_portraits_native_1.png",
+    "art/batch_b1/sheets/iron_winter_portraits_native_2.png",
+    "art/batch_b1/sheets/iron_winter_portraits_native_3.png"
+  ],
+  "reference": "art/portrait/polish2/adult_M_hide_wrap_short/v1.png",
+  "reference_sha256": "c5d706a490c166bafa6baea7cecebfca62e4be07d18184bcb0a92be0d1ff24a4",
+  "records": [
+    {
+      "look": "adult_M_iron_winter_short",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/adult_M_iron_winter_short/trial1/raw.png",
+      "raw_sha256": "acb0a9dda32e991432b0c96cd723f28a7ad88bb9ee11cb4483bf3c7ca878f770",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/adult_M_iron_winter_short/trial1/generation.json",
+      "generation_sha256": "e5423d4167cc63570f81745dcd44a72677dcadce0150ca374de0009911ec7f75",
+      "prompt": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/adult_M_iron_winter_short/trial1/prompt.txt",
+      "prompt_sha256": "9b12c5d95449169b3131c3fc4499afaa4ae1e2cac6f5452cbb2c103377458052",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/records/iron/adult_M_iron_winter_short-portrait-try1-tool.json",
+      "tool_record_sha256": "6bfd72a9504a993fed84773416e862b13582a057cb386547a6a98b65533a18fd",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/style05/anchors/portrait.png",
+          "sha256": "0697e196dd4927557f8b2a138cb8de1d8e6124f495e9f40288acd42ba8db044c"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/character/batch_b1/adult_M_iron_winter_short/S/idle.png",
+          "sha256": "1ae2a19159b9ee23a60bde12edd11beecdd9a6287b30ca815aa6acba1ad1c0d8"
+        }
+      ],
+      "summary_sha256": "2809f66bef82984faf6cd3015c3483ed9bde24e50d1e54890c6cec4d13332596"
+    },
+    {
+      "look": "adult_M_iron_winter_long_tied",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/adult_M_iron_winter_long_tied/trial1/raw.png",
+      "raw_sha256": "755b1af4002224dae29341547d65df2aff8104380aa862daf0fdcc67855edac1",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/adult_M_iron_winter_long_tied/trial1/generation.json",
+      "generation_sha256": "a8351f2a1c4180d87e67fc7de111b8d8876e204a6392d7517b558e85445a65c9",
+      "prompt": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/adult_M_iron_winter_long_tied/trial1/prompt.txt",
+      "prompt_sha256": "7850ede712513b2adcf600e67c53529257a5aed2584c49551e4a1b2d790db39a",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/records/iron/adult_M_iron_winter_long_tied-portrait-try1-tool.json",
+      "tool_record_sha256": "78d2deb0bc11a6eb8f6a80b0b900c0faaaef61eeea24fb7169e253826493df75",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/style05/anchors/portrait.png",
+          "sha256": "0697e196dd4927557f8b2a138cb8de1d8e6124f495e9f40288acd42ba8db044c"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/character/batch_b1/adult_M_iron_winter_long_tied/S/idle.png",
+          "sha256": "d1305dad04e14437bac13af1360a6fa6ab7542f154bbad414db79417d2f9dca5"
+        }
+      ],
+      "summary_sha256": "ff6c1d8c8bb64edf128be2d44aec23411ca5103e4f27ef6d87a4e2ee0d3ee460"
+    },
+    {
+      "look": "adult_M_iron_winter_bun",
+      "attempt": 1,
+      "status": "superseded_passing",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/adult_M_iron_winter_bun/trial1/raw.png",
+      "raw_sha256": "7f62cf949c7ff87433b724ffc8d0a393bea90f29738b9a680fedab3e73aa47b2",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/adult_M_iron_winter_bun/trial1/generation.json",
+      "generation_sha256": "1060c5d2907ce1b8d4dde62332e78ee28f111559248e781cb9819779ce64138a",
+      "prompt": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/adult_M_iron_winter_bun/trial1/prompt.txt",
+      "prompt_sha256": "fbd5266d88da1e98eecb932aab87adda8ccb280f8c156d58354988fa5dc313e6",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/records/iron/adult_M_iron_winter_bun-portrait-try1-tool.json",
+      "tool_record_sha256": "510d96a4d426a5bd6a6f39fe6fd0c9b1e5594180d31a60a219a4ca33f0b7f012",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/style05/anchors/portrait.png",
+          "sha256": "0697e196dd4927557f8b2a138cb8de1d8e6124f495e9f40288acd42ba8db044c"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/character/batch_b1/adult_M_iron_winter_bun/S/idle.png",
+          "sha256": "0df7c113d53025c5f154082497797a3b23a9c2791cda90ab27a52439260352fb"
+        }
+      ],
+      "summary_sha256": "5d5aa8369b09ed70b3d30c003899e2e58473ff06e9d4eefa3957ff3e0e212e3f"
+    },
+    {
+      "look": "adult_M_iron_winter_bun",
+      "attempt": 2,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/adult_M_iron_winter_bun/trial2/raw.png",
+      "raw_sha256": "11334bbda70edc544af2b31bdead898b9b4bd502cd753d12025228ceb90cc138",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/adult_M_iron_winter_bun/trial2/generation.json",
+      "generation_sha256": "9268b9ca5ba406da2ef34416c7ac8eb38c7b5f009a493bfda48010227a81bf7f",
+      "prompt": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/adult_M_iron_winter_bun/trial2/prompt.txt",
+      "prompt_sha256": "386afc9118ffa82d8487a737ae81da3d6ee3e9cb5b090af044ad6ddafec1e29f",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/records/iron/adult_M_iron_winter_bun-portrait-try2-tool.json",
+      "tool_record_sha256": "e139c7dd7f4385e545b42b90fcb610349015076feef60d1ac6b3f3851f90edd8",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/style05/anchors/portrait.png",
+          "sha256": "0697e196dd4927557f8b2a138cb8de1d8e6124f495e9f40288acd42ba8db044c"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/character/batch_b1/adult_M_iron_winter_bun/S/idle.png",
+          "sha256": "0df7c113d53025c5f154082497797a3b23a9c2791cda90ab27a52439260352fb"
+        }
+      ],
+      "summary_sha256": "cfaf33d32c57fb81460be8af4067285933633c7408f84e5b48700646600f9324"
+    },
+    {
+      "look": "adult_F_iron_winter_short",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/adult_F_iron_winter_short/trial1/raw.png",
+      "raw_sha256": "95971b5e81faec6f0a22880da3449efee09fd2a9eaf0e82017cfbc68f8254663",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/adult_F_iron_winter_short/trial1/generation.json",
+      "generation_sha256": "3895ff9a3bf39d429a8d793dd8dca8f68c2c19bf915ed765613ec76e0b34bde7",
+      "prompt": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/adult_F_iron_winter_short/trial1/prompt.txt",
+      "prompt_sha256": "12b2400d5ea0b4fb976e112db742efc3300c5c061b145837b7d117802ca5b368",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/records/iron/adult_F_iron_winter_short-portrait-try1-tool.json",
+      "tool_record_sha256": "2b6c4e2b33727f3a26dce6bbe4b3ad0639f93a44bd11d9568b26b563ef004ec3",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/style05/anchors/portrait.png",
+          "sha256": "0697e196dd4927557f8b2a138cb8de1d8e6124f495e9f40288acd42ba8db044c"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/character/batch_b1/adult_F_iron_winter_short/S/idle.png",
+          "sha256": "811f188277ad120533457837f21b99af2665b67f2272faf88a7c0dc4497adf90"
+        }
+      ],
+      "summary_sha256": "8b17690483ed18cdbf58be717e289691ae45778ea2049bb2e348e7b09fee4991"
+    },
+    {
+      "look": "adult_F_iron_winter_long_tied",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/adult_F_iron_winter_long_tied/trial1/raw.png",
+      "raw_sha256": "8be6a426e398e31e32960bb7faed87fb52b1071f67fd39d914a0aa7bf3dee8c1",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/adult_F_iron_winter_long_tied/trial1/generation.json",
+      "generation_sha256": "0cf6a02cccb13d3bd957a1505c88cf39f0f0ec380d1fe6d7a5f059f032f181fe",
+      "prompt": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/adult_F_iron_winter_long_tied/trial1/prompt.txt",
+      "prompt_sha256": "4f155ce52d5f2b2be782144585c80d55a832dd431e80b5ab5fdba0c506d19997",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/records/iron/adult_F_iron_winter_long_tied-portrait-try1-tool.json",
+      "tool_record_sha256": "dba86f3dd9d7cec7fdf9481e56948f581ec7c1f749b70282a8f5e5795becbe41",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/style05/anchors/portrait.png",
+          "sha256": "0697e196dd4927557f8b2a138cb8de1d8e6124f495e9f40288acd42ba8db044c"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/character/batch_b1/adult_F_iron_winter_long_tied/S/idle.png",
+          "sha256": "a3ed78645de15fd1aa6d85598e2059a04789f53d4c5e0cc21a50ee96a516aa4b"
+        }
+      ],
+      "summary_sha256": "3ddddf217ed1e52e04962863259d2b13e084dd402826a9bf598dd0ed4b30df77"
+    },
+    {
+      "look": "adult_F_iron_winter_bun",
+      "attempt": 1,
+      "status": "superseded_passing",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/adult_F_iron_winter_bun/trial1/raw.png",
+      "raw_sha256": "f507f888a6aad1089c8dec86888da687fc413999f70c161ec8afaa9aaae33c04",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/adult_F_iron_winter_bun/trial1/generation.json",
+      "generation_sha256": "a16437e2a91be39b6be35852b49f85929ec209f187e55c112277e315a6776354",
+      "prompt": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/adult_F_iron_winter_bun/trial1/prompt.txt",
+      "prompt_sha256": "8b8722f9c627e56b91aaca3be0f9ccc52b515f27e43a77a4ee858fdbf2f474f1",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/records/iron/adult_F_iron_winter_bun-portrait-try1-tool.json",
+      "tool_record_sha256": "26d6f635a063ac1b00ee6dd76ccce5fae374e37e486f8953374d69b4b0e4a9c1",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/style05/anchors/portrait.png",
+          "sha256": "0697e196dd4927557f8b2a138cb8de1d8e6124f495e9f40288acd42ba8db044c"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/character/batch_b1/adult_F_iron_winter_bun/S/idle.png",
+          "sha256": "f307f639be36b0a79a5c6363730242919a7e2a95cf27aeeed5b5e103b9820eb1"
+        }
+      ],
+      "summary_sha256": "cdf542287376679cee268994fd7b43ec6fe9afe1dcc03909bd5be0c228de3528"
+    },
+    {
+      "look": "adult_F_iron_winter_bun",
+      "attempt": 2,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/adult_F_iron_winter_bun/trial2/raw.png",
+      "raw_sha256": "f0a73b7891a90dcad59dede77e3d24095d1cee1802eaba2a825b5604e4c47a1a",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/adult_F_iron_winter_bun/trial2/generation.json",
+      "generation_sha256": "f85a65b2a594ea8635521ba290e595ad64304bee87f528ba68c28f4bdd7adbfe",
+      "prompt": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/adult_F_iron_winter_bun/trial2/prompt.txt",
+      "prompt_sha256": "27d14496854cac8e214bcde422543e834a23dbcb51bbf0e32dfb1db07650c9a3",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/records/iron/adult_F_iron_winter_bun-portrait-try2-tool.json",
+      "tool_record_sha256": "5cbfcc5f9fa186adcf6b6d4fd34e878de469ce8c6f69211cca468a10f11c44fc",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/style05/anchors/portrait.png",
+          "sha256": "0697e196dd4927557f8b2a138cb8de1d8e6124f495e9f40288acd42ba8db044c"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/character/batch_b1/adult_F_iron_winter_bun/S/idle.png",
+          "sha256": "f307f639be36b0a79a5c6363730242919a7e2a95cf27aeeed5b5e103b9820eb1"
+        }
+      ],
+      "summary_sha256": "4dc9cc1835a19cee5b1b20dfe8f9707a7af80683f4f90a3a063f6246e6bc1d2f"
+    },
+    {
+      "look": "child_M_iron_winter_short",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/child_M_iron_winter_short/trial1/raw.png",
+      "raw_sha256": "f16f77e6c702595b0e2b84949e1318cbac40ddbc67291128eef137c0d6df2378",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/child_M_iron_winter_short/trial1/generation.json",
+      "generation_sha256": "9c17a9a33f3850148de72bbcbaf5194b66e6185fc49061745ea4e2cf8f395f46",
+      "prompt": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/child_M_iron_winter_short/trial1/prompt.txt",
+      "prompt_sha256": "c77469866d97a9d5f642d7a533a0b457a3ff5cf758f5f54c7af9d1483b44ad3d",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/records/iron/child_M_iron_winter_short-portrait-try1-tool.json",
+      "tool_record_sha256": "6a92d0e4b34db7dd137de769b677bd3dd9d5e15266cd8550ecd455e938606f7a",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/style05/anchors/portrait.png",
+          "sha256": "0697e196dd4927557f8b2a138cb8de1d8e6124f495e9f40288acd42ba8db044c"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/character/batch_b1/child_M_iron_winter_short/S/idle.png",
+          "sha256": "fa5ca58565ecae7728d090d11d2924e8aa1985225fd022dc83c5a7d066280bc0"
+        }
+      ],
+      "summary_sha256": "dc774dc5f906d16b45be27c2ac8a8e6ca0162a3994c1fe031c44dbfd63ffb66f"
+    },
+    {
+      "look": "child_M_iron_winter_long_tied",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/child_M_iron_winter_long_tied/trial1/raw.png",
+      "raw_sha256": "39bfcac64941bfc825e10312c95c0c6566c84cd5027f22e2e00f3d2c4a9e9da9",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/child_M_iron_winter_long_tied/trial1/generation.json",
+      "generation_sha256": "7f366583f957d7e07a4e5d15ddee83193197c8edfc64feb5ebc70b1fc10e7b22",
+      "prompt": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/child_M_iron_winter_long_tied/trial1/prompt.txt",
+      "prompt_sha256": "1bc5e69c5436ed49eed370deb37a9d15df8db9ec05278d963ac72f1dca0fe8ac",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/records/iron/child_M_iron_winter_long_tied-portrait-try1-tool.json",
+      "tool_record_sha256": "c4748b7f442ff14ae53fa1dbe8e5cd3d1fede2acf5e75ae9f15fa719b882ceba",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/style05/anchors/portrait.png",
+          "sha256": "0697e196dd4927557f8b2a138cb8de1d8e6124f495e9f40288acd42ba8db044c"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/character/batch_b1/child_M_iron_winter_long_tied/S/idle.png",
+          "sha256": "cc1b709286227ba15c91412cd7e28cf86dfc66db3372332d0fa9c9eda0e20342"
+        }
+      ],
+      "summary_sha256": "0fbec298d3e04bc7e16f6c40523e2966e4fc7adaf396ce55d367bf2df7d03603"
+    },
+    {
+      "look": "child_M_iron_winter_bun",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/child_M_iron_winter_bun/trial1/raw.png",
+      "raw_sha256": "9840c494e70aaab9ecb9f146337db251ac5f4f96d1d9d6c3d6c0f90dd5df7d54",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/child_M_iron_winter_bun/trial1/generation.json",
+      "generation_sha256": "a5e57bd523a812d391c5d23d63abbff0447baac090a327c672156ff676026eeb",
+      "prompt": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/child_M_iron_winter_bun/trial1/prompt.txt",
+      "prompt_sha256": "1d2f652a59acc730093456a1da6c07d098d74584ec4f34eb1c7b7edd62f53c24",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/records/iron/child_M_iron_winter_bun-portrait-try1-tool.json",
+      "tool_record_sha256": "99abbd2415ea42a6d7fb8ce28ad228d6a68e20100df2ab8b4b8158f4eca96a35",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/style05/anchors/portrait.png",
+          "sha256": "0697e196dd4927557f8b2a138cb8de1d8e6124f495e9f40288acd42ba8db044c"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/character/batch_b1/child_M_iron_winter_bun/S/idle.png",
+          "sha256": "92d5515079485b297bcdea1ec8b9b89473e6ff5927a963806c4bfb8fdff614dd"
+        }
+      ],
+      "summary_sha256": "badc448f5227b264d14ed5fb264b24075eb70e0e49034efaac3567d0c364af81"
+    },
+    {
+      "look": "child_F_iron_winter_short",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/child_F_iron_winter_short/trial1/raw.png",
+      "raw_sha256": "5c689f34c1e510f6599c38d8207ab41f92e8289c2f961e20ec92ba314f66512d",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/child_F_iron_winter_short/trial1/generation.json",
+      "generation_sha256": "bd60462bf4340fa823bb5bbe201c71558f9ee54c0b0f43151ce4544faf275e1b",
+      "prompt": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/child_F_iron_winter_short/trial1/prompt.txt",
+      "prompt_sha256": "307f43e5370bfb2867ce4d6dd47b7245663e045dc01233c261c32bba766afcef",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/records/iron/child_F_iron_winter_short-portrait-try1-tool.json",
+      "tool_record_sha256": "224d571e0a4d5d63923888b46056dc66c85668e1a1cea47ddc487b50c00c40e8",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/style05/anchors/portrait.png",
+          "sha256": "0697e196dd4927557f8b2a138cb8de1d8e6124f495e9f40288acd42ba8db044c"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/character/batch_b1/child_F_iron_winter_short/S/idle.png",
+          "sha256": "31c72c3edcd7d8be1bfd1feb7deeddd5a6c63618c53ec82c26bac9a671ad4518"
+        }
+      ],
+      "summary_sha256": "f9f87eb4ff9f8edd023b58b53fa4e7b40facc7462eb971fef5ee667de55b4219"
+    },
+    {
+      "look": "child_F_iron_winter_long_tied",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/child_F_iron_winter_long_tied/trial1/raw.png",
+      "raw_sha256": "dddc8067f7fda9d34e01ea8e826f14e7c8cadd20d8230e7c92b0c1d8f3f16659",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/child_F_iron_winter_long_tied/trial1/generation.json",
+      "generation_sha256": "2b10aa92c53e6bce04d4330148299ae12fafa80b6cc906573faeaa6fc58c845e",
+      "prompt": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/child_F_iron_winter_long_tied/trial1/prompt.txt",
+      "prompt_sha256": "cbf134a0866eed9a7ca8e39423e096e0837e44f3a8d1ac6cd27027722f259c07",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/records/iron/child_F_iron_winter_long_tied-portrait-try1-tool.json",
+      "tool_record_sha256": "a3493ff865be478165a91e129ba1a4a53638d4b3edb82dd4e4823915492bab4b",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/style05/anchors/portrait.png",
+          "sha256": "0697e196dd4927557f8b2a138cb8de1d8e6124f495e9f40288acd42ba8db044c"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/character/batch_b1/child_F_iron_winter_long_tied/S/idle.png",
+          "sha256": "cafd0b945b3d8e7c884ad45d758776b55fd6648b24be20101ee60becc25a0b0d"
+        }
+      ],
+      "summary_sha256": "b627de8e6210ea5da67945c8f022a693906e23a43b62dfafacef9036e09bfdc7"
+    },
+    {
+      "look": "child_F_iron_winter_bun",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/child_F_iron_winter_bun/trial1/raw.png",
+      "raw_sha256": "2642deb2a3d74b438e306994c96aa313f948d7cc18346db0c419bfa48e8cbcf0",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/child_F_iron_winter_bun/trial1/generation.json",
+      "generation_sha256": "f0fa00f245e5b51394137959b8c29c68bd44fef3fcb67abd486e1c2086e59806",
+      "prompt": "/Users/rexxa/work/art-batch/B1/raw/iron_portraits/child_F_iron_winter_bun/trial1/prompt.txt",
+      "prompt_sha256": "64993c35bb864451d259fd50d27aa0a32120e8b7404362696d0e58dc7c2d6d27",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/records/iron/child_F_iron_winter_bun-portrait-try1-tool.json",
+      "tool_record_sha256": "2935977c016f08fe333e0e30a948e3fa1f9fd47997f71527a5d24dd0c2e0ec71",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/style05/anchors/portrait.png",
+          "sha256": "0697e196dd4927557f8b2a138cb8de1d8e6124f495e9f40288acd42ba8db044c"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/character/batch_b1/child_F_iron_winter_bun/S/idle.png",
+          "sha256": "476829d8d1071971e8e36a1227c41b819745a54659968dd237f7253264a68b7e"
+        }
+      ],
+      "summary_sha256": "96356aa65f4eef17a479ac9abb5b55a2d0c4f45572253add912c9bdeec263050"
+    }
+  ],
+  "looks": [
+    {
+      "look": "adult_M_iron_winter_short",
+      "selected_attempt": 1,
+      "visual_score": 94,
+      "delivery": "art/portrait/batch_b1/adult_M_iron_winter_short",
+      "summary_sha256": "2809f66bef82984faf6cd3015c3483ed9bde24e50d1e54890c6cec4d13332596"
+    },
+    {
+      "look": "adult_M_iron_winter_long_tied",
+      "selected_attempt": 1,
+      "visual_score": 94,
+      "delivery": "art/portrait/batch_b1/adult_M_iron_winter_long_tied",
+      "summary_sha256": "ff6c1d8c8bb64edf128be2d44aec23411ca5103e4f27ef6d87a4e2ee0d3ee460"
+    },
+    {
+      "look": "adult_M_iron_winter_bun",
+      "selected_attempt": 2,
+      "visual_score": 95,
+      "delivery": "art/portrait/batch_b1/adult_M_iron_winter_bun",
+      "summary_sha256": "cfaf33d32c57fb81460be8af4067285933633c7408f84e5b48700646600f9324"
+    },
+    {
+      "look": "adult_F_iron_winter_short",
+      "selected_attempt": 1,
+      "visual_score": 94,
+      "delivery": "art/portrait/batch_b1/adult_F_iron_winter_short",
+      "summary_sha256": "8b17690483ed18cdbf58be717e289691ae45778ea2049bb2e348e7b09fee4991"
+    },
+    {
+      "look": "adult_F_iron_winter_long_tied",
+      "selected_attempt": 1,
+      "visual_score": 94,
+      "delivery": "art/portrait/batch_b1/adult_F_iron_winter_long_tied",
+      "summary_sha256": "3ddddf217ed1e52e04962863259d2b13e084dd402826a9bf598dd0ed4b30df77"
+    },
+    {
+      "look": "adult_F_iron_winter_bun",
+      "selected_attempt": 2,
+      "visual_score": 95,
+      "delivery": "art/portrait/batch_b1/adult_F_iron_winter_bun",
+      "summary_sha256": "4dc9cc1835a19cee5b1b20dfe8f9707a7af80683f4f90a3a063f6246e6bc1d2f"
+    },
+    {
+      "look": "child_M_iron_winter_short",
+      "selected_attempt": 1,
+      "visual_score": 94,
+      "delivery": "art/portrait/batch_b1/child_M_iron_winter_short",
+      "summary_sha256": "dc774dc5f906d16b45be27c2ac8a8e6ca0162a3994c1fe031c44dbfd63ffb66f"
+    },
+    {
+      "look": "child_M_iron_winter_long_tied",
+      "selected_attempt": 1,
+      "visual_score": 94,
+      "delivery": "art/portrait/batch_b1/child_M_iron_winter_long_tied",
+      "summary_sha256": "0fbec298d3e04bc7e16f6c40523e2966e4fc7adaf396ce55d367bf2df7d03603"
+    },
+    {
+      "look": "child_M_iron_winter_bun",
+      "selected_attempt": 1,
+      "visual_score": 94,
+      "delivery": "art/portrait/batch_b1/child_M_iron_winter_bun",
+      "summary_sha256": "badc448f5227b264d14ed5fb264b24075eb70e0e49034efaac3567d0c364af81"
+    },
+    {
+      "look": "child_F_iron_winter_short",
+      "selected_attempt": 1,
+      "visual_score": 94,
+      "delivery": "art/portrait/batch_b1/child_F_iron_winter_short",
+      "summary_sha256": "f9f87eb4ff9f8edd023b58b53fa4e7b40facc7462eb971fef5ee667de55b4219"
+    },
+    {
+      "look": "child_F_iron_winter_long_tied",
+      "selected_attempt": 1,
+      "visual_score": 94,
+      "delivery": "art/portrait/batch_b1/child_F_iron_winter_long_tied",
+      "summary_sha256": "b627de8e6210ea5da67945c8f022a693906e23a43b62dfafacef9036e09bfdc7"
+    },
+    {
+      "look": "child_F_iron_winter_bun",
+      "selected_attempt": 1,
+      "visual_score": 94,
+      "delivery": "art/portrait/batch_b1/child_F_iron_winter_bun",
+      "summary_sha256": "96356aa65f4eef17a479ac9abb5b55a2d0c4f45572253add912c9bdeec263050"
+    }
+  ]
+}

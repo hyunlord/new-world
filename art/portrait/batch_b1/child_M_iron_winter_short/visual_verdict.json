@@ -1,0 +1,11 @@
+{
+  "score": 94,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Fine freckles and scars read best at2x; full head silhouettes and identities remain clear at128px."
+  ],
+  "suggestions": [],
+  "reasoning": "Six distinct child identities follow the exact child FACE_VARIANTS row order: skin, hair colour, facial shape, freckles, brows and scars. All remain clearly children, with full unclipped heads and consistent hoodless ochre wool cloak. Native and 2x visual pass.",
+  "summary_sha256": "dc774dc5f906d16b45be27c2ac8a8e6ca0162a3994c1fe031c44dbfd63ffb66f"
+}

@@ -1,0 +1,11 @@
+{
+  "score": 94,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Fine freckles and scars read best at2x; full head silhouettes and identities remain clear at128px."
+  ],
+  "suggestions": [],
+  "reasoning": "Inspected full source and normalized2x: allsix full heads and ears within512cells with top margin, matching short/lowponytail silhouette and dark tunic+tawny wool cloak. Skin/hair diversity, full/short/absent beard order follows plan; v4grey and v5auburn visibly55\u201370 with age lines. No accessories or props.",
+  "summary_sha256": "2809f66bef82984faf6cd3015c3483ed9bde24e50d1e54890c6cec4d13332596"
+}
