@@ -1,0 +1,490 @@
+{
+  "assets": [
+    {
+      "id": "bread_oven_foundation",
+      "path": "art/style05/struct/b3/stages_early/bread_oven_foundation.png",
+      "width": 53,
+      "height": 20,
+      "anchor": [
+        26,
+        15
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_NUMERIC_VISUAL_NOT_IMPORTED",
+      "sha256": "5799dd21581d73d8f3fc8e266d41dfbaaa9395435cc1172623f76ea135a3027c"
+    },
+    {
+      "id": "bread_oven_half_built",
+      "path": "art/style05/struct/b3/stages_early/bread_oven_half_built.png",
+      "width": 41,
+      "height": 30,
+      "anchor": [
+        20,
+        25
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_NUMERIC_VISUAL_NOT_IMPORTED",
+      "sha256": "6bdd98277088390fd58f561b4e19ea15378eb5b97fd72581b8c04fe28800dc0d"
+    },
+    {
+      "id": "bread_oven_damaged",
+      "path": "art/style05/struct/b3/stages_early/bread_oven_damaged.png",
+      "width": 45,
+      "height": 38,
+      "anchor": [
+        22,
+        33
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_NUMERIC_VISUAL_NOT_IMPORTED",
+      "sha256": "800b0341ba515eb0fc787baa2af3d660e36839cd4f62d90b188bfcae0a8e12b3"
+    },
+    {
+      "id": "bread_oven_ruined",
+      "path": "art/style05/struct/b3/stages_early/bread_oven_ruined.png",
+      "width": 54,
+      "height": 20,
+      "anchor": [
+        27,
+        15
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_NUMERIC_VISUAL_NOT_IMPORTED",
+      "sha256": "76ce6113e1177553abebdbea58d4227cd8357e4172c300dfc024a9d607e01a4d"
+    },
+    {
+      "id": "potters_kiln_foundation",
+      "path": "art/style05/struct/b3/stages_early/potters_kiln_foundation.png",
+      "width": 50,
+      "height": 22,
+      "anchor": [
+        25,
+        17
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_NUMERIC_VISUAL_NOT_IMPORTED",
+      "sha256": "691054b728c1e228447d67b46b2afce3cc5b6402542abd7007f49017e8d8683c"
+    },
+    {
+      "id": "potters_kiln_half_built",
+      "path": "art/style05/struct/b3/stages_early/potters_kiln_half_built.png",
+      "width": 47,
+      "height": 36,
+      "anchor": [
+        23,
+        31
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_NUMERIC_VISUAL_NOT_IMPORTED",
+      "sha256": "3088be920dd415b480f9f8c6255bd218ffbf8b2a32c45388cef48b65891e4931"
+    },
+    {
+      "id": "potters_kiln_damaged",
+      "path": "art/style05/struct/b3/stages_early/potters_kiln_damaged.png",
+      "width": 48,
+      "height": 50,
+      "anchor": [
+        24,
+        45
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_NUMERIC_VISUAL_NOT_IMPORTED",
+      "sha256": "ab43160acc9c451410a4853bf473ef20e38c3722e88d9bb512b5f2d5bce90edd"
+    },
+    {
+      "id": "potters_kiln_ruined",
+      "path": "art/style05/struct/b3/stages_early/potters_kiln_ruined.png",
+      "width": 57,
+      "height": 24,
+      "anchor": [
+        28,
+        19
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_NUMERIC_VISUAL_NOT_IMPORTED",
+      "sha256": "2041f1cbdbd4f850a2de3391151b9e4052117d75d0295f08acf7c62fb5fe55c9"
+    },
+    {
+      "id": "smokehouse_half_built",
+      "path": "art/style05/struct/b3/stages_early/smokehouse_half_built.png",
+      "width": 75,
+      "height": 54,
+      "anchor": [
+        37,
+        49
+      ],
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_NUMERIC_VISUAL_NOT_IMPORTED",
+      "sha256": "704a5e34428113875be1ae08ae3fef0570b626ee25520ef5a1db432fbc7f8294"
+    },
+    {
+      "id": "smokehouse_damaged",
+      "path": "art/style05/struct/b3/stages_early/smokehouse_damaged.png",
+      "width": 91,
+      "height": 62,
+      "anchor": [
+        45,
+        57
+      ],
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_NUMERIC_VISUAL_NOT_IMPORTED",
+      "sha256": "e9a7613a3a292a840213d198d200013c5878683d63a5be39b1357dcaf56c6e29"
+    },
+    {
+      "id": "smokehouse_ruined",
+      "path": "art/style05/struct/b3/stages_early/smokehouse_ruined.png",
+      "width": 55,
+      "height": 28,
+      "anchor": [
+        27,
+        23
+      ],
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_NUMERIC_VISUAL_NOT_IMPORTED",
+      "sha256": "d7d0aa9391eda56544fec1c9149228dd5a44301d653d636cd504cb4010731e9b"
+    },
+    {
+      "id": "well_foundation",
+      "path": "art/style05/struct/b3/stages_early/well_foundation.png",
+      "width": 42,
+      "height": 26,
+      "anchor": [
+        21,
+        21
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_NUMERIC_VISUAL_NOT_IMPORTED",
+      "sha256": "04062dcaa1a8ff9a5ea201643f2dc4e5c797ceb5cce05b8473555c2e2a5b6886"
+    },
+    {
+      "id": "well_half_built",
+      "path": "art/style05/struct/b3/stages_early/well_half_built.png",
+      "width": 56,
+      "height": 42,
+      "anchor": [
+        28,
+        37
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_NUMERIC_VISUAL_NOT_IMPORTED",
+      "sha256": "4c1d571af476c3452e0d8bb1706f5323f047fa5f82de113a59714d523d14bc46"
+    },
+    {
+      "id": "well_damaged",
+      "path": "art/style05/struct/b3/stages_early/well_damaged.png",
+      "width": 56,
+      "height": 56,
+      "anchor": [
+        28,
+        51
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_NUMERIC_VISUAL_NOT_IMPORTED",
+      "sha256": "edd79edf1829cadd354b91852f3b6917b25e2de08356bdc6267a9d6cd767c2e7"
+    },
+    {
+      "id": "grinding_stone_damaged",
+      "path": "art/style05/struct/b3/stages_early/grinding_stone_damaged.png",
+      "width": 57,
+      "height": 40,
+      "anchor": [
+        28,
+        35
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_NUMERIC_VISUAL_NOT_IMPORTED",
+      "sha256": "354e115d0686a0576139fbe4973b58500fcce2b070c6e64fd2bf208c1c32bd4b"
+    },
+    {
+      "id": "grinding_stone_ruined",
+      "path": "art/style05/struct/b3/stages_early/grinding_stone_ruined.png",
+      "width": 30,
+      "height": 18,
+      "anchor": [
+        15,
+        13
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_NUMERIC_VISUAL_NOT_IMPORTED",
+      "sha256": "10210463c9fab99c9ff9a2bee40cdcd8fdc589a3805745de524432a41b8164cd"
+    },
+    {
+      "id": "loom_damaged",
+      "path": "art/style05/struct/b3/stages_early/loom_damaged.png",
+      "width": 82,
+      "height": 64,
+      "anchor": [
+        41,
+        59
+      ],
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_NUMERIC_VISUAL_NOT_IMPORTED",
+      "sha256": "265a3a7d8eab2cf86e8a35fc338c01fc95f7911ec78df442c869ba85edf8c165"
+    },
+    {
+      "id": "megalith_foundation",
+      "path": "art/style05/struct/b3/stages_early/megalith_foundation.png",
+      "width": 46,
+      "height": 29,
+      "anchor": [
+        23,
+        24
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_NUMERIC_VISUAL_NOT_IMPORTED",
+      "sha256": "7a0d62b5a2b65502d1ea47cf2bcb8d98a601c3ded613466c5b2e7eaab2b3a6f9"
+    },
+    {
+      "id": "megalith_damaged",
+      "path": "art/style05/struct/b3/stages_early/megalith_damaged.png",
+      "width": 58,
+      "height": 92,
+      "anchor": [
+        29,
+        87
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_NUMERIC_VISUAL_NOT_IMPORTED",
+      "sha256": "71123a7e6f571896a872f065fe3f161b9f9d0460caf459fa617bf14d1694bc5e"
+    },
+    {
+      "id": "megalith_ruined",
+      "path": "art/style05/struct/b3/stages_early/megalith_ruined.png",
+      "width": 85,
+      "height": 33,
+      "anchor": [
+        42,
+        28
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_NUMERIC_VISUAL_NOT_IMPORTED",
+      "sha256": "aa372c5c9bb1dbb47c694557d959609f3238d03fa1bc609f2b07bc40d8af4ddf"
+    },
+    {
+      "id": "pen_fence_foundation",
+      "path": "art/style05/struct/b3/stages_early/pen_fence_foundation.png",
+      "width": 56,
+      "height": 18,
+      "anchor": [
+        28,
+        13
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_NUMERIC_VISUAL_NOT_IMPORTED",
+      "sha256": "4042c003e9217d7a8dde95295767ebde4096e91b153fe5123694b2a289e37c34"
+    },
+    {
+      "id": "drying_rack_foundation",
+      "path": "art/style05/struct/b3/stages_early/drying_rack_foundation.png",
+      "width": 55,
+      "height": 20,
+      "anchor": [
+        27,
+        15
+      ],
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_NUMERIC_VISUAL_NOT_IMPORTED",
+      "sha256": "0d8659940f98100c6706e660cedac51d981e6c35875bd3ca5862f23baf04d55c"
+    },
+    {
+      "id": "fish_weir_damaged",
+      "path": "art/style05/struct/b3/stages_early/fish_weir_damaged.png",
+      "width": 112,
+      "height": 96,
+      "anchor": [
+        56,
+        91
+      ],
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_NUMERIC_VISUAL_NOT_IMPORTED",
+      "sha256": "27bf3f7b69d33d5fba3199d008d7b0ac33ceec5ed721c7cd9d5b5cfa13fffe72"
+    },
+    {
+      "id": "hearth_damaged",
+      "path": "art/style05/struct/b3/stages_early/hearth_damaged.png",
+      "width": 40,
+      "height": 28,
+      "anchor": [
+        20,
+        23
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_NUMERIC_VISUAL_NOT_IMPORTED",
+      "sha256": "24983cc69405dd199705d5e9e7f46f338ba880dc9635a0ac80493c6d9b322eec"
+    },
+    {
+      "id": "lean_to_damaged",
+      "path": "art/style05/struct/b3/stages_early/lean_to_damaged.png",
+      "width": 94,
+      "height": 72,
+      "anchor": [
+        47,
+        67
+      ],
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_NUMERIC_VISUAL_NOT_IMPORTED",
+      "sha256": "20a021ad2c662072248bdde2f67a04abcf17231a9d8de423259b785c2f5c065f"
+    },
+    {
+      "id": "trap_damaged",
+      "path": "art/style05/struct/b3/stages_early/trap_damaged.png",
+      "width": 41,
+      "height": 32,
+      "anchor": [
+        20,
+        27
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_NUMERIC_VISUAL_NOT_IMPORTED",
+      "sha256": "60066f7bb607657ac593486f01ea58e3a86ef549f52de8d02ed7ae7f8edba325"
+    },
+    {
+      "id": "trap_ruined",
+      "path": "art/style05/struct/b3/stages_early/trap_ruined.png",
+      "width": 29,
+      "height": 18,
+      "anchor": [
+        14,
+        13
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "ADOPTED_NUMERIC_VISUAL_NOT_IMPORTED",
+      "sha256": "d97f015740046b55b4b6d32a594073c09aea93a71d92ce0aa605fd60be2bc993"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "assets": [
+    {
+      "id": "olive_press_half_built",
+      "path": "art/style05/struct/b3/stages_mine_press/olive_press_half_built.png",
+      "width": 127,
+      "height": 72,
+      "anchor": [
+        63,
+        67
+      ],
+      "footprint": [
+        2,
+        2
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "SELECTED_CANDIDATE_NOT_GAME_IMPORTED",
+      "sha256": "5d739cb45d86c1ea0e2abad0fe09ae2c0f5240de4a4d04d7f56e599724eb6d4b"
+    },
+    {
+      "id": "olive_press_damaged",
+      "path": "art/style05/struct/b3/stages_mine_press/olive_press_damaged.png",
+      "width": 123,
+      "height": 88,
+      "anchor": [
+        61,
+        83
+      ],
+      "footprint": [
+        2,
+        2
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "SELECTED_CANDIDATE_NOT_GAME_IMPORTED",
+      "sha256": "1b10b3853c8a151ad6f69bea1f4fa53e28a874fd50166f2d2982ffcee43db32b"
+    }
+  ]
+}

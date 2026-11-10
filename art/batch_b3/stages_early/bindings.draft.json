@@ -1,0 +1,99 @@
+{
+  "status": "DRAFT_SYMBOLIC_NOT_APPLIED",
+  "source_commit": null,
+  "symbolic_rows": [
+    {
+      "content_id": "bread_oven",
+      "binding_shape": {
+        "foundation": "bread_oven_foundation",
+        "half_built": "bread_oven_half_built",
+        "damaged": "bread_oven_damaged",
+        "ruined": "bread_oven_ruined"
+      }
+    },
+    {
+      "content_id": "drying_rack",
+      "binding_shape": {
+        "foundation": "drying_rack_foundation"
+      }
+    },
+    {
+      "content_id": "fish_weir",
+      "binding_shape": {
+        "damaged": "fish_weir_damaged"
+      }
+    },
+    {
+      "content_id": "grinding_stone",
+      "binding_shape": {
+        "damaged": "grinding_stone_damaged",
+        "ruined": "grinding_stone_ruined"
+      }
+    },
+    {
+      "content_id": "hearth",
+      "binding_shape": {
+        "damaged": "hearth_damaged"
+      }
+    },
+    {
+      "content_id": "lean_to",
+      "binding_shape": {
+        "damaged": "lean_to_damaged"
+      }
+    },
+    {
+      "content_id": "loom",
+      "binding_shape": {
+        "damaged": "loom_damaged"
+      }
+    },
+    {
+      "content_id": "megalith",
+      "binding_shape": {
+        "foundation": "megalith_foundation",
+        "damaged": "megalith_damaged",
+        "ruined": "megalith_ruined"
+      }
+    },
+    {
+      "content_id": "pen_fence",
+      "binding_shape": {
+        "foundation": "pen_fence_foundation"
+      }
+    },
+    {
+      "content_id": "potters_kiln",
+      "binding_shape": {
+        "foundation": "potters_kiln_foundation",
+        "half_built": "potters_kiln_half_built",
+        "damaged": "potters_kiln_damaged",
+        "ruined": "potters_kiln_ruined"
+      }
+    },
+    {
+      "content_id": "smokehouse",
+      "binding_shape": {
+        "half_built": "smokehouse_half_built",
+        "damaged": "smokehouse_damaged",
+        "ruined": "smokehouse_ruined"
+      }
+    },
+    {
+      "content_id": "trap",
+      "binding_shape": {
+        "damaged": "trap_damaged",
+        "ruined": "trap_ruined"
+      }
+    },
+    {
+      "content_id": "well",
+      "binding_shape": {
+        "foundation": "well_foundation",
+        "half_built": "well_half_built",
+        "damaged": "well_damaged"
+      }
+    }
+  ],
+  "integration_required": "Verify real content codes and state selection with C2/C3. Coverage retains unavailable and N/A states; do not alias them to unrelated built art."
+}

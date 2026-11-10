@@ -21,3 +21,5 @@ Verification: `verification.json` records fresh hash checks for all60 preserved 
 External evidence: `/Users/rexxa/work/art-batch/B3/stages_early/` contains records, original tool arguments/results, raw outputs, frozen processing results, finalization script and matching boards. Regeneration is unnecessary. Verify portable manifest hashes with Python hashlib against `manifest.json` record fields `raw_preserved/raw_sha256`, `normalized/normalized_sha256`, and each `references[].path/sha256`; verify exported rows from `coverage.json` against their `sha256`.
 
 Not checked: runtime import/placement and historical separate model-judge scores. `judge_v2.model_status` remains MISSING and full judge-v2 pass count remains zero;27 are numeric+human-visual candidates, not fabricated model passes. The27 unavailable slots remain integration gaps.
+
+Root integration review normalized the27 file proposals to role/id/source/dest, added assets.json geometry adapter rows and bindings.draft.json symbolic mappings. This changes draft packaging only; all selected PNGs and numeric records are unchanged.

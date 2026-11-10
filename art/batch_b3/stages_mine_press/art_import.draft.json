@@ -19,6 +19,8 @@
       "dest": "structures/b3/stages_mine_press/olive_press_damaged.png"
     }
   ],
-  "metadata_source": "art/batch_b3/stages_mine_press/manifest.json",
-  "instruction": "Merge selected asset metadata into integration structure adapter; explicit lifecycle binding support still required."
+  "instruction": "Merge selected asset metadata into integration structure adapter; explicit lifecycle binding support still required.",
+  "meta_sources": {
+    "structure": "art/batch_b3/stages_mine_press/assets.json"
+  }
 }
