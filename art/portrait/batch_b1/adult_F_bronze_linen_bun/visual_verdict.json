@@ -1,0 +1,13 @@
+{
+  "score": 92,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Parchment grain is slightly stronger than the old single-portrait anchor."
+  ],
+  "suggestions": [
+    "Keep three skin tones distinct and the short hair above the nape in later sheets."
+  ],
+  "reasoning": "Viewed full source, native portrait anchor and nearest2x outputs. Six prescribed skin/hair identities, older adult age lines and beard variants remain readable; matching cream linen shoulders, full heads and stable framing.",
+  "summary_sha256": "be2f4140e8245b7fe95d42169073f1f66f02951cc494c7c3f99a537a5849c7ea"
+}

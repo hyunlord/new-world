@@ -1,0 +1,178 @@
+{
+  "schema_version": 1,
+  "scope": "bronze_linen portraits only; merge with bronze wardrobe manifest",
+  "generated_sheets": 14,
+  "generated_portrait_cells": 84,
+  "adopted_sheets": 12,
+  "adopted_portraits": 72,
+  "rejected_sheets": 0,
+  "superseded_passing_sheets": 2,
+  "failed_calls": 0,
+  "max_attempt": 2,
+  "self_review": {
+    "weakest_regenerated": 2,
+    "base_sheets": 12,
+    "fraction": 0.16666666666666666,
+    "looks": [
+      "child_M_bronze_linen_short",
+      "child_F_bronze_linen_short"
+    ],
+    "comparison_sheet": "art/batch_b1/sheets/bronze_linen_portraits_self_review.png"
+  },
+  "records": [
+    {
+      "look": "adult_F_bronze_linen_bun",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/adult_F_bronze_linen_bun/try1/raw.png",
+      "raw_sha256": "3f29352902a73b286443b6141fb5b64b7946b35b29524a9c40a1e13e86187883",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/adult_F_bronze_linen_bun/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/adult_F_bronze_linen_bun/try1/tool.json",
+      "summary_sha256": "be2f4140e8245b7fe95d42169073f1f66f02951cc494c7c3f99a537a5849c7ea",
+      "visual_score": 92
+    },
+    {
+      "look": "adult_F_bronze_linen_long_tied",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/adult_F_bronze_linen_long_tied/try1/raw.png",
+      "raw_sha256": "f86c2ac895a591dc3d0a6bfd0daed550df5e9ab414e330b218403a02120321ca",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/adult_F_bronze_linen_long_tied/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/adult_F_bronze_linen_long_tied/try1/tool.json",
+      "summary_sha256": "1167f10196bae790fc3b685de9e2c6fd6a6df110defb1206da11b9884748b127",
+      "visual_score": 92
+    },
+    {
+      "look": "adult_F_bronze_linen_short",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/adult_F_bronze_linen_short/try1/raw.png",
+      "raw_sha256": "41b4834bfa5faff4394eaf4d7e2aa7312d13018849225337a973f149959b3dda",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/adult_F_bronze_linen_short/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/adult_F_bronze_linen_short/try1/tool.json",
+      "summary_sha256": "d392169c8527b036117a36aa4b8f3e9a6d30676d4df6aec7d7afdfb47605391f",
+      "visual_score": 91
+    },
+    {
+      "look": "adult_M_bronze_linen_bun",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/adult_M_bronze_linen_bun/try1/raw.png",
+      "raw_sha256": "29ea0000423fa0bf77e15c9bc0165c4567d4fa28ae84d33c208a6261b7211d31",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/adult_M_bronze_linen_bun/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/adult_M_bronze_linen_bun/try1/tool.json",
+      "summary_sha256": "85985a1ad98a56175b66781b10a9ec34f8a1dd17a8af1131405ad7470d3d7a0d",
+      "visual_score": 92
+    },
+    {
+      "look": "adult_M_bronze_linen_long_tied",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/adult_M_bronze_linen_long_tied/try1/raw.png",
+      "raw_sha256": "0805501dc9bfe2dcd036050d303530bd140e751a50ccf34cd398a0e429bad75a",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/adult_M_bronze_linen_long_tied/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/adult_M_bronze_linen_long_tied/try1/tool.json",
+      "summary_sha256": "bab62daa8d8062f23577b2f911e188c0358b7062cf50ef9534d497c8fcf4d339",
+      "visual_score": 92
+    },
+    {
+      "look": "adult_M_bronze_linen_short",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/adult_M_bronze_linen_short/try1/raw.png",
+      "raw_sha256": "e3ee14325276f9ca4435690536d51964e73668817f366f12edf243e2e21bf730",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/adult_M_bronze_linen_short/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/adult_M_bronze_linen_short/try1/tool.json",
+      "summary_sha256": "532e93b289b6f41bac8289e2b5b71c855450388e62acb8492ca6a4e45ce71014",
+      "visual_score": 91
+    },
+    {
+      "look": "child_F_bronze_linen_bun",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/child_F_bronze_linen_bun/try1/raw.png",
+      "raw_sha256": "ba92cbf137bbaa6e9ef3974af2af176b67cfa843b6c2a098bc12ec8da8b5add7",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/child_F_bronze_linen_bun/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/child_F_bronze_linen_bun/try1/tool.json",
+      "summary_sha256": "d48435a553cacdab29ce84b9ef0ac862b2d96117bef164df433f3c2cfcb7f3bd",
+      "visual_score": 92
+    },
+    {
+      "look": "child_F_bronze_linen_long_tied",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/child_F_bronze_linen_long_tied/try1/raw.png",
+      "raw_sha256": "3a20f6ee54ee69f0fa0006d3681f33bf4b4cffff1e2bb1b6c5b7e70681e20d7b",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/child_F_bronze_linen_long_tied/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/child_F_bronze_linen_long_tied/try1/tool.json",
+      "summary_sha256": "706cbfcca9df7d94a953a0c3831dd2a241ac4b120376175d7f2917d594866869",
+      "visual_score": 92
+    },
+    {
+      "look": "child_F_bronze_linen_short",
+      "attempt": 1,
+      "status": "superseded_passing",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/child_F_bronze_linen_short/try1/raw.png",
+      "raw_sha256": "690bd8ee40574984c6e56b73a5972edf267aad6189d33c19734460608764ee71",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/child_F_bronze_linen_short/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/child_F_bronze_linen_short/try1/tool.json",
+      "summary_sha256": "2bc4a7fbe1e15697ac2f192629315e8d8b9e7fda4a39ba36f700488adff563a6",
+      "visual_score": 90
+    },
+    {
+      "look": "child_F_bronze_linen_short",
+      "attempt": 2,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/child_F_bronze_linen_short/try2/raw.png",
+      "raw_sha256": "64331c597b7b4cc5085af02f47aac9c880dc49c19327287c4531a04ad4a85e4b",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/child_F_bronze_linen_short/try2/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/child_F_bronze_linen_short/try2/tool.json",
+      "summary_sha256": "738f22a2aec5db680d17665fdae4b64ba81d4aa0cba54edc2028ca99a08d11c2",
+      "visual_score": 93
+    },
+    {
+      "look": "child_M_bronze_linen_bun",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/child_M_bronze_linen_bun/try1/raw.png",
+      "raw_sha256": "b16dcb3df7cf9ba7738682710442b98349bfa1b6a13f3f1de503d6f30248f9cf",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/child_M_bronze_linen_bun/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/child_M_bronze_linen_bun/try1/tool.json",
+      "summary_sha256": "823ae4d230b9630f43404f7585529125f0938a5e677cddf11cac79bff01d9181",
+      "visual_score": 92
+    },
+    {
+      "look": "child_M_bronze_linen_long_tied",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/child_M_bronze_linen_long_tied/try1/raw.png",
+      "raw_sha256": "22455b6a7499bfb1534986e9823179108487ae5f2c90f15a1082b96c64dd30a0",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/child_M_bronze_linen_long_tied/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/child_M_bronze_linen_long_tied/try1/tool.json",
+      "summary_sha256": "3ef2e65116982da23028fd2ac52b950e09940933ca73a4d41d8035f69e36d215",
+      "visual_score": 92
+    },
+    {
+      "look": "child_M_bronze_linen_short",
+      "attempt": 1,
+      "status": "superseded_passing",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/child_M_bronze_linen_short/try1/raw.png",
+      "raw_sha256": "643da3984301d28aabd382856ccd924ac5fad59ad3546124a8508595e154bf26",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/child_M_bronze_linen_short/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/child_M_bronze_linen_short/try1/tool.json",
+      "summary_sha256": "e5959dd7baf95c2ec80e157299e3fba7da180a69d32b68d7b3111f3b4ef7746d",
+      "visual_score": 90
+    },
+    {
+      "look": "child_M_bronze_linen_short",
+      "attempt": 2,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/child_M_bronze_linen_short/try2/raw.png",
+      "raw_sha256": "1c2c9863de3e36d336f753d22f7b724633a7c07c5d13a51b0dce22ffb0e591a8",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/child_M_bronze_linen_short/try2/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_portraits_root/child_M_bronze_linen_short/try2/tool.json",
+      "summary_sha256": "1ce228f90376aedede1b39e3202bb178c60097be30d0ce90775398cd34533947",
+      "visual_score": 93
+    }
+  ]
+}

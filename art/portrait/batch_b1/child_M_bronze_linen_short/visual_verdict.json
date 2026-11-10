@@ -1,0 +1,11 @@
+{
+  "score": 93,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Some heavy brows remain deliberately distinct, but the deep adult frown shadows are reduced."
+  ],
+  "suggestions": [],
+  "reasoning": "Required weakest-two regeneration compared against full first-pass contact sheet and both native/nearest2x trials. Softer cheeks and less angular brow/jaw improve child age reading without losing the six prescribed skin/hair/scar/freckle identities or linen neckline.",
+  "summary_sha256": "1ce228f90376aedede1b39e3202bb178c60097be30d0ce90775398cd34533947"
+}

@@ -1,0 +1,13 @@
+{
+  "score": 92,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Restrained parchment texture remains visible at native size."
+  ],
+  "suggestions": [
+    "Maintain exact skin/hair and neckline consistency."
+  ],
+  "reasoning": "Viewed full source, native contact sheet and nearest2x outputs beside the old portrait anchor. Correct six skin/hair/age identities, clear hairstyle, full head margins, opaque parchment and cream linen shoulders; no child beard or grey hair.",
+  "summary_sha256": "3ef2e65116982da23028fd2ac52b950e09940933ca73a4d41d8035f69e36d215"
+}
