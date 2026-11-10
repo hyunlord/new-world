@@ -1,0 +1,12 @@
+{
+  "score": 92,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Fine freckles/scars reduce at128px.",
+    "Child heavy-brow variants have slightly angular cheeks; adult variants retain intended age lines."
+  ],
+  "suggestions": [],
+  "reasoning": "Native and2x inspection confirms six row-major identities, distinct skin/hair categories and continuous undyed wool neckline. Portrait medium matches parchment anchors; all six opaque128px cells pass.",
+  "summary_sha256": "a2cc0e75aace75b3865351ab0c6885948d2a354326d48a85c1cc43d664965cd5"
+}

@@ -1,0 +1,11 @@
+{
+  "score": 93,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Scars and freckles remain fine at128px, but palette and broader face structure distinguish all six."
+  ],
+  "suggestions": [],
+  "reasoning": "Self-review improves youthful cheek/chin shapes and relaxed brows while retaining six exact identity axes and visible low-tied hair. Smooth woven cream binding and broader wool wash better match body. Native/2x comparison favours try2; all opaque128px cells pass.",
+  "summary_sha256": "1c17762d3e0562b4220a386b98b1b92685954978d1559c78164ffb5d52b61f8e"
+}

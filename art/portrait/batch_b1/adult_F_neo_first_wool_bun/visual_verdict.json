@@ -1,0 +1,12 @@
+{
+  "score": 92,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Skin and hair identity palette read clearly; fine face features soften at native128px.",
+    "Cream wool edging is textured slightly more than the smooth body sprite."
+  ],
+  "suggestions": [],
+  "reasoning": "Six distinct prescribed age, skin, hair and feature identities remain in row-major order. Warm ink/wash medium and wrapped undyed wool neckline agree with references at native and2x, opaque square cells pass.",
+  "summary_sha256": "e38a388a029469f403441fe9c58e2346ffd6ec3805db92b4ded6823dae953f02"
+}

@@ -1,0 +1,11 @@
+{
+  "score": 91,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Fine freckles/scars soften at128px; heavy-brow children slightly angular."
+  ],
+  "suggestions": [],
+  "reasoning": "Six prescribed child face identities remain distinct by skin, hair and features, no beard/grey/wrinkles. Ink/wash and undyed diagonal wool neckline match anchors at native and2x; six opaque128px cells pass.",
+  "summary_sha256": "80112d0b3d672835742b6dce99c5690c6a06d942fb537c5f0aaab3b0a05a6a34"
+}

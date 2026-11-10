@@ -1,0 +1,130 @@
+{
+  "look": "adult_F_neo_first_wool_long_tied",
+  "record_sha256": "99548316771b64978c5b625d3d3db6c95a18f64e149a1ebe6bafc30e6f101f7e",
+  "raw_sha256": "1aa729a3724c0768aa2c3722015a103d0e2740d1f64453ba68c66a0ea648fd3c",
+  "prompt_sha256": "2666fb1479bf9e0e4f3d30b2185d771467eb14625e9e12d36d97318cae705fc8",
+  "portraits": [
+    {
+      "variant": "v1",
+      "path": "v1.png",
+      "sha256": "73b9c4f5cf3d94cda9f820b6e05e0e9785f2b81e80151b1ac72ea2aac3f13509",
+      "source_box": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "variant": "v2",
+      "path": "v2.png",
+      "sha256": "cd4036873ce53a396007813d1edbf6de33156d6b42b01a3d284fd9c06dbb7720",
+      "source_box": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "variant": "v3",
+      "path": "v3.png",
+      "sha256": "a8f78ec3a8b197ac64dc84b6da958dbc80728f632ee9062d384579958683c61a",
+      "source_box": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "variant": "v4",
+      "path": "v4.png",
+      "sha256": "ca2f42c7d12995a18cb8d3d0671d1d8700edb9a1c09c9016a8dc45736cd718dc",
+      "source_box": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "variant": "v5",
+      "path": "v5.png",
+      "sha256": "f40b9eeeac5dc1f2ed84ccc6c72b449936c2603d32a067a261092237db9a2499",
+      "source_box": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "variant": "v6",
+      "path": "v6.png",
+      "sha256": "1e2b608c4ccf9e44a063fd5350e0321cb3a45277b48b388b79f42807ed469b1f",
+      "source_box": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    }
+  ],
+  "passed": true,
+  "method": "exact 3x2 source cells; full-frame uniform Lanczos; no extraction"
+}
