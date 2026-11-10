@@ -1,0 +1,375 @@
+{
+  "record": {
+    "id": "timber_bridge_ew",
+    "lane": "iron",
+    "era": "iron",
+    "attempt": 3,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c28c-a06d-74a0-9a1b-4625cbcc6757/exec-85037f41-ac6c-4d64-96c6-71d217548203.png",
+    "prompt": "Use case: precise-object-edit. Image1 is the TARGET east-west timber bridge. Preserve its identity, every timber and rope, orthogonal plan, ink marks, earthy wash, and upper-left lighting. Geometry correction only: the actual open walking deck currently spans189.6px horizontally when the complete sprite is152px high. Widen the flat deck approximately1.3 percent to make its actual left-to-right bank-to-bank span192px at152px total sprite height. Keep north/south rails low and parallel, both left/right walking entrances open. Do not change the railing height or deck depth. This is a three-tile span; no convergence or perspective, plan corners square. Hand-painted ink and watercolor in the attached style anchors, fine internal wood grain, no glossy render. Isolated object with transparent exterior, no river, ground, text, border, glow or background.",
+    "subject": null,
+    "references": [
+      "/Users/rexxa/.codex/generated_images/01a1c28c-a06d-74a0-9a1b-4625cbcc6757/exec-a6f8c696-9e91-465b-9c15-46e9475846eb.png",
+      "art/style05/anchors/props.png",
+      "art/style05/anchors/scene.png"
+    ],
+    "target_height": 153,
+    "projection_family": "bridge",
+    "height_band": [
+      150,
+      154
+    ],
+    "height_band_reason": "EW bridge exact plan192px horizontal span by128px deckdepth plus24px rail/frontface projection; wholeheight152px, footprint3x2 at64px.",
+    "footprint": [
+      3.0,
+      2.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:59:41.742Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/iron/raw/timber_bridge_ew_try3.png",
+  "raw_sha256": "ff2613d940740f01881c7d58c02b295ec84ff88720a5974cb5b888ec8503ff59",
+  "references": [
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c28c-a06d-74a0-9a1b-4625cbcc6757/exec-a6f8c696-9e91-465b-9c15-46e9475846eb.png",
+      "sha256": "042b1055c33ae5d3a08afe5a7c079de9744eea25d699d494041fbe64685b51c0"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/iron/normalized/timber_bridge_ew_try3.png",
+  "normalized_sha256": "044f9553eb5e7ba8b4ea19ab77deb6c93d89ba4b70a9c5101161d4663292200c",
+  "size": [
+    216,
+    162
+  ],
+  "anchor": [
+    108,
+    157
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (103, 75, 1348, 994)",
+    "uniform Lanczos scale: 0.16721311475409836",
+    "transparent 4px padding; source-canvas anchor: (108, 157)"
+  ],
+  "projection": {
+    "family": "bridge",
+    "anchor": [
+      108,
+      157
+    ],
+    "height_band": [
+      150,
+      154
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 26815,
+    "base_row": 157,
+    "base_error": 0,
+    "height": 154,
+    "gradient_x": -0.013820981489130087,
+    "gradient_y": -0.14254298608499424,
+    "light_angle_degrees": 264.46190748842366,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/iron/raw/timber_bridge_ew_try3.png",
+    "sha256": "ff2613d940740f01881c7d58c02b295ec84ff88720a5974cb5b888ec8503ff59",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.26284443535606566,
+      "saturation_q25": 0.4048564438235802,
+      "saturation_q75": 0.5449110087537294,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.47213595499958,
+      "wash_flatness": 0.0057265141193928015,
+      "foreground_pixels": 40878
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    37,
+    1370,
+    1059
+  ],
+  "raw_opaque_bbox": [
+    105,
+    77,
+    1346,
+    992
+  ],
+  "raw_faint_far_ratio": 0.0006475437092003711,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "root-authorized canonical selection; independent visual judgments retained from crops_grain",
+    "created_at": "2026-11-10T00:05:37.657211+00:00",
+    "source_review": "/Users/rexxa/work/art-batch/A2/checks/bridge_uniform_probe_independent_review.json",
+    "source_review_sha256": "a2dfdd7ee495731775fc966390268f26a51c3306be47a16c9267acf5f3c1b174",
+    "source_review_archive": "/Users/rexxa/work/art-batch/A2/iron/archive/precanonical_bridge_probes/bridge_uniform_probe_independent_review.json",
+    "source_review_unchanged": true,
+    "canonical_selection_only": true,
+    "adopted": false,
+    "assets": [
+      {
+        "id": "timber_bridge_ew",
+        "attempt": 3,
+        "reviewed_raw": "/Users/rexxa/work/art-batch/A2/iron/raw/timber_bridge_ew_try3.png",
+        "reviewed_raw_sha256": "ff2613d940740f01881c7d58c02b295ec84ff88720a5974cb5b888ec8503ff59",
+        "original_png": "/Users/rexxa/work/art-batch/A2/iron/archive/precanonical_bridge_probes/normalized/timber_bridge_ew_try3.png",
+        "original_sha256": "b0537aac101419cb6cdd0cea49904df51c53cfdf28ca06c7b0a1b8f34da46cd9",
+        "size": [
+          216,
+          162
+        ],
+        "anchor": [
+          108,
+          157
+        ],
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "alpha_note": "Actual preserved RGBA was composited on dark and pale backgrounds. No visible halo or ground patch. This is a visual verdict, not an assertion that every off-subject alpha sample is exactly zero.",
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "numeric_ready": true,
+        "fresh_projection_passed": true,
+        "fresh_raw_style_numeric_pass": true,
+        "geometry": {
+          "compound_opaque_height": 154,
+          "target_height": 153,
+          "frozen_height_band": [
+            150,
+            154
+          ],
+          "uniform_scale_verified": true,
+          "changed_RGBA_channels_from_independent_normalization": 0,
+          "original_export_preserved_and_reproduced": true,
+          "axis": "x",
+          "manual_raw_deck_endpoints": [
+            152,
+            1301
+          ],
+          "manual_scaled_span": 192.12786885245902,
+          "manual_semantic_endpoint_uncertainty_px": 1,
+          "alpha_cross_sections": {
+            "50": [
+              12,
+              203,
+              192
+            ],
+            "70": [
+              12,
+              203,
+              192
+            ],
+            "90": [
+              12,
+              203,
+              192
+            ],
+            "110": [
+              12,
+              203,
+              192
+            ]
+          },
+          "bank_interval_half_open": [
+            12,
+            204
+          ],
+          "bank_interval_length": 192,
+          "integer_envelope_note": "At all four free-deck rows, alpha>=128 occupies columns12..203 inclusive:192 pixels.",
+          "upright_proportion_reading": "Front cap-to-lower-foot extent is approximately raw y813..992, about30px after uniform scaling, including elliptical faces. That visible low corner assembly is plausible beside the56px adult; it is not a pure measured vertical rise."
+        },
+        "differences": [
+          "The uniform probe differs from the original only through the documented target-height normalization; no source or local pixel changes.",
+          "Rough bark and broken timber marks are more textured than the bench, but resolve into restrained weathered timber at1x/2x and stay consistent with locked props."
+        ],
+        "suggestions": [
+          "If root chooses this geometry, bind the canonical sidecar and later import placement to this exact probe RGBA, anchor and bank interval. Preserve original exports."
+        ],
+        "reasoning": "Independent normalization from the preserved raw produces identical RGBA and size. Fresh checks use the unchanged calibration and frozen band and all pass. The orthogonal deck has open east/west ends and a measured192px free-deck span, while low corner assemblies remain plausible beside the native adult and bench. Natural broken bark contours, subdued earth pigments and upper-left highlights remain legible at1x/2x. This approves the separate153-target probe for root canonical selection.",
+        "source_reviewed_png": "/Users/rexxa/work/art-batch/A2/iron/probes/timber_bridge_ew_try3_height153.png",
+        "source_reviewed_sha256": "8f03cbbc4772badb99d68269193c8e30162dbaaaf8e1f1ee683d948370bb86a0",
+        "reviewed_png": "/Users/rexxa/work/art-batch/A2/iron/normalized/timber_bridge_ew_try3.png",
+        "reviewed_sha256": "044f9553eb5e7ba8b4ea19ab77deb6c93d89ba4b70a9c5101161d4663292200c",
+        "raw_sha256": "ff2613d940740f01881c7d58c02b295ec84ff88720a5974cb5b888ec8503ff59",
+        "normalized_sha256": "044f9553eb5e7ba8b4ea19ab77deb6c93d89ba4b70a9c5101161d4663292200c",
+        "canonical_result": "/Users/rexxa/work/art-batch/A2/iron/normalized/timber_bridge_ew_try3.json",
+        "canonical_record": "/Users/rexxa/work/art-batch/A2/iron/records/timber_bridge_ew_try3.json",
+        "archive": "/Users/rexxa/work/art-batch/A2/iron/archive/precanonical_bridge_probes",
+        "canonical_rgba_equals_independent_probe": true,
+        "record_change": {
+          "field": "target_height",
+          "before": 152,
+          "after": 153,
+          "frozen_height_band_unchanged": [
+            150,
+            154
+          ]
+        },
+        "selection_note": "Root approved canonical selection. Existing helper rerun; decoded RGBA equals independently reviewed probe exactly. New PNG bytes may differ only by encoder options. Generation prompt, source raw and original record preserved unchanged in archive.",
+        "original_historical_path": "/Users/rexxa/work/art-batch/A2/iron/normalized/timber_bridge_ew_try3.png"
+      },
+      {
+        "id": "timber_bridge_damaged",
+        "attempt": 3,
+        "reviewed_raw": "/Users/rexxa/work/art-batch/A2/iron/raw/timber_bridge_damaged_try3.png",
+        "reviewed_raw_sha256": "1e2e668c0313d9c59e38a36cf39b03f74f46263c3c7eb72a02958c33c50dae75",
+        "original_png": "/Users/rexxa/work/art-batch/A2/iron/archive/precanonical_bridge_probes/normalized/timber_bridge_damaged_try3.png",
+        "original_sha256": "78077bf6527dd956c11df48a3bd84be2fff8b0a76b04a596c153648f6c1f7b0f",
+        "size": [
+          148,
+          223
+        ],
+        "anchor": [
+          74,
+          218
+        ],
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "alpha_note": "Actual preserved RGBA was composited on dark and pale backgrounds. No visible halo or ground patch. This is a visual verdict, not an assertion that every off-subject alpha sample is exactly zero.",
+        "score": 90,
+        "verdict": "pass",
+        "category_match": true,
+        "numeric_ready": true,
+        "fresh_projection_passed": true,
+        "fresh_raw_style_numeric_pass": true,
+        "geometry": {
+          "compound_opaque_height": 215,
+          "target_height": 214,
+          "frozen_height_band": [
+            214,
+            218
+          ],
+          "uniform_scale_verified": true,
+          "changed_RGBA_channels_from_independent_normalization": 0,
+          "original_export_preserved_and_reproduced": true,
+          "axis": "y",
+          "manual_raw_deck_endpoints": [
+            236,
+            1259
+          ],
+          "manual_scaled_span": 191.53280839895015,
+          "manual_semantic_endpoint_uncertainty_px": 1,
+          "alpha_cross_sections": {
+            "45": [
+              17,
+              209,
+              193
+            ],
+            "50": [
+              17,
+              210,
+              194
+            ],
+            "55": [
+              17,
+              210,
+              194
+            ],
+            "90": [
+              17,
+              210,
+              194
+            ],
+            "95": [
+              17,
+              210,
+              194
+            ]
+          },
+          "bank_interval_half_open": [
+            18,
+            210
+          ],
+          "bank_interval_length": 192,
+          "integer_envelope_note": "Selected deck columns occupy rows17..209/210 inclusive:193–194 pixels. The half-open192px bank interval[18,210) has1px northern overlap and0–1px southern overlap. The ragged entire envelope is not exactly192px. The intentional damaged plank gap remains transparent.",
+          "upright_proportion_reading": "Top and middle cap junctions support low posts attached to rails that run along the north/south deck. The side timber below the final cap continues along the plan direction; interpreting its full roughly49–58px image extent as upright height would conflate ground depth with rise. Ground-contact points are hidden/ambiguous, so precise upright height is unverified. At1x/2x beside the56px adult the low-cap interpretation is coherent, but this does not certify an exact12px or waist-height post."
+        },
+        "differences": [
+          "The uniform probe differs from the original only through the documented target-height normalization; no source or local pixel changes.",
+          "Rough bark and broken timber marks are more textured than the bench, but resolve into restrained weathered timber at1x/2x and stay consistent with locked props.",
+          "The damaged plank gap reads clearly; ragged bank edges require the recorded1px overlap allowance.",
+          "Exact post rise cannot be isolated from the rail and ground-depth overlap; no numerical upright-height claim is made."
+        ],
+        "suggestions": [
+          "If root chooses this geometry, bind the canonical sidecar and later import placement to this exact probe RGBA, anchor and bank interval. Preserve original exports.",
+          "Carry the193–194px ragged envelope and approximate semantic endpoint measurement into handoff. Do not describe the entire deck envelope as exactly192px."
+        ],
+        "reasoning": "Independent normalization from preserved raw produces identical RGBA. Fresh style/projection checks pass without any threshold or band change. The north/south deck has parallel plan sides, a clear damaged plank gap and a near192px semantic span; integer ragged edges extend1px over the chosen bank interval. Weathered timber treatment fits the locked props and bench at game scale. Low caps and rails are visually coherent, but hidden ground contacts preclude an exact upright-height proof. Acceptance applies to the214-target probe with that explicit geometry limitation, not to a fabricated exact192px entire envelope.",
+        "source_reviewed_png": "/Users/rexxa/work/art-batch/A2/iron/probes/timber_bridge_damaged_try3_height214.png",
+        "source_reviewed_sha256": "d2ac06dcd8867114baf62dc4ef2398c63577f2b76cca1e2b4665e9b6a121972f",
+        "reviewed_png": "/Users/rexxa/work/art-batch/A2/iron/normalized/timber_bridge_damaged_try3.png",
+        "reviewed_sha256": "5ca735962dcd2b0ed0537d5be4d327b192b53e114d31b92bda32691a190518e4",
+        "raw_sha256": "1e2e668c0313d9c59e38a36cf39b03f74f46263c3c7eb72a02958c33c50dae75",
+        "normalized_sha256": "5ca735962dcd2b0ed0537d5be4d327b192b53e114d31b92bda32691a190518e4",
+        "canonical_result": "/Users/rexxa/work/art-batch/A2/iron/normalized/timber_bridge_damaged_try3.json",
+        "canonical_record": "/Users/rexxa/work/art-batch/A2/iron/records/timber_bridge_damaged_try3.json",
+        "archive": "/Users/rexxa/work/art-batch/A2/iron/archive/precanonical_bridge_probes",
+        "canonical_rgba_equals_independent_probe": true,
+        "record_change": {
+          "field": "target_height",
+          "before": 216,
+          "after": 214,
+          "frozen_height_band_unchanged": [
+            214,
+            218
+          ]
+        },
+        "selection_note": "Root approved canonical selection. Existing helper rerun; decoded RGBA equals independently reviewed probe exactly. New PNG bytes may differ only by encoder options. Generation prompt, source raw and original record preserved unchanged in archive.",
+        "original_historical_path": "/Users/rexxa/work/art-batch/A2/iron/normalized/timber_bridge_damaged_try3.png"
+      }
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "timber_bridge_ew",
+  "adopted_path": "art/style05/struct/a2/iron/timber_bridge_ew.png",
+  "review_asset_id": "timber_bridge_ew",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/bridge_canonical_selection_review.json",
+  "review_sha256": "2085a92c502af86ceed565b2fbc8018c888c23e5ac9dc35e23f21e62772546a8"
+}

@@ -1,0 +1,183 @@
+{
+  "id": "paved_road_corner",
+  "attempt": 3,
+  "role": "ground_tile",
+  "source_record": "/Users/rexxa/work/art-batch/A2/iron/records/paved_road_corner_try3.json",
+  "raw": "/Users/rexxa/work/art-batch/A2/iron/raw/paved_road_corner_try3.png",
+  "raw_sha256": "b3096186a0c2f116897d02e2c0ab2e65342562cefac5cb26a3794ffc4bcf7c3c",
+  "normalized": "/Users/rexxa/work/art-batch/A2/iron/ground/paved_road_corner_try3.png",
+  "normalized_sha256": "668526a032ab725451169ba48a93160b8d7e7cd7308eae4870a1ed7ccbd0b8d1",
+  "references": [
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c28c-a06d-74a0-9a1b-4625cbcc6757/exec-9ebb1b9e-0a34-4602-a090-a4096f286616.png",
+      "sha256": "90d858f824fa87c94ad53618db7bb9385ed1bb75146c24f7b0b8234dc522cbc1"
+    },
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c28c-a06d-74a0-9a1b-4625cbcc6757/exec-cb6f2c0f-93e7-4e2d-8e9d-a0e05c2cd009.png",
+      "sha256": "ceed2b5f9e84dfaf79387cf141bfffaf10250b441577ee4595591d61d20da942"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "operations": [
+    "existing STRUCT strip fullframe RGBA Lanczos (1254, 1254) -> (64,64); no crop, alpha modification, edge blending or repaint"
+  ],
+  "size": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    43
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "alpha_min": 255,
+  "alpha_max": 255,
+  "all_alpha_ge_128": true,
+  "fully_opaque_255": true,
+  "opaque_pixels_255": 4096,
+  "seam_x": {
+    "width": 64,
+    "height": 64,
+    "interior_p95": 27.121354166666663,
+    "join_columns": [
+      64,
+      128,
+      192
+    ],
+    "join_mad": [
+      21.583333333333332,
+      21.583333333333332,
+      21.583333333333332
+    ],
+    "limit": 31.18955729166666,
+    "passed": true
+  },
+  "seam_y": {
+    "width": 64,
+    "height": 64,
+    "interior_p95": 26.011458333333334,
+    "join_columns": [
+      64,
+      128,
+      192
+    ],
+    "join_mad": [
+      21.005208333333332,
+      21.005208333333332,
+      21.005208333333332
+    ],
+    "limit": 29.91317708333333,
+    "passed": true
+  },
+  "judge_v2_ground": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/iron/raw/paved_road_corner_try3.png",
+    "sha256": "b3096186a0c2f116897d02e2c0ab2e65342562cefac5cb26a3794ffc4bcf7c3c",
+    "family": "ground",
+    "metrics": {
+      "edge_density": 0.25122826908541196,
+      "saturation_q25": 0.3620296039174041,
+      "saturation_q75": 0.4402622730923041,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.004117731095931065,
+      "foreground_pixels": 65536
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "numeric_ready": true,
+  "status": "ADOPTED_GROUND_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "standing_projection": "not applicable; ground tile at source32,43 worldanchor",
+  "record": {
+    "id": "paved_road_corner",
+    "lane": "iron",
+    "era": "iron",
+    "attempt": 3,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c28c-a06d-74a0-9a1b-4625cbcc6757/exec-c60d3187-9445-4448-8c7b-ba2fb1f98338.png",
+    "prompt": "Use case: precise-object-edit. Image1 target corner-paving tile. Image2 successful base material reference. Preserve corner-directed stonecourses and all four edge colors. Restore slightly richer natural mottled stone wash from image2: small visible dark/light mineral flecks and3fine crackgroups on broad limestone slabs, restrained natural-history ink, not smooth flatwashed surface. NO new border/trim, no big contrast changes. FULLFRAME OPAQUE squaretexture, alpha255 everypixel, no transparency/margin. Seamless repeatingedges; upper-leftlocalshading.",
+    "references": [
+      "/Users/rexxa/.codex/generated_images/01a1c28c-a06d-74a0-9a1b-4625cbcc6757/exec-9ebb1b9e-0a34-4602-a090-a4096f286616.png",
+      "/Users/rexxa/.codex/generated_images/01a1c28c-a06d-74a0-9a1b-4625cbcc6757/exec-cb6f2c0f-93e7-4e2d-8e9d-a0e05c2cd009.png",
+      "art/style05/anchors/props.png",
+      "art/style05/anchors/scene.png"
+    ],
+    "target_height": 64,
+    "projection_family": "road",
+    "height_band": [
+      62,
+      66
+    ],
+    "height_band_reason": "New road family; target 64px whole silhouette for 1x1 64px tiles, 56px adult scale; houses include visible floor depth and 60px walls.",
+    "footprint": [
+      1,
+      1
+    ],
+    "style_family": "ground",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:56:12.561Z"
+  },
+  "adopted_id": "paved_road_corner",
+  "adopted_path": "art/style05/env/ground/a2/iron/paved_road_corner.png",
+  "source_check": "/Users/rexxa/work/art-batch/A2/iron/ground/paved_road_corner_try3.json",
+  "source_check_sha256": "7b9d89709267a957843913950c20b081fca2bad7cd3d0c6ce2c56a4ec7455c1f",
+  "review": {
+    "reviewer": "checks_native independent of generating lane; root confirmed repeat proof",
+    "source_review": "/Users/rexxa/work/art-batch/A2/checks/ground_road_variants_final_contract_review.json",
+    "source_review_sha256": "6f160f2e7a856d34de5508e576929f950f0fafecd1f842c4018209da69f87eb6",
+    "assets": [
+      {
+        "id": "paved_road_corner",
+        "attempt": 3,
+        "reviewer": "checks_native independent of generating iron agent",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Curved courses form a readable quarter-turn in flat limestone paving. Thin sepia joints, beige-grey wash and small crack accents match the accepted base and same-family ground references. Native1x and2x repeats remain fully filled without a perimeter frame; pattern repetition is visible but the tile has no gap or raised curb.",
+        "same_family_references": [
+          "art/style05/anchors/ground.png",
+          "art/style05/env/ground/hill_rock.png"
+        ],
+        "raw_sha256": "b3096186a0c2f116897d02e2c0ab2e65342562cefac5cb26a3794ffc4bcf7c3c",
+        "normalized_sha256": "668526a032ab725451169ba48a93160b8d7e7cd7308eae4870a1ed7ccbd0b8d1"
+      }
+    ]
+  },
+  "review_asset_id": "paved_road_corner",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/road_corner3_adoption_selection.json",
+  "review_sha256": "18367a61112deb162fed3a331eee29cdc3405b599f460a5824593b3502b0c554"
+}

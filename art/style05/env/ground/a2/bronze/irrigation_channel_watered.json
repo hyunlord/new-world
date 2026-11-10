@@ -1,0 +1,223 @@
+{
+  "id": "irrigation_channel_watered",
+  "attempt": 2,
+  "record": {
+    "id": "irrigation_channel_watered",
+    "subject": "Full-frame square groundtile matching dry irrigation channel, muted sageblue water in central28px channel fromtopedge tobottomedge; flankingsoil fills64x64pixels.",
+    "target_height": 64,
+    "footprint": [
+      1,
+      1
+    ],
+    "projection_family": "ground_irrigation",
+    "style_family": "ground",
+    "height_band_reason": "Top-down ground extent, not standing-object height: 64px covers 1x164pxgridtiles; predeclared before generation.",
+    "lane": "bronze",
+    "era": "bronze",
+    "attempt": 2,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c290-f6fe-7e03-a8f0-4c49ecdc4053/exec-317b5e70-7538-4c6e-a5ee-cd5f43b67f4a.png",
+    "prompt": "Use case: precise-object-edit. IMAGE1 is edit target. Other images are locked INK/MATERIAL references only. Preserve target geometry, camera, proportions, palette, clean alpha and major contour; change only the requested state. Make the intended WATERED irrigation channel state. Preserve exactly this straight north-south narrow stone-lined channel with both continuous banks and its top-down terrain geometry. Keep channel filled with quiet muted blue-grey water but REMOVE bright white vein-like reflection lattice; only three fine short pale ripple marks across entire channel. Slightly simplify tiny weeds. Preserve natural earth ink and granular watercolor. Entire square opaque to all four edges. Exact matching north/south channel width, matching edge colors, seamless top-bottom and left-right. WorldSim style05 ILLUSTRATED GROUND TEXTURE. Entire rectangular image is the terrain tile, fully opaque edge-to-edge: no background, margin, transparency, borderoutline, panel or detached island. Straight TOP-DOWN orthographic 64px worldgrid. Fine variable broken sepia ink and natural quiet granular watercolor wash matching locked ground+scene references. Earthbrown ochre mutedslategrey and sage. Three quiet mainfurrows and sparse small stonegroups, secondaryfine surfacegrain; outer/secondary ink2:1. Upperleftlighting; no perspective, letters, UI, objects or people. Seamless oppositeedges, no directional colourgradient across whole tile. Required overall image aspect1:1 SQUARE, contentfills entirecanvas.",
+    "references": [
+      "/Users/rexxa/.codex/generated_images/01a1c290-f6fe-7e03-a8f0-4c49ecdc4053/exec-e1042cae-fc26-49ab-86e4-5b7b09e3d599.png",
+      "art/style05/anchors/ground.png",
+      "art/style05/anchors/scene.png"
+    ],
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:56:19.128Z",
+    "height_band": [
+      62,
+      66
+    ]
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/bronze/raw/irrigation_channel_watered_try2.png",
+  "raw_sha256": "a5ef19f27e4a56de79411587acc19f729a2f2a5e1ac8309d0be5bd35b9f430de",
+  "normalized": "/Users/rexxa/work/art-batch/A2/bronze/ground/irrigation_channel_watered_try2.png",
+  "normalized_sha256": "d1bcd2ae4aa562b94c0bf758e7a9553ace756c6b08e824b9dd9ffd112ab970d6",
+  "size": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    43
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "placement": "Reference world_base is NW tile origin plus (32,43); paste top-left at NW tile origin. 128x128 covers NW/E/S/SE tiles.",
+  "operations": [
+    "full-frame convert RGBA preserving generated RGB and opacity",
+    "global Lanczos resample to declared ground canvas; existing normalize.py strip path; no crop or padding or pixel/alpha painting"
+  ],
+  "projection": "ground top-down; standing projection not applicable",
+  "fully_opaque_alpha255_everywhere": true,
+  "alpha_min": 255,
+  "non255_pixels": 0,
+  "seam_x": {
+    "width": 64,
+    "height": 64,
+    "interior_p95": 26.029687499999998,
+    "join_columns": [
+      64,
+      128,
+      192
+    ],
+    "join_mad": [
+      15.036458333333334,
+      15.036458333333334,
+      15.036458333333334
+    ],
+    "limit": 29.934140624999994,
+    "passed": true
+  },
+  "seam_y": {
+    "width": 64,
+    "height": 64,
+    "interior_p95": 15.759374999999999,
+    "join_columns": [
+      64,
+      128,
+      192
+    ],
+    "join_mad": [
+      13.375,
+      13.375,
+      13.375
+    ],
+    "limit": 18.123281249999998,
+    "passed": true
+  },
+  "raw_style_judge": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/bronze/raw/irrigation_channel_watered_try2.png",
+    "sha256": "a5ef19f27e4a56de79411587acc19f729a2f2a5e1ac8309d0be5bd35b9f430de",
+    "family": "ground",
+    "metrics": {
+      "edge_density": 0.29287918871252205,
+      "saturation_q25": 0.5446787079759566,
+      "saturation_q75": 0.5909128159656507,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.004647075996703707,
+      "foreground_pixels": 65536
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "numeric_ready": true,
+  "status": "ADOPTED_GROUND_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "references": [
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c290-f6fe-7e03-a8f0-4c49ecdc4053/exec-e1042cae-fc26-49ab-86e4-5b7b09e3d599.png",
+      "sha256": "0e830ff43aa2a775c8ab78d957bc9282e52d04638b997f5544f362525d5ffee9"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/ground.png",
+      "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "adopted_id": "irrigation_channel_watered",
+  "adopted_path": "art/style05/env/ground/a2/bronze/irrigation_channel_watered.png",
+  "source_check": "/Users/rexxa/work/art-batch/A2/bronze/ground/irrigation_channel_watered_try2.json",
+  "source_check_sha256": "c952d6eed0d233e5b5310796fc3e6c6ebe05f47794e78d34eadaf61fe2b766df",
+  "review": {
+    "reviewer": "checks_native independent of generating lane; root confirmed repeat proof",
+    "source_review": "/Users/rexxa/work/art-batch/A2/checks/ground_bronze_final_contract_review.json",
+    "source_review_sha256": "2160118c11b4a338688db11c81db44f4143697e58208d4e62b2d6b12220a22a9",
+    "assets": [
+      {
+        "id": "irrigation_channel_watered",
+        "attempt": 2,
+        "reviewer": "checks_native independent of generating bronze agent",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Narrow blue-grey water and modest earth/stone banks distinguish a watered irrigation channel. Straight top-down geometry, restrained earth colors and fine ground texture match the ground anchor and existing packed earth; native1x/2x repeats connect without alpha holes.",
+        "same_family_references": [
+          "art/style05/anchors/ground.png",
+          "art/style05/env/ground/packed_earth.png"
+        ],
+        "raw_sha256": "a5ef19f27e4a56de79411587acc19f729a2f2a5e1ac8309d0be5bd35b9f430de",
+        "normalized_sha256": "d1bcd2ae4aa562b94c0bf758e7a9553ace756c6b08e824b9dd9ffd112ab970d6"
+      },
+      {
+        "id": "terrace_cultivated",
+        "attempt": 2,
+        "reviewer": "checks_native independent of generating bronze agent",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Horizontal low retaining banks and repeated small green seedling rows clearly show cultivated terrace ground. The128px square spans exactly2x2 tiles at native scale; fine ink, earthy soil wash and uninterrupted repeated rows are coherent with the locked ground references.",
+        "same_family_references": [
+          "art/style05/anchors/ground.png",
+          "art/style05/env/ground/packed_earth.png"
+        ],
+        "raw_sha256": "164eec4516a6d5174de6b3f707fff63a33b58c2b7c135f788deb6fe15b81c490",
+        "normalized_sha256": "ac76f28206a8ddedb64b162609cc9f63e18d18302551686dbbd5e64f4591e546"
+      },
+      {
+        "id": "ditch_watered",
+        "attempt": 3,
+        "reviewer": "checks_native independent of generating bronze agent",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Broad steep earth banks surrounding a narrow water-filled trough read as a watered defensive ditch and remain distinct from the shallow irrigation channel. Top-down ground extent, natural root/stone accents and warm soil palette agree with references;1x/2x repeats retain continuous banks and water.",
+        "same_family_references": [
+          "art/style05/anchors/ground.png",
+          "art/style05/env/ground/packed_earth.png"
+        ],
+        "raw_sha256": "4b2f41b9efba2b8dfbe4caeb5709472436f9fe44715ce745bcee02d9dbce0bd3",
+        "normalized_sha256": "065eddab09b0369641dafa3f8ec7d832dcbb8195232718f16d1ba2b345eb21e6"
+      }
+    ]
+  },
+  "review_asset_id": "irrigation_channel_watered",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/bronze_ground_adoption_selection.json",
+  "review_sha256": "18a2f07ffbc2845fb657ec8626440a4862ab58d04e527bca7154186858cd495c"
+}

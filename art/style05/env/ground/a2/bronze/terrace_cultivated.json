@@ -1,0 +1,223 @@
+{
+  "id": "terrace_cultivated",
+  "attempt": 2,
+  "record": {
+    "id": "terrace_cultivated",
+    "subject": "Full-frame square128x128 top-down terracedplot matching emptybeds with3smallseedlingrows ineachsoilbed, groundfillsallpixels.",
+    "target_height": 128,
+    "footprint": [
+      2,
+      2
+    ],
+    "projection_family": "ground_terrace",
+    "style_family": "ground",
+    "height_band_reason": "Top-down ground extent, not standing-object height: 128px covers 2x264pxgridtiles; predeclared before generation.",
+    "lane": "bronze",
+    "era": "bronze",
+    "attempt": 2,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c290-f6fe-7e03-a8f0-4c49ecdc4053/exec-98f38fef-1bab-46aa-b097-34e2d898d63e.png",
+    "prompt": "Use case: precise-object-edit. IMAGE1 is edit target. Other images are locked INK/MATERIAL references only. Preserve target geometry, camera, proportions, palette, clean alpha and major contour; change only the requested state. Create CULTIVATED state of same three soil terraces with exactly two full-width east-west dry-stone retaining strips. Preserve exact bed and retaining-wall geometry. Add three straight E-W seedling rows per soil bed, nine rows total, small low sage-green four-leaf crop clusters, spaced consistently and readable at128x128game size. Fine broken ink, not uniform cartoon contours. Slightly strengthen principal soil-furrow and stone contour accents so they are clearly thicker than minor grain, while keeping natural quiet earthwash. Preserve fully opaque square and seamless opposite edges, no outer border. WorldSim style05 ILLUSTRATED GROUND TEXTURE. Entire rectangular image is the terrain tile, fully opaque edge-to-edge: no background, margin, transparency, borderoutline, panel or detached island. Straight TOP-DOWN orthographic 64px worldgrid. Fine variable broken sepia ink and natural quiet granular watercolor wash matching locked ground+scene references. Earthbrown ochre mutedslategrey and sage. Three quiet mainfurrows and sparse small stonegroups, secondaryfine surfacegrain; outer/secondary ink2:1. Upperleftlighting; no perspective, letters, UI, objects or people. Seamless oppositeedges, no directional colourgradient across whole tile. Required overall image aspect1:1 SQUARE, contentfills entirecanvas.",
+    "references": [
+      "/Users/rexxa/.codex/generated_images/01a1c290-f6fe-7e03-a8f0-4c49ecdc4053/exec-79641b9a-e556-4e5c-8bb3-6fd41973e242.png",
+      "art/style05/anchors/ground.png",
+      "art/style05/anchors/scene.png"
+    ],
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:56:19.128Z",
+    "height_band": [
+      126,
+      130
+    ]
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/bronze/raw/terrace_cultivated_try2.png",
+  "raw_sha256": "164eec4516a6d5174de6b3f707fff63a33b58c2b7c135f788deb6fe15b81c490",
+  "normalized": "/Users/rexxa/work/art-batch/A2/bronze/ground/terrace_cultivated_try2.png",
+  "normalized_sha256": "ac76f28206a8ddedb64b162609cc9f63e18d18302551686dbbd5e64f4591e546",
+  "size": [
+    128,
+    128
+  ],
+  "anchor": [
+    32,
+    43
+  ],
+  "footprint": [
+    2,
+    2
+  ],
+  "placement": "Reference world_base is NW tile origin plus (32,43); paste top-left at NW tile origin. 128x128 covers NW/E/S/SE tiles.",
+  "operations": [
+    "full-frame convert RGBA preserving generated RGB and opacity",
+    "global Lanczos resample to declared ground canvas; existing normalize.py strip path; no crop or padding or pixel/alpha painting"
+  ],
+  "projection": "ground top-down; standing projection not applicable",
+  "fully_opaque_alpha255_everywhere": true,
+  "alpha_min": 255,
+  "non255_pixels": 0,
+  "seam_x": {
+    "width": 128,
+    "height": 128,
+    "interior_p95": 17.88671875,
+    "join_columns": [
+      128,
+      256,
+      384
+    ],
+    "join_mad": [
+      18.4453125,
+      18.4453125,
+      18.4453125
+    ],
+    "limit": 20.569726562499998,
+    "passed": true
+  },
+  "seam_y": {
+    "width": 128,
+    "height": 128,
+    "interior_p95": 37.06640625,
+    "join_columns": [
+      128,
+      256,
+      384
+    ],
+    "join_mad": [
+      15.544270833333334,
+      15.544270833333334,
+      15.544270833333334
+    ],
+    "limit": 42.626367187499994,
+    "passed": true
+  },
+  "raw_style_judge": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/bronze/raw/terrace_cultivated_try2.png",
+    "sha256": "164eec4516a6d5174de6b3f707fff63a33b58c2b7c135f788deb6fe15b81c490",
+    "family": "ground",
+    "metrics": {
+      "edge_density": 0.27899029982363316,
+      "saturation_q25": 0.5931499557481275,
+      "saturation_q75": 0.6225592189183242,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.005849739871570196,
+      "foreground_pixels": 65536
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "numeric_ready": true,
+  "status": "ADOPTED_GROUND_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "references": [
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c290-f6fe-7e03-a8f0-4c49ecdc4053/exec-79641b9a-e556-4e5c-8bb3-6fd41973e242.png",
+      "sha256": "db2ba9080b66fdc128dfd9bfaa0e625a8ec77e1df8cc77da39b1dcce7050da37"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/ground.png",
+      "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "adopted_id": "terrace_cultivated",
+  "adopted_path": "art/style05/env/ground/a2/bronze/terrace_cultivated.png",
+  "source_check": "/Users/rexxa/work/art-batch/A2/bronze/ground/terrace_cultivated_try2.json",
+  "source_check_sha256": "f94d84344e90dfc89528b8c37acaf353a64b30ab410ec719b5e5e3ea333ba7d2",
+  "review": {
+    "reviewer": "checks_native independent of generating lane; root confirmed repeat proof",
+    "source_review": "/Users/rexxa/work/art-batch/A2/checks/ground_bronze_final_contract_review.json",
+    "source_review_sha256": "2160118c11b4a338688db11c81db44f4143697e58208d4e62b2d6b12220a22a9",
+    "assets": [
+      {
+        "id": "irrigation_channel_watered",
+        "attempt": 2,
+        "reviewer": "checks_native independent of generating bronze agent",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Narrow blue-grey water and modest earth/stone banks distinguish a watered irrigation channel. Straight top-down geometry, restrained earth colors and fine ground texture match the ground anchor and existing packed earth; native1x/2x repeats connect without alpha holes.",
+        "same_family_references": [
+          "art/style05/anchors/ground.png",
+          "art/style05/env/ground/packed_earth.png"
+        ],
+        "raw_sha256": "a5ef19f27e4a56de79411587acc19f729a2f2a5e1ac8309d0be5bd35b9f430de",
+        "normalized_sha256": "d1bcd2ae4aa562b94c0bf758e7a9553ace756c6b08e824b9dd9ffd112ab970d6"
+      },
+      {
+        "id": "terrace_cultivated",
+        "attempt": 2,
+        "reviewer": "checks_native independent of generating bronze agent",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Horizontal low retaining banks and repeated small green seedling rows clearly show cultivated terrace ground. The128px square spans exactly2x2 tiles at native scale; fine ink, earthy soil wash and uninterrupted repeated rows are coherent with the locked ground references.",
+        "same_family_references": [
+          "art/style05/anchors/ground.png",
+          "art/style05/env/ground/packed_earth.png"
+        ],
+        "raw_sha256": "164eec4516a6d5174de6b3f707fff63a33b58c2b7c135f788deb6fe15b81c490",
+        "normalized_sha256": "ac76f28206a8ddedb64b162609cc9f63e18d18302551686dbbd5e64f4591e546"
+      },
+      {
+        "id": "ditch_watered",
+        "attempt": 3,
+        "reviewer": "checks_native independent of generating bronze agent",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Broad steep earth banks surrounding a narrow water-filled trough read as a watered defensive ditch and remain distinct from the shallow irrigation channel. Top-down ground extent, natural root/stone accents and warm soil palette agree with references;1x/2x repeats retain continuous banks and water.",
+        "same_family_references": [
+          "art/style05/anchors/ground.png",
+          "art/style05/env/ground/packed_earth.png"
+        ],
+        "raw_sha256": "4b2f41b9efba2b8dfbe4caeb5709472436f9fe44715ce745bcee02d9dbce0bd3",
+        "normalized_sha256": "065eddab09b0369641dafa3f8ec7d832dcbb8195232718f16d1ba2b345eb21e6"
+      }
+    ]
+  },
+  "review_asset_id": "terrace_cultivated",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/bronze_ground_adoption_selection.json",
+  "review_sha256": "18a2f07ffbc2845fb657ec8626440a4862ab58d04e527bca7154186858cd495c"
+}

@@ -1,0 +1,831 @@
+{
+  "schema_version": 1,
+  "status": "ADOPTED_GROUND_CONTACT_SHEETS_RUNTIME_IMPORT_PENDING",
+  "manifest": "art/batch_a2/ground_assets.json",
+  "manifest_sha256": "7004e1427ed0d19aa5a080e4d2a1e9e6c768d3a2b05d8da4b9db95380de92c3a",
+  "asset_count": 8,
+  "world_tile_px": 64,
+  "source_anchor_convention": "Reference world base is NW occupied cell origin plus(32,43); paste origin=world_base-source_anchor.",
+  "operations": [
+    "Tile unchanged full RGBA ground source pixels into256x256 review blocks; no artwork changes.",
+    "Crop existing ground references at documented native coordinates without resampling.",
+    "Composite unchanged adult and bench source canvases on neutral review background.",
+    "Generate entire2x companion from1x master with exact nearest-neighbor doubling; annotations double too."
+  ],
+  "assets": [
+    {
+      "id": "paved_road",
+      "path": "art/style05/env/ground/a2/iron/paved_road.png",
+      "width": 64,
+      "height": 64,
+      "anchor": [
+        32,
+        43
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "role": "ground_texture",
+      "status": "A2_ADOPTED_GROUND_CANDIDATE_NOT_IMPORTED",
+      "sha256": "dcb2ba7f262f77a5b443f506f0841aba1692637859097f44e7c24ed0084fa2da",
+      "sidecar_sha256": "991ed420e1a83c9d35ab2838ec674d8e5abcd9d54e7cac3278cf0a1fa56ecc88",
+      "repeat_region_1x": [
+        20,
+        103,
+        276,
+        359
+      ],
+      "repeat_count": [
+        4,
+        4
+      ],
+      "sprite_origins_1x": [
+        [
+          20,
+          103
+        ],
+        [
+          84,
+          103
+        ],
+        [
+          148,
+          103
+        ],
+        [
+          212,
+          103
+        ],
+        [
+          20,
+          167
+        ],
+        [
+          84,
+          167
+        ],
+        [
+          148,
+          167
+        ],
+        [
+          212,
+          167
+        ],
+        [
+          20,
+          231
+        ],
+        [
+          84,
+          231
+        ],
+        [
+          148,
+          231
+        ],
+        [
+          212,
+          231
+        ],
+        [
+          20,
+          295
+        ],
+        [
+          84,
+          295
+        ],
+        [
+          148,
+          295
+        ],
+        [
+          212,
+          295
+        ]
+      ],
+      "source_pixels_resized": false
+    },
+    {
+      "id": "paved_road_ew",
+      "path": "art/style05/env/ground/a2/iron/paved_road_ew.png",
+      "width": 64,
+      "height": 64,
+      "anchor": [
+        32,
+        43
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "role": "ground_texture",
+      "status": "A2_ADOPTED_GROUND_CANDIDATE_NOT_IMPORTED",
+      "sha256": "0974ff43343bcfcbdadd41b1781c639adb8fdd1a901948ac29e2467a53635b25",
+      "sidecar_sha256": "95e7fec98776cb755e7d507476378edc726b3608ce6dbf375778777e9c906cd8",
+      "repeat_region_1x": [
+        336,
+        103,
+        592,
+        359
+      ],
+      "repeat_count": [
+        4,
+        4
+      ],
+      "sprite_origins_1x": [
+        [
+          336,
+          103
+        ],
+        [
+          400,
+          103
+        ],
+        [
+          464,
+          103
+        ],
+        [
+          528,
+          103
+        ],
+        [
+          336,
+          167
+        ],
+        [
+          400,
+          167
+        ],
+        [
+          464,
+          167
+        ],
+        [
+          528,
+          167
+        ],
+        [
+          336,
+          231
+        ],
+        [
+          400,
+          231
+        ],
+        [
+          464,
+          231
+        ],
+        [
+          528,
+          231
+        ],
+        [
+          336,
+          295
+        ],
+        [
+          400,
+          295
+        ],
+        [
+          464,
+          295
+        ],
+        [
+          528,
+          295
+        ]
+      ],
+      "source_pixels_resized": false
+    },
+    {
+      "id": "paved_road_damaged",
+      "path": "art/style05/env/ground/a2/iron/paved_road_damaged.png",
+      "width": 64,
+      "height": 64,
+      "anchor": [
+        32,
+        43
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "role": "ground_texture",
+      "status": "A2_ADOPTED_GROUND_CANDIDATE_NOT_IMPORTED",
+      "sha256": "5048dceae8d2f8b21569a08dbf71c6d78fb9345607b80db042746ae087bfb6d1",
+      "sidecar_sha256": "cfb95aa91eea31491cb9af39b82ad40ab9c062afddb6b2a620a9c00cde4f4d04",
+      "repeat_region_1x": [
+        652,
+        103,
+        908,
+        359
+      ],
+      "repeat_count": [
+        4,
+        4
+      ],
+      "sprite_origins_1x": [
+        [
+          652,
+          103
+        ],
+        [
+          716,
+          103
+        ],
+        [
+          780,
+          103
+        ],
+        [
+          844,
+          103
+        ],
+        [
+          652,
+          167
+        ],
+        [
+          716,
+          167
+        ],
+        [
+          780,
+          167
+        ],
+        [
+          844,
+          167
+        ],
+        [
+          652,
+          231
+        ],
+        [
+          716,
+          231
+        ],
+        [
+          780,
+          231
+        ],
+        [
+          844,
+          231
+        ],
+        [
+          652,
+          295
+        ],
+        [
+          716,
+          295
+        ],
+        [
+          780,
+          295
+        ],
+        [
+          844,
+          295
+        ]
+      ],
+      "source_pixels_resized": false
+    },
+    {
+      "id": "paved_road_junction",
+      "path": "art/style05/env/ground/a2/iron/paved_road_junction.png",
+      "width": 64,
+      "height": 64,
+      "anchor": [
+        32,
+        43
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "role": "ground_texture",
+      "status": "A2_ADOPTED_GROUND_CANDIDATE_NOT_IMPORTED",
+      "sha256": "b925a68ec758a0aceec4d36bbbcf379ed9671a6e9861d4293629486618daa35d",
+      "sidecar_sha256": "dec37e39768f17dfeacee1952659b9b23a85a569c42db20254549ac5d7c2901e",
+      "repeat_region_1x": [
+        968,
+        103,
+        1224,
+        359
+      ],
+      "repeat_count": [
+        4,
+        4
+      ],
+      "sprite_origins_1x": [
+        [
+          968,
+          103
+        ],
+        [
+          1032,
+          103
+        ],
+        [
+          1096,
+          103
+        ],
+        [
+          1160,
+          103
+        ],
+        [
+          968,
+          167
+        ],
+        [
+          1032,
+          167
+        ],
+        [
+          1096,
+          167
+        ],
+        [
+          1160,
+          167
+        ],
+        [
+          968,
+          231
+        ],
+        [
+          1032,
+          231
+        ],
+        [
+          1096,
+          231
+        ],
+        [
+          1160,
+          231
+        ],
+        [
+          968,
+          295
+        ],
+        [
+          1032,
+          295
+        ],
+        [
+          1096,
+          295
+        ],
+        [
+          1160,
+          295
+        ]
+      ],
+      "source_pixels_resized": false
+    },
+    {
+      "id": "paved_road_corner",
+      "path": "art/style05/env/ground/a2/iron/paved_road_corner.png",
+      "width": 64,
+      "height": 64,
+      "anchor": [
+        32,
+        43
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "role": "ground_texture",
+      "status": "A2_ADOPTED_GROUND_CANDIDATE_NOT_IMPORTED",
+      "sha256": "668526a032ab725451169ba48a93160b8d7e7cd7308eae4870a1ed7ccbd0b8d1",
+      "sidecar_sha256": "eab7e41813ca6801ef321065e2d86f5dcdda7fed62ca52d7dc5ed3d86aaf2556",
+      "repeat_region_1x": [
+        20,
+        433,
+        276,
+        689
+      ],
+      "repeat_count": [
+        4,
+        4
+      ],
+      "sprite_origins_1x": [
+        [
+          20,
+          433
+        ],
+        [
+          84,
+          433
+        ],
+        [
+          148,
+          433
+        ],
+        [
+          212,
+          433
+        ],
+        [
+          20,
+          497
+        ],
+        [
+          84,
+          497
+        ],
+        [
+          148,
+          497
+        ],
+        [
+          212,
+          497
+        ],
+        [
+          20,
+          561
+        ],
+        [
+          84,
+          561
+        ],
+        [
+          148,
+          561
+        ],
+        [
+          212,
+          561
+        ],
+        [
+          20,
+          625
+        ],
+        [
+          84,
+          625
+        ],
+        [
+          148,
+          625
+        ],
+        [
+          212,
+          625
+        ]
+      ],
+      "source_pixels_resized": false
+    },
+    {
+      "id": "irrigation_channel_watered",
+      "path": "art/style05/env/ground/a2/bronze/irrigation_channel_watered.png",
+      "width": 64,
+      "height": 64,
+      "anchor": [
+        32,
+        43
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "role": "ground_texture",
+      "status": "A2_ADOPTED_GROUND_CANDIDATE_NOT_IMPORTED",
+      "sha256": "d1bcd2ae4aa562b94c0bf758e7a9553ace756c6b08e824b9dd9ffd112ab970d6",
+      "sidecar_sha256": "29e4d9930807735949c76d1124c00bebbada25bf14c8bf77bafb1fc25d4bcaa5",
+      "repeat_region_1x": [
+        336,
+        433,
+        592,
+        689
+      ],
+      "repeat_count": [
+        4,
+        4
+      ],
+      "sprite_origins_1x": [
+        [
+          336,
+          433
+        ],
+        [
+          400,
+          433
+        ],
+        [
+          464,
+          433
+        ],
+        [
+          528,
+          433
+        ],
+        [
+          336,
+          497
+        ],
+        [
+          400,
+          497
+        ],
+        [
+          464,
+          497
+        ],
+        [
+          528,
+          497
+        ],
+        [
+          336,
+          561
+        ],
+        [
+          400,
+          561
+        ],
+        [
+          464,
+          561
+        ],
+        [
+          528,
+          561
+        ],
+        [
+          336,
+          625
+        ],
+        [
+          400,
+          625
+        ],
+        [
+          464,
+          625
+        ],
+        [
+          528,
+          625
+        ]
+      ],
+      "source_pixels_resized": false
+    },
+    {
+      "id": "terrace_cultivated",
+      "path": "art/style05/env/ground/a2/bronze/terrace_cultivated.png",
+      "width": 128,
+      "height": 128,
+      "anchor": [
+        32,
+        43
+      ],
+      "footprint": [
+        2,
+        2
+      ],
+      "role": "ground_texture",
+      "status": "A2_ADOPTED_GROUND_CANDIDATE_NOT_IMPORTED",
+      "sha256": "ac76f28206a8ddedb64b162609cc9f63e18d18302551686dbbd5e64f4591e546",
+      "sidecar_sha256": "afe44815d6f22116f9561a7c5c54555a5c837cc3c3aca55178f88620d4c74d9e",
+      "repeat_region_1x": [
+        652,
+        433,
+        908,
+        689
+      ],
+      "repeat_count": [
+        2,
+        2
+      ],
+      "sprite_origins_1x": [
+        [
+          652,
+          433
+        ],
+        [
+          780,
+          433
+        ],
+        [
+          652,
+          561
+        ],
+        [
+          780,
+          561
+        ]
+      ],
+      "source_pixels_resized": false
+    },
+    {
+      "id": "ditch_watered",
+      "path": "art/style05/env/ground/a2/bronze/ditch_watered.png",
+      "width": 64,
+      "height": 64,
+      "anchor": [
+        32,
+        43
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "role": "ground_texture",
+      "status": "A2_ADOPTED_GROUND_CANDIDATE_NOT_IMPORTED",
+      "sha256": "065eddab09b0369641dafa3f8ec7d832dcbb8195232718f16d1ba2b345eb21e6",
+      "sidecar_sha256": "5c6258a1a52d19bd51360e0a5f8644e0238cb88e456a32baedc319a96987942e",
+      "repeat_region_1x": [
+        968,
+        433,
+        1224,
+        689
+      ],
+      "repeat_count": [
+        4,
+        4
+      ],
+      "sprite_origins_1x": [
+        [
+          968,
+          433
+        ],
+        [
+          1032,
+          433
+        ],
+        [
+          1096,
+          433
+        ],
+        [
+          1160,
+          433
+        ],
+        [
+          968,
+          497
+        ],
+        [
+          1032,
+          497
+        ],
+        [
+          1096,
+          497
+        ],
+        [
+          1160,
+          497
+        ],
+        [
+          968,
+          561
+        ],
+        [
+          1032,
+          561
+        ],
+        [
+          1096,
+          561
+        ],
+        [
+          1160,
+          561
+        ],
+        [
+          968,
+          625
+        ],
+        [
+          1032,
+          625
+        ],
+        [
+          1096,
+          625
+        ],
+        [
+          1160,
+          625
+        ]
+      ],
+      "source_pixels_resized": false
+    }
+  ],
+  "references": [
+    {
+      "id": "packed_earth",
+      "path": "art/style05/env/ground/packed_earth.png",
+      "sha256": "d726d1ee0bb5c3a74df45bc47016129e5a0ee8146cdbd61341a2ec42eab6b8ff",
+      "source_size": [
+        512,
+        512
+      ],
+      "crop": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "origin_1x": [
+        20,
+        774
+      ],
+      "resized": false
+    },
+    {
+      "id": "hill_rock",
+      "path": "art/style05/env/ground/hill_rock.png",
+      "sha256": "bc56d04b30b3b338cdb219a90e6c65d7e6b1e5cf5aac060b416f7283bce93233",
+      "source_size": [
+        512,
+        512
+      ],
+      "crop": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "origin_1x": [
+        336,
+        774
+      ],
+      "resized": false
+    },
+    {
+      "id": "adult56",
+      "path": "art/character/route_i/adult_M_loincloth_long_tied/S/idle.png",
+      "sha256": "600661c1a40459299ad5e26662bd19191956fcbb988d8f6007dc2157a4900801",
+      "source_size": [
+        80,
+        112
+      ],
+      "alpha128_bbox": [
+        26,
+        49,
+        55,
+        105
+      ],
+      "origin_1x": [
+        740,
+        906
+      ],
+      "display_base_from_alpha128": 1010,
+      "resized": false
+    },
+    {
+      "id": "casting_bench36",
+      "path": "art/style05/struct/a2/bronze/casting_bench_empty.png",
+      "sha256": "21b6d3c83c4b04a99a256a3f65d5737f18c778a9146a83a0fa0a8b2006593fd8",
+      "source_size": [
+        70,
+        44
+      ],
+      "alpha128_bbox": [
+        4,
+        4,
+        66,
+        40
+      ],
+      "origin_1x": [
+        924,
+        971
+      ],
+      "display_base_from_alpha128": 1010,
+      "resized": false
+    }
+  ],
+  "outputs": {
+    "1x": {
+      "path": "art/batch_a2/boards/ground_final_1x.png",
+      "size": [
+        1280,
+        1090
+      ],
+      "sha256": "85e56063952cabb69a7ebd6887093d90c54b44242c54cd55962bfac151dbda10"
+    },
+    "2x": {
+      "path": "art/batch_a2/boards/ground_final_2x.png",
+      "size": [
+        2560,
+        2180
+      ],
+      "sha256": "0cad917ee011f534142b4faf59d062e4573f005916476c41cb3c15ffc81e9a94"
+    }
+  }
+}

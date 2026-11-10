@@ -1,0 +1,224 @@
+{
+  "id": "paved_road_junction",
+  "attempt": 2,
+  "role": "ground_tile",
+  "source_record": "/Users/rexxa/work/art-batch/A2/iron/records/paved_road_junction_try2.json",
+  "raw": "/Users/rexxa/work/art-batch/A2/iron/raw/paved_road_junction_try2.png",
+  "raw_sha256": "18d15d8275a0e73f820583677213da69710256ba756d04a45893c535c9f64e5a",
+  "normalized": "/Users/rexxa/work/art-batch/A2/iron/ground/paved_road_junction_try2.png",
+  "normalized_sha256": "b925a68ec758a0aceec4d36bbbcf379ed9671a6e9861d4293629486618daa35d",
+  "references": [
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c28c-a06d-74a0-9a1b-4625cbcc6757/exec-cb6f2c0f-93e7-4e2d-8e9d-a0e05c2cd009.png",
+      "sha256": "ceed2b5f9e84dfaf79387cf141bfffaf10250b441577ee4595591d61d20da942"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "operations": [
+    "existing STRUCT strip fullframe RGBA Lanczos (1254, 1254) -> (64,64); no crop, alpha modification, edge blending or repaint"
+  ],
+  "size": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    43
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "alpha_min": 255,
+  "alpha_max": 255,
+  "all_alpha_ge_128": true,
+  "fully_opaque_255": true,
+  "opaque_pixels_255": 4096,
+  "seam_x": {
+    "width": 64,
+    "height": 64,
+    "interior_p95": 26.526562499999997,
+    "join_columns": [
+      64,
+      128,
+      192
+    ],
+    "join_mad": [
+      16.619791666666668,
+      16.619791666666668,
+      16.619791666666668
+    ],
+    "limit": 30.505546874999993,
+    "passed": true
+  },
+  "seam_y": {
+    "width": 64,
+    "height": 64,
+    "interior_p95": 27.9421875,
+    "join_columns": [
+      64,
+      128,
+      192
+    ],
+    "join_mad": [
+      17.427083333333332,
+      17.427083333333332,
+      17.427083333333332
+    ],
+    "limit": 32.133515624999994,
+    "passed": true
+  },
+  "judge_v2_ground": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/iron/raw/paved_road_junction_try2.png",
+    "sha256": "18d15d8275a0e73f820583677213da69710256ba756d04a45893c535c9f64e5a",
+    "family": "ground",
+    "metrics": {
+      "edge_density": 0.24346497858402621,
+      "saturation_q25": 0.36058529155369706,
+      "saturation_q75": 0.43837885818338307,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.004118436246755459,
+      "foreground_pixels": 65536
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "numeric_ready": true,
+  "status": "ADOPTED_GROUND_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "standing_projection": "not applicable; ground tile at source32,43 worldanchor",
+  "record": {
+    "id": "paved_road_junction",
+    "lane": "iron",
+    "era": "iron",
+    "attempt": 2,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c28c-a06d-74a0-9a1b-4625cbcc6757/exec-639a2f49-228b-4262-b754-55ef9f051ca7.png",
+    "prompt": "Use case: stylized-concept. WorldSim style05 game GROUND tile. Image1 is the successful opaque paving material reference. Match its natural mottled stone wash, fine ink contour and earth palette closely. A fresh exact square top-down stone paving texture, alpha255 FULLY OPAQUE physical paint on EVERY pixel within square; no translucency, glass, see-through wash or faded edges. FULL-FRAME OPAQUE texture covers whole square canvas with NO exterior margin or background. Every corner and every pixel is fully opaque alpha255. NO outline, border, cobble trim or perimeter emphasis. Identical balanced grey-beige color statistics at all4edges, stones clipped naturally by tile boundaries to repeat seamlessly. Fine sepia ink between irregular limestone slabs, broad restrained opaque earth washes, sparse3crack accents, subtle local upper-left light only; no overall gradient. Orthographic, no raised face or perspective. No text, label, scenery, grass, border or background.\nSUBJECT: Fourway paving junction: courses enter from north/south/east/west and meet in a quiet central fitted slab. Entire square fully paved, no circle motif or perimeter border.",
+    "references": [
+      "/Users/rexxa/.codex/generated_images/01a1c28c-a06d-74a0-9a1b-4625cbcc6757/exec-cb6f2c0f-93e7-4e2d-8e9d-a0e05c2cd009.png",
+      "art/style05/anchors/props.png",
+      "art/style05/anchors/scene.png"
+    ],
+    "target_height": 64,
+    "projection_family": "road",
+    "height_band": [
+      62,
+      66
+    ],
+    "height_band_reason": "New road family; target 64px whole silhouette for 1x1 64px tiles, 56px adult scale; houses include visible floor depth and 60px walls.",
+    "footprint": [
+      1,
+      1
+    ],
+    "style_family": "ground",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:51:50.370Z"
+  },
+  "adopted_id": "paved_road_junction",
+  "adopted_path": "art/style05/env/ground/a2/iron/paved_road_junction.png",
+  "source_check": "/Users/rexxa/work/art-batch/A2/iron/ground/paved_road_junction_try2.json",
+  "source_check_sha256": "4754fb82075204c7c7fa4d77f4f66325340e92948c05cd760cbadd813c6a106c",
+  "review": {
+    "reviewer": "checks_native independent of generating lane; root confirmed repeat sheets",
+    "source_review": "/Users/rexxa/work/art-batch/A2/checks/ground_road_variants_try2_contract_review.json",
+    "source_review_sha256": "fde265731532c8d03ef7fad466b3fe6a69a1e58de3ce69ca69922f1595a5c2bd",
+    "assets": [
+      {
+        "id": "paved_road_ew",
+        "attempt": 2,
+        "reviewer": "checks_native independent of generating iron agent",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Horizontal courses distinguish the east-west paving while restrained beige-grey limestone and thin sepia joints match the adopted base. Both repeat axes retain continuous fully opaque ground.",
+        "same_family_references": [
+          "art/style05/anchors/ground.png",
+          "art/style05/env/ground/hill_rock.png"
+        ],
+        "raw_sha256": "5bcad2c794ae4071a9f94eb1c6b6d89bd8b112ab22ad3bf93a60a5101c5fd9d0",
+        "normalized_sha256": "0974ff43343bcfcbdadd41b1781c639adb8fdd1a901948ac29e2467a53635b25"
+      },
+      {
+        "id": "paved_road_damaged",
+        "attempt": 2,
+        "reviewer": "checks_native independent of generating iron agent",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Several central cracks and an opaque earth-filled missing-stone patch distinguish damage without changing the perimeter material. Ground camera, scale and palette remain consistent with the base.",
+        "same_family_references": [
+          "art/style05/anchors/ground.png",
+          "art/style05/env/ground/hill_rock.png"
+        ],
+        "raw_sha256": "624f3dd87b1ac09c29fc7321169d764c531a3c6c6c2cc495713b36b0c0149837",
+        "normalized_sha256": "5048dceae8d2f8b21569a08dbf71c6d78fb9345607b80db042746ae087bfb6d1"
+      },
+      {
+        "id": "paved_road_junction",
+        "attempt": 2,
+        "reviewer": "checks_native independent of generating iron agent",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Courses meet around a quiet fitted central slab and read as a junction at1x. No perspective or raised edge; limestone material and opaque join quality agree with the base.",
+        "same_family_references": [
+          "art/style05/anchors/ground.png",
+          "art/style05/env/ground/hill_rock.png"
+        ],
+        "raw_sha256": "18d15d8275a0e73f820583677213da69710256ba756d04a45893c535c9f64e5a",
+        "normalized_sha256": "b925a68ec758a0aceec4d36bbbcf379ed9671a6e9861d4293629486618daa35d"
+      }
+    ]
+  },
+  "review_asset_id": "paved_road_junction",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/road_variants_try2_adoption_selection.json",
+  "review_sha256": "3268eac5e73a430aaae279a5ad540f0221956e7f3b11c9a644416fdd9ebfe6dd"
+}

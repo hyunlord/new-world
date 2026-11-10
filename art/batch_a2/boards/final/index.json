@@ -1,0 +1,1158 @@
+[
+  {
+    "file": "bronze_01_1x.png",
+    "scale": 1,
+    "assets": [
+      {
+        "path": "art/style05/struct/a2/bronze/bee_skep_active.png",
+        "sha256": "354d4c0f76691a8dda432c747c1b65263541fd6e98c5d917a1a6c9007eb4ef6e"
+      },
+      {
+        "path": "art/style05/struct/a2/bronze/bee_skep_empty.png",
+        "sha256": "e29605000949a7ea561d685d512e42dce646aa06c14cd942abe44a0c2b6aa3a1"
+      },
+      {
+        "path": "art/style05/struct/a2/bronze/casting_bench_empty.png",
+        "sha256": "21b6d3c83c4b04a99a256a3f65d5737f18c778a9146a83a0fa0a8b2006593fd8"
+      },
+      {
+        "path": "art/style05/struct/a2/bronze/casting_bench_working.png",
+        "sha256": "a6d0129921da55fff2c852e79a7488dc92caa77fd65421821690dfc1384871de"
+      },
+      {
+        "path": "art/style05/struct/a2/bronze/charcoal_clamp_burning.png",
+        "sha256": "7913c93849cef814ce6e905ed24e474a9540bb8bfb27a885f64399528e1cca2b"
+      },
+      {
+        "path": "art/style05/struct/a2/bronze/charcoal_clamp_idle.png",
+        "sha256": "aabdce7698ec44bdcc97c284ea498e56a8b81da50d7feb7b891988b291e27af1"
+      },
+      {
+        "path": "art/style05/struct/a2/bronze/charcoal_clamp_spent.png",
+        "sha256": "115887961836f19dfa59cb14041c2fa276bb76e069428b923e5ba827afef1e8f"
+      },
+      {
+        "path": "art/style05/struct/a2/bronze/copper_smelter_lit.png",
+        "sha256": "8b13d194b2a6426bc6334b10c38f8b24b239e6e8b53802d3175a4661b16f2636"
+      },
+      {
+        "path": "art/style05/struct/a2/bronze/copper_smelter_unlit.png",
+        "sha256": "34220aa01a089c2d09289aab2c220cb9006fbebfa8b3757ea7b439d317b22fe4"
+      },
+      {
+        "path": "art/style05/struct/a2/bronze/olive_press_working.png",
+        "sha256": "14f0bdb5cdb473cf4af5a027822f3a8cad4790cce8e110f7b289c6012a5cd9f6"
+      },
+      {
+        "path": "art/style05/struct/a2/bronze/palisade_damaged.png",
+        "sha256": "b5445a98c6683a12c4aec6afe1d7c26e864da0d35a3e066557263e53ac061ec5"
+      },
+      {
+        "path": "art/style05/struct/a2/bronze/palisade_end.png",
+        "sha256": "efa013a70eda7441ff351bff91031404e0f120a8af559ff892724af7eef5ec88"
+      }
+    ]
+  },
+  {
+    "file": "bronze_01_2x.png",
+    "scale": 2,
+    "assets": [
+      {
+        "path": "art/style05/struct/a2/bronze/bee_skep_active.png",
+        "sha256": "354d4c0f76691a8dda432c747c1b65263541fd6e98c5d917a1a6c9007eb4ef6e"
+      },
+      {
+        "path": "art/style05/struct/a2/bronze/bee_skep_empty.png",
+        "sha256": "e29605000949a7ea561d685d512e42dce646aa06c14cd942abe44a0c2b6aa3a1"
+      },
+      {
+        "path": "art/style05/struct/a2/bronze/casting_bench_empty.png",
+        "sha256": "21b6d3c83c4b04a99a256a3f65d5737f18c778a9146a83a0fa0a8b2006593fd8"
+      },
+      {
+        "path": "art/style05/struct/a2/bronze/casting_bench_working.png",
+        "sha256": "a6d0129921da55fff2c852e79a7488dc92caa77fd65421821690dfc1384871de"
+      },
+      {
+        "path": "art/style05/struct/a2/bronze/charcoal_clamp_burning.png",
+        "sha256": "7913c93849cef814ce6e905ed24e474a9540bb8bfb27a885f64399528e1cca2b"
+      },
+      {
+        "path": "art/style05/struct/a2/bronze/charcoal_clamp_idle.png",
+        "sha256": "aabdce7698ec44bdcc97c284ea498e56a8b81da50d7feb7b891988b291e27af1"
+      },
+      {
+        "path": "art/style05/struct/a2/bronze/charcoal_clamp_spent.png",
+        "sha256": "115887961836f19dfa59cb14041c2fa276bb76e069428b923e5ba827afef1e8f"
+      },
+      {
+        "path": "art/style05/struct/a2/bronze/copper_smelter_lit.png",
+        "sha256": "8b13d194b2a6426bc6334b10c38f8b24b239e6e8b53802d3175a4661b16f2636"
+      },
+      {
+        "path": "art/style05/struct/a2/bronze/copper_smelter_unlit.png",
+        "sha256": "34220aa01a089c2d09289aab2c220cb9006fbebfa8b3757ea7b439d317b22fe4"
+      },
+      {
+        "path": "art/style05/struct/a2/bronze/olive_press_working.png",
+        "sha256": "14f0bdb5cdb473cf4af5a027822f3a8cad4790cce8e110f7b289c6012a5cd9f6"
+      },
+      {
+        "path": "art/style05/struct/a2/bronze/palisade_damaged.png",
+        "sha256": "b5445a98c6683a12c4aec6afe1d7c26e864da0d35a3e066557263e53ac061ec5"
+      },
+      {
+        "path": "art/style05/struct/a2/bronze/palisade_end.png",
+        "sha256": "efa013a70eda7441ff351bff91031404e0f120a8af559ff892724af7eef5ec88"
+      }
+    ]
+  },
+  {
+    "file": "bronze_02_1x.png",
+    "scale": 1,
+    "assets": [
+      {
+        "path": "art/style05/struct/a2/bronze/palisade_ew.png",
+        "sha256": "ef20ea34c508e4f9c9abdeb7fa3c06c9f2482777b5f8a855c16add6339bb5449"
+      },
+      {
+        "path": "art/style05/struct/a2/bronze/palisade_gate_closed.png",
+        "sha256": "fe00d2e7d65cd8a0c4c44a7b2c53bd8bf424f9802a4f53b7aecf4656562d6f5d"
+      },
+      {
+        "path": "art/style05/struct/a2/bronze/palisade_gate_open.png",
+        "sha256": "5f83e221f12a2499c8a7d30bd7414c71817cd459a0bee57bd486027bba1016ab"
+      },
+      {
+        "path": "art/style05/struct/a2/bronze/shrine_damaged.png",
+        "sha256": "308e6ea4ee47f602c9d9683320890dad8bf74a654e262b79029e13f2415d922e"
+      },
+      {
+        "path": "art/style05/struct/a2/bronze/shrine_intact.png",
+        "sha256": "8c5ef1301e80874f2f80732cfe2c1981a8309c75a62021c630de3a4b5577df2e"
+      }
+    ]
+  },
+  {
+    "file": "bronze_02_2x.png",
+    "scale": 2,
+    "assets": [
+      {
+        "path": "art/style05/struct/a2/bronze/palisade_ew.png",
+        "sha256": "ef20ea34c508e4f9c9abdeb7fa3c06c9f2482777b5f8a855c16add6339bb5449"
+      },
+      {
+        "path": "art/style05/struct/a2/bronze/palisade_gate_closed.png",
+        "sha256": "fe00d2e7d65cd8a0c4c44a7b2c53bd8bf424f9802a4f53b7aecf4656562d6f5d"
+      },
+      {
+        "path": "art/style05/struct/a2/bronze/palisade_gate_open.png",
+        "sha256": "5f83e221f12a2499c8a7d30bd7414c71817cd459a0bee57bd486027bba1016ab"
+      },
+      {
+        "path": "art/style05/struct/a2/bronze/shrine_damaged.png",
+        "sha256": "308e6ea4ee47f602c9d9683320890dad8bf74a654e262b79029e13f2415d922e"
+      },
+      {
+        "path": "art/style05/struct/a2/bronze/shrine_intact.png",
+        "sha256": "8c5ef1301e80874f2f80732cfe2c1981a8309c75a62021c630de3a4b5577df2e"
+      }
+    ]
+  },
+  {
+    "file": "contents_01_1x.png",
+    "scale": 1,
+    "assets": [
+      {
+        "path": "art/style05/struct/a2/contents/chief_seat.png",
+        "sha256": "ac72043123c67506d4a775622e90c4324bb882a9f5e4ac17e603b9d1f3ee1995"
+      },
+      {
+        "path": "art/style05/struct/a2/contents/grain_bin_empty.png",
+        "sha256": "4d464044f126a5f219203d68a8bb90f4f09d294a88e50f30eb2edc0a6f63f30b"
+      },
+      {
+        "path": "art/style05/struct/a2/contents/grain_bin_full.png",
+        "sha256": "b85c478e73aa861cebb033013c997cb2b1a013c47bdf7d9aeb68b77a1ea96bc5"
+      },
+      {
+        "path": "art/style05/struct/a2/contents/ox_cart_empty.png",
+        "sha256": "26d1388585ace6256e1540c2e1c876abef6ace6465ca2c6c54bbc8d476a5ee0e"
+      },
+      {
+        "path": "art/style05/struct/a2/contents/school_desk.png",
+        "sha256": "a1a04f04bd3c41de80d3bf00a3050236d87a7ee1a17d75dc18ed91e64ba8ac7c"
+      }
+    ]
+  },
+  {
+    "file": "contents_01_2x.png",
+    "scale": 2,
+    "assets": [
+      {
+        "path": "art/style05/struct/a2/contents/chief_seat.png",
+        "sha256": "ac72043123c67506d4a775622e90c4324bb882a9f5e4ac17e603b9d1f3ee1995"
+      },
+      {
+        "path": "art/style05/struct/a2/contents/grain_bin_empty.png",
+        "sha256": "4d464044f126a5f219203d68a8bb90f4f09d294a88e50f30eb2edc0a6f63f30b"
+      },
+      {
+        "path": "art/style05/struct/a2/contents/grain_bin_full.png",
+        "sha256": "b85c478e73aa861cebb033013c997cb2b1a013c47bdf7d9aeb68b77a1ea96bc5"
+      },
+      {
+        "path": "art/style05/struct/a2/contents/ox_cart_empty.png",
+        "sha256": "26d1388585ace6256e1540c2e1c876abef6ace6465ca2c6c54bbc8d476a5ee0e"
+      },
+      {
+        "path": "art/style05/struct/a2/contents/school_desk.png",
+        "sha256": "a1a04f04bd3c41de80d3bf00a3050236d87a7ee1a17d75dc18ed91e64ba8ac7c"
+      }
+    ]
+  },
+  {
+    "file": "crops_grain_01_1x.png",
+    "scale": 1,
+    "assets": [
+      {
+        "path": "art/style05/struct/a2/crops_grain/barley_growing.png",
+        "sha256": "2e712690accf2adbd41552fc6be07b73c6ec7f14e277a10db68422728b513b35"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/barley_harvested.png",
+        "sha256": "bbcd3615cebc9d13d54fcbfb163617f89dcc48d7adcbb803c1b4b348fc13d17b"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/barley_ripe.png",
+        "sha256": "6500bfc9e16dfc94a07c97d20a896bede2c117886a37c79cc59f43efc99fbf32"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/barley_seedling.png",
+        "sha256": "8c16139c3170104daded1342058bb0ba93b02b194ada0bff8dc0951e33c7d1a9"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/flax_seedling.png",
+        "sha256": "7ca187a9d387d8b6589e66262ad15d54ed9e9a7bb1cd4fd912874cebdfff8e05"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/millet_growing.png",
+        "sha256": "d62d1c1ad793717e70f598add37d978c4bc301c9ed188707221ff31385de9fa9"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/millet_harvested.png",
+        "sha256": "71eaac2ad200954ca70b4d5e9361201f10ae8a933ee0479c6e6fc8c333f22e95"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/millet_ripe.png",
+        "sha256": "65537cd635f8be9cb57a4f9389ed7b1ca336046a114ad7cf8095c4349fd3daaa"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/millet_seedling.png",
+        "sha256": "da0c76e8d800c187dcc2ed78872dabc6fb6fa22bdaf88f5bfd7454bb7c12636e"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/oats_growing.png",
+        "sha256": "796b2ab0a6f5cdafe2e5e7fe704f13c5bab2581c3cef6d3da5047b230cb4eaae"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/oats_harvested.png",
+        "sha256": "e1fe573f559abd0d729a9f0f4e1d60e0926d593b9a7183337200f3aa652ff8af"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/oats_ripe.png",
+        "sha256": "260c54bbd4b1b64a0697967e7d6afcf935c3df0c2b1b23c4cb7173af68809512"
+      }
+    ]
+  },
+  {
+    "file": "crops_grain_01_2x.png",
+    "scale": 2,
+    "assets": [
+      {
+        "path": "art/style05/struct/a2/crops_grain/barley_growing.png",
+        "sha256": "2e712690accf2adbd41552fc6be07b73c6ec7f14e277a10db68422728b513b35"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/barley_harvested.png",
+        "sha256": "bbcd3615cebc9d13d54fcbfb163617f89dcc48d7adcbb803c1b4b348fc13d17b"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/barley_ripe.png",
+        "sha256": "6500bfc9e16dfc94a07c97d20a896bede2c117886a37c79cc59f43efc99fbf32"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/barley_seedling.png",
+        "sha256": "8c16139c3170104daded1342058bb0ba93b02b194ada0bff8dc0951e33c7d1a9"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/flax_seedling.png",
+        "sha256": "7ca187a9d387d8b6589e66262ad15d54ed9e9a7bb1cd4fd912874cebdfff8e05"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/millet_growing.png",
+        "sha256": "d62d1c1ad793717e70f598add37d978c4bc301c9ed188707221ff31385de9fa9"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/millet_harvested.png",
+        "sha256": "71eaac2ad200954ca70b4d5e9361201f10ae8a933ee0479c6e6fc8c333f22e95"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/millet_ripe.png",
+        "sha256": "65537cd635f8be9cb57a4f9389ed7b1ca336046a114ad7cf8095c4349fd3daaa"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/millet_seedling.png",
+        "sha256": "da0c76e8d800c187dcc2ed78872dabc6fb6fa22bdaf88f5bfd7454bb7c12636e"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/oats_growing.png",
+        "sha256": "796b2ab0a6f5cdafe2e5e7fe704f13c5bab2581c3cef6d3da5047b230cb4eaae"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/oats_harvested.png",
+        "sha256": "e1fe573f559abd0d729a9f0f4e1d60e0926d593b9a7183337200f3aa652ff8af"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/oats_ripe.png",
+        "sha256": "260c54bbd4b1b64a0697967e7d6afcf935c3df0c2b1b23c4cb7173af68809512"
+      }
+    ]
+  },
+  {
+    "file": "crops_grain_02_1x.png",
+    "scale": 1,
+    "assets": [
+      {
+        "path": "art/style05/struct/a2/crops_grain/oats_seedling.png",
+        "sha256": "a2e05b75b6e9cee026178352cbd55cd32328e7b7ba764919f2a951518919bba4"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/rye_growing.png",
+        "sha256": "da81edc83f8930b0a11e4e70be78b3ffff61aa693ed405b7fb23ecbadc07b05d"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/rye_harvested.png",
+        "sha256": "0e0bc979c2ea05e7fc034acea058bb7d753e41e9f1f53d00a81dca72202499b6"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/rye_ripe.png",
+        "sha256": "0848a140d11c8bb923801718f5b35a6fbd4b5344c9e49a266c5b03da4a4b4995"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/rye_seedling.png",
+        "sha256": "069a955114328eac13fb397745e972e1076f605249753cbefea7cea1c675e69e"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/wheat_growing.png",
+        "sha256": "dc8ee5292e5b80a2693244f30ff68dc1e9708dbccd7db81088356b45f59a91c6"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/wheat_harvested.png",
+        "sha256": "9fb8e8950576602a677f8d599fd4983acdf862a8c5d9b24c2a5c1ff56acd7b3d"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/wheat_ripe.png",
+        "sha256": "a2afc335c12a390a6ff66a1de916d588b3237de15ded9ca6c5344b7e2c78a68b"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/wheat_seedling.png",
+        "sha256": "fd2a8317c1e79a1d6d46a79ea0d0d051b6d9afe2068deadea039f9d88da60311"
+      }
+    ]
+  },
+  {
+    "file": "crops_grain_02_2x.png",
+    "scale": 2,
+    "assets": [
+      {
+        "path": "art/style05/struct/a2/crops_grain/oats_seedling.png",
+        "sha256": "a2e05b75b6e9cee026178352cbd55cd32328e7b7ba764919f2a951518919bba4"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/rye_growing.png",
+        "sha256": "da81edc83f8930b0a11e4e70be78b3ffff61aa693ed405b7fb23ecbadc07b05d"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/rye_harvested.png",
+        "sha256": "0e0bc979c2ea05e7fc034acea058bb7d753e41e9f1f53d00a81dca72202499b6"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/rye_ripe.png",
+        "sha256": "0848a140d11c8bb923801718f5b35a6fbd4b5344c9e49a266c5b03da4a4b4995"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/rye_seedling.png",
+        "sha256": "069a955114328eac13fb397745e972e1076f605249753cbefea7cea1c675e69e"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/wheat_growing.png",
+        "sha256": "dc8ee5292e5b80a2693244f30ff68dc1e9708dbccd7db81088356b45f59a91c6"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/wheat_harvested.png",
+        "sha256": "9fb8e8950576602a677f8d599fd4983acdf862a8c5d9b24c2a5c1ff56acd7b3d"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/wheat_ripe.png",
+        "sha256": "a2afc335c12a390a6ff66a1de916d588b3237de15ded9ca6c5344b7e2c78a68b"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_grain/wheat_seedling.png",
+        "sha256": "fd2a8317c1e79a1d6d46a79ea0d0d051b6d9afe2068deadea039f9d88da60311"
+      }
+    ]
+  },
+  {
+    "file": "crops_orchard_01_1x.png",
+    "scale": 1,
+    "assets": [
+      {
+        "path": "art/style05/struct/a2/crops_orchard/apple_bare.png",
+        "sha256": "171e7b4a73714ae680246685bc37f8d16a52ebb1f86b61f62924b3d77f682bed"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/apple_fruiting.png",
+        "sha256": "a9ff03b5258443f3f7b7fb2ce1731e8912064a4effb923f06d7b4b4ef2e770f8"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/apple_leafy.png",
+        "sha256": "3fe529aef50289043a2bb42f0b88056a093949bd4de707d4be8970e959d9cf24"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/apple_sapling.png",
+        "sha256": "5b7bb7d11c71b9d8773ad6ef7db1a3d60cb90e4bd1927f12ba8186f03d7e50b5"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/grape_bare.png",
+        "sha256": "b4934a431aaa9281fef8b702fe6415bed544f2f096fb8e703b0793ef64897738"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/grape_fruiting.png",
+        "sha256": "d12233b201a092e8d7a0e94c40014b834be2268b01ce9ae5658a8ef635a7653c"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/grape_leafy.png",
+        "sha256": "1aa2ec6d22eb90dd588a09fb9a0edd5398564395dfbcddc085f5768d88a4787b"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/grape_young.png",
+        "sha256": "3b3e13d8c71d6069999cad37f0ee1a9a99d413eb60f6dae902f81b5b28027a59"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/hemp_growing.png",
+        "sha256": "3efe7e20740cdd79eec59d263377fe248982c212cf838240afb347f4c4232480"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/hemp_harvested.png",
+        "sha256": "c274e8426c21fb25c26043c63c1a95c334ad193c5cbd87e9abe359a5f23a5dc8"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/hemp_ripe.png",
+        "sha256": "250d73ffbabb5fcceb3c9cb97020f669b5015598cb6afd71d8f1fa2327da9012"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/hemp_seedling.png",
+        "sha256": "0fc7711c5718b1667b0c6908378cef246592ea57fca6c927fa7205c540dd32b4"
+      }
+    ]
+  },
+  {
+    "file": "crops_orchard_01_2x.png",
+    "scale": 2,
+    "assets": [
+      {
+        "path": "art/style05/struct/a2/crops_orchard/apple_bare.png",
+        "sha256": "171e7b4a73714ae680246685bc37f8d16a52ebb1f86b61f62924b3d77f682bed"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/apple_fruiting.png",
+        "sha256": "a9ff03b5258443f3f7b7fb2ce1731e8912064a4effb923f06d7b4b4ef2e770f8"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/apple_leafy.png",
+        "sha256": "3fe529aef50289043a2bb42f0b88056a093949bd4de707d4be8970e959d9cf24"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/apple_sapling.png",
+        "sha256": "5b7bb7d11c71b9d8773ad6ef7db1a3d60cb90e4bd1927f12ba8186f03d7e50b5"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/grape_bare.png",
+        "sha256": "b4934a431aaa9281fef8b702fe6415bed544f2f096fb8e703b0793ef64897738"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/grape_fruiting.png",
+        "sha256": "d12233b201a092e8d7a0e94c40014b834be2268b01ce9ae5658a8ef635a7653c"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/grape_leafy.png",
+        "sha256": "1aa2ec6d22eb90dd588a09fb9a0edd5398564395dfbcddc085f5768d88a4787b"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/grape_young.png",
+        "sha256": "3b3e13d8c71d6069999cad37f0ee1a9a99d413eb60f6dae902f81b5b28027a59"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/hemp_growing.png",
+        "sha256": "3efe7e20740cdd79eec59d263377fe248982c212cf838240afb347f4c4232480"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/hemp_harvested.png",
+        "sha256": "c274e8426c21fb25c26043c63c1a95c334ad193c5cbd87e9abe359a5f23a5dc8"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/hemp_ripe.png",
+        "sha256": "250d73ffbabb5fcceb3c9cb97020f669b5015598cb6afd71d8f1fa2327da9012"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/hemp_seedling.png",
+        "sha256": "0fc7711c5718b1667b0c6908378cef246592ea57fca6c927fa7205c540dd32b4"
+      }
+    ]
+  },
+  {
+    "file": "crops_orchard_02_1x.png",
+    "scale": 1,
+    "assets": [
+      {
+        "path": "art/style05/struct/a2/crops_orchard/lentil_growing.png",
+        "sha256": "d4ce71506007b97a4d00be4153ae8720476e1397a478f041d709b74623b14888"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/lentil_harvested.png",
+        "sha256": "6ed83b79fcfc138590335e9af8b52eec93e2ed68c28c5086ce41972622cd1d20"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/lentil_ripe.png",
+        "sha256": "8aad5d154d2f726df0c164276716695d5ccc341b92b0fc483369471414700b1e"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/lentil_seedling.png",
+        "sha256": "fbd6363205b848bec0a81a59484a72ef4c57864d3c465ed3d44e79645b87b998"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/olive_dormant.png",
+        "sha256": "e6bed702a8df57054037247181352d0c38b29fc686be2c90bb36aa4704af0515"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/olive_fruiting.png",
+        "sha256": "24079fe2c686e5e3abc78d459dd6b3f0947c0659a9c83c20736ade7d7542e752"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/olive_leafy.png",
+        "sha256": "c8fabcf65a1546e4d871ed9f3ae36970bae67a28e7697fcb8d79dc97a799a5e9"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/olive_sapling.png",
+        "sha256": "86ae0d9614b34fb3c1af25f321bdb06e48fd7674eb05e14a8103a3d3b4d6842b"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/pea_growing.png",
+        "sha256": "1393cbfc05ed1cf840f76a4a20733881e2f594831f50d7df9a890af87d2c2118"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/pea_harvested.png",
+        "sha256": "b593389b2f416e81293b495c95bdbfc56e3857218dddea9a9eaac2615c41d28f"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/pea_ripe.png",
+        "sha256": "6d64c0f58ddcf572511eea08d2a19972ca14d718954e3e27c62cd9d60dbabbc4"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/pea_seedling.png",
+        "sha256": "03e3ab5d0f99bafc34e95fe77141250bd93d7f367918e69ce3e52c4f414393d2"
+      }
+    ]
+  },
+  {
+    "file": "crops_orchard_02_2x.png",
+    "scale": 2,
+    "assets": [
+      {
+        "path": "art/style05/struct/a2/crops_orchard/lentil_growing.png",
+        "sha256": "d4ce71506007b97a4d00be4153ae8720476e1397a478f041d709b74623b14888"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/lentil_harvested.png",
+        "sha256": "6ed83b79fcfc138590335e9af8b52eec93e2ed68c28c5086ce41972622cd1d20"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/lentil_ripe.png",
+        "sha256": "8aad5d154d2f726df0c164276716695d5ccc341b92b0fc483369471414700b1e"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/lentil_seedling.png",
+        "sha256": "fbd6363205b848bec0a81a59484a72ef4c57864d3c465ed3d44e79645b87b998"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/olive_dormant.png",
+        "sha256": "e6bed702a8df57054037247181352d0c38b29fc686be2c90bb36aa4704af0515"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/olive_fruiting.png",
+        "sha256": "24079fe2c686e5e3abc78d459dd6b3f0947c0659a9c83c20736ade7d7542e752"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/olive_leafy.png",
+        "sha256": "c8fabcf65a1546e4d871ed9f3ae36970bae67a28e7697fcb8d79dc97a799a5e9"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/olive_sapling.png",
+        "sha256": "86ae0d9614b34fb3c1af25f321bdb06e48fd7674eb05e14a8103a3d3b4d6842b"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/pea_growing.png",
+        "sha256": "1393cbfc05ed1cf840f76a4a20733881e2f594831f50d7df9a890af87d2c2118"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/pea_harvested.png",
+        "sha256": "b593389b2f416e81293b495c95bdbfc56e3857218dddea9a9eaac2615c41d28f"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/pea_ripe.png",
+        "sha256": "6d64c0f58ddcf572511eea08d2a19972ca14d718954e3e27c62cd9d60dbabbc4"
+      },
+      {
+        "path": "art/style05/struct/a2/crops_orchard/pea_seedling.png",
+        "sha256": "03e3ab5d0f99bafc34e95fe77141250bd93d7f367918e69ce3e52c4f414393d2"
+      }
+    ]
+  },
+  {
+    "file": "iron_01_1x.png",
+    "scale": 1,
+    "assets": [
+      {
+        "path": "art/style05/struct/a2/iron/aqueduct.png",
+        "sha256": "d43acf874ad06b4979d6032bd0b88fc5b1aa6c814fb38aa3883527ebd944dd55"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/aqueduct_damaged.png",
+        "sha256": "fbf6c5d8969a54faebfbdf250497df0d5de1882031015994f24818092611199c"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/bloomery_lit.png",
+        "sha256": "b955eaeadeb13682ed319944d84a63ff8cb991565595dfcd36b20092dd78cfee"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/bloomery_unlit.png",
+        "sha256": "34d0c1f13298c2d625f7a217943310b5dda69450b16b807f0102360f3a6f5471"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/forge_idle.png",
+        "sha256": "6f7bce88ef5ae6de102ed09e7567ecb1f2f099e6bc98c14d750de1004e249e59"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/forge_working.png",
+        "sha256": "14fdf4aa25ec1d31b44b5a50ee6c7669329b40b489c105db91edf9151872cd22"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/reservoir_empty.png",
+        "sha256": "595e5e7ee4183d2da9581ad1b915107bceac020c818e647c253230c20ac8de94"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/reservoir_full.png",
+        "sha256": "92599b82af03c3834fb25683e97e808f75e4c352064a9f162268a59a32a657e9"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/rotary_quern.png",
+        "sha256": "77b95ba4a421cb72edb8928a41bf03b639ef9224729a0d52411a74ab024b3374"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/rotary_quern_working.png",
+        "sha256": "2e571ac1480489c02483f64e7385d8a01e92b33b5134907cb493a54726475415"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/sundial.png",
+        "sha256": "cac341d7b351c6a365233a627e88c490a0d76dae83b33108dca3f79bc7ffd8ea"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/timber_bridge_damaged.png",
+        "sha256": "5ca735962dcd2b0ed0537d5be4d327b192b53e114d31b92bda32691a190518e4"
+      }
+    ]
+  },
+  {
+    "file": "iron_01_2x.png",
+    "scale": 2,
+    "assets": [
+      {
+        "path": "art/style05/struct/a2/iron/aqueduct.png",
+        "sha256": "d43acf874ad06b4979d6032bd0b88fc5b1aa6c814fb38aa3883527ebd944dd55"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/aqueduct_damaged.png",
+        "sha256": "fbf6c5d8969a54faebfbdf250497df0d5de1882031015994f24818092611199c"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/bloomery_lit.png",
+        "sha256": "b955eaeadeb13682ed319944d84a63ff8cb991565595dfcd36b20092dd78cfee"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/bloomery_unlit.png",
+        "sha256": "34d0c1f13298c2d625f7a217943310b5dda69450b16b807f0102360f3a6f5471"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/forge_idle.png",
+        "sha256": "6f7bce88ef5ae6de102ed09e7567ecb1f2f099e6bc98c14d750de1004e249e59"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/forge_working.png",
+        "sha256": "14fdf4aa25ec1d31b44b5a50ee6c7669329b40b489c105db91edf9151872cd22"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/reservoir_empty.png",
+        "sha256": "595e5e7ee4183d2da9581ad1b915107bceac020c818e647c253230c20ac8de94"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/reservoir_full.png",
+        "sha256": "92599b82af03c3834fb25683e97e808f75e4c352064a9f162268a59a32a657e9"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/rotary_quern.png",
+        "sha256": "77b95ba4a421cb72edb8928a41bf03b639ef9224729a0d52411a74ab024b3374"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/rotary_quern_working.png",
+        "sha256": "2e571ac1480489c02483f64e7385d8a01e92b33b5134907cb493a54726475415"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/sundial.png",
+        "sha256": "cac341d7b351c6a365233a627e88c490a0d76dae83b33108dca3f79bc7ffd8ea"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/timber_bridge_damaged.png",
+        "sha256": "5ca735962dcd2b0ed0537d5be4d327b192b53e114d31b92bda32691a190518e4"
+      }
+    ]
+  },
+  {
+    "file": "iron_02_1x.png",
+    "scale": 1,
+    "assets": [
+      {
+        "path": "art/style05/struct/a2/iron/timber_bridge_ew.png",
+        "sha256": "044f9553eb5e7ba8b4ea19ab77deb6c93d89ba4b70a9c5101161d4663292200c"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/town_gate_closed.png",
+        "sha256": "f808880b1a8bc28576c7450f8dd3c0665097bffd41543f49c368a1596c2c5134"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/town_gate_open.png",
+        "sha256": "bb4b01bfc201eaad2f6aca660bf9357b752f51e725c5536b9d2d01327fab8a54"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/watchtower.png",
+        "sha256": "357b49b92eda3d30c0a7b2281951bae58cd6367d92cb576cf6aa9705e5019016"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/watchtower_damaged.png",
+        "sha256": "a7f37cbcb47205d01b80126846e285eed9093e76e43420fdbb1f15ca07c6e387"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/watermill_millstones_idle.png",
+        "sha256": "75bbf9faadbd82f33f030b8cc2202b17b9a2512daff05255e6d81d664da50993"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/watermill_millstones_working.png",
+        "sha256": "42311aefb7dbb60b838c03e5280d4fbcdb3d236c0819af61333294f6013a7f5a"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/waterwheel_idle.png",
+        "sha256": "8b07636feb60b5aa8d617675f6e764c83fb617be10fdafc8c1ccbe9275070b2c"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/waterwheel_working.png",
+        "sha256": "35e3dfb8feecd44da8eb6b8c45a0444d7a75e310b33a913b405e49d535352761"
+      }
+    ]
+  },
+  {
+    "file": "iron_02_2x.png",
+    "scale": 2,
+    "assets": [
+      {
+        "path": "art/style05/struct/a2/iron/timber_bridge_ew.png",
+        "sha256": "044f9553eb5e7ba8b4ea19ab77deb6c93d89ba4b70a9c5101161d4663292200c"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/town_gate_closed.png",
+        "sha256": "f808880b1a8bc28576c7450f8dd3c0665097bffd41543f49c368a1596c2c5134"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/town_gate_open.png",
+        "sha256": "bb4b01bfc201eaad2f6aca660bf9357b752f51e725c5536b9d2d01327fab8a54"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/watchtower.png",
+        "sha256": "357b49b92eda3d30c0a7b2281951bae58cd6367d92cb576cf6aa9705e5019016"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/watchtower_damaged.png",
+        "sha256": "a7f37cbcb47205d01b80126846e285eed9093e76e43420fdbb1f15ca07c6e387"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/watermill_millstones_idle.png",
+        "sha256": "75bbf9faadbd82f33f030b8cc2202b17b9a2512daff05255e6d81d664da50993"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/watermill_millstones_working.png",
+        "sha256": "42311aefb7dbb60b838c03e5280d4fbcdb3d236c0819af61333294f6013a7f5a"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/waterwheel_idle.png",
+        "sha256": "8b07636feb60b5aa8d617675f6e764c83fb617be10fdafc8c1ccbe9275070b2c"
+      },
+      {
+        "path": "art/style05/struct/a2/iron/waterwheel_working.png",
+        "sha256": "35e3dfb8feecd44da8eb6b8c45a0444d7a75e310b33a913b405e49d535352761"
+      }
+    ]
+  },
+  {
+    "file": "neolithic_01_1x.png",
+    "scale": 1,
+    "assets": [
+      {
+        "path": "art/style05/struct/a2/neolithic/bread_oven_lit.png",
+        "sha256": "92977a97bed350303db3784f8dbb5201a5538f01000631f453290e71527c896c"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/bread_oven_unlit.png",
+        "sha256": "37a38b65f87013417b4e68c9473dfde5311b9bb565b1aa8ff63041f6608cef3f"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/fish_weir_catch.png",
+        "sha256": "a8077b33f55a183f7d388c840c8d4b72bc17be99be377fccb2a31e09267631a5"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/fish_weir_empty.png",
+        "sha256": "eb89f63f826892e9fbd968b941f8819034049379634965661f317703866bc5f2"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/loom_loaded.png",
+        "sha256": "049fef15873b5e5183abc25b48fdb2392dc38d01c8e2eb914f0a17df97567c9a"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/megalith.png",
+        "sha256": "5ff6065d2a6588cdb184b6f87ebc2f40d1632a152946b4c564717252b0190d23"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/megalith_fallen.png",
+        "sha256": "fe95640efcb8940a6a89824f310756f5994dc03a6d095849e28738320801b4c7"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/pen_fence_damaged.png",
+        "sha256": "e827eb2791c9e978c0ca9eb5f7c5342f0dd6f6bd2e857172fd1c325faca61123"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/pen_fence_end.png",
+        "sha256": "1ad4133fe7689ac0e58ede20d321674b1fe341fa12626158dd2521803eee8aed"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/pen_fence_straight.png",
+        "sha256": "93da3ddc08dfbab136a16d1c6ff842563d930bb2845e8b042b7632d546e416e5"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/pen_gate_closed.png",
+        "sha256": "1023719e46a811c48caefb878b1347075bfe1f233e8d580adc2d7538c59cbb92"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/pen_gate_open.png",
+        "sha256": "7f04247300ef144662652c810aa702291d3b8a83adbc781716ff67db2f361090"
+      }
+    ]
+  },
+  {
+    "file": "neolithic_01_2x.png",
+    "scale": 2,
+    "assets": [
+      {
+        "path": "art/style05/struct/a2/neolithic/bread_oven_lit.png",
+        "sha256": "92977a97bed350303db3784f8dbb5201a5538f01000631f453290e71527c896c"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/bread_oven_unlit.png",
+        "sha256": "37a38b65f87013417b4e68c9473dfde5311b9bb565b1aa8ff63041f6608cef3f"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/fish_weir_catch.png",
+        "sha256": "a8077b33f55a183f7d388c840c8d4b72bc17be99be377fccb2a31e09267631a5"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/fish_weir_empty.png",
+        "sha256": "eb89f63f826892e9fbd968b941f8819034049379634965661f317703866bc5f2"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/loom_loaded.png",
+        "sha256": "049fef15873b5e5183abc25b48fdb2392dc38d01c8e2eb914f0a17df97567c9a"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/megalith.png",
+        "sha256": "5ff6065d2a6588cdb184b6f87ebc2f40d1632a152946b4c564717252b0190d23"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/megalith_fallen.png",
+        "sha256": "fe95640efcb8940a6a89824f310756f5994dc03a6d095849e28738320801b4c7"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/pen_fence_damaged.png",
+        "sha256": "e827eb2791c9e978c0ca9eb5f7c5342f0dd6f6bd2e857172fd1c325faca61123"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/pen_fence_end.png",
+        "sha256": "1ad4133fe7689ac0e58ede20d321674b1fe341fa12626158dd2521803eee8aed"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/pen_fence_straight.png",
+        "sha256": "93da3ddc08dfbab136a16d1c6ff842563d930bb2845e8b042b7632d546e416e5"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/pen_gate_closed.png",
+        "sha256": "1023719e46a811c48caefb878b1347075bfe1f233e8d580adc2d7538c59cbb92"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/pen_gate_open.png",
+        "sha256": "7f04247300ef144662652c810aa702291d3b8a83adbc781716ff67db2f361090"
+      }
+    ]
+  },
+  {
+    "file": "neolithic_02_1x.png",
+    "scale": 1,
+    "assets": [
+      {
+        "path": "art/style05/struct/a2/neolithic/potter_kiln_firing.png",
+        "sha256": "f5a84bfb6733abd5b8781a85879d332de0984c89d3c2810bcf94e110cc6dd135"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/ritual_site.png",
+        "sha256": "0a9e4a0af88ce4d26cc4da67db516fda5d8073b021d89b096010b8d88d84075b"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/ritual_site_empty.png",
+        "sha256": "683c1599ff96abbd8477bd63d976d15ee23d3477aab4813281f8dcfaea746edb"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/smokehouse_idle.png",
+        "sha256": "4902a850caed3a2f0dbc7708b27b0f613debde151ae642347e00e9315caf1c3d"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/smokehouse_working.png",
+        "sha256": "91ac4cddadce95028ea92cb76530432c0085e6cfd1e7cc906cf78453e0568394"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/trap_set.png",
+        "sha256": "f3f56836a57a5ebb6d3a5bae2d4d984beeeb7299618e792e0e06fe8def5d574e"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/trap_sprung.png",
+        "sha256": "c36111dfc1c0c5c89bc433c0ba19d8e90783f7e2424f6fbb37216f919266f8cf"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/well.png",
+        "sha256": "aac1827c268a79d761f161073f08f7dc6f7d0e03fe39e2569d98cf03998799a3"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/well_dry.png",
+        "sha256": "e13df89b92d7955a9236fceec496772e246278f9f4f0014b8e5806f344760796"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/windbreak.png",
+        "sha256": "955cd58d9f3891c4c651a7a7bc2fb69da0a735e38f86679f2f24742ed01f8da9"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/windbreak_damaged.png",
+        "sha256": "a5d48b3eaf0db259dfa879c0a143aa26179b5afb8e530975630eca181878fecb"
+      }
+    ]
+  },
+  {
+    "file": "neolithic_02_2x.png",
+    "scale": 2,
+    "assets": [
+      {
+        "path": "art/style05/struct/a2/neolithic/potter_kiln_firing.png",
+        "sha256": "f5a84bfb6733abd5b8781a85879d332de0984c89d3c2810bcf94e110cc6dd135"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/ritual_site.png",
+        "sha256": "0a9e4a0af88ce4d26cc4da67db516fda5d8073b021d89b096010b8d88d84075b"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/ritual_site_empty.png",
+        "sha256": "683c1599ff96abbd8477bd63d976d15ee23d3477aab4813281f8dcfaea746edb"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/smokehouse_idle.png",
+        "sha256": "4902a850caed3a2f0dbc7708b27b0f613debde151ae642347e00e9315caf1c3d"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/smokehouse_working.png",
+        "sha256": "91ac4cddadce95028ea92cb76530432c0085e6cfd1e7cc906cf78453e0568394"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/trap_set.png",
+        "sha256": "f3f56836a57a5ebb6d3a5bae2d4d984beeeb7299618e792e0e06fe8def5d574e"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/trap_sprung.png",
+        "sha256": "c36111dfc1c0c5c89bc433c0ba19d8e90783f7e2424f6fbb37216f919266f8cf"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/well.png",
+        "sha256": "aac1827c268a79d761f161073f08f7dc6f7d0e03fe39e2569d98cf03998799a3"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/well_dry.png",
+        "sha256": "e13df89b92d7955a9236fceec496772e246278f9f4f0014b8e5806f344760796"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/windbreak.png",
+        "sha256": "955cd58d9f3891c4c651a7a7bc2fb69da0a735e38f86679f2f24742ed01f8da9"
+      },
+      {
+        "path": "art/style05/struct/a2/neolithic/windbreak_damaged.png",
+        "sha256": "a5d48b3eaf0db259dfa879c0a143aa26179b5afb8e530975630eca181878fecb"
+      }
+    ]
+  },
+  {
+    "file": "ores_01_1x.png",
+    "scale": 1,
+    "assets": [
+      {
+        "path": "art/style05/struct/a2/ores/bog_iron_outcrop_depleted.png",
+        "sha256": "16538ebb339f7e2307fb6e786260ebf09b407819e1a6ea7203ebac0fe6814d3c"
+      },
+      {
+        "path": "art/style05/struct/a2/ores/bog_iron_outcrop_full.png",
+        "sha256": "bdd6f2307e147b9bcdddbefe4fadb6fe5c252da6fe3028936d18938dd0f4e429"
+      },
+      {
+        "path": "art/style05/struct/a2/ores/copper_outcrop_depleted.png",
+        "sha256": "4f54b5dfbbe076cbdc3fcf67e8556f587da3ff6e602beecf7fa66b376f36d7aa"
+      },
+      {
+        "path": "art/style05/struct/a2/ores/copper_outcrop_full.png",
+        "sha256": "23f79d744cdb3aa791d0d31de3878a7a284e310a2c8412f7045df67aafdb5a31"
+      },
+      {
+        "path": "art/style05/struct/a2/ores/gold_outcrop_depleted.png",
+        "sha256": "c308aaad185025bdb86a9071960f5ea356db77de86661ff8878ae400a04b0fa1"
+      },
+      {
+        "path": "art/style05/struct/a2/ores/gold_outcrop_full.png",
+        "sha256": "125f28a8d9450422e0682aa2c9e115b8d7527d31ff5d365da4a42e2eba563325"
+      },
+      {
+        "path": "art/style05/struct/a2/ores/iron_outcrop_depleted.png",
+        "sha256": "2b1a5935f07979ba920f435dc54e1e44fd8e57f9b698e621f0c569b034b6f7c0"
+      },
+      {
+        "path": "art/style05/struct/a2/ores/iron_outcrop_full.png",
+        "sha256": "75921c23cdb5a81ad92f706368e5e8ab7d658cf118fcca66fd0bf63d2fbc609f"
+      },
+      {
+        "path": "art/style05/struct/a2/ores/lead_outcrop_depleted.png",
+        "sha256": "f86947f3b94a10bd5bb28fc7700d5f30acb49064dc47d0e4eb058fb1799eab80"
+      },
+      {
+        "path": "art/style05/struct/a2/ores/lead_outcrop_full.png",
+        "sha256": "9b3643d416e66c67e859f3bfd51a57dc7f0fb759d37affc0889eacf070aa72a9"
+      },
+      {
+        "path": "art/style05/struct/a2/ores/silver_outcrop_depleted.png",
+        "sha256": "0ff2c00c43359d9be1a34bac1308e5caf09b1b9be96c3cfa168c9f06aacac67d"
+      },
+      {
+        "path": "art/style05/struct/a2/ores/silver_outcrop_full.png",
+        "sha256": "9f209120345b017e53bad838ddbb81031ae27808f54f230400ac30a75d29c2c6"
+      }
+    ]
+  },
+  {
+    "file": "ores_01_2x.png",
+    "scale": 2,
+    "assets": [
+      {
+        "path": "art/style05/struct/a2/ores/bog_iron_outcrop_depleted.png",
+        "sha256": "16538ebb339f7e2307fb6e786260ebf09b407819e1a6ea7203ebac0fe6814d3c"
+      },
+      {
+        "path": "art/style05/struct/a2/ores/bog_iron_outcrop_full.png",
+        "sha256": "bdd6f2307e147b9bcdddbefe4fadb6fe5c252da6fe3028936d18938dd0f4e429"
+      },
+      {
+        "path": "art/style05/struct/a2/ores/copper_outcrop_depleted.png",
+        "sha256": "4f54b5dfbbe076cbdc3fcf67e8556f587da3ff6e602beecf7fa66b376f36d7aa"
+      },
+      {
+        "path": "art/style05/struct/a2/ores/copper_outcrop_full.png",
+        "sha256": "23f79d744cdb3aa791d0d31de3878a7a284e310a2c8412f7045df67aafdb5a31"
+      },
+      {
+        "path": "art/style05/struct/a2/ores/gold_outcrop_depleted.png",
+        "sha256": "c308aaad185025bdb86a9071960f5ea356db77de86661ff8878ae400a04b0fa1"
+      },
+      {
+        "path": "art/style05/struct/a2/ores/gold_outcrop_full.png",
+        "sha256": "125f28a8d9450422e0682aa2c9e115b8d7527d31ff5d365da4a42e2eba563325"
+      },
+      {
+        "path": "art/style05/struct/a2/ores/iron_outcrop_depleted.png",
+        "sha256": "2b1a5935f07979ba920f435dc54e1e44fd8e57f9b698e621f0c569b034b6f7c0"
+      },
+      {
+        "path": "art/style05/struct/a2/ores/iron_outcrop_full.png",
+        "sha256": "75921c23cdb5a81ad92f706368e5e8ab7d658cf118fcca66fd0bf63d2fbc609f"
+      },
+      {
+        "path": "art/style05/struct/a2/ores/lead_outcrop_depleted.png",
+        "sha256": "f86947f3b94a10bd5bb28fc7700d5f30acb49064dc47d0e4eb058fb1799eab80"
+      },
+      {
+        "path": "art/style05/struct/a2/ores/lead_outcrop_full.png",
+        "sha256": "9b3643d416e66c67e859f3bfd51a57dc7f0fb759d37affc0889eacf070aa72a9"
+      },
+      {
+        "path": "art/style05/struct/a2/ores/silver_outcrop_depleted.png",
+        "sha256": "0ff2c00c43359d9be1a34bac1308e5caf09b1b9be96c3cfa168c9f06aacac67d"
+      },
+      {
+        "path": "art/style05/struct/a2/ores/silver_outcrop_full.png",
+        "sha256": "9f209120345b017e53bad838ddbb81031ae27808f54f230400ac30a75d29c2c6"
+      }
+    ]
+  },
+  {
+    "file": "ores_02_1x.png",
+    "scale": 1,
+    "assets": [
+      {
+        "path": "art/style05/struct/a2/ores/tin_outcrop_depleted.png",
+        "sha256": "6ef32d35a09bfa5963cc127b7dcbfa443ae5d7aadabd2c51ac33304021ef5bbe"
+      },
+      {
+        "path": "art/style05/struct/a2/ores/tin_outcrop_full.png",
+        "sha256": "004d934f772aa4984ee9c35aac3bcc367e4ae2d67e2cdabaf7bb16c3fbc52721"
+      }
+    ]
+  },
+  {
+    "file": "ores_02_2x.png",
+    "scale": 2,
+    "assets": [
+      {
+        "path": "art/style05/struct/a2/ores/tin_outcrop_depleted.png",
+        "sha256": "6ef32d35a09bfa5963cc127b7dcbfa443ae5d7aadabd2c51ac33304021ef5bbe"
+      },
+      {
+        "path": "art/style05/struct/a2/ores/tin_outcrop_full.png",
+        "sha256": "004d934f772aa4984ee9c35aac3bcc367e4ae2d67e2cdabaf7bb16c3fbc52721"
+      }
+    ]
+  }
+]

@@ -1,0 +1,173 @@
+{
+  "id": "paved_road",
+  "attempt": 3,
+  "role": "ground_tile",
+  "source_record": "/Users/rexxa/work/art-batch/A2/iron/records/paved_road_try3.json",
+  "raw": "/Users/rexxa/work/art-batch/A2/iron/raw/paved_road_try3.png",
+  "raw_sha256": "ceed2b5f9e84dfaf79387cf141bfffaf10250b441577ee4595591d61d20da942",
+  "normalized": "/Users/rexxa/work/art-batch/A2/iron/ground/paved_road_try3.png",
+  "normalized_sha256": "dcb2ba7f262f77a5b443f506f0841aba1692637859097f44e7c24ed0084fa2da",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "operations": [
+    "existing STRUCT strip fullframe RGBA Lanczos (1254, 1254) -> (64,64); no crop, alpha modification, edge blending or repaint"
+  ],
+  "size": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    43
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "alpha_min": 255,
+  "alpha_max": 255,
+  "all_alpha_ge_128": true,
+  "fully_opaque_255": true,
+  "opaque_pixels_255": 4096,
+  "seam_x": {
+    "width": 64,
+    "height": 64,
+    "interior_p95": 19.881770833333334,
+    "join_columns": [
+      64,
+      128,
+      192
+    ],
+    "join_mad": [
+      15.151041666666666,
+      15.151041666666666,
+      15.151041666666666
+    ],
+    "limit": 22.864036458333334,
+    "passed": true
+  },
+  "seam_y": {
+    "width": 64,
+    "height": 64,
+    "interior_p95": 25.180208333333333,
+    "join_columns": [
+      64,
+      128,
+      192
+    ],
+    "join_mad": [
+      20.619791666666668,
+      20.619791666666668,
+      20.619791666666668
+    ],
+    "limit": 28.95723958333333,
+    "passed": true
+  },
+  "judge_v2_ground": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/iron/raw/paved_road_try3.png",
+    "sha256": "ceed2b5f9e84dfaf79387cf141bfffaf10250b441577ee4595591d61d20da942",
+    "family": "ground",
+    "metrics": {
+      "edge_density": 0.2612118921642731,
+      "saturation_q25": 0.31304516651296205,
+      "saturation_q75": 0.3973723302225731,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.0042299122333671335,
+      "foreground_pixels": 65536
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "numeric_ready": true,
+  "status": "ADOPTED_GROUND_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "standing_projection": "not applicable; ground tile at source32,43 worldanchor",
+  "record": {
+    "id": "paved_road",
+    "lane": "iron",
+    "era": "iron",
+    "attempt": 3,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c28c-a06d-74a0-9a1b-4625cbcc6757/exec-cb6f2c0f-93e7-4e2d-8e9d-a0e05c2cd009.png",
+    "prompt": "Use case: stylized-concept. WorldSim style05 game GROUND tile. Image1 is style/material reference only, NOT edit target. A fresh exact square top-down stone paving texture, alpha255 FULLY OPAQUE physical paint on EVERY pixel within square; no translucency, glass, see-through wash or faded edges. FULL-FRAME completely opaque square tile: texture fills all canvas corners and every edge; there is no outside background or transparency. NO outline, border, cobble trim or perimeter emphasis. Identical balanced grey-beige color statistics at all4edges, stones clipped naturally by tile boundaries to repeat seamlessly. Fine sepia ink between irregular limestone slabs, broad restrained opaque earth washes, sparse3crack accents, subtle local upper-left light only; no overall gradient. Orthographic, no raised face or perspective. No text, label, scenery, grass, border or background.\nSUBJECT: Irregular fitted limestone paving stones; all stone and mortar absolutely opaque. NO edge border and NO perimeter trim. Natural partial stones cut at imageedges, repeat seamless.",
+    "references": [
+      "art/style05/anchors/props.png",
+      "art/style05/anchors/scene.png"
+    ],
+    "target_height": 64,
+    "projection_family": "road",
+    "height_band": [
+      62,
+      66
+    ],
+    "height_band_reason": "New road family; target 64px whole silhouette for 1x1 64px tiles, 56px adult scale; houses include visible floor depth and 60px walls.",
+    "footprint": [
+      1,
+      1
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:47:21.730Z"
+  },
+  "adopted_id": "paved_road",
+  "adopted_path": "art/style05/env/ground/a2/iron/paved_road.png",
+  "source_check": "/Users/rexxa/work/art-batch/A2/iron/ground/paved_road_try3.json",
+  "source_check_sha256": "dc0f795b8d5cffb223ae7fcf61615478dcbd665029bd3d65c168f723b0bdfa2f",
+  "review": {
+    "reviewer": "checks_native independent of generating lane; root confirmed repeat proof",
+    "source_review": "/Users/rexxa/work/art-batch/A2/checks/ground_final_contract_review.json",
+    "source_review_sha256": "c5e1e437640bba118298d8ae9ce0c37dfaafa9dba2e352a85ceeb8c7dcdece09",
+    "assets": [
+      {
+        "id": "paved_road",
+        "attempt": 3,
+        "reviewer": "checks_native independent of generating iron agent",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Straight top-down fitted limestone paving fills every pixel. Fine dark joints and restrained beige-grey stone washes agree with the ground anchor and existing hill rock material; native1x and2x repeats have no transparent holes or emphasized perimeter-mortar grid. Repeating motifs remain visible as expected from a single tile.",
+        "same_family_references": [
+          "art/style05/anchors/ground.png",
+          "art/style05/env/ground/hill_rock.png"
+        ],
+        "raw_sha256": "ceed2b5f9e84dfaf79387cf141bfffaf10250b441577ee4595591d61d20da942",
+        "normalized_sha256": "dcb2ba7f262f77a5b443f506f0841aba1692637859097f44e7c24ed0084fa2da"
+      }
+    ]
+  },
+  "review_asset_id": "paved_road",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/paved_road3_ground_independent_review_flat.json",
+  "review_sha256": "fc724031cb259cc8f6549134908cb77abaf202aa29f16f41e61f9e55f341d5b0"
+}

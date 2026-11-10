@@ -2685,6 +2685,91 @@
       "count_buckets": [],
       "family": "buildings",
       "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "shrine_intact",
+      "path": "art/style05/struct/a2/bronze/shrine_intact.png",
+      "width": 113,
+      "height": 88,
+      "footprint": [
+        3.0,
+        2.0
+      ],
+      "anchor": [
+        56,
+        83
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "shrine_damaged",
+      "path": "art/style05/struct/a2/bronze/shrine_damaged.png",
+      "width": 111,
+      "height": 88,
+      "footprint": [
+        3.0,
+        2.0
+      ],
+      "anchor": [
+        55,
+        83
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "olive_press_working",
+      "path": "art/style05/struct/a2/bronze/olive_press_working.png",
+      "width": 130,
+      "height": 88,
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "anchor": [
+        65,
+        83
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "timber_bridge_ew",
+      "path": "art/style05/struct/a2/iron/timber_bridge_ew.png",
+      "width": 216,
+      "height": 162,
+      "footprint": [
+        3.0,
+        2.0
+      ],
+      "anchor": [
+        108,
+        157
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "timber_bridge_damaged",
+      "path": "art/style05/struct/a2/iron/timber_bridge_damaged.png",
+      "width": 148,
+      "height": 223,
+      "footprint": [
+        2.0,
+        3.0
+      ],
+      "anchor": [
+        74,
+        218
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
     }
   ]
 }

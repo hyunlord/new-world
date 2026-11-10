@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "status": "ADOPTED_GROUND_CANDIDATES_NOT_IMPORTED",
+  "anchor_convention": "Reference world base is NW occupied cell origin plus(32,43); paste origin=world_base-source_anchor.",
+  "assets": [
+    {
+      "id": "paved_road",
+      "path": "art/style05/env/ground/a2/iron/paved_road.png",
+      "width": 64,
+      "height": 64,
+      "anchor": [
+        32,
+        43
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "role": "ground_texture",
+      "status": "A2_ADOPTED_GROUND_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "paved_road_ew",
+      "path": "art/style05/env/ground/a2/iron/paved_road_ew.png",
+      "width": 64,
+      "height": 64,
+      "anchor": [
+        32,
+        43
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "role": "ground_texture",
+      "status": "A2_ADOPTED_GROUND_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "paved_road_damaged",
+      "path": "art/style05/env/ground/a2/iron/paved_road_damaged.png",
+      "width": 64,
+      "height": 64,
+      "anchor": [
+        32,
+        43
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "role": "ground_texture",
+      "status": "A2_ADOPTED_GROUND_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "paved_road_junction",
+      "path": "art/style05/env/ground/a2/iron/paved_road_junction.png",
+      "width": 64,
+      "height": 64,
+      "anchor": [
+        32,
+        43
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "role": "ground_texture",
+      "status": "A2_ADOPTED_GROUND_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "paved_road_corner",
+      "path": "art/style05/env/ground/a2/iron/paved_road_corner.png",
+      "width": 64,
+      "height": 64,
+      "anchor": [
+        32,
+        43
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "role": "ground_texture",
+      "status": "A2_ADOPTED_GROUND_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "irrigation_channel_watered",
+      "path": "art/style05/env/ground/a2/bronze/irrigation_channel_watered.png",
+      "width": 64,
+      "height": 64,
+      "anchor": [
+        32,
+        43
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "role": "ground_texture",
+      "status": "A2_ADOPTED_GROUND_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "terrace_cultivated",
+      "path": "art/style05/env/ground/a2/bronze/terrace_cultivated.png",
+      "width": 128,
+      "height": 128,
+      "anchor": [
+        32,
+        43
+      ],
+      "footprint": [
+        2,
+        2
+      ],
+      "role": "ground_texture",
+      "status": "A2_ADOPTED_GROUND_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "ditch_watered",
+      "path": "art/style05/env/ground/a2/bronze/ditch_watered.png",
+      "width": 64,
+      "height": 64,
+      "anchor": [
+        32,
+        43
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "role": "ground_texture",
+      "status": "A2_ADOPTED_GROUND_CANDIDATE_NOT_IMPORTED"
+    }
+  ]
+}

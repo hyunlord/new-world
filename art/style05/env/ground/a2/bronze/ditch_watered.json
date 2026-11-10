@@ -1,0 +1,223 @@
+{
+  "id": "ditch_watered",
+  "attempt": 3,
+  "record": {
+    "id": "ditch_watered",
+    "subject": "Full-frame square64x64 groundtile matching dryditch but centraltrenchcontains mutedslate-sage water, continuous top-to-bottom.",
+    "target_height": 64,
+    "footprint": [
+      1,
+      1
+    ],
+    "projection_family": "ground_ditch",
+    "style_family": "ground",
+    "height_band_reason": "Top-down ground extent, not standing-object height: 64px covers 1x164pxgridtiles; predeclared before generation.",
+    "lane": "bronze",
+    "era": "bronze",
+    "attempt": 3,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c290-f6fe-7e03-a8f0-4c49ecdc4053/exec-1ccc92a6-870e-4267-869b-e6ea6f185910.png",
+    "prompt": "Use case: precise-object-edit. IMAGE1 is edit target. Other images are locked INK/MATERIAL references only. Preserve target geometry, camera, proportions, palette, clean alpha and major contour; change only the requested state. FINAL PRECISE TILE CORRECTION: Keep the same earthen north-south ditch, water, scale, top-down drawing and rich fine material. Correct north/south repeat: make water exactly vertically centered, identical width and x positions at TOP AND BOTTOM edges, banks similarly matching; no wandering or diagonal perspective. Water is narrow muted slate-grey blue with only three quiet thin pale ripple dashes. Earthwash needs somewhat MORE naturally uneven pigment pools: small broad pale ochre and deep umber variations on both left and right bank, no global gradient. Preserve crisp variable fine sepia grain and slightly stronger main contours. Retain full-frame fully opaque square all255; no framing, transparent margin, cast shadow, labels or objects. Matching opposite edge colours and motifs seamless in both directions. WorldSim style05 ILLUSTRATED GROUND TEXTURE. Entire rectangular image is the terrain tile, fully opaque edge-to-edge: no background, margin, transparency, borderoutline, panel or detached island. Straight TOP-DOWN orthographic 64px worldgrid. Fine variable broken sepia ink and natural quiet granular watercolor wash matching locked ground+scene references. Earthbrown ochre mutedslategrey and sage. Three quiet mainfurrows and sparse small stonegroups, secondaryfine surfacegrain; outer/secondary ink2:1. Upperleftlighting; no perspective, letters, UI, objects or people. Seamless oppositeedges, no directional colourgradient across whole tile. Required overall image aspect1:1 SQUARE, contentfills entirecanvas.",
+    "references": [
+      "/Users/rexxa/.codex/generated_images/01a1c290-f6fe-7e03-a8f0-4c49ecdc4053/exec-c573e85e-148c-466b-b1da-9df9cd72381c.png",
+      "art/style05/anchors/ground.png",
+      "art/style05/anchors/scene.png"
+    ],
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:59:03.543Z",
+    "height_band": [
+      62,
+      66
+    ]
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/bronze/raw/ditch_watered_try3.png",
+  "raw_sha256": "4b2f41b9efba2b8dfbe4caeb5709472436f9fe44715ce745bcee02d9dbce0bd3",
+  "normalized": "/Users/rexxa/work/art-batch/A2/bronze/ground/ditch_watered_try3.png",
+  "normalized_sha256": "065eddab09b0369641dafa3f8ec7d832dcbb8195232718f16d1ba2b345eb21e6",
+  "size": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    43
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "placement": "Reference world_base is NW tile origin plus (32,43); paste top-left at NW tile origin. 128x128 covers NW/E/S/SE tiles.",
+  "operations": [
+    "full-frame convert RGBA preserving generated RGB and opacity",
+    "global Lanczos resample to declared ground canvas; existing normalize.py strip path; no crop or padding or pixel/alpha painting"
+  ],
+  "projection": "ground top-down; standing projection not applicable",
+  "fully_opaque_alpha255_everywhere": true,
+  "alpha_min": 255,
+  "non255_pixels": 0,
+  "seam_x": {
+    "width": 64,
+    "height": 64,
+    "interior_p95": 23.091145833333332,
+    "join_columns": [
+      64,
+      128,
+      192
+    ],
+    "join_mad": [
+      17.682291666666668,
+      17.682291666666668,
+      17.682291666666668
+    ],
+    "limit": 26.55481770833333,
+    "passed": true
+  },
+  "seam_y": {
+    "width": 64,
+    "height": 64,
+    "interior_p95": 16.444791666666667,
+    "join_columns": [
+      64,
+      128,
+      192
+    ],
+    "join_mad": [
+      14.994791666666666,
+      14.994791666666666,
+      14.994791666666666
+    ],
+    "limit": 18.911510416666665,
+    "passed": true
+  },
+  "raw_style_judge": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/bronze/raw/ditch_watered_try3.png",
+    "sha256": "4b2f41b9efba2b8dfbe4caeb5709472436f9fe44715ce745bcee02d9dbce0bd3",
+    "family": "ground",
+    "metrics": {
+      "edge_density": 0.25801524313429075,
+      "saturation_q25": 0.5897047183813219,
+      "saturation_q75": 0.686419315964161,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.005900717631687645,
+      "foreground_pixels": 65536
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "numeric_ready": true,
+  "status": "ADOPTED_GROUND_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "references": [
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c290-f6fe-7e03-a8f0-4c49ecdc4053/exec-c573e85e-148c-466b-b1da-9df9cd72381c.png",
+      "sha256": "814bacb3db257872967e3e72b1f035fde780d80384bcd3845055a997a885eb04"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/ground.png",
+      "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "adopted_id": "ditch_watered",
+  "adopted_path": "art/style05/env/ground/a2/bronze/ditch_watered.png",
+  "source_check": "/Users/rexxa/work/art-batch/A2/bronze/ground/ditch_watered_try3.json",
+  "source_check_sha256": "eac0601ae9a8ca488481c121e2d5ac9f27fee61e9be6b69330466299c243dde5",
+  "review": {
+    "reviewer": "checks_native independent of generating lane; root confirmed repeat proof",
+    "source_review": "/Users/rexxa/work/art-batch/A2/checks/ground_bronze_final_contract_review.json",
+    "source_review_sha256": "2160118c11b4a338688db11c81db44f4143697e58208d4e62b2d6b12220a22a9",
+    "assets": [
+      {
+        "id": "irrigation_channel_watered",
+        "attempt": 2,
+        "reviewer": "checks_native independent of generating bronze agent",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Narrow blue-grey water and modest earth/stone banks distinguish a watered irrigation channel. Straight top-down geometry, restrained earth colors and fine ground texture match the ground anchor and existing packed earth; native1x/2x repeats connect without alpha holes.",
+        "same_family_references": [
+          "art/style05/anchors/ground.png",
+          "art/style05/env/ground/packed_earth.png"
+        ],
+        "raw_sha256": "a5ef19f27e4a56de79411587acc19f729a2f2a5e1ac8309d0be5bd35b9f430de",
+        "normalized_sha256": "d1bcd2ae4aa562b94c0bf758e7a9553ace756c6b08e824b9dd9ffd112ab970d6"
+      },
+      {
+        "id": "terrace_cultivated",
+        "attempt": 2,
+        "reviewer": "checks_native independent of generating bronze agent",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Horizontal low retaining banks and repeated small green seedling rows clearly show cultivated terrace ground. The128px square spans exactly2x2 tiles at native scale; fine ink, earthy soil wash and uninterrupted repeated rows are coherent with the locked ground references.",
+        "same_family_references": [
+          "art/style05/anchors/ground.png",
+          "art/style05/env/ground/packed_earth.png"
+        ],
+        "raw_sha256": "164eec4516a6d5174de6b3f707fff63a33b58c2b7c135f788deb6fe15b81c490",
+        "normalized_sha256": "ac76f28206a8ddedb64b162609cc9f63e18d18302551686dbbd5e64f4591e546"
+      },
+      {
+        "id": "ditch_watered",
+        "attempt": 3,
+        "reviewer": "checks_native independent of generating bronze agent",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Broad steep earth banks surrounding a narrow water-filled trough read as a watered defensive ditch and remain distinct from the shallow irrigation channel. Top-down ground extent, natural root/stone accents and warm soil palette agree with references;1x/2x repeats retain continuous banks and water.",
+        "same_family_references": [
+          "art/style05/anchors/ground.png",
+          "art/style05/env/ground/packed_earth.png"
+        ],
+        "raw_sha256": "4b2f41b9efba2b8dfbe4caeb5709472436f9fe44715ce745bcee02d9dbce0bd3",
+        "normalized_sha256": "065eddab09b0369641dafa3f8ec7d832dcbb8195232718f16d1ba2b345eb21e6"
+      }
+    ]
+  },
+  "review_asset_id": "ditch_watered",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/bronze_ground_adoption_selection.json",
+  "review_sha256": "18a2f07ffbc2845fb657ec8626440a4862ab58d04e527bca7154186858cd495c"
+}

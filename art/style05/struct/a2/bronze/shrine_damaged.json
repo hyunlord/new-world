@@ -1,0 +1,257 @@
+{
+  "record": {
+    "id": "shrine_damaged",
+    "lane": "bronze",
+    "era": "bronze",
+    "attempt": 2,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c290-f6fe-7e03-a8f0-4c49ecdc4053/exec-3192d5bd-32bf-4883-b4fd-32bdb36073d8.png",
+    "prompt": "Use case: precise-object-edit. IMAGE1 is edit target. Other images are locked INK/MATERIAL references only. Preserve target geometry, camera, proportions, palette, clean alpha and major contour; change only the requested state. DAMAGE STATE ONLY. Keep refined thinbrokenink/granularmineralwash oftarget EXACTLY. Chip menhirupperrightcorner whilehighestpointleftretains80px; chip altarfront-rightedge; rightbowlmissingrimwedge. Leftbowl andbothsupportfeet remain. Noother geometry, material, lighting orpalettechange. No thickcartoonoutline returns. WorldSim style05 ink-and-tone BRONZE AGE game sprite. Fine controlled sepia/brown-black pen line over quiet restrained earth-colour wash. Outer contour weight twice secondary line (2:1). Gentle upper-left illumination over natural translucent pigment wash, with restrained lower-right shadows; no polygonal flat facet fills. Apply material-specific marks ONLY: stone/clay may have three short crack groups; WOOD has three thin broken longitudinal grain lines, never branched surface cracks; STRAW has five curved parallel weave bands, never cracks. Smooth metal has NO cracks. One small group of three parallel / hatch marks only where needed. Sparse deliberate surface marks. Natural quiet granular watercolor pigment and broken pen edges like the locked originals; not flat vector facets, not uniform black outline, no all-over crosshatching. Upper-left daylight. Standing front three-quarter about20degrees down, substantial front face, shallow compressed top; grid-aligned square geometry, never isometric diamond. Adult56px for scale. One isolated object only, full silhouette and generous perfectly transparent margins. Outside object every pixel ALPHA ZERO, no shadow, glow, aura, haze, colored veil, ground patch, blur or backdrop; inside transparent gaps also alpha zero. No labels/text/frames/people/modern fittings/iron. No 3D rendering or pixel art.",
+    "subject": "same open-air shrine group, upright menhir chipped at top and altar chipped along right front edge, one clay bowl broken, no wall ring/floorplate/roof",
+    "references": [
+      "/Users/rexxa/.codex/generated_images/01a1c290-f6fe-7e03-a8f0-4c49ecdc4053/exec-076e8be7-b4d4-4b7a-8f3d-d92e3def6dfb.png",
+      "art/style05/anchors/props.png",
+      "art/style05/anchors/scene.png",
+      "/Users/rexxa/work/art-batch/A2/iron/raw/waterwheel_idle_try1.png",
+      "/Users/rexxa/work/art-batch/A2/neolithic/raw/loom_loaded_try2.png"
+    ],
+    "target_height": 80,
+    "projection_family": "shrine",
+    "height_band": [
+      78,
+      82
+    ],
+    "height_band_reason": "Family target predeclared in bronze/tasks.json relative to adult56px and footprint; unchanged by checks.",
+    "footprint": [
+      3.0,
+      2.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:49:55.615Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/bronze/raw/shrine_damaged_try2.png",
+  "raw_sha256": "11d0bbef82d92aff74f349fe1a54b62c2932d56e7e1d0783fee104f2d236104f",
+  "references": [
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c290-f6fe-7e03-a8f0-4c49ecdc4053/exec-076e8be7-b4d4-4b7a-8f3d-d92e3def6dfb.png",
+      "sha256": "5a0bea56e5a31847d515d75feed5c05e01ead7aa9c42498633a0f061c34a9158"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch/A2/iron/raw/waterwheel_idle_try1.png",
+      "sha256": "6ecb1122075a606ef33786387b74ef1a240a28b946ad37cc5b0a385d3a0aaa9b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch/A2/neolithic/raw/loom_loaded_try2.png",
+      "sha256": "378b755731a07a73a0b01f28a798c654e39a486ad5d9f7a3089b3ac2dc600ff4"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/bronze/normalized/shrine_damaged_try2.png",
+  "normalized_sha256": "308e6ea4ee47f602c9d9683320890dad8bf74a654e262b79029e13f2415d922e",
+  "size": [
+    111,
+    88
+  ],
+  "anchor": [
+    55,
+    83
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (162, 67, 1312, 968)",
+    "uniform Lanczos scale: 0.08918617614269789",
+    "transparent 4px padding; source-canvas anchor: (55, 83)"
+  ],
+  "projection": {
+    "family": "shrine",
+    "anchor": [
+      55,
+      83
+    ],
+    "height_band": [
+      78,
+      82
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 3948,
+    "base_row": 83,
+    "base_error": 0,
+    "height": 80,
+    "gradient_x": -0.874680593132154,
+    "gradient_y": -0.6800273201251305,
+    "light_angle_degrees": 217.8635616537445,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/bronze/raw/shrine_damaged_try2.png",
+    "sha256": "11d0bbef82d92aff74f349fe1a54b62c2932d56e7e1d0783fee104f2d236104f",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.22306419301454578,
+      "saturation_q25": 0.27612394653525085,
+      "saturation_q75": 0.3371045823597978,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.01065200536385216,
+      "foreground_pixels": 24675
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 254,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    20,
+    1508,
+    974
+  ],
+  "raw_opaque_bbox": [
+    164,
+    69,
+    1310,
+    966
+  ],
+  "raw_faint_far_ratio": 0.000639073422435422,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "crops_grain independent reviewer",
+    "reviewed_at": "2026-11-09T23:53:48.903657+00:00",
+    "scope": "Final bronze style corrections; no art edits or adoption. Earlier reviews remain immutable. Numeric readiness is necessary but does not imply visual acceptance.",
+    "acceptance": "medium, line, light and palette each >=4; score >=90; coherent semantics; visually clean saved RGBA; consistent camera and game-scale treatment.",
+    "references": [
+      "art/style05/anchors/props.png",
+      "art/style05/anchors/scene.png",
+      "art/style05/struct/woodworking_bench.png",
+      "art/style05/struct/pottery_bench.png",
+      "art/style05/struct/a2/iron/waterwheel_idle.png",
+      "/Users/rexxa/work/art-batch/A2/iron/raw/waterwheel_idle_try1.png"
+    ],
+    "evidence": [
+      "/Users/rexxa/work/art-batch/A2/checks/bronze_style_final_complete_raw.png",
+      "/Users/rexxa/work/art-batch/A2/checks/bronze_style_final_complete_1x2x.png"
+    ],
+    "assets": [
+      {
+        "id": "shrine_intact",
+        "attempt": 2,
+        "reviewed_png": "/Users/rexxa/work/art-batch/A2/bronze/normalized/shrine_intact_try2.png",
+        "reviewed_sha256": "8c5ef1301e80874f2f80732cfe2c1981a8309c75a62021c630de3a4b5577df2e",
+        "reviewed_raw": "/Users/rexxa/work/art-batch/A2/bronze/raw/shrine_intact_try2.png",
+        "reviewed_raw_sha256": "5a0bea56e5a31847d515d75feed5c05e01ead7aa9c42498633a0f061c34a9158",
+        "size": [
+          113,
+          88
+        ],
+        "anchor": [
+          56,
+          83
+        ],
+        "height": 80,
+        "numeric_ready": true,
+        "projection_passed": true,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "alpha_note": "Actual saved RGBA composited on dark and pale backgrounds: no visible halo or ground patch. Alpha cleanliness here is a visual verdict, not a claim that all off-subject alpha values are exactly zero.",
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Stone and clay are lighter than the timber references, appropriately for their material.",
+          "Large natural stone planes remain, but their transitions now carry mottled mineral wash rather than flat polygon fills."
+        ],
+        "suggestions": [],
+        "reasoning": "The standing stone and altar have fine uneven sepia edges, intermittent fractures, and quiet granular stone wash. These survive at 1x/2x as natural stone rather than a bold outlined icon. Bowls stay subordinate and upper-left highlights agree with locked props. The menhir, low altar, two supports and bowls read coherently; actual dark/light RGBA composites show no visible halo."
+      },
+      {
+        "id": "shrine_damaged",
+        "attempt": 2,
+        "reviewed_png": "/Users/rexxa/work/art-batch/A2/bronze/normalized/shrine_damaged_try2.png",
+        "reviewed_sha256": "308e6ea4ee47f602c9d9683320890dad8bf74a654e262b79029e13f2415d922e",
+        "reviewed_raw": "/Users/rexxa/work/art-batch/A2/bronze/raw/shrine_damaged_try2.png",
+        "reviewed_raw_sha256": "11d0bbef82d92aff74f349fe1a54b62c2932d56e7e1d0783fee104f2d236104f",
+        "size": [
+          111,
+          88
+        ],
+        "anchor": [
+          55,
+          83
+        ],
+        "height": 80,
+        "numeric_ready": true,
+        "projection_passed": true,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "alpha_note": "Actual saved RGBA composited on dark and pale backgrounds: no visible halo or ground patch. Alpha cleanliness here is a visual verdict, not a claim that all off-subject alpha values are exactly zero.",
+        "score": 90,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Damage is restrained at 1x: the clearest cues are the chipped menhir crown and chipped right bowl.",
+          "The altar chip is more legible at 2x than 1x."
+        ],
+        "suggestions": [],
+        "reasoning": "The stone wash, thin irregular contour and quiet fracture groups retain the corrected intact shrine treatment. The broken crown, altar edge and bowl rim express damage without introducing a second material style. Both shrines retain 80px height and closely matching proportions. Minor damage is subtle at 1x but visible at 2x, with no new alpha contamination on actual RGBA composites."
+      }
+    ],
+    "summary": {
+      "pass": 2,
+      "reject": 3,
+      "capped_rejections": [
+        "olive_press_empty",
+        "bee_skep_active"
+      ]
+    },
+    "selection_source": {
+      "path": "/Users/rexxa/work/art-batch/A2/checks/bronze_style_final_independent_review.json",
+      "sha256": "7e91acd46a2e4349794782b40c458e8b6eb313d9c60fdbffb7807c30d1d2b011"
+    }
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "shrine_damaged",
+  "adopted_path": "art/style05/struct/a2/bronze/shrine_damaged.png",
+  "review_asset_id": "shrine_damaged",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/bronze_style_final_adoption_selection.json",
+  "review_sha256": "9a3cec03df769514e7f5da4caa436ed378b924dbeef3a7e445b0f5723fd233df"
+}
