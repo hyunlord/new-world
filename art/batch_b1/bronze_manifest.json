@@ -1,5 +1,5 @@
 {
-  "scope": "bronze wardrobes; earth portraits pending",
+  "scope": "bronze wardrobes with separate three-top portrait manifest references",
   "body_looks": 36,
   "body_frames": 360,
   "self_review": {
@@ -11,7 +11,8 @@
   },
   "portrait_manifest_refs": [
     "art/batch_b1/bronze_linen_portraits_manifest.json",
-    "art/batch_b1/bronze_cloak_portraits_manifest.json"
+    "art/batch_b1/bronze_cloak_portraits_manifest.json",
+    "art/batch_b1/bronze_earth_portraits_manifest.json"
   ],
   "tops": {
     "bronze_linen": {
@@ -447,5 +448,27 @@
     "superseded_passing_sheets": 3,
     "failed_calls": 0,
     "final_frames": 360
+  },
+  "own_portraits": {
+    "schema_version": 1,
+    "scope": "bronze_earth_linen portraits only",
+    "generated_sheets": 14,
+    "generated_portrait_cells": 84,
+    "adopted_sheets": 12,
+    "adopted_portraits": 72,
+    "rejected_sheets": 0,
+    "superseded_passing_sheets": 2,
+    "failed_calls": 0,
+    "max_attempt": 2,
+    "self_review": {
+      "weakest_regenerated": 2,
+      "base_sheets": 12,
+      "fraction": 0.16666666666666666,
+      "looks": [
+        "child_F_bronze_earth_linen_bun",
+        "child_M_bronze_earth_linen_long_tied"
+      ],
+      "comparison_sheet": "art/batch_b1/sheets/bronze_earth_portraits_self_review.png"
+    }
   }
 }

@@ -1,0 +1,178 @@
+{
+  "schema_version": 1,
+  "scope": "bronze_earth_linen portraits only",
+  "generated_sheets": 14,
+  "generated_portrait_cells": 84,
+  "adopted_sheets": 12,
+  "adopted_portraits": 72,
+  "rejected_sheets": 0,
+  "superseded_passing_sheets": 2,
+  "failed_calls": 0,
+  "max_attempt": 2,
+  "self_review": {
+    "weakest_regenerated": 2,
+    "base_sheets": 12,
+    "fraction": 0.16666666666666666,
+    "looks": [
+      "child_F_bronze_earth_linen_bun",
+      "child_M_bronze_earth_linen_long_tied"
+    ],
+    "comparison_sheet": "art/batch_b1/sheets/bronze_earth_portraits_self_review.png"
+  },
+  "records": [
+    {
+      "look": "adult_F_bronze_earth_linen_bun",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/adult_F_bronze_earth_linen_bun/try1/raw.png",
+      "raw_sha256": "87ed6e21be1b276eec2c5afb19971433abd431fd2f6a72368aa387760c4a34a7",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/adult_F_bronze_earth_linen_bun/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/adult_F_bronze_earth_linen_bun/try1/tool.json",
+      "summary_sha256": "f4e572675dd4059f424ff5b50a2d6769639a6dca7cd93e2b8a6456031571993a",
+      "visual_score": 92
+    },
+    {
+      "look": "adult_F_bronze_earth_linen_long_tied",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/adult_F_bronze_earth_linen_long_tied/try1/raw.png",
+      "raw_sha256": "4f2f2755ad24e9b4eccdddadd87259413800bd5564c1e2bcedccdb54b641def3",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/adult_F_bronze_earth_linen_long_tied/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/adult_F_bronze_earth_linen_long_tied/try1/tool.json",
+      "summary_sha256": "5af6733c9ea83604d40ef2a64df598d66649671a722cda747ced171cfb2fd147",
+      "visual_score": 92
+    },
+    {
+      "look": "adult_F_bronze_earth_linen_short",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/adult_F_bronze_earth_linen_short/try1/raw.png",
+      "raw_sha256": "06ce0d9e87ef7e3e39cc272976a9f33929269aa99f031a0f587cec9ba9992aa9",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/adult_F_bronze_earth_linen_short/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/adult_F_bronze_earth_linen_short/try1/tool.json",
+      "summary_sha256": "bbcd15b99904a50c3b5e8bd8b1557a48aa6240af29deb3e935f694c220be4328",
+      "visual_score": 92
+    },
+    {
+      "look": "adult_M_bronze_earth_linen_bun",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/adult_M_bronze_earth_linen_bun/try1/raw.png",
+      "raw_sha256": "898ec933fb8b79c300cc7e9e362eb88b5ed8efd54f0454d7d67a5fc8122dca64",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/adult_M_bronze_earth_linen_bun/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/adult_M_bronze_earth_linen_bun/try1/tool.json",
+      "summary_sha256": "fe37f276bcb09fec19328802b065b65c29dc13ad4081f044511d67d8538b73cf",
+      "visual_score": 92
+    },
+    {
+      "look": "adult_M_bronze_earth_linen_long_tied",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/adult_M_bronze_earth_linen_long_tied/try1/raw.png",
+      "raw_sha256": "934c4130d8bba99fd27768eb847cec123978687bd43914abe74c75fbc3359288",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/adult_M_bronze_earth_linen_long_tied/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/adult_M_bronze_earth_linen_long_tied/try1/tool.json",
+      "summary_sha256": "748c066a5b535ede3ba04522aeebe155aff3bec808b315e19c7e7191caaebf8c",
+      "visual_score": 92
+    },
+    {
+      "look": "adult_M_bronze_earth_linen_short",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/adult_M_bronze_earth_linen_short/try1/raw.png",
+      "raw_sha256": "79ab57aac8a409012cb9fd0bb9781c16c6b498245d241e46904074d208181de1",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/adult_M_bronze_earth_linen_short/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/adult_M_bronze_earth_linen_short/try1/tool.json",
+      "summary_sha256": "3dbaa54b404bac482538665887c7b3f498c4c6af8c3329b4258f85c04f115845",
+      "visual_score": 92
+    },
+    {
+      "look": "child_F_bronze_earth_linen_bun",
+      "attempt": 1,
+      "status": "superseded_passing",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/child_F_bronze_earth_linen_bun/try1/raw.png",
+      "raw_sha256": "cdb74a565194bc33aa91461374230d2dcb171a648ebe698527c4d70bc40be244",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/child_F_bronze_earth_linen_bun/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/child_F_bronze_earth_linen_bun/try1/tool.json",
+      "summary_sha256": "7017c37d5c52d1a6b1a47b7c1b9dd0eac91f9949b29a6254c59193e85e1e587e",
+      "visual_score": 92
+    },
+    {
+      "look": "child_F_bronze_earth_linen_bun",
+      "attempt": 2,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/child_F_bronze_earth_linen_bun/try2/raw.png",
+      "raw_sha256": "53c111c2422c49c8ecfd086bdc974df2cbd0ee2f3dfaa79b04b9aeea2d32f907",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/child_F_bronze_earth_linen_bun/try2/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/child_F_bronze_earth_linen_bun/try2/tool.json",
+      "summary_sha256": "93e0401f9acf199cc96c59ea7d97a2cb479dae34483cfe77bfc0417f6d367234",
+      "visual_score": 93
+    },
+    {
+      "look": "child_F_bronze_earth_linen_long_tied",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/child_F_bronze_earth_linen_long_tied/try1/raw.png",
+      "raw_sha256": "43b423e92969d334fd454a1d4453da2fc61aae2c68a2482bfd482d77ddcd972c",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/child_F_bronze_earth_linen_long_tied/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/child_F_bronze_earth_linen_long_tied/try1/tool.json",
+      "summary_sha256": "c1921c817d6b922f554c49fa0bf65da5592f958b8c92dafc0d8ecf94d213b7d8",
+      "visual_score": 92
+    },
+    {
+      "look": "child_F_bronze_earth_linen_short",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/child_F_bronze_earth_linen_short/try1/raw.png",
+      "raw_sha256": "ea215aec0e17aa712765233166ee790653818a10fb887a8d620b3733bb445f86",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/child_F_bronze_earth_linen_short/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/child_F_bronze_earth_linen_short/try1/tool.json",
+      "summary_sha256": "44a94efb20dbd5d28960cd4502686c8c7482c8597f05ab3b719410ce3aea4ff9",
+      "visual_score": 92
+    },
+    {
+      "look": "child_M_bronze_earth_linen_bun",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/child_M_bronze_earth_linen_bun/try1/raw.png",
+      "raw_sha256": "ca35a6c14c6e2ba881c38ca2e261b84417e55ed3ceddcb154c0f19a84d01a420",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/child_M_bronze_earth_linen_bun/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/child_M_bronze_earth_linen_bun/try1/tool.json",
+      "summary_sha256": "aef1d64fd84b871108e4f4b1989f93c3655144557491a0ac0ee1de542f596480",
+      "visual_score": 92
+    },
+    {
+      "look": "child_M_bronze_earth_linen_long_tied",
+      "attempt": 1,
+      "status": "superseded_passing",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/child_M_bronze_earth_linen_long_tied/try1/raw.png",
+      "raw_sha256": "ffbfa87db1a4973bd297be4492cd922bb265542c085c472ad3fdd98220d7c006",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/child_M_bronze_earth_linen_long_tied/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/child_M_bronze_earth_linen_long_tied/try1/tool.json",
+      "summary_sha256": "6ad0198e89c4edbfaeb62e45a0385a541b25fd6ebe36fc85c432c7b6b7e20b00",
+      "visual_score": 92
+    },
+    {
+      "look": "child_M_bronze_earth_linen_long_tied",
+      "attempt": 2,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/child_M_bronze_earth_linen_long_tied/try2/raw.png",
+      "raw_sha256": "d77503f37396b31b7e6b20d4210986daa7554569fba5866b510d1ec1e5434528",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/child_M_bronze_earth_linen_long_tied/try2/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/child_M_bronze_earth_linen_long_tied/try2/tool.json",
+      "summary_sha256": "60419987d1f57c2a1f9ca13c687106b35f05a18186174d01aeb7df6d659f43c4",
+      "visual_score": 93
+    },
+    {
+      "look": "child_M_bronze_earth_linen_short",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/child_M_bronze_earth_linen_short/try1/raw.png",
+      "raw_sha256": "1fdb0ba2ddc353c7fed0801b152d5f6ed6179561d13a6a76b026b765857e8e96",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/child_M_bronze_earth_linen_short/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_earth_portraits/child_M_bronze_earth_linen_short/try1/tool.json",
+      "summary_sha256": "25e8ebc6c68e3057fa2d15a8f69be3f965333e5151feb3e868b7cb09200e77b9",
+      "visual_score": 92
+    }
+  ]
+}

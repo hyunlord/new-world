@@ -1,0 +1,11 @@
+{
+  "score": 92,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Six distinct faces preserve exact skin/hair/age/beard sequence, neckline and hairstyle in the ink-and-earth-wash medium."
+  ],
+  "suggestions": [],
+  "reasoning": "Inspected six opaque128px portraits at2x. All cells centered without clipping. Adults v4/v5 visibly older; child variants remain children. Ochre ancient linen consistent across all six. Face identity and prescribed features legible.",
+  "summary_sha256": "44a94efb20dbd5d28960cd4502686c8c7482c8597f05ab3b719410ce3aea4ff9"
+}
