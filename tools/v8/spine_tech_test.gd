@@ -317,6 +317,18 @@ func _capture_outcrop(world: Node) -> void:
 	await _frames()
 	await _capture("c2_outcrop_why_ko_rerender")
 	why.call("close")
+	var feed: Control = _main.get_node("UI/ChroniclePanel") as Control
+	var entry: Dictionary = preload("res://scripts/ui/chronicle_text.gd").rows(world.call("get_chronicle_since", int(receipt["chronicle_index"]), 1))[0]
+	var commands: Dictionary = world.call("get_command_log", 0)
+	for language: String in ["ko", "en"]:
+		_locale.call("set_language", language)
+		await _key(KEY_C)
+		await _frames()
+		var expected: String = preload("res://scripts/ui/chronicle_text.gd").ore_sentence(entry.get("ore_evidence", {}), _locale)
+		_check("outcrop_default_feed_" + language, feed.visible and (feed.find_child("NotableFilter", true, false) as Button).button_pressed and int(entry.get("kind", -1)) == 66 and bool(feed.call("keeps_kind", 66)) and bool(feed.call("passes_filtered", entry, 0, -1)) and str(feed.call("plain_text")).contains(expected))
+		await _capture("c2_outcrop_default_feed_" + language + "_rerender")
+		await _key(KEY_C)
+	_check("outcrop_feed_inspection_read_only", world.call("get_command_log", 0) == commands and int(world.call("get_time_snapshot")["tick"]) == int(receipt["tick"]))
 
 
 ## C1's actual save supplies constructed stations; no renderer-only objects or simulated production.

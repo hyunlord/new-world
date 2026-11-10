@@ -1,8 +1,14 @@
 # System world registration
 
+Current C2 membership: baseline retains its published 51-system order; colony registers 55 systems, including colony-only `OreDiscoverySystem` at priority 128/interval 8. `rust/crates/sim-engine/src/registration.rs` declares membership and `rust/crates/sim-systems/src/lib.rs` owns constructors and the pinned `BASELINE_ORDER`. The current table below must pass the registration tests on the next frozen HEAD; this source update does not claim a completed gate.
+
+## Historical pre-switch status (retained)
+
 Baseline and colony each retain 49 registrations. The priority125 slot is `AgentDecisionSystem` for baseline and `ColonyMindSystem` for colony. Other registrations retain their prior membership, including baseline no-ops. Membership means registered, not that every arm fires.
 
 Validation status: **NOT_RUN** for the production switch; parent-owned focused verification is pending. The table below was prepared from current source; the test must confirm it against real constructor metadata before acceptance.
+
+## Current registration table
 
 `sim-engine::registration::SYSTEM_REGISTRATIONS` owns world membership. Concrete constructors stay in `sim-systems`. The `registration_tests::system_worlds_document_matches_real_registration` test renders this table from actual registered instances, checks this snapshot, and prints the table with `--nocapture`. Tests do not overwrite documentation.
 
@@ -24,6 +30,7 @@ Validation status: **NOT_RUN** for the production switch; parent-owned focused v
 | StewardSystem | 125 | 360 | yes | yes |
 | StaleSeekTargetSystem | 126 | 1 | yes | yes |
 | JobExecuteSystem | 127 | 1 | yes | yes |
+| OreDiscoverySystem | 128 | 8 | no | yes |
 | HungerDecaySystem | 130 | 1 | yes | yes |
 | ThirstDecaySystem | 131 | 1 | yes | yes |
 | SleepDecaySystem | 132 | 1 | yes | yes |
@@ -66,7 +73,7 @@ Validation status: **NOT_RUN** for the production switch; parent-owned focused v
 | InfluenceVisualizationSystem | 1000 | 6 | yes | yes |
 <!-- SYSTEM_WORLDS:END -->
 
-## Integration seam for the switch
+## Historical pre-switch integration plan (retained)
 
 `sim_systems::register_world_runtime_systems(engine, WorldKind)` is an explicit entry point; it currently delegates both worlds to unchanged default registration. Existing production callers are unchanged in this preparatory change. Add the colony mind row and constructor selection together at the switch, retaining priority125 and interval1 and the pinned baseline sequence.
 

@@ -154,6 +154,16 @@ fn authenticated_original13_fixtures_keep_all_physical_food_and_system_slots() {
                 room_slot + 1,
                 ("BuildingTemplateSystem".to_owned(), Vec::new()),
             );
+            for (after, added) in [
+                ("JobExecuteSystem", "OreDiscoverySystem"),
+                ("VisitorSystem", "LivestockSystem"),
+            ] {
+                let slot = expected_systems
+                    .iter()
+                    .position(|(name, _)| name == after)
+                    .expect("original colony slot");
+                expected_systems.insert(slot + 1, (added.to_owned(), Vec::new()));
+            }
         }
         let presentation_slot = expected_systems
             .iter()

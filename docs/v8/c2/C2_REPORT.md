@@ -27,6 +27,16 @@ keyed 난수와 순서 있는 광맥 상태로 생성하고, 주민의 실제 �
 | N=1000 tick BASE/후보 성능 보고·ledger | PENDING — REPORT_ONLY |
 | 게시 SHA와 원격 fast-forward 영수증 | PENDING |
 
+첫 동결 후보 `830c1239eadd2556e8773e440175b9965309ee12`의 사전 검사는
+`pregate-a-attempt1-r2/ABORTED.json`처럼 확인된 실패 뒤 중단했다. 연대기
+고유 이름 수, 등록 시스템 목록, 새 무기 목록을 반영하지 않은 시험3개를
+수정했다. 별도 UI 검토는 실제 광맥 발견이 기본 연대기 필터에서 빠지는
+제품 누락을 찾아 데이터 필터에 연결했다. 집중 재검증은 연대기1개,
+등록·문서4개, 무기1개 및 실제 창721개 모두 통과했다.0개 시험만 선택된
+`a-pregate-fix-metadata.log`는 성공 시험 수에 넣지 않는다. 최초 직접 실행의
+권한 오류(`pregate-a-attempt1.txt`)도 보존하며 실행기는 `bash`로 호출한다.
+중단된 부분 실행은 게시 게이트나 전체 사전 검사 통과로 계산하지 않는다.
+
 동결 HEAD에서 `cargo test --workspace --no-fail-fast -- --test-threads=8`,
 `cargo clippy --workspace --all-targets -- -D warnings`, gate33의 Python
 세 시험군과 Godot 렌더 없이120초 미만인 모든 사전 검사를 통과해야 전체
@@ -61,6 +71,7 @@ READ_CHANGED_FIXTURES는 다음 공백 구분 목록을 파싱·출력하고 설
 | 정적 art 검사 | 기존 gate33 Python30개 통과 기록; 최종 동결 사전 검사에서 다시 실행 |
 | Why·작은 지도·동물 UI | 실제 창145개 통과/실패0/실행오류0, `ui-candidate-3/`; KO1.0/EN1.0/EN1.25 포함 |
 | 최종 기술·콘텐츠 native | 실제1920×1080 창714개 통과/실패0/실행오류0, `tech-native-a-02/run.log`, `tech_result.json`; 시각 판정94점 PASS |
+| 기본 연대기까지 포함한 새 native | 실제1920×1080 창721개 통과/실패0/실행오류0, `tech-native-a-03/run.log`; KO/EN 기본 중요 사건 필터에서 실제 광맥 발견 문장 표시 및 명령·tick 불변 |
 | 최종 선택 팩 headless UI | 87개 통과/실패0/실행오류0, `selected-ui-final-a/`; 새 광맥 placeholder와 동물 실루엣·건축 데이터 경계 확인 |
 | 살아 있는 염소의 새 native 캡처 | 351개 단언 통과/실패0/fixture gap0/실행오류0, `goat-native-a-01/`; 기존 실제 포획·출생·착유·도축 저장 상태를 후보에서 새로 렌더링 |
 | 작업 트리 정적 마감 | all-target Clippy 통과 `clippy-working-a-03.log`, fmt 통과 `fmt-working-a-final.log`, 문서 검사 통과 `docs-working-a-final.log`; 최종 동결 사전 검사를 대신하지 않음 |
@@ -88,6 +99,7 @@ prospecting만 장면용으로 부여하고 순간이동 없이 보행했으며
 
 - 청동기 숯·광맥·제련·주조 지식: `screens/0855_tech_ko_bronze_lane5_node82.png` 및 같은 시각 node83/85/86/87.
 - 실제 발견 광맥과 원인: `screens/0856_c2_outcrop_found_ko_rerender.png`, `0856_c2_outcrop_why_ko_rerender.png`.
+- 실제 기본 연대기의 광맥 발견: `screens/0919_c2_outcrop_default_feed_ko_rerender.png`, `0919_c2_outcrop_default_feed_en_rerender.png`.
 - 실제 숯가마·제련소·주조소·흙벽돌 집: `screens/0856_c2_physical_{charcoal_clamp,smelter,casting_bench,mud_brick_house}_ko_rerender.png`.
 - 실제 작업장의 숯·구리 제련·구리 도끼 조리법: `screens/0856_c2_recipe_{burn_charcoal,smelt_copper,cast_copper_axe}_ko_rerender.png`.
 - 기존 포획 장면을 새 실루엣으로 렌더링한 Why·출생·작은 지도: `ui-candidate-3/`와 `screens/0829_*`.
@@ -147,8 +159,8 @@ format22로 확장했다. 모든 시작 수치는 데이터 주석과 BALANCE_DE
 
 ### 새 도구 줄 수와 그 이유
 
-작업 중 보수적 집계는 **1091줄**(`tooling-count-a-working.json`, 새 렌더링
-파일명 구분1줄 포함)이며 최종 동결 합계는 PENDING이다. 삭제 줄을 차감하지 않는
+작업 중 보수적 집계는 **1103줄**(`tooling-count-a-fix-working.json`, 기본
+연대기 실제 확인12줄 포함)이며 최종 동결 합계는 PENDING이다. 삭제 줄을 차감하지 않는
 지원 코드 gross 추가량이며, 기능 회귀 시험은 별도로 공개한다. 전체 C2
 상한1500줄은 C2-b까지 누적으로 적용한다.
 

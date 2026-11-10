@@ -52,3 +52,12 @@ Authority: `/Users/rexxa/work/c2-data/GOAL.md`, including its planner addendum.
     placement before inspecting the next. Frame deposits through the camera's
     public centering API after deferred reset; renderer counts alone do not
     establish on-screen visibility. Preserve the failed first native run.
+17. The first frozen pre-gate found stale Chronicle-name and full weapon-list
+    expectations, plus a missing OreDiscovery entry in world-membership metadata.
+    Preserve historical discriminants, baseline registration order and weapon
+    damage; extend the exact current lists and metadata. Retain the aborted
+    red pre-gate and rerun all prechecks on a new commit before any full gate.
+18. A direct Why read does not prove that a new event reaches the normal feed.
+    OreDiscovered66 needs both visibility and default-notable entries in the
+    existing chronicle data. Verify the localized row through the actual C panel
+    with the default filter, without changing world ticks or command history.

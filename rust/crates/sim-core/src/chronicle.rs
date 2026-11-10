@@ -836,10 +836,12 @@ mod tests {
         assert_eq!(ChronicleKind::LivestockMilk.as_u8(), 63);
         assert_eq!(ChronicleKind::LivestockSlaughtered.as_u8(), 64);
         assert_eq!(ChronicleKind::LivestockDied.as_u8(), 65);
+        assert_eq!(ChronicleKind::OreDiscovered.as_u8(), 66);
+        assert_eq!(ChronicleKind::OreDiscovered.as_str(), "ore_discovered");
         assert_eq!(ChronicleKind::ALL.len(), 67);
         let names: std::collections::BTreeSet<&str> =
             ChronicleKind::ALL.iter().map(|k| k.as_str()).collect();
-        assert_eq!(names.len(), 66);
+        assert_eq!(names.len(), 67);
         assert_eq!(DepartCause::TopUp.as_u8(), 4);
     }
 

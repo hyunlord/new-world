@@ -918,14 +918,31 @@ mod item_capability_tests {
 
     #[test]
     fn historical_weapon_preferences_and_rule_damage_are_preserved() {
+        let bronze_spear = ItemKind::from_name("bronze_spear").expect("bronze spear");
+        let bronze_axe = ItemKind::from_name("bronze_axe").expect("bronze axe");
+        let bronze_dagger = ItemKind::from_name("bronze_dagger").expect("bronze dagger");
+        let copper_axe = ItemKind::from_name("copper_axe").expect("copper axe");
         assert_eq!(
             draft_weapons(),
-            vec![ItemKind::Spear, ItemKind::GroundAxe, ItemKind::StoneAxe]
+            vec![
+                bronze_spear,
+                bronze_axe,
+                bronze_dagger,
+                copper_axe,
+                ItemKind::Spear,
+                ItemKind::GroundAxe,
+                ItemKind::StoneAxe,
+            ]
         );
-        assert_eq!(hunting_tools(false), vec![ItemKind::Spear]);
+        assert_eq!(hunting_tools(false), vec![bronze_spear, ItemKind::Spear]);
         assert_eq!(
             hunting_tools(true),
-            vec![ItemKind::Spear, ItemKind::FlintBlade]
+            vec![
+                bronze_spear,
+                ItemKind::Spear,
+                ItemKind::FlintBlade,
+                bronze_dagger,
+            ]
         );
         let mut world = World::new();
         let mut rule = WildlifeRule::M5;
@@ -938,6 +955,10 @@ mod item_capability_tests {
             (ItemKind::GroundAxe, 53),
             (ItemKind::StoneAxe, 29),
             (ItemKind::FlintBlade, 7),
+            (bronze_spear, 16),
+            (bronze_axe, 13),
+            (bronze_dagger, 13),
+            (copper_axe, 11),
         ] {
             let entity = world.spawn((Tool {
                 item: ItemSpec::raw(kind, None),
