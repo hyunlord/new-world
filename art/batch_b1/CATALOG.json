@@ -1,0 +1,751 @@
+{
+  "schema_version": 1,
+  "scope": "planned B1 production coverage, not an adoption manifest",
+  "baseline_commit": "f182769fe06b1cb60105e4d0bf127b6524277838",
+  "reference_game_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+  "tops": [
+    {
+      "id": "neo_plant",
+      "era": "neolithic",
+      "wardrobe": "undyed plant fibre, cord belt"
+    },
+    {
+      "id": "neo_first_wool",
+      "era": "neolithic",
+      "wardrobe": "natural first wool wrap, cord tie"
+    },
+    {
+      "id": "bronze_linen",
+      "era": "bronze",
+      "wardrobe": "cream linen tunic, tied leather belt"
+    },
+    {
+      "id": "bronze_wool_cloak",
+      "era": "bronze",
+      "wardrobe": "oatmeal wool tunic, brown cloak"
+    },
+    {
+      "id": "bronze_earth_linen",
+      "era": "bronze",
+      "wardrobe": "muted ochre/russet linen, tied belt"
+    },
+    {
+      "id": "iron_work",
+      "era": "iron",
+      "wardrobe": "linen tunic, leather work apron"
+    },
+    {
+      "id": "iron_winter",
+      "era": "iron",
+      "wardrobe": "natural dark wool tunic, warm cloak"
+    }
+  ],
+  "proposed_look_grid": {
+    "ages": [
+      "child",
+      "adult"
+    ],
+    "sexes": [
+      "M",
+      "F"
+    ],
+    "tops": [
+      "loincloth",
+      "hide_wrap",
+      "fur_cloak",
+      "neo_plant",
+      "neo_first_wool",
+      "bronze_linen",
+      "bronze_wool_cloak",
+      "bronze_earth_linen",
+      "iron_work",
+      "iron_winter"
+    ],
+    "hairs": [
+      "short",
+      "long_tied",
+      "bun"
+    ],
+    "fallbacks": {
+      "adult_M_fur_cloak_long_tied": "adult_M_fur_cloak_bun",
+      "adult_M_hide_wrap_long_tied": "adult_M_hide_wrap_bun"
+    }
+  },
+  "expected_new_looks": 84,
+  "expected_new_frames": 840,
+  "expected_new_portraits": 504,
+  "looks": [
+    {
+      "id": "child_M_neo_plant_short",
+      "age": "child",
+      "sex": "M",
+      "top": "neo_plant",
+      "hair": "short",
+      "era": "neolithic"
+    },
+    {
+      "id": "child_M_neo_plant_long_tied",
+      "age": "child",
+      "sex": "M",
+      "top": "neo_plant",
+      "hair": "long_tied",
+      "era": "neolithic"
+    },
+    {
+      "id": "child_M_neo_plant_bun",
+      "age": "child",
+      "sex": "M",
+      "top": "neo_plant",
+      "hair": "bun",
+      "era": "neolithic"
+    },
+    {
+      "id": "child_M_neo_first_wool_short",
+      "age": "child",
+      "sex": "M",
+      "top": "neo_first_wool",
+      "hair": "short",
+      "era": "neolithic"
+    },
+    {
+      "id": "child_M_neo_first_wool_long_tied",
+      "age": "child",
+      "sex": "M",
+      "top": "neo_first_wool",
+      "hair": "long_tied",
+      "era": "neolithic"
+    },
+    {
+      "id": "child_M_neo_first_wool_bun",
+      "age": "child",
+      "sex": "M",
+      "top": "neo_first_wool",
+      "hair": "bun",
+      "era": "neolithic"
+    },
+    {
+      "id": "child_M_bronze_linen_short",
+      "age": "child",
+      "sex": "M",
+      "top": "bronze_linen",
+      "hair": "short",
+      "era": "bronze"
+    },
+    {
+      "id": "child_M_bronze_linen_long_tied",
+      "age": "child",
+      "sex": "M",
+      "top": "bronze_linen",
+      "hair": "long_tied",
+      "era": "bronze"
+    },
+    {
+      "id": "child_M_bronze_linen_bun",
+      "age": "child",
+      "sex": "M",
+      "top": "bronze_linen",
+      "hair": "bun",
+      "era": "bronze"
+    },
+    {
+      "id": "child_M_bronze_wool_cloak_short",
+      "age": "child",
+      "sex": "M",
+      "top": "bronze_wool_cloak",
+      "hair": "short",
+      "era": "bronze"
+    },
+    {
+      "id": "child_M_bronze_wool_cloak_long_tied",
+      "age": "child",
+      "sex": "M",
+      "top": "bronze_wool_cloak",
+      "hair": "long_tied",
+      "era": "bronze"
+    },
+    {
+      "id": "child_M_bronze_wool_cloak_bun",
+      "age": "child",
+      "sex": "M",
+      "top": "bronze_wool_cloak",
+      "hair": "bun",
+      "era": "bronze"
+    },
+    {
+      "id": "child_M_bronze_earth_linen_short",
+      "age": "child",
+      "sex": "M",
+      "top": "bronze_earth_linen",
+      "hair": "short",
+      "era": "bronze"
+    },
+    {
+      "id": "child_M_bronze_earth_linen_long_tied",
+      "age": "child",
+      "sex": "M",
+      "top": "bronze_earth_linen",
+      "hair": "long_tied",
+      "era": "bronze"
+    },
+    {
+      "id": "child_M_bronze_earth_linen_bun",
+      "age": "child",
+      "sex": "M",
+      "top": "bronze_earth_linen",
+      "hair": "bun",
+      "era": "bronze"
+    },
+    {
+      "id": "child_M_iron_work_short",
+      "age": "child",
+      "sex": "M",
+      "top": "iron_work",
+      "hair": "short",
+      "era": "iron"
+    },
+    {
+      "id": "child_M_iron_work_long_tied",
+      "age": "child",
+      "sex": "M",
+      "top": "iron_work",
+      "hair": "long_tied",
+      "era": "iron"
+    },
+    {
+      "id": "child_M_iron_work_bun",
+      "age": "child",
+      "sex": "M",
+      "top": "iron_work",
+      "hair": "bun",
+      "era": "iron"
+    },
+    {
+      "id": "child_M_iron_winter_short",
+      "age": "child",
+      "sex": "M",
+      "top": "iron_winter",
+      "hair": "short",
+      "era": "iron"
+    },
+    {
+      "id": "child_M_iron_winter_long_tied",
+      "age": "child",
+      "sex": "M",
+      "top": "iron_winter",
+      "hair": "long_tied",
+      "era": "iron"
+    },
+    {
+      "id": "child_M_iron_winter_bun",
+      "age": "child",
+      "sex": "M",
+      "top": "iron_winter",
+      "hair": "bun",
+      "era": "iron"
+    },
+    {
+      "id": "child_F_neo_plant_short",
+      "age": "child",
+      "sex": "F",
+      "top": "neo_plant",
+      "hair": "short",
+      "era": "neolithic"
+    },
+    {
+      "id": "child_F_neo_plant_long_tied",
+      "age": "child",
+      "sex": "F",
+      "top": "neo_plant",
+      "hair": "long_tied",
+      "era": "neolithic"
+    },
+    {
+      "id": "child_F_neo_plant_bun",
+      "age": "child",
+      "sex": "F",
+      "top": "neo_plant",
+      "hair": "bun",
+      "era": "neolithic"
+    },
+    {
+      "id": "child_F_neo_first_wool_short",
+      "age": "child",
+      "sex": "F",
+      "top": "neo_first_wool",
+      "hair": "short",
+      "era": "neolithic"
+    },
+    {
+      "id": "child_F_neo_first_wool_long_tied",
+      "age": "child",
+      "sex": "F",
+      "top": "neo_first_wool",
+      "hair": "long_tied",
+      "era": "neolithic"
+    },
+    {
+      "id": "child_F_neo_first_wool_bun",
+      "age": "child",
+      "sex": "F",
+      "top": "neo_first_wool",
+      "hair": "bun",
+      "era": "neolithic"
+    },
+    {
+      "id": "child_F_bronze_linen_short",
+      "age": "child",
+      "sex": "F",
+      "top": "bronze_linen",
+      "hair": "short",
+      "era": "bronze"
+    },
+    {
+      "id": "child_F_bronze_linen_long_tied",
+      "age": "child",
+      "sex": "F",
+      "top": "bronze_linen",
+      "hair": "long_tied",
+      "era": "bronze"
+    },
+    {
+      "id": "child_F_bronze_linen_bun",
+      "age": "child",
+      "sex": "F",
+      "top": "bronze_linen",
+      "hair": "bun",
+      "era": "bronze"
+    },
+    {
+      "id": "child_F_bronze_wool_cloak_short",
+      "age": "child",
+      "sex": "F",
+      "top": "bronze_wool_cloak",
+      "hair": "short",
+      "era": "bronze"
+    },
+    {
+      "id": "child_F_bronze_wool_cloak_long_tied",
+      "age": "child",
+      "sex": "F",
+      "top": "bronze_wool_cloak",
+      "hair": "long_tied",
+      "era": "bronze"
+    },
+    {
+      "id": "child_F_bronze_wool_cloak_bun",
+      "age": "child",
+      "sex": "F",
+      "top": "bronze_wool_cloak",
+      "hair": "bun",
+      "era": "bronze"
+    },
+    {
+      "id": "child_F_bronze_earth_linen_short",
+      "age": "child",
+      "sex": "F",
+      "top": "bronze_earth_linen",
+      "hair": "short",
+      "era": "bronze"
+    },
+    {
+      "id": "child_F_bronze_earth_linen_long_tied",
+      "age": "child",
+      "sex": "F",
+      "top": "bronze_earth_linen",
+      "hair": "long_tied",
+      "era": "bronze"
+    },
+    {
+      "id": "child_F_bronze_earth_linen_bun",
+      "age": "child",
+      "sex": "F",
+      "top": "bronze_earth_linen",
+      "hair": "bun",
+      "era": "bronze"
+    },
+    {
+      "id": "child_F_iron_work_short",
+      "age": "child",
+      "sex": "F",
+      "top": "iron_work",
+      "hair": "short",
+      "era": "iron"
+    },
+    {
+      "id": "child_F_iron_work_long_tied",
+      "age": "child",
+      "sex": "F",
+      "top": "iron_work",
+      "hair": "long_tied",
+      "era": "iron"
+    },
+    {
+      "id": "child_F_iron_work_bun",
+      "age": "child",
+      "sex": "F",
+      "top": "iron_work",
+      "hair": "bun",
+      "era": "iron"
+    },
+    {
+      "id": "child_F_iron_winter_short",
+      "age": "child",
+      "sex": "F",
+      "top": "iron_winter",
+      "hair": "short",
+      "era": "iron"
+    },
+    {
+      "id": "child_F_iron_winter_long_tied",
+      "age": "child",
+      "sex": "F",
+      "top": "iron_winter",
+      "hair": "long_tied",
+      "era": "iron"
+    },
+    {
+      "id": "child_F_iron_winter_bun",
+      "age": "child",
+      "sex": "F",
+      "top": "iron_winter",
+      "hair": "bun",
+      "era": "iron"
+    },
+    {
+      "id": "adult_M_neo_plant_short",
+      "age": "adult",
+      "sex": "M",
+      "top": "neo_plant",
+      "hair": "short",
+      "era": "neolithic"
+    },
+    {
+      "id": "adult_M_neo_plant_long_tied",
+      "age": "adult",
+      "sex": "M",
+      "top": "neo_plant",
+      "hair": "long_tied",
+      "era": "neolithic"
+    },
+    {
+      "id": "adult_M_neo_plant_bun",
+      "age": "adult",
+      "sex": "M",
+      "top": "neo_plant",
+      "hair": "bun",
+      "era": "neolithic"
+    },
+    {
+      "id": "adult_M_neo_first_wool_short",
+      "age": "adult",
+      "sex": "M",
+      "top": "neo_first_wool",
+      "hair": "short",
+      "era": "neolithic"
+    },
+    {
+      "id": "adult_M_neo_first_wool_long_tied",
+      "age": "adult",
+      "sex": "M",
+      "top": "neo_first_wool",
+      "hair": "long_tied",
+      "era": "neolithic"
+    },
+    {
+      "id": "adult_M_neo_first_wool_bun",
+      "age": "adult",
+      "sex": "M",
+      "top": "neo_first_wool",
+      "hair": "bun",
+      "era": "neolithic"
+    },
+    {
+      "id": "adult_M_bronze_linen_short",
+      "age": "adult",
+      "sex": "M",
+      "top": "bronze_linen",
+      "hair": "short",
+      "era": "bronze"
+    },
+    {
+      "id": "adult_M_bronze_linen_long_tied",
+      "age": "adult",
+      "sex": "M",
+      "top": "bronze_linen",
+      "hair": "long_tied",
+      "era": "bronze"
+    },
+    {
+      "id": "adult_M_bronze_linen_bun",
+      "age": "adult",
+      "sex": "M",
+      "top": "bronze_linen",
+      "hair": "bun",
+      "era": "bronze"
+    },
+    {
+      "id": "adult_M_bronze_wool_cloak_short",
+      "age": "adult",
+      "sex": "M",
+      "top": "bronze_wool_cloak",
+      "hair": "short",
+      "era": "bronze"
+    },
+    {
+      "id": "adult_M_bronze_wool_cloak_long_tied",
+      "age": "adult",
+      "sex": "M",
+      "top": "bronze_wool_cloak",
+      "hair": "long_tied",
+      "era": "bronze"
+    },
+    {
+      "id": "adult_M_bronze_wool_cloak_bun",
+      "age": "adult",
+      "sex": "M",
+      "top": "bronze_wool_cloak",
+      "hair": "bun",
+      "era": "bronze"
+    },
+    {
+      "id": "adult_M_bronze_earth_linen_short",
+      "age": "adult",
+      "sex": "M",
+      "top": "bronze_earth_linen",
+      "hair": "short",
+      "era": "bronze"
+    },
+    {
+      "id": "adult_M_bronze_earth_linen_long_tied",
+      "age": "adult",
+      "sex": "M",
+      "top": "bronze_earth_linen",
+      "hair": "long_tied",
+      "era": "bronze"
+    },
+    {
+      "id": "adult_M_bronze_earth_linen_bun",
+      "age": "adult",
+      "sex": "M",
+      "top": "bronze_earth_linen",
+      "hair": "bun",
+      "era": "bronze"
+    },
+    {
+      "id": "adult_M_iron_work_short",
+      "age": "adult",
+      "sex": "M",
+      "top": "iron_work",
+      "hair": "short",
+      "era": "iron"
+    },
+    {
+      "id": "adult_M_iron_work_long_tied",
+      "age": "adult",
+      "sex": "M",
+      "top": "iron_work",
+      "hair": "long_tied",
+      "era": "iron"
+    },
+    {
+      "id": "adult_M_iron_work_bun",
+      "age": "adult",
+      "sex": "M",
+      "top": "iron_work",
+      "hair": "bun",
+      "era": "iron"
+    },
+    {
+      "id": "adult_M_iron_winter_short",
+      "age": "adult",
+      "sex": "M",
+      "top": "iron_winter",
+      "hair": "short",
+      "era": "iron"
+    },
+    {
+      "id": "adult_M_iron_winter_long_tied",
+      "age": "adult",
+      "sex": "M",
+      "top": "iron_winter",
+      "hair": "long_tied",
+      "era": "iron"
+    },
+    {
+      "id": "adult_M_iron_winter_bun",
+      "age": "adult",
+      "sex": "M",
+      "top": "iron_winter",
+      "hair": "bun",
+      "era": "iron"
+    },
+    {
+      "id": "adult_F_neo_plant_short",
+      "age": "adult",
+      "sex": "F",
+      "top": "neo_plant",
+      "hair": "short",
+      "era": "neolithic"
+    },
+    {
+      "id": "adult_F_neo_plant_long_tied",
+      "age": "adult",
+      "sex": "F",
+      "top": "neo_plant",
+      "hair": "long_tied",
+      "era": "neolithic"
+    },
+    {
+      "id": "adult_F_neo_plant_bun",
+      "age": "adult",
+      "sex": "F",
+      "top": "neo_plant",
+      "hair": "bun",
+      "era": "neolithic"
+    },
+    {
+      "id": "adult_F_neo_first_wool_short",
+      "age": "adult",
+      "sex": "F",
+      "top": "neo_first_wool",
+      "hair": "short",
+      "era": "neolithic"
+    },
+    {
+      "id": "adult_F_neo_first_wool_long_tied",
+      "age": "adult",
+      "sex": "F",
+      "top": "neo_first_wool",
+      "hair": "long_tied",
+      "era": "neolithic"
+    },
+    {
+      "id": "adult_F_neo_first_wool_bun",
+      "age": "adult",
+      "sex": "F",
+      "top": "neo_first_wool",
+      "hair": "bun",
+      "era": "neolithic"
+    },
+    {
+      "id": "adult_F_bronze_linen_short",
+      "age": "adult",
+      "sex": "F",
+      "top": "bronze_linen",
+      "hair": "short",
+      "era": "bronze"
+    },
+    {
+      "id": "adult_F_bronze_linen_long_tied",
+      "age": "adult",
+      "sex": "F",
+      "top": "bronze_linen",
+      "hair": "long_tied",
+      "era": "bronze"
+    },
+    {
+      "id": "adult_F_bronze_linen_bun",
+      "age": "adult",
+      "sex": "F",
+      "top": "bronze_linen",
+      "hair": "bun",
+      "era": "bronze"
+    },
+    {
+      "id": "adult_F_bronze_wool_cloak_short",
+      "age": "adult",
+      "sex": "F",
+      "top": "bronze_wool_cloak",
+      "hair": "short",
+      "era": "bronze"
+    },
+    {
+      "id": "adult_F_bronze_wool_cloak_long_tied",
+      "age": "adult",
+      "sex": "F",
+      "top": "bronze_wool_cloak",
+      "hair": "long_tied",
+      "era": "bronze"
+    },
+    {
+      "id": "adult_F_bronze_wool_cloak_bun",
+      "age": "adult",
+      "sex": "F",
+      "top": "bronze_wool_cloak",
+      "hair": "bun",
+      "era": "bronze"
+    },
+    {
+      "id": "adult_F_bronze_earth_linen_short",
+      "age": "adult",
+      "sex": "F",
+      "top": "bronze_earth_linen",
+      "hair": "short",
+      "era": "bronze"
+    },
+    {
+      "id": "adult_F_bronze_earth_linen_long_tied",
+      "age": "adult",
+      "sex": "F",
+      "top": "bronze_earth_linen",
+      "hair": "long_tied",
+      "era": "bronze"
+    },
+    {
+      "id": "adult_F_bronze_earth_linen_bun",
+      "age": "adult",
+      "sex": "F",
+      "top": "bronze_earth_linen",
+      "hair": "bun",
+      "era": "bronze"
+    },
+    {
+      "id": "adult_F_iron_work_short",
+      "age": "adult",
+      "sex": "F",
+      "top": "iron_work",
+      "hair": "short",
+      "era": "iron"
+    },
+    {
+      "id": "adult_F_iron_work_long_tied",
+      "age": "adult",
+      "sex": "F",
+      "top": "iron_work",
+      "hair": "long_tied",
+      "era": "iron"
+    },
+    {
+      "id": "adult_F_iron_work_bun",
+      "age": "adult",
+      "sex": "F",
+      "top": "iron_work",
+      "hair": "bun",
+      "era": "iron"
+    },
+    {
+      "id": "adult_F_iron_winter_short",
+      "age": "adult",
+      "sex": "F",
+      "top": "iron_winter",
+      "hair": "short",
+      "era": "iron"
+    },
+    {
+      "id": "adult_F_iron_winter_long_tied",
+      "age": "adult",
+      "sex": "F",
+      "top": "iron_winter",
+      "hair": "long_tied",
+      "era": "iron"
+    },
+    {
+      "id": "adult_F_iron_winter_bun",
+      "age": "adult",
+      "sex": "F",
+      "top": "iron_winter",
+      "hair": "bun",
+      "era": "iron"
+    }
+  ]
+}
