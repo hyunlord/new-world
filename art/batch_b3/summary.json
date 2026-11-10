@@ -1,0 +1,335 @@
+{
+  "schema_version": 1,
+  "status": "COMPLETE_ATTEMPTED_REVIEW_WITH_EXPLICIT_GAPS",
+  "asset_source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+  "selected_pngs": 146,
+  "generation_tool_requests": 224,
+  "successful_raw_image_outputs": 222,
+  "blocked_no_image_requests": 2,
+  "generated_frame_slots": 280,
+  "selected_frame_slots": 146,
+  "rejected_or_superseded_frame_slots": 134,
+  "counting_note": "Animal atlases contain68frame slots from10successful calls. All other successful calls yield one frame. Reused A2 pixels,110room compositions and54blueprint display recipes are not new generations. State gap counts across lanes overlap the canonical coverage ledger and must not be summed as unique buildings.",
+  "families": 55,
+  "canonical_state_slots": 330,
+  "pending_states": 0,
+  "room_forms": 22,
+  "room_compositions": 110,
+  "blueprint_recipes_ready": 54,
+  "terrain_physical_coverage_rows": 20,
+  "direct_import_file_rows": 88,
+  "animal_replacement_rows": 58,
+  "runtime_imports_applied": 0,
+  "lanes": [
+    {
+      "lane": "stages_bronze",
+      "generated_images": 41,
+      "selected_pngs": 23,
+      "rejected_images": 18,
+      "state_gaps": 3
+    },
+    {
+      "lane": "stages_early",
+      "generated_images": 60,
+      "selected_pngs": 27,
+      "rejected_images": 33,
+      "state_gaps": 27
+    },
+    {
+      "lane": "stages_iron",
+      "generated_images": 47,
+      "selected_pngs": 23,
+      "rejected_images": 24,
+      "state_gaps": 7
+    },
+    {
+      "lane": "stages_mine_press",
+      "generated_images": 20,
+      "selected_pngs": 2,
+      "rejected_images": 18,
+      "state_gaps": 6
+    },
+    {
+      "lane": "retries_struct",
+      "generated_images": 24,
+      "selected_pngs": 5,
+      "rejected_images": 19,
+      "state_gaps": 6,
+      "blocked_no_image_requests": 1
+    },
+    {
+      "lane": "retries_ground",
+      "generated_images": 14,
+      "selected_pngs": 3,
+      "rejected_images": 11,
+      "state_gaps": 3
+    },
+    {
+      "lane": "items",
+      "generated_images": 2,
+      "selected_pngs": 1,
+      "rejected_images": 1,
+      "blocked_no_image_requests": 1
+    },
+    {
+      "lane": "round3_animals",
+      "generated_atlases": 10,
+      "generated_frame_slots": 68,
+      "selected_pngs": 58,
+      "superseded_frame_slots": 10
+    },
+    {
+      "lane": "round3_icons",
+      "generated_images": 2,
+      "selected_pngs": 2,
+      "rejected_images": 0
+    },
+    {
+      "lane": "round3_smelter",
+      "generated_images": 2,
+      "selected_pngs": 2,
+      "rejected_images": 0
+    }
+  ],
+  "standalone_family_counts": [
+    {
+      "lane": "stages_bronze",
+      "family": "bee_skep",
+      "generated_images": 4,
+      "selected": 4,
+      "rejected_or_superseded_images": 0
+    },
+    {
+      "lane": "stages_bronze",
+      "family": "casting_bench",
+      "generated_images": 6,
+      "selected": 3,
+      "rejected_or_superseded_images": 3
+    },
+    {
+      "lane": "stages_bronze",
+      "family": "charcoal_clamp",
+      "generated_images": 5,
+      "selected": 4,
+      "rejected_or_superseded_images": 1
+    },
+    {
+      "lane": "stages_bronze",
+      "family": "copper_smelter",
+      "generated_images": 10,
+      "selected": 3,
+      "rejected_or_superseded_images": 7
+    },
+    {
+      "lane": "stages_bronze",
+      "family": "palisade",
+      "generated_images": 4,
+      "selected": 3,
+      "rejected_or_superseded_images": 1
+    },
+    {
+      "lane": "stages_bronze",
+      "family": "palisade_gate",
+      "generated_images": 7,
+      "selected": 3,
+      "rejected_or_superseded_images": 4
+    },
+    {
+      "lane": "stages_bronze",
+      "family": "shrine",
+      "generated_images": 5,
+      "selected": 3,
+      "rejected_or_superseded_images": 2
+    },
+    {
+      "lane": "stages_early",
+      "family": "bread_oven",
+      "generated_images": 6,
+      "selected": 4,
+      "rejected_or_superseded_images": 2
+    },
+    {
+      "lane": "stages_early",
+      "family": "drying_rack",
+      "generated_images": 4,
+      "selected": 1,
+      "rejected_or_superseded_images": 3
+    },
+    {
+      "lane": "stages_early",
+      "family": "fish_weir",
+      "generated_images": 4,
+      "selected": 1,
+      "rejected_or_superseded_images": 3
+    },
+    {
+      "lane": "stages_early",
+      "family": "grinding_stone",
+      "generated_images": 2,
+      "selected": 2,
+      "rejected_or_superseded_images": 0
+    },
+    {
+      "lane": "stages_early",
+      "family": "hearth",
+      "generated_images": 2,
+      "selected": 1,
+      "rejected_or_superseded_images": 1
+    },
+    {
+      "lane": "stages_early",
+      "family": "lean_to",
+      "generated_images": 4,
+      "selected": 1,
+      "rejected_or_superseded_images": 3
+    },
+    {
+      "lane": "stages_early",
+      "family": "loom",
+      "generated_images": 3,
+      "selected": 1,
+      "rejected_or_superseded_images": 2
+    },
+    {
+      "lane": "stages_early",
+      "family": "megalith",
+      "generated_images": 5,
+      "selected": 3,
+      "rejected_or_superseded_images": 2
+    },
+    {
+      "lane": "stages_early",
+      "family": "pen_fence",
+      "generated_images": 3,
+      "selected": 1,
+      "rejected_or_superseded_images": 2
+    },
+    {
+      "lane": "stages_early",
+      "family": "pen_gate",
+      "generated_images": 4,
+      "selected": 0,
+      "rejected_or_superseded_images": 4
+    },
+    {
+      "lane": "stages_early",
+      "family": "potters_kiln",
+      "generated_images": 5,
+      "selected": 4,
+      "rejected_or_superseded_images": 1
+    },
+    {
+      "lane": "stages_early",
+      "family": "ritual_site",
+      "generated_images": 4,
+      "selected": 0,
+      "rejected_or_superseded_images": 4
+    },
+    {
+      "lane": "stages_early",
+      "family": "smokehouse",
+      "generated_images": 5,
+      "selected": 3,
+      "rejected_or_superseded_images": 2
+    },
+    {
+      "lane": "stages_early",
+      "family": "trap",
+      "generated_images": 2,
+      "selected": 2,
+      "rejected_or_superseded_images": 0
+    },
+    {
+      "lane": "stages_early",
+      "family": "well",
+      "generated_images": 4,
+      "selected": 3,
+      "rejected_or_superseded_images": 1
+    },
+    {
+      "lane": "stages_early",
+      "family": "windbreak",
+      "generated_images": 3,
+      "selected": 0,
+      "rejected_or_superseded_images": 3
+    },
+    {
+      "lane": "stages_iron",
+      "family": "aqueduct",
+      "generated_images": 6,
+      "selected": 1,
+      "rejected_or_superseded_images": 5
+    },
+    {
+      "lane": "stages_iron",
+      "family": "bloomery",
+      "generated_images": 4,
+      "selected": 4,
+      "rejected_or_superseded_images": 0
+    },
+    {
+      "lane": "stages_iron",
+      "family": "bridge",
+      "generated_images": 8,
+      "selected": 3,
+      "rejected_or_superseded_images": 5
+    },
+    {
+      "lane": "stages_iron",
+      "family": "forge",
+      "generated_images": 6,
+      "selected": 3,
+      "rejected_or_superseded_images": 3
+    },
+    {
+      "lane": "stages_iron",
+      "family": "reservoir",
+      "generated_images": 7,
+      "selected": 3,
+      "rejected_or_superseded_images": 4
+    },
+    {
+      "lane": "stages_iron",
+      "family": "rotary_quern",
+      "generated_images": 2,
+      "selected": 2,
+      "rejected_or_superseded_images": 0
+    },
+    {
+      "lane": "stages_iron",
+      "family": "sundial",
+      "generated_images": 2,
+      "selected": 2,
+      "rejected_or_superseded_images": 0
+    },
+    {
+      "lane": "stages_iron",
+      "family": "town_gate",
+      "generated_images": 7,
+      "selected": 2,
+      "rejected_or_superseded_images": 5
+    },
+    {
+      "lane": "stages_iron",
+      "family": "watchtower",
+      "generated_images": 5,
+      "selected": 3,
+      "rejected_or_superseded_images": 2
+    },
+    {
+      "lane": "stages_mine_press",
+      "family": "mine_entrance",
+      "generated_images": 12,
+      "selected": 0,
+      "rejected_or_superseded_images": 12
+    },
+    {
+      "lane": "stages_mine_press",
+      "family": "olive_press",
+      "generated_images": 8,
+      "selected": 2,
+      "rejected_or_superseded_images": 6
+    }
+  ],
+  "checks": "External B3/checks/; model judge unavailable remains explicit; no fabricated full model-gate passes."
+}

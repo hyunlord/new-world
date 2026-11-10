@@ -2,7 +2,7 @@
   "schema_version": 1,
   "status": "DRAFT_NOT_APPLIED",
   "source_branch": "v8/art-batch-b3",
-  "source_commit": null,
+  "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
   "source_commit_requirement": "Pin the final B3 asset commit before applying. This fragment requires the A2 source227529c26307bc3a854eb7bf819e88d02af39046 and the B3 material dependencies.",
   "runtime_rows_to_append": [],
   "fragment_kind": "symbolic_lifecycle_binding_proposals",

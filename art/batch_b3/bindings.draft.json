@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "status": "DRAFT_INDEX_NOT_APPLIED",
+  "source_branch": "v8/art-batch-b3",
+  "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+  "instruction": "Index of fragments; not a replacement runtime configuration. Resolve authoritative IDs, lifecycle selection and adapters in C2/C3. Replacement fragments preserve unrelated A1/A2/A4 rows.",
+  "fragments": [
+    "art/batch_b3/items/bindings.draft.json",
+    "art/batch_b3/retries_ground/bindings.draft.json",
+    "art/batch_b3/retries_struct/bindings.draft.json",
+    "art/batch_b3/rooms/bindings.draft.json",
+    "art/batch_b3/round3_animals/bindings.draft.json",
+    "art/batch_b3/round3_icons/bindings.draft.json",
+    "art/batch_b3/round3_smelter/bindings.draft.json",
+    "art/batch_b3/stages_bronze/bindings.draft.json",
+    "art/batch_b3/stages_early/bindings.draft.json",
+    "art/batch_b3/stages_iron/bindings.draft.json",
+    "art/batch_b3/stages_mine_press/bindings.draft.json"
+  ],
+  "numeric_content_codes_assigned": 0,
+  "runtime_rows_applied": 0,
+  "integration_required": [
+    "Resolve existing simulation states and content codes; do not invent enums from art labels.",
+    "Maintain independent floor/wall/prop sorting and recorded origins/anchors.",
+    "Keep unavailable states unavailable until replacement art is accepted."
+  ]
+}

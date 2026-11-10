@@ -9,5 +9,6 @@
     }
   ],
   "runtime_rows_to_append": [],
-  "note": "Replaces A2 built smelter states; numeric runtime ID unverified; merge existing current bindings by importer."
+  "note": "Replaces A2 built smelter states; numeric runtime ID unverified; merge existing current bindings by importer.",
+  "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
 }

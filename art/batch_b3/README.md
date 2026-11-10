@@ -6,6 +6,9 @@ are `/Users/rexxa/work/art-batch/BRIEF.md` and `BRIEF2.md`, with the planner's
 Raw generations, exact requests, tool returns and verification logs live in
 `/Users/rexxa/work/art-batch/B3/`; the Korean final report is `REPORT.md` there.
 
+- `summary.json`:146 selected PNGs, generation/selection counts and34 standalone family subtotals.
+- `art_import.draft.json` / `bindings.draft.json`: index of11 fragment pairs, pinned
+  to asset commit `abd82d7daf08df4de2b768a37f605faf669dbd7c`.
 - `coverage.json`: all55 A2 building families ×6 requested visual states,
   including explicit N/A, rejected and unavailable states. Do not equate
   attempted coverage with adopted sprites.
@@ -26,3 +29,9 @@ lane's metadata manifest; the importer does not consume adjacent sidecars by
 itself. C2/C3 must resolve real content codes, state selection and independent
 layer sorting. No simulation enum, numerical binding code or progress threshold
 is assigned here. The repository's runtime source/config trees remain unchanged.
+
+Final coverage has no pending rows. Frozen style/geometry failures remain explicit
+gaps, including the active mine and its unavailable blueprint. Historical separate
+model-judge output is unavailable; numeric checks and independent visual verdicts
+are recorded separately. The art-only docs check retains two baseline failures
+(binary files under docs and prototype UID omissions); see external B3/checks.

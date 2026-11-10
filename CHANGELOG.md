@@ -13,8 +13,12 @@ tags `v7-final-sim` and `v7-final-art`.
   (`art/batch_b3/rooms/`, `art/batch_b3/boards/`).
 - Draft blueprint display recipes for all 55 A2 building families; missing
   accepted sources remain explicit (`art/batch_b3/blueprints.json`).
-- Standalone lifecycle production, round-one retries and planner round-three
-  replacements are recorded per lane under `art/batch_b3/`; no runtime import.
+- 75 selected standalone lifecycle states,8 recovered A2 variants and an iron
+  spear candidate, with rejected attempts and coverage gaps preserved per lane.
+- 58 quieter A1 animal frames,2 roofed A4 tech icons and2 readable A2 copper
+  furnace replacements; replacement ledgers name their exact round-one sources.
+- Complete55-family coverage ledger and unapplied import/binding fragments
+  under `art/batch_b3/`; runtime source and configuration trees are unchanged.
 
 ### Changed
 - Room damage review now excludes protected door cells when choosing a breach;

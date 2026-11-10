@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "status": "DRAFT_INDEX_NOT_APPLIED",
+  "source_branch": "v8/art-batch-b3",
+  "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+  "instruction": "Index of fragments; not a replacement runtime configuration. Resolve authoritative IDs, lifecycle selection and adapters in C2/C3. Replacement fragments preserve unrelated A1/A2/A4 rows.",
+  "files": [],
+  "fragments": [
+    {
+      "lane": "items",
+      "import_fragment": "art/batch_b3/items/art_import.draft.json",
+      "bindings_fragment": "art/batch_b3/items/bindings.draft.json",
+      "direct_file_rows": 1,
+      "animal_frame_rows": 0,
+      "operation": "append_or_recipe_proposal",
+      "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+    },
+    {
+      "lane": "retries_ground",
+      "import_fragment": "art/batch_b3/retries_ground/art_import.draft.json",
+      "bindings_fragment": "art/batch_b3/retries_ground/bindings.draft.json",
+      "direct_file_rows": 3,
+      "animal_frame_rows": 0,
+      "operation": "append_previously_rejected_A2_ids_only",
+      "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+    },
+    {
+      "lane": "retries_struct",
+      "import_fragment": "art/batch_b3/retries_struct/art_import.draft.json",
+      "bindings_fragment": "art/batch_b3/retries_struct/bindings.draft.json",
+      "direct_file_rows": 5,
+      "animal_frame_rows": 0,
+      "operation": "append_previously_rejected_A2_ids_only",
+      "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+    },
+    {
+      "lane": "rooms",
+      "import_fragment": "art/batch_b3/rooms/art_import.draft.json",
+      "bindings_fragment": "art/batch_b3/rooms/bindings.draft.json",
+      "direct_file_rows": 0,
+      "animal_frame_rows": 0,
+      "operation": "append_or_recipe_proposal",
+      "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+    },
+    {
+      "lane": "round3_animals",
+      "import_fragment": "art/batch_b3/round3_animals/art_import.draft.json",
+      "bindings_fragment": "art/batch_b3/round3_animals/bindings.draft.json",
+      "direct_file_rows": 0,
+      "animal_frame_rows": 58,
+      "operation": "replace_matching_A1_animals_rows",
+      "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+    },
+    {
+      "lane": "round3_icons",
+      "import_fragment": "art/batch_b3/round3_icons/art_import.draft.json",
+      "bindings_fragment": "art/batch_b3/round3_icons/bindings.draft.json",
+      "direct_file_rows": 2,
+      "animal_frame_rows": 0,
+      "operation": "replace_matching_A4_file_rows",
+      "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+    },
+    {
+      "lane": "round3_smelter",
+      "import_fragment": "art/batch_b3/round3_smelter/art_import.draft.json",
+      "bindings_fragment": "art/batch_b3/round3_smelter/bindings.draft.json",
+      "direct_file_rows": 2,
+      "animal_frame_rows": 0,
+      "operation": "replace_matching_A2_structure_rows",
+      "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+    },
+    {
+      "lane": "stages_bronze",
+      "import_fragment": "art/batch_b3/stages_bronze/art_import.draft.json",
+      "bindings_fragment": "art/batch_b3/stages_bronze/bindings.draft.json",
+      "direct_file_rows": 23,
+      "animal_frame_rows": 0,
+      "operation": "append_or_recipe_proposal",
+      "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+    },
+    {
+      "lane": "stages_early",
+      "import_fragment": "art/batch_b3/stages_early/art_import.draft.json",
+      "bindings_fragment": "art/batch_b3/stages_early/bindings.draft.json",
+      "direct_file_rows": 27,
+      "animal_frame_rows": 0,
+      "operation": "append_or_recipe_proposal",
+      "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+    },
+    {
+      "lane": "stages_iron",
+      "import_fragment": "art/batch_b3/stages_iron/art_import.draft.json",
+      "bindings_fragment": "art/batch_b3/stages_iron/bindings.draft.json",
+      "direct_file_rows": 23,
+      "animal_frame_rows": 0,
+      "operation": "append_or_recipe_proposal",
+      "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+    },
+    {
+      "lane": "stages_mine_press",
+      "import_fragment": "art/batch_b3/stages_mine_press/art_import.draft.json",
+      "bindings_fragment": "art/batch_b3/stages_mine_press/bindings.draft.json",
+      "direct_file_rows": 2,
+      "animal_frame_rows": 0,
+      "operation": "append_or_recipe_proposal",
+      "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+    }
+  ],
+  "direct_file_rows": 88,
+  "animal_frame_rows": 58,
+  "layered_room_compositions": 110,
+  "blueprint_recipes_ready": 54,
+  "terrain_lifecycle_rows": 20,
+  "blueprints": "art/batch_b3/blueprints.json"
+}

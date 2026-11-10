@@ -162,5 +162,6 @@
       "source": "art/style05/struct/b3/stages_iron/watchtower_ruined.png",
       "note": "C2/C3 map verified building code and implement lifecycle read selector."
     }
-  ]
+  ],
+  "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
 }

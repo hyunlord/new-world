@@ -29,5 +29,6 @@
     }
   },
   "runtime_numeric_ids": null,
-  "instruction": "No simulation IDs invented; C2/C3 must map actual construction/damage states."
+  "instruction": "No simulation IDs invented; C2/C3 must map actual construction/damage states.",
+  "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
 }

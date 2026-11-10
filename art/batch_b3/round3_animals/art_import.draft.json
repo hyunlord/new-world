@@ -1,7 +1,7 @@
 {
   "draft_only": true,
   "source_branch": "v8/art-batch-b3",
-  "source_commit": null,
+  "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
   "operation": "replace_matching_A1_animals_rows",
   "instruction": "Pin B3 immutable art commit, replace source/meta rows for listed species; preserve every other A1 species and existing destinations. Do not append duplicate animal IDs.",
   "animals": {

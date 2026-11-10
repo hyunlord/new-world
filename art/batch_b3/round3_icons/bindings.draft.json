@@ -26,5 +26,6 @@
   },
   "metadata": "art/batch_b3/round3_icons/manifest.json",
   "states": "Reuse A4 state_variants.json stable/endangered/unknown/inert treatments",
-  "operation": "replace_matching_A4_ui_knowledge_rows"
+  "operation": "replace_matching_A4_ui_knowledge_rows",
+  "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
 }

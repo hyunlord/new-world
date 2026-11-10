@@ -68,5 +68,6 @@
       "runtime_numeric_id": null
     }
   },
-  "note": "Symbolic retry state keys only; integrator must map actual selectors. No simulation IDs invented."
+  "note": "Symbolic retry state keys only; integrator must map actual selectors. No simulation IDs invented.",
+  "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
 }

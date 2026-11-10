@@ -263,9 +263,10 @@
         "kind": "layered_recipe",
         "path": "art/batch_b3/rooms/recipes.json",
         "recipe": "cart_shed_built",
-        "sha256": "646e59ed6036f5ec3c8eede455d2db2beaea86dd568c7f7647def2035fa0c452",
         "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
-        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+        "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+        "preview_sha256": "646e59ed6036f5ec3c8eede455d2db2beaea86dd568c7f7647def2035fa0c452",
+        "recipe_source_sha256": "a1a0e5c523417b59626f14fbbc70f7b044f061af9d08c93ae5121af132efa91e"
       },
       "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
       "round1_variants": [
@@ -394,9 +395,10 @@
         "kind": "layered_recipe",
         "path": "art/batch_b3/rooms/recipes.json",
         "recipe": "chief_hall_built",
-        "sha256": "3951ebd25badd4c6dfb6c1b9941c355109b8f4d16baa2479ddd9aaeda45d1292",
         "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
-        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+        "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+        "preview_sha256": "3951ebd25badd4c6dfb6c1b9941c355109b8f4d16baa2479ddd9aaeda45d1292",
+        "recipe_source_sha256": "a1a0e5c523417b59626f14fbbc70f7b044f061af9d08c93ae5121af132efa91e"
       },
       "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
       "round1_variants": [
@@ -647,9 +649,10 @@
         "kind": "layered_recipe",
         "path": "art/batch_b3/rooms/recipes.json",
         "recipe": "granary_built",
-        "sha256": "7c23830544127a1a7a6594bf1a46cee28cae823f952b6670c488c6415d8f33d4",
         "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
-        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+        "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+        "preview_sha256": "7c23830544127a1a7a6594bf1a46cee28cae823f952b6670c488c6415d8f33d4",
+        "recipe_source_sha256": "a1a0e5c523417b59626f14fbbc70f7b044f061af9d08c93ae5121af132efa91e"
       },
       "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
       "round1_variants": [
@@ -763,9 +766,10 @@
         "kind": "layered_recipe",
         "path": "art/batch_b3/rooms/recipes.json",
         "recipe": "hut_built",
-        "sha256": "9f3932cd677140891d658f7b733f4d13ce2b4262ad5ac948b3cb402089366909",
         "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
-        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+        "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+        "preview_sha256": "9f3932cd677140891d658f7b733f4d13ce2b4262ad5ac948b3cb402089366909",
+        "recipe_source_sha256": "a1a0e5c523417b59626f14fbbc70f7b044f061af9d08c93ae5121af132efa91e"
       },
       "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
       "round1_variants": [
@@ -862,9 +866,10 @@
         "kind": "layered_recipe",
         "path": "art/batch_b3/rooms/recipes.json",
         "recipe": "log_house_built",
-        "sha256": "9f3932cd677140891d658f7b733f4d13ce2b4262ad5ac948b3cb402089366909",
         "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
-        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+        "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+        "preview_sha256": "9f3932cd677140891d658f7b733f4d13ce2b4262ad5ac948b3cb402089366909",
+        "recipe_source_sha256": "a1a0e5c523417b59626f14fbbc70f7b044f061af9d08c93ae5121af132efa91e"
       },
       "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
       "round1_variants": [
@@ -942,9 +947,10 @@
         "kind": "layered_recipe",
         "path": "art/batch_b3/rooms/recipes.json",
         "recipe": "market_built",
-        "sha256": "e4e3a7b778fbaf8d97fa7dfec25f807407f92ec4d3e17d5dd66686d935a01ad9",
         "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
-        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+        "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+        "preview_sha256": "e4e3a7b778fbaf8d97fa7dfec25f807407f92ec4d3e17d5dd66686d935a01ad9",
+        "recipe_source_sha256": "a1a0e5c523417b59626f14fbbc70f7b044f061af9d08c93ae5121af132efa91e"
       },
       "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
       "round1_variants": [
@@ -1052,9 +1058,10 @@
         "kind": "layered_recipe",
         "path": "art/batch_b3/rooms/recipes.json",
         "recipe": "mud_brick_house_built",
-        "sha256": "b35069a754ea97f2abaf48a35421c4ab11c1893ea7bb7f61b245dec5a2f4e882",
         "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
-        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+        "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+        "preview_sha256": "b35069a754ea97f2abaf48a35421c4ab11c1893ea7bb7f61b245dec5a2f4e882",
+        "recipe_source_sha256": "a1a0e5c523417b59626f14fbbc70f7b044f061af9d08c93ae5121af132efa91e"
       },
       "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
       "round1_variants": [
@@ -1247,9 +1254,10 @@
         "kind": "layered_recipe",
         "path": "art/batch_b3/rooms/recipes.json",
         "recipe": "palisade_gatehouse_built",
-        "sha256": "0734115d8d2f1a43afd03e08509e9d01fd6c97d0a31fb052cd11f9321c61806c",
         "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
-        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+        "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+        "preview_sha256": "0734115d8d2f1a43afd03e08509e9d01fd6c97d0a31fb052cd11f9321c61806c",
+        "recipe_source_sha256": "a1a0e5c523417b59626f14fbbc70f7b044f061af9d08c93ae5121af132efa91e"
       },
       "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
       "round1_variants": [
@@ -1641,9 +1649,10 @@
         "kind": "layered_recipe",
         "path": "art/batch_b3/rooms/recipes.json",
         "recipe": "school_built",
-        "sha256": "8603062da8b97ec4ca8d7f9b86815fc32d6beeaab3b3b23a388a3bb49b8460a7",
         "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
-        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+        "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+        "preview_sha256": "8603062da8b97ec4ca8d7f9b86815fc32d6beeaab3b3b23a388a3bb49b8460a7",
+        "recipe_source_sha256": "a1a0e5c523417b59626f14fbbc70f7b044f061af9d08c93ae5121af132efa91e"
       },
       "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
       "round1_variants": [
@@ -1763,9 +1772,10 @@
         "kind": "layered_recipe",
         "path": "art/batch_b3/rooms/recipes.json",
         "recipe": "stone_house_built",
-        "sha256": "f2bdf825487237a2dc6773ae0564a1225786e6533e8e028bc36448b2720ca547",
         "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
-        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+        "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+        "preview_sha256": "f2bdf825487237a2dc6773ae0564a1225786e6533e8e028bc36448b2720ca547",
+        "recipe_source_sha256": "a1a0e5c523417b59626f14fbbc70f7b044f061af9d08c93ae5121af132efa91e"
       },
       "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
       "round1_variants": [
@@ -1799,9 +1809,10 @@
         "kind": "layered_recipe",
         "path": "art/batch_b3/rooms/recipes.json",
         "recipe": "stone_storehouse_built",
-        "sha256": "3648dcfe8e209168501b1ec49d795fe2676712517a1b416139bb656ccd16bf99",
         "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
-        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+        "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+        "preview_sha256": "3648dcfe8e209168501b1ec49d795fe2676712517a1b416139bb656ccd16bf99",
+        "recipe_source_sha256": "a1a0e5c523417b59626f14fbbc70f7b044f061af9d08c93ae5121af132efa91e"
       },
       "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
       "round1_variants": [
@@ -1835,9 +1846,10 @@
         "kind": "layered_recipe",
         "path": "art/batch_b3/rooms/recipes.json",
         "recipe": "storehouse_built",
-        "sha256": "646e59ed6036f5ec3c8eede455d2db2beaea86dd568c7f7647def2035fa0c452",
         "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
-        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+        "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+        "preview_sha256": "646e59ed6036f5ec3c8eede455d2db2beaea86dd568c7f7647def2035fa0c452",
+        "recipe_source_sha256": "a1a0e5c523417b59626f14fbbc70f7b044f061af9d08c93ae5121af132efa91e"
       },
       "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
       "round1_variants": [
@@ -1905,9 +1917,10 @@
         "kind": "layered_recipe",
         "path": "art/batch_b3/rooms/recipes.json",
         "recipe": "temple_built",
-        "sha256": "89016ecca650a671f1d467d5c26ab78f700bba486e253695365ace390aa89df9",
         "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
-        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+        "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+        "preview_sha256": "89016ecca650a671f1d467d5c26ab78f700bba486e253695365ace390aa89df9",
+        "recipe_source_sha256": "a1a0e5c523417b59626f14fbbc70f7b044f061af9d08c93ae5121af132efa91e"
       },
       "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
       "round1_variants": [
@@ -2028,9 +2041,10 @@
         "kind": "layered_recipe",
         "path": "art/batch_b3/rooms/recipes.json",
         "recipe": "town_wall_drystone_built",
-        "sha256": "adb314a7cf985c5a2bc0b54f51d82981a68e1e80fe7d932435b9b2f896b96827",
         "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
-        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+        "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+        "preview_sha256": "adb314a7cf985c5a2bc0b54f51d82981a68e1e80fe7d932435b9b2f896b96827",
+        "recipe_source_sha256": "a1a0e5c523417b59626f14fbbc70f7b044f061af9d08c93ae5121af132efa91e"
       },
       "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
       "round1_variants": [
@@ -2091,9 +2105,10 @@
         "kind": "layered_recipe",
         "path": "art/batch_b3/rooms/recipes.json",
         "recipe": "trading_post_built",
-        "sha256": "27d7d01374b2c933e8130b1e93ae1d55d166134d8683b343c57a612ec78b3e60",
         "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
-        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+        "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+        "preview_sha256": "27d7d01374b2c933e8130b1e93ae1d55d166134d8683b343c57a612ec78b3e60",
+        "recipe_source_sha256": "a1a0e5c523417b59626f14fbbc70f7b044f061af9d08c93ae5121af132efa91e"
       },
       "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
       "round1_variants": [
@@ -2170,9 +2185,10 @@
         "kind": "layered_recipe",
         "path": "art/batch_b3/rooms/recipes.json",
         "recipe": "warehouse_built",
-        "sha256": "e4e3a7b778fbaf8d97fa7dfec25f807407f92ec4d3e17d5dd66686d935a01ad9",
         "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
-        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+        "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+        "preview_sha256": "e4e3a7b778fbaf8d97fa7dfec25f807407f92ec4d3e17d5dd66686d935a01ad9",
+        "recipe_source_sha256": "a1a0e5c523417b59626f14fbbc70f7b044f061af9d08c93ae5121af132efa91e"
       },
       "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
       "round1_variants": [
@@ -2249,9 +2265,10 @@
         "kind": "layered_recipe",
         "path": "art/batch_b3/rooms/recipes.json",
         "recipe": "watermill_built",
-        "sha256": "14b071844e27f53809c98bd42c4e78ebb2427456cfba68d17137994b416214e6",
         "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
-        "source_commit": "3ddbca9df65aaade43658b971ab117806a66442c"
+        "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+        "preview_sha256": "14b071844e27f53809c98bd42c4e78ebb2427456cfba68d17137994b416214e6",
+        "recipe_source_sha256": "a1a0e5c523417b59626f14fbbc70f7b044f061af9d08c93ae5121af132efa91e"
       },
       "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
       "round1_variants": [
