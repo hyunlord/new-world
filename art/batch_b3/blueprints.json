@@ -15,7 +15,7 @@
     "outline": "one transparent-side pixel, four cardinal neighbours",
     "canvas_anchor_footprint": "preserve source values exactly",
     "generated_images": 0,
-    "caveat": "Display recipe; C2/C3 must bind real runtime blueprint codes. Pending built-source rows are not adopted sprites."
+    "caveat": "Display recipe; C2/C3 must bind real runtime blueprint codes. Rejected built-source rows are unavailable display recipes."
   },
   "families": [
     {
@@ -429,17 +429,18 @@
       "source": {
         "kind": "sprite",
         "asset_id": "copper_smelter_unlit",
-        "path": "art/style05/struct/a2/bronze/copper_smelter_unlit.png",
-        "sha256": "34220aa01a089c2d09289aab2c220cb9006fbebfa8b3757ea7b439d317b22fe4",
+        "path": "art/style05/struct/b3/round3_smelter/copper_smelter_unlit.png",
+        "sha256": "96fb0edf959b80b9bc67c7a4893333ebb6c94740e68ef09afe2446066da99af7",
         "anchor": [
-          24,
+          33,
           43
         ],
         "footprint": [
           1.0,
           1.0
         ],
-        "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+        "source_commit": "18fde62b7cd03bf05fab4ab75bc46c1436a0a138",
+        "replaces_a2_pot_silhouette": true
       },
       "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
       "round1_variants": [
@@ -1015,7 +1016,7 @@
       "era": "bronze",
       "state": "blueprint",
       "operation": "existing_site_ghost",
-      "status": "WAITING_FOR_ACCEPTED_BUILT_SOURCE",
+      "status": "CAPPED_REJECTED_NO_ACCEPTED_BUILT_SOURCE",
       "source": null,
       "variant_rule": "Apply the same operator to each accepted built variant at its own published anchor/footprint; never rotate a direction-specific sprite.",
       "round1_variants": [

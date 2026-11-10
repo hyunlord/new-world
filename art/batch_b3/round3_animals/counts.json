@@ -1,0 +1,43 @@
+{
+  "families": [
+    {
+      "species": "cattle",
+      "generated_calls": 1,
+      "generated_frame_slots": 10,
+      "adopted_candidate_frames": 10,
+      "rejected_or_superseded_frames": 0
+    },
+    {
+      "species": "aurochs",
+      "generated_calls": 2,
+      "generated_frame_slots": 12,
+      "adopted_candidate_frames": 12,
+      "rejected_or_superseded_frames": 0
+    },
+    {
+      "species": "horse",
+      "generated_calls": 2,
+      "generated_frame_slots": 12,
+      "adopted_candidate_frames": 12,
+      "rejected_or_superseded_frames": 0
+    },
+    {
+      "species": "reindeer",
+      "generated_calls": 3,
+      "generated_frame_slots": 22,
+      "adopted_candidate_frames": 12,
+      "rejected_or_superseded_frames": 10
+    },
+    {
+      "species": "reindeer_winter",
+      "generated_calls": 2,
+      "generated_frame_slots": 12,
+      "adopted_candidate_frames": 12,
+      "rejected_or_superseded_frames": 0
+    }
+  ],
+  "total_calls": 10,
+  "total_generated_frame_slots": 68,
+  "total_adopted_candidate_frames": 58,
+  "total_rejected_or_superseded_frames": 10
+}

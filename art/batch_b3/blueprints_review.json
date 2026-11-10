@@ -1,0 +1,18 @@
+{
+  "score": 92,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Mine entrance built retry remains rejected at the three-attempt cap; its blueprint is unavailable."
+  ],
+  "suggestions": [],
+  "reasoning": "Five native review pages preserve each accepted source's silhouette and canvas while applying the existing pale blueprint wash/outline. No physical sprite or runtime state is fabricated.",
+  "reviewed_boards": [
+    "art/batch_b3/boards/blueprints/blueprints_01_1x.png",
+    "art/batch_b3/boards/blueprints/blueprints_02_1x.png",
+    "art/batch_b3/boards/blueprints/blueprints_03_1x.png",
+    "art/batch_b3/boards/blueprints/blueprints_04_1x.png",
+    "art/batch_b3/boards/blueprints/blueprints_05_1x.png"
+  ],
+  "scope": "54 accepted-source display recipes; one final built-source gap. Copper smelter uses the reviewed B3 furnace replacement."
+}

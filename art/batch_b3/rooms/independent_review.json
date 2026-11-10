@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "reviewer": "B3 animal_fixes independent reviewer",
+  "verdict": "PASS_ART_RECIPE_SCOPE",
+  "score": 90,
+  "blocking_findings": [],
+  "scope": {
+    "code": [
+      "schema.py",
+      "layers.py",
+      "render.py",
+      "ghost.py",
+      "boards.py"
+    ],
+    "data": [
+      "recipes.json",
+      "source_a2.json",
+      "exports.json",
+      "review.json",
+      "art_import.draft.json",
+      "bindings.draft.json"
+    ],
+    "visual_families": [
+      "mud_brick_house",
+      "chief_hall",
+      "watermill",
+      "town_wall_drystone_ns",
+      "town_wall_fired_brick_corner",
+      "granary"
+    ],
+    "visual_states": [
+      "blueprint",
+      "foundation",
+      "half_built",
+      "built",
+      "damaged",
+      "ruined"
+    ],
+    "viewed_scales": [
+      1,
+      2
+    ]
+  },
+  "checks": [
+    {
+      "claim": "Source geometry and materials preserved",
+      "result": "pass",
+      "evidence": "Pinned A2 rooms blob at227529c26307bc3a854eb7bf819e88d02af39046 verified against recorded SHA256. All22 built recipes preserve source footprint, wall style, material, floor, exact wall cell set and prop source/cell/offset/footprint. Six formerly implicit prop anchors match their original sidecar values. No preservation differences found."
+    },
+    {
+      "claim": "Damage is actual geometry loss",
+      "result": "pass",
+      "evidence": "All22 damaged recipes remove exactly one existing built wall cell, retain the original door cell and place collapsed-material debris in the missing cell. The six reviewed boards visibly lose a wall section; this is not an intact room plus a rubble overlay. Waterwheel and surviving furniture remain in their source positions."
+    },
+    {
+      "claim": "Anchor and material provenance",
+      "result": "pass",
+      "evidence": "All110 preview origin+anchor pairs resolve to footprint bottom centre at(w*32,(h-1)*64+43). All recorded export source hashes match current files. Renderer uses existing wall topology, crops EW courses without resampling, retains NS plan depth and composites exact prop images; no new generated originals are claimed."
+    },
+    {
+      "claim": "Blueprint follows the existing recipe",
+      "result": "pass",
+      "evidence": "Compared ghost.py with scripts/world/art/site_ghost.gd and assets/v8art/render_params.json on origin/v8/wip at4a44336e7782f2b27615d942b5cd54dbfee89406. Threshold96, 25% alpha, four-cardinal-neighbour outline, RGB218/222/205 and rounded outline alpha230 match. Canvas stays unchanged. Boards derive blueprint from the built preview."
+    },
+    {
+      "claim": "Visual stage readability",
+      "result": "pass",
+      "evidence": "Six requested board pairs reviewed: foundations have low facades, half-built forms have raised sections, built forms retain adopted contents, damage has a breach and ruins have sparse low remnants. Unrotated NS and corner town walls retain their directions. Scale reference uses an existing adult."
+    },
+    {
+      "claim": "Integration claims are appropriately bounded",
+      "result": "pass",
+      "evidence": "Both fragments are DRAFT_NOT_APPLIED with source_commit=null and no runtime rows to append. Art import has no files rows and explicitly requires a lifecycle adapter and authoritative C2/C3 codes. Bindings are symbolic proposals with null numerical codes; previews are explicitly excluded as runtime source sprites."
+    }
+  ],
+  "nonblocking_observations": [
+    {
+      "severity": "inherited_visual_limit",
+      "detail": "NS wall-cap surfaces are noticeably softer than EW facades and the packed-earth floor is busy. These are unchanged adopted source pixels and already disclosed in review.json; this review does not certify improved source texture quality."
+    },
+    {
+      "severity": "reuse_limit",
+      "detail": "Mud-brick and fired-brick breaches use the existing generic stone_pile debris. Main wall material remains correct and damage is readable, but debris does not encode distinct clay-brick fragments. No requirement to generate a new debris family was inferred."
+    }
+  ],
+  "not_verified": [
+    "Godot runtime import, lifecycle adapter and authoritative simulation bindings remain pending.",
+    "Existing8 tests and22 built byte comparisons were not rerun; independent source/schema/anchor/hash and semantic damage checks were performed instead.",
+    "Visual audit covers the six requested representatives, not a second exhaustive visual audit of all22 families."
+  ],
+  "board_hashes": {
+    "mud_brick_house_1x.png": "3f33167827c5c802530a9096c1714dbc7bb55ae21ae5564aaea6feb4086fa0f1",
+    "mud_brick_house_2x.png": "820c9cb04b8c16f88950b16b3b44647056d4dac7dd227028475c53babff1dccf",
+    "chief_hall_1x.png": "6e3cff4dcfb11cf4c773db0199aa3280262e0f7570bcb24ad1502bc66362c924",
+    "chief_hall_2x.png": "f61adb0e118dc4fd583cfecd3fe4599a240bcb90b9463485d473d62c70d78ad5",
+    "watermill_1x.png": "76c71d966117b21a77e5007964c0f8c8807b73acfe0388be3ee79f53e576048b",
+    "watermill_2x.png": "d1d3559b79e6bcd0fcae19bf9a5cae8feec21cd6b039a39979caa348614f44ca",
+    "town_wall_drystone_ns_1x.png": "9b88570651f7a0abbef32e4a5445cc91191028d11febd835740e4c33b53932dd",
+    "town_wall_drystone_ns_2x.png": "ae312a08e08ea699c5dc54a7b10e58a443d14f53e7ee729267f5f9ecf3ef081a",
+    "town_wall_fired_brick_corner_1x.png": "7a0542ce418b1d6a95e4d2a463ddd7a0927c8bcb23a419a2cd2448408a98afd6",
+    "town_wall_fired_brick_corner_2x.png": "c4fb015da2d4578251029d18f625f392cbbd716aba4914475a339eb96c4f7593",
+    "granary_1x.png": "05c129c43e0fbf1e05fc6a51dfe9b44eb413092daad576b6ccccfd654f0922fd",
+    "granary_2x.png": "e1d095f7e08598c73504ad75c4035db871fbb558f33a613709aec6d5366eb13a"
+  },
+  "write_scope": "Only this external review JSON was created; no code/data changes or generations."
+}
