@@ -1,0 +1,11 @@
+{
+  "score": 93,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Facial accents remain subtle at native128px."
+  ],
+  "suggestions": [],
+  "reasoning": "Softer cheeks, small chin/neck and gently defined heavy brows improve child age readability while retaining six prescribed hair/skin/features. Correct tied hairstyle, brown cloak/oatmeal wool, parchment and complete framing remain intact; preferred over passingtry1.",
+  "summary_sha256": "b3bdbf316ddd10b5a3d8f94d4fff054116bffa6f8a0796fd0b8be02959dee01f"
+}

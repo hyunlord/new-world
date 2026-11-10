@@ -1,0 +1,11 @@
+{
+  "score": 93,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Facial accents remain subtle at native128px."
+  ],
+  "suggestions": [],
+  "reasoning": "Refined brow/jaw contour retains clear older v4/v5 age lines and distinct six adult identity colors; less angular frown matches family ink restraint. Correct tied hairstyle, brown cloak/oatmeal wool, parchment and complete framing remain intact; preferred over passingtry1.",
+  "summary_sha256": "b83c87b399671c30e3e729e052f4b57649fc1957c9e5e45b2f44a8489247a424"
+}

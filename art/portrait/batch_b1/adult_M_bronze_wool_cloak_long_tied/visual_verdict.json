@@ -1,0 +1,11 @@
+{
+  "score": 92,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Facial freckles and scars are subtle at native128px."
+  ],
+  "suggestions": [],
+  "reasoning": "Six ordered skin/hair/age/beard identities remain distinct, with correct hair silhouette, agedv4/v5 and cream oatmeal wool beneath brown cord-tied cloak. Fine warm ink and parchment match existing anchors; full head/shoulders remain inside each cell.",
+  "summary_sha256": "bbe125cb8137b71d5013bfe132f88c54ea89671351ff67791db04f5e89eb623f"
+}

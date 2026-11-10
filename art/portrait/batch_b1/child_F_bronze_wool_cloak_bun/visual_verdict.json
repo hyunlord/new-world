@@ -1,0 +1,13 @@
+{
+  "score": 92,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Freckles and scar remain subtle at128px."
+  ],
+  "suggestions": [
+    "Keep restrained facial accents at native scale."
+  ],
+  "reasoning": "Six ordered child identity colors/features and short/tied/bun silhouette read clearly, with no adult beard or grey. All faces and shoulders fit; plain cord-tied brown cloak and oatmeal wool share warm fine-ink parchment style.",
+  "summary_sha256": "965bc480ee2e9a4a8e5ee558e27011f2a1e5619996d483bddfbe446c2e6ccbb9"
+}

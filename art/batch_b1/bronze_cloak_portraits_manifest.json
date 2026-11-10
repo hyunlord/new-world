@@ -1,0 +1,2559 @@
+{
+  "schema_version": 1,
+  "scope": "bronze_wool_cloak portraits only; merge with bronze wardrobe manifest",
+  "generated_sheets": 14,
+  "generated_portrait_cells": 84,
+  "adopted_sheets": 12,
+  "adopted_portraits": 72,
+  "rejected_sheets": 0,
+  "superseded_passing_sheets": 2,
+  "failed_calls": 0,
+  "max_attempt": 2,
+  "self_review": {
+    "weakest_regenerated": 2,
+    "base_sheets": 12,
+    "fraction": 0.16666666666666666,
+    "looks": [
+      "adult_F_bronze_wool_cloak_long_tied",
+      "child_F_bronze_wool_cloak_long_tied"
+    ],
+    "comparison_sheet": "art/batch_b1/sheets/bronze_cloak_portraits_self_review.png",
+    "result": "Both try2 selected at93; firstpass91 preserved externally."
+  },
+  "style": "warm fine brown ink, earth wash, pale parchment; oatmeal wool and plain brown cord-tied cloak, broad restrained folds",
+  "reference_note": "Two childF tied/bun firstpass records use matching-age/hair childM adopted cloak wardrobe references where female bodies were not yet available; these refs define wardrobe only, exact identities follow childF FacePlan.",
+  "records": [
+    {
+      "look": "adult_F_bronze_wool_cloak_bun",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/adult_F_bronze_wool_cloak_bun/try1/raw.png",
+      "raw_sha256": "d6caee276439e06e1579999595de027046c037b1c1150d657b71c36f29c7124e",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/adult_F_bronze_wool_cloak_bun/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/adult_F_bronze_wool_cloak_bun/try1/tool_return.json",
+      "summary_sha256": "629cacd1b0f0408395008670ac6682705b66ac4f3410607b5194c30754719ff8",
+      "visual_score": 92
+    },
+    {
+      "look": "adult_F_bronze_wool_cloak_long_tied",
+      "attempt": 1,
+      "status": "superseded_passing",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/adult_F_bronze_wool_cloak_long_tied/try1/raw.png",
+      "raw_sha256": "36f5e2529b0d24268cf387aab369fdf5b33dc84c11c25101b1ccfb282105413d",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/adult_F_bronze_wool_cloak_long_tied/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/adult_F_bronze_wool_cloak_long_tied/try1/tool_return.json",
+      "summary_sha256": "fbe3595e1601b765cceb9deaf02a2b73cddfc21b733978bd7b52a495eaf95aef",
+      "visual_score": 91
+    },
+    {
+      "look": "adult_F_bronze_wool_cloak_long_tied",
+      "attempt": 2,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/adult_F_bronze_wool_cloak_long_tied/try2/raw.png",
+      "raw_sha256": "e8627ed33474e95f309c729feb1d2cd29bf8ae16db7c6f823d078f03ec9d3f32",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/adult_F_bronze_wool_cloak_long_tied/try2/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/adult_F_bronze_wool_cloak_long_tied/try2/tool_return.json",
+      "summary_sha256": "b83c87b399671c30e3e729e052f4b57649fc1957c9e5e45b2f44a8489247a424",
+      "visual_score": 93
+    },
+    {
+      "look": "adult_F_bronze_wool_cloak_short",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/adult_F_bronze_wool_cloak_short/try1/raw.png",
+      "raw_sha256": "e5bac56325e37a33478e56215e7a86ee436a6d63a9bbe22d8a2be36a624d9e61",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/adult_F_bronze_wool_cloak_short/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/adult_F_bronze_wool_cloak_short/try1/tool_return.json",
+      "summary_sha256": "947ed1ca3ef5ceac6c3e123b6fb3826cf3a82b77c4d53b38b4b479e1ba72017f",
+      "visual_score": 92
+    },
+    {
+      "look": "adult_M_bronze_wool_cloak_bun",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/adult_M_bronze_wool_cloak_bun/try1/raw.png",
+      "raw_sha256": "3ed3cb12cecb0125b0bbcb45aa56993c9848dad2104437c16812b3349d6f74aa",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/adult_M_bronze_wool_cloak_bun/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/adult_M_bronze_wool_cloak_bun/try1/tool_return.json",
+      "summary_sha256": "f077a3ce5767f35aec5ec3744ee938de38cfe6eb3dc925ac9c16e2d5d11f9c01",
+      "visual_score": 92
+    },
+    {
+      "look": "adult_M_bronze_wool_cloak_long_tied",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/adult_M_bronze_wool_cloak_long_tied/try1/raw.png",
+      "raw_sha256": "e783db981395320c46aeabc3ec06d98934312927bcaacc431a4730dc4c7693f3",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/adult_M_bronze_wool_cloak_long_tied/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/adult_M_bronze_wool_cloak_long_tied/try1/tool_return.json",
+      "summary_sha256": "bbe125cb8137b71d5013bfe132f88c54ea89671351ff67791db04f5e89eb623f",
+      "visual_score": 92
+    },
+    {
+      "look": "adult_M_bronze_wool_cloak_short",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/adult_M_bronze_wool_cloak_short/try1/raw.png",
+      "raw_sha256": "400cf83959d47bf947d24b2b1ece389f121a4d39f86e32ddbaaaf24f659bdcca",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/adult_M_bronze_wool_cloak_short/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/adult_M_bronze_wool_cloak_short/try1/tool_return.json",
+      "summary_sha256": "e8ad31adcc6117df0cd0360794d96753619b35610ecc481d4c2564c4029c2eac",
+      "visual_score": 92
+    },
+    {
+      "look": "child_F_bronze_wool_cloak_bun",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/child_F_bronze_wool_cloak_bun/try1/raw.png",
+      "raw_sha256": "76e6073dc25df38ad67da49ac59995917da4d341a7a6c16b82ba5bb78b18b076",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/child_F_bronze_wool_cloak_bun/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/child_F_bronze_wool_cloak_bun/try1/tool_return.json",
+      "summary_sha256": "965bc480ee2e9a4a8e5ee558e27011f2a1e5619996d483bddfbe446c2e6ccbb9",
+      "visual_score": 92
+    },
+    {
+      "look": "child_F_bronze_wool_cloak_long_tied",
+      "attempt": 1,
+      "status": "superseded_passing",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/child_F_bronze_wool_cloak_long_tied/try1/raw.png",
+      "raw_sha256": "d7fab8d5db1d05cd66cf112a38d9a224c9243a0851d563575abafbdc78ba3fe2",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/child_F_bronze_wool_cloak_long_tied/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/child_F_bronze_wool_cloak_long_tied/try1/tool_return.json",
+      "summary_sha256": "a6ce912d0a899efd299e482a7ddb83ca622279b52567448ef9cff9e3d67574a3",
+      "visual_score": 91
+    },
+    {
+      "look": "child_F_bronze_wool_cloak_long_tied",
+      "attempt": 2,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/child_F_bronze_wool_cloak_long_tied/try2/raw.png",
+      "raw_sha256": "5c78e10ef4f4fb724934c36b36ba71c044b41987c14a1c93f63f36338d88d7c6",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/child_F_bronze_wool_cloak_long_tied/try2/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/child_F_bronze_wool_cloak_long_tied/try2/tool_return.json",
+      "summary_sha256": "b3bdbf316ddd10b5a3d8f94d4fff054116bffa6f8a0796fd0b8be02959dee01f",
+      "visual_score": 93
+    },
+    {
+      "look": "child_F_bronze_wool_cloak_short",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/child_F_bronze_wool_cloak_short/try1/raw.png",
+      "raw_sha256": "6ade020f12049fa0a85873afdb19553526057acfeeb2706ef3d0ff1aa88d4a23",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/child_F_bronze_wool_cloak_short/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/child_F_bronze_wool_cloak_short/try1/tool_return.json",
+      "summary_sha256": "1a02ca2100575d6c6632b90fded707e154f4fe00b20c119ff1274b8b4108b1c8",
+      "visual_score": 93
+    },
+    {
+      "look": "child_M_bronze_wool_cloak_bun",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/child_M_bronze_wool_cloak_bun/try1/raw.png",
+      "raw_sha256": "9973f41b0a6131c877ace56c752f2f1df61a6f8c9e75d1486958c27f14adf36a",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/child_M_bronze_wool_cloak_bun/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/child_M_bronze_wool_cloak_bun/try1/tool_return.json",
+      "summary_sha256": "9ecf6038ec8c7790344170d3e2d17d22821c10a3375727cede0679341034dd4a",
+      "visual_score": 92
+    },
+    {
+      "look": "child_M_bronze_wool_cloak_long_tied",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/child_M_bronze_wool_cloak_long_tied/try1/raw.png",
+      "raw_sha256": "76c6a261f6fcecf5b934d1840eb4d1f9d3231bddda301f419db5376eefc9ff09",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/child_M_bronze_wool_cloak_long_tied/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/child_M_bronze_wool_cloak_long_tied/try1/tool_return.json",
+      "summary_sha256": "3c5f4b76a61c87e72b1cfb758523da8c79cbea46a6c36a43334f214f8db8ff2c",
+      "visual_score": 92
+    },
+    {
+      "look": "child_M_bronze_wool_cloak_short",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/child_M_bronze_wool_cloak_short/try1/raw.png",
+      "raw_sha256": "e8a3ccd058fe7ab33d1151ebcb63b946ef6cca81f9dfb8302aa60aadf927ad57",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/child_M_bronze_wool_cloak_short/try1/generation.json",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/bronze_cloak_portraits/child_M_bronze_wool_cloak_short/try1/tool_return.json",
+      "summary_sha256": "95d2368daaf78203718ce2e84381a85a091fd1ef8aed73343bc1488909f0cc6a",
+      "visual_score": 93
+    }
+  ],
+  "files": [
+    {
+      "look": "adult_F_bronze_wool_cloak_bun",
+      "variant": "v1",
+      "path": "art/portrait/batch_b1/adult_F_bronze_wool_cloak_bun/v1.png",
+      "sha256": "19fcb42825f1d4052415d2969aabf0ad0cf8cf06490e464f952f177e445328ba",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v1",
+        "skin": "S1",
+        "hair": "H2",
+        "age_band": "young",
+        "features": [
+          "narrow face",
+          "freckles"
+        ],
+        "beard": "none",
+        "description": "young woman; light warm skin; dark brown hair; narrow face, freckles",
+        "skin_rgb": [
+          224,
+          189,
+          142
+        ],
+        "hair_rgb": [
+          83,
+          66,
+          45
+        ]
+      }
+    },
+    {
+      "look": "adult_F_bronze_wool_cloak_bun",
+      "variant": "v2",
+      "path": "art/portrait/batch_b1/adult_F_bronze_wool_cloak_bun/v2.png",
+      "sha256": "f5c45d941ee983015a39c4b48b2c884c389cf146be5df43e7c81b81037038cc5",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v2",
+        "skin": "S2",
+        "hair": "H1",
+        "age_band": "adult",
+        "features": [
+          "broad nose",
+          "heavy brows"
+        ],
+        "beard": "none",
+        "description": "adult woman; mid warm brown skin; black hair; broad nose, heavy brows",
+        "skin_rgb": [
+          181,
+          141,
+          97
+        ],
+        "hair_rgb": [
+          44,
+          32,
+          20
+        ]
+      }
+    },
+    {
+      "look": "adult_F_bronze_wool_cloak_bun",
+      "variant": "v3",
+      "path": "art/portrait/batch_b1/adult_F_bronze_wool_cloak_bun/v3.png",
+      "sha256": "e1cfac243e94e81f34e264f4ca86e0b4a9abf12043f422e1e51814e187d15266",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v3",
+        "skin": "S3",
+        "hair": "H3",
+        "age_band": "adult",
+        "features": [
+          "narrow face",
+          "a scar"
+        ],
+        "beard": "none",
+        "description": "adult woman; deep brown skin; auburn hair; narrow face, a scar",
+        "skin_rgb": [
+          113,
+          74,
+          47
+        ],
+        "hair_rgb": [
+          139,
+          73,
+          43
+        ]
+      }
+    },
+    {
+      "look": "adult_F_bronze_wool_cloak_bun",
+      "variant": "v4",
+      "path": "art/portrait/batch_b1/adult_F_bronze_wool_cloak_bun/v4.png",
+      "sha256": "c52113efcc4c1f61b2d1a748e0f5ba151a5d0d2632b1d82f7f981e4f3219ef73",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v4",
+        "skin": "S1",
+        "hair": "H4",
+        "age_band": "older",
+        "features": [
+          "round face",
+          "freckles"
+        ],
+        "beard": "none",
+        "description": "older woman; light warm skin; grey hair; round face, freckles; clearly aged 55-70, visible facial age lines",
+        "skin_rgb": [
+          224,
+          189,
+          142
+        ],
+        "hair_rgb": [
+          160,
+          155,
+          140
+        ]
+      }
+    },
+    {
+      "look": "adult_F_bronze_wool_cloak_bun",
+      "variant": "v5",
+      "path": "art/portrait/batch_b1/adult_F_bronze_wool_cloak_bun/v5.png",
+      "sha256": "8b1bb346e3911cda28a31caf96e88843811e19562ec3493bb785571051c158b5",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v5",
+        "skin": "S2",
+        "hair": "H3",
+        "age_band": "older",
+        "features": [
+          "broad nose",
+          "a scar"
+        ],
+        "beard": "none",
+        "description": "older woman; mid warm brown skin; auburn hair; broad nose, a scar; clearly aged 55-70, visible facial age lines",
+        "skin_rgb": [
+          181,
+          141,
+          97
+        ],
+        "hair_rgb": [
+          139,
+          73,
+          43
+        ]
+      }
+    },
+    {
+      "look": "adult_F_bronze_wool_cloak_bun",
+      "variant": "v6",
+      "path": "art/portrait/batch_b1/adult_F_bronze_wool_cloak_bun/v6.png",
+      "sha256": "9930d91497a3de6a1e50379bd4271199b1b07a89547281f7c19f95be6733592c",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v6",
+        "skin": "S3",
+        "hair": "H2",
+        "age_band": "young",
+        "features": [
+          "round face",
+          "heavy brows"
+        ],
+        "beard": "none",
+        "description": "young woman; deep brown skin; dark brown hair; round face, heavy brows",
+        "skin_rgb": [
+          113,
+          74,
+          47
+        ],
+        "hair_rgb": [
+          83,
+          66,
+          45
+        ]
+      }
+    },
+    {
+      "look": "adult_F_bronze_wool_cloak_long_tied",
+      "variant": "v1",
+      "path": "art/portrait/batch_b1/adult_F_bronze_wool_cloak_long_tied/v1.png",
+      "sha256": "7f8dc6ea6914943e39ed2d66ae3fd5af0b95a970a0e919c24a891d5af2fc32bf",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v1",
+        "skin": "S1",
+        "hair": "H2",
+        "age_band": "young",
+        "features": [
+          "narrow face",
+          "freckles"
+        ],
+        "beard": "none",
+        "description": "young woman; light warm skin; dark brown hair; narrow face, freckles",
+        "skin_rgb": [
+          224,
+          189,
+          142
+        ],
+        "hair_rgb": [
+          83,
+          66,
+          45
+        ]
+      }
+    },
+    {
+      "look": "adult_F_bronze_wool_cloak_long_tied",
+      "variant": "v2",
+      "path": "art/portrait/batch_b1/adult_F_bronze_wool_cloak_long_tied/v2.png",
+      "sha256": "4b7a0067af375ba9ee73cbbed63c7f99f23ae0f95ae463a3311b819c05c08a4f",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v2",
+        "skin": "S2",
+        "hair": "H1",
+        "age_band": "adult",
+        "features": [
+          "broad nose",
+          "heavy brows"
+        ],
+        "beard": "none",
+        "description": "adult woman; mid warm brown skin; black hair; broad nose, heavy brows",
+        "skin_rgb": [
+          181,
+          141,
+          97
+        ],
+        "hair_rgb": [
+          44,
+          32,
+          20
+        ]
+      }
+    },
+    {
+      "look": "adult_F_bronze_wool_cloak_long_tied",
+      "variant": "v3",
+      "path": "art/portrait/batch_b1/adult_F_bronze_wool_cloak_long_tied/v3.png",
+      "sha256": "541c096f880c1edc4a406815f8d671290c5b11b435ae0ede249407e9fb292ee7",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v3",
+        "skin": "S3",
+        "hair": "H3",
+        "age_band": "adult",
+        "features": [
+          "narrow face",
+          "a scar"
+        ],
+        "beard": "none",
+        "description": "adult woman; deep brown skin; auburn hair; narrow face, a scar",
+        "skin_rgb": [
+          113,
+          74,
+          47
+        ],
+        "hair_rgb": [
+          139,
+          73,
+          43
+        ]
+      }
+    },
+    {
+      "look": "adult_F_bronze_wool_cloak_long_tied",
+      "variant": "v4",
+      "path": "art/portrait/batch_b1/adult_F_bronze_wool_cloak_long_tied/v4.png",
+      "sha256": "c9a49f094616fe4cea30841d14c11453345049169031bce572218fdccd82c025",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v4",
+        "skin": "S1",
+        "hair": "H4",
+        "age_band": "older",
+        "features": [
+          "round face",
+          "freckles"
+        ],
+        "beard": "none",
+        "description": "older woman; light warm skin; grey hair; round face, freckles; clearly aged 55-70, visible facial age lines",
+        "skin_rgb": [
+          224,
+          189,
+          142
+        ],
+        "hair_rgb": [
+          160,
+          155,
+          140
+        ]
+      }
+    },
+    {
+      "look": "adult_F_bronze_wool_cloak_long_tied",
+      "variant": "v5",
+      "path": "art/portrait/batch_b1/adult_F_bronze_wool_cloak_long_tied/v5.png",
+      "sha256": "f8c9ff1515f9ff0fc42ad798bf4bb9b5bf47dad568480c5533214677e7e3aedb",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v5",
+        "skin": "S2",
+        "hair": "H3",
+        "age_band": "older",
+        "features": [
+          "broad nose",
+          "a scar"
+        ],
+        "beard": "none",
+        "description": "older woman; mid warm brown skin; auburn hair; broad nose, a scar; clearly aged 55-70, visible facial age lines",
+        "skin_rgb": [
+          181,
+          141,
+          97
+        ],
+        "hair_rgb": [
+          139,
+          73,
+          43
+        ]
+      }
+    },
+    {
+      "look": "adult_F_bronze_wool_cloak_long_tied",
+      "variant": "v6",
+      "path": "art/portrait/batch_b1/adult_F_bronze_wool_cloak_long_tied/v6.png",
+      "sha256": "e965f742f35f7e692ea0aa5d5353db3c74b356bb077bca05e9d29296420d94fb",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v6",
+        "skin": "S3",
+        "hair": "H2",
+        "age_band": "young",
+        "features": [
+          "round face",
+          "heavy brows"
+        ],
+        "beard": "none",
+        "description": "young woman; deep brown skin; dark brown hair; round face, heavy brows",
+        "skin_rgb": [
+          113,
+          74,
+          47
+        ],
+        "hair_rgb": [
+          83,
+          66,
+          45
+        ]
+      }
+    },
+    {
+      "look": "adult_F_bronze_wool_cloak_short",
+      "variant": "v1",
+      "path": "art/portrait/batch_b1/adult_F_bronze_wool_cloak_short/v1.png",
+      "sha256": "9ce7d03a8d98a8fdf74b46887a68173cdc9d032306cfbfc0eeb27f5dc1f04617",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v1",
+        "skin": "S1",
+        "hair": "H2",
+        "age_band": "young",
+        "features": [
+          "narrow face",
+          "freckles"
+        ],
+        "beard": "none",
+        "description": "young woman; light warm skin; dark brown hair; narrow face, freckles",
+        "skin_rgb": [
+          224,
+          189,
+          142
+        ],
+        "hair_rgb": [
+          83,
+          66,
+          45
+        ]
+      }
+    },
+    {
+      "look": "adult_F_bronze_wool_cloak_short",
+      "variant": "v2",
+      "path": "art/portrait/batch_b1/adult_F_bronze_wool_cloak_short/v2.png",
+      "sha256": "c00ae71c33aa6291d18047bc33890a49fa4d89c174b1c105f45a01cf0d6b8a4e",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v2",
+        "skin": "S2",
+        "hair": "H1",
+        "age_band": "adult",
+        "features": [
+          "broad nose",
+          "heavy brows"
+        ],
+        "beard": "none",
+        "description": "adult woman; mid warm brown skin; black hair; broad nose, heavy brows",
+        "skin_rgb": [
+          181,
+          141,
+          97
+        ],
+        "hair_rgb": [
+          44,
+          32,
+          20
+        ]
+      }
+    },
+    {
+      "look": "adult_F_bronze_wool_cloak_short",
+      "variant": "v3",
+      "path": "art/portrait/batch_b1/adult_F_bronze_wool_cloak_short/v3.png",
+      "sha256": "1411cf28d6af8e8249d75b32832a3d34e67aef1558135804059b2e75847e185a",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v3",
+        "skin": "S3",
+        "hair": "H3",
+        "age_band": "adult",
+        "features": [
+          "narrow face",
+          "a scar"
+        ],
+        "beard": "none",
+        "description": "adult woman; deep brown skin; auburn hair; narrow face, a scar",
+        "skin_rgb": [
+          113,
+          74,
+          47
+        ],
+        "hair_rgb": [
+          139,
+          73,
+          43
+        ]
+      }
+    },
+    {
+      "look": "adult_F_bronze_wool_cloak_short",
+      "variant": "v4",
+      "path": "art/portrait/batch_b1/adult_F_bronze_wool_cloak_short/v4.png",
+      "sha256": "957cbf14ddd2cf48eb57c84f44b1cc0b5d4711ddd275bfe0acc0c9b6522c111d",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v4",
+        "skin": "S1",
+        "hair": "H4",
+        "age_band": "older",
+        "features": [
+          "round face",
+          "freckles"
+        ],
+        "beard": "none",
+        "description": "older woman; light warm skin; grey hair; round face, freckles; clearly aged 55-70, visible facial age lines",
+        "skin_rgb": [
+          224,
+          189,
+          142
+        ],
+        "hair_rgb": [
+          160,
+          155,
+          140
+        ]
+      }
+    },
+    {
+      "look": "adult_F_bronze_wool_cloak_short",
+      "variant": "v5",
+      "path": "art/portrait/batch_b1/adult_F_bronze_wool_cloak_short/v5.png",
+      "sha256": "fb13047d0c1068db0166585a887a07a4e35c11a1069d1fdfb6973e74cbc3cde3",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v5",
+        "skin": "S2",
+        "hair": "H3",
+        "age_band": "older",
+        "features": [
+          "broad nose",
+          "a scar"
+        ],
+        "beard": "none",
+        "description": "older woman; mid warm brown skin; auburn hair; broad nose, a scar; clearly aged 55-70, visible facial age lines",
+        "skin_rgb": [
+          181,
+          141,
+          97
+        ],
+        "hair_rgb": [
+          139,
+          73,
+          43
+        ]
+      }
+    },
+    {
+      "look": "adult_F_bronze_wool_cloak_short",
+      "variant": "v6",
+      "path": "art/portrait/batch_b1/adult_F_bronze_wool_cloak_short/v6.png",
+      "sha256": "a217961162923ffe53c129090610653a1ee07a409bb88735058290d9be321280",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v6",
+        "skin": "S3",
+        "hair": "H2",
+        "age_band": "young",
+        "features": [
+          "round face",
+          "heavy brows"
+        ],
+        "beard": "none",
+        "description": "young woman; deep brown skin; dark brown hair; round face, heavy brows",
+        "skin_rgb": [
+          113,
+          74,
+          47
+        ],
+        "hair_rgb": [
+          83,
+          66,
+          45
+        ]
+      }
+    },
+    {
+      "look": "adult_M_bronze_wool_cloak_bun",
+      "variant": "v1",
+      "path": "art/portrait/batch_b1/adult_M_bronze_wool_cloak_bun/v1.png",
+      "sha256": "6a1270abd2d8f83fe295097a025746708495a061e30d7cc654dabdafe94e6a51",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v1",
+        "skin": "S1",
+        "hair": "H2",
+        "age_band": "young",
+        "features": [
+          "narrow face",
+          "freckles"
+        ],
+        "beard": "clean",
+        "description": "young man; light warm skin; dark brown hair; narrow face, freckles; clean shaven",
+        "skin_rgb": [
+          224,
+          189,
+          142
+        ],
+        "hair_rgb": [
+          83,
+          66,
+          45
+        ]
+      }
+    },
+    {
+      "look": "adult_M_bronze_wool_cloak_bun",
+      "variant": "v2",
+      "path": "art/portrait/batch_b1/adult_M_bronze_wool_cloak_bun/v2.png",
+      "sha256": "63e2965ac8f5d11d33f9ac1c2cc4d87f28e9ccd509ddfa00abd17cc2b072727a",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v2",
+        "skin": "S2",
+        "hair": "H1",
+        "age_band": "adult",
+        "features": [
+          "broad nose",
+          "heavy brows"
+        ],
+        "beard": "full",
+        "description": "adult man; mid warm brown skin; black hair; broad nose, heavy brows; full beard",
+        "skin_rgb": [
+          181,
+          141,
+          97
+        ],
+        "hair_rgb": [
+          44,
+          32,
+          20
+        ]
+      }
+    },
+    {
+      "look": "adult_M_bronze_wool_cloak_bun",
+      "variant": "v3",
+      "path": "art/portrait/batch_b1/adult_M_bronze_wool_cloak_bun/v3.png",
+      "sha256": "90b88001a4c986245c2637b65ef1bde8b35b3df37eff1339d1010ab633a56bf4",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v3",
+        "skin": "S3",
+        "hair": "H3",
+        "age_band": "adult",
+        "features": [
+          "narrow face",
+          "a scar"
+        ],
+        "beard": "short",
+        "description": "adult man; deep brown skin; auburn hair; narrow face, a scar; short beard",
+        "skin_rgb": [
+          113,
+          74,
+          47
+        ],
+        "hair_rgb": [
+          139,
+          73,
+          43
+        ]
+      }
+    },
+    {
+      "look": "adult_M_bronze_wool_cloak_bun",
+      "variant": "v4",
+      "path": "art/portrait/batch_b1/adult_M_bronze_wool_cloak_bun/v4.png",
+      "sha256": "0e001bbf06e5f6831d480edf24cd935f46d51ccdd1332ad553f1f43b1dba27a6",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v4",
+        "skin": "S1",
+        "hair": "H4",
+        "age_band": "older",
+        "features": [
+          "round face",
+          "freckles"
+        ],
+        "beard": "full",
+        "description": "older man; light warm skin; grey hair; round face, freckles; clearly aged 55-70, visible facial age lines; full beard",
+        "skin_rgb": [
+          224,
+          189,
+          142
+        ],
+        "hair_rgb": [
+          160,
+          155,
+          140
+        ]
+      }
+    },
+    {
+      "look": "adult_M_bronze_wool_cloak_bun",
+      "variant": "v5",
+      "path": "art/portrait/batch_b1/adult_M_bronze_wool_cloak_bun/v5.png",
+      "sha256": "c775aa32ea28ed9f704f0fb7557c9ce661a8d9b50fee2803cb23e3350462ccb9",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v5",
+        "skin": "S2",
+        "hair": "H3",
+        "age_band": "older",
+        "features": [
+          "broad nose",
+          "a scar"
+        ],
+        "beard": "short",
+        "description": "older man; mid warm brown skin; auburn hair; broad nose, a scar; clearly aged 55-70, visible facial age lines; short beard",
+        "skin_rgb": [
+          181,
+          141,
+          97
+        ],
+        "hair_rgb": [
+          139,
+          73,
+          43
+        ]
+      }
+    },
+    {
+      "look": "adult_M_bronze_wool_cloak_bun",
+      "variant": "v6",
+      "path": "art/portrait/batch_b1/adult_M_bronze_wool_cloak_bun/v6.png",
+      "sha256": "1309caf1fcb00a38412904b0b31225a3c67067f7cad057b1a64a9e851698b30e",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v6",
+        "skin": "S3",
+        "hair": "H2",
+        "age_band": "young",
+        "features": [
+          "round face",
+          "heavy brows"
+        ],
+        "beard": "clean",
+        "description": "young man; deep brown skin; dark brown hair; round face, heavy brows; clean shaven",
+        "skin_rgb": [
+          113,
+          74,
+          47
+        ],
+        "hair_rgb": [
+          83,
+          66,
+          45
+        ]
+      }
+    },
+    {
+      "look": "adult_M_bronze_wool_cloak_long_tied",
+      "variant": "v1",
+      "path": "art/portrait/batch_b1/adult_M_bronze_wool_cloak_long_tied/v1.png",
+      "sha256": "b558b900d2e4ea9043f23b6aebb48aae9a4b87c6fdb49c9fa0b003437878b12f",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v1",
+        "skin": "S1",
+        "hair": "H2",
+        "age_band": "young",
+        "features": [
+          "narrow face",
+          "freckles"
+        ],
+        "beard": "clean",
+        "description": "young man; light warm skin; dark brown hair; narrow face, freckles; clean shaven",
+        "skin_rgb": [
+          224,
+          189,
+          142
+        ],
+        "hair_rgb": [
+          83,
+          66,
+          45
+        ]
+      }
+    },
+    {
+      "look": "adult_M_bronze_wool_cloak_long_tied",
+      "variant": "v2",
+      "path": "art/portrait/batch_b1/adult_M_bronze_wool_cloak_long_tied/v2.png",
+      "sha256": "0bfde6b8d62de06034fcfb8911a598c1ed241290ff57010404eda67f970b5794",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v2",
+        "skin": "S2",
+        "hair": "H1",
+        "age_band": "adult",
+        "features": [
+          "broad nose",
+          "heavy brows"
+        ],
+        "beard": "full",
+        "description": "adult man; mid warm brown skin; black hair; broad nose, heavy brows; full beard",
+        "skin_rgb": [
+          181,
+          141,
+          97
+        ],
+        "hair_rgb": [
+          44,
+          32,
+          20
+        ]
+      }
+    },
+    {
+      "look": "adult_M_bronze_wool_cloak_long_tied",
+      "variant": "v3",
+      "path": "art/portrait/batch_b1/adult_M_bronze_wool_cloak_long_tied/v3.png",
+      "sha256": "c5596d7464f5a5621a93116451d5460100a8b2e7603e29f34d5a377ed2c04a10",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v3",
+        "skin": "S3",
+        "hair": "H3",
+        "age_band": "adult",
+        "features": [
+          "narrow face",
+          "a scar"
+        ],
+        "beard": "short",
+        "description": "adult man; deep brown skin; auburn hair; narrow face, a scar; short beard",
+        "skin_rgb": [
+          113,
+          74,
+          47
+        ],
+        "hair_rgb": [
+          139,
+          73,
+          43
+        ]
+      }
+    },
+    {
+      "look": "adult_M_bronze_wool_cloak_long_tied",
+      "variant": "v4",
+      "path": "art/portrait/batch_b1/adult_M_bronze_wool_cloak_long_tied/v4.png",
+      "sha256": "86a9c16e2e2bfccb149d4755687c9af9fc7bc3914e18556cc0393402bea99e46",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v4",
+        "skin": "S1",
+        "hair": "H4",
+        "age_band": "older",
+        "features": [
+          "round face",
+          "freckles"
+        ],
+        "beard": "full",
+        "description": "older man; light warm skin; grey hair; round face, freckles; clearly aged 55-70, visible facial age lines; full beard",
+        "skin_rgb": [
+          224,
+          189,
+          142
+        ],
+        "hair_rgb": [
+          160,
+          155,
+          140
+        ]
+      }
+    },
+    {
+      "look": "adult_M_bronze_wool_cloak_long_tied",
+      "variant": "v5",
+      "path": "art/portrait/batch_b1/adult_M_bronze_wool_cloak_long_tied/v5.png",
+      "sha256": "9b66cd1a7327489bc8286495011c5edb76aa19f06db78b34f893af95993b48b3",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v5",
+        "skin": "S2",
+        "hair": "H3",
+        "age_band": "older",
+        "features": [
+          "broad nose",
+          "a scar"
+        ],
+        "beard": "short",
+        "description": "older man; mid warm brown skin; auburn hair; broad nose, a scar; clearly aged 55-70, visible facial age lines; short beard",
+        "skin_rgb": [
+          181,
+          141,
+          97
+        ],
+        "hair_rgb": [
+          139,
+          73,
+          43
+        ]
+      }
+    },
+    {
+      "look": "adult_M_bronze_wool_cloak_long_tied",
+      "variant": "v6",
+      "path": "art/portrait/batch_b1/adult_M_bronze_wool_cloak_long_tied/v6.png",
+      "sha256": "577d47d726e0ba1816e51542af4a0c3c235ee5d8c5d34957a4b3af0836c85406",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v6",
+        "skin": "S3",
+        "hair": "H2",
+        "age_band": "young",
+        "features": [
+          "round face",
+          "heavy brows"
+        ],
+        "beard": "clean",
+        "description": "young man; deep brown skin; dark brown hair; round face, heavy brows; clean shaven",
+        "skin_rgb": [
+          113,
+          74,
+          47
+        ],
+        "hair_rgb": [
+          83,
+          66,
+          45
+        ]
+      }
+    },
+    {
+      "look": "adult_M_bronze_wool_cloak_short",
+      "variant": "v1",
+      "path": "art/portrait/batch_b1/adult_M_bronze_wool_cloak_short/v1.png",
+      "sha256": "bd81d5b71ced947bd06928d303ff64071409ba9a4829eb86c862dd099cf8ff9f",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v1",
+        "skin": "S1",
+        "hair": "H2",
+        "age_band": "young",
+        "features": [
+          "narrow face",
+          "freckles"
+        ],
+        "beard": "clean",
+        "description": "young man; light warm skin; dark brown hair; narrow face, freckles; clean shaven",
+        "skin_rgb": [
+          224,
+          189,
+          142
+        ],
+        "hair_rgb": [
+          83,
+          66,
+          45
+        ]
+      }
+    },
+    {
+      "look": "adult_M_bronze_wool_cloak_short",
+      "variant": "v2",
+      "path": "art/portrait/batch_b1/adult_M_bronze_wool_cloak_short/v2.png",
+      "sha256": "d53a2c8ae027fdafc594a698a1308bab39abac802c4eb56dfbd211a37cd7fd6c",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v2",
+        "skin": "S2",
+        "hair": "H1",
+        "age_band": "adult",
+        "features": [
+          "broad nose",
+          "heavy brows"
+        ],
+        "beard": "full",
+        "description": "adult man; mid warm brown skin; black hair; broad nose, heavy brows; full beard",
+        "skin_rgb": [
+          181,
+          141,
+          97
+        ],
+        "hair_rgb": [
+          44,
+          32,
+          20
+        ]
+      }
+    },
+    {
+      "look": "adult_M_bronze_wool_cloak_short",
+      "variant": "v3",
+      "path": "art/portrait/batch_b1/adult_M_bronze_wool_cloak_short/v3.png",
+      "sha256": "6639be048266bcb51bf34d095527d7b65e64d4cf52d3a5473ee620832ebb1396",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v3",
+        "skin": "S3",
+        "hair": "H3",
+        "age_band": "adult",
+        "features": [
+          "narrow face",
+          "a scar"
+        ],
+        "beard": "short",
+        "description": "adult man; deep brown skin; auburn hair; narrow face, a scar; short beard",
+        "skin_rgb": [
+          113,
+          74,
+          47
+        ],
+        "hair_rgb": [
+          139,
+          73,
+          43
+        ]
+      }
+    },
+    {
+      "look": "adult_M_bronze_wool_cloak_short",
+      "variant": "v4",
+      "path": "art/portrait/batch_b1/adult_M_bronze_wool_cloak_short/v4.png",
+      "sha256": "77aaa0364db066b077ebb157685ed7efaf5425dff1d908a2128a437af269faaa",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v4",
+        "skin": "S1",
+        "hair": "H4",
+        "age_band": "older",
+        "features": [
+          "round face",
+          "freckles"
+        ],
+        "beard": "full",
+        "description": "older man; light warm skin; grey hair; round face, freckles; clearly aged 55-70, visible facial age lines; full beard",
+        "skin_rgb": [
+          224,
+          189,
+          142
+        ],
+        "hair_rgb": [
+          160,
+          155,
+          140
+        ]
+      }
+    },
+    {
+      "look": "adult_M_bronze_wool_cloak_short",
+      "variant": "v5",
+      "path": "art/portrait/batch_b1/adult_M_bronze_wool_cloak_short/v5.png",
+      "sha256": "2c4e646d2b60d84cbdeda6ac1244b26cd4362d439761700ff809091e979ac1ec",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v5",
+        "skin": "S2",
+        "hair": "H3",
+        "age_band": "older",
+        "features": [
+          "broad nose",
+          "a scar"
+        ],
+        "beard": "short",
+        "description": "older man; mid warm brown skin; auburn hair; broad nose, a scar; clearly aged 55-70, visible facial age lines; short beard",
+        "skin_rgb": [
+          181,
+          141,
+          97
+        ],
+        "hair_rgb": [
+          139,
+          73,
+          43
+        ]
+      }
+    },
+    {
+      "look": "adult_M_bronze_wool_cloak_short",
+      "variant": "v6",
+      "path": "art/portrait/batch_b1/adult_M_bronze_wool_cloak_short/v6.png",
+      "sha256": "32c040bb621dca41bfcbcfe9b1eb8dc31ccc96a0f3567bd4946c1c7583cfa60d",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v6",
+        "skin": "S3",
+        "hair": "H2",
+        "age_band": "young",
+        "features": [
+          "round face",
+          "heavy brows"
+        ],
+        "beard": "clean",
+        "description": "young man; deep brown skin; dark brown hair; round face, heavy brows; clean shaven",
+        "skin_rgb": [
+          113,
+          74,
+          47
+        ],
+        "hair_rgb": [
+          83,
+          66,
+          45
+        ]
+      }
+    },
+    {
+      "look": "child_F_bronze_wool_cloak_bun",
+      "variant": "v1",
+      "path": "art/portrait/batch_b1/child_F_bronze_wool_cloak_bun/v1.png",
+      "sha256": "6d62d0c15a42935e99dc935fb4bd131663a41164916e1dec284809b3e43f3abc",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v1",
+        "skin": "S1",
+        "hair": "H1",
+        "age_band": "child",
+        "features": [
+          "round face",
+          "freckles"
+        ],
+        "beard": "none",
+        "description": "child girl; light warm skin; black hair; round face, freckles",
+        "skin_rgb": [
+          224,
+          189,
+          142
+        ],
+        "hair_rgb": [
+          44,
+          32,
+          20
+        ]
+      }
+    },
+    {
+      "look": "child_F_bronze_wool_cloak_bun",
+      "variant": "v2",
+      "path": "art/portrait/batch_b1/child_F_bronze_wool_cloak_bun/v2.png",
+      "sha256": "e16b293a89f527282c2331feee9ec9cb78fa3899669ccc481d92b9c1366f1e4f",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v2",
+        "skin": "S2",
+        "hair": "H2",
+        "age_band": "child",
+        "features": [
+          "narrow face",
+          "heavy brows"
+        ],
+        "beard": "none",
+        "description": "child girl; mid warm brown skin; dark brown hair; narrow face, heavy brows",
+        "skin_rgb": [
+          181,
+          141,
+          97
+        ],
+        "hair_rgb": [
+          83,
+          66,
+          45
+        ]
+      }
+    },
+    {
+      "look": "child_F_bronze_wool_cloak_bun",
+      "variant": "v3",
+      "path": "art/portrait/batch_b1/child_F_bronze_wool_cloak_bun/v3.png",
+      "sha256": "f891d402dd578e349f8e18b17dfe9d81122a99e8306f3ecf0644ff4e27d88e97",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v3",
+        "skin": "S3",
+        "hair": "H3",
+        "age_band": "child",
+        "features": [
+          "broad nose",
+          "freckles"
+        ],
+        "beard": "none",
+        "description": "child girl; deep brown skin; auburn hair; broad nose, freckles",
+        "skin_rgb": [
+          113,
+          74,
+          47
+        ],
+        "hair_rgb": [
+          139,
+          73,
+          43
+        ]
+      }
+    },
+    {
+      "look": "child_F_bronze_wool_cloak_bun",
+      "variant": "v4",
+      "path": "art/portrait/batch_b1/child_F_bronze_wool_cloak_bun/v4.png",
+      "sha256": "6ccf3d035bf8b3908c0475c403b2d17b21c0c736c8ffbe298eb818536944e308",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v4",
+        "skin": "S1",
+        "hair": "H3",
+        "age_band": "child",
+        "features": [
+          "narrow face",
+          "a scar"
+        ],
+        "beard": "none",
+        "description": "child girl; light warm skin; auburn hair; narrow face, a scar",
+        "skin_rgb": [
+          224,
+          189,
+          142
+        ],
+        "hair_rgb": [
+          139,
+          73,
+          43
+        ]
+      }
+    },
+    {
+      "look": "child_F_bronze_wool_cloak_bun",
+      "variant": "v5",
+      "path": "art/portrait/batch_b1/child_F_bronze_wool_cloak_bun/v5.png",
+      "sha256": "55651c1e713efa88b772fd84c3bd825c4d8f3c67df37a829a5dbf1ce7131b137",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v5",
+        "skin": "S2",
+        "hair": "H1",
+        "age_band": "child",
+        "features": [
+          "broad nose",
+          "heavy brows"
+        ],
+        "beard": "none",
+        "description": "child girl; mid warm brown skin; black hair; broad nose, heavy brows",
+        "skin_rgb": [
+          181,
+          141,
+          97
+        ],
+        "hair_rgb": [
+          44,
+          32,
+          20
+        ]
+      }
+    },
+    {
+      "look": "child_F_bronze_wool_cloak_bun",
+      "variant": "v6",
+      "path": "art/portrait/batch_b1/child_F_bronze_wool_cloak_bun/v6.png",
+      "sha256": "8bcdf50df8efa262a2c490ee711dbcfe5d1c01ec153042392e3aa59811da8fd9",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v6",
+        "skin": "S3",
+        "hair": "H2",
+        "age_band": "child",
+        "features": [
+          "round face",
+          "a scar"
+        ],
+        "beard": "none",
+        "description": "child girl; deep brown skin; dark brown hair; round face, a scar",
+        "skin_rgb": [
+          113,
+          74,
+          47
+        ],
+        "hair_rgb": [
+          83,
+          66,
+          45
+        ]
+      }
+    },
+    {
+      "look": "child_F_bronze_wool_cloak_long_tied",
+      "variant": "v1",
+      "path": "art/portrait/batch_b1/child_F_bronze_wool_cloak_long_tied/v1.png",
+      "sha256": "23da55eb240a7c123203b8a744831e96be4db78d4fa8b878cd63fce10b04ed18",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v1",
+        "skin": "S1",
+        "hair": "H1",
+        "age_band": "child",
+        "features": [
+          "round face",
+          "freckles"
+        ],
+        "beard": "none",
+        "description": "child girl; light warm skin; black hair; round face, freckles",
+        "skin_rgb": [
+          224,
+          189,
+          142
+        ],
+        "hair_rgb": [
+          44,
+          32,
+          20
+        ]
+      }
+    },
+    {
+      "look": "child_F_bronze_wool_cloak_long_tied",
+      "variant": "v2",
+      "path": "art/portrait/batch_b1/child_F_bronze_wool_cloak_long_tied/v2.png",
+      "sha256": "889ae7a2fd3d4542803df0c58757ec8e87789906c01a116877d1adfbf7ed4db4",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v2",
+        "skin": "S2",
+        "hair": "H2",
+        "age_band": "child",
+        "features": [
+          "narrow face",
+          "heavy brows"
+        ],
+        "beard": "none",
+        "description": "child girl; mid warm brown skin; dark brown hair; narrow face, heavy brows",
+        "skin_rgb": [
+          181,
+          141,
+          97
+        ],
+        "hair_rgb": [
+          83,
+          66,
+          45
+        ]
+      }
+    },
+    {
+      "look": "child_F_bronze_wool_cloak_long_tied",
+      "variant": "v3",
+      "path": "art/portrait/batch_b1/child_F_bronze_wool_cloak_long_tied/v3.png",
+      "sha256": "aeb297687689bb2eab5fb3039f6a4db3841ea165ef346f4e76ccd188c7822ecd",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v3",
+        "skin": "S3",
+        "hair": "H3",
+        "age_band": "child",
+        "features": [
+          "broad nose",
+          "freckles"
+        ],
+        "beard": "none",
+        "description": "child girl; deep brown skin; auburn hair; broad nose, freckles",
+        "skin_rgb": [
+          113,
+          74,
+          47
+        ],
+        "hair_rgb": [
+          139,
+          73,
+          43
+        ]
+      }
+    },
+    {
+      "look": "child_F_bronze_wool_cloak_long_tied",
+      "variant": "v4",
+      "path": "art/portrait/batch_b1/child_F_bronze_wool_cloak_long_tied/v4.png",
+      "sha256": "17595c4a18b7730262ed51f8385f4d9df92f1e903b5a7cfe4ecb480ffdeaafbf",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v4",
+        "skin": "S1",
+        "hair": "H3",
+        "age_band": "child",
+        "features": [
+          "narrow face",
+          "a scar"
+        ],
+        "beard": "none",
+        "description": "child girl; light warm skin; auburn hair; narrow face, a scar",
+        "skin_rgb": [
+          224,
+          189,
+          142
+        ],
+        "hair_rgb": [
+          139,
+          73,
+          43
+        ]
+      }
+    },
+    {
+      "look": "child_F_bronze_wool_cloak_long_tied",
+      "variant": "v5",
+      "path": "art/portrait/batch_b1/child_F_bronze_wool_cloak_long_tied/v5.png",
+      "sha256": "b3efc71e4135a6a429b031b43ff9be2a1242064524c78a23b8e2dad66dc4c3d5",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v5",
+        "skin": "S2",
+        "hair": "H1",
+        "age_band": "child",
+        "features": [
+          "broad nose",
+          "heavy brows"
+        ],
+        "beard": "none",
+        "description": "child girl; mid warm brown skin; black hair; broad nose, heavy brows",
+        "skin_rgb": [
+          181,
+          141,
+          97
+        ],
+        "hair_rgb": [
+          44,
+          32,
+          20
+        ]
+      }
+    },
+    {
+      "look": "child_F_bronze_wool_cloak_long_tied",
+      "variant": "v6",
+      "path": "art/portrait/batch_b1/child_F_bronze_wool_cloak_long_tied/v6.png",
+      "sha256": "b41f084cb7552e0f7a7dba664a4d9839ffc5aab1c732af6b21d4033e799a8d95",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v6",
+        "skin": "S3",
+        "hair": "H2",
+        "age_band": "child",
+        "features": [
+          "round face",
+          "a scar"
+        ],
+        "beard": "none",
+        "description": "child girl; deep brown skin; dark brown hair; round face, a scar",
+        "skin_rgb": [
+          113,
+          74,
+          47
+        ],
+        "hair_rgb": [
+          83,
+          66,
+          45
+        ]
+      }
+    },
+    {
+      "look": "child_F_bronze_wool_cloak_short",
+      "variant": "v1",
+      "path": "art/portrait/batch_b1/child_F_bronze_wool_cloak_short/v1.png",
+      "sha256": "e84236e560b05d7ef768140bcadf8702e46af3a0c596859a174c4f284e0dc104",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v1",
+        "skin": "S1",
+        "hair": "H1",
+        "age_band": "child",
+        "features": [
+          "round face",
+          "freckles"
+        ],
+        "beard": "none",
+        "description": "child girl; light warm skin; black hair; round face, freckles",
+        "skin_rgb": [
+          224,
+          189,
+          142
+        ],
+        "hair_rgb": [
+          44,
+          32,
+          20
+        ]
+      }
+    },
+    {
+      "look": "child_F_bronze_wool_cloak_short",
+      "variant": "v2",
+      "path": "art/portrait/batch_b1/child_F_bronze_wool_cloak_short/v2.png",
+      "sha256": "0d82f6451d048194e25d35b0739d8a1d3872f490634c237e6bdaf844bfd6c3b9",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v2",
+        "skin": "S2",
+        "hair": "H2",
+        "age_band": "child",
+        "features": [
+          "narrow face",
+          "heavy brows"
+        ],
+        "beard": "none",
+        "description": "child girl; mid warm brown skin; dark brown hair; narrow face, heavy brows",
+        "skin_rgb": [
+          181,
+          141,
+          97
+        ],
+        "hair_rgb": [
+          83,
+          66,
+          45
+        ]
+      }
+    },
+    {
+      "look": "child_F_bronze_wool_cloak_short",
+      "variant": "v3",
+      "path": "art/portrait/batch_b1/child_F_bronze_wool_cloak_short/v3.png",
+      "sha256": "6804f50299390d3354bc07eb05e4aa3f7fa4250d2fb5030b8a2777430f9a548a",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v3",
+        "skin": "S3",
+        "hair": "H3",
+        "age_band": "child",
+        "features": [
+          "broad nose",
+          "freckles"
+        ],
+        "beard": "none",
+        "description": "child girl; deep brown skin; auburn hair; broad nose, freckles",
+        "skin_rgb": [
+          113,
+          74,
+          47
+        ],
+        "hair_rgb": [
+          139,
+          73,
+          43
+        ]
+      }
+    },
+    {
+      "look": "child_F_bronze_wool_cloak_short",
+      "variant": "v4",
+      "path": "art/portrait/batch_b1/child_F_bronze_wool_cloak_short/v4.png",
+      "sha256": "9eb5912da8c471dcf31c3139f9c8226623858634590c8dd84b37a18dc19833fe",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v4",
+        "skin": "S1",
+        "hair": "H3",
+        "age_band": "child",
+        "features": [
+          "narrow face",
+          "a scar"
+        ],
+        "beard": "none",
+        "description": "child girl; light warm skin; auburn hair; narrow face, a scar",
+        "skin_rgb": [
+          224,
+          189,
+          142
+        ],
+        "hair_rgb": [
+          139,
+          73,
+          43
+        ]
+      }
+    },
+    {
+      "look": "child_F_bronze_wool_cloak_short",
+      "variant": "v5",
+      "path": "art/portrait/batch_b1/child_F_bronze_wool_cloak_short/v5.png",
+      "sha256": "1363850326a6c51932040ae113478900c5d89cc2c609487f35387375c7b6a227",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v5",
+        "skin": "S2",
+        "hair": "H1",
+        "age_band": "child",
+        "features": [
+          "broad nose",
+          "heavy brows"
+        ],
+        "beard": "none",
+        "description": "child girl; mid warm brown skin; black hair; broad nose, heavy brows",
+        "skin_rgb": [
+          181,
+          141,
+          97
+        ],
+        "hair_rgb": [
+          44,
+          32,
+          20
+        ]
+      }
+    },
+    {
+      "look": "child_F_bronze_wool_cloak_short",
+      "variant": "v6",
+      "path": "art/portrait/batch_b1/child_F_bronze_wool_cloak_short/v6.png",
+      "sha256": "4050402e50fff4cabc9d64aa640fa09471c55c2198c429d61f20f99c1184c5b1",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v6",
+        "skin": "S3",
+        "hair": "H2",
+        "age_band": "child",
+        "features": [
+          "round face",
+          "a scar"
+        ],
+        "beard": "none",
+        "description": "child girl; deep brown skin; dark brown hair; round face, a scar",
+        "skin_rgb": [
+          113,
+          74,
+          47
+        ],
+        "hair_rgb": [
+          83,
+          66,
+          45
+        ]
+      }
+    },
+    {
+      "look": "child_M_bronze_wool_cloak_bun",
+      "variant": "v1",
+      "path": "art/portrait/batch_b1/child_M_bronze_wool_cloak_bun/v1.png",
+      "sha256": "b557111cb9a770a8c5aa2a097d0c3d4a8f1a776f198ce9ced891455e39514792",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v1",
+        "skin": "S1",
+        "hair": "H1",
+        "age_band": "child",
+        "features": [
+          "round face",
+          "freckles"
+        ],
+        "beard": "none",
+        "description": "child boy; light warm skin; black hair; round face, freckles",
+        "skin_rgb": [
+          224,
+          189,
+          142
+        ],
+        "hair_rgb": [
+          44,
+          32,
+          20
+        ]
+      }
+    },
+    {
+      "look": "child_M_bronze_wool_cloak_bun",
+      "variant": "v2",
+      "path": "art/portrait/batch_b1/child_M_bronze_wool_cloak_bun/v2.png",
+      "sha256": "1ef1366a52bebb66ccb7cac35e102e8e644b57018c7042376985296c48fdf5b9",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v2",
+        "skin": "S2",
+        "hair": "H2",
+        "age_band": "child",
+        "features": [
+          "narrow face",
+          "heavy brows"
+        ],
+        "beard": "none",
+        "description": "child boy; mid warm brown skin; dark brown hair; narrow face, heavy brows",
+        "skin_rgb": [
+          181,
+          141,
+          97
+        ],
+        "hair_rgb": [
+          83,
+          66,
+          45
+        ]
+      }
+    },
+    {
+      "look": "child_M_bronze_wool_cloak_bun",
+      "variant": "v3",
+      "path": "art/portrait/batch_b1/child_M_bronze_wool_cloak_bun/v3.png",
+      "sha256": "b1384940cda2a3376f08185f42d1e5237ebda5e02d8854d188f5acd94fdb706b",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v3",
+        "skin": "S3",
+        "hair": "H3",
+        "age_band": "child",
+        "features": [
+          "broad nose",
+          "freckles"
+        ],
+        "beard": "none",
+        "description": "child boy; deep brown skin; auburn hair; broad nose, freckles",
+        "skin_rgb": [
+          113,
+          74,
+          47
+        ],
+        "hair_rgb": [
+          139,
+          73,
+          43
+        ]
+      }
+    },
+    {
+      "look": "child_M_bronze_wool_cloak_bun",
+      "variant": "v4",
+      "path": "art/portrait/batch_b1/child_M_bronze_wool_cloak_bun/v4.png",
+      "sha256": "c0b2594d68a74cbde125c07c5e15350ee39ac912ea488c6b5d5d6e63fe912d58",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v4",
+        "skin": "S1",
+        "hair": "H3",
+        "age_band": "child",
+        "features": [
+          "narrow face",
+          "a scar"
+        ],
+        "beard": "none",
+        "description": "child boy; light warm skin; auburn hair; narrow face, a scar",
+        "skin_rgb": [
+          224,
+          189,
+          142
+        ],
+        "hair_rgb": [
+          139,
+          73,
+          43
+        ]
+      }
+    },
+    {
+      "look": "child_M_bronze_wool_cloak_bun",
+      "variant": "v5",
+      "path": "art/portrait/batch_b1/child_M_bronze_wool_cloak_bun/v5.png",
+      "sha256": "6157a4a1488815db2c4ab0ca1de0626c9001dcef727f20317f835461034745c1",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v5",
+        "skin": "S2",
+        "hair": "H1",
+        "age_band": "child",
+        "features": [
+          "broad nose",
+          "heavy brows"
+        ],
+        "beard": "none",
+        "description": "child boy; mid warm brown skin; black hair; broad nose, heavy brows",
+        "skin_rgb": [
+          181,
+          141,
+          97
+        ],
+        "hair_rgb": [
+          44,
+          32,
+          20
+        ]
+      }
+    },
+    {
+      "look": "child_M_bronze_wool_cloak_bun",
+      "variant": "v6",
+      "path": "art/portrait/batch_b1/child_M_bronze_wool_cloak_bun/v6.png",
+      "sha256": "484ce2cb1fab63e139be91e4c2b0310191d1bd7e2badfe3640c46741c2396e8b",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v6",
+        "skin": "S3",
+        "hair": "H2",
+        "age_band": "child",
+        "features": [
+          "round face",
+          "a scar"
+        ],
+        "beard": "none",
+        "description": "child boy; deep brown skin; dark brown hair; round face, a scar",
+        "skin_rgb": [
+          113,
+          74,
+          47
+        ],
+        "hair_rgb": [
+          83,
+          66,
+          45
+        ]
+      }
+    },
+    {
+      "look": "child_M_bronze_wool_cloak_long_tied",
+      "variant": "v1",
+      "path": "art/portrait/batch_b1/child_M_bronze_wool_cloak_long_tied/v1.png",
+      "sha256": "d5cc8979b61e9ae5d8a80c77021a119f2f655dfac4044a3e0b037ff516f39b6a",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v1",
+        "skin": "S1",
+        "hair": "H1",
+        "age_band": "child",
+        "features": [
+          "round face",
+          "freckles"
+        ],
+        "beard": "none",
+        "description": "child boy; light warm skin; black hair; round face, freckles",
+        "skin_rgb": [
+          224,
+          189,
+          142
+        ],
+        "hair_rgb": [
+          44,
+          32,
+          20
+        ]
+      }
+    },
+    {
+      "look": "child_M_bronze_wool_cloak_long_tied",
+      "variant": "v2",
+      "path": "art/portrait/batch_b1/child_M_bronze_wool_cloak_long_tied/v2.png",
+      "sha256": "e0fd41849ecec763d06b0cf74d3acb91aed3198f3aad8897979778096bcf99cf",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v2",
+        "skin": "S2",
+        "hair": "H2",
+        "age_band": "child",
+        "features": [
+          "narrow face",
+          "heavy brows"
+        ],
+        "beard": "none",
+        "description": "child boy; mid warm brown skin; dark brown hair; narrow face, heavy brows",
+        "skin_rgb": [
+          181,
+          141,
+          97
+        ],
+        "hair_rgb": [
+          83,
+          66,
+          45
+        ]
+      }
+    },
+    {
+      "look": "child_M_bronze_wool_cloak_long_tied",
+      "variant": "v3",
+      "path": "art/portrait/batch_b1/child_M_bronze_wool_cloak_long_tied/v3.png",
+      "sha256": "81cfec0e888f03ed9eaa0e1f782f7ae366ff8c11008c7b1ed5fd20ca315c51d4",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v3",
+        "skin": "S3",
+        "hair": "H3",
+        "age_band": "child",
+        "features": [
+          "broad nose",
+          "freckles"
+        ],
+        "beard": "none",
+        "description": "child boy; deep brown skin; auburn hair; broad nose, freckles",
+        "skin_rgb": [
+          113,
+          74,
+          47
+        ],
+        "hair_rgb": [
+          139,
+          73,
+          43
+        ]
+      }
+    },
+    {
+      "look": "child_M_bronze_wool_cloak_long_tied",
+      "variant": "v4",
+      "path": "art/portrait/batch_b1/child_M_bronze_wool_cloak_long_tied/v4.png",
+      "sha256": "32d7a7a2b061978913f68a5aad7439523f1526dfea6fb2c18588d2c113279ae7",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v4",
+        "skin": "S1",
+        "hair": "H3",
+        "age_band": "child",
+        "features": [
+          "narrow face",
+          "a scar"
+        ],
+        "beard": "none",
+        "description": "child boy; light warm skin; auburn hair; narrow face, a scar",
+        "skin_rgb": [
+          224,
+          189,
+          142
+        ],
+        "hair_rgb": [
+          139,
+          73,
+          43
+        ]
+      }
+    },
+    {
+      "look": "child_M_bronze_wool_cloak_long_tied",
+      "variant": "v5",
+      "path": "art/portrait/batch_b1/child_M_bronze_wool_cloak_long_tied/v5.png",
+      "sha256": "5be6a630f20d4bdb5a4f10a33f20ff6ad0211307e7bdac4840ab8e4b872d5b86",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v5",
+        "skin": "S2",
+        "hair": "H1",
+        "age_band": "child",
+        "features": [
+          "broad nose",
+          "heavy brows"
+        ],
+        "beard": "none",
+        "description": "child boy; mid warm brown skin; black hair; broad nose, heavy brows",
+        "skin_rgb": [
+          181,
+          141,
+          97
+        ],
+        "hair_rgb": [
+          44,
+          32,
+          20
+        ]
+      }
+    },
+    {
+      "look": "child_M_bronze_wool_cloak_long_tied",
+      "variant": "v6",
+      "path": "art/portrait/batch_b1/child_M_bronze_wool_cloak_long_tied/v6.png",
+      "sha256": "fd5addc6d3da7b95077396ae2e458918d73fd394c9d7c71059b279d324261657",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v6",
+        "skin": "S3",
+        "hair": "H2",
+        "age_band": "child",
+        "features": [
+          "round face",
+          "a scar"
+        ],
+        "beard": "none",
+        "description": "child boy; deep brown skin; dark brown hair; round face, a scar",
+        "skin_rgb": [
+          113,
+          74,
+          47
+        ],
+        "hair_rgb": [
+          83,
+          66,
+          45
+        ]
+      }
+    },
+    {
+      "look": "child_M_bronze_wool_cloak_short",
+      "variant": "v1",
+      "path": "art/portrait/batch_b1/child_M_bronze_wool_cloak_short/v1.png",
+      "sha256": "174edaeba45a5f9bdf1f32c20234cdf9749cafe62aa1151d8a5059f6b1cef681",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v1",
+        "skin": "S1",
+        "hair": "H1",
+        "age_band": "child",
+        "features": [
+          "round face",
+          "freckles"
+        ],
+        "beard": "none",
+        "description": "child boy; light warm skin; black hair; round face, freckles",
+        "skin_rgb": [
+          224,
+          189,
+          142
+        ],
+        "hair_rgb": [
+          44,
+          32,
+          20
+        ]
+      }
+    },
+    {
+      "look": "child_M_bronze_wool_cloak_short",
+      "variant": "v2",
+      "path": "art/portrait/batch_b1/child_M_bronze_wool_cloak_short/v2.png",
+      "sha256": "cbd35ca5f4e400a086567cd3bf4e7784581bf70e1b3ec104257c5e77c06a3c64",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v2",
+        "skin": "S2",
+        "hair": "H2",
+        "age_band": "child",
+        "features": [
+          "narrow face",
+          "heavy brows"
+        ],
+        "beard": "none",
+        "description": "child boy; mid warm brown skin; dark brown hair; narrow face, heavy brows",
+        "skin_rgb": [
+          181,
+          141,
+          97
+        ],
+        "hair_rgb": [
+          83,
+          66,
+          45
+        ]
+      }
+    },
+    {
+      "look": "child_M_bronze_wool_cloak_short",
+      "variant": "v3",
+      "path": "art/portrait/batch_b1/child_M_bronze_wool_cloak_short/v3.png",
+      "sha256": "8be747383b84059beb1ac1300b539a9e6c5c8f8b01930c57658bce3637042db5",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v3",
+        "skin": "S3",
+        "hair": "H3",
+        "age_band": "child",
+        "features": [
+          "broad nose",
+          "freckles"
+        ],
+        "beard": "none",
+        "description": "child boy; deep brown skin; auburn hair; broad nose, freckles",
+        "skin_rgb": [
+          113,
+          74,
+          47
+        ],
+        "hair_rgb": [
+          139,
+          73,
+          43
+        ]
+      }
+    },
+    {
+      "look": "child_M_bronze_wool_cloak_short",
+      "variant": "v4",
+      "path": "art/portrait/batch_b1/child_M_bronze_wool_cloak_short/v4.png",
+      "sha256": "546bdb4df94bfd7d76f1d08460b82ddb8cb615ddb5f46b0461dba9642fb8d1d9",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v4",
+        "skin": "S1",
+        "hair": "H3",
+        "age_band": "child",
+        "features": [
+          "narrow face",
+          "a scar"
+        ],
+        "beard": "none",
+        "description": "child boy; light warm skin; auburn hair; narrow face, a scar",
+        "skin_rgb": [
+          224,
+          189,
+          142
+        ],
+        "hair_rgb": [
+          139,
+          73,
+          43
+        ]
+      }
+    },
+    {
+      "look": "child_M_bronze_wool_cloak_short",
+      "variant": "v5",
+      "path": "art/portrait/batch_b1/child_M_bronze_wool_cloak_short/v5.png",
+      "sha256": "8269ffa8b811b5a2e6b0581de4b9057c68094b014cbe7a6178b4d360a63a3340",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v5",
+        "skin": "S2",
+        "hair": "H1",
+        "age_band": "child",
+        "features": [
+          "broad nose",
+          "heavy brows"
+        ],
+        "beard": "none",
+        "description": "child boy; mid warm brown skin; black hair; broad nose, heavy brows",
+        "skin_rgb": [
+          181,
+          141,
+          97
+        ],
+        "hair_rgb": [
+          44,
+          32,
+          20
+        ]
+      }
+    },
+    {
+      "look": "child_M_bronze_wool_cloak_short",
+      "variant": "v6",
+      "path": "art/portrait/batch_b1/child_M_bronze_wool_cloak_short/v6.png",
+      "sha256": "87ef9716fbff5f024fd919efe518fcf48d32bfcb4ec8fbea0b677d366a179e7a",
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null,
+      "identity": {
+        "id": "v6",
+        "skin": "S3",
+        "hair": "H2",
+        "age_band": "child",
+        "features": [
+          "round face",
+          "a scar"
+        ],
+        "beard": "none",
+        "description": "child boy; deep brown skin; dark brown hair; round face, a scar",
+        "skin_rgb": [
+          113,
+          74,
+          47
+        ],
+        "hair_rgb": [
+          83,
+          66,
+          45
+        ]
+      }
+    }
+  ]
+}
