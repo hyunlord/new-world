@@ -1,0 +1,123 @@
+{
+  "rows": [
+    {
+      "family": "olive_press",
+      "state": "foundation",
+      "status": "CAPPED_REJECTED",
+      "sourcepath": null,
+      "attempts": 3,
+      "reasons": [
+        "declared opaque width 107 outside 122 +/- 12"
+      ],
+      "attempt_records": [
+        "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/olive_press_foundation_try1.json",
+        "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/olive_press_foundation_try2.json",
+        "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/olive_press_foundation_try3.json"
+      ]
+    },
+    {
+      "family": "olive_press",
+      "state": "half_built",
+      "status": "SELECTED_CANDIDATE_NOT_GAME_IMPORTED",
+      "sourcepath": "art/style05/struct/b3/stages_mine_press/olive_press_half_built.png",
+      "attempts": 1,
+      "reasons": [],
+      "attempt_records": [
+        "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/olive_press_half_built_try1.json"
+      ],
+      "independent_review": "art/batch_b3/stages_mine_press/root_review.json"
+    },
+    {
+      "family": "olive_press",
+      "state": "damaged",
+      "status": "SELECTED_CANDIDATE_NOT_GAME_IMPORTED",
+      "sourcepath": "art/style05/struct/b3/stages_mine_press/olive_press_damaged.png",
+      "attempts": 1,
+      "reasons": [],
+      "attempt_records": [
+        "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/olive_press_damaged_try1.json"
+      ],
+      "independent_review": "art/batch_b3/stages_mine_press/root_review.json"
+    },
+    {
+      "family": "olive_press",
+      "state": "ruined",
+      "status": "CAPPED_REJECTED",
+      "sourcepath": null,
+      "attempts": 3,
+      "reasons": [
+        "declared opaque width 136 outside 122 +/- 12"
+      ],
+      "attempt_records": [
+        "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/olive_press_ruined_try1.json",
+        "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/olive_press_ruined_try2.json",
+        "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/olive_press_ruined_try3.json"
+      ]
+    },
+    {
+      "family": "mine_entrance",
+      "state": "foundation",
+      "status": "CAPPED_REJECTED",
+      "sourcepath": null,
+      "attempts": 3,
+      "reasons": [
+        "style metric: wash_flatness",
+        "declared opaque width 111 outside 97 +/- 12"
+      ],
+      "attempt_records": [
+        "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/mine_entrance_foundation_try1.json",
+        "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/mine_entrance_foundation_try2.json",
+        "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/mine_entrance_foundation_try3.json"
+      ]
+    },
+    {
+      "family": "mine_entrance",
+      "state": "half_built",
+      "status": "CAPPED_REJECTED",
+      "sourcepath": null,
+      "attempts": 3,
+      "reasons": [
+        "style metric: edge_density",
+        "style metric: wash_flatness"
+      ],
+      "attempt_records": [
+        "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/mine_entrance_half_built_try1.json",
+        "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/mine_entrance_half_built_try2.json",
+        "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/mine_entrance_half_built_try3.json"
+      ]
+    },
+    {
+      "family": "mine_entrance",
+      "state": "damaged",
+      "status": "CAPPED_REJECTED",
+      "sourcepath": null,
+      "attempts": 3,
+      "reasons": [
+        "style metric: edge_density",
+        "style metric: wash_flatness",
+        "visual: generated brown halo/backdrop, not isolated clean transparent surround"
+      ],
+      "attempt_records": [
+        "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/mine_entrance_damaged_try1.json",
+        "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/mine_entrance_damaged_try2.json",
+        "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/mine_entrance_damaged_try3.json"
+      ]
+    },
+    {
+      "family": "mine_entrance",
+      "state": "ruined",
+      "status": "CAPPED_REJECTED",
+      "sourcepath": null,
+      "attempts": 3,
+      "reasons": [
+        "style metric: wash_flatness",
+        "declared opaque width 117 outside 97 +/- 12"
+      ],
+      "attempt_records": [
+        "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/mine_entrance_ruined_try1.json",
+        "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/mine_entrance_ruined_try2.json",
+        "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/mine_entrance_ruined_try3.json"
+      ]
+    }
+  ]
+}

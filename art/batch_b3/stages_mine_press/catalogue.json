@@ -1,0 +1,261 @@
+{
+  "status": "PREDECLARED_BEFORE_GENERATION",
+  "rows": [
+    {
+      "id": "olive_press_foundation",
+      "family": "olive_press",
+      "state": "foundation",
+      "attempt": 1,
+      "era": "bronze",
+      "lane": "stages_mine_press",
+      "target_height": 24,
+      "width_target": 122,
+      "width_tolerance": 12,
+      "footprint": [
+        2,
+        2
+      ],
+      "projection_family": "b3_olive_press_foundation",
+      "height_band": [
+        22,
+        26
+      ],
+      "height_band_reason": "Predeclared stage silhouette height; same A2 footprint and source ground-span target. No frozen style or lighting tolerance changed.",
+      "style_family": "buildings",
+      "subject": "Only its complete low circular STONE PRESS BASIN foundation and the two low timber footing stumps where the full left pivot post and right fork will stand. Empty basin, no lever, no tall uprights, no compression post, no olives or jar or counterweight. Basin remains same diameter as reference and footings remain same spacing. Very low wide silhouette roughly5 times wider than tall.",
+      "seed": null,
+      "generation_id": null,
+      "raw": "",
+      "references": [
+        "/Users/rexxa/work/art-batch/A2/bronze/raw/olive_press_working_try3.png",
+        "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+        "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png"
+      ],
+      "prompt": "Use case: precise-object-edit. IMAGE1 is the target building; images2/3 are locked style references. Create its foundation lifecycle state: Only its complete low circular STONE PRESS BASIN foundation and the two low timber footing stumps where the full left pivot post and right fork will stand. Empty basin, no lever, no tall uprights, no compression post, no olives or jar or counterweight. Basin remains same diameter as reference and footings remain same spacing. Very low wide silhouette roughly5 times wider than tall. WorldSim concept05: hand-ink thin irregular sepia/charcoal lines with quiet natural earth pigment wash, main contour twice secondary ink. Upper-left light, visibly light upper/left surfaces and dark lower/right; front three-quarter about20degrees down, shallow compressed tops, substantial front faces. Match locked props and scene style only; never reproduce their scenery. WOOD:3 short broken longitudinal grain groups per major beam, no continuous grooves or smooth cylinder cartoon. STONE:3 short crack/facet groups per large mass. One subtle / hatch group of3 marks in shadow. No all-over crosshatching or speckle. No metal. No roof, people, labels, ground patch, cast-shadow puddle, backdrop, haze, glow, or detached decorative flecks. One complete isolated sprite with actual transparent alpha, gaps transparent and generous margins. Preserve object identity and fixed ground footprint, not an isometric diamond."
+    },
+    {
+      "id": "olive_press_half_built",
+      "family": "olive_press",
+      "state": "half_built",
+      "attempt": 1,
+      "era": "bronze",
+      "lane": "stages_mine_press",
+      "target_height": 64,
+      "width_target": 122,
+      "width_tolerance": 12,
+      "footprint": [
+        2,
+        2
+      ],
+      "projection_family": "b3_olive_press_half_built",
+      "height_band": [
+        62,
+        66
+      ],
+      "height_band_reason": "Predeclared stage silhouette height; same A2 footprint and source ground-span target. No frozen style or lighting tolerance changed.",
+      "style_family": "buildings",
+      "subject": "Construction halfway: complete circular stone basin and the left pivot post and right forked support partly erected, left post only four-fifths final height. Main lever is absent, compression post absent, rope/counterweight absent. One unfinished beam laid low beside the empty basin within footprint. Incomplete assembly clearly readable; no olives or oil or vessel. Wide silhouette around1.9times width/height.",
+      "seed": null,
+      "generation_id": null,
+      "raw": "",
+      "references": [
+        "/Users/rexxa/work/art-batch/A2/bronze/raw/olive_press_working_try3.png",
+        "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+        "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png"
+      ],
+      "prompt": "Use case: precise-object-edit. IMAGE1 is the target building; images2/3 are locked style references. Create its half_built lifecycle state: Construction halfway: complete circular stone basin and the left pivot post and right forked support partly erected, left post only four-fifths final height. Main lever is absent, compression post absent, rope/counterweight absent. One unfinished beam laid low beside the empty basin within footprint. Incomplete assembly clearly readable; no olives or oil or vessel. Wide silhouette around1.9times width/height. WorldSim concept05: hand-ink thin irregular sepia/charcoal lines with quiet natural earth pigment wash, main contour twice secondary ink. Upper-left light, visibly light upper/left surfaces and dark lower/right; front three-quarter about20degrees down, shallow compressed tops, substantial front faces. Match locked props and scene style only; never reproduce their scenery. WOOD:3 short broken longitudinal grain groups per major beam, no continuous grooves or smooth cylinder cartoon. STONE:3 short crack/facet groups per large mass. One subtle / hatch group of3 marks in shadow. No all-over crosshatching or speckle. No metal. No roof, people, labels, ground patch, cast-shadow puddle, backdrop, haze, glow, or detached decorative flecks. One complete isolated sprite with actual transparent alpha, gaps transparent and generous margins. Preserve object identity and fixed ground footprint, not an isometric diamond."
+    },
+    {
+      "id": "olive_press_damaged",
+      "family": "olive_press",
+      "state": "damaged",
+      "attempt": 1,
+      "era": "bronze",
+      "lane": "stages_mine_press",
+      "target_height": 80,
+      "width_target": 122,
+      "width_tolerance": 12,
+      "footprint": [
+        2,
+        2
+      ],
+      "projection_family": "b3_olive_press_damaged",
+      "height_band": [
+        78,
+        82
+      ],
+      "height_band_reason": "Predeclared stage silhouette height; same A2 footprint and source ground-span target. No frozen style or lighting tolerance changed.",
+      "style_family": "buildings",
+      "subject": "Same completed wooden BEAM OLIVE PRESS damaged: retain left pivot and right fork, but main lever visibly split near right end and right support has one broken brace; snapped rope leaves counterweight resting beside basin. Stone basin has one broad cracked rim section, empty of olives. No oil and no working stream. Main structure still stands with same80px overall height and1.5 width/height.",
+      "seed": null,
+      "generation_id": null,
+      "raw": "",
+      "references": [
+        "/Users/rexxa/work/art-batch/A2/bronze/raw/olive_press_working_try3.png",
+        "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+        "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png"
+      ],
+      "prompt": "Use case: precise-object-edit. IMAGE1 is the target building; images2/3 are locked style references. Create its damaged lifecycle state: Same completed wooden BEAM OLIVE PRESS damaged: retain left pivot and right fork, but main lever visibly split near right end and right support has one broken brace; snapped rope leaves counterweight resting beside basin. Stone basin has one broad cracked rim section, empty of olives. No oil and no working stream. Main structure still stands with same80px overall height and1.5 width/height. WorldSim concept05: hand-ink thin irregular sepia/charcoal lines with quiet natural earth pigment wash, main contour twice secondary ink. Upper-left light, visibly light upper/left surfaces and dark lower/right; front three-quarter about20degrees down, shallow compressed tops, substantial front faces. Match locked props and scene style only; never reproduce their scenery. WOOD:3 short broken longitudinal grain groups per major beam, no continuous grooves or smooth cylinder cartoon. STONE:3 short crack/facet groups per large mass. One subtle / hatch group of3 marks in shadow. No all-over crosshatching or speckle. No metal. No roof, people, labels, ground patch, cast-shadow puddle, backdrop, haze, glow, or detached decorative flecks. One complete isolated sprite with actual transparent alpha, gaps transparent and generous margins. Preserve object identity and fixed ground footprint, not an isometric diamond."
+    },
+    {
+      "id": "olive_press_ruined",
+      "family": "olive_press",
+      "state": "ruined",
+      "attempt": 1,
+      "era": "bronze",
+      "lane": "stages_mine_press",
+      "target_height": 28,
+      "width_target": 122,
+      "width_tolerance": 12,
+      "footprint": [
+        2,
+        2
+      ],
+      "projection_family": "b3_olive_press_ruined",
+      "height_band": [
+        26,
+        30
+      ],
+      "height_band_reason": "Predeclared stage silhouette height; same A2 footprint and source ground-span target. No frozen style or lighting tolerance changed.",
+      "style_family": "buildings",
+      "subject": "Same olive press collapsed: low broken stone basin with one missing rim sector, two short snapped timber stumps, and the snapped wooden lever resting diagonally across the basin as two pieces. Fallen counterweight and loose loop of rope lie immediately alongside within footprint. No tall upright, no olives or oil or jar. Wide low ruin around4.3times wider than high.",
+      "seed": null,
+      "generation_id": null,
+      "raw": "",
+      "references": [
+        "/Users/rexxa/work/art-batch/A2/bronze/raw/olive_press_working_try3.png",
+        "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+        "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png"
+      ],
+      "prompt": "Use case: precise-object-edit. IMAGE1 is the target building; images2/3 are locked style references. Create its ruined lifecycle state: Same olive press collapsed: low broken stone basin with one missing rim sector, two short snapped timber stumps, and the snapped wooden lever resting diagonally across the basin as two pieces. Fallen counterweight and loose loop of rope lie immediately alongside within footprint. No tall upright, no olives or oil or jar. Wide low ruin around4.3times wider than high. WorldSim concept05: hand-ink thin irregular sepia/charcoal lines with quiet natural earth pigment wash, main contour twice secondary ink. Upper-left light, visibly light upper/left surfaces and dark lower/right; front three-quarter about20degrees down, shallow compressed tops, substantial front faces. Match locked props and scene style only; never reproduce their scenery. WOOD:3 short broken longitudinal grain groups per major beam, no continuous grooves or smooth cylinder cartoon. STONE:3 short crack/facet groups per large mass. One subtle / hatch group of3 marks in shadow. No all-over crosshatching or speckle. No metal. No roof, people, labels, ground patch, cast-shadow puddle, backdrop, haze, glow, or detached decorative flecks. One complete isolated sprite with actual transparent alpha, gaps transparent and generous margins. Preserve object identity and fixed ground footprint, not an isometric diamond."
+    },
+    {
+      "id": "mine_entrance_foundation",
+      "family": "mine_entrance",
+      "state": "foundation",
+      "attempt": 1,
+      "era": "bronze",
+      "lane": "stages_mine_press",
+      "target_height": 40,
+      "width_target": 97,
+      "width_tolerance": 12,
+      "footprint": [
+        2,
+        1
+      ],
+      "projection_family": "b3_mine_entrance_foundation",
+      "height_band": [
+        38,
+        42
+      ],
+      "height_band_reason": "Predeclared stage silhouette height; same A2 footprint and source ground-span target. No frozen style or lighting tolerance changed.",
+      "style_family": "buildings",
+      "subject": "Early construction of this mine entrance: low freshly cut grey-umber rock shelf around a shallow rectangular recess, two short timber footing stubs set at original jamb positions, no header beam and no full upright posts yet. No dark deep tunnel yet, no basket. Preserve natural rock identity. Low broad rocky foundation about2.4times wider than high.",
+      "seed": null,
+      "generation_id": null,
+      "raw": "",
+      "references": [
+        "/Users/rexxa/work/art-batch/A2/bronze/raw/mine_entrance_active_try3.png",
+        "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+        "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png"
+      ],
+      "prompt": "Use case: precise-object-edit. IMAGE1 is the target building; images2/3 are locked style references. Create its foundation lifecycle state: Early construction of this mine entrance: low freshly cut grey-umber rock shelf around a shallow rectangular recess, two short timber footing stubs set at original jamb positions, no header beam and no full upright posts yet. No dark deep tunnel yet, no basket. Preserve natural rock identity. Low broad rocky foundation about2.4times wider than high. WorldSim concept05: hand-ink thin irregular sepia/charcoal lines with quiet natural earth pigment wash, main contour twice secondary ink. Upper-left light, visibly light upper/left surfaces and dark lower/right; front three-quarter about20degrees down, shallow compressed tops, substantial front faces. Match locked props and scene style only; never reproduce their scenery. WOOD:3 short broken longitudinal grain groups per major beam, no continuous grooves or smooth cylinder cartoon. STONE:3 short crack/facet groups per large mass. One subtle / hatch group of3 marks in shadow. No all-over crosshatching or speckle. No metal. No roof, people, labels, ground patch, cast-shadow puddle, backdrop, haze, glow, or detached decorative flecks. One complete isolated sprite with actual transparent alpha, gaps transparent and generous margins. Preserve object identity and fixed ground footprint, not an isometric diamond."
+    },
+    {
+      "id": "mine_entrance_half_built",
+      "family": "mine_entrance",
+      "state": "half_built",
+      "attempt": 1,
+      "era": "bronze",
+      "lane": "stages_mine_press",
+      "target_height": 64,
+      "width_target": 97,
+      "width_tolerance": 12,
+      "footprint": [
+        2,
+        1
+      ],
+      "projection_family": "b3_mine_entrance_half_built",
+      "height_band": [
+        62,
+        66
+      ],
+      "height_band_reason": "Predeclared stage silhouette height; same A2 footprint and source ground-span target. No frozen style or lighting tolerance changed.",
+      "style_family": "buildings",
+      "subject": "Half-built mine entrance: retain same low grey-brown rock face and a partly excavated shallow dark-brown recess. Left wooden jamb stands full height, right jamb reaches only halfway; header beam is absent. One timber lies on the threshold within the rock face footprint. No ore basket. Rock outline remains same size, width around1.5times height. Keep warmer brighter rock upper-left and darker lower-right.",
+      "seed": null,
+      "generation_id": null,
+      "raw": "",
+      "references": [
+        "/Users/rexxa/work/art-batch/A2/bronze/raw/mine_entrance_active_try3.png",
+        "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+        "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png"
+      ],
+      "prompt": "Use case: precise-object-edit. IMAGE1 is the target building; images2/3 are locked style references. Create its half_built lifecycle state: Half-built mine entrance: retain same low grey-brown rock face and a partly excavated shallow dark-brown recess. Left wooden jamb stands full height, right jamb reaches only halfway; header beam is absent. One timber lies on the threshold within the rock face footprint. No ore basket. Rock outline remains same size, width around1.5times height. Keep warmer brighter rock upper-left and darker lower-right. WorldSim concept05: hand-ink thin irregular sepia/charcoal lines with quiet natural earth pigment wash, main contour twice secondary ink. Upper-left light, visibly light upper/left surfaces and dark lower/right; front three-quarter about20degrees down, shallow compressed tops, substantial front faces. Match locked props and scene style only; never reproduce their scenery. WOOD:3 short broken longitudinal grain groups per major beam, no continuous grooves or smooth cylinder cartoon. STONE:3 short crack/facet groups per large mass. One subtle / hatch group of3 marks in shadow. No all-over crosshatching or speckle. No metal. No roof, people, labels, ground patch, cast-shadow puddle, backdrop, haze, glow, or detached decorative flecks. One complete isolated sprite with actual transparent alpha, gaps transparent and generous margins. Preserve object identity and fixed ground footprint, not an isometric diamond."
+    },
+    {
+      "id": "mine_entrance_damaged",
+      "family": "mine_entrance",
+      "state": "damaged",
+      "attempt": 1,
+      "era": "bronze",
+      "lane": "stages_mine_press",
+      "target_height": 64,
+      "width_target": 97,
+      "width_tolerance": 12,
+      "footprint": [
+        2,
+        1
+      ],
+      "projection_family": "b3_mine_entrance_damaged",
+      "height_band": [
+        62,
+        66
+      ],
+      "height_band_reason": "Predeclared stage silhouette height; same A2 footprint and source ground-span target. No frozen style or lighting tolerance changed.",
+      "style_family": "buildings",
+      "subject": "Damaged mine entrance: same full rock face, tunnel mouth and timber support frame, but a visible split in the wooden header and one broken right diagonal brace; two small fallen stones partly obstruct the lower-right threshold. Opening remains mostly visible. No ore basket. Rock upper-left distinctly lighter, rock lower-right darker. Width around1.5times height.",
+      "seed": null,
+      "generation_id": null,
+      "raw": "",
+      "references": [
+        "/Users/rexxa/work/art-batch/A2/bronze/raw/mine_entrance_active_try3.png",
+        "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+        "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png"
+      ],
+      "prompt": "Use case: precise-object-edit. IMAGE1 is the target building; images2/3 are locked style references. Create its damaged lifecycle state: Damaged mine entrance: same full rock face, tunnel mouth and timber support frame, but a visible split in the wooden header and one broken right diagonal brace; two small fallen stones partly obstruct the lower-right threshold. Opening remains mostly visible. No ore basket. Rock upper-left distinctly lighter, rock lower-right darker. Width around1.5times height. WorldSim concept05: hand-ink thin irregular sepia/charcoal lines with quiet natural earth pigment wash, main contour twice secondary ink. Upper-left light, visibly light upper/left surfaces and dark lower/right; front three-quarter about20degrees down, shallow compressed tops, substantial front faces. Match locked props and scene style only; never reproduce their scenery. WOOD:3 short broken longitudinal grain groups per major beam, no continuous grooves or smooth cylinder cartoon. STONE:3 short crack/facet groups per large mass. One subtle / hatch group of3 marks in shadow. No all-over crosshatching or speckle. No metal. No roof, people, labels, ground patch, cast-shadow puddle, backdrop, haze, glow, or detached decorative flecks. One complete isolated sprite with actual transparent alpha, gaps transparent and generous margins. Preserve object identity and fixed ground footprint, not an isometric diamond."
+    },
+    {
+      "id": "mine_entrance_ruined",
+      "family": "mine_entrance",
+      "state": "ruined",
+      "attempt": 1,
+      "era": "bronze",
+      "lane": "stages_mine_press",
+      "target_height": 40,
+      "width_target": 97,
+      "width_tolerance": 12,
+      "footprint": [
+        2,
+        1
+      ],
+      "projection_family": "b3_mine_entrance_ruined",
+      "height_band": [
+        38,
+        42
+      ],
+      "height_band_reason": "Predeclared stage silhouette height; same A2 footprint and source ground-span target. No frozen style or lighting tolerance changed.",
+      "style_family": "buildings",
+      "subject": "Ruined collapsed mine entrance: the upper arch rock has fallen into a broad LOW rubble mass sealing almost all of the old mouth, a short broken jamb stump remains at each side, fractured header lies across rubble. Small dark slit under rubble only, not an open working tunnel. No basket. Broad low silhouette around2.4times wider than tall, same97px ground span at final scale.",
+      "seed": null,
+      "generation_id": null,
+      "raw": "",
+      "references": [
+        "/Users/rexxa/work/art-batch/A2/bronze/raw/mine_entrance_active_try3.png",
+        "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+        "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png"
+      ],
+      "prompt": "Use case: precise-object-edit. IMAGE1 is the target building; images2/3 are locked style references. Create its ruined lifecycle state: Ruined collapsed mine entrance: the upper arch rock has fallen into a broad LOW rubble mass sealing almost all of the old mouth, a short broken jamb stump remains at each side, fractured header lies across rubble. Small dark slit under rubble only, not an open working tunnel. No basket. Broad low silhouette around2.4times wider than tall, same97px ground span at final scale. WorldSim concept05: hand-ink thin irregular sepia/charcoal lines with quiet natural earth pigment wash, main contour twice secondary ink. Upper-left light, visibly light upper/left surfaces and dark lower/right; front three-quarter about20degrees down, shallow compressed tops, substantial front faces. Match locked props and scene style only; never reproduce their scenery. WOOD:3 short broken longitudinal grain groups per major beam, no continuous grooves or smooth cylinder cartoon. STONE:3 short crack/facet groups per large mass. One subtle / hatch group of3 marks in shadow. No all-over crosshatching or speckle. No metal. No roof, people, labels, ground patch, cast-shadow puddle, backdrop, haze, glow, or detached decorative flecks. One complete isolated sprite with actual transparent alpha, gaps transparent and generous margins. Preserve object identity and fixed ground footprint, not an isometric diamond."
+    }
+  ]
+}

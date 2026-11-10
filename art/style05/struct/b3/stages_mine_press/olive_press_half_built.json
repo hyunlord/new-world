@@ -1,0 +1,203 @@
+{
+  "id": "olive_press_half_built",
+  "family": "olive_press",
+  "state": "half_built",
+  "era": "bronze",
+  "path": "art/style05/struct/b3/stages_mine_press/olive_press_half_built.png",
+  "sha256": "5d739cb45d86c1ea0e2abad0fe09ae2c0f5240de4a4d04d7f56e599724eb6d4b",
+  "canvas": [
+    127,
+    72
+  ],
+  "anchor": [
+    63,
+    67
+  ],
+  "footprint": [
+    2,
+    2
+  ],
+  "selected_attempt": 1,
+  "source_record": "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/olive_press_half_built_try1.json",
+  "source_raw_sha256": "1e79a059b611cc61676573a2678d44d0f2b0bc45b8cff2b97b6b42fc24a85f23",
+  "status": "SELECTED_CANDIDATE_NOT_GAME_IMPORTED",
+  "self_review": {
+    "score": 92,
+    "verdict": "pass",
+    "reason": "Consistent stone basin/beam press identity; half assembly lacks lever, damaged beam split is visible; same ink, natural earth wash, upper-left light as A2 built."
+  },
+  "checks": {
+    "record": {
+      "id": "olive_press_half_built",
+      "lane": "stages_mine_press",
+      "era": "bronze",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/olive_press_half_built_try1.png",
+      "prompt": "Use case: precise-object-edit. IMAGE1 is the target building; images2/3 are locked style references. Create its half_built lifecycle state: Construction halfway: complete circular stone basin and the left pivot post and right forked support partly erected, left post only four-fifths final height. Main lever is absent, compression post absent, rope/counterweight absent. One unfinished beam laid low beside the empty basin within footprint. Incomplete assembly clearly readable; no olives or oil or vessel. Wide silhouette around1.9times width/height. WorldSim concept05: hand-ink thin irregular sepia/charcoal lines with quiet natural earth pigment wash, main contour twice secondary ink. Upper-left light, visibly light upper/left surfaces and dark lower/right; front three-quarter about20degrees down, shallow compressed tops, substantial front faces. Match locked props and scene style only; never reproduce their scenery. WOOD:3 short broken longitudinal grain groups per major beam, no continuous grooves or smooth cylinder cartoon. STONE:3 short crack/facet groups per large mass. One subtle / hatch group of3 marks in shadow. No all-over crosshatching or speckle. No metal. No roof, people, labels, ground patch, cast-shadow puddle, backdrop, haze, glow, or detached decorative flecks. One complete isolated sprite with actual transparent alpha, gaps transparent and generous margins. Preserve object identity and fixed ground footprint, not an isometric diamond.",
+      "subject": "Construction halfway: complete circular stone basin and the left pivot post and right forked support partly erected, left post only four-fifths final height. Main lever is absent, compression post absent, rope/counterweight absent. One unfinished beam laid low beside the empty basin within footprint. Incomplete assembly clearly readable; no olives or oil or vessel. Wide silhouette around1.9times width/height.",
+      "references": [
+        "/Users/rexxa/work/art-batch/A2/bronze/raw/olive_press_working_try3.png",
+        "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+        "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png"
+      ],
+      "target_height": 64,
+      "projection_family": "b3_olive_press_half_built",
+      "height_band": [
+        62,
+        66
+      ],
+      "height_band_reason": "Predeclared stage silhouette height; same A2 footprint and source ground-span target. No frozen style or lighting tolerance changed.",
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "style_family": "buildings",
+      "generation_id": "exec-9562927a-3c01-4f03-a3b8-bc826a09fcc2",
+      "seed": null,
+      "generated_at": "2026-11-10T22:41:47.931618+00:00"
+    },
+    "raw_preserved": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/olive_press_half_built_try1.png",
+    "raw_sha256": "1e79a059b611cc61676573a2678d44d0f2b0bc45b8cff2b97b6b42fc24a85f23",
+    "references": [
+      {
+        "path": "/Users/rexxa/work/art-batch/A2/bronze/raw/olive_press_working_try3.png",
+        "sha256": "172a2b7eb79ce144b6ac4a9b0ab94796e2ac6034ae176219de8d8bf2c9c53366"
+      },
+      {
+        "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+        "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      {
+        "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+        "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+      }
+    ],
+    "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+    "normalized": "/Users/rexxa/work/art-batch/B3/stages_mine_press/normalized/olive_press_half_built_try1.png",
+    "normalized_sha256": "5d739cb45d86c1ea0e2abad0fe09ae2c0f5240de4a4d04d7f56e599724eb6d4b",
+    "size": [
+      127,
+      72
+    ],
+    "anchor": [
+      63,
+      67
+    ],
+    "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+    "operations": [
+      "alpha>=128 bounds plus 2px fringe crop: (190, 145, 1509, 858)",
+      "uniform Lanczos scale: 0.09026798307475317",
+      "transparent 4px padding; source-canvas anchor: (63, 67)"
+    ],
+    "projection": {
+      "family": "b3_olive_press_half_built",
+      "anchor": [
+        63,
+        67
+      ],
+      "height_band": [
+        62,
+        66
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 3621,
+      "base_row": 67,
+      "base_error": 0,
+      "height": 64,
+      "gradient_x": -1.0249150042869388,
+      "gradient_y": -1.5083465788720298,
+      "light_angle_degrees": 235.80406087627358,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "judge_v2": {
+      "candidate": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/olive_press_half_built_try1.png",
+      "sha256": "1e79a059b611cc61676573a2678d44d0f2b0bc45b8cff2b97b6b42fc24a85f23",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.2284553378334098,
+        "saturation_q25": 0.33236624821772465,
+        "saturation_q75": 0.509920311734054,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.012093168204119126,
+        "foreground_pixels": 17023
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    "raw_alpha_min": 0,
+    "raw_alpha_max": 255,
+    "clipped_at_raw_border": false,
+    "raw_nonzero_bbox": [
+      0,
+      17,
+      1708,
+      910
+    ],
+    "raw_opaque_bbox": [
+      192,
+      147,
+      1507,
+      856
+    ],
+    "raw_faint_far_ratio": 0.005205268349682265,
+    "review_flags": [
+      "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+    ],
+    "numeric_ready": true,
+    "status": "NUMERIC_READY_AWAITING_REVIEW",
+    "failures": [],
+    "review": null,
+    "seed_note": "Null means the generation tool did not expose a seed; none was invented."
+  },
+  "geometry_declared": {
+    "id": "olive_press_half_built",
+    "family": "olive_press",
+    "state": "half_built",
+    "attempt": 1,
+    "era": "bronze",
+    "lane": "stages_mine_press",
+    "target_height": 64,
+    "width_target": 122,
+    "width_tolerance": 12,
+    "footprint": [
+      2,
+      2
+    ],
+    "projection_family": "b3_olive_press_half_built",
+    "height_band": [
+      62,
+      66
+    ],
+    "height_band_reason": "Predeclared stage silhouette height; same A2 footprint and source ground-span target. No frozen style or lighting tolerance changed.",
+    "style_family": "buildings",
+    "subject": "Construction halfway: complete circular stone basin and the left pivot post and right forked support partly erected, left post only four-fifths final height. Main lever is absent, compression post absent, rope/counterweight absent. One unfinished beam laid low beside the empty basin within footprint. Incomplete assembly clearly readable; no olives or oil or vessel. Wide silhouette around1.9times width/height.",
+    "seed": null,
+    "generation_id": null,
+    "raw": "",
+    "references": [
+      "/Users/rexxa/work/art-batch/A2/bronze/raw/olive_press_working_try3.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png"
+    ],
+    "prompt": "Use case: precise-object-edit. IMAGE1 is the target building; images2/3 are locked style references. Create its half_built lifecycle state: Construction halfway: complete circular stone basin and the left pivot post and right forked support partly erected, left post only four-fifths final height. Main lever is absent, compression post absent, rope/counterweight absent. One unfinished beam laid low beside the empty basin within footprint. Incomplete assembly clearly readable; no olives or oil or vessel. Wide silhouette around1.9times width/height. WorldSim concept05: hand-ink thin irregular sepia/charcoal lines with quiet natural earth pigment wash, main contour twice secondary ink. Upper-left light, visibly light upper/left surfaces and dark lower/right; front three-quarter about20degrees down, shallow compressed tops, substantial front faces. Match locked props and scene style only; never reproduce their scenery. WOOD:3 short broken longitudinal grain groups per major beam, no continuous grooves or smooth cylinder cartoon. STONE:3 short crack/facet groups per large mass. One subtle / hatch group of3 marks in shadow. No all-over crosshatching or speckle. No metal. No roof, people, labels, ground patch, cast-shadow puddle, backdrop, haze, glow, or detached decorative flecks. One complete isolated sprite with actual transparent alpha, gaps transparent and generous margins. Preserve object identity and fixed ground footprint, not an isometric diamond."
+  },
+  "independent_review": "art/batch_b3/stages_mine_press/root_review.json"
+}

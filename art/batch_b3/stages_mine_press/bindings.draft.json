@@ -1,0 +1,33 @@
+{
+  "status": "DRAFT_NOT_APPLIED",
+  "structures": {
+    "olive_press_half_built": {
+      "sprite": "structures/b3/stages_mine_press/olive_press_half_built.png",
+      "family": "olive_press",
+      "state": "half_built",
+      "anchor": [
+        63,
+        67
+      ],
+      "footprint": [
+        2,
+        2
+      ]
+    },
+    "olive_press_damaged": {
+      "sprite": "structures/b3/stages_mine_press/olive_press_damaged.png",
+      "family": "olive_press",
+      "state": "damaged",
+      "anchor": [
+        61,
+        83
+      ],
+      "footprint": [
+        2,
+        2
+      ]
+    }
+  },
+  "runtime_numeric_ids": null,
+  "instruction": "No simulation IDs invented; C2/C3 must map actual construction/damage states."
+}

@@ -1,0 +1,1295 @@
+{
+  "schema_version": 1,
+  "assets": [
+    {
+      "id": "olive_press_half_built",
+      "family": "olive_press",
+      "state": "half_built",
+      "era": "bronze",
+      "path": "art/style05/struct/b3/stages_mine_press/olive_press_half_built.png",
+      "sha256": "5d739cb45d86c1ea0e2abad0fe09ae2c0f5240de4a4d04d7f56e599724eb6d4b",
+      "canvas": [
+        127,
+        72
+      ],
+      "anchor": [
+        63,
+        67
+      ],
+      "footprint": [
+        2,
+        2
+      ],
+      "selected_attempt": 1,
+      "source_record": "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/olive_press_half_built_try1.json",
+      "source_raw_sha256": "1e79a059b611cc61676573a2678d44d0f2b0bc45b8cff2b97b6b42fc24a85f23",
+      "status": "SELECTED_CANDIDATE_NOT_GAME_IMPORTED",
+      "self_review": {
+        "score": 92,
+        "verdict": "pass",
+        "reason": "Consistent stone basin/beam press identity; half assembly lacks lever, damaged beam split is visible; same ink, natural earth wash, upper-left light as A2 built."
+      },
+      "checks": {
+        "record": {
+          "id": "olive_press_half_built",
+          "lane": "stages_mine_press",
+          "era": "bronze",
+          "attempt": 1,
+          "raw": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/olive_press_half_built_try1.png",
+          "prompt": "Use case: precise-object-edit. IMAGE1 is the target building; images2/3 are locked style references. Create its half_built lifecycle state: Construction halfway: complete circular stone basin and the left pivot post and right forked support partly erected, left post only four-fifths final height. Main lever is absent, compression post absent, rope/counterweight absent. One unfinished beam laid low beside the empty basin within footprint. Incomplete assembly clearly readable; no olives or oil or vessel. Wide silhouette around1.9times width/height. WorldSim concept05: hand-ink thin irregular sepia/charcoal lines with quiet natural earth pigment wash, main contour twice secondary ink. Upper-left light, visibly light upper/left surfaces and dark lower/right; front three-quarter about20degrees down, shallow compressed tops, substantial front faces. Match locked props and scene style only; never reproduce their scenery. WOOD:3 short broken longitudinal grain groups per major beam, no continuous grooves or smooth cylinder cartoon. STONE:3 short crack/facet groups per large mass. One subtle / hatch group of3 marks in shadow. No all-over crosshatching or speckle. No metal. No roof, people, labels, ground patch, cast-shadow puddle, backdrop, haze, glow, or detached decorative flecks. One complete isolated sprite with actual transparent alpha, gaps transparent and generous margins. Preserve object identity and fixed ground footprint, not an isometric diamond.",
+          "subject": "Construction halfway: complete circular stone basin and the left pivot post and right forked support partly erected, left post only four-fifths final height. Main lever is absent, compression post absent, rope/counterweight absent. One unfinished beam laid low beside the empty basin within footprint. Incomplete assembly clearly readable; no olives or oil or vessel. Wide silhouette around1.9times width/height.",
+          "references": [
+            "/Users/rexxa/work/art-batch/A2/bronze/raw/olive_press_working_try3.png",
+            "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+            "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png"
+          ],
+          "target_height": 64,
+          "projection_family": "b3_olive_press_half_built",
+          "height_band": [
+            62,
+            66
+          ],
+          "height_band_reason": "Predeclared stage silhouette height; same A2 footprint and source ground-span target. No frozen style or lighting tolerance changed.",
+          "footprint": [
+            2.0,
+            2.0
+          ],
+          "style_family": "buildings",
+          "generation_id": "exec-9562927a-3c01-4f03-a3b8-bc826a09fcc2",
+          "seed": null,
+          "generated_at": "2026-11-10T22:41:47.931618+00:00"
+        },
+        "raw_preserved": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/olive_press_half_built_try1.png",
+        "raw_sha256": "1e79a059b611cc61676573a2678d44d0f2b0bc45b8cff2b97b6b42fc24a85f23",
+        "references": [
+          {
+            "path": "/Users/rexxa/work/art-batch/A2/bronze/raw/olive_press_working_try3.png",
+            "sha256": "172a2b7eb79ce144b6ac4a9b0ab94796e2ac6034ae176219de8d8bf2c9c53366"
+          },
+          {
+            "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+            "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+          },
+          {
+            "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+            "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+          }
+        ],
+        "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+        "normalized": "/Users/rexxa/work/art-batch/B3/stages_mine_press/normalized/olive_press_half_built_try1.png",
+        "normalized_sha256": "5d739cb45d86c1ea0e2abad0fe09ae2c0f5240de4a4d04d7f56e599724eb6d4b",
+        "size": [
+          127,
+          72
+        ],
+        "anchor": [
+          63,
+          67
+        ],
+        "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+        "operations": [
+          "alpha>=128 bounds plus 2px fringe crop: (190, 145, 1509, 858)",
+          "uniform Lanczos scale: 0.09026798307475317",
+          "transparent 4px padding; source-canvas anchor: (63, 67)"
+        ],
+        "projection": {
+          "family": "b3_olive_press_half_built",
+          "anchor": [
+            63,
+            67
+          ],
+          "height_band": [
+            62,
+            66
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 3621,
+          "base_row": 67,
+          "base_error": 0,
+          "height": 64,
+          "gradient_x": -1.0249150042869388,
+          "gradient_y": -1.5083465788720298,
+          "light_angle_degrees": 235.80406087627358,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "judge_v2": {
+          "candidate": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/olive_press_half_built_try1.png",
+          "sha256": "1e79a059b611cc61676573a2678d44d0f2b0bc45b8cff2b97b6b42fc24a85f23",
+          "family": "buildings",
+          "metrics": {
+            "edge_density": 0.2284553378334098,
+            "saturation_q25": 0.33236624821772465,
+            "saturation_q75": 0.509920311734054,
+            "stroke_q25": 2.0,
+            "stroke_q50": 2.0,
+            "stroke_q75": 2.8284271247461903,
+            "stroke_q90": 4.0,
+            "wash_flatness": 0.012093168204119126,
+            "foreground_pixels": 17023
+          },
+          "numeric_checks": {
+            "edge_density": true,
+            "saturation_q25": true,
+            "saturation_q75": true,
+            "stroke_q25": true,
+            "stroke_q50": true,
+            "stroke_q75": true,
+            "stroke_q90": true,
+            "wash_flatness": true
+          },
+          "numeric_pass": true,
+          "model_scores": null,
+          "model_status": "MISSING",
+          "passed": false
+        },
+        "raw_alpha_min": 0,
+        "raw_alpha_max": 255,
+        "clipped_at_raw_border": false,
+        "raw_nonzero_bbox": [
+          0,
+          17,
+          1708,
+          910
+        ],
+        "raw_opaque_bbox": [
+          192,
+          147,
+          1507,
+          856
+        ],
+        "raw_faint_far_ratio": 0.005205268349682265,
+        "review_flags": [
+          "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+        ],
+        "numeric_ready": true,
+        "status": "NUMERIC_READY_AWAITING_REVIEW",
+        "failures": [],
+        "review": null,
+        "seed_note": "Null means the generation tool did not expose a seed; none was invented."
+      },
+      "geometry_declared": {
+        "id": "olive_press_half_built",
+        "family": "olive_press",
+        "state": "half_built",
+        "attempt": 1,
+        "era": "bronze",
+        "lane": "stages_mine_press",
+        "target_height": 64,
+        "width_target": 122,
+        "width_tolerance": 12,
+        "footprint": [
+          2,
+          2
+        ],
+        "projection_family": "b3_olive_press_half_built",
+        "height_band": [
+          62,
+          66
+        ],
+        "height_band_reason": "Predeclared stage silhouette height; same A2 footprint and source ground-span target. No frozen style or lighting tolerance changed.",
+        "style_family": "buildings",
+        "subject": "Construction halfway: complete circular stone basin and the left pivot post and right forked support partly erected, left post only four-fifths final height. Main lever is absent, compression post absent, rope/counterweight absent. One unfinished beam laid low beside the empty basin within footprint. Incomplete assembly clearly readable; no olives or oil or vessel. Wide silhouette around1.9times width/height.",
+        "seed": null,
+        "generation_id": null,
+        "raw": "",
+        "references": [
+          "/Users/rexxa/work/art-batch/A2/bronze/raw/olive_press_working_try3.png",
+          "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+          "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png"
+        ],
+        "prompt": "Use case: precise-object-edit. IMAGE1 is the target building; images2/3 are locked style references. Create its half_built lifecycle state: Construction halfway: complete circular stone basin and the left pivot post and right forked support partly erected, left post only four-fifths final height. Main lever is absent, compression post absent, rope/counterweight absent. One unfinished beam laid low beside the empty basin within footprint. Incomplete assembly clearly readable; no olives or oil or vessel. Wide silhouette around1.9times width/height. WorldSim concept05: hand-ink thin irregular sepia/charcoal lines with quiet natural earth pigment wash, main contour twice secondary ink. Upper-left light, visibly light upper/left surfaces and dark lower/right; front three-quarter about20degrees down, shallow compressed tops, substantial front faces. Match locked props and scene style only; never reproduce their scenery. WOOD:3 short broken longitudinal grain groups per major beam, no continuous grooves or smooth cylinder cartoon. STONE:3 short crack/facet groups per large mass. One subtle / hatch group of3 marks in shadow. No all-over crosshatching or speckle. No metal. No roof, people, labels, ground patch, cast-shadow puddle, backdrop, haze, glow, or detached decorative flecks. One complete isolated sprite with actual transparent alpha, gaps transparent and generous margins. Preserve object identity and fixed ground footprint, not an isometric diamond."
+      },
+      "independent_review": "art/batch_b3/stages_mine_press/root_review.json"
+    },
+    {
+      "id": "olive_press_damaged",
+      "family": "olive_press",
+      "state": "damaged",
+      "era": "bronze",
+      "path": "art/style05/struct/b3/stages_mine_press/olive_press_damaged.png",
+      "sha256": "1b10b3853c8a151ad6f69bea1f4fa53e28a874fd50166f2d2982ffcee43db32b",
+      "canvas": [
+        123,
+        88
+      ],
+      "anchor": [
+        61,
+        83
+      ],
+      "footprint": [
+        2,
+        2
+      ],
+      "selected_attempt": 1,
+      "source_record": "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/olive_press_damaged_try1.json",
+      "source_raw_sha256": "48a70b665a5abb76d2257b40834fe0dc586f6c50abee4916e23a8dbc50cd6425",
+      "status": "SELECTED_CANDIDATE_NOT_GAME_IMPORTED",
+      "self_review": {
+        "score": 92,
+        "verdict": "pass",
+        "reason": "Consistent stone basin/beam press identity; half assembly lacks lever, damaged beam split is visible; same ink, natural earth wash, upper-left light as A2 built."
+      },
+      "checks": {
+        "record": {
+          "id": "olive_press_damaged",
+          "lane": "stages_mine_press",
+          "era": "bronze",
+          "attempt": 1,
+          "raw": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/olive_press_damaged_try1.png",
+          "prompt": "Use case: precise-object-edit. IMAGE1 is the target building; images2/3 are locked style references. Create its damaged lifecycle state: Same completed wooden BEAM OLIVE PRESS damaged: retain left pivot and right fork, but main lever visibly split near right end and right support has one broken brace; snapped rope leaves counterweight resting beside basin. Stone basin has one broad cracked rim section, empty of olives. No oil and no working stream. Main structure still stands with same80px overall height and1.5 width/height. WorldSim concept05: hand-ink thin irregular sepia/charcoal lines with quiet natural earth pigment wash, main contour twice secondary ink. Upper-left light, visibly light upper/left surfaces and dark lower/right; front three-quarter about20degrees down, shallow compressed tops, substantial front faces. Match locked props and scene style only; never reproduce their scenery. WOOD:3 short broken longitudinal grain groups per major beam, no continuous grooves or smooth cylinder cartoon. STONE:3 short crack/facet groups per large mass. One subtle / hatch group of3 marks in shadow. No all-over crosshatching or speckle. No metal. No roof, people, labels, ground patch, cast-shadow puddle, backdrop, haze, glow, or detached decorative flecks. One complete isolated sprite with actual transparent alpha, gaps transparent and generous margins. Preserve object identity and fixed ground footprint, not an isometric diamond.",
+          "subject": "Same completed wooden BEAM OLIVE PRESS damaged: retain left pivot and right fork, but main lever visibly split near right end and right support has one broken brace; snapped rope leaves counterweight resting beside basin. Stone basin has one broad cracked rim section, empty of olives. No oil and no working stream. Main structure still stands with same80px overall height and1.5 width/height.",
+          "references": [
+            "/Users/rexxa/work/art-batch/A2/bronze/raw/olive_press_working_try3.png",
+            "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+            "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png"
+          ],
+          "target_height": 80,
+          "projection_family": "b3_olive_press_damaged",
+          "height_band": [
+            78,
+            82
+          ],
+          "height_band_reason": "Predeclared stage silhouette height; same A2 footprint and source ground-span target. No frozen style or lighting tolerance changed.",
+          "footprint": [
+            2.0,
+            2.0
+          ],
+          "style_family": "buildings",
+          "generation_id": "exec-f904291e-c2be-48d7-8263-2af492df2992",
+          "seed": null,
+          "generated_at": "2026-11-10T22:41:48.128074+00:00"
+        },
+        "raw_preserved": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/olive_press_damaged_try1.png",
+        "raw_sha256": "48a70b665a5abb76d2257b40834fe0dc586f6c50abee4916e23a8dbc50cd6425",
+        "references": [
+          {
+            "path": "/Users/rexxa/work/art-batch/A2/bronze/raw/olive_press_working_try3.png",
+            "sha256": "172a2b7eb79ce144b6ac4a9b0ab94796e2ac6034ae176219de8d8bf2c9c53366"
+          },
+          {
+            "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+            "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+          },
+          {
+            "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+            "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+          }
+        ],
+        "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+        "normalized": "/Users/rexxa/work/art-batch/B3/stages_mine_press/normalized/olive_press_damaged_try1.png",
+        "normalized_sha256": "1b10b3853c8a151ad6f69bea1f4fa53e28a874fd50166f2d2982ffcee43db32b",
+        "size": [
+          123,
+          88
+        ],
+        "anchor": [
+          61,
+          83
+        ],
+        "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+        "operations": [
+          "alpha>=128 bounds plus 2px fringe crop: (53, 114, 1405, 1055)",
+          "uniform Lanczos scale: 0.08537886872998933",
+          "transparent 4px padding; source-canvas anchor: (61, 83)"
+        ],
+        "projection": {
+          "family": "b3_olive_press_damaged",
+          "anchor": [
+            61,
+            83
+          ],
+          "height_band": [
+            78,
+            82
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 4779,
+          "base_row": 83,
+          "base_error": 0,
+          "height": 80,
+          "gradient_x": -0.6865204446381866,
+          "gradient_y": -1.7947266099105001,
+          "light_angle_degrees": 249.06710263979923,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "judge_v2": {
+          "candidate": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/olive_press_damaged_try1.png",
+          "sha256": "48a70b665a5abb76d2257b40834fe0dc586f6c50abee4916e23a8dbc50cd6425",
+          "family": "buildings",
+          "metrics": {
+            "edge_density": 0.22700875856816452,
+            "saturation_q25": 0.4349223802429352,
+            "saturation_q75": 0.548897597284876,
+            "stroke_q25": 2.0,
+            "stroke_q50": 2.0,
+            "stroke_q75": 2.8284271247461903,
+            "stroke_q90": 4.0,
+            "wash_flatness": 0.01601383441692378,
+            "foreground_pixels": 23862
+          },
+          "numeric_checks": {
+            "edge_density": true,
+            "saturation_q25": true,
+            "saturation_q75": true,
+            "stroke_q25": true,
+            "stroke_q50": true,
+            "stroke_q75": true,
+            "stroke_q90": true,
+            "wash_flatness": true
+          },
+          "numeric_pass": true,
+          "model_scores": null,
+          "model_status": "MISSING",
+          "passed": false
+        },
+        "raw_alpha_min": 0,
+        "raw_alpha_max": 255,
+        "clipped_at_raw_border": false,
+        "raw_nonzero_bbox": [
+          0,
+          9,
+          1448,
+          1070
+        ],
+        "raw_opaque_bbox": [
+          55,
+          116,
+          1403,
+          1053
+        ],
+        "raw_faint_far_ratio": 0.006781681901893721,
+        "review_flags": [
+          "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+        ],
+        "numeric_ready": true,
+        "status": "NUMERIC_READY_AWAITING_REVIEW",
+        "failures": [],
+        "review": null,
+        "seed_note": "Null means the generation tool did not expose a seed; none was invented."
+      },
+      "geometry_declared": {
+        "id": "olive_press_damaged",
+        "family": "olive_press",
+        "state": "damaged",
+        "attempt": 1,
+        "era": "bronze",
+        "lane": "stages_mine_press",
+        "target_height": 80,
+        "width_target": 122,
+        "width_tolerance": 12,
+        "footprint": [
+          2,
+          2
+        ],
+        "projection_family": "b3_olive_press_damaged",
+        "height_band": [
+          78,
+          82
+        ],
+        "height_band_reason": "Predeclared stage silhouette height; same A2 footprint and source ground-span target. No frozen style or lighting tolerance changed.",
+        "style_family": "buildings",
+        "subject": "Same completed wooden BEAM OLIVE PRESS damaged: retain left pivot and right fork, but main lever visibly split near right end and right support has one broken brace; snapped rope leaves counterweight resting beside basin. Stone basin has one broad cracked rim section, empty of olives. No oil and no working stream. Main structure still stands with same80px overall height and1.5 width/height.",
+        "seed": null,
+        "generation_id": null,
+        "raw": "",
+        "references": [
+          "/Users/rexxa/work/art-batch/A2/bronze/raw/olive_press_working_try3.png",
+          "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+          "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png"
+        ],
+        "prompt": "Use case: precise-object-edit. IMAGE1 is the target building; images2/3 are locked style references. Create its damaged lifecycle state: Same completed wooden BEAM OLIVE PRESS damaged: retain left pivot and right fork, but main lever visibly split near right end and right support has one broken brace; snapped rope leaves counterweight resting beside basin. Stone basin has one broad cracked rim section, empty of olives. No oil and no working stream. Main structure still stands with same80px overall height and1.5 width/height. WorldSim concept05: hand-ink thin irregular sepia/charcoal lines with quiet natural earth pigment wash, main contour twice secondary ink. Upper-left light, visibly light upper/left surfaces and dark lower/right; front three-quarter about20degrees down, shallow compressed tops, substantial front faces. Match locked props and scene style only; never reproduce their scenery. WOOD:3 short broken longitudinal grain groups per major beam, no continuous grooves or smooth cylinder cartoon. STONE:3 short crack/facet groups per large mass. One subtle / hatch group of3 marks in shadow. No all-over crosshatching or speckle. No metal. No roof, people, labels, ground patch, cast-shadow puddle, backdrop, haze, glow, or detached decorative flecks. One complete isolated sprite with actual transparent alpha, gaps transparent and generous margins. Preserve object identity and fixed ground footprint, not an isometric diamond."
+      },
+      "independent_review": "art/batch_b3/stages_mine_press/root_review.json"
+    }
+  ],
+  "attempts": [
+    {
+      "id": "olive_press_foundation",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/olive_press_foundation_try1.png",
+      "raw_sha256": "c1c2f83560b48893a800b2fa66b6b1d47dabea76ff65c49faa756953b9dff311",
+      "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c799-32eb-7b82-b59d-e08146989b3f/exec-0310e937-7425-462a-8b21-6536ace2e716.png",
+      "record": "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/olive_press_foundation_try1.json",
+      "record_sha256": "dde88665ab420c5304468b86a0d7f982dd22e36dc8347a0bc886f76999c4b07e",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A2/bronze/raw/olive_press_working_try3.png",
+          "sha256": "172a2b7eb79ce144b6ac4a9b0ab94796e2ac6034ae176219de8d8bf2c9c53366"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+          "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "normalized": "/Users/rexxa/work/art-batch/B3/stages_mine_press/normalized/olive_press_foundation_try1.png",
+      "normalized_sha256": "37e6b8dd7afd5c4e2ccb5c9e0b203dfdc80be79616a50544db2e21ee391ff585",
+      "size": [
+        85,
+        32
+      ],
+      "anchor": [
+        42,
+        27
+      ],
+      "opaque_width": 77,
+      "width_pass": false,
+      "numeric_ready": true,
+      "failures": [
+        "declared opaque width 77 outside 122 +/- 12"
+      ],
+      "status": "REJECTED",
+      "seed": null,
+      "tool": "built-in image_gen",
+      "reference_delivery": "explicit referenced_image_paths"
+    },
+    {
+      "id": "olive_press_foundation",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/olive_press_foundation_try2.png",
+      "raw_sha256": "4151ba9a8713df0821fd0f6ffa0543c8a5503ba18093a34b112b1b11a3d2fb6b",
+      "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c799-32eb-7b82-b59d-e08146989b3f/exec-387fd836-c32c-41a2-aaac-19a656953203.png",
+      "record": "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/olive_press_foundation_try2.json",
+      "record_sha256": "cdab53f08070cf448ca03117cb4e4cd6cc658edb4dec9142c6242bb6249b34f0",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/olive_press_foundation_try1.png",
+          "sha256": "c1c2f83560b48893a800b2fa66b6b1d47dabea76ff65c49faa756953b9dff311"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+          "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "normalized": "/Users/rexxa/work/art-batch/B3/stages_mine_press/normalized/olive_press_foundation_try2.png",
+      "normalized_sha256": "0c7caf5a1ad775162ab61c28c9185b4d20dac2771d508ebe16453abe1f4b0657",
+      "size": [
+        147,
+        32
+      ],
+      "anchor": [
+        73,
+        27
+      ],
+      "opaque_width": 139,
+      "width_pass": false,
+      "numeric_ready": true,
+      "failures": [
+        "declared opaque width 139 outside 122 +/- 12"
+      ],
+      "status": "REJECTED",
+      "seed": null,
+      "tool": "built-in image_gen",
+      "reference_delivery": "explicit referenced_image_paths"
+    },
+    {
+      "id": "olive_press_foundation",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/olive_press_foundation_try3.png",
+      "raw_sha256": "e88c6fd8ba4924269d918ba769c989a823fd49fcb1f8d4c925b1ed93431beee4",
+      "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c799-32eb-7b82-b59d-e08146989b3f/exec-2572e802-1a35-43cb-91e9-93734a9b33a0.png",
+      "record": "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/olive_press_foundation_try3.json",
+      "record_sha256": "c674ed75dda00111d6e83cf7998bd5be15fc9a549e59de63248a174a13cf17ec",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/olive_press_foundation_try1.png",
+          "sha256": "c1c2f83560b48893a800b2fa66b6b1d47dabea76ff65c49faa756953b9dff311"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+          "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "normalized": "/Users/rexxa/work/art-batch/B3/stages_mine_press/normalized/olive_press_foundation_try3.png",
+      "normalized_sha256": "af8b8a66fcbe197dfc25bcac798b6cc708902d1230b95549d50510dc0aa6ef0d",
+      "size": [
+        115,
+        32
+      ],
+      "anchor": [
+        57,
+        27
+      ],
+      "opaque_width": 107,
+      "width_pass": false,
+      "numeric_ready": true,
+      "failures": [
+        "declared opaque width 107 outside 122 +/- 12"
+      ],
+      "status": "REJECTED",
+      "seed": null,
+      "tool": "built-in image_gen",
+      "reference_delivery": "explicit referenced_image_paths"
+    },
+    {
+      "id": "olive_press_half_built",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/olive_press_half_built_try1.png",
+      "raw_sha256": "1e79a059b611cc61676573a2678d44d0f2b0bc45b8cff2b97b6b42fc24a85f23",
+      "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c799-32eb-7b82-b59d-e08146989b3f/exec-9562927a-3c01-4f03-a3b8-bc826a09fcc2.png",
+      "record": "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/olive_press_half_built_try1.json",
+      "record_sha256": "70a6044e982cb64ae7cec0a5529a1b0f92e7f3cf024562a3d8a5d56bcfb526dc",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A2/bronze/raw/olive_press_working_try3.png",
+          "sha256": "172a2b7eb79ce144b6ac4a9b0ab94796e2ac6034ae176219de8d8bf2c9c53366"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+          "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "normalized": "/Users/rexxa/work/art-batch/B3/stages_mine_press/normalized/olive_press_half_built_try1.png",
+      "normalized_sha256": "5d739cb45d86c1ea0e2abad0fe09ae2c0f5240de4a4d04d7f56e599724eb6d4b",
+      "size": [
+        127,
+        72
+      ],
+      "anchor": [
+        63,
+        67
+      ],
+      "opaque_width": 119,
+      "width_pass": true,
+      "numeric_ready": true,
+      "failures": [],
+      "status": "READY_FOR_VISUAL_REVIEW",
+      "seed": null,
+      "tool": "built-in image_gen",
+      "reference_delivery": "explicit referenced_image_paths"
+    },
+    {
+      "id": "olive_press_damaged",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/olive_press_damaged_try1.png",
+      "raw_sha256": "48a70b665a5abb76d2257b40834fe0dc586f6c50abee4916e23a8dbc50cd6425",
+      "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c799-32eb-7b82-b59d-e08146989b3f/exec-f904291e-c2be-48d7-8263-2af492df2992.png",
+      "record": "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/olive_press_damaged_try1.json",
+      "record_sha256": "4ef4c4dc1f206a394780e0f59ec6c9cce0fad27a4a931ea2e03b107db72a1378",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A2/bronze/raw/olive_press_working_try3.png",
+          "sha256": "172a2b7eb79ce144b6ac4a9b0ab94796e2ac6034ae176219de8d8bf2c9c53366"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+          "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "normalized": "/Users/rexxa/work/art-batch/B3/stages_mine_press/normalized/olive_press_damaged_try1.png",
+      "normalized_sha256": "1b10b3853c8a151ad6f69bea1f4fa53e28a874fd50166f2d2982ffcee43db32b",
+      "size": [
+        123,
+        88
+      ],
+      "anchor": [
+        61,
+        83
+      ],
+      "opaque_width": 115,
+      "width_pass": true,
+      "numeric_ready": true,
+      "failures": [],
+      "status": "READY_FOR_VISUAL_REVIEW",
+      "seed": null,
+      "tool": "built-in image_gen",
+      "reference_delivery": "explicit referenced_image_paths"
+    },
+    {
+      "id": "olive_press_ruined",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/olive_press_ruined_try1.png",
+      "raw_sha256": "a8e382bdf61cece52296f1b41e6f3f5e07efcea54bc40a18658062b44c933543",
+      "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c799-32eb-7b82-b59d-e08146989b3f/exec-697d1440-a44a-4f2a-850d-712a84135f98.png",
+      "record": "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/olive_press_ruined_try1.json",
+      "record_sha256": "5a2aa3a5e96c88a53b71786e85798f749ea57851c4790aad34acc1f671ca5a76",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A2/bronze/raw/olive_press_working_try3.png",
+          "sha256": "172a2b7eb79ce144b6ac4a9b0ab94796e2ac6034ae176219de8d8bf2c9c53366"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+          "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "normalized": "/Users/rexxa/work/art-batch/B3/stages_mine_press/normalized/olive_press_ruined_try1.png",
+      "normalized_sha256": "784d67845557fac47d5de272890ee5674cab8ebb552e195aa88a666e26d91dcd",
+      "size": [
+        116,
+        36
+      ],
+      "anchor": [
+        58,
+        31
+      ],
+      "opaque_width": 108,
+      "width_pass": false,
+      "numeric_ready": true,
+      "failures": [
+        "declared opaque width 108 outside 122 +/- 12"
+      ],
+      "status": "REJECTED",
+      "seed": null,
+      "tool": "built-in image_gen",
+      "reference_delivery": "explicit referenced_image_paths"
+    },
+    {
+      "id": "olive_press_ruined",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/olive_press_ruined_try2.png",
+      "raw_sha256": "9a3a6cbacd4d5f5ba071c2a240f4c9eded7f8c86d63882031050fa32da2be536",
+      "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c799-32eb-7b82-b59d-e08146989b3f/exec-2d042c9b-7c50-4b1d-a6b9-12432610b56b.png",
+      "record": "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/olive_press_ruined_try2.json",
+      "record_sha256": "a2e86d868f428b345568331e56ced987a0aa0f448200cdf9e7b7a33e8502f89c",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/olive_press_ruined_try1.png",
+          "sha256": "a8e382bdf61cece52296f1b41e6f3f5e07efcea54bc40a18658062b44c933543"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+          "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "normalized": "/Users/rexxa/work/art-batch/B3/stages_mine_press/normalized/olive_press_ruined_try2.png",
+      "normalized_sha256": "bd03cf8019c2caf72889e135f1697ecf84ce2ecda666c787e338862ab621b2f6",
+      "size": [
+        144,
+        36
+      ],
+      "anchor": [
+        72,
+        31
+      ],
+      "opaque_width": 136,
+      "width_pass": false,
+      "numeric_ready": true,
+      "failures": [
+        "declared opaque width 136 outside 122 +/- 12"
+      ],
+      "status": "REJECTED",
+      "seed": null,
+      "tool": "built-in image_gen",
+      "reference_delivery": "explicit referenced_image_paths"
+    },
+    {
+      "id": "olive_press_ruined",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/olive_press_ruined_try3.png",
+      "raw_sha256": "1a59e00137689972ce6f93e20a3a9aa85039da87c2acd553f5d1a4c6202148a7",
+      "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c799-32eb-7b82-b59d-e08146989b3f/exec-8a2fe12a-61bb-4260-9bbd-6ef25aa54cef.png",
+      "record": "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/olive_press_ruined_try3.json",
+      "record_sha256": "4b982b29297c5506c0069004f43285a4f45be73c50c4910ec1c604995a7aff43",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/olive_press_ruined_try2.png",
+          "sha256": "9a3a6cbacd4d5f5ba071c2a240f4c9eded7f8c86d63882031050fa32da2be536"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+          "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "normalized": "/Users/rexxa/work/art-batch/B3/stages_mine_press/normalized/olive_press_ruined_try3.png",
+      "normalized_sha256": "0dc28506c94db04088cb10b3573461842262b85fa8cbb4025865cc71b4f5a10a",
+      "size": [
+        144,
+        36
+      ],
+      "anchor": [
+        72,
+        31
+      ],
+      "opaque_width": 136,
+      "width_pass": false,
+      "numeric_ready": true,
+      "failures": [
+        "declared opaque width 136 outside 122 +/- 12"
+      ],
+      "status": "REJECTED",
+      "seed": null,
+      "tool": "built-in image_gen",
+      "reference_delivery": "explicit referenced_image_paths"
+    },
+    {
+      "id": "mine_entrance_foundation",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/mine_entrance_foundation_try1.png",
+      "raw_sha256": "667023905f50606f0d3465ce8790f2af8a12eb251f4c882048676684fdac6089",
+      "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c799-32eb-7b82-b59d-e08146989b3f/exec-04478190-17b9-491b-badb-54b7d2ecb54f.png",
+      "record": "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/mine_entrance_foundation_try1.json",
+      "record_sha256": "ff1600003fcdbe525ff71464755d25cbf01d38ad69acc54da1c03a12401cbe97",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A2/bronze/raw/mine_entrance_active_try3.png",
+          "sha256": "f53216b7a5ad2eb37a5cb291950cfdfbc6d6de3e71c0d038a1adf5309f67a750"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+          "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "normalized": "/Users/rexxa/work/art-batch/B3/stages_mine_press/normalized/mine_entrance_foundation_try1.png",
+      "normalized_sha256": "34be7e75535bda38013cd4502e9fc7ca948ebcdf8db407e3c3d5973c35d3071e",
+      "size": [
+        79,
+        48
+      ],
+      "anchor": [
+        39,
+        43
+      ],
+      "opaque_width": 71,
+      "width_pass": false,
+      "numeric_ready": false,
+      "failures": [
+        "projection upper-left luminance gradient failed",
+        "declared opaque width 71 outside 97 +/- 12"
+      ],
+      "status": "REJECTED",
+      "seed": null,
+      "tool": "built-in image_gen",
+      "reference_delivery": "explicit referenced_image_paths"
+    },
+    {
+      "id": "mine_entrance_foundation",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/mine_entrance_foundation_try2.png",
+      "raw_sha256": "795a0f46be73880fcdfb71c9882aa99bdc328245b0a2ef010d05ca096cc7d22f",
+      "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c799-32eb-7b82-b59d-e08146989b3f/exec-d0f0e304-15af-4b5c-ad36-6da15027499c.png",
+      "record": "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/mine_entrance_foundation_try2.json",
+      "record_sha256": "2fd952b988ce8bb3b531d669e15195204b2d36107166917f893574c25acc0f8b",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/mine_entrance_foundation_try1.png",
+          "sha256": "667023905f50606f0d3465ce8790f2af8a12eb251f4c882048676684fdac6089"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+          "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "normalized": "/Users/rexxa/work/art-batch/B3/stages_mine_press/normalized/mine_entrance_foundation_try2.png",
+      "normalized_sha256": "1b1158589caa793471eeb56cf8347076e55ef844e2c7c62995f92ed2451249cb",
+      "size": [
+        129,
+        48
+      ],
+      "anchor": [
+        64,
+        43
+      ],
+      "opaque_width": 121,
+      "width_pass": false,
+      "numeric_ready": true,
+      "failures": [
+        "declared opaque width 121 outside 97 +/- 12"
+      ],
+      "status": "REJECTED",
+      "seed": null,
+      "tool": "built-in image_gen",
+      "reference_delivery": "explicit referenced_image_paths"
+    },
+    {
+      "id": "mine_entrance_foundation",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/mine_entrance_foundation_try3.png",
+      "raw_sha256": "d6ee173f3a8eb2aec557b75a6f00b2a04c0a76060de741f0732e7c548614c694",
+      "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c799-32eb-7b82-b59d-e08146989b3f/exec-0b6f47d0-2bcf-43a0-baaf-662ef77f83ea.png",
+      "record": "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/mine_entrance_foundation_try3.json",
+      "record_sha256": "48d6a0c7d989ec0f8ef047c50ce914f77d43fa02d46a32879513ef96fd1b040a",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/mine_entrance_foundation_try2.png",
+          "sha256": "795a0f46be73880fcdfb71c9882aa99bdc328245b0a2ef010d05ca096cc7d22f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+          "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "normalized": "/Users/rexxa/work/art-batch/B3/stages_mine_press/normalized/mine_entrance_foundation_try3.png",
+      "normalized_sha256": "2ac8c7518e6a84e17a404319cedd52a113eef200edcccdecfcfc4695219156f0",
+      "size": [
+        119,
+        48
+      ],
+      "anchor": [
+        59,
+        43
+      ],
+      "opaque_width": 111,
+      "width_pass": false,
+      "numeric_ready": false,
+      "failures": [
+        "style metric: wash_flatness",
+        "declared opaque width 111 outside 97 +/- 12"
+      ],
+      "status": "REJECTED",
+      "seed": null,
+      "tool": "built-in image_gen",
+      "reference_delivery": "explicit referenced_image_paths"
+    },
+    {
+      "id": "mine_entrance_half_built",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/mine_entrance_half_built_try1.png",
+      "raw_sha256": "2908e7a7326b0cee1e2b8e0aa71c4c8fe187d1f295fc8a55f90035c652cb0721",
+      "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c799-32eb-7b82-b59d-e08146989b3f/exec-49b3b9a6-eaca-4222-8fcc-7028220eaba9.png",
+      "record": "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/mine_entrance_half_built_try1.json",
+      "record_sha256": "eec7858188bfe005c8e7a6925cf12965687c346a7b07accdc0c01efe1cd08a8e",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A2/bronze/raw/mine_entrance_active_try3.png",
+          "sha256": "f53216b7a5ad2eb37a5cb291950cfdfbc6d6de3e71c0d038a1adf5309f67a750"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+          "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "normalized": "/Users/rexxa/work/art-batch/B3/stages_mine_press/normalized/mine_entrance_half_built_try1.png",
+      "normalized_sha256": "00fd50ddf7a07a84b83fbe43eba94133d0802bc68c37881e9ab54c003e6c927c",
+      "size": [
+        105,
+        72
+      ],
+      "anchor": [
+        52,
+        67
+      ],
+      "opaque_width": 97,
+      "width_pass": true,
+      "numeric_ready": false,
+      "failures": [
+        "projection upper-left luminance gradient failed",
+        "style metric: edge_density"
+      ],
+      "status": "REJECTED",
+      "seed": null,
+      "tool": "built-in image_gen",
+      "reference_delivery": "explicit referenced_image_paths"
+    },
+    {
+      "id": "mine_entrance_half_built",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/mine_entrance_half_built_try2.png",
+      "raw_sha256": "37904c10352ccd2eda6c358da19ff648a47fb1c80ef5aad784775768f60ce37e",
+      "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c799-32eb-7b82-b59d-e08146989b3f/exec-1b6c9cb0-df9b-46d6-8ed3-a133f9279b36.png",
+      "record": "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/mine_entrance_half_built_try2.json",
+      "record_sha256": "eba393e5ffdbbf478f601478a02e2066ef0ac314d89231090358fcb80cfe13f4",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/mine_entrance_half_built_try1.png",
+          "sha256": "2908e7a7326b0cee1e2b8e0aa71c4c8fe187d1f295fc8a55f90035c652cb0721"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+          "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "normalized": "/Users/rexxa/work/art-batch/B3/stages_mine_press/normalized/mine_entrance_half_built_try2.png",
+      "normalized_sha256": "b722924b8346b55d7b8dee288307a4ea482b4e8fafe6c7d2468fd8e8ab08c1c2",
+      "size": [
+        104,
+        72
+      ],
+      "anchor": [
+        52,
+        67
+      ],
+      "opaque_width": 96,
+      "width_pass": true,
+      "numeric_ready": false,
+      "failures": [
+        "style metric: edge_density",
+        "style metric: wash_flatness"
+      ],
+      "status": "REJECTED",
+      "seed": null,
+      "tool": "built-in image_gen",
+      "reference_delivery": "explicit referenced_image_paths"
+    },
+    {
+      "id": "mine_entrance_half_built",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/mine_entrance_half_built_try3.png",
+      "raw_sha256": "fd0b5638d9fe1b0b5bc5ef40da67af91925b4276da473b0052a107e0e86f90bc",
+      "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c799-32eb-7b82-b59d-e08146989b3f/exec-05549fac-57fc-488c-b147-c80b22ba7d2e.png",
+      "record": "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/mine_entrance_half_built_try3.json",
+      "record_sha256": "aac5faef136fabe6f659bd9a011d3cb08520896b643f82fb3c111d996d3b2bbc",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/mine_entrance_half_built_try2.png",
+          "sha256": "37904c10352ccd2eda6c358da19ff648a47fb1c80ef5aad784775768f60ce37e"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+          "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "normalized": "/Users/rexxa/work/art-batch/B3/stages_mine_press/normalized/mine_entrance_half_built_try3.png",
+      "normalized_sha256": "ea68009440c732461ea67e9aaa79ef8d0efcb937cd5cf311d70b6ab335303ba7",
+      "size": [
+        104,
+        72
+      ],
+      "anchor": [
+        52,
+        67
+      ],
+      "opaque_width": 96,
+      "width_pass": true,
+      "numeric_ready": false,
+      "failures": [
+        "style metric: edge_density",
+        "style metric: wash_flatness"
+      ],
+      "status": "REJECTED",
+      "seed": null,
+      "tool": "built-in image_gen",
+      "reference_delivery": "explicit referenced_image_paths"
+    },
+    {
+      "id": "mine_entrance_damaged",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/mine_entrance_damaged_try1.png",
+      "raw_sha256": "d2ace2d126cb919ed06808b2d3ffb7cbc884239d26c8a8c51de529c9e107f48f",
+      "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c799-32eb-7b82-b59d-e08146989b3f/exec-0c207856-5308-4d30-b73a-5a074ea0a0c2.png",
+      "record": "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/mine_entrance_damaged_try1.json",
+      "record_sha256": "6a7ded7924f7e2e911e1017f8838437d1eb9339943effe55d2f8d3b9fb8a21bf",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A2/bronze/raw/mine_entrance_active_try3.png",
+          "sha256": "f53216b7a5ad2eb37a5cb291950cfdfbc6d6de3e71c0d038a1adf5309f67a750"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+          "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "normalized": "/Users/rexxa/work/art-batch/B3/stages_mine_press/normalized/mine_entrance_damaged_try1.png",
+      "normalized_sha256": "1afd1b39aed353ba29c6c41d3e136c74e34efb801259e8fc2a338a7f7345b399",
+      "size": [
+        104,
+        72
+      ],
+      "anchor": [
+        52,
+        67
+      ],
+      "opaque_width": 96,
+      "width_pass": true,
+      "numeric_ready": false,
+      "failures": [
+        "projection upper-left luminance gradient failed",
+        "style metric: wash_flatness",
+        "visual: generated brown halo/backdrop, not isolated clean transparent surround"
+      ],
+      "status": "REJECTED",
+      "seed": null,
+      "tool": "built-in image_gen",
+      "reference_delivery": "explicit referenced_image_paths"
+    },
+    {
+      "id": "mine_entrance_damaged",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/mine_entrance_damaged_try2.png",
+      "raw_sha256": "d2057c70e8660a9f1e8c36df9fe1510dfd6d68169c4abf8bc0edc22ae4ab1b12",
+      "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c799-32eb-7b82-b59d-e08146989b3f/exec-335693e2-3a1e-4a5e-a28c-cb81d45bb791.png",
+      "record": "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/mine_entrance_damaged_try2.json",
+      "record_sha256": "26cc44d8b0e876a2863a728e0511845255d870f59ac96f9b5937446fe510caa5",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/mine_entrance_damaged_try1.png",
+          "sha256": "d2ace2d126cb919ed06808b2d3ffb7cbc884239d26c8a8c51de529c9e107f48f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+          "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "normalized": "/Users/rexxa/work/art-batch/B3/stages_mine_press/normalized/mine_entrance_damaged_try2.png",
+      "normalized_sha256": "4d5096c7b00835f8a56b21eeb2c7b9394c0e6292475170e7c717d7a87370730e",
+      "size": [
+        105,
+        72
+      ],
+      "anchor": [
+        52,
+        67
+      ],
+      "opaque_width": 97,
+      "width_pass": true,
+      "numeric_ready": false,
+      "failures": [
+        "style metric: wash_flatness",
+        "visual: generated brown halo/backdrop, not isolated clean transparent surround"
+      ],
+      "status": "REJECTED",
+      "seed": null,
+      "tool": "built-in image_gen",
+      "reference_delivery": "explicit referenced_image_paths"
+    },
+    {
+      "id": "mine_entrance_damaged",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/mine_entrance_damaged_try3.png",
+      "raw_sha256": "a89750ebba094ef20b682c6b1906556b8e459b85b66758e484b61783c5f11e2a",
+      "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c799-32eb-7b82-b59d-e08146989b3f/exec-5b32a277-0e17-4e5f-9a7e-7cccb987ed96.png",
+      "record": "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/mine_entrance_damaged_try3.json",
+      "record_sha256": "8f4fcb128db5cf506acfa78aac25eb3fbeae56b1f3b834f6ab04456181b50bb5",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/mine_entrance_damaged_try2.png",
+          "sha256": "d2057c70e8660a9f1e8c36df9fe1510dfd6d68169c4abf8bc0edc22ae4ab1b12"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+          "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "normalized": "/Users/rexxa/work/art-batch/B3/stages_mine_press/normalized/mine_entrance_damaged_try3.png",
+      "normalized_sha256": "f3f69eaf674611ce47d69f8e6d2735f473b5ba2033ed1cf009f0fa81099a4a6d",
+      "size": [
+        105,
+        72
+      ],
+      "anchor": [
+        52,
+        67
+      ],
+      "opaque_width": 97,
+      "width_pass": true,
+      "numeric_ready": false,
+      "failures": [
+        "style metric: edge_density",
+        "style metric: wash_flatness",
+        "visual: generated brown halo/backdrop, not isolated clean transparent surround"
+      ],
+      "status": "REJECTED",
+      "seed": null,
+      "tool": "built-in image_gen",
+      "reference_delivery": "explicit referenced_image_paths"
+    },
+    {
+      "id": "mine_entrance_ruined",
+      "attempt": 1,
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/mine_entrance_ruined_try1.png",
+      "raw_sha256": "cb44b8c5e7ad43b92a80d53d23819889689d2e82a2ffc1babd6dd0e840d99611",
+      "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c799-32eb-7b82-b59d-e08146989b3f/exec-a53b2a28-bb6c-45b6-9772-1e2a71d85a10.png",
+      "record": "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/mine_entrance_ruined_try1.json",
+      "record_sha256": "d0874d0eb9de916cfc2ad4bc876ee0fe75ceaec7ef47c48fb89f29d5432f18ef",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A2/bronze/raw/mine_entrance_active_try3.png",
+          "sha256": "f53216b7a5ad2eb37a5cb291950cfdfbc6d6de3e71c0d038a1adf5309f67a750"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+          "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "normalized": "/Users/rexxa/work/art-batch/B3/stages_mine_press/normalized/mine_entrance_ruined_try1.png",
+      "normalized_sha256": "44f9b2a08ebf8c06dfe6f199af016ff554aaa43c02eac466b3348eb97a6b9677",
+      "size": [
+        123,
+        48
+      ],
+      "anchor": [
+        61,
+        43
+      ],
+      "opaque_width": 115,
+      "width_pass": false,
+      "numeric_ready": false,
+      "failures": [
+        "projection upper-left luminance gradient failed",
+        "declared opaque width 115 outside 97 +/- 12"
+      ],
+      "status": "REJECTED",
+      "seed": null,
+      "tool": "built-in image_gen",
+      "reference_delivery": "explicit referenced_image_paths"
+    },
+    {
+      "id": "mine_entrance_ruined",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/mine_entrance_ruined_try2.png",
+      "raw_sha256": "f5d643bc6cbddd40df7d1273872e94021900be29e2e5e5f3833cb6febb84baa2",
+      "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c799-32eb-7b82-b59d-e08146989b3f/exec-8ebb6059-9b3d-40f6-bb3b-081705f2b8b1.png",
+      "record": "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/mine_entrance_ruined_try2.json",
+      "record_sha256": "abbd77d91e3bf59eea879fb61dd41ba14cad25dd82d6ccce20bb02dbb17bdaf9",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/mine_entrance_ruined_try1.png",
+          "sha256": "cb44b8c5e7ad43b92a80d53d23819889689d2e82a2ffc1babd6dd0e840d99611"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+          "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "normalized": "/Users/rexxa/work/art-batch/B3/stages_mine_press/normalized/mine_entrance_ruined_try2.png",
+      "normalized_sha256": "9f9bdd23cb995c354d5adcf11657702f87cc9a0fc6d4d7f52d2feb8a43d81290",
+      "size": [
+        123,
+        48
+      ],
+      "anchor": [
+        61,
+        43
+      ],
+      "opaque_width": 115,
+      "width_pass": false,
+      "numeric_ready": false,
+      "failures": [
+        "style metric: wash_flatness",
+        "declared opaque width 115 outside 97 +/- 12"
+      ],
+      "status": "REJECTED",
+      "seed": null,
+      "tool": "built-in image_gen",
+      "reference_delivery": "explicit referenced_image_paths"
+    },
+    {
+      "id": "mine_entrance_ruined",
+      "attempt": 3,
+      "raw": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/mine_entrance_ruined_try3.png",
+      "raw_sha256": "0942f862903a2364fb0fc35505b9c9aa7d9a5060927fab5aca0cdfc5e1d99788",
+      "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c799-32eb-7b82-b59d-e08146989b3f/exec-72a32943-0cc8-46b7-8abf-74feb2af04df.png",
+      "record": "/Users/rexxa/work/art-batch/B3/stages_mine_press/records/mine_entrance_ruined_try3.json",
+      "record_sha256": "ef5c3d2679d5d631286643642b7de08b677947ada40cbb4fa2836e2743eda519",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B3/stages_mine_press/raw/mine_entrance_ruined_try2.png",
+          "sha256": "f5d643bc6cbddd40df7d1273872e94021900be29e2e5e5f3833cb6febb84baa2"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/props.png",
+          "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b3/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "normalized": "/Users/rexxa/work/art-batch/B3/stages_mine_press/normalized/mine_entrance_ruined_try3.png",
+      "normalized_sha256": "78ae601e64f6632a843251b363683f445ed010b51521545c49896369e544da35",
+      "size": [
+        125,
+        48
+      ],
+      "anchor": [
+        62,
+        43
+      ],
+      "opaque_width": 117,
+      "width_pass": false,
+      "numeric_ready": false,
+      "failures": [
+        "style metric: wash_flatness",
+        "declared opaque width 117 outside 97 +/- 12"
+      ],
+      "status": "REJECTED",
+      "seed": null,
+      "tool": "built-in image_gen",
+      "reference_delivery": "explicit referenced_image_paths"
+    }
+  ],
+  "counts": {
+    "generated": 20,
+    "selected_candidates": 2,
+    "rejected": 18
+  },
+  "calibration": "unchanged A2 judge/projection + preregistered width targets",
+  "self_review": {
+    "weakest": [
+      "olive_press_foundation",
+      "olive_press_ruined"
+    ],
+    "action": "Targeted width corrections through cap3; neither satisfied declared span. Remaining mine rows retried for directional lighting/style through cap3. No gate relaxed."
+  }
+}

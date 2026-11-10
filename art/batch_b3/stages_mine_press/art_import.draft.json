@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "status": "DRAFT_NOT_APPLIED",
+  "source_branch": "v8/art-batch-b3",
+  "source_commit": null,
+  "fragment_kind": "append_only_art_import_files",
+  "target": "tools/v8/art_import.json",
+  "files": [
+    {
+      "role": "structure",
+      "id": "olive_press_half_built",
+      "source": "art/style05/struct/b3/stages_mine_press/olive_press_half_built.png",
+      "dest": "structures/b3/stages_mine_press/olive_press_half_built.png"
+    },
+    {
+      "role": "structure",
+      "id": "olive_press_damaged",
+      "source": "art/style05/struct/b3/stages_mine_press/olive_press_damaged.png",
+      "dest": "structures/b3/stages_mine_press/olive_press_damaged.png"
+    }
+  ],
+  "metadata_source": "art/batch_b3/stages_mine_press/manifest.json",
+  "instruction": "Merge selected asset metadata into integration structure adapter; explicit lifecycle binding support still required."
+}
