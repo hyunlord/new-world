@@ -1,0 +1,11 @@
+{
+  "score": 91,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Fine ink details compress at native size; wardrobe and hairstyle silhouettes remain legible."
+  ],
+  "suggestions": [],
+  "reasoning": "Native and 2x reviewed: hairstyle and age-specific anatomy coherent, tawny wool shoulder cloak over dark knee tunic, bare calves; held work/carry prop connected, right-facing walk and horizontal sleep. Dark winter cloth loses fine detail at1x; material separation remains visible; numeric failures retained.",
+  "summary_sha256": "41973fcba517cb96f6b0fe3a610be810b27f138a47516448712b421661575c31"
+}

@@ -1,0 +1,72 @@
+{
+  "look": "adult_M_iron_work_bun",
+  "age": "adult",
+  "attempt": 1,
+  "raw": "/Users/rexxa/work/art-batch/B1/raw/iron/adult_M_iron_work_bun/trial1/raw.png",
+  "raw_sha256": "5627e06264390e187ff091b0b12cd8f35a1d6540b5ce11969d6e15f65bd3afd5",
+  "prompt_sha256": "f8c8104159810ec392c0e21cd7e302c29ea4ccde695a52f530545a7d6bdd474d",
+  "facing": "S",
+  "pose": "idle",
+  "check_pose": "idle",
+  "path": "S/idle.png",
+  "sha256": "f440ed02e8244c2b97e3169a677af444eccf2f103fb8e4c17e57cb469f402e33",
+  "source_box": [
+    0,
+    17,
+    278,
+    516
+  ],
+  "normalization": {
+    "scaled_size": [
+      35,
+      62
+    ],
+    "trim_box": [
+      3,
+      1,
+      29,
+      58
+    ],
+    "placement": [
+      27,
+      48
+    ],
+    "resized_to_canvas_offset": [
+      24,
+      47
+    ],
+    "visible_pixels": 942,
+    "rotation_degrees": 0,
+    "scale": 0.12416851441241686,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "passed": true,
+    "findings": [],
+    "coverage": 0.09419642857142857,
+    "component_count": 1,
+    "largest_hole": 0,
+    "contact_ok": true,
+    "sleep_axis_ok": true,
+    "opaque_height": 56,
+    "opaque_width": 24,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+    "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+    "visible_height": 57,
+    "visible_width": 26,
+    "visibility_threshold": 16
+  },
+  "standing_scale": 0.12416851441241686,
+  "sleep_scale": 0.14583333333333334,
+  "anchor": [
+    40,
+    104
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "template_version": 3
+}

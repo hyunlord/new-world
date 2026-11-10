@@ -1,0 +1,11 @@
+{
+  "score": 91,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Fine ink details compress at native size; wardrobe and hairstyle silhouettes remain legible."
+  ],
+  "suggestions": [],
+  "reasoning": "Native and 2x reviewed: tawny wool cloak clearly overlays dark knee tunic, bare calves, short beard and matching hair; hoe work is bent and distinct from idle, held log bundle coherent, right-facing walk and horizontal sleep. Darker winter palette differs from bare-hide reference; numeric failures retained independently.",
+  "summary_sha256": "4210d88eb78ccb38e4f637992f35c57535224092b7d657827d9f4c0738189b76"
+}

@@ -1,0 +1,11 @@
+{
+  "score": 94,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Slightly larger bust than first attempt; face and apron remain fully within each cell."
+  ],
+  "suggestions": [],
+  "reasoning": "Compared try1 and try2 at native128px enlarged2x. Try2 improves child age read with rounder cheeks, shorter mid-face and smaller chin; all six skin/hair identities, long tied hair and visible leather apron remain intact. Select try2 over try1.",
+  "summary_sha256": "50e3cf58656094c6adda07b9a2f93ba29db52e51fb8db0ecb6c98fe954d30cfc"
+}

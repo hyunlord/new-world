@@ -1,0 +1,11 @@
+{
+  "score": 91,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Fine ink details compress at native size; wardrobe and hairstyle silhouettes remain legible."
+  ],
+  "suggestions": [],
+  "reasoning": "Reviewed native and 2x: child anatomy and 40px stature, no beard, correct hairstyle and cream tunic/apron, spindle work and grain bag carry safely connected, distinct right-facing walk and horizontal sleep. Numeric diagnostics kept independently.",
+  "summary_sha256": "1a9075c2c0f91f0fcd35abc25ddbf42b0c1917c706274f2f89882f6b0654fab5"
+}

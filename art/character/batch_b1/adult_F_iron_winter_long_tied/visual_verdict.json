@@ -1,0 +1,11 @@
+{
+  "score": 92,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Fine ink details compress at native size; wardrobe and hairstyle silhouettes remain legible."
+  ],
+  "suggestions": [],
+  "reasoning": "Native and 2x reviewed: mature female proportions, consistent short or low-tied hair, tawny wool cloak over dark knee tunic, bare calves; hoe and held log bundle clearly distinct and connected, right-facing walk and horizontal sleep. All10 structure pass; numeric diagnostics independent.",
+  "summary_sha256": "de932d4ef42f37c88796a897c66e87baa75fdaa5a9bb78decfcff6d257cc69f1"
+}

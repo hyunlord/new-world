@@ -1,0 +1,11 @@
+{
+  "score": 93,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Wash is slightly softer than baseline contour treatment at128px."
+  ],
+  "suggestions": [],
+  "reasoning": "Inspected sheet and full native128px set enlarged2x against baseline anchors. Apron straps, contained hair silhouettes and six distinct skin/hair identities remain readable; child sets have no grey or beards, adult sets preserve two older identities.",
+  "summary_sha256": "08eab02c078758186f7f712ca0107a1eaeafbe402c4bf6c6ff060d008144d17a"
+}

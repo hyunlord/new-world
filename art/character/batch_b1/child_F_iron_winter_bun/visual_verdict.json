@@ -1,0 +1,11 @@
+{
+  "score": 92,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Fine ink details compress at native size; wardrobe and hairstyle silhouettes remain legible."
+  ],
+  "suggestions": [],
+  "reasoning": "Native and 2x reviewed: child proportions, high bun and no beard, tawny wool cloak separated from dark knee tunic, bare calves; safe connected spindle and grain bag, right-facing walk and horizontal sleep. Numeric diagnostics independent.",
+  "summary_sha256": "fa50823cc92a45c841b0e211a5bb9bbdd84d3fadd5f4957eaa5ccfd4e8407791"
+}

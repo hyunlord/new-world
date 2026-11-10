@@ -1,0 +1,879 @@
+{
+  "schema_version": 1,
+  "scope": "iron_work portraits only; reviewed artwork, no runtime activation",
+  "generated_sheets": 14,
+  "generated_portrait_cells": 84,
+  "adopted_sheets": 12,
+  "adopted_portraits": 72,
+  "rejected_sheets": 0,
+  "superseded_passing_sheets": 2,
+  "failed_calls": 0,
+  "max_attempt": 2,
+  "tool": "builtin image_gen",
+  "self_review": {
+    "weakest_regenerated": 2,
+    "base_sheets": 12,
+    "fraction": 0.16666666666666666,
+    "looks": [
+      "child_F_iron_work_long_tied",
+      "child_M_iron_work_long_tied"
+    ],
+    "selected_attempts": {
+      "child_F_iron_work_long_tied": 2,
+      "child_M_iron_work_long_tied": 2
+    },
+    "reason": "Try2 child cheeks, chin and mid-face read younger at native128px; both attempts preserved.",
+    "comparison_sheet": "art/batch_b1/sheets/iron_work_portraits_self_review.png"
+  },
+  "native_sheets": [
+    "art/batch_b1/sheets/iron_work_portraits_native_1.png",
+    "art/batch_b1/sheets/iron_work_portraits_native_2.png",
+    "art/batch_b1/sheets/iron_work_portraits_native_3.png"
+  ],
+  "records": [
+    {
+      "look": "adult_F_iron_work_bun",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/adult_F_iron_work_bun/try1/raw.png",
+      "raw_sha256": "2eccf79999fbcf6144942f62d6ba7f51cb35ad891c22b4d9f24f5662eb17aa7f",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/adult_F_iron_work_bun/try1/generation.json",
+      "generation_sha256": "51c25806e06ad5892d4e1d0941313531dfa056da8d64369e14b4c11eccc34116",
+      "prompt": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/adult_F_iron_work_bun/try1/prompt.txt",
+      "prompt_sha256": "07a5aa4f7c57ccec06eff7baa3ffedbee102c2906e512fa4e26946412eccf677",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/adult_F_iron_work_bun/try1/tool.json",
+      "tool_record_sha256": "657ad74a5f4bb8d9545e266eac139a04ce3c2efffac40159d7580c9a729b118d",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/portrait/polish2/adult_M_hide_wrap_short/v1.png",
+          "sha256": "c5d706a490c166bafa6baea7cecebfca62e4be07d18184bcb0a92be0d1ff24a4"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/portrait/polish2/adult_F_hide_wrap_bun/v4.png",
+          "sha256": "b6ce18976a1bd94e019a9e0dbfae77a35331006e1c9859d581690a6c3d26fdf8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/character/batch_b1/adult_M_iron_work_short/S/idle.png",
+          "sha256": "497d4cb867f96bc8db941564d442506d455d3c73e4212fadea1876230abeaca2"
+        }
+      ],
+      "summary_sha256": "89892e110e4844d2ca6eb4ac30e718bade7f18b747c56a358a44d1ffd034acd3",
+      "visual_score": 93
+    },
+    {
+      "look": "adult_F_iron_work_long_tied",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/adult_F_iron_work_long_tied/try1/raw.png",
+      "raw_sha256": "36f23034266d6c1f9af0ef7941c2fbff08fb27c942413ba4266c07f91a746e5a",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/adult_F_iron_work_long_tied/try1/generation.json",
+      "generation_sha256": "d5495b6530406c29722a2a22caff862877b4cc9fe73a92fdc2ccd1b1dbb39282",
+      "prompt": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/adult_F_iron_work_long_tied/try1/prompt.txt",
+      "prompt_sha256": "a3c63e136eebd17aeb1e73d6246f8e59285b19d4ec94a94d467161d4802a2b00",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/adult_F_iron_work_long_tied/try1/tool.json",
+      "tool_record_sha256": "2927ac354b43dfa944c50e1b844a449318741d1c8d5637f37c21af08e5b77ddd",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/portrait/polish2/adult_M_hide_wrap_short/v1.png",
+          "sha256": "c5d706a490c166bafa6baea7cecebfca62e4be07d18184bcb0a92be0d1ff24a4"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/portrait/polish2/adult_F_hide_wrap_bun/v4.png",
+          "sha256": "b6ce18976a1bd94e019a9e0dbfae77a35331006e1c9859d581690a6c3d26fdf8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/character/batch_b1/adult_M_iron_work_short/S/idle.png",
+          "sha256": "497d4cb867f96bc8db941564d442506d455d3c73e4212fadea1876230abeaca2"
+        }
+      ],
+      "summary_sha256": "8f2f51e7dd503913b1267baee8eb5715761cefa7b002b9f291688d6cfec8873a",
+      "visual_score": 94
+    },
+    {
+      "look": "adult_F_iron_work_short",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/adult_F_iron_work_short/try1/raw.png",
+      "raw_sha256": "9e0f7777ed0a55e3a201aa0e9bdde3675030ab46766896ad108127832772cd7a",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/adult_F_iron_work_short/try1/generation.json",
+      "generation_sha256": "172ca1c3653bc74695b1b3c965b532cb647828ee028783c5b18fe55a43c3b434",
+      "prompt": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/adult_F_iron_work_short/try1/prompt.txt",
+      "prompt_sha256": "780d401296a3f0cc10b596f248418ea972f1851c117ee5084ebd7c1561af5fa3",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/adult_F_iron_work_short/try1/tool.json",
+      "tool_record_sha256": "f3055268d2b2ebd11318f1310608634843bb4367b2055ecdc16646e7e31f5560",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/portrait/polish2/adult_M_hide_wrap_short/v1.png",
+          "sha256": "c5d706a490c166bafa6baea7cecebfca62e4be07d18184bcb0a92be0d1ff24a4"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/portrait/polish2/adult_F_hide_wrap_bun/v4.png",
+          "sha256": "b6ce18976a1bd94e019a9e0dbfae77a35331006e1c9859d581690a6c3d26fdf8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/character/batch_b1/adult_M_iron_work_short/S/idle.png",
+          "sha256": "497d4cb867f96bc8db941564d442506d455d3c73e4212fadea1876230abeaca2"
+        }
+      ],
+      "summary_sha256": "e5fa8b76c3a39dc67f7086f5b4a14c9f7c657174366f62fe9eb1df1052c124a7",
+      "visual_score": 92
+    },
+    {
+      "look": "adult_M_iron_work_bun",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/adult_M_iron_work_bun/try1/raw.png",
+      "raw_sha256": "c339d384778e695087c92594d0ad18245550096d172e163a0963ed3f9a2d4d0e",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/adult_M_iron_work_bun/try1/generation.json",
+      "generation_sha256": "7d95d2fec76a51be5d24e9ac3163204871a617ef67f2bcd0584f424980f1368a",
+      "prompt": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/adult_M_iron_work_bun/try1/prompt.txt",
+      "prompt_sha256": "c307a6a1c4dfc58d113b87dd39cd327bd347ed10da75510da8978ef83027d220",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/adult_M_iron_work_bun/try1/tool.json",
+      "tool_record_sha256": "b298f7e9a6b5a244a43d07c07f4545275962cf72e212c646f1404375bac83914",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/portrait/polish2/adult_M_hide_wrap_short/v1.png",
+          "sha256": "c5d706a490c166bafa6baea7cecebfca62e4be07d18184bcb0a92be0d1ff24a4"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/portrait/polish2/adult_F_hide_wrap_bun/v4.png",
+          "sha256": "b6ce18976a1bd94e019a9e0dbfae77a35331006e1c9859d581690a6c3d26fdf8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/character/batch_b1/adult_M_iron_work_short/S/idle.png",
+          "sha256": "497d4cb867f96bc8db941564d442506d455d3c73e4212fadea1876230abeaca2"
+        }
+      ],
+      "summary_sha256": "45066c9587c301b580c3c68d47fb507c038ec6605a0e559fa0642a8cfe0828c0",
+      "visual_score": 94
+    },
+    {
+      "look": "adult_M_iron_work_long_tied",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/adult_M_iron_work_long_tied/try1/raw.png",
+      "raw_sha256": "88aa718b6b8e669981d57e082f3cac742b3e94a3b8caf8b53827acca3c294c66",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/adult_M_iron_work_long_tied/try1/generation.json",
+      "generation_sha256": "53e365ddf45eb29c11c2f868669558ed6fe942a99e099375bf31a7126f28772c",
+      "prompt": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/adult_M_iron_work_long_tied/try1/prompt.txt",
+      "prompt_sha256": "32103bb2d205db025174b9274edc3a378ad6ce717fe3571611c660354c100683",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/adult_M_iron_work_long_tied/try1/tool.json",
+      "tool_record_sha256": "85d3528ac7677e115956fc6f18c9d62050dffd464b94c3c4c58f612684e7e73b",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/portrait/polish2/adult_M_hide_wrap_short/v1.png",
+          "sha256": "c5d706a490c166bafa6baea7cecebfca62e4be07d18184bcb0a92be0d1ff24a4"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/portrait/polish2/adult_F_hide_wrap_bun/v4.png",
+          "sha256": "b6ce18976a1bd94e019a9e0dbfae77a35331006e1c9859d581690a6c3d26fdf8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/character/batch_b1/adult_M_iron_work_short/S/idle.png",
+          "sha256": "497d4cb867f96bc8db941564d442506d455d3c73e4212fadea1876230abeaca2"
+        }
+      ],
+      "summary_sha256": "5506666630c3a2a33f6127eeb6f4fac761f6a7fd17f4cd91586841e2f2a4e6d9",
+      "visual_score": 95
+    },
+    {
+      "look": "adult_M_iron_work_short",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/adult_M_iron_work_short/try1/raw.png",
+      "raw_sha256": "73be6c0a9d7ac25d09703dc332b0ff01e675ef5aaeafcb5e8a8289cf4ddd171e",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/adult_M_iron_work_short/try1/generation.json",
+      "generation_sha256": "982ed3716db17a077d15e6e8d69b7c2c7735630a4135031d15901773c5fcadfb",
+      "prompt": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/adult_M_iron_work_short/try1/prompt.txt",
+      "prompt_sha256": "a98af596fc8020f5543902dabe70c28fa6acede96f09ad969ef61a537854691c",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/adult_M_iron_work_short/try1/tool.json",
+      "tool_record_sha256": "1d69e8733924e38d685d309a3259d628c31f560d6b5b59aa975573e7b3ebdbc6",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/portrait/polish2/adult_M_hide_wrap_short/v1.png",
+          "sha256": "c5d706a490c166bafa6baea7cecebfca62e4be07d18184bcb0a92be0d1ff24a4"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/portrait/polish2/adult_F_hide_wrap_bun/v4.png",
+          "sha256": "b6ce18976a1bd94e019a9e0dbfae77a35331006e1c9859d581690a6c3d26fdf8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/character/batch_b1/adult_M_iron_work_short/S/idle.png",
+          "sha256": "497d4cb867f96bc8db941564d442506d455d3c73e4212fadea1876230abeaca2"
+        }
+      ],
+      "summary_sha256": "e379ae71e05f9e895d0b903cf5a1351c6ddc55b7770a5027973ecaa64d708936",
+      "visual_score": 94
+    },
+    {
+      "look": "child_F_iron_work_bun",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_F_iron_work_bun/try1/raw.png",
+      "raw_sha256": "22b7790ffbd40d4c52aacba39da946d5b0f91b68f6ea73a095841053eeff6f8c",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_F_iron_work_bun/try1/generation.json",
+      "generation_sha256": "b3d26a85e771a4ad676b68e9dabac8de8bc8e5315613d7e78d1b61d7782ba9b8",
+      "prompt": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_F_iron_work_bun/try1/prompt.txt",
+      "prompt_sha256": "cb72a034c179cdd18c258bfd9e1fceff7e118e8ed962966edcab00211d44e720",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_F_iron_work_bun/try1/tool.json",
+      "tool_record_sha256": "6c22b2f1c789cc81ae6d5027ff47098de540b5ffa026afcea2470fb3e675a892",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/portrait/polish2/adult_M_hide_wrap_short/v1.png",
+          "sha256": "c5d706a490c166bafa6baea7cecebfca62e4be07d18184bcb0a92be0d1ff24a4"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/portrait/polish2/adult_F_hide_wrap_bun/v4.png",
+          "sha256": "b6ce18976a1bd94e019a9e0dbfae77a35331006e1c9859d581690a6c3d26fdf8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/character/batch_b1/adult_M_iron_work_short/S/idle.png",
+          "sha256": "497d4cb867f96bc8db941564d442506d455d3c73e4212fadea1876230abeaca2"
+        }
+      ],
+      "summary_sha256": "08eab02c078758186f7f712ca0107a1eaeafbe402c4bf6c6ff060d008144d17a",
+      "visual_score": 93
+    },
+    {
+      "look": "child_F_iron_work_long_tied",
+      "attempt": 1,
+      "status": "superseded_passing",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_F_iron_work_long_tied/try1/raw.png",
+      "raw_sha256": "ad880288c97b3319688aa6e51b749ff46a3d0755288c08cec2fb320528a786ec",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_F_iron_work_long_tied/try1/generation.json",
+      "generation_sha256": "6a841dec3656a29ec8ee3fb01830aff2aee1cd9cca2258203093756409a7daa1",
+      "prompt": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_F_iron_work_long_tied/try1/prompt.txt",
+      "prompt_sha256": "c8ef484177e4f100b6ddcd693b7a01b8239d8e8ae1ada6b8969c8cc0f29d0db3",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_F_iron_work_long_tied/try1/tool.json",
+      "tool_record_sha256": "bd863024d2e002a5a816acf65db7162090f2bbf817d0ac91925b2594e79753f5",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/portrait/polish2/adult_M_hide_wrap_short/v1.png",
+          "sha256": "c5d706a490c166bafa6baea7cecebfca62e4be07d18184bcb0a92be0d1ff24a4"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/portrait/polish2/adult_F_hide_wrap_bun/v4.png",
+          "sha256": "b6ce18976a1bd94e019a9e0dbfae77a35331006e1c9859d581690a6c3d26fdf8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/character/batch_b1/adult_M_iron_work_short/S/idle.png",
+          "sha256": "497d4cb867f96bc8db941564d442506d455d3c73e4212fadea1876230abeaca2"
+        }
+      ],
+      "summary_sha256": "c5165761bd2c3aff358650f4155633144ed422944c48fce3b2d1a64d85cb4977",
+      "visual_score": 91
+    },
+    {
+      "look": "child_F_iron_work_long_tied",
+      "attempt": 2,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_F_iron_work_long_tied/try2/raw.png",
+      "raw_sha256": "53ae9f568a1d5a29e12aafd0d3c2a446eac332d6869c6e16e18d5711cdc82d58",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_F_iron_work_long_tied/try2/generation.json",
+      "generation_sha256": "621497cb61f0ad17ffe1094f432907a9200346d86be1d45c0866146b80521419",
+      "prompt": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_F_iron_work_long_tied/try2/prompt.txt",
+      "prompt_sha256": "4467c44b5700aa6a01e3dd66f98c32dd95ef7a3bd39150d70cc5642e6a5a51ea",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_F_iron_work_long_tied/try2/tool.json",
+      "tool_record_sha256": "a88e7a3c88d708c54ace12e0ddb94ecaf84168b6405097fbc366be1330a4c86d",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/portrait/polish2/adult_M_hide_wrap_short/v1.png",
+          "sha256": "c5d706a490c166bafa6baea7cecebfca62e4be07d18184bcb0a92be0d1ff24a4"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/portrait/polish2/adult_F_hide_wrap_bun/v4.png",
+          "sha256": "b6ce18976a1bd94e019a9e0dbfae77a35331006e1c9859d581690a6c3d26fdf8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/character/batch_b1/adult_M_iron_work_short/S/idle.png",
+          "sha256": "497d4cb867f96bc8db941564d442506d455d3c73e4212fadea1876230abeaca2"
+        }
+      ],
+      "summary_sha256": "b98d1f41d53f37301136f5f1b2f0ac6a452e16a989acd7a8077b19c9b443cbcc",
+      "visual_score": 94
+    },
+    {
+      "look": "child_F_iron_work_short",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_F_iron_work_short/try1/raw.png",
+      "raw_sha256": "c1967fa8485c3b7c5e224898cc82c01603153335e3b25fb08a4d5fdede3c7ac4",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_F_iron_work_short/try1/generation.json",
+      "generation_sha256": "ff2d400ad48f5aec1ca5efcdfbbb38a38b1ec0c185db6ab59a39a79f4a3bfee7",
+      "prompt": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_F_iron_work_short/try1/prompt.txt",
+      "prompt_sha256": "1c50dc4df1df839dcecaca6e4d02185a717b69927ca2e9ffbb5c7e0616a00721",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_F_iron_work_short/try1/tool.json",
+      "tool_record_sha256": "686ccb5769ea6c13aeb7a66d35edd846b65a729b3f18926f5cdcc595cb4b56a8",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/portrait/polish2/adult_M_hide_wrap_short/v1.png",
+          "sha256": "c5d706a490c166bafa6baea7cecebfca62e4be07d18184bcb0a92be0d1ff24a4"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/portrait/polish2/adult_F_hide_wrap_bun/v4.png",
+          "sha256": "b6ce18976a1bd94e019a9e0dbfae77a35331006e1c9859d581690a6c3d26fdf8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/character/batch_b1/adult_M_iron_work_short/S/idle.png",
+          "sha256": "497d4cb867f96bc8db941564d442506d455d3c73e4212fadea1876230abeaca2"
+        }
+      ],
+      "summary_sha256": "0de19900d9ee3abdeaea2558bd259370fa7dc82face0541eb82d01fc1d721f43",
+      "visual_score": 94
+    },
+    {
+      "look": "child_M_iron_work_bun",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_M_iron_work_bun/try1/raw.png",
+      "raw_sha256": "2a9872886c6648ec8e43e04afdc8a5fa29ca14b41ab357457f368fd0501fd170",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_M_iron_work_bun/try1/generation.json",
+      "generation_sha256": "1ce8d9cbb762f7538dc429b22a9fa66b5df006886dd35e0dbf4b262d5c3d173a",
+      "prompt": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_M_iron_work_bun/try1/prompt.txt",
+      "prompt_sha256": "c53cbd30a6d81840d3394613bef6bdbcfae6adb7ee26ce0708bbf58b59f79e13",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_M_iron_work_bun/try1/tool.json",
+      "tool_record_sha256": "4d949ad3eab8fcfce3866aaba8ee6798764afc1850661bf18531825277d36781",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/portrait/polish2/adult_M_hide_wrap_short/v1.png",
+          "sha256": "c5d706a490c166bafa6baea7cecebfca62e4be07d18184bcb0a92be0d1ff24a4"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/portrait/polish2/adult_F_hide_wrap_bun/v4.png",
+          "sha256": "b6ce18976a1bd94e019a9e0dbfae77a35331006e1c9859d581690a6c3d26fdf8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/character/batch_b1/adult_M_iron_work_short/S/idle.png",
+          "sha256": "497d4cb867f96bc8db941564d442506d455d3c73e4212fadea1876230abeaca2"
+        }
+      ],
+      "summary_sha256": "da992746e7b1e6da56641daf4b3b1cc9ff6bd9cb509218e3721488f9497e5d38",
+      "visual_score": 93
+    },
+    {
+      "look": "child_M_iron_work_long_tied",
+      "attempt": 1,
+      "status": "superseded_passing",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_M_iron_work_long_tied/try1/raw.png",
+      "raw_sha256": "5722260fdb3050427fe78101bbd41c4fb846b90429abb2132ab7bfed9ce4431b",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_M_iron_work_long_tied/try1/generation.json",
+      "generation_sha256": "e18541dac8bd94ff79d2758ac72b557bd2df2f435a66863dad6ab9a127a7eeed",
+      "prompt": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_M_iron_work_long_tied/try1/prompt.txt",
+      "prompt_sha256": "3ef4cbca374c7e244c89c823b14c46de5c8aeb010eebabd89a85d52e3c3aa1f2",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_M_iron_work_long_tied/try1/tool.json",
+      "tool_record_sha256": "3579bcef088d819196cce1caed2f6426ceb7d2bce82897a6d0f911dbe1203a15",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/portrait/polish2/adult_M_hide_wrap_short/v1.png",
+          "sha256": "c5d706a490c166bafa6baea7cecebfca62e4be07d18184bcb0a92be0d1ff24a4"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/portrait/polish2/adult_F_hide_wrap_bun/v4.png",
+          "sha256": "b6ce18976a1bd94e019a9e0dbfae77a35331006e1c9859d581690a6c3d26fdf8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/character/batch_b1/adult_M_iron_work_short/S/idle.png",
+          "sha256": "497d4cb867f96bc8db941564d442506d455d3c73e4212fadea1876230abeaca2"
+        }
+      ],
+      "summary_sha256": "4088fe10958cd0b2af48fe0565ab46140c440bbb8d7c4af88f0c77c9ddebf170",
+      "visual_score": 91
+    },
+    {
+      "look": "child_M_iron_work_long_tied",
+      "attempt": 2,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_M_iron_work_long_tied/try2/raw.png",
+      "raw_sha256": "cc674558f19d33bdfd0ab838ae78c32a0349e59cae7ddb774d556c280c4bdfbe",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_M_iron_work_long_tied/try2/generation.json",
+      "generation_sha256": "c8dbb7303ff2ef8e4cc4fda51d911e0e4fc1e9e7f0164a1255172015ff44666c",
+      "prompt": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_M_iron_work_long_tied/try2/prompt.txt",
+      "prompt_sha256": "164b60f4430d70cfe205384e4ae7a6562f4259eee1b099d0b7875f56e38f73c5",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_M_iron_work_long_tied/try2/tool.json",
+      "tool_record_sha256": "faae95232b1e106cb2def27899c6e3da59a6bdf29e7679c7201276ca440e8104",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/portrait/polish2/adult_M_hide_wrap_short/v1.png",
+          "sha256": "c5d706a490c166bafa6baea7cecebfca62e4be07d18184bcb0a92be0d1ff24a4"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/portrait/polish2/adult_F_hide_wrap_bun/v4.png",
+          "sha256": "b6ce18976a1bd94e019a9e0dbfae77a35331006e1c9859d581690a6c3d26fdf8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/character/batch_b1/adult_M_iron_work_short/S/idle.png",
+          "sha256": "497d4cb867f96bc8db941564d442506d455d3c73e4212fadea1876230abeaca2"
+        }
+      ],
+      "summary_sha256": "50e3cf58656094c6adda07b9a2f93ba29db52e51fb8db0ecb6c98fe954d30cfc",
+      "visual_score": 94
+    },
+    {
+      "look": "child_M_iron_work_short",
+      "attempt": 1,
+      "status": "adopted",
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_M_iron_work_short/try1/raw.png",
+      "raw_sha256": "dace1f978634c065f00ddfe2638d872e80f8a08f296de9111f3be9cbe9a2ab9a",
+      "generation_record": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_M_iron_work_short/try1/generation.json",
+      "generation_sha256": "fd388b442461f9f772774fa82e69c45336deebdcd497ce684e9b201c87e29ced",
+      "prompt": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_M_iron_work_short/try1/prompt.txt",
+      "prompt_sha256": "53ad324f2e1a3de3ade36b606b813da2953a74a2fced1190709c053dcbfcad8b",
+      "tool_record": "/Users/rexxa/work/art-batch/B1/raw/iron_work_portraits/child_M_iron_work_short/try1/tool.json",
+      "tool_record_sha256": "ceee1d46fbf0e1edf6fba8225175aa253dc297e289c1928a8b6a319e789e2e96",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/portrait/polish2/adult_M_hide_wrap_short/v1.png",
+          "sha256": "c5d706a490c166bafa6baea7cecebfca62e4be07d18184bcb0a92be0d1ff24a4"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/portrait/polish2/adult_F_hide_wrap_bun/v4.png",
+          "sha256": "b6ce18976a1bd94e019a9e0dbfae77a35331006e1c9859d581690a6c3d26fdf8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b1/art/character/batch_b1/adult_M_iron_work_short/S/idle.png",
+          "sha256": "497d4cb867f96bc8db941564d442506d455d3c73e4212fadea1876230abeaca2"
+        }
+      ],
+      "summary_sha256": "80307b4db668a44d5044351838cecf05ba97f718d045586751e8440ebce63789",
+      "visual_score": 94
+    }
+  ],
+  "files": [
+    {
+      "look": "adult_F_iron_work_bun",
+      "variant": "v1",
+      "path": "art/portrait/batch_b1/adult_F_iron_work_bun/v1.png",
+      "sha256": "c6a7035ab897ee17e27c89154f39cf3633adf98a3c3c80e32afaf19258e14d96"
+    },
+    {
+      "look": "adult_F_iron_work_bun",
+      "variant": "v2",
+      "path": "art/portrait/batch_b1/adult_F_iron_work_bun/v2.png",
+      "sha256": "bd0d565e3f2c0180ee25382d5c7b896a94c3abe811d7f6fd1a05bf1a6b4e6dae"
+    },
+    {
+      "look": "adult_F_iron_work_bun",
+      "variant": "v3",
+      "path": "art/portrait/batch_b1/adult_F_iron_work_bun/v3.png",
+      "sha256": "56858151794a50515e520393daaa1b47a1a7c505f5f8cc176d1cfe6bb84003a3"
+    },
+    {
+      "look": "adult_F_iron_work_bun",
+      "variant": "v4",
+      "path": "art/portrait/batch_b1/adult_F_iron_work_bun/v4.png",
+      "sha256": "fd2ce17c429681c5c5272ecee78a6e0478e03c9b0eadb2251f049d261e4264fb"
+    },
+    {
+      "look": "adult_F_iron_work_bun",
+      "variant": "v5",
+      "path": "art/portrait/batch_b1/adult_F_iron_work_bun/v5.png",
+      "sha256": "f0d8ddcbe31bf194a3f738b6c418199f309bc0f3229b022d120a389c71b901a3"
+    },
+    {
+      "look": "adult_F_iron_work_bun",
+      "variant": "v6",
+      "path": "art/portrait/batch_b1/adult_F_iron_work_bun/v6.png",
+      "sha256": "abe9070dedbd44177b0214fde32fd49303a2f8b775aea6cd602de9b12a58a84d"
+    },
+    {
+      "look": "adult_F_iron_work_long_tied",
+      "variant": "v1",
+      "path": "art/portrait/batch_b1/adult_F_iron_work_long_tied/v1.png",
+      "sha256": "bff893f6ef3fa66ac397129ce1a232efe64d86d361b983cf8b08e6fc3c282d3f"
+    },
+    {
+      "look": "adult_F_iron_work_long_tied",
+      "variant": "v2",
+      "path": "art/portrait/batch_b1/adult_F_iron_work_long_tied/v2.png",
+      "sha256": "292f876e714912d5d8b468836a576c59ffb9890375f69dbe48433fe9488e5c93"
+    },
+    {
+      "look": "adult_F_iron_work_long_tied",
+      "variant": "v3",
+      "path": "art/portrait/batch_b1/adult_F_iron_work_long_tied/v3.png",
+      "sha256": "c3a8805c92b4c03e0eadfb882e205ada4ea9ea39f986a28b607092ee15a0f811"
+    },
+    {
+      "look": "adult_F_iron_work_long_tied",
+      "variant": "v4",
+      "path": "art/portrait/batch_b1/adult_F_iron_work_long_tied/v4.png",
+      "sha256": "3fa8a8ce4108fccd50db0768108511d720b6d27426f3f05538ede0795bc3938f"
+    },
+    {
+      "look": "adult_F_iron_work_long_tied",
+      "variant": "v5",
+      "path": "art/portrait/batch_b1/adult_F_iron_work_long_tied/v5.png",
+      "sha256": "9464446e09811e33bef2df700090b3483c797a82aec3548bdd7fce5bbdc75a8d"
+    },
+    {
+      "look": "adult_F_iron_work_long_tied",
+      "variant": "v6",
+      "path": "art/portrait/batch_b1/adult_F_iron_work_long_tied/v6.png",
+      "sha256": "f376986397d3348066460b68ea4f42b6f79af4cbbc954e0a73b06901c78d7c43"
+    },
+    {
+      "look": "adult_F_iron_work_short",
+      "variant": "v1",
+      "path": "art/portrait/batch_b1/adult_F_iron_work_short/v1.png",
+      "sha256": "89578bda1e999032dad6efe84f0806216175be54955d8a6952fd427d2ace47ee"
+    },
+    {
+      "look": "adult_F_iron_work_short",
+      "variant": "v2",
+      "path": "art/portrait/batch_b1/adult_F_iron_work_short/v2.png",
+      "sha256": "eca0d8eae180eabb9bc13dc3bc690f5760943f463f7304ef6c99302b7baa281a"
+    },
+    {
+      "look": "adult_F_iron_work_short",
+      "variant": "v3",
+      "path": "art/portrait/batch_b1/adult_F_iron_work_short/v3.png",
+      "sha256": "d5dbfa0a78ad1498b135b05138b02a8ac05359aa10710cef0702e0bd7f73b95b"
+    },
+    {
+      "look": "adult_F_iron_work_short",
+      "variant": "v4",
+      "path": "art/portrait/batch_b1/adult_F_iron_work_short/v4.png",
+      "sha256": "09a3eb0882275d1d195bb3c45faa6a38add8a8646a1b0e91e73b96774d24d165"
+    },
+    {
+      "look": "adult_F_iron_work_short",
+      "variant": "v5",
+      "path": "art/portrait/batch_b1/adult_F_iron_work_short/v5.png",
+      "sha256": "7b113c448f788a2f1c65befbfb33ef9c57c7d6468fec2fbc7d9253ea39dafa2a"
+    },
+    {
+      "look": "adult_F_iron_work_short",
+      "variant": "v6",
+      "path": "art/portrait/batch_b1/adult_F_iron_work_short/v6.png",
+      "sha256": "9322b900bb04dfcc67e4049ab1dc5f0046e1c760168ccdd2a339cdac6c00bd4b"
+    },
+    {
+      "look": "adult_M_iron_work_bun",
+      "variant": "v1",
+      "path": "art/portrait/batch_b1/adult_M_iron_work_bun/v1.png",
+      "sha256": "9303b1e86cd78452c942480ca05be5d79db03482ba5313f329e97e64fe602b3d"
+    },
+    {
+      "look": "adult_M_iron_work_bun",
+      "variant": "v2",
+      "path": "art/portrait/batch_b1/adult_M_iron_work_bun/v2.png",
+      "sha256": "4716d01c5731591334868aa2cabbfd23290e7d0630511afbbe2944e32ea37878"
+    },
+    {
+      "look": "adult_M_iron_work_bun",
+      "variant": "v3",
+      "path": "art/portrait/batch_b1/adult_M_iron_work_bun/v3.png",
+      "sha256": "e351edc81135a842ba128b2a27ccc8f60ed816286684a55f5820256222f20453"
+    },
+    {
+      "look": "adult_M_iron_work_bun",
+      "variant": "v4",
+      "path": "art/portrait/batch_b1/adult_M_iron_work_bun/v4.png",
+      "sha256": "46aa7e6f2f047fbcad66751ad5c7741657930eb2b9168576a025ab4407ad9f03"
+    },
+    {
+      "look": "adult_M_iron_work_bun",
+      "variant": "v5",
+      "path": "art/portrait/batch_b1/adult_M_iron_work_bun/v5.png",
+      "sha256": "aa7e661abc644d268c2b531351b5626cb3173177b3c2b68871fe411f4ff51926"
+    },
+    {
+      "look": "adult_M_iron_work_bun",
+      "variant": "v6",
+      "path": "art/portrait/batch_b1/adult_M_iron_work_bun/v6.png",
+      "sha256": "0f924cab972f17af7785fe916aeeb7521b7c4ce5e3711c35470d5c00bdb43505"
+    },
+    {
+      "look": "adult_M_iron_work_long_tied",
+      "variant": "v1",
+      "path": "art/portrait/batch_b1/adult_M_iron_work_long_tied/v1.png",
+      "sha256": "f143c432c6a458183f61809c364d293a4396cc4b12a8429a22297040b710e6e7"
+    },
+    {
+      "look": "adult_M_iron_work_long_tied",
+      "variant": "v2",
+      "path": "art/portrait/batch_b1/adult_M_iron_work_long_tied/v2.png",
+      "sha256": "b51ade3b59c7b025e8ba6e79d16909626baa8ccc68474a03ec9fdad9d2eaefac"
+    },
+    {
+      "look": "adult_M_iron_work_long_tied",
+      "variant": "v3",
+      "path": "art/portrait/batch_b1/adult_M_iron_work_long_tied/v3.png",
+      "sha256": "4b3d202bdd80186939ea0f2439018e09b06a4339713433bbcccf638a0aaa19e4"
+    },
+    {
+      "look": "adult_M_iron_work_long_tied",
+      "variant": "v4",
+      "path": "art/portrait/batch_b1/adult_M_iron_work_long_tied/v4.png",
+      "sha256": "65caf5adbf33ccf56cb430ba4e6482ad6bb334537766c85da867e2e3280f743b"
+    },
+    {
+      "look": "adult_M_iron_work_long_tied",
+      "variant": "v5",
+      "path": "art/portrait/batch_b1/adult_M_iron_work_long_tied/v5.png",
+      "sha256": "9d9fa20a7ae89c5086fc82b662b7857cea513759eff1720a7697a0c7d85b2209"
+    },
+    {
+      "look": "adult_M_iron_work_long_tied",
+      "variant": "v6",
+      "path": "art/portrait/batch_b1/adult_M_iron_work_long_tied/v6.png",
+      "sha256": "043af71f0702ca6904444b0fc8d6346488f2ed2d658ce6051c82b15f8c87f2c8"
+    },
+    {
+      "look": "adult_M_iron_work_short",
+      "variant": "v1",
+      "path": "art/portrait/batch_b1/adult_M_iron_work_short/v1.png",
+      "sha256": "ddce6cb523693fae7ddc9adf7f904b71df9117bfbfddbf56403b2faf2120e430"
+    },
+    {
+      "look": "adult_M_iron_work_short",
+      "variant": "v2",
+      "path": "art/portrait/batch_b1/adult_M_iron_work_short/v2.png",
+      "sha256": "0dff6ff8dc97c9dc55c128b37c5e3e24fa2dd7c843e1ba3ed1d70de0dc0e406d"
+    },
+    {
+      "look": "adult_M_iron_work_short",
+      "variant": "v3",
+      "path": "art/portrait/batch_b1/adult_M_iron_work_short/v3.png",
+      "sha256": "5af7f108da27694821e0661830fc83dd1457b45390454a17c25fe8fa13c33803"
+    },
+    {
+      "look": "adult_M_iron_work_short",
+      "variant": "v4",
+      "path": "art/portrait/batch_b1/adult_M_iron_work_short/v4.png",
+      "sha256": "8586983f9c432e787337df808d61a4cebfc425e8ccebacc2123c3968e13a35f1"
+    },
+    {
+      "look": "adult_M_iron_work_short",
+      "variant": "v5",
+      "path": "art/portrait/batch_b1/adult_M_iron_work_short/v5.png",
+      "sha256": "b4731fb55501e2d56dcc0a81ad313da2e15311d476854bfaae6514f3ead84290"
+    },
+    {
+      "look": "adult_M_iron_work_short",
+      "variant": "v6",
+      "path": "art/portrait/batch_b1/adult_M_iron_work_short/v6.png",
+      "sha256": "19d11698e9133112476146a9943da9e6b93b4e3d0f803a75f5b4ef61a4c04c32"
+    },
+    {
+      "look": "child_F_iron_work_bun",
+      "variant": "v1",
+      "path": "art/portrait/batch_b1/child_F_iron_work_bun/v1.png",
+      "sha256": "fb3f9bf6dbfbee532c1049effd43f88112cf93070980f0d4e132ed6fde6d56e6"
+    },
+    {
+      "look": "child_F_iron_work_bun",
+      "variant": "v2",
+      "path": "art/portrait/batch_b1/child_F_iron_work_bun/v2.png",
+      "sha256": "517d40e6191e20ffadd46c77ca37893910736e20a478ce5cb74922f19969b321"
+    },
+    {
+      "look": "child_F_iron_work_bun",
+      "variant": "v3",
+      "path": "art/portrait/batch_b1/child_F_iron_work_bun/v3.png",
+      "sha256": "56ed352e22f68c8e750d0a6c1f1856f3d80b809fb27f2ddf935d25906509baeb"
+    },
+    {
+      "look": "child_F_iron_work_bun",
+      "variant": "v4",
+      "path": "art/portrait/batch_b1/child_F_iron_work_bun/v4.png",
+      "sha256": "0e1469a859578400f23c397547a191dd43742711fd3db5dd56d9ecf171916900"
+    },
+    {
+      "look": "child_F_iron_work_bun",
+      "variant": "v5",
+      "path": "art/portrait/batch_b1/child_F_iron_work_bun/v5.png",
+      "sha256": "e50837d9f515281faef6cd75d517db127043d54398a2a2fbca7b567a1710b78c"
+    },
+    {
+      "look": "child_F_iron_work_bun",
+      "variant": "v6",
+      "path": "art/portrait/batch_b1/child_F_iron_work_bun/v6.png",
+      "sha256": "d89d3b4a067a686aa25e0e32de2df28238e0e9c0fda987ec251e4d354c7326dd"
+    },
+    {
+      "look": "child_F_iron_work_long_tied",
+      "variant": "v1",
+      "path": "art/portrait/batch_b1/child_F_iron_work_long_tied/v1.png",
+      "sha256": "f6f9dee9625a2dfa73c518217df477d0858e036ead428e0773a4c74dc7a76374"
+    },
+    {
+      "look": "child_F_iron_work_long_tied",
+      "variant": "v2",
+      "path": "art/portrait/batch_b1/child_F_iron_work_long_tied/v2.png",
+      "sha256": "4e4b1a5b600a8a2bdd4752ae120b94c2b066c621a61e7babbdd57ef79902593e"
+    },
+    {
+      "look": "child_F_iron_work_long_tied",
+      "variant": "v3",
+      "path": "art/portrait/batch_b1/child_F_iron_work_long_tied/v3.png",
+      "sha256": "7554f356f8218162fdf2ecbc0c523c0b408b9aa1c83bc8e3a71a18faab4ff3ff"
+    },
+    {
+      "look": "child_F_iron_work_long_tied",
+      "variant": "v4",
+      "path": "art/portrait/batch_b1/child_F_iron_work_long_tied/v4.png",
+      "sha256": "a7ad82bdb4e76acb896a24c6a1edccbdb3512d70fb55ccdc64c2b70921ddc2bb"
+    },
+    {
+      "look": "child_F_iron_work_long_tied",
+      "variant": "v5",
+      "path": "art/portrait/batch_b1/child_F_iron_work_long_tied/v5.png",
+      "sha256": "f36b48125e90ad8e10c1523e2eba69af5517cb58612f0994d8d50e131eba956e"
+    },
+    {
+      "look": "child_F_iron_work_long_tied",
+      "variant": "v6",
+      "path": "art/portrait/batch_b1/child_F_iron_work_long_tied/v6.png",
+      "sha256": "7cc0e0270b59a4864eabc42050bd15c0a8074843c250ff7ece55f2bcd11a7289"
+    },
+    {
+      "look": "child_F_iron_work_short",
+      "variant": "v1",
+      "path": "art/portrait/batch_b1/child_F_iron_work_short/v1.png",
+      "sha256": "68567941adf40b50f9117d3dbe252c2a28a5352f9522c5f8e56180b95a4339db"
+    },
+    {
+      "look": "child_F_iron_work_short",
+      "variant": "v2",
+      "path": "art/portrait/batch_b1/child_F_iron_work_short/v2.png",
+      "sha256": "180850b61fafb4ae74210180c8b3f387528f6db26786f6093fef40a2dc004bb6"
+    },
+    {
+      "look": "child_F_iron_work_short",
+      "variant": "v3",
+      "path": "art/portrait/batch_b1/child_F_iron_work_short/v3.png",
+      "sha256": "5fcc380736134ff9fd04ffb1c728e7ff36df5f8cca62e14775eb0532f738c389"
+    },
+    {
+      "look": "child_F_iron_work_short",
+      "variant": "v4",
+      "path": "art/portrait/batch_b1/child_F_iron_work_short/v4.png",
+      "sha256": "873b6eb19683e2378104e0c59c344a816c31c6a2159b6cf8b1954fb589dcdd58"
+    },
+    {
+      "look": "child_F_iron_work_short",
+      "variant": "v5",
+      "path": "art/portrait/batch_b1/child_F_iron_work_short/v5.png",
+      "sha256": "bd0f3227c22afbc68838c7d25b880e4dfd339392d4442f7d277b7c250fe1a5ec"
+    },
+    {
+      "look": "child_F_iron_work_short",
+      "variant": "v6",
+      "path": "art/portrait/batch_b1/child_F_iron_work_short/v6.png",
+      "sha256": "6c0780f575c3db4a7979be32961516a86a7ebf7bec37f052cd01d863860096e9"
+    },
+    {
+      "look": "child_M_iron_work_bun",
+      "variant": "v1",
+      "path": "art/portrait/batch_b1/child_M_iron_work_bun/v1.png",
+      "sha256": "507ce1ad7eb427eac3b4acd12ce30575971952d378a9ac05b4e26b9077b45890"
+    },
+    {
+      "look": "child_M_iron_work_bun",
+      "variant": "v2",
+      "path": "art/portrait/batch_b1/child_M_iron_work_bun/v2.png",
+      "sha256": "e1699a69fa76eb416344f1dfb518979fda92e44ea7e465172084ca6121e352e6"
+    },
+    {
+      "look": "child_M_iron_work_bun",
+      "variant": "v3",
+      "path": "art/portrait/batch_b1/child_M_iron_work_bun/v3.png",
+      "sha256": "1e63c57fdce35f21e5e24eee2d37f24aeb138d779cbb0bbd1a48ffa2190035cc"
+    },
+    {
+      "look": "child_M_iron_work_bun",
+      "variant": "v4",
+      "path": "art/portrait/batch_b1/child_M_iron_work_bun/v4.png",
+      "sha256": "074f4439032a9974e5062877fcb8026b7887e6936df21ec4baa14f639354494a"
+    },
+    {
+      "look": "child_M_iron_work_bun",
+      "variant": "v5",
+      "path": "art/portrait/batch_b1/child_M_iron_work_bun/v5.png",
+      "sha256": "c0a8cc2e3a6847e46bf3504ff6d09e7f181df95e0da4ae17690fba49b4054a63"
+    },
+    {
+      "look": "child_M_iron_work_bun",
+      "variant": "v6",
+      "path": "art/portrait/batch_b1/child_M_iron_work_bun/v6.png",
+      "sha256": "1ffda83878e1e25df9112b0cdae1ad8e82e6e0be08c958b3a5972d3b1c7ad97f"
+    },
+    {
+      "look": "child_M_iron_work_long_tied",
+      "variant": "v1",
+      "path": "art/portrait/batch_b1/child_M_iron_work_long_tied/v1.png",
+      "sha256": "84c0a5a2a35e1be4f29de990c50848d99a21062768dfc4573590b9e014efbe00"
+    },
+    {
+      "look": "child_M_iron_work_long_tied",
+      "variant": "v2",
+      "path": "art/portrait/batch_b1/child_M_iron_work_long_tied/v2.png",
+      "sha256": "cbb926fdc043fe229318b327d4015992c8ea90df3998f23fd1f2c022a4fbd89d"
+    },
+    {
+      "look": "child_M_iron_work_long_tied",
+      "variant": "v3",
+      "path": "art/portrait/batch_b1/child_M_iron_work_long_tied/v3.png",
+      "sha256": "24f2ea5c97f7eae58bdd7b433d9f3718455ccce163b4ba6c6bf1210283f195bb"
+    },
+    {
+      "look": "child_M_iron_work_long_tied",
+      "variant": "v4",
+      "path": "art/portrait/batch_b1/child_M_iron_work_long_tied/v4.png",
+      "sha256": "cee256982ec6370096861cdb13f1072499d0802e827f79e6d6c57159056d27aa"
+    },
+    {
+      "look": "child_M_iron_work_long_tied",
+      "variant": "v5",
+      "path": "art/portrait/batch_b1/child_M_iron_work_long_tied/v5.png",
+      "sha256": "a6336112a101fded9d37110e4aa161f987f43e75a3edf444c734859d39ae2fdc"
+    },
+    {
+      "look": "child_M_iron_work_long_tied",
+      "variant": "v6",
+      "path": "art/portrait/batch_b1/child_M_iron_work_long_tied/v6.png",
+      "sha256": "41ef1598fb6bdd0008932041a3f7cfdb57d30a22373f97919cbd06ffd75d4398"
+    },
+    {
+      "look": "child_M_iron_work_short",
+      "variant": "v1",
+      "path": "art/portrait/batch_b1/child_M_iron_work_short/v1.png",
+      "sha256": "97dc3610400ab1ceba1dc389e86fb154cfbe7b5e5608dda0603a65893faa2f91"
+    },
+    {
+      "look": "child_M_iron_work_short",
+      "variant": "v2",
+      "path": "art/portrait/batch_b1/child_M_iron_work_short/v2.png",
+      "sha256": "68a0e2c26072fe6ed753ef1b2678251198a8339b0ee1b6fc421cc0a3308e3a2c"
+    },
+    {
+      "look": "child_M_iron_work_short",
+      "variant": "v3",
+      "path": "art/portrait/batch_b1/child_M_iron_work_short/v3.png",
+      "sha256": "a4b4d1cebdb0621383bfff0f85ccf1e2462edc903c8e40448373e26c6af2a137"
+    },
+    {
+      "look": "child_M_iron_work_short",
+      "variant": "v4",
+      "path": "art/portrait/batch_b1/child_M_iron_work_short/v4.png",
+      "sha256": "3cd242431b834427142cdccc5adaf8041efc5a169c2a44f9ffa6628f01862878"
+    },
+    {
+      "look": "child_M_iron_work_short",
+      "variant": "v5",
+      "path": "art/portrait/batch_b1/child_M_iron_work_short/v5.png",
+      "sha256": "77902449b65498e37c2dc501efce68701d18009c5375c21f56f66077ac1bb5bf"
+    },
+    {
+      "look": "child_M_iron_work_short",
+      "variant": "v6",
+      "path": "art/portrait/batch_b1/child_M_iron_work_short/v6.png",
+      "sha256": "f73c2b82bf81549f9645644a13791e409c39c81896445389bcb2ec598d8b6f24"
+    }
+  ],
+  "pending": [
+    "Runtime skin/hair transforms and masks are not measured by portrait generation.",
+    "Era/job selector and top-code mapping remain an independent integration step."
+  ]
+}

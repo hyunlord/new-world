@@ -1,0 +1,11 @@
+{
+  "score": 93,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Fine ink details compress at native size; wardrobe and hairstyle silhouettes remain legible."
+  ],
+  "suggestions": [],
+  "reasoning": "Native and 2x reviewed: sparse cloak folds and lighter tawny wash clearly separate from dark tunic, compact spindle directly between hands survives native size, child anatomy and low ponytail coherent; grain bag carry, right-facing walk and horizontal sleep legible. Both idle heights pass. Cleaner than earlier attempt.",
+  "summary_sha256": "12ec042acc12a5447516666a435ad2e414513bd77e8104f64181ecaac5bf2038"
+}

@@ -1,0 +1,11 @@
+{
+  "score": 93,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Slightly softer earth wash than baseline anchor; consistent in native view."
+  ],
+  "suggestions": [],
+  "reasoning": "Reviewed full source and native128px portraits at2x. Six contained age8–11 busts show prescribed skin/hair/face differences without beard or grey; leather apron and linen match the adopted body.",
+  "summary_sha256": "da992746e7b1e6da56641daf4b3b1cc9ff6bd9cb509218e3721488f9497e5d38"
+}

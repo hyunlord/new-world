@@ -1,0 +1,11 @@
+{
+  "score": 92,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Fine ink details compress at native size; wardrobe and hairstyle silhouettes remain legible."
+  ],
+  "suggestions": [],
+  "reasoning": "Native and 2x reviewed: child anatomy and 40px stature, no beard, clearly differentiated tied hair or high bun, cream tunic and leather apron, connected spindle work and grain bag carry, clear right facing and horizontal sleep.",
+  "summary_sha256": "b312c1f10d63b97920f56adddf90701127a5d6b0e84aa15d5938643fe266afdc"
+}

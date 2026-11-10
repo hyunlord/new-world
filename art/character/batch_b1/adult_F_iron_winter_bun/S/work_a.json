@@ -1,0 +1,72 @@
+{
+  "look": "adult_F_iron_winter_bun",
+  "age": "adult",
+  "attempt": 2,
+  "raw": "/Users/rexxa/work/art-batch/B1/raw/iron/adult_F_iron_winter_bun/trial2/raw.png",
+  "raw_sha256": "7a22ec403b9645436e079df555f1abcef6dd3c929fb340a121341107b8f00ad8",
+  "prompt_sha256": "8ab44df8454077c7baaea099fee1063b06e5b192c88fb5a14b219615d4165c54",
+  "facing": "S",
+  "pose": "work_a",
+  "check_pose": "work_a",
+  "path": "S/work_a.png",
+  "sha256": "47340e09e586a42a0814b907edfa72e81d239f207ba2062cc78e1bde0741fde2",
+  "source_box": [
+    516,
+    17,
+    896,
+    574
+  ],
+  "normalization": {
+    "scaled_size": [
+      49,
+      72
+    ],
+    "trim_box": [
+      7,
+      6,
+      41,
+      62
+    ],
+    "placement": [
+      23,
+      49
+    ],
+    "resized_to_canvas_offset": [
+      16,
+      43
+    ],
+    "visible_pixels": 997,
+    "rotation_degrees": 0,
+    "scale": 0.12962962962962962,
+    "discarded_pixels": 18,
+    "discarded_max_alpha": 1,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "passed": true,
+    "findings": [],
+    "coverage": 0.09988839285714286,
+    "component_count": 1,
+    "largest_hole": 0,
+    "contact_ok": true,
+    "sleep_axis_ok": true,
+    "opaque_height": 55,
+    "opaque_width": 33,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+    "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+    "visible_height": 56,
+    "visible_width": 34,
+    "visibility_threshold": 16
+  },
+  "standing_scale": 0.12962962962962962,
+  "sleep_scale": 0.15300546448087432,
+  "anchor": [
+    40,
+    104
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "template_version": 3
+}

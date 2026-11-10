@@ -1,0 +1,745 @@
+{
+  "look": "child_F_iron_winter_long_tied",
+  "age": "child",
+  "attempt": 2,
+  "record_sha256": "14d30d7b3b08e6a2016b2464ff0fc2fbbd4ae0119004ab904b73b83eca03b3aa",
+  "raw_sha256": "661cafc33930864ef0f1c1c8662d15641ccb2dea1a2c8649da2814eb6e68b05d",
+  "prompt_sha256": "684144f3a798d38ce973b009c21d975edc995c3d30b15101d4cae5c1aac86f5c",
+  "passed": true,
+  "frames": [
+    {
+      "look": "child_F_iron_winter_long_tied",
+      "age": "child",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron/child_F_iron_winter_long_tied/trial2/raw.png",
+      "raw_sha256": "661cafc33930864ef0f1c1c8662d15641ccb2dea1a2c8649da2814eb6e68b05d",
+      "prompt_sha256": "684144f3a798d38ce973b009c21d975edc995c3d30b15101d4cae5c1aac86f5c",
+      "facing": "S",
+      "pose": "idle",
+      "check_pose": "idle",
+      "path": "S/idle.png",
+      "sha256": "cafd0b945b3d8e7c884ad45d758776b55fd6648b24be20101ee60becc25a0b0d",
+      "source_box": [
+        0,
+        17,
+        305,
+        530
+      ],
+      "normalization": {
+        "scaled_size": [
+          29,
+          48
+        ],
+        "trim_box": [
+          6,
+          2,
+          22,
+          43
+        ],
+        "placement": [
+          32,
+          64
+        ],
+        "resized_to_canvas_offset": [
+          26,
+          62
+        ],
+        "visible_pixels": 483,
+        "rotation_degrees": 0,
+        "scale": 0.09411764705882353,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.04631696428571429,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 39,
+        "opaque_width": 16,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 41,
+        "visible_width": 16,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.09411764705882353,
+      "sleep_scale": 0.10443864229765012,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "child_F_iron_winter_long_tied",
+      "age": "child",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron/child_F_iron_winter_long_tied/trial2/raw.png",
+      "raw_sha256": "661cafc33930864ef0f1c1c8662d15641ccb2dea1a2c8649da2814eb6e68b05d",
+      "prompt_sha256": "684144f3a798d38ce973b009c21d975edc995c3d30b15101d4cae5c1aac86f5c",
+      "facing": "S",
+      "pose": "walk_a",
+      "check_pose": "walk_a",
+      "path": "S/walk_a.png",
+      "sha256": "6c65b701aece0e1e5e6bbf84b8344bb1ea94b8193254bbda7338055b4e02c69f",
+      "source_box": [
+        277,
+        7,
+        586,
+        519
+      ],
+      "normalization": {
+        "scaled_size": [
+          29,
+          48
+        ],
+        "trim_box": [
+          5,
+          3,
+          24,
+          44
+        ],
+        "placement": [
+          30,
+          64
+        ],
+        "resized_to_canvas_offset": [
+          25,
+          61
+        ],
+        "visible_pixels": 476,
+        "rotation_degrees": 0,
+        "scale": 0.09411764705882353,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.04587053571428571,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 39,
+        "opaque_width": 19,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 41,
+        "visible_width": 19,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.09411764705882353,
+      "sleep_scale": 0.10443864229765012,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "child_F_iron_winter_long_tied",
+      "age": "child",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron/child_F_iron_winter_long_tied/trial2/raw.png",
+      "raw_sha256": "661cafc33930864ef0f1c1c8662d15641ccb2dea1a2c8649da2814eb6e68b05d",
+      "prompt_sha256": "684144f3a798d38ce973b009c21d975edc995c3d30b15101d4cae5c1aac86f5c",
+      "facing": "S",
+      "pose": "work_a",
+      "check_pose": "work_a",
+      "path": "S/work_a.png",
+      "sha256": "c135e3d35153eb2632f3db1a8b158d54165d997af1468ff6c5ebda5cf98b825e",
+      "source_box": [
+        561,
+        25,
+        863,
+        532
+      ],
+      "normalization": {
+        "scaled_size": [
+          28,
+          48
+        ],
+        "trim_box": [
+          6,
+          1,
+          23,
+          42
+        ],
+        "placement": [
+          31,
+          64
+        ],
+        "resized_to_canvas_offset": [
+          25,
+          63
+        ],
+        "visible_pixels": 485,
+        "rotation_degrees": 0,
+        "scale": 0.09411764705882353,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.048214285714285716,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 40,
+        "opaque_width": 16,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 41,
+        "visible_width": 17,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.09411764705882353,
+      "sleep_scale": 0.10443864229765012,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "child_F_iron_winter_long_tied",
+      "age": "child",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron/child_F_iron_winter_long_tied/trial2/raw.png",
+      "raw_sha256": "661cafc33930864ef0f1c1c8662d15641ccb2dea1a2c8649da2814eb6e68b05d",
+      "prompt_sha256": "684144f3a798d38ce973b009c21d975edc995c3d30b15101d4cae5c1aac86f5c",
+      "facing": "S",
+      "pose": "carry",
+      "check_pose": "carry",
+      "path": "S/carry.png",
+      "sha256": "f9bd4fe42dac39e667bc2f54e850d740f646797048fbf2121f4c6a2638aca305",
+      "source_box": [
+        845,
+        8,
+        1270,
+        530
+      ],
+      "normalization": {
+        "scaled_size": [
+          40,
+          49
+        ],
+        "trim_box": [
+          6,
+          3,
+          22,
+          44
+        ],
+        "placement": [
+          32,
+          64
+        ],
+        "resized_to_canvas_offset": [
+          26,
+          61
+        ],
+        "visible_pixels": 487,
+        "rotation_degrees": 0,
+        "scale": 0.09411764705882353,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.046651785714285715,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 40,
+        "opaque_width": 15,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 41,
+        "visible_width": 16,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.09411764705882353,
+      "sleep_scale": 0.10443864229765012,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "child_F_iron_winter_long_tied",
+      "age": "child",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron/child_F_iron_winter_long_tied/trial2/raw.png",
+      "raw_sha256": "661cafc33930864ef0f1c1c8662d15641ccb2dea1a2c8649da2814eb6e68b05d",
+      "prompt_sha256": "684144f3a798d38ce973b009c21d975edc995c3d30b15101d4cae5c1aac86f5c",
+      "facing": "S",
+      "pose": "sleep",
+      "check_pose": "sleep",
+      "path": "S/sleep.png",
+      "sha256": "055bcfa701bd4f9397ac345d637a2003413743b5e9fc4a5f48546d5fa849031f",
+      "source_box": [
+        1097,
+        21,
+        1535,
+        624
+      ],
+      "normalization": {
+        "scaled_size": [
+          46,
+          63
+        ],
+        "trim_box": [
+          3,
+          26,
+          44,
+          41
+        ],
+        "placement": [
+          35,
+          58
+        ],
+        "resized_to_canvas_offset": [
+          32,
+          32
+        ],
+        "visible_pixels": 418,
+        "rotation_degrees": 0,
+        "scale": 0.10443864229765012,
+        "discarded_pixels": 50,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.04107142857142857,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 13,
+        "opaque_width": 40,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 15,
+        "visible_width": 41,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.09411764705882353,
+      "sleep_scale": 0.10443864229765012,
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "child_F_iron_winter_long_tied",
+      "age": "child",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron/child_F_iron_winter_long_tied/trial2/raw.png",
+      "raw_sha256": "661cafc33930864ef0f1c1c8662d15641ccb2dea1a2c8649da2814eb6e68b05d",
+      "prompt_sha256": "684144f3a798d38ce973b009c21d975edc995c3d30b15101d4cae5c1aac86f5c",
+      "facing": "E",
+      "pose": "idle",
+      "check_pose": "idle",
+      "path": "E/idle.png",
+      "sha256": "21c8efbfd30f5646c91c638cedbde7d427d61eb9f4778064c6ce17a499c8917d",
+      "source_box": [
+        0,
+        509,
+        296,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          28,
+          48
+        ],
+        "trim_box": [
+          6,
+          4,
+          21,
+          45
+        ],
+        "placement": [
+          32,
+          64
+        ],
+        "resized_to_canvas_offset": [
+          26,
+          60
+        ],
+        "visible_pixels": 456,
+        "rotation_degrees": 0,
+        "scale": 0.09411764705882353,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.04397321428571429,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 40,
+        "opaque_width": 14,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 41,
+        "visible_width": 15,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.09411764705882353,
+      "sleep_scale": 0.10526315789473684,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "child_F_iron_winter_long_tied",
+      "age": "child",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron/child_F_iron_winter_long_tied/trial2/raw.png",
+      "raw_sha256": "661cafc33930864ef0f1c1c8662d15641ccb2dea1a2c8649da2814eb6e68b05d",
+      "prompt_sha256": "684144f3a798d38ce973b009c21d975edc995c3d30b15101d4cae5c1aac86f5c",
+      "facing": "E",
+      "pose": "walk_a",
+      "check_pose": "walk_a",
+      "path": "E/walk_a.png",
+      "sha256": "b378199a131497f3daa7936bd8c73c5aaa22e20909de9fc6efba3e4aa237cd1b",
+      "source_box": [
+        269,
+        500,
+        608,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          32,
+          49
+        ],
+        "trim_box": [
+          5,
+          5,
+          27,
+          45
+        ],
+        "placement": [
+          29,
+          65
+        ],
+        "resized_to_canvas_offset": [
+          24,
+          60
+        ],
+        "visible_pixels": 465,
+        "rotation_degrees": 0,
+        "scale": 0.09411764705882353,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.04441964285714286,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 40,
+        "opaque_width": 21,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 40,
+        "visible_width": 22,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.09411764705882353,
+      "sleep_scale": 0.10526315789473684,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "child_F_iron_winter_long_tied",
+      "age": "child",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron/child_F_iron_winter_long_tied/trial2/raw.png",
+      "raw_sha256": "661cafc33930864ef0f1c1c8662d15641ccb2dea1a2c8649da2814eb6e68b05d",
+      "prompt_sha256": "684144f3a798d38ce973b009c21d975edc995c3d30b15101d4cae5c1aac86f5c",
+      "facing": "E",
+      "pose": "work_a",
+      "check_pose": "work_a",
+      "path": "E/work_a.png",
+      "sha256": "94200e37deaadd271622c7af03c1317aa7c6c0981d0e9009822a792d1a0373dc",
+      "source_box": [
+        570,
+        505,
+        870,
+        1016
+      ],
+      "normalization": {
+        "scaled_size": [
+          28,
+          48
+        ],
+        "trim_box": [
+          7,
+          4,
+          23,
+          45
+        ],
+        "placement": [
+          32,
+          64
+        ],
+        "resized_to_canvas_offset": [
+          25,
+          60
+        ],
+        "visible_pixels": 475,
+        "rotation_degrees": 0,
+        "scale": 0.09411764705882353,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.04575892857142857,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 40,
+        "opaque_width": 15,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 41,
+        "visible_width": 16,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.09411764705882353,
+      "sleep_scale": 0.10526315789473684,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "child_F_iron_winter_long_tied",
+      "age": "child",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron/child_F_iron_winter_long_tied/trial2/raw.png",
+      "raw_sha256": "661cafc33930864ef0f1c1c8662d15641ccb2dea1a2c8649da2814eb6e68b05d",
+      "prompt_sha256": "684144f3a798d38ce973b009c21d975edc995c3d30b15101d4cae5c1aac86f5c",
+      "facing": "E",
+      "pose": "carry",
+      "check_pose": "carry",
+      "path": "E/carry.png",
+      "sha256": "de6d8f27d64da476fe4526c0019a15d8864ac8ff52846cdf7c490ea1324f0324",
+      "source_box": [
+        847,
+        504,
+        1240,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          37,
+          49
+        ],
+        "trim_box": [
+          6,
+          4,
+          21,
+          46
+        ],
+        "placement": [
+          32,
+          63
+        ],
+        "resized_to_canvas_offset": [
+          26,
+          59
+        ],
+        "visible_pixels": 460,
+        "rotation_degrees": 0,
+        "scale": 0.09411764705882353,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.044642857142857144,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 40,
+        "opaque_width": 14,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 42,
+        "visible_width": 15,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.09411764705882353,
+      "sleep_scale": 0.10526315789473684,
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    },
+    {
+      "look": "child_F_iron_winter_long_tied",
+      "age": "child",
+      "attempt": 2,
+      "raw": "/Users/rexxa/work/art-batch/B1/raw/iron/child_F_iron_winter_long_tied/trial2/raw.png",
+      "raw_sha256": "661cafc33930864ef0f1c1c8662d15641ccb2dea1a2c8649da2814eb6e68b05d",
+      "prompt_sha256": "684144f3a798d38ce973b009c21d975edc995c3d30b15101d4cae5c1aac86f5c",
+      "facing": "E",
+      "pose": "sleep",
+      "check_pose": "sleep",
+      "path": "E/sleep.png",
+      "sha256": "b144f7edd0a6a68297040e79c376f3bef2614d9c8b11060f17f0aae9a55cd23d",
+      "source_box": [
+        1095,
+        594,
+        1536,
+        1024
+      ],
+      "normalization": {
+        "scaled_size": [
+          46,
+          45
+        ],
+        "trim_box": [
+          4,
+          19,
+          44,
+          34
+        ],
+        "placement": [
+          36,
+          58
+        ],
+        "resized_to_canvas_offset": [
+          32,
+          39
+        ],
+        "visible_pixels": 407,
+        "rotation_degrees": 0,
+        "scale": 0.10526315789473684,
+        "discarded_pixels": 2,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.04051339285714286,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 14,
+        "opaque_width": 40,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+        "visible_height": 15,
+        "visible_width": 40,
+        "visibility_threshold": 16
+      },
+      "standing_scale": 0.09411764705882353,
+      "sleep_scale": 0.10526315789473684,
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "template_version": 3
+    }
+  ],
+  "error": null,
+  "layout": "wardrobe",
+  "frame_ids": [
+    "idle",
+    "walk_a",
+    "work_a",
+    "carry",
+    "sleep"
+  ],
+  "template_version": 3,
+  "numeric_pass": false,
+  "numeric_passing_panels": 8,
+  "numeric_model_status": "MISSING",
+  "numeric_report_sha256": "9d2bd3f71fee34b11d7e6ff9d3061d1730b7ade5a76b41c8e09657da58d8dbac"
+}

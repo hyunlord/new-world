@@ -1,0 +1,11 @@
+{
+  "score": 92,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Finer facial detail compresses at native size."
+  ],
+  "suggestions": [],
+  "reasoning": "Native and 2x frames keep the cream tunic, leather apron, low ponytail, hammer and ingot legible; coherent front and right facing, horizontal sleep and continuous silhouettes.",
+  "summary_sha256": "3d912034cab23b8255eed6c044f49aa91fd71d851d74fb8668d466044b29fcdf"
+}

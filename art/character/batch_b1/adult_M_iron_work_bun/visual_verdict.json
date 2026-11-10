@@ -1,0 +1,11 @@
+{
+  "score": 92,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Fine ink detail reduces at native size but apron and tool silhouettes remain clear."
+  ],
+  "suggestions": [],
+  "reasoning": "Reviewed native and 2x: consistent cream tunic and dark apron, rounded high bun, bare calves, connected hammer and ingot, clear right-facing row and horizontal sleeps.",
+  "summary_sha256": "5ca4712a4c774099a308dbf989ee98230b27c254bf7c06796dacca332c65b6c2"
+}
