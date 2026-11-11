@@ -1,0 +1,153 @@
+{
+  "id": "wild_hazel_harvested",
+  "attempt": 1,
+  "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/wild_hazel_harvested_try1.json",
+  "record_sha256": "2fbdc38dcecd2e8510c76790961aad87b9cf3f7799df9c21d3a6f2b2b2aa5ede",
+  "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/wild_hazel_harvested_try1.png",
+  "raw_sha256": "d68ad8242083f9c7fdad509708a0810681d99bb7450649fdf670024ed904ab89",
+  "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-d9532ab9-70b7-4cc5-82bb-c6ac58786507.png",
+  "source_matches": true,
+  "prompt_sha256": "26e596d3cf5d7e91e43160034eefc364c468f3ac1f7290f0f38b76622b6ebef9",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/wild_hazel_full_try1.png",
+      "sha256": "08586306a234c529eb5c872b08e5442fa94f04b489073658e0c701d48ac5e918"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+      "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "seed": null,
+  "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/wild_hazel_full_try1.png",
+  "transform": {
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "crop": [
+      131,
+      132,
+      1091,
+      1068
+    ],
+    "scale": 0.060085836909871244,
+    "scaled_canvas": [
+      58,
+      56
+    ],
+    "offset": [
+      20,
+      25
+    ],
+    "output_canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "target_height": 56
+  },
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "visual": {
+    "score": 91,
+    "verdict": "pass",
+    "category_match": true,
+    "differences": [],
+    "suggestions": [],
+    "reasoning": "Independent1x/2x composited review: rooted botanical morphology, upper-left light and sepia ink/earth-sage wash compared across family. Numeric gates are evaluated separately."
+  },
+  "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/wild_hazel_harvested_try1.png",
+  "output_sha256": "2530f354621ffa5378d8a2a8d81b192db8af1d5eabc7d6f63b37cee9a8473935",
+  "checks": {
+    "alpha_min": 0,
+    "alpha_max": 255,
+    "opaque_height": 56,
+    "opaque_components": 1,
+    "visible_border": false,
+    "raw_transparent": true,
+    "raw_opaque_border": false,
+    "source_opaque_outside_crop": 0,
+    "canvas_matches": true,
+    "passed": true
+  },
+  "projection": {
+    "family": "shrub",
+    "anchor": [
+      48,
+      80
+    ],
+    "height_band": [
+      54,
+      58
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1810,
+    "base_row": 80,
+    "base_error": 0,
+    "height": 56,
+    "gradient_x": -1.2953378281622907,
+    "gradient_y": -1.3631424133811227,
+    "light_angle_degrees": 226.46101311777218,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "style": {
+    "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/wild_hazel_harvested_try1.png",
+    "sha256": "d68ad8242083f9c7fdad509708a0810681d99bb7450649fdf670024ed904ab89",
+    "family": "plants",
+    "metrics": {
+      "edge_density": 0.22692369477911647,
+      "saturation_q25": 0.4563602936684527,
+      "saturation_q75": 0.5234218869778002,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.8284271247461903,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.47213595499958,
+      "wash_flatness": 0.025385624823650966,
+      "foreground_pixels": 35640
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "numeric_candidate": true,
+  "adoption": "NUMERIC_AND_VISUAL_CANDIDATE",
+  "model_gate": "MISSING",
+  "canvas": [
+    96,
+    96
+  ],
+  "anchor": [
+    48,
+    80
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "climate": [
+    "harsh",
+    "neutral",
+    "mild"
+  ]
+}

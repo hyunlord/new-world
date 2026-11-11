@@ -1,0 +1,153 @@
+{
+  "id": "reeds_harvested",
+  "attempt": 1,
+  "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/reeds_harvested_try1.json",
+  "record_sha256": "f311cb347916b63d9c4efe2fc3eb214890648accf7ecf49e48c9b56e6b06b625",
+  "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/reeds_harvested_try1.png",
+  "raw_sha256": "54af24aae1e4c440065629095a9813732b230b13609599e758450260ad80c573",
+  "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-93f16652-4eba-4e8d-8c6f-b674e9cac1c8.png",
+  "source_matches": true,
+  "prompt_sha256": "a42e32b2d1b711957a41d293f7145f56d45e76750818c899c3db7afebd347b41",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/reeds_full_try1.png",
+      "sha256": "c4ef85ede886d85a45061f80018f04cb48ee4efc9efb69f6212d30f95d49c23f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+      "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "seed": null,
+  "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/reeds_full_try1.png",
+  "transform": {
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "crop": [
+      205,
+      105,
+      1047,
+      1004
+    ],
+    "scale": 0.0670391061452514,
+    "scaled_canvas": [
+      56,
+      60
+    ],
+    "offset": [
+      20,
+      21
+    ],
+    "output_canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "target_height": 60
+  },
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "visual": {
+    "score": 91,
+    "verdict": "pass",
+    "category_match": true,
+    "differences": [],
+    "suggestions": [],
+    "reasoning": "Independent1x/2x composited review: rooted botanical morphology, upper-left light and sepia ink/earth-sage wash compared across family. Numeric gates are evaluated separately."
+  },
+  "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/reeds_harvested_try1.png",
+  "output_sha256": "b8d898cde16ca35aa719dd0b5337005fe1028a8ab868732dbcdf92c7d12066ff",
+  "checks": {
+    "alpha_min": 0,
+    "alpha_max": 255,
+    "opaque_height": 16,
+    "opaque_components": 1,
+    "visible_border": false,
+    "raw_transparent": true,
+    "raw_opaque_border": false,
+    "source_opaque_outside_crop": 0,
+    "canvas_matches": true,
+    "passed": true
+  },
+  "projection": {
+    "family": "shrub",
+    "anchor": [
+      48,
+      80
+    ],
+    "height_band": [
+      14,
+      18
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 144,
+    "base_row": 80,
+    "base_error": 0,
+    "height": 16,
+    "gradient_x": -4.782712727272727,
+    "gradient_y": -4.94651935483871,
+    "light_angle_degrees": 225.96457168057137,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "style": {
+    "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/reeds_harvested_try1.png",
+    "sha256": "54af24aae1e4c440065629095a9813732b230b13609599e758450260ad80c573",
+    "family": "plants",
+    "metrics": {
+      "edge_density": 0.23744710860366713,
+      "saturation_q25": 0.5442553694538451,
+      "saturation_q75": 0.6468619048819562,
+      "stroke_q25": 2.0,
+      "stroke_q50": 4.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 5.656854249492381,
+      "wash_flatness": 0.0317195593221561,
+      "foreground_pixels": 32326
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "numeric_candidate": true,
+  "adoption": "NUMERIC_AND_VISUAL_CANDIDATE",
+  "model_gate": "MISSING",
+  "canvas": [
+    96,
+    96
+  ],
+  "anchor": [
+    48,
+    80
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "climate": [
+    "harsh",
+    "neutral",
+    "mild"
+  ]
+}

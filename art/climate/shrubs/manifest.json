@@ -1,0 +1,4752 @@
+{
+  "status": "ART_CANDIDATES_NOT_GAME_INTEGRATED",
+  "canvas": [
+    96,
+    96
+  ],
+  "anchor": [
+    48,
+    80
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "style": "style05 fine sepia ink and restrained sage earth wash; outer/detail2:1; sparse / hatching; upper-left light",
+  "model_gate": "MISSING",
+  "accepted": [
+    {
+      "id": "berry_harsh_full",
+      "path": "art/flora/climate/shrubs/berry_harsh_full.png",
+      "sha256": "89f5b4ec2173941c4185b44bb650e2cad07cc065f0939f9a96e8546e61922d90",
+      "attempt": 1
+    },
+    {
+      "id": "berry_harsh_harvested",
+      "path": "art/flora/climate/shrubs/berry_harsh_harvested.png",
+      "sha256": "632de1c8a6ac7f0b7afbc8048c3606845f2a53cbc05965417e892e9c335d8367",
+      "attempt": 3
+    },
+    {
+      "id": "berry_harsh_winter",
+      "path": "art/flora/climate/shrubs/berry_harsh_winter.png",
+      "sha256": "d4f0117c42cd8aee5eecdb52c29a8bb7767ce5ad451d5f514a796f92f350aa6a",
+      "attempt": 1
+    },
+    {
+      "id": "berry_mild_full",
+      "path": "art/flora/climate/shrubs/berry_mild_full.png",
+      "sha256": "2f83f90e6316abb96a8b1ee7119bf5a3327d7337758441f4d0b44cd730326449",
+      "attempt": 1
+    },
+    {
+      "id": "berry_neutral_full",
+      "path": "art/flora/climate/shrubs/berry_neutral_full.png",
+      "sha256": "789eee4cddd3e8f7f10d590c1594ed4316b845fcd41b39b22afe102d7b3ee7c5",
+      "attempt": 1
+    },
+    {
+      "id": "berry_neutral_harvested",
+      "path": "art/flora/climate/shrubs/berry_neutral_harvested.png",
+      "sha256": "e379fedf5b5b2eccb89ddfc2f46cf5f2a4bdfdb9656c85993df351fbf7e17933",
+      "attempt": 3
+    },
+    {
+      "id": "mediterranean_scrub_full",
+      "path": "art/flora/climate/shrubs/mediterranean_scrub_full.png",
+      "sha256": "042ed2d187dec6a85e80da68cba741af2647bca4fa3ef726a21e85e6164c612d",
+      "attempt": 1
+    },
+    {
+      "id": "mediterranean_scrub_winter",
+      "path": "art/flora/climate/shrubs/mediterranean_scrub_winter.png",
+      "sha256": "820f47398f4022cb291d1a7d4d304926ef4417e25b054e92bbd4908233cf12c9",
+      "attempt": 1
+    },
+    {
+      "id": "reeds_full",
+      "path": "art/flora/climate/shrubs/reeds_full.png",
+      "sha256": "1c6896fffcf20b4aec92e30baae08f795d52ab9b2b237664c69cafeaffe63613",
+      "attempt": 2
+    },
+    {
+      "id": "reeds_harvested",
+      "path": "art/flora/climate/shrubs/reeds_harvested.png",
+      "sha256": "b8d898cde16ca35aa719dd0b5337005fe1028a8ab868732dbcdf92c7d12066ff",
+      "attempt": 1
+    },
+    {
+      "id": "tundra_willow_full",
+      "path": "art/flora/climate/shrubs/tundra_willow_full.png",
+      "sha256": "24fe9fa3278e59333cbb90b0fd713bddb921d4eb31f6befa8c48f77891c3318b",
+      "attempt": 1
+    },
+    {
+      "id": "wild_hazel_full",
+      "path": "art/flora/climate/shrubs/wild_hazel_full.png",
+      "sha256": "8dde09c9edcc5b7c881acdb577da51a52253d34a5dbcbffc83e635fc1609ff53",
+      "attempt": 1
+    },
+    {
+      "id": "wild_hazel_harvested",
+      "path": "art/flora/climate/shrubs/wild_hazel_harvested.png",
+      "sha256": "2530f354621ffa5378d8a2a8d81b192db8af1d5eabc7d6f63b37cee9a8473935",
+      "attempt": 1
+    }
+  ],
+  "gaps": [
+    "berry_neutral_winter",
+    "berry_mild_harvested",
+    "berry_mild_winter",
+    "wild_hazel_winter",
+    "reeds_winter",
+    "mediterranean_scrub_harvested",
+    "tundra_willow_harvested",
+    "tundra_willow_winter"
+  ],
+  "attempts": [
+    {
+      "id": "berry_harsh_full",
+      "attempt": 1,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/berry_harsh_full_try1.json",
+      "record_sha256": "7e35aa73109979dcbb78c6a0a467bf21ae85013849d8145b6e7028903c13db80",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_harsh_full_try1.png",
+      "raw_sha256": "73e525c4032943806581cc73289d9bc7af4018abccd639fe4849697dc0f7dbf5",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c2fb-7ce4-76c1-82bc-15df06f8d254/exec-65568225-b932-4a09-88bd-b841ed59f589.png",
+      "source_matches": true,
+      "prompt_sha256": "79702e7b3e94057cf58b8462f9d88d005f2681f0f88b236a205ea10539c7bbe0",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/flora/sprites/berry_bush_full.png",
+          "sha256": "c3afe09223b5ed332cee1129200948b1557742d5d377079761acb9a6fec74b31"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_harsh_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1536,
+          1024
+        ],
+        "crop": [
+          214,
+          208,
+          1296,
+          790
+        ],
+        "scale": 0.05536332179930796,
+        "scaled_canvas": [
+          60,
+          32
+        ],
+        "offset": [
+          19,
+          49
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 32
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": {
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Independent1x/2x composited review: rooted botanical morphology, upper-left light and sepia ink/earth-sage wash compared across family. Numeric gates are evaluated separately."
+      },
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/berry_harsh_full_try1.png",
+      "output_sha256": "89f5b4ec2173941c4185b44bb650e2cad07cc065f0939f9a96e8546e61922d90",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 32,
+        "opaque_components": 1,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 0,
+        "canvas_matches": true,
+        "passed": true
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          30,
+          34
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1029,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 32,
+        "gradient_x": -1.4795466092572658,
+        "gradient_y": -2.7659217679558012,
+        "light_angle_degrees": 241.85678679327629,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_harsh_full_try1.png",
+        "sha256": "73e525c4032943806581cc73289d9bc7af4018abccd639fe4849697dc0f7dbf5",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.2199051516923277,
+          "saturation_q25": 0.5111379156180605,
+          "saturation_q75": 0.623821921495056,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.03358716989109633,
+          "foreground_pixels": 18751
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": true,
+      "adoption": "NUMERIC_AND_VISUAL_CANDIDATE",
+      "model_gate": "MISSING",
+      "canvas": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "harsh"
+      ]
+    },
+    {
+      "id": "berry_harsh_harvested",
+      "attempt": 1,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/berry_harsh_harvested_try1.json",
+      "record_sha256": "12c1e2ef7f928c5342a63ad3b0d7dfebffa48c82ffc54920998a6f167db797c8",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_harsh_harvested_try1.png",
+      "raw_sha256": "e1138b760ba04b364e2807baf930363ed090432d0182bc2c88f5a7a5568c7454",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-75eed280-972b-43a7-912f-397da072b5d7.png",
+      "source_matches": true,
+      "prompt_sha256": "78e60789a094f4427a35a51b869f4e6c04581efeda5b281f8c42452482611e53",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_harsh_full_try1.png",
+          "sha256": "73e525c4032943806581cc73289d9bc7af4018abccd639fe4849697dc0f7dbf5"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_harsh_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1536,
+          1024
+        ],
+        "crop": [
+          214,
+          208,
+          1296,
+          790
+        ],
+        "scale": 0.05536332179930796,
+        "scaled_canvas": [
+          60,
+          32
+        ],
+        "offset": [
+          19,
+          49
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 32
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": "REVIEW_REQUIRED",
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/berry_harsh_harvested_try1.png",
+      "output_sha256": "af5b27022a7717c0207263595e77dc21ef1e7127d4142fcbab9ea362cd4c0305",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 32,
+        "opaque_components": 1,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 141,
+        "canvas_matches": true,
+        "passed": false
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          30,
+          34
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1030,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 32,
+        "gradient_x": -1.202190712742981,
+        "gradient_y": -2.0905690767519474,
+        "light_angle_degrees": 240.09876059660274,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_harsh_harvested_try1.png",
+        "sha256": "e1138b760ba04b364e2807baf930363ed090432d0182bc2c88f5a7a5568c7454",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.2419138370688498,
+          "saturation_q25": 0.49702903527661835,
+          "saturation_q75": 0.5976080176267425,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.03137670080020137,
+          "foreground_pixels": 18388
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": false
+    },
+    {
+      "id": "berry_harsh_harvested",
+      "attempt": 2,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/berry_harsh_harvested_try2.json",
+      "record_sha256": "2f113092a935b809f5e4ca65918cb5c2ea82ebd84583784b94ef8bc553edab44",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_harsh_harvested_try2.png",
+      "raw_sha256": "3354399941449bc0cf5bca1152dd32d1e7aaba3d3963449ac6f4679cab40d7aa",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-6dbece01-5b41-4ae4-aac6-b5c5afb49285.png",
+      "source_matches": true,
+      "prompt_sha256": "2e9d991b225fe45cb54e46b921acb10410154b90ceb204a6257bef9928c446ad",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_harsh_full_try1.png",
+          "sha256": "73e525c4032943806581cc73289d9bc7af4018abccd639fe4849697dc0f7dbf5"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_harsh_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1536,
+          1024
+        ],
+        "crop": [
+          214,
+          208,
+          1296,
+          790
+        ],
+        "scale": 0.05536332179930796,
+        "scaled_canvas": [
+          60,
+          32
+        ],
+        "offset": [
+          19,
+          49
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 32
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": "REVIEW_REQUIRED",
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/berry_harsh_harvested_try2.png",
+      "output_sha256": "8073914e185cfe70ae8ed7813292c14b4990ef98e0cdb9a6ad5cb06be8a7f205",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 32,
+        "opaque_components": 1,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 146969,
+        "canvas_matches": true,
+        "passed": false
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          30,
+          34
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1554,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 32,
+        "gradient_x": -0.8353047684865241,
+        "gradient_y": -1.612030255681818,
+        "light_angle_degrees": 242.60819084392978,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_harsh_harvested_try2.png",
+        "sha256": "3354399941449bc0cf5bca1152dd32d1e7aaba3d3963449ac6f4679cab40d7aa",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.23226351351351351,
+          "saturation_q25": 0.4488949332237608,
+          "saturation_q75": 0.5474949810979025,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.028452990448013832,
+          "foreground_pixels": 19049
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": false
+    },
+    {
+      "id": "berry_harsh_harvested",
+      "attempt": 3,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/berry_harsh_harvested_try3.json",
+      "record_sha256": "9c2a9be648a9a0bec561b0d8e03ee682a38fc2be1f392e95f4e2dd8fe0c1c159",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_harsh_harvested_try3.png",
+      "raw_sha256": "86d3d5ff2201bd1941bf304e795e01ba268e3cfef750fab12c141a9d1be1504b",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-d077c99f-3d9c-46ff-a65b-b724b0c2584e.png",
+      "source_matches": true,
+      "prompt_sha256": "9e6fa456a9a01bf743a3e9f1241b1206d9557506af91e3b66a270722806cdbb0",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_harsh_harvested_try1.png",
+          "sha256": "e1138b760ba04b364e2807baf930363ed090432d0182bc2c88f5a7a5568c7454"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_harsh_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1536,
+          1024
+        ],
+        "crop": [
+          214,
+          208,
+          1296,
+          790
+        ],
+        "scale": 0.05536332179930796,
+        "scaled_canvas": [
+          60,
+          32
+        ],
+        "offset": [
+          19,
+          49
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 32
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": {
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Independent1x/2x composited review: rooted botanical morphology, upper-left light and sepia ink/earth-sage wash compared across family. Numeric gates are evaluated separately."
+      },
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/berry_harsh_harvested_try3.png",
+      "output_sha256": "632de1c8a6ac7f0b7afbc8048c3606845f2a53cbc05965417e892e9c335d8367",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 32,
+        "opaque_components": 1,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 0,
+        "canvas_matches": true,
+        "passed": true
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          30,
+          34
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 955,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 32,
+        "gradient_x": -1.6783085781433609,
+        "gradient_y": -2.6485557715674357,
+        "light_angle_degrees": 237.63881838039896,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_harsh_harvested_try3.png",
+        "sha256": "86d3d5ff2201bd1941bf304e795e01ba268e3cfef750fab12c141a9d1be1504b",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.25075967763244816,
+          "saturation_q25": 0.4741316959328206,
+          "saturation_q75": 0.5843315395532547,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.02863522359046131,
+          "foreground_pixels": 18642
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": true,
+      "adoption": "NUMERIC_AND_VISUAL_CANDIDATE",
+      "model_gate": "MISSING",
+      "canvas": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "harsh"
+      ]
+    },
+    {
+      "id": "berry_harsh_winter",
+      "attempt": 1,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/berry_harsh_winter_try1.json",
+      "record_sha256": "28c088b9ca7b5f4a4504d493ba33fadfb11f4f1a21038767cf3dc3572ed8bc66",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_harsh_winter_try1.png",
+      "raw_sha256": "ebc41abc6e6bb9032d1e3ad6048c94373c3eba6441e6ee32af96db62e25905e6",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-58f89749-9dc9-4d8e-8c10-653a57f2e172.png",
+      "source_matches": true,
+      "prompt_sha256": "2eaa083e10ebe18b0f51d8776e4b70d35d7a528be43f8c74e30b47bd8caf75f3",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_harsh_full_try1.png",
+          "sha256": "73e525c4032943806581cc73289d9bc7af4018abccd639fe4849697dc0f7dbf5"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_harsh_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1536,
+          1024
+        ],
+        "crop": [
+          214,
+          208,
+          1296,
+          790
+        ],
+        "scale": 0.05536332179930796,
+        "scaled_canvas": [
+          60,
+          32
+        ],
+        "offset": [
+          19,
+          49
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 32
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": {
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Independent1x/2x composited review: rooted botanical morphology, upper-left light and sepia ink/earth-sage wash compared across family. Numeric gates are evaluated separately."
+      },
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/berry_harsh_winter_try1.png",
+      "output_sha256": "d4f0117c42cd8aee5eecdb52c29a8bb7767ce5ad451d5f514a796f92f350aa6a",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 32,
+        "opaque_components": 1,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 0,
+        "canvas_matches": true,
+        "passed": true
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          30,
+          34
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1035,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 32,
+        "gradient_x": -1.0818681623931623,
+        "gradient_y": -2.197176431718061,
+        "light_angle_degrees": 243.78481658220323,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_harsh_winter_try1.png",
+        "sha256": "ebc41abc6e6bb9032d1e3ad6048c94373c3eba6441e6ee32af96db62e25905e6",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.2437687589716821,
+          "saturation_q25": 0.5088953012742352,
+          "saturation_q75": 0.6020445244407953,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.02294646163665668,
+          "foreground_pixels": 18719
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": true,
+      "adoption": "NUMERIC_AND_VISUAL_CANDIDATE",
+      "model_gate": "MISSING",
+      "canvas": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "harsh"
+      ]
+    },
+    {
+      "id": "berry_mild_full",
+      "attempt": 1,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/berry_mild_full_try1.json",
+      "record_sha256": "b2100d957cde4499b3504622fe35fa9a0ebb864546f6fdf1571b54a921f90848",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_mild_full_try1.png",
+      "raw_sha256": "644d63a0c193ab72dd7da8292ee367af4125cc2f70f347f1ed96538f71177a1a",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c2fb-7ce4-76c1-82bc-15df06f8d254/exec-ebe6935e-b3d4-408b-916a-48745c15c0a0.png",
+      "source_matches": true,
+      "prompt_sha256": "d3bb47b5be77816700ef5a51ccbd8d15c0829b1f8893453acda35080b7921a20",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/flora/sprites/berry_bush_full.png",
+          "sha256": "c3afe09223b5ed332cee1129200948b1557742d5d377079761acb9a6fec74b31"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_mild_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          134,
+          261,
+          1125,
+          946
+        ],
+        "scale": 0.05873715124816446,
+        "scaled_canvas": [
+          58,
+          40
+        ],
+        "offset": [
+          20,
+          41
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 40
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": {
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Independent1x/2x composited review: rooted botanical morphology, upper-left light and sepia ink/earth-sage wash compared across family. Numeric gates are evaluated separately."
+      },
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/berry_mild_full_try1.png",
+      "output_sha256": "2f83f90e6316abb96a8b1ee7119bf5a3327d7337758441f4d0b44cd730326449",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 40,
+        "opaque_components": 1,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 0,
+        "canvas_matches": true,
+        "passed": true
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          38,
+          42
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 857,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 40,
+        "gradient_x": -2.6921840348330917,
+        "gradient_y": -2.3583145015105744,
+        "light_angle_degrees": 221.21789362051743,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_mild_full_try1.png",
+        "sha256": "644d63a0c193ab72dd7da8292ee367af4125cc2f70f347f1ed96538f71177a1a",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.19041045462911835,
+          "saturation_q25": 0.48685612415687096,
+          "saturation_q75": 0.5475719281760031,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.021690218349552783,
+          "foreground_pixels": 16842
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": true,
+      "adoption": "NUMERIC_AND_VISUAL_CANDIDATE",
+      "model_gate": "MISSING",
+      "canvas": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "mild"
+      ]
+    },
+    {
+      "id": "berry_mild_harvested",
+      "attempt": 1,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/berry_mild_harvested_try1.json",
+      "record_sha256": "7c8b528718c1465f01ae4535e93791d6502453c2867b0283d5a7b8c30a65441e",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_mild_harvested_try1.png",
+      "raw_sha256": "e6bfcf4c25aadad6caa00bd48e575b994c6cd7148c4c683bf85e33ac16b516c7",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-d2baf5e3-4d53-4246-8224-4113e31c7ba9.png",
+      "source_matches": true,
+      "prompt_sha256": "3a1187c313731d09bab861579b9d99f201e465ac0ca91f99f91ce55d03255fb2",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_mild_full_try1.png",
+          "sha256": "644d63a0c193ab72dd7da8292ee367af4125cc2f70f347f1ed96538f71177a1a"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_mild_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          134,
+          261,
+          1125,
+          946
+        ],
+        "scale": 0.05873715124816446,
+        "scaled_canvas": [
+          58,
+          40
+        ],
+        "offset": [
+          20,
+          41
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 40
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": "REVIEW_REQUIRED",
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/berry_mild_harvested_try1.png",
+      "output_sha256": "b6cea2d848af246bdab1df29675fcbc2b982e753d02f6200fbdac0dc06d55623",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 40,
+        "opaque_components": 3,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 0,
+        "canvas_matches": true,
+        "passed": false
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          38,
+          42
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 801,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 40,
+        "gradient_x": -2.5925702531645567,
+        "gradient_y": -1.1649167495854063,
+        "light_angle_degrees": 204.19576141664427,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_mild_harvested_try1.png",
+        "sha256": "e6bfcf4c25aadad6caa00bd48e575b994c6cd7148c4c683bf85e33ac16b516c7",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.19100019650225977,
+          "saturation_q25": 0.4627355242129867,
+          "saturation_q75": 0.5215999432872634,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.024484433687572738,
+          "foreground_pixels": 15813
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": false
+    },
+    {
+      "id": "berry_mild_harvested",
+      "attempt": 2,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/berry_mild_harvested_try2.json",
+      "record_sha256": "6f30bac6b8669e191a8ced9cc9fb88433412382641627fc60507b334ec39c248",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_mild_harvested_try2.png",
+      "raw_sha256": "f06534f44724dfb4402a6c8b4a60341fd371f49db1a8b68affda5068a04d54f1",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-2671fc21-5126-4c29-a4e8-4e70d71090a1.png",
+      "source_matches": true,
+      "prompt_sha256": "4c5ea206d4c4d176da38309b21ca54176d591ae9d6c663a8f32584301ad1da29",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_mild_full_try1.png",
+          "sha256": "644d63a0c193ab72dd7da8292ee367af4125cc2f70f347f1ed96538f71177a1a"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_mild_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          134,
+          261,
+          1125,
+          946
+        ],
+        "scale": 0.05873715124816446,
+        "scaled_canvas": [
+          58,
+          40
+        ],
+        "offset": [
+          20,
+          41
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 40
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": "REVIEW_REQUIRED",
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/berry_mild_harvested_try2.png",
+      "output_sha256": "f90249d809dbc6f66526f4211dd87656fd54022be0a00c40f218ba156e87eacb",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 40,
+        "opaque_components": 1,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 177,
+        "canvas_matches": true,
+        "passed": false
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          38,
+          42
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 973,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 40,
+        "gradient_x": -2.2034379835873383,
+        "gradient_y": -3.9866263736263736,
+        "light_angle_degrees": 241.07024544168866,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_mild_harvested_try2.png",
+        "sha256": "f06534f44724dfb4402a6c8b4a60341fd371f49db1a8b68affda5068a04d54f1",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.23010238907849828,
+          "saturation_q25": 0.515702113397801,
+          "saturation_q75": 0.6056602795393551,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.03953490108416034,
+          "foreground_pixels": 18615
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": false
+    },
+    {
+      "id": "berry_mild_harvested",
+      "attempt": 3,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/berry_mild_harvested_try3.json",
+      "record_sha256": "187cb1340a98a30a96e97c9ab4e923104e21516a0c36aab525aef4e2ff0f4bc1",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_mild_harvested_try3.png",
+      "raw_sha256": "a76556d6e9ad419d3d33c2eabd3a1d6ce81fe430fb2f719a7120940af2808267",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-6c2fb973-5c0c-4f9c-99f9-952b4a4d7be4.png",
+      "source_matches": true,
+      "prompt_sha256": "40d016da97bc59f953536333bc65639c16abaa3a1d1bfc48ff25cc7b7ae07fb6",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_mild_harvested_try1.png",
+          "sha256": "e6bfcf4c25aadad6caa00bd48e575b994c6cd7148c4c683bf85e33ac16b516c7"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_mild_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          134,
+          261,
+          1125,
+          946
+        ],
+        "scale": 0.05873715124816446,
+        "scaled_canvas": [
+          58,
+          40
+        ],
+        "offset": [
+          20,
+          41
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 40
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": "REVIEW_REQUIRED",
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/berry_mild_harvested_try3.png",
+      "output_sha256": "ce4967aa15cc95439c1ae5ebcde0c20a66c38721ab579ab77e62a2ef31de6b0b",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 40,
+        "opaque_components": 1,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 17,
+        "canvas_matches": true,
+        "passed": false
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          38,
+          42
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 853,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 40,
+        "gradient_x": -2.7728746817538887,
+        "gradient_y": -4.2386047197640115,
+        "light_angle_degrees": 236.80748271789284,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_mild_harvested_try3.png",
+        "sha256": "a76556d6e9ad419d3d33c2eabd3a1d6ce81fe430fb2f719a7120940af2808267",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.21236757822123675,
+          "saturation_q25": 0.4506702394529208,
+          "saturation_q75": 0.5096904908642202,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.030920134330718038,
+          "foreground_pixels": 17216
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": false
+    },
+    {
+      "id": "berry_mild_winter",
+      "attempt": 1,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/berry_mild_winter_try1.json",
+      "record_sha256": "2e95cb2e1cd1c1f51d51df87f7937cf9330b73c2b435afc1c484054318d78ba3",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_mild_winter_try1.png",
+      "raw_sha256": "6ee8d678b1c549a8a0ef98c114aad75edceb26bee67af9cfcf550c1063092c7d",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-5724f9aa-985a-48c2-b916-1396e5a26612.png",
+      "source_matches": true,
+      "prompt_sha256": "1f47146d34f74ca88bbf7cdecab3c44518c463265c6eb91d944d269991702219",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_mild_full_try1.png",
+          "sha256": "644d63a0c193ab72dd7da8292ee367af4125cc2f70f347f1ed96538f71177a1a"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_mild_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          134,
+          261,
+          1125,
+          946
+        ],
+        "scale": 0.05873715124816446,
+        "scaled_canvas": [
+          58,
+          40
+        ],
+        "offset": [
+          20,
+          41
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 40
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": "REVIEW_REQUIRED",
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/berry_mild_winter_try1.png",
+      "output_sha256": "375cc22692762031923510f20704f2363c4283509bdf0ec33dddc1ea1632e9da",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 40,
+        "opaque_components": 7,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 0,
+        "canvas_matches": true,
+        "passed": false
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          38,
+          42
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 525,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 40,
+        "gradient_x": -2.9662224,
+        "gradient_y": -2.5252634560906513,
+        "light_angle_degrees": 220.40907612857143,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_mild_winter_try1.png",
+        "sha256": "6ee8d678b1c549a8a0ef98c114aad75edceb26bee67af9cfcf550c1063092c7d",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.203635728019577,
+          "saturation_q25": 0.4619953331410403,
+          "saturation_q75": 0.5130523983988348,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.015736463689689027,
+          "foreground_pixels": 10520
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": false
+    },
+    {
+      "id": "berry_mild_winter",
+      "attempt": 2,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/berry_mild_winter_try2.json",
+      "record_sha256": "585b4af9654f56183e1db08d28d728bf4e8b20bcdc2968b63dad519d50730180",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_mild_winter_try2.png",
+      "raw_sha256": "b8c665fdd15517abe79a4435c68cd502ad4134f151d98b14960c54697dc113c6",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-5fef6d57-c649-4f78-ac29-169731d712a0.png",
+      "source_matches": true,
+      "prompt_sha256": "bc570b248c0a36c7ab4312f236bb44764df0e2575662ebff4d3046055c91706a",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_mild_full_try1.png",
+          "sha256": "644d63a0c193ab72dd7da8292ee367af4125cc2f70f347f1ed96538f71177a1a"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_mild_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          134,
+          261,
+          1125,
+          946
+        ],
+        "scale": 0.05873715124816446,
+        "scaled_canvas": [
+          58,
+          40
+        ],
+        "offset": [
+          20,
+          41
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 40
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": "REVIEW_REQUIRED",
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/berry_mild_winter_try2.png",
+      "output_sha256": "b5a01c1025b513e6fb2af1e9c0b3125373ba10626563bb25f61b15b6a2436e46",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 40,
+        "opaque_components": 1,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 2183,
+        "canvas_matches": true,
+        "passed": false
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          38,
+          42
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 695,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 40,
+        "gradient_x": -2.3232381443298964,
+        "gradient_y": -2.915130545454546,
+        "light_angle_degrees": 231.44660779386226,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_mild_winter_try2.png",
+        "sha256": "b8c665fdd15517abe79a4435c68cd502ad4134f151d98b14960c54697dc113c6",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.2382867703011197,
+          "saturation_q25": 0.5166405624681087,
+          "saturation_q75": 0.5856212320013765,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.032061293394909894,
+          "foreground_pixels": 12616
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": false
+    },
+    {
+      "id": "berry_mild_winter",
+      "attempt": 3,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/berry_mild_winter_try3.json",
+      "record_sha256": "ad6c00bbf8920ec9f48abd616b85ba0ea39741bcdd431a3187fc3e204f38f868",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_mild_winter_try3.png",
+      "raw_sha256": "c9564fdcb0c51c370a4a625243e1f3b6e076869f03bd304b68f24784ca580cd8",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-dbe34165-3975-40f4-b736-819b8b0117c2.png",
+      "source_matches": true,
+      "prompt_sha256": "5561522f0ae4bc81abffdf1075bfbc66c4674b7835e3836aa7dc95eae3bef109",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_mild_winter_try1.png",
+          "sha256": "6ee8d678b1c549a8a0ef98c114aad75edceb26bee67af9cfcf550c1063092c7d"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_mild_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          134,
+          261,
+          1125,
+          946
+        ],
+        "scale": 0.05873715124816446,
+        "scaled_canvas": [
+          58,
+          40
+        ],
+        "offset": [
+          20,
+          41
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 40
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": "REVIEW_REQUIRED",
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/berry_mild_winter_try3.png",
+      "output_sha256": "0249f5e3a5291c32e12dca039f97e0ac976c961c97f0f835e3bf56acf0bd9d5b",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 40,
+        "opaque_components": 2,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 0,
+        "canvas_matches": true,
+        "passed": false
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          38,
+          42
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 588,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 40,
+        "gradient_x": -4.0107396475770924,
+        "gradient_y": -3.187527400468384,
+        "light_angle_degrees": 218.47585211775828,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_mild_winter_try3.png",
+        "sha256": "c9564fdcb0c51c370a4a625243e1f3b6e076869f03bd304b68f24784ca580cd8",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.2043626448534424,
+          "saturation_q25": 0.39674104808309574,
+          "saturation_q75": 0.44267065422681634,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.019731988566356284,
+          "foreground_pixels": 11906
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": false
+    },
+    {
+      "id": "berry_neutral_full",
+      "attempt": 1,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/berry_neutral_full_try1.json",
+      "record_sha256": "f189fcfeaf38a8e640ccfc4a5797ea41ae3ea446556f6096a3d37be53650da94",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_neutral_full_try1.png",
+      "raw_sha256": "171fe870c2dd62736199631de7f0f5f1f3a95135cfc56ed3a70086a9b29a7be2",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c2fb-7ce4-76c1-82bc-15df06f8d254/exec-057206c2-9bc2-4ee7-ad27-da98ab92e371.png",
+      "source_matches": true,
+      "prompt_sha256": "f64a22b764984e40a8b454969acf3609480db328e011e814b87746f7d72fb270",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/flora/sprites/berry_bush_full.png",
+          "sha256": "c3afe09223b5ed332cee1129200948b1557742d5d377079761acb9a6fec74b31"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_neutral_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          139,
+          186,
+          1117,
+          954
+        ],
+        "scale": 0.05235602094240838,
+        "scaled_canvas": [
+          51,
+          40
+        ],
+        "offset": [
+          23,
+          41
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 40
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": {
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Independent1x/2x composited review: rooted botanical morphology, upper-left light and sepia ink/earth-sage wash compared across family. Numeric gates are evaluated separately."
+      },
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/berry_neutral_full_try1.png",
+      "output_sha256": "789eee4cddd3e8f7f10d590c1594ed4316b845fcd41b39b22afe102d7b3ee7c5",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 40,
+        "opaque_components": 1,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 0,
+        "canvas_matches": true,
+        "passed": true
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          38,
+          42
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1054,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 40,
+        "gradient_x": -2.1038345415778252,
+        "gradient_y": -1.7006553238199784,
+        "light_angle_degrees": 218.9506822198572,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_neutral_full_try1.png",
+        "sha256": "171fe870c2dd62736199631de7f0f5f1f3a95135cfc56ed3a70086a9b29a7be2",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.23347567768288155,
+          "saturation_q25": 0.4906128201260831,
+          "saturation_q75": 0.543973020482104,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.027590781717186885,
+          "foreground_pixels": 26838
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": true,
+      "adoption": "NUMERIC_AND_VISUAL_CANDIDATE",
+      "model_gate": "MISSING",
+      "canvas": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "neutral"
+      ]
+    },
+    {
+      "id": "berry_neutral_harvested",
+      "attempt": 1,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/berry_neutral_harvested_try1.json",
+      "record_sha256": "403ab8371b646ba6ad110208f03fd75c72d822b33b0ccce623627fc54bbb3a6b",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_neutral_harvested_try1.png",
+      "raw_sha256": "333341acdba425b42d74e0fe8d318441f77342e92d965a2b73d3cf386cc0013d",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-7254e117-a564-4211-b8e1-f1b610db1624.png",
+      "source_matches": true,
+      "prompt_sha256": "2f4301e83c412805d340976f2550fef482006c227288a550e0ddd9b327741535",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_neutral_full_try1.png",
+          "sha256": "171fe870c2dd62736199631de7f0f5f1f3a95135cfc56ed3a70086a9b29a7be2"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_neutral_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          139,
+          186,
+          1117,
+          954
+        ],
+        "scale": 0.05235602094240838,
+        "scaled_canvas": [
+          51,
+          40
+        ],
+        "offset": [
+          23,
+          41
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 40
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": "REVIEW_REQUIRED",
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/berry_neutral_harvested_try1.png",
+      "output_sha256": "12a2cdaf2d1dbfefc20621eeebed3914d1e815dbeac5686ea6a57908a1555363",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 40,
+        "opaque_components": 1,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 8,
+        "canvas_matches": true,
+        "passed": false
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          38,
+          42
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1056,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 40,
+        "gradient_x": -2.204020996818664,
+        "gradient_y": -1.425130196936543,
+        "light_angle_degrees": 212.88689610819665,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_neutral_harvested_try1.png",
+        "sha256": "333341acdba425b42d74e0fe8d318441f77342e92d965a2b73d3cf386cc0013d",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.24484814345397363,
+          "saturation_q25": 0.4736361597254398,
+          "saturation_q75": 0.523204721283019,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.025637082850665873,
+          "foreground_pixels": 26289
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": false
+    },
+    {
+      "id": "berry_neutral_harvested",
+      "attempt": 2,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/berry_neutral_harvested_try2.json",
+      "record_sha256": "fdb7584da0aed762cdb30d60e48ac671ac26c8364bf541e88d9762a9e0c80b65",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_neutral_harvested_try2.png",
+      "raw_sha256": "ae1ef91da6f4874ccda6f95268f94725b3eb8b5e6f3bb986389365fded72384c",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-e265ddd6-5be9-4a9a-a3aa-e652327f433a.png",
+      "source_matches": true,
+      "prompt_sha256": "ac72d15c61c5570648c84e3b130ee7037ca2a38b3de5dbbc905212559b286930",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_neutral_full_try1.png",
+          "sha256": "171fe870c2dd62736199631de7f0f5f1f3a95135cfc56ed3a70086a9b29a7be2"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_neutral_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          139,
+          186,
+          1117,
+          954
+        ],
+        "scale": 0.05235602094240838,
+        "scaled_canvas": [
+          51,
+          40
+        ],
+        "offset": [
+          23,
+          41
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 40
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": "REVIEW_REQUIRED",
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/berry_neutral_harvested_try2.png",
+      "output_sha256": "93f1b5df4c023a6850e4964afb5adcbe5bd3af83f73c92202233c6a2994a3c0d",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 40,
+        "opaque_components": 1,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 5,
+        "canvas_matches": true,
+        "passed": false
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          38,
+          42
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1050,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 40,
+        "gradient_x": -1.4487244111349036,
+        "gradient_y": -2.4477883771929823,
+        "light_angle_degrees": 239.38081680048282,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_neutral_harvested_try2.png",
+        "sha256": "ae1ef91da6f4874ccda6f95268f94725b3eb8b5e6f3bb986389365fded72384c",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.2548076923076923,
+          "saturation_q25": 0.44530699608203805,
+          "saturation_q75": 0.5207360507434875,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.026527778689957,
+          "foreground_pixels": 26050
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": false
+    },
+    {
+      "id": "berry_neutral_harvested",
+      "attempt": 3,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/berry_neutral_harvested_try3.json",
+      "record_sha256": "f2bc786350a04b84ae16e60ea0959d06cab6f00bd02b0f0cccc166d2c4f75514",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_neutral_harvested_try3.png",
+      "raw_sha256": "fc4ab2c7daa29df88e8b54baf1a05cecc435bacb4836dcd9f148bdd4cc72f63b",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-e0823aaa-2d3f-48ee-8eca-a7ba243b8347.png",
+      "source_matches": true,
+      "prompt_sha256": "428e8f70b173c26d4c831375a9edefac5faab8c88aff3eef9420c739e9444ef9",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_neutral_harvested_try1.png",
+          "sha256": "333341acdba425b42d74e0fe8d318441f77342e92d965a2b73d3cf386cc0013d"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_neutral_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          139,
+          186,
+          1117,
+          954
+        ],
+        "scale": 0.05235602094240838,
+        "scaled_canvas": [
+          51,
+          40
+        ],
+        "offset": [
+          23,
+          41
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 40
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": {
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Independent1x/2x composited review: rooted botanical morphology, upper-left light and sepia ink/earth-sage wash compared across family. Numeric gates are evaluated separately."
+      },
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/berry_neutral_harvested_try3.png",
+      "output_sha256": "e379fedf5b5b2eccb89ddfc2f46cf5f2a4bdfdb9656c85993df351fbf7e17933",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 40,
+        "opaque_components": 1,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 0,
+        "canvas_matches": true,
+        "passed": true
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          38,
+          42
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1041,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 40,
+        "gradient_x": -1.8402302250803857,
+        "gradient_y": -2.0050964835164833,
+        "light_angle_degrees": 227.4550213442195,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_neutral_harvested_try3.png",
+        "sha256": "fc4ab2c7daa29df88e8b54baf1a05cecc435bacb4836dcd9f148bdd4cc72f63b",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.2570107995200213,
+          "saturation_q25": 0.3998462564108288,
+          "saturation_q75": 0.49207265153533125,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.021801116710485513,
+          "foreground_pixels": 26962
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": true,
+      "adoption": "NUMERIC_AND_VISUAL_CANDIDATE",
+      "model_gate": "MISSING",
+      "canvas": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "neutral"
+      ]
+    },
+    {
+      "id": "berry_neutral_winter",
+      "attempt": 1,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/berry_neutral_winter_try1.json",
+      "record_sha256": "4f424e1f586cf04e43f8de28aa8f92b6bb9a23e1fef84a0a1d212dcaf90b65ef",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_neutral_winter_try1.png",
+      "raw_sha256": "d353cfd8037282e67fd06326d43167a8a5eddd9c4626ac5e9ad7188d79988f96",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-2d5fe9bc-3a36-4198-a80b-c8a05df3279e.png",
+      "source_matches": true,
+      "prompt_sha256": "771be8ecda4247085d4b23663aab27dcf9397929a22213b5962336dfba400cca",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_neutral_full_try1.png",
+          "sha256": "171fe870c2dd62736199631de7f0f5f1f3a95135cfc56ed3a70086a9b29a7be2"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_neutral_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          139,
+          186,
+          1117,
+          954
+        ],
+        "scale": 0.05235602094240838,
+        "scaled_canvas": [
+          51,
+          40
+        ],
+        "offset": [
+          23,
+          41
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 40
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": "REVIEW_REQUIRED",
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/berry_neutral_winter_try1.png",
+      "output_sha256": "efd8966867b47a989bf51ad6ec30ce468b3001ad55cd0599128a3a2644660664",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 36,
+        "opaque_components": 11,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 0,
+        "canvas_matches": true,
+        "passed": false
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          38,
+          42
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 181,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 36,
+        "gradient_x": -7.0987752808988756,
+        "gradient_y": -8.474832,
+        "light_angle_degrees": 230.04944154581207,
+        "base_passed": true,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_neutral_winter_try1.png",
+        "sha256": "d353cfd8037282e67fd06326d43167a8a5eddd9c4626ac5e9ad7188d79988f96",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.08680351906158358,
+          "saturation_q25": 0.4513987455236323,
+          "saturation_q75": 0.4841819229276255,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.04125058063958454,
+          "foreground_pixels": 5677
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": false
+    },
+    {
+      "id": "berry_neutral_winter",
+      "attempt": 2,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/berry_neutral_winter_try2.json",
+      "record_sha256": "e5c4094eb2cdde6c26b1933f68a75054ad3ee57d3ac8b6d7dda4383a6e7d596c",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_neutral_winter_try2.png",
+      "raw_sha256": "2979378c8e0a5e585de0ac64d8d264120bf9ff5ec7ceb57b2313c135f0e7a697",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-56bac1cc-b768-44a3-8a16-b3561fd97ffb.png",
+      "source_matches": true,
+      "prompt_sha256": "9cdef7f431b70ff8915b89f85b6894139939a55936880dd1f4fc8353d2bef7b0",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_neutral_full_try1.png",
+          "sha256": "171fe870c2dd62736199631de7f0f5f1f3a95135cfc56ed3a70086a9b29a7be2"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_neutral_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          139,
+          186,
+          1117,
+          954
+        ],
+        "scale": 0.05235602094240838,
+        "scaled_canvas": [
+          51,
+          40
+        ],
+        "offset": [
+          23,
+          41
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 40
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": "REVIEW_REQUIRED",
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/berry_neutral_winter_try2.png",
+      "output_sha256": "1636b44efb76048b86c999d4c3e77d7de1524ef2b878b6d84d6275e8585a4cee",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 40,
+        "opaque_components": 1,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 30063,
+        "canvas_matches": true,
+        "passed": false
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          38,
+          42
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 575,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 40,
+        "gradient_x": -2.868038495575221,
+        "gradient_y": -8.939553051643193,
+        "light_angle_degrees": 252.21242324672744,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_neutral_winter_try2.png",
+        "sha256": "2979378c8e0a5e585de0ac64d8d264120bf9ff5ec7ceb57b2313c135f0e7a697",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.20714678394722374,
+          "saturation_q25": 0.5339263852475187,
+          "saturation_q75": 0.5663687569666846,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.026588085392894128,
+          "foreground_pixels": 13088
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": false
+    },
+    {
+      "id": "berry_neutral_winter",
+      "attempt": 3,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/berry_neutral_winter_try3.json",
+      "record_sha256": "0702bc9cf056c198f86bdffcdf213d5b26ba44a1a45bbd894dbfc7858eae77a4",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_neutral_winter_try3.png",
+      "raw_sha256": "4d62c1091b709ff897e7dbb52c496f2761f6bce01a570a6f901aa78359f43283",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-d6252bc9-8ced-4415-8af0-fc95bc6f5909.png",
+      "source_matches": true,
+      "prompt_sha256": "2a8e2c16ad4ddb6a171fce3f84284f64295fa2938991f6a28484a9e6f975d7e4",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_neutral_winter_try1.png",
+          "sha256": "d353cfd8037282e67fd06326d43167a8a5eddd9c4626ac5e9ad7188d79988f96"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_neutral_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          139,
+          186,
+          1117,
+          954
+        ],
+        "scale": 0.05235602094240838,
+        "scaled_canvas": [
+          51,
+          40
+        ],
+        "offset": [
+          23,
+          41
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 40
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": "REVIEW_REQUIRED",
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/berry_neutral_winter_try3.png",
+      "output_sha256": "d13ef6d87e7f06573c09c02d17c4370f347e6802008d954b192b9ae2effb24f3",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 37,
+        "opaque_components": 11,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 0,
+        "canvas_matches": true,
+        "passed": false
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          38,
+          42
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 266,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 37,
+        "gradient_x": -7.410554545454546,
+        "gradient_y": -9.576807741935484,
+        "light_angle_degrees": 232.26721819686145,
+        "base_passed": true,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_neutral_winter_try3.png",
+        "sha256": "4d62c1091b709ff897e7dbb52c496f2761f6bce01a570a6f901aa78359f43283",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.15056254136333555,
+          "saturation_q25": 0.46312340585471073,
+          "saturation_q75": 0.5008796281992356,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.03602878069083166,
+          "foreground_pixels": 7564
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": false
+    },
+    {
+      "id": "mediterranean_scrub_full",
+      "attempt": 1,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/mediterranean_scrub_full_try1.json",
+      "record_sha256": "14b80d3c0f59f7669bdbc5e18c969d655e20d8974b6b773b508ffeb6e8c19cdc",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/mediterranean_scrub_full_try1.png",
+      "raw_sha256": "5d3039a5aea381eb61ce089be0446520a18ef2532187eb164b506cbfe961a63b",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c2fb-7ce4-76c1-82bc-15df06f8d254/exec-d6ba17fc-4126-44c7-9560-4b84625ddaa2.png",
+      "source_matches": true,
+      "prompt_sha256": "d14274fa0f12930ce50d3d7836be9ebb896856397de1e2788cad5bc5b7aeda41",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/flora/sprites/berry_bush_full.png",
+          "sha256": "c3afe09223b5ed332cee1129200948b1557742d5d377079761acb9a6fec74b31"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/mediterranean_scrub_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          185,
+          238,
+          1041,
+          951
+        ],
+        "scale": 0.05077574047954866,
+        "scaled_canvas": [
+          43,
+          36
+        ],
+        "offset": [
+          28,
+          45
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 36
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": {
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Independent1x/2x composited review: rooted botanical morphology, upper-left light and sepia ink/earth-sage wash compared across family. Numeric gates are evaluated separately."
+      },
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/mediterranean_scrub_full_try1.png",
+      "output_sha256": "042ed2d187dec6a85e80da68cba741af2647bca4fa3ef726a21e85e6164c612d",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 36,
+        "opaque_components": 1,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 0,
+        "canvas_matches": true,
+        "passed": true
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          34,
+          38
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 693,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 36,
+        "gradient_x": -2.1279381031613975,
+        "gradient_y": -2.7242912457912456,
+        "light_angle_degrees": 232.00668051196953,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/mediterranean_scrub_full_try1.png",
+        "sha256": "5d3039a5aea381eb61ce089be0446520a18ef2532187eb164b506cbfe961a63b",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.2531031058641805,
+          "saturation_q25": 0.45155630334999997,
+          "saturation_q75": 0.5174790174704744,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.030207869682707788,
+          "foreground_pixels": 24344
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": true,
+      "adoption": "NUMERIC_AND_VISUAL_CANDIDATE",
+      "model_gate": "MISSING",
+      "canvas": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "mild"
+      ]
+    },
+    {
+      "id": "mediterranean_scrub_harvested",
+      "attempt": 1,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/mediterranean_scrub_harvested_try1.json",
+      "record_sha256": "9b843f222d19909581f0a01525296bcb709514916d254b79dba4831d1dbedafb",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/mediterranean_scrub_harvested_try1.png",
+      "raw_sha256": "0aab89c78fb635a16fc8a06b884ab59a97677451ca8b0de9ee3722d23fa73b39",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-5c5f3be7-377e-4661-bbe6-840f4516df2f.png",
+      "source_matches": true,
+      "prompt_sha256": "d2ddd2bcccaec1f2929a2abd7dd496137db93e93afb5603380db18333387d71d",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/mediterranean_scrub_full_try1.png",
+          "sha256": "5d3039a5aea381eb61ce089be0446520a18ef2532187eb164b506cbfe961a63b"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/mediterranean_scrub_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          185,
+          238,
+          1041,
+          951
+        ],
+        "scale": 0.05077574047954866,
+        "scaled_canvas": [
+          43,
+          36
+        ],
+        "offset": [
+          28,
+          45
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 36
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": "REVIEW_REQUIRED",
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/mediterranean_scrub_harvested_try1.png",
+      "output_sha256": "dbfb9b8782b8c0d39b3ba56cbfedfb565e9e1e138166754c3c723f7dd37e5d21",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 28,
+        "opaque_components": 1,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 0,
+        "canvas_matches": true,
+        "passed": true
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          20,
+          24
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 203,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 28,
+        "gradient_x": -4.821115447154472,
+        "gradient_y": -9.486330578512396,
+        "light_angle_degrees": 243.0595438400627,
+        "base_passed": true,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/mediterranean_scrub_harvested_try1.png",
+        "sha256": "0aab89c78fb635a16fc8a06b884ab59a97677451ca8b0de9ee3722d23fa73b39",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.18556489645273733,
+          "saturation_q25": 0.4924375469148608,
+          "saturation_q75": 0.53684178888467,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.038968644544230976,
+          "foreground_pixels": 8658
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": false
+    },
+    {
+      "id": "mediterranean_scrub_winter",
+      "attempt": 1,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/mediterranean_scrub_winter_try1.json",
+      "record_sha256": "23b264f25aa3c8de27ce8a642c4cab0d6d56d59ee79262293b3a82ef3583b935",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/mediterranean_scrub_winter_try1.png",
+      "raw_sha256": "ee475729610f565f5b917b0ce9beb4f0831ebd22ad30a790304a292252f6d3ba",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-43cae77b-7719-43f2-99c6-c09d8b818cbc.png",
+      "source_matches": true,
+      "prompt_sha256": "e1f34ead420511a46a1bdeb307303265d8205792cbeb22f8d07006e2f40770e0",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/mediterranean_scrub_full_try1.png",
+          "sha256": "5d3039a5aea381eb61ce089be0446520a18ef2532187eb164b506cbfe961a63b"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/mediterranean_scrub_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          185,
+          238,
+          1041,
+          951
+        ],
+        "scale": 0.05077574047954866,
+        "scaled_canvas": [
+          43,
+          36
+        ],
+        "offset": [
+          28,
+          45
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 36
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": {
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Independent1x/2x composited review: rooted botanical morphology, upper-left light and sepia ink/earth-sage wash compared across family. Numeric gates are evaluated separately."
+      },
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/mediterranean_scrub_winter_try1.png",
+      "output_sha256": "820f47398f4022cb291d1a7d4d304926ef4417e25b054e92bbd4908233cf12c9",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 36,
+        "opaque_components": 1,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 0,
+        "canvas_matches": true,
+        "passed": true
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          34,
+          38
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 699,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 36,
+        "gradient_x": -1.9962875409836063,
+        "gradient_y": -2.9819824212271975,
+        "light_angle_degrees": 236.19967753587758,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/mediterranean_scrub_winter_try1.png",
+        "sha256": "ee475729610f565f5b917b0ce9beb4f0831ebd22ad30a790304a292252f6d3ba",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.2717351382548927,
+          "saturation_q25": 0.3950786486373076,
+          "saturation_q75": 0.4794562843277995,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.025343618630642665,
+          "foreground_pixels": 24886
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": true,
+      "adoption": "NUMERIC_AND_VISUAL_CANDIDATE",
+      "model_gate": "MISSING",
+      "canvas": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "mild"
+      ]
+    },
+    {
+      "id": "reeds_full",
+      "attempt": 1,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/reeds_full_try1.json",
+      "record_sha256": "1e835dd60362a5ff2f4f541fd9ec054813f73962872241dc07304250f6157afb",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/reeds_full_try1.png",
+      "raw_sha256": "c4ef85ede886d85a45061f80018f04cb48ee4efc9efb69f6212d30f95d49c23f",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c2fb-7ce4-76c1-82bc-15df06f8d254/exec-c0c01675-29ec-450b-a30c-364b6d4519ad.png",
+      "source_matches": true,
+      "prompt_sha256": "f29587a770186a36a32c2d4150307bead997c48c4472953311cf696a4985f037",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/flora/sprites/berry_bush_full.png",
+          "sha256": "c3afe09223b5ed332cee1129200948b1557742d5d377079761acb9a6fec74b31"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/reeds_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          205,
+          105,
+          1047,
+          1004
+        ],
+        "scale": 0.0670391061452514,
+        "scaled_canvas": [
+          56,
+          60
+        ],
+        "offset": [
+          20,
+          21
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 60
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": "REVIEW_REQUIRED",
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/reeds_full_try1.png",
+      "output_sha256": "bb482f96aa5d5aa3052c899c4a42353a660d28bf4e16df5a06b00fe75b2f581c",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 60,
+        "opaque_components": 3,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 0,
+        "canvas_matches": true,
+        "passed": false
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          58,
+          62
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1051,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 60,
+        "gradient_x": -3.267708135168961,
+        "gradient_y": -3.9676654366543667,
+        "light_angle_degrees": 230.52565615151426,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/reeds_full_try1.png",
+        "sha256": "c4ef85ede886d85a45061f80018f04cb48ee4efc9efb69f6212d30f95d49c23f",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.1904199236502454,
+          "saturation_q25": 0.5340166673453024,
+          "saturation_q75": 0.6398227250680809,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.039894314398853825,
+          "foreground_pixels": 18927
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": false
+    },
+    {
+      "id": "reeds_full",
+      "attempt": 2,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/reeds_full_try2.json",
+      "record_sha256": "163868498bfeab8c817ea94b79187841b084aa3521d98a4a8596f9d9e675f2c4",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/reeds_full_try2.png",
+      "raw_sha256": "53bdef531c7949a1ee1338d456d6b151834e0f1c4c36f458f6b346233e24dd57",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-a3d1345b-835d-46d1-963d-d37ef35f557d.png",
+      "source_matches": true,
+      "prompt_sha256": "59da2b91ac0e77f7e3d390f64d418d768e43fd8d8e788ba630aa9b17f87ae723",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/reeds_full_try1.png",
+          "sha256": "c4ef85ede886d85a45061f80018f04cb48ee4efc9efb69f6212d30f95d49c23f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/reeds_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          205,
+          105,
+          1047,
+          1004
+        ],
+        "scale": 0.0670391061452514,
+        "scaled_canvas": [
+          56,
+          60
+        ],
+        "offset": [
+          20,
+          21
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 60
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": {
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Independent1x/2x composited review: rooted botanical morphology, upper-left light and sepia ink/earth-sage wash compared across family. Numeric gates are evaluated separately."
+      },
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/reeds_full_try2.png",
+      "output_sha256": "1c6896fffcf20b4aec92e30baae08f795d52ab9b2b237664c69cafeaffe63613",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 60,
+        "opaque_components": 1,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 0,
+        "canvas_matches": true,
+        "passed": true
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          58,
+          62
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1240,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 60,
+        "gradient_x": -3.8639846452866857,
+        "gradient_y": -4.122319493177388,
+        "light_angle_degrees": 226.85271396931088,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/reeds_full_try2.png",
+        "sha256": "53bdef531c7949a1ee1338d456d6b151834e0f1c4c36f458f6b346233e24dd57",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.20614596670934698,
+          "saturation_q25": 0.3934667291983808,
+          "saturation_q75": 0.5128481564512238,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.033175000205997354,
+          "foreground_pixels": 22666
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": true,
+      "adoption": "NUMERIC_AND_VISUAL_CANDIDATE",
+      "model_gate": "MISSING",
+      "canvas": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "harsh",
+        "neutral",
+        "mild"
+      ]
+    },
+    {
+      "id": "reeds_harvested",
+      "attempt": 1,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/reeds_harvested_try1.json",
+      "record_sha256": "f311cb347916b63d9c4efe2fc3eb214890648accf7ecf49e48c9b56e6b06b625",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/reeds_harvested_try1.png",
+      "raw_sha256": "54af24aae1e4c440065629095a9813732b230b13609599e758450260ad80c573",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-93f16652-4eba-4e8d-8c6f-b674e9cac1c8.png",
+      "source_matches": true,
+      "prompt_sha256": "a42e32b2d1b711957a41d293f7145f56d45e76750818c899c3db7afebd347b41",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/reeds_full_try1.png",
+          "sha256": "c4ef85ede886d85a45061f80018f04cb48ee4efc9efb69f6212d30f95d49c23f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/reeds_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          205,
+          105,
+          1047,
+          1004
+        ],
+        "scale": 0.0670391061452514,
+        "scaled_canvas": [
+          56,
+          60
+        ],
+        "offset": [
+          20,
+          21
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 60
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": {
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Independent1x/2x composited review: rooted botanical morphology, upper-left light and sepia ink/earth-sage wash compared across family. Numeric gates are evaluated separately."
+      },
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/reeds_harvested_try1.png",
+      "output_sha256": "b8d898cde16ca35aa719dd0b5337005fe1028a8ab868732dbcdf92c7d12066ff",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 16,
+        "opaque_components": 1,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 0,
+        "canvas_matches": true,
+        "passed": true
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          14,
+          18
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 144,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 16,
+        "gradient_x": -4.782712727272727,
+        "gradient_y": -4.94651935483871,
+        "light_angle_degrees": 225.96457168057137,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/reeds_harvested_try1.png",
+        "sha256": "54af24aae1e4c440065629095a9813732b230b13609599e758450260ad80c573",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.23744710860366713,
+          "saturation_q25": 0.5442553694538451,
+          "saturation_q75": 0.6468619048819562,
+          "stroke_q25": 2.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 5.656854249492381,
+          "wash_flatness": 0.0317195593221561,
+          "foreground_pixels": 32326
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": true,
+      "adoption": "NUMERIC_AND_VISUAL_CANDIDATE",
+      "model_gate": "MISSING",
+      "canvas": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "harsh",
+        "neutral",
+        "mild"
+      ]
+    },
+    {
+      "id": "reeds_winter",
+      "attempt": 1,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/reeds_winter_try1.json",
+      "record_sha256": "475f590be654f48b2b10ac6d654c1caf34573a7e37b570732eaee40681602062",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/reeds_winter_try1.png",
+      "raw_sha256": "817c9caba9b554c80e3d74ed15488f7848e563f8deb35ecee96de5abb3eed6dc",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-8157aa27-5fad-41f9-b3d0-f019b5b14969.png",
+      "source_matches": true,
+      "prompt_sha256": "9dc8816a3d63a9b83ad9a28ae4bb85a9ffc545eaa8f6a857f738dc5382aded66",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/reeds_full_try1.png",
+          "sha256": "c4ef85ede886d85a45061f80018f04cb48ee4efc9efb69f6212d30f95d49c23f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/reeds_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          205,
+          105,
+          1047,
+          1004
+        ],
+        "scale": 0.0670391061452514,
+        "scaled_canvas": [
+          56,
+          60
+        ],
+        "offset": [
+          20,
+          21
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 60
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": "REVIEW_REQUIRED",
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/reeds_winter_try1.png",
+      "output_sha256": "b7b3c07d7ac23e48177f3dc2c0261df3a700e69dfb7364ec8f58b404ca569766",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 60,
+        "opaque_components": 5,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 2,
+        "canvas_matches": true,
+        "passed": false
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          58,
+          62
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1026,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 60,
+        "gradient_x": -2.719158139534884,
+        "gradient_y": -3.7607439588688947,
+        "light_angle_degrees": 234.1316674852403,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/reeds_winter_try1.png",
+        "sha256": "817c9caba9b554c80e3d74ed15488f7848e563f8deb35ecee96de5abb3eed6dc",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.18680704369700923,
+          "saturation_q25": 0.3924767756671595,
+          "saturation_q75": 0.511658364330864,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.030771347296727074,
+          "foreground_pixels": 18573
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": false
+    },
+    {
+      "id": "reeds_winter",
+      "attempt": 2,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/reeds_winter_try2.json",
+      "record_sha256": "00a4bb49446b23a590557f2a745b9a478c70ba158966883cdc8564c8faeaf1cd",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/reeds_winter_try2.png",
+      "raw_sha256": "4fb163d046bf6b78568c91cba4ac62eff264efc7b29f3089bc71cf8b88492372",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-fdd3f7c9-1be5-4aa1-be4b-0c0890127a3c.png",
+      "source_matches": true,
+      "prompt_sha256": "16ddacb988e6f9240ebf5fd4f5c76c20d1fde0028322914edc54c4a2f1f38905",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/reeds_full_try1.png",
+          "sha256": "c4ef85ede886d85a45061f80018f04cb48ee4efc9efb69f6212d30f95d49c23f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/reeds_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          205,
+          105,
+          1047,
+          1004
+        ],
+        "scale": 0.0670391061452514,
+        "scaled_canvas": [
+          56,
+          60
+        ],
+        "offset": [
+          20,
+          21
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 60
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": "REVIEW_REQUIRED",
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/reeds_winter_try2.png",
+      "output_sha256": "e5c582e6de71576b6a9b213fc1791cca62816eec259d848b0c40693b6c96796c",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 60,
+        "opaque_components": 1,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 73139,
+        "canvas_matches": true,
+        "passed": false
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          58,
+          62
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 2214,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 60,
+        "gradient_x": -1.2234492055849782,
+        "gradient_y": -2.9763760314341843,
+        "light_angle_degrees": 247.6547248945447,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/reeds_winter_try2.png",
+        "sha256": "4fb163d046bf6b78568c91cba4ac62eff264efc7b29f3089bc71cf8b88492372",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.2258162837657637,
+          "saturation_q25": 0.5298581586147497,
+          "saturation_q75": 0.6147162291865511,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.019527544373001138,
+          "foreground_pixels": 30174
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": false
+    },
+    {
+      "id": "reeds_winter",
+      "attempt": 3,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/reeds_winter_try3.json",
+      "record_sha256": "cac3900b44efb967e1b846af356ec717c3633a61073079eec865825c670aa0ad",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/reeds_winter_try3.png",
+      "raw_sha256": "d7154138e94626c6fe4eb8a65e04348b28cb547bab1bff00ea8c026e33bea664",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-d505b5fb-4d27-4555-96aa-f23c04204bb5.png",
+      "source_matches": true,
+      "prompt_sha256": "7f8bb583b6a58ca549f214ac9c377340a94ff894c7f29d3b01398763b59400ae",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/reeds_winter_try1.png",
+          "sha256": "817c9caba9b554c80e3d74ed15488f7848e563f8deb35ecee96de5abb3eed6dc"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/reeds_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          205,
+          105,
+          1047,
+          1004
+        ],
+        "scale": 0.0670391061452514,
+        "scaled_canvas": [
+          56,
+          60
+        ],
+        "offset": [
+          20,
+          21
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 60
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": "REVIEW_REQUIRED",
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/reeds_winter_try3.png",
+      "output_sha256": "57f09d5541fd402b898a7e50b502e7e05c7003d1b1438c0e556c711c0b95bf3f",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 60,
+        "opaque_components": 1,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 0,
+        "canvas_matches": true,
+        "passed": true
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          58,
+          62
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1105,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 60,
+        "gradient_x": -2.1826177419354833,
+        "gradient_y": -3.526354566210045,
+        "light_angle_degrees": 238.24479176959537,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/reeds_winter_try3.png",
+        "sha256": "d7154138e94626c6fe4eb8a65e04348b28cb547bab1bff00ea8c026e33bea664",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.2026572880031262,
+          "saturation_q25": 0.41736097641700487,
+          "saturation_q75": 0.5641943891543525,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.038909331384330954,
+          "foreground_pixels": 20059
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": false
+    },
+    {
+      "id": "tundra_willow_full",
+      "attempt": 1,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/tundra_willow_full_try1.json",
+      "record_sha256": "8a8699219de35f93730346db809c6a031649ecef11773eae59291157b7d86537",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/tundra_willow_full_try1.png",
+      "raw_sha256": "fe6d84cc42049ff9855a6c23069a0f83e18038397b97f8fcb5cf4302f72c783a",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c2fb-7ce4-76c1-82bc-15df06f8d254/exec-5979bdc1-f13e-499d-a902-036defffddac.png",
+      "source_matches": true,
+      "prompt_sha256": "1e6fbb615e778daeb6239d1fd746cb28b362bcae99d6a475e523aed6dbc0d351",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/flora/sprites/berry_bush_full.png",
+          "sha256": "c3afe09223b5ed332cee1129200948b1557742d5d377079761acb9a6fec74b31"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/tundra_willow_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          144,
+          369,
+          1111,
+          846
+        ],
+        "scale": 0.06765327695560254,
+        "scaled_canvas": [
+          65,
+          32
+        ],
+        "offset": [
+          16,
+          49
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 32
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": {
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Independent1x/2x composited review: rooted botanical morphology, upper-left light and sepia ink/earth-sage wash compared across family. Numeric gates are evaluated separately."
+      },
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/tundra_willow_full_try1.png",
+      "output_sha256": "24fe9fa3278e59333cbb90b0fd713bddb921d4eb31f6befa8c48f77891c3318b",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 32,
+        "opaque_components": 1,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 0,
+        "canvas_matches": true,
+        "passed": true
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          30,
+          34
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 958,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 32,
+        "gradient_x": -2.0748806183115343,
+        "gradient_y": -3.971475182481752,
+        "light_angle_degrees": 242.4153708119544,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/tundra_willow_full_try1.png",
+        "sha256": "fe6d84cc42049ff9855a6c23069a0f83e18038397b97f8fcb5cf4302f72c783a",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.20164343089280767,
+          "saturation_q25": 0.5105280381838075,
+          "saturation_q75": 0.5709983508320671,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.02981485745405864,
+          "foreground_pixels": 14806
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": true,
+      "adoption": "NUMERIC_AND_VISUAL_CANDIDATE",
+      "model_gate": "MISSING",
+      "canvas": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "harsh"
+      ]
+    },
+    {
+      "id": "tundra_willow_harvested",
+      "attempt": 1,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/tundra_willow_harvested_try1.json",
+      "record_sha256": "2b79cdb2e55bbe2bf412528609518a0ea9096d75bb5ab47b162fda917bef01e9",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/tundra_willow_harvested_try1.png",
+      "raw_sha256": "8bc838df7a2ed68bcd2ebfb0e69154fa5e74fd4988e175845ddf45633eb95d64",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-4a5f8d5a-4131-40e1-9a41-45574a7c4da6.png",
+      "source_matches": true,
+      "prompt_sha256": "bab0d126c888160ee59d9a5a0422c1ad102c1eb9fec7bedb9715d092368e880a",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/tundra_willow_full_try1.png",
+          "sha256": "fe6d84cc42049ff9855a6c23069a0f83e18038397b97f8fcb5cf4302f72c783a"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/tundra_willow_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          144,
+          369,
+          1111,
+          846
+        ],
+        "scale": 0.06765327695560254,
+        "scaled_canvas": [
+          65,
+          32
+        ],
+        "offset": [
+          16,
+          49
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 32
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": "REVIEW_REQUIRED",
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/tundra_willow_harvested_try1.png",
+      "output_sha256": "852fb60e39b5316f31b8a2c30abad2eaddde0512846fc09210cdedd5ea843004",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 26,
+        "opaque_components": 1,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 0,
+        "canvas_matches": true,
+        "passed": true
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          18,
+          22
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 361,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 26,
+        "gradient_x": -8.460701255230125,
+        "gradient_y": -12.280062348178138,
+        "light_angle_degrees": 235.43398623340045,
+        "base_passed": true,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/tundra_willow_harvested_try1.png",
+        "sha256": "8bc838df7a2ed68bcd2ebfb0e69154fa5e74fd4988e175845ddf45633eb95d64",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.16691111762980346,
+          "saturation_q25": 0.42647867252735805,
+          "saturation_q75": 0.4488803651255405,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.02785737505324972,
+          "foreground_pixels": 6660
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": false
+    },
+    {
+      "id": "tundra_willow_winter",
+      "attempt": 1,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/tundra_willow_winter_try1.json",
+      "record_sha256": "27c2a9480e4d501478ded04455e60392f8a3fe37b5d5d5e9dc2e264ac6c5444b",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/tundra_willow_winter_try1.png",
+      "raw_sha256": "fa6be760fe5a2b387bd09c303c3ca370458c7725936d666875fbe975039d3685",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-e98538d5-621b-4a0a-ad05-7bb8d5b18e96.png",
+      "source_matches": true,
+      "prompt_sha256": "0d222e325aa17e290978b589e25503f61ba5d4e42938f81f02bbdabc6b9eb744",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/tundra_willow_full_try1.png",
+          "sha256": "fe6d84cc42049ff9855a6c23069a0f83e18038397b97f8fcb5cf4302f72c783a"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/tundra_willow_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          144,
+          369,
+          1111,
+          846
+        ],
+        "scale": 0.06765327695560254,
+        "scaled_canvas": [
+          65,
+          32
+        ],
+        "offset": [
+          16,
+          49
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 32
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": "REVIEW_REQUIRED",
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/tundra_willow_winter_try1.png",
+      "output_sha256": "063283b020ea7ac5dde5163beb8cc75c38cb6c2b13c8a52f33434f483848f530",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 31,
+        "opaque_components": 15,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 0,
+        "canvas_matches": true,
+        "passed": false
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          30,
+          34
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 285,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 31,
+        "gradient_x": -5.699348684210526,
+        "gradient_y": -9.675031372549018,
+        "light_angle_degrees": 239.4985945761798,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/tundra_willow_winter_try1.png",
+        "sha256": "fa6be760fe5a2b387bd09c303c3ca370458c7725936d666875fbe975039d3685",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.14036478984932593,
+          "saturation_q25": 0.4899326650047737,
+          "saturation_q75": 0.5192191681542445,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.034663786827940746,
+          "foreground_pixels": 4964
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": false
+    },
+    {
+      "id": "wild_hazel_full",
+      "attempt": 1,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/wild_hazel_full_try1.json",
+      "record_sha256": "d7826500647312718abff54326d0ddbef81b5027d8420de8fa99b08a1c7d4adc",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/wild_hazel_full_try1.png",
+      "raw_sha256": "08586306a234c529eb5c872b08e5442fa94f04b489073658e0c701d48ac5e918",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c2fb-7ce4-76c1-82bc-15df06f8d254/exec-77765619-7b33-42bb-81bf-9b485376dbfd.png",
+      "source_matches": true,
+      "prompt_sha256": "e22c8f2ec47a1be08530ba6d3f95152e317f93096fe12a122f2e204d5457e332",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/flora/sprites/berry_bush_full.png",
+          "sha256": "c3afe09223b5ed332cee1129200948b1557742d5d377079761acb9a6fec74b31"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/wild_hazel_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          131,
+          132,
+          1091,
+          1068
+        ],
+        "scale": 0.060085836909871244,
+        "scaled_canvas": [
+          58,
+          56
+        ],
+        "offset": [
+          20,
+          25
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 56
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": {
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Independent1x/2x composited review: rooted botanical morphology, upper-left light and sepia ink/earth-sage wash compared across family. Numeric gates are evaluated separately."
+      },
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/wild_hazel_full_try1.png",
+      "output_sha256": "8dde09c9edcc5b7c881acdb577da51a52253d34a5dbcbffc83e635fc1609ff53",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 56,
+        "opaque_components": 1,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 0,
+        "canvas_matches": true,
+        "passed": true
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          54,
+          58
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1789,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 56,
+        "gradient_x": -1.3918089534180274,
+        "gradient_y": -1.0723626892792244,
+        "light_angle_degrees": 217.61357709781765,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/wild_hazel_full_try1.png",
+        "sha256": "08586306a234c529eb5c872b08e5442fa94f04b489073658e0c701d48ac5e918",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.21369120588425058,
+          "saturation_q25": 0.49140621816725016,
+          "saturation_q75": 0.5592945919586629,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.029444559404615336,
+          "foreground_pixels": 35519
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": true,
+      "adoption": "NUMERIC_AND_VISUAL_CANDIDATE",
+      "model_gate": "MISSING",
+      "canvas": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "harsh",
+        "neutral",
+        "mild"
+      ]
+    },
+    {
+      "id": "wild_hazel_harvested",
+      "attempt": 1,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/wild_hazel_harvested_try1.json",
+      "record_sha256": "2fbdc38dcecd2e8510c76790961aad87b9cf3f7799df9c21d3a6f2b2b2aa5ede",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/wild_hazel_harvested_try1.png",
+      "raw_sha256": "d68ad8242083f9c7fdad509708a0810681d99bb7450649fdf670024ed904ab89",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-d9532ab9-70b7-4cc5-82bb-c6ac58786507.png",
+      "source_matches": true,
+      "prompt_sha256": "26e596d3cf5d7e91e43160034eefc364c468f3ac1f7290f0f38b76622b6ebef9",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/wild_hazel_full_try1.png",
+          "sha256": "08586306a234c529eb5c872b08e5442fa94f04b489073658e0c701d48ac5e918"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/wild_hazel_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          131,
+          132,
+          1091,
+          1068
+        ],
+        "scale": 0.060085836909871244,
+        "scaled_canvas": [
+          58,
+          56
+        ],
+        "offset": [
+          20,
+          25
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 56
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": {
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Independent1x/2x composited review: rooted botanical morphology, upper-left light and sepia ink/earth-sage wash compared across family. Numeric gates are evaluated separately."
+      },
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/wild_hazel_harvested_try1.png",
+      "output_sha256": "2530f354621ffa5378d8a2a8d81b192db8af1d5eabc7d6f63b37cee9a8473935",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 56,
+        "opaque_components": 1,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 0,
+        "canvas_matches": true,
+        "passed": true
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          54,
+          58
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1810,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 56,
+        "gradient_x": -1.2953378281622907,
+        "gradient_y": -1.3631424133811227,
+        "light_angle_degrees": 226.46101311777218,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/wild_hazel_harvested_try1.png",
+        "sha256": "d68ad8242083f9c7fdad509708a0810681d99bb7450649fdf670024ed904ab89",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.22692369477911647,
+          "saturation_q25": 0.4563602936684527,
+          "saturation_q75": 0.5234218869778002,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.025385624823650966,
+          "foreground_pixels": 35640
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": true,
+      "adoption": "NUMERIC_AND_VISUAL_CANDIDATE",
+      "model_gate": "MISSING",
+      "canvas": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "harsh",
+        "neutral",
+        "mild"
+      ]
+    },
+    {
+      "id": "wild_hazel_winter",
+      "attempt": 1,
+      "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/wild_hazel_winter_try1.json",
+      "record_sha256": "accdf2ca6f3b2e0de3554e2b318e40483b257be4e19432057298c21041eb6f80",
+      "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/wild_hazel_winter_try1.png",
+      "raw_sha256": "798582b73823b0e08ef3a88225e88e5d53face035a4da9942e346648db11eafe",
+      "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-a867ab20-164d-4d2f-8479-7111a34f37e2.png",
+      "source_matches": true,
+      "prompt_sha256": "e7f472e4cac08cf8c60128382a01b8cb25de7ca974f7cda50faa2e90c987659b",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/wild_hazel_full_try1.png",
+          "sha256": "08586306a234c529eb5c872b08e5442fa94f04b489073658e0c701d48ac5e918"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+          "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "seed": null,
+      "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/wild_hazel_full_try1.png",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          131,
+          132,
+          1091,
+          1068
+        ],
+        "scale": 0.060085836909871244,
+        "scaled_canvas": [
+          58,
+          56
+        ],
+        "offset": [
+          20,
+          25
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 56
+      },
+      "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+      "visual": "REVIEW_REQUIRED",
+      "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/wild_hazel_winter_try1.png",
+      "output_sha256": "47ccddb3369eaa4629b945428125e009e34144dc9869a231066c77f456fd9bc1",
+      "checks": {
+        "alpha_min": 0,
+        "alpha_max": 255,
+        "opaque_height": 53,
+        "opaque_components": 12,
+        "visible_border": false,
+        "raw_transparent": true,
+        "raw_opaque_border": false,
+        "source_opaque_outside_crop": 0,
+        "canvas_matches": true,
+        "passed": false
+      },
+      "projection": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          50,
+          54
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 410,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 53,
+        "gradient_x": -13.066806986899566,
+        "gradient_y": -2.3915147540983606,
+        "light_angle_degrees": 190.3716056509897,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/wild_hazel_winter_try1.png",
+        "sha256": "798582b73823b0e08ef3a88225e88e5d53face035a4da9942e346648db11eafe",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.20582830139144132,
+          "saturation_q25": 0.4525688867497386,
+          "saturation_q75": 0.4926227905125606,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.03477259961815249,
+          "foreground_pixels": 10027
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "numeric_candidate": false
+    }
+  ],
+  "optional_skipped": [
+    "spring",
+    "autumn",
+    "full_v2"
+  ]
+}

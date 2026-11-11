@@ -1,0 +1,368 @@
+{
+  "status": "PROPOSAL_ONLY_NOT_IMPORTER_READY",
+  "source_commit": "PIN_ART_COMMIT_AFTER_COMMIT",
+  "files": [
+    {
+      "id": "berry_harsh_full",
+      "role": "flora",
+      "type": "flora",
+      "source": "art/flora/climate/shrubs/berry_harsh_full.png",
+      "dest": "flora/climate/shrubs/berry_harsh_full.png",
+      "sha256": "89f5b4ec2173941c4185b44bb650e2cad07cc065f0939f9a96e8546e61922d90",
+      "canvas": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "berry_harsh_harvested",
+      "role": "flora",
+      "type": "flora",
+      "source": "art/flora/climate/shrubs/berry_harsh_harvested.png",
+      "dest": "flora/climate/shrubs/berry_harsh_harvested.png",
+      "sha256": "632de1c8a6ac7f0b7afbc8048c3606845f2a53cbc05965417e892e9c335d8367",
+      "canvas": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "berry_harsh_winter",
+      "role": "flora",
+      "type": "flora",
+      "source": "art/flora/climate/shrubs/berry_harsh_winter.png",
+      "dest": "flora/climate/shrubs/berry_harsh_winter.png",
+      "sha256": "d4f0117c42cd8aee5eecdb52c29a8bb7767ce5ad451d5f514a796f92f350aa6a",
+      "canvas": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "berry_mild_full",
+      "role": "flora",
+      "type": "flora",
+      "source": "art/flora/climate/shrubs/berry_mild_full.png",
+      "dest": "flora/climate/shrubs/berry_mild_full.png",
+      "sha256": "2f83f90e6316abb96a8b1ee7119bf5a3327d7337758441f4d0b44cd730326449",
+      "canvas": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "berry_neutral_full",
+      "role": "flora",
+      "type": "flora",
+      "source": "art/flora/climate/shrubs/berry_neutral_full.png",
+      "dest": "flora/climate/shrubs/berry_neutral_full.png",
+      "sha256": "789eee4cddd3e8f7f10d590c1594ed4316b845fcd41b39b22afe102d7b3ee7c5",
+      "canvas": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "berry_neutral_harvested",
+      "role": "flora",
+      "type": "flora",
+      "source": "art/flora/climate/shrubs/berry_neutral_harvested.png",
+      "dest": "flora/climate/shrubs/berry_neutral_harvested.png",
+      "sha256": "e379fedf5b5b2eccb89ddfc2f46cf5f2a4bdfdb9656c85993df351fbf7e17933",
+      "canvas": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "mediterranean_scrub_full",
+      "role": "flora",
+      "type": "flora",
+      "source": "art/flora/climate/shrubs/mediterranean_scrub_full.png",
+      "dest": "flora/climate/shrubs/mediterranean_scrub_full.png",
+      "sha256": "042ed2d187dec6a85e80da68cba741af2647bca4fa3ef726a21e85e6164c612d",
+      "canvas": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "mediterranean_scrub_winter",
+      "role": "flora",
+      "type": "flora",
+      "source": "art/flora/climate/shrubs/mediterranean_scrub_winter.png",
+      "dest": "flora/climate/shrubs/mediterranean_scrub_winter.png",
+      "sha256": "820f47398f4022cb291d1a7d4d304926ef4417e25b054e92bbd4908233cf12c9",
+      "canvas": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "reeds_full",
+      "role": "flora",
+      "type": "flora",
+      "source": "art/flora/climate/shrubs/reeds_full.png",
+      "dest": "flora/climate/shrubs/reeds_full.png",
+      "sha256": "1c6896fffcf20b4aec92e30baae08f795d52ab9b2b237664c69cafeaffe63613",
+      "canvas": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "reeds_harvested",
+      "role": "flora",
+      "type": "flora",
+      "source": "art/flora/climate/shrubs/reeds_harvested.png",
+      "dest": "flora/climate/shrubs/reeds_harvested.png",
+      "sha256": "b8d898cde16ca35aa719dd0b5337005fe1028a8ab868732dbcdf92c7d12066ff",
+      "canvas": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "tundra_willow_full",
+      "role": "flora",
+      "type": "flora",
+      "source": "art/flora/climate/shrubs/tundra_willow_full.png",
+      "dest": "flora/climate/shrubs/tundra_willow_full.png",
+      "sha256": "24fe9fa3278e59333cbb90b0fd713bddb921d4eb31f6befa8c48f77891c3318b",
+      "canvas": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wild_hazel_full",
+      "role": "flora",
+      "type": "flora",
+      "source": "art/flora/climate/shrubs/wild_hazel_full.png",
+      "dest": "flora/climate/shrubs/wild_hazel_full.png",
+      "sha256": "8dde09c9edcc5b7c881acdb577da51a52253d34a5dbcbffc83e635fc1609ff53",
+      "canvas": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wild_hazel_harvested",
+      "role": "flora",
+      "type": "flora",
+      "source": "art/flora/climate/shrubs/wild_hazel_harvested.png",
+      "dest": "flora/climate/shrubs/wild_hazel_harvested.png",
+      "sha256": "2530f354621ffa5378d8a2a8d81b192db8af1d5eabc7d6f63b37cee9a8473935",
+      "canvas": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    }
+  ],
+  "bindings_proposal": [
+    {
+      "symbolic_id": "berry_harsh_full",
+      "climate": [
+        "harsh"
+      ],
+      "state": "full"
+    },
+    {
+      "symbolic_id": "berry_harsh_harvested",
+      "climate": [
+        "harsh"
+      ],
+      "state": "harvested"
+    },
+    {
+      "symbolic_id": "berry_harsh_winter",
+      "climate": [
+        "harsh"
+      ],
+      "state": "winter"
+    },
+    {
+      "symbolic_id": "berry_mild_full",
+      "climate": [
+        "mild"
+      ],
+      "state": "full"
+    },
+    {
+      "symbolic_id": "berry_neutral_full",
+      "climate": [
+        "neutral"
+      ],
+      "state": "full"
+    },
+    {
+      "symbolic_id": "berry_neutral_harvested",
+      "climate": [
+        "neutral"
+      ],
+      "state": "harvested"
+    },
+    {
+      "symbolic_id": "mediterranean_scrub_full",
+      "climate": [
+        "mild"
+      ],
+      "state": "full"
+    },
+    {
+      "symbolic_id": "mediterranean_scrub_winter",
+      "climate": [
+        "mild"
+      ],
+      "state": "winter"
+    },
+    {
+      "symbolic_id": "reeds_full",
+      "climate": [
+        "harsh",
+        "neutral",
+        "mild"
+      ],
+      "state": "full"
+    },
+    {
+      "symbolic_id": "reeds_harvested",
+      "climate": [
+        "harsh",
+        "neutral",
+        "mild"
+      ],
+      "state": "harvested"
+    },
+    {
+      "symbolic_id": "tundra_willow_full",
+      "climate": [
+        "harsh"
+      ],
+      "state": "full"
+    },
+    {
+      "symbolic_id": "wild_hazel_full",
+      "climate": [
+        "harsh",
+        "neutral",
+        "mild"
+      ],
+      "state": "full"
+    },
+    {
+      "symbolic_id": "wild_hazel_harvested",
+      "climate": [
+        "harsh",
+        "neutral",
+        "mild"
+      ],
+      "state": "harvested"
+    }
+  ],
+  "integration_note": "C2/C3 merge existing manifest; resolve real flora schema and content ids; no numeric simulation ids invented. Climate/harvested selector not implemented. Sidecars require metadata adapter."
+}

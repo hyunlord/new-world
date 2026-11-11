@@ -1,0 +1,151 @@
+{
+  "id": "berry_harsh_winter",
+  "attempt": 1,
+  "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/berry_harsh_winter_try1.json",
+  "record_sha256": "28c088b9ca7b5f4a4504d493ba33fadfb11f4f1a21038767cf3dc3572ed8bc66",
+  "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_harsh_winter_try1.png",
+  "raw_sha256": "ebc41abc6e6bb9032d1e3ad6048c94373c3eba6441e6ee32af96db62e25905e6",
+  "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-58f89749-9dc9-4d8e-8c10-653a57f2e172.png",
+  "source_matches": true,
+  "prompt_sha256": "2eaa083e10ebe18b0f51d8776e4b70d35d7a528be43f8c74e30b47bd8caf75f3",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_harsh_full_try1.png",
+      "sha256": "73e525c4032943806581cc73289d9bc7af4018abccd639fe4849697dc0f7dbf5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+      "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "seed": null,
+  "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_harsh_full_try1.png",
+  "transform": {
+    "source_canvas": [
+      1536,
+      1024
+    ],
+    "crop": [
+      214,
+      208,
+      1296,
+      790
+    ],
+    "scale": 0.05536332179930796,
+    "scaled_canvas": [
+      60,
+      32
+    ],
+    "offset": [
+      19,
+      49
+    ],
+    "output_canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "target_height": 32
+  },
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "visual": {
+    "score": 91,
+    "verdict": "pass",
+    "category_match": true,
+    "differences": [],
+    "suggestions": [],
+    "reasoning": "Independent1x/2x composited review: rooted botanical morphology, upper-left light and sepia ink/earth-sage wash compared across family. Numeric gates are evaluated separately."
+  },
+  "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/berry_harsh_winter_try1.png",
+  "output_sha256": "d4f0117c42cd8aee5eecdb52c29a8bb7767ce5ad451d5f514a796f92f350aa6a",
+  "checks": {
+    "alpha_min": 0,
+    "alpha_max": 255,
+    "opaque_height": 32,
+    "opaque_components": 1,
+    "visible_border": false,
+    "raw_transparent": true,
+    "raw_opaque_border": false,
+    "source_opaque_outside_crop": 0,
+    "canvas_matches": true,
+    "passed": true
+  },
+  "projection": {
+    "family": "shrub",
+    "anchor": [
+      48,
+      80
+    ],
+    "height_band": [
+      30,
+      34
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1035,
+    "base_row": 80,
+    "base_error": 0,
+    "height": 32,
+    "gradient_x": -1.0818681623931623,
+    "gradient_y": -2.197176431718061,
+    "light_angle_degrees": 243.78481658220323,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "style": {
+    "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_harsh_winter_try1.png",
+    "sha256": "ebc41abc6e6bb9032d1e3ad6048c94373c3eba6441e6ee32af96db62e25905e6",
+    "family": "plants",
+    "metrics": {
+      "edge_density": 0.2437687589716821,
+      "saturation_q25": 0.5088953012742352,
+      "saturation_q75": 0.6020445244407953,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.02294646163665668,
+      "foreground_pixels": 18719
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "numeric_candidate": true,
+  "adoption": "NUMERIC_AND_VISUAL_CANDIDATE",
+  "model_gate": "MISSING",
+  "canvas": [
+    96,
+    96
+  ],
+  "anchor": [
+    48,
+    80
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "climate": [
+    "harsh"
+  ]
+}

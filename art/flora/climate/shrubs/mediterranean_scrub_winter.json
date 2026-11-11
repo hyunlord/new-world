@@ -1,0 +1,151 @@
+{
+  "id": "mediterranean_scrub_winter",
+  "attempt": 1,
+  "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/mediterranean_scrub_winter_try1.json",
+  "record_sha256": "23b264f25aa3c8de27ce8a642c4cab0d6d56d59ee79262293b3a82ef3583b935",
+  "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/mediterranean_scrub_winter_try1.png",
+  "raw_sha256": "ee475729610f565f5b917b0ce9beb4f0831ebd22ad30a790304a292252f6d3ba",
+  "source": "/Users/rexxa/.codex/generated_images/01a1c815-fa2f-77b2-a8cf-abecf78ae93d/exec-43cae77b-7719-43f2-99c6-c09d8b818cbc.png",
+  "source_matches": true,
+  "prompt_sha256": "e1f34ead420511a46a1bdeb307303265d8205792cbeb22f8d07006e2f40770e0",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/B2/shrubs/raw/mediterranean_scrub_full_try1.png",
+      "sha256": "5d3039a5aea381eb61ce089be0446520a18ef2532187eb164b506cbfe961a63b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+      "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "seed": null,
+  "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/mediterranean_scrub_full_try1.png",
+  "transform": {
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "crop": [
+      185,
+      238,
+      1041,
+      951
+    ],
+    "scale": 0.05077574047954866,
+    "scaled_canvas": [
+      43,
+      36
+    ],
+    "offset": [
+      28,
+      45
+    ],
+    "output_canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "target_height": 36
+  },
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "visual": {
+    "score": 91,
+    "verdict": "pass",
+    "category_match": true,
+    "differences": [],
+    "suggestions": [],
+    "reasoning": "Independent1x/2x composited review: rooted botanical morphology, upper-left light and sepia ink/earth-sage wash compared across family. Numeric gates are evaluated separately."
+  },
+  "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/mediterranean_scrub_winter_try1.png",
+  "output_sha256": "820f47398f4022cb291d1a7d4d304926ef4417e25b054e92bbd4908233cf12c9",
+  "checks": {
+    "alpha_min": 0,
+    "alpha_max": 255,
+    "opaque_height": 36,
+    "opaque_components": 1,
+    "visible_border": false,
+    "raw_transparent": true,
+    "raw_opaque_border": false,
+    "source_opaque_outside_crop": 0,
+    "canvas_matches": true,
+    "passed": true
+  },
+  "projection": {
+    "family": "shrub",
+    "anchor": [
+      48,
+      80
+    ],
+    "height_band": [
+      34,
+      38
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 699,
+    "base_row": 80,
+    "base_error": 0,
+    "height": 36,
+    "gradient_x": -1.9962875409836063,
+    "gradient_y": -2.9819824212271975,
+    "light_angle_degrees": 236.19967753587758,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "style": {
+    "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/mediterranean_scrub_winter_try1.png",
+    "sha256": "ee475729610f565f5b917b0ce9beb4f0831ebd22ad30a790304a292252f6d3ba",
+    "family": "plants",
+    "metrics": {
+      "edge_density": 0.2717351382548927,
+      "saturation_q25": 0.3950786486373076,
+      "saturation_q75": 0.4794562843277995,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.025343618630642665,
+      "foreground_pixels": 24886
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "numeric_candidate": true,
+  "adoption": "NUMERIC_AND_VISUAL_CANDIDATE",
+  "model_gate": "MISSING",
+  "canvas": [
+    96,
+    96
+  ],
+  "anchor": [
+    48,
+    80
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "climate": [
+    "mild"
+  ]
+}

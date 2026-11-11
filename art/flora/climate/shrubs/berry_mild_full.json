@@ -1,0 +1,151 @@
+{
+  "id": "berry_mild_full",
+  "attempt": 1,
+  "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/berry_mild_full_try1.json",
+  "record_sha256": "b2100d957cde4499b3504622fe35fa9a0ebb864546f6fdf1571b54a921f90848",
+  "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_mild_full_try1.png",
+  "raw_sha256": "644d63a0c193ab72dd7da8292ee367af4125cc2f70f347f1ed96538f71177a1a",
+  "source": "/Users/rexxa/.codex/generated_images/01a1c2fb-7ce4-76c1-82bc-15df06f8d254/exec-ebe6935e-b3d4-408b-916a-48745c15c0a0.png",
+  "source_matches": true,
+  "prompt_sha256": "d3bb47b5be77816700ef5a51ccbd8d15c0829b1f8893453acda35080b7921a20",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+      "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b2/art/flora/sprites/berry_bush_full.png",
+      "sha256": "c3afe09223b5ed332cee1129200948b1557742d5d377079761acb9a6fec74b31"
+    }
+  ],
+  "seed": null,
+  "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_mild_full_try1.png",
+  "transform": {
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "crop": [
+      134,
+      261,
+      1125,
+      946
+    ],
+    "scale": 0.05873715124816446,
+    "scaled_canvas": [
+      58,
+      40
+    ],
+    "offset": [
+      20,
+      41
+    ],
+    "output_canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "target_height": 40
+  },
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "visual": {
+    "score": 91,
+    "verdict": "pass",
+    "category_match": true,
+    "differences": [],
+    "suggestions": [],
+    "reasoning": "Independent1x/2x composited review: rooted botanical morphology, upper-left light and sepia ink/earth-sage wash compared across family. Numeric gates are evaluated separately."
+  },
+  "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/berry_mild_full_try1.png",
+  "output_sha256": "2f83f90e6316abb96a8b1ee7119bf5a3327d7337758441f4d0b44cd730326449",
+  "checks": {
+    "alpha_min": 0,
+    "alpha_max": 255,
+    "opaque_height": 40,
+    "opaque_components": 1,
+    "visible_border": false,
+    "raw_transparent": true,
+    "raw_opaque_border": false,
+    "source_opaque_outside_crop": 0,
+    "canvas_matches": true,
+    "passed": true
+  },
+  "projection": {
+    "family": "shrub",
+    "anchor": [
+      48,
+      80
+    ],
+    "height_band": [
+      38,
+      42
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 857,
+    "base_row": 80,
+    "base_error": 0,
+    "height": 40,
+    "gradient_x": -2.6921840348330917,
+    "gradient_y": -2.3583145015105744,
+    "light_angle_degrees": 221.21789362051743,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "style": {
+    "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_mild_full_try1.png",
+    "sha256": "644d63a0c193ab72dd7da8292ee367af4125cc2f70f347f1ed96538f71177a1a",
+    "family": "plants",
+    "metrics": {
+      "edge_density": 0.19041045462911835,
+      "saturation_q25": 0.48685612415687096,
+      "saturation_q75": 0.5475719281760031,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.021690218349552783,
+      "foreground_pixels": 16842
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "numeric_candidate": true,
+  "adoption": "NUMERIC_AND_VISUAL_CANDIDATE",
+  "model_gate": "MISSING",
+  "canvas": [
+    96,
+    96
+  ],
+  "anchor": [
+    48,
+    80
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "climate": [
+    "mild"
+  ]
+}

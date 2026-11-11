@@ -1,0 +1,202 @@
+[
+  {
+    "id": "berry_harsh",
+    "height": 32,
+    "climate": [
+      "harsh"
+    ],
+    "subject": "low lingonberry evergreen shrub with small leathery oval leaves and dark red berries",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "heights": {
+      "full": 32,
+      "harvested": 32,
+      "winter": 32,
+      "spring": 32,
+      "autumn": 32,
+      "full_v2": 32
+    }
+  },
+  {
+    "id": "berry_neutral",
+    "height": 40,
+    "climate": [
+      "neutral"
+    ],
+    "subject": "one low wild raspberry bramble bush, arching thorny canes from one compact base, compound serrated sage green leaves, four sparse clusters of dull deep red aggregate raspberry fruits, irregular squat rounded bush silhouette",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "heights": {
+      "full": 40,
+      "harvested": 40,
+      "winter": 40,
+      "spring": 40,
+      "autumn": 40,
+      "full_v2": 40
+    }
+  },
+  {
+    "id": "berry_mild",
+    "height": 40,
+    "climate": [
+      "mild"
+    ],
+    "subject": "one low Mediterranean wild blackberry bramble shrub, arching slender thorny canes from one compact base, small leathery dull olive compound leaves and three clusters of deep purple-black aggregate berries, dry-climate open asymmetrical silhouette",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "heights": {
+      "full": 40,
+      "harvested": 40,
+      "winter": 40,
+      "spring": 40,
+      "autumn": 40,
+      "full_v2": 40
+    }
+  },
+  {
+    "id": "wild_hazel",
+    "height": 56,
+    "climate": [
+      "harsh",
+      "neutral",
+      "mild"
+    ],
+    "subject": "one young wild hazel multi-stem shrub, five short woody upright stems joined at one base, broad round heart-shaped serrated leaves, three small clusters of ripening hazelnuts each nut held in a ragged leafy husk, natural untended woodland shrub",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "heights": {
+      "full": 56,
+      "harvested": 56,
+      "winter": 52,
+      "spring": 56,
+      "autumn": 56,
+      "full_v2": 56
+    }
+  },
+  {
+    "id": "reeds",
+    "height": 60,
+    "climate": [
+      "harsh",
+      "neutral",
+      "mild"
+    ],
+    "subject": "one compact rooted tuft of common reed Phragmites, seven to nine upright slender jointed stems, long narrow drooping strap leaves, three feathery warm tan reed plumes, no cattail sausages, clump rooted together at a compact base",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "heights": {
+      "full": 60,
+      "harvested": 16,
+      "winter": 60,
+      "spring": 60,
+      "autumn": 60,
+      "full_v2": 60
+    }
+  },
+  {
+    "id": "mediterranean_scrub",
+    "height": 36,
+    "climate": [
+      "mild"
+    ],
+    "subject": "one compact irregular Mediterranean rosemary-like evergreen scrub shrub with a low twisted woody base, several twiggy sprays of short narrow needle-like grey sage leaves, no flowers or fruit, untended wind-shaped garrigue shrub",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "heights": {
+      "full": 36,
+      "harvested": 22,
+      "winter": 36,
+      "spring": 36,
+      "autumn": 36,
+      "full_v2": 36
+    }
+  },
+  {
+    "id": "tundra_willow",
+    "height": 32,
+    "climate": [
+      "harsh"
+    ],
+    "subject": "one low spreading tundra dwarf willow shrub, twisted short brown stems spreading sideways from one visible rooted base, small rounded dull sage leaves, three subtle spent catkin tips, compact wind-shaped prostrate silhouette",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "heights": {
+      "full": 32,
+      "harvested": 20,
+      "winter": 32,
+      "spring": 32,
+      "autumn": 32,
+      "full_v2": 32
+    }
+  }
+]

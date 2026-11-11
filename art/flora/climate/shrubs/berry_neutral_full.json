@@ -1,0 +1,151 @@
+{
+  "id": "berry_neutral_full",
+  "attempt": 1,
+  "record": "/Users/rexxa/work/art-batch/B2/shrubs/records/berry_neutral_full_try1.json",
+  "record_sha256": "f189fcfeaf38a8e640ccfc4a5797ea41ae3ea446556f6096a3d37be53650da94",
+  "raw": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_neutral_full_try1.png",
+  "raw_sha256": "171fe870c2dd62736199631de7f0f5f1f3a95135cfc56ed3a70086a9b29a7be2",
+  "source": "/Users/rexxa/.codex/generated_images/01a1c2fb-7ce4-76c1-82bc-15df06f8d254/exec-057206c2-9bc2-4ee7-ad27-da98ab92e371.png",
+  "source_matches": true,
+  "prompt_sha256": "f64a22b764984e40a8b454969acf3609480db328e011e814b87746f7d72fb270",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+      "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b2/art/flora/sprites/berry_bush_full.png",
+      "sha256": "c3afe09223b5ed332cee1129200948b1557742d5d377079761acb9a6fec74b31"
+    }
+  ],
+  "seed": null,
+  "transform_reference": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_neutral_full_try1.png",
+  "transform": {
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "crop": [
+      139,
+      186,
+      1117,
+      954
+    ],
+    "scale": 0.05235602094240838,
+    "scaled_canvas": [
+      51,
+      40
+    ],
+    "offset": [
+      23,
+      41
+    ],
+    "output_canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "target_height": 40
+  },
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "visual": {
+    "score": 91,
+    "verdict": "pass",
+    "category_match": true,
+    "differences": [],
+    "suggestions": [],
+    "reasoning": "Independent1x/2x composited review: rooted botanical morphology, upper-left light and sepia ink/earth-sage wash compared across family. Numeric gates are evaluated separately."
+  },
+  "output": "/Users/rexxa/work/art-batch/B2/shrubs/normalized/berry_neutral_full_try1.png",
+  "output_sha256": "789eee4cddd3e8f7f10d590c1594ed4316b845fcd41b39b22afe102d7b3ee7c5",
+  "checks": {
+    "alpha_min": 0,
+    "alpha_max": 255,
+    "opaque_height": 40,
+    "opaque_components": 1,
+    "visible_border": false,
+    "raw_transparent": true,
+    "raw_opaque_border": false,
+    "source_opaque_outside_crop": 0,
+    "canvas_matches": true,
+    "passed": true
+  },
+  "projection": {
+    "family": "shrub",
+    "anchor": [
+      48,
+      80
+    ],
+    "height_band": [
+      38,
+      42
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1054,
+    "base_row": 80,
+    "base_error": 0,
+    "height": 40,
+    "gradient_x": -2.1038345415778252,
+    "gradient_y": -1.7006553238199784,
+    "light_angle_degrees": 218.9506822198572,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "style": {
+    "candidate": "/Users/rexxa/work/art-batch/B2/shrubs/raw/berry_neutral_full_try1.png",
+    "sha256": "171fe870c2dd62736199631de7f0f5f1f3a95135cfc56ed3a70086a9b29a7be2",
+    "family": "plants",
+    "metrics": {
+      "edge_density": 0.23347567768288155,
+      "saturation_q25": 0.4906128201260831,
+      "saturation_q75": 0.543973020482104,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.027590781717186885,
+      "foreground_pixels": 26838
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "numeric_candidate": true,
+  "adoption": "NUMERIC_AND_VISUAL_CANDIDATE",
+  "model_gate": "MISSING",
+  "canvas": [
+    96,
+    96
+  ],
+  "anchor": [
+    48,
+    80
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "climate": [
+    "neutral"
+  ]
+}
