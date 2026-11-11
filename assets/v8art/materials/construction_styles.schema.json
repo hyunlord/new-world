@@ -222,6 +222,18 @@
             "da": 0.0,
             "db": 0.0
           }
+        },
+        "wall_pieces": {
+          "anyOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Wall Pieces"
         }
       },
       "required": [
