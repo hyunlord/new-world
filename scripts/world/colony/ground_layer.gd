@@ -1189,8 +1189,18 @@ func _factor_for_zoom() -> int:
 	return 1 if z >= 0.99 else (2 if z >= 0.49 else 4)
 
 
-func _door_texture(info: Dictionary, open: bool) -> Texture2D:
-	var key: String = "%s|%s|%s|%s" % [str(info.get("style", "")), str(info.get("material", "")), str(info.get("category", "")), str(open)]
+func _door_orientation(t: Vector2i) -> String:
+	var e: bool = _walls.occupancy.has(t + Vector2i(1, 0))
+	var w: bool = _walls.occupancy.has(t + Vector2i(-1, 0))
+	var n: bool = _walls.occupancy.has(t + Vector2i(0, -1))
+	var s: bool = _walls.occupancy.has(t + Vector2i(0, 1))
+	if (n or s) and not (e and w):
+		return "ns"
+	return "ew"
+
+
+func _door_texture(info: Dictionary, open: bool, orientation: String) -> Texture2D:
+	var key: String = "%s|%s|%s|%s|%s" % [str(info.get("style", "")), str(info.get("material", "")), str(info.get("category", "")), str(open), orientation]
 	if _door_tex.has(key):
 		return _door_tex[key]
 	var r: Dictionary = _resolver.resolve(str(info.get("style", "")), info.get("material", ""), str(info.get("category", "")), "door")
@@ -1226,4 +1236,4 @@ func _update_doors() -> void:
 			sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 			_world.add_child(sprite)
 			_doors[t] = sprite
-		sprite.texture = _door_texture(_walls.openings[t], occupied.has(t))
+		sprite.texture = _door_texture(_walls.openings[t], occupied.has(t), _door_orientation(t))

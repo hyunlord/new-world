@@ -216,6 +216,7 @@ func resolve(style_id: String, material_id: Variant, category: String = "", kind
 			for role: String in o.keys():
 				if o[role] != null:
 					textures[role] = o[role]
+	var wp: Variant = style.get("wall_pieces", null)
 	return {
 		"style_id": str(style.get("id", "")),
 		"material_id": material_id,
@@ -228,6 +229,7 @@ func resolve(style_id: String, material_id: Variant, category: String = "", kind
 		"style_source": style_source,
 		"top": _with_defaults(style.get("top", null), top_defaults),
 		"face": _with_defaults(style.get("face", null), face_defaults),
+		"wall_pieces": wp if wp is Dictionary else null,
 	}
 
 

@@ -111,6 +111,7 @@ func _run() -> void:
 	_check_banks(layer, map, size)
 	_check_dig(layer, world, map, size)
 	_check_data_only()
+	_check_data_only_pieces()
 	_check_shores_synthetic()
 	_check_shore_pixels()
 	_check_mask_cache_isolation()
@@ -638,6 +639,75 @@ func _check_data_only() -> void:
 		var want: float = 0.45 if ty == 4 else (0.40 if ty == 5 else 0.55)
 		ok = ok and float(opaque) / total >= want
 	_check("data_only_wall_renders", ok, "texture set %s; strip coverage %s; problems %s" % [(r.get("textures", {}) as Dictionary).get("face", ""), coverage, probs])
+
+
+## Wall pieces capability: the "log" style with wall_pieces renders thin walls through piece masks.
+func _check_data_only_pieces() -> void:
+	var base: String = ArtData.ROOT + "materials/"
+	var styles: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(base + "construction_styles.json"))
+	var looks: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(base + "material_looks.json"))
+	var defaults: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(base + "category_defaults.json"))
+	var resolver: MaterialResolver = MaterialResolver.new()
+	resolver.load_schema_defaults(JSON.parse_string(FileAccess.get_file_as_string(base + "construction_styles.schema.json")))
+	resolver.load_documents(styles, looks, defaults)
+	var r: Dictionary = resolver.resolve("log", "", "", "wall")
+	var has_wp: bool = r.get("wall_pieces", null) is Dictionary
+	_check("data_only_pieces_resolved", has_wp and resolver.problems.is_empty(), "wall_pieces present=%s; problems=%s" % [has_wp, resolver.problems])
+	if not has_wp:
+		return
+	var probs: Array[String] = []
+	var s: Dictionary = WallBaker.prepare_set(r, ArtData.param("walls", {}), probs)
+	var has_pieces: bool = s.get("_has_pieces", false)
+	_check("data_only_pieces_prepared", has_pieces and probs.is_empty(), "_has_pieces=%s; piece count=%d; problems=%s" % [has_pieces, (s.get("_pieces", {}) as Dictionary).size(), probs])
+	if not has_pieces:
+		return
+	# Build a 3×3 room and bake — thin walls have lower opaque coverage than full-width walls.
+	var walls: WallBaker = WallBaker.new()
+	walls.chunk_tiles = 16
+	walls.sets["log"] = s
+	for y: int in range(4, 7):
+		for x: int in range(4, 7):
+			if x == 5 and y == 5:
+				continue
+			var t: Vector2i = Vector2i(x, y)
+			walls.occupancy[t] = true
+			walls.cell_set[t] = "log"
+	var rows: Dictionary = walls.bake(0, 0)
+	var ok: bool = rows.size() == 3
+	var coverage: Array[String] = []
+	for ty: int in [4, 5, 6]:
+		var strip: Image = rows.get(ty, null)
+		if strip == null:
+			ok = false
+			continue
+		var opaque: int = 0
+		var exterior_transparent: int = 0
+		for py: int in strip.get_height():
+			for px: int in range(4 * TILE, 7 * TILE):
+				if strip.get_pixel(px, py).a > 0.5:
+					opaque += 1
+		var total: int = 3 * TILE * strip.get_height()
+		var frac: float = float(opaque) / total
+		coverage.append("%d: %.2f" % [ty, frac])
+		# Thin walls: coverage must be lower than full-width (< 0.85) but still present (> 0.10).
+		ok = ok and frac > 0.10 and frac < 0.85
+	# Check that the exterior (outside the wall band) is mostly transparent — thin wall evidence.
+	var margin: int = (TILE - 26) / 2  # wall_w=26, margin=19
+	var ns_strip: Image = rows.get(5, null)
+	if ns_strip != null:
+		var transparent_outside: int = 0
+		var total_outside: int = 0
+		# Column 4 is the west wall (N-S) at mask 5 (NS straight): check pixels outside the wall band.
+		for py: int in ns_strip.get_height():
+			for px_off: int in [0, TILE - 1]:  # left and right edges of the tile column
+				var px: int = 4 * TILE + px_off
+				total_outside += 1
+				if ns_strip.get_pixel(px, py).a < 0.1:
+					transparent_outside += 1
+		var thin_ratio: float = float(transparent_outside) / maxi(total_outside, 1)
+		ok = ok and thin_ratio > 0.5
+		coverage.append("thin:%.2f" % thin_ratio)
+	_check("data_only_pieces_renders", ok, "strips=%d; coverage %s; problems %s" % [rows.size(), coverage, probs])
 
 
 ## Fraction of land (opaque) pixels in the 5 × 5 box around (x, y).
