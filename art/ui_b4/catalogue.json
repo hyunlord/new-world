@@ -2,7 +2,7 @@
   "schema_version": 1,
   "runtime_source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
   "a4_source_commit": "386248ffbab91993960145f59fbc3636890cea63",
-  "status": "planned_candidate_coverage_not_runtime_import",
+  "status": "selected_candidate_coverage_not_runtime_import",
   "lanes": {
     "jobs": {
       "required_ids": [

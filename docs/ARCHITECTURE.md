@@ -275,4 +275,4 @@ calls. UI text goes through `Locale.ltr("KEY")`; keys live in
 
 ## B4 UI art branch pack
 
-`art/ui_b4/` holds the production contract, pinned runtime inventory and unapplied import/binding drafts. `art/techmap/` reuses A4's tested mechanical image normalization and contact-sheet tooling. This pack does not edit the simulation or game UI consumers; C2/C3 own integration. ADR: `docs/decisions/0016-b4-ui-art-candidates.md`.
+`art/ui_b4/` holds the production contract, pinned runtime inventory, five family manifests, combined importer metadata and unapplied import/binding drafts. `art/style05/ui_b4/` contains 138 selected candidates; `art/boards/ui_b4/` contains curated comparisons. `python3 -m art.ui_b4.check ROOT EXTERNAL_REPORT.json` replays normalization and audits provenance and coverage. `art/techmap/` reuses A4's tested mechanical image normalization and contact-sheet tooling. This pack does not edit the simulation or game UI consumers; C2/C3 own integration. ADR: `docs/decisions/0016-b4-ui-art-candidates.md`.

@@ -5,12 +5,14 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
-## ART-BATCH B4 — 2026-11-10
+## ART-BATCH B4 — 2026-11-11
 
 ### Added
 - UI art production contract and 138-subject catalogue covering jobs, alerts, needs/moods, decision vignettes, steward rules, building categories and room legends (`art/ui_b4/`). Runtime source names are pinned to game commit `4a44336e7782f2b27615d942b5cd54dbfee89406`; proposed future identifiers remain explicit.
 - Existing A4 image normalization, comparison-sheet tools and eight regression tests reused unchanged in `art/techmap/`.
-- ADR 0016 records the art-only scope, canonical canvases and mandatory weakest-candidate regeneration pass. Production and verification results will be appended after selection.
+- 138 selected candidates: 115 icons and 23 decision vignettes, with sidecars, five family manifests, importer metadata and light/dark comparison boards. The weakest 24 subjects were regenerated (10–20% per family); 165 completed outputs and 11 interrupted submissions remain externally recorded.
+- A thin provenance checker reproduces canonical PNGs from raw outputs and verifies coverage, reference hashes, dispositions, retry caps and review fractions; 35 tests pass. Independent visual reviews score 91–93/100.
+- ADR 0016 records the art-only scope, canonical canvases and mandatory weakest-candidate regeneration pass. No runtime import is applied. The full artifact audit passes; docs checks retain two pre-existing failure groups.
 
 ## M1-ART — 2026-10-21
 

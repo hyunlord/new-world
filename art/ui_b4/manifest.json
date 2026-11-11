@@ -1,0 +1,4283 @@
+{
+  "schema_version": 1,
+  "status": "ART_CANDIDATES_NOT_RUNTIME_ADOPTED",
+  "runtime_source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+  "a4_style_source_commit": "386248ffbab91993960145f59fbc3636890cea63",
+  "canonical_icons": 115,
+  "decision_vignettes": 23,
+  "anchor_kind": "UI canvas center; not world feet",
+  "assets": [
+    {
+      "id": "b4_jobs_chop_bronze",
+      "source_id": "chop_bronze",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "bronze",
+      "path": "ui/b4/jobs/chop_bronze.png",
+      "source_path": "art/style05/ui_b4/jobs/chop_bronze.png",
+      "sha256": "49a728e48b0a098ab5882a5f0a62d5295a3f56b7cf3fa2cb020edc991bd32ac1",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Golden-brown bronze axe biting a thick log, two split chips and a clear notch; no hands.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "chop",
+            "code": 1
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false,
+        "art_variant": {
+          "id": "chop_bronze",
+          "base_job": "chop",
+          "is_runtime_kind": false,
+          "note": "Named material/process art variant only; no invented JobKind code."
+        }
+      }
+    },
+    {
+      "id": "b4_jobs_craft_smelting_bronze",
+      "source_id": "craft_smelting_bronze",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "bronze",
+      "path": "ui/b4/jobs/craft_smelting_bronze.png",
+      "source_path": "art/style05/ui_b4/jobs/craft_smelting_bronze.png",
+      "sha256": "fdfdbc476555a002954f0b6f18888e9f4d99ca5cf8d47943395512e18fe234af",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Smelting: a small round clay crucible seated among three large charcoal lumps, with one warm orange molten copper pool visible at its open top and two subdued terracotta copper ore chunks beside it. A small amber flame behind establishes work, with no furnace building or person.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "craft",
+            "code": 7
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false,
+        "art_variant": {
+          "id": "craft_smelting_bronze",
+          "base_job": "craft",
+          "is_runtime_kind": false,
+          "note": "Named material/process art variant only; no invented JobKind code."
+        }
+      }
+    },
+    {
+      "id": "b4_jobs_craft_casting_bronze",
+      "source_id": "craft_casting_bronze",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "bronze",
+      "path": "ui/b4/jobs/craft_casting_bronze.png",
+      "source_path": "art/style05/ui_b4/jobs/craft_casting_bronze.png",
+      "sha256": "51da09676fb70464d8c281863c5d5fb917b4aa111c479f3119f142b79b621adf",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Casting: a tilted clay crucible pours one continuous thin golden-brown bronze stream into a clear axe-shaped cavity of an open two-part clay mould. Compact readable pouring action. No person or metal tongs.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "craft",
+            "code": 7
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false,
+        "art_variant": {
+          "id": "craft_casting_bronze",
+          "base_job": "craft",
+          "is_runtime_kind": false,
+          "note": "Named material/process art variant only; no invented JobKind code."
+        }
+      }
+    },
+    {
+      "id": "b4_jobs_dig_mining_bronze",
+      "source_id": "dig_mining_bronze",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "bronze",
+      "path": "ui/b4/jobs/dig_mining_bronze.png",
+      "source_path": "art/style05/ui_b4/jobs/dig_mining_bronze.png",
+      "sha256": "d7759fba63637a976ce0b28005e0ec4a19382d8ffca0d877b93d6ca95c948951",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Mining: a primitive antler pick embedded in one large rough rock with broad subdued green copper mineral bands, with two small detached ore chunks. Show impact notch, not decorative crystals; no steel pick.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "dig",
+            "code": 9
+          },
+          {
+            "kind": "WorkType",
+            "id": "mine",
+            "code": 6
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false,
+        "art_variant": {
+          "id": "dig_mining_bronze",
+          "base_job": "dig",
+          "is_runtime_kind": false,
+          "note": "Named material/process art variant only; no invented JobKind code."
+        }
+      }
+    },
+    {
+      "id": "b4_jobs_hunt_bronze",
+      "source_id": "hunt_bronze",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "bronze",
+      "path": "ui/b4/jobs/hunt_bronze.png",
+      "source_path": "art/style05/ui_b4/jobs/hunt_bronze.png",
+      "sha256": "5cfb452853e9ec1563c07c5870a9f56d203cb45fd57032b8e85920bfa77dec7a",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Deer side profile with simple forked antler beside golden-brown bronze-point spear.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "hunt",
+            "code": 15
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false,
+        "art_variant": {
+          "id": "hunt_bronze",
+          "base_job": "hunt",
+          "is_runtime_kind": false,
+          "note": "Named material/process art variant only; no invented JobKind code."
+        }
+      }
+    },
+    {
+      "id": "b4_jobs_chop",
+      "source_id": "chop",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/jobs/chop.png",
+      "source_path": "art/style05/ui_b4/jobs/chop.png",
+      "sha256": "36411bf470bf6be4808b20433a952c4586c2f81f77103ceaf0ddde63b79abe20",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Chopping wood: a grey chipped flint axe lashed into a forked wooden handle bites into one short log; two broad detached chips. Clear chopping notch. No metal. The same axe splitting a log is proposed for the verified WorkType split, without another JobKind.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "chop",
+            "code": 1
+          },
+          {
+            "kind": "WorkType",
+            "id": "split",
+            "code": 4
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "b4_jobs_haul",
+      "source_id": "haul",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/jobs/haul.png",
+      "source_path": "art/style05/ui_b4/jobs/haul.png",
+      "sha256": "98ac7f61ad40a89c758f478cbbb26962c6b638700671bf100b023b4d6bc6c75d",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Hauling: three short logs bundled tightly in simple fibre carrying straps, the single arched strap lifting upward as if carried. Just the carried load; no receiving location, person or arrows.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "haul",
+            "code": 2
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "b4_jobs_deliver",
+      "source_id": "deliver",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/jobs/deliver.png",
+      "source_path": "art/style05/ui_b4/jobs/deliver.png",
+      "sha256": "947cdc47bff66ac7ce560049581c3aac2fd58414e96642c4fce894c026875019",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Delivering: one large open hand setting a tied bundle of two logs into a simple low open receiving basket. Show load arriving at a visible destination; no arrows, text or modern crate.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "deliver",
+            "code": 3
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "b4_jobs_build",
+      "source_id": "build",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/jobs/build.png",
+      "source_path": "art/style05/ui_b4/jobs/build.png",
+      "sha256": "6712b9c8cafed2bcf8bdd3379ce0f4a49d94ba09bee3a934a29fdb7fee43b463",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Building: a squat wooden mallet resting diagonally across two large notched logs neatly joined into a corner, compact clear joinery. No metal, nails or roof.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "build",
+            "code": 4
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "b4_jobs_quarry",
+      "source_id": "quarry",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/jobs/quarry.png",
+      "source_path": "art/style05/ui_b4/jobs/quarry.png",
+      "sha256": "026f413641d962c1947a34df839abcce270e8cea2942b2f788ea2b307e79beff",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Quarrying: a large oval stone hammer strikes a broad grey boulder with a split line and one freshly detached rectangular stone chunk. Separate clear hammer and stone, no metal pick.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "quarry",
+            "code": 5
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "b4_jobs_supply",
+      "source_id": "supply",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/jobs/supply.png",
+      "source_path": "art/style05/ui_b4/jobs/supply.png",
+      "sha256": "dd7bd5775ef89c2fad6ab999c9cdeba22ab354f218dc8c0f579fe983f1aac7da",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Three short logs ready on a compact primitive timber workbench with two visible legs.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "supply",
+            "code": 6
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "b4_jobs_craft",
+      "source_id": "craft",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/jobs/craft.png",
+      "source_path": "art/style05/ui_b4/jobs/craft.png",
+      "sha256": "bb3e565cbab08caf2a372181fea97cf4571d0154b5dee9500dcf3b9e8a5e1c98",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Crafting: one hand-held round hammerstone poised directly over a large flint core on a small hide pad, with two broad flakes; no metal, no nails, clear tool-making action.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "craft",
+            "code": 7
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "b4_jobs_gather",
+      "source_id": "gather",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/jobs/gather.png",
+      "source_path": "art/style05/ui_b4/jobs/gather.png",
+      "sha256": "d3678f41e4d5e3d6c3c6df21f14b04016e056704c86c976e1657e29d2f55ea0b",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Gathering food: a compact open wicker basket holding three large muted red berries and one green leaf, beside one matching berry sprig. Basket and berry silhouette, no harvest blade.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "gather",
+            "code": 8
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "b4_jobs_dig",
+      "source_id": "dig",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/jobs/dig.png",
+      "source_path": "art/style05/ui_b4/jobs/dig.png",
+      "sha256": "3681d3688f67475ef2cf85efd33bd7990fc369088a97dc41756ab2d6c696fd18",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Digging: a thick pointed wooden digging stick planted diagonally in a small crescent of freshly lifted earth with one broad root. No spade blade, no metal, no surrounding ground plane.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "dig",
+            "code": 9
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "b4_jobs_deconstruct",
+      "source_id": "deconstruct",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/jobs/deconstruct.png",
+      "source_path": "art/style05/ui_b4/jobs/deconstruct.png",
+      "sha256": "e62d2e6b5e27fb2dcd2854bc89017f478ffdf069c6b3094dff9223d89d13d6a1",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Deconstructing: two disassembled notched logs with a loosened fibre binding loop and a lifted wooden peg. Show separated joinery and slack lash, no hammer or saw or metal.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "deconstruct",
+            "code": 10
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "b4_jobs_clear",
+      "source_id": "clear",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/jobs/clear.png",
+      "source_path": "art/style05/ui_b4/jobs/clear.png",
+      "sha256": "cad588bd62f397431ba9e1f58829438b4146aca42d99298b48a1b063fffe571a",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "One hand grips three cut brush stems above a large grey flint cutting blade.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "clear",
+            "code": 11
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "b4_jobs_dig_clay",
+      "source_id": "dig_clay",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/jobs/dig_clay.png",
+      "source_path": "art/style05/ui_b4/jobs/dig_clay.png",
+      "sha256": "e159ccb4ba4737726a84d0cafc94916959dcb522ba74828da5d67658754b19dd",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Digging clay: a broad wooden scoop lifting a heavy reddish-grey clay clod from a compact open clay lump; the scoop and sticky clay obvious, no earthenware bowl or metal.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "dig_clay",
+            "code": 12
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "b4_jobs_teach",
+      "source_id": "teach",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/jobs/teach.png",
+      "source_path": "art/style05/ui_b4/jobs/teach.png",
+      "sha256": "0bb029af53f5ed689b38cee2826f6cdf1068c48242b352d11d8417e15ec3a39d",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Teaching stone craft: two hands, one larger guiding hand pointing to the facet of a broad grey flint core held by the smaller learner hand. One core, two hands, deliberate demonstration; no text, symbols, sleeves or metal.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "teach",
+            "code": 13
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "b4_jobs_learn",
+      "source_id": "learn",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/jobs/learn.png",
+      "source_path": "art/style05/ui_b4/jobs/learn.png",
+      "sha256": "9aea68553bedbeae6687a8b25836114fb9df97d2dc951886461013ab3412eb2d",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Learning stone craft: one small open hand comparing a newly made grey flint flake with a larger finished exemplar flake positioned beside it, deliberate practice. Three large shapes only; no writing, text, school or metal.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "learn",
+            "code": 14
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "b4_jobs_hunt",
+      "source_id": "hunt",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/jobs/hunt.png",
+      "source_path": "art/style05/ui_b4/jobs/hunt.png",
+      "sha256": "bf472205474e8a17abdc70aebc23b44fdcd7ec40fc211a3ffc312b25d69388db",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Deer side profile with simple forked antler beside lashed grey flint-point spear.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "hunt",
+            "code": 15
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "b4_jobs_equip",
+      "source_id": "equip",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/jobs/equip.png",
+      "source_path": "art/style05/ui_b4/jobs/equip.png",
+      "sha256": "a07831ffa95ba7bb1e2b8646cdd8ef03a10affa3e6723aa8623d2b8d75a022ec",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Equipping: one bare hand clasping the wooden grip of a simple lashed flint axe as it is taken up. Grip gesture, whole compact axe fully visible; no person torso, metal or modern strap.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "equip",
+            "code": 16
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "b4_jobs_trade",
+      "source_id": "trade",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/jobs/trade.png",
+      "source_path": "art/style05/ui_b4/jobs/trade.png",
+      "sha256": "cb8e65173565b316310acd15ed17efa34508108aff5c1d41b27fc3b8a7f6fe1c",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Two opposing bare hands exchange an ochre food root and a grey flint flake.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "trade",
+            "code": 17
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "b4_jobs_harvest",
+      "source_id": "harvest",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/jobs/harvest.png",
+      "source_path": "art/style05/ui_b4/jobs/harvest.png",
+      "sha256": "2df9b9279ef40d7393c47c8fb5eba08d1ca5f78ec6081bca0d769729ee4e7d3e",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Harvesting wild plants: a bare hand pulling a broad edible root with two large sage leaves; one smaller root nearby. A clear uprooted wild root harvest, no cultivated grain, sickle or metal.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "harvest",
+            "code": 18
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "b4_jobs_till_field",
+      "source_id": "till_field",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "neolithic",
+      "path": "ui/b4/jobs/till_field.png",
+      "source_path": "art/style05/ui_b4/jobs/till_field.png",
+      "sha256": "ba18e423dfcc7ca1c93a286ce3b1282254ed8557a8ac0b9ee61a1da09a8cb9b4",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Tilling a field: a short stone-bladed hoe crossing two compact parallel soil furrows. Large grey stone blade bound by fibre to wooden bent handle, no metal; two separated short furrows only, no background tile.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "till_field",
+            "code": 19
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "b4_jobs_sow_field",
+      "source_id": "sow_field",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "neolithic",
+      "path": "ui/b4/jobs/sow_field.png",
+      "source_path": "art/style05/ui_b4/jobs/sow_field.png",
+      "sha256": "6255fa2af7f30a18167f665add2e411104920f4c9be994dc890698006fcd24e7",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Sowing a field: an open bare hand scattering five large ochre grain seeds in a descending arc toward two compact parallel earth furrows. No bag, metal or background plane.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "sow_field",
+            "code": 20
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "b4_jobs_tend_field",
+      "source_id": "tend_field",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "neolithic",
+      "path": "ui/b4/jobs/tend_field.png",
+      "source_path": "art/style05/ui_b4/jobs/tend_field.png",
+      "sha256": "087a4648a1e38d7b463462116aa9f80a332816a11ebf91cae819236ee20683da",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Tending a field: one bare hand removes a small weed beside two sturdy green cereal seedlings with clear gap between weed and crop. Three simple plant shapes, roots visible, no metal watering can.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "tend_field",
+            "code": 21
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "b4_jobs_harvest_field",
+      "source_id": "harvest_field",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "neolithic",
+      "path": "ui/b4/jobs/harvest_field.png",
+      "source_path": "art/style05/ui_b4/jobs/harvest_field.png",
+      "sha256": "1e2cc9f80888665a7293a146745fcff34c54e4f645ec50ed48d6e3db2b3bf0ec",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Harvesting a grain field: a curved wooden sickle with inset grey flint teeth cutting three ripe golden grain stalks tied in a compact sheaf. No metal, no loose berry or root, strong curved blade silhouette.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "harvest_field",
+            "code": 22
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "b4_jobs_capture",
+      "source_id": "capture",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "neolithic",
+      "path": "ui/b4/jobs/capture.png",
+      "source_path": "art/style05/ui_b4/jobs/capture.png",
+      "sha256": "a0f2126af6563e345a38bb0851e2ac4cfce9f262fec326ebdfecda53950b5576",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Capturing a young wild animal: a small standing tan goat kid calmly enclosed by a simple loose loop of fibre rope, loop open and safe around body, one short rope end. No cage, injury, metal, bells or dyed fabric.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "capture",
+            "code": 23
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "b4_jobs_milk",
+      "source_id": "milk",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "neolithic",
+      "path": "ui/b4/jobs/milk.png",
+      "source_path": "art/style05/ui_b4/jobs/milk.png",
+      "sha256": "88aa0ea151b344dd66ccf9ad0e452f7a0bb9d3bf4dcdd47e0215befd6ab0765f",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Milking: a tan goat udder and one bare hand gently expressing a single milk stream into a simple undecorated clay bowl; crop at rear-body only so the milking action is large and clear. No metal pail or modern milking apparatus.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "milk",
+            "code": 24
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "b4_jobs_slaughter",
+      "source_id": "slaughter",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "neolithic",
+      "path": "ui/b4/jobs/slaughter.png",
+      "source_path": "art/style05/ui_b4/jobs/slaughter.png",
+      "sha256": "07b19f4dd5861b06eb788e47b3dd97ef49b808f25e57ca6404cc4aca5933443e",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Livestock processing job: a simple broad chipped flint knife laid beside a neatly folded tan animal hide and a small hoof silhouette. Non-graphic still-life only; no live animal, blood, wound or body; no metal.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "slaughter",
+            "code": 25
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "b4_cards_era_change_bronze",
+      "source_id": "era_change_bronze",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "bronze",
+      "path": "ui/b4/cards/era_change_bronze.png",
+      "source_path": "art/style05/ui_b4/cards/era_change_bronze.png",
+      "sha256": "28fb3ffb28d7ca5fb876af93bfb7be7ef18ed4b6f67b5002dfc0d327dd7b7bde",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "semantic_note": "A crouching craftsperson beside a small clay smelting furnace with amber fire presents the first golden-brown bronze axe to a second clothed villager. Beside them a muted copper ingot, dark charcoal and a clay casting mould make the new material legible. A short low mud-brick wall fragment implies the material transition. No stone age scene transitioning through a magic portal; show one concrete moment.",
+      "source_runtime_ids": {
+        "verified": [],
+        "proposed_future": [
+          "era_change_bronze"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "b4_cards_trader",
+      "source_id": "trader",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "paleolithic",
+      "path": "ui/b4/cards/trader.png",
+      "source_path": "art/style05/ui_b4/cards/trader.png",
+      "sha256": "21160e2bcf51a01e03ecd48db810974fa568c600a6dc212576166e141da29768",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "semantic_note": "Two standing adults exchange a bundle of dried fish for a basket of gathered berries between them. One is clearly a visiting trader carrying a tied hide pack at their feet; the other opens a welcoming palm. No currency, metal, market stall, or domestic grain. Keep both entire figures visible.",
+      "source_runtime_ids": {
+        "verified": [
+          "trader"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "b4_cards_need_food",
+      "source_id": "need_food",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "paleolithic",
+      "path": "ui/b4/cards/need_food.png",
+      "source_path": "art/style05/ui_b4/cards/need_food.png",
+      "sha256": "a7098fe2a0206d37bdddfd9eb01cf2d36019c9ddd84d300e332f622bce7a2cec",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "semantic_note": "A worried seated adult tilts a nearly empty woven food basket, with exactly a few berries and roots visible. Another adult kneels beside a completely empty wooden bowl. Clear empty-container silhouettes communicate food shortage rather than starvation spectacle.",
+      "source_runtime_ids": {
+        "verified": [
+          "need_food"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "b4_cards_need_warmth",
+      "source_id": "need_warmth",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "paleolithic",
+      "path": "ui/b4/cards/need_warmth.png",
+      "source_path": "art/style05/ui_b4/cards/need_warmth.png",
+      "sha256": "088ff995c119d30562dca2043f37ff48a56f463d1024f51025a0c58a8b04afb3",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "semantic_note": "Firewood shortage: huddled adults, cold ash and spent twig, empty tilted fuel basket. No abundant fuel.",
+      "source_runtime_ids": {
+        "verified": [
+          "need_warmth"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "b4_cards_migrants",
+      "source_id": "migrants",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "paleolithic",
+      "path": "ui/b4/cards/migrants.png",
+      "source_path": "art/style05/ui_b4/cards/migrants.png",
+      "sha256": "a0b4b1613af89344e52e9e8ee687ea54dd4f5744fdb83009d567826f2adfd458",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "semantic_note": "A family of three arriving travelers: two adults with tied hide bundles and one clearly shorter clothed child, greeted by a fourth adult with an open hand. All full figures, one walking staff, simple hide clothing, no metal or wheeled cart. Their grouping and carried household bundles communicate migration.",
+      "source_runtime_ids": {
+        "verified": [
+          "migrants"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "b4_cards_knowledge_risk",
+      "source_id": "knowledge_risk",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "paleolithic",
+      "path": "ui/b4/cards/knowledge_risk.png",
+      "source_path": "art/style05/ui_b4/cards/knowledge_risk.png",
+      "sha256": "413b32f8c1575b97d3be51657c371769027e044bd439c7b927d3c8d91c55370c",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "semantic_note": "A gray-haired elder alone demonstrates careful flint knapping on a lap hide, with a flint core and hammerstone prominent; an empty low sitting stone beside the elder suggests no learner to inherit the skill. Reflective mood, no magic, letters, written scroll or book.",
+      "source_runtime_ids": {
+        "verified": [
+          "knowledge_risk"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "b4_cards_tools_low",
+      "source_id": "tools_low",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "paleolithic",
+      "path": "ui/b4/cards/tools_low.png",
+      "source_path": "art/style05/ui_b4/cards/tools_low.png",
+      "sha256": "07e3d866be92b9811b91f936663e604b4fc706f16f05ca9aae4da3dcef456222",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "semantic_note": "A kneeling craftsperson examines a broken stone axe: clearly separated chipped stone head, snapped wooden haft and loose fiber binding on a small hide mat; a second worker holds an empty hand. Sparse useful composition makes tool shortage immediately legible.",
+      "source_runtime_ids": {
+        "verified": [
+          "tools_low"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "b4_cards_wolves",
+      "source_id": "wolves",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "paleolithic",
+      "path": "ui/b4/cards/wolves.png",
+      "source_path": "art/style05/ui_b4/cards/wolves.png",
+      "sha256": "28da50b7da1deb03cd1861d68072083e2af855e6849dba455329b22295c6cebc",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "semantic_note": "Two gray-brown wolves at the edge of a small camp face a wary adult villager who holds an unlit wooden staff defensively. The wolves stay apart from the person with readable muzzles and ears; a few hearth stones suggest the camp. Tense warning, no attack contact, wounds or blood.",
+      "source_runtime_ids": {
+        "verified": [
+          "wolves"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "b4_cards_idle_adults",
+      "source_id": "idle_adults",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "paleolithic",
+      "path": "ui/b4/cards/idle_adults.png",
+      "source_path": "art/style05/ui_b4/cards/idle_adults.png",
+      "sha256": "3b58d52aca7588d21d04d7bea7ac47e15c49c0b9d0839fc2279cd65ef65a957d",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "semantic_note": "Able adults quietly wait for work; still hands, divergent gazes, untouched stone adze and empty gathering basket.",
+      "source_runtime_ids": {
+        "verified": [
+          "idle_adults"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "b4_cards_quarrel",
+      "source_id": "quarrel",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "paleolithic",
+      "path": "ui/b4/cards/quarrel.png",
+      "source_path": "art/style05/ui_b4/cards/quarrel.png",
+      "sha256": "19a3d403799f8e49a940c074967df19c180972e4775fc5f9eb34624c563dc587",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "semantic_note": "Two standing adults argue over one gathered-root basket between them. Open palms and turned-away faces show disagreement, one third adult raises a calming hand. No weapons, punches, blood, modern gestures or speech balloons.",
+      "source_runtime_ids": {
+        "verified": [
+          "quarrel"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "b4_cards_pressure",
+      "source_id": "pressure",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "paleolithic",
+      "path": "ui/b4/cards/pressure.png",
+      "source_path": "art/style05/ui_b4/cards/pressure.png",
+      "sha256": "0492fb80cf3448eef944a52ba1680bef39bd25f486d4edbb9a27f914e4e29922",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "semantic_note": "General PressureBegan preparation: alert lookout while another adult secures hide shelter over gathered provisions. Intended general hardship preparedness, not a specific pressure subtype.",
+      "source_runtime_ids": {
+        "verified": [
+          "pressure"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "b4_cards_storage",
+      "source_id": "storage",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "paleolithic",
+      "path": "ui/b4/cards/storage.png",
+      "source_path": "art/style05/ui_b4/cards/storage.png",
+      "sha256": "5b4f4797333497a6b81802ee435ab26a7e4ab4fafe9434d9bf1010d877fb7008",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "semantic_note": "A villager tries to set one basket beside three already crowded woven baskets and tied bundles under a short bark-and-pole drying shelter. The cramped storage is legible through overlapping containers, but each is anatomically readable. No metal, pottery, grain, warehouse or roof-cut building.",
+      "source_runtime_ids": {
+        "verified": [
+          "storage"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "b4_cards_sick_person",
+      "source_id": "sick_person",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "paleolithic",
+      "path": "ui/b4/cards/sick_person.png",
+      "source_path": "art/style05/ui_b4/cards/sick_person.png",
+      "sha256": "04b1c41c539803ff36aba0fd2e1d2818b40da50038fe67c032b3862265732597",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "semantic_note": "Gentle illness-care scene with water and herbs. Runtime sick_person is explicitly test_only at the source pin.",
+      "source_runtime_ids": {
+        "verified": [
+          "sick_person"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": true
+      }
+    },
+    {
+      "id": "b4_cards_sowing_window",
+      "source_id": "sowing_window",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "neolithic",
+      "path": "ui/b4/cards/sowing_window.png",
+      "source_path": "art/style05/ui_b4/cards/sowing_window.png",
+      "sha256": "e138473919d78d955356e2669a903333f1ca2a6f430ce0d1bc52e65ca0659291",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "semantic_note": "An adult in plain undyed plant-fiber wrap bends to scatter seed into two short tidy furrows while a second holds a woven seed basket. A wooden digging stick lies nearby. Large hand/seed gesture reads as spring sowing; no metal, dyed cloth, horizon, calendar glyph or rectangular ground tile.",
+      "source_runtime_ids": {
+        "verified": [
+          "sowing_window"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "b4_cards_harvest_ready",
+      "source_id": "harvest_ready",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "neolithic",
+      "path": "ui/b4/cards/harvest_ready.png",
+      "source_path": "art/style05/ui_b4/cards/harvest_ready.png",
+      "sha256": "3aaff79d55697544307d3b3f94c629707476261c5dadc7048385d294f282cb21",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "semantic_note": "An adult kneels beside a compact ripe golden emmer wheat stand and gathers a sheaf; a flint-inset sickle and tied sheaf are clearly visible in the foreground. Every blade is stone, clothing undyed plant fiber. The whole compact vignette communicates harvest readiness.",
+      "source_runtime_ids": {
+        "verified": [
+          "harvest_ready"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "b4_cards_cloth_short",
+      "source_id": "cloth_short",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "neolithic",
+      "path": "ui/b4/cards/cloth_short.png",
+      "source_path": "art/style05/ui_b4/cards/cloth_short.png",
+      "sha256": "cbebaa3673826c2de0493ec37cd48928d6239e9a1d0fbca06b317617ff1e0cf7",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "semantic_note": "Undyed cloth shortage: tiny unfinished swatch, empty fiber basket and bare spindle, waiting resident in patched hide clothing.",
+      "source_runtime_ids": {
+        "verified": [
+          "cloth_short"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "b4_cards_first_kid",
+      "source_id": "first_kid",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "neolithic",
+      "path": "ui/b4/cards/first_kid.png",
+      "source_path": "art/style05/ui_b4/cards/first_kid.png",
+      "sha256": "f0c17c1a2dae909e503a9d025931add0ecb5d9a7d911615c2f3aaa994d218db0",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "semantic_note": "First livestock kid: goat mother and small standing goat kid in a fiber-lashed pen with herder. This runtime ID does not mean a human birth.",
+      "source_runtime_ids": {
+        "verified": [
+          "first_kid"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "b4_cards_human_birth",
+      "source_id": "human_birth",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "paleolithic",
+      "path": "ui/b4/cards/human_birth.png",
+      "source_path": "art/style05/ui_b4/cards/human_birth.png",
+      "sha256": "6562a9bc1f6c03e1a8ae37dc74e8d172ae3520a3a413438746d6921641786cc8",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "semantic_note": "Proposed future human birth card: fully clothed parents with a swaddled newborn after delivery. Distinct from runtime first_kid livestock birth.",
+      "source_runtime_ids": {
+        "verified": [],
+        "proposed_future": [
+          "human_birth"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "b4_cards_raid",
+      "source_id": "raid",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "neolithic",
+      "path": "ui/b4/cards/raid.png",
+      "source_path": "art/style05/ui_b4/cards/raid.png",
+      "sha256": "7f2280ede6b6df7f58233ee8f5061b90b9c7eedb62fae083272278671e0016dd",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "semantic_note": "Two anxious villagers behind a short wooden palisade gate look toward two approaching hostile silhouettes carrying simple stone-tipped spears and hide shields. The scene is a warning of a raid, no impact or injury; clear separate defender and approaching groups. No metal, horses, helmets, banners or battle gore.",
+      "source_runtime_ids": {
+        "verified": [],
+        "proposed_future": [
+          "raid"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "b4_cards_visitor",
+      "source_id": "visitor",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "paleolithic",
+      "path": "ui/b4/cards/visitor.png",
+      "source_path": "art/style05/ui_b4/cards/visitor.png",
+      "sha256": "be550102959843f078e0ad711ce3b9722a720f7c67634fbd9ae9cea079807ae0",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "semantic_note": "One lone traveler with a walking staff and a small hide shoulder bag meets one resident at the edge of a stone-ring hearth. The traveler raises an open hand in greeting; both complete figures visible. Unlike migration, no family, luggage pile or trade goods.",
+      "source_runtime_ids": {
+        "verified": [],
+        "proposed_future": [
+          "visitor"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "b4_cards_era_change_neolithic",
+      "source_id": "era_change_neolithic",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "neolithic",
+      "path": "ui/b4/cards/era_change_neolithic.png",
+      "source_path": "art/style05/ui_b4/cards/era_change_neolithic.png",
+      "sha256": "b9ed436a4230be9faf18c28137539916419aa8e73d7624aee5babf965b716359",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "semantic_note": "An adult presents a smooth ground stone axe beside a freshly formed clay pot, while another adult tends a small patch of grain and a goat kid stands by a low wooden pen rail. A compact celebratory beginning of farming and settled crafts; undyed plant-fiber clothing, no metal or dyed cloth.",
+      "source_runtime_ids": {
+        "verified": [],
+        "proposed_future": [
+          "era_change_neolithic"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "b4_cards_era_change_iron",
+      "source_id": "era_change_iron",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "iron",
+      "path": "ui/b4/cards/era_change_iron.png",
+      "source_path": "art/style05/ui_b4/cards/era_change_iron.png",
+      "sha256": "df088b753e2526c709d0cf8fadc1a7f84003cbc9590f56418653571fde78aecf",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "semantic_note": "A smith in undyed wool tunic and leather apron uses a dark hand hammer on a squat stone anvil beside a small clay bloomery; a newly forged charcoal-gray iron axe and a rough iron bloom are prominent. Two short dressed paving stones imply the new road era. No steel chrome, industrial furnace, goggles or medieval castle.",
+      "source_runtime_ids": {
+        "verified": [],
+        "proposed_future": [
+          "era_change_iron"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "b4_cards_tin_shortage",
+      "source_id": "tin_shortage",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "bronze",
+      "path": "ui/b4/cards/tin_shortage.png",
+      "source_path": "art/style05/ui_b4/cards/tin_shortage.png",
+      "sha256": "d80871f303925a13aa7f868b723ecde714a368c4eed7eff6a6f0c1086bacdf5d",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "semantic_note": "Future proposed bronze-age card requested by C2 GOAL3.3: copper ingot beside an empty tin-side clay tray and unused mould, waiting for trader supply. Not an existing runtime card ID.",
+      "source_runtime_ids": {
+        "verified": [],
+        "proposed_future": [
+          "tin_shortage"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "b4_alerts_food_low",
+      "source_id": "food_low",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "path": "ui/b4/alerts/food_low.png",
+      "source_path": "art/style05/ui_b4/alerts/food_low.png",
+      "sha256": "b43088318a0008e08ca2699d437c05da4b8f987ac76762f2c8db0fe5a62e68a9",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Food supplies running low: a tilted shallow woven reed basket, conspicuously almost empty with ONLY two small roots in its wide exposed dark interior. Broad empty cavity is dominant. Three broad weave groups.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "food_low"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_alerts_firewood_low",
+      "source_id": "firewood_low",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "path": "ui/b4/alerts/firewood_low.png",
+      "source_path": "art/style05/ui_b4/alerts/firewood_low.png",
+      "sha256": "e017276caa0117a215f9c7dfcd757381ddda6c783c3461bde29ac30e114094b0",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Firewood nearly depleted: a single short split log with a tiny charred ember at its end. The lone log, rather than a pile, is the whole silhouette. Three broken bark strokes, no fire ring.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "firewood_low"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_alerts_sleeping_outside",
+      "source_id": "sleeping_outside",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "path": "ui/b4/alerts/sleeping_outside.png",
+      "source_path": "art/style05/ui_b4/alerts/sleeping_outside.png",
+      "sha256": "1f523264f886070a8d0e7441c4035a68bba5f6b13faddfd624c79d7dd0dbd9df",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Sleeping without shelter: one small sleeping person curled in a rough undyed hide wrap, head resting on forearm, with a tiny pale crescent moon above. No bed or roof. Clear curled horizontal silhouette; face minimal.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "sleeping_outside"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_alerts_stockpile_missing",
+      "source_id": "stockpile_missing",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "path": "ui/b4/alerts/stockpile_missing.png",
+      "source_path": "art/style05/ui_b4/alerts/stockpile_missing.png",
+      "sha256": "34c00c01097e38dffa1c79db6f4b0cf7b5a4e46c0051dfbff03bc2d67a3618de",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Missing storage designation: four corner pegs and three sides of rope surrounding an empty transparent diamond.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "stockpile_missing"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_alerts_storehouse_full",
+      "source_id": "storehouse_full",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "path": "ui/b4/alerts/storehouse_full.png",
+      "source_path": "art/style05/ui_b4/alerts/storehouse_full.png",
+      "sha256": "fc6635dc6dd352a18950f11327cc4099b27c4a815e48bdef97da93a2859f1613",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Storehouse full: three tightly packed squat reed baskets beneath a tiny thatch eave, one basket overflowing with large round roots. Compact heavy silhouette; visibly crowded opening. No complete building scene.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "storehouse_full"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_alerts_idle_adults",
+      "source_id": "idle_adults",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "path": "ui/b4/alerts/idle_adults.png",
+      "source_path": "art/style05/ui_b4/alerts/idle_adults.png",
+      "sha256": "5ee50e0d389db709f57350c3991be4be5a86c32bc56f46d280df82e2c448fc8b",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Idle workers: a seated adult in an undyed hide wrap, elbows resting loosely on raised knees and hands empty, head upright. Quiet waiting posture, not sickness, no tool.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "idle_adults"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_alerts_orders_unreachable",
+      "source_id": "orders_unreachable",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "path": "ui/b4/alerts/orders_unreachable.png",
+      "source_path": "art/style05/ui_b4/alerts/orders_unreachable.png",
+      "sha256": "a33db2cb1c274e945bbe3c7568482f7c624e0d7ea94ccc7ef15c7f87ed84d210",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Unreachable work order: two simple human footprints approach a large cracked boulder blocking their path. Footprints stop before the boulder. No arrows, cross signs or map grid.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "orders_unreachable"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_alerts_knowledge_waiting",
+      "source_id": "knowledge_waiting",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "path": "ui/b4/alerts/knowledge_waiting.png",
+      "source_path": "art/style05/ui_b4/alerts/knowledge_waiting.png",
+      "sha256": "56cdbd9ca486940c6ef54b7188f132e1596af08e39b5a9267e636ac25a0e8fed",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Waiting to learn: ear above receptive hand; semantic mnemonic with localized text, separate from discovery.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "knowledge_waiting"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_alerts_technique_at_risk",
+      "source_id": "technique_at_risk",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "path": "ui/b4/alerts/technique_at_risk.png",
+      "source_path": "art/style05/ui_b4/alerts/technique_at_risk.png",
+      "sha256": "5853a37adb414855a1c09dcebf9198efc2cc6608002dfb41581bc9caa1ba7b9b",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Technique loss risk: intact flint with severed fiber transmission loop; localized text supplies exact risk.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "technique_at_risk"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_alerts_wolves_approaching",
+      "source_id": "wolves_approaching",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "path": "ui/b4/alerts/wolves_approaching.png",
+      "source_path": "art/style05/ui_b4/alerts/wolves_approaching.png",
+      "sha256": "2350da08616a0c26cd5125ef1b58ce572f0a578129554608f97886b04bea33fa",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Danger of approaching wolves: one gray wolf head and upper shoulders, three-quarter facing viewer, alert pointed ears and slightly lowered threatening muzzle. Mouth closed, no blood or cartoon snarl. Three cheek fur tufts.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "wolves_approaching"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_alerts_migrants_waiting",
+      "source_id": "migrants_waiting",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "path": "ui/b4/alerts/migrants_waiting.png",
+      "source_path": "art/style05/ui_b4/alerts/migrants_waiting.png",
+      "sha256": "3609306a0d1980340f51ad97497a30490dba57f9d816ff030aa195374fc2fa78",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Migrants waiting: two simplified people shoulder to shoulder in undyed hide clothing, one adult carrying a bundled hide pack on a wooden staff, smaller companion beside them. Friendly waiting silhouettes, no landscape.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "migrants_waiting"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_alerts_trader_present",
+      "source_id": "trader_present",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "path": "ui/b4/alerts/trader_present.png",
+      "source_path": "art/style05/ui_b4/alerts/trader_present.png",
+      "sha256": "161fabdf8cc8daa9e763dea4f215b32a7679ca9e34da0d2e5a732db62587c2c8",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A trader is present: one compact open reed pack basket with two neatly tied fiber bundles and a pale flint blade set beside it. Travel pack silhouette and exchange goods, no coins or metal.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "trader_present"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_alerts_person_sick",
+      "source_id": "person_sick",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "path": "ui/b4/alerts/person_sick.png",
+      "source_path": "art/style05/ui_b4/alerts/person_sick.png",
+      "sha256": "dd0765ef339862aa55d23697c382b229d5716feed374b36acaac51c7fb4c1e39",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Person ill: a clothed adult head and shoulders hunched forward under an undyed hide shawl, one hand at forehead, exhausted closed eyes. No cross, thermometer, medicine bottle, droplets or text.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "person_sick"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_alerts_person_breakdown",
+      "source_id": "person_breakdown",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "path": "ui/b4/alerts/person_breakdown.png",
+      "source_path": "art/style05/ui_b4/alerts/person_breakdown.png",
+      "sha256": "1ddd6af99c7981c1f5060071448cd1660febad9043f1df261790b439b4e91782",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Person overwhelmed: a seated adult in plain hide clothing with both hands cupping the sides of their head, elbows flared and head bowed. Strong inward distressed pose, no tears or swirls or modern symbols.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "person_breakdown"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_alerts_person_injured",
+      "source_id": "person_injured",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "path": "ui/b4/alerts/person_injured.png",
+      "source_path": "art/style05/ui_b4/alerts/person_injured.png",
+      "sha256": "eb9f5bd953df7c039d86b3c22fd33ee391459a242263d926f807bc88b0fe3ddd",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Injury: bare forearm with broad undyed bandage and visible knot; no medical symbol or blood.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "person_injured"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_alerts_meat_spoiling",
+      "source_id": "meat_spoiling",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "path": "ui/b4/alerts/meat_spoiling.png",
+      "source_path": "art/style05/ui_b4/alerts/meat_spoiling.png",
+      "sha256": "b41809bacda2d90d0cd0fb54ae5921ddcb032949b178c1ac34c40a84942fbaee",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Stored meat spoiling: a single strip of dried meat hanging from a short fiber cord, uneven dark edge and two small pale green spoil spots. This is hanging meat specifically, not a basket or general food. No insects swarm.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "meat_spoiling"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_alerts_newborn_without_bed",
+      "source_id": "newborn_without_bed",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "path": "ui/b4/alerts/newborn_without_bed.png",
+      "source_path": "art/style05/ui_b4/alerts/newborn_without_bed.png",
+      "sha256": "47589cb007525178b82af1e4bc929e1c0f1ad280ae79ebbed8deedb7c927edbd",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Newborn has no sleeping place: a very small baby fully swaddled in an undyed hide wrap, asleep, lying alone with nothing beneath it. Rounded head above tapered bundle, three simple wrap folds. No bed, basket, moon, blood.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "newborn_without_bed"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_alerts_food_winter",
+      "source_id": "food_winter",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "path": "ui/b4/alerts/food_winter.png",
+      "source_path": "art/style05/ui_b4/alerts/food_winter.png",
+      "sha256": "5a67b35d2abaa475df7479ffe85d4e55570c6d4519bfb3acf72c2a0f8d34a2a8",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Food needed for winter: a half-full reed basket holding three roots with a small pale frost crust across its upper rim and one bare twig leaning against it. Frost and scant contents both clear, no snowflake symbol.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "food_winter"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_alerts_food_spoil",
+      "source_id": "food_spoil",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "path": "ui/b4/alerts/food_spoil.png",
+      "source_path": "art/style05/ui_b4/alerts/food_spoil.png",
+      "sha256": "fb612ccae948873b80b9e80705e63b8e5c3c878dd69ca7e6a252ea562a652918",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Food is spoiling: two withered berries and one shriveled root with a wilted leaf, one berry showing a muted pale green mold patch. Distinct from hanging meat. Keep large simplified silhouettes, no flies.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "food_spoil"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_alerts_birth",
+      "source_id": "birth",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "path": "ui/b4/alerts/birth.png",
+      "source_path": "art/style05/ui_b4/alerts/birth.png",
+      "sha256": "e5b16f76f76581ffda8409b1570a42108a1155f16769eee1f72528eb0eefcd29",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Human birth notification: a small sleeping fully swaddled newborn cradled gently in two adult hands. Plain undyed wrap, no bed, no blood, no scene. Warm quiet pose with only three cloth folds.",
+      "source_runtime_ids": {
+        "status": "proposed_art_concept",
+        "concept": "birth",
+        "binding_owner": "B4 root; actual ChronicleKind mappings are separate from this concept ID"
+      }
+    },
+    {
+      "id": "b4_alerts_death",
+      "source_id": "death",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "path": "ui/b4/alerts/death.png",
+      "source_path": "art/style05/ui_b4/alerts/death.png",
+      "sha256": "727bcca8fe976b5acb9207f4d9de4c453ceb93246e3b4338fd707b32a5f00172",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Death notification: a simple low cairn of three rough gray stones with one dry bent sprig laid diagonally across them. Respectful stone-age grave marker, no cross, skull, bones, writing or tombstone slab.",
+      "source_runtime_ids": {
+        "status": "proposed_art_concept",
+        "concept": "death",
+        "binding_owner": "B4 root; actual ChronicleKind mappings are separate from this concept ID"
+      }
+    },
+    {
+      "id": "b4_alerts_pairing",
+      "source_id": "pairing",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "path": "ui/b4/alerts/pairing.png",
+      "source_path": "art/style05/ui_b4/alerts/pairing.png",
+      "sha256": "60fa39f79d39b499119456a49ff5adb8535213122189baa87e228f25b47311c5",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Pairing bond notification: two distinct bare human hands gently clasping, one warm ochre skin tone and one deeper earth skin tone. No rings or jewelry, no heart icon, just clean interlocked hand silhouette.",
+      "source_runtime_ids": {
+        "status": "proposed_art_concept",
+        "concept": "pairing",
+        "binding_owner": "B4 root; actual ChronicleKind mappings are separate from this concept ID"
+      }
+    },
+    {
+      "id": "b4_alerts_settlement",
+      "source_id": "settlement",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "path": "ui/b4/alerts/settlement.png",
+      "source_path": "art/style05/ui_b4/alerts/settlement.png",
+      "sha256": "861820d1e6076fd2b64d003ef13e1cdb50b152b1ddd175ab0b88e336619ae5c0",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Settlement founded: a hide shelter enclosing an amber hearth, isolated without terrain.",
+      "source_runtime_ids": {
+        "status": "proposed_art_concept",
+        "concept": "settlement",
+        "binding_owner": "B4 root; actual ChronicleKind mappings are separate from this concept ID"
+      }
+    },
+    {
+      "id": "b4_alerts_departure",
+      "source_id": "departure",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "path": "ui/b4/alerts/departure.png",
+      "source_path": "art/style05/ui_b4/alerts/departure.png",
+      "sha256": "f9672926d5c1e2b3a24372ce53b73cbbf79a1790754803cbbf0408ce69b9b989",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Departure notification: a rolled undyed hide travel bundle tied with fiber cord on a shoulder-height angled walking staff, with two small footprints beneath pointing away. No person, arrows or scene.",
+      "source_runtime_ids": {
+        "status": "proposed_art_concept",
+        "concept": "departure",
+        "binding_owner": "B4 root; actual ChronicleKind mappings are separate from this concept ID"
+      }
+    },
+    {
+      "id": "b4_alerts_discovery",
+      "source_id": "discovery",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "path": "ui/b4/alerts/discovery.png",
+      "source_path": "art/style05/ui_b4/alerts/discovery.png",
+      "sha256": "330c31b52f956676d6f5b2707ba800d5e9e03225f1407212da89b734c6197c13",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "New discovery notification: an open human hand displaying a freshly split pale flint with a bright bone-colored edge. Three sparse short ink rays above the flint, no glowing magic, bulb or star.",
+      "source_runtime_ids": {
+        "status": "proposed_art_concept",
+        "concept": "discovery",
+        "binding_owner": "B4 root; actual ChronicleKind mappings are separate from this concept ID"
+      }
+    },
+    {
+      "id": "b4_alerts_trade_complete",
+      "source_id": "trade_complete",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "path": "ui/b4/alerts/trade_complete.png",
+      "source_path": "art/style05/ui_b4/alerts/trade_complete.png",
+      "sha256": "895eb9f7df7d9bc256109386e50eb8fc096b33a927d8d838093ad1c52b304ab5",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Trade completed notification: two open human palms face each other, one offering a pale flint blade, the other offering a tied bundle of roots. No arrows, coins, checkmark or text. Balanced two-sided compact silhouette.",
+      "source_runtime_ids": {
+        "status": "proposed_art_concept",
+        "concept": "trade_complete",
+        "binding_owner": "B4 root; actual ChronicleKind mappings are separate from this concept ID"
+      }
+    },
+    {
+      "id": "b4_alerts_building_complete",
+      "source_id": "building_complete",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "path": "ui/b4/alerts/building_complete.png",
+      "source_path": "art/style05/ui_b4/alerts/building_complete.png",
+      "sha256": "83991bc5ba7204404c065f377f6d92bf738416203ba45a3609c7e71af8470a2f",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Building completed notification: a finished small timber doorway frame firmly joined with fiber lashings, a fitted vertical plank door standing partly open. No whole wall or scene, three visible posts and clear door leaf.",
+      "source_runtime_ids": {
+        "status": "proposed_art_concept",
+        "concept": "building_complete",
+        "binding_owner": "B4 root; actual ChronicleKind mappings are separate from this concept ID"
+      }
+    },
+    {
+      "id": "b4_alerts_era_change",
+      "source_id": "era_change",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "path": "ui/b4/alerts/era_change.png",
+      "source_path": "art/style05/ui_b4/alerts/era_change.png",
+      "sha256": "e36b2dc8e7739df0680bc283b7d4b7fece3ced5447180d99a975c7d8c65176db",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Era change notification, era-neutral: three rising rough stone steps with a small fresh green shoot growing from the top step. This is a symbolic progress marker made of natural stone, no numerals, arrows, metal, flag or architecture.",
+      "source_runtime_ids": {
+        "status": "proposed_art_concept",
+        "concept": "era_change",
+        "binding_owner": "B4 root; actual ChronicleKind mappings are separate from this concept ID"
+      }
+    },
+    {
+      "id": "b4_alerts_livestock_birth",
+      "source_id": "livestock_birth",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "neolithic_and_later",
+      "path": "ui/b4/alerts/livestock_birth.png",
+      "source_path": "art/style05/ui_b4/alerts/livestock_birth.png",
+      "sha256": "7326e4322e66819b21e877f0f0673157675fa2daf5fd485a931e3a5f17fe7bfb",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Livestock birth notification: a tiny newborn goat kid curled beside the larger protective foreleg and lowered muzzle of a mother goat. No human infant. Kid clearly has goat ears and four folded legs; no gore.",
+      "source_runtime_ids": {
+        "status": "proposed_art_concept",
+        "concept": "livestock_birth",
+        "binding_owner": "B4 root; actual ChronicleKind mappings are separate from this concept ID"
+      }
+    },
+    {
+      "id": "b4_needs_need_hunger",
+      "source_id": "need_hunger",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/needs/need_hunger.png",
+      "source_path": "art/style05/ui_b4/needs/need_hunger.png",
+      "sha256": "39e1587be932aa0f317c66b2cfd583bb0c5ed5dd4fa8bfd3cd9eb9b890ff17cc",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A shallow oval wooden bowl heaped with three clear food groups: golden gathered nuts, dark red berries, and pale root pieces. Plenty to eat, simple full bowl silhouette.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "ui_icons",
+            "id": "hunger"
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "scripts/ui/panels/agent_inspector_panel.gd:279"
+      }
+    },
+    {
+      "id": "b4_needs_need_thirst",
+      "source_id": "need_thirst",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/needs/need_thirst.png",
+      "source_path": "art/style05/ui_b4/needs/need_thirst.png",
+      "sha256": "7491d2e777df0aeb48ac12dd45c68d89e371c9c57cee40fb7638a9324a9f1fe6",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Two cupped adult hands holding a generous pool of clean muted slate-blue water, a small falling drop. Clear broad water shape in hands, no vessel technology.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "ui_icons",
+            "id": "thirst"
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "scripts/ui/panels/agent_inspector_panel.gd:279"
+      }
+    },
+    {
+      "id": "b4_needs_need_sleep",
+      "source_id": "need_sleep",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/needs/need_sleep.png",
+      "source_path": "art/style05/ui_b4/needs/need_sleep.png",
+      "sha256": "bb2122fa19bd67e6cb3e2e58b4aad8607117d083828b11f247363028283cc34a",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Curled sleeping adult in undyed hide on a compact reed mat; proposed new image for verified sleep UI role.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "ui_icons",
+            "id": "sleep"
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "scripts/ui/panels/agent_inspector_panel.gd:279"
+      }
+    },
+    {
+      "id": "b4_needs_need_warmth",
+      "source_id": "need_warmth",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/needs/need_warmth.png",
+      "source_path": "art/style05/ui_b4/needs/need_warmth.png",
+      "sha256": "30c6b26b69fd45bb6d4fba04e067c11a7bdb94daac45d1097c3336faf6623742",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Two adult hands held comfortably above a small amber flame between two short logs; compact intimate composition, warm hands as clear broad silhouette.",
+      "source_runtime_ids": {
+        "verified": [],
+        "proposed_future": [
+          "ui_icons.warmth"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "scripts/ui/panels/agent_inspector_panel.gd",
+        "note": "Underlying warmth/social/health concepts exist; this icon binding role is proposed, not a verified need bar."
+      }
+    },
+    {
+      "id": "b4_needs_need_social",
+      "source_id": "need_social",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/needs/need_social.png",
+      "source_path": "art/style05/ui_b4/needs/need_social.png",
+      "sha256": "4b7e9b1c168e95830cbf1e08b7fa2c84a68fbd826c3ba3f99f8de80303f33a2e",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Three simple adult upper-body figures in plain undyed hide wraps leaning together in a close friendly hearth-circle, two hands gently on shoulders. Compact triangular group, no text or hearts.",
+      "source_runtime_ids": {
+        "verified": [],
+        "proposed_future": [
+          "ui_icons.social"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "scripts/ui/panels/agent_inspector_panel.gd",
+        "note": "Underlying warmth/social/health concepts exist; this icon binding role is proposed, not a verified need bar."
+      }
+    },
+    {
+      "id": "b4_needs_need_health",
+      "source_id": "need_health",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/needs/need_health.png",
+      "source_path": "art/style05/ui_b4/needs/need_health.png",
+      "sha256": "f3cc1b53f01195fce219882ca867c20dc69ebf639fa7f650579575e8ab8cd2bb",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A strong upright adult hand and wrist with one small healthy sage-green medicinal leaf resting against the palm. Vital, intact hand silhouette; no medical cross, heart or modern sign.",
+      "source_runtime_ids": {
+        "verified": [],
+        "proposed_future": [
+          "ui_icons.health"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "scripts/ui/panels/agent_inspector_panel.gd",
+        "note": "Underlying warmth/social/health concepts exist; this icon binding role is proposed, not a verified need bar."
+      }
+    },
+    {
+      "id": "b4_needs_mood_low",
+      "source_id": "mood_low",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/needs/mood_low.png",
+      "source_path": "art/style05/ui_b4/needs/mood_low.png",
+      "sha256": "be5ddb909999bf632a799f6ecbdd5cd6bc7a63ec8bb3f353e6496243975bd81e",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A stone-age adult portrait bust in plain hide, chin lowered, heavy weary brow and downturned eyes, shoulders slumped. Real hand-drawn human face with warm earthy skin; no emoji, no cartoon face circle.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "mood_band",
+            "id": "low",
+            "code": 1
+          }
+        ],
+        "proposed_future": [
+          "mood_band_icons.low"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "scripts/ui/story_text.gd:34"
+      }
+    },
+    {
+      "id": "b4_needs_mood_normal",
+      "source_id": "mood_normal",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/needs/mood_normal.png",
+      "source_path": "art/style05/ui_b4/needs/mood_normal.png",
+      "sha256": "e6ffd3107de0fd7bf5b93940267b21058dfa4b14812b1bdb3290c71482de5217",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A stone-age adult portrait bust in plain hide, upright relaxed shoulders, calm attentive neutral expression with closed mouth. Real hand-drawn human face; no emoji, no cartoon face circle.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "mood_band",
+            "id": "normal",
+            "code": 2
+          }
+        ],
+        "proposed_future": [
+          "mood_band_icons.normal"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "scripts/ui/story_text.gd:34"
+      }
+    },
+    {
+      "id": "b4_needs_mood_content",
+      "source_id": "mood_content",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/needs/mood_content.png",
+      "source_path": "art/style05/ui_b4/needs/mood_content.png",
+      "sha256": "9dfde0d4b7131c9b01ca2d7b750c4823a3566f96ffb2de9daae4267b6a810299",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Relaxed adult with lifted chin and hands at chest; actual mood band 3, proposed raster group.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "mood_band",
+            "id": "content",
+            "code": 3
+          }
+        ],
+        "proposed_future": [
+          "mood_band_icons.content"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "scripts/ui/story_text.gd:34"
+      }
+    },
+    {
+      "id": "b4_needs_mood_breakdown",
+      "source_id": "mood_breakdown",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/needs/mood_breakdown.png",
+      "source_path": "art/style05/ui_b4/needs/mood_breakdown.png",
+      "sha256": "b7b4652c2aae3ce035dc8d27b76ff525f2ff37db96c03a6dc78e7ab950f840af",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A stone-age adult portrait bust in plain hide with face bowed into both open hands, elbows outward and shoulders tense. Face partly obscured by hands, clear distress silhouette; no violence, no emoji.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "mood_band",
+            "id": "breakdown",
+            "code": 4
+          }
+        ],
+        "proposed_future": [
+          "mood_band_icons.breakdown"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "scripts/ui/story_text.gd:34"
+      }
+    },
+    {
+      "id": "b4_needs_modifier_slept_roofed",
+      "source_id": "modifier_slept_roofed",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/needs/modifier_slept_roofed.png",
+      "source_path": "art/style05/ui_b4/needs/modifier_slept_roofed.png",
+      "sha256": "7e8dbf932f579b1ae78c981e2f860bf72554e8172db15180058e7840c0561f5c",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A small folded hide sleeping mat sheltered beneath a simple triangular lean-to of two wooden poles and reed thatch. Clear roof-over-bed silhouette, no ground slab.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "slept_roofed",
+            "code": 0
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.slept_roofed"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "b4_needs_modifier_slept_outside",
+      "source_id": "modifier_slept_outside",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/needs/modifier_slept_outside.png",
+      "source_path": "art/style05/ui_b4/needs/modifier_slept_outside.png",
+      "sha256": "2cec975bd749265310cf1a151033926287dd4a18bf0ec3738311d3898ad019a3",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A rolled hide pillow and thin reed sleeping mat exposed under a small pale crescent moon, no roof or shelter. Sparse open silhouette, no star field or backdrop.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "slept_outside",
+            "code": 1
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.slept_outside"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "b4_needs_modifier_fed",
+      "source_id": "modifier_fed",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/needs/modifier_fed.png",
+      "source_path": "art/style05/ui_b4/needs/modifier_fed.png",
+      "sha256": "f8b44043f3efa033e23b9ff5a8575e73f337611cd95d9656b889e1ec1766b268",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "An adult hand holding a generous handful of gathered nuts and berries close to a shallow wooden bowl. Full food portion and satisfied abundance, no cutlery.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "fed",
+            "code": 2
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.fed"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "b4_needs_modifier_hungry",
+      "source_id": "modifier_hungry",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/needs/modifier_hungry.png",
+      "source_path": "art/style05/ui_b4/needs/modifier_hungry.png",
+      "sha256": "254281d1f5ef1d80f0ad8b3f66d346bf37e909170ca90be4911835092298a3a5",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A hollow near-empty shallow wooden bowl with only a single small nut, a thin adult hand reaching toward it. Empty interior dominates, no modern symbol.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "hungry",
+            "code": 3
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.hungry"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "b4_needs_modifier_thirsty",
+      "source_id": "modifier_thirsty",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/needs/modifier_thirsty.png",
+      "source_path": "art/style05/ui_b4/needs/modifier_thirsty.png",
+      "sha256": "6e7e75ba9fd7e09e87f23b5926e133b5f72d0c7b073353ac5009ed8875cc1f84",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Dry cracked stone basin with one separate final droplet; actual Thirsty modifier 4.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "thirsty",
+            "code": 4
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.thirsty"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "b4_needs_modifier_cold",
+      "source_id": "modifier_cold",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/needs/modifier_cold.png",
+      "source_path": "art/style05/ui_b4/needs/modifier_cold.png",
+      "sha256": "40c4c8e240f07457c5f6497d56fd6d36fee8d1ebcb00523882f38015d0bcc7d6",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A tightly folded undyed hide wrap around a pair of crossed bare hands, three thin side wind strokes. Compact cold self-hug gesture, no snowflake or text.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "cold",
+            "code": 5
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.cold"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "b4_needs_modifier_quarrelled",
+      "source_id": "modifier_quarrelled",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/needs/modifier_quarrelled.png",
+      "source_path": "art/style05/ui_b4/needs/modifier_quarrelled.png",
+      "sha256": "7f75b082db423c5d6105eda76dc87baaa962cc69a524e167eec3f03713a0f08c",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Two adult heads and shoulders in plain hide facing away from one another with tense turned backs, a narrow clear gap between them. Disagreement expressed by posture; no weapons or speech bubbles.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "quarrelled",
+            "code": 6
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.quarrelled"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "b4_needs_modifier_learned",
+      "source_id": "modifier_learned",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/needs/modifier_learned.png",
+      "source_path": "art/style05/ui_b4/needs/modifier_learned.png",
+      "sha256": "d7118d9dd385f7a2f5b7407ecd74f86024ddb7f5918bb868a61e6bf5a38d8d81",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "One hand holds a flint core while an older hand points at its edge; actual Learned modifier 7.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "learned",
+            "code": 7
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.learned"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "b4_needs_modifier_discovered",
+      "source_id": "modifier_discovered",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/needs/modifier_discovered.png",
+      "source_path": "art/style05/ui_b4/needs/modifier_discovered.png",
+      "sha256": "447402fb468a01a09de005ef586ff59510a423c56055788491c92a0a486a0e01",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A freshly split flint core with a bright pale sharp edge held in one adult palm, three small radiating ink dashes at the edge. Material discovery, no lightbulb or magic sparkles.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "discovered",
+            "code": 8
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.discovered"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "b4_needs_modifier_grief",
+      "source_id": "modifier_grief",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/needs/modifier_grief.png",
+      "source_path": "art/style05/ui_b4/needs/modifier_grief.png",
+      "sha256": "177344ee994720f3625d3c9f12ff4756f23c85a6c82b4121bea9a52313898711",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A bowed adult head in profile, one hand gently covering the cheek, beside a small tied bundle of dried pale flowers. Quiet sorrow, no skull, tears as large emoji, or gravestone text.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "grief",
+            "code": 9
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.grief"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "b4_needs_modifier_sick",
+      "source_id": "modifier_sick",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/needs/modifier_sick.png",
+      "source_path": "art/style05/ui_b4/needs/modifier_sick.png",
+      "sha256": "635c68b156bade5ae37894e004c4d809e9f7f71ccbe34981e660b0d018dd0e73",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A reclining adult head on a folded hide pillow, one hand against the forehead and a small sprig of medicinal sage beside it. Fever/rest, non-graphic, no medical cross.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "sick",
+            "code": 10
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.sick"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "b4_needs_modifier_crafted",
+      "source_id": "modifier_crafted",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/needs/modifier_crafted.png",
+      "source_path": "art/style05/ui_b4/needs/modifier_crafted.png",
+      "sha256": "e43a0a5aee9d10fab06953e33527cd94aaf309c93a9aba79ca4c5ed10be1a187",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A finished stone axe head neatly bound to a short wood haft, beside the flint chip that made it. Crisp finished-tool silhouette and sparse binding, no metal.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "crafted",
+            "code": 11
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.crafted"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "b4_needs_modifier_drafted",
+      "source_id": "modifier_drafted",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/needs/modifier_drafted.png",
+      "source_path": "art/style05/ui_b4/needs/modifier_drafted.png",
+      "sha256": "75d4d6d601a31a2ad498ba8c423728854b4725ba91985654430f268ab70e983b",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "An upright adult hand gripping a simple wood shaft with a flint spear point, a plain hide shoulder below. Mustered duty, calm defensive posture, no metal, no injury or attack.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "drafted",
+            "code": 12
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.drafted"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "b4_needs_modifier_pressure",
+      "source_id": "modifier_pressure",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/needs/modifier_pressure.png",
+      "source_path": "art/style05/ui_b4/needs/modifier_pressure.png",
+      "sha256": "490158265143078c4fb25e091ec2001953c1982b7754e631792c24d1304e760f",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A pair of adult shoulders hunched beneath a bundle of firewood carried across the back, head lowered and both hands supporting the load. Burden and strain, no chains, no modern pressure gauge.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "pressure",
+            "code": 13
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.pressure"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "b4_needs_modifier_food_varied",
+      "source_id": "modifier_food_varied",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/needs/modifier_food_varied.png",
+      "source_path": "art/style05/ui_b4/needs/modifier_food_varied.png",
+      "sha256": "69b529dbc2c359d03d7b00203906fb56bc9ce8acfb6089c7fa056953ed60fb1b",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A shallow wicker food tray with three distinct broad food shapes: red berry cluster, pale root, and brown nuts. Deliberately varied foods, no metal or farm grain.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "food_varied",
+            "code": 14
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.food_varied"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "b4_needs_modifier_food_monotonous",
+      "source_id": "modifier_food_monotonous",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/needs/modifier_food_monotonous.png",
+      "source_path": "art/style05/ui_b4/needs/modifier_food_monotonous.png",
+      "sha256": "e453b4dbc07fe4559112b63a4fb02facaa19d1bb105725b41ffc4120de80d4be",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Five identical whole wild roots on a wicker tray; actual FoodMonotonous modifier 15.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "food_monotonous",
+            "code": 15
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.food_monotonous"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "b4_needs_modifier_clothing_comfort",
+      "source_id": "modifier_clothing_comfort",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/needs/modifier_clothing_comfort.png",
+      "source_path": "art/style05/ui_b4/needs/modifier_clothing_comfort.png",
+      "sha256": "68a63e39919f9322bf52703866a7630608e5a693ecb20bfe5c2bc9393f51c2fe",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A neatly folded soft undyed hide tunic with a simple bone pin and three quiet fold marks, broad soft rounded shape suggesting comfortable clothing. No metal, woven linen, dye, modern seams or buttons.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "clothing_comfort",
+            "code": 16
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.clothing_comfort"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "b4_needs_need_hunger_critical",
+      "source_id": "need_hunger_critical",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/needs/need_hunger_critical.png",
+      "source_path": "art/style05/ui_b4/needs/need_hunger_critical.png",
+      "sha256": "0c6456c6059740c22e9ba0d7699d4645b0aad553508aa105d5e55e3df11df2d1",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "An empty shallow wooden bowl tilted toward the viewer, one tiny remaining berry in it, two bare ribs of its wood visible. Emphasize its hollow vacant interior and unmistakable lack of food; no skull.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "ui_icons",
+            "id": "hunger"
+          }
+        ],
+        "proposed_future": [
+          "need_urgency_art.hunger.critical"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "scripts/ui/panels/agent_inspector_panel.gd:279",
+        "note": "Visual deficit variant only; no new runtime state or threshold is claimed."
+      }
+    },
+    {
+      "id": "b4_needs_need_thirst_critical",
+      "source_id": "need_thirst_critical",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/needs/need_thirst_critical.png",
+      "source_path": "art/style05/ui_b4/needs/need_thirst_critical.png",
+      "sha256": "9beb3d8cd3540aeda30a605d9a59bb341202f3e580f7d6ba3efad3ecec5c34f8",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Two empty cupped adult hands below a single tiny falling water drop, the dry palms open and clearly visible. Clear shortage silhouette, no cracked skin gore.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "ui_icons",
+            "id": "thirst"
+          }
+        ],
+        "proposed_future": [
+          "need_urgency_art.thirst.critical"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "scripts/ui/panels/agent_inspector_panel.gd:279",
+        "note": "Visual deficit variant only; no new runtime state or threshold is claimed."
+      }
+    },
+    {
+      "id": "b4_governance_rule_smelter",
+      "source_id": "rule_smelter",
+      "lane": "governance",
+      "family": "icon",
+      "era": "bronze",
+      "path": "ui/b4/governance/rule_smelter.png",
+      "source_path": "art/style05/ui_b4/governance/rule_smelter.png",
+      "sha256": "86f1a3536bb2c7ecfa2351087f30d150326e6a6a8389df83e06145986f634d16",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A compact terracotta clay shaft furnace with a small amber fire mouth and ONE copper ore lump beside it. Strong furnace silhouette denotes requesting a smelter. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [],
+        "proposed_rule": "smelter",
+        "numeric_rule_id": null,
+        "binding_status": "proposed_unapplied_future_rule",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_governance_rule_tool_upgrade",
+      "source_id": "rule_tool_upgrade",
+      "lane": "governance",
+      "family": "icon",
+      "era": "bronze",
+      "path": "ui/b4/governance/rule_tool_upgrade.png",
+      "source_path": "art/style05/ui_b4/governance/rule_tool_upgrade.png",
+      "sha256": "94f9eee05cd33d1323c2d38479114aa0792cade5a8c27263d5ebd12f03003f3d",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Two stout short-handled axes as a compact close pair: left a clearly chipped grey STONE axe head bound with sinew, right a much broader smooth golden-brown BRONZE axe head with a clean flared cutting edge and two rim highlights. Bronze head is one and a half times the stone head width; both heads large relative to short chunky wooden handles. Silhouettes form one broad compact diagonally stepped grouping. The material progression must remain obvious at32px. No arrows, sparkle, number, icon badge, text. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [],
+        "proposed_rule": "tool_upgrade",
+        "numeric_rule_id": null,
+        "binding_status": "proposed_unapplied_future_rule",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_governance_rule_forge",
+      "source_id": "rule_forge",
+      "lane": "governance",
+      "family": "icon",
+      "era": "iron",
+      "path": "ui/b4/governance/rule_forge.png",
+      "source_path": "art/style05/ui_b4/governance/rule_forge.png",
+      "sha256": "bbeaa0e822012f8b638c41f1053e97e8948bfa92da9f5336669dda54dace0f11",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A compact squat IRON anvil with one short tapered blunt horn and a clearly pinched waist, dark charcoal forged-metal planes, two restrained pale rim highlights. A broad wooden-handled iron hammer lies diagonally across its top. One tiny dull ember near base. Make the anvil silhouette unmistakable and broad at32px; NOT a tree stump, NOT a stone boulder, no wood base, no ornate medieval decoration. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [],
+        "proposed_rule": "forge",
+        "numeric_rule_id": null,
+        "binding_status": "proposed_unapplied_future_rule",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_governance_rule_stockpile",
+      "source_id": "rule_stockpile",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/governance/rule_stockpile.png",
+      "source_path": "art/style05/ui_b4/governance/rule_stockpile.png",
+      "sha256": "7eb82e20d607a1ec904cda48fde47400079886f51b790352a6d29cd4e94f9bcb",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Three neatly stacked tied bundles: short firewood logs at bottom, a small plain hide pouch and two rounded stone lumps above. A compact triangular pile denotes planning a stockpile. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "steward_rule",
+            "id": 1
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_governance_rule_wood",
+      "source_id": "rule_wood",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/governance/rule_wood.png",
+      "source_path": "art/style05/ui_b4/governance/rule_wood.png",
+      "sha256": "e77228a327f82d4a787453b39ad851d3f904a599b78f3e6d50e141cfc08ef8f5",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Three cut firewood logs tied tightly with one plain plant-fiber cord, pale cut end rings facing viewer. A compact orderly bundle with clear wood silhouette. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "steward_rule",
+            "id": 2
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_governance_rule_housing",
+      "source_id": "rule_housing",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/governance/rule_housing.png",
+      "source_path": "art/style05/ui_b4/governance/rule_housing.png",
+      "sha256": "bcaf171d5fbd459b79794c677e4e13b6ec0cededfe69f3eb9bef1b7658d42166",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A tiny open front shelter made of two bent branches and an undyed hide covering, with one clearly visible plain sleeping mat inside. Compact shelter silhouette, no ground slab. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "steward_rule",
+            "id": 3
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_governance_rule_production",
+      "source_id": "rule_production",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/governance/rule_production.png",
+      "source_path": "art/style05/ui_b4/governance/rule_production.png",
+      "sha256": "5a5268364f78279814b84f182bef87381a01024ab8756bc523e1df019a0fbd98",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A low rough wooden workbench with a clearly visible chipped stone hand tool and two unfinished stone blanks on top. A single bench silhouette denotes ordering production. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "steward_rule",
+            "id": 4
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_governance_rule_hunt",
+      "source_id": "rule_hunt",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/governance/rule_hunt.png",
+      "source_path": "art/style05/ui_b4/governance/rule_hunt.png",
+      "sha256": "1395a1db3d84f7093475f6da39065c38692f954685989736cf80cc45c3fb4b9c",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A compact hunting emblem composed of a plainly recognizable small deer head in profile, natural warm-brown hide with a short branching antler and pointed ear, beside a single diagonal flint-tipped wooden spear. The deer is alive and calm, neck cleanly cropped as an illustrated emblem with no gore, no trophy mount. Deer profile silhouette dominates, spear remains thick and simple at32px. No hoofprints, no hanging droplets, no shield, no metal, no bow. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "steward_rule",
+            "id": 5
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_governance_rule_defence",
+      "source_id": "rule_defence",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/governance/rule_defence.png",
+      "source_path": "art/style05/ui_b4/governance/rule_defence.png",
+      "sha256": "8821b49e0e85d6455e5b939904088a8010894de7912f060b52b02a3f1486e050",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Two crossed wooden spears with knapped flint points behind a small plain undyed hide guard-shield. No metal fittings, no painted insignia, calm protective composition. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "steward_rule",
+            "id": 7
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_governance_rule_food_plan",
+      "source_id": "rule_food_plan",
+      "lane": "governance",
+      "family": "icon",
+      "era": "neolithic",
+      "path": "ui/b4/governance/rule_food_plan.png",
+      "source_path": "art/style05/ui_b4/governance/rule_food_plan.png",
+      "sha256": "a02e50b13992dafcb0bc6319be4e7614944a811a6c2494eef811da4a782f4614",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A broad shallow woven grain basket with three upright wheat heads and a single unmarked wooden tally stick beside it. Denotes planning grain supplies; no text or numerical marks. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "steward_rule",
+            "id": 8
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_governance_rule_seasonal_fuel",
+      "source_id": "rule_seasonal_fuel",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/governance/rule_seasonal_fuel.png",
+      "source_path": "art/style05/ui_b4/governance/rule_seasonal_fuel.png",
+      "sha256": "bbc0701b4ab9985bed5e7c9885d5915d8ee4e62d6d608b3ae4d1c23af459cb9d",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A winter-prepared reserve of five short split firewood logs stacked into a compact triangular pile, partly covered by one loose heavy undyed hide flap draped over the upper logs. A thick broad irregular ivory snow cap rests along the hide ridge and curls over one side, with a little snow between two exposed log ends. Show the exposed dry amber cut log ends below the cover. This is a protected reserve pile, NOT a tied log bundle and NOT a roof building: no posts or frame. Snow shape is substantial and distinct at32px, not a tiny dusting. No modern snowflake symbol. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "steward_rule",
+            "id": 9
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_governance_rule_roofed_storehouse",
+      "source_id": "rule_roofed_storehouse",
+      "lane": "governance",
+      "family": "icon",
+      "era": "neolithic",
+      "path": "ui/b4/governance/rule_roofed_storehouse.png",
+      "source_path": "art/style05/ui_b4/governance/rule_roofed_storehouse.png",
+      "sha256": "8a7cf3d94a2ec8477c0465d448298e0be280f4d0f88f099f4bc6614e459098a9",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A miniature open-front reed-thatched lean-to roof sheltering two rounded woven storage baskets. Roof silhouette is unmistakable; no ground rectangle or floor slab. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "steward_rule",
+            "id": 10
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_governance_rule_livestock",
+      "source_id": "rule_livestock",
+      "lane": "governance",
+      "family": "icon",
+      "era": "neolithic",
+      "path": "ui/b4/governance/rule_livestock.png",
+      "source_path": "art/style05/ui_b4/governance/rule_livestock.png",
+      "sha256": "63aa25454c0218e2c9c11655f25319eb1d23416876c6b334f8ed10c9619af039",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A small friendly goat in profile behind two low rough wooden fence rails, the horns and short tail clearly visible. No collar, no metal, no bell. Denotes keeping livestock. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "steward_rule",
+            "id": 11
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_governance_category_dwelling",
+      "source_id": "category_dwelling",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/governance/category_dwelling.png",
+      "source_path": "art/style05/ui_b4/governance/category_dwelling.png",
+      "sha256": "d4e9d448e0da1895afe20b50e91927be747aa29f3720e0b1e9dc2b60dbe181bd",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A single compact round hide-covered shelter with dark open entrance and a short threshold, clearly a home. No contents, no people, no fenced yard, no floor slab. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "building_category",
+            "id": "dwelling"
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_governance_category_storage",
+      "source_id": "category_storage",
+      "lane": "governance",
+      "family": "icon",
+      "era": "neolithic",
+      "path": "ui/b4/governance/category_storage.png",
+      "source_path": "art/style05/ui_b4/governance/category_storage.png",
+      "sha256": "76cd0085ff81fd61fb7918e4c159486a476658ff52c5a63cc8d399fe8081b521",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A tall round woven storage basket with a plain fitted reed lid, and one smaller lidded basket tucked beside it. Compact storage silhouette, no food spilling out. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "building_category",
+            "id": "storage"
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_governance_category_workshop",
+      "source_id": "category_workshop",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/governance/category_workshop.png",
+      "source_path": "art/style05/ui_b4/governance/category_workshop.png",
+      "sha256": "f1a93fbfb6458955806db9f9a25b59801b811e1e02815e256271dddad527d038",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "One small rough wooden crafting bench, with a knapped stone hammer resting on its broad top. Compact unmistakable bench with four stubby legs. No metal. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "building_category",
+            "id": "workshop"
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_governance_category_utility",
+      "source_id": "category_utility",
+      "lane": "governance",
+      "family": "icon",
+      "era": "neolithic",
+      "path": "ui/b4/governance/category_utility.png",
+      "source_path": "art/style05/ui_b4/governance/category_utility.png",
+      "sha256": "a49346f7a7e31dcd6d5f674b07d94c5e4bc4e8506d6127ff7d4821cb887559ac",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A squat stone-lined well mouth with one simple wooden pail and a plant-fiber rope coil beside it. No metal handle or windlass. Water-supply utility as a clear compact silhouette. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "building_category",
+            "id": "utility"
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_governance_category_civic",
+      "source_id": "category_civic",
+      "lane": "governance",
+      "family": "icon",
+      "era": "neolithic",
+      "path": "ui/b4/governance/category_civic.png",
+      "source_path": "art/style05/ui_b4/governance/category_civic.png",
+      "sha256": "f8ea557e49502aebf7ffa96f1ff0184fe8329fd0c73d93fd83c7c748f3e4d752",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Three squat weathered standing stones arranged around one low central stone seat, denoting a communal gathering place. No temple, no religious symbol, no writing, no ground disk. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "building_category",
+            "id": "civic"
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_governance_category_trade",
+      "source_id": "category_trade",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/governance/category_trade.png",
+      "source_path": "art/style05/ui_b4/governance/category_trade.png",
+      "sha256": "c1afa188dccc8d3c00286d8954bb5f6bf20f1ab0cb8ae2c720e7c46c19852117",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Two close opposing cupped human hands offering barter in a compact nearly square diagonal arrangement: upper-left palm contains exactly three large muted red berries; lower-right palm contains one large pale-grey flint tool. Both objects occupy most of each palm; fingers simplified but anatomically natural. The hands almost meet, minimal gap, wrists short. Emphasize chunky berry cluster and broad flint silhouette so exchange reads at32px. No sleeves, coins, metal, text, arrows or handshake. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "building_category",
+            "id": "trade"
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_governance_legend_unassigned",
+      "source_id": "legend_unassigned",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/governance/legend_unassigned.png",
+      "source_path": "art/style05/ui_b4/governance/legend_unassigned.png",
+      "sha256": "651080cedafc06b3d0d466f3af2581c9d912a0ac602b83c41c1170a88a5069c6",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A tiny empty roofless room outline made from four rough branch wall edges, with one doorway gap. Empty center is fully transparent. Simple plan-view room glyph, no furniture or question mark. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "room_role",
+            "id": 0
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_governance_legend_bedroom",
+      "source_id": "legend_bedroom",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/governance/legend_bedroom.png",
+      "source_path": "art/style05/ui_b4/governance/legend_bedroom.png",
+      "sha256": "46fb0ef340388aa2ea6c82b7dcea503927dc120964a7720d3e4effba5818bdda",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A single small rolled-edge undyed hide sleeping mat with a soft folded hide pillow at one end, plan-view simplified field-guide glyph. No frame or modern bed. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "room_role",
+            "id": 1
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_governance_legend_storehouse",
+      "source_id": "legend_storehouse",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/governance/legend_storehouse.png",
+      "source_path": "art/style05/ui_b4/governance/legend_storehouse.png",
+      "sha256": "ad0dbd69b238da50dd73d5818b49f9b41b6c88f47a66cb80c0123c09a25bbc7b",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Two short log bundles stacked in a compact square pile next to one small tied hide pouch, simplified nearly plan-view storeroom glyph. No walls or background. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "room_role",
+            "id": 2
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_governance_legend_workshop",
+      "source_id": "legend_workshop",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/governance/legend_workshop.png",
+      "source_path": "art/style05/ui_b4/governance/legend_workshop.png",
+      "sha256": "681a82ec172d03221ff987264bdd6109a863543a5a1323ef074e87aeab586b6f",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A single chipped stone hammer crossed with a short wooden carving wedge, simplified bold field-guide tool glyph. No metal, no engineering gear symbol. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "room_role",
+            "id": 3
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_governance_legend_hall",
+      "source_id": "legend_hall",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/governance/legend_hall.png",
+      "source_path": "art/style05/ui_b4/governance/legend_hall.png",
+      "sha256": "f6bd315093ac147abde248cd2c67d1d12e9b4d86366c66972e9ffc3fffe108e8",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Three simple rough wood stools forming a semicircle around one small central hearth stone, simplified plan-view gathering-room glyph. No flames or people, no ground disk. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "room_role",
+            "id": 4
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_governance_panel_built",
+      "source_id": "panel_built",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/governance/panel_built.png",
+      "source_path": "art/style05/ui_b4/governance/panel_built.png",
+      "sha256": "6ede5de44a72753b0803a661da2adcbe174d179d548a1c07662955433e782e3a",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A compact completed small hide shelter with two firm structural posts and taut roof, front three-quarter. A single finished construction silhouette with no tools or marks. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "panel_group",
+            "id": "built"
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_governance_panel_available",
+      "source_id": "panel_available",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/governance/panel_available.png",
+      "source_path": "art/style05/ui_b4/governance/panel_available.png",
+      "sha256": "7954653cc603fd5025a6430e12611a906ce55fa49a7376d3d4ee19a1c67e1e67",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "A compact complete triangular wooden shelter frame without its hide covering, with a neatly rolled hide leaning beside it, ready to construct. Clearly materials available, no ghost glow. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "panel_group",
+            "id": "available"
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "b4_governance_panel_next",
+      "source_id": "panel_next",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "path": "ui/b4/governance/panel_next.png",
+      "source_path": "art/style05/ui_b4/governance/panel_next.png",
+      "sha256": "548327d711b9e254bf5400c4624cc2bb33a81f7dbed4092aaceacc50873f6546",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "semantic_note": "Two small bundled straight wood poles and a rolled hide placed next to a simple unbuilt shelter outline formed from three loose branches lying flat. Clear future construction ingredients, no modern arrows or locks. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "panel_group",
+            "id": "next"
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    }
+  ],
+  "integration_note": "Destination paths describe proposed importer layout. New consumers and bindings remain unapplied."
+}
