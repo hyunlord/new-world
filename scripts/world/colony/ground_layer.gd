@@ -438,6 +438,10 @@ func _prepare_grounds_body() -> void:
 	for style: Dictionary in _resolver.styles:
 		if str(style.get("kind", "")) == "floor":
 			_prepared_ground(_floor_ground_id(_resolver.resolve(str(style.get("id", "")), "", "", "floor")), period, tone, season, person_std)
+			# Authored sim-bound looks tint floors (a Lab shift costs ~300 ms on first use); prepare them at load too.
+			for look: Variant in (ArtData.param("material_looks", {}) as Dictionary).values():
+				if look is Dictionary and (look as Dictionary).has("sim_id"):
+					_prepared_ground(_floor_ground_id(_resolver.resolve(str(style.get("id", "")), int(look["sim_id"]), "", "floor")), period, tone, season, person_std)
 	var images: Array[Image] = []
 	_tone_report.clear()
 	_ground_means.clear()
