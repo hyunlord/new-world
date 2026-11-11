@@ -1,0 +1,133 @@
+{
+  "id": "wild_pea_harvested",
+  "state": "harvested",
+  "species": "wild_pea",
+  "status": "ADOPTED_CANDIDATE",
+  "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_pea_harvested_try1.png",
+  "source_sha256": "b08c06f70d1d8b14f403b9963616570e000595c1cf4731d59a35b54c7b33fc18",
+  "generation_record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_pea_harvested_try1.json",
+  "generation_record_sha256": "09a218ea5a7116dedf20771d5c11787d99e4752e573be21be70ca2a51fa05a14",
+  "prompt_sha256": "b21512930723f78217830498d2de57c1b4d87ffdb4af13a91e3c54aef15cd715",
+  "reference_sha256": {
+    "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_pea_full_try1.png": "006183090b077cb9f6d727ece7534c6af39b14cc8bc91ff8c33eb32b70f704a8",
+    "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+    "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+  },
+  "attempt": 1,
+  "seed": null,
+  "geometry_source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_pea_full_try1.png",
+  "geometry_source_sha256": "006183090b077cb9f6d727ece7534c6af39b14cc8bc91ff8c33eb32b70f704a8",
+  "transform": {
+    "source_canvas": [
+      1536,
+      1024
+    ],
+    "crop": [
+      253,
+      43,
+      1285,
+      961
+    ],
+    "scale": 0.0350109409190372,
+    "scaled_canvas": [
+      36,
+      32
+    ],
+    "offset": [
+      15,
+      26
+    ],
+    "output_canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "target_height": 32
+  },
+  "footprint": [
+    1,
+    1
+  ],
+  "checks": {
+    "structure": true,
+    "visible_border": false,
+    "raw_border": false,
+    "opaque_components": 5,
+    "component_sizes": [
+      407,
+      10,
+      4,
+      2,
+      2
+    ],
+    "tree_connectivity": "NOT_APPLICABLE_MULTISTEM_HERB",
+    "source_opaque_outside_crop": 0,
+    "size_match": true,
+    "tool_source_sha256": "b08c06f70d1d8b14f403b9963616570e000595c1cf4731d59a35b54c7b33fc18",
+    "actual_raw": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_pea_harvested_try1.png"
+  },
+  "projection": {
+    "family": "item",
+    "anchor": [
+      32,
+      56
+    ],
+    "height_band": [
+      1,
+      34
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 425,
+    "base_row": 56,
+    "base_error": 0,
+    "height": 29,
+    "gradient_x": -1.4396314199395772,
+    "gradient_y": -2.733348765432099,
+    "light_angle_degrees": 242.2246072517493,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "style": {
+    "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_pea_harvested_try1.png",
+    "sha256": "b08c06f70d1d8b14f403b9963616570e000595c1cf4731d59a35b54c7b33fc18",
+    "family": "plants",
+    "metrics": {
+      "edge_density": 0.23232253139962528,
+      "saturation_q25": 0.4568932459702975,
+      "saturation_q75": 0.5061000424489103,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.013744949705854742,
+      "foreground_pixels": 22058
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "review": {
+    "id": "wild_pea_harvested",
+    "attempt": 1,
+    "visual_score": 90,
+    "visual_notes": "One compact rooted stand; no detached major props; state morphology checked on contact sheet."
+  },
+  "path": "art/flora/climate/herbaceous/wild_pea_harvested.png",
+  "sha256": "362bf7408c501765d29b0f0f9a4eb2865b2826e4d52fd973784cc8190ab415bd"
+}

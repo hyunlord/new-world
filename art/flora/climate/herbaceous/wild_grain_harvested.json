@@ -1,0 +1,133 @@
+{
+  "id": "wild_grain_harvested",
+  "state": "harvested",
+  "species": "wild_grain",
+  "status": "ADOPTED_CANDIDATE",
+  "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_grain_harvested_try1.png",
+  "source_sha256": "a468013ace0c18b75ee8e530c2f14a84a9549cc28d70b806ea1de9b0ab5d53d9",
+  "generation_record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_grain_harvested_try1.json",
+  "generation_record_sha256": "2735eb92acc8c5819d2a86eca752b49a0e7cbe6cb550f94a9be651efa941ca2a",
+  "prompt_sha256": "ba90f3ed222715d11dcfd2c2bf1092d066ab5fcab50b249537159bc0d378f0f0",
+  "reference_sha256": {
+    "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_grain_full_try1.png": "05196c58f9c6b97db4b8443bb490aed74c14b28ad64942da66237d33f019a068",
+    "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+    "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+  },
+  "attempt": 1,
+  "seed": null,
+  "geometry_source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_grain_full_try1.png",
+  "geometry_source_sha256": "05196c58f9c6b97db4b8443bb490aed74c14b28ad64942da66237d33f019a068",
+  "transform": {
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "crop": [
+      201,
+      32,
+      1042,
+      1223
+    ],
+    "scale": 0.040438079191238416,
+    "scaled_canvas": [
+      34,
+      48
+    ],
+    "offset": [
+      17,
+      11
+    ],
+    "output_canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "target_height": 48
+  },
+  "footprint": [
+    1,
+    1
+  ],
+  "checks": {
+    "structure": true,
+    "visible_border": false,
+    "raw_border": false,
+    "opaque_components": 5,
+    "component_sizes": [
+      206,
+      5,
+      4,
+      3,
+      1
+    ],
+    "tree_connectivity": "NOT_APPLICABLE_MULTISTEM_HERB",
+    "source_opaque_outside_crop": 0,
+    "size_match": true,
+    "tool_source_sha256": "a468013ace0c18b75ee8e530c2f14a84a9549cc28d70b806ea1de9b0ab5d53d9",
+    "actual_raw": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_grain_harvested_try1.png"
+  },
+  "projection": {
+    "family": "item",
+    "anchor": [
+      32,
+      56
+    ],
+    "height_band": [
+      1,
+      50
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 219,
+    "base_row": 57,
+    "base_error": 1,
+    "height": 30,
+    "gradient_x": -0.6227239436619717,
+    "gradient_y": -2.38034512195122,
+    "light_angle_degrees": 255.33937070059773,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "style": {
+    "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_grain_harvested_try1.png",
+    "sha256": "a468013ace0c18b75ee8e530c2f14a84a9549cc28d70b806ea1de9b0ab5d53d9",
+    "family": "plants",
+    "metrics": {
+      "edge_density": 0.21517791539834155,
+      "saturation_q25": 0.5455530167294873,
+      "saturation_q75": 0.5823845064302535,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.03158851717188894,
+      "foreground_pixels": 15052
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "review": {
+    "id": "wild_grain_harvested",
+    "attempt": 1,
+    "visual_score": 90,
+    "visual_notes": "One compact rooted stand; no detached major props/foliage; full, cut or dormant morphology readable at 1x/2x."
+  },
+  "path": "art/flora/climate/herbaceous/wild_grain_harvested.png",
+  "sha256": "2a60494810eece45292543b839bc1ded4ec02def535f34599cff6d1d22fe9bb1"
+}

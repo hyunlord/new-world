@@ -1,0 +1,133 @@
+{
+  "id": "wild_rye_harvested",
+  "state": "harvested",
+  "species": "wild_rye",
+  "status": "ADOPTED_CANDIDATE",
+  "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_rye_harvested_try1.png",
+  "source_sha256": "4db2505b75de348e34451baa202f64a325d80534b1fe23b51eb612343aa934bb",
+  "generation_record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_rye_harvested_try1.json",
+  "generation_record_sha256": "b4cfd9d69c227ca7fc3fca49f5657fd4c100f5963dc3bea2f482ed1398ae4f4f",
+  "prompt_sha256": "af58805f95287e20880ea6df6ce5f10557f0106f10bca7954a75cdf704b1db99",
+  "reference_sha256": {
+    "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_rye_full_try1.png": "5beca6e806b2b589ef105bdcf5445488e34106a69dbd20de15a39d336f0e8a1a",
+    "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+    "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+  },
+  "attempt": 1,
+  "seed": null,
+  "geometry_source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_rye_full_try1.png",
+  "geometry_source_sha256": "5beca6e806b2b589ef105bdcf5445488e34106a69dbd20de15a39d336f0e8a1a",
+  "transform": {
+    "source_canvas": [
+      1536,
+      1024
+    ],
+    "crop": [
+      309,
+      22,
+      1178,
+      999
+    ],
+    "scale": 0.04933196300102775,
+    "scaled_canvas": [
+      43,
+      48
+    ],
+    "offset": [
+      12,
+      9
+    ],
+    "output_canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "target_height": 48
+  },
+  "footprint": [
+    1,
+    1
+  ],
+  "checks": {
+    "structure": true,
+    "visible_border": false,
+    "raw_border": false,
+    "opaque_components": 5,
+    "component_sizes": [
+      286,
+      5,
+      3,
+      3,
+      1
+    ],
+    "tree_connectivity": "NOT_APPLICABLE_MULTISTEM_HERB",
+    "source_opaque_outside_crop": 0,
+    "size_match": true,
+    "tool_source_sha256": "4db2505b75de348e34451baa202f64a325d80534b1fe23b51eb612343aa934bb",
+    "actual_raw": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_rye_harvested_try1.png"
+  },
+  "projection": {
+    "family": "item",
+    "anchor": [
+      32,
+      56
+    ],
+    "height_band": [
+      1,
+      50
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 298,
+    "base_row": 55,
+    "base_error": -1,
+    "height": 31,
+    "gradient_x": -0.8889051162790698,
+    "gradient_y": -1.9902063063063056,
+    "light_angle_degrees": 245.93256555074112,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "style": {
+    "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_rye_harvested_try1.png",
+    "sha256": "4db2505b75de348e34451baa202f64a325d80534b1fe23b51eb612343aa934bb",
+    "family": "plants",
+    "metrics": {
+      "edge_density": 0.23059297956191,
+      "saturation_q25": 0.5209026580181213,
+      "saturation_q75": 0.5814882616617647,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.013049346247231714,
+      "foreground_pixels": 17433
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "review": {
+    "id": "wild_rye_harvested",
+    "attempt": 1,
+    "visual_score": 90,
+    "visual_notes": "One compact rooted stand; no detached major props; state morphology checked on contact sheet."
+  },
+  "path": "art/flora/climate/herbaceous/wild_rye_harvested.png",
+  "sha256": "ac1259430252edfd40f5340b4c01d96713a284bb6a6c58e34beaf4272aa22c8a"
+}

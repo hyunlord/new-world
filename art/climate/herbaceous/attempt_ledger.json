@@ -1,0 +1,2476 @@
+{
+  "attempts": [
+    {
+      "id": "wild_barley_full",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_barley_full_try1.png",
+      "sha256": "7a236ad59829261a9c4b0936016ae161730ff2b51315e81d291c62a2d0c4c183",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_barley_full_try1.json",
+      "record_sha256": "9968a8de4159171fc81fea3a975125e3fb151641c08b1e0dd7fa8438818cf2f8",
+      "tool_source_sha256": "7a236ad59829261a9c4b0936016ae161730ff2b51315e81d291c62a2d0c4c183",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_barley_full_try1.png",
+        "sha256": "7a236ad59829261a9c4b0936016ae161730ff2b51315e81d291c62a2d0c4c183",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.21234966792317359,
+          "saturation_q25": 0.5644342377639409,
+          "saturation_q75": 0.5983269224794956,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.020247741976694003,
+          "foreground_pixels": 12108
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          50
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 473,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 47,
+        "gradient_x": -0.07201761006289353,
+        "gradient_y": -2.6889377521613835,
+        "light_angle_degrees": 268.46581837213694,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_barley_harvested",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_barley_harvested_try1.png",
+      "sha256": "9c44f2d95545bb7f0c3461985a98a67071f6dfb265b2e68a6fcc5e5b74bbfa6c",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_barley_harvested_try1.json",
+      "record_sha256": "1421f09a0f17284194c77a0eed1845ade3c51676d5f3b5dcc2493d4eb3382460",
+      "tool_source_sha256": "9c44f2d95545bb7f0c3461985a98a67071f6dfb265b2e68a6fcc5e5b74bbfa6c",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_barley_harvested_try1.png",
+        "sha256": "9c44f2d95545bb7f0c3461985a98a67071f6dfb265b2e68a6fcc5e5b74bbfa6c",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.25478468899521534,
+          "saturation_q25": 0.5395784059069904,
+          "saturation_q75": 0.5852630848534706,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.015162041467967955,
+          "foreground_pixels": 18655
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          50
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 382,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 25,
+        "gradient_x": -0.10552461059190073,
+        "gradient_y": -1.053423003194888,
+        "light_angle_degrees": 264.2795893343526,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_barley_winter",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_barley_winter_try1.png",
+      "sha256": "200d0bb14f7b0d39c85e5038d99502cc70adef3bd47b1da1c697e326956202d2",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_barley_winter_try1.json",
+      "record_sha256": "d97e0af65f7efe2c71df5e7a9e4a4c6ec7ac53048477f66dbb99bee81a51392c",
+      "tool_source_sha256": "200d0bb14f7b0d39c85e5038d99502cc70adef3bd47b1da1c697e326956202d2",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_barley_winter_try1.png",
+        "sha256": "200d0bb14f7b0d39c85e5038d99502cc70adef3bd47b1da1c697e326956202d2",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.25,
+          "saturation_q25": 0.46581518949564793,
+          "saturation_q75": 0.4996272603241345,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.026062253982376497,
+          "foreground_pixels": 12533
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          50
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 401,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 47,
+        "gradient_x": -1.1197490909090908,
+        "gradient_y": -3.426205460750853,
+        "light_angle_degrees": 251.90162377235183,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_einkorn_full",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_einkorn_full_try1.png",
+      "sha256": "731a0e2e49681090ae3e3fbf7b65aad3409dfaec14df5107f6f90e9f7cfa80e4",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_einkorn_full_try1.json",
+      "record_sha256": "75efaf6639dbbcacf25d05ee073c039dc6a543cf85c30248558eec4255d87837",
+      "tool_source_sha256": "731a0e2e49681090ae3e3fbf7b65aad3409dfaec14df5107f6f90e9f7cfa80e4",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_einkorn_full_try1.png",
+        "sha256": "731a0e2e49681090ae3e3fbf7b65aad3409dfaec14df5107f6f90e9f7cfa80e4",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.14447592067988668,
+          "saturation_q25": 0.5463046160973107,
+          "saturation_q75": 0.5988219603774292,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.016954043998749713,
+          "foreground_pixels": 7443
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          50
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 233,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 45,
+        "gradient_x": -2.838629268292683,
+        "gradient_y": -3.4160253731343286,
+        "light_angle_degrees": 230.27428987977675,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_einkorn_harvested",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_einkorn_harvested_try1.png",
+      "sha256": "ee243a93e58ee6e0c529a2b7ab544d12d4e234a2975329e186560e58f55de281",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_einkorn_harvested_try1.json",
+      "record_sha256": "b202a70029e8d01cc88919eb36b34b3fffc8b1a5b5e19ffcfb0c4ea8b5f1c932",
+      "tool_source_sha256": "ee243a93e58ee6e0c529a2b7ab544d12d4e234a2975329e186560e58f55de281",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_einkorn_harvested_try1.png",
+        "sha256": "ee243a93e58ee6e0c529a2b7ab544d12d4e234a2975329e186560e58f55de281",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.2291328646115017,
+          "saturation_q25": 0.5227719780415252,
+          "saturation_q75": 0.5612499994022238,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.010519979387585518,
+          "foreground_pixels": 10135
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          50
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 199,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 33,
+        "gradient_x": -1.7320597014925365,
+        "gradient_y": -2.912317730496453,
+        "light_angle_degrees": 239.2585341584745,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 2
+    },
+    {
+      "id": "wild_einkorn_harvested",
+      "attempt": 2,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_einkorn_harvested_try2.png",
+      "sha256": "247ecdc674b393c53ea28149a681b994fd20714202f797851cd3316ef1521904",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_einkorn_harvested_try2.json",
+      "record_sha256": "acffc1d82399cd18196c5b399da3f031237551cfa5b58188d23e950b7ef5a412",
+      "tool_source_sha256": "247ecdc674b393c53ea28149a681b994fd20714202f797851cd3316ef1521904",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_einkorn_harvested_try2.png",
+        "sha256": "247ecdc674b393c53ea28149a681b994fd20714202f797851cd3316ef1521904",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.27842598947609243,
+          "saturation_q25": 0.4337481932252488,
+          "saturation_q75": 0.47760925605220395,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.02293056755022238,
+          "foreground_pixels": 11416
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          50
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 82,
+        "base_row": 55,
+        "base_error": -1,
+        "height": 13,
+        "gradient_x": -4.021381538461538,
+        "gradient_y": -2.42286,
+        "light_angle_degrees": 211.06872958954952,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_einkorn_winter",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_einkorn_winter_try1.png",
+      "sha256": "f77a7bfa77038801b6f6c5aa4cf271d3277114a4499b546d41d60b0af6afcc23",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_einkorn_winter_try1.json",
+      "record_sha256": "ce77a2dd0281316353b1bdf06e50f661cd45ec1f780d743b50ae28f799bf5776",
+      "tool_source_sha256": "f77a7bfa77038801b6f6c5aa4cf271d3277114a4499b546d41d60b0af6afcc23",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_einkorn_winter_try1.png",
+        "sha256": "f77a7bfa77038801b6f6c5aa4cf271d3277114a4499b546d41d60b0af6afcc23",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.2065698041692988,
+          "saturation_q25": 0.42928224473888243,
+          "saturation_q75": 0.4578359184658619,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.008664049212973314,
+          "foreground_pixels": 6122
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          50
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 78,
+        "base_row": 55,
+        "base_error": -1,
+        "height": 35,
+        "gradient_x": -1.7879027027027035,
+        "gradient_y": -4.318879069767441,
+        "light_angle_degrees": 247.5117274526699,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_flax_full",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_flax_full_try1.png",
+      "sha256": "7f011225c756bc37214adaf61f982a9fa38ad58334fb3ecae62cf7e246c84a03",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_flax_full_try1.json",
+      "record_sha256": "910a788ec9c4852460901d8ade4e532463b4558cb2e746ef2c5469b8d0b3f406",
+      "tool_source_sha256": "7f011225c756bc37214adaf61f982a9fa38ad58334fb3ecae62cf7e246c84a03",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_flax_full_try1.png",
+        "sha256": "7f011225c756bc37214adaf61f982a9fa38ad58334fb3ecae62cf7e246c84a03",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.16500415627597673,
+          "saturation_q25": 0.1581899529206075,
+          "saturation_q75": 0.5811141076309445,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.010798572173985659,
+          "foreground_pixels": 10078
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": false,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          42
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 170,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 40,
+        "gradient_x": 0.3582891566265065,
+        "gradient_y": -7.2476886597938135,
+        "light_angle_degrees": 272.83011031226874,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_flax_full",
+      "attempt": 2,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_flax_full_try2.png",
+      "sha256": "9ddb89251f5b96df32eeba5222a88cbdbae9063a4d73a0c5ab91ce90a2a13857",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_flax_full_try2.json",
+      "record_sha256": "9f55119fa69bbbb47e8c9804198a46de1d5e27ca8584a4fa2b4263a3331a666c",
+      "tool_source_sha256": "9ddb89251f5b96df32eeba5222a88cbdbae9063a4d73a0c5ab91ce90a2a13857",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_flax_full_try2.png",
+        "sha256": "9ddb89251f5b96df32eeba5222a88cbdbae9063a4d73a0c5ab91ce90a2a13857",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.17807655371107148,
+          "saturation_q25": 0.6163040246271577,
+          "saturation_q75": 0.6886824854972566,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.02328725800571608,
+          "foreground_pixels": 15865
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          42
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 415,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 40,
+        "gradient_x": -3.6225077490774904,
+        "gradient_y": -6.471526428571428,
+        "light_angle_degrees": 240.76160167803204,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 75
+    },
+    {
+      "id": "wild_flax_full",
+      "attempt": 3,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_flax_full_try3.png",
+      "sha256": "532518ca7707ca636d188769f46bb1c2ee46a04977d2c8498812db736b5baa9c",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_flax_full_try3.json",
+      "record_sha256": "6256c7c58489e785fce750f83f79b4bc6736d08d303e9c067d0bc85a94e11604",
+      "tool_source_sha256": "532518ca7707ca636d188769f46bb1c2ee46a04977d2c8498812db736b5baa9c",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_flax_full_try3.png",
+        "sha256": "532518ca7707ca636d188769f46bb1c2ee46a04977d2c8498812db736b5baa9c",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.17868291957782073,
+          "saturation_q25": 0.5992962741748712,
+          "saturation_q75": 0.6825124590577566,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.023709946592487176,
+          "foreground_pixels": 15360
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          42
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 323,
+        "base_row": 55,
+        "base_error": -1,
+        "height": 37,
+        "gradient_x": -2.790333673469388,
+        "gradient_y": -6.1048413145539895,
+        "light_angle_degrees": 245.43632932466835,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_flax_harvested",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_flax_harvested_try1.png",
+      "sha256": "89c6afe4f08aaed680fa841e4ead55859295f750a4701f6a840b3f991dc22b46",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_flax_harvested_try1.json",
+      "record_sha256": "a6bad56dcad56f2fa63d377804796a111ca9e6881f00e60a63d8503d4494848d",
+      "tool_source_sha256": "89c6afe4f08aaed680fa841e4ead55859295f750a4701f6a840b3f991dc22b46",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_flax_harvested_try1.png",
+        "sha256": "89c6afe4f08aaed680fa841e4ead55859295f750a4701f6a840b3f991dc22b46",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.26016455262255744,
+          "saturation_q25": 0.5392559164074373,
+          "saturation_q75": 0.6379475364534773,
+          "stroke_q25": 2.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.47213595499958,
+          "stroke_q90": 5.656854249492381,
+          "wash_flatness": 0.019794419613627837,
+          "foreground_pixels": 32557
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          42
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 43,
+        "base_row": 55,
+        "base_error": -1,
+        "height": 7,
+        "gradient_x": -2.5422742857142846,
+        "gradient_y": -5.354245714285715,
+        "light_angle_degrees": 244.60094746191209,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_flax_harvested",
+      "attempt": 2,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_flax_harvested_try2.png",
+      "sha256": "386081eb99ce7d6120d009665fa05e34e8db477504a952ac3b5ba0967299d896",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_flax_harvested_try2.json",
+      "record_sha256": "e66fa8e6a2493f34ba0477e79afa770fdaa17aa685c774728812c8daef623485",
+      "tool_source_sha256": "386081eb99ce7d6120d009665fa05e34e8db477504a952ac3b5ba0967299d896",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_flax_harvested_try2.png",
+        "sha256": "386081eb99ce7d6120d009665fa05e34e8db477504a952ac3b5ba0967299d896",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.2302964813939353,
+          "saturation_q25": 0.596638356841684,
+          "saturation_q75": 0.6315684854284793,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.021651276382270837,
+          "foreground_pixels": 21175
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          42
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 116,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 19,
+        "gradient_x": -0.832264197530864,
+        "gradient_y": -1.6682426966292139,
+        "light_angle_degrees": 243.48599860240776,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_flax_winter",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_flax_winter_try1.png",
+      "sha256": "a7279ac17cacd51690221969088ce3a9741e3c3e23ac07c54c1243ee1181c03a",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_flax_winter_try1.json",
+      "record_sha256": "fe0addc10f7c5eda19c662f97599396f04e5138b9c172d47e47547acc42eeecb",
+      "tool_source_sha256": "a7279ac17cacd51690221969088ce3a9741e3c3e23ac07c54c1243ee1181c03a",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_flax_winter_try1.png",
+        "sha256": "a7279ac17cacd51690221969088ce3a9741e3c3e23ac07c54c1243ee1181c03a",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.20100502512562815,
+          "saturation_q25": 0.5078632898447744,
+          "saturation_q75": 0.54030790496016,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.013301092699410244,
+          "foreground_pixels": 8214
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          42
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 136,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 35,
+        "gradient_x": -1.6996513513513516,
+        "gradient_y": -3.558891111111112,
+        "light_angle_degrees": 244.4718428287706,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_grain_full",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_grain_full_try1.png",
+      "sha256": "05196c58f9c6b97db4b8443bb490aed74c14b28ad64942da66237d33f019a068",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_grain_full_try1.json",
+      "record_sha256": "e2a84c4257702b8eae39f0208efea4ebe4cac69d888e7bca7bcd6b583ada0fd5",
+      "tool_source_sha256": "05196c58f9c6b97db4b8443bb490aed74c14b28ad64942da66237d33f019a068",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_grain_full_try1.png",
+        "sha256": "05196c58f9c6b97db4b8443bb490aed74c14b28ad64942da66237d33f019a068",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.175214787815673,
+          "saturation_q25": 0.5708053570223458,
+          "saturation_q75": 0.6015728020707404,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.02851325347535098,
+          "foreground_pixels": 9153
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          50
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 305,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 43,
+        "gradient_x": -2.043215730337078,
+        "gradient_y": -6.000051741293533,
+        "light_angle_degrees": 251.1945960845196,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_grain_harvested",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_grain_harvested_try1.png",
+      "sha256": "a468013ace0c18b75ee8e530c2f14a84a9549cc28d70b806ea1de9b0ab5d53d9",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_grain_harvested_try1.json",
+      "record_sha256": "2735eb92acc8c5819d2a86eca752b49a0e7cbe6cb550f94a9be651efa941ca2a",
+      "tool_source_sha256": "a468013ace0c18b75ee8e530c2f14a84a9549cc28d70b806ea1de9b0ab5d53d9",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_grain_harvested_try1.png",
+        "sha256": "a468013ace0c18b75ee8e530c2f14a84a9549cc28d70b806ea1de9b0ab5d53d9",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.21517791539834155,
+          "saturation_q25": 0.5455530167294873,
+          "saturation_q75": 0.5823845064302535,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.03158851717188894,
+          "foreground_pixels": 15052
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          50
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 219,
+        "base_row": 57,
+        "base_error": 1,
+        "height": 30,
+        "gradient_x": -0.6227239436619717,
+        "gradient_y": -2.38034512195122,
+        "light_angle_degrees": 255.33937070059773,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_grain_winter",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_grain_winter_try1.png",
+      "sha256": "f10330e4832b942acfd36bcb426fd321163ad3bb27bb32c86d889f311a4efc43",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_grain_winter_try1.json",
+      "record_sha256": "a1557fa6b1b3c82b17d82566986e2ad8084be9614e79534ffb60d405eb96c1ed",
+      "tool_source_sha256": "f10330e4832b942acfd36bcb426fd321163ad3bb27bb32c86d889f311a4efc43",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_grain_winter_try1.png",
+        "sha256": "f10330e4832b942acfd36bcb426fd321163ad3bb27bb32c86d889f311a4efc43",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.19648910411622275,
+          "saturation_q25": 0.4832109677935528,
+          "saturation_q75": 0.54340134959443,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.03178771254578347,
+          "foreground_pixels": 15158
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          50
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 135,
+        "base_row": 55,
+        "base_error": -1,
+        "height": 21,
+        "gradient_x": -1.3785955056179775,
+        "gradient_y": -4.010410526315789,
+        "light_angle_degrees": 251.02937642438764,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_grape_full",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_grape_full_try1.png",
+      "sha256": "c71c1beb035026d4016fce7607be39363548857a9d0ceb1f50d44ea4a1863351",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_grape_full_try1.json",
+      "record_sha256": "59cafecbf73b298ab483d0e78914d8e0ebbaf3d6f704c925d35c065b3e3e8de0",
+      "tool_source_sha256": "c71c1beb035026d4016fce7607be39363548857a9d0ceb1f50d44ea4a1863351",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_grape_full_try1.png",
+        "sha256": "c71c1beb035026d4016fce7607be39363548857a9d0ceb1f50d44ea4a1863351",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.2153853018606934,
+          "saturation_q25": 0.45051634846404687,
+          "saturation_q75": 0.5398876804356418,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.022393578742402116,
+          "foreground_pixels": 29186
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          1,
+          66
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 2100,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 64,
+        "gradient_x": -0.7786590341833968,
+        "gradient_y": -0.7233362938596491,
+        "light_angle_degrees": 222.89058779864135,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_grape_full",
+      "attempt": 2,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_grape_full_try2.png",
+      "sha256": "a91838592aa83eb38ffc7cafcf1da21923107f88064cbaa06400a44ba5aeaa2d",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_grape_full_try2.json",
+      "record_sha256": "5fab265afa5b6ce5bfecdf6b51cbf6f90cf000aa2e0dc6e9687fe9773601b251",
+      "tool_source_sha256": "a91838592aa83eb38ffc7cafcf1da21923107f88064cbaa06400a44ba5aeaa2d",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_grape_full_try2.png",
+        "sha256": "a91838592aa83eb38ffc7cafcf1da21923107f88064cbaa06400a44ba5aeaa2d",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.22938337355413166,
+          "saturation_q25": 0.5057125250335642,
+          "saturation_q75": 0.6479190782103398,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.04021176064286276,
+          "foreground_pixels": 30821
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          1,
+          66
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 2257,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 64,
+        "gradient_x": -1.1245639442231075,
+        "gradient_y": -1.2395834510595356,
+        "light_angle_degrees": 227.78533399659258,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 398
+    },
+    {
+      "id": "wild_grape_harvested",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_grape_harvested_try1.png",
+      "sha256": "4f29765e51aa0a4b8038d98b5f077dd56820f91b007757db6798540fb4a45ff7",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_grape_harvested_try1.json",
+      "record_sha256": "9c7241b6cdefc64ca2c8d68fcdd01c6a2b3231d1b46307f769add8d057889269",
+      "tool_source_sha256": "4f29765e51aa0a4b8038d98b5f077dd56820f91b007757db6798540fb4a45ff7",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_grape_harvested_try1.png",
+        "sha256": "4f29765e51aa0a4b8038d98b5f077dd56820f91b007757db6798540fb4a45ff7",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.2286756156854455,
+          "saturation_q25": 0.4912544528027375,
+          "saturation_q75": 0.5723896035135778,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.0204311117258872,
+          "foreground_pixels": 25829
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          1,
+          66
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1867,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 64,
+        "gradient_x": -1.3394683137739343,
+        "gradient_y": -0.9051193916349808,
+        "light_angle_degrees": 214.04808799959218,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_grape_winter",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_grape_winter_try1.png",
+      "sha256": "dfa70d57a47d28b085ec97297c335a9ec04f8468bbcd8c2711db3fd5df47da35",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_grape_winter_try1.json",
+      "record_sha256": "9963dbddf2f0910624ae86ac675926253eab6b3f280f1317e03054977fb2b2ae",
+      "tool_source_sha256": "dfa70d57a47d28b085ec97297c335a9ec04f8468bbcd8c2711db3fd5df47da35",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_grape_winter_try1.png",
+        "sha256": "dfa70d57a47d28b085ec97297c335a9ec04f8468bbcd8c2711db3fd5df47da35",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.2601237842617153,
+          "saturation_q25": 0.4307424189730634,
+          "saturation_q75": 0.48113724793695206,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.021862363639693887,
+          "foreground_pixels": 10694
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          48,
+          80
+        ],
+        "height_band": [
+          1,
+          66
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 608,
+        "base_row": 80,
+        "base_error": 0,
+        "height": 57,
+        "gradient_x": -5.887068695652174,
+        "gradient_y": -5.002599999999999,
+        "light_angle_degrees": 220.35657793229603,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_hemp_full",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_hemp_full_try1.png",
+      "sha256": "b8331f8c3febe6b04074ddc2ff066ee7fd137724bc5c512eeb866c05a6feff18",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_hemp_full_try1.json",
+      "record_sha256": "b7f5a72584bd0700541fdbd5ee76ce04c5368736c1fd01a8332e5b3167e46b1b",
+      "tool_source_sha256": "b8331f8c3febe6b04074ddc2ff066ee7fd137724bc5c512eeb866c05a6feff18",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_hemp_full_try1.png",
+        "sha256": "b8331f8c3febe6b04074ddc2ff066ee7fd137724bc5c512eeb866c05a6feff18",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.09639249639249639,
+          "saturation_q25": 0.5631718713693927,
+          "saturation_q75": 0.620239246432249,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.0,
+          "wash_flatness": 0.012351141747144523,
+          "foreground_pixels": 12808
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": true
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          50
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 437,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 45,
+        "gradient_x": -0.8022503496503502,
+        "gradient_y": 2.682278102189781,
+        "light_angle_degrees": 106.65155094887537,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_hemp_harvested",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_hemp_harvested_try1.png",
+      "sha256": "b13e798d2395e6bf34a16da7f3d518376f6cc81241fded7820c2592886441a38",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_hemp_harvested_try1.json",
+      "record_sha256": "9b28f374979c2d3027be59e51919859332dc062830097bf8f6d1aace22d7a769",
+      "tool_source_sha256": "b13e798d2395e6bf34a16da7f3d518376f6cc81241fded7820c2592886441a38",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_hemp_harvested_try1.png",
+        "sha256": "b13e798d2395e6bf34a16da7f3d518376f6cc81241fded7820c2592886441a38",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.24401249566122873,
+          "saturation_q25": 0.49187450240563846,
+          "saturation_q75": 0.5460470250910751,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.027060407675636625,
+          "foreground_pixels": 19322
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          50
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 107,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 16,
+        "gradient_x": -2.641807792207792,
+        "gradient_y": -4.330784269662921,
+        "light_angle_degrees": 238.6165255860816,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_hemp_winter",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_hemp_winter_try1.png",
+      "sha256": "d52a3ea315c972bab06c3dfc3028570609a95908240463081b1bb731b21a7cbb",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_hemp_winter_try1.json",
+      "record_sha256": "2e7f3368229c819aeb0d2c96d9661b736ab16fbe2f2249e23876f1f5d738a1f9",
+      "tool_source_sha256": "d52a3ea315c972bab06c3dfc3028570609a95908240463081b1bb731b21a7cbb",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_hemp_winter_try1.png",
+        "sha256": "d52a3ea315c972bab06c3dfc3028570609a95908240463081b1bb731b21a7cbb",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.21079258010118043,
+          "saturation_q25": 0.4835099652340674,
+          "saturation_q75": 0.5189144695692107,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.018307397616384988,
+          "foreground_pixels": 5520
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          50
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 155,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 46,
+        "gradient_x": -4.92646440677966,
+        "gradient_y": -3.4024909090909077,
+        "light_angle_degrees": 214.63112063465786,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_lentil_full",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_lentil_full_try1.png",
+      "sha256": "7fa05ba3177ebaca1a3c270746a63422d1d9dc2dda1b0853297c457eb2f18bbc",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_lentil_full_try1.json",
+      "record_sha256": "0da457fe42ff6aa47043978fd2771647b2a812f014ad8a1cd5a8c055b7b12b5a",
+      "tool_source_sha256": "7fa05ba3177ebaca1a3c270746a63422d1d9dc2dda1b0853297c457eb2f18bbc",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_lentil_full_try1.png",
+        "sha256": "7fa05ba3177ebaca1a3c270746a63422d1d9dc2dda1b0853297c457eb2f18bbc",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.19947377076138792,
+          "saturation_q25": 0.5570018025340249,
+          "saturation_q75": 0.5817022954575733,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.0182281110370093,
+          "foreground_pixels": 14929
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          30
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 418,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 27,
+        "gradient_x": -1.0420481012658231,
+        "gradient_y": -0.4339100977198691,
+        "light_angle_degrees": 202.60690446331063,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_lentil_harvested",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_lentil_harvested_try1.png",
+      "sha256": "67e7c77a33b20a59a1bd043235215626485ad8940d0080cbef37924daffb4388",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_lentil_harvested_try1.json",
+      "record_sha256": "a60fccb9cb65ba9cbb207c2eaf1ed6a56a84dffef4d023d7d12cb740f62001a3",
+      "tool_source_sha256": "67e7c77a33b20a59a1bd043235215626485ad8940d0080cbef37924daffb4388",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_lentil_harvested_try1.png",
+        "sha256": "67e7c77a33b20a59a1bd043235215626485ad8940d0080cbef37924daffb4388",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.21204301075268817,
+          "saturation_q25": 0.5583697817847336,
+          "saturation_q75": 0.5862994136120124,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.011107828982624099,
+          "foreground_pixels": 6874
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          30
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 155,
+        "base_row": 55,
+        "base_error": -1,
+        "height": 16,
+        "gradient_x": -0.06055294117647088,
+        "gradient_y": -1.6051959595959602,
+        "light_angle_degrees": 267.83965088606476,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_lentil_winter",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_lentil_winter_try1.png",
+      "sha256": "a3abd80b671adcd474468c5998671df7a11714ad2ec0c7879e0ab719b90510a4",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_lentil_winter_try1.json",
+      "record_sha256": "e6e748cc6f1ce6269802b997f2da99e79cff7cb26d0edba58f2ce4f9c3994e22",
+      "tool_source_sha256": "a3abd80b671adcd474468c5998671df7a11714ad2ec0c7879e0ab719b90510a4",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_lentil_winter_try1.png",
+        "sha256": "a3abd80b671adcd474468c5998671df7a11714ad2ec0c7879e0ab719b90510a4",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.2050955414012739,
+          "saturation_q25": 0.5601244437195272,
+          "saturation_q75": 0.5806672890722526,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.022415068905772172,
+          "foreground_pixels": 7018
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          30
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 79,
+        "base_row": 54,
+        "base_error": -2,
+        "height": 12,
+        "gradient_x": -1.695578181818182,
+        "gradient_y": -4.772435555555557,
+        "light_angle_degrees": 250.44060084967012,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_millet_full",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_millet_full_try1.png",
+      "sha256": "eb6f4177928ce4bb3d66a485bf15c620cbf76de8b8c10e36edd8ad5bbf2a152e",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_millet_full_try1.json",
+      "record_sha256": "3102e9d2f69a735f2ea5a68244156cbf5fd8af1fa63838962d99c5592f93f7e2",
+      "tool_source_sha256": "eb6f4177928ce4bb3d66a485bf15c620cbf76de8b8c10e36edd8ad5bbf2a152e",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_millet_full_try1.png",
+        "sha256": "eb6f4177928ce4bb3d66a485bf15c620cbf76de8b8c10e36edd8ad5bbf2a152e",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.15667618141452586,
+          "saturation_q25": 0.5936105657014102,
+          "saturation_q75": 0.6427124526235276,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.0,
+          "wash_flatness": 0.009680087685187177,
+          "foreground_pixels": 12742
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": true
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          46
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 291,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 43,
+        "gradient_x": -1.9573217391304345,
+        "gradient_y": -2.282122352941176,
+        "light_angle_degrees": 229.38109821150837,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_millet_harvested",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_millet_harvested_try1.png",
+      "sha256": "246e54c933c0d0aa30c799a54cfb64afbcf563eb26a234c2bc0ee931c994b311",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_millet_harvested_try1.json",
+      "record_sha256": "82b924e1ccd55a70a11605ffb229d08fb4849675470ca97aeff2345deb5642f3",
+      "tool_source_sha256": "246e54c933c0d0aa30c799a54cfb64afbcf563eb26a234c2bc0ee931c994b311",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_millet_harvested_try1.png",
+        "sha256": "246e54c933c0d0aa30c799a54cfb64afbcf563eb26a234c2bc0ee931c994b311",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.22559414990859233,
+          "saturation_q25": 0.5252793629227348,
+          "saturation_q75": 0.5790947033270819,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.014975786364562056,
+          "foreground_pixels": 16590
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          46
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 389,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 28,
+        "gradient_x": -1.5251134228187924,
+        "gradient_y": -1.477407560137457,
+        "light_angle_degrees": 224.08972672258622,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 6
+    },
+    {
+      "id": "wild_millet_winter",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_millet_winter_try1.png",
+      "sha256": "d0abf74685deeb074753c6870a77a5d15b1a9e04ef6dc0633f7947b1a4b3457e",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_millet_winter_try1.json",
+      "record_sha256": "0789744b5ab90f3ec5242c25a2df49ac6830b0e1225a3e4cb728dde3aa494064",
+      "tool_source_sha256": "d0abf74685deeb074753c6870a77a5d15b1a9e04ef6dc0633f7947b1a4b3457e",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_millet_winter_try1.png",
+        "sha256": "d0abf74685deeb074753c6870a77a5d15b1a9e04ef6dc0633f7947b1a4b3457e",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.22189962671090835,
+          "saturation_q25": 0.48296026907533685,
+          "saturation_q75": 0.5432845993055126,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.023443516525628053,
+          "foreground_pixels": 17344
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          46
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 126,
+        "base_row": 55,
+        "base_error": -1,
+        "height": 15,
+        "gradient_x": -3.0500822222222217,
+        "gradient_y": -4.422334065934065,
+        "light_angle_degrees": 235.4059846747678,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_pea_full",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_pea_full_try1.png",
+      "sha256": "006183090b077cb9f6d727ece7534c6af39b14cc8bc91ff8c33eb32b70f704a8",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_pea_full_try1.json",
+      "record_sha256": "28fa589415a7039bcb47b9aa5073c78468c1ac1c38110e4cedec48954a052253",
+      "tool_source_sha256": "006183090b077cb9f6d727ece7534c6af39b14cc8bc91ff8c33eb32b70f704a8",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_pea_full_try1.png",
+        "sha256": "006183090b077cb9f6d727ece7534c6af39b14cc8bc91ff8c33eb32b70f704a8",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.22075869336143308,
+          "saturation_q25": 0.5108287221627166,
+          "saturation_q75": 0.5394160414146301,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.015493945825910212,
+          "foreground_pixels": 23609
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          34
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 460,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 29,
+        "gradient_x": -1.9394005509641876,
+        "gradient_y": -3.020470360110803,
+        "light_angle_degrees": 237.2960637782616,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_pea_harvested",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_pea_harvested_try1.png",
+      "sha256": "b08c06f70d1d8b14f403b9963616570e000595c1cf4731d59a35b54c7b33fc18",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_pea_harvested_try1.json",
+      "record_sha256": "09a218ea5a7116dedf20771d5c11787d99e4752e573be21be70ca2a51fa05a14",
+      "tool_source_sha256": "b08c06f70d1d8b14f403b9963616570e000595c1cf4731d59a35b54c7b33fc18",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_pea_harvested_try1.png",
+        "sha256": "b08c06f70d1d8b14f403b9963616570e000595c1cf4731d59a35b54c7b33fc18",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.23232253139962528,
+          "saturation_q25": 0.4568932459702975,
+          "saturation_q75": 0.5061000424489103,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.013744949705854742,
+          "foreground_pixels": 22058
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          34
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 425,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 29,
+        "gradient_x": -1.4396314199395772,
+        "gradient_y": -2.733348765432099,
+        "light_angle_degrees": 242.2246072517493,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_pea_winter",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_pea_winter_try1.png",
+      "sha256": "84b50c09fb09756518a99e3299f2e1a6e5b43d3e8fda428adda41fe7744f36d9",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_pea_winter_try1.json",
+      "record_sha256": "96f19bf751529609bf4f1b19eb7487ddd8fbd4389338488fd0a1e5c1d42a42ed",
+      "tool_source_sha256": "84b50c09fb09756518a99e3299f2e1a6e5b43d3e8fda428adda41fe7744f36d9",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_pea_winter_try1.png",
+        "sha256": "84b50c09fb09756518a99e3299f2e1a6e5b43d3e8fda428adda41fe7744f36d9",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.24031007751937986,
+          "saturation_q25": 0.4950917457895876,
+          "saturation_q75": 0.519655243245826,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.021689556749065454,
+          "foreground_pixels": 8445
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          34
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 112,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 27,
+        "gradient_x": -2.2174875,
+        "gradient_y": -2.633185714285714,
+        "light_angle_degrees": 229.89822737766028,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_root_full",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_root_full_try1.png",
+      "sha256": "c2dc670822ff00b2476aead263b01f6115de147d323aa3deb5304309084b5109",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_root_full_try1.json",
+      "record_sha256": "99f2f5e0b0345d37b0fc22089e5cdcec19b42199767115c36d71e71c3d6f3db8",
+      "tool_source_sha256": "c2dc670822ff00b2476aead263b01f6115de147d323aa3deb5304309084b5109",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_root_full_try1.png",
+        "sha256": "c2dc670822ff00b2476aead263b01f6115de147d323aa3deb5304309084b5109",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.23763736263736263,
+          "saturation_q25": 0.41532228692681367,
+          "saturation_q75": 0.5233695749091999,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.0,
+          "wash_flatness": 0.01282058948893868,
+          "foreground_pixels": 23120
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": true
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          26
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 355,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 24,
+        "gradient_x": -1.0215895765472316,
+        "gradient_y": -1.334109523809523,
+        "light_angle_degrees": 232.5570431838619,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_root_harvested",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_root_harvested_try1.png",
+      "sha256": "57f6355072033a453d9f4d8a3180ec20bd3febe00beb33f3d04e4547086c44ce",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_root_harvested_try1.json",
+      "record_sha256": "7133638a21d96ac2692b0c90b4c8206d6c33b7081a75a41bfe954778fd1ef297",
+      "tool_source_sha256": "57f6355072033a453d9f4d8a3180ec20bd3febe00beb33f3d04e4547086c44ce",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_root_harvested_try1.png",
+        "sha256": "57f6355072033a453d9f4d8a3180ec20bd3febe00beb33f3d04e4547086c44ce",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.25194516487588,
+          "saturation_q25": 0.44807173218193785,
+          "saturation_q75": 0.5700869389210477,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.023444299015539863,
+          "foreground_pixels": 25822
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          26
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 10,
+        "base_row": 53,
+        "base_error": -3,
+        "height": 3,
+        "gradient_x": -6.056833333333333,
+        "gradient_y": -10.62346666666666,
+        "light_angle_degrees": 240.3109277471591,
+        "base_passed": false,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": false
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_root_winter",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_root_winter_try1.png",
+      "sha256": "6245ffc443f28fa25125722c4385aebbf8d811aaaf255a12072fc6bfa51e883c",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_root_winter_try1.json",
+      "record_sha256": "bfddcee54c69a797507718072c17f25ee1c883070a8def4ea32dd2d1618f68d0",
+      "tool_source_sha256": "6245ffc443f28fa25125722c4385aebbf8d811aaaf255a12072fc6bfa51e883c",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_root_winter_try1.png",
+        "sha256": "6245ffc443f28fa25125722c4385aebbf8d811aaaf255a12072fc6bfa51e883c",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.24991364421416234,
+          "saturation_q25": 0.49323595955341626,
+          "saturation_q75": 0.5802627035576262,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.02375189973284102,
+          "foreground_pixels": 20909
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          26
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 266,
+        "base_row": 55,
+        "base_error": -1,
+        "height": 22,
+        "gradient_x": -3.174256744186045,
+        "gradient_y": -6.203778000000001,
+        "light_angle_degrees": 242.90275823144165,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_rye_full",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_rye_full_try1.png",
+      "sha256": "5beca6e806b2b589ef105bdcf5445488e34106a69dbd20de15a39d336f0e8a1a",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_rye_full_try1.json",
+      "record_sha256": "26b11eb01d1cde2780b143f3eb1a8cd31dd2315bc8510b2744561102448ce84a",
+      "tool_source_sha256": "5beca6e806b2b589ef105bdcf5445488e34106a69dbd20de15a39d336f0e8a1a",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_rye_full_try1.png",
+        "sha256": "5beca6e806b2b589ef105bdcf5445488e34106a69dbd20de15a39d336f0e8a1a",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.18305597579425115,
+          "saturation_q25": 0.4736884590750967,
+          "saturation_q75": 0.5210898860546924,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.013933366421302157,
+          "foreground_pixels": 10518
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          50
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 334,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 47,
+        "gradient_x": -1.587220304568528,
+        "gradient_y": -3.057579279279279,
+        "light_angle_degrees": 242.56571771723986,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_rye_harvested",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_rye_harvested_try1.png",
+      "sha256": "4db2505b75de348e34451baa202f64a325d80534b1fe23b51eb612343aa934bb",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_rye_harvested_try1.json",
+      "record_sha256": "b4cfd9d69c227ca7fc3fca49f5657fd4c100f5963dc3bea2f482ed1398ae4f4f",
+      "tool_source_sha256": "4db2505b75de348e34451baa202f64a325d80534b1fe23b51eb612343aa934bb",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_rye_harvested_try1.png",
+        "sha256": "4db2505b75de348e34451baa202f64a325d80534b1fe23b51eb612343aa934bb",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.23059297956191,
+          "saturation_q25": 0.5209026580181213,
+          "saturation_q75": 0.5814882616617647,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.013049346247231714,
+          "foreground_pixels": 17433
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          50
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 298,
+        "base_row": 55,
+        "base_error": -1,
+        "height": 31,
+        "gradient_x": -0.8889051162790698,
+        "gradient_y": -1.9902063063063056,
+        "light_angle_degrees": 245.93256555074112,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    },
+    {
+      "id": "wild_rye_winter",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_rye_winter_try1.png",
+      "sha256": "d8cb472ebb06f1cd1d660213fc26e0e751f1d283b5aa1c4e300c21ffc1b2464e",
+      "record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_rye_winter_try1.json",
+      "record_sha256": "6e1153172b4be8ed4c8950ad7f58ce21dbe28c48f02e03decde7fc8ad0512326",
+      "tool_source_sha256": "d8cb472ebb06f1cd1d660213fc26e0e751f1d283b5aa1c4e300c21ffc1b2464e",
+      "seed": null,
+      "style": {
+        "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_rye_winter_try1.png",
+        "sha256": "d8cb472ebb06f1cd1d660213fc26e0e751f1d283b5aa1c4e300c21ffc1b2464e",
+        "family": "plants",
+        "metrics": {
+          "edge_density": 0.255126953125,
+          "saturation_q25": 0.501765642975242,
+          "saturation_q75": 0.5496363046039018,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.02104176199491106,
+          "foreground_pixels": 10329
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "size_match": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          56
+        ],
+        "height_band": [
+          1,
+          50
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 211,
+        "base_row": 55,
+        "base_error": -1,
+        "height": 39,
+        "gradient_x": -1.868817054263566,
+        "gradient_y": -1.6005246575342458,
+        "light_angle_degrees": 220.5779828870759,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "opaque_outside_crop": 0
+    }
+  ],
+  "maximum_attempt": 3,
+  "count": 38
+}

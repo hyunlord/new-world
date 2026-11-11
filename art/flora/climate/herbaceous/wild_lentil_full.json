@@ -1,0 +1,134 @@
+{
+  "id": "wild_lentil_full",
+  "state": "full",
+  "species": "wild_lentil",
+  "status": "ADOPTED_CANDIDATE",
+  "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_lentil_full_try1.png",
+  "source_sha256": "7fa05ba3177ebaca1a3c270746a63422d1d9dc2dda1b0853297c457eb2f18bbc",
+  "generation_record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_lentil_full_try1.json",
+  "generation_record_sha256": "0da457fe42ff6aa47043978fd2771647b2a812f014ad8a1cd5a8c055b7b12b5a",
+  "prompt_sha256": "175530e40a49a15912e10a30dc1f39071835012b9d6a6924fb9c07853a271d8b",
+  "reference_sha256": {
+    "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+    "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+  },
+  "attempt": 1,
+  "seed": null,
+  "geometry_source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_lentil_full_try1.png",
+  "geometry_source_sha256": "7fa05ba3177ebaca1a3c270746a63422d1d9dc2dda1b0853297c457eb2f18bbc",
+  "transform": {
+    "source_canvas": [
+      1536,
+      1024
+    ],
+    "crop": [
+      108,
+      76,
+      1410,
+      943
+    ],
+    "scale": 0.03244495944380069,
+    "scaled_canvas": [
+      42,
+      28
+    ],
+    "offset": [
+      12,
+      29
+    ],
+    "output_canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "target_height": 28
+  },
+  "footprint": [
+    1,
+    1
+  ],
+  "checks": {
+    "structure": true,
+    "visible_border": false,
+    "raw_border": false,
+    "opaque_components": 7,
+    "component_sizes": [
+      376,
+      17,
+      8,
+      6,
+      6,
+      3,
+      2
+    ],
+    "tree_connectivity": "NOT_APPLICABLE_MULTISTEM_HERB",
+    "source_opaque_outside_crop": 0,
+    "size_match": true,
+    "tool_source_sha256": "7fa05ba3177ebaca1a3c270746a63422d1d9dc2dda1b0853297c457eb2f18bbc",
+    "actual_raw": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_lentil_full_try1.png"
+  },
+  "projection": {
+    "family": "item",
+    "anchor": [
+      32,
+      56
+    ],
+    "height_band": [
+      1,
+      30
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 418,
+    "base_row": 56,
+    "base_error": 0,
+    "height": 27,
+    "gradient_x": -1.0420481012658231,
+    "gradient_y": -0.4339100977198691,
+    "light_angle_degrees": 202.60690446331063,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "style": {
+    "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_lentil_full_try1.png",
+    "sha256": "7fa05ba3177ebaca1a3c270746a63422d1d9dc2dda1b0853297c457eb2f18bbc",
+    "family": "plants",
+    "metrics": {
+      "edge_density": 0.19947377076138792,
+      "saturation_q25": 0.5570018025340249,
+      "saturation_q75": 0.5817022954575733,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.0182281110370093,
+      "foreground_pixels": 14929
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "review": {
+    "id": "wild_lentil_full",
+    "attempt": 1,
+    "visual_score": 90,
+    "visual_notes": "One compact rooted stand; no detached major props/foliage; full, cut or dormant morphology readable at 1x/2x."
+  },
+  "path": "art/flora/climate/herbaceous/wild_lentil_full.png",
+  "sha256": "6823936b20df568a580c2d1d8a55abcf71009e01d50f95b6d3a2a5c69a4e4938"
+}

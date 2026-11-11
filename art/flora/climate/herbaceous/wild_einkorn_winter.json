@@ -1,0 +1,146 @@
+{
+  "id": "wild_einkorn_winter",
+  "state": "winter",
+  "species": "wild_einkorn",
+  "status": "ADOPTED_CANDIDATE",
+  "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_einkorn_winter_try1.png",
+  "source_sha256": "f77a7bfa77038801b6f6c5aa4cf271d3277114a4499b546d41d60b0af6afcc23",
+  "generation_record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_einkorn_winter_try1.json",
+  "generation_record_sha256": "ce77a2dd0281316353b1bdf06e50f661cd45ec1f780d743b50ae28f799bf5776",
+  "prompt_sha256": "6a736760cd7763099e09f63f2f1f274fbf113b9e1e3536a33d8157ab546f0c3e",
+  "reference_sha256": {
+    "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_einkorn_full_try1.png": "731a0e2e49681090ae3e3fbf7b65aad3409dfaec14df5107f6f90e9f7cfa80e4",
+    "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+    "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+  },
+  "attempt": 1,
+  "seed": null,
+  "geometry_source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_einkorn_full_try1.png",
+  "geometry_source_sha256": "731a0e2e49681090ae3e3fbf7b65aad3409dfaec14df5107f6f90e9f7cfa80e4",
+  "transform": {
+    "source_canvas": [
+      1312,
+      1199
+    ],
+    "crop": [
+      246,
+      26,
+      1072,
+      1135
+    ],
+    "scale": 0.04343891402714932,
+    "scaled_canvas": [
+      36,
+      48
+    ],
+    "offset": [
+      14,
+      10
+    ],
+    "output_canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "target_height": 48
+  },
+  "footprint": [
+    1,
+    1
+  ],
+  "checks": {
+    "structure": true,
+    "visible_border": false,
+    "raw_border": false,
+    "opaque_components": 18,
+    "component_sizes": [
+      56,
+      3,
+      2,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "tree_connectivity": "NOT_APPLICABLE_MULTISTEM_HERB",
+    "source_opaque_outside_crop": 0,
+    "size_match": true,
+    "tool_source_sha256": "f77a7bfa77038801b6f6c5aa4cf271d3277114a4499b546d41d60b0af6afcc23",
+    "actual_raw": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_einkorn_winter_try1.png"
+  },
+  "projection": {
+    "family": "item",
+    "anchor": [
+      32,
+      56
+    ],
+    "height_band": [
+      1,
+      50
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 78,
+    "base_row": 55,
+    "base_error": -1,
+    "height": 35,
+    "gradient_x": -1.7879027027027035,
+    "gradient_y": -4.318879069767441,
+    "light_angle_degrees": 247.5117274526699,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "style": {
+    "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_einkorn_winter_try1.png",
+    "sha256": "f77a7bfa77038801b6f6c5aa4cf271d3277114a4499b546d41d60b0af6afcc23",
+    "family": "plants",
+    "metrics": {
+      "edge_density": 0.2065698041692988,
+      "saturation_q25": 0.42928224473888243,
+      "saturation_q75": 0.4578359184658619,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.008664049212973314,
+      "foreground_pixels": 6122
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "review": {
+    "id": "wild_einkorn_winter",
+    "attempt": 1,
+    "visual_score": 90,
+    "visual_notes": "One compact rooted stand; no detached major props/foliage; full, cut or dormant morphology readable at 1x/2x."
+  },
+  "path": "art/flora/climate/herbaceous/wild_einkorn_winter.png",
+  "sha256": "3f1aa88e2a309f33074cf05a070ac51785e7f61a7558dafe336d6d0139836686"
+}

@@ -1,0 +1,129 @@
+{
+  "id": "wild_hemp_harvested",
+  "state": "harvested",
+  "species": "wild_hemp",
+  "status": "ADOPTED_CANDIDATE",
+  "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_hemp_harvested_try1.png",
+  "source_sha256": "b13e798d2395e6bf34a16da7f3d518376f6cc81241fded7820c2592886441a38",
+  "generation_record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_hemp_harvested_try1.json",
+  "generation_record_sha256": "9b28f374979c2d3027be59e51919859332dc062830097bf8f6d1aace22d7a769",
+  "prompt_sha256": "c34b41a174550b468bb08c6b6435e9a3e9227387771d4c1ef63fd21357f50c34",
+  "reference_sha256": {
+    "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_hemp_full_try1.png": "b8331f8c3febe6b04074ddc2ff066ee7fd137724bc5c512eeb866c05a6feff18",
+    "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+    "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+  },
+  "attempt": 1,
+  "seed": null,
+  "geometry_source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_hemp_full_try1.png",
+  "geometry_source_sha256": "b8331f8c3febe6b04074ddc2ff066ee7fd137724bc5c512eeb866c05a6feff18",
+  "transform": {
+    "source_canvas": [
+      1199,
+      1312
+    ],
+    "crop": [
+      58,
+      9,
+      1070,
+      1290
+    ],
+    "scale": 0.037588097102584185,
+    "scaled_canvas": [
+      38,
+      48
+    ],
+    "offset": [
+      14,
+      11
+    ],
+    "output_canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "target_height": 48
+  },
+  "footprint": [
+    1,
+    1
+  ],
+  "checks": {
+    "structure": true,
+    "visible_border": false,
+    "raw_border": false,
+    "opaque_components": 1,
+    "component_sizes": [
+      107
+    ],
+    "tree_connectivity": "NOT_APPLICABLE_MULTISTEM_HERB",
+    "source_opaque_outside_crop": 0,
+    "size_match": true,
+    "tool_source_sha256": "b13e798d2395e6bf34a16da7f3d518376f6cc81241fded7820c2592886441a38",
+    "actual_raw": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_hemp_harvested_try1.png"
+  },
+  "projection": {
+    "family": "item",
+    "anchor": [
+      32,
+      56
+    ],
+    "height_band": [
+      1,
+      50
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 107,
+    "base_row": 56,
+    "base_error": 0,
+    "height": 16,
+    "gradient_x": -2.641807792207792,
+    "gradient_y": -4.330784269662921,
+    "light_angle_degrees": 238.6165255860816,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "style": {
+    "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_hemp_harvested_try1.png",
+    "sha256": "b13e798d2395e6bf34a16da7f3d518376f6cc81241fded7820c2592886441a38",
+    "family": "plants",
+    "metrics": {
+      "edge_density": 0.24401249566122873,
+      "saturation_q25": 0.49187450240563846,
+      "saturation_q75": 0.5460470250910751,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.027060407675636625,
+      "foreground_pixels": 19322
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "review": {
+    "id": "wild_hemp_harvested",
+    "attempt": 1,
+    "visual_score": 90,
+    "visual_notes": "One compact rooted stand; no detached major props; state morphology checked on contact sheet."
+  },
+  "path": "art/flora/climate/herbaceous/wild_hemp_harvested.png",
+  "sha256": "c308267bb3cf91bf34f6a25ba7925028cf09083781c7724b4cf19566013fc6de"
+}

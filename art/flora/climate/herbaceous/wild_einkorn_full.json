@@ -1,0 +1,143 @@
+{
+  "id": "wild_einkorn_full",
+  "state": "full",
+  "species": "wild_einkorn",
+  "status": "ADOPTED_CANDIDATE",
+  "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_einkorn_full_try1.png",
+  "source_sha256": "731a0e2e49681090ae3e3fbf7b65aad3409dfaec14df5107f6f90e9f7cfa80e4",
+  "generation_record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_einkorn_full_try1.json",
+  "generation_record_sha256": "75efaf6639dbbcacf25d05ee073c039dc6a543cf85c30248558eec4255d87837",
+  "prompt_sha256": "67148db8828bb2a3988af37a5ac3bd603d5843cde6405e4e7fec511b0d772337",
+  "reference_sha256": {
+    "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+    "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+  },
+  "attempt": 1,
+  "seed": null,
+  "geometry_source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_einkorn_full_try1.png",
+  "geometry_source_sha256": "731a0e2e49681090ae3e3fbf7b65aad3409dfaec14df5107f6f90e9f7cfa80e4",
+  "transform": {
+    "source_canvas": [
+      1312,
+      1199
+    ],
+    "crop": [
+      246,
+      26,
+      1072,
+      1135
+    ],
+    "scale": 0.04343891402714932,
+    "scaled_canvas": [
+      36,
+      48
+    ],
+    "offset": [
+      14,
+      10
+    ],
+    "output_canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "target_height": 48
+  },
+  "footprint": [
+    1,
+    1
+  ],
+  "checks": {
+    "structure": true,
+    "visible_border": false,
+    "raw_border": false,
+    "opaque_components": 16,
+    "component_sizes": [
+      156,
+      12,
+      10,
+      8,
+      7,
+      7,
+      6,
+      6,
+      6,
+      5,
+      4,
+      2,
+      1,
+      1,
+      1,
+      1
+    ],
+    "tree_connectivity": "NOT_APPLICABLE_MULTISTEM_HERB",
+    "source_opaque_outside_crop": 0,
+    "size_match": true,
+    "tool_source_sha256": "731a0e2e49681090ae3e3fbf7b65aad3409dfaec14df5107f6f90e9f7cfa80e4",
+    "actual_raw": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_einkorn_full_try1.png"
+  },
+  "projection": {
+    "family": "item",
+    "anchor": [
+      32,
+      56
+    ],
+    "height_band": [
+      1,
+      50
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 233,
+    "base_row": 56,
+    "base_error": 0,
+    "height": 45,
+    "gradient_x": -2.838629268292683,
+    "gradient_y": -3.4160253731343286,
+    "light_angle_degrees": 230.27428987977675,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "style": {
+    "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_einkorn_full_try1.png",
+    "sha256": "731a0e2e49681090ae3e3fbf7b65aad3409dfaec14df5107f6f90e9f7cfa80e4",
+    "family": "plants",
+    "metrics": {
+      "edge_density": 0.14447592067988668,
+      "saturation_q25": 0.5463046160973107,
+      "saturation_q75": 0.5988219603774292,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.016954043998749713,
+      "foreground_pixels": 7443
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "review": {
+    "id": "wild_einkorn_full",
+    "attempt": 1,
+    "visual_score": 90,
+    "visual_notes": "One compact rooted stand; no detached major props/foliage; full, cut or dormant morphology readable at 1x/2x."
+  },
+  "path": "art/flora/climate/herbaceous/wild_einkorn_full.png",
+  "sha256": "01d30c56e5fb2d4cec8a5ba0b8b0955eae0f26e5580b6a54dc3d708b8b68b90f"
+}

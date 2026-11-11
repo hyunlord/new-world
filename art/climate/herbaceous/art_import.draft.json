@@ -1,0 +1,751 @@
+{
+  "status": "DRAFT_NOT_RUNTIME_IMPORT",
+  "files": [
+    {
+      "id": "wild_barley_full",
+      "species": "wild_barley",
+      "state": "full",
+      "path": "art/flora/climate/herbaceous/wild_barley_full.png",
+      "sha256": "0adc9814b82a44a396631c0272c7b22c27e609193d51bb84bcbc05cb86d4de2d",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "mild",
+        "neutral",
+        "harsh"
+      ],
+      "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+      "runtime_code": null,
+      "placement_status": "VERIFIED_ORIGIN"
+    },
+    {
+      "id": "wild_barley_harvested",
+      "species": "wild_barley",
+      "state": "harvested",
+      "path": "art/flora/climate/herbaceous/wild_barley_harvested.png",
+      "sha256": "051a214acc591ac46640d094c2d3bbd1d236e5ee03cf17ec2a1f1a75a4e96f5e",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "mild",
+        "neutral",
+        "harsh"
+      ],
+      "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+      "runtime_code": null,
+      "placement_status": "VERIFIED_ORIGIN"
+    },
+    {
+      "id": "wild_barley_winter",
+      "species": "wild_barley",
+      "state": "winter",
+      "path": "art/flora/climate/herbaceous/wild_barley_winter.png",
+      "sha256": "5a55fbc4fd610681f6d0b63de2fb47c664d734aa258c76c319bdce1caa05078e",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "mild",
+        "neutral",
+        "harsh"
+      ],
+      "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+      "runtime_code": null,
+      "placement_status": "VERIFIED_ORIGIN"
+    },
+    {
+      "id": "wild_einkorn_full",
+      "species": "wild_einkorn",
+      "state": "full",
+      "path": "art/flora/climate/herbaceous/wild_einkorn_full.png",
+      "sha256": "01d30c56e5fb2d4cec8a5ba0b8b0955eae0f26e5580b6a54dc3d708b8b68b90f",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": null,
+      "runtime_binding": "PROPOSED_ID",
+      "runtime_code": null,
+      "placement_status": "PROPOSED_NOT_APPLIED"
+    },
+    {
+      "id": "wild_einkorn_harvested",
+      "species": "wild_einkorn",
+      "state": "harvested",
+      "path": "art/flora/climate/herbaceous/wild_einkorn_harvested.png",
+      "sha256": "fba276da529183c504900ea87b00fee20e9148c71413b8cc0f1f5bd9049d849b",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": null,
+      "runtime_binding": "PROPOSED_ID",
+      "runtime_code": null,
+      "placement_status": "PROPOSED_NOT_APPLIED"
+    },
+    {
+      "id": "wild_einkorn_winter",
+      "species": "wild_einkorn",
+      "state": "winter",
+      "path": "art/flora/climate/herbaceous/wild_einkorn_winter.png",
+      "sha256": "3f1aa88e2a309f33074cf05a070ac51785e7f61a7558dafe336d6d0139836686",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": null,
+      "runtime_binding": "PROPOSED_ID",
+      "runtime_code": null,
+      "placement_status": "PROPOSED_NOT_APPLIED"
+    },
+    {
+      "id": "wild_flax_full",
+      "species": "wild_flax",
+      "state": "full",
+      "path": "art/flora/climate/herbaceous/wild_flax_full.png",
+      "sha256": "4b4f92eb5cd4d1c264f554db8449bebe0e29121e501646782bf325de252eab5d",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "mild",
+        "neutral",
+        "harsh"
+      ],
+      "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+      "runtime_code": null,
+      "placement_status": "VERIFIED_ORIGIN"
+    },
+    {
+      "id": "wild_flax_harvested",
+      "species": "wild_flax",
+      "state": "harvested",
+      "path": "art/flora/climate/herbaceous/wild_flax_harvested.png",
+      "sha256": "d81cc4ae664655c0cb10ea3fb4177bdcf18fd63ccb499a0ac508270ef86dbf03",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "mild",
+        "neutral",
+        "harsh"
+      ],
+      "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+      "runtime_code": null,
+      "placement_status": "VERIFIED_ORIGIN"
+    },
+    {
+      "id": "wild_grain_full",
+      "species": "wild_grain",
+      "state": "full",
+      "path": "art/flora/climate/herbaceous/wild_grain_full.png",
+      "sha256": "5a8e14f792d9f77b18532694fbd6d44b921d8a70f5c167b62da120374739c9b4",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "mild",
+        "neutral",
+        "harsh"
+      ],
+      "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+      "runtime_code": null,
+      "placement_status": "VERIFIED_ORIGIN"
+    },
+    {
+      "id": "wild_grain_harvested",
+      "species": "wild_grain",
+      "state": "harvested",
+      "path": "art/flora/climate/herbaceous/wild_grain_harvested.png",
+      "sha256": "2a60494810eece45292543b839bc1ded4ec02def535f34599cff6d1d22fe9bb1",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "mild",
+        "neutral",
+        "harsh"
+      ],
+      "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+      "runtime_code": null,
+      "placement_status": "VERIFIED_ORIGIN"
+    },
+    {
+      "id": "wild_grain_winter",
+      "species": "wild_grain",
+      "state": "winter",
+      "path": "art/flora/climate/herbaceous/wild_grain_winter.png",
+      "sha256": "556e2bbee0b228db3ae9f66f0145b1f5f1f5a03c3701325b8aeea098ab333f29",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "mild",
+        "neutral",
+        "harsh"
+      ],
+      "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+      "runtime_code": null,
+      "placement_status": "VERIFIED_ORIGIN"
+    },
+    {
+      "id": "wild_grape_full",
+      "species": "wild_grape",
+      "state": "full",
+      "path": "art/flora/climate/herbaceous/wild_grape_full.png",
+      "sha256": "228aa266887a629272e1201a954fda93726eb069938591aba2efbf057780e4d8",
+      "canvas": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "mild"
+      ],
+      "runtime_binding": "PROPOSED_ID",
+      "runtime_code": null,
+      "placement_status": "PROPOSED_NOT_APPLIED"
+    },
+    {
+      "id": "wild_lentil_full",
+      "species": "wild_lentil",
+      "state": "full",
+      "path": "art/flora/climate/herbaceous/wild_lentil_full.png",
+      "sha256": "6823936b20df568a580c2d1d8a55abcf71009e01d50f95b6d3a2a5c69a4e4938",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "mild",
+        "neutral"
+      ],
+      "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+      "runtime_code": null,
+      "placement_status": "VERIFIED_ORIGIN"
+    },
+    {
+      "id": "wild_millet_winter",
+      "species": "wild_millet",
+      "state": "winter",
+      "path": "art/flora/climate/herbaceous/wild_millet_winter.png",
+      "sha256": "349ef24fceabd8f9d3aa3d124515bc2f47c728153e91fbd6080a35a1ac242634",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "mild"
+      ],
+      "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+      "runtime_code": null,
+      "placement_status": "VERIFIED_ORIGIN"
+    },
+    {
+      "id": "wild_pea_full",
+      "species": "wild_pea",
+      "state": "full",
+      "path": "art/flora/climate/herbaceous/wild_pea_full.png",
+      "sha256": "a67a8b36e7b1c0ebd4bef0f09991f305611ea57b853eb96227c5735f9414eae3",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "mild",
+        "neutral"
+      ],
+      "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+      "runtime_code": null,
+      "placement_status": "VERIFIED_ORIGIN"
+    },
+    {
+      "id": "wild_root_winter",
+      "species": "wild_root",
+      "state": "winter",
+      "path": "art/flora/climate/herbaceous/wild_root_winter.png",
+      "sha256": "9f1ee2da25ef046cbaaea402271f6f9e171f0b6ca2421c5ed95a2df3910f915b",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "mild",
+        "neutral",
+        "harsh"
+      ],
+      "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+      "runtime_code": null,
+      "placement_status": "VERIFIED_ORIGIN"
+    },
+    {
+      "id": "wild_rye_full",
+      "species": "wild_rye",
+      "state": "full",
+      "path": "art/flora/climate/herbaceous/wild_rye_full.png",
+      "sha256": "10bba40936d99d17ca0f7b490a7a94295b0879c3f82b2021307eeb74a2741a82",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "neutral",
+        "harsh"
+      ],
+      "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+      "runtime_code": null,
+      "placement_status": "VERIFIED_ORIGIN"
+    },
+    {
+      "id": "wild_flax_winter",
+      "species": "wild_flax",
+      "state": "winter",
+      "path": "art/flora/climate/herbaceous/wild_flax_winter.png",
+      "sha256": "22edad20c0eb16f7bab1d87a849d79800defcac819dd4d57aa6c33e69654300b",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "mild",
+        "neutral",
+        "harsh"
+      ],
+      "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+      "runtime_code": null,
+      "placement_status": "VERIFIED_ORIGIN"
+    },
+    {
+      "id": "wild_lentil_harvested",
+      "species": "wild_lentil",
+      "state": "harvested",
+      "path": "art/flora/climate/herbaceous/wild_lentil_harvested.png",
+      "sha256": "249661aeb01e9bcfb341014d2294f671fd6809372e5ce809717207267388baa6",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "mild",
+        "neutral"
+      ],
+      "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+      "runtime_code": null,
+      "placement_status": "VERIFIED_ORIGIN"
+    },
+    {
+      "id": "wild_lentil_winter",
+      "species": "wild_lentil",
+      "state": "winter",
+      "path": "art/flora/climate/herbaceous/wild_lentil_winter.png",
+      "sha256": "194bbb7342ebaf9d96f615ba32c96c7ea51902ca18104273c9b91a9e9c2c8abd",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "mild",
+        "neutral"
+      ],
+      "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+      "runtime_code": null,
+      "placement_status": "VERIFIED_ORIGIN"
+    },
+    {
+      "id": "wild_pea_harvested",
+      "species": "wild_pea",
+      "state": "harvested",
+      "path": "art/flora/climate/herbaceous/wild_pea_harvested.png",
+      "sha256": "362bf7408c501765d29b0f0f9a4eb2865b2826e4d52fd973784cc8190ab415bd",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "mild",
+        "neutral"
+      ],
+      "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+      "runtime_code": null,
+      "placement_status": "VERIFIED_ORIGIN"
+    },
+    {
+      "id": "wild_pea_winter",
+      "species": "wild_pea",
+      "state": "winter",
+      "path": "art/flora/climate/herbaceous/wild_pea_winter.png",
+      "sha256": "751fcc87225aabf105d30d9f5896013029f498c471cf70a346c7d948a4399496",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "mild",
+        "neutral"
+      ],
+      "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+      "runtime_code": null,
+      "placement_status": "VERIFIED_ORIGIN"
+    },
+    {
+      "id": "wild_hemp_harvested",
+      "species": "wild_hemp",
+      "state": "harvested",
+      "path": "art/flora/climate/herbaceous/wild_hemp_harvested.png",
+      "sha256": "c308267bb3cf91bf34f6a25ba7925028cf09083781c7724b4cf19566013fc6de",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": null,
+      "runtime_binding": "PROPOSED_ID",
+      "runtime_code": null,
+      "placement_status": "PROPOSED_NOT_APPLIED"
+    },
+    {
+      "id": "wild_hemp_winter",
+      "species": "wild_hemp",
+      "state": "winter",
+      "path": "art/flora/climate/herbaceous/wild_hemp_winter.png",
+      "sha256": "ab53711fda1e4f2b3e967d55efcf271a5fc34a1b0ecc2e60f92610432a31b8d4",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": null,
+      "runtime_binding": "PROPOSED_ID",
+      "runtime_code": null,
+      "placement_status": "PROPOSED_NOT_APPLIED"
+    },
+    {
+      "id": "wild_rye_harvested",
+      "species": "wild_rye",
+      "state": "harvested",
+      "path": "art/flora/climate/herbaceous/wild_rye_harvested.png",
+      "sha256": "ac1259430252edfd40f5340b4c01d96713a284bb6a6c58e34beaf4272aa22c8a",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "neutral",
+        "harsh"
+      ],
+      "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+      "runtime_code": null,
+      "placement_status": "VERIFIED_ORIGIN"
+    },
+    {
+      "id": "wild_rye_winter",
+      "species": "wild_rye",
+      "state": "winter",
+      "path": "art/flora/climate/herbaceous/wild_rye_winter.png",
+      "sha256": "e635aa03eec7cae43a1123b595452695580dd4fc70f7064cc2c86efaee3e55d1",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "neutral",
+        "harsh"
+      ],
+      "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+      "runtime_code": null,
+      "placement_status": "VERIFIED_ORIGIN"
+    },
+    {
+      "id": "wild_grape_harvested",
+      "species": "wild_grape",
+      "state": "harvested",
+      "path": "art/flora/climate/herbaceous/wild_grape_harvested.png",
+      "sha256": "5a903587108dbfbc653bd60d8a7c8aa2415c8ca77d82e3f651202f7a7c5c127f",
+      "canvas": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "mild"
+      ],
+      "runtime_binding": "PROPOSED_ID",
+      "runtime_code": null,
+      "placement_status": "PROPOSED_NOT_APPLIED"
+    },
+    {
+      "id": "wild_grape_winter",
+      "species": "wild_grape",
+      "state": "winter",
+      "path": "art/flora/climate/herbaceous/wild_grape_winter.png",
+      "sha256": "1ac2b57be5d5ce62f1653635ee1dcae6bb9c08a27c816b31bac86be2688642e1",
+      "canvas": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "climate": [
+        "mild"
+      ],
+      "runtime_binding": "PROPOSED_ID",
+      "runtime_code": null,
+      "placement_status": "PROPOSED_NOT_APPLIED"
+    }
+  ],
+  "active_ids": [
+    "wild_barley",
+    "wild_flax",
+    "wild_grain",
+    "wild_lentil",
+    "wild_millet",
+    "wild_pea",
+    "wild_root",
+    "wild_rye"
+  ],
+  "proposed_ids": [
+    "wild_einkorn",
+    "wild_grape",
+    "wild_hemp"
+  ],
+  "notes": [
+    "wild_grain is emmer wheat; einkorn is a distinct proposed art ID.",
+    "Oats share the bible wild_rye source; no new oat wild-source ID.",
+    "Grape is mild only. Symbolic IDs and state mapping require owner integration."
+  ],
+  "gaps": [
+    "wild_hemp_full",
+    "wild_millet_full",
+    "wild_millet_harvested",
+    "wild_root_full",
+    "wild_root_harvested"
+  ]
+}

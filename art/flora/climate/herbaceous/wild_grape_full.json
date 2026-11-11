@@ -1,0 +1,130 @@
+{
+  "id": "wild_grape_full",
+  "state": "full",
+  "species": "wild_grape",
+  "status": "ADOPTED_CANDIDATE",
+  "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_grape_full_try1.png",
+  "source_sha256": "c71c1beb035026d4016fce7607be39363548857a9d0ceb1f50d44ea4a1863351",
+  "generation_record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_grape_full_try1.json",
+  "generation_record_sha256": "59cafecbf73b298ab483d0e78914d8e0ebbaf3d6f704c925d35c065b3e3e8de0",
+  "prompt_sha256": "cce9074a2a7d5ae0c56a5d5a23edf185c412967f22197dc94d2953431cf9df90",
+  "reference_sha256": {
+    "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+    "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+  },
+  "attempt": 1,
+  "seed": null,
+  "geometry_source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_grape_full_try1.png",
+  "geometry_source_sha256": "c71c1beb035026d4016fce7607be39363548857a9d0ceb1f50d44ea4a1863351",
+  "transform": {
+    "source_canvas": [
+      1536,
+      1024
+    ],
+    "crop": [
+      301,
+      92,
+      1185,
+      913
+    ],
+    "scale": 0.07833537331701346,
+    "scaled_canvas": [
+      69,
+      64
+    ],
+    "offset": [
+      14,
+      17
+    ],
+    "output_canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "target_height": 64
+  },
+  "footprint": [
+    1,
+    1
+  ],
+  "checks": {
+    "structure": true,
+    "visible_border": false,
+    "raw_border": false,
+    "opaque_components": 3,
+    "component_sizes": [
+      2098,
+      1,
+      1
+    ],
+    "tree_connectivity": "NOT_APPLICABLE_MULTISTEM_HERB",
+    "source_opaque_outside_crop": 0,
+    "size_match": true,
+    "tool_source_sha256": "c71c1beb035026d4016fce7607be39363548857a9d0ceb1f50d44ea4a1863351",
+    "actual_raw": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_grape_full_try1.png"
+  },
+  "projection": {
+    "family": "item",
+    "anchor": [
+      48,
+      80
+    ],
+    "height_band": [
+      1,
+      66
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 2100,
+    "base_row": 80,
+    "base_error": 0,
+    "height": 64,
+    "gradient_x": -0.7786590341833968,
+    "gradient_y": -0.7233362938596491,
+    "light_angle_degrees": 222.89058779864135,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "style": {
+    "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_grape_full_try1.png",
+    "sha256": "c71c1beb035026d4016fce7607be39363548857a9d0ceb1f50d44ea4a1863351",
+    "family": "plants",
+    "metrics": {
+      "edge_density": 0.2153853018606934,
+      "saturation_q25": 0.45051634846404687,
+      "saturation_q75": 0.5398876804356418,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.022393578742402116,
+      "foreground_pixels": 29186
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "review": {
+    "id": "wild_grape_full",
+    "attempt": 1,
+    "visual_score": 90,
+    "visual_notes": "Retain coherent pale try1: self-review try2 failed numeric style and original crop398px; no further attempts under economy cap."
+  },
+  "path": "art/flora/climate/herbaceous/wild_grape_full.png",
+  "sha256": "228aa266887a629272e1201a954fda93726eb069938591aba2efbf057780e4d8"
+}

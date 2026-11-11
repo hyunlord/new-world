@@ -1,0 +1,147 @@
+{
+  "id": "wild_pea_winter",
+  "state": "winter",
+  "species": "wild_pea",
+  "status": "ADOPTED_CANDIDATE",
+  "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_pea_winter_try1.png",
+  "source_sha256": "84b50c09fb09756518a99e3299f2e1a6e5b43d3e8fda428adda41fe7744f36d9",
+  "generation_record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_pea_winter_try1.json",
+  "generation_record_sha256": "96f19bf751529609bf4f1b19eb7487ddd8fbd4389338488fd0a1e5c1d42a42ed",
+  "prompt_sha256": "18efcc8112f9e0a5381991cc344154feaed5c1546e726dcbcd8ef00c55f23e6a",
+  "reference_sha256": {
+    "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_pea_full_try1.png": "006183090b077cb9f6d727ece7534c6af39b14cc8bc91ff8c33eb32b70f704a8",
+    "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+    "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+  },
+  "attempt": 1,
+  "seed": null,
+  "geometry_source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_pea_full_try1.png",
+  "geometry_source_sha256": "006183090b077cb9f6d727ece7534c6af39b14cc8bc91ff8c33eb32b70f704a8",
+  "transform": {
+    "source_canvas": [
+      1536,
+      1024
+    ],
+    "crop": [
+      253,
+      43,
+      1285,
+      961
+    ],
+    "scale": 0.0350109409190372,
+    "scaled_canvas": [
+      36,
+      32
+    ],
+    "offset": [
+      15,
+      26
+    ],
+    "output_canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "target_height": 32
+  },
+  "footprint": [
+    1,
+    1
+  ],
+  "checks": {
+    "structure": true,
+    "visible_border": false,
+    "raw_border": false,
+    "opaque_components": 19,
+    "component_sizes": [
+      92,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "tree_connectivity": "NOT_APPLICABLE_MULTISTEM_HERB",
+    "source_opaque_outside_crop": 0,
+    "size_match": true,
+    "tool_source_sha256": "84b50c09fb09756518a99e3299f2e1a6e5b43d3e8fda428adda41fe7744f36d9",
+    "actual_raw": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_pea_winter_try1.png"
+  },
+  "projection": {
+    "family": "item",
+    "anchor": [
+      32,
+      56
+    ],
+    "height_band": [
+      1,
+      34
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 112,
+    "base_row": 56,
+    "base_error": 0,
+    "height": 27,
+    "gradient_x": -2.2174875,
+    "gradient_y": -2.633185714285714,
+    "light_angle_degrees": 229.89822737766028,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "style": {
+    "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_pea_winter_try1.png",
+    "sha256": "84b50c09fb09756518a99e3299f2e1a6e5b43d3e8fda428adda41fe7744f36d9",
+    "family": "plants",
+    "metrics": {
+      "edge_density": 0.24031007751937986,
+      "saturation_q25": 0.4950917457895876,
+      "saturation_q75": 0.519655243245826,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.021689556749065454,
+      "foreground_pixels": 8445
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "review": {
+    "id": "wild_pea_winter",
+    "attempt": 1,
+    "visual_score": 90,
+    "visual_notes": "One compact rooted stand; no detached major props; state morphology checked on contact sheet."
+  },
+  "path": "art/flora/climate/herbaceous/wild_pea_winter.png",
+  "sha256": "751fcc87225aabf105d30d9f5896013029f498c471cf70a346c7d948a4399496"
+}

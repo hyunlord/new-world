@@ -1,0 +1,133 @@
+{
+  "id": "wild_flax_full",
+  "state": "full",
+  "species": "wild_flax",
+  "status": "ADOPTED_CANDIDATE",
+  "source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_flax_full_try3.png",
+  "source_sha256": "532518ca7707ca636d188769f46bb1c2ee46a04977d2c8498812db736b5baa9c",
+  "generation_record": "/Users/rexxa/work/art-batch/B2/herbaceous/records/wild_flax_full_try3.json",
+  "generation_record_sha256": "6256c7c58489e785fce750f83f79b4bc6736d08d303e9c067d0bc85a94e11604",
+  "prompt_sha256": "0ecde384efe63219e9806f9adea6c089d5c23e609b7c671b71450ed208ebaab6",
+  "reference_sha256": {
+    "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_flax_full_try1.png": "7f011225c756bc37214adaf61f982a9fa38ad58334fb3ecae62cf7e246c84a03",
+    "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+    "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+  },
+  "attempt": 3,
+  "seed": null,
+  "geometry_source": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_flax_full_try1.png",
+  "geometry_source_sha256": "7f011225c756bc37214adaf61f982a9fa38ad58334fb3ecae62cf7e246c84a03",
+  "transform": {
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "crop": [
+      160,
+      79,
+      1075,
+      1185
+    ],
+    "scale": 0.036297640653357534,
+    "scaled_canvas": [
+      33,
+      40
+    ],
+    "offset": [
+      17,
+      17
+    ],
+    "output_canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "target_height": 40
+  },
+  "footprint": [
+    1,
+    1
+  ],
+  "checks": {
+    "structure": true,
+    "visible_border": false,
+    "raw_border": false,
+    "opaque_components": 5,
+    "component_sizes": [
+      293,
+      23,
+      4,
+      2,
+      1
+    ],
+    "tree_connectivity": "NOT_APPLICABLE_MULTISTEM_HERB",
+    "source_opaque_outside_crop": 0,
+    "size_match": true,
+    "tool_source_sha256": "532518ca7707ca636d188769f46bb1c2ee46a04977d2c8498812db736b5baa9c",
+    "actual_raw": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_flax_full_try3.png"
+  },
+  "projection": {
+    "family": "item",
+    "anchor": [
+      32,
+      56
+    ],
+    "height_band": [
+      1,
+      42
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 323,
+    "base_row": 55,
+    "base_error": -1,
+    "height": 37,
+    "gradient_x": -2.790333673469388,
+    "gradient_y": -6.1048413145539895,
+    "light_angle_degrees": 245.43632932466835,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "style": {
+    "candidate": "/Users/rexxa/work/art-batch/B2/herbaceous/raw/wild_flax_full_try3.png",
+    "sha256": "532518ca7707ca636d188769f46bb1c2ee46a04977d2c8498812db736b5baa9c",
+    "family": "plants",
+    "metrics": {
+      "edge_density": 0.17868291957782073,
+      "saturation_q25": 0.5992962741748712,
+      "saturation_q75": 0.6825124590577566,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.023709946592487176,
+      "foreground_pixels": 15360
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "review": {
+    "id": "wild_flax_full",
+    "attempt": 3,
+    "visual_score": 90,
+    "visual_notes": "Final compact flax full: blue flowers, narrow leaves and capsules; stronger warm contour."
+  },
+  "path": "art/flora/climate/herbaceous/wild_flax_full.png",
+  "sha256": "4b4f92eb5cd4d1c264f554db8449bebe0e29121e501646782bf325de252eab5d"
+}
