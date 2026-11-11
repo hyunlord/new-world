@@ -3,8 +3,10 @@
 # dependencies = ["pillow", "pydantic", "pytest"]
 # ///
 # How to run: python3 -m pytest art/ui_b4/test_check.py
-"""Reject missing or fabricated provenance using real temporary PNG exports."""
-# noqa: SIZE_OK - Owner keeps fixture, CLI, and rule tests in one bounded test file.
+"""Reject missing or fabricated provenance using real temporary PNG exports.
+
+Size exception: # noqa: SIZE_OK - Owner keeps fixture, CLI, and rule tests together.
+"""
 
 from __future__ import annotations
 

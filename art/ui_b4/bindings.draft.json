@@ -781,231 +781,231 @@
       "asset": "b4_jobs_slaughter"
     }
   ],
-  "chronicle_note": "34 events have semantically matched pictures; remaining32 retain the existing UI notice indicator and exact localized text. All66 source kinds are accounted for; no66 unique notification drawing claim.",
+  "chronicle_note": "34 events have semantically matched pictures; remaining32 retain localized text only. All66 source kinds are accounted for; no66 unique notification drawing claim.",
   "ui_chronicle_generic_notice": [
     {
       "code": 1,
       "name": "FoundingMember",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 3,
       "name": "CameOfAge",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 4,
       "name": "BecameElder",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 6,
       "name": "DepartureCancelled",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 7,
       "name": "Settled",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 8,
       "name": "Joined",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 9,
       "name": "LeftSettlement",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 10,
       "name": "Widowed",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 13,
       "name": "FissionStarted",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 14,
       "name": "DaughterFounded",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 15,
       "name": "FissionCancelled",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 16,
       "name": "SettlementDissolved",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 17,
       "name": "PorterDeparted",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 20,
       "name": "VillagesEstranged",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 21,
       "name": "VillagesReconciled",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 24,
       "name": "ToolBroke",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 28,
       "name": "KnowledgeLost",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 30,
       "name": "PressureEnded",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 32,
       "name": "Fight",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 35,
       "name": "WolfKilled",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 37,
       "name": "Recovered",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 39,
       "name": "MigrantsJoined",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 40,
       "name": "MigrantsDeclined",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 43,
       "name": "TraderLeft",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 45,
       "name": "StewardAction",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 47,
       "name": "MindChoice",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 48,
       "name": "FirstCookedMeal",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 49,
       "name": "FirstDriedStore",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 51,
       "name": "WinterStoredSurvived",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 53,
       "name": "FoodOperation",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 56,
       "name": "CropFailure",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     },
     {
       "code": 65,
       "name": "LivestockDied",
       "asset": null,
-      "semantic": "generic notice indicator; event meaning comes from localized text",
-      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
+      "semantic": "localized event text; no semantic icon",
+      "presentation": "Existing localized chronicle text only; no new severity raster."
     }
   ]
 }

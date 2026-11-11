@@ -834,12 +834,17 @@
       "id": "b4_governance_rule_forge",
       "source": "art/style05/ui_b4/governance/rule_forge.png",
       "dest": "ui/b4/governance/rule_forge.png"
+    },
+    {
+      "role": "ui_art_metadata",
+      "id": "b4_manifest",
+      "source": "art/ui_b4/manifest.json",
+      "dest": "ui/b4_manifest.json"
     }
   ],
-  "metadata_file": {
-    "role": "ui_art_metadata",
-    "id": "b4_manifest",
-    "source": "art/ui_b4/manifest.json",
-    "dest": "ui/b4_manifest.json"
-  }
+  "integration_notes": [
+    "Merge these explicit files rows into the complete importer configuration; this draft is not a replacement config.",
+    "Extend importer binding_ids verification to recognize critical_asset before applying the two optional need-critical bindings.",
+    "New UI consumers and binding groups require game-side implementation and captures; chronicle fallback remains localized text only."
+  ]
 }
