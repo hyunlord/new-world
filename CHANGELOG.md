@@ -5,6 +5,18 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## ART-BATCH B2 — 2026-11-11
+
+Art-only climate ground and flora production on `v8/art-batch-b2`; delivery is in progress. Final selection and counts belong to `art/climate/manifest.json` and the external `B2/REPORT.md`.
+
+### Added
+- `art/climate/`: coverage, frozen style contract, candidate processing and import handoff documentation for eight ground families, wild plants, climate shrubs and trees.
+- Candidate namespaces `art/style05/climate/grounds/` and `art/flora/climate/`; original generations and rejected attempts remain outside the repository.
+
+### Changed
+- Existing flora registration, seasonal rendering and deterministic ground edges are reused. Generated originals, reused frames and derived variants are counted separately.
+- The resumed pass caps each asset at three attempts and skips optional expansion; failed states remain explicit gaps. Runtime climate/state selectors and olive wood identity remain C2/C3 integration work (ADR 0016).
+
 ## M1-ART — 2026-10-21
 
 The colony view drawn like the mock-up: real ground, a canopy that reads as forest, buildings and log piles you can read, people you can find (`docs/v8/m1art/ART_GOAL.md`, report `docs/v8/m1art/ART_REPORT.md`). No simulation change (`rust/` untouched; identity, colony determinism and replay pass).
