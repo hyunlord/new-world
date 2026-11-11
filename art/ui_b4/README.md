@@ -17,3 +17,5 @@ Default/hover/selected/disabled and severity presentation are draft recipes. Lab
 The importer draft contains 138 PNG rows plus one manifest JSON row in `files`. The current importer binding verifier also needs `critical_asset` support before the two retained critical variants can be wired. The 32 chronicle events without a semantic illustration retain localized text only.
 
 Final production: 138 selected candidates (115 icons, 23 cards), 165 completed attributed outputs, 11 interrupted submissions, and 24 weakest subjects regenerated. Five-lane artifact audit passes; 35 tests pass; independent source-art review scores 91–93. Run `python3 -m art.ui_b4.check ROOT EXTERNAL_REPORT.json` while the external evidence paths remain available. The old item-style diagnostic reports a wash-flatness failure and no model verdict; it is not represented as a passed style gate. Full game tests/captures remain integration work.
+
+Immutable asset and metadata import pin: `0eb2492676140a294ad319045602e72bae760c8c`. The draft’s own later commit only records that pin; all 139 imported files are byte-verified at the pinned commit.

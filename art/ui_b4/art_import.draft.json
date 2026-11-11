@@ -1,8 +1,8 @@
 {
   "status": "DRAFT_NOT_APPLIED",
   "source_branch": "v8/art-batch-b4",
-  "source_commit": null,
-  "pinning_instruction": "PENDING asset commit; source_commit will be pinned after selected images and metadata are committed. Do not run this draft as the complete importer config.",
+  "source_commit": "0eb2492676140a294ad319045602e72bae760c8c",
+  "pinning_instruction": "Import only the explicit files rows from this immutable commit after merging into the full game configuration. Preserve existing assets and apply bindings only with new consumers.",
   "managed_dirs_to_add": [
     "ui"
   ],
