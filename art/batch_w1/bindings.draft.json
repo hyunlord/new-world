@@ -1,0 +1,53 @@
+{
+  "draft_contract": "SYMBOLIC_PROPOSAL_NOT_LIVE_BINDINGS",
+  "enabled": false,
+  "numeric_sim_codes": null,
+  "roof_bindings": [
+    {
+      "templates": [
+        "hut"
+      ],
+      "footprint": [
+        3,
+        3
+      ],
+      "built": "w1_hide_built",
+      "frame": null,
+      "placement_status": "BLOCKED: circular roof leaves square wall-ring corners exposed"
+    },
+    {
+      "templates": [
+        "log_house",
+        "stone_house",
+        "workshop_shed",
+        "storehouse",
+        "drying_shed",
+        "granary",
+        "smokehouse",
+        "oven_house"
+      ],
+      "footprint": [
+        4,
+        4
+      ],
+      "built": "w1_thatch_built",
+      "frame": null,
+      "placement_status": "offline only; verify runtime projection, anchors and state transition"
+    }
+  ],
+  "cutaway": {
+    "supported_at_inspected_ref": false,
+    "proposed_modulate_alpha": 0.35,
+    "separate_asset": null
+  },
+  "door_binding": {
+    "kind": "door",
+    "orientation_required": true,
+    "ew": [
+      "w1_door_ew_closed",
+      "w1_door_ew_open"
+    ],
+    "ns": null,
+    "frame_registration": "UNVERIFIED"
+  }
+}

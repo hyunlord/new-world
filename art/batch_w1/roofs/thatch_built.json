@@ -1,0 +1,32 @@
+{
+  "id": "thatch_built",
+  "path": "art/batch_w1/roofs/thatch_built.png",
+  "source": "/Users/rexxa/work/art-batch/W1/raw/thatch_roof_try2.png",
+  "source_sha256": "52e8c88be9d4c758c4bf269b39ea4c66baaa15ba3f3cd18f18b693be5de0cb15",
+  "sha256": "ebebd3c249f373393a69b03edb2ad29c006a490670e85feb09f7a1c7c4b336ca",
+  "crop": [
+    136,
+    160,
+    1112,
+    1127
+  ],
+  "scale": 0.28764278296988577,
+  "canvas": [
+    289,
+    286
+  ],
+  "anchor": [
+    48,
+    103
+  ],
+  "footprint": [
+    4,
+    4
+  ],
+  "status": "RETAINED_CANDIDATE_NOT_ADOPTED",
+  "source_cell": null,
+  "blockers": [
+    "judge_v2 model evaluation missing",
+    "runtime anchor and placement integration unverified"
+  ]
+}

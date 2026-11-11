@@ -1,0 +1,145 @@
+[
+  {
+    "id": "hide_built",
+    "path": "art/batch_w1/roofs/hide_built.png",
+    "source": "/Users/rexxa/work/art-batch/W1/raw/hide_roof_try2.png",
+    "source_sha256": "e2a3555d1d05957d311536556365195e6296ffe66aded76472bf878c4c67fc2b",
+    "sha256": "7fc48084f93533a66b37c41d186a61ebcafdfe5819b31ffd79c850689b12d8cd",
+    "crop": [
+      126,
+      144,
+      1118,
+      1107
+    ],
+    "scale": 0.21897810218978103,
+    "canvas": [
+      225,
+      219
+    ],
+    "anchor": [
+      48,
+      103
+    ],
+    "footprint": [
+      3,
+      3
+    ],
+    "status": "RETAINED_CANDIDATE_NOT_ADOPTED",
+    "source_cell": null,
+    "blockers": [
+      "judge_v2 model evaluation missing",
+      "runtime anchor and placement integration unverified",
+      "offline square-ring composite exposes north corners; round-hut geometry or new art required"
+    ]
+  },
+  {
+    "id": "thatch_built",
+    "path": "art/batch_w1/roofs/thatch_built.png",
+    "source": "/Users/rexxa/work/art-batch/W1/raw/thatch_roof_try2.png",
+    "source_sha256": "52e8c88be9d4c758c4bf269b39ea4c66baaa15ba3f3cd18f18b693be5de0cb15",
+    "sha256": "ebebd3c249f373393a69b03edb2ad29c006a490670e85feb09f7a1c7c4b336ca",
+    "crop": [
+      136,
+      160,
+      1112,
+      1127
+    ],
+    "scale": 0.28764278296988577,
+    "canvas": [
+      289,
+      286
+    ],
+    "anchor": [
+      48,
+      103
+    ],
+    "footprint": [
+      4,
+      4
+    ],
+    "status": "RETAINED_CANDIDATE_NOT_ADOPTED",
+    "source_cell": null,
+    "blockers": [
+      "judge_v2 model evaluation missing",
+      "runtime anchor and placement integration unverified"
+    ]
+  },
+  {
+    "id": "door_ew_closed",
+    "path": "art/batch_w1/doors/door_ew_closed.png",
+    "source": "/Users/rexxa/work/art-batch/W1/raw/door_try1.png",
+    "source_sha256": "5d099bd3cd1338eed24dfa8e7a7e213287e449ee96c1674467cdc733512a1f6d",
+    "sha256": "53db4702418f320d5d6e2bda8e118b1fd1cdfd94eec2fcb659ba1b7b8cbe9929",
+    "crop": [
+      83,
+      34,
+      565,
+      564
+    ],
+    "scale": 0.11406844106463879,
+    "canvas": [
+      63,
+      68
+    ],
+    "anchor": [
+      31,
+      63
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "status": "RETAINED_CANDIDATE_NOT_ADOPTED",
+    "source_cell": [
+      0,
+      0,
+      636,
+      618
+    ],
+    "blockers": [
+      "judge_v2 model evaluation missing",
+      "runtime anchor and placement integration unverified",
+      "common jamb registration and wall joins unverified",
+      "NS pair missing"
+    ]
+  },
+  {
+    "id": "door_ew_open",
+    "path": "art/batch_w1/doors/door_ew_open.png",
+    "source": "/Users/rexxa/work/art-batch/W1/raw/door_try1.png",
+    "source_sha256": "5d099bd3cd1338eed24dfa8e7a7e213287e449ee96c1674467cdc733512a1f6d",
+    "sha256": "8d448253bdef08a3662c83e71067463d28d10e82a5617af31c7ac342c1e9a1d5",
+    "crop": [
+      50,
+      36,
+      597,
+      579
+    ],
+    "scale": 0.11131725417439703,
+    "canvas": [
+      69,
+      68
+    ],
+    "anchor": [
+      34,
+      63
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "status": "RETAINED_CANDIDATE_NOT_ADOPTED",
+    "source_cell": [
+      636,
+      0,
+      1271,
+      618
+    ],
+    "blockers": [
+      "judge_v2 model evaluation missing",
+      "runtime anchor and placement integration unverified",
+      "common jamb registration and wall joins unverified",
+      "NS pair missing"
+    ]
+  }
+]

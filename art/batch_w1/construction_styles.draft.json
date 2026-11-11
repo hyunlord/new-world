@@ -1,0 +1,130 @@
+{
+  "draft_contract": "PROPOSAL_NOT_RUNTIME_SCHEMA_V1",
+  "enabled": false,
+  "runtime_rows_to_append": [],
+  "reason": "No adopted coherent wall set. Schema v1 cannot express the proposed full-piece autotiles. Do not import this document.",
+  "proposed_capability": "wall_pieces",
+  "bits": {
+    "N": 1,
+    "E": 2,
+    "S": 4,
+    "W": 8
+  },
+  "visual_thickness_px": [
+    21,
+    32
+  ],
+  "standing_face_px": 44,
+  "pieces": [
+    {
+      "mask": 0,
+      "name": "isolated",
+      "asset": null,
+      "status": "REJECTED"
+    },
+    {
+      "mask": 1,
+      "name": "end_n",
+      "asset": null,
+      "status": "REJECTED"
+    },
+    {
+      "mask": 2,
+      "name": "end_e",
+      "asset": null,
+      "status": "REJECTED"
+    },
+    {
+      "mask": 3,
+      "name": "corner_ne",
+      "asset": null,
+      "status": "REJECTED"
+    },
+    {
+      "mask": 4,
+      "name": "end_s",
+      "asset": null,
+      "status": "REJECTED"
+    },
+    {
+      "mask": 5,
+      "name": "straight_ns",
+      "asset": null,
+      "status": "REJECTED"
+    },
+    {
+      "mask": 6,
+      "name": "corner_se",
+      "asset": null,
+      "status": "REJECTED"
+    },
+    {
+      "mask": 7,
+      "name": "t_nes",
+      "asset": null,
+      "status": "REJECTED"
+    },
+    {
+      "mask": 8,
+      "name": "end_w",
+      "asset": null,
+      "status": "REJECTED"
+    },
+    {
+      "mask": 9,
+      "name": "corner_nw",
+      "asset": null,
+      "status": "REJECTED"
+    },
+    {
+      "mask": 10,
+      "name": "straight_ew",
+      "asset": null,
+      "status": "REJECTED"
+    },
+    {
+      "mask": 11,
+      "name": "t_new",
+      "asset": null,
+      "status": "REJECTED"
+    },
+    {
+      "mask": 12,
+      "name": "corner_sw",
+      "asset": null,
+      "status": "REJECTED"
+    },
+    {
+      "mask": 13,
+      "name": "t_nsw",
+      "asset": null,
+      "status": "REJECTED"
+    },
+    {
+      "mask": 14,
+      "name": "t_esw",
+      "asset": null,
+      "status": "REJECTED"
+    },
+    {
+      "mask": 15,
+      "name": "cross",
+      "asset": null,
+      "status": "REJECTED"
+    }
+  ],
+  "damage": {
+    "5": null,
+    "10": null
+  },
+  "doors": {
+    "ew": {
+      "closed": "w1_door_ew_closed",
+      "open": "w1_door_ew_open"
+    },
+    "ns": {
+      "closed": null,
+      "open": null
+    }
+  }
+}

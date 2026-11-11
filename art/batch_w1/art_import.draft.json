@@ -1,0 +1,29 @@
+{
+  "about": "Additive file rows for retained candidates only. NOT approved for import; resolve exports.json blockers first. Never replace live configuration.",
+  "files": [
+    {
+      "role": "structure",
+      "id": "w1_hide_built",
+      "source": "art/batch_w1/roofs/hide_built.png",
+      "dest": "structures/w1/hide_built.png"
+    },
+    {
+      "role": "structure",
+      "id": "w1_thatch_built",
+      "source": "art/batch_w1/roofs/thatch_built.png",
+      "dest": "structures/w1/thatch_built.png"
+    },
+    {
+      "role": "structure",
+      "id": "w1_door_ew_closed",
+      "source": "art/batch_w1/doors/door_ew_closed.png",
+      "dest": "structures/w1/door_ew_closed.png"
+    },
+    {
+      "role": "structure",
+      "id": "w1_door_ew_open",
+      "source": "art/batch_w1/doors/door_ew_open.png",
+      "dest": "structures/w1/door_ew_open.png"
+    }
+  ]
+}

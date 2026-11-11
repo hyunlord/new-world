@@ -1,0 +1,251 @@
+{
+  "raw_requests": 20,
+  "generated_piece_slots": 70,
+  "adopted": 0,
+  "retained_candidates": 4,
+  "rejected_or_superseded_slots": 66,
+  "pieces": [
+    {
+      "piece": "isolated",
+      "mask": 0,
+      "attempts": [
+        "log_atlas_try1",
+        "log_atlas_try2",
+        "log_atlas_try3"
+      ],
+      "result": "REJECTED: NS projection / joint continuity; no complete coherent set"
+    },
+    {
+      "piece": "end_n",
+      "mask": 1,
+      "attempts": [
+        "log_atlas_try1",
+        "log_atlas_try2",
+        "log_atlas_try3"
+      ],
+      "result": "REJECTED: NS projection / joint continuity; no complete coherent set"
+    },
+    {
+      "piece": "end_e",
+      "mask": 2,
+      "attempts": [
+        "log_atlas_try1",
+        "log_atlas_try2",
+        "log_atlas_try3"
+      ],
+      "result": "REJECTED: NS projection / joint continuity; no complete coherent set"
+    },
+    {
+      "piece": "corner_ne",
+      "mask": 3,
+      "attempts": [
+        "log_atlas_try1",
+        "log_atlas_try2",
+        "log_atlas_try3"
+      ],
+      "result": "REJECTED: NS projection / joint continuity; no complete coherent set"
+    },
+    {
+      "piece": "end_s",
+      "mask": 4,
+      "attempts": [
+        "log_atlas_try1",
+        "log_atlas_try2",
+        "log_atlas_try3"
+      ],
+      "result": "REJECTED: NS projection / joint continuity; no complete coherent set"
+    },
+    {
+      "piece": "straight_ns",
+      "mask": 5,
+      "attempts": [
+        "log_atlas_try1",
+        "log_atlas_try2",
+        "straight_ns_try3"
+      ],
+      "result": "REJECTED: NS projection / joint continuity; no complete coherent set"
+    },
+    {
+      "piece": "corner_se",
+      "mask": 6,
+      "attempts": [
+        "log_atlas_try1",
+        "log_atlas_try2",
+        "log_atlas_try3"
+      ],
+      "result": "REJECTED: NS projection / joint continuity; no complete coherent set"
+    },
+    {
+      "piece": "t_nes",
+      "mask": 7,
+      "attempts": [
+        "log_atlas_try1",
+        "log_atlas_try2",
+        "log_atlas_try3"
+      ],
+      "result": "REJECTED: NS projection / joint continuity; no complete coherent set"
+    },
+    {
+      "piece": "end_w",
+      "mask": 8,
+      "attempts": [
+        "log_atlas_try1",
+        "log_atlas_try2",
+        "log_atlas_try3"
+      ],
+      "result": "REJECTED: NS projection / joint continuity; no complete coherent set"
+    },
+    {
+      "piece": "corner_nw",
+      "mask": 9,
+      "attempts": [
+        "log_atlas_try1",
+        "log_atlas_try2",
+        "log_atlas_try3"
+      ],
+      "result": "REJECTED: NS projection / joint continuity; no complete coherent set"
+    },
+    {
+      "piece": "straight_ew",
+      "mask": 10,
+      "attempts": [
+        "log_atlas_try1",
+        "log_atlas_try2",
+        "log_atlas_try3"
+      ],
+      "result": "REJECTED: NS projection / joint continuity; no complete coherent set"
+    },
+    {
+      "piece": "t_new",
+      "mask": 11,
+      "attempts": [
+        "log_atlas_try1",
+        "log_atlas_try2",
+        "log_atlas_try3"
+      ],
+      "result": "REJECTED: NS projection / joint continuity; no complete coherent set"
+    },
+    {
+      "piece": "corner_sw",
+      "mask": 12,
+      "attempts": [
+        "log_atlas_try1",
+        "log_atlas_try2",
+        "log_atlas_try3"
+      ],
+      "result": "REJECTED: NS projection / joint continuity; no complete coherent set"
+    },
+    {
+      "piece": "t_nsw",
+      "mask": 13,
+      "attempts": [
+        "log_atlas_try1",
+        "log_atlas_try2",
+        "log_atlas_try3"
+      ],
+      "result": "REJECTED: NS projection / joint continuity; no complete coherent set"
+    },
+    {
+      "piece": "t_esw",
+      "mask": 14,
+      "attempts": [
+        "log_atlas_try1",
+        "log_atlas_try2",
+        "log_atlas_try3"
+      ],
+      "result": "REJECTED: NS projection / joint continuity; no complete coherent set"
+    },
+    {
+      "piece": "cross",
+      "mask": 15,
+      "attempts": [
+        "log_atlas_try1",
+        "log_atlas_try2",
+        "log_atlas_try3"
+      ],
+      "result": "REJECTED: NS projection / joint continuity; no complete coherent set"
+    },
+    {
+      "piece": "door_ew_closed",
+      "attempts": [
+        "door_try1"
+      ],
+      "result": "RETAINED_CANDIDATE_NOT_ADOPTED"
+    },
+    {
+      "piece": "door_ew_open",
+      "attempts": [
+        "door_try1"
+      ],
+      "result": "RETAINED_CANDIDATE_NOT_ADOPTED"
+    },
+    {
+      "piece": "door_ns_closed",
+      "attempts": [
+        "door_try1",
+        "door_ns_try2",
+        "door_ns_try3"
+      ],
+      "result": "REJECTED: diagonal or EW-like projection"
+    },
+    {
+      "piece": "door_ns_open",
+      "attempts": [
+        "door_try1",
+        "door_ns_try2",
+        "door_ns_try3"
+      ],
+      "result": "REJECTED: diagonal or EW-like projection"
+    },
+    {
+      "piece": "damaged_ew",
+      "attempts": [
+        "damaged_try1"
+      ],
+      "result": "REJECTED: no accepted matching wall family"
+    },
+    {
+      "piece": "damaged_ns",
+      "attempts": [
+        "damaged_try1",
+        "damaged_ns_try2",
+        "damaged_ns_try3"
+      ],
+      "result": "REJECTED: earlier axis failures; last readable but no matching accepted family"
+    },
+    {
+      "piece": "hide_built",
+      "attempts": [
+        "hide_roof_try1",
+        "hide_roof_try2"
+      ],
+      "result": "RETAINED_CANDIDATE_NOT_ADOPTED"
+    },
+    {
+      "piece": "hide_frame",
+      "attempts": [
+        "hide_frame_try1",
+        "hide_frame_try2",
+        "hide_frame_try3"
+      ],
+      "result": "REJECTED_NUMERIC: frozen wash_flatness"
+    },
+    {
+      "piece": "thatch_built",
+      "attempts": [
+        "thatch_roof_try1",
+        "thatch_roof_try2"
+      ],
+      "result": "RETAINED_CANDIDATE_NOT_ADOPTED"
+    },
+    {
+      "piece": "thatch_frame",
+      "attempts": [
+        "thatch_frame_try1",
+        "thatch_frame_try2",
+        "thatch_frame_try3"
+      ],
+      "result": "REJECTED_NUMERIC: frozen wash_flatness"
+    }
+  ]
+}

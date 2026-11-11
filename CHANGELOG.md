@@ -5,6 +5,12 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## ART-W1 — 2026-11-11
+
+### Added
+- `art/batch_w1/`: four retained roof/EW-door candidates, provenance sidecars, native/2× comparison and placement sheets, an explicit attempt ledger, and disabled import/binding drafts. No assets are fully adopted: coherent walls, NS doors and construction frames failed within the three-attempt cap.
+- A renderer handoff documenting the inspected runtime's missing full-piece mask support, door orientation and roof state/fade integration; ADR 0016 records the blocked partial delivery. Runtime and simulation remain unchanged.
+
 ## M1-ART — 2026-10-21
 
 The colony view drawn like the mock-up: real ground, a canopy that reads as forest, buildings and log piles you can read, people you can find (`docs/v8/m1art/ART_GOAL.md`, report `docs/v8/m1art/ART_REPORT.md`). No simulation change (`rust/` untouched; identity, colony determinism and replay pass).

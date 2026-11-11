@@ -1,0 +1,39 @@
+{
+  "id": "door_ew_open",
+  "path": "art/batch_w1/doors/door_ew_open.png",
+  "source": "/Users/rexxa/work/art-batch/W1/raw/door_try1.png",
+  "source_sha256": "5d099bd3cd1338eed24dfa8e7a7e213287e449ee96c1674467cdc733512a1f6d",
+  "sha256": "8d448253bdef08a3662c83e71067463d28d10e82a5617af31c7ac342c1e9a1d5",
+  "crop": [
+    50,
+    36,
+    597,
+    579
+  ],
+  "scale": 0.11131725417439703,
+  "canvas": [
+    69,
+    68
+  ],
+  "anchor": [
+    34,
+    63
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "status": "RETAINED_CANDIDATE_NOT_ADOPTED",
+  "source_cell": [
+    636,
+    0,
+    1271,
+    618
+  ],
+  "blockers": [
+    "judge_v2 model evaluation missing",
+    "runtime anchor and placement integration unverified",
+    "common jamb registration and wall joins unverified",
+    "NS pair missing"
+  ]
+}
