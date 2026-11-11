@@ -1,0 +1,35 @@
+{
+  "id": "build",
+  "lane": "jobs",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/jobs/build.png",
+  "sha256": "6712b9c8cafed2bcf8bdd3379ce0f4a49d94ba09bee3a934a29fdb7fee43b463",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/build-01.json",
+  "attempt_record_sha256": "90fc07407c0a8cca9b6278176b9fa662028fde1d05de206ae1a3d2eced764cf7",
+  "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/build-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Building: a squat wooden mallet resting diagonally across two large notched logs neatly joined into a corner, compact clear joinery. No metal, nails or roof.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "JobKind",
+        "id": "build",
+        "code": 4
+      }
+    ],
+    "proposed_future": [],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+    "bindings_applied": false
+  }
+}

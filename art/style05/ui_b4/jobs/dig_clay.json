@@ -1,0 +1,35 @@
+{
+  "id": "dig_clay",
+  "lane": "jobs",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/jobs/dig_clay.png",
+  "sha256": "e159ccb4ba4737726a84d0cafc94916959dcb522ba74828da5d67658754b19dd",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/dig_clay-01.json",
+  "attempt_record_sha256": "dce05c26055c26331e38e11674943000a105238cb4c4ac5284d275d90185fd54",
+  "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/dig_clay-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Digging clay: a broad wooden scoop lifting a heavy reddish-grey clay clod from a compact open clay lump; the scoop and sticky clay obvious, no earthenware bowl or metal.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "JobKind",
+        "id": "dig_clay",
+        "code": 12
+      }
+    ],
+    "proposed_future": [],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+    "bindings_applied": false
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "family": "icon",
+  "inputs": [
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/polish/items/stone_axe_try1.png",
+      "sha256": "128e62930b1b4ca7de86f19dc74d1d834bf87ccc281dd28c02ef2f6fe9a32600",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/polish/items/ground_axe_try3.png",
+      "sha256": "dcf4c2afb47e86e24d848127a91b959ac1acdfcf2eb70dcc55315e1ee1981d29",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/polish/items/berry_basket_try1.png",
+      "sha256": "4fe5d8d7d964ef649f1423bc2f92f6c80e615f07bd6ce73ebd1bb7a2fa1348ee",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/polish/items/clay_try3.png",
+      "sha256": "31c518a4272368573fcef3f1c2e25aeccb1ae1c83fa6c55cda9b8711c0b57edb",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/polish/items/firewood_try3.png",
+      "sha256": "ef9ba8786b98697b4814f15e04d8ce1cde705a20715886b3667275ef5fff3441",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/env1/items/clay_pot_empty.png",
+      "sha256": "1e0fd136c5b99ad8f4114c9fd0d4b3b518c7c66cf7912812238a7d1b1ba68cd1",
+      "role": "reference"
+    },
+    {
+      "path": "art/style05/ui_b4/jobs/clear.png",
+      "sha256": "cad588bd62f397431ba9e1f58829438b4146aca42d99298b48a1b063fffe571a",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/ui_b4/jobs/dig_clay.png",
+      "sha256": "e159ccb4ba4737726a84d0cafc94916959dcb522ba74828da5d67658754b19dd",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/ui_b4/jobs/teach.png",
+      "sha256": "0bb029af53f5ed689b38cee2826f6cdf1068c48242b352d11d8417e15ec3a39d",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/ui_b4/jobs/learn.png",
+      "sha256": "9aea68553bedbeae6687a8b25836114fb9df97d2dc951886461013ab3412eb2d",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/ui_b4/jobs/hunt.png",
+      "sha256": "bf472205474e8a17abdc70aebc23b44fdcd7ec40fc211a3ffc312b25d69388db",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/ui_b4/jobs/equip.png",
+      "sha256": "a07831ffa95ba7bb1e2b8646cdd8ef03a10affa3e6723aa8623d2b8d75a022ec",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/ui_b4/jobs/trade.png",
+      "sha256": "cb8e65173565b316310acd15ed17efa34508108aff5c1d41b27fc3b8a7f6fe1c",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/ui_b4/jobs/harvest.png",
+      "sha256": "2df9b9279ef40d7393c47c8fb5eba08d1ca5f78ec6081bca0d769729ee4e7d3e",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/ui_b4/jobs/till_field.png",
+      "sha256": "ba18e423dfcc7ca1c93a286ce3b1282254ed8557a8ac0b9ee61a1da09a8cb9b4",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/ui_b4/jobs/sow_field.png",
+      "sha256": "6255fa2af7f30a18167f665add2e411104920f4c9be994dc890698006fcd24e7",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/ui_b4/jobs/tend_field.png",
+      "sha256": "087a4648a1e38d7b463462116aa9f80a332816a11ebf91cae819236ee20683da",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/ui_b4/jobs/harvest_field.png",
+      "sha256": "1e2cc9f80888665a7293a146745fcff34c54e4f645ec50ed48d6e3db2b3bf0ec",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/ui_b4/jobs/capture.png",
+      "sha256": "a0f2126af6563e345a38bb0851e2ac4cfce9f262fec326ebdfecda53950b5576",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/ui_b4/jobs/milk.png",
+      "sha256": "88aa0ea151b344dd66ccf9ad0e452f7a0bb9d3bf4dcdd47e0215befd6ab0765f",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/ui_b4/jobs/slaughter.png",
+      "sha256": "07b19f4dd5861b06eb788e47b3dd97ef49b808f25e57ca6404cc4aca5933443e",
+      "role": "candidate"
+    }
+  ],
+  "canvas": [
+    1140,
+    812
+  ],
+  "sheet_sha256": "0f24861f28b0a900c290d6358bca60c522db8580c6c9710e918363ac02735c4c",
+  "note": "Review composite only; source sprites are unchanged."
+}

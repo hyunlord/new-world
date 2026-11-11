@@ -1,0 +1,35 @@
+{
+  "id": "learn",
+  "lane": "jobs",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/jobs/learn.png",
+  "sha256": "9aea68553bedbeae6687a8b25836114fb9df97d2dc951886461013ab3412eb2d",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/learn-01.json",
+  "attempt_record_sha256": "8759e1dcbad5950ad65c75d9878e110f269aee5326f70797c9c4356858ba645d",
+  "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/learn-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Learning stone craft: one small open hand comparing a newly made grey flint flake with a larger finished exemplar flake positioned beside it, deliberate practice. Three large shapes only; no writing, text, school or metal.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "JobKind",
+        "id": "learn",
+        "code": 14
+      }
+    ],
+    "proposed_future": [],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+    "bindings_applied": false
+  }
+}

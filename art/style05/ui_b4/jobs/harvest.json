@@ -1,0 +1,35 @@
+{
+  "id": "harvest",
+  "lane": "jobs",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/jobs/harvest.png",
+  "sha256": "2df9b9279ef40d7393c47c8fb5eba08d1ca5f78ec6081bca0d769729ee4e7d3e",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/harvest-01.json",
+  "attempt_record_sha256": "be9e2dc73bf8619f0dcaa4e72199990eee6f93381d801a364dafd6652ad5dd07",
+  "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/harvest-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Harvesting wild plants: a bare hand pulling a broad edible root with two large sage leaves; one smaller root nearby. A clear uprooted wild root harvest, no cultivated grain, sickle or metal.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "JobKind",
+        "id": "harvest",
+        "code": 18
+      }
+    ],
+    "proposed_future": [],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+    "bindings_applied": false
+  }
+}

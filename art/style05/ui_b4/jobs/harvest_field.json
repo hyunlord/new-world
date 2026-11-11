@@ -1,0 +1,35 @@
+{
+  "id": "harvest_field",
+  "lane": "jobs",
+  "family": "icon",
+  "era": "neolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/jobs/harvest_field.png",
+  "sha256": "1e2cc9f80888665a7293a146745fcff34c54e4f645ec50ed48d6e3db2b3bf0ec",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/harvest_field-01.json",
+  "attempt_record_sha256": "0223d837fff85bed0dbdd54d309c79c1eaa527ef130abbea2184ea34ade14fce",
+  "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/harvest_field-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Harvesting a grain field: a curved wooden sickle with inset grey flint teeth cutting three ripe golden grain stalks tied in a compact sheaf. No metal, no loose berry or root, strong curved blade silhouette.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "JobKind",
+        "id": "harvest_field",
+        "code": 22
+      }
+    ],
+    "proposed_future": [],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+    "bindings_applied": false
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "capture",
+  "lane": "jobs",
+  "family": "icon",
+  "era": "neolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/jobs/capture.png",
+  "sha256": "a0f2126af6563e345a38bb0851e2ac4cfce9f262fec326ebdfecda53950b5576",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/capture-01.json",
+  "attempt_record_sha256": "e8bdd366aaf215d33284019af1a98f5584e174885b25afe5437e0f159356dc49",
+  "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/capture-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Capturing a young wild animal: a small standing tan goat kid calmly enclosed by a simple loose loop of fibre rope, loop open and safe around body, one short rope end. No cage, injury, metal, bells or dyed fabric.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "JobKind",
+        "id": "capture",
+        "code": 23
+      }
+    ],
+    "proposed_future": [],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+    "bindings_applied": false
+  }
+}

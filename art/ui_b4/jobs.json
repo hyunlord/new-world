@@ -1,0 +1,1280 @@
+{
+  "schema_version": 1,
+  "lane": "jobs",
+  "assets": [
+    {
+      "id": "chop_bronze",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "bronze",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/jobs/chop_bronze.png",
+      "sha256": "49a728e48b0a098ab5882a5f0a62d5295a3f56b7cf3fa2cb020edc991bd32ac1",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/chop_bronze-01.json",
+      "attempt_record_sha256": "7eac4e2cd331d34779ef8e9db46ded13d09d740325f7f477155a1241e4476f8f",
+      "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/chop_bronze-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Golden-brown bronze axe biting a thick log, two split chips and a clear notch; no hands.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "chop",
+            "code": 1
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false,
+        "art_variant": {
+          "id": "chop_bronze",
+          "base_job": "chop",
+          "is_runtime_kind": false,
+          "note": "Named material/process art variant only; no invented JobKind code."
+        }
+      }
+    },
+    {
+      "id": "craft_smelting_bronze",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "bronze",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/jobs/craft_smelting_bronze.png",
+      "sha256": "fdfdbc476555a002954f0b6f18888e9f4d99ca5cf8d47943395512e18fe234af",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/craft_smelting_bronze-02.json",
+      "attempt_record_sha256": "d53116977a59114b65876797349fd81ca396ea73a63379b4d4f7bc1916fed283",
+      "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/craft_smelting_bronze-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "Smelting: a small round clay crucible seated among three large charcoal lumps, with one warm orange molten copper pool visible at its open top and two subdued terracotta copper ore chunks beside it. A small amber flame behind establishes work, with no furnace building or person.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "craft",
+            "code": 7
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false,
+        "art_variant": {
+          "id": "craft_smelting_bronze",
+          "base_job": "craft",
+          "is_runtime_kind": false,
+          "note": "Named material/process art variant only; no invented JobKind code."
+        }
+      }
+    },
+    {
+      "id": "craft_casting_bronze",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "bronze",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/jobs/craft_casting_bronze.png",
+      "sha256": "51da09676fb70464d8c281863c5d5fb917b4aa111c479f3119f142b79b621adf",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/craft_casting_bronze-01.json",
+      "attempt_record_sha256": "3b78258c69c735ba2acfc203b128135bf1246aa780ded87d5d2c9cfaf10c5a6f",
+      "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/craft_casting_bronze-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Casting: a tilted clay crucible pours one continuous thin golden-brown bronze stream into a clear axe-shaped cavity of an open two-part clay mould. Compact readable pouring action. No person or metal tongs.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "craft",
+            "code": 7
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false,
+        "art_variant": {
+          "id": "craft_casting_bronze",
+          "base_job": "craft",
+          "is_runtime_kind": false,
+          "note": "Named material/process art variant only; no invented JobKind code."
+        }
+      }
+    },
+    {
+      "id": "dig_mining_bronze",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "bronze",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/jobs/dig_mining_bronze.png",
+      "sha256": "d7759fba63637a976ce0b28005e0ec4a19382d8ffca0d877b93d6ca95c948951",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/dig_mining_bronze-01.json",
+      "attempt_record_sha256": "07c3383d9d8690dcace3bb7e8b6aae284faecc55b7bf6255a9f7fc620480fc08",
+      "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/dig_mining_bronze-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Mining: a primitive antler pick embedded in one large rough rock with broad subdued green copper mineral bands, with two small detached ore chunks. Show impact notch, not decorative crystals; no steel pick.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "dig",
+            "code": 9
+          },
+          {
+            "kind": "WorkType",
+            "id": "mine",
+            "code": 6
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false,
+        "art_variant": {
+          "id": "dig_mining_bronze",
+          "base_job": "dig",
+          "is_runtime_kind": false,
+          "note": "Named material/process art variant only; no invented JobKind code."
+        }
+      }
+    },
+    {
+      "id": "hunt_bronze",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "bronze",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/jobs/hunt_bronze.png",
+      "sha256": "5cfb452853e9ec1563c07c5870a9f56d203cb45fd57032b8e85920bfa77dec7a",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/hunt_bronze-02.json",
+      "attempt_record_sha256": "f5596778626b325a66fcb24fc49701cbcbdd2ce89288ead8cc3ac1151082c7cc",
+      "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/hunt_bronze-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "Deer side profile with simple forked antler beside golden-brown bronze-point spear.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "hunt",
+            "code": 15
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false,
+        "art_variant": {
+          "id": "hunt_bronze",
+          "base_job": "hunt",
+          "is_runtime_kind": false,
+          "note": "Named material/process art variant only; no invented JobKind code."
+        }
+      }
+    },
+    {
+      "id": "chop",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/jobs/chop.png",
+      "sha256": "36411bf470bf6be4808b20433a952c4586c2f81f77103ceaf0ddde63b79abe20",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/chop-02.json",
+      "attempt_record_sha256": "d17149e9d0fcf1ea6b5b40f4bebb93a72b34c5676c42ffd6b39b205222c6d7f1",
+      "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/chop-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "Chopping wood: a grey chipped flint axe lashed into a forked wooden handle bites into one short log; two broad detached chips. Clear chopping notch. No metal. The same axe splitting a log is proposed for the verified WorkType split, without another JobKind.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "chop",
+            "code": 1
+          },
+          {
+            "kind": "WorkType",
+            "id": "split",
+            "code": 4
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "haul",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/jobs/haul.png",
+      "sha256": "98ac7f61ad40a89c758f478cbbb26962c6b638700671bf100b023b4d6bc6c75d",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/haul-02.json",
+      "attempt_record_sha256": "75d962d74448ae0ceb300e39b432e9497b126a8c309b5519cafb6ea7e7a09661",
+      "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/haul-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "Hauling: three short logs bundled tightly in simple fibre carrying straps, the single arched strap lifting upward as if carried. Just the carried load; no receiving location, person or arrows.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "haul",
+            "code": 2
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "deliver",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/jobs/deliver.png",
+      "sha256": "947cdc47bff66ac7ce560049581c3aac2fd58414e96642c4fce894c026875019",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/deliver-01.json",
+      "attempt_record_sha256": "450502f872abdecf432a8a0a1f81e61484125a030ee411ccfc008563c33e0a87",
+      "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/deliver-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Delivering: one large open hand setting a tied bundle of two logs into a simple low open receiving basket. Show load arriving at a visible destination; no arrows, text or modern crate.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "deliver",
+            "code": 3
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "build",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/jobs/build.png",
+      "sha256": "6712b9c8cafed2bcf8bdd3379ce0f4a49d94ba09bee3a934a29fdb7fee43b463",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/build-01.json",
+      "attempt_record_sha256": "90fc07407c0a8cca9b6278176b9fa662028fde1d05de206ae1a3d2eced764cf7",
+      "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/build-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Building: a squat wooden mallet resting diagonally across two large notched logs neatly joined into a corner, compact clear joinery. No metal, nails or roof.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "build",
+            "code": 4
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "quarry",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/jobs/quarry.png",
+      "sha256": "026f413641d962c1947a34df839abcce270e8cea2942b2f788ea2b307e79beff",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/quarry-01.json",
+      "attempt_record_sha256": "a5162dc9aad32f9b3a4b4f5f1a2a660a6fecd6877b72dc4c1f98df51787855cc",
+      "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/quarry-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Quarrying: a large oval stone hammer strikes a broad grey boulder with a split line and one freshly detached rectangular stone chunk. Separate clear hammer and stone, no metal pick.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "quarry",
+            "code": 5
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "supply",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/jobs/supply.png",
+      "sha256": "dd7bd5775ef89c2fad6ab999c9cdeba22ab354f218dc8c0f579fe983f1aac7da",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/supply-02.json",
+      "attempt_record_sha256": "6f2e1d471235c346d131375438c3dd742dbad27dcf0365ec7f57568dfe85ab49",
+      "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/supply-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "Three short logs ready on a compact primitive timber workbench with two visible legs.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "supply",
+            "code": 6
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "craft",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/jobs/craft.png",
+      "sha256": "bb3e565cbab08caf2a372181fea97cf4571d0154b5dee9500dcf3b9e8a5e1c98",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/craft-01.json",
+      "attempt_record_sha256": "2d0a2a8fb1fb7fd58072f21b9ef0e94612e43baf3f20887ac61d843156f6cea2",
+      "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/craft-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Crafting: one hand-held round hammerstone poised directly over a large flint core on a small hide pad, with two broad flakes; no metal, no nails, clear tool-making action.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "craft",
+            "code": 7
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "gather",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/jobs/gather.png",
+      "sha256": "d3678f41e4d5e3d6c3c6df21f14b04016e056704c86c976e1657e29d2f55ea0b",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/gather-01.json",
+      "attempt_record_sha256": "bd2d88b9581a3b380ff559c06ee79d7a136b1bc887f6259faf6ce0d4b9b2b912",
+      "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/gather-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Gathering food: a compact open wicker basket holding three large muted red berries and one green leaf, beside one matching berry sprig. Basket and berry silhouette, no harvest blade.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "gather",
+            "code": 8
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "dig",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/jobs/dig.png",
+      "sha256": "3681d3688f67475ef2cf85efd33bd7990fc369088a97dc41756ab2d6c696fd18",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/dig-01.json",
+      "attempt_record_sha256": "1c50f1b4e2ca49945de77be83a2c6a54ef2922f322055fef97790f77c2f6067d",
+      "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/dig-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Digging: a thick pointed wooden digging stick planted diagonally in a small crescent of freshly lifted earth with one broad root. No spade blade, no metal, no surrounding ground plane.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "dig",
+            "code": 9
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "deconstruct",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/jobs/deconstruct.png",
+      "sha256": "e62d2e6b5e27fb2dcd2854bc89017f478ffdf069c6b3094dff9223d89d13d6a1",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/deconstruct-01.json",
+      "attempt_record_sha256": "22e7182511d1193072905c51fa14f26aaf54d963550a08f161e0a0d27df024c8",
+      "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/deconstruct-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Deconstructing: two disassembled notched logs with a loosened fibre binding loop and a lifted wooden peg. Show separated joinery and slack lash, no hammer or saw or metal.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "deconstruct",
+            "code": 10
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "clear",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/jobs/clear.png",
+      "sha256": "cad588bd62f397431ba9e1f58829438b4146aca42d99298b48a1b063fffe571a",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/clear-02.json",
+      "attempt_record_sha256": "3dbb0faffce30d5b94426af84c5952a13a5d79729e85c64e8b52dad01230052b",
+      "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/clear-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "One hand grips three cut brush stems above a large grey flint cutting blade.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "clear",
+            "code": 11
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "dig_clay",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/jobs/dig_clay.png",
+      "sha256": "e159ccb4ba4737726a84d0cafc94916959dcb522ba74828da5d67658754b19dd",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/dig_clay-01.json",
+      "attempt_record_sha256": "dce05c26055c26331e38e11674943000a105238cb4c4ac5284d275d90185fd54",
+      "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/dig_clay-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Digging clay: a broad wooden scoop lifting a heavy reddish-grey clay clod from a compact open clay lump; the scoop and sticky clay obvious, no earthenware bowl or metal.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "dig_clay",
+            "code": 12
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "teach",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/jobs/teach.png",
+      "sha256": "0bb029af53f5ed689b38cee2826f6cdf1068c48242b352d11d8417e15ec3a39d",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/teach-01.json",
+      "attempt_record_sha256": "792bc9d559797dae0ac8ce522843ecdc000dc6d03265d645b678a1e881588956",
+      "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/teach-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Teaching stone craft: two hands, one larger guiding hand pointing to the facet of a broad grey flint core held by the smaller learner hand. One core, two hands, deliberate demonstration; no text, symbols, sleeves or metal.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "teach",
+            "code": 13
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "learn",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/jobs/learn.png",
+      "sha256": "9aea68553bedbeae6687a8b25836114fb9df97d2dc951886461013ab3412eb2d",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/learn-01.json",
+      "attempt_record_sha256": "8759e1dcbad5950ad65c75d9878e110f269aee5326f70797c9c4356858ba645d",
+      "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/learn-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Learning stone craft: one small open hand comparing a newly made grey flint flake with a larger finished exemplar flake positioned beside it, deliberate practice. Three large shapes only; no writing, text, school or metal.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "learn",
+            "code": 14
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "hunt",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/jobs/hunt.png",
+      "sha256": "bf472205474e8a17abdc70aebc23b44fdcd7ec40fc211a3ffc312b25d69388db",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/hunt-02.json",
+      "attempt_record_sha256": "09bba4e7441c98e8749e2eb965104b079f5cd2f291fa0cc0d333679ede3404ed",
+      "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/hunt-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "Deer side profile with simple forked antler beside lashed grey flint-point spear.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "hunt",
+            "code": 15
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "equip",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/jobs/equip.png",
+      "sha256": "a07831ffa95ba7bb1e2b8646cdd8ef03a10affa3e6723aa8623d2b8d75a022ec",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/equip-01.json",
+      "attempt_record_sha256": "0a3833a4acaaf50f79605f41bdf0a30b8c250c992dbaf3becc3fcae407775448",
+      "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/equip-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Equipping: one bare hand clasping the wooden grip of a simple lashed flint axe as it is taken up. Grip gesture, whole compact axe fully visible; no person torso, metal or modern strap.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "equip",
+            "code": 16
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "trade",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/jobs/trade.png",
+      "sha256": "cb8e65173565b316310acd15ed17efa34508108aff5c1d41b27fc3b8a7f6fe1c",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/trade-02.json",
+      "attempt_record_sha256": "9b994f16e3c12ee97ec0a2428eb86b898ab5e5edb5071f3de75c5acd4887b7b2",
+      "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/trade-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "Two opposing bare hands exchange an ochre food root and a grey flint flake.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "trade",
+            "code": 17
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "harvest",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/jobs/harvest.png",
+      "sha256": "2df9b9279ef40d7393c47c8fb5eba08d1ca5f78ec6081bca0d769729ee4e7d3e",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/harvest-01.json",
+      "attempt_record_sha256": "be9e2dc73bf8619f0dcaa4e72199990eee6f93381d801a364dafd6652ad5dd07",
+      "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/harvest-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Harvesting wild plants: a bare hand pulling a broad edible root with two large sage leaves; one smaller root nearby. A clear uprooted wild root harvest, no cultivated grain, sickle or metal.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "harvest",
+            "code": 18
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "till_field",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "neolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/jobs/till_field.png",
+      "sha256": "ba18e423dfcc7ca1c93a286ce3b1282254ed8557a8ac0b9ee61a1da09a8cb9b4",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/till_field-01.json",
+      "attempt_record_sha256": "45a4576159f9c5dd951718758f8afee1962e561a3185a608db558b7d863a5937",
+      "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/till_field-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Tilling a field: a short stone-bladed hoe crossing two compact parallel soil furrows. Large grey stone blade bound by fibre to wooden bent handle, no metal; two separated short furrows only, no background tile.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "till_field",
+            "code": 19
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "sow_field",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "neolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/jobs/sow_field.png",
+      "sha256": "6255fa2af7f30a18167f665add2e411104920f4c9be994dc890698006fcd24e7",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/sow_field-01.json",
+      "attempt_record_sha256": "d8e67dc8a083bd66bf6a6568c3c791be42392e79ead81a88aa0d14e85db14856",
+      "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/sow_field-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Sowing a field: an open bare hand scattering five large ochre grain seeds in a descending arc toward two compact parallel earth furrows. No bag, metal or background plane.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "sow_field",
+            "code": 20
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "tend_field",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "neolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/jobs/tend_field.png",
+      "sha256": "087a4648a1e38d7b463462116aa9f80a332816a11ebf91cae819236ee20683da",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/tend_field-01.json",
+      "attempt_record_sha256": "6f5d98bee484f7ab98dc0f5723cd5d3656450ff4ff8ab0acf0d6c8ddec9159ba",
+      "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/tend_field-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Tending a field: one bare hand removes a small weed beside two sturdy green cereal seedlings with clear gap between weed and crop. Three simple plant shapes, roots visible, no metal watering can.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "tend_field",
+            "code": 21
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "harvest_field",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "neolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/jobs/harvest_field.png",
+      "sha256": "1e2cc9f80888665a7293a146745fcff34c54e4f645ec50ed48d6e3db2b3bf0ec",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/harvest_field-01.json",
+      "attempt_record_sha256": "0223d837fff85bed0dbdd54d309c79c1eaa527ef130abbea2184ea34ade14fce",
+      "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/harvest_field-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Harvesting a grain field: a curved wooden sickle with inset grey flint teeth cutting three ripe golden grain stalks tied in a compact sheaf. No metal, no loose berry or root, strong curved blade silhouette.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "harvest_field",
+            "code": 22
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "capture",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "neolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/jobs/capture.png",
+      "sha256": "a0f2126af6563e345a38bb0851e2ac4cfce9f262fec326ebdfecda53950b5576",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/capture-01.json",
+      "attempt_record_sha256": "e8bdd366aaf215d33284019af1a98f5584e174885b25afe5437e0f159356dc49",
+      "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/capture-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Capturing a young wild animal: a small standing tan goat kid calmly enclosed by a simple loose loop of fibre rope, loop open and safe around body, one short rope end. No cage, injury, metal, bells or dyed fabric.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "capture",
+            "code": 23
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "milk",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "neolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/jobs/milk.png",
+      "sha256": "88aa0ea151b344dd66ccf9ad0e452f7a0bb9d3bf4dcdd47e0215befd6ab0765f",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/milk-01.json",
+      "attempt_record_sha256": "9d20ccdbe6340e56dd54611ba4b68fe0faee7ae2e9c9af9473dae16ab898e238",
+      "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/milk-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Milking: a tan goat udder and one bare hand gently expressing a single milk stream into a simple undecorated clay bowl; crop at rear-body only so the milking action is large and clear. No metal pail or modern milking apparatus.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "milk",
+            "code": 24
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    },
+    {
+      "id": "slaughter",
+      "lane": "jobs",
+      "family": "icon",
+      "era": "neolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/jobs/slaughter.png",
+      "sha256": "07b19f4dd5861b06eb788e47b3dd97ef49b808f25e57ca6404cc4aca5933443e",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/slaughter-01.json",
+      "attempt_record_sha256": "dfa61e7f315fff051786a1fd3881178dfa666c5249ba7f41911cafbb7d4ba7bb",
+      "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/slaughter-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Livestock processing job: a simple broad chipped flint knife laid beside a neatly folded tan animal hide and a small hoof silhouette. Non-graphic still-life only; no live animal, blood, wound or body; no metal.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "JobKind",
+            "id": "slaughter",
+            "code": 25
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+        "bindings_applied": false
+      }
+    }
+  ],
+  "attempts": [
+    "/Users/rexxa/work/art-batch/B4/jobs/records/build-01.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/capture-01.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/chop-02.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/chop_bronze-01.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/clear-01.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/clear-02.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/craft-01.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/craft_casting_bronze-01.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/craft_smelting_bronze-01.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/craft_smelting_bronze-02.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/deconstruct-01.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/deliver-01.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/dig-01.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/dig_clay-01.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/dig_mining_bronze-01.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/equip-01.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/gather-01.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/harvest-01.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/harvest_field-01.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/haul-02.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/hunt-01.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/hunt-02.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/hunt_bronze-01.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/hunt_bronze-02.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/learn-01.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/milk-01.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/quarry-01.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/slaughter-01.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/sow_field-01.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/supply-01.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/supply-02.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/teach-01.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/tend_field-01.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/till_field-01.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/trade-01.json",
+    "/Users/rexxa/work/art-batch/B4/jobs/records/trade-02.json"
+  ],
+  "rejected": [
+    {
+      "record": "/Users/rexxa/work/art-batch/B4/jobs/records/craft_smelting_bronze-01.json",
+      "reason": "Generated haze reaches canvas edge; A4 raw border alpha37 exceeds permitted15."
+    }
+  ],
+  "superseded": [
+    {
+      "record": "/Users/rexxa/work/art-batch/B4/jobs/records/hunt_bronze-01.json",
+      "reason": "Replace ambiguous raised hoof stones with recognizable deer profile and bronze-point spear; animal and bronze edge remain visible at32px."
+    },
+    {
+      "record": "/Users/rexxa/work/art-batch/B4/jobs/records/hunt-01.json",
+      "reason": "Replace hoof stones with recognizable deer profile and flint spear; the grey faceted spear point distinguishes its earliest material."
+    },
+    {
+      "record": "/Users/rexxa/work/art-batch/B4/jobs/records/trade-01.json",
+      "reason": "Exactly two opposing hands and two large contrasting goods remain legible at32px; removes the four-hand basket clutter."
+    },
+    {
+      "record": "/Users/rexxa/work/art-batch/B4/jobs/records/clear-01.json",
+      "reason": "Large flint blade across hand-held cut stems expresses clearing, distinct from tied or carried bundles."
+    },
+    {
+      "record": "/Users/rexxa/work/art-batch/B4/jobs/records/supply-01.json",
+      "reason": "Visible bench legs and inputs on the worktop communicate a supplied station, distinct from haul and delivery."
+    }
+  ],
+  "interrupted_attempts": {
+    "evidence": "/Users/rexxa/work/art-batch/B4/jobs/interruption.json",
+    "no_artifact": [
+      {
+        "id": "chop",
+        "attempt": 1
+      },
+      {
+        "id": "haul",
+        "attempt": 1
+      }
+    ],
+    "count_toward_cap": true
+  },
+  "coverage": {
+    "required_ids": [
+      "chop",
+      "haul",
+      "deliver",
+      "build",
+      "quarry",
+      "supply",
+      "craft",
+      "gather",
+      "dig",
+      "deconstruct",
+      "clear",
+      "dig_clay",
+      "teach",
+      "learn",
+      "hunt",
+      "equip",
+      "trade",
+      "harvest",
+      "till_field",
+      "sow_field",
+      "tend_field",
+      "harvest_field",
+      "capture",
+      "milk",
+      "slaughter"
+    ],
+    "variant_ids": [
+      "chop_bronze",
+      "craft_smelting_bronze",
+      "craft_casting_bronze",
+      "dig_mining_bronze",
+      "hunt_bronze"
+    ],
+    "not_applicable": []
+  },
+  "self_review": {
+    "weakest_ids": [
+      "hunt_bronze",
+      "hunt",
+      "trade",
+      "clear",
+      "supply"
+    ],
+    "regenerated_ids": [
+      "hunt_bronze",
+      "hunt",
+      "trade",
+      "clear",
+      "supply"
+    ],
+    "before_after": [
+      {
+        "id": "hunt_bronze",
+        "before_record": "/Users/rexxa/work/art-batch/B4/jobs/records/hunt_bronze-01.json",
+        "after_record": "/Users/rexxa/work/art-batch/B4/jobs/records/hunt_bronze-02.json",
+        "decision": "select_after",
+        "reason": "Replace ambiguous raised hoof stones with recognizable deer profile and bronze-point spear; animal and bronze edge remain visible at32px."
+      },
+      {
+        "id": "hunt",
+        "before_record": "/Users/rexxa/work/art-batch/B4/jobs/records/hunt-01.json",
+        "after_record": "/Users/rexxa/work/art-batch/B4/jobs/records/hunt-02.json",
+        "decision": "select_after",
+        "reason": "Replace hoof stones with recognizable deer profile and flint spear; the grey faceted spear point distinguishes its earliest material."
+      },
+      {
+        "id": "trade",
+        "before_record": "/Users/rexxa/work/art-batch/B4/jobs/records/trade-01.json",
+        "after_record": "/Users/rexxa/work/art-batch/B4/jobs/records/trade-02.json",
+        "decision": "select_after",
+        "reason": "Exactly two opposing hands and two large contrasting goods remain legible at32px; removes the four-hand basket clutter."
+      },
+      {
+        "id": "clear",
+        "before_record": "/Users/rexxa/work/art-batch/B4/jobs/records/clear-01.json",
+        "after_record": "/Users/rexxa/work/art-batch/B4/jobs/records/clear-02.json",
+        "decision": "select_after",
+        "reason": "Large flint blade across hand-held cut stems expresses clearing, distinct from tied or carried bundles."
+      },
+      {
+        "id": "supply",
+        "before_record": "/Users/rexxa/work/art-batch/B4/jobs/records/supply-01.json",
+        "after_record": "/Users/rexxa/work/art-batch/B4/jobs/records/supply-02.json",
+        "decision": "select_after",
+        "reason": "Visible bench legs and inputs on the worktop communicate a supplied station, distinct from haul and delivery."
+      }
+    ],
+    "rate": 0.16666666666666666,
+    "verdict": "/Users/rexxa/work/art-batch/B4/jobs/reviews/final_self_review.json",
+    "independent": false
+  },
+  "notes": [
+    "30 candidates:25 verified runtime JobKinds and5 named bronze art variants. Optional iron variants omitted per owner economical-scope steering.",
+    "A4 unchanged sheets.py title retains A4; the boards below contain B4 jobs candidates and adopted reference sprites.",
+    "No runtime imports or bindings applied. Root owns independent final visual review.",
+    "36 raw output records plus2 interrupted calls without returned artifacts; no asset exceeds2 requested attempts. Seed and model version were not exposed by imagegen."
+  ],
+  "boards": [
+    "art/boards/ui_b4/jobs_final_1.png",
+    "art/boards/ui_b4/jobs_final_2.png",
+    "art/boards/ui_b4/jobs_self_review.png"
+  ]
+}

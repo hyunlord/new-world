@@ -1,0 +1,35 @@
+{
+  "id": "deconstruct",
+  "lane": "jobs",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/jobs/deconstruct.png",
+  "sha256": "e62d2e6b5e27fb2dcd2854bc89017f478ffdf069c6b3094dff9223d89d13d6a1",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/deconstruct-01.json",
+  "attempt_record_sha256": "22e7182511d1193072905c51fa14f26aaf54d963550a08f161e0a0d27df024c8",
+  "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/deconstruct-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Deconstructing: two disassembled notched logs with a loosened fibre binding loop and a lifted wooden peg. Show separated joinery and slack lash, no hammer or saw or metal.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "JobKind",
+        "id": "deconstruct",
+        "code": 10
+      }
+    ],
+    "proposed_future": [],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+    "bindings_applied": false
+  }
+}

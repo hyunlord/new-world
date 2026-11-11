@@ -1,0 +1,35 @@
+{
+  "id": "till_field",
+  "lane": "jobs",
+  "family": "icon",
+  "era": "neolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/jobs/till_field.png",
+  "sha256": "ba18e423dfcc7ca1c93a286ce3b1282254ed8557a8ac0b9ee61a1da09a8cb9b4",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/till_field-01.json",
+  "attempt_record_sha256": "45a4576159f9c5dd951718758f8afee1962e561a3185a608db558b7d863a5937",
+  "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/till_field-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Tilling a field: a short stone-bladed hoe crossing two compact parallel soil furrows. Large grey stone blade bound by fibre to wooden bent handle, no metal; two separated short furrows only, no background tile.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "JobKind",
+        "id": "till_field",
+        "code": 19
+      }
+    ],
+    "proposed_future": [],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+    "bindings_applied": false
+  }
+}

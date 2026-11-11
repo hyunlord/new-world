@@ -1,0 +1,35 @@
+{
+  "id": "deliver",
+  "lane": "jobs",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/jobs/deliver.png",
+  "sha256": "947cdc47bff66ac7ce560049581c3aac2fd58414e96642c4fce894c026875019",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/deliver-01.json",
+  "attempt_record_sha256": "450502f872abdecf432a8a0a1f81e61484125a030ee411ccfc008563c33e0a87",
+  "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/deliver-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Delivering: one large open hand setting a tied bundle of two logs into a simple low open receiving basket. Show load arriving at a visible destination; no arrows, text or modern crate.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "JobKind",
+        "id": "deliver",
+        "code": 3
+      }
+    ],
+    "proposed_future": [],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+    "bindings_applied": false
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "craft_casting_bronze",
+  "lane": "jobs",
+  "family": "icon",
+  "era": "bronze",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/jobs/craft_casting_bronze.png",
+  "sha256": "51da09676fb70464d8c281863c5d5fb917b4aa111c479f3119f142b79b621adf",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/craft_casting_bronze-01.json",
+  "attempt_record_sha256": "3b78258c69c735ba2acfc203b128135bf1246aa780ded87d5d2c9cfaf10c5a6f",
+  "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/craft_casting_bronze-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Casting: a tilted clay crucible pours one continuous thin golden-brown bronze stream into a clear axe-shaped cavity of an open two-part clay mould. Compact readable pouring action. No person or metal tongs.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "JobKind",
+        "id": "craft",
+        "code": 7
+      }
+    ],
+    "proposed_future": [],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+    "bindings_applied": false,
+    "art_variant": {
+      "id": "craft_casting_bronze",
+      "base_job": "craft",
+      "is_runtime_kind": false,
+      "note": "Named material/process art variant only; no invented JobKind code."
+    }
+  }
+}

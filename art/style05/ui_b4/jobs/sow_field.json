@@ -1,0 +1,35 @@
+{
+  "id": "sow_field",
+  "lane": "jobs",
+  "family": "icon",
+  "era": "neolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/jobs/sow_field.png",
+  "sha256": "6255fa2af7f30a18167f665add2e411104920f4c9be994dc890698006fcd24e7",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/sow_field-01.json",
+  "attempt_record_sha256": "d8e67dc8a083bd66bf6a6568c3c791be42392e79ead81a88aa0d14e85db14856",
+  "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/sow_field-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Sowing a field: an open bare hand scattering five large ochre grain seeds in a descending arc toward two compact parallel earth furrows. No bag, metal or background plane.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "JobKind",
+        "id": "sow_field",
+        "code": 20
+      }
+    ],
+    "proposed_future": [],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+    "bindings_applied": false
+  }
+}

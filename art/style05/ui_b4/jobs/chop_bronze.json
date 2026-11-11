@@ -1,0 +1,41 @@
+{
+  "id": "chop_bronze",
+  "lane": "jobs",
+  "family": "icon",
+  "era": "bronze",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/jobs/chop_bronze.png",
+  "sha256": "49a728e48b0a098ab5882a5f0a62d5295a3f56b7cf3fa2cb020edc991bd32ac1",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/chop_bronze-01.json",
+  "attempt_record_sha256": "7eac4e2cd331d34779ef8e9db46ded13d09d740325f7f477155a1241e4476f8f",
+  "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/chop_bronze-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Golden-brown bronze axe biting a thick log, two split chips and a clear notch; no hands.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "JobKind",
+        "id": "chop",
+        "code": 1
+      }
+    ],
+    "proposed_future": [],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+    "bindings_applied": false,
+    "art_variant": {
+      "id": "chop_bronze",
+      "base_job": "chop",
+      "is_runtime_kind": false,
+      "note": "Named material/process art variant only; no invented JobKind code."
+    }
+  }
+}

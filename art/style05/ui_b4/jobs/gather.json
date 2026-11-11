@@ -1,0 +1,35 @@
+{
+  "id": "gather",
+  "lane": "jobs",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/jobs/gather.png",
+  "sha256": "d3678f41e4d5e3d6c3c6df21f14b04016e056704c86c976e1657e29d2f55ea0b",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/gather-01.json",
+  "attempt_record_sha256": "bd2d88b9581a3b380ff559c06ee79d7a136b1bc887f6259faf6ce0d4b9b2b912",
+  "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/gather-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Gathering food: a compact open wicker basket holding three large muted red berries and one green leaf, beside one matching berry sprig. Basket and berry silhouette, no harvest blade.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "JobKind",
+        "id": "gather",
+        "code": 8
+      }
+    ],
+    "proposed_future": [],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+    "bindings_applied": false
+  }
+}

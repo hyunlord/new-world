@@ -1,0 +1,46 @@
+{
+  "id": "dig_mining_bronze",
+  "lane": "jobs",
+  "family": "icon",
+  "era": "bronze",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/jobs/dig_mining_bronze.png",
+  "sha256": "d7759fba63637a976ce0b28005e0ec4a19382d8ffca0d877b93d6ca95c948951",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/dig_mining_bronze-01.json",
+  "attempt_record_sha256": "07c3383d9d8690dcace3bb7e8b6aae284faecc55b7bf6255a9f7fc620480fc08",
+  "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/dig_mining_bronze-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Mining: a primitive antler pick embedded in one large rough rock with broad subdued green copper mineral bands, with two small detached ore chunks. Show impact notch, not decorative crystals; no steel pick.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "JobKind",
+        "id": "dig",
+        "code": 9
+      },
+      {
+        "kind": "WorkType",
+        "id": "mine",
+        "code": 6
+      }
+    ],
+    "proposed_future": [],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+    "bindings_applied": false,
+    "art_variant": {
+      "id": "dig_mining_bronze",
+      "base_job": "dig",
+      "is_runtime_kind": false,
+      "note": "Named material/process art variant only; no invented JobKind code."
+    }
+  }
+}

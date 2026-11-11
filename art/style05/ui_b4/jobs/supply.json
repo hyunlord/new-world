@@ -1,0 +1,35 @@
+{
+  "id": "supply",
+  "lane": "jobs",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/jobs/supply.png",
+  "sha256": "dd7bd5775ef89c2fad6ab999c9cdeba22ab354f218dc8c0f579fe983f1aac7da",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/supply-02.json",
+  "attempt_record_sha256": "6f2e1d471235c346d131375438c3dd742dbad27dcf0365ec7f57568dfe85ab49",
+  "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/supply-02.json",
+  "status": "candidate_selected",
+  "semantic_note": "Three short logs ready on a compact primitive timber workbench with two visible legs.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "JobKind",
+        "id": "supply",
+        "code": 6
+      }
+    ],
+    "proposed_future": [],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+    "bindings_applied": false
+  }
+}

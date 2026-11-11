@@ -1,0 +1,40 @@
+{
+  "id": "chop",
+  "lane": "jobs",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/jobs/chop.png",
+  "sha256": "36411bf470bf6be4808b20433a952c4586c2f81f77103ceaf0ddde63b79abe20",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/chop-02.json",
+  "attempt_record_sha256": "d17149e9d0fcf1ea6b5b40f4bebb93a72b34c5676c42ffd6b39b205222c6d7f1",
+  "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/chop-02.json",
+  "status": "candidate_selected",
+  "semantic_note": "Chopping wood: a grey chipped flint axe lashed into a forked wooden handle bites into one short log; two broad detached chips. Clear chopping notch. No metal. The same axe splitting a log is proposed for the verified WorkType split, without another JobKind.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "JobKind",
+        "id": "chop",
+        "code": 1
+      },
+      {
+        "kind": "WorkType",
+        "id": "split",
+        "code": 4
+      }
+    ],
+    "proposed_future": [],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+    "bindings_applied": false
+  }
+}

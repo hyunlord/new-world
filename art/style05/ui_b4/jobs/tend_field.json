@@ -1,0 +1,35 @@
+{
+  "id": "tend_field",
+  "lane": "jobs",
+  "family": "icon",
+  "era": "neolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/jobs/tend_field.png",
+  "sha256": "087a4648a1e38d7b463462116aa9f80a332816a11ebf91cae819236ee20683da",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/jobs/records/tend_field-01.json",
+  "attempt_record_sha256": "6f5d98bee484f7ab98dc0f5723cd5d3656450ff4ff8ab0acf0d6c8ddec9159ba",
+  "normalization": "/Users/rexxa/work/art-batch/B4/jobs/checks/tend_field-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Tending a field: one bare hand removes a small weed beside two sturdy green cereal seedlings with clear gap between weed and crop. Three simple plant shapes, roots visible, no metal watering can.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "JobKind",
+        "id": "tend_field",
+        "code": 21
+      }
+    ],
+    "proposed_future": [],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "rust/crates/sim-core/src/colony/job.rs:88",
+    "bindings_applied": false
+  }
+}
