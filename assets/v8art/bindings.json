@@ -1179,5 +1179,254 @@
         18
       ]
     }
+  },
+  "ui_knowledge": {
+    "about": "Tech-map card icons (tech_panel.gd): knowledge.ron id → manifest id; a node without a row draws text only.",
+    "adze": {
+      "asset": "tech_adze"
+    },
+    "animal_taming": {
+      "asset": "tech_animal_taming"
+    },
+    "atlatl": {
+      "asset": "tech_atlatl"
+    },
+    "barley": {
+      "asset": "tech_barley"
+    },
+    "barter": {
+      "asset": "tech_barter"
+    },
+    "basketry": {
+      "asset": "tech_basketry"
+    },
+    "bedding": {
+      "asset": "tech_bedding"
+    },
+    "bone_setting": {
+      "asset": "tech_bone_setting"
+    },
+    "bone_tools": {
+      "asset": "tech_bone_tools"
+    },
+    "bow": {
+      "asset": "tech_bow"
+    },
+    "clay_digging": {
+      "asset": "tech_clay_digging"
+    },
+    "clay_prep": {
+      "asset": "tech_clay_prep"
+    },
+    "cooking": {
+      "asset": "tech_cooking"
+    },
+    "cordage": {
+      "asset": "tech_cordage"
+    },
+    "crop_rotation": {
+      "asset": "tech_crop_rotation"
+    },
+    "cultivation": {
+      "asset": "tech_cultivation"
+    },
+    "dairy": {
+      "asset": "tech_dairy"
+    },
+    "digging": {
+      "asset": "tech_digging"
+    },
+    "dog_taming": {
+      "asset": "tech_dog_taming"
+    },
+    "doorway": {
+      "asset": "tech_doorway"
+    },
+    "dugout_canoe": {
+      "asset": "tech_dugout_canoe"
+    },
+    "dyeing": {
+      "asset": "tech_dyeing"
+    },
+    "elder_council": {
+      "asset": "tech_elder_council"
+    },
+    "fence": {
+      "asset": "tech_fence"
+    },
+    "fermentation": {
+      "asset": "tech_fermentation"
+    },
+    "fire_keeping": {
+      "asset": "tech_fire_keeping"
+    },
+    "firewood_splitting": {
+      "asset": "tech_firewood_splitting"
+    },
+    "fishing": {
+      "asset": "tech_fishing"
+    },
+    "flint_knapping": {
+      "asset": "tech_flint_knapping"
+    },
+    "food_drying": {
+      "asset": "tech_food_drying"
+    },
+    "food_preservation": {
+      "asset": "tech_food_preservation"
+    },
+    "foraging": {
+      "asset": "tech_foraging"
+    },
+    "grain_parching": {
+      "asset": "tech_grain_parching"
+    },
+    "granary": {
+      "asset": "tech_granary"
+    },
+    "hafting": {
+      "asset": "tech_hafting"
+    },
+    "herbalism": {
+      "asset": "tech_herbalism"
+    },
+    "herding": {
+      "asset": "tech_herding"
+    },
+    "hide_scraping": {
+      "asset": "tech_hide_scraping"
+    },
+    "hide_working": {
+      "asset": "tech_hide_working"
+    },
+    "hoe": {
+      "asset": "tech_hoe"
+    },
+    "hut_building": {
+      "asset": "tech_hut_building"
+    },
+    "instruction": {
+      "asset": "tech_instruction"
+    },
+    "kinship": {
+      "asset": "tech_kinship"
+    },
+    "leather_armor": {
+      "asset": "tech_leather_armor"
+    },
+    "lentil": {
+      "asset": "tech_lentil"
+    },
+    "lunar_calendar": {
+      "asset": "tech_lunar_calendar"
+    },
+    "megalith": {
+      "asset": "tech_megalith"
+    },
+    "millet": {
+      "asset": "tech_millet"
+    },
+    "mud_brick": {
+      "asset": "tech_mud_brick"
+    },
+    "nut_processing": {
+      "asset": "tech_nut_processing"
+    },
+    "ochre": {
+      "asset": "tech_ochre"
+    },
+    "orchard": {
+      "asset": "tech_orchard"
+    },
+    "oven": {
+      "asset": "tech_oven"
+    },
+    "packed_floor": {
+      "asset": "tech_packed_floor"
+    },
+    "pea": {
+      "asset": "tech_pea"
+    },
+    "pot_firing": {
+      "asset": "tech_pot_firing"
+    },
+    "pot_forming": {
+      "asset": "tech_pot_forming"
+    },
+    "pressure_flaking": {
+      "asset": "tech_pressure_flaking"
+    },
+    "querns": {
+      "asset": "tech_querns"
+    },
+    "ritual": {
+      "asset": "tech_ritual"
+    },
+    "rye": {
+      "asset": "tech_rye"
+    },
+    "selective_breeding": {
+      "asset": "tech_selective_breeding"
+    },
+    "sickle": {
+      "asset": "tech_sickle"
+    },
+    "sling": {
+      "asset": "tech_sling"
+    },
+    "spear": {
+      "asset": "tech_spear"
+    },
+    "spinning": {
+      "asset": "tech_spinning"
+    },
+    "stone_grinding": {
+      "asset": "tech_stone_grinding"
+    },
+    "stone_quarrying": {
+      "asset": "tech_stone_quarrying"
+    },
+    "stone_walling": {
+      "asset": "tech_stone_walling"
+    },
+    "storytelling": {
+      "asset": "tech_storytelling"
+    },
+    "taboo": {
+      "asset": "tech_taboo"
+    },
+    "tailoring": {
+      "asset": "tech_tailoring"
+    },
+    "tally": {
+      "asset": "tech_tally"
+    },
+    "thatch": {
+      "asset": "tech_thatch"
+    },
+    "timber_wall": {
+      "asset": "tech_timber_wall"
+    },
+    "tracking": {
+      "asset": "tech_tracking"
+    },
+    "trapping": {
+      "asset": "tech_trapping"
+    },
+    "water_finding": {
+      "asset": "tech_water_finding"
+    },
+    "wattle_daub": {
+      "asset": "tech_wattle_daub"
+    },
+    "weather_lore": {
+      "asset": "tech_weather_lore"
+    },
+    "weaving": {
+      "asset": "tech_weaving"
+    },
+    "well": {
+      "asset": "tech_well"
+    }
   }
 }

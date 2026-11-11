@@ -10,6 +10,7 @@
 #   가르치기 button that opens the teach dialog (UI/TeachPanel) on this node. The cards are rebuilt only when the
 #   statuses or counts change; the detail is read again when the selection, the tech read or the hour changes.
 #   Esc, 닫기 or a world reset closes it.
+# ART-IMPORT part 2: a card whose knowledge.ron id has a bindings `ui_knowledge` row shows that icon on its left.
 # M5.5 (goal §9.4): a card whose node an artifact the colony holds hints at (get_neighbours `clue_nodes`) carries the
 #   eureka glyph ★ (legend "★ 단서 (유레카)"); the detail adds "★ 단서: 토기 — 발견 확률 ×3" (`clue_items`) and one line
 #   "이웃 붉은바위가 앎 (소문)" per neighbour whose `rumoured` bits hold the node.
@@ -20,6 +21,8 @@ extends Control
 const PanelTooltips = preload("res://scripts/ui/panels/panel_tooltips.gd")
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
+const ArtData = preload("res://scripts/world/art/art_data.gd")
+const Content = preload("res://scripts/ui/content_context.gd")
 const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
 const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
@@ -31,6 +34,8 @@ const EUREKA: Color = Color("f0c040")
 const RUMOUR: Color = Color("a8c8f0")
 const PANEL_RECT: Rect2 = Rect2(12, 124, 1896, 830)
 const CARD_SIZE: Vector2 = Vector2(264, 88)
+## Card icon edge (A4 tech icons target 32/48 px) when bindings `ui_knowledge` names one for the node.
+const ICON_SIZE: int = 48
 const LANE_WIDTH: int = 160
 const DETAIL_WIDTH: int = 392
 const GAP: int = 8
@@ -406,6 +411,25 @@ func _card(row: Dictionary, tech: Dictionary) -> Button:
 	lines.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	lines.set_anchors_preset(Control.PRESET_FULL_RECT)
 	lines.offset_left = 8
+	var icon_texture: Texture2D = _node_icon(id)
+	if icon_texture != null:
+		var icon: TextureRect = TextureRect.new()
+		icon.name = "Icon"
+		icon.texture = icon_texture
+		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.set_anchors_preset(Control.PRESET_CENTER_LEFT)
+		icon.offset_left = 8
+		icon.offset_right = 8 + ICON_SIZE
+		icon.offset_top = -ICON_SIZE / 2.0
+		icon.offset_bottom = ICON_SIZE / 2.0
+		if inert or code == 0 or code == 4:
+			icon.modulate = Color(1, 1, 1, 0.45)
+		card.add_child(icon)
+		if card.has_node("Hatch"):
+			card.move_child(card.get_node("Hatch"), -1)
+		lines.offset_left = 8 + ICON_SIZE + GAP
 	lines.offset_top = 4
 	lines.offset_right = -8
 	lines.offset_bottom = -4
@@ -429,7 +453,17 @@ func _card(row: Dictionary, tech: Dictionary) -> Button:
 	count_label.name = "Count"
 	count_label.add_theme_color_override("font_color", colour if code != 4 else MUTED)
 	lines.add_child(count_label)
+	# A two-line name (EN, or narrowed by the icon) grows the card instead of pushing the count out of it.
+	name_label.resized.connect(func() -> void: card.custom_minimum_size.y = maxf(CARD_SIZE.y, lines.get_combined_minimum_size().y + 8))
 	return card
+
+
+## ADR 0033: the card icon comes only from bindings `ui_knowledge` keyed by the knowledge.ron id (null = text only).
+func _node_icon(id: int) -> Texture2D:
+	var row: Dictionary = ArtData.bindings().get("ui_knowledge", {}).get(str(Content.row("knowledge", id).get("id", "")), {})
+	if not row.get("asset") is String or not ArtData.has(str(row["asset"])):
+		return null
+	return ArtData.texture(str(row["asset"]))
 
 
 ## M5.5: the get_neighbours read ({} without the bridge read).

@@ -16483,6 +16483,1072 @@
     44
    ],
    "source": "art/style05/struct/woodworking_bench.png"
+  },
+  {
+   "bytes": 4733,
+   "id": "tech_adze",
+   "path": "ui/knowledge/adze.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "a0474fcb91859739af3563d7c23fbfcf1d3c0a6868aeae7345c83ab16a54c0b1",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/adze.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7324,
+   "id": "tech_animal_taming",
+   "path": "ui/knowledge/animal_taming.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "4509d205698872a0b6293a38d874f56508567b0e8cbdfed0915737e407c00336",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/animal_taming.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 3276,
+   "id": "tech_atlatl",
+   "path": "ui/knowledge/atlatl.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "2ac324f1ea70404fadb7ccbc74816e20f7607359e6d9a303f2df99fc807da710",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/atlatl.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6379,
+   "id": "tech_barley",
+   "path": "ui/knowledge/barley.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "28e2379caf5490784977e57d41df5ce9f6008948445b4d28f2ed05ad212b301d",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/barley.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 5815,
+   "id": "tech_barter",
+   "path": "ui/knowledge/barter.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "65ca2857fa250e05cbdf51177718f5fce540cbd70b9a17a74544f3fb9e10cd42",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/barter.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7491,
+   "id": "tech_basketry",
+   "path": "ui/knowledge/basketry.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "96297de94f1e8ce5b2492f73d65ddd73c51eac1e3eb35cfd4c67737796ea85ae",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/basketry.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 4917,
+   "id": "tech_bedding",
+   "path": "ui/knowledge/bedding.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "d41fb01b139c3b7210399a8eb3c9add6741de286238e5b7ebbc52aac30e61f0e",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/bedding.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 4594,
+   "id": "tech_bone_setting",
+   "path": "ui/knowledge/bone_setting.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "c568e45208ef131b023b957bb8e1154c7f4921550afd0e64b9e00d361beca6e2",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/bone_setting.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 5314,
+   "id": "tech_bone_tools",
+   "path": "ui/knowledge/bone_tools.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "a670e56385c3d09e1e6c2d17fe1f0d95f7620a6cb8fa3ce8f2bae457df90282c",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/bone_tools.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 5808,
+   "id": "tech_bow",
+   "path": "ui/knowledge/bow.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "81fc3f9daea6b26c18947f508e690b78e4a459230319fde136b50f0302081582",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/bow.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 4620,
+   "id": "tech_clay_digging",
+   "path": "ui/knowledge/clay_digging.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "21393511293d00609ff7ff2355dc4dee6cc8e1478e96b8cdb07023b3aba06829",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/clay_digging.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7812,
+   "id": "tech_clay_prep",
+   "path": "ui/knowledge/clay_prep.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "d21ad3256326058fb190c3a38c66391ea21a72dd6a09a507c9c5ef1bd300c0ba",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/clay_prep.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 5773,
+   "id": "tech_cooking",
+   "path": "ui/knowledge/cooking.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "a8114a5a1528997c135384b341493a727cece650aaab46a2582b6c70af117437",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/cooking.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7902,
+   "id": "tech_cordage",
+   "path": "ui/knowledge/cordage.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "409f86d53894f676b2d828d25e1be1911364d97609e8485c16168f58cf5c40d8",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/cordage.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 8319,
+   "id": "tech_crop_rotation",
+   "path": "ui/knowledge/crop_rotation.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "36ee75de4b4abd27b0e8c3736f090d9a3d9a912e64c53bd0d3d9c23db783466b",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/crop_rotation.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 5856,
+   "id": "tech_cultivation",
+   "path": "ui/knowledge/cultivation.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "9d12f2151fbb697c7d1712f78e5df268084bbb4cb21294d360d1543a65d68279",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/cultivation.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7256,
+   "id": "tech_dairy",
+   "path": "ui/knowledge/dairy.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "eff9d8ebc2d2d5f77d2c7678f3c584799d5567d3237a52b8058691f5e2c40cf0",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/dairy.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 3326,
+   "id": "tech_digging",
+   "path": "ui/knowledge/digging.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "bb27be5a6d7ebee6e0e894013cb231d92e85594b68e12a14827a99a6eeead478",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/digging.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 5574,
+   "id": "tech_dog_taming",
+   "path": "ui/knowledge/dog_taming.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "6cec4857a8ffa93a5fb39bed0ec1add0762b51a5dc1a776d6f1b0118daa59c65",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/dog_taming.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7710,
+   "id": "tech_doorway",
+   "path": "ui/knowledge/doorway.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "533b7ce5bc0d9fc485a071ecb079e710f136ca272395c1825dcaa8a0a8c918bb",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/doorway.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 3983,
+   "id": "tech_dugout_canoe",
+   "path": "ui/knowledge/dugout_canoe.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "bda7869287a52ffd90500f299469824c1ba5ce6349ed26b9d6b82c86e585be2b",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/dugout_canoe.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7024,
+   "id": "tech_dyeing",
+   "path": "ui/knowledge/dyeing.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "67af72038e392cc3a6bd9ad819447af38a28789a2c84a2b3549b9246961e41c8",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/dyeing.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7395,
+   "id": "tech_elder_council",
+   "path": "ui/knowledge/elder_council.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "4331494fcee73196029f6bba0c479cc956072e5ea7a2c7cb66026e67cd565121",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/elder_council.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6570,
+   "id": "tech_fence",
+   "path": "ui/knowledge/fence.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "2404e8c6ed7b904ea545b6011c534591e7d5fba082c6610a181242d25b5e8aec",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/fence.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7417,
+   "id": "tech_fermentation",
+   "path": "ui/knowledge/fermentation.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "58a072c5f6a167a06e758684baf100293ecd88b2bd12d651beef545bcf3a2f20",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/fermentation.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 5353,
+   "id": "tech_fire_keeping",
+   "path": "ui/knowledge/fire_keeping.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "88ea5d6f7abc0571c9caba351b90fd321378f912f42516142c49d281c598a580",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/fire_keeping.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7445,
+   "id": "tech_firewood_splitting",
+   "path": "ui/knowledge/firewood_splitting.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "580ca11f4dc1f53bbbf73be995d776eb1a1117dd84b7182ce050a10dc63ec08a",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/firewood_splitting.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6553,
+   "id": "tech_fishing",
+   "path": "ui/knowledge/fishing.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "9b58b584215c8dd6a0540170dd1f2d9cb738b243791fdee987f2a5fbd105910e",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/fishing.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6723,
+   "id": "tech_flint_knapping",
+   "path": "ui/knowledge/flint_knapping.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "7cf5a2daeb773281dfc5f3eaf6984d17d8f8ff10f4845222c2c6c6b210f57e17",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/flint_knapping.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7605,
+   "id": "tech_food_drying",
+   "path": "ui/knowledge/food_drying.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "6bedae457ebfab28868c4ee30ebb09ed1c9870178f6caef9d76e017b05d1f98f",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/food_drying.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 9203,
+   "id": "tech_food_preservation",
+   "path": "ui/knowledge/food_preservation.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "43b8ac2fa0f9c65009f0738b33e2c414a35f9d694f30576488bd80c7c76b9e5a",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/food_preservation.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7309,
+   "id": "tech_foraging",
+   "path": "ui/knowledge/foraging.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "f82d2a992d4c317a95f26c65be05600b2ce5579d1c4996f6f3d89817c115055a",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/foraging.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 5361,
+   "id": "tech_grain_parching",
+   "path": "ui/knowledge/grain_parching.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "fc10f0a02e38dde1ec0d9b8031a9ae7854d115ef21e9b23403d4408e7686e8b2",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/grain_parching.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 8922,
+   "id": "tech_granary",
+   "path": "ui/knowledge/granary.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "4447257944730621d2e7dad66ed3304c8dc881409eb2289dbb5ebaa3bfc23d74",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/granary.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 4715,
+   "id": "tech_hafting",
+   "path": "ui/knowledge/hafting.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "bfedbba79ca17f2207d9ed8b297531c5fe34436082760dd3fc149d7792da912b",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/hafting.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7807,
+   "id": "tech_herbalism",
+   "path": "ui/knowledge/herbalism.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "c7a4e499fef97a5a43855728a2673002ea835ea39528bbfd1f3fe7478a9cc98e",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/herbalism.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7011,
+   "id": "tech_herding",
+   "path": "ui/knowledge/herding.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "d65cf887440e4c7328f4d3361c5183498c2a7c2f4ec8bac7bd3e94cbb772e488",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/herding.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6108,
+   "id": "tech_hide_scraping",
+   "path": "ui/knowledge/hide_scraping.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "9696bf90935d827f64fc987fd55293da291fc455dc38569274b8ce20ceb9eb80",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/hide_scraping.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7762,
+   "id": "tech_hide_working",
+   "path": "ui/knowledge/hide_working.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "0fb3d7ddbb99d92930b60626d8215ee322569799d6f58822a4f14e0c1e15ef32",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/hide_working.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 3992,
+   "id": "tech_hoe",
+   "path": "ui/knowledge/hoe.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "bee9dac18e681aaa2e8b9cbc4809fa78ddf9d2f336256bc86f7781ffa230ae37",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/hoe.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6131,
+   "id": "tech_hut_building",
+   "path": "ui/knowledge/hut_building.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "5f137e3e9b29ba0940a839aafa7156f8af4f077016b489a2e078de8b94568b25",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/hut_building.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 8206,
+   "id": "tech_instruction",
+   "path": "ui/knowledge/instruction.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "058fc8866e37f3dd328d4556714e30373ec443bbd09035d45906f747e016b08f",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/instruction.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6599,
+   "id": "tech_kinship",
+   "path": "ui/knowledge/kinship.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "a85cebce09a27d6b3953ca24194c14864715b4355afeae1078d27bce83cd3f9f",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/kinship.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7920,
+   "id": "tech_leather_armor",
+   "path": "ui/knowledge/leather_armor.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "c2021e3871457f363a624499b5a032f5a87ffefaca059a09209dda9a58382517",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/leather_armor.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7824,
+   "id": "tech_lentil",
+   "path": "ui/knowledge/lentil.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "2e38d47975a98c889a0a6628e62695822ba5b2b62d24b666272a6163dc620512",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/lentil.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6227,
+   "id": "tech_lunar_calendar",
+   "path": "ui/knowledge/lunar_calendar.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "f9dcb506d199ad16044b3d9f6df74b31ebaf8e00a49fe3603f6e039349c3d933",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/lunar_calendar.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 5104,
+   "id": "tech_megalith",
+   "path": "ui/knowledge/megalith.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "818bb02b1e271cc6e179ae8817339788bf03e4bc514cb8c664a4fb792f8c4d68",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/megalith.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7720,
+   "id": "tech_millet",
+   "path": "ui/knowledge/millet.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "c02b05a7da3b9e0f178a71355b7e52e1c8be0152d6e064a6a167b0eeb440e520",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/millet.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7752,
+   "id": "tech_mud_brick",
+   "path": "ui/knowledge/mud_brick.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "5bcedc63e1d8dd70ffa4f4410d0e8ac78af381105ffa9e079f8dc14663fb1f12",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/mud_brick.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6638,
+   "id": "tech_nut_processing",
+   "path": "ui/knowledge/nut_processing.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "af7e4484f2259e5a4b2595bef175491cf29215a7a4b3f9686780bddae811b095",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/nut_processing.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6393,
+   "id": "tech_ochre",
+   "path": "ui/knowledge/ochre.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "92c0b59dd0f4c6a3f8b0d98653a40cbda50909226caca2649762656d21541a9c",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/ochre.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7836,
+   "id": "tech_orchard",
+   "path": "ui/knowledge/orchard.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "f502f31d67c8d07d984827fd582dd1fd592eb1d81c0ede9bc0c3dbabb66652f1",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/orchard.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6759,
+   "id": "tech_oven",
+   "path": "ui/knowledge/oven.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "caf8adaceee48357df9d3ec6a4860c37f92b41facb7eb77604dbaff137320c48",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/oven.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 4245,
+   "id": "tech_packed_floor",
+   "path": "ui/knowledge/packed_floor.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "ae3404fabbaa7beafac52b8275c1842868b16c640a068726070388ec935a5e77",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/packed_floor.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7428,
+   "id": "tech_pea",
+   "path": "ui/knowledge/pea.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "2d61b901a018af35b096d93b77bae7d54829d2fa68be924d50c665ed9a09f7b5",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/pea.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7991,
+   "id": "tech_pot_firing",
+   "path": "ui/knowledge/pot_firing.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "98845c1ea8d412ac8108ca2cdaf9ff63ec053c0d6aa2ff22f29c4a7a9b8815be",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/pot_firing.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6502,
+   "id": "tech_pot_forming",
+   "path": "ui/knowledge/pot_forming.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "366608d441d9e26e6b7c990fc5d2b2cb544667b1e78c6cf06a8b8a483f10fd33",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/pot_forming.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 4436,
+   "id": "tech_pressure_flaking",
+   "path": "ui/knowledge/pressure_flaking.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "77ec859c5a0976ef0fd42f30efaaae0ac31672f834449972d93a591820518346",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/pressure_flaking.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6658,
+   "id": "tech_querns",
+   "path": "ui/knowledge/querns.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "080a8273b717f487076d4b27faa48c3587d6a2bae5eca482e154e2c3e9901e75",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/querns.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6188,
+   "id": "tech_ritual",
+   "path": "ui/knowledge/ritual.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "4503a333bf5bf62cbc34b08e627705ea492aa61dea3e6a244b902c96374026a6",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/ritual.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 4660,
+   "id": "tech_rye",
+   "path": "ui/knowledge/rye.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "c4f214d75718ca446b1f9d4a00691fdd8188263abba5643eecc1d580c395358c",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/rye.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 8725,
+   "id": "tech_selective_breeding",
+   "path": "ui/knowledge/selective_breeding.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "738a5fa9ac7a0a92ab3a695a99632bd6de7e8f5178fcfec1d2f430bb754935f0",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/selective_breeding.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6009,
+   "id": "tech_sickle",
+   "path": "ui/knowledge/sickle.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "425684d47b357d3979b9ef73ab6ca635907259fe78c69f474bbc35c8ed68775d",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/sickle.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 5808,
+   "id": "tech_sling",
+   "path": "ui/knowledge/sling.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "2150d3cdd369ff5786f335db63b0afe907430b16793af52b8ca062c04b933b00",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/sling.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 3027,
+   "id": "tech_spear",
+   "path": "ui/knowledge/spear.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "4b1094795ca377548a283ae49d9eace01beeca5d05ebe6349607139f2fb64250",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/spear.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6042,
+   "id": "tech_spinning",
+   "path": "ui/knowledge/spinning.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "ebab51e24582961f6721c01d3830fa61acaa23d81986c9cee6f8e4ea5ec6af9e",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/spinning.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6771,
+   "id": "tech_stone_grinding",
+   "path": "ui/knowledge/stone_grinding.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "4ffc7574485a20602724fc9f84ec1d47a1720adbf59890a88b201413295ab072",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/stone_grinding.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7036,
+   "id": "tech_stone_quarrying",
+   "path": "ui/knowledge/stone_quarrying.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "a4704b0b70e094523316d0cf40bade92a3e0e873089dca3ed09b6d664c596f0a",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/stone_quarrying.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 5670,
+   "id": "tech_stone_walling",
+   "path": "ui/knowledge/stone_walling.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "a560a79e6c4724a51e7ae3da1fa1f7e6e70ff062bac17c2ea0c0eb40c90e5ea6",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/stone_walling.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7258,
+   "id": "tech_storytelling",
+   "path": "ui/knowledge/storytelling.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "de5e707d2b0debdd8dcfeb3b999463b6a9de0e19948f2703ed7a68c5916b7b63",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/storytelling.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7143,
+   "id": "tech_taboo",
+   "path": "ui/knowledge/taboo.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "ba945a6cea4eac73761784640551a3cbec0b75f4ea05505baba42fa662bf8177",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/taboo.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 8227,
+   "id": "tech_tailoring",
+   "path": "ui/knowledge/tailoring.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "6724c62cf09623083ae7e646b517d26bcfbd611c1401a7d39d85d650d21c58f2",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/tailoring.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6652,
+   "id": "tech_tally",
+   "path": "ui/knowledge/tally.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "fd69721ec83458d1b3d2f2a4c6298f99b9c7f09ec3a7a3217c422993f5ae82be",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/tally.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6799,
+   "id": "tech_thatch",
+   "path": "ui/knowledge/thatch.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "9adbe5cc5925a934b7e3b8366dbcb8d9dcc335aafc90d5b9b0a45c5c23f4b9cc",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/thatch.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7740,
+   "id": "tech_timber_wall",
+   "path": "ui/knowledge/timber_wall.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "ecd4ec28b6a31cf825e6d0d9c16e832c3dc0aee082868de57bc72062bcfb60d2",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/timber_wall.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 5024,
+   "id": "tech_tracking",
+   "path": "ui/knowledge/tracking.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "4f39b85a4820778afee14aba1d950567b13362a8e29a757e7088aa289e1cb080",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/tracking.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 5746,
+   "id": "tech_trapping",
+   "path": "ui/knowledge/trapping.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "768b1cb39fcd0921458efe7d122102dd2d80754c56188884307e8983e31ab6e1",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/trapping.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7091,
+   "id": "tech_water_finding",
+   "path": "ui/knowledge/water_finding.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "d0c84c8dcdfcc61fcac7a5cd0090c328689a89157a395ce81c59f7ea614d0b51",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/water_finding.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7242,
+   "id": "tech_wattle_daub",
+   "path": "ui/knowledge/wattle_daub.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "272d4bda8110f543129ffc95a5f8aec29b0c7f596be0e0f5dcf7ddf88a602de3",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/wattle_daub.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6441,
+   "id": "tech_weather_lore",
+   "path": "ui/knowledge/weather_lore.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "a458c4b0ef6f2753d4ee33448433d0c9be22632454d44be5c916cce7cadd6b36",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/weather_lore.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6977,
+   "id": "tech_weaving",
+   "path": "ui/knowledge/weaving.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "e3115b8b7ac8c20ffd9bd36634fa265b198d3d6d935d243859082b2b2b168687",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/weaving.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7919,
+   "id": "tech_well",
+   "path": "ui/knowledge/well.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "d532a4b28eee35503e6ba4a479677f82dedd33e85fabc431ac27ac0d5beda381",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/well.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
   }
  ],
  "generated_by": "tools/v8/art_import.py",
@@ -16902,5 +17968,5 @@
   "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
   "source": "art/style05/anchors/person.png"
  },
- "total_bytes": 14699593
+ "total_bytes": 15232214
 }
