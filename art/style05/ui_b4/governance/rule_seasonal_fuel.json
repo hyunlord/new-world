@@ -1,0 +1,32 @@
+{
+  "id": "rule_seasonal_fuel",
+  "lane": "governance",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/governance/rule_seasonal_fuel.png",
+  "sha256": "bbc0701b4ab9985bed5e7c9885d5915d8ee4e62d6d608b3ae4d1c23af459cb9d",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_seasonal_fuel-02.json",
+  "attempt_record_sha256": "ae973d7d202edbc1c410e88ccba359bb37464d7e24fa0c92ddacb15fc4289c32",
+  "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/rule_seasonal_fuel-02.json",
+  "status": "candidate_selected",
+  "semantic_note": "A winter-prepared reserve of five short split firewood logs stacked into a compact triangular pile, partly covered by one loose heavy undyed hide flap draped over the upper logs. A thick broad irregular ivory snow cap rests along the hide ridge and curls over one side, with a little snow between two exposed log ends. Show the exposed dry amber cut log ends below the cover. This is a protected reserve pile, NOT a tied log bundle and NOT a roof building: no posts or frame. Snow shape is substantial and distinct at32px, not a tiny dusting. No modern snowflake symbol. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+  "source_runtime_ids": {
+    "verified_runtime_ids": [
+      {
+        "kind": "steward_rule",
+        "id": 9
+      }
+    ],
+    "binding_status": "proposed_unapplied_raster_binding",
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+  }
+}

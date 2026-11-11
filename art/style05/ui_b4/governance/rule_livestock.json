@@ -1,0 +1,32 @@
+{
+  "id": "rule_livestock",
+  "lane": "governance",
+  "family": "icon",
+  "era": "neolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/governance/rule_livestock.png",
+  "sha256": "63aa25454c0218e2c9c11655f25319eb1d23416876c6b334f8ed10c9619af039",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_livestock-01.json",
+  "attempt_record_sha256": "6776903e27dadb6464e1436259de1992d85b2dcb8730ca4239ffa02a666dccec",
+  "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/rule_livestock-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "A small friendly goat in profile behind two low rough wooden fence rails, the horns and short tail clearly visible. No collar, no metal, no bell. Denotes keeping livestock. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+  "source_runtime_ids": {
+    "verified_runtime_ids": [
+      {
+        "kind": "steward_rule",
+        "id": 11
+      }
+    ],
+    "binding_status": "proposed_unapplied_raster_binding",
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+  }
+}

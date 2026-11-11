@@ -1,0 +1,29 @@
+{
+  "id": "rule_tool_upgrade",
+  "lane": "governance",
+  "family": "icon",
+  "era": "bronze",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/governance/rule_tool_upgrade.png",
+  "sha256": "94f9eee05cd33d1323c2d38479114aa0792cade5a8c27263d5ebd12f03003f3d",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_tool_upgrade-02.json",
+  "attempt_record_sha256": "40247a41e86ce8fe95a12ab0c94d3f1597a95aea6cf942e27ebd6907cd348159",
+  "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/rule_tool_upgrade-02.json",
+  "status": "candidate_selected",
+  "semantic_note": "Two stout short-handled axes as a compact close pair: left a clearly chipped grey STONE axe head bound with sinew, right a much broader smooth golden-brown BRONZE axe head with a clean flared cutting edge and two rim highlights. Bronze head is one and a half times the stone head width; both heads large relative to short chunky wooden handles. Silhouettes form one broad compact diagonally stepped grouping. The material progression must remain obvious at32px. No arrows, sparkle, number, icon badge, text. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+  "source_runtime_ids": {
+    "verified_runtime_ids": [],
+    "proposed_rule": "tool_upgrade",
+    "numeric_rule_id": null,
+    "binding_status": "proposed_unapplied_future_rule",
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+  }
+}

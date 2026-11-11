@@ -1,0 +1,29 @@
+{
+  "id": "rule_smelter",
+  "lane": "governance",
+  "family": "icon",
+  "era": "bronze",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/governance/rule_smelter.png",
+  "sha256": "86f1a3536bb2c7ecfa2351087f30d150326e6a6a8389df83e06145986f634d16",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_smelter-01.json",
+  "attempt_record_sha256": "df6135ae9fba0d38aea50532339ed4e8e4088ae73e1f58b69d4e6b41fc08fe06",
+  "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/rule_smelter-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "A compact terracotta clay shaft furnace with a small amber fire mouth and ONE copper ore lump beside it. Strong furnace silhouette denotes requesting a smelter. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+  "source_runtime_ids": {
+    "verified_runtime_ids": [],
+    "proposed_rule": "smelter",
+    "numeric_rule_id": null,
+    "binding_status": "proposed_unapplied_future_rule",
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+  }
+}

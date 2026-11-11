@@ -1,0 +1,1051 @@
+{
+  "schema_version": 1,
+  "lane": "governance",
+  "assets": [
+    {
+      "id": "rule_smelter",
+      "lane": "governance",
+      "family": "icon",
+      "era": "bronze",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/governance/rule_smelter.png",
+      "sha256": "86f1a3536bb2c7ecfa2351087f30d150326e6a6a8389df83e06145986f634d16",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_smelter-01.json",
+      "attempt_record_sha256": "df6135ae9fba0d38aea50532339ed4e8e4088ae73e1f58b69d4e6b41fc08fe06",
+      "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/rule_smelter-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A compact terracotta clay shaft furnace with a small amber fire mouth and ONE copper ore lump beside it. Strong furnace silhouette denotes requesting a smelter. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [],
+        "proposed_rule": "smelter",
+        "numeric_rule_id": null,
+        "binding_status": "proposed_unapplied_future_rule",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "rule_tool_upgrade",
+      "lane": "governance",
+      "family": "icon",
+      "era": "bronze",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/governance/rule_tool_upgrade.png",
+      "sha256": "94f9eee05cd33d1323c2d38479114aa0792cade5a8c27263d5ebd12f03003f3d",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_tool_upgrade-02.json",
+      "attempt_record_sha256": "40247a41e86ce8fe95a12ab0c94d3f1597a95aea6cf942e27ebd6907cd348159",
+      "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/rule_tool_upgrade-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "Two stout short-handled axes as a compact close pair: left a clearly chipped grey STONE axe head bound with sinew, right a much broader smooth golden-brown BRONZE axe head with a clean flared cutting edge and two rim highlights. Bronze head is one and a half times the stone head width; both heads large relative to short chunky wooden handles. Silhouettes form one broad compact diagonally stepped grouping. The material progression must remain obvious at32px. No arrows, sparkle, number, icon badge, text. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [],
+        "proposed_rule": "tool_upgrade",
+        "numeric_rule_id": null,
+        "binding_status": "proposed_unapplied_future_rule",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "rule_forge",
+      "lane": "governance",
+      "family": "icon",
+      "era": "iron",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/governance/rule_forge.png",
+      "sha256": "bbeaa0e822012f8b638c41f1053e97e8948bfa92da9f5336669dda54dace0f11",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_forge-02.json",
+      "attempt_record_sha256": "91fec921316e38acbcf9b4b260dac0a7cdb446de6496d92a2ed2c641cc89054e",
+      "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/rule_forge-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "A compact squat IRON anvil with one short tapered blunt horn and a clearly pinched waist, dark charcoal forged-metal planes, two restrained pale rim highlights. A broad wooden-handled iron hammer lies diagonally across its top. One tiny dull ember near base. Make the anvil silhouette unmistakable and broad at32px; NOT a tree stump, NOT a stone boulder, no wood base, no ornate medieval decoration. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [],
+        "proposed_rule": "forge",
+        "numeric_rule_id": null,
+        "binding_status": "proposed_unapplied_future_rule",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "rule_stockpile",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/governance/rule_stockpile.png",
+      "sha256": "7eb82e20d607a1ec904cda48fde47400079886f51b790352a6d29cd4e94f9bcb",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_stockpile-01.json",
+      "attempt_record_sha256": "deac074a01c2ae96720d24e0a83aeff250be4fb4250dc0d84fbed55d1f74b5dd",
+      "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/rule_stockpile-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Three neatly stacked tied bundles: short firewood logs at bottom, a small plain hide pouch and two rounded stone lumps above. A compact triangular pile denotes planning a stockpile. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "steward_rule",
+            "id": 1
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "rule_wood",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/governance/rule_wood.png",
+      "sha256": "e77228a327f82d4a787453b39ad851d3f904a599b78f3e6d50e141cfc08ef8f5",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_wood-01.json",
+      "attempt_record_sha256": "c33a8db36df578748633a57a78f9c80f4fdb7360d511d43e55a010ffee8f6de0",
+      "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/rule_wood-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Three cut firewood logs tied tightly with one plain plant-fiber cord, pale cut end rings facing viewer. A compact orderly bundle with clear wood silhouette. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "steward_rule",
+            "id": 2
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "rule_housing",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/governance/rule_housing.png",
+      "sha256": "bcaf171d5fbd459b79794c677e4e13b6ec0cededfe69f3eb9bef1b7658d42166",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_housing-02.json",
+      "attempt_record_sha256": "b0edb4c66858a3fb9bd2a7cf785b38de21eab4d453591ee2747036bfc3d97e73",
+      "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/rule_housing-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "A tiny open front shelter made of two bent branches and an undyed hide covering, with one clearly visible plain sleeping mat inside. Compact shelter silhouette, no ground slab. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "steward_rule",
+            "id": 3
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "rule_production",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/governance/rule_production.png",
+      "sha256": "5a5268364f78279814b84f182bef87381a01024ab8756bc523e1df019a0fbd98",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_production-02.json",
+      "attempt_record_sha256": "979264b6ba64170546e608b035dfd360c887c72ed3d9c26bd3a750a087263e1b",
+      "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/rule_production-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "A low rough wooden workbench with a clearly visible chipped stone hand tool and two unfinished stone blanks on top. A single bench silhouette denotes ordering production. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "steward_rule",
+            "id": 4
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "rule_hunt",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/governance/rule_hunt.png",
+      "sha256": "1395a1db3d84f7093475f6da39065c38692f954685989736cf80cc45c3fb4b9c",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_hunt-03.json",
+      "attempt_record_sha256": "a3a871ee19749ea7f8a4088a184c2a2c971137adb914d4c9179dc8c70cdd2b5a",
+      "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/rule_hunt-03.json",
+      "status": "candidate_selected",
+      "semantic_note": "A compact hunting emblem composed of a plainly recognizable small deer head in profile, natural warm-brown hide with a short branching antler and pointed ear, beside a single diagonal flint-tipped wooden spear. The deer is alive and calm, neck cleanly cropped as an illustrated emblem with no gore, no trophy mount. Deer profile silhouette dominates, spear remains thick and simple at32px. No hoofprints, no hanging droplets, no shield, no metal, no bow. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "steward_rule",
+            "id": 5
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "rule_defence",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/governance/rule_defence.png",
+      "sha256": "8821b49e0e85d6455e5b939904088a8010894de7912f060b52b02a3f1486e050",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_defence-02.json",
+      "attempt_record_sha256": "a6018942348e566c18be3ce4c7b8d020b61a70d9263d5e8c5cfda23b163aaffd",
+      "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/rule_defence-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "Two crossed wooden spears with knapped flint points behind a small plain undyed hide guard-shield. No metal fittings, no painted insignia, calm protective composition. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "steward_rule",
+            "id": 7
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "rule_food_plan",
+      "lane": "governance",
+      "family": "icon",
+      "era": "neolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/governance/rule_food_plan.png",
+      "sha256": "a02e50b13992dafcb0bc6319be4e7614944a811a6c2494eef811da4a782f4614",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_food_plan-01.json",
+      "attempt_record_sha256": "39bacf03da70fec57d9e414e3ddd4b486ad51b00b119f427e8037375fefae37d",
+      "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/rule_food_plan-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A broad shallow woven grain basket with three upright wheat heads and a single unmarked wooden tally stick beside it. Denotes planning grain supplies; no text or numerical marks. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "steward_rule",
+            "id": 8
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "rule_seasonal_fuel",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/governance/rule_seasonal_fuel.png",
+      "sha256": "bbc0701b4ab9985bed5e7c9885d5915d8ee4e62d6d608b3ae4d1c23af459cb9d",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_seasonal_fuel-02.json",
+      "attempt_record_sha256": "ae973d7d202edbc1c410e88ccba359bb37464d7e24fa0c92ddacb15fc4289c32",
+      "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/rule_seasonal_fuel-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "A winter-prepared reserve of five short split firewood logs stacked into a compact triangular pile, partly covered by one loose heavy undyed hide flap draped over the upper logs. A thick broad irregular ivory snow cap rests along the hide ridge and curls over one side, with a little snow between two exposed log ends. Show the exposed dry amber cut log ends below the cover. This is a protected reserve pile, NOT a tied log bundle and NOT a roof building: no posts or frame. Snow shape is substantial and distinct at32px, not a tiny dusting. No modern snowflake symbol. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "steward_rule",
+            "id": 9
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "rule_roofed_storehouse",
+      "lane": "governance",
+      "family": "icon",
+      "era": "neolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/governance/rule_roofed_storehouse.png",
+      "sha256": "8a7cf3d94a2ec8477c0465d448298e0be280f4d0f88f099f4bc6614e459098a9",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_roofed_storehouse-01.json",
+      "attempt_record_sha256": "c77759dc1753b489e57773ccbed1541d66f64773fb9ee69f57b15f0799d0183a",
+      "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/rule_roofed_storehouse-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A miniature open-front reed-thatched lean-to roof sheltering two rounded woven storage baskets. Roof silhouette is unmistakable; no ground rectangle or floor slab. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "steward_rule",
+            "id": 10
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "rule_livestock",
+      "lane": "governance",
+      "family": "icon",
+      "era": "neolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/governance/rule_livestock.png",
+      "sha256": "63aa25454c0218e2c9c11655f25319eb1d23416876c6b334f8ed10c9619af039",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_livestock-01.json",
+      "attempt_record_sha256": "6776903e27dadb6464e1436259de1992d85b2dcb8730ca4239ffa02a666dccec",
+      "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/rule_livestock-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A small friendly goat in profile behind two low rough wooden fence rails, the horns and short tail clearly visible. No collar, no metal, no bell. Denotes keeping livestock. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "steward_rule",
+            "id": 11
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "category_dwelling",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/governance/category_dwelling.png",
+      "sha256": "d4e9d448e0da1895afe20b50e91927be747aa29f3720e0b1e9dc2b60dbe181bd",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/category_dwelling-01.json",
+      "attempt_record_sha256": "6bddf398db3efb6867481a9569048f9b4108085981a1412beb59e1db704cf19d",
+      "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/category_dwelling-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A single compact round hide-covered shelter with dark open entrance and a short threshold, clearly a home. No contents, no people, no fenced yard, no floor slab. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "building_category",
+            "id": "dwelling"
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "category_storage",
+      "lane": "governance",
+      "family": "icon",
+      "era": "neolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/governance/category_storage.png",
+      "sha256": "76cd0085ff81fd61fb7918e4c159486a476658ff52c5a63cc8d399fe8081b521",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/category_storage-01.json",
+      "attempt_record_sha256": "d5ee60beb41151582be827a42701743f92c35c2b8ea47bee7a87c983497cacc1",
+      "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/category_storage-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A tall round woven storage basket with a plain fitted reed lid, and one smaller lidded basket tucked beside it. Compact storage silhouette, no food spilling out. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "building_category",
+            "id": "storage"
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "category_workshop",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/governance/category_workshop.png",
+      "sha256": "f1a93fbfb6458955806db9f9a25b59801b811e1e02815e256271dddad527d038",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/category_workshop-01.json",
+      "attempt_record_sha256": "e0a56249ae4405bde19449efd026754d3e07b1f0f128ae29eee070da07a516aa",
+      "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/category_workshop-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "One small rough wooden crafting bench, with a knapped stone hammer resting on its broad top. Compact unmistakable bench with four stubby legs. No metal. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "building_category",
+            "id": "workshop"
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "category_utility",
+      "lane": "governance",
+      "family": "icon",
+      "era": "neolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/governance/category_utility.png",
+      "sha256": "a49346f7a7e31dcd6d5f674b07d94c5e4bc4e8506d6127ff7d4821cb887559ac",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/category_utility-01.json",
+      "attempt_record_sha256": "3e66610c42ef5ec30aa9c3423527e616cf6df6fdf31e36e6ff8c90b39ebb7ea2",
+      "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/category_utility-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A squat stone-lined well mouth with one simple wooden pail and a plant-fiber rope coil beside it. No metal handle or windlass. Water-supply utility as a clear compact silhouette. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "building_category",
+            "id": "utility"
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "category_civic",
+      "lane": "governance",
+      "family": "icon",
+      "era": "neolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/governance/category_civic.png",
+      "sha256": "f8ea557e49502aebf7ffa96f1ff0184fe8329fd0c73d93fd83c7c748f3e4d752",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/category_civic-01.json",
+      "attempt_record_sha256": "18e7f55d0afada251cc079cbbf5daba07ee11494361893f8796d7467b4e8c04e",
+      "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/category_civic-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Three squat weathered standing stones arranged around one low central stone seat, denoting a communal gathering place. No temple, no religious symbol, no writing, no ground disk. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "building_category",
+            "id": "civic"
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "category_trade",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/governance/category_trade.png",
+      "sha256": "c1afa188dccc8d3c00286d8954bb5f6bf20f1ab0cb8ae2c720e7c46c19852117",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/category_trade-02.json",
+      "attempt_record_sha256": "98bd2d614df6399d0f83b6838b1e4331dc528c71c366bc3a1886d098f9574619",
+      "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/category_trade-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "Two close opposing cupped human hands offering barter in a compact nearly square diagonal arrangement: upper-left palm contains exactly three large muted red berries; lower-right palm contains one large pale-grey flint tool. Both objects occupy most of each palm; fingers simplified but anatomically natural. The hands almost meet, minimal gap, wrists short. Emphasize chunky berry cluster and broad flint silhouette so exchange reads at32px. No sleeves, coins, metal, text, arrows or handshake. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "building_category",
+            "id": "trade"
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "legend_unassigned",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/governance/legend_unassigned.png",
+      "sha256": "651080cedafc06b3d0d466f3af2581c9d912a0ac602b83c41c1170a88a5069c6",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/legend_unassigned-01.json",
+      "attempt_record_sha256": "7a4eab1a0fae0debbac6496ea2907ef9b94806045b48b97c2757dc9433f4b820",
+      "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/legend_unassigned-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A tiny empty roofless room outline made from four rough branch wall edges, with one doorway gap. Empty center is fully transparent. Simple plan-view room glyph, no furniture or question mark. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "room_role",
+            "id": 0
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "legend_bedroom",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/governance/legend_bedroom.png",
+      "sha256": "46fb0ef340388aa2ea6c82b7dcea503927dc120964a7720d3e4effba5818bdda",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/legend_bedroom-01.json",
+      "attempt_record_sha256": "1ea3d42df248d37f637197cd6e3c23a043a87d28e6664a938ff400f2af936127",
+      "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/legend_bedroom-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A single small rolled-edge undyed hide sleeping mat with a soft folded hide pillow at one end, plan-view simplified field-guide glyph. No frame or modern bed. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "room_role",
+            "id": 1
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "legend_storehouse",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/governance/legend_storehouse.png",
+      "sha256": "ad0dbd69b238da50dd73d5818b49f9b41b6c88f47a66cb80c0123c09a25bbc7b",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/legend_storehouse-01.json",
+      "attempt_record_sha256": "bd196d3f58378b43c823d6663cd6fb8ad1b53ed2b06e8b8e3fa74d9ac0572c4b",
+      "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/legend_storehouse-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Two short log bundles stacked in a compact square pile next to one small tied hide pouch, simplified nearly plan-view storeroom glyph. No walls or background. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "room_role",
+            "id": 2
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "legend_workshop",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/governance/legend_workshop.png",
+      "sha256": "681a82ec172d03221ff987264bdd6109a863543a5a1323ef074e87aeab586b6f",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/legend_workshop-01.json",
+      "attempt_record_sha256": "047b6eb63e59ecb81ed8840007b19a6834b0a7233f7ac70dab4345af5d73aac2",
+      "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/legend_workshop-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A single chipped stone hammer crossed with a short wooden carving wedge, simplified bold field-guide tool glyph. No metal, no engineering gear symbol. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "room_role",
+            "id": 3
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "legend_hall",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/governance/legend_hall.png",
+      "sha256": "f6bd315093ac147abde248cd2c67d1d12e9b4d86366c66972e9ffc3fffe108e8",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/legend_hall-01.json",
+      "attempt_record_sha256": "576cca0ee4e913538ec00be582b9f9b5ef704d5a6d1b72fb9db2fda02f00236d",
+      "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/legend_hall-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Three simple rough wood stools forming a semicircle around one small central hearth stone, simplified plan-view gathering-room glyph. No flames or people, no ground disk. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "room_role",
+            "id": 4
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "panel_built",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/governance/panel_built.png",
+      "sha256": "6ede5de44a72753b0803a661da2adcbe174d179d548a1c07662955433e782e3a",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/panel_built-01.json",
+      "attempt_record_sha256": "f5ec80a5374581a7b2ef8ed301c19e62fd9c7f85e54cf28fbbbd5d71d908287a",
+      "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/panel_built-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A compact completed small hide shelter with two firm structural posts and taut roof, front three-quarter. A single finished construction silhouette with no tools or marks. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "panel_group",
+            "id": "built"
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "panel_available",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/governance/panel_available.png",
+      "sha256": "7954653cc603fd5025a6430e12611a906ce55fa49a7376d3d4ee19a1c67e1e67",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/panel_available-01.json",
+      "attempt_record_sha256": "5c84d550143e317d69c1d8f0c901ed8cf55349146b7ee6e746ab9b5917f1946b",
+      "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/panel_available-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A compact complete triangular wooden shelter frame without its hide covering, with a neatly rolled hide leaning beside it, ready to construct. Clearly materials available, no ghost glow. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "panel_group",
+            "id": "available"
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "panel_next",
+      "lane": "governance",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/governance/panel_next.png",
+      "sha256": "548327d711b9e254bf5400c4624cc2bb33a81f7dbed4092aaceacc50873f6546",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/panel_next-01.json",
+      "attempt_record_sha256": "b0a35c31e827f8b965d21311cf667986ee5882c4375f68362fda910c0a8c6ff0",
+      "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/panel_next-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Two small bundled straight wood poles and a rolled hide placed next to a simple unbuilt shelter outline formed from three loose branches lying flat. Clear future construction ingredients, no modern arrows or locks. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+      "source_runtime_ids": {
+        "verified_runtime_ids": [
+          {
+            "kind": "panel_group",
+            "id": "next"
+          }
+        ],
+        "binding_status": "proposed_unapplied_raster_binding",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    }
+  ],
+  "attempts": [
+    "/Users/rexxa/work/art-batch/B4/governance/records/category_civic-01.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/category_dwelling-01.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/category_storage-01.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/category_trade-01.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/category_trade-02.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/category_utility-01.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/category_workshop-01.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/legend_bedroom-01.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/legend_hall-01.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/legend_storehouse-01.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/legend_unassigned-01.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/legend_workshop-01.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/panel_available-01.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/panel_built-01.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/panel_next-01.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/rule_defence-02.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/rule_food_plan-01.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/rule_forge-01.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/rule_forge-02.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/rule_housing-02.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/rule_hunt-02.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/rule_hunt-03.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/rule_livestock-01.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/rule_production-02.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/rule_roofed_storehouse-01.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/rule_seasonal_fuel-01.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/rule_seasonal_fuel-02.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/rule_smelter-01.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/rule_stockpile-01.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/rule_tool_upgrade-01.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/rule_tool_upgrade-02.json",
+    "/Users/rexxa/work/art-batch/B4/governance/records/rule_wood-01.json"
+  ],
+  "rejected": [],
+  "superseded": [
+    {
+      "record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_tool_upgrade-01.json",
+      "reason": "Selected after: larger paired heads and shorter handles keep grey stone versus bronze progression visible at32px."
+    },
+    {
+      "record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_forge-01.json",
+      "reason": "Selected after: waist and horn remain readable at32px; charcoal iron planes distinguish it from the prior stump-like block."
+    },
+    {
+      "record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_hunt-02.json",
+      "reason": "Selected after: deer profile plus flint spear gives a recognizable prey cue; prior paired hoof shapes read as droplets."
+    },
+    {
+      "record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_seasonal_fuel-01.json",
+      "reason": "Selected after: hide-covered triangular reserve with substantial snow cap differs clearly from ordinary tied wood bundle at32px."
+    },
+    {
+      "record": "/Users/rexxa/work/art-batch/B4/governance/records/category_trade-01.json",
+      "reason": "Selected after: compact hands and larger three-berry/flint shapes preserve exchange meaning better at32px."
+    }
+  ],
+  "coverage": {
+    "required_ids": [
+      "rule_stockpile",
+      "rule_wood",
+      "rule_housing",
+      "rule_production",
+      "rule_hunt",
+      "rule_defence",
+      "rule_food_plan",
+      "rule_seasonal_fuel",
+      "rule_roofed_storehouse",
+      "rule_livestock",
+      "category_dwelling",
+      "category_storage",
+      "category_workshop",
+      "category_utility",
+      "category_civic",
+      "category_trade",
+      "legend_unassigned",
+      "legend_bedroom",
+      "legend_storehouse",
+      "legend_workshop",
+      "legend_hall"
+    ],
+    "variant_ids": [
+      "panel_built",
+      "panel_available",
+      "panel_next",
+      "rule_smelter",
+      "rule_tool_upgrade",
+      "rule_forge"
+    ],
+    "not_applicable": [
+      "Rule6 is absent from authored runtime rules; no asset assigned.",
+      "Seasonal/damage world-object variants do not apply to UI glyphs; seasonal_fuel is the actual rule9 concept.",
+      "Room0 unassigned is a meaningful room role and has a glyph; no mood/JobKind absence sentinel imported here."
+    ]
+  },
+  "self_review": {
+    "weakest_ids": [
+      "rule_forge",
+      "rule_tool_upgrade",
+      "rule_seasonal_fuel",
+      "rule_hunt",
+      "category_trade"
+    ],
+    "regenerated_ids": [
+      "rule_forge",
+      "rule_tool_upgrade",
+      "rule_seasonal_fuel",
+      "rule_hunt",
+      "category_trade"
+    ],
+    "before_after": [
+      {
+        "id": "rule_tool_upgrade",
+        "before_record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_tool_upgrade-01.json",
+        "after_record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_tool_upgrade-02.json",
+        "decision": "select_after",
+        "reason": "Selected after: larger paired heads and shorter handles keep grey stone versus bronze progression visible at32px."
+      },
+      {
+        "id": "rule_forge",
+        "before_record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_forge-01.json",
+        "after_record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_forge-02.json",
+        "decision": "select_after",
+        "reason": "Selected after: waist and horn remain readable at32px; charcoal iron planes distinguish it from the prior stump-like block."
+      },
+      {
+        "id": "rule_hunt",
+        "before_record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_hunt-02.json",
+        "after_record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_hunt-03.json",
+        "decision": "select_after",
+        "reason": "Selected after: deer profile plus flint spear gives a recognizable prey cue; prior paired hoof shapes read as droplets."
+      },
+      {
+        "id": "rule_seasonal_fuel",
+        "before_record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_seasonal_fuel-01.json",
+        "after_record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_seasonal_fuel-02.json",
+        "decision": "select_after",
+        "reason": "Selected after: hide-covered triangular reserve with substantial snow cap differs clearly from ordinary tied wood bundle at32px."
+      },
+      {
+        "id": "category_trade",
+        "before_record": "/Users/rexxa/work/art-batch/B4/governance/records/category_trade-01.json",
+        "after_record": "/Users/rexxa/work/art-batch/B4/governance/records/category_trade-02.json",
+        "decision": "select_after",
+        "reason": "Selected after: compact hands and larger three-berry/flint shapes preserve exchange meaning better at32px."
+      }
+    ]
+  },
+  "interrupted_attempts": {
+    "submitted_attempts": [
+      {
+        "id": "rule_housing",
+        "attempt": 1,
+        "prompt_path": "/Users/rexxa/work/art-batch/B4/governance/prompts/rule_housing-01.txt",
+        "status": "interrupted_before_tool_result_record"
+      },
+      {
+        "id": "rule_production",
+        "attempt": 1,
+        "prompt_path": "/Users/rexxa/work/art-batch/B4/governance/prompts/rule_production-01.txt",
+        "status": "interrupted_before_tool_result_record"
+      },
+      {
+        "id": "rule_hunt",
+        "attempt": 1,
+        "prompt_path": "/Users/rexxa/work/art-batch/B4/governance/prompts/rule_hunt-01.txt",
+        "status": "interrupted_before_tool_result_record"
+      },
+      {
+        "id": "rule_defence",
+        "attempt": 1,
+        "prompt_path": "/Users/rexxa/work/art-batch/B4/governance/prompts/rule_defence-01.txt",
+        "status": "interrupted_before_tool_result_record"
+      }
+    ],
+    "unassigned_raw": {
+      "original_path": "/Users/rexxa/.codex/generated_images/01a1c2fd-609c-73d0-9ee5-f9b42313383c/exec-7cb4c256-32a7-453e-a17b-1d0d8c5d24fc.png",
+      "sha256": "40a95182941e375c8b0aea8c92939d918204dc923758f5d86547359fe256cdc3",
+      "visual_subject": "housing shelter with sleeping mat",
+      "provenance": "subject suggests housing call, exact response mapping not recorded; excluded from adoption"
+    },
+    "attempt_budget_note": "All four submitted calls count toward max3 per asset; restart at2."
+  },
+  "notes": [
+    "All27 are art candidates; no runtime bindings applied.",
+    "32 completed image generations plus4 interrupted submitted calls, maximum3attempts per asset inclusive interruption and self-review.",
+    "Mandatory5/27 regeneration (18.52%); all five after candidates selected, before raws retained.",
+    "A4 sheets.py reused byte-for-byte, so comparison board header says A4.",
+    "Style line/mark-count rules are visual targets, not mechanically certified exact counts."
+  ]
+}

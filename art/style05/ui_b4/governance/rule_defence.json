@@ -1,0 +1,32 @@
+{
+  "id": "rule_defence",
+  "lane": "governance",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/governance/rule_defence.png",
+  "sha256": "8821b49e0e85d6455e5b939904088a8010894de7912f060b52b02a3f1486e050",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_defence-02.json",
+  "attempt_record_sha256": "a6018942348e566c18be3ce4c7b8d020b61a70d9263d5e8c5cfda23b163aaffd",
+  "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/rule_defence-02.json",
+  "status": "candidate_selected",
+  "semantic_note": "Two crossed wooden spears with knapped flint points behind a small plain undyed hide guard-shield. No metal fittings, no painted insignia, calm protective composition. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+  "source_runtime_ids": {
+    "verified_runtime_ids": [
+      {
+        "kind": "steward_rule",
+        "id": 7
+      }
+    ],
+    "binding_status": "proposed_unapplied_raster_binding",
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+  }
+}

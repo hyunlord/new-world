@@ -1,0 +1,32 @@
+{
+  "id": "category_utility",
+  "lane": "governance",
+  "family": "icon",
+  "era": "neolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/governance/category_utility.png",
+  "sha256": "a49346f7a7e31dcd6d5f674b07d94c5e4bc4e8506d6127ff7d4821cb887559ac",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/category_utility-01.json",
+  "attempt_record_sha256": "3e66610c42ef5ec30aa9c3423527e616cf6df6fdf31e36e6ff8c90b39ebb7ea2",
+  "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/category_utility-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "A squat stone-lined well mouth with one simple wooden pail and a plant-fiber rope coil beside it. No metal handle or windlass. Water-supply utility as a clear compact silhouette. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+  "source_runtime_ids": {
+    "verified_runtime_ids": [
+      {
+        "kind": "building_category",
+        "id": "utility"
+      }
+    ],
+    "binding_status": "proposed_unapplied_raster_binding",
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "id": "rule_production",
+  "lane": "governance",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/governance/rule_production.png",
+  "sha256": "5a5268364f78279814b84f182bef87381a01024ab8756bc523e1df019a0fbd98",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_production-02.json",
+  "attempt_record_sha256": "979264b6ba64170546e608b035dfd360c887c72ed3d9c26bd3a750a087263e1b",
+  "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/rule_production-02.json",
+  "status": "candidate_selected",
+  "semantic_note": "A low rough wooden workbench with a clearly visible chipped stone hand tool and two unfinished stone blanks on top. A single bench silhouette denotes ordering production. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+  "source_runtime_ids": {
+    "verified_runtime_ids": [
+      {
+        "kind": "steward_rule",
+        "id": 4
+      }
+    ],
+    "binding_status": "proposed_unapplied_raster_binding",
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+  }
+}

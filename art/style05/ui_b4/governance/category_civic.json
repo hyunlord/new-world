@@ -1,0 +1,32 @@
+{
+  "id": "category_civic",
+  "lane": "governance",
+  "family": "icon",
+  "era": "neolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/governance/category_civic.png",
+  "sha256": "f8ea557e49502aebf7ffa96f1ff0184fe8329fd0c73d93fd83c7c748f3e4d752",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/category_civic-01.json",
+  "attempt_record_sha256": "18e7f55d0afada251cc079cbbf5daba07ee11494361893f8796d7467b4e8c04e",
+  "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/category_civic-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Three squat weathered standing stones arranged around one low central stone seat, denoting a communal gathering place. No temple, no religious symbol, no writing, no ground disk. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+  "source_runtime_ids": {
+    "verified_runtime_ids": [
+      {
+        "kind": "building_category",
+        "id": "civic"
+      }
+    ],
+    "binding_status": "proposed_unapplied_raster_binding",
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+  }
+}

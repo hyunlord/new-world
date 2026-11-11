@@ -1,0 +1,32 @@
+{
+  "id": "rule_stockpile",
+  "lane": "governance",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/governance/rule_stockpile.png",
+  "sha256": "7eb82e20d607a1ec904cda48fde47400079886f51b790352a6d29cd4e94f9bcb",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_stockpile-01.json",
+  "attempt_record_sha256": "deac074a01c2ae96720d24e0a83aeff250be4fb4250dc0d84fbed55d1f74b5dd",
+  "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/rule_stockpile-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Three neatly stacked tied bundles: short firewood logs at bottom, a small plain hide pouch and two rounded stone lumps above. A compact triangular pile denotes planning a stockpile. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+  "source_runtime_ids": {
+    "verified_runtime_ids": [
+      {
+        "kind": "steward_rule",
+        "id": 1
+      }
+    ],
+    "binding_status": "proposed_unapplied_raster_binding",
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+  }
+}

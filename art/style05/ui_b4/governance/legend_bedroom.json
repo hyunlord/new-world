@@ -1,0 +1,32 @@
+{
+  "id": "legend_bedroom",
+  "lane": "governance",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/governance/legend_bedroom.png",
+  "sha256": "46fb0ef340388aa2ea6c82b7dcea503927dc120964a7720d3e4effba5818bdda",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/legend_bedroom-01.json",
+  "attempt_record_sha256": "1ea3d42df248d37f637197cd6e3c23a043a87d28e6664a938ff400f2af936127",
+  "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/legend_bedroom-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "A single small rolled-edge undyed hide sleeping mat with a soft folded hide pillow at one end, plan-view simplified field-guide glyph. No frame or modern bed. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+  "source_runtime_ids": {
+    "verified_runtime_ids": [
+      {
+        "kind": "room_role",
+        "id": 1
+      }
+    ],
+    "binding_status": "proposed_unapplied_raster_binding",
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+  }
+}

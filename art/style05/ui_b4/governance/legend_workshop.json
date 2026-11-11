@@ -1,0 +1,32 @@
+{
+  "id": "legend_workshop",
+  "lane": "governance",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/governance/legend_workshop.png",
+  "sha256": "681a82ec172d03221ff987264bdd6109a863543a5a1323ef074e87aeab586b6f",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/legend_workshop-01.json",
+  "attempt_record_sha256": "047b6eb63e59ecb81ed8840007b19a6834b0a7233f7ac70dab4345af5d73aac2",
+  "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/legend_workshop-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "A single chipped stone hammer crossed with a short wooden carving wedge, simplified bold field-guide tool glyph. No metal, no engineering gear symbol. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+  "source_runtime_ids": {
+    "verified_runtime_ids": [
+      {
+        "kind": "room_role",
+        "id": 3
+      }
+    ],
+    "binding_status": "proposed_unapplied_raster_binding",
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+  }
+}

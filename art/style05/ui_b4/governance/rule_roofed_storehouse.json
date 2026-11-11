@@ -1,0 +1,32 @@
+{
+  "id": "rule_roofed_storehouse",
+  "lane": "governance",
+  "family": "icon",
+  "era": "neolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/governance/rule_roofed_storehouse.png",
+  "sha256": "8a7cf3d94a2ec8477c0465d448298e0be280f4d0f88f099f4bc6614e459098a9",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/rule_roofed_storehouse-01.json",
+  "attempt_record_sha256": "c77759dc1753b489e57773ccbed1541d66f64773fb9ee69f57b15f0799d0183a",
+  "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/rule_roofed_storehouse-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "A miniature open-front reed-thatched lean-to roof sheltering two rounded woven storage baskets. Roof silhouette is unmistakable; no ground rectangle or floor slab. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+  "source_runtime_ids": {
+    "verified_runtime_ids": [
+      {
+        "kind": "steward_rule",
+        "id": 10
+      }
+    ],
+    "binding_status": "proposed_unapplied_raster_binding",
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+  }
+}

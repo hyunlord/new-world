@@ -1,0 +1,32 @@
+{
+  "id": "panel_built",
+  "lane": "governance",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/governance/panel_built.png",
+  "sha256": "6ede5de44a72753b0803a661da2adcbe174d179d548a1c07662955433e782e3a",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/governance/records/panel_built-01.json",
+  "attempt_record_sha256": "f5ec80a5374581a7b2ef8ed301c19e62fd9c7f85e54cf28fbbbd5d71d908287a",
+  "normalization": "/Users/rexxa/work/art-batch/B4/governance/checks/panel_built-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "A compact completed small hide shelter with two firm structural posts and taut roof, front three-quarter. A single finished construction silhouette with no tools or marks. Art ID and raster binding are proposed; runtime evidence is pinned separately.",
+  "source_runtime_ids": {
+    "verified_runtime_ids": [
+      {
+        "kind": "panel_group",
+        "id": "built"
+      }
+    ],
+    "binding_status": "proposed_unapplied_raster_binding",
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+  }
+}

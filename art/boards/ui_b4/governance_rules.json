@@ -1,0 +1,106 @@
+{
+  "family": "icon",
+  "inputs": [
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/polish/items/stone_axe_try1.png",
+      "sha256": "128e62930b1b4ca7de86f19dc74d1d834bf87ccc281dd28c02ef2f6fe9a32600",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/polish/items/ground_axe_try3.png",
+      "sha256": "dcf4c2afb47e86e24d848127a91b959ac1acdfcf2eb70dcc55315e1ee1981d29",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/polish/items/berry_basket_try1.png",
+      "sha256": "4fe5d8d7d964ef649f1423bc2f92f6c80e615f07bd6ce73ebd1bb7a2fa1348ee",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/polish/items/clay_try3.png",
+      "sha256": "31c518a4272368573fcef3f1c2e25aeccb1ae1c83fa6c55cda9b8711c0b57edb",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/polish/items/firewood_try3.png",
+      "sha256": "ef9ba8786b98697b4814f15e04d8ce1cde705a20715886b3667275ef5fff3441",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/env1/items/clay_pot_empty.png",
+      "sha256": "1e0fd136c5b99ad8f4114c9fd0d4b3b518c7c66cf7912812238a7d1b1ba68cd1",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/ui_b4/governance/rule_defence.png",
+      "sha256": "8821b49e0e85d6455e5b939904088a8010894de7912f060b52b02a3f1486e050",
+      "role": "candidate"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/ui_b4/governance/rule_food_plan.png",
+      "sha256": "a02e50b13992dafcb0bc6319be4e7614944a811a6c2494eef811da4a782f4614",
+      "role": "candidate"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/ui_b4/governance/rule_forge.png",
+      "sha256": "bbeaa0e822012f8b638c41f1053e97e8948bfa92da9f5336669dda54dace0f11",
+      "role": "candidate"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/ui_b4/governance/rule_housing.png",
+      "sha256": "bcaf171d5fbd459b79794c677e4e13b6ec0cededfe69f3eb9bef1b7658d42166",
+      "role": "candidate"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/ui_b4/governance/rule_hunt.png",
+      "sha256": "1395a1db3d84f7093475f6da39065c38692f954685989736cf80cc45c3fb4b9c",
+      "role": "candidate"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/ui_b4/governance/rule_livestock.png",
+      "sha256": "63aa25454c0218e2c9c11655f25319eb1d23416876c6b334f8ed10c9619af039",
+      "role": "candidate"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/ui_b4/governance/rule_production.png",
+      "sha256": "5a5268364f78279814b84f182bef87381a01024ab8756bc523e1df019a0fbd98",
+      "role": "candidate"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/ui_b4/governance/rule_roofed_storehouse.png",
+      "sha256": "8a7cf3d94a2ec8477c0465d448298e0be280f4d0f88f099f4bc6614e459098a9",
+      "role": "candidate"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/ui_b4/governance/rule_seasonal_fuel.png",
+      "sha256": "bbc0701b4ab9985bed5e7c9885d5915d8ee4e62d6d608b3ae4d1c23af459cb9d",
+      "role": "candidate"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/ui_b4/governance/rule_smelter.png",
+      "sha256": "86f1a3536bb2c7ecfa2351087f30d150326e6a6a8389df83e06145986f634d16",
+      "role": "candidate"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/ui_b4/governance/rule_stockpile.png",
+      "sha256": "7eb82e20d607a1ec904cda48fde47400079886f51b790352a6d29cd4e94f9bcb",
+      "role": "candidate"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/ui_b4/governance/rule_tool_upgrade.png",
+      "sha256": "94f9eee05cd33d1323c2d38479114aa0792cade5a8c27263d5ebd12f03003f3d",
+      "role": "candidate"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/ui_b4/governance/rule_wood.png",
+      "sha256": "e77228a327f82d4a787453b39ad851d3f904a599b78f3e6d50e141cfc08ef8f5",
+      "role": "candidate"
+    }
+  ],
+  "canvas": [
+    1140,
+    812
+  ],
+  "sheet_sha256": "133e2613012515b3a72607ab4cab92a66731ee74b9b2078b6d670f03c19b9361",
+  "note": "Review composite only; source sprites are unchanged."
+}
