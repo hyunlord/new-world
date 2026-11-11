@@ -1,0 +1,37 @@
+{
+  "id": "modifier_food_varied",
+  "lane": "needs",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/needs/modifier_food_varied.png",
+  "sha256": "69b529dbc2c359d03d7b00203906fb56bc9ce8acfb6089c7fa056953ed60fb1b",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_food_varied-01.json",
+  "attempt_record_sha256": "f9cf156ee509a7ec36d7f084fef20459f4df356ee1dab156069833c1825aee9d",
+  "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/modifier_food_varied-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "A shallow wicker food tray with three distinct broad food shapes: red berry cluster, pale root, and brown nuts. Deliberately varied foods, no metal or farm grain.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "MoodModifier",
+        "id": "food_varied",
+        "code": 14
+      }
+    ],
+    "proposed_future": [
+      "mood_modifier_icons.food_varied"
+    ],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "bindings_applied": false,
+    "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+  }
+}

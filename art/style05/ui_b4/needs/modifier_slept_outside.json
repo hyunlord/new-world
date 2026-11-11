@@ -1,0 +1,37 @@
+{
+  "id": "modifier_slept_outside",
+  "lane": "needs",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/needs/modifier_slept_outside.png",
+  "sha256": "2cec975bd749265310cf1a151033926287dd4a18bf0ec3738311d3898ad019a3",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_slept_outside-01.json",
+  "attempt_record_sha256": "9cf4199d0805ace13c89b2d59dd5f619823e8289b51654c78c9f2124fadb3da1",
+  "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/modifier_slept_outside-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "A rolled hide pillow and thin reed sleeping mat exposed under a small pale crescent moon, no roof or shelter. Sparse open silhouette, no star field or backdrop.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "MoodModifier",
+        "id": "slept_outside",
+        "code": 1
+      }
+    ],
+    "proposed_future": [
+      "mood_modifier_icons.slept_outside"
+    ],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "bindings_applied": false,
+    "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+  }
+}

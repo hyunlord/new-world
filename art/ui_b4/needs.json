@@ -1,0 +1,1269 @@
+{
+  "schema_version": 1,
+  "lane": "needs",
+  "assets": [
+    {
+      "id": "need_hunger",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/needs/need_hunger.png",
+      "sha256": "39e1587be932aa0f317c66b2cfd583bb0c5ed5dd4fa8bfd3cd9eb9b890ff17cc",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/need_hunger-01.json",
+      "attempt_record_sha256": "76bc437f32b18a48727f6fd6b2cf32cbdc276f1d34acc34d9e74cdb59c757f70",
+      "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/need_hunger-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A shallow oval wooden bowl heaped with three clear food groups: golden gathered nuts, dark red berries, and pale root pieces. Plenty to eat, simple full bowl silhouette.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "ui_icons",
+            "id": "hunger"
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "scripts/ui/panels/agent_inspector_panel.gd:279"
+      }
+    },
+    {
+      "id": "need_thirst",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/needs/need_thirst.png",
+      "sha256": "7491d2e777df0aeb48ac12dd45c68d89e371c9c57cee40fb7638a9324a9f1fe6",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/need_thirst-01.json",
+      "attempt_record_sha256": "b4ac401cd5995c4267b8585ecb2fa5abc6c18517644fdb922c07c686ae9538cf",
+      "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/need_thirst-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Two cupped adult hands holding a generous pool of clean muted slate-blue water, a small falling drop. Clear broad water shape in hands, no vessel technology.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "ui_icons",
+            "id": "thirst"
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "scripts/ui/panels/agent_inspector_panel.gd:279"
+      }
+    },
+    {
+      "id": "need_sleep",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/needs/need_sleep.png",
+      "sha256": "bb2122fa19bd67e6cb3e2e58b4aad8607117d083828b11f247363028283cc34a",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/need_sleep-02.json",
+      "attempt_record_sha256": "3b449613d40f751e9a52f5fb3c9f1cfee24ec4676434b255f9bd94808cb02256",
+      "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/need_sleep-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "Curled sleeping adult in undyed hide on a compact reed mat; proposed new image for verified sleep UI role.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "ui_icons",
+            "id": "sleep"
+          }
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "scripts/ui/panels/agent_inspector_panel.gd:279"
+      }
+    },
+    {
+      "id": "need_warmth",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/needs/need_warmth.png",
+      "sha256": "30c6b26b69fd45bb6d4fba04e067c11a7bdb94daac45d1097c3336faf6623742",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/need_warmth-01.json",
+      "attempt_record_sha256": "f5bc792d0d07b47abaa227e6e5407272ab834c6d3e471aa691cc386718f4d454",
+      "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/need_warmth-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Two adult hands held comfortably above a small amber flame between two short logs; compact intimate composition, warm hands as clear broad silhouette.",
+      "source_runtime_ids": {
+        "verified": [],
+        "proposed_future": [
+          "ui_icons.warmth"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "scripts/ui/panels/agent_inspector_panel.gd",
+        "note": "Underlying warmth/social/health concepts exist; this icon binding role is proposed, not a verified need bar."
+      }
+    },
+    {
+      "id": "need_social",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/needs/need_social.png",
+      "sha256": "4b7e9b1c168e95830cbf1e08b7fa2c84a68fbd826c3ba3f99f8de80303f33a2e",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/need_social-02.json",
+      "attempt_record_sha256": "7d1f403faed261875f9ec7539835e49ec4022830f0c4a8ce8e789c9a0ba5a90f",
+      "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/need_social-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "Three simple adult upper-body figures in plain undyed hide wraps leaning together in a close friendly hearth-circle, two hands gently on shoulders. Compact triangular group, no text or hearts.",
+      "source_runtime_ids": {
+        "verified": [],
+        "proposed_future": [
+          "ui_icons.social"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "scripts/ui/panels/agent_inspector_panel.gd",
+        "note": "Underlying warmth/social/health concepts exist; this icon binding role is proposed, not a verified need bar."
+      }
+    },
+    {
+      "id": "need_health",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/needs/need_health.png",
+      "sha256": "f3cc1b53f01195fce219882ca867c20dc69ebf639fa7f650579575e8ab8cd2bb",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/need_health-01.json",
+      "attempt_record_sha256": "999aa1eee1d6e71cd84edf6caef718ef55f0b3005ca704b4fc09ef766ef2fac9",
+      "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/need_health-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A strong upright adult hand and wrist with one small healthy sage-green medicinal leaf resting against the palm. Vital, intact hand silhouette; no medical cross, heart or modern sign.",
+      "source_runtime_ids": {
+        "verified": [],
+        "proposed_future": [
+          "ui_icons.health"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "scripts/ui/panels/agent_inspector_panel.gd",
+        "note": "Underlying warmth/social/health concepts exist; this icon binding role is proposed, not a verified need bar."
+      }
+    },
+    {
+      "id": "mood_low",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/needs/mood_low.png",
+      "sha256": "be5ddb909999bf632a799f6ecbdd5cd6bc7a63ec8bb3f353e6496243975bd81e",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/mood_low-01.json",
+      "attempt_record_sha256": "ea3acc59d8a06f517b4bcc6603e3cb473664afed35e6da03f016ade4eebdd6ab",
+      "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/mood_low-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A stone-age adult portrait bust in plain hide, chin lowered, heavy weary brow and downturned eyes, shoulders slumped. Real hand-drawn human face with warm earthy skin; no emoji, no cartoon face circle.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "mood_band",
+            "id": "low",
+            "code": 1
+          }
+        ],
+        "proposed_future": [
+          "mood_band_icons.low"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "scripts/ui/story_text.gd:34"
+      }
+    },
+    {
+      "id": "mood_normal",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/needs/mood_normal.png",
+      "sha256": "e6ffd3107de0fd7bf5b93940267b21058dfa4b14812b1bdb3290c71482de5217",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/mood_normal-01.json",
+      "attempt_record_sha256": "2052434fd0e380c4d97ba458ddefa691f74f88ca78ff5f6cfd87de4650f82a91",
+      "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/mood_normal-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A stone-age adult portrait bust in plain hide, upright relaxed shoulders, calm attentive neutral expression with closed mouth. Real hand-drawn human face; no emoji, no cartoon face circle.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "mood_band",
+            "id": "normal",
+            "code": 2
+          }
+        ],
+        "proposed_future": [
+          "mood_band_icons.normal"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "scripts/ui/story_text.gd:34"
+      }
+    },
+    {
+      "id": "mood_content",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/needs/mood_content.png",
+      "sha256": "9dfde0d4b7131c9b01ca2d7b750c4823a3566f96ffb2de9daae4267b6a810299",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/mood_content-02.json",
+      "attempt_record_sha256": "b5d2781222a3076205ecb1a38ed6a449bd7d5c8831fb4a4df8c7aa469350ee8d",
+      "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/mood_content-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "Relaxed adult with lifted chin and hands at chest; actual mood band 3, proposed raster group.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "mood_band",
+            "id": "content",
+            "code": 3
+          }
+        ],
+        "proposed_future": [
+          "mood_band_icons.content"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "scripts/ui/story_text.gd:34"
+      }
+    },
+    {
+      "id": "mood_breakdown",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/needs/mood_breakdown.png",
+      "sha256": "b7b4652c2aae3ce035dc8d27b76ff525f2ff37db96c03a6dc78e7ab950f840af",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/mood_breakdown-01.json",
+      "attempt_record_sha256": "05737dc42c78784f824999a680d772ca7223fd2d6dbf2c94c63d70f1b70ffc13",
+      "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/mood_breakdown-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A stone-age adult portrait bust in plain hide with face bowed into both open hands, elbows outward and shoulders tense. Face partly obscured by hands, clear distress silhouette; no violence, no emoji.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "mood_band",
+            "id": "breakdown",
+            "code": 4
+          }
+        ],
+        "proposed_future": [
+          "mood_band_icons.breakdown"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "scripts/ui/story_text.gd:34"
+      }
+    },
+    {
+      "id": "modifier_slept_roofed",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/needs/modifier_slept_roofed.png",
+      "sha256": "7e8dbf932f579b1ae78c981e2f860bf72554e8172db15180058e7840c0561f5c",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_slept_roofed-01.json",
+      "attempt_record_sha256": "67933a841cea8f71353c6a2363d2665d2cc49a743a3fd376e8b8a4c20c776246",
+      "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/modifier_slept_roofed-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A small folded hide sleeping mat sheltered beneath a simple triangular lean-to of two wooden poles and reed thatch. Clear roof-over-bed silhouette, no ground slab.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "slept_roofed",
+            "code": 0
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.slept_roofed"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "modifier_slept_outside",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/needs/modifier_slept_outside.png",
+      "sha256": "2cec975bd749265310cf1a151033926287dd4a18bf0ec3738311d3898ad019a3",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_slept_outside-01.json",
+      "attempt_record_sha256": "9cf4199d0805ace13c89b2d59dd5f619823e8289b51654c78c9f2124fadb3da1",
+      "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/modifier_slept_outside-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A rolled hide pillow and thin reed sleeping mat exposed under a small pale crescent moon, no roof or shelter. Sparse open silhouette, no star field or backdrop.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "slept_outside",
+            "code": 1
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.slept_outside"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "modifier_fed",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/needs/modifier_fed.png",
+      "sha256": "f8b44043f3efa033e23b9ff5a8575e73f337611cd95d9656b889e1ec1766b268",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_fed-01.json",
+      "attempt_record_sha256": "d97de0cddce776668acd1342d8b4be23184f0f2af64fdf0dc35f2dc736b7dac6",
+      "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/modifier_fed-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "An adult hand holding a generous handful of gathered nuts and berries close to a shallow wooden bowl. Full food portion and satisfied abundance, no cutlery.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "fed",
+            "code": 2
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.fed"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "modifier_hungry",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/needs/modifier_hungry.png",
+      "sha256": "254281d1f5ef1d80f0ad8b3f66d346bf37e909170ca90be4911835092298a3a5",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_hungry-01.json",
+      "attempt_record_sha256": "bfb359f9e9809ab0d9c6a6e267694e65fb2e8f5cf84bed46928aa25144c33a17",
+      "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/modifier_hungry-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A hollow near-empty shallow wooden bowl with only a single small nut, a thin adult hand reaching toward it. Empty interior dominates, no modern symbol.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "hungry",
+            "code": 3
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.hungry"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "modifier_thirsty",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/needs/modifier_thirsty.png",
+      "sha256": "6e7e75ba9fd7e09e87f23b5926e133b5f72d0c7b073353ac5009ed8875cc1f84",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_thirsty-03.json",
+      "attempt_record_sha256": "86f0a0d863f4d4577ea1cef9bab35be97f7bf1a314ba3ee8ba1b361be0f62e36",
+      "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/modifier_thirsty-03.json",
+      "status": "candidate_selected",
+      "semantic_note": "Dry cracked stone basin with one separate final droplet; actual Thirsty modifier 4.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "thirsty",
+            "code": 4
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.thirsty"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "modifier_cold",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/needs/modifier_cold.png",
+      "sha256": "40c4c8e240f07457c5f6497d56fd6d36fee8d1ebcb00523882f38015d0bcc7d6",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_cold-01.json",
+      "attempt_record_sha256": "3d63a9416e127b829e6d663c0b8ff57049efbf3cd7b3844de177ae4518f21225",
+      "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/modifier_cold-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A tightly folded undyed hide wrap around a pair of crossed bare hands, three thin side wind strokes. Compact cold self-hug gesture, no snowflake or text.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "cold",
+            "code": 5
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.cold"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "modifier_quarrelled",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/needs/modifier_quarrelled.png",
+      "sha256": "7f75b082db423c5d6105eda76dc87baaa962cc69a524e167eec3f03713a0f08c",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_quarrelled-01.json",
+      "attempt_record_sha256": "8922b483a70b150456b1865e081451ec8f819a2127c7755ead6fcc0f1b817c77",
+      "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/modifier_quarrelled-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Two adult heads and shoulders in plain hide facing away from one another with tense turned backs, a narrow clear gap between them. Disagreement expressed by posture; no weapons or speech bubbles.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "quarrelled",
+            "code": 6
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.quarrelled"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "modifier_learned",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/needs/modifier_learned.png",
+      "sha256": "d7118d9dd385f7a2f5b7407ecd74f86024ddb7f5918bb868a61e6bf5a38d8d81",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_learned-02.json",
+      "attempt_record_sha256": "abbbcaa84f3402560e011e84c1ef9d8c27ba7f696a55a9ddb1354ec37da2df19",
+      "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/modifier_learned-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "One hand holds a flint core while an older hand points at its edge; actual Learned modifier 7.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "learned",
+            "code": 7
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.learned"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "modifier_discovered",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/needs/modifier_discovered.png",
+      "sha256": "447402fb468a01a09de005ef586ff59510a423c56055788491c92a0a486a0e01",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_discovered-01.json",
+      "attempt_record_sha256": "492b9e49df509a5a895607b579e491184c85bd87f3d3308332b5ab9c82956d12",
+      "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/modifier_discovered-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A freshly split flint core with a bright pale sharp edge held in one adult palm, three small radiating ink dashes at the edge. Material discovery, no lightbulb or magic sparkles.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "discovered",
+            "code": 8
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.discovered"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "modifier_grief",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/needs/modifier_grief.png",
+      "sha256": "177344ee994720f3625d3c9f12ff4756f23c85a6c82b4121bea9a52313898711",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_grief-01.json",
+      "attempt_record_sha256": "fae9785458dc93e80011bc2f25107e9cd18bffb6fe753020a27e5a0908fc61bf",
+      "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/modifier_grief-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A bowed adult head in profile, one hand gently covering the cheek, beside a small tied bundle of dried pale flowers. Quiet sorrow, no skull, tears as large emoji, or gravestone text.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "grief",
+            "code": 9
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.grief"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "modifier_sick",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/needs/modifier_sick.png",
+      "sha256": "635c68b156bade5ae37894e004c4d809e9f7f71ccbe34981e660b0d018dd0e73",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_sick-01.json",
+      "attempt_record_sha256": "770ecf69e64d34e653393e28a0e95386a1dc4e00fafa2c062c0c8113ce35e174",
+      "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/modifier_sick-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A reclining adult head on a folded hide pillow, one hand against the forehead and a small sprig of medicinal sage beside it. Fever/rest, non-graphic, no medical cross.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "sick",
+            "code": 10
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.sick"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "modifier_crafted",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/needs/modifier_crafted.png",
+      "sha256": "e43a0a5aee9d10fab06953e33527cd94aaf309c93a9aba79ca4c5ed10be1a187",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_crafted-01.json",
+      "attempt_record_sha256": "6dc29070b94e924667e4e4d8fad0a5666bbda74083c84fb8b2d3b4e41002c5ac",
+      "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/modifier_crafted-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A finished stone axe head neatly bound to a short wood haft, beside the flint chip that made it. Crisp finished-tool silhouette and sparse binding, no metal.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "crafted",
+            "code": 11
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.crafted"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "modifier_drafted",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/needs/modifier_drafted.png",
+      "sha256": "75d4d6d601a31a2ad498ba8c423728854b4725ba91985654430f268ab70e983b",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_drafted-01.json",
+      "attempt_record_sha256": "60d480e5c555fb2e7aaebc18fe18309815ed99521a2c60ba5d06bc4c4d2f43b9",
+      "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/modifier_drafted-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "An upright adult hand gripping a simple wood shaft with a flint spear point, a plain hide shoulder below. Mustered duty, calm defensive posture, no metal, no injury or attack.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "drafted",
+            "code": 12
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.drafted"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "modifier_pressure",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/needs/modifier_pressure.png",
+      "sha256": "490158265143078c4fb25e091ec2001953c1982b7754e631792c24d1304e760f",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_pressure-01.json",
+      "attempt_record_sha256": "8d48c71fc410f696b567fbef899857b4cd3b2a56ec672b0fba43683c02a899df",
+      "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/modifier_pressure-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A pair of adult shoulders hunched beneath a bundle of firewood carried across the back, head lowered and both hands supporting the load. Burden and strain, no chains, no modern pressure gauge.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "pressure",
+            "code": 13
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.pressure"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "modifier_food_varied",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/needs/modifier_food_varied.png",
+      "sha256": "69b529dbc2c359d03d7b00203906fb56bc9ce8acfb6089c7fa056953ed60fb1b",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_food_varied-01.json",
+      "attempt_record_sha256": "f9cf156ee509a7ec36d7f084fef20459f4df356ee1dab156069833c1825aee9d",
+      "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/modifier_food_varied-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A shallow wicker food tray with three distinct broad food shapes: red berry cluster, pale root, and brown nuts. Deliberately varied foods, no metal or farm grain.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "food_varied",
+            "code": 14
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.food_varied"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "modifier_food_monotonous",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/needs/modifier_food_monotonous.png",
+      "sha256": "e453b4dbc07fe4559112b63a4fb02facaa19d1bb105725b41ffc4120de80d4be",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_food_monotonous-02.json",
+      "attempt_record_sha256": "4d4dae56532368c5d40dfafb02114a3ab073898f10009c3870201c1c63bb5103",
+      "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/modifier_food_monotonous-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "Five identical whole wild roots on a wicker tray; actual FoodMonotonous modifier 15.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "food_monotonous",
+            "code": 15
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.food_monotonous"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "modifier_clothing_comfort",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/needs/modifier_clothing_comfort.png",
+      "sha256": "68a63e39919f9322bf52703866a7630608e5a693ecb20bfe5c2bc9393f51c2fe",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_clothing_comfort-01.json",
+      "attempt_record_sha256": "6c746844f8396354c8b394432eed9468947e4dae8aa500868800d1142e187d1d",
+      "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/modifier_clothing_comfort-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A neatly folded soft undyed hide tunic with a simple bone pin and three quiet fold marks, broad soft rounded shape suggesting comfortable clothing. No metal, woven linen, dye, modern seams or buttons.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "MoodModifier",
+            "id": "clothing_comfort",
+            "code": 16
+          }
+        ],
+        "proposed_future": [
+          "mood_modifier_icons.clothing_comfort"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+      }
+    },
+    {
+      "id": "need_hunger_critical",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/needs/need_hunger_critical.png",
+      "sha256": "0c6456c6059740c22e9ba0d7699d4645b0aad553508aa105d5e55e3df11df2d1",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/need_hunger_critical-01.json",
+      "attempt_record_sha256": "87d260ba08c4b3ff6d146b036752afda34cd3d4bb70d25d66d3c44c0a60b5ccd",
+      "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/need_hunger_critical-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "An empty shallow wooden bowl tilted toward the viewer, one tiny remaining berry in it, two bare ribs of its wood visible. Emphasize its hollow vacant interior and unmistakable lack of food; no skull.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "ui_icons",
+            "id": "hunger"
+          }
+        ],
+        "proposed_future": [
+          "need_urgency_art.hunger.critical"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "scripts/ui/panels/agent_inspector_panel.gd:279",
+        "note": "Visual deficit variant only; no new runtime state or threshold is claimed."
+      }
+    },
+    {
+      "id": "need_thirst_critical",
+      "lane": "needs",
+      "family": "icon",
+      "era": "paleolithic",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/needs/need_thirst_critical.png",
+      "sha256": "9beb3d8cd3540aeda30a605d9a59bb341202f3e580f7d6ba3efad3ecec5c34f8",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/need_thirst_critical-01.json",
+      "attempt_record_sha256": "d91a1994860b75c58b304241bde3481fbb1e8bf165c244c24d07557f55d7080f",
+      "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/need_thirst_critical-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Two empty cupped adult hands below a single tiny falling water drop, the dry palms open and clearly visible. Clear shortage silhouette, no cracked skin gore.",
+      "source_runtime_ids": {
+        "verified": [
+          {
+            "kind": "ui_icons",
+            "id": "thirst"
+          }
+        ],
+        "proposed_future": [
+          "need_urgency_art.thirst.critical"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "bindings_applied": false,
+        "source_path": "scripts/ui/panels/agent_inspector_panel.gd:279",
+        "note": "Visual deficit variant only; no new runtime state or threshold is claimed."
+      }
+    }
+  ],
+  "attempts": [
+    "/Users/rexxa/work/art-batch/B4/needs/records/modifier_clothing_comfort-01.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/modifier_cold-01.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/modifier_crafted-01.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/modifier_discovered-01.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/modifier_drafted-01.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/modifier_fed-01.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/modifier_food_monotonous-01.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/modifier_food_monotonous-02.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/modifier_food_varied-01.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/modifier_grief-01.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/modifier_hungry-01.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/modifier_learned-01.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/modifier_learned-02.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/modifier_pressure-01.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/modifier_quarrelled-01.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/modifier_sick-01.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/modifier_slept_outside-01.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/modifier_slept_roofed-01.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/modifier_thirsty-01.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/modifier_thirsty-02.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/modifier_thirsty-03.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/mood_breakdown-01.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/mood_content-01.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/mood_content-02.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/mood_low-01.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/mood_normal-01.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/need_health-01.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/need_hunger-01.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/need_hunger_critical-01.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/need_sleep-01.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/need_sleep-02.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/need_sleep_critical-01.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/need_social-02.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/need_thirst-01.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/need_thirst_critical-01.json",
+    "/Users/rexxa/work/art-batch/B4/needs/records/need_warmth-01.json"
+  ],
+  "rejected": [
+    {
+      "record": "/Users/rexxa/work/art-batch/B4/needs/records/need_sleep_critical-01.json",
+      "reason": "Owner omitted optional sleep critical variant in economical scope update; completed interrupted-batch output preserved externally and excluded from candidate coverage."
+    },
+    {
+      "record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_thirsty-02.json",
+      "reason": "Semantic rejection: unwanted blue-gray pool suggests adequate water rather than thirst deficit."
+    }
+  ],
+  "superseded": [
+    {
+      "record": "/Users/rexxa/work/art-batch/B4/needs/records/need_sleep-01.json",
+      "reason": "Rounded cocoon makes the sleeping face and curled posture readable at 32px; original was a thin horizontal strip."
+    },
+    {
+      "record": "/Users/rexxa/work/art-batch/B4/needs/records/mood_content-01.json",
+      "reason": "Open elbows, hands over chest and raised chin distinguish content from the neutral portrait without relying on hue."
+    },
+    {
+      "record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_thirsty-01.json",
+      "reason": "Final dry cracked basin with separate drop combines readable water cue and clear deficit; attempt 2 incorrectly added a pool."
+    },
+    {
+      "record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_learned-01.json",
+      "reason": "Two hands and one broad flint core replace two crowded faces; pointing gesture remains visible at 32px."
+    },
+    {
+      "record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_food_monotonous-01.json",
+      "reason": "Five whole tapered roots replace bread-like chunks, making the repeated raw food shape era-safe and explicit."
+    }
+  ],
+  "coverage": {
+    "required_ids": [
+      "need_hunger",
+      "need_thirst",
+      "need_sleep",
+      "need_warmth",
+      "need_social",
+      "need_health",
+      "mood_low",
+      "mood_normal",
+      "mood_content",
+      "mood_breakdown",
+      "modifier_slept_roofed",
+      "modifier_slept_outside",
+      "modifier_fed",
+      "modifier_hungry",
+      "modifier_thirsty",
+      "modifier_cold",
+      "modifier_quarrelled",
+      "modifier_learned",
+      "modifier_discovered",
+      "modifier_grief",
+      "modifier_sick",
+      "modifier_crafted",
+      "modifier_drafted",
+      "modifier_pressure",
+      "modifier_food_varied",
+      "modifier_food_monotonous",
+      "modifier_clothing_comfort"
+    ],
+    "variant_ids": [
+      "need_hunger_critical",
+      "need_thirst_critical"
+    ],
+    "not_applicable": [
+      {
+        "id": "mood_none",
+        "reason": "Verified band 0 means absence; use no icon."
+      },
+      {
+        "id": "need_sleep_critical",
+        "reason": "Optional urgency variant omitted by owner scope update; no selected asset."
+      },
+      {
+        "id": "need_warmth_critical",
+        "reason": "Optional urgency variant omitted by owner scope update; no selected asset."
+      },
+      {
+        "id": "need_social_critical",
+        "reason": "Optional urgency variant omitted by owner scope update; no selected asset."
+      },
+      {
+        "id": "need_health_critical",
+        "reason": "Optional urgency variant omitted by owner scope update; no selected asset."
+      }
+    ]
+  },
+  "self_review": {
+    "weakest_ids": [
+      "need_sleep",
+      "mood_content",
+      "modifier_thirsty",
+      "modifier_learned",
+      "modifier_food_monotonous"
+    ],
+    "regenerated_ids": [
+      "need_sleep",
+      "mood_content",
+      "modifier_thirsty",
+      "modifier_learned",
+      "modifier_food_monotonous"
+    ],
+    "before_after": [
+      {
+        "id": "need_sleep",
+        "before_record": "/Users/rexxa/work/art-batch/B4/needs/records/need_sleep-01.json",
+        "after_record": "/Users/rexxa/work/art-batch/B4/needs/records/need_sleep-02.json",
+        "decision": "select_after",
+        "reason": "Rounded cocoon makes the sleeping face and curled posture readable at 32px; original was a thin horizontal strip."
+      },
+      {
+        "id": "mood_content",
+        "before_record": "/Users/rexxa/work/art-batch/B4/needs/records/mood_content-01.json",
+        "after_record": "/Users/rexxa/work/art-batch/B4/needs/records/mood_content-02.json",
+        "decision": "select_after",
+        "reason": "Open elbows, hands over chest and raised chin distinguish content from the neutral portrait without relying on hue."
+      },
+      {
+        "id": "modifier_thirsty",
+        "before_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_thirsty-01.json",
+        "after_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_thirsty-03.json",
+        "decision": "select_after",
+        "reason": "Final dry cracked basin with separate drop combines readable water cue and clear deficit; attempt 2 incorrectly added a pool."
+      },
+      {
+        "id": "modifier_learned",
+        "before_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_learned-01.json",
+        "after_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_learned-02.json",
+        "decision": "select_after",
+        "reason": "Two hands and one broad flint core replace two crowded faces; pointing gesture remains visible at 32px."
+      },
+      {
+        "id": "modifier_food_monotonous",
+        "before_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_food_monotonous-01.json",
+        "after_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_food_monotonous-02.json",
+        "decision": "select_after",
+        "reason": "Five whole tapered roots replace bread-like chunks, making the repeated raw food shape era-safe and explicit."
+      }
+    ]
+  },
+  "interrupted_submissions": [
+    {
+      "id": "need_social",
+      "attempt": 1,
+      "status": "interrupted_no_output",
+      "prompt": "/Users/rexxa/work/art-batch/B4/needs/prompts/need_social-01.txt",
+      "counted_toward_attempt_cap": true,
+      "reason": "Submitted in interrupted four-call batch; no recoverable output or completion metadata."
+    },
+    {
+      "id": "need_warmth_critical",
+      "attempt": 1,
+      "status": "interrupted_no_output",
+      "prompt": "/Users/rexxa/work/art-batch/B4/needs/prompts/need_warmth_critical-01.txt",
+      "counted_toward_attempt_cap": true,
+      "reason": "Submitted in interrupted four-call batch; no recoverable output or completion metadata."
+    }
+  ],
+  "self_review_evidence": {
+    "initial_sheets": [
+      "/Users/rexxa/work/art-batch/B4/needs/sheets/pre_review_1.png",
+      "/Users/rexxa/work/art-batch/B4/needs/sheets/pre_review_2.png"
+    ],
+    "before": "/Users/rexxa/work/art-batch/B4/needs/sheets/self_review_1.png",
+    "after": "/Users/rexxa/work/art-batch/B4/needs/sheets/self_review_selected.png",
+    "thirst_final": "/Users/rexxa/work/art-batch/B4/needs/sheets/thirst_review.png",
+    "verdict": "/Users/rexxa/work/art-batch/B4/needs/reviews/post_regeneration.json",
+    "reviewer": "producer self-review; root independent review pending"
+  },
+  "notes": [
+    "A4 sheets.py is reused unchanged: its A4 heading describes the utility, not this B4 family.",
+    "No runtime imports applied. All proposed binding groups require importer work.",
+    "need_warmth-01 and excluded need_sleep_critical-01 recovered from actual output files after interruption; exact saved prompts and raw identity preserved, tool completion metadata unavailable."
+  ]
+}

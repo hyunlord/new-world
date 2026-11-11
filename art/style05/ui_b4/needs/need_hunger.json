@@ -1,0 +1,34 @@
+{
+  "id": "need_hunger",
+  "lane": "needs",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/needs/need_hunger.png",
+  "sha256": "39e1587be932aa0f317c66b2cfd583bb0c5ed5dd4fa8bfd3cd9eb9b890ff17cc",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/need_hunger-01.json",
+  "attempt_record_sha256": "76bc437f32b18a48727f6fd6b2cf32cbdc276f1d34acc34d9e74cdb59c757f70",
+  "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/need_hunger-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "A shallow oval wooden bowl heaped with three clear food groups: golden gathered nuts, dark red berries, and pale root pieces. Plenty to eat, simple full bowl silhouette.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "ui_icons",
+        "id": "hunger"
+      }
+    ],
+    "proposed_future": [],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "bindings_applied": false,
+    "source_path": "scripts/ui/panels/agent_inspector_panel.gd:279"
+  }
+}

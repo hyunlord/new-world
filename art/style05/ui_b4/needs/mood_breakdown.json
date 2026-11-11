@@ -1,0 +1,37 @@
+{
+  "id": "mood_breakdown",
+  "lane": "needs",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/needs/mood_breakdown.png",
+  "sha256": "b7b4652c2aae3ce035dc8d27b76ff525f2ff37db96c03a6dc78e7ab950f840af",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/mood_breakdown-01.json",
+  "attempt_record_sha256": "05737dc42c78784f824999a680d772ca7223fd2d6dbf2c94c63d70f1b70ffc13",
+  "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/mood_breakdown-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "A stone-age adult portrait bust in plain hide with face bowed into both open hands, elbows outward and shoulders tense. Face partly obscured by hands, clear distress silhouette; no violence, no emoji.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "mood_band",
+        "id": "breakdown",
+        "code": 4
+      }
+    ],
+    "proposed_future": [
+      "mood_band_icons.breakdown"
+    ],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "bindings_applied": false,
+    "source_path": "scripts/ui/story_text.gd:34"
+  }
+}

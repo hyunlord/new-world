@@ -1,0 +1,37 @@
+{
+  "id": "need_hunger_critical",
+  "lane": "needs",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/needs/need_hunger_critical.png",
+  "sha256": "0c6456c6059740c22e9ba0d7699d4645b0aad553508aa105d5e55e3df11df2d1",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/need_hunger_critical-01.json",
+  "attempt_record_sha256": "87d260ba08c4b3ff6d146b036752afda34cd3d4bb70d25d66d3c44c0a60b5ccd",
+  "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/need_hunger_critical-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "An empty shallow wooden bowl tilted toward the viewer, one tiny remaining berry in it, two bare ribs of its wood visible. Emphasize its hollow vacant interior and unmistakable lack of food; no skull.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "ui_icons",
+        "id": "hunger"
+      }
+    ],
+    "proposed_future": [
+      "need_urgency_art.hunger.critical"
+    ],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "bindings_applied": false,
+    "source_path": "scripts/ui/panels/agent_inspector_panel.gd:279",
+    "note": "Visual deficit variant only; no new runtime state or threshold is claimed."
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "id": "modifier_thirsty",
+  "lane": "needs",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/needs/modifier_thirsty.png",
+  "sha256": "6e7e75ba9fd7e09e87f23b5926e133b5f72d0c7b073353ac5009ed8875cc1f84",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_thirsty-03.json",
+  "attempt_record_sha256": "86f0a0d863f4d4577ea1cef9bab35be97f7bf1a314ba3ee8ba1b361be0f62e36",
+  "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/modifier_thirsty-03.json",
+  "status": "candidate_selected",
+  "semantic_note": "Dry cracked stone basin with one separate final droplet; actual Thirsty modifier 4.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "MoodModifier",
+        "id": "thirsty",
+        "code": 4
+      }
+    ],
+    "proposed_future": [
+      "mood_modifier_icons.thirsty"
+    ],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "bindings_applied": false,
+    "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+  }
+}

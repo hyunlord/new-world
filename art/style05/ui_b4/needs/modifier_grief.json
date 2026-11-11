@@ -1,0 +1,37 @@
+{
+  "id": "modifier_grief",
+  "lane": "needs",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/needs/modifier_grief.png",
+  "sha256": "177344ee994720f3625d3c9f12ff4756f23c85a6c82b4121bea9a52313898711",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_grief-01.json",
+  "attempt_record_sha256": "fae9785458dc93e80011bc2f25107e9cd18bffb6fe753020a27e5a0908fc61bf",
+  "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/modifier_grief-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "A bowed adult head in profile, one hand gently covering the cheek, beside a small tied bundle of dried pale flowers. Quiet sorrow, no skull, tears as large emoji, or gravestone text.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "MoodModifier",
+        "id": "grief",
+        "code": 9
+      }
+    ],
+    "proposed_future": [
+      "mood_modifier_icons.grief"
+    ],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "bindings_applied": false,
+    "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+  }
+}

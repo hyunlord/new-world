@@ -1,0 +1,37 @@
+{
+  "id": "modifier_drafted",
+  "lane": "needs",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/needs/modifier_drafted.png",
+  "sha256": "75d4d6d601a31a2ad498ba8c423728854b4725ba91985654430f268ab70e983b",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_drafted-01.json",
+  "attempt_record_sha256": "60d480e5c555fb2e7aaebc18fe18309815ed99521a2c60ba5d06bc4c4d2f43b9",
+  "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/modifier_drafted-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "An upright adult hand gripping a simple wood shaft with a flint spear point, a plain hide shoulder below. Mustered duty, calm defensive posture, no metal, no injury or attack.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "MoodModifier",
+        "id": "drafted",
+        "code": 12
+      }
+    ],
+    "proposed_future": [
+      "mood_modifier_icons.drafted"
+    ],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "bindings_applied": false,
+    "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+  }
+}

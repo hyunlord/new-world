@@ -1,0 +1,37 @@
+{
+  "id": "modifier_discovered",
+  "lane": "needs",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/needs/modifier_discovered.png",
+  "sha256": "447402fb468a01a09de005ef586ff59510a423c56055788491c92a0a486a0e01",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_discovered-01.json",
+  "attempt_record_sha256": "492b9e49df509a5a895607b579e491184c85bd87f3d3308332b5ab9c82956d12",
+  "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/modifier_discovered-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "A freshly split flint core with a bright pale sharp edge held in one adult palm, three small radiating ink dashes at the edge. Material discovery, no lightbulb or magic sparkles.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "MoodModifier",
+        "id": "discovered",
+        "code": 8
+      }
+    ],
+    "proposed_future": [
+      "mood_modifier_icons.discovered"
+    ],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "bindings_applied": false,
+    "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+  }
+}

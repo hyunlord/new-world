@@ -1,0 +1,37 @@
+{
+  "id": "modifier_cold",
+  "lane": "needs",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/needs/modifier_cold.png",
+  "sha256": "40c4c8e240f07457c5f6497d56fd6d36fee8d1ebcb00523882f38015d0bcc7d6",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_cold-01.json",
+  "attempt_record_sha256": "3d63a9416e127b829e6d663c0b8ff57049efbf3cd7b3844de177ae4518f21225",
+  "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/modifier_cold-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "A tightly folded undyed hide wrap around a pair of crossed bare hands, three thin side wind strokes. Compact cold self-hug gesture, no snowflake or text.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "MoodModifier",
+        "id": "cold",
+        "code": 5
+      }
+    ],
+    "proposed_future": [
+      "mood_modifier_icons.cold"
+    ],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "bindings_applied": false,
+    "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+  }
+}

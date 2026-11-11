@@ -1,0 +1,37 @@
+{
+  "id": "modifier_hungry",
+  "lane": "needs",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/needs/modifier_hungry.png",
+  "sha256": "254281d1f5ef1d80f0ad8b3f66d346bf37e909170ca90be4911835092298a3a5",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_hungry-01.json",
+  "attempt_record_sha256": "bfb359f9e9809ab0d9c6a6e267694e65fb2e8f5cf84bed46928aa25144c33a17",
+  "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/modifier_hungry-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "A hollow near-empty shallow wooden bowl with only a single small nut, a thin adult hand reaching toward it. Empty interior dominates, no modern symbol.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "MoodModifier",
+        "id": "hungry",
+        "code": 3
+      }
+    ],
+    "proposed_future": [
+      "mood_modifier_icons.hungry"
+    ],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "bindings_applied": false,
+    "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+  }
+}

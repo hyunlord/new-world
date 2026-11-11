@@ -1,0 +1,37 @@
+{
+  "id": "modifier_learned",
+  "lane": "needs",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/needs/modifier_learned.png",
+  "sha256": "d7118d9dd385f7a2f5b7407ecd74f86024ddb7f5918bb868a61e6bf5a38d8d81",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_learned-02.json",
+  "attempt_record_sha256": "abbbcaa84f3402560e011e84c1ef9d8c27ba7f696a55a9ddb1354ec37da2df19",
+  "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/modifier_learned-02.json",
+  "status": "candidate_selected",
+  "semantic_note": "One hand holds a flint core while an older hand points at its edge; actual Learned modifier 7.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "MoodModifier",
+        "id": "learned",
+        "code": 7
+      }
+    ],
+    "proposed_future": [
+      "mood_modifier_icons.learned"
+    ],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "bindings_applied": false,
+    "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+  }
+}

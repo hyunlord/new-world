@@ -1,0 +1,37 @@
+{
+  "id": "modifier_food_monotonous",
+  "lane": "needs",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/needs/modifier_food_monotonous.png",
+  "sha256": "e453b4dbc07fe4559112b63a4fb02facaa19d1bb105725b41ffc4120de80d4be",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/modifier_food_monotonous-02.json",
+  "attempt_record_sha256": "4d4dae56532368c5d40dfafb02114a3ab073898f10009c3870201c1c63bb5103",
+  "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/modifier_food_monotonous-02.json",
+  "status": "candidate_selected",
+  "semantic_note": "Five identical whole wild roots on a wicker tray; actual FoodMonotonous modifier 15.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "MoodModifier",
+        "id": "food_monotonous",
+        "code": 15
+      }
+    ],
+    "proposed_future": [
+      "mood_modifier_icons.food_monotonous"
+    ],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "bindings_applied": false,
+    "source_path": "rust/crates/sim-core/src/colony/people.rs:155"
+  }
+}

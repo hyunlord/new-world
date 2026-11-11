@@ -1,0 +1,37 @@
+{
+  "id": "mood_content",
+  "lane": "needs",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/needs/mood_content.png",
+  "sha256": "9dfde0d4b7131c9b01ca2d7b750c4823a3566f96ffb2de9daae4267b6a810299",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/mood_content-02.json",
+  "attempt_record_sha256": "b5d2781222a3076205ecb1a38ed6a449bd7d5c8831fb4a4df8c7aa469350ee8d",
+  "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/mood_content-02.json",
+  "status": "candidate_selected",
+  "semantic_note": "Relaxed adult with lifted chin and hands at chest; actual mood band 3, proposed raster group.",
+  "source_runtime_ids": {
+    "verified": [
+      {
+        "kind": "mood_band",
+        "id": "content",
+        "code": 3
+      }
+    ],
+    "proposed_future": [
+      "mood_band_icons.content"
+    ],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "bindings_applied": false,
+    "source_path": "scripts/ui/story_text.gd:34"
+  }
+}

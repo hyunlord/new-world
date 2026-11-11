@@ -1,0 +1,32 @@
+{
+  "id": "need_social",
+  "lane": "needs",
+  "family": "icon",
+  "era": "paleolithic",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/needs/need_social.png",
+  "sha256": "4b7e9b1c168e95830cbf1e08b7fa2c84a68fbd826c3ba3f99f8de80303f33a2e",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/needs/records/need_social-02.json",
+  "attempt_record_sha256": "7d1f403faed261875f9ec7539835e49ec4022830f0c4a8ce8e789c9a0ba5a90f",
+  "normalization": "/Users/rexxa/work/art-batch/B4/needs/checks/need_social-02.json",
+  "status": "candidate_selected",
+  "semantic_note": "Three simple adult upper-body figures in plain undyed hide wraps leaning together in a close friendly hearth-circle, two hands gently on shoulders. Compact triangular group, no text or hearts.",
+  "source_runtime_ids": {
+    "verified": [],
+    "proposed_future": [
+      "ui_icons.social"
+    ],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "bindings_applied": false,
+    "source_path": "scripts/ui/panels/agent_inspector_panel.gd",
+    "note": "Underlying warmth/social/health concepts exist; this icon binding role is proposed, not a verified need bar."
+  }
+}
