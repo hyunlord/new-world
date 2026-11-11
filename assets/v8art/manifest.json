@@ -16485,6 +16485,552 @@
    "source": "art/style05/struct/woodworking_bench.png"
   },
   {
+   "bytes": 5391,
+   "id": "b4_alerts_firewood_low",
+   "path": "ui/b4/alerts/firewood_low.png",
+   "role": "ui_alert_icon",
+   "sha256": "e017276caa0117a215f9c7dfcd757381ddda6c783c3461bde29ac30e114094b0",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/firewood_low.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 7257,
+   "id": "b4_alerts_food_low",
+   "path": "ui/b4/alerts/food_low.png",
+   "role": "ui_alert_icon",
+   "sha256": "b43088318a0008e08ca2699d437c05da4b8f987ac76762f2c8db0fe5a62e68a9",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/food_low.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 7305,
+   "id": "b4_alerts_food_spoil",
+   "path": "ui/b4/alerts/food_spoil.png",
+   "role": "ui_alert_icon",
+   "sha256": "fb612ccae948873b80b9e80705e63b8e5c3c878dd69ca7e6a252ea562a652918",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/food_spoil.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 8992,
+   "id": "b4_alerts_food_winter",
+   "path": "ui/b4/alerts/food_winter.png",
+   "role": "ui_alert_icon",
+   "sha256": "5a67b35d2abaa475df7479ffe85d4e55570c6d4519bfb3acf72c2a0f8d34a2a8",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/food_winter.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 6431,
+   "id": "b4_alerts_idle_adults",
+   "path": "ui/b4/alerts/idle_adults.png",
+   "role": "ui_alert_icon",
+   "sha256": "5ee50e0d389db709f57350c3991be4be5a86c32bc56f46d280df82e2c448fc8b",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/idle_adults.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 5481,
+   "id": "b4_alerts_knowledge_waiting",
+   "path": "ui/b4/alerts/knowledge_waiting.png",
+   "role": "ui_alert_icon",
+   "sha256": "56cdbd9ca486940c6ef54b7188f132e1596af08e39b5a9267e636ac25a0e8fed",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/knowledge_waiting.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 3140,
+   "id": "b4_alerts_meat_spoiling",
+   "path": "ui/b4/alerts/meat_spoiling.png",
+   "role": "ui_alert_icon",
+   "sha256": "b41809bacda2d90d0cd0fb54ae5921ddcb032949b178c1ac34c40a84942fbaee",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/meat_spoiling.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 8348,
+   "id": "b4_alerts_migrants_waiting",
+   "path": "ui/b4/alerts/migrants_waiting.png",
+   "role": "ui_alert_icon",
+   "sha256": "3609306a0d1980340f51ad97497a30490dba57f9d816ff030aa195374fc2fa78",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/migrants_waiting.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 6117,
+   "id": "b4_alerts_newborn_without_bed",
+   "path": "ui/b4/alerts/newborn_without_bed.png",
+   "role": "ui_alert_icon",
+   "sha256": "47589cb007525178b82af1e4bc929e1c0f1ad280ae79ebbed8deedb7c927edbd",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/newborn_without_bed.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 8068,
+   "id": "b4_alerts_orders_unreachable",
+   "path": "ui/b4/alerts/orders_unreachable.png",
+   "role": "ui_alert_icon",
+   "sha256": "a33db2cb1c274e945bbe3c7568482f7c624e0d7ea94ccc7ef15c7f87ed84d210",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/orders_unreachable.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 7597,
+   "id": "b4_alerts_person_breakdown",
+   "path": "ui/b4/alerts/person_breakdown.png",
+   "role": "ui_alert_icon",
+   "sha256": "1ddd6af99c7981c1f5060071448cd1660febad9043f1df261790b439b4e91782",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/person_breakdown.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 5438,
+   "id": "b4_alerts_person_injured",
+   "path": "ui/b4/alerts/person_injured.png",
+   "role": "ui_alert_icon",
+   "sha256": "eb9f5bd953df7c039d86b3c22fd33ee391459a242263d926f807bc88b0fe3ddd",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/person_injured.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 8277,
+   "id": "b4_alerts_person_sick",
+   "path": "ui/b4/alerts/person_sick.png",
+   "role": "ui_alert_icon",
+   "sha256": "dd0765ef339862aa55d23697c382b229d5716feed374b36acaac51c7fb4c1e39",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/person_sick.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 5885,
+   "id": "b4_alerts_sleeping_outside",
+   "path": "ui/b4/alerts/sleeping_outside.png",
+   "role": "ui_alert_icon",
+   "sha256": "1f523264f886070a8d0e7441c4035a68bba5f6b13faddfd624c79d7dd0dbd9df",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/sleeping_outside.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 4108,
+   "id": "b4_alerts_stockpile_missing",
+   "path": "ui/b4/alerts/stockpile_missing.png",
+   "role": "ui_alert_icon",
+   "sha256": "34c00c01097e38dffa1c79db6f4b0cf7b5a4e46c0051dfbff03bc2d67a3618de",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/stockpile_missing.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 8712,
+   "id": "b4_alerts_storehouse_full",
+   "path": "ui/b4/alerts/storehouse_full.png",
+   "role": "ui_alert_icon",
+   "sha256": "fc6635dc6dd352a18950f11327cc4099b27c4a815e48bdef97da93a2859f1613",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/storehouse_full.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 5278,
+   "id": "b4_alerts_technique_at_risk",
+   "path": "ui/b4/alerts/technique_at_risk.png",
+   "role": "ui_alert_icon",
+   "sha256": "5853a37adb414855a1c09dcebf9198efc2cc6608002dfb41581bc9caa1ba7b9b",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/technique_at_risk.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 9545,
+   "id": "b4_alerts_trader_present",
+   "path": "ui/b4/alerts/trader_present.png",
+   "role": "ui_alert_icon",
+   "sha256": "161fabdf8cc8daa9e763dea4f215b32a7679ca9e34da0d2e5a732db62587c2c8",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/trader_present.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 8100,
+   "id": "b4_alerts_wolves_approaching",
+   "path": "ui/b4/alerts/wolves_approaching.png",
+   "role": "ui_alert_icon",
+   "sha256": "2350da08616a0c26cd5125ef1b58ce572f0a578129554608f97886b04bea33fa",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/wolves_approaching.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 180320,
+   "id": "b4_cards_cloth_short",
+   "path": "ui/b4/cards/cloth_short.png",
+   "role": "ui_decision_illustration",
+   "sha256": "cbebaa3673826c2de0493ec37cd48928d6239e9a1d0fbca06b317617ff1e0cf7",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/cloth_short.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 272272,
+   "id": "b4_cards_first_kid",
+   "path": "ui/b4/cards/first_kid.png",
+   "role": "ui_decision_illustration",
+   "sha256": "f0c17c1a2dae909e503a9d025931add0ecb5d9a7d911615c2f3aaa994d218db0",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/first_kid.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 211410,
+   "id": "b4_cards_harvest_ready",
+   "path": "ui/b4/cards/harvest_ready.png",
+   "role": "ui_decision_illustration",
+   "sha256": "3aaff79d55697544307d3b3f94c629707476261c5dadc7048385d294f282cb21",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/harvest_ready.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 197490,
+   "id": "b4_cards_idle_adults",
+   "path": "ui/b4/cards/idle_adults.png",
+   "role": "ui_decision_illustration",
+   "sha256": "3b58d52aca7588d21d04d7bea7ac47e15c49c0b9d0839fc2279cd65ef65a957d",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/idle_adults.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 169454,
+   "id": "b4_cards_knowledge_risk",
+   "path": "ui/b4/cards/knowledge_risk.png",
+   "role": "ui_decision_illustration",
+   "sha256": "413b32f8c1575b97d3be51657c371769027e044bd439c7b927d3c8d91c55370c",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/knowledge_risk.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 225410,
+   "id": "b4_cards_migrants",
+   "path": "ui/b4/cards/migrants.png",
+   "role": "ui_decision_illustration",
+   "sha256": "a0b4b1613af89344e52e9e8ee687ea54dd4f5744fdb83009d567826f2adfd458",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/migrants.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 212397,
+   "id": "b4_cards_need_food",
+   "path": "ui/b4/cards/need_food.png",
+   "role": "ui_decision_illustration",
+   "sha256": "a7098fe2a0206d37bdddfd9eb01cf2d36019c9ddd84d300e332f622bce7a2cec",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/need_food.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 208670,
+   "id": "b4_cards_need_warmth",
+   "path": "ui/b4/cards/need_warmth.png",
+   "role": "ui_decision_illustration",
+   "sha256": "088ff995c119d30562dca2043f37ff48a56f463d1024f51025a0c58a8b04afb3",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/need_warmth.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 237920,
+   "id": "b4_cards_pressure",
+   "path": "ui/b4/cards/pressure.png",
+   "role": "ui_decision_illustration",
+   "sha256": "0492fb80cf3448eef944a52ba1680bef39bd25f486d4edbb9a27f914e4e29922",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/pressure.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 196661,
+   "id": "b4_cards_quarrel",
+   "path": "ui/b4/cards/quarrel.png",
+   "role": "ui_decision_illustration",
+   "sha256": "19a3d403799f8e49a940c074967df19c180972e4775fc5f9eb34624c563dc587",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/quarrel.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 216880,
+   "id": "b4_cards_sick_person",
+   "path": "ui/b4/cards/sick_person.png",
+   "role": "ui_decision_illustration",
+   "sha256": "04b1c41c539803ff36aba0fd2e1d2818b40da50038fe67c032b3862265732597",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/sick_person.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 133817,
+   "id": "b4_cards_sowing_window",
+   "path": "ui/b4/cards/sowing_window.png",
+   "role": "ui_decision_illustration",
+   "sha256": "e138473919d78d955356e2669a903333f1ca2a6f430ce0d1bc52e65ca0659291",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/sowing_window.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 247195,
+   "id": "b4_cards_storage",
+   "path": "ui/b4/cards/storage.png",
+   "role": "ui_decision_illustration",
+   "sha256": "5b4f4797333497a6b81802ee435ab26a7e4ab4fafe9434d9bf1010d877fb7008",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/storage.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 144492,
+   "id": "b4_cards_tools_low",
+   "path": "ui/b4/cards/tools_low.png",
+   "role": "ui_decision_illustration",
+   "sha256": "07e3d866be92b9811b91f936663e604b4fc706f16f05ca9aae4da3dcef456222",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/tools_low.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 143622,
+   "id": "b4_cards_trader",
+   "path": "ui/b4/cards/trader.png",
+   "role": "ui_decision_illustration",
+   "sha256": "21160e2bcf51a01e03ecd48db810974fa568c600a6dc212576166e141da29768",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/trader.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 186423,
+   "id": "b4_cards_wolves",
+   "path": "ui/b4/cards/wolves.png",
+   "role": "ui_decision_illustration",
+   "sha256": "28da50b7da1deb03cd1861d68072083e2af855e6849dba455329b22295c6cebc",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/wolves.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 6123,
+   "id": "b4_jobs_build",
+   "path": "ui/b4/jobs/build.png",
+   "role": "ui_job_icon",
+   "sha256": "6712b9c8cafed2bcf8bdd3379ce0f4a49d94ba09bee3a934a29fdb7fee43b463",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/jobs/build.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 6482,
+   "id": "b4_jobs_chop",
+   "path": "ui/b4/jobs/chop.png",
+   "role": "ui_job_icon",
+   "sha256": "36411bf470bf6be4808b20433a952c4586c2f81f77103ceaf0ddde63b79abe20",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/jobs/chop.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 8157,
+   "id": "b4_jobs_craft",
+   "path": "ui/b4/jobs/craft.png",
+   "role": "ui_job_icon",
+   "sha256": "bb3e565cbab08caf2a372181fea97cf4571d0154b5dee9500dcf3b9e8a5e1c98",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/jobs/craft.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 5239,
+   "id": "b4_jobs_dig",
+   "path": "ui/b4/jobs/dig.png",
+   "role": "ui_job_icon",
+   "sha256": "3681d3688f67475ef2cf85efd33bd7990fc369088a97dc41756ab2d6c696fd18",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/jobs/dig.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 7457,
+   "id": "b4_jobs_haul",
+   "path": "ui/b4/jobs/haul.png",
+   "role": "ui_job_icon",
+   "sha256": "98ac7f61ad40a89c758f478cbbb26962c6b638700671bf100b023b4d6bc6c75d",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/jobs/haul.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 5563,
+   "id": "b4_jobs_hunt",
+   "path": "ui/b4/jobs/hunt.png",
+   "role": "ui_job_icon",
+   "sha256": "bf472205474e8a17abdc70aebc23b44fdcd7ec40fc211a3ffc312b25d69388db",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/jobs/hunt.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 6565,
+   "id": "b4_jobs_quarry",
+   "path": "ui/b4/jobs/quarry.png",
+   "role": "ui_job_icon",
+   "sha256": "026f413641d962c1947a34df839abcce270e8cea2942b2f788ea2b307e79beff",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/jobs/quarry.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
    "bytes": 4733,
    "id": "tech_adze",
    "path": "ui/knowledge/adze.png",
@@ -17968,5 +18514,5 @@
   "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
   "source": "art/style05/anchors/person.png"
  },
- "total_bytes": 15232214
+ "total_bytes": 18591703
 }

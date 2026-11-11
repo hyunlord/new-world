@@ -2145,6 +2145,300 @@
       "source": "art/style05/techmap/icons/neolithic/well.png",
       "dest": "ui/knowledge/well.png",
       "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_chop",
+      "source": "art/style05/ui_b4/jobs/chop.png",
+      "dest": "ui/b4/jobs/chop.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_haul",
+      "source": "art/style05/ui_b4/jobs/haul.png",
+      "dest": "ui/b4/jobs/haul.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_build",
+      "source": "art/style05/ui_b4/jobs/build.png",
+      "dest": "ui/b4/jobs/build.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_quarry",
+      "source": "art/style05/ui_b4/jobs/quarry.png",
+      "dest": "ui/b4/jobs/quarry.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_craft",
+      "source": "art/style05/ui_b4/jobs/craft.png",
+      "dest": "ui/b4/jobs/craft.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_dig",
+      "source": "art/style05/ui_b4/jobs/dig.png",
+      "dest": "ui/b4/jobs/dig.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_hunt",
+      "source": "art/style05/ui_b4/jobs/hunt.png",
+      "dest": "ui/b4/jobs/hunt.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_need_food",
+      "source": "art/style05/ui_b4/cards/need_food.png",
+      "dest": "ui/b4/cards/need_food.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_need_warmth",
+      "source": "art/style05/ui_b4/cards/need_warmth.png",
+      "dest": "ui/b4/cards/need_warmth.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_migrants",
+      "source": "art/style05/ui_b4/cards/migrants.png",
+      "dest": "ui/b4/cards/migrants.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_trader",
+      "source": "art/style05/ui_b4/cards/trader.png",
+      "dest": "ui/b4/cards/trader.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_knowledge_risk",
+      "source": "art/style05/ui_b4/cards/knowledge_risk.png",
+      "dest": "ui/b4/cards/knowledge_risk.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_tools_low",
+      "source": "art/style05/ui_b4/cards/tools_low.png",
+      "dest": "ui/b4/cards/tools_low.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_wolves",
+      "source": "art/style05/ui_b4/cards/wolves.png",
+      "dest": "ui/b4/cards/wolves.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_idle_adults",
+      "source": "art/style05/ui_b4/cards/idle_adults.png",
+      "dest": "ui/b4/cards/idle_adults.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_quarrel",
+      "source": "art/style05/ui_b4/cards/quarrel.png",
+      "dest": "ui/b4/cards/quarrel.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_pressure",
+      "source": "art/style05/ui_b4/cards/pressure.png",
+      "dest": "ui/b4/cards/pressure.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_storage",
+      "source": "art/style05/ui_b4/cards/storage.png",
+      "dest": "ui/b4/cards/storage.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_sick_person",
+      "source": "art/style05/ui_b4/cards/sick_person.png",
+      "dest": "ui/b4/cards/sick_person.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_sowing_window",
+      "source": "art/style05/ui_b4/cards/sowing_window.png",
+      "dest": "ui/b4/cards/sowing_window.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_harvest_ready",
+      "source": "art/style05/ui_b4/cards/harvest_ready.png",
+      "dest": "ui/b4/cards/harvest_ready.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_cloth_short",
+      "source": "art/style05/ui_b4/cards/cloth_short.png",
+      "dest": "ui/b4/cards/cloth_short.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_first_kid",
+      "source": "art/style05/ui_b4/cards/first_kid.png",
+      "dest": "ui/b4/cards/first_kid.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_food_low",
+      "source": "art/style05/ui_b4/alerts/food_low.png",
+      "dest": "ui/b4/alerts/food_low.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_firewood_low",
+      "source": "art/style05/ui_b4/alerts/firewood_low.png",
+      "dest": "ui/b4/alerts/firewood_low.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_sleeping_outside",
+      "source": "art/style05/ui_b4/alerts/sleeping_outside.png",
+      "dest": "ui/b4/alerts/sleeping_outside.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_stockpile_missing",
+      "source": "art/style05/ui_b4/alerts/stockpile_missing.png",
+      "dest": "ui/b4/alerts/stockpile_missing.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_storehouse_full",
+      "source": "art/style05/ui_b4/alerts/storehouse_full.png",
+      "dest": "ui/b4/alerts/storehouse_full.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_idle_adults",
+      "source": "art/style05/ui_b4/alerts/idle_adults.png",
+      "dest": "ui/b4/alerts/idle_adults.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_orders_unreachable",
+      "source": "art/style05/ui_b4/alerts/orders_unreachable.png",
+      "dest": "ui/b4/alerts/orders_unreachable.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_knowledge_waiting",
+      "source": "art/style05/ui_b4/alerts/knowledge_waiting.png",
+      "dest": "ui/b4/alerts/knowledge_waiting.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_technique_at_risk",
+      "source": "art/style05/ui_b4/alerts/technique_at_risk.png",
+      "dest": "ui/b4/alerts/technique_at_risk.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_wolves_approaching",
+      "source": "art/style05/ui_b4/alerts/wolves_approaching.png",
+      "dest": "ui/b4/alerts/wolves_approaching.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_migrants_waiting",
+      "source": "art/style05/ui_b4/alerts/migrants_waiting.png",
+      "dest": "ui/b4/alerts/migrants_waiting.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_trader_present",
+      "source": "art/style05/ui_b4/alerts/trader_present.png",
+      "dest": "ui/b4/alerts/trader_present.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_person_sick",
+      "source": "art/style05/ui_b4/alerts/person_sick.png",
+      "dest": "ui/b4/alerts/person_sick.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_person_breakdown",
+      "source": "art/style05/ui_b4/alerts/person_breakdown.png",
+      "dest": "ui/b4/alerts/person_breakdown.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_person_injured",
+      "source": "art/style05/ui_b4/alerts/person_injured.png",
+      "dest": "ui/b4/alerts/person_injured.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_meat_spoiling",
+      "source": "art/style05/ui_b4/alerts/meat_spoiling.png",
+      "dest": "ui/b4/alerts/meat_spoiling.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_newborn_without_bed",
+      "source": "art/style05/ui_b4/alerts/newborn_without_bed.png",
+      "dest": "ui/b4/alerts/newborn_without_bed.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_food_winter",
+      "source": "art/style05/ui_b4/alerts/food_winter.png",
+      "dest": "ui/b4/alerts/food_winter.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_food_spoil",
+      "source": "art/style05/ui_b4/alerts/food_spoil.png",
+      "dest": "ui/b4/alerts/food_spoil.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
     }
   ],
   "animals": {

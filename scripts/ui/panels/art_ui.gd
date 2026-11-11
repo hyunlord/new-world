@@ -72,6 +72,26 @@ static func proficiency_bar(value: int, threshold: int, width: int) -> ProgressB
 	return bar
 
 
+## ADR 0033: the texture bindings group `group` names for `key` (null without a row or asset; the caller keeps its text look).
+static func bound_texture(group: String, key: String) -> Texture2D:
+	var definition: Variant = ArtData.bindings().get(group, {}).get(key, {})
+	if not definition is Dictionary or not definition.get("asset") is String or not ArtData.has(str(definition["asset"])):
+		return null
+	return ArtData.texture(str(definition["asset"]))
+
+
+## A `size` box that shows `texture` centred at its aspect (mouse passes through).
+static func texture_box(texture: Texture2D, size: Vector2) -> TextureRect:
+	var box: TextureRect = TextureRect.new()
+	box.texture = texture
+	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	box.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	box.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	box.custom_minimum_size = size
+	return box
+
+
 static func apply_icon(sprite: Sprite2D, role: String) -> bool:
 	var definition: Dictionary = ArtData.bindings().get("ui_icons", {}).get(role, {})
 	if definition.is_empty():

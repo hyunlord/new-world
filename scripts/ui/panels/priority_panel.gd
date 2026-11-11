@@ -13,6 +13,7 @@
 # Bridge methods: via SimReads get_work_priorities, get_time_snapshot, get_story; get_agent_economy (direct, per adult,
 #   only on a refresh of the Pottery column); via SimReads.mutate cmd_set_work_priority, cmd_set_dress_order; signal
 #   world_reset.
+# ART-IMPORT part 3: a work-type column whose name has a bindings `ui_jobs` row shows that icon above its title.
 extends Control
 
 const PanelTooltips = preload("res://scripts/ui/panels/panel_tooltips.gd")
@@ -29,6 +30,8 @@ const DEFAULT_LEVEL: int = 3
 const CELL_WIDTH: int = 88
 ## Cell colours by level 0–4 (0 = never: dim; 1 = first: bright green … 4 = last: muted).
 const LEVEL_COLORS: Array[Color] = [Color("6a6058"), Color("8ee07a"), Color("e8d26e"), Color("e0a060"), Color("b08878")]
+## ART-IMPORT part 3: column icon height (B4 job icons are 64 px; 32 is their smallest reviewed size).
+const JOB_ICON_SIZE: int = 32
 const MUTED: Color = Color("c8b89a")
 ## M4: the Pottery skill (`SkillKind::code` 6) and how often its column is read again.
 const POTTERY_SKILL: int = 6
@@ -203,6 +206,19 @@ func _refresh() -> void:
 		title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		title.custom_minimum_size.x = CELL_WIDTH
 		_headers.add_child(title)
+		var job_icon: Texture2D = ArtUI.bound_texture("ui_jobs", w)
+		if job_icon == null:
+			continue
+		# The title stays the grid child (tests and widths read it); the icon sits in the space it grows above its text.
+		title.custom_minimum_size.y = JOB_ICON_SIZE + title.get_minimum_size().y
+		title.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
+		var icon: TextureRect = ArtUI.texture_box(job_icon, Vector2(JOB_ICON_SIZE, JOB_ICON_SIZE))
+		icon.name = "Icon"
+		icon.set_anchors_preset(Control.PRESET_CENTER_TOP)
+		icon.offset_left = -JOB_ICON_SIZE / 2.0
+		icon.offset_right = JOB_ICON_SIZE / 2.0
+		icon.offset_bottom = JOB_ICON_SIZE
+		title.add_child(icon)
 	var pottery_title: Label = Label.new()
 	pottery_title.name = "PotteryTitle"
 	pottery_title.text = EconomyText.ltr(_locale, "M4_PRIORITY_POTTERY")

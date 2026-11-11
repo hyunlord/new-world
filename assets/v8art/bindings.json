@@ -1428,5 +1428,140 @@
     "well": {
       "asset": "tech_well"
     }
+  },
+  "ui_jobs": {
+    "about": "Work-priority column icons (priority_panel.gd): work type name → manifest id; a column without a row shows its name only.",
+    "craft": {
+      "asset": "b4_jobs_craft"
+    },
+    "build": {
+      "asset": "b4_jobs_build"
+    },
+    "quarry": {
+      "asset": "b4_jobs_quarry"
+    },
+    "chop": {
+      "asset": "b4_jobs_chop"
+    },
+    "haul": {
+      "asset": "b4_jobs_haul"
+    },
+    "mine": {
+      "asset": "b4_jobs_dig"
+    },
+    "hunt": {
+      "asset": "b4_jobs_hunt"
+    }
+  },
+  "ui_alerts": {
+    "about": "Alert-row icons (alerts_panel.gd): alerts.json id → manifest id; an alert without a row keeps its text glyph.",
+    "food_low": {
+      "asset": "b4_alerts_food_low"
+    },
+    "firewood_low": {
+      "asset": "b4_alerts_firewood_low"
+    },
+    "sleeping_outside": {
+      "asset": "b4_alerts_sleeping_outside"
+    },
+    "stockpile_missing": {
+      "asset": "b4_alerts_stockpile_missing"
+    },
+    "storehouse_full": {
+      "asset": "b4_alerts_storehouse_full"
+    },
+    "idle_adults": {
+      "asset": "b4_alerts_idle_adults"
+    },
+    "orders_unreachable": {
+      "asset": "b4_alerts_orders_unreachable"
+    },
+    "knowledge_waiting": {
+      "asset": "b4_alerts_knowledge_waiting"
+    },
+    "technique_at_risk": {
+      "asset": "b4_alerts_technique_at_risk"
+    },
+    "wolves_approaching": {
+      "asset": "b4_alerts_wolves_approaching"
+    },
+    "migrants_waiting": {
+      "asset": "b4_alerts_migrants_waiting"
+    },
+    "trader_present": {
+      "asset": "b4_alerts_trader_present"
+    },
+    "person_sick": {
+      "asset": "b4_alerts_person_sick"
+    },
+    "person_breakdown": {
+      "asset": "b4_alerts_person_breakdown"
+    },
+    "person_injured": {
+      "asset": "b4_alerts_person_injured"
+    },
+    "meat_spoiling": {
+      "asset": "b4_alerts_meat_spoiling"
+    },
+    "newborn_without_bed": {
+      "asset": "b4_alerts_newborn_without_bed"
+    },
+    "food_winter": {
+      "asset": "b4_alerts_food_winter"
+    },
+    "food_spoil": {
+      "asset": "b4_alerts_food_spoil"
+    }
+  },
+  "ui_cards": {
+    "about": "Decision-card illustrations (card_panel.gd): cards.json id → manifest id; a card without a row draws text only.",
+    "need_food": {
+      "asset": "b4_cards_need_food"
+    },
+    "need_warmth": {
+      "asset": "b4_cards_need_warmth"
+    },
+    "migrants": {
+      "asset": "b4_cards_migrants"
+    },
+    "trader": {
+      "asset": "b4_cards_trader"
+    },
+    "knowledge_risk": {
+      "asset": "b4_cards_knowledge_risk"
+    },
+    "tools_low": {
+      "asset": "b4_cards_tools_low"
+    },
+    "wolves": {
+      "asset": "b4_cards_wolves"
+    },
+    "idle_adults": {
+      "asset": "b4_cards_idle_adults"
+    },
+    "quarrel": {
+      "asset": "b4_cards_quarrel"
+    },
+    "pressure": {
+      "asset": "b4_cards_pressure"
+    },
+    "storage": {
+      "asset": "b4_cards_storage"
+    },
+    "sick_person": {
+      "asset": "b4_cards_sick_person"
+    },
+    "sowing_window": {
+      "asset": "b4_cards_sowing_window"
+    },
+    "harvest_ready": {
+      "asset": "b4_cards_harvest_ready"
+    },
+    "cloth_short": {
+      "asset": "b4_cards_cloth_short"
+    },
+    "first_kid": {
+      "asset": "b4_cards_first_kid"
+    }
   }
 }

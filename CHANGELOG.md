@@ -5,6 +5,7 @@
 ### Added
 - Data-only import of round-1/B3 art bound to codes already on v8/main: goat, wild sheep, wild boar frames (A1) and B3's speckle-fixed reindeer; 115 A3 item icons with count buckets (53 item codes); A2 bread oven lit/unlit for ClayOven 16. Pen livestock draw their species' still frame from bindings, else the placeholder. Bronze/iron, cattle, tech-map/chapter art and stage sprites stay deferred (see the art-import inventory).
 - Part 2: tech-map cards draw a 48 px icon on the left when bindings `ui_knowledge` names one for the node's knowledge.ron id (82 A4 paleolithic/neolithic icons); nodes without a row draw text only. A card grows to fit a two-line name instead of clipping its count line. Bronze/iron icons, B3's house/chief-hall icons (no node on v8/main), era banners and chapter art stay deferred.
+- Part 3: B4 UI art by data. Work-priority columns show a 32 px job icon above the title when bindings `ui_jobs` names one for the work type (7 of 8; `split` has no B4 icon); alert rows show the bindings `ui_alerts` icon instead of their text glyph (all 19 alerts.json ids); decision cards show a 128×64 thumbnail beside the title from bindings `ui_cards` (all 16 cards.json ids). Shared lookup `ArtUI.bound_texture`; no row keeps today's look. Steward-rule icons stay deferred (the steward control lists modes, not rules), as do needs/mood, chronicle, building-category, legend and bronze proposal art.
 
 ## C1-b — implemented, verification IN_PROGRESS, 2026-11-10 (not published)
 
