@@ -3,12 +3,14 @@
 #   evaluator (alerts.json), chronicle entries, or custom bridge checks. At most 3 cards
 #   open; the rest fold with a count. Card state is presentation only — not saved, not hashed.
 #   After a load, cards rebuild from the current alert/event state.
+# ART-IMPORT part 3: a card whose cards.json id has a bindings `ui_cards` row shows that illustration as a thumbnail beside its title.
 # Bridge methods: via SimReads get_requests, get_chronicle_since, get_settlement_diagnosis,
 #   get_ui_facts, get_time_snapshot, get_world_info, get_card_harvest_target,
 #   get_command_log, get_neighbours, get_work_priorities, get_story;
 #   cmd_* for card answers; signal world_reset.
 extends PanelContainer
 
+const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const KoreanText = preload("res://scripts/ui/mux/korean_text.gd")
 const ChronicleText = preload("res://scripts/ui/chronicle_text.gd")
 const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
@@ -17,6 +19,8 @@ const Names = preload("res://scripts/ui/person_names.gd")
 const THEME = preload("res://assets/ui/worldsim_theme.tres")
 const CARDS_PATH: String = "res://assets/ui/cards.json"
 const MAX_OPEN: int = 3
+## ART-IMPORT part 3: decision thumbnail box (B4 cards are 520×260, shown at 1/4 beside the title).
+const CARD_ART_SIZE: Vector2 = Vector2(128, 64)
 const TICKS_PER_HOUR: int = 60
 ## Consecutive clear polls before closing an alert-triggered card (hysteresis).
 const DEFAULT_CLEAR_POLLS: int = 3
@@ -1085,7 +1089,21 @@ func _build_card_widget(card_id: String, card: Dictionary) -> void:
 	var title_label: Label = Label.new()
 	title_label.text = _format_card_text(str(def.get("title_key", "")), trigger_data)
 	title_label.add_theme_color_override("font_color", Color("e8c46e"))
-	card_box.add_child(title_label)
+	var art: Texture2D = ArtUI.bound_texture("ui_cards", str(def.get("id", "")))
+	if art == null:
+		card_box.add_child(title_label)
+	else:
+		# A thumbnail beside the title keeps the card about as tall as before (the panel sits over the map).
+		var head: HBoxContainer = HBoxContainer.new()
+		head.add_theme_constant_override("separation", 8)
+		card_box.add_child(head)
+		var illustration: TextureRect = ArtUI.texture_box(art, CARD_ART_SIZE)
+		illustration.name = "Illustration"
+		head.add_child(illustration)
+		title_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		title_label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		title_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+		head.add_child(title_label)
 	var body_label: Label = Label.new()
 	var body_key: String = str(def.get("body_ordered_key", "")) if trigger_data.has("order_id") and def.has("body_ordered_key") else str(def.get("body_key", ""))
 	var body: String = _format_card_text(body_key, trigger_data)

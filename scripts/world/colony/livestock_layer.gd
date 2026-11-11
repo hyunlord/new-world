@@ -78,8 +78,12 @@ func _refresh() -> void:
 			world_layer.add_child(body)
 			_bodies[ids[i]] = body
 		body.visible = not _lod
-		body.texture = Icons.item_texture(Content.row("animals", kinds[i]))
-		body.offset = Vector2(0, -body.texture.get_height() * 0.5)
+		# The species' own still frame when bindings.json names it exactly; else the data-selected placeholder.
+		var frame: String = WildAnimals.frame_id(kinds[i], -1, 0, false) if int(WildAnimals.row_of(kinds[i]).get("code", -1)) == kinds[i] else ""
+		var art: Texture2D = ArtData.texture(frame) if not frame.is_empty() and ArtData.has(frame) else null
+		body.texture = art if art != null else Icons.item_texture(Content.row("animals", kinds[i]))
+		body.centered = art == null
+		body.offset = -Vector2(ArtData.anchor(frame)) if art != null else Vector2(0, -body.texture.get_height() * 0.5)
 		body.position = View.base_point(Vector2i(xs[i], ys[i]))
 	queue_redraw()
 

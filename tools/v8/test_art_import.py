@@ -46,7 +46,7 @@ class ArtImportTest(unittest.TestCase):
             roles[row["role"]] = roles.get(row["role"], 0) + 1
         self.assertEqual(roles["people_frame"], 34 * 2 * 5)
         self.assertEqual(roles["portrait"], 34 * 6)
-        self.assertEqual(roles["animal_frame"], 2 * 2 * 5)
+        self.assertEqual(roles["animal_frame"], 2 * 2 * 5 + 4 * 2 * 6)  # wolf, deer; goat, sheep, boar, reindeer
         self.assertEqual(roles["material_texture"], 29)
 
     def test_the_two_fallback_looks_resolve_to_the_bun(self) -> None:

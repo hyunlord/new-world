@@ -10,7 +10,8 @@
     "structures",
     "items",
     "animals",
-    "flora"
+    "flora",
+    "ui"
   ],
   "budget_bytes": 41943040,
   "look_grid": {
@@ -636,12 +637,1818 @@
       "id": "berry_basket",
       "source": "art/style05/polish/items/berry_basket_try1.png",
       "dest": "items/berry_basket.png"
+    },
+    {
+      "role": "item",
+      "id": "wool",
+      "source": "art/style05/batch_a3/items/wool.png",
+      "dest": "items/wool.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "wool_count_2_8",
+      "source": "art/style05/batch_a3/items/wool_count_2_8.png",
+      "dest": "items/wool_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "wool_count_9_plus",
+      "source": "art/style05/batch_a3/items/wool_count_9_plus.png",
+      "dest": "items/wool_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "flour",
+      "source": "art/style05/batch_a3/items/flour.png",
+      "dest": "items/flour.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "flour_count_2_8",
+      "source": "art/style05/batch_a3/items/flour_count_2_8.png",
+      "dest": "items/flour_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "flour_count_9_plus",
+      "source": "art/style05/batch_a3/items/flour_count_9_plus.png",
+      "dest": "items/flour_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "bread",
+      "source": "art/style05/batch_a3/items/bread.png",
+      "dest": "items/bread.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "bread_count_2_8",
+      "source": "art/style05/batch_a3/items/bread_count_2_8.png",
+      "dest": "items/bread_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "bread_count_9_plus",
+      "source": "art/style05/batch_a3/items/bread_count_9_plus.png",
+      "dest": "items/bread_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "beer",
+      "source": "art/style05/batch_a3/items/beer.png",
+      "dest": "items/beer.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "milk_item",
+      "source": "art/style05/batch_a3/items/milk.png",
+      "dest": "items/milk.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "cheese",
+      "source": "art/style05/batch_a3/items/cheese.png",
+      "dest": "items/cheese.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "cheese_count_2_8",
+      "source": "art/style05/batch_a3/items/cheese_count_2_8.png",
+      "dest": "items/cheese_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "cheese_count_9_plus",
+      "source": "art/style05/batch_a3/items/cheese_count_9_plus.png",
+      "dest": "items/cheese_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "smoked_meat",
+      "source": "art/style05/batch_a3/items/smoked_meat.png",
+      "dest": "items/smoked_meat.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "smoked_meat_count_2_8",
+      "source": "art/style05/batch_a3/items/smoked_meat_count_2_8.png",
+      "dest": "items/smoked_meat_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "smoked_meat_count_9_plus",
+      "source": "art/style05/batch_a3/items/smoked_meat_count_9_plus.png",
+      "dest": "items/smoked_meat_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "hoe",
+      "source": "art/style05/batch_a3/items/hoe.png",
+      "dest": "items/hoe.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "sickle",
+      "source": "art/style05/batch_a3/items/sickle.png",
+      "dest": "items/sickle.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "adze",
+      "source": "art/style05/batch_a3/items/adze.png",
+      "dest": "items/adze.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "bow",
+      "source": "art/style05/batch_a3/items/bow.png",
+      "dest": "items/bow.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "arrow",
+      "source": "art/style05/batch_a3/items/arrow.png",
+      "dest": "items/arrow.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "leather_armor",
+      "source": "art/style05/batch_a3/items/leather_armor.png",
+      "dest": "items/leather_armor.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "herbs",
+      "source": "art/style05/batch_a3/items/herbs.png",
+      "dest": "items/herbs.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "herbs_count_2_8",
+      "source": "art/style05/batch_a3/items/herbs_count_2_8.png",
+      "dest": "items/herbs_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "herbs_count_9_plus",
+      "source": "art/style05/batch_a3/items/herbs_count_9_plus.png",
+      "dest": "items/herbs_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "poultice",
+      "source": "art/style05/batch_a3/items/poultice.png",
+      "dest": "items/poultice.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "barley",
+      "source": "art/style05/batch_a3/items/barley.png",
+      "dest": "items/barley.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "barley_count_2_8",
+      "source": "art/style05/batch_a3/items/barley_count_2_8.png",
+      "dest": "items/barley_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "barley_count_9_plus",
+      "source": "art/style05/batch_a3/items/barley_count_9_plus.png",
+      "dest": "items/barley_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "barley_seed",
+      "source": "art/style05/batch_a3/items/barley_seed.png",
+      "dest": "items/barley_seed.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "barley_seed_count_2_8",
+      "source": "art/style05/batch_a3/items/barley_seed_count_2_8.png",
+      "dest": "items/barley_seed_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "barley_seed_count_9_plus",
+      "source": "art/style05/batch_a3/items/barley_seed_count_9_plus.png",
+      "dest": "items/barley_seed_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "rye",
+      "source": "art/style05/batch_a3/items/rye.png",
+      "dest": "items/rye.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "rye_count_2_8",
+      "source": "art/style05/batch_a3/items/rye_count_2_8.png",
+      "dest": "items/rye_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "rye_count_9_plus",
+      "source": "art/style05/batch_a3/items/rye_count_9_plus.png",
+      "dest": "items/rye_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "rye_seed",
+      "source": "art/style05/batch_a3/items/rye_seed.png",
+      "dest": "items/rye_seed.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "rye_seed_count_2_8",
+      "source": "art/style05/batch_a3/items/rye_seed_count_2_8.png",
+      "dest": "items/rye_seed_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "rye_seed_count_9_plus",
+      "source": "art/style05/batch_a3/items/rye_seed_count_9_plus.png",
+      "dest": "items/rye_seed_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "lentil",
+      "source": "art/style05/batch_a3/items/lentil.png",
+      "dest": "items/lentil.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "lentil_count_2_8",
+      "source": "art/style05/batch_a3/items/lentil_count_2_8.png",
+      "dest": "items/lentil_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "lentil_count_9_plus",
+      "source": "art/style05/batch_a3/items/lentil_count_9_plus.png",
+      "dest": "items/lentil_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "lentil_seed",
+      "source": "art/style05/batch_a3/items/lentil_seed.png",
+      "dest": "items/lentil_seed.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "lentil_seed_count_2_8",
+      "source": "art/style05/batch_a3/items/lentil_seed_count_2_8.png",
+      "dest": "items/lentil_seed_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "lentil_seed_count_9_plus",
+      "source": "art/style05/batch_a3/items/lentil_seed_count_9_plus.png",
+      "dest": "items/lentil_seed_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "pea",
+      "source": "art/style05/batch_a3/items/pea.png",
+      "dest": "items/pea.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "pea_count_2_8",
+      "source": "art/style05/batch_a3/items/pea_count_2_8.png",
+      "dest": "items/pea_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "pea_count_9_plus",
+      "source": "art/style05/batch_a3/items/pea_count_9_plus.png",
+      "dest": "items/pea_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "pea_seed",
+      "source": "art/style05/batch_a3/items/pea_seed.png",
+      "dest": "items/pea_seed.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "pea_seed_count_2_8",
+      "source": "art/style05/batch_a3/items/pea_seed_count_2_8.png",
+      "dest": "items/pea_seed_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "pea_seed_count_9_plus",
+      "source": "art/style05/batch_a3/items/pea_seed_count_9_plus.png",
+      "dest": "items/pea_seed_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "millet",
+      "source": "art/style05/batch_a3/items/millet.png",
+      "dest": "items/millet.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "millet_count_2_8",
+      "source": "art/style05/batch_a3/items/millet_count_2_8.png",
+      "dest": "items/millet_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "millet_count_9_plus",
+      "source": "art/style05/batch_a3/items/millet_count_9_plus.png",
+      "dest": "items/millet_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "millet_seed",
+      "source": "art/style05/batch_a3/items/millet_seed.png",
+      "dest": "items/millet_seed.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "millet_seed_count_2_8",
+      "source": "art/style05/batch_a3/items/millet_seed_count_2_8.png",
+      "dest": "items/millet_seed_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "millet_seed_count_9_plus",
+      "source": "art/style05/batch_a3/items/millet_seed_count_9_plus.png",
+      "dest": "items/millet_seed_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "apple",
+      "source": "art/style05/batch_a3/items/apple.png",
+      "dest": "items/apple.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "apple_count_2_8",
+      "source": "art/style05/batch_a3/items/apple_count_2_8.png",
+      "dest": "items/apple_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "apple_count_9_plus",
+      "source": "art/style05/batch_a3/items/apple_count_9_plus.png",
+      "dest": "items/apple_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "hay",
+      "source": "art/style05/batch_a3/items/hay.png",
+      "dest": "items/hay.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "hay_count_2_8",
+      "source": "art/style05/batch_a3/items/hay_count_2_8.png",
+      "dest": "items/hay_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "hay_count_9_plus",
+      "source": "art/style05/batch_a3/items/hay_count_9_plus.png",
+      "dest": "items/hay_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "goat_hide",
+      "source": "art/style05/batch_a3/items/goat_hide.png",
+      "dest": "items/goat_hide.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "wild_grain",
+      "source": "art/style05/batch_a3/items/wild_grain.png",
+      "dest": "items/wild_grain.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "wild_grain_count_2_8",
+      "source": "art/style05/batch_a3/items/wild_grain_count_2_8.png",
+      "dest": "items/wild_grain_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "wild_grain_count_9_plus",
+      "source": "art/style05/batch_a3/items/wild_grain_count_9_plus.png",
+      "dest": "items/wild_grain_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "emmer_seed",
+      "source": "art/style05/batch_a3/items/emmer_seed.png",
+      "dest": "items/emmer_seed.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "emmer_seed_count_2_8",
+      "source": "art/style05/batch_a3/items/emmer_seed_count_2_8.png",
+      "dest": "items/emmer_seed_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "emmer_seed_count_9_plus",
+      "source": "art/style05/batch_a3/items/emmer_seed_count_9_plus.png",
+      "dest": "items/emmer_seed_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "flax_seed",
+      "source": "art/style05/batch_a3/items/flax_seed.png",
+      "dest": "items/flax_seed.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "flax_seed_count_2_8",
+      "source": "art/style05/batch_a3/items/flax_seed_count_2_8.png",
+      "dest": "items/flax_seed_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "flax_seed_count_9_plus",
+      "source": "art/style05/batch_a3/items/flax_seed_count_9_plus.png",
+      "dest": "items/flax_seed_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "flax_stalks",
+      "source": "art/style05/batch_a3/items/flax_stalks.png",
+      "dest": "items/flax_stalks.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "flax_stalks_count_2_8",
+      "source": "art/style05/batch_a3/items/flax_stalks_count_2_8.png",
+      "dest": "items/flax_stalks_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "flax_stalks_count_9_plus",
+      "source": "art/style05/batch_a3/items/flax_stalks_count_9_plus.png",
+      "dest": "items/flax_stalks_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "flax_fibre",
+      "source": "art/style05/batch_a3/items/flax_fibre.png",
+      "dest": "items/flax_fibre.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "flax_fibre_count_2_8",
+      "source": "art/style05/batch_a3/items/flax_fibre_count_2_8.png",
+      "dest": "items/flax_fibre_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "flax_fibre_count_9_plus",
+      "source": "art/style05/batch_a3/items/flax_fibre_count_9_plus.png",
+      "dest": "items/flax_fibre_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "linen_thread",
+      "source": "art/style05/batch_a3/items/linen_thread.png",
+      "dest": "items/linen_thread.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "linen_thread_count_2_8",
+      "source": "art/style05/batch_a3/items/linen_thread_count_2_8.png",
+      "dest": "items/linen_thread_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "linen_thread_count_9_plus",
+      "source": "art/style05/batch_a3/items/linen_thread_count_9_plus.png",
+      "dest": "items/linen_thread_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "linen_cloth",
+      "source": "art/style05/batch_a3/items/linen_cloth.png",
+      "dest": "items/linen_cloth.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "linen_cloth_count_2_8",
+      "source": "art/style05/batch_a3/items/linen_cloth_count_2_8.png",
+      "dest": "items/linen_cloth_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "linen_cloth_count_9_plus",
+      "source": "art/style05/batch_a3/items/linen_cloth_count_9_plus.png",
+      "dest": "items/linen_cloth_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "hand_spindle",
+      "source": "art/style05/batch_a3/items/hand_spindle.png",
+      "dest": "items/hand_spindle.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "linen_tunic",
+      "source": "art/style05/batch_a3/items/linen_tunic.png",
+      "dest": "items/linen_tunic.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "linen_wrap",
+      "source": "art/style05/batch_a3/items/linen_wrap.png",
+      "dest": "items/linen_wrap.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "dyed_tunic",
+      "source": "art/style05/batch_a3/items/dyed_tunic.png",
+      "dest": "items/dyed_tunic.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "cord",
+      "source": "art/style05/batch_a3/items/cord.png",
+      "dest": "items/cord.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "basket",
+      "source": "art/style05/batch_a3/items/basket.png",
+      "dest": "items/basket.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "sling",
+      "source": "art/style05/batch_a3/items/sling.png",
+      "dest": "items/sling.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "bone_needle",
+      "source": "art/style05/batch_a3/items/bone_needle.png",
+      "dest": "items/bone_needle.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "fish",
+      "source": "art/style05/batch_a3/items/fish.png",
+      "dest": "items/fish.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "fish_count_2_8",
+      "source": "art/style05/batch_a3/items/fish_count_2_8.png",
+      "dest": "items/fish_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "fish_count_9_plus",
+      "source": "art/style05/batch_a3/items/fish_count_9_plus.png",
+      "dest": "items/fish_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "hazelnuts",
+      "source": "art/style05/batch_a3/items/hazelnuts.png",
+      "dest": "items/hazelnuts.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "hazelnuts_count_2_8",
+      "source": "art/style05/batch_a3/items/hazelnuts_count_2_8.png",
+      "dest": "items/hazelnuts_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "hazelnuts_count_9_plus",
+      "source": "art/style05/batch_a3/items/hazelnuts_count_9_plus.png",
+      "dest": "items/hazelnuts_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "roots",
+      "source": "art/style05/batch_a3/items/roots.png",
+      "dest": "items/roots.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "roots_count_2_8",
+      "source": "art/style05/batch_a3/items/roots_count_2_8.png",
+      "dest": "items/roots_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "roots_count_9_plus",
+      "source": "art/style05/batch_a3/items/roots_count_9_plus.png",
+      "dest": "items/roots_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "roast_meat",
+      "source": "art/style05/batch_a3/items/roast_meat.png",
+      "dest": "items/roast_meat.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "porridge",
+      "source": "art/style05/batch_a3/items/porridge.png",
+      "dest": "items/porridge.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "stew",
+      "source": "art/style05/batch_a3/items/stew.png",
+      "dest": "items/stew.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "dried_meat",
+      "source": "art/style05/batch_a3/items/dried_meat.png",
+      "dest": "items/dried_meat.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "dried_meat_count_2_8",
+      "source": "art/style05/batch_a3/items/dried_meat_count_2_8.png",
+      "dest": "items/dried_meat_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "dried_meat_count_9_plus",
+      "source": "art/style05/batch_a3/items/dried_meat_count_9_plus.png",
+      "dest": "items/dried_meat_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "dried_berries",
+      "source": "art/style05/batch_a3/items/dried_berries.png",
+      "dest": "items/dried_berries.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "dried_berries_count_2_8",
+      "source": "art/style05/batch_a3/items/dried_berries_count_2_8.png",
+      "dest": "items/dried_berries_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "dried_berries_count_9_plus",
+      "source": "art/style05/batch_a3/items/dried_berries_count_9_plus.png",
+      "dest": "items/dried_berries_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "roasted_roots",
+      "source": "art/style05/batch_a3/items/roasted_roots.png",
+      "dest": "items/roasted_roots.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "roasted_roots_count_2_8",
+      "source": "art/style05/batch_a3/items/roasted_roots_count_2_8.png",
+      "dest": "items/roasted_roots_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "roasted_roots_count_9_plus",
+      "source": "art/style05/batch_a3/items/roasted_roots_count_9_plus.png",
+      "dest": "items/roasted_roots_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "fruit_porridge",
+      "source": "art/style05/batch_a3/items/fruit_porridge.png",
+      "dest": "items/fruit_porridge.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "structure",
+      "id": "bread_oven_lit",
+      "source": "art/style05/struct/a2/neolithic/bread_oven_lit.png",
+      "dest": "structures/a2/neolithic/bread_oven_lit.png",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046"
+    },
+    {
+      "role": "structure",
+      "id": "bread_oven_unlit",
+      "source": "art/style05/struct/a2/neolithic/bread_oven_unlit.png",
+      "dest": "structures/a2/neolithic/bread_oven_unlit.png",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_adze",
+      "source": "art/style05/techmap/icons/neolithic/adze.png",
+      "dest": "ui/knowledge/adze.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_animal_taming",
+      "source": "art/style05/techmap/icons/neolithic/animal_taming.png",
+      "dest": "ui/knowledge/animal_taming.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_atlatl",
+      "source": "art/style05/techmap/icons/paleolithic/atlatl.png",
+      "dest": "ui/knowledge/atlatl.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_barley",
+      "source": "art/style05/techmap/icons/neolithic/barley.png",
+      "dest": "ui/knowledge/barley.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_barter",
+      "source": "art/style05/techmap/icons/neolithic/barter.png",
+      "dest": "ui/knowledge/barter.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_basketry",
+      "source": "art/style05/techmap/icons/paleolithic/basketry.png",
+      "dest": "ui/knowledge/basketry.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_bedding",
+      "source": "art/style05/techmap/icons/paleolithic/bedding.png",
+      "dest": "ui/knowledge/bedding.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_bone_setting",
+      "source": "art/style05/techmap/icons/neolithic/bone_setting.png",
+      "dest": "ui/knowledge/bone_setting.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_bone_tools",
+      "source": "art/style05/techmap/icons/paleolithic/bone_tools.png",
+      "dest": "ui/knowledge/bone_tools.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_bow",
+      "source": "art/style05/techmap/icons/neolithic/bow.png",
+      "dest": "ui/knowledge/bow.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_clay_digging",
+      "source": "art/style05/techmap/icons/neolithic/clay_digging.png",
+      "dest": "ui/knowledge/clay_digging.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_clay_prep",
+      "source": "art/style05/techmap/icons/neolithic/clay_prep.png",
+      "dest": "ui/knowledge/clay_prep.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_cooking",
+      "source": "art/style05/techmap/icons/paleolithic/cooking.png",
+      "dest": "ui/knowledge/cooking.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_cordage",
+      "source": "art/style05/techmap/icons/paleolithic/cordage.png",
+      "dest": "ui/knowledge/cordage.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_crop_rotation",
+      "source": "art/style05/techmap/icons/neolithic/crop_rotation.png",
+      "dest": "ui/knowledge/crop_rotation.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_cultivation",
+      "source": "art/style05/techmap/icons/neolithic/cultivation.png",
+      "dest": "ui/knowledge/cultivation.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_dairy",
+      "source": "art/style05/techmap/icons/neolithic/dairy.png",
+      "dest": "ui/knowledge/dairy.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_digging",
+      "source": "art/style05/techmap/icons/paleolithic/digging.png",
+      "dest": "ui/knowledge/digging.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_dog_taming",
+      "source": "art/style05/techmap/icons/neolithic/dog_taming.png",
+      "dest": "ui/knowledge/dog_taming.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_doorway",
+      "source": "art/style05/techmap/icons/paleolithic/doorway.png",
+      "dest": "ui/knowledge/doorway.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_dugout_canoe",
+      "source": "art/style05/techmap/icons/neolithic/dugout_canoe.png",
+      "dest": "ui/knowledge/dugout_canoe.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_dyeing",
+      "source": "art/style05/techmap/icons/neolithic/dyeing.png",
+      "dest": "ui/knowledge/dyeing.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_elder_council",
+      "source": "art/style05/techmap/icons/neolithic/elder_council.png",
+      "dest": "ui/knowledge/elder_council.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_fence",
+      "source": "art/style05/techmap/icons/neolithic/fence.png",
+      "dest": "ui/knowledge/fence.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_fermentation",
+      "source": "art/style05/techmap/icons/neolithic/fermentation.png",
+      "dest": "ui/knowledge/fermentation.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_fire_keeping",
+      "source": "art/style05/techmap/icons/paleolithic/fire_keeping.png",
+      "dest": "ui/knowledge/fire_keeping.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_firewood_splitting",
+      "source": "art/style05/techmap/icons/paleolithic/firewood_splitting.png",
+      "dest": "ui/knowledge/firewood_splitting.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_fishing",
+      "source": "art/style05/techmap/icons/paleolithic/fishing.png",
+      "dest": "ui/knowledge/fishing.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_flint_knapping",
+      "source": "art/style05/techmap/icons/paleolithic/flint_knapping.png",
+      "dest": "ui/knowledge/flint_knapping.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_food_drying",
+      "source": "art/style05/techmap/icons/paleolithic/food_drying.png",
+      "dest": "ui/knowledge/food_drying.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_food_preservation",
+      "source": "art/style05/techmap/icons/neolithic/food_preservation.png",
+      "dest": "ui/knowledge/food_preservation.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_foraging",
+      "source": "art/style05/techmap/icons/paleolithic/foraging.png",
+      "dest": "ui/knowledge/foraging.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_grain_parching",
+      "source": "art/style05/techmap/icons/paleolithic/grain_parching.png",
+      "dest": "ui/knowledge/grain_parching.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_granary",
+      "source": "art/style05/techmap/icons/neolithic/granary.png",
+      "dest": "ui/knowledge/granary.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_hafting",
+      "source": "art/style05/techmap/icons/paleolithic/hafting.png",
+      "dest": "ui/knowledge/hafting.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_herbalism",
+      "source": "art/style05/techmap/icons/neolithic/herbalism.png",
+      "dest": "ui/knowledge/herbalism.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_herding",
+      "source": "art/style05/techmap/icons/neolithic/herding.png",
+      "dest": "ui/knowledge/herding.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_hide_scraping",
+      "source": "art/style05/techmap/icons/paleolithic/hide_scraping.png",
+      "dest": "ui/knowledge/hide_scraping.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_hide_working",
+      "source": "art/style05/techmap/icons/paleolithic/hide_working.png",
+      "dest": "ui/knowledge/hide_working.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_hoe",
+      "source": "art/style05/techmap/icons/neolithic/hoe.png",
+      "dest": "ui/knowledge/hoe.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_hut_building",
+      "source": "art/style05/techmap/icons/paleolithic/hut_building.png",
+      "dest": "ui/knowledge/hut_building.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_instruction",
+      "source": "art/style05/techmap/icons/paleolithic/instruction.png",
+      "dest": "ui/knowledge/instruction.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_kinship",
+      "source": "art/style05/techmap/icons/neolithic/kinship.png",
+      "dest": "ui/knowledge/kinship.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_leather_armor",
+      "source": "art/style05/techmap/icons/neolithic/leather_armor.png",
+      "dest": "ui/knowledge/leather_armor.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_lentil",
+      "source": "art/style05/techmap/icons/neolithic/lentil.png",
+      "dest": "ui/knowledge/lentil.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_lunar_calendar",
+      "source": "art/style05/techmap/icons/neolithic/lunar_calendar.png",
+      "dest": "ui/knowledge/lunar_calendar.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_megalith",
+      "source": "art/style05/techmap/icons/neolithic/megalith.png",
+      "dest": "ui/knowledge/megalith.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_millet",
+      "source": "art/style05/techmap/icons/neolithic/millet.png",
+      "dest": "ui/knowledge/millet.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_mud_brick",
+      "source": "art/style05/techmap/icons/neolithic/mud_brick.png",
+      "dest": "ui/knowledge/mud_brick.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_nut_processing",
+      "source": "art/style05/techmap/icons/paleolithic/nut_processing.png",
+      "dest": "ui/knowledge/nut_processing.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_ochre",
+      "source": "art/style05/techmap/icons/paleolithic/ochre.png",
+      "dest": "ui/knowledge/ochre.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_orchard",
+      "source": "art/style05/techmap/icons/neolithic/orchard.png",
+      "dest": "ui/knowledge/orchard.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_oven",
+      "source": "art/style05/techmap/icons/neolithic/oven.png",
+      "dest": "ui/knowledge/oven.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_packed_floor",
+      "source": "art/style05/techmap/icons/paleolithic/packed_floor.png",
+      "dest": "ui/knowledge/packed_floor.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_pea",
+      "source": "art/style05/techmap/icons/neolithic/pea.png",
+      "dest": "ui/knowledge/pea.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_pot_firing",
+      "source": "art/style05/techmap/icons/neolithic/pot_firing.png",
+      "dest": "ui/knowledge/pot_firing.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_pot_forming",
+      "source": "art/style05/techmap/icons/neolithic/pot_forming.png",
+      "dest": "ui/knowledge/pot_forming.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_pressure_flaking",
+      "source": "art/style05/techmap/icons/paleolithic/pressure_flaking.png",
+      "dest": "ui/knowledge/pressure_flaking.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_querns",
+      "source": "art/style05/techmap/icons/neolithic/querns.png",
+      "dest": "ui/knowledge/querns.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_ritual",
+      "source": "art/style05/techmap/icons/neolithic/ritual.png",
+      "dest": "ui/knowledge/ritual.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_rye",
+      "source": "art/style05/techmap/icons/neolithic/rye.png",
+      "dest": "ui/knowledge/rye.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_selective_breeding",
+      "source": "art/style05/techmap/icons/neolithic/selective_breeding.png",
+      "dest": "ui/knowledge/selective_breeding.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_sickle",
+      "source": "art/style05/techmap/icons/neolithic/sickle.png",
+      "dest": "ui/knowledge/sickle.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_sling",
+      "source": "art/style05/techmap/icons/paleolithic/sling.png",
+      "dest": "ui/knowledge/sling.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_spear",
+      "source": "art/style05/techmap/icons/paleolithic/spear.png",
+      "dest": "ui/knowledge/spear.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_spinning",
+      "source": "art/style05/techmap/icons/neolithic/spinning.png",
+      "dest": "ui/knowledge/spinning.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_stone_grinding",
+      "source": "art/style05/techmap/icons/neolithic/stone_grinding.png",
+      "dest": "ui/knowledge/stone_grinding.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_stone_quarrying",
+      "source": "art/style05/techmap/icons/paleolithic/stone_quarrying.png",
+      "dest": "ui/knowledge/stone_quarrying.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_stone_walling",
+      "source": "art/style05/techmap/icons/neolithic/stone_walling.png",
+      "dest": "ui/knowledge/stone_walling.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_storytelling",
+      "source": "art/style05/techmap/icons/paleolithic/storytelling.png",
+      "dest": "ui/knowledge/storytelling.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_taboo",
+      "source": "art/style05/techmap/icons/neolithic/taboo.png",
+      "dest": "ui/knowledge/taboo.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_tailoring",
+      "source": "art/style05/techmap/icons/neolithic/tailoring.png",
+      "dest": "ui/knowledge/tailoring.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_tally",
+      "source": "art/style05/techmap/icons/neolithic/tally.png",
+      "dest": "ui/knowledge/tally.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_thatch",
+      "source": "art/style05/techmap/icons/neolithic/thatch.png",
+      "dest": "ui/knowledge/thatch.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_timber_wall",
+      "source": "art/style05/techmap/icons/neolithic/timber_wall.png",
+      "dest": "ui/knowledge/timber_wall.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_tracking",
+      "source": "art/style05/techmap/icons/paleolithic/tracking.png",
+      "dest": "ui/knowledge/tracking.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_trapping",
+      "source": "art/style05/techmap/icons/paleolithic/trapping.png",
+      "dest": "ui/knowledge/trapping.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_water_finding",
+      "source": "art/style05/techmap/icons/paleolithic/water_finding.png",
+      "dest": "ui/knowledge/water_finding.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_wattle_daub",
+      "source": "art/style05/techmap/icons/neolithic/wattle_daub.png",
+      "dest": "ui/knowledge/wattle_daub.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_weather_lore",
+      "source": "art/style05/techmap/icons/paleolithic/weather_lore.png",
+      "dest": "ui/knowledge/weather_lore.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_weaving",
+      "source": "art/style05/techmap/icons/neolithic/weaving.png",
+      "dest": "ui/knowledge/weaving.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_well",
+      "source": "art/style05/techmap/icons/neolithic/well.png",
+      "dest": "ui/knowledge/well.png",
+      "from": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_chop",
+      "source": "art/style05/ui_b4/jobs/chop.png",
+      "dest": "ui/b4/jobs/chop.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_haul",
+      "source": "art/style05/ui_b4/jobs/haul.png",
+      "dest": "ui/b4/jobs/haul.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_build",
+      "source": "art/style05/ui_b4/jobs/build.png",
+      "dest": "ui/b4/jobs/build.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_quarry",
+      "source": "art/style05/ui_b4/jobs/quarry.png",
+      "dest": "ui/b4/jobs/quarry.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_craft",
+      "source": "art/style05/ui_b4/jobs/craft.png",
+      "dest": "ui/b4/jobs/craft.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_dig",
+      "source": "art/style05/ui_b4/jobs/dig.png",
+      "dest": "ui/b4/jobs/dig.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_job_icon",
+      "id": "b4_jobs_hunt",
+      "source": "art/style05/ui_b4/jobs/hunt.png",
+      "dest": "ui/b4/jobs/hunt.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_need_food",
+      "source": "art/style05/ui_b4/cards/need_food.png",
+      "dest": "ui/b4/cards/need_food.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_need_warmth",
+      "source": "art/style05/ui_b4/cards/need_warmth.png",
+      "dest": "ui/b4/cards/need_warmth.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_migrants",
+      "source": "art/style05/ui_b4/cards/migrants.png",
+      "dest": "ui/b4/cards/migrants.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_trader",
+      "source": "art/style05/ui_b4/cards/trader.png",
+      "dest": "ui/b4/cards/trader.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_knowledge_risk",
+      "source": "art/style05/ui_b4/cards/knowledge_risk.png",
+      "dest": "ui/b4/cards/knowledge_risk.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_tools_low",
+      "source": "art/style05/ui_b4/cards/tools_low.png",
+      "dest": "ui/b4/cards/tools_low.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_wolves",
+      "source": "art/style05/ui_b4/cards/wolves.png",
+      "dest": "ui/b4/cards/wolves.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_idle_adults",
+      "source": "art/style05/ui_b4/cards/idle_adults.png",
+      "dest": "ui/b4/cards/idle_adults.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_quarrel",
+      "source": "art/style05/ui_b4/cards/quarrel.png",
+      "dest": "ui/b4/cards/quarrel.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_pressure",
+      "source": "art/style05/ui_b4/cards/pressure.png",
+      "dest": "ui/b4/cards/pressure.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_storage",
+      "source": "art/style05/ui_b4/cards/storage.png",
+      "dest": "ui/b4/cards/storage.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_sick_person",
+      "source": "art/style05/ui_b4/cards/sick_person.png",
+      "dest": "ui/b4/cards/sick_person.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_sowing_window",
+      "source": "art/style05/ui_b4/cards/sowing_window.png",
+      "dest": "ui/b4/cards/sowing_window.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_harvest_ready",
+      "source": "art/style05/ui_b4/cards/harvest_ready.png",
+      "dest": "ui/b4/cards/harvest_ready.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_cloth_short",
+      "source": "art/style05/ui_b4/cards/cloth_short.png",
+      "dest": "ui/b4/cards/cloth_short.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_decision_illustration",
+      "id": "b4_cards_first_kid",
+      "source": "art/style05/ui_b4/cards/first_kid.png",
+      "dest": "ui/b4/cards/first_kid.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_food_low",
+      "source": "art/style05/ui_b4/alerts/food_low.png",
+      "dest": "ui/b4/alerts/food_low.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_firewood_low",
+      "source": "art/style05/ui_b4/alerts/firewood_low.png",
+      "dest": "ui/b4/alerts/firewood_low.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_sleeping_outside",
+      "source": "art/style05/ui_b4/alerts/sleeping_outside.png",
+      "dest": "ui/b4/alerts/sleeping_outside.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_stockpile_missing",
+      "source": "art/style05/ui_b4/alerts/stockpile_missing.png",
+      "dest": "ui/b4/alerts/stockpile_missing.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_storehouse_full",
+      "source": "art/style05/ui_b4/alerts/storehouse_full.png",
+      "dest": "ui/b4/alerts/storehouse_full.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_idle_adults",
+      "source": "art/style05/ui_b4/alerts/idle_adults.png",
+      "dest": "ui/b4/alerts/idle_adults.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_orders_unreachable",
+      "source": "art/style05/ui_b4/alerts/orders_unreachable.png",
+      "dest": "ui/b4/alerts/orders_unreachable.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_knowledge_waiting",
+      "source": "art/style05/ui_b4/alerts/knowledge_waiting.png",
+      "dest": "ui/b4/alerts/knowledge_waiting.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_technique_at_risk",
+      "source": "art/style05/ui_b4/alerts/technique_at_risk.png",
+      "dest": "ui/b4/alerts/technique_at_risk.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_wolves_approaching",
+      "source": "art/style05/ui_b4/alerts/wolves_approaching.png",
+      "dest": "ui/b4/alerts/wolves_approaching.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_migrants_waiting",
+      "source": "art/style05/ui_b4/alerts/migrants_waiting.png",
+      "dest": "ui/b4/alerts/migrants_waiting.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_trader_present",
+      "source": "art/style05/ui_b4/alerts/trader_present.png",
+      "dest": "ui/b4/alerts/trader_present.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_person_sick",
+      "source": "art/style05/ui_b4/alerts/person_sick.png",
+      "dest": "ui/b4/alerts/person_sick.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_person_breakdown",
+      "source": "art/style05/ui_b4/alerts/person_breakdown.png",
+      "dest": "ui/b4/alerts/person_breakdown.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_person_injured",
+      "source": "art/style05/ui_b4/alerts/person_injured.png",
+      "dest": "ui/b4/alerts/person_injured.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_meat_spoiling",
+      "source": "art/style05/ui_b4/alerts/meat_spoiling.png",
+      "dest": "ui/b4/alerts/meat_spoiling.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_newborn_without_bed",
+      "source": "art/style05/ui_b4/alerts/newborn_without_bed.png",
+      "dest": "ui/b4/alerts/newborn_without_bed.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_food_winter",
+      "source": "art/style05/ui_b4/alerts/food_winter.png",
+      "dest": "ui/b4/alerts/food_winter.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "ui_alert_icon",
+      "id": "b4_alerts_food_spoil",
+      "source": "art/style05/ui_b4/alerts/food_spoil.png",
+      "dest": "ui/b4/alerts/food_spoil.png",
+      "from": "0eb2492676140a294ad319045602e72bae760c8c"
     }
   ],
   "animals": {
     "species": [
       "wolf",
-      "deer"
+      "deer",
+      "goat",
+      "sheep_fleeced",
+      "wild_boar",
+      "reindeer"
     ],
     "facings": [
       "S",
@@ -661,11 +2468,51 @@
         "run",
         "graze",
         "dead"
+      ],
+      "goat": [
+        "stand",
+        "walk",
+        "run",
+        "graze",
+        "attack",
+        "dead"
+      ],
+      "sheep_fleeced": [
+        "stand",
+        "walk",
+        "run",
+        "graze",
+        "attack",
+        "dead"
+      ],
+      "wild_boar": [
+        "stand",
+        "walk",
+        "run",
+        "graze",
+        "attack",
+        "dead"
+      ],
+      "reindeer": [
+        "stand",
+        "walk",
+        "run",
+        "graze",
+        "attack",
+        "dead"
       ]
     },
-    "source": "art/animal/polish/{species}/try2/{facing}/{pose}.png",
+    "source": "art/animal/batch_a1/adopted/{species}/{facing}/{pose}.png",
     "dest": "animals/{species}/{facing}/{pose}.png",
-    "meta_source": "docs/v8/artpolish/animal_manifest.json"
+    "meta_source": "docs/v8/artbatch_a1/animal_manifest.json",
+    "from": "326822482b33edd1ac3bd4acefd0061f557756d6",
+    "species_sources": {
+      "reindeer": {
+        "from": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+        "source": "art/style05/batch_b3/animals/{species}/{facing}/{pose}.png",
+        "meta_source": "art/batch_b3/round3_animals/animal_manifest.json"
+      }
+    }
   },
   "meta_sources": {
     "structure": "docs/v8/artstruct/assets.json",

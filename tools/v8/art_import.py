@@ -50,9 +50,9 @@ class GitReader:
         self.proc = subprocess.Popen(["git", "-C", str(ROOT), "cat-file", "--batch"], stdin=subprocess.PIPE,
                                      stdout=subprocess.PIPE)
 
-    def read(self, path: str) -> bytes:
+    def read(self, path: str, commit: str | None = None) -> bytes:
         assert self.proc.stdin is not None and self.proc.stdout is not None
-        self.proc.stdin.write(f"{self.commit}:{path}\n".encode())
+        self.proc.stdin.write(f"{commit or self.commit}:{path}\n".encode())
         self.proc.stdin.flush()
         header = self.proc.stdout.readline().decode().split()
         if len(header) != 3 or header[1] != "blob":
@@ -96,10 +96,12 @@ def plan(config: dict, git: GitReader) -> tuple[list[dict], dict]:
     rows: list[dict] = []
     people = config["people"]
 
-    def add(role: str, source: str, dest: str, ident: str, meta: dict | None = None) -> None:
-        data = git.read(source)
+    def add(role: str, source: str, dest: str, ident: str, meta: dict | None = None, commit: str | None = None) -> None:
+        data = git.read(source, commit)
         row = {"id": ident, "role": role, "path": dest, "source": source,
                "sha256": hashlib.sha256(data).hexdigest(), "bytes": len(data)}
+        if commit:
+            row["source_commit"] = commit
         if dest.endswith(".png"):
             row["size"] = png_size(data)
         if meta:
@@ -121,11 +123,19 @@ def plan(config: dict, git: GitReader) -> tuple[list[dict], dict]:
         add("people_data", entry["source"], entry["dest"], entry["id"])
 
     metas = config["meta_sources"]
-    structures = {a["id"]: a for a in json.loads(git.read(metas["structure"]))["assets"]}
-    items_doc = json.loads(git.read(metas["item"]))
-    items = {a["id"]: a for a in items_doc["assets"]}
+    meta_docs: dict[tuple, dict] = {}
+
+    def meta_assets(path: str, commit: str | None) -> dict:
+        """A source manifest's assets by id; a row's own `from` / `meta_source` pick another art commit's file."""
+        if (path, commit) not in meta_docs:
+            meta_docs[(path, commit)] = {a["id"]: a for a in json.loads(git.read(path, commit))["assets"]}
+        return meta_docs[(path, commit)]
+
     for entry in config["files"]:
         role, ident = entry["role"], entry.get("id", Path(entry["dest"]).stem)
+        commit = entry.get("from")
+        structures = meta_assets(entry.get("meta_source", metas["structure"]), commit)
+        items = meta_assets(entry.get("meta_source", metas["item"]), commit) if role == "item" else {}
         meta: dict | None = None
         if role == "structure":
             s = structures[ident]
@@ -144,7 +154,7 @@ def plan(config: dict, git: GitReader) -> tuple[list[dict], dict]:
             base = items.get(ident)
             if base is not None:
                 meta = {"canvas": base["canvas_px"], "anchor": [round(v) for v in base["anchor_px"]]}
-        add(role, entry["source"], entry["dest"], ident, meta)
+        add(role, entry["source"], entry["dest"], ident, meta, commit)
 
     flora = config.get("flora")
     if flora:
@@ -180,14 +190,17 @@ def plan(config: dict, git: GitReader) -> tuple[list[dict], dict]:
             add("flora_texture", source, dest_of(source), Path(source).stem)
 
     animals = config["animals"]
-    frames = {f["image"]: f for f in json.loads(git.read(animals["meta_source"]))["frames"]}
     for species in animals["species"]:
+        # A species may come from another art commit (`species_sources`: from, source, meta_source).
+        spec = {**animals, **animals.get("species_sources", {}).get(species, {})}
+        frames = {f["image"]: f for f in json.loads(git.read(spec["meta_source"], spec.get("from")))["frames"]}
         for facing in animals["facings"]:
             for pose in animals["poses"][species]:
-                src = animals["source"].format(species=species, facing=facing, pose=pose)
+                src = spec["source"].format(species=species, facing=facing, pose=pose)
                 f = frames[src]
                 add("animal_frame", src, animals["dest"].format(species=species, facing=facing, pose=pose),
-                    f"{species}/{facing}/{pose}", {"canvas": f["canvas_px"], "anchor": f["anchor_px"]})
+                    f"{species}/{facing}/{pose}", {"canvas": f["canvas_px"], "anchor": f["anchor_px"]},
+                    spec.get("from"))
 
     grid = config["look_grid"]
     present = set(people["looks"])
