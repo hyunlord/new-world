@@ -1199,16 +1199,33 @@ func _door_orientation(t: Vector2i) -> String:
 	return "ew"
 
 
-func _door_texture(info: Dictionary, open: bool, orientation: String) -> Texture2D:
-	var key: String = "%s|%s|%s|%s|%s" % [str(info.get("style", "")), str(info.get("material", "")), str(info.get("category", "")), str(open), orientation]
+func _door_texture(info: Dictionary, open: bool, orientation: String, t: Vector2i) -> Texture2D:
+	# Check adjacent wall for oriented piece-based doors (ADR 0033 wall_pieces.doors).
+	var adj_key: String = ""
+	var piece_door: Image = null
+	for offset: Vector2i in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, -1), Vector2i(0, 1)]:
+		var n: Vector2i = t + offset
+		var ck: Variant = _walls.cell_set.get(n, null)
+		if ck != null:
+			var s: Dictionary = _walls.sets.get(ck, {})
+			var od: Dictionary = (s.get("_doors", {}) as Dictionary).get(orientation, {})
+			var dimg: Variant = od.get("open" if open else "closed", null)
+			if dimg is Image:
+				adj_key = str(ck)
+				piece_door = dimg as Image
+				break
+	var key: String = "%s|%s|%s|%s|%s|%s" % [str(info.get("style", "")), str(info.get("material", "")), str(info.get("category", "")), str(open), orientation, adj_key]
 	if _door_tex.has(key):
 		return _door_tex[key]
-	var r: Dictionary = _resolver.resolve(str(info.get("style", "")), info.get("material", ""), str(info.get("category", "")), "door")
-	var tint: Dictionary = r.get("tint", {})
-	var img: Image = ArtData.image_at(MaterialResolver.res_path(str((r.get("textures", {}) as Dictionary).get("door_open" if open else "door_closed", ""))))
 	var tex: Texture2D = null
-	if img != null:
-		tex = ImageTexture.create_from_image(Tone.lab_shift(img, float(tint.get("dL", 0)), float(tint.get("da", 0)), float(tint.get("db", 0))))
+	if piece_door != null:
+		tex = ImageTexture.create_from_image(piece_door)
+	else:
+		var r: Dictionary = _resolver.resolve(str(info.get("style", "")), info.get("material", ""), str(info.get("category", "")), "door")
+		var tint: Dictionary = r.get("tint", {})
+		var img: Image = ArtData.image_at(MaterialResolver.res_path(str((r.get("textures", {}) as Dictionary).get("door_open" if open else "door_closed", ""))))
+		if img != null:
+			tex = ImageTexture.create_from_image(Tone.lab_shift(img, float(tint.get("dL", 0)), float(tint.get("da", 0)), float(tint.get("db", 0))))
 	_door_tex[key] = tex
 	return tex
 
@@ -1236,4 +1253,4 @@ func _update_doors() -> void:
 			sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 			_world.add_child(sprite)
 			_doors[t] = sprite
-		sprite.texture = _door_texture(_walls.openings[t], occupied.has(t), _door_orientation(t))
+		sprite.texture = _door_texture(_walls.openings[t], occupied.has(t), _door_orientation(t), t)

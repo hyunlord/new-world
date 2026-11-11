@@ -1,10 +1,12 @@
 # wall_shots.gd — before/after screenshots for W2 thin wall pieces.
 # Usage: godot --path . --resolution 1920x1080 --script res://tools/v8/wall_shots.gd -- --out <dir> [--tag before|after]
-# Boots seed 0, advances to tick ~7440 (day 6 noon, huts built), takes 1× and 2× shots of the settlement.
+# Boots seed 0, advances to tick ~7440 (day 6 noon, huts built), takes 1×–4× shots plus a ghost overlay.
 extends SceneTree
 
 const View = preload("res://scripts/world/colony/view.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
+const SiteGhost = preload("res://scripts/world/art/site_ghost.gd")
+const WallBaker = preload("res://scripts/world/art/wall_baker.gd")
 const TILE: int = 64
 
 var _out: String = "/tmp/wall_shots"
@@ -55,9 +57,27 @@ func _run() -> void:
 			hearth = Vector2i(bxs[i], bys[i])
 			break
 	print("WALL_SHOTS hearth=%s tag=%s" % [hearth, _tag])
+	# Report bake timing.
+	var layer: Node = main.get_node_or_null("ColonyView/GroundLayer")
+	if layer != null:
+		print("WALL_SHOTS_BAKE worst_bake=%s last_bake_usec=%d" % [layer.get("worst_bake"), int(layer.get("last_bake_usec"))])
+	# Place a ghost hut (half-built outline) near the settlement.
+	var world_node: Node = main.get_node_or_null("ColonyView/World")
+	if world_node != null:
+		var ring: Dictionary = {"size": [3, 3], "wall_style": "log", "door_style": "slab_door", "door": [1, 2], "floor_style": "packed_earth"}
+		var ri: Dictionary = SiteGhost.ring_image(ring)
+		if not ri.is_empty():
+			var ghost_img: Image = SiteGhost.ghost_image(ri["image"])
+			var gs: Sprite2D = Sprite2D.new()
+			gs.texture = ImageTexture.create_from_image(ghost_img)
+			gs.centered = false
+			gs.position = Vector2((hearth.x + 4) * TILE, (hearth.y - 3) * TILE - WallBaker.CAP)
+			world_node.add_child(gs)
+			print("WALL_SHOTS ghost placed at %s" % gs.position)
 	var ui: CanvasLayer = main.get_node("UI") as CanvasLayer
 	ui.visible = false
-	for zoom: float in [1.0, 2.0]:
+	# Take 1×, 2× (overview) + 3×, 4× (close-up on a single hut with walls exposed).
+	for zoom: float in [1.0, 2.0, 3.0, 4.0]:
 		camera.zoom = Vector2.ONE * zoom
 		camera.position = Vector2(hearth) * TILE + Vector2(TILE, TILE) * 0.5
 		if camera.has_method("_clamp_position"):

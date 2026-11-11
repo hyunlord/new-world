@@ -103,7 +103,22 @@ static func _prepare_pieces(resolved: Dictionary, out_problems: Array[String]) -
 	if pieces.size() != 16:
 		out_problems.append("expected 16 pieces, got %d" % pieces.size())
 		return {}
-	return {"_has_pieces": true, "_pieces": pieces, "_canvas": canvas, "_anchor": anchor}
+	# Load oriented door pieces from wall_pieces.doors (ADR 0033).
+	var doors_map: Variant = wp.get("doors", null)
+	var prepared_doors: Dictionary = {}
+	if doors_map is Dictionary:
+		for orient: String in (doors_map as Dictionary).keys():
+			var od: Variant = (doors_map as Dictionary)[orient]
+			if od is Dictionary:
+				var pd: Dictionary = {}
+				for state: String in (od as Dictionary).keys():
+					var art_path: String = str(od[state])
+					var dimg: Image = ArtData.image_at(MaterialResolver.res_path(art_path))
+					if dimg != null:
+						pd[state] = Tone.lab_shift(dimg, dl, da, db)
+				if not pd.is_empty():
+					prepared_doors[orient] = pd
+	return {"_has_pieces": true, "_pieces": pieces, "_canvas": canvas, "_anchor": anchor, "_doors": prepared_doors}
 
 
 ## Exact prepared images shared only inside this baker; callers draw but do not mutate these images.
