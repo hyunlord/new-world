@@ -185,6 +185,19 @@ static func footprint(id: String) -> Vector2i:
 	return Vector2i.ONE
 
 
+## World scale (sprite scale factor against its 64-px canvas) of item `code` at count bucket `bucket` (0/1/2 for
+## 1 / 2–8 / 9+): the binding row's own `world_scale` when it names one (fixed regardless of bucket), else
+## `items.scale_default` growing by `items.scale_bucket_step` per bucket up to `items.scale_max`.
+static func item_scale(code: int, bucket: int) -> float:
+	var row: Dictionary = binding("items", code)
+	if row.get("world_scale", null) is float or row.get("world_scale", null) is int:
+		return float(row["world_scale"])
+	var base: float = float(param("items.scale_default", 0.45))
+	var step: float = float(param("items.scale_bucket_step", 0.15))
+	var cap: float = float(param("items.scale_max", 0.85))
+	return minf(cap, base + float(bucket) * step)
+
+
 ## The bindings row of `family` ("items", "buildings", "workshops", "nodes", "animals", "terrain", "resources")
 ## for sim code `code`; the family's fallback row (its `fallback` id, or `fallback_code`) when the code is unknown.
 static func binding(family: String, code: int) -> Dictionary:

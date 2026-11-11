@@ -246,7 +246,7 @@
     "stump_ticks": 1440
   },
   "items": {
-    "about": "count buckets: 1, 2-8, 9+ (ENV1 stack_note); `copies` duplicates one sprite by the stack layout, `assets` names one sprite per bucket.",
+    "about": "count buckets: 1, 2-8, 9+ (ENV1 stack_note); `copies` duplicates one sprite by the stack layout, `assets` names one sprite per bucket. World size: a row's `world_scale` (world px / 64-px canvas) overrides render_params.json `items.scale_default`/`scale_bucket_step`/`scale_max`, which otherwise grow by count bucket.",
     "bucket_limits": [
       1,
       8
@@ -281,12 +281,14 @@
       {
         "code": 4,
         "sim": "FlintBlade",
-        "asset": "flint_blade"
+        "asset": "flint_blade",
+        "world_scale": 0.25
       },
       {
         "code": 5,
         "sim": "StoneAxe",
-        "asset": "stone_axe"
+        "asset": "stone_axe",
+        "world_scale": 0.333
       },
       {
         "code": 6,
@@ -297,7 +299,13 @@
       {
         "code": 7,
         "sim": "Clay",
-        "asset": "clay"
+        "asset": "clay",
+        "world_scale": 0.5
+      },
+      {
+        "code": 17,
+        "sim": "Berries",
+        "asset": "berry_basket"
       },
       {
         "code": 8,
