@@ -1,0 +1,30 @@
+{
+  "id": "person_injured",
+  "lane": "alerts",
+  "family": "icon",
+  "era": "stone_age_compatible_era_neutral",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/alerts/person_injured.png",
+  "sha256": "eb9f5bd953df7c039d86b3c22fd33ee391459a242263d926f807bc88b0fe3ddd",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/person_injured-02.json",
+  "attempt_record_sha256": "2e32e7c8fdef7c1a34767834cab414593ef26465403434e11774911884e51683",
+  "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/person_injured-02.json",
+  "status": "candidate_selected",
+  "semantic_note": "Injury: bare forearm with broad undyed bandage and visible knot; no medical symbol or blood.",
+  "source_runtime_ids": {
+    "status": "verified_runtime_alert",
+    "ids": [
+      "person_injured"
+    ],
+    "source": "assets/ui/alerts.json",
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+  }
+}

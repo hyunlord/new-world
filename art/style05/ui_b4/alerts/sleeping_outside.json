@@ -1,0 +1,30 @@
+{
+  "id": "sleeping_outside",
+  "lane": "alerts",
+  "family": "icon",
+  "era": "stone_age_compatible_era_neutral",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/alerts/sleeping_outside.png",
+  "sha256": "1f523264f886070a8d0e7441c4035a68bba5f6b13faddfd624c79d7dd0dbd9df",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/sleeping_outside-01.json",
+  "attempt_record_sha256": "da11b764cb47ebebcbd0b77dfd5fc2e9c4c34f700e20e8e491a3d50edc63805d",
+  "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/sleeping_outside-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Sleeping without shelter: one small sleeping person curled in a rough undyed hide wrap, head resting on forearm, with a tiny pale crescent moon above. No bed or roof. Clear curled horizontal silhouette; face minimal.",
+  "source_runtime_ids": {
+    "status": "verified_runtime_alert",
+    "ids": [
+      "sleeping_outside"
+    ],
+    "source": "assets/ui/alerts.json",
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+  }
+}

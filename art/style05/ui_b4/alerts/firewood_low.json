@@ -1,0 +1,30 @@
+{
+  "id": "firewood_low",
+  "lane": "alerts",
+  "family": "icon",
+  "era": "stone_age_compatible_era_neutral",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/alerts/firewood_low.png",
+  "sha256": "e017276caa0117a215f9c7dfcd757381ddda6c783c3461bde29ac30e114094b0",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/firewood_low-01.json",
+  "attempt_record_sha256": "9b1048c569b47240ec3fafa939506fbf668eb51bcd6efc9400080ce16cf9db08",
+  "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/firewood_low-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Firewood nearly depleted: a single short split log with a tiny charred ember at its end. The lone log, rather than a pile, is the whole silhouette. Three broken bark strokes, no fire ring.",
+  "source_runtime_ids": {
+    "status": "verified_runtime_alert",
+    "ids": [
+      "firewood_low"
+    ],
+    "source": "assets/ui/alerts.json",
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+  }
+}

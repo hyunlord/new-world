@@ -1,0 +1,111 @@
+{
+  "family": "icon",
+  "inputs": [
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/polish/items/stone_axe_try1.png",
+      "sha256": "128e62930b1b4ca7de86f19dc74d1d834bf87ccc281dd28c02ef2f6fe9a32600",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/polish/items/ground_axe_try3.png",
+      "sha256": "dcf4c2afb47e86e24d848127a91b959ac1acdfcf2eb70dcc55315e1ee1981d29",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/polish/items/berry_basket_try1.png",
+      "sha256": "4fe5d8d7d964ef649f1423bc2f92f6c80e615f07bd6ce73ebd1bb7a2fa1348ee",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/polish/items/clay_try3.png",
+      "sha256": "31c518a4272368573fcef3f1c2e25aeccb1ae1c83fa6c55cda9b8711c0b57edb",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/polish/items/firewood_try3.png",
+      "sha256": "ef9ba8786b98697b4814f15e04d8ce1cde705a20715886b3667275ef5fff3441",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/env1/items/clay_pot_empty.png",
+      "sha256": "1e0fd136c5b99ad8f4114c9fd0d4b3b518c7c66cf7912812238a7d1b1ba68cd1",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/ui_b4/alerts/meat_spoiling.png",
+      "sha256": "b41809bacda2d90d0cd0fb54ae5921ddcb032949b178c1ac34c40a84942fbaee",
+      "role": "candidate"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/ui_b4/alerts/newborn_without_bed.png",
+      "sha256": "47589cb007525178b82af1e4bc929e1c0f1ad280ae79ebbed8deedb7c927edbd",
+      "role": "candidate"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/ui_b4/alerts/food_winter.png",
+      "sha256": "5a67b35d2abaa475df7479ffe85d4e55570c6d4519bfb3acf72c2a0f8d34a2a8",
+      "role": "candidate"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/ui_b4/alerts/food_spoil.png",
+      "sha256": "fb612ccae948873b80b9e80705e63b8e5c3c878dd69ca7e6a252ea562a652918",
+      "role": "candidate"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/ui_b4/alerts/birth.png",
+      "sha256": "e5b16f76f76581ffda8409b1570a42108a1155f16769eee1f72528eb0eefcd29",
+      "role": "candidate"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/ui_b4/alerts/death.png",
+      "sha256": "727bcca8fe976b5acb9207f4d9de4c453ceb93246e3b4338fd707b32a5f00172",
+      "role": "candidate"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/ui_b4/alerts/pairing.png",
+      "sha256": "60fa39f79d39b499119456a49ff5adb8535213122189baa87e228f25b47311c5",
+      "role": "candidate"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/ui_b4/alerts/settlement.png",
+      "sha256": "861820d1e6076fd2b64d003ef13e1cdb50b152b1ddd175ab0b88e336619ae5c0",
+      "role": "candidate"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/ui_b4/alerts/departure.png",
+      "sha256": "f9672926d5c1e2b3a24372ce53b73cbbf79a1790754803cbbf0408ce69b9b989",
+      "role": "candidate"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/ui_b4/alerts/discovery.png",
+      "sha256": "330c31b52f956676d6f5b2707ba800d5e9e03225f1407212da89b734c6197c13",
+      "role": "candidate"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/ui_b4/alerts/trade_complete.png",
+      "sha256": "895eb9f7df7d9bc256109386e50eb8fc096b33a927d8d838093ad1c52b304ab5",
+      "role": "candidate"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/ui_b4/alerts/building_complete.png",
+      "sha256": "83991bc5ba7204404c065f377f6d92bf738416203ba45a3609c7e71af8470a2f",
+      "role": "candidate"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/ui_b4/alerts/era_change.png",
+      "sha256": "e36b2dc8e7739df0680bc283b7d4b7fece3ced5447180d99a975c7d8c65176db",
+      "role": "candidate"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-b4/art/style05/ui_b4/alerts/livestock_birth.png",
+      "sha256": "7326e4322e66819b21e877f0f0673157675fa2daf5fd485a931e3a5f17fe7bfb",
+      "role": "candidate"
+    }
+  ],
+  "canvas": [
+    1140,
+    812
+  ],
+  "sheet_sha256": "8690a2e0ea4bbcfc64233e38503e87dfd94246cabc61cde9da342240aa78e021",
+  "note": "Review composite only; source sprites are unchanged."
+}

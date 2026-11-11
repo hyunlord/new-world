@@ -1,0 +1,27 @@
+{
+  "id": "building_complete",
+  "lane": "alerts",
+  "family": "icon",
+  "era": "stone_age_compatible_era_neutral",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/alerts/building_complete.png",
+  "sha256": "83991bc5ba7204404c065f377f6d92bf738416203ba45a3609c7e71af8470a2f",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/building_complete-01.json",
+  "attempt_record_sha256": "2ce455d51f69e2e157c946c6b4a8d3aa55cdbde797bf745994a34a6d6f638466",
+  "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/building_complete-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Building completed notification: a finished small timber doorway frame firmly joined with fiber lashings, a fitted vertical plank door standing partly open. No whole wall or scene, three visible posts and clear door leaf.",
+  "source_runtime_ids": {
+    "status": "proposed_art_concept",
+    "concept": "building_complete",
+    "binding_owner": "B4 root; actual ChronicleKind mappings are separate from this concept ID"
+  }
+}

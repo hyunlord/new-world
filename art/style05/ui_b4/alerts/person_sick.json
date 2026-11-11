@@ -1,0 +1,30 @@
+{
+  "id": "person_sick",
+  "lane": "alerts",
+  "family": "icon",
+  "era": "stone_age_compatible_era_neutral",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/alerts/person_sick.png",
+  "sha256": "dd0765ef339862aa55d23697c382b229d5716feed374b36acaac51c7fb4c1e39",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/person_sick-01.json",
+  "attempt_record_sha256": "f7d02439e3db246b153a0d4bc161a27661c3293b3f45bd25721c991c035becef",
+  "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/person_sick-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Person ill: a clothed adult head and shoulders hunched forward under an undyed hide shawl, one hand at forehead, exhausted closed eyes. No cross, thermometer, medicine bottle, droplets or text.",
+  "source_runtime_ids": {
+    "status": "verified_runtime_alert",
+    "ids": [
+      "person_sick"
+    ],
+    "source": "assets/ui/alerts.json",
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+  }
+}

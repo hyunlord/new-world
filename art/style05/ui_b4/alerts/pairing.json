@@ -1,0 +1,27 @@
+{
+  "id": "pairing",
+  "lane": "alerts",
+  "family": "icon",
+  "era": "stone_age_compatible_era_neutral",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/alerts/pairing.png",
+  "sha256": "60fa39f79d39b499119456a49ff5adb8535213122189baa87e228f25b47311c5",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/pairing-01.json",
+  "attempt_record_sha256": "926704a2a00c10c4d1f50ddb8475bfd1aca21c4fcfa10ba372d0d4808d3595e1",
+  "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/pairing-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Pairing bond notification: two distinct bare human hands gently clasping, one warm ochre skin tone and one deeper earth skin tone. No rings or jewelry, no heart icon, just clean interlocked hand silhouette.",
+  "source_runtime_ids": {
+    "status": "proposed_art_concept",
+    "concept": "pairing",
+    "binding_owner": "B4 root; actual ChronicleKind mappings are separate from this concept ID"
+  }
+}

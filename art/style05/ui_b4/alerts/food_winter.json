@@ -1,0 +1,30 @@
+{
+  "id": "food_winter",
+  "lane": "alerts",
+  "family": "icon",
+  "era": "stone_age_compatible_era_neutral",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/alerts/food_winter.png",
+  "sha256": "5a67b35d2abaa475df7479ffe85d4e55570c6d4519bfb3acf72c2a0f8d34a2a8",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/food_winter-01.json",
+  "attempt_record_sha256": "d4fa74bf64a522afa034bd991ee04202c9b6b8de8b39f577ff29346e3ced87be",
+  "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/food_winter-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Food needed for winter: a half-full reed basket holding three roots with a small pale frost crust across its upper rim and one bare twig leaning against it. Frost and scant contents both clear, no snowflake symbol.",
+  "source_runtime_ids": {
+    "status": "verified_runtime_alert",
+    "ids": [
+      "food_winter"
+    ],
+    "source": "assets/ui/alerts.json",
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+  }
+}

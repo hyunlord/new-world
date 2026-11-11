@@ -1,0 +1,30 @@
+{
+  "id": "migrants_waiting",
+  "lane": "alerts",
+  "family": "icon",
+  "era": "stone_age_compatible_era_neutral",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/alerts/migrants_waiting.png",
+  "sha256": "3609306a0d1980340f51ad97497a30490dba57f9d816ff030aa195374fc2fa78",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/migrants_waiting-01.json",
+  "attempt_record_sha256": "64645e354c82224017069b00eb1c542b65aa066ac111855727b0ceecfffd5ebd",
+  "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/migrants_waiting-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Migrants waiting: two simplified people shoulder to shoulder in undyed hide clothing, one adult carrying a bundled hide pack on a wooden staff, smaller companion beside them. Friendly waiting silhouettes, no landscape.",
+  "source_runtime_ids": {
+    "status": "verified_runtime_alert",
+    "ids": [
+      "migrants_waiting"
+    ],
+    "source": "assets/ui/alerts.json",
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+  }
+}

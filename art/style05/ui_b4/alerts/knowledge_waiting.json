@@ -1,0 +1,30 @@
+{
+  "id": "knowledge_waiting",
+  "lane": "alerts",
+  "family": "icon",
+  "era": "stone_age_compatible_era_neutral",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/alerts/knowledge_waiting.png",
+  "sha256": "56cdbd9ca486940c6ef54b7188f132e1596af08e39b5a9267e636ac25a0e8fed",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/knowledge_waiting-02.json",
+  "attempt_record_sha256": "088b1cd8dd8a8001639c75f3e5e0d7a3d03d1cd66e91543c1eb2c526dbead203",
+  "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/knowledge_waiting-02.json",
+  "status": "candidate_selected",
+  "semantic_note": "Waiting to learn: ear above receptive hand; semantic mnemonic with localized text, separate from discovery.",
+  "source_runtime_ids": {
+    "status": "verified_runtime_alert",
+    "ids": [
+      "knowledge_waiting"
+    ],
+    "source": "assets/ui/alerts.json",
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+  }
+}

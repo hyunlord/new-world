@@ -1,0 +1,27 @@
+{
+  "id": "birth",
+  "lane": "alerts",
+  "family": "icon",
+  "era": "stone_age_compatible_era_neutral",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/alerts/birth.png",
+  "sha256": "e5b16f76f76581ffda8409b1570a42108a1155f16769eee1f72528eb0eefcd29",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/birth-01.json",
+  "attempt_record_sha256": "21d20336c3528e7c7ec1c584b4bc3d4bd76bc37a166623a036882b55b1c166c1",
+  "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/birth-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Human birth notification: a small sleeping fully swaddled newborn cradled gently in two adult hands. Plain undyed wrap, no bed, no blood, no scene. Warm quiet pose with only three cloth folds.",
+  "source_runtime_ids": {
+    "status": "proposed_art_concept",
+    "concept": "birth",
+    "binding_owner": "B4 root; actual ChronicleKind mappings are separate from this concept ID"
+  }
+}

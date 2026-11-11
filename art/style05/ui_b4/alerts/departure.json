@@ -1,0 +1,27 @@
+{
+  "id": "departure",
+  "lane": "alerts",
+  "family": "icon",
+  "era": "stone_age_compatible_era_neutral",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/alerts/departure.png",
+  "sha256": "f9672926d5c1e2b3a24372ce53b73cbbf79a1790754803cbbf0408ce69b9b989",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/departure-01.json",
+  "attempt_record_sha256": "59660aa2f0efa59d3f900f283af8ab70b5f20f5cb88f7bbdb6440276bdc8a273",
+  "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/departure-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Departure notification: a rolled undyed hide travel bundle tied with fiber cord on a shoulder-height angled walking staff, with two small footprints beneath pointing away. No person, arrows or scene.",
+  "source_runtime_ids": {
+    "status": "proposed_art_concept",
+    "concept": "departure",
+    "binding_owner": "B4 root; actual ChronicleKind mappings are separate from this concept ID"
+  }
+}

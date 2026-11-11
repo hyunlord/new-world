@@ -1,0 +1,30 @@
+{
+  "id": "stockpile_missing",
+  "lane": "alerts",
+  "family": "icon",
+  "era": "stone_age_compatible_era_neutral",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/alerts/stockpile_missing.png",
+  "sha256": "34c00c01097e38dffa1c79db6f4b0cf7b5a4e46c0051dfbff03bc2d67a3618de",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/stockpile_missing-02.json",
+  "attempt_record_sha256": "055fd184e46688df4766a85e6798c4bd233bc1b84f130f20610a7e3fa8d364ad",
+  "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/stockpile_missing-02.json",
+  "status": "candidate_selected",
+  "semantic_note": "Missing storage designation: four corner pegs and three sides of rope surrounding an empty transparent diamond.",
+  "source_runtime_ids": {
+    "status": "verified_runtime_alert",
+    "ids": [
+      "stockpile_missing"
+    ],
+    "source": "assets/ui/alerts.json",
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+  }
+}

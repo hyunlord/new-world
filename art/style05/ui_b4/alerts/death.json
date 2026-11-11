@@ -1,0 +1,27 @@
+{
+  "id": "death",
+  "lane": "alerts",
+  "family": "icon",
+  "era": "stone_age_compatible_era_neutral",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/alerts/death.png",
+  "sha256": "727bcca8fe976b5acb9207f4d9de4c453ceb93246e3b4338fd707b32a5f00172",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/death-01.json",
+  "attempt_record_sha256": "9417b72ae4d29d4859d76021abac515f7771ae52e95b4ef05004dca9f5813236",
+  "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/death-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Death notification: a simple low cairn of three rough gray stones with one dry bent sprig laid diagonally across them. Respectful stone-age grave marker, no cross, skull, bones, writing or tombstone slab.",
+  "source_runtime_ids": {
+    "status": "proposed_art_concept",
+    "concept": "death",
+    "binding_owner": "B4 root; actual ChronicleKind mappings are separate from this concept ID"
+  }
+}

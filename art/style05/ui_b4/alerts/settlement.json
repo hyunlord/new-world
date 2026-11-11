@@ -1,0 +1,27 @@
+{
+  "id": "settlement",
+  "lane": "alerts",
+  "family": "icon",
+  "era": "stone_age_compatible_era_neutral",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/alerts/settlement.png",
+  "sha256": "861820d1e6076fd2b64d003ef13e1cdb50b152b1ddd175ab0b88e336619ae5c0",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/settlement-02.json",
+  "attempt_record_sha256": "93e968395278771b944f92095f3b8771a91205414e8b059f37324979ecd6f7f6",
+  "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/settlement-02.json",
+  "status": "candidate_selected",
+  "semantic_note": "Settlement founded: a hide shelter enclosing an amber hearth, isolated without terrain.",
+  "source_runtime_ids": {
+    "status": "proposed_art_concept",
+    "concept": "settlement",
+    "binding_owner": "B4 root; actual ChronicleKind mappings are separate from this concept ID"
+  }
+}

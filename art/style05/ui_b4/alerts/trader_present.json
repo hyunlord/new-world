@@ -1,0 +1,30 @@
+{
+  "id": "trader_present",
+  "lane": "alerts",
+  "family": "icon",
+  "era": "stone_age_compatible_era_neutral",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/alerts/trader_present.png",
+  "sha256": "161fabdf8cc8daa9e763dea4f215b32a7679ca9e34da0d2e5a732db62587c2c8",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/trader_present-01.json",
+  "attempt_record_sha256": "8d95b533f2819322cb19c58bb9adee37b167657c8d1c998797f37ea7f4397521",
+  "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/trader_present-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "A trader is present: one compact open reed pack basket with two neatly tied fiber bundles and a pale flint blade set beside it. Travel pack silhouette and exchange goods, no coins or metal.",
+  "source_runtime_ids": {
+    "status": "verified_runtime_alert",
+    "ids": [
+      "trader_present"
+    ],
+    "source": "assets/ui/alerts.json",
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+  }
+}

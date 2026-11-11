@@ -1,0 +1,997 @@
+{
+  "schema_version": 1,
+  "lane": "alerts",
+  "assets": [
+    {
+      "id": "food_low",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/alerts/food_low.png",
+      "sha256": "b43088318a0008e08ca2699d437c05da4b8f987ac76762f2c8db0fe5a62e68a9",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/food_low-01.json",
+      "attempt_record_sha256": "2ae107bf443682a396a65df4205b0774d0cd5a535a45cce5c237609b174de3d8",
+      "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/food_low-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Food supplies running low: a tilted shallow woven reed basket, conspicuously almost empty with ONLY two small roots in its wide exposed dark interior. Broad empty cavity is dominant. Three broad weave groups.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "food_low"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "firewood_low",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/alerts/firewood_low.png",
+      "sha256": "e017276caa0117a215f9c7dfcd757381ddda6c783c3461bde29ac30e114094b0",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/firewood_low-01.json",
+      "attempt_record_sha256": "9b1048c569b47240ec3fafa939506fbf668eb51bcd6efc9400080ce16cf9db08",
+      "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/firewood_low-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Firewood nearly depleted: a single short split log with a tiny charred ember at its end. The lone log, rather than a pile, is the whole silhouette. Three broken bark strokes, no fire ring.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "firewood_low"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "sleeping_outside",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/alerts/sleeping_outside.png",
+      "sha256": "1f523264f886070a8d0e7441c4035a68bba5f6b13faddfd624c79d7dd0dbd9df",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/sleeping_outside-01.json",
+      "attempt_record_sha256": "da11b764cb47ebebcbd0b77dfd5fc2e9c4c34f700e20e8e491a3d50edc63805d",
+      "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/sleeping_outside-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Sleeping without shelter: one small sleeping person curled in a rough undyed hide wrap, head resting on forearm, with a tiny pale crescent moon above. No bed or roof. Clear curled horizontal silhouette; face minimal.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "sleeping_outside"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "stockpile_missing",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/alerts/stockpile_missing.png",
+      "sha256": "34c00c01097e38dffa1c79db6f4b0cf7b5a4e46c0051dfbff03bc2d67a3618de",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/stockpile_missing-02.json",
+      "attempt_record_sha256": "055fd184e46688df4766a85e6798c4bd233bc1b84f130f20610a7e3fa8d364ad",
+      "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/stockpile_missing-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "Missing storage designation: four corner pegs and three sides of rope surrounding an empty transparent diamond.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "stockpile_missing"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "storehouse_full",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/alerts/storehouse_full.png",
+      "sha256": "fc6635dc6dd352a18950f11327cc4099b27c4a815e48bdef97da93a2859f1613",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/storehouse_full-01.json",
+      "attempt_record_sha256": "3e039e1f3c49a96ba7bd82a211c0dfff25d082f37bb229f3b6cbc1e8e8ea004a",
+      "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/storehouse_full-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Storehouse full: three tightly packed squat reed baskets beneath a tiny thatch eave, one basket overflowing with large round roots. Compact heavy silhouette; visibly crowded opening. No complete building scene.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "storehouse_full"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "idle_adults",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/alerts/idle_adults.png",
+      "sha256": "5ee50e0d389db709f57350c3991be4be5a86c32bc56f46d280df82e2c448fc8b",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/idle_adults-01.json",
+      "attempt_record_sha256": "86ac84c5a876297b832d077e76a6a28e59c9915010d0ea66116dce9bbe807b07",
+      "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/idle_adults-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Idle workers: a seated adult in an undyed hide wrap, elbows resting loosely on raised knees and hands empty, head upright. Quiet waiting posture, not sickness, no tool.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "idle_adults"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "orders_unreachable",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/alerts/orders_unreachable.png",
+      "sha256": "a33db2cb1c274e945bbe3c7568482f7c624e0d7ea94ccc7ef15c7f87ed84d210",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/orders_unreachable-01.json",
+      "attempt_record_sha256": "8df5b955208c20637f567a60b50cd0e9aaf95334ff0868c606d5d487b7848baa",
+      "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/orders_unreachable-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Unreachable work order: two simple human footprints approach a large cracked boulder blocking their path. Footprints stop before the boulder. No arrows, cross signs or map grid.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "orders_unreachable"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "knowledge_waiting",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/alerts/knowledge_waiting.png",
+      "sha256": "56cdbd9ca486940c6ef54b7188f132e1596af08e39b5a9267e636ac25a0e8fed",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/knowledge_waiting-02.json",
+      "attempt_record_sha256": "088b1cd8dd8a8001639c75f3e5e0d7a3d03d1cd66e91543c1eb2c526dbead203",
+      "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/knowledge_waiting-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "Waiting to learn: ear above receptive hand; semantic mnemonic with localized text, separate from discovery.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "knowledge_waiting"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "technique_at_risk",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/alerts/technique_at_risk.png",
+      "sha256": "5853a37adb414855a1c09dcebf9198efc2cc6608002dfb41581bc9caa1ba7b9b",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/technique_at_risk-02.json",
+      "attempt_record_sha256": "cabcb81a76a3db35b6ea57de07a35b5e72fa6afa5ecb02eb36bf5cc6e183c670",
+      "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/technique_at_risk-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "Technique loss risk: intact flint with severed fiber transmission loop; localized text supplies exact risk.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "technique_at_risk"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "wolves_approaching",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/alerts/wolves_approaching.png",
+      "sha256": "2350da08616a0c26cd5125ef1b58ce572f0a578129554608f97886b04bea33fa",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/wolves_approaching-01.json",
+      "attempt_record_sha256": "38b6441cd3910d383dc531dd172db261a30eac43ca26323b3c2cb84ba8f3ee10",
+      "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/wolves_approaching-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Danger of approaching wolves: one gray wolf head and upper shoulders, three-quarter facing viewer, alert pointed ears and slightly lowered threatening muzzle. Mouth closed, no blood or cartoon snarl. Three cheek fur tufts.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "wolves_approaching"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "migrants_waiting",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/alerts/migrants_waiting.png",
+      "sha256": "3609306a0d1980340f51ad97497a30490dba57f9d816ff030aa195374fc2fa78",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/migrants_waiting-01.json",
+      "attempt_record_sha256": "64645e354c82224017069b00eb1c542b65aa066ac111855727b0ceecfffd5ebd",
+      "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/migrants_waiting-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Migrants waiting: two simplified people shoulder to shoulder in undyed hide clothing, one adult carrying a bundled hide pack on a wooden staff, smaller companion beside them. Friendly waiting silhouettes, no landscape.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "migrants_waiting"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "trader_present",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/alerts/trader_present.png",
+      "sha256": "161fabdf8cc8daa9e763dea4f215b32a7679ca9e34da0d2e5a732db62587c2c8",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/trader_present-01.json",
+      "attempt_record_sha256": "8d95b533f2819322cb19c58bb9adee37b167657c8d1c998797f37ea7f4397521",
+      "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/trader_present-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A trader is present: one compact open reed pack basket with two neatly tied fiber bundles and a pale flint blade set beside it. Travel pack silhouette and exchange goods, no coins or metal.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "trader_present"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "person_sick",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/alerts/person_sick.png",
+      "sha256": "dd0765ef339862aa55d23697c382b229d5716feed374b36acaac51c7fb4c1e39",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/person_sick-01.json",
+      "attempt_record_sha256": "f7d02439e3db246b153a0d4bc161a27661c3293b3f45bd25721c991c035becef",
+      "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/person_sick-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Person ill: a clothed adult head and shoulders hunched forward under an undyed hide shawl, one hand at forehead, exhausted closed eyes. No cross, thermometer, medicine bottle, droplets or text.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "person_sick"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "person_breakdown",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/alerts/person_breakdown.png",
+      "sha256": "1ddd6af99c7981c1f5060071448cd1660febad9043f1df261790b439b4e91782",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/person_breakdown-01.json",
+      "attempt_record_sha256": "6003c0858c2396406e0b405bb490066a95ea25603c3657fac3ef9b8482fa84e9",
+      "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/person_breakdown-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Person overwhelmed: a seated adult in plain hide clothing with both hands cupping the sides of their head, elbows flared and head bowed. Strong inward distressed pose, no tears or swirls or modern symbols.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "person_breakdown"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "person_injured",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/alerts/person_injured.png",
+      "sha256": "eb9f5bd953df7c039d86b3c22fd33ee391459a242263d926f807bc88b0fe3ddd",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/person_injured-02.json",
+      "attempt_record_sha256": "2e32e7c8fdef7c1a34767834cab414593ef26465403434e11774911884e51683",
+      "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/person_injured-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "Injury: bare forearm with broad undyed bandage and visible knot; no medical symbol or blood.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "person_injured"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "meat_spoiling",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/alerts/meat_spoiling.png",
+      "sha256": "b41809bacda2d90d0cd0fb54ae5921ddcb032949b178c1ac34c40a84942fbaee",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/meat_spoiling-01.json",
+      "attempt_record_sha256": "38aa56da2e9e69c1ccf87beca7753b8a61652b98d99191b03f35a978792a65f6",
+      "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/meat_spoiling-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Stored meat spoiling: a single strip of dried meat hanging from a short fiber cord, uneven dark edge and two small pale green spoil spots. This is hanging meat specifically, not a basket or general food. No insects swarm.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "meat_spoiling"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "newborn_without_bed",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/alerts/newborn_without_bed.png",
+      "sha256": "47589cb007525178b82af1e4bc929e1c0f1ad280ae79ebbed8deedb7c927edbd",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/newborn_without_bed-01.json",
+      "attempt_record_sha256": "f99d803f76d7857eedb8093030d54f7db63fabfe3fb2125f15d136e15ea89542",
+      "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/newborn_without_bed-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Newborn has no sleeping place: a very small baby fully swaddled in an undyed hide wrap, asleep, lying alone with nothing beneath it. Rounded head above tapered bundle, three simple wrap folds. No bed, basket, moon, blood.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "newborn_without_bed"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "food_winter",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/alerts/food_winter.png",
+      "sha256": "5a67b35d2abaa475df7479ffe85d4e55570c6d4519bfb3acf72c2a0f8d34a2a8",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/food_winter-01.json",
+      "attempt_record_sha256": "d4fa74bf64a522afa034bd991ee04202c9b6b8de8b39f577ff29346e3ced87be",
+      "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/food_winter-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Food needed for winter: a half-full reed basket holding three roots with a small pale frost crust across its upper rim and one bare twig leaning against it. Frost and scant contents both clear, no snowflake symbol.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "food_winter"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "food_spoil",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/alerts/food_spoil.png",
+      "sha256": "fb612ccae948873b80b9e80705e63b8e5c3c878dd69ca7e6a252ea562a652918",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/food_spoil-01.json",
+      "attempt_record_sha256": "ad0bcf83ce34d68b3e72bc428b1ce8f4326fb78330ca7b02b50d8f578848b95c",
+      "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/food_spoil-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Food is spoiling: two withered berries and one shriveled root with a wilted leaf, one berry showing a muted pale green mold patch. Distinct from hanging meat. Keep large simplified silhouettes, no flies.",
+      "source_runtime_ids": {
+        "status": "verified_runtime_alert",
+        "ids": [
+          "food_spoil"
+        ],
+        "source": "assets/ui/alerts.json",
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406"
+      }
+    },
+    {
+      "id": "birth",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/alerts/birth.png",
+      "sha256": "e5b16f76f76581ffda8409b1570a42108a1155f16769eee1f72528eb0eefcd29",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/birth-01.json",
+      "attempt_record_sha256": "21d20336c3528e7c7ec1c584b4bc3d4bd76bc37a166623a036882b55b1c166c1",
+      "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/birth-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Human birth notification: a small sleeping fully swaddled newborn cradled gently in two adult hands. Plain undyed wrap, no bed, no blood, no scene. Warm quiet pose with only three cloth folds.",
+      "source_runtime_ids": {
+        "status": "proposed_art_concept",
+        "concept": "birth",
+        "binding_owner": "B4 root; actual ChronicleKind mappings are separate from this concept ID"
+      }
+    },
+    {
+      "id": "death",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/alerts/death.png",
+      "sha256": "727bcca8fe976b5acb9207f4d9de4c453ceb93246e3b4338fd707b32a5f00172",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/death-01.json",
+      "attempt_record_sha256": "9417b72ae4d29d4859d76021abac515f7771ae52e95b4ef05004dca9f5813236",
+      "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/death-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Death notification: a simple low cairn of three rough gray stones with one dry bent sprig laid diagonally across them. Respectful stone-age grave marker, no cross, skull, bones, writing or tombstone slab.",
+      "source_runtime_ids": {
+        "status": "proposed_art_concept",
+        "concept": "death",
+        "binding_owner": "B4 root; actual ChronicleKind mappings are separate from this concept ID"
+      }
+    },
+    {
+      "id": "pairing",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/alerts/pairing.png",
+      "sha256": "60fa39f79d39b499119456a49ff5adb8535213122189baa87e228f25b47311c5",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/pairing-01.json",
+      "attempt_record_sha256": "926704a2a00c10c4d1f50ddb8475bfd1aca21c4fcfa10ba372d0d4808d3595e1",
+      "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/pairing-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Pairing bond notification: two distinct bare human hands gently clasping, one warm ochre skin tone and one deeper earth skin tone. No rings or jewelry, no heart icon, just clean interlocked hand silhouette.",
+      "source_runtime_ids": {
+        "status": "proposed_art_concept",
+        "concept": "pairing",
+        "binding_owner": "B4 root; actual ChronicleKind mappings are separate from this concept ID"
+      }
+    },
+    {
+      "id": "settlement",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/alerts/settlement.png",
+      "sha256": "861820d1e6076fd2b64d003ef13e1cdb50b152b1ddd175ab0b88e336619ae5c0",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/settlement-02.json",
+      "attempt_record_sha256": "93e968395278771b944f92095f3b8771a91205414e8b059f37324979ecd6f7f6",
+      "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/settlement-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "Settlement founded: a hide shelter enclosing an amber hearth, isolated without terrain.",
+      "source_runtime_ids": {
+        "status": "proposed_art_concept",
+        "concept": "settlement",
+        "binding_owner": "B4 root; actual ChronicleKind mappings are separate from this concept ID"
+      }
+    },
+    {
+      "id": "departure",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/alerts/departure.png",
+      "sha256": "f9672926d5c1e2b3a24372ce53b73cbbf79a1790754803cbbf0408ce69b9b989",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/departure-01.json",
+      "attempt_record_sha256": "59660aa2f0efa59d3f900f283af8ab70b5f20f5cb88f7bbdb6440276bdc8a273",
+      "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/departure-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Departure notification: a rolled undyed hide travel bundle tied with fiber cord on a shoulder-height angled walking staff, with two small footprints beneath pointing away. No person, arrows or scene.",
+      "source_runtime_ids": {
+        "status": "proposed_art_concept",
+        "concept": "departure",
+        "binding_owner": "B4 root; actual ChronicleKind mappings are separate from this concept ID"
+      }
+    },
+    {
+      "id": "discovery",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/alerts/discovery.png",
+      "sha256": "330c31b52f956676d6f5b2707ba800d5e9e03225f1407212da89b734c6197c13",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/discovery-01.json",
+      "attempt_record_sha256": "bad016e56034cfacf3677964adbc0a7ae9c4572fefee8d73b43d0d23cfcc19c3",
+      "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/discovery-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "New discovery notification: an open human hand displaying a freshly split pale flint with a bright bone-colored edge. Three sparse short ink rays above the flint, no glowing magic, bulb or star.",
+      "source_runtime_ids": {
+        "status": "proposed_art_concept",
+        "concept": "discovery",
+        "binding_owner": "B4 root; actual ChronicleKind mappings are separate from this concept ID"
+      }
+    },
+    {
+      "id": "trade_complete",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/alerts/trade_complete.png",
+      "sha256": "895eb9f7df7d9bc256109386e50eb8fc096b33a927d8d838093ad1c52b304ab5",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/trade_complete-01.json",
+      "attempt_record_sha256": "488477600076beabc4633f4f469ceead881ccc6884028e186ab14745d17cc9f7",
+      "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/trade_complete-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Trade completed notification: two open human palms face each other, one offering a pale flint blade, the other offering a tied bundle of roots. No arrows, coins, checkmark or text. Balanced two-sided compact silhouette.",
+      "source_runtime_ids": {
+        "status": "proposed_art_concept",
+        "concept": "trade_complete",
+        "binding_owner": "B4 root; actual ChronicleKind mappings are separate from this concept ID"
+      }
+    },
+    {
+      "id": "building_complete",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/alerts/building_complete.png",
+      "sha256": "83991bc5ba7204404c065f377f6d92bf738416203ba45a3609c7e71af8470a2f",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/building_complete-01.json",
+      "attempt_record_sha256": "2ce455d51f69e2e157c946c6b4a8d3aa55cdbde797bf745994a34a6d6f638466",
+      "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/building_complete-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Building completed notification: a finished small timber doorway frame firmly joined with fiber lashings, a fitted vertical plank door standing partly open. No whole wall or scene, three visible posts and clear door leaf.",
+      "source_runtime_ids": {
+        "status": "proposed_art_concept",
+        "concept": "building_complete",
+        "binding_owner": "B4 root; actual ChronicleKind mappings are separate from this concept ID"
+      }
+    },
+    {
+      "id": "era_change",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "stone_age_compatible_era_neutral",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/alerts/era_change.png",
+      "sha256": "e36b2dc8e7739df0680bc283b7d4b7fece3ced5447180d99a975c7d8c65176db",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/era_change-01.json",
+      "attempt_record_sha256": "d489a64f1ffa21e81c749084095438cbb0f356f9257f20364e0ad3e32c9f64db",
+      "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/era_change-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Era change notification, era-neutral: three rising rough stone steps with a small fresh green shoot growing from the top step. This is a symbolic progress marker made of natural stone, no numerals, arrows, metal, flag or architecture.",
+      "source_runtime_ids": {
+        "status": "proposed_art_concept",
+        "concept": "era_change",
+        "binding_owner": "B4 root; actual ChronicleKind mappings are separate from this concept ID"
+      }
+    },
+    {
+      "id": "livestock_birth",
+      "lane": "alerts",
+      "family": "icon",
+      "era": "neolithic_and_later",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/alerts/livestock_birth.png",
+      "sha256": "7326e4322e66819b21e877f0f0673157675fa2daf5fd485a931e3a5f17fe7bfb",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/livestock_birth-01.json",
+      "attempt_record_sha256": "a38710f5bdb20b8eaf8110bd3bac085383d931ac269ca41695325a84271edf04",
+      "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/livestock_birth-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Livestock birth notification: a tiny newborn goat kid curled beside the larger protective foreleg and lowered muzzle of a mother goat. No human infant. Kid clearly has goat ears and four folded legs; no gore.",
+      "source_runtime_ids": {
+        "status": "proposed_art_concept",
+        "concept": "livestock_birth",
+        "binding_owner": "B4 root; actual ChronicleKind mappings are separate from this concept ID"
+      }
+    }
+  ],
+  "attempts": [
+    "/Users/rexxa/work/art-batch/B4/alerts/records/birth-01.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/building_complete-01.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/death-01.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/departure-01.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/discovery-01.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/era_change-01.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/firewood_low-01.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/food_low-01.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/food_spoil-01.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/food_winter-01.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/idle_adults-01.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/knowledge_waiting-01.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/knowledge_waiting-02.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/livestock_birth-01.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/meat_spoiling-01.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/migrants_waiting-01.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/newborn_without_bed-01.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/orders_unreachable-01.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/pairing-01.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/person_breakdown-01.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/person_injured-01.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/person_injured-02.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/person_sick-01.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/settlement-01.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/settlement-02.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/sleeping_outside-01.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/stockpile_missing-01.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/stockpile_missing-02.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/storehouse_full-01.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/technique_at_risk-01.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/technique_at_risk-02.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/trade_complete-01.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/trader_present-01.json",
+    "/Users/rexxa/work/art-batch/B4/alerts/records/wolves_approaching-01.json"
+  ],
+  "rejected": [],
+  "superseded": [
+    {
+      "record": "/Users/rexxa/work/art-batch/B4/alerts/records/person_injured-01.json",
+      "reason": "Banded forearm makes injury visible at 32px; portrait was secondary clutter."
+    },
+    {
+      "record": "/Users/rexxa/work/art-batch/B4/alerts/records/knowledge_waiting-01.json",
+      "reason": "Ear and receptive palm separate learning-waiting from discovery flint; exact condition requires localized text."
+    },
+    {
+      "record": "/Users/rexxa/work/art-batch/B4/alerts/records/technique_at_risk-01.json",
+      "reason": "Single flint with broken fiber loop reads as interrupted technique transmission and separates from discovery."
+    },
+    {
+      "record": "/Users/rexxa/work/art-batch/B4/alerts/records/stockpile_missing-01.json",
+      "reason": "One open diamond and transparent center read as one empty unassigned area instead of two fences."
+    },
+    {
+      "record": "/Users/rexxa/work/art-batch/B4/alerts/records/settlement-01.json",
+      "reason": "Hide shelter and hearth remove unwanted floor and give founded-home silhouette."
+    }
+  ],
+  "coverage": {
+    "required_ids": [
+      "food_low",
+      "firewood_low",
+      "sleeping_outside",
+      "stockpile_missing",
+      "storehouse_full",
+      "idle_adults",
+      "orders_unreachable",
+      "knowledge_waiting",
+      "technique_at_risk",
+      "wolves_approaching",
+      "migrants_waiting",
+      "trader_present",
+      "person_sick",
+      "person_breakdown",
+      "person_injured",
+      "meat_spoiling",
+      "newborn_without_bed",
+      "food_winter",
+      "food_spoil",
+      "birth",
+      "death",
+      "pairing",
+      "settlement",
+      "departure",
+      "discovery",
+      "trade_complete",
+      "building_complete",
+      "era_change",
+      "livestock_birth"
+    ],
+    "variant_ids": [],
+    "not_applicable": [
+      "Severity glyph variants omitted by latest owner instruction; severity remains independent UI metadata.",
+      "UI footprint, world feet anchors, seams and tiling do not apply.",
+      "No optional generated hover/disabled states; canonical art supports shared UI recipes."
+    ]
+  },
+  "self_review": {
+    "weakest_ids": [
+      "person_injured",
+      "knowledge_waiting",
+      "technique_at_risk",
+      "stockpile_missing",
+      "settlement"
+    ],
+    "regenerated_ids": [
+      "person_injured",
+      "knowledge_waiting",
+      "technique_at_risk",
+      "stockpile_missing",
+      "settlement"
+    ],
+    "before_after": [
+      {
+        "id": "person_injured",
+        "before_record": "/Users/rexxa/work/art-batch/B4/alerts/records/person_injured-01.json",
+        "after_record": "/Users/rexxa/work/art-batch/B4/alerts/records/person_injured-02.json",
+        "decision": "select_after",
+        "reason": "Banded forearm makes injury visible at 32px; portrait was secondary clutter."
+      },
+      {
+        "id": "knowledge_waiting",
+        "before_record": "/Users/rexxa/work/art-batch/B4/alerts/records/knowledge_waiting-01.json",
+        "after_record": "/Users/rexxa/work/art-batch/B4/alerts/records/knowledge_waiting-02.json",
+        "decision": "select_after",
+        "reason": "Ear and receptive palm separate learning-waiting from discovery flint; exact condition requires localized text."
+      },
+      {
+        "id": "technique_at_risk",
+        "before_record": "/Users/rexxa/work/art-batch/B4/alerts/records/technique_at_risk-01.json",
+        "after_record": "/Users/rexxa/work/art-batch/B4/alerts/records/technique_at_risk-02.json",
+        "decision": "select_after",
+        "reason": "Single flint with broken fiber loop reads as interrupted technique transmission and separates from discovery."
+      },
+      {
+        "id": "stockpile_missing",
+        "before_record": "/Users/rexxa/work/art-batch/B4/alerts/records/stockpile_missing-01.json",
+        "after_record": "/Users/rexxa/work/art-batch/B4/alerts/records/stockpile_missing-02.json",
+        "decision": "select_after",
+        "reason": "One open diamond and transparent center read as one empty unassigned area instead of two fences."
+      },
+      {
+        "id": "settlement",
+        "before_record": "/Users/rexxa/work/art-batch/B4/alerts/records/settlement-01.json",
+        "after_record": "/Users/rexxa/work/art-batch/B4/alerts/records/settlement-02.json",
+        "decision": "select_after",
+        "reason": "Hide shelter and hearth remove unwanted floor and give founded-home silhouette."
+      }
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "id": "era_change",
+  "lane": "alerts",
+  "family": "icon",
+  "era": "stone_age_compatible_era_neutral",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/alerts/era_change.png",
+  "sha256": "e36b2dc8e7739df0680bc283b7d4b7fece3ced5447180d99a975c7d8c65176db",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/era_change-01.json",
+  "attempt_record_sha256": "d489a64f1ffa21e81c749084095438cbb0f356f9257f20364e0ad3e32c9f64db",
+  "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/era_change-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Era change notification, era-neutral: three rising rough stone steps with a small fresh green shoot growing from the top step. This is a symbolic progress marker made of natural stone, no numerals, arrows, metal, flag or architecture.",
+  "source_runtime_ids": {
+    "status": "proposed_art_concept",
+    "concept": "era_change",
+    "binding_owner": "B4 root; actual ChronicleKind mappings are separate from this concept ID"
+  }
+}

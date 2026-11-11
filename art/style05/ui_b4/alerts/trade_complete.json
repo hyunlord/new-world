@@ -1,0 +1,27 @@
+{
+  "id": "trade_complete",
+  "lane": "alerts",
+  "family": "icon",
+  "era": "stone_age_compatible_era_neutral",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/alerts/trade_complete.png",
+  "sha256": "895eb9f7df7d9bc256109386e50eb8fc096b33a927d8d838093ad1c52b304ab5",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/trade_complete-01.json",
+  "attempt_record_sha256": "488477600076beabc4633f4f469ceead881ccc6884028e186ab14745d17cc9f7",
+  "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/trade_complete-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Trade completed notification: two open human palms face each other, one offering a pale flint blade, the other offering a tied bundle of roots. No arrows, coins, checkmark or text. Balanced two-sided compact silhouette.",
+  "source_runtime_ids": {
+    "status": "proposed_art_concept",
+    "concept": "trade_complete",
+    "binding_owner": "B4 root; actual ChronicleKind mappings are separate from this concept ID"
+  }
+}

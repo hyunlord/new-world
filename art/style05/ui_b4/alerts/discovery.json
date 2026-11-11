@@ -1,0 +1,27 @@
+{
+  "id": "discovery",
+  "lane": "alerts",
+  "family": "icon",
+  "era": "stone_age_compatible_era_neutral",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    32
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/alerts/discovery.png",
+  "sha256": "330c31b52f956676d6f5b2707ba800d5e9e03225f1407212da89b734c6197c13",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/alerts/records/discovery-01.json",
+  "attempt_record_sha256": "bad016e56034cfacf3677964adbc0a7ae9c4572fefee8d73b43d0d23cfcc19c3",
+  "normalization": "/Users/rexxa/work/art-batch/B4/alerts/checks/discovery-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "New discovery notification: an open human hand displaying a freshly split pale flint with a bright bone-colored edge. Three sparse short ink rays above the flint, no glowing magic, bulb or star.",
+  "source_runtime_ids": {
+    "status": "proposed_art_concept",
+    "concept": "discovery",
+    "binding_owner": "B4 root; actual ChronicleKind mappings are separate from this concept ID"
+  }
+}
