@@ -1,6 +1,6 @@
 # B2 climate art handoff
 
-This is candidate art for `v8/art-batch-b2`. Production and review are in progress. Final counts, selected files, rejected states and hashes belong to `manifest.json`; no count in this overview certifies completion.
+This is candidate art for `v8/art-batch-b2`. The capped generation and review pass is closed. Final counts, selected files, rejected states and hashes belong to `manifest.json`; capped gaps remain explicitly unfulfilled.
 
 Read [COVERAGE.md](COVERAGE.md) for required families and [STYLE_CONTRACT.md](STYLE_CONTRACT.md) for frozen drawing, geometry and review rules. The final handoff files are `art_import.draft.json` and `bindings.draft.json`. They are additive fragments for C2/C3, not replacement runtime configuration.
 
@@ -11,7 +11,7 @@ Read [COVERAGE.md](COVERAGE.md) for required families and [STYLE_CONTRACT.md](ST
 | Climate berries, shrubs and reeds | `art/climate/shrubs/` | `art/flora/climate/shrubs/` |
 | Trees | `art/climate/trees/` | `art/flora/climate/trees/` and existing `art/flora/sprites/` |
 
-Existing oak, birch and pine frames, masks and stumps are reused. New olive fruit-full and fruit-picked states retain evergreen foliage; winter and other seasonal derivatives use the existing season operations. Herb and shrub states distinguish depletion from winter dormancy. Ground edge recipes retain world-coordinate sampling and lighting orientation.
+Existing oak, birch and pine frames, masks and stumps are reused. Olive fruit-full and fruit-picked proposals retain evergreen foliage; all olive outputs stay blocked outside active imports because the historical canopy gate fails. Winter and other seasonal derivatives use the existing season operations. Herb and shrub states distinguish depletion from winter dormancy. Ground edge recipes retain world-coordinate sampling and lighting orientation.
 
 Original generations, exact prompts, source/reference hashes, reviews and check logs live in `/Users/rexxa/work/art-batch/B2/`. The Korean final report is `/Users/rexxa/work/art-batch/B2/REPORT.md`; progress and final sheet copies are in its `sheets/` directory. Generated originals, exports, existing reuse and derived variants are separate quantities.
 

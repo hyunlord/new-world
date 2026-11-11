@@ -1,6 +1,6 @@
 # WorldSim 역사
 
-- 2026-11-11 — ART-BATCH B2 기후 지면·식물 후보 제작을 재개하고 기존 계절·경계·기준점 도구 재사용과 미적용 import 초안 경계를 기록했다 (`art/climate/README.md`, `docs/decisions/0016-climate-art-candidates.md`); 최종 수량과 게시 증거는 제작 완료 뒤 외부 `art-batch/B2/REPORT.md`에 기록한다.
+- 2026-11-11 — ART-BATCH B2 기후 지면·식물 후보의 3회 제한 제작·검수를 마치고 기존 계절·경계·기준점 도구 재사용과 미적용 import 초안 경계를 기록했다 (`art/climate/README.md`, `docs/decisions/0016-climate-art-candidates.md`); 새 지면 8종은 스타일 실패로 미채택, olive는 canopy 실패로 제안만 보존. 최종 수량과 게시 증거는 외부 `art-batch/B2/REPORT.md`에 기록한다.
 
 > 날짜순 기록. 한 줄에 한 항목, 측정 결과는 그 패스 보고서의 숫자를 옮긴 것이다(다시 재지 않음). 자세한 내용은 태그에 있다: 시뮬레이션 줄기 `v7-final-sim` (= `354e4a13`), 아트 줄기 `v7-final-art` (= `b1ca032f`, 시뮬레이션 줄기 전체를 포함). 지운 문서는 `git show v7-final-art:<경로>`로 읽는다. 지운 것의 목록은 [archive/INDEX.md](archive/INDEX.md).
 >

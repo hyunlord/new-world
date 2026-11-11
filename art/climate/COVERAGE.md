@@ -82,6 +82,11 @@ and pod harvesting retains the living plant. Winter is a separately named
 state, not a synonym for depletion. Shape or density variants are declared in
 the lane manifest, with their source and state relationship.
 
+The 2026-11-11 planner economy instruction prioritizes the explicitly requested
+seven herb families and three climate berries plus reeds. Bible-completion
+extras (rye, millet, hemp, root, hazel, scrub and willow) retain their existing
+attempts and any valid output, but receive no optional silhouette expansion.
+
 | Production family | Climate and terrain evidence | State and identity notes |
 |---|---|---|
 | Wild grain / wheat / emmer | Bible: Mild/Neutral, reduced Harsh; plain/hill | Explicit B2 wheat coverage. Verified `wild_grain` code 3 supplies crop `emmer`; avoid cultivated field rows |

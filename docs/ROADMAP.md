@@ -4,7 +4,7 @@
 
 | 단계 | 내용 | 상태 |
 |---|---|---|
-| ART-BATCH B2 | 기후별 지면·경계·계절, 야생 식물 full/harvested/winter, 기존 나무 재사용 | 제작·검수 진행 중 (2026-11-11, `v8/art-batch-b2`); 최종 선택·공백·SHA는 `art/climate/manifest.json`과 외부 `art-batch/B2/REPORT.md` 참조 |
+| ART-BATCH B2 | 기후별 지면·경계·계절, 야생 식물 full/harvested/winter, 기존 나무 재사용 | 횟수 제한 제작·자체 검수 종료, 실패 상태는 공백 (2026-11-11, `v8/art-batch-b2`); 최종 선택·공백·SHA는 `art/climate/manifest.json`과 외부 `art-batch/B2/REPORT.md` 참조 |
 
 B2 다음: 아트 후보와 import 초안을 C2/C3가 병합하고 실제 기후·상태 선택을 연결한다. 아래 게임 로드맵의 상태를 아트 후보만으로 완료 처리하지 않는다.
 

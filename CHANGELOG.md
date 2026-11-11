@@ -7,15 +7,15 @@ tags `v7-final-sim` and `v7-final-art`.
 
 ## ART-BATCH B2 — 2026-11-11
 
-Art-only climate ground and flora production on `v8/art-batch-b2`; delivery is in progress. Final selection and counts belong to `art/climate/manifest.json` and the external `B2/REPORT.md`.
+Art-only climate ground and flora production on `v8/art-batch-b2`; the capped production/review pass is closed with explicit gaps. Final selection and counts belong to `art/climate/manifest.json` and the external `B2/REPORT.md`.
 
 ### Added
 - `art/climate/`: coverage, frozen style contract, candidate processing and import handoff documentation for eight ground families, wild plants, climate shrubs and trees.
-- Candidate namespaces `art/style05/climate/grounds/` and `art/flora/climate/`; original generations and rejected attempts remain outside the repository.
+- Selected flora namespace `art/flora/climate/`; original generations and rejected attempts remain outside the repository. All eight new ground masters failed the frozen style gate after three attempts, so no new ground PNGs are adopted.
 
 ### Changed
 - Existing flora registration, seasonal rendering and deterministic ground edges are reused. Generated originals, reused frames and derived variants are counted separately.
-- The resumed pass caps each asset at three attempts and skips optional expansion; failed states remain explicit gaps. Runtime climate/state selectors and olive wood identity remain C2/C3 integration work (ADR 0016).
+- The resumed pass caps each asset at three attempts and skips optional expansion; failed states remain explicit gaps. Olive files remain blocked proposals because the canopy gate fails. Runtime climate/state selectors and olive wood identity remain C2/C3 integration work (ADR 0016).
 
 ## M1-ART — 2026-10-21
 

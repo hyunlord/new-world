@@ -1,0 +1,59 @@
+{
+  "status": "CAPPED_ART_REVIEW_CLOSED_WITH_GAPS",
+  "art_base_commit": "f182769fe06b1cb60105e4d0bf127b6524277838",
+  "runtime_reference_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+  "source_commit": "5d0137c07c185b2758dc8e512dca9b2ef55e2d3c",
+  "lanes": {
+    "grounds": "art/climate/grounds/manifest.json",
+    "herbaceous": "art/climate/herbaceous/manifest.json",
+    "shrubs": "art/climate/shrubs/manifest.json",
+    "trees": "art/climate/trees/manifest.json"
+  },
+  "counts": {
+    "new_selected_herbaceous_pngs": 28,
+    "new_selected_shrub_pngs": 13,
+    "existing_tree_season_derivatives": 26,
+    "existing_tree_references": 19,
+    "blocked_olive_proposal_pngs": 12,
+    "new_selected_ground_masters": 0,
+    "ground_base_gaps": 8,
+    "generated_sources": 106,
+    "selected_new_normalized_flora": 41,
+    "selected_proposed_tree_sources": 3,
+    "rejected_or_superseded_sources": 62
+  },
+  "import_draft": "art/climate/art_import.draft.json",
+  "bindings_draft": "art/climate/bindings.draft.json",
+  "blocked": {
+    "grounds": [
+      "tundra",
+      "taiga_floor",
+      "steppe",
+      "temperate_meadow",
+      "mediterranean_scrub",
+      "marsh",
+      "river_gravel",
+      "highland_rock"
+    ],
+    "ground_season_frames": 32,
+    "herbaceous": [
+      "wild_hemp_full",
+      "wild_millet_full",
+      "wild_millet_harvested",
+      "wild_root_full",
+      "wild_root_harvested"
+    ],
+    "shrubs": [
+      "berry_neutral_winter",
+      "berry_mild_harvested",
+      "berry_mild_winter",
+      "wild_hazel_winter",
+      "reeds_winter",
+      "mediterranean_scrub_harvested",
+      "tundra_willow_harvested",
+      "tundra_willow_winter"
+    ]
+  },
+  "evidence": "/Users/rexxa/work/art-batch/B2/REPORT.md",
+  "runtime_applied": false
+}
