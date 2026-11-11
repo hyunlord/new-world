@@ -34,13 +34,10 @@
       ],
       "variant_ids": [
         "chop_bronze",
-        "chop_iron",
         "craft_smelting_bronze",
         "craft_casting_bronze",
-        "craft_forging_iron",
         "dig_mining_bronze",
-        "hunt_bronze",
-        "hunt_iron"
+        "hunt_bronze"
       ]
     },
     "cards": {
@@ -104,11 +101,7 @@
         "era_change",
         "livestock_birth"
       ],
-      "variant_ids": [
-        "severity_notice",
-        "severity_warning",
-        "severity_danger"
-      ]
+      "variant_ids": []
     },
     "needs": {
       "required_ids": [
@@ -142,11 +135,7 @@
       ],
       "variant_ids": [
         "need_hunger_critical",
-        "need_thirst_critical",
-        "need_sleep_critical",
-        "need_warmth_critical",
-        "need_social_critical",
-        "need_health_critical"
+        "need_thirst_critical"
       ]
     },
     "governance": {
@@ -187,6 +176,7 @@
     "Future cards and rule variants are proposed art IDs, not invented runtime identifiers.",
     "none JobKind and mood band none are absence sentinels; no sprite.",
     "Chronicle kinds share explicit semantic family artwork; every event mapping is documented separately.",
-    "Seasonal/count buckets and damaged world-object states do not apply to UI icons; need critical, material-era and panel-state variants are explicit."
+    "Seasonal/count buckets and damaged world-object states do not apply to UI icons; need critical, material-era and panel-state variants are explicit.",
+    "2026-11-11 owner economy override: max three attempts per asset; optional iron job, severity glyph, and four unstarted critical need variants omitted."
   ]
 }

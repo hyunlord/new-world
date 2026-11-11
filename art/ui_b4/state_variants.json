@@ -5,9 +5,9 @@
     "hover": "Same art; UI-owned focus/hover boundary, no new raster.",
     "selected": "Same art; ink selection ring outside canonical bounds, preserve anchor.",
     "disabled": "Same art; UI-owned dimming plus unavailable text; do not mutate source PNG.",
-    "danger": "Canonical semantic icon plus independent severity_danger glyph and localized danger label.",
-    "warning": "Canonical semantic icon plus severity_warning glyph and localized warning label.",
-    "notice": "Canonical semantic icon plus severity_notice glyph and localized notice label."
+    "danger": "Canonical semantic icon plus localized danger label; severity raster omitted by owner economy override.",
+    "warning": "Canonical semantic icon plus localized warning label; severity raster omitted by owner economy override.",
+    "notice": "Canonical semantic icon plus localized notice label; severity raster omitted by owner economy override."
   },
   "semantic_variants": "See catalogue.json variant_ids; these are authored PNGs.",
   "localization": "No text baked into art; KO/EN share canonical PNG.",

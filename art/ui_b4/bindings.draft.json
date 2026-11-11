@@ -304,25 +304,21 @@
     },
     "sleep": {
       "asset": "b4_needs_need_sleep",
-      "critical_asset": "b4_needs_need_sleep_critical",
       "existing_icon_role": true,
       "state_selector": "Integration must use actual need semantics; no thresholds invented in art."
     },
     "warmth": {
       "asset": "b4_needs_need_warmth",
-      "critical_asset": "b4_needs_need_warmth_critical",
       "existing_icon_role": false,
       "state_selector": "Integration must use actual need semantics; no thresholds invented in art."
     },
     "social": {
       "asset": "b4_needs_need_social",
-      "critical_asset": "b4_needs_need_social_critical",
       "existing_icon_role": false,
       "state_selector": "Integration must use actual need semantics; no thresholds invented in art."
     },
     "health": {
       "asset": "b4_needs_need_health",
-      "critical_asset": "b4_needs_need_health_critical",
       "existing_icon_role": false,
       "state_selector": "Integration must use actual need semantics; no thresholds invented in art."
     }
@@ -541,17 +537,7 @@
       "asset": "b4_governance_legend_hall"
     }
   ],
-  "ui_severities": {
-    "notice": {
-      "asset": "b4_alerts_severity_notice"
-    },
-    "warning": {
-      "asset": "b4_alerts_severity_warning"
-    },
-    "danger": {
-      "asset": "b4_alerts_severity_danger"
-    }
-  },
+  "ui_severities": {},
   "proposed_future_cards": {
     "human_birth": {
       "asset": "b4_cards_human_birth",
@@ -602,11 +588,6 @@
       "new_job_code": null,
       "selector_status": "Proposal; choose by recipe/material/era only after integration verification."
     },
-    "chop_iron": {
-      "asset": "b4_jobs_chop_iron",
-      "new_job_code": null,
-      "selector_status": "Proposal; choose by recipe/material/era only after integration verification."
-    },
     "craft_smelting_bronze": {
       "asset": "b4_jobs_craft_smelting_bronze",
       "new_job_code": null,
@@ -617,11 +598,6 @@
       "new_job_code": null,
       "selector_status": "Proposal; choose by recipe/material/era only after integration verification."
     },
-    "craft_forging_iron": {
-      "asset": "b4_jobs_craft_forging_iron",
-      "new_job_code": null,
-      "selector_status": "Proposal; choose by recipe/material/era only after integration verification."
-    },
     "dig_mining_bronze": {
       "asset": "b4_jobs_dig_mining_bronze",
       "new_job_code": null,
@@ -629,11 +605,6 @@
     },
     "hunt_bronze": {
       "asset": "b4_jobs_hunt_bronze",
-      "new_job_code": null,
-      "selector_status": "Proposal; choose by recipe/material/era only after integration verification."
-    },
-    "hunt_iron": {
-      "asset": "b4_jobs_hunt_iron",
       "new_job_code": null,
       "selector_status": "Proposal; choose by recipe/material/era only after integration verification."
     }
@@ -810,199 +781,231 @@
       "asset": "b4_jobs_slaughter"
     }
   ],
-  "chronicle_note": "34 events have semantically matched pictures; the remaining32 share the generic notice indicator and retain their exact localized event text. All66 source kinds are accounted for; there are not66 unique notification drawings.",
+  "chronicle_note": "34 events have semantically matched pictures; remaining32 retain the existing UI notice indicator and exact localized text. All66 source kinds are accounted for; no66 unique notification drawing claim.",
   "ui_chronicle_generic_notice": [
     {
       "code": 1,
       "name": "FoundingMember",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 3,
       "name": "CameOfAge",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 4,
       "name": "BecameElder",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 6,
       "name": "DepartureCancelled",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 7,
       "name": "Settled",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 8,
       "name": "Joined",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 9,
       "name": "LeftSettlement",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 10,
       "name": "Widowed",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 13,
       "name": "FissionStarted",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 14,
       "name": "DaughterFounded",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 15,
       "name": "FissionCancelled",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 16,
       "name": "SettlementDissolved",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 17,
       "name": "PorterDeparted",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 20,
       "name": "VillagesEstranged",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 21,
       "name": "VillagesReconciled",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 24,
       "name": "ToolBroke",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 28,
       "name": "KnowledgeLost",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 30,
       "name": "PressureEnded",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 32,
       "name": "Fight",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 35,
       "name": "WolfKilled",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 37,
       "name": "Recovered",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 39,
       "name": "MigrantsJoined",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 40,
       "name": "MigrantsDeclined",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 43,
       "name": "TraderLeft",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 45,
       "name": "StewardAction",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 47,
       "name": "MindChoice",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 48,
       "name": "FirstCookedMeal",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 49,
       "name": "FirstDriedStore",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 51,
       "name": "WinterStoredSurvived",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 53,
       "name": "FoodOperation",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 56,
       "name": "CropFailure",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     },
     {
       "code": 65,
       "name": "LivestockDied",
-      "asset": "b4_alerts_severity_notice",
-      "semantic": "generic notice indicator; event meaning comes from localized text"
+      "asset": null,
+      "semantic": "generic notice indicator; event meaning comes from localized text",
+      "presentation": "Existing UI notice indicator with exact localized event text; optional new severity raster omitted."
     }
   ]
 }

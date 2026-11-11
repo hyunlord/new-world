@@ -165,12 +165,6 @@
     },
     {
       "role": "ui_job_icon",
-      "id": "b4_jobs_chop_iron",
-      "source": "art/style05/ui_b4/jobs/chop_iron.png",
-      "dest": "ui/b4/jobs/chop_iron.png"
-    },
-    {
-      "role": "ui_job_icon",
       "id": "b4_jobs_craft_smelting_bronze",
       "source": "art/style05/ui_b4/jobs/craft_smelting_bronze.png",
       "dest": "ui/b4/jobs/craft_smelting_bronze.png"
@@ -183,12 +177,6 @@
     },
     {
       "role": "ui_job_icon",
-      "id": "b4_jobs_craft_forging_iron",
-      "source": "art/style05/ui_b4/jobs/craft_forging_iron.png",
-      "dest": "ui/b4/jobs/craft_forging_iron.png"
-    },
-    {
-      "role": "ui_job_icon",
       "id": "b4_jobs_dig_mining_bronze",
       "source": "art/style05/ui_b4/jobs/dig_mining_bronze.png",
       "dest": "ui/b4/jobs/dig_mining_bronze.png"
@@ -198,12 +186,6 @@
       "id": "b4_jobs_hunt_bronze",
       "source": "art/style05/ui_b4/jobs/hunt_bronze.png",
       "dest": "ui/b4/jobs/hunt_bronze.png"
-    },
-    {
-      "role": "ui_job_icon",
-      "id": "b4_jobs_hunt_iron",
-      "source": "art/style05/ui_b4/jobs/hunt_iron.png",
-      "dest": "ui/b4/jobs/hunt_iron.png"
     },
     {
       "role": "ui_decision_illustration",
@@ -518,24 +500,6 @@
       "dest": "ui/b4/alerts/livestock_birth.png"
     },
     {
-      "role": "ui_alert_icon",
-      "id": "b4_alerts_severity_notice",
-      "source": "art/style05/ui_b4/alerts/severity_notice.png",
-      "dest": "ui/b4/alerts/severity_notice.png"
-    },
-    {
-      "role": "ui_alert_icon",
-      "id": "b4_alerts_severity_warning",
-      "source": "art/style05/ui_b4/alerts/severity_warning.png",
-      "dest": "ui/b4/alerts/severity_warning.png"
-    },
-    {
-      "role": "ui_alert_icon",
-      "id": "b4_alerts_severity_danger",
-      "source": "art/style05/ui_b4/alerts/severity_danger.png",
-      "dest": "ui/b4/alerts/severity_danger.png"
-    },
-    {
       "role": "ui_need_mood_icon",
       "id": "b4_needs_need_hunger",
       "source": "art/style05/ui_b4/needs/need_hunger.png",
@@ -708,30 +672,6 @@
       "id": "b4_needs_need_thirst_critical",
       "source": "art/style05/ui_b4/needs/need_thirst_critical.png",
       "dest": "ui/b4/needs/need_thirst_critical.png"
-    },
-    {
-      "role": "ui_need_mood_icon",
-      "id": "b4_needs_need_sleep_critical",
-      "source": "art/style05/ui_b4/needs/need_sleep_critical.png",
-      "dest": "ui/b4/needs/need_sleep_critical.png"
-    },
-    {
-      "role": "ui_need_mood_icon",
-      "id": "b4_needs_need_warmth_critical",
-      "source": "art/style05/ui_b4/needs/need_warmth_critical.png",
-      "dest": "ui/b4/needs/need_warmth_critical.png"
-    },
-    {
-      "role": "ui_need_mood_icon",
-      "id": "b4_needs_need_social_critical",
-      "source": "art/style05/ui_b4/needs/need_social_critical.png",
-      "dest": "ui/b4/needs/need_social_critical.png"
-    },
-    {
-      "role": "ui_need_mood_icon",
-      "id": "b4_needs_need_health_critical",
-      "source": "art/style05/ui_b4/needs/need_health_critical.png",
-      "dest": "ui/b4/needs/need_health_critical.png"
     },
     {
       "role": "ui_governance_icon",

@@ -6,9 +6,9 @@ ART-BATCH round 2 requests jobs, alerts, needs/moods, decision illustrations, st
 
 ## Decision
 
-Reuse A4's exact normalizer, its tests and its comparison-sheet tool, with no new package dependency. Author 148 canonical images in five bounded lanes. Record existing runtime names separately from proposed art variants. Canonical icons are 64x64; decision vignettes 520x260; centers are UI anchors with null footprints. All source images come from the built-in image generator with actual reference attachments and preserved alpha. Every selected candidate has an immutable attempt record, normalized export, sidecar, contact-sheet comparison and visual review.
+Reuse A4's exact normalizer, its tests and its comparison-sheet tool, with no new package dependency. Author 138 canonical images in five bounded lanes. Record existing runtime names separately from proposed art variants. Canonical icons are 64x64; decision vignettes 520x260; centers are UI anchors with null footprints. All source images come from the built-in image generator with actual reference attachments and preserved alpha. Every selected candidate has an immutable attempt record, normalized export, sidecar, contact-sheet comparison and visual review.
 
-Needs use distinct adequate/critical silhouettes; era-specific work and card variants have explicit material permissions. The no-mood sentinel remains absence. Generic selectable states share canonical art through unapplied UI treatment recipes. After base coverage and variants, each lane regenerates 10–20 percent selected from its weakest contact-sheet candidates and retains the alternatives.
+Two already-generated need critical variants use distinct silhouettes; era-specific work and card variants have explicit material permissions. The no-mood sentinel remains absence. Generic selectable states share canonical art through unapplied UI treatment recipes. After base coverage and variants, each lane regenerates 10–20 percent selected from its weakest contact-sheet candidates and retains the alternatives.
 
 ## Alternatives considered
 
@@ -20,6 +20,8 @@ Needs use distinct adequate/critical silhouettes; era-specific work and card var
 ## Consequences
 
 Importer drafts need a full immutable art commit and explicit UI metadata. Current UI image consumers and proposed binding groups still require C2/C3 integration. Structural/semantic/general-vision evidence is not the historical generator judge and does not confer owner approval. Raw/evidence data stays outside the repository.
+
+The 2026-11-11 owner economy override caps each asset at three attempts and omits unstarted optional iron job, severity glyph and four critical need variants.
 
 ## Date
 

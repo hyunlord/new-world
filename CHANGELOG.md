@@ -8,7 +8,7 @@ tags `v7-final-sim` and `v7-final-art`.
 ## ART-BATCH B4 — 2026-11-10
 
 ### Added
-- UI art production contract and 148-subject catalogue covering jobs, alerts, needs/moods, decision vignettes, steward rules, building categories and room legends (`art/ui_b4/`). Runtime source names are pinned to game commit `4a44336e7782f2b27615d942b5cd54dbfee89406`; proposed future identifiers remain explicit.
+- UI art production contract and 138-subject catalogue covering jobs, alerts, needs/moods, decision vignettes, steward rules, building categories and room legends (`art/ui_b4/`). Runtime source names are pinned to game commit `4a44336e7782f2b27615d942b5cd54dbfee89406`; proposed future identifiers remain explicit.
 - Existing A4 image normalization, comparison-sheet tools and eight regression tests reused unchanged in `art/techmap/`.
 - ADR 0016 records the art-only scope, canonical canvases and mandatory weakest-candidate regeneration pass. Production and verification results will be appended after selection.
 

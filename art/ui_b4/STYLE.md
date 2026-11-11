@@ -16,7 +16,7 @@ Compare icons at 32/48/64 on light and dark; narrative at native and exact 2x. I
 
 ## Eras and variants
 
-Paleolithic/neolithic use no metal or dyed cloth. Generic job art uses its earliest permitted material. Metal-specific variants explicitly label bronze/iron. Need urgency and mood valence use distinct silhouettes, never color alone. Selection/hover/disabled treatments are proposed UI recipes sharing canonical art; they are not additional generated PNGs. Card illustrations use semantic IDs, with livestock birth distinct from human birth. Proposed future types are separated from verified runtime IDs. After all required subjects and variants, regenerate the weakest 10–20 percent and retain before/after evidence.
+Paleolithic/neolithic use no metal or dyed cloth. Generic job art uses its earliest permitted material. Metal-specific variants explicitly label bronze/iron. Retained need urgency variants and mood valence use distinct silhouettes, never color alone. Selection/hover/disabled treatments are proposed UI recipes sharing canonical art; they are not additional generated PNGs. Card illustrations use semantic IDs, with livestock birth distinct from human birth. Proposed future types are separated from verified runtime IDs. After all required subjects and variants, regenerate the weakest 10–20 percent and retain before/after evidence.
 
 ## Evidence
 
