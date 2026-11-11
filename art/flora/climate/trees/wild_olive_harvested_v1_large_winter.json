@@ -1,0 +1,250 @@
+{
+  "id": "wild_olive_harvested_v1_large_winter",
+  "path": "/Users/rexxa/work/art-batch-b2/art/flora/climate/trees/wild_olive_harvested_v1_large_winter.png",
+  "sha256": "33b25cc06c293476444abe74a9823f6985b224215d604037b8dc627fc599322f",
+  "mask_path": "/Users/rexxa/work/art-batch-b2/art/flora/climate/trees/wild_olive_harvested_v1_large_winter_mask.png",
+  "mask_sha256": "26e7a233ea021fb4f722f3d8b62e4dd7da0c1dcf52e25fcd15abfe1c36982c79",
+  "record": {
+    "id": "wild_olive_harvested_v1",
+    "species": "wild_olive",
+    "state": "harvested",
+    "variant": "v1",
+    "source": "/Users/rexxa/work/art-batch/B2/trees/raw/wild_olive_harvested_v1_try3.png",
+    "generation_record": "/Users/rexxa/work/art-batch/B2/trees/records/wild_olive_harvested_v1_try3.json",
+    "transform_reference": "wild_olive_full_v1",
+    "season_tints": {
+      "spring": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "winter": {
+        "delta_lab": [
+          -8.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "autumn": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    }
+  },
+  "provenance": {
+    "source": {
+      "path": "/Users/rexxa/work/art-batch/B2/trees/raw/wild_olive_harvested_v1_try3.png",
+      "sha256": "ab9e17a2e55e78907c0559a2dd7fd2869655e20512299308d63435ee1230222b"
+    },
+    "generation_record": {
+      "path": "/Users/rexxa/work/art-batch/B2/trees/records/wild_olive_harvested_v1_try3.json",
+      "sha256": "25180d77f059a5535f705c3714c0baa677a0e56a0b64fd1e80d96d033c2d9c11"
+    },
+    "prompt_sha256": "4b3024d94dc7cb1065fe5cb776911e106a841e6bade01184426af7da9f5a4461",
+    "references": [
+      {
+        "path": "/Users/rexxa/work/art-batch/B2/trees/raw/wild_olive_full_v1_try1.png",
+        "sha256": "694105ed30ded26ce6f7cc904c7f31fe7250e35fcab2fee58242801ea0d4f41a"
+      },
+      {
+        "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+        "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+      },
+      {
+        "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+        "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+      }
+    ],
+    "seed": null,
+    "attempt": 3
+  },
+  "transform": {
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "crop": [
+      57,
+      65,
+      1200,
+      1155
+    ],
+    "scale": 0.14732965009208104,
+    "scaled_canvas": [
+      168,
+      161
+    ],
+    "offset": [
+      13,
+      20
+    ],
+    "output_canvas": [
+      192,
+      192
+    ],
+    "anchor": [
+      96,
+      180
+    ],
+    "target_height": 160
+  },
+  "footprint": [
+    1,
+    1
+  ],
+  "checks": {
+    "alpha_min": 0,
+    "alpha_max": 255,
+    "opaque_height": 159,
+    "opaque_components": 1,
+    "visible_border": false,
+    "raw_transparent": true,
+    "raw_opaque_border": false,
+    "source_opaque_outside_crop": 0,
+    "canvas_matches": true,
+    "passed": true
+  },
+  "projection": {
+    "family": "tree",
+    "anchor": [
+      96,
+      180
+    ],
+    "height_band": [
+      128,
+      192
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 12924,
+    "base_row": 180,
+    "base_error": 0,
+    "height": 159,
+    "gradient_x": -0.7538541102514507,
+    "gradient_y": -1.061460196996609,
+    "light_angle_degrees": 234.61744804845782,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/B2/trees/raw/wild_olive_harvested_v1_try3.png",
+    "sha256": "ab9e17a2e55e78907c0559a2dd7fd2869655e20512299308d63435ee1230222b",
+    "family": "plants",
+    "metrics": {
+      "edge_density": 0.2932722568011749,
+      "saturation_q25": 0.3519033688847631,
+      "saturation_q75": 0.41245530759638294,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.017850422325570037,
+      "foreground_pixels": 33469
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "pair": {
+    "lower_box_y": 134,
+    "lower_alpha128_intersection": 1562,
+    "lower_alpha128_union": 1631,
+    "lower_alpha128_iou": 0.9576946658491723,
+    "lower_alpha_bytes_exact_fraction": 0.8347701149425287,
+    "lower_alpha_bytes_exact_on_visible_union_fraction": 0.1685494803434252,
+    "summer_base_row": 180,
+    "bare_base_row": 180,
+    "base_delta_px": 0,
+    "summer_root_span_at_base": [
+      97,
+      97
+    ],
+    "bare_root_span_at_base": [
+      97,
+      97
+    ],
+    "exact_lower_silhouette": false
+  },
+  "derived": true,
+  "tint": {
+    "delta_lab": [
+      -8.0,
+      0.0,
+      0.0
+    ],
+    "frame": "foliage",
+    "snow_cap": {
+      "depth_px": 0,
+      "alpha": 0.0
+    }
+  },
+  "failures": [],
+  "status": "CANDIDATE_REVIEW_REQUIRED",
+  "production_species_status": "PROPOSED_ART_CANDIDATE_NOT_PRODUCTION_SPECIES",
+  "canopy_diagnostics": {
+    "id": "wild_olive_harvested_v1_large_winter",
+    "failures": [],
+    "checks": {
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "opaque_height": 159,
+      "opaque_components": 1,
+      "visible_border": false,
+      "raw_transparent": true,
+      "raw_opaque_border": false,
+      "source_opaque_outside_crop": 0,
+      "canvas_matches": true,
+      "passed": true
+    },
+    "mask": {
+      "trunk_box_fraction": 0.01856763925729443,
+      "foliage_cluster_coverage": 1.0,
+      "mask_pixels": 4283,
+      "foliage_pixels": 3452,
+      "passed": true,
+      "foliage_gate_applicable": true
+    },
+    "summer": {
+      "mean_hue_degrees": 50.331314457730244,
+      "mean_saturation": 0.5097484057685719,
+      "palette_hue_range_degrees": [
+        88.88888888888891,
+        112.5
+      ],
+      "passed": false
+    }
+  }
+}

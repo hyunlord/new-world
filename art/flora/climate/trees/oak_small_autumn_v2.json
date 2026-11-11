@@ -1,0 +1,38 @@
+{
+  "id": "oak_small_autumn_v2",
+  "species": "oak",
+  "size": "small",
+  "state": "full",
+  "season": "autumn",
+  "path": "art/flora/climate/trees/oak_small_autumn_v2.png",
+  "sha256": "847f2e128847c34b4b45fabffdd48f9dbe4f3c787131b8110458da18e7bc4465",
+  "canvas": [
+    128,
+    112
+  ],
+  "anchor": [
+    64,
+    100
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "kind": "derived_season",
+  "source": "art/flora/sprites/oak_small_v2.png",
+  "source_sha256": "d1c32570e23ba1d60b521b4a31a4f5598e19b2e7f48e5f436fe60ba2a639df77",
+  "mask": "art/flora/masks/oak_small_v2.png",
+  "mask_sha256": "20614eb9111a148e57ee79ab4c01a3e777c303d7a5e68c33b9fb95d2e1eda8a8",
+  "tint": {
+    "delta_lab": [
+      -8.0,
+      35.0,
+      15.0
+    ],
+    "frame": "foliage",
+    "snow_cap": {
+      "depth_px": 0,
+      "alpha": 0.0
+    }
+  }
+}

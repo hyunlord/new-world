@@ -1,0 +1,38 @@
+{
+  "id": "pine_large_spring_v1",
+  "species": "pine",
+  "size": "large",
+  "state": "full",
+  "season": "spring",
+  "path": "art/flora/climate/trees/pine_large_spring_v1.png",
+  "sha256": "f7b54c638c8263f9306dea75ee5fa340a01a9e11fe3b77d95db35f9e7dc19506",
+  "canvas": [
+    192,
+    192
+  ],
+  "anchor": [
+    96,
+    180
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "kind": "derived_season",
+  "source": "art/flora/sprites/pine_large_v1.png",
+  "source_sha256": "c69d226cebddcb92d5023fd820565d64fbabd1a92cb1e2fb285d89f6721d30e6",
+  "mask": "art/flora/masks/pine_large_v1.png",
+  "mask_sha256": "9b0d55bce8477dd23df571182cea58eda0e3f83eeb2760dda6c7e8a85e2da01c",
+  "tint": {
+    "delta_lab": [
+      6.0,
+      0.0,
+      6.0
+    ],
+    "frame": "foliage",
+    "snow_cap": {
+      "depth_px": 0,
+      "alpha": 0.0
+    }
+  }
+}

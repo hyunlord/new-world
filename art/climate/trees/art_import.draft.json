@@ -1,0 +1,2420 @@
+{
+  "status": "DRAFT_NOT_RUNTIME_IMPORT",
+  "files": [
+    {
+      "id": "oak_small_spring_v1",
+      "species": "oak",
+      "size": "small",
+      "state": "full",
+      "season": "spring",
+      "path": "art/flora/climate/trees/oak_small_spring_v1.png",
+      "sha256": "5a20f65684f5d727d2e1349b6a4fab447ce57be11d0f9632400ebd44aff7dac8",
+      "canvas": [
+        128,
+        112
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "source": "art/flora/sprites/oak_small_v1.png",
+      "source_sha256": "38c6970cf65a5144291399da25068eec09c6209e826c5ccd244155b4e086773f",
+      "mask": "art/flora/masks/oak_small_v1.png",
+      "mask_sha256": "aed50a4c5445cee6efe02c4cc52bc607eca736c5f7b86fbadab22d6314e23d4a",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+    },
+    {
+      "id": "oak_small_autumn_v1",
+      "species": "oak",
+      "size": "small",
+      "state": "full",
+      "season": "autumn",
+      "path": "art/flora/climate/trees/oak_small_autumn_v1.png",
+      "sha256": "21333bfd8152ca0ba0be31429a8ed381a0f5a5a5e856e696bd13cd5aad60d566",
+      "canvas": [
+        128,
+        112
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "source": "art/flora/sprites/oak_small_v1.png",
+      "source_sha256": "38c6970cf65a5144291399da25068eec09c6209e826c5ccd244155b4e086773f",
+      "mask": "art/flora/masks/oak_small_v1.png",
+      "mask_sha256": "aed50a4c5445cee6efe02c4cc52bc607eca736c5f7b86fbadab22d6314e23d4a",
+      "tint": {
+        "delta_lab": [
+          -8.0,
+          35.0,
+          15.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+    },
+    {
+      "id": "oak_small_spring_v2",
+      "species": "oak",
+      "size": "small",
+      "state": "full",
+      "season": "spring",
+      "path": "art/flora/climate/trees/oak_small_spring_v2.png",
+      "sha256": "1509afbe54a989b5c0fc8610be94c745d0957e5af3d8f7eeb2e597b37788cd46",
+      "canvas": [
+        128,
+        112
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "source": "art/flora/sprites/oak_small_v2.png",
+      "source_sha256": "d1c32570e23ba1d60b521b4a31a4f5598e19b2e7f48e5f436fe60ba2a639df77",
+      "mask": "art/flora/masks/oak_small_v2.png",
+      "mask_sha256": "20614eb9111a148e57ee79ab4c01a3e777c303d7a5e68c33b9fb95d2e1eda8a8",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+    },
+    {
+      "id": "oak_small_autumn_v2",
+      "species": "oak",
+      "size": "small",
+      "state": "full",
+      "season": "autumn",
+      "path": "art/flora/climate/trees/oak_small_autumn_v2.png",
+      "sha256": "847f2e128847c34b4b45fabffdd48f9dbe4f3c787131b8110458da18e7bc4465",
+      "canvas": [
+        128,
+        112
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "source": "art/flora/sprites/oak_small_v2.png",
+      "source_sha256": "d1c32570e23ba1d60b521b4a31a4f5598e19b2e7f48e5f436fe60ba2a639df77",
+      "mask": "art/flora/masks/oak_small_v2.png",
+      "mask_sha256": "20614eb9111a148e57ee79ab4c01a3e777c303d7a5e68c33b9fb95d2e1eda8a8",
+      "tint": {
+        "delta_lab": [
+          -8.0,
+          35.0,
+          15.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+    },
+    {
+      "id": "oak_large_spring_v1",
+      "species": "oak",
+      "size": "large",
+      "state": "full",
+      "season": "spring",
+      "path": "art/flora/climate/trees/oak_large_spring_v1.png",
+      "sha256": "f2f7bbbe642e01e3eb2972327524a1961483c4893113ae418008d685c2db3397",
+      "canvas": [
+        192,
+        192
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "source": "art/flora/sprites/oak_large_v1.png",
+      "source_sha256": "409c1005a4c4987a88a0e09b075ae5bce0b2dea90806a68e9d0f8989e1297cad",
+      "mask": "art/flora/masks/oak_large_v1.png",
+      "mask_sha256": "83bbed04aedbb28d80a4bd54cf5b0c916853880575054499f63a80fb98d7cf41",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+    },
+    {
+      "id": "oak_large_autumn_v1",
+      "species": "oak",
+      "size": "large",
+      "state": "full",
+      "season": "autumn",
+      "path": "art/flora/climate/trees/oak_large_autumn_v1.png",
+      "sha256": "a3c1d929a3382b9a253c1f75f4580568577d21cfbd9f19c17ee3e469969d8c06",
+      "canvas": [
+        192,
+        192
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "source": "art/flora/sprites/oak_large_v1.png",
+      "source_sha256": "409c1005a4c4987a88a0e09b075ae5bce0b2dea90806a68e9d0f8989e1297cad",
+      "mask": "art/flora/masks/oak_large_v1.png",
+      "mask_sha256": "83bbed04aedbb28d80a4bd54cf5b0c916853880575054499f63a80fb98d7cf41",
+      "tint": {
+        "delta_lab": [
+          -8.0,
+          35.0,
+          15.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+    },
+    {
+      "id": "oak_large_spring_v2",
+      "species": "oak",
+      "size": "large",
+      "state": "full",
+      "season": "spring",
+      "path": "art/flora/climate/trees/oak_large_spring_v2.png",
+      "sha256": "bbe2016b2e03c7514830584418ff76df344fa2677c7efbc2bb9fca213b99f624",
+      "canvas": [
+        192,
+        192
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "source": "art/flora/sprites/oak_large_v2.png",
+      "source_sha256": "e2f99a16a2aec6ec0ce2d2a5184a2339a9538f3e0cda165225d8be3ed50e944e",
+      "mask": "art/flora/masks/oak_large_v2.png",
+      "mask_sha256": "cb43dadbb0e70a1002e8bc46e37b17f98c5f00c6f77a30589ce9f791a64dbed4",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+    },
+    {
+      "id": "oak_large_autumn_v2",
+      "species": "oak",
+      "size": "large",
+      "state": "full",
+      "season": "autumn",
+      "path": "art/flora/climate/trees/oak_large_autumn_v2.png",
+      "sha256": "e6a782aaad86c374ec8e0a100f6e888a1fc7fd8507fadd6fd641335c6a9e2513",
+      "canvas": [
+        192,
+        192
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "source": "art/flora/sprites/oak_large_v2.png",
+      "source_sha256": "e2f99a16a2aec6ec0ce2d2a5184a2339a9538f3e0cda165225d8be3ed50e944e",
+      "mask": "art/flora/masks/oak_large_v2.png",
+      "mask_sha256": "cb43dadbb0e70a1002e8bc46e37b17f98c5f00c6f77a30589ce9f791a64dbed4",
+      "tint": {
+        "delta_lab": [
+          -8.0,
+          35.0,
+          15.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+    },
+    {
+      "id": "birch_small_spring_v1",
+      "species": "birch",
+      "size": "small",
+      "state": "full",
+      "season": "spring",
+      "path": "art/flora/climate/trees/birch_small_spring_v1.png",
+      "sha256": "d29dd33ea342e04a0dfb0e09a1b1801cc3016e58462d3b76f1ae13c00cc52c1a",
+      "canvas": [
+        128,
+        112
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "source": "art/flora/sprites/birch_small_v1.png",
+      "source_sha256": "706e8919b579025a1762860f9fd485f97cc18c7f3e8740d67c526de79e9ce70d",
+      "mask": "art/flora/masks/birch_small_v1.png",
+      "mask_sha256": "078ad68c6eb98f2e877206aaa9144fa7637a06e8db83260fed7ce38daf147102",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+    },
+    {
+      "id": "birch_small_autumn_v1",
+      "species": "birch",
+      "size": "small",
+      "state": "full",
+      "season": "autumn",
+      "path": "art/flora/climate/trees/birch_small_autumn_v1.png",
+      "sha256": "b1f8dc0612e452f6e03ab36028a8d4c347fbe5b544fa5a89a3862449fc124f80",
+      "canvas": [
+        128,
+        112
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "source": "art/flora/sprites/birch_small_v1.png",
+      "source_sha256": "706e8919b579025a1762860f9fd485f97cc18c7f3e8740d67c526de79e9ce70d",
+      "mask": "art/flora/masks/birch_small_v1.png",
+      "mask_sha256": "078ad68c6eb98f2e877206aaa9144fa7637a06e8db83260fed7ce38daf147102",
+      "tint": {
+        "delta_lab": [
+          8.0,
+          10.0,
+          32.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+    },
+    {
+      "id": "birch_small_spring_v2",
+      "species": "birch",
+      "size": "small",
+      "state": "full",
+      "season": "spring",
+      "path": "art/flora/climate/trees/birch_small_spring_v2.png",
+      "sha256": "421e4994b6afd4cc3998020fe9a069aa74aa3d7939c325941d3ec893a424e69e",
+      "canvas": [
+        128,
+        112
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "source": "art/flora/sprites/birch_small_v2.png",
+      "source_sha256": "10cd21c4737518042da9dbc0fe5b5560d9bdf30e8c4a2f360430e5e83f8606a5",
+      "mask": "art/flora/masks/birch_small_v2.png",
+      "mask_sha256": "0bebc1e6d5ec2c4d454842d9f377d820a674ca5df448d19382f854fc54ca0b05",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+    },
+    {
+      "id": "birch_small_autumn_v2",
+      "species": "birch",
+      "size": "small",
+      "state": "full",
+      "season": "autumn",
+      "path": "art/flora/climate/trees/birch_small_autumn_v2.png",
+      "sha256": "1bf21927daeb0abaf58429e9709222ae0d921bb1c0cb9947efc2275c83e9f295",
+      "canvas": [
+        128,
+        112
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "source": "art/flora/sprites/birch_small_v2.png",
+      "source_sha256": "10cd21c4737518042da9dbc0fe5b5560d9bdf30e8c4a2f360430e5e83f8606a5",
+      "mask": "art/flora/masks/birch_small_v2.png",
+      "mask_sha256": "0bebc1e6d5ec2c4d454842d9f377d820a674ca5df448d19382f854fc54ca0b05",
+      "tint": {
+        "delta_lab": [
+          8.0,
+          10.0,
+          32.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+    },
+    {
+      "id": "birch_large_spring_v1",
+      "species": "birch",
+      "size": "large",
+      "state": "full",
+      "season": "spring",
+      "path": "art/flora/climate/trees/birch_large_spring_v1.png",
+      "sha256": "4022d99ab41b683ecfa84b44ff8f1d6fd069f7df0713f257c402f113e5259b7f",
+      "canvas": [
+        192,
+        192
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "source": "art/flora/sprites/birch_large_v1.png",
+      "source_sha256": "2683048c36fe7cd7f24cdcef5046f27ab87ca8d39db245448654ae83858fac5f",
+      "mask": "art/flora/masks/birch_large_v1.png",
+      "mask_sha256": "744c5e6a1a234f6ac8ca08b2c80a41916361a34f23f7f1507ab847e40e72eb2a",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+    },
+    {
+      "id": "birch_large_autumn_v1",
+      "species": "birch",
+      "size": "large",
+      "state": "full",
+      "season": "autumn",
+      "path": "art/flora/climate/trees/birch_large_autumn_v1.png",
+      "sha256": "275d64d7ca3f4ed15b3fe2a0cdbda15b12d296a4fe6dade46ece6c1828845e7a",
+      "canvas": [
+        192,
+        192
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "source": "art/flora/sprites/birch_large_v1.png",
+      "source_sha256": "2683048c36fe7cd7f24cdcef5046f27ab87ca8d39db245448654ae83858fac5f",
+      "mask": "art/flora/masks/birch_large_v1.png",
+      "mask_sha256": "744c5e6a1a234f6ac8ca08b2c80a41916361a34f23f7f1507ab847e40e72eb2a",
+      "tint": {
+        "delta_lab": [
+          8.0,
+          10.0,
+          32.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+    },
+    {
+      "id": "birch_large_spring_v2",
+      "species": "birch",
+      "size": "large",
+      "state": "full",
+      "season": "spring",
+      "path": "art/flora/climate/trees/birch_large_spring_v2.png",
+      "sha256": "fa74e2f8cffbd4e1a70806498ab5c7c8d94205817b020b48dc1aeed52d8b9cb9",
+      "canvas": [
+        192,
+        192
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "source": "art/flora/sprites/birch_large_v2.png",
+      "source_sha256": "20edfbe6ba0486c3e3c35e60501da563739e402416e1b2a048bd5099028062f5",
+      "mask": "art/flora/masks/birch_large_v2.png",
+      "mask_sha256": "79c46d1e540a412bcb55342795df92fadc23d3b314cbb9f5dd5adc40f2d9926e",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+    },
+    {
+      "id": "birch_large_autumn_v2",
+      "species": "birch",
+      "size": "large",
+      "state": "full",
+      "season": "autumn",
+      "path": "art/flora/climate/trees/birch_large_autumn_v2.png",
+      "sha256": "55fe5c32d2c829f6d51efaee0c846591d3a5876068fe9acacbb3b8c3c0dcaef7",
+      "canvas": [
+        192,
+        192
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "source": "art/flora/sprites/birch_large_v2.png",
+      "source_sha256": "20edfbe6ba0486c3e3c35e60501da563739e402416e1b2a048bd5099028062f5",
+      "mask": "art/flora/masks/birch_large_v2.png",
+      "mask_sha256": "79c46d1e540a412bcb55342795df92fadc23d3b314cbb9f5dd5adc40f2d9926e",
+      "tint": {
+        "delta_lab": [
+          8.0,
+          10.0,
+          32.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+    },
+    {
+      "id": "pine_small_spring_v1",
+      "species": "pine",
+      "size": "small",
+      "state": "full",
+      "season": "spring",
+      "path": "art/flora/climate/trees/pine_small_spring_v1.png",
+      "sha256": "1e573939262b39f50ee1f839b804bcfd9ebc48596110a34c348ece3f9900eee3",
+      "canvas": [
+        128,
+        112
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "source": "art/flora/sprites/pine_small_v1.png",
+      "source_sha256": "983f71a2a386f98cd12a990b2963b7672c1a4d7dfcdc84076c963f5b0b011b76",
+      "mask": "art/flora/masks/pine_small_v1.png",
+      "mask_sha256": "7c6e0eae18f6f3ae93212de3aa9f2bc94a6c69de9e71447ecb173af6ec770fbf",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+    },
+    {
+      "id": "pine_small_autumn_v1",
+      "species": "pine",
+      "size": "small",
+      "state": "full",
+      "season": "autumn",
+      "path": "art/flora/climate/trees/pine_small_autumn_v1.png",
+      "sha256": "983f71a2a386f98cd12a990b2963b7672c1a4d7dfcdc84076c963f5b0b011b76",
+      "canvas": [
+        128,
+        112
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "source": "art/flora/sprites/pine_small_v1.png",
+      "source_sha256": "983f71a2a386f98cd12a990b2963b7672c1a4d7dfcdc84076c963f5b0b011b76",
+      "mask": "art/flora/masks/pine_small_v1.png",
+      "mask_sha256": "7c6e0eae18f6f3ae93212de3aa9f2bc94a6c69de9e71447ecb173af6ec770fbf",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+    },
+    {
+      "id": "pine_small_spring_v2",
+      "species": "pine",
+      "size": "small",
+      "state": "full",
+      "season": "spring",
+      "path": "art/flora/climate/trees/pine_small_spring_v2.png",
+      "sha256": "4bcbad242d20eac0672e4c46f856ac645835a78386a126f0f95d51c5aff36aa7",
+      "canvas": [
+        128,
+        112
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "source": "art/flora/sprites/pine_small_v2.png",
+      "source_sha256": "d0a8077b26ccc26fb028947d56a9254c210553862000cff79d9cb4676d46fe5c",
+      "mask": "art/flora/masks/pine_small_v2.png",
+      "mask_sha256": "c2b3565822a9328ae08f5ccde352dc81310143709512fee8f21085e3ed7c6e7d",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+    },
+    {
+      "id": "pine_small_autumn_v2",
+      "species": "pine",
+      "size": "small",
+      "state": "full",
+      "season": "autumn",
+      "path": "art/flora/climate/trees/pine_small_autumn_v2.png",
+      "sha256": "d0a8077b26ccc26fb028947d56a9254c210553862000cff79d9cb4676d46fe5c",
+      "canvas": [
+        128,
+        112
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "source": "art/flora/sprites/pine_small_v2.png",
+      "source_sha256": "d0a8077b26ccc26fb028947d56a9254c210553862000cff79d9cb4676d46fe5c",
+      "mask": "art/flora/masks/pine_small_v2.png",
+      "mask_sha256": "c2b3565822a9328ae08f5ccde352dc81310143709512fee8f21085e3ed7c6e7d",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+    },
+    {
+      "id": "pine_small_winter_v1",
+      "species": "pine",
+      "size": "small",
+      "state": "winter",
+      "season": "winter",
+      "path": "art/flora/climate/trees/pine_small_winter_v1.png",
+      "sha256": "ceccdefbaa357a37d0aa32806a262b5e8e4fa4f6cc93290b677f29c04aac9920",
+      "canvas": [
+        128,
+        112
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "source": "art/flora/sprites/pine_small_v1.png",
+      "source_sha256": "983f71a2a386f98cd12a990b2963b7672c1a4d7dfcdc84076c963f5b0b011b76",
+      "mask": "art/flora/masks/pine_small_v1.png",
+      "mask_sha256": "7c6e0eae18f6f3ae93212de3aa9f2bc94a6c69de9e71447ecb173af6ec770fbf",
+      "tint": {
+        "delta_lab": [
+          -8.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 3,
+          "alpha": 0.7
+        }
+      },
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+    },
+    {
+      "id": "pine_large_spring_v1",
+      "species": "pine",
+      "size": "large",
+      "state": "full",
+      "season": "spring",
+      "path": "art/flora/climate/trees/pine_large_spring_v1.png",
+      "sha256": "f7b54c638c8263f9306dea75ee5fa340a01a9e11fe3b77d95db35f9e7dc19506",
+      "canvas": [
+        192,
+        192
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "source": "art/flora/sprites/pine_large_v1.png",
+      "source_sha256": "c69d226cebddcb92d5023fd820565d64fbabd1a92cb1e2fb285d89f6721d30e6",
+      "mask": "art/flora/masks/pine_large_v1.png",
+      "mask_sha256": "9b0d55bce8477dd23df571182cea58eda0e3f83eeb2760dda6c7e8a85e2da01c",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+    },
+    {
+      "id": "pine_large_autumn_v1",
+      "species": "pine",
+      "size": "large",
+      "state": "full",
+      "season": "autumn",
+      "path": "art/flora/climate/trees/pine_large_autumn_v1.png",
+      "sha256": "c69d226cebddcb92d5023fd820565d64fbabd1a92cb1e2fb285d89f6721d30e6",
+      "canvas": [
+        192,
+        192
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "source": "art/flora/sprites/pine_large_v1.png",
+      "source_sha256": "c69d226cebddcb92d5023fd820565d64fbabd1a92cb1e2fb285d89f6721d30e6",
+      "mask": "art/flora/masks/pine_large_v1.png",
+      "mask_sha256": "9b0d55bce8477dd23df571182cea58eda0e3f83eeb2760dda6c7e8a85e2da01c",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+    },
+    {
+      "id": "pine_large_spring_v2",
+      "species": "pine",
+      "size": "large",
+      "state": "full",
+      "season": "spring",
+      "path": "art/flora/climate/trees/pine_large_spring_v2.png",
+      "sha256": "e35f4eb0e9e8036780892703cc151f5fa4876d41a5606b0962ac0382d608bc50",
+      "canvas": [
+        192,
+        192
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "source": "art/flora/sprites/pine_large_v2.png",
+      "source_sha256": "e315d6a347389ecf8fa948850683bf0c3a62064897ae802806e51eb3d8ce28cc",
+      "mask": "art/flora/masks/pine_large_v2.png",
+      "mask_sha256": "275840a2428b2b3395996d8b74efdf6a44a955fb4442e21fd8d85ed89135adce",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+    },
+    {
+      "id": "pine_large_autumn_v2",
+      "species": "pine",
+      "size": "large",
+      "state": "full",
+      "season": "autumn",
+      "path": "art/flora/climate/trees/pine_large_autumn_v2.png",
+      "sha256": "e315d6a347389ecf8fa948850683bf0c3a62064897ae802806e51eb3d8ce28cc",
+      "canvas": [
+        192,
+        192
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "source": "art/flora/sprites/pine_large_v2.png",
+      "source_sha256": "e315d6a347389ecf8fa948850683bf0c3a62064897ae802806e51eb3d8ce28cc",
+      "mask": "art/flora/masks/pine_large_v2.png",
+      "mask_sha256": "275840a2428b2b3395996d8b74efdf6a44a955fb4442e21fd8d85ed89135adce",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+    },
+    {
+      "id": "pine_large_winter_v1",
+      "species": "pine",
+      "size": "large",
+      "state": "winter",
+      "season": "winter",
+      "path": "art/flora/climate/trees/pine_large_winter_v1.png",
+      "sha256": "4e837edb593bb6a0e7bf52f8c027b4067ca4ac2f0def7b2f50a470a8e4694fb7",
+      "canvas": [
+        192,
+        192
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "source": "art/flora/sprites/pine_large_v1.png",
+      "source_sha256": "c69d226cebddcb92d5023fd820565d64fbabd1a92cb1e2fb285d89f6721d30e6",
+      "mask": "art/flora/masks/pine_large_v1.png",
+      "mask_sha256": "9b0d55bce8477dd23df571182cea58eda0e3f83eeb2760dda6c7e8a85e2da01c",
+      "tint": {
+        "delta_lab": [
+          -8.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 3,
+          "alpha": 0.7
+        }
+      },
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+    }
+  ],
+  "existing_references": [
+    {
+      "id": "oak_small_full_v1",
+      "species": "oak",
+      "size": "small",
+      "state": "full",
+      "season": "summer",
+      "path": "art/flora/sprites/oak_small_v1.png",
+      "sha256": "38c6970cf65a5144291399da25068eec09c6209e826c5ccd244155b4e086773f",
+      "canvas": [
+        128,
+        112
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "existing_reuse",
+      "source": "art/flora/sprites/oak_small_v1.png",
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "EXISTING_CATALOG_REUSE"
+    },
+    {
+      "id": "oak_small_full_v2",
+      "species": "oak",
+      "size": "small",
+      "state": "full",
+      "season": "summer",
+      "path": "art/flora/sprites/oak_small_v2.png",
+      "sha256": "d1c32570e23ba1d60b521b4a31a4f5598e19b2e7f48e5f436fe60ba2a639df77",
+      "canvas": [
+        128,
+        112
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "existing_reuse",
+      "source": "art/flora/sprites/oak_small_v2.png",
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "EXISTING_CATALOG_REUSE"
+    },
+    {
+      "id": "oak_small_winter_v1",
+      "species": "oak",
+      "size": "small",
+      "state": "winter",
+      "season": "winter",
+      "path": "art/flora/sprites/oak_small_bare.png",
+      "sha256": "3cf313970724c29399110a661cc207cb7b0361590307edda35951f5e827a55e2",
+      "canvas": [
+        128,
+        112
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "existing_reuse",
+      "source": "art/flora/sprites/oak_small_bare.png",
+      "source_sha256": "3cf313970724c29399110a661cc207cb7b0361590307edda35951f5e827a55e2",
+      "mask": "art/flora/masks/oak_small_bare.png",
+      "mask_sha256": "2e78316b74bad44723a009a5c4d2ed21f139428a30ce6fea436e7512e1f1616f",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "bare",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "EXISTING_CATALOG_REUSE"
+    },
+    {
+      "id": "oak_large_full_v1",
+      "species": "oak",
+      "size": "large",
+      "state": "full",
+      "season": "summer",
+      "path": "art/flora/sprites/oak_large_v1.png",
+      "sha256": "409c1005a4c4987a88a0e09b075ae5bce0b2dea90806a68e9d0f8989e1297cad",
+      "canvas": [
+        192,
+        192
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "existing_reuse",
+      "source": "art/flora/sprites/oak_large_v1.png",
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "EXISTING_CATALOG_REUSE"
+    },
+    {
+      "id": "oak_large_full_v2",
+      "species": "oak",
+      "size": "large",
+      "state": "full",
+      "season": "summer",
+      "path": "art/flora/sprites/oak_large_v2.png",
+      "sha256": "e2f99a16a2aec6ec0ce2d2a5184a2339a9538f3e0cda165225d8be3ed50e944e",
+      "canvas": [
+        192,
+        192
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "existing_reuse",
+      "source": "art/flora/sprites/oak_large_v2.png",
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "EXISTING_CATALOG_REUSE"
+    },
+    {
+      "id": "oak_large_winter_v1",
+      "species": "oak",
+      "size": "large",
+      "state": "winter",
+      "season": "winter",
+      "path": "art/flora/sprites/oak_large_bare.png",
+      "sha256": "42535527738429b4fc93ed92fed50b65a42630c5ecc17c59ec412a1b3ccc41ec",
+      "canvas": [
+        192,
+        192
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "existing_reuse",
+      "source": "art/flora/sprites/oak_large_bare.png",
+      "source_sha256": "42535527738429b4fc93ed92fed50b65a42630c5ecc17c59ec412a1b3ccc41ec",
+      "mask": "art/flora/masks/oak_large_bare.png",
+      "mask_sha256": "d47def74e608b221363559e1dfc571273eefcb417af8644b5d7578c47224dba6",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "bare",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "EXISTING_CATALOG_REUSE"
+    },
+    {
+      "id": "oak_harvested",
+      "species": "oak",
+      "size": "stump",
+      "state": "harvested",
+      "season": null,
+      "path": "art/flora/sprites/oak_stump.png",
+      "sha256": "877f846df7de0e1492e3806caaf74aa9dc26b1c1cdebd1a4ab25bcd3ce210ac0",
+      "canvas": [
+        64,
+        48
+      ],
+      "anchor": [
+        32,
+        40
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "existing_reuse",
+      "source": "art/flora/sprites/oak_stump.png",
+      "semantics": "wood harvested; tree removed, original stump retained",
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "EXISTING_CATALOG_REUSE"
+    },
+    {
+      "id": "birch_small_full_v1",
+      "species": "birch",
+      "size": "small",
+      "state": "full",
+      "season": "summer",
+      "path": "art/flora/sprites/birch_small_v1.png",
+      "sha256": "706e8919b579025a1762860f9fd485f97cc18c7f3e8740d67c526de79e9ce70d",
+      "canvas": [
+        128,
+        112
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "existing_reuse",
+      "source": "art/flora/sprites/birch_small_v1.png",
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "EXISTING_CATALOG_REUSE"
+    },
+    {
+      "id": "birch_small_full_v2",
+      "species": "birch",
+      "size": "small",
+      "state": "full",
+      "season": "summer",
+      "path": "art/flora/sprites/birch_small_v2.png",
+      "sha256": "10cd21c4737518042da9dbc0fe5b5560d9bdf30e8c4a2f360430e5e83f8606a5",
+      "canvas": [
+        128,
+        112
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "existing_reuse",
+      "source": "art/flora/sprites/birch_small_v2.png",
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "EXISTING_CATALOG_REUSE"
+    },
+    {
+      "id": "birch_small_winter_v1",
+      "species": "birch",
+      "size": "small",
+      "state": "winter",
+      "season": "winter",
+      "path": "art/flora/sprites/birch_small_bare.png",
+      "sha256": "cb4ca010687e33d913e438285a6faf65e7dac230ab7727ad64ac906d6ecd7959",
+      "canvas": [
+        128,
+        112
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "existing_reuse",
+      "source": "art/flora/sprites/birch_small_bare.png",
+      "source_sha256": "cb4ca010687e33d913e438285a6faf65e7dac230ab7727ad64ac906d6ecd7959",
+      "mask": "art/flora/masks/birch_small_bare.png",
+      "mask_sha256": "2e78316b74bad44723a009a5c4d2ed21f139428a30ce6fea436e7512e1f1616f",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "bare",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "EXISTING_CATALOG_REUSE"
+    },
+    {
+      "id": "birch_large_full_v1",
+      "species": "birch",
+      "size": "large",
+      "state": "full",
+      "season": "summer",
+      "path": "art/flora/sprites/birch_large_v1.png",
+      "sha256": "2683048c36fe7cd7f24cdcef5046f27ab87ca8d39db245448654ae83858fac5f",
+      "canvas": [
+        192,
+        192
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "existing_reuse",
+      "source": "art/flora/sprites/birch_large_v1.png",
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "EXISTING_CATALOG_REUSE"
+    },
+    {
+      "id": "birch_large_full_v2",
+      "species": "birch",
+      "size": "large",
+      "state": "full",
+      "season": "summer",
+      "path": "art/flora/sprites/birch_large_v2.png",
+      "sha256": "20edfbe6ba0486c3e3c35e60501da563739e402416e1b2a048bd5099028062f5",
+      "canvas": [
+        192,
+        192
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "existing_reuse",
+      "source": "art/flora/sprites/birch_large_v2.png",
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "EXISTING_CATALOG_REUSE"
+    },
+    {
+      "id": "birch_large_winter_v1",
+      "species": "birch",
+      "size": "large",
+      "state": "winter",
+      "season": "winter",
+      "path": "art/flora/sprites/birch_large_bare.png",
+      "sha256": "2e8c1d1f097af463219ff3a3a47d3243cbf5f19d845076594a772b7f92f7ba7c",
+      "canvas": [
+        192,
+        192
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "existing_reuse",
+      "source": "art/flora/sprites/birch_large_bare.png",
+      "source_sha256": "2e8c1d1f097af463219ff3a3a47d3243cbf5f19d845076594a772b7f92f7ba7c",
+      "mask": "art/flora/masks/birch_large_bare.png",
+      "mask_sha256": "d47def74e608b221363559e1dfc571273eefcb417af8644b5d7578c47224dba6",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "bare",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "EXISTING_CATALOG_REUSE"
+    },
+    {
+      "id": "birch_harvested",
+      "species": "birch",
+      "size": "stump",
+      "state": "harvested",
+      "season": null,
+      "path": "art/flora/sprites/birch_stump.png",
+      "sha256": "68d94c5c5a2486e1bad814cacc227cacceabfe7cd2af8d0ffcd0e58f7815760b",
+      "canvas": [
+        64,
+        48
+      ],
+      "anchor": [
+        32,
+        40
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "existing_reuse",
+      "source": "art/flora/sprites/birch_stump.png",
+      "semantics": "wood harvested; tree removed, original stump retained",
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "EXISTING_CATALOG_REUSE"
+    },
+    {
+      "id": "pine_small_full_v1",
+      "species": "pine",
+      "size": "small",
+      "state": "full",
+      "season": "summer",
+      "path": "art/flora/sprites/pine_small_v1.png",
+      "sha256": "983f71a2a386f98cd12a990b2963b7672c1a4d7dfcdc84076c963f5b0b011b76",
+      "canvas": [
+        128,
+        112
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "existing_reuse",
+      "source": "art/flora/sprites/pine_small_v1.png",
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "EXISTING_CATALOG_REUSE"
+    },
+    {
+      "id": "pine_small_full_v2",
+      "species": "pine",
+      "size": "small",
+      "state": "full",
+      "season": "summer",
+      "path": "art/flora/sprites/pine_small_v2.png",
+      "sha256": "d0a8077b26ccc26fb028947d56a9254c210553862000cff79d9cb4676d46fe5c",
+      "canvas": [
+        128,
+        112
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "existing_reuse",
+      "source": "art/flora/sprites/pine_small_v2.png",
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "EXISTING_CATALOG_REUSE"
+    },
+    {
+      "id": "pine_large_full_v1",
+      "species": "pine",
+      "size": "large",
+      "state": "full",
+      "season": "summer",
+      "path": "art/flora/sprites/pine_large_v1.png",
+      "sha256": "c69d226cebddcb92d5023fd820565d64fbabd1a92cb1e2fb285d89f6721d30e6",
+      "canvas": [
+        192,
+        192
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "existing_reuse",
+      "source": "art/flora/sprites/pine_large_v1.png",
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "EXISTING_CATALOG_REUSE"
+    },
+    {
+      "id": "pine_large_full_v2",
+      "species": "pine",
+      "size": "large",
+      "state": "full",
+      "season": "summer",
+      "path": "art/flora/sprites/pine_large_v2.png",
+      "sha256": "e315d6a347389ecf8fa948850683bf0c3a62064897ae802806e51eb3d8ce28cc",
+      "canvas": [
+        192,
+        192
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "existing_reuse",
+      "source": "art/flora/sprites/pine_large_v2.png",
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "EXISTING_CATALOG_REUSE"
+    },
+    {
+      "id": "pine_harvested",
+      "species": "pine",
+      "size": "stump",
+      "state": "harvested",
+      "season": null,
+      "path": "art/flora/sprites/pine_stump.png",
+      "sha256": "a8596b13aed83b125bb5a16c768102982b730fb2c357be19eef14713b8224b30",
+      "canvas": [
+        64,
+        48
+      ],
+      "anchor": [
+        32,
+        40
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "existing_reuse",
+      "source": "art/flora/sprites/pine_stump.png",
+      "semantics": "wood harvested; tree removed, original stump retained",
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "EXISTING_CATALOG_REUSE"
+    }
+  ],
+  "proposed_files": [
+    {
+      "id": "wild_olive_full_v1_large",
+      "species": "wild_olive",
+      "state": "full",
+      "season": "summer",
+      "path": "art/flora/climate/trees/wild_olive_full_v1_large.png",
+      "sha256": "6cf003adf7be58025452c5b9816b59789c3cbdda0c7b73ed2bc9e0c4a157f792",
+      "canvas": [
+        192,
+        192
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "new_generation",
+      "sidecar": "art/flora/climate/trees/wild_olive_full_v1_large.json",
+      "source": "/Users/rexxa/work/art-batch/B2/trees/raw/wild_olive_full_v1_try1.png",
+      "source_sha256": "694105ed30ded26ce6f7cc904c7f31fe7250e35fcab2fee58242801ea0d4f41a",
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "PROPOSED_ART_CANDIDATE_NOT_PRODUCTION_SPECIES",
+      "qualification": {
+        "raw_style_projection_structure": "passed",
+        "production_canopy": "FAILED",
+        "diagnostics": {
+          "id": "wild_olive_full_v1_large",
+          "failures": [],
+          "checks": {
+            "alpha_min": 0,
+            "alpha_max": 255,
+            "opaque_height": 160,
+            "opaque_components": 1,
+            "visible_border": false,
+            "raw_transparent": true,
+            "raw_opaque_border": false,
+            "source_opaque_outside_crop": 0,
+            "canvas_matches": true,
+            "passed": true
+          },
+          "mask": {
+            "trunk_box_fraction": 0.013704686118479222,
+            "foliage_cluster_coverage": 1.0,
+            "mask_pixels": 5949,
+            "foliage_pixels": 5949,
+            "passed": true,
+            "foliage_gate_applicable": true
+          },
+          "summer": {
+            "mean_hue_degrees": 51.664046380213215,
+            "mean_saturation": 0.4270360523045866,
+            "palette_hue_range_degrees": [
+              88.88888888888891,
+              112.5
+            ],
+            "passed": false
+          }
+        },
+        "required_followup": "C2 species validation; no runtime species or fabricated wood material"
+      }
+    },
+    {
+      "id": "wild_olive_full_v1_small",
+      "species": "wild_olive",
+      "state": "full",
+      "season": "summer",
+      "path": "art/flora/climate/trees/wild_olive_full_v1_small.png",
+      "sha256": "f9eff4545e923122e782b401d4bd3a51e816a01749482909b2bec0bd827ec988",
+      "canvas": [
+        128,
+        112
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "new_generation",
+      "sidecar": "art/flora/climate/trees/wild_olive_full_v1_small.json",
+      "source": "/Users/rexxa/work/art-batch/B2/trees/raw/wild_olive_full_v1_try1.png",
+      "source_sha256": "694105ed30ded26ce6f7cc904c7f31fe7250e35fcab2fee58242801ea0d4f41a",
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "PROPOSED_ART_CANDIDATE_NOT_PRODUCTION_SPECIES",
+      "qualification": {
+        "raw_style_projection_structure": "passed",
+        "production_canopy": "FAILED",
+        "diagnostics": {
+          "id": "wild_olive_full_v1_small",
+          "failures": [],
+          "checks": {
+            "alpha_min": 0,
+            "alpha_max": 255,
+            "opaque_height": 79,
+            "opaque_components": 1,
+            "visible_border": false,
+            "raw_transparent": true,
+            "raw_opaque_border": false,
+            "source_opaque_outside_crop": 0,
+            "canvas_matches": true,
+            "passed": true
+          },
+          "mask": {
+            "trunk_box_fraction": 0.015271493212669683,
+            "foliage_cluster_coverage": 1.0,
+            "mask_pixels": 1646,
+            "foliage_pixels": 1646,
+            "passed": true,
+            "foliage_gate_applicable": true
+          },
+          "summer": {
+            "mean_hue_degrees": 51.52560814970811,
+            "mean_saturation": 0.4123342712703974,
+            "palette_hue_range_degrees": [
+              88.88888888888891,
+              112.5
+            ],
+            "passed": false
+          }
+        },
+        "required_followup": "C2 species validation; no runtime species or fabricated wood material"
+      }
+    },
+    {
+      "id": "wild_olive_full_v2_large",
+      "species": "wild_olive",
+      "state": "full",
+      "season": "summer",
+      "path": "art/flora/climate/trees/wild_olive_full_v2_large.png",
+      "sha256": "12c073f5b98b71c41490b4e1cb823ace472a40ffb2983507e415c39708c7f198",
+      "canvas": [
+        192,
+        192
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "new_generation",
+      "sidecar": "art/flora/climate/trees/wild_olive_full_v2_large.json",
+      "source": "/Users/rexxa/work/art-batch/B2/trees/raw/wild_olive_full_v2_try2.png",
+      "source_sha256": "3841d260843feb170690db34c5ac853f9839c9da97c22f4f201c1e9d0ba7ae90",
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "PROPOSED_ART_CANDIDATE_NOT_PRODUCTION_SPECIES",
+      "qualification": {
+        "raw_style_projection_structure": "passed",
+        "production_canopy": "FAILED",
+        "diagnostics": {
+          "id": "wild_olive_full_v2_large",
+          "failures": [],
+          "checks": {
+            "alpha_min": 0,
+            "alpha_max": 255,
+            "opaque_height": 160,
+            "opaque_components": 1,
+            "visible_border": false,
+            "raw_transparent": true,
+            "raw_opaque_border": false,
+            "source_opaque_outside_crop": 0,
+            "canvas_matches": true,
+            "passed": true
+          },
+          "mask": {
+            "trunk_box_fraction": 0.02497789566755084,
+            "foliage_cluster_coverage": 1.0,
+            "mask_pixels": 4761,
+            "foliage_pixels": 4761,
+            "passed": false,
+            "foliage_gate_applicable": true
+          },
+          "summer": {
+            "mean_hue_degrees": 51.10297939549769,
+            "mean_saturation": 0.45977982500752074,
+            "palette_hue_range_degrees": [
+              88.88888888888891,
+              112.5
+            ],
+            "passed": false
+          }
+        },
+        "required_followup": "C2 species validation; no runtime species or fabricated wood material"
+      }
+    },
+    {
+      "id": "wild_olive_full_v2_small",
+      "species": "wild_olive",
+      "state": "full",
+      "season": "summer",
+      "path": "art/flora/climate/trees/wild_olive_full_v2_small.png",
+      "sha256": "0e2bccf04473dda9889dadc93dadad0775dd2a1328fa107b4f599f60262cb9ac",
+      "canvas": [
+        128,
+        112
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "new_generation",
+      "sidecar": "art/flora/climate/trees/wild_olive_full_v2_small.json",
+      "source": "/Users/rexxa/work/art-batch/B2/trees/raw/wild_olive_full_v2_try2.png",
+      "source_sha256": "3841d260843feb170690db34c5ac853f9839c9da97c22f4f201c1e9d0ba7ae90",
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "PROPOSED_ART_CANDIDATE_NOT_PRODUCTION_SPECIES",
+      "qualification": {
+        "raw_style_projection_structure": "passed",
+        "production_canopy": "FAILED",
+        "diagnostics": {
+          "id": "wild_olive_full_v2_small",
+          "failures": [],
+          "checks": {
+            "alpha_min": 0,
+            "alpha_max": 255,
+            "opaque_height": 79,
+            "opaque_components": 1,
+            "visible_border": false,
+            "raw_transparent": true,
+            "raw_opaque_border": false,
+            "source_opaque_outside_crop": 0,
+            "canvas_matches": true,
+            "passed": true
+          },
+          "mask": {
+            "trunk_box_fraction": 0.016968325791855202,
+            "foliage_cluster_coverage": 1.0,
+            "mask_pixels": 1347,
+            "foliage_pixels": 1347,
+            "passed": true,
+            "foliage_gate_applicable": true
+          },
+          "summer": {
+            "mean_hue_degrees": 50.36740280995703,
+            "mean_saturation": 0.4539984542916306,
+            "palette_hue_range_degrees": [
+              88.88888888888891,
+              112.5
+            ],
+            "passed": false
+          }
+        },
+        "required_followup": "C2 species validation; no runtime species or fabricated wood material"
+      }
+    },
+    {
+      "id": "wild_olive_harvested_v1_large",
+      "species": "wild_olive",
+      "state": "harvested",
+      "season": "summer",
+      "path": "art/flora/climate/trees/wild_olive_harvested_v1_large.png",
+      "sha256": "061ecbe7ce30f0d4c54d3e50d3461c57e6af898cfa575d1e5645ad1299634ae7",
+      "canvas": [
+        192,
+        192
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "new_generation",
+      "sidecar": "art/flora/climate/trees/wild_olive_harvested_v1_large.json",
+      "source": "/Users/rexxa/work/art-batch/B2/trees/raw/wild_olive_harvested_v1_try3.png",
+      "source_sha256": "ab9e17a2e55e78907c0559a2dd7fd2869655e20512299308d63435ee1230222b",
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "PROPOSED_ART_CANDIDATE_NOT_PRODUCTION_SPECIES",
+      "qualification": {
+        "raw_style_projection_structure": "passed",
+        "production_canopy": "FAILED",
+        "diagnostics": {
+          "id": "wild_olive_harvested_v1_large",
+          "failures": [],
+          "checks": {
+            "alpha_min": 0,
+            "alpha_max": 255,
+            "opaque_height": 159,
+            "opaque_components": 1,
+            "visible_border": false,
+            "raw_transparent": true,
+            "raw_opaque_border": false,
+            "source_opaque_outside_crop": 0,
+            "canvas_matches": true,
+            "passed": true
+          },
+          "mask": {
+            "trunk_box_fraction": 0.01856763925729443,
+            "foliage_cluster_coverage": 1.0,
+            "mask_pixels": 4283,
+            "foliage_pixels": 4283,
+            "passed": true,
+            "foliage_gate_applicable": true
+          },
+          "summer": {
+            "mean_hue_degrees": 49.56327268062972,
+            "mean_saturation": 0.4299328968484125,
+            "palette_hue_range_degrees": [
+              88.88888888888891,
+              112.5
+            ],
+            "passed": false
+          }
+        },
+        "required_followup": "C2 species validation; no runtime species or fabricated wood material"
+      }
+    },
+    {
+      "id": "wild_olive_harvested_v1_large_autumn",
+      "species": "wild_olive",
+      "state": "harvested",
+      "season": "autumn",
+      "path": "art/flora/climate/trees/wild_olive_harvested_v1_large_autumn.png",
+      "sha256": "061ecbe7ce30f0d4c54d3e50d3461c57e6af898cfa575d1e5645ad1299634ae7",
+      "canvas": [
+        192,
+        192
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "sidecar": "art/flora/climate/trees/wild_olive_harvested_v1_large_autumn.json",
+      "source": "/Users/rexxa/work/art-batch/B2/trees/raw/wild_olive_harvested_v1_try3.png",
+      "source_sha256": "ab9e17a2e55e78907c0559a2dd7fd2869655e20512299308d63435ee1230222b",
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "PROPOSED_ART_CANDIDATE_NOT_PRODUCTION_SPECIES",
+      "qualification": {
+        "raw_style_projection_structure": "passed",
+        "production_canopy": "FAILED",
+        "diagnostics": {
+          "id": "wild_olive_harvested_v1_large_autumn",
+          "failures": [],
+          "checks": {
+            "alpha_min": 0,
+            "alpha_max": 255,
+            "opaque_height": 159,
+            "opaque_components": 1,
+            "visible_border": false,
+            "raw_transparent": true,
+            "raw_opaque_border": false,
+            "source_opaque_outside_crop": 0,
+            "canvas_matches": true,
+            "passed": true
+          },
+          "mask": {
+            "trunk_box_fraction": 0.01856763925729443,
+            "foliage_cluster_coverage": 1.0,
+            "mask_pixels": 4283,
+            "foliage_pixels": 4283,
+            "passed": true,
+            "foliage_gate_applicable": true
+          },
+          "summer": {
+            "mean_hue_degrees": 49.56327268062972,
+            "mean_saturation": 0.4299328968484125,
+            "palette_hue_range_degrees": [
+              88.88888888888891,
+              112.5
+            ],
+            "passed": false
+          }
+        },
+        "required_followup": "C2 species validation; no runtime species or fabricated wood material"
+      }
+    },
+    {
+      "id": "wild_olive_harvested_v1_large_spring",
+      "species": "wild_olive",
+      "state": "harvested",
+      "season": "spring",
+      "path": "art/flora/climate/trees/wild_olive_harvested_v1_large_spring.png",
+      "sha256": "1c7fc3b77d81c8d6c8b96227f8f98b9a799bfb8c040ac45b074baa730abc3248",
+      "canvas": [
+        192,
+        192
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "sidecar": "art/flora/climate/trees/wild_olive_harvested_v1_large_spring.json",
+      "source": "/Users/rexxa/work/art-batch/B2/trees/raw/wild_olive_harvested_v1_try3.png",
+      "source_sha256": "ab9e17a2e55e78907c0559a2dd7fd2869655e20512299308d63435ee1230222b",
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "PROPOSED_ART_CANDIDATE_NOT_PRODUCTION_SPECIES",
+      "qualification": {
+        "raw_style_projection_structure": "passed",
+        "production_canopy": "FAILED",
+        "diagnostics": {
+          "id": "wild_olive_harvested_v1_large_spring",
+          "failures": [],
+          "checks": {
+            "alpha_min": 0,
+            "alpha_max": 255,
+            "opaque_height": 159,
+            "opaque_components": 1,
+            "visible_border": false,
+            "raw_transparent": true,
+            "raw_opaque_border": false,
+            "source_opaque_outside_crop": 0,
+            "canvas_matches": true,
+            "passed": true
+          },
+          "mask": {
+            "trunk_box_fraction": 0.01856763925729443,
+            "foliage_cluster_coverage": 1.0,
+            "mask_pixels": 4283,
+            "foliage_pixels": 3981,
+            "passed": true,
+            "foliage_gate_applicable": true
+          },
+          "summer": {
+            "mean_hue_degrees": 48.66701367837623,
+            "mean_saturation": 0.48648242768485583,
+            "palette_hue_range_degrees": [
+              88.88888888888891,
+              112.5
+            ],
+            "passed": false
+          }
+        },
+        "required_followup": "C2 species validation; no runtime species or fabricated wood material"
+      }
+    },
+    {
+      "id": "wild_olive_harvested_v1_large_winter",
+      "species": "wild_olive",
+      "state": "harvested",
+      "season": "winter",
+      "path": "art/flora/climate/trees/wild_olive_harvested_v1_large_winter.png",
+      "sha256": "33b25cc06c293476444abe74a9823f6985b224215d604037b8dc627fc599322f",
+      "canvas": [
+        192,
+        192
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "sidecar": "art/flora/climate/trees/wild_olive_harvested_v1_large_winter.json",
+      "source": "/Users/rexxa/work/art-batch/B2/trees/raw/wild_olive_harvested_v1_try3.png",
+      "source_sha256": "ab9e17a2e55e78907c0559a2dd7fd2869655e20512299308d63435ee1230222b",
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "PROPOSED_ART_CANDIDATE_NOT_PRODUCTION_SPECIES",
+      "qualification": {
+        "raw_style_projection_structure": "passed",
+        "production_canopy": "FAILED",
+        "diagnostics": {
+          "id": "wild_olive_harvested_v1_large_winter",
+          "failures": [],
+          "checks": {
+            "alpha_min": 0,
+            "alpha_max": 255,
+            "opaque_height": 159,
+            "opaque_components": 1,
+            "visible_border": false,
+            "raw_transparent": true,
+            "raw_opaque_border": false,
+            "source_opaque_outside_crop": 0,
+            "canvas_matches": true,
+            "passed": true
+          },
+          "mask": {
+            "trunk_box_fraction": 0.01856763925729443,
+            "foliage_cluster_coverage": 1.0,
+            "mask_pixels": 4283,
+            "foliage_pixels": 3452,
+            "passed": true,
+            "foliage_gate_applicable": true
+          },
+          "summer": {
+            "mean_hue_degrees": 50.331314457730244,
+            "mean_saturation": 0.5097484057685719,
+            "palette_hue_range_degrees": [
+              88.88888888888891,
+              112.5
+            ],
+            "passed": false
+          }
+        },
+        "required_followup": "C2 species validation; no runtime species or fabricated wood material"
+      }
+    },
+    {
+      "id": "wild_olive_harvested_v1_small",
+      "species": "wild_olive",
+      "state": "harvested",
+      "season": "summer",
+      "path": "art/flora/climate/trees/wild_olive_harvested_v1_small.png",
+      "sha256": "cf24e619ef3ed20beb703c12e3d0ba5e05b64bc20a2655012fa5cf2f961a0560",
+      "canvas": [
+        128,
+        112
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "new_generation",
+      "sidecar": "art/flora/climate/trees/wild_olive_harvested_v1_small.json",
+      "source": "/Users/rexxa/work/art-batch/B2/trees/raw/wild_olive_harvested_v1_try3.png",
+      "source_sha256": "ab9e17a2e55e78907c0559a2dd7fd2869655e20512299308d63435ee1230222b",
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "PROPOSED_ART_CANDIDATE_NOT_PRODUCTION_SPECIES",
+      "qualification": {
+        "raw_style_projection_structure": "passed",
+        "production_canopy": "FAILED",
+        "diagnostics": {
+          "id": "wild_olive_harvested_v1_small",
+          "failures": [],
+          "checks": {
+            "alpha_min": 0,
+            "alpha_max": 255,
+            "opaque_height": 79,
+            "opaque_components": 1,
+            "visible_border": false,
+            "raw_transparent": true,
+            "raw_opaque_border": false,
+            "source_opaque_outside_crop": 0,
+            "canvas_matches": true,
+            "passed": true
+          },
+          "mask": {
+            "trunk_box_fraction": 0.019796380090497737,
+            "foliage_cluster_coverage": 1.0,
+            "mask_pixels": 931,
+            "foliage_pixels": 931,
+            "passed": true,
+            "foliage_gate_applicable": true
+          },
+          "summer": {
+            "mean_hue_degrees": 49.0941471185331,
+            "mean_saturation": 0.4190390858795126,
+            "palette_hue_range_degrees": [
+              88.88888888888891,
+              112.5
+            ],
+            "passed": false
+          }
+        },
+        "required_followup": "C2 species validation; no runtime species or fabricated wood material"
+      }
+    },
+    {
+      "id": "wild_olive_harvested_v1_small_autumn",
+      "species": "wild_olive",
+      "state": "harvested",
+      "season": "autumn",
+      "path": "art/flora/climate/trees/wild_olive_harvested_v1_small_autumn.png",
+      "sha256": "cf24e619ef3ed20beb703c12e3d0ba5e05b64bc20a2655012fa5cf2f961a0560",
+      "canvas": [
+        128,
+        112
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "sidecar": "art/flora/climate/trees/wild_olive_harvested_v1_small_autumn.json",
+      "source": "/Users/rexxa/work/art-batch/B2/trees/raw/wild_olive_harvested_v1_try3.png",
+      "source_sha256": "ab9e17a2e55e78907c0559a2dd7fd2869655e20512299308d63435ee1230222b",
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "PROPOSED_ART_CANDIDATE_NOT_PRODUCTION_SPECIES",
+      "qualification": {
+        "raw_style_projection_structure": "passed",
+        "production_canopy": "FAILED",
+        "diagnostics": {
+          "id": "wild_olive_harvested_v1_small_autumn",
+          "failures": [],
+          "checks": {
+            "alpha_min": 0,
+            "alpha_max": 255,
+            "opaque_height": 79,
+            "opaque_components": 1,
+            "visible_border": false,
+            "raw_transparent": true,
+            "raw_opaque_border": false,
+            "source_opaque_outside_crop": 0,
+            "canvas_matches": true,
+            "passed": true
+          },
+          "mask": {
+            "trunk_box_fraction": 0.019796380090497737,
+            "foliage_cluster_coverage": 1.0,
+            "mask_pixels": 931,
+            "foliage_pixels": 931,
+            "passed": true,
+            "foliage_gate_applicable": true
+          },
+          "summer": {
+            "mean_hue_degrees": 49.0941471185331,
+            "mean_saturation": 0.4190390858795126,
+            "palette_hue_range_degrees": [
+              88.88888888888891,
+              112.5
+            ],
+            "passed": false
+          }
+        },
+        "required_followup": "C2 species validation; no runtime species or fabricated wood material"
+      }
+    },
+    {
+      "id": "wild_olive_harvested_v1_small_spring",
+      "species": "wild_olive",
+      "state": "harvested",
+      "season": "spring",
+      "path": "art/flora/climate/trees/wild_olive_harvested_v1_small_spring.png",
+      "sha256": "dfa433dbd20288db0df70bb97c69f59684760976d1b9c8338e7eb000d371b715",
+      "canvas": [
+        128,
+        112
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "sidecar": "art/flora/climate/trees/wild_olive_harvested_v1_small_spring.json",
+      "source": "/Users/rexxa/work/art-batch/B2/trees/raw/wild_olive_harvested_v1_try3.png",
+      "source_sha256": "ab9e17a2e55e78907c0559a2dd7fd2869655e20512299308d63435ee1230222b",
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "PROPOSED_ART_CANDIDATE_NOT_PRODUCTION_SPECIES",
+      "qualification": {
+        "raw_style_projection_structure": "passed",
+        "production_canopy": "FAILED",
+        "diagnostics": {
+          "id": "wild_olive_harvested_v1_small_spring",
+          "failures": [],
+          "checks": {
+            "alpha_min": 0,
+            "alpha_max": 255,
+            "opaque_height": 79,
+            "opaque_components": 1,
+            "visible_border": false,
+            "raw_transparent": true,
+            "raw_opaque_border": false,
+            "source_opaque_outside_crop": 0,
+            "canvas_matches": true,
+            "passed": true
+          },
+          "mask": {
+            "trunk_box_fraction": 0.019796380090497737,
+            "foliage_cluster_coverage": 1.0,
+            "mask_pixels": 931,
+            "foliage_pixels": 874,
+            "passed": true,
+            "foliage_gate_applicable": true
+          },
+          "summer": {
+            "mean_hue_degrees": 48.31734106501511,
+            "mean_saturation": 0.4755272359652221,
+            "palette_hue_range_degrees": [
+              88.88888888888891,
+              112.5
+            ],
+            "passed": false
+          }
+        },
+        "required_followup": "C2 species validation; no runtime species or fabricated wood material"
+      }
+    },
+    {
+      "id": "wild_olive_harvested_v1_small_winter",
+      "species": "wild_olive",
+      "state": "harvested",
+      "season": "winter",
+      "path": "art/flora/climate/trees/wild_olive_harvested_v1_small_winter.png",
+      "sha256": "a9d277a9839014f823b0420bb603d3a0e628da49898ec0385390e57eaeb69e54",
+      "canvas": [
+        128,
+        112
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "derived_season",
+      "sidecar": "art/flora/climate/trees/wild_olive_harvested_v1_small_winter.json",
+      "source": "/Users/rexxa/work/art-batch/B2/trees/raw/wild_olive_harvested_v1_try3.png",
+      "source_sha256": "ab9e17a2e55e78907c0559a2dd7fd2869655e20512299308d63435ee1230222b",
+      "role": "tree",
+      "type": "flora",
+      "adoption_state": "PROPOSED_ART_CANDIDATE_NOT_PRODUCTION_SPECIES",
+      "qualification": {
+        "raw_style_projection_structure": "passed",
+        "production_canopy": "FAILED",
+        "diagnostics": {
+          "id": "wild_olive_harvested_v1_small_winter",
+          "failures": [],
+          "checks": {
+            "alpha_min": 0,
+            "alpha_max": 255,
+            "opaque_height": 79,
+            "opaque_components": 1,
+            "visible_border": false,
+            "raw_transparent": true,
+            "raw_opaque_border": false,
+            "source_opaque_outside_crop": 0,
+            "canvas_matches": true,
+            "passed": true
+          },
+          "mask": {
+            "trunk_box_fraction": 0.019796380090497737,
+            "foliage_cluster_coverage": 1.0,
+            "mask_pixels": 931,
+            "foliage_pixels": 795,
+            "passed": true,
+            "foliage_gate_applicable": true
+          },
+          "summer": {
+            "mean_hue_degrees": 49.85403363737259,
+            "mean_saturation": 0.49496673226449617,
+            "palette_hue_range_degrees": [
+              88.88888888888891,
+              112.5
+            ],
+            "passed": false
+          }
+        },
+        "required_followup": "C2 species validation; no runtime species or fabricated wood material"
+      }
+    }
+  ],
+  "bindings": {
+    "oak_birch_pine_harvested": "reuse original stump; wood removed",
+    "olive_harvested": "fruit picked, evergreen leafy canopy retained; proposed only",
+    "climate_selectors": "C2/C3 integration pending"
+  },
+  "blocked_production_species": [
+    "wild_olive: summer hue gate failed on all outputs; full_v2_large trunk mask fraction 0.02497789566755084 exceeds 0.02; missing validated species material binding"
+  ]
+}

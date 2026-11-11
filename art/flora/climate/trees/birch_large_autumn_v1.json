@@ -1,0 +1,38 @@
+{
+  "id": "birch_large_autumn_v1",
+  "species": "birch",
+  "size": "large",
+  "state": "full",
+  "season": "autumn",
+  "path": "art/flora/climate/trees/birch_large_autumn_v1.png",
+  "sha256": "275d64d7ca3f4ed15b3fe2a0cdbda15b12d296a4fe6dade46ece6c1828845e7a",
+  "canvas": [
+    192,
+    192
+  ],
+  "anchor": [
+    96,
+    180
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "kind": "derived_season",
+  "source": "art/flora/sprites/birch_large_v1.png",
+  "source_sha256": "2683048c36fe7cd7f24cdcef5046f27ab87ca8d39db245448654ae83858fac5f",
+  "mask": "art/flora/masks/birch_large_v1.png",
+  "mask_sha256": "744c5e6a1a234f6ac8ca08b2c80a41916361a34f23f7f1507ab847e40e72eb2a",
+  "tint": {
+    "delta_lab": [
+      8.0,
+      10.0,
+      32.0
+    ],
+    "frame": "foliage",
+    "snow_cap": {
+      "depth_px": 0,
+      "alpha": 0.0
+    }
+  }
+}

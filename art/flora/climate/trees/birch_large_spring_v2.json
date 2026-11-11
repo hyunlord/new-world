@@ -1,0 +1,38 @@
+{
+  "id": "birch_large_spring_v2",
+  "species": "birch",
+  "size": "large",
+  "state": "full",
+  "season": "spring",
+  "path": "art/flora/climate/trees/birch_large_spring_v2.png",
+  "sha256": "fa74e2f8cffbd4e1a70806498ab5c7c8d94205817b020b48dc1aeed52d8b9cb9",
+  "canvas": [
+    192,
+    192
+  ],
+  "anchor": [
+    96,
+    180
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "kind": "derived_season",
+  "source": "art/flora/sprites/birch_large_v2.png",
+  "source_sha256": "20edfbe6ba0486c3e3c35e60501da563739e402416e1b2a048bd5099028062f5",
+  "mask": "art/flora/masks/birch_large_v2.png",
+  "mask_sha256": "79c46d1e540a412bcb55342795df92fadc23d3b314cbb9f5dd5adc40f2d9926e",
+  "tint": {
+    "delta_lab": [
+      6.0,
+      0.0,
+      6.0
+    ],
+    "frame": "foliage",
+    "snow_cap": {
+      "depth_px": 0,
+      "alpha": 0.0
+    }
+  }
+}

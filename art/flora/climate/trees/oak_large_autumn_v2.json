@@ -1,0 +1,38 @@
+{
+  "id": "oak_large_autumn_v2",
+  "species": "oak",
+  "size": "large",
+  "state": "full",
+  "season": "autumn",
+  "path": "art/flora/climate/trees/oak_large_autumn_v2.png",
+  "sha256": "e6a782aaad86c374ec8e0a100f6e888a1fc7fd8507fadd6fd641335c6a9e2513",
+  "canvas": [
+    192,
+    192
+  ],
+  "anchor": [
+    96,
+    180
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "kind": "derived_season",
+  "source": "art/flora/sprites/oak_large_v2.png",
+  "source_sha256": "e2f99a16a2aec6ec0ce2d2a5184a2339a9538f3e0cda165225d8be3ed50e944e",
+  "mask": "art/flora/masks/oak_large_v2.png",
+  "mask_sha256": "cb43dadbb0e70a1002e8bc46e37b17f98c5f00c6f77a30589ce9f791a64dbed4",
+  "tint": {
+    "delta_lab": [
+      -8.0,
+      35.0,
+      15.0
+    ],
+    "frame": "foliage",
+    "snow_cap": {
+      "depth_px": 0,
+      "alpha": 0.0
+    }
+  }
+}

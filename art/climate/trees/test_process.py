@@ -124,3 +124,16 @@ def test_empty_input_cannot_pass(tmp_path: Path) -> None:
         _ = process.run(path, tmp_path / "out")
     # Then no empty success report is emitted.
     assert not (tmp_path / "out").exists()
+
+
+def test_fourth_generation_is_rejected(tmp_path: Path) -> None:
+    # Given a generation record over the per-asset three-attempt budget.
+    path = inputs(tmp_path)
+    generation = tmp_path / "full.json"
+    payload = TypeAdapter(dict[str, JsonValue]).validate_json(generation.read_bytes())
+    payload["attempt"] = 4
+    _ = generation.write_text(json.dumps(payload))
+    # When parsing provenance, then the budget fails before writing output.
+    with pytest.raises(ValueError, match="less than or equal to 3"):
+        _ = process.run(path, tmp_path / "out")
+    assert not (tmp_path / "out").exists()

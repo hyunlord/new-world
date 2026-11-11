@@ -57,7 +57,7 @@ class Generation(BaseModel):
 
     model_config: ClassVar[ConfigDict] = ConfigDict(frozen=True, extra="ignore")
     id: str
-    attempt: int = Field(ge=1)
+    attempt: int = Field(ge=1, le=3)
     source: Path
     preserved_source: Path
     prompt: str = Field(min_length=1)

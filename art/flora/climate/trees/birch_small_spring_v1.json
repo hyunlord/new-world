@@ -1,0 +1,38 @@
+{
+  "id": "birch_small_spring_v1",
+  "species": "birch",
+  "size": "small",
+  "state": "full",
+  "season": "spring",
+  "path": "art/flora/climate/trees/birch_small_spring_v1.png",
+  "sha256": "d29dd33ea342e04a0dfb0e09a1b1801cc3016e58462d3b76f1ae13c00cc52c1a",
+  "canvas": [
+    128,
+    112
+  ],
+  "anchor": [
+    64,
+    100
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "kind": "derived_season",
+  "source": "art/flora/sprites/birch_small_v1.png",
+  "source_sha256": "706e8919b579025a1762860f9fd485f97cc18c7f3e8740d67c526de79e9ce70d",
+  "mask": "art/flora/masks/birch_small_v1.png",
+  "mask_sha256": "078ad68c6eb98f2e877206aaa9144fa7637a06e8db83260fed7ce38daf147102",
+  "tint": {
+    "delta_lab": [
+      6.0,
+      0.0,
+      6.0
+    ],
+    "frame": "foliage",
+    "snow_cap": {
+      "depth_px": 0,
+      "alpha": 0.0
+    }
+  }
+}

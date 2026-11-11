@@ -1,0 +1,38 @@
+{
+  "id": "oak_small_spring_v1",
+  "species": "oak",
+  "size": "small",
+  "state": "full",
+  "season": "spring",
+  "path": "art/flora/climate/trees/oak_small_spring_v1.png",
+  "sha256": "5a20f65684f5d727d2e1349b6a4fab447ce57be11d0f9632400ebd44aff7dac8",
+  "canvas": [
+    128,
+    112
+  ],
+  "anchor": [
+    64,
+    100
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "kind": "derived_season",
+  "source": "art/flora/sprites/oak_small_v1.png",
+  "source_sha256": "38c6970cf65a5144291399da25068eec09c6209e826c5ccd244155b4e086773f",
+  "mask": "art/flora/masks/oak_small_v1.png",
+  "mask_sha256": "aed50a4c5445cee6efe02c4cc52bc607eca736c5f7b86fbadab22d6314e23d4a",
+  "tint": {
+    "delta_lab": [
+      6.0,
+      0.0,
+      6.0
+    ],
+    "frame": "foliage",
+    "snow_cap": {
+      "depth_px": 0,
+      "alpha": 0.0
+    }
+  }
+}

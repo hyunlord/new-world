@@ -1,0 +1,38 @@
+{
+  "id": "pine_small_spring_v2",
+  "species": "pine",
+  "size": "small",
+  "state": "full",
+  "season": "spring",
+  "path": "art/flora/climate/trees/pine_small_spring_v2.png",
+  "sha256": "4bcbad242d20eac0672e4c46f856ac645835a78386a126f0f95d51c5aff36aa7",
+  "canvas": [
+    128,
+    112
+  ],
+  "anchor": [
+    64,
+    100
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "kind": "derived_season",
+  "source": "art/flora/sprites/pine_small_v2.png",
+  "source_sha256": "d0a8077b26ccc26fb028947d56a9254c210553862000cff79d9cb4676d46fe5c",
+  "mask": "art/flora/masks/pine_small_v2.png",
+  "mask_sha256": "c2b3565822a9328ae08f5ccde352dc81310143709512fee8f21085e3ed7c6e7d",
+  "tint": {
+    "delta_lab": [
+      6.0,
+      0.0,
+      6.0
+    ],
+    "frame": "foliage",
+    "snow_cap": {
+      "depth_px": 0,
+      "alpha": 0.0
+    }
+  }
+}

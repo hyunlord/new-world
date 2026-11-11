@@ -1,0 +1,179 @@
+{
+  "id": "wild_olive_full_v2_large",
+  "path": "/Users/rexxa/work/art-batch-b2/art/flora/climate/trees/wild_olive_full_v2_large.png",
+  "sha256": "12c073f5b98b71c41490b4e1cb823ace472a40ffb2983507e415c39708c7f198",
+  "mask_path": "/Users/rexxa/work/art-batch-b2/art/flora/climate/trees/wild_olive_full_v2_large_mask.png",
+  "mask_sha256": "94540b77657d966c3f66348a290cf4ffefeace70e3fcd4ca376287785a6f407b",
+  "record": {
+    "id": "wild_olive_full_v2",
+    "species": "wild_olive",
+    "state": "full",
+    "variant": "v2",
+    "source": "/Users/rexxa/work/art-batch/B2/trees/raw/wild_olive_full_v2_try2.png",
+    "generation_record": "/Users/rexxa/work/art-batch/B2/trees/records/wild_olive_full_v2_try2.json",
+    "transform_reference": null,
+    "season_tints": {}
+  },
+  "provenance": {
+    "source": {
+      "path": "/Users/rexxa/work/art-batch/B2/trees/raw/wild_olive_full_v2_try2.png",
+      "sha256": "3841d260843feb170690db34c5ac853f9839c9da97c22f4f201c1e9d0ba7ae90"
+    },
+    "generation_record": {
+      "path": "/Users/rexxa/work/art-batch/B2/trees/records/wild_olive_full_v2_try2.json",
+      "sha256": "b08f4c7b1d05a4f741b69ba1e23745d9abb88900e332205972f5118881cf91f8"
+    },
+    "prompt_sha256": "ffbb1bdb1728d35b45057a68b87691e687263fafbef926c93a714cefb4ca5f42",
+    "references": [
+      {
+        "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/ground.png",
+        "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+      },
+      {
+        "path": "/Users/rexxa/work/art-batch-b2/art/style05/anchors/scene.png",
+        "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+      }
+    ],
+    "seed": null,
+    "attempt": 2
+  },
+  "transform": {
+    "source_canvas": [
+      1254,
+      1254
+    ],
+    "crop": [
+      64,
+      51,
+      1188,
+      1202
+    ],
+    "scale": 0.13949433304272013,
+    "scaled_canvas": [
+      157,
+      161
+    ],
+    "offset": [
+      18,
+      20
+    ],
+    "output_canvas": [
+      192,
+      192
+    ],
+    "anchor": [
+      96,
+      180
+    ],
+    "target_height": 160
+  },
+  "footprint": [
+    1,
+    1
+  ],
+  "checks": {
+    "alpha_min": 0,
+    "alpha_max": 255,
+    "opaque_height": 160,
+    "opaque_components": 1,
+    "visible_border": false,
+    "raw_transparent": true,
+    "raw_opaque_border": false,
+    "source_opaque_outside_crop": 0,
+    "canvas_matches": true,
+    "passed": true
+  },
+  "projection": {
+    "family": "tree",
+    "anchor": [
+      96,
+      180
+    ],
+    "height_band": [
+      128,
+      192
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 10122,
+    "base_row": 180,
+    "base_error": 0,
+    "height": 160,
+    "gradient_x": -0.5217119361702127,
+    "gradient_y": -0.9270805549626467,
+    "light_angle_degrees": 240.63149072581584,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/B2/trees/raw/wild_olive_full_v2_try2.png",
+    "sha256": "3841d260843feb170690db34c5ac853f9839c9da97c22f4f201c1e9d0ba7ae90",
+    "family": "plants",
+    "metrics": {
+      "edge_density": 0.25109466221851545,
+      "saturation_q25": 0.390755740053123,
+      "saturation_q75": 0.47300426436344223,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.016032293498159232,
+      "foreground_pixels": 25856
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "pair": null,
+  "derived": false,
+  "tint": null,
+  "failures": [],
+  "status": "CANDIDATE_REVIEW_REQUIRED",
+  "production_species_status": "PROPOSED_ART_CANDIDATE_NOT_PRODUCTION_SPECIES",
+  "canopy_diagnostics": {
+    "id": "wild_olive_full_v2_large",
+    "failures": [],
+    "checks": {
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "opaque_height": 160,
+      "opaque_components": 1,
+      "visible_border": false,
+      "raw_transparent": true,
+      "raw_opaque_border": false,
+      "source_opaque_outside_crop": 0,
+      "canvas_matches": true,
+      "passed": true
+    },
+    "mask": {
+      "trunk_box_fraction": 0.02497789566755084,
+      "foliage_cluster_coverage": 1.0,
+      "mask_pixels": 4761,
+      "foliage_pixels": 4761,
+      "passed": false,
+      "foliage_gate_applicable": true
+    },
+    "summer": {
+      "mean_hue_degrees": 51.10297939549769,
+      "mean_saturation": 0.45977982500752074,
+      "palette_hue_range_degrees": [
+        88.88888888888891,
+        112.5
+      ],
+      "passed": false
+    }
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "compositing": "actual RGBA over light 1x and dark 2x; nearest neighbor scaling only",
+  "rows": [
+    {
+      "path": "art/climate/trees/boards/contact_1x_01.png",
+      "sha256": "83d2fda50715e7e9a8727c5eb1b704e8b474411940392ec8c117d15ab482980e",
+      "scale": 1,
+      "source_manifest": "/Users/rexxa/work/art-batch-b2/art/climate/trees/manifest.json",
+      "source_manifest_sha256": "33b517876648cb40574eb60afeb65e9721c5be8eb0ce505614a6dbfff9b32a06"
+    },
+    {
+      "path": "art/climate/trees/boards/contact_1x_02.png",
+      "sha256": "6074c9a4145d2e97d8d60f1dc818199e4820a7269c8da8c84080d8cba1782b21",
+      "scale": 1,
+      "source_manifest": "/Users/rexxa/work/art-batch-b2/art/climate/trees/manifest.json",
+      "source_manifest_sha256": "33b517876648cb40574eb60afeb65e9721c5be8eb0ce505614a6dbfff9b32a06"
+    },
+    {
+      "path": "art/climate/trees/boards/contact_1x_03.png",
+      "sha256": "9fe5d88a1e5e13f74e578b5501b773f3411fa63f67e9513a3e18bcba4f715d4a",
+      "scale": 1,
+      "source_manifest": "/Users/rexxa/work/art-batch-b2/art/climate/trees/manifest.json",
+      "source_manifest_sha256": "33b517876648cb40574eb60afeb65e9721c5be8eb0ce505614a6dbfff9b32a06"
+    },
+    {
+      "path": "art/climate/trees/boards/contact_1x_04.png",
+      "sha256": "be92c6096be8982c7bd491047e1668daf77149caf61d63fec373e9f0fb418d68",
+      "scale": 1,
+      "source_manifest": "/Users/rexxa/work/art-batch-b2/art/climate/trees/manifest.json",
+      "source_manifest_sha256": "33b517876648cb40574eb60afeb65e9721c5be8eb0ce505614a6dbfff9b32a06"
+    },
+    {
+      "path": "art/climate/trees/boards/contact_1x_05.png",
+      "sha256": "f0a8242ac9149c88895cbc57af9f7f83852fecef07948351b0de77b03fe8f2b5",
+      "scale": 1,
+      "source_manifest": "/Users/rexxa/work/art-batch-b2/art/climate/trees/manifest.json",
+      "source_manifest_sha256": "33b517876648cb40574eb60afeb65e9721c5be8eb0ce505614a6dbfff9b32a06"
+    },
+    {
+      "path": "art/climate/trees/boards/contact_2x_01.png",
+      "sha256": "18e04e059c7009913aff32e5d18d9e49eed5688c96f4d032f899401436c35594",
+      "scale": 2,
+      "source_manifest": "/Users/rexxa/work/art-batch-b2/art/climate/trees/manifest.json",
+      "source_manifest_sha256": "33b517876648cb40574eb60afeb65e9721c5be8eb0ce505614a6dbfff9b32a06"
+    },
+    {
+      "path": "art/climate/trees/boards/contact_2x_02.png",
+      "sha256": "a0bc88d9d56621680d67457c58ea217433b4dcdaf405f45b7ef7b57171c97a6b",
+      "scale": 2,
+      "source_manifest": "/Users/rexxa/work/art-batch-b2/art/climate/trees/manifest.json",
+      "source_manifest_sha256": "33b517876648cb40574eb60afeb65e9721c5be8eb0ce505614a6dbfff9b32a06"
+    },
+    {
+      "path": "art/climate/trees/boards/contact_2x_03.png",
+      "sha256": "b1e7bf88731fca2c5e8d548ffc6df6b1c776febfaee84c67681efdaa099ccdf1",
+      "scale": 2,
+      "source_manifest": "/Users/rexxa/work/art-batch-b2/art/climate/trees/manifest.json",
+      "source_manifest_sha256": "33b517876648cb40574eb60afeb65e9721c5be8eb0ce505614a6dbfff9b32a06"
+    },
+    {
+      "path": "art/climate/trees/boards/contact_2x_04.png",
+      "sha256": "13dd0b0dad937ef558da4e5b8b7582fa0a9ea681f2b12e646f06fbc5a80d102d",
+      "scale": 2,
+      "source_manifest": "/Users/rexxa/work/art-batch-b2/art/climate/trees/manifest.json",
+      "source_manifest_sha256": "33b517876648cb40574eb60afeb65e9721c5be8eb0ce505614a6dbfff9b32a06"
+    },
+    {
+      "path": "art/climate/trees/boards/contact_2x_05.png",
+      "sha256": "6df3811e3652dfe323ffd8a53b7c5fb7d98463ae9090d947e040b3b43df335d6",
+      "scale": 2,
+      "source_manifest": "/Users/rexxa/work/art-batch-b2/art/climate/trees/manifest.json",
+      "source_manifest_sha256": "33b517876648cb40574eb60afeb65e9721c5be8eb0ce505614a6dbfff9b32a06"
+    },
+    {
+      "path": "art/climate/trees/boards/contact_2x_06.png",
+      "sha256": "a10584d846e3719bda7e7db112284cf8efc01459f893116ad2baaaa2da0a43d8",
+      "scale": 2,
+      "source_manifest": "/Users/rexxa/work/art-batch-b2/art/climate/trees/manifest.json",
+      "source_manifest_sha256": "33b517876648cb40574eb60afeb65e9721c5be8eb0ce505614a6dbfff9b32a06"
+    },
+    {
+      "path": "art/climate/trees/boards/contact_2x_07.png",
+      "sha256": "c8194aed155962e4a7b4cd0f25a9b73a920df6ce831af64e67c59814e56e9a3f",
+      "scale": 2,
+      "source_manifest": "/Users/rexxa/work/art-batch-b2/art/climate/trees/manifest.json",
+      "source_manifest_sha256": "33b517876648cb40574eb60afeb65e9721c5be8eb0ce505614a6dbfff9b32a06"
+    },
+    {
+      "path": "art/climate/trees/boards/contact_2x_08.png",
+      "sha256": "a3a2ae9fcd960ddb6867c29d0ea461dbb01d004258e7ace0163e0fb3dfd537b0",
+      "scale": 2,
+      "source_manifest": "/Users/rexxa/work/art-batch-b2/art/climate/trees/manifest.json",
+      "source_manifest_sha256": "33b517876648cb40574eb60afeb65e9721c5be8eb0ce505614a6dbfff9b32a06"
+    }
+  ]
+}

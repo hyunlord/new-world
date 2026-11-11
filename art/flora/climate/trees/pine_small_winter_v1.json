@@ -1,0 +1,38 @@
+{
+  "id": "pine_small_winter_v1",
+  "species": "pine",
+  "size": "small",
+  "state": "winter",
+  "season": "winter",
+  "path": "art/flora/climate/trees/pine_small_winter_v1.png",
+  "sha256": "ceccdefbaa357a37d0aa32806a262b5e8e4fa4f6cc93290b677f29c04aac9920",
+  "canvas": [
+    128,
+    112
+  ],
+  "anchor": [
+    64,
+    100
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "kind": "derived_season",
+  "source": "art/flora/sprites/pine_small_v1.png",
+  "source_sha256": "983f71a2a386f98cd12a990b2963b7672c1a4d7dfcdc84076c963f5b0b011b76",
+  "mask": "art/flora/masks/pine_small_v1.png",
+  "mask_sha256": "7c6e0eae18f6f3ae93212de3aa9f2bc94a6c69de9e71447ecb173af6ec770fbf",
+  "tint": {
+    "delta_lab": [
+      -8.0,
+      0.0,
+      0.0
+    ],
+    "frame": "foliage",
+    "snow_cap": {
+      "depth_px": 3,
+      "alpha": 0.7
+    }
+  }
+}

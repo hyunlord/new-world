@@ -1,0 +1,38 @@
+{
+  "id": "birch_small_autumn_v2",
+  "species": "birch",
+  "size": "small",
+  "state": "full",
+  "season": "autumn",
+  "path": "art/flora/climate/trees/birch_small_autumn_v2.png",
+  "sha256": "1bf21927daeb0abaf58429e9709222ae0d921bb1c0cb9947efc2275c83e9f295",
+  "canvas": [
+    128,
+    112
+  ],
+  "anchor": [
+    64,
+    100
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "kind": "derived_season",
+  "source": "art/flora/sprites/birch_small_v2.png",
+  "source_sha256": "10cd21c4737518042da9dbc0fe5b5560d9bdf30e8c4a2f360430e5e83f8606a5",
+  "mask": "art/flora/masks/birch_small_v2.png",
+  "mask_sha256": "0bebc1e6d5ec2c4d454842d9f377d820a674ca5df448d19382f854fc54ca0b05",
+  "tint": {
+    "delta_lab": [
+      8.0,
+      10.0,
+      32.0
+    ],
+    "frame": "foliage",
+    "snow_cap": {
+      "depth_px": 0,
+      "alpha": 0.0
+    }
+  }
+}
