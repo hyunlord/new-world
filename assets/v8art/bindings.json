@@ -1563,5 +1563,35 @@
     "first_kid": {
       "asset": "b4_cards_first_kid"
     }
+  },
+  "template_roofs": {
+    "about": "Template-site overlay (building_layer.gd _sync_template_sites): buildings.ron template id → {asset}. asset null = the site's wall/door/floor/bed pieces are its art, nothing is drawn over them; a manifest id draws that sprite at its anchor; a template without a row keeps the generated placeholder roof.",
+    "hut": {
+      "asset": null
+    },
+    "log_house": {
+      "asset": null
+    },
+    "stone_house": {
+      "asset": null
+    },
+    "workshop_shed": {
+      "asset": null
+    },
+    "storehouse": {
+      "asset": null
+    },
+    "drying_shed": {
+      "asset": null
+    },
+    "granary": {
+      "asset": null
+    },
+    "smokehouse": {
+      "asset": null
+    },
+    "oven_house": {
+      "asset": null
+    }
   }
 }
