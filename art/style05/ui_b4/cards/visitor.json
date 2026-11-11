@@ -1,0 +1,31 @@
+{
+  "id": "visitor",
+  "lane": "cards",
+  "family": "chapter",
+  "era": "paleolithic",
+  "canvas": [
+    520,
+    260
+  ],
+  "anchor": [
+    260,
+    130
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/cards/visitor.png",
+  "sha256": "be550102959843f078e0ad711ce3b9722a720f7c67634fbd9ae9cea079807ae0",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/visitor-01.json",
+  "attempt_record_sha256": "c84e7dfe105c2f95c705469442baaad1986ed669c315bcfab580df8ebd33cfb5",
+  "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/visitor-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "One lone traveler with a walking staff and a small hide shoulder bag meets one resident at the edge of a stone-ring hearth. The traveler raises an open hand in greeting; both complete figures visible. Unlike migration, no family, luggage pile or trade goods.",
+  "source_runtime_ids": {
+    "verified": [],
+    "proposed_future": [
+      "visitor"
+    ],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "assets/ui/cards.json",
+    "test_only": false
+  }
+}

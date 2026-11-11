@@ -1,0 +1,31 @@
+{
+  "id": "quarrel",
+  "lane": "cards",
+  "family": "chapter",
+  "era": "paleolithic",
+  "canvas": [
+    520,
+    260
+  ],
+  "anchor": [
+    260,
+    130
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/cards/quarrel.png",
+  "sha256": "19a3d403799f8e49a940c074967df19c180972e4775fc5f9eb34624c563dc587",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/quarrel-01.json",
+  "attempt_record_sha256": "a015f1fc7a1448a7b910e0836cd177f7410c329f994731bfa276a488c0463f58",
+  "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/quarrel-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Two standing adults argue over one gathered-root basket between them. Open palms and turned-away faces show disagreement, one third adult raises a calming hand. No weapons, punches, blood, modern gestures or speech balloons.",
+  "source_runtime_ids": {
+    "verified": [
+      "quarrel"
+    ],
+    "proposed_future": [],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "assets/ui/cards.json",
+    "test_only": false
+  }
+}

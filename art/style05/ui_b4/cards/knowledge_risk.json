@@ -1,0 +1,31 @@
+{
+  "id": "knowledge_risk",
+  "lane": "cards",
+  "family": "chapter",
+  "era": "paleolithic",
+  "canvas": [
+    520,
+    260
+  ],
+  "anchor": [
+    260,
+    130
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/cards/knowledge_risk.png",
+  "sha256": "413b32f8c1575b97d3be51657c371769027e044bd439c7b927d3c8d91c55370c",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/knowledge_risk-02.json",
+  "attempt_record_sha256": "4448922c5eb6dcc15cfcc39682be0810b3513134a961c9d302eee227676d2347",
+  "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/knowledge_risk-02.json",
+  "status": "candidate_selected",
+  "semantic_note": "A gray-haired elder alone demonstrates careful flint knapping on a lap hide, with a flint core and hammerstone prominent; an empty low sitting stone beside the elder suggests no learner to inherit the skill. Reflective mood, no magic, letters, written scroll or book.",
+  "source_runtime_ids": {
+    "verified": [
+      "knowledge_risk"
+    ],
+    "proposed_future": [],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "assets/ui/cards.json",
+    "test_only": false
+  }
+}

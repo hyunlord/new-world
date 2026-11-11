@@ -1,0 +1,31 @@
+{
+  "id": "harvest_ready",
+  "lane": "cards",
+  "family": "chapter",
+  "era": "neolithic",
+  "canvas": [
+    520,
+    260
+  ],
+  "anchor": [
+    260,
+    130
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/cards/harvest_ready.png",
+  "sha256": "3aaff79d55697544307d3b3f94c629707476261c5dadc7048385d294f282cb21",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/harvest_ready-01.json",
+  "attempt_record_sha256": "ac21b96f806107d9685c4447953bff09bed4ead5c7b7d37607c05fa5c32da4b0",
+  "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/harvest_ready-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "An adult kneels beside a compact ripe golden emmer wheat stand and gathers a sheaf; a flint-inset sickle and tied sheaf are clearly visible in the foreground. Every blade is stone, clothing undyed plant fiber. The whole compact vignette communicates harvest readiness.",
+  "source_runtime_ids": {
+    "verified": [
+      "harvest_ready"
+    ],
+    "proposed_future": [],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "assets/ui/cards.json",
+    "test_only": false
+  }
+}

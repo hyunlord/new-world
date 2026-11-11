@@ -1,0 +1,31 @@
+{
+  "id": "sick_person",
+  "lane": "cards",
+  "family": "chapter",
+  "era": "paleolithic",
+  "canvas": [
+    520,
+    260
+  ],
+  "anchor": [
+    260,
+    130
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/cards/sick_person.png",
+  "sha256": "04b1c41c539803ff36aba0fd2e1d2818b40da50038fe67c032b3862265732597",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/sick_person-01.json",
+  "attempt_record_sha256": "91937af90ab3c2b8a20412e1dd54385252d4dbf76439deb02f337285201811e9",
+  "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/sick_person-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Gentle illness-care scene with water and herbs. Runtime sick_person is explicitly test_only at the source pin.",
+  "source_runtime_ids": {
+    "verified": [
+      "sick_person"
+    ],
+    "proposed_future": [],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "assets/ui/cards.json",
+    "test_only": true
+  }
+}

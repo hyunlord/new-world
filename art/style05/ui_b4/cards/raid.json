@@ -1,0 +1,31 @@
+{
+  "id": "raid",
+  "lane": "cards",
+  "family": "chapter",
+  "era": "neolithic",
+  "canvas": [
+    520,
+    260
+  ],
+  "anchor": [
+    260,
+    130
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/cards/raid.png",
+  "sha256": "7f2280ede6b6df7f58233ee8f5061b90b9c7eedb62fae083272278671e0016dd",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/raid-01.json",
+  "attempt_record_sha256": "38a8aa01aa359404d22d0e41a43c217afb257d121f4c49977c6b3a9d3db8206a",
+  "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/raid-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Two anxious villagers behind a short wooden palisade gate look toward two approaching hostile silhouettes carrying simple stone-tipped spears and hide shields. The scene is a warning of a raid, no impact or injury; clear separate defender and approaching groups. No metal, horses, helmets, banners or battle gore.",
+  "source_runtime_ids": {
+    "verified": [],
+    "proposed_future": [
+      "raid"
+    ],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "assets/ui/cards.json",
+    "test_only": false
+  }
+}

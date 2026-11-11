@@ -1,0 +1,31 @@
+{
+  "id": "sowing_window",
+  "lane": "cards",
+  "family": "chapter",
+  "era": "neolithic",
+  "canvas": [
+    520,
+    260
+  ],
+  "anchor": [
+    260,
+    130
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/cards/sowing_window.png",
+  "sha256": "e138473919d78d955356e2669a903333f1ca2a6f430ce0d1bc52e65ca0659291",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/sowing_window-01.json",
+  "attempt_record_sha256": "1bab082dd5d5cde5f0dbe37852057e4aba3e927e9aafa71213e50c59aa0fce0c",
+  "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/sowing_window-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "An adult in plain undyed plant-fiber wrap bends to scatter seed into two short tidy furrows while a second holds a woven seed basket. A wooden digging stick lies nearby. Large hand/seed gesture reads as spring sowing; no metal, dyed cloth, horizon, calendar glyph or rectangular ground tile.",
+  "source_runtime_ids": {
+    "verified": [
+      "sowing_window"
+    ],
+    "proposed_future": [],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "assets/ui/cards.json",
+    "test_only": false
+  }
+}

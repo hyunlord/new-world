@@ -1,0 +1,31 @@
+{
+  "id": "era_change_iron",
+  "lane": "cards",
+  "family": "chapter",
+  "era": "iron",
+  "canvas": [
+    520,
+    260
+  ],
+  "anchor": [
+    260,
+    130
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/cards/era_change_iron.png",
+  "sha256": "df088b753e2526c709d0cf8fadc1a7f84003cbc9590f56418653571fde78aecf",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/era_change_iron-01.json",
+  "attempt_record_sha256": "7ec606ecc78904aab0d4c48adefeb9c2f1274e9995353277f7b19b7d22399dee",
+  "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/era_change_iron-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "A smith in undyed wool tunic and leather apron uses a dark hand hammer on a squat stone anvil beside a small clay bloomery; a newly forged charcoal-gray iron axe and a rough iron bloom are prominent. Two short dressed paving stones imply the new road era. No steel chrome, industrial furnace, goggles or medieval castle.",
+  "source_runtime_ids": {
+    "verified": [],
+    "proposed_future": [
+      "era_change_iron"
+    ],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "assets/ui/cards.json",
+    "test_only": false
+  }
+}

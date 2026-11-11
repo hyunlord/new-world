@@ -1,0 +1,31 @@
+{
+  "id": "tin_shortage",
+  "lane": "cards",
+  "family": "chapter",
+  "era": "bronze",
+  "canvas": [
+    520,
+    260
+  ],
+  "anchor": [
+    260,
+    130
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/cards/tin_shortage.png",
+  "sha256": "d80871f303925a13aa7f868b723ecde714a368c4eed7eff6a6f0c1086bacdf5d",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/tin_shortage-02.json",
+  "attempt_record_sha256": "6a3e0f69af512084260deb8b1f7303207521350a11c4b6e164ff40fd5d5d3d91",
+  "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/tin_shortage-02.json",
+  "status": "candidate_selected",
+  "semantic_note": "Future proposed bronze-age card requested by C2 GOAL3.3: copper ingot beside an empty tin-side clay tray and unused mould, waiting for trader supply. Not an existing runtime card ID.",
+  "source_runtime_ids": {
+    "verified": [],
+    "proposed_future": [
+      "tin_shortage"
+    ],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "assets/ui/cards.json",
+    "test_only": false
+  }
+}

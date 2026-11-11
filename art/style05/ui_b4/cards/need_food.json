@@ -1,0 +1,31 @@
+{
+  "id": "need_food",
+  "lane": "cards",
+  "family": "chapter",
+  "era": "paleolithic",
+  "canvas": [
+    520,
+    260
+  ],
+  "anchor": [
+    260,
+    130
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/cards/need_food.png",
+  "sha256": "a7098fe2a0206d37bdddfd9eb01cf2d36019c9ddd84d300e332f622bce7a2cec",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/need_food-01.json",
+  "attempt_record_sha256": "94b6706055f9e94d4c71da3164c5e21cd6aff37269b8db349df5cd5606a929a1",
+  "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/need_food-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "A worried seated adult tilts a nearly empty woven food basket, with exactly a few berries and roots visible. Another adult kneels beside a completely empty wooden bowl. Clear empty-container silhouettes communicate food shortage rather than starvation spectacle.",
+  "source_runtime_ids": {
+    "verified": [
+      "need_food"
+    ],
+    "proposed_future": [],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "assets/ui/cards.json",
+    "test_only": false
+  }
+}

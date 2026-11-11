@@ -1,0 +1,31 @@
+{
+  "id": "wolves",
+  "lane": "cards",
+  "family": "chapter",
+  "era": "paleolithic",
+  "canvas": [
+    520,
+    260
+  ],
+  "anchor": [
+    260,
+    130
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/cards/wolves.png",
+  "sha256": "28da50b7da1deb03cd1861d68072083e2af855e6849dba455329b22295c6cebc",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/wolves-01.json",
+  "attempt_record_sha256": "2a04215be60c8e9a67d26e6f63ea29f95bb9c73ce92a8ddcfa01b8974a24bd01",
+  "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/wolves-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Two gray-brown wolves at the edge of a small camp face a wary adult villager who holds an unlit wooden staff defensively. The wolves stay apart from the person with readable muzzles and ears; a few hearth stones suggest the camp. Tense warning, no attack contact, wounds or blood.",
+  "source_runtime_ids": {
+    "verified": [
+      "wolves"
+    ],
+    "proposed_future": [],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "assets/ui/cards.json",
+    "test_only": false
+  }
+}

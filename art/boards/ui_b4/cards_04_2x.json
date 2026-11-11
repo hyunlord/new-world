@@ -1,0 +1,12 @@
+{
+  "method": "exact integer2x nearest pixel replication of native review composite",
+  "source_sheet": "/Users/rexxa/work/art-batch/B4/cards/sheets/final_04.png",
+  "source_sha256": "02f6fce8fa9525ae5f6312bae4521ee5caade2fd408a06b091c6c9ef6fd9082d",
+  "path": "/Users/rexxa/work/art-batch/B4/cards/sheets/final_04_2x.png",
+  "sha256": "10deb043b47008f905f595f6b37567cf4087da74fc860a37c029d35aab541fb5",
+  "canvas": [
+    2200,
+    2772
+  ],
+  "source_art_unchanged": true
+}

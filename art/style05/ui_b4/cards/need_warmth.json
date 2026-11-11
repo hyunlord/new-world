@@ -1,0 +1,31 @@
+{
+  "id": "need_warmth",
+  "lane": "cards",
+  "family": "chapter",
+  "era": "paleolithic",
+  "canvas": [
+    520,
+    260
+  ],
+  "anchor": [
+    260,
+    130
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/cards/need_warmth.png",
+  "sha256": "088ff995c119d30562dca2043f37ff48a56f463d1024f51025a0c58a8b04afb3",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/need_warmth-02.json",
+  "attempt_record_sha256": "75c5c7e11104feabe3fe0fb44c083635f0d0362821ba5f3a5976f7cb0e610fe3",
+  "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/need_warmth-02.json",
+  "status": "candidate_selected",
+  "semantic_note": "Firewood shortage: huddled adults, cold ash and spent twig, empty tilted fuel basket. No abundant fuel.",
+  "source_runtime_ids": {
+    "verified": [
+      "need_warmth"
+    ],
+    "proposed_future": [],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "assets/ui/cards.json",
+    "test_only": false
+  }
+}

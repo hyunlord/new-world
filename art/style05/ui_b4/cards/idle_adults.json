@@ -1,0 +1,31 @@
+{
+  "id": "idle_adults",
+  "lane": "cards",
+  "family": "chapter",
+  "era": "paleolithic",
+  "canvas": [
+    520,
+    260
+  ],
+  "anchor": [
+    260,
+    130
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/cards/idle_adults.png",
+  "sha256": "3b58d52aca7588d21d04d7bea7ac47e15c49c0b9d0839fc2279cd65ef65a957d",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/idle_adults-02.json",
+  "attempt_record_sha256": "9279a0cc3202571ad0e3da1298e273890704cfce4a85bce4539ea24140c23ce2",
+  "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/idle_adults-02.json",
+  "status": "candidate_selected",
+  "semantic_note": "Able adults quietly wait for work; still hands, divergent gazes, untouched stone adze and empty gathering basket.",
+  "source_runtime_ids": {
+    "verified": [
+      "idle_adults"
+    ],
+    "proposed_future": [],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "assets/ui/cards.json",
+    "test_only": false
+  }
+}

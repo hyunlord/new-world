@@ -1,0 +1,31 @@
+{
+  "id": "storage",
+  "lane": "cards",
+  "family": "chapter",
+  "era": "paleolithic",
+  "canvas": [
+    520,
+    260
+  ],
+  "anchor": [
+    260,
+    130
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/cards/storage.png",
+  "sha256": "5b4f4797333497a6b81802ee435ab26a7e4ab4fafe9434d9bf1010d877fb7008",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/storage-01.json",
+  "attempt_record_sha256": "582806aabe51ad3d66c5fcad5a0c2f8088355dc12ed91e27c4c599f319a21d69",
+  "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/storage-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "A villager tries to set one basket beside three already crowded woven baskets and tied bundles under a short bark-and-pole drying shelter. The cramped storage is legible through overlapping containers, but each is anatomically readable. No metal, pottery, grain, warehouse or roof-cut building.",
+  "source_runtime_ids": {
+    "verified": [
+      "storage"
+    ],
+    "proposed_future": [],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "assets/ui/cards.json",
+    "test_only": false
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "id": "human_birth",
+  "lane": "cards",
+  "family": "chapter",
+  "era": "paleolithic",
+  "canvas": [
+    520,
+    260
+  ],
+  "anchor": [
+    260,
+    130
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/cards/human_birth.png",
+  "sha256": "6562a9bc1f6c03e1a8ae37dc74e8d172ae3520a3a413438746d6921641786cc8",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/human_birth-01.json",
+  "attempt_record_sha256": "5b64820bb44ec02bb82afd48a12ae6958c322ec28223c09217770125eb1be967",
+  "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/human_birth-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "Proposed future human birth card: fully clothed parents with a swaddled newborn after delivery. Distinct from runtime first_kid livestock birth.",
+  "source_runtime_ids": {
+    "verified": [],
+    "proposed_future": [
+      "human_birth"
+    ],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "assets/ui/cards.json",
+    "test_only": false
+  }
+}

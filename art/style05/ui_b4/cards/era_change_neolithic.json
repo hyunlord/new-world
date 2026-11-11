@@ -1,0 +1,31 @@
+{
+  "id": "era_change_neolithic",
+  "lane": "cards",
+  "family": "chapter",
+  "era": "neolithic",
+  "canvas": [
+    520,
+    260
+  ],
+  "anchor": [
+    260,
+    130
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/cards/era_change_neolithic.png",
+  "sha256": "b9ed436a4230be9faf18c28137539916419aa8e73d7624aee5babf965b716359",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/era_change_neolithic-01.json",
+  "attempt_record_sha256": "079d94a9dd49dc1c88b5a4f29593da83b4f57edea7fcf4409568e72cb3ab3bab",
+  "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/era_change_neolithic-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "An adult presents a smooth ground stone axe beside a freshly formed clay pot, while another adult tends a small patch of grain and a goat kid stands by a low wooden pen rail. A compact celebratory beginning of farming and settled crafts; undyed plant-fiber clothing, no metal or dyed cloth.",
+  "source_runtime_ids": {
+    "verified": [],
+    "proposed_future": [
+      "era_change_neolithic"
+    ],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "assets/ui/cards.json",
+    "test_only": false
+  }
+}

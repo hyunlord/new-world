@@ -1,0 +1,867 @@
+{
+  "schema_version": 1,
+  "lane": "cards",
+  "assets": [
+    {
+      "id": "era_change_bronze",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "bronze",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/cards/era_change_bronze.png",
+      "sha256": "28fb3ffb28d7ca5fb876af93bfb7be7ef18ed4b6f67b5002dfc0d327dd7b7bde",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/era_change_bronze-01.json",
+      "attempt_record_sha256": "88714a1b7c19762dfeb9ad18b3872d2d832e2f6491dc605925e217ce3398b3d1",
+      "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/era_change_bronze-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A crouching craftsperson beside a small clay smelting furnace with amber fire presents the first golden-brown bronze axe to a second clothed villager. Beside them a muted copper ingot, dark charcoal and a clay casting mould make the new material legible. A short low mud-brick wall fragment implies the material transition. No stone age scene transitioning through a magic portal; show one concrete moment.",
+      "source_runtime_ids": {
+        "verified": [],
+        "proposed_future": [
+          "era_change_bronze"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "trader",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "paleolithic",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/cards/trader.png",
+      "sha256": "21160e2bcf51a01e03ecd48db810974fa568c600a6dc212576166e141da29768",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/trader-01.json",
+      "attempt_record_sha256": "4e3c0395f2378f380c8d23a6e0f68ea572063dbd221b99be4bec41ee2f1a8345",
+      "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/trader-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Two standing adults exchange a bundle of dried fish for a basket of gathered berries between them. One is clearly a visiting trader carrying a tied hide pack at their feet; the other opens a welcoming palm. No currency, metal, market stall, or domestic grain. Keep both entire figures visible.",
+      "source_runtime_ids": {
+        "verified": [
+          "trader"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "need_food",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "paleolithic",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/cards/need_food.png",
+      "sha256": "a7098fe2a0206d37bdddfd9eb01cf2d36019c9ddd84d300e332f622bce7a2cec",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/need_food-01.json",
+      "attempt_record_sha256": "94b6706055f9e94d4c71da3164c5e21cd6aff37269b8db349df5cd5606a929a1",
+      "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/need_food-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A worried seated adult tilts a nearly empty woven food basket, with exactly a few berries and roots visible. Another adult kneels beside a completely empty wooden bowl. Clear empty-container silhouettes communicate food shortage rather than starvation spectacle.",
+      "source_runtime_ids": {
+        "verified": [
+          "need_food"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "need_warmth",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "paleolithic",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/cards/need_warmth.png",
+      "sha256": "088ff995c119d30562dca2043f37ff48a56f463d1024f51025a0c58a8b04afb3",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/need_warmth-02.json",
+      "attempt_record_sha256": "75c5c7e11104feabe3fe0fb44c083635f0d0362821ba5f3a5976f7cb0e610fe3",
+      "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/need_warmth-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "Firewood shortage: huddled adults, cold ash and spent twig, empty tilted fuel basket. No abundant fuel.",
+      "source_runtime_ids": {
+        "verified": [
+          "need_warmth"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "migrants",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "paleolithic",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/cards/migrants.png",
+      "sha256": "a0b4b1613af89344e52e9e8ee687ea54dd4f5744fdb83009d567826f2adfd458",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/migrants-01.json",
+      "attempt_record_sha256": "524dc01096adc6811766995b4fe2953b2e05cdd656e9480fa33df3b5228928f4",
+      "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/migrants-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A family of three arriving travelers: two adults with tied hide bundles and one clearly shorter clothed child, greeted by a fourth adult with an open hand. All full figures, one walking staff, simple hide clothing, no metal or wheeled cart. Their grouping and carried household bundles communicate migration.",
+      "source_runtime_ids": {
+        "verified": [
+          "migrants"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "knowledge_risk",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "paleolithic",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/cards/knowledge_risk.png",
+      "sha256": "413b32f8c1575b97d3be51657c371769027e044bd439c7b927d3c8d91c55370c",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/knowledge_risk-02.json",
+      "attempt_record_sha256": "4448922c5eb6dcc15cfcc39682be0810b3513134a961c9d302eee227676d2347",
+      "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/knowledge_risk-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "A gray-haired elder alone demonstrates careful flint knapping on a lap hide, with a flint core and hammerstone prominent; an empty low sitting stone beside the elder suggests no learner to inherit the skill. Reflective mood, no magic, letters, written scroll or book.",
+      "source_runtime_ids": {
+        "verified": [
+          "knowledge_risk"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "tools_low",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "paleolithic",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/cards/tools_low.png",
+      "sha256": "07e3d866be92b9811b91f936663e604b4fc706f16f05ca9aae4da3dcef456222",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/tools_low-02.json",
+      "attempt_record_sha256": "b7e4c114cdfebe103b847ff0441cd6bd9e1f7dc6d41586ee0c7e2e4fdb619631",
+      "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/tools_low-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "A kneeling craftsperson examines a broken stone axe: clearly separated chipped stone head, snapped wooden haft and loose fiber binding on a small hide mat; a second worker holds an empty hand. Sparse useful composition makes tool shortage immediately legible.",
+      "source_runtime_ids": {
+        "verified": [
+          "tools_low"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "wolves",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "paleolithic",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/cards/wolves.png",
+      "sha256": "28da50b7da1deb03cd1861d68072083e2af855e6849dba455329b22295c6cebc",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/wolves-01.json",
+      "attempt_record_sha256": "2a04215be60c8e9a67d26e6f63ea29f95bb9c73ce92a8ddcfa01b8974a24bd01",
+      "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/wolves-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Two gray-brown wolves at the edge of a small camp face a wary adult villager who holds an unlit wooden staff defensively. The wolves stay apart from the person with readable muzzles and ears; a few hearth stones suggest the camp. Tense warning, no attack contact, wounds or blood.",
+      "source_runtime_ids": {
+        "verified": [
+          "wolves"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "idle_adults",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "paleolithic",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/cards/idle_adults.png",
+      "sha256": "3b58d52aca7588d21d04d7bea7ac47e15c49c0b9d0839fc2279cd65ef65a957d",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/idle_adults-02.json",
+      "attempt_record_sha256": "9279a0cc3202571ad0e3da1298e273890704cfce4a85bce4539ea24140c23ce2",
+      "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/idle_adults-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "Able adults quietly wait for work; still hands, divergent gazes, untouched stone adze and empty gathering basket.",
+      "source_runtime_ids": {
+        "verified": [
+          "idle_adults"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "quarrel",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "paleolithic",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/cards/quarrel.png",
+      "sha256": "19a3d403799f8e49a940c074967df19c180972e4775fc5f9eb34624c563dc587",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/quarrel-01.json",
+      "attempt_record_sha256": "a015f1fc7a1448a7b910e0836cd177f7410c329f994731bfa276a488c0463f58",
+      "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/quarrel-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Two standing adults argue over one gathered-root basket between them. Open palms and turned-away faces show disagreement, one third adult raises a calming hand. No weapons, punches, blood, modern gestures or speech balloons.",
+      "source_runtime_ids": {
+        "verified": [
+          "quarrel"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "pressure",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "paleolithic",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/cards/pressure.png",
+      "sha256": "0492fb80cf3448eef944a52ba1680bef39bd25f486d4edbb9a27f914e4e29922",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/pressure-02.json",
+      "attempt_record_sha256": "0f56f707c9e386b63017ea1fb29f5cd84b33926830c823182669693d41bc7de3",
+      "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/pressure-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "General PressureBegan preparation: alert lookout while another adult secures hide shelter over gathered provisions. Intended general hardship preparedness, not a specific pressure subtype.",
+      "source_runtime_ids": {
+        "verified": [
+          "pressure"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "storage",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "paleolithic",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/cards/storage.png",
+      "sha256": "5b4f4797333497a6b81802ee435ab26a7e4ab4fafe9434d9bf1010d877fb7008",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/storage-01.json",
+      "attempt_record_sha256": "582806aabe51ad3d66c5fcad5a0c2f8088355dc12ed91e27c4c599f319a21d69",
+      "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/storage-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A villager tries to set one basket beside three already crowded woven baskets and tied bundles under a short bark-and-pole drying shelter. The cramped storage is legible through overlapping containers, but each is anatomically readable. No metal, pottery, grain, warehouse or roof-cut building.",
+      "source_runtime_ids": {
+        "verified": [
+          "storage"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "sick_person",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "paleolithic",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/cards/sick_person.png",
+      "sha256": "04b1c41c539803ff36aba0fd2e1d2818b40da50038fe67c032b3862265732597",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/sick_person-01.json",
+      "attempt_record_sha256": "91937af90ab3c2b8a20412e1dd54385252d4dbf76439deb02f337285201811e9",
+      "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/sick_person-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Gentle illness-care scene with water and herbs. Runtime sick_person is explicitly test_only at the source pin.",
+      "source_runtime_ids": {
+        "verified": [
+          "sick_person"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": true
+      }
+    },
+    {
+      "id": "sowing_window",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "neolithic",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/cards/sowing_window.png",
+      "sha256": "e138473919d78d955356e2669a903333f1ca2a6f430ce0d1bc52e65ca0659291",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/sowing_window-01.json",
+      "attempt_record_sha256": "1bab082dd5d5cde5f0dbe37852057e4aba3e927e9aafa71213e50c59aa0fce0c",
+      "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/sowing_window-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "An adult in plain undyed plant-fiber wrap bends to scatter seed into two short tidy furrows while a second holds a woven seed basket. A wooden digging stick lies nearby. Large hand/seed gesture reads as spring sowing; no metal, dyed cloth, horizon, calendar glyph or rectangular ground tile.",
+      "source_runtime_ids": {
+        "verified": [
+          "sowing_window"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "harvest_ready",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "neolithic",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/cards/harvest_ready.png",
+      "sha256": "3aaff79d55697544307d3b3f94c629707476261c5dadc7048385d294f282cb21",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/harvest_ready-01.json",
+      "attempt_record_sha256": "ac21b96f806107d9685c4447953bff09bed4ead5c7b7d37607c05fa5c32da4b0",
+      "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/harvest_ready-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "An adult kneels beside a compact ripe golden emmer wheat stand and gathers a sheaf; a flint-inset sickle and tied sheaf are clearly visible in the foreground. Every blade is stone, clothing undyed plant fiber. The whole compact vignette communicates harvest readiness.",
+      "source_runtime_ids": {
+        "verified": [
+          "harvest_ready"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "cloth_short",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "neolithic",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/cards/cloth_short.png",
+      "sha256": "cbebaa3673826c2de0493ec37cd48928d6239e9a1d0fbca06b317617ff1e0cf7",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/cloth_short-02.json",
+      "attempt_record_sha256": "3599ae90da3f4ce57f4d2032a8c47860ebdfe9ec2ca8f93eb81f1f084573eaa3",
+      "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/cloth_short-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "Undyed cloth shortage: tiny unfinished swatch, empty fiber basket and bare spindle, waiting resident in patched hide clothing.",
+      "source_runtime_ids": {
+        "verified": [
+          "cloth_short"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "first_kid",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "neolithic",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/cards/first_kid.png",
+      "sha256": "f0c17c1a2dae909e503a9d025931add0ecb5d9a7d911615c2f3aaa994d218db0",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/first_kid-01.json",
+      "attempt_record_sha256": "7d4db9ab70dfc12e07b2f416d140393062489e4b8b6f5bb97b68766c66f4555b",
+      "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/first_kid-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "First livestock kid: goat mother and small standing goat kid in a fiber-lashed pen with herder. This runtime ID does not mean a human birth.",
+      "source_runtime_ids": {
+        "verified": [
+          "first_kid"
+        ],
+        "proposed_future": [],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "human_birth",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "paleolithic",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/cards/human_birth.png",
+      "sha256": "6562a9bc1f6c03e1a8ae37dc74e8d172ae3520a3a413438746d6921641786cc8",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/human_birth-01.json",
+      "attempt_record_sha256": "5b64820bb44ec02bb82afd48a12ae6958c322ec28223c09217770125eb1be967",
+      "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/human_birth-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Proposed future human birth card: fully clothed parents with a swaddled newborn after delivery. Distinct from runtime first_kid livestock birth.",
+      "source_runtime_ids": {
+        "verified": [],
+        "proposed_future": [
+          "human_birth"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "raid",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "neolithic",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/cards/raid.png",
+      "sha256": "7f2280ede6b6df7f58233ee8f5061b90b9c7eedb62fae083272278671e0016dd",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/raid-01.json",
+      "attempt_record_sha256": "38a8aa01aa359404d22d0e41a43c217afb257d121f4c49977c6b3a9d3db8206a",
+      "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/raid-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "Two anxious villagers behind a short wooden palisade gate look toward two approaching hostile silhouettes carrying simple stone-tipped spears and hide shields. The scene is a warning of a raid, no impact or injury; clear separate defender and approaching groups. No metal, horses, helmets, banners or battle gore.",
+      "source_runtime_ids": {
+        "verified": [],
+        "proposed_future": [
+          "raid"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "visitor",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "paleolithic",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/cards/visitor.png",
+      "sha256": "be550102959843f078e0ad711ce3b9722a720f7c67634fbd9ae9cea079807ae0",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/visitor-01.json",
+      "attempt_record_sha256": "c84e7dfe105c2f95c705469442baaad1986ed669c315bcfab580df8ebd33cfb5",
+      "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/visitor-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "One lone traveler with a walking staff and a small hide shoulder bag meets one resident at the edge of a stone-ring hearth. The traveler raises an open hand in greeting; both complete figures visible. Unlike migration, no family, luggage pile or trade goods.",
+      "source_runtime_ids": {
+        "verified": [],
+        "proposed_future": [
+          "visitor"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "era_change_neolithic",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "neolithic",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/cards/era_change_neolithic.png",
+      "sha256": "b9ed436a4230be9faf18c28137539916419aa8e73d7624aee5babf965b716359",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/era_change_neolithic-01.json",
+      "attempt_record_sha256": "079d94a9dd49dc1c88b5a4f29593da83b4f57edea7fcf4409568e72cb3ab3bab",
+      "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/era_change_neolithic-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "An adult presents a smooth ground stone axe beside a freshly formed clay pot, while another adult tends a small patch of grain and a goat kid stands by a low wooden pen rail. A compact celebratory beginning of farming and settled crafts; undyed plant-fiber clothing, no metal or dyed cloth.",
+      "source_runtime_ids": {
+        "verified": [],
+        "proposed_future": [
+          "era_change_neolithic"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "era_change_iron",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "iron",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/cards/era_change_iron.png",
+      "sha256": "df088b753e2526c709d0cf8fadc1a7f84003cbc9590f56418653571fde78aecf",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/era_change_iron-01.json",
+      "attempt_record_sha256": "7ec606ecc78904aab0d4c48adefeb9c2f1274e9995353277f7b19b7d22399dee",
+      "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/era_change_iron-01.json",
+      "status": "candidate_selected",
+      "semantic_note": "A smith in undyed wool tunic and leather apron uses a dark hand hammer on a squat stone anvil beside a small clay bloomery; a newly forged charcoal-gray iron axe and a rough iron bloom are prominent. Two short dressed paving stones imply the new road era. No steel chrome, industrial furnace, goggles or medieval castle.",
+      "source_runtime_ids": {
+        "verified": [],
+        "proposed_future": [
+          "era_change_iron"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    },
+    {
+      "id": "tin_shortage",
+      "lane": "cards",
+      "family": "chapter",
+      "era": "bronze",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "path": "art/style05/ui_b4/cards/tin_shortage.png",
+      "sha256": "d80871f303925a13aa7f868b723ecde714a368c4eed7eff6a6f0c1086bacdf5d",
+      "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/tin_shortage-02.json",
+      "attempt_record_sha256": "6a3e0f69af512084260deb8b1f7303207521350a11c4b6e164ff40fd5d5d3d91",
+      "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/tin_shortage-02.json",
+      "status": "candidate_selected",
+      "semantic_note": "Future proposed bronze-age card requested by C2 GOAL3.3: copper ingot beside an empty tin-side clay tray and unused mould, waiting for trader supply. Not an existing runtime card ID.",
+      "source_runtime_ids": {
+        "verified": [],
+        "proposed_future": [
+          "tin_shortage"
+        ],
+        "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+        "source_path": "assets/ui/cards.json",
+        "test_only": false
+      }
+    }
+  ],
+  "attempts": [
+    "/Users/rexxa/work/art-batch/B4/cards/records/cloth_short-01.json",
+    "/Users/rexxa/work/art-batch/B4/cards/records/cloth_short-02.json",
+    "/Users/rexxa/work/art-batch/B4/cards/records/era_change_bronze-01.json",
+    "/Users/rexxa/work/art-batch/B4/cards/records/era_change_iron-01.json",
+    "/Users/rexxa/work/art-batch/B4/cards/records/era_change_neolithic-01.json",
+    "/Users/rexxa/work/art-batch/B4/cards/records/first_kid-01.json",
+    "/Users/rexxa/work/art-batch/B4/cards/records/harvest_ready-01.json",
+    "/Users/rexxa/work/art-batch/B4/cards/records/human_birth-01.json",
+    "/Users/rexxa/work/art-batch/B4/cards/records/idle_adults-01.json",
+    "/Users/rexxa/work/art-batch/B4/cards/records/idle_adults-02.json",
+    "/Users/rexxa/work/art-batch/B4/cards/records/knowledge_risk-02.json",
+    "/Users/rexxa/work/art-batch/B4/cards/records/migrants-01.json",
+    "/Users/rexxa/work/art-batch/B4/cards/records/need_food-01.json",
+    "/Users/rexxa/work/art-batch/B4/cards/records/need_warmth-01.json",
+    "/Users/rexxa/work/art-batch/B4/cards/records/need_warmth-02.json",
+    "/Users/rexxa/work/art-batch/B4/cards/records/pressure-01.json",
+    "/Users/rexxa/work/art-batch/B4/cards/records/pressure-02.json",
+    "/Users/rexxa/work/art-batch/B4/cards/records/quarrel-01.json",
+    "/Users/rexxa/work/art-batch/B4/cards/records/raid-01.json",
+    "/Users/rexxa/work/art-batch/B4/cards/records/sick_person-01.json",
+    "/Users/rexxa/work/art-batch/B4/cards/records/sowing_window-01.json",
+    "/Users/rexxa/work/art-batch/B4/cards/records/storage-01.json",
+    "/Users/rexxa/work/art-batch/B4/cards/records/tin_shortage-02.json",
+    "/Users/rexxa/work/art-batch/B4/cards/records/tools_low-02.json",
+    "/Users/rexxa/work/art-batch/B4/cards/records/trader-01.json",
+    "/Users/rexxa/work/art-batch/B4/cards/records/visitor-01.json",
+    "/Users/rexxa/work/art-batch/B4/cards/records/wolves-01.json"
+  ],
+  "rejected": [
+    {
+      "record": "/Users/rexxa/work/art-batch/B4/cards/records/need_warmth-01.json",
+      "reason": "The full firewood bundle contradicted firewood_low. The selected second attempt has cold ash, one spent twig and an empty tilted fuel basket; the huddled poses remain clear."
+    },
+    {
+      "record": "/Users/rexxa/work/art-batch/B4/cards/records/pressure-01.json",
+      "reason": "The first attempt incorrectly depicted labour overload. The selected second attempt shows a lookout and securing a hide shelter around provisions, appropriate general preparation for PressureBegan."
+    }
+  ],
+  "superseded": [
+    {
+      "record": "/Users/rexxa/work/art-batch/B4/cards/records/idle_adults-01.json",
+      "reason": "The first conversational gesture read as socializing. The selected second attempt separates still gazes and resting hands, with an unused adze and basket between."
+    },
+    {
+      "record": "/Users/rexxa/work/art-batch/B4/cards/records/cloth_short-01.json",
+      "reason": "The first spare fiber bundle weakened shortage. The selected second attempt centers an empty fiber basket and bare spindle beside the small unfinished swatch and patched waiting resident."
+    }
+  ],
+  "coverage": {
+    "required_ids": [
+      "need_food",
+      "need_warmth",
+      "migrants",
+      "trader",
+      "knowledge_risk",
+      "tools_low",
+      "wolves",
+      "idle_adults",
+      "quarrel",
+      "pressure",
+      "storage",
+      "sick_person",
+      "sowing_window",
+      "harvest_ready",
+      "cloth_short",
+      "first_kid"
+    ],
+    "variant_ids": [
+      "human_birth",
+      "raid",
+      "visitor",
+      "era_change_neolithic",
+      "era_change_bronze",
+      "era_change_iron",
+      "tin_shortage"
+    ],
+    "not_applicable": [
+      "No additional trader_neolithic variant: generic trader contains no metal or domestic grain.",
+      "World tile/feet anchors do not apply to UI card vignettes."
+    ]
+  },
+  "self_review": {
+    "weakest_ids": [
+      "need_warmth",
+      "pressure",
+      "idle_adults",
+      "cloth_short"
+    ],
+    "regenerated_ids": [
+      "need_warmth",
+      "pressure",
+      "idle_adults",
+      "cloth_short"
+    ],
+    "before_after": [
+      {
+        "id": "need_warmth",
+        "before_record": "/Users/rexxa/work/art-batch/B4/cards/records/need_warmth-01.json",
+        "after_record": "/Users/rexxa/work/art-batch/B4/cards/records/need_warmth-02.json",
+        "decision": "select_second_attempt",
+        "reason": "The full firewood bundle contradicted firewood_low. The selected second attempt has cold ash, one spent twig and an empty tilted fuel basket; the huddled poses remain clear."
+      },
+      {
+        "id": "pressure",
+        "before_record": "/Users/rexxa/work/art-batch/B4/cards/records/pressure-01.json",
+        "after_record": "/Users/rexxa/work/art-batch/B4/cards/records/pressure-02.json",
+        "decision": "select_second_attempt",
+        "reason": "The first attempt incorrectly depicted labour overload. The selected second attempt shows a lookout and securing a hide shelter around provisions, appropriate general preparation for PressureBegan."
+      },
+      {
+        "id": "idle_adults",
+        "before_record": "/Users/rexxa/work/art-batch/B4/cards/records/idle_adults-01.json",
+        "after_record": "/Users/rexxa/work/art-batch/B4/cards/records/idle_adults-02.json",
+        "decision": "select_second_attempt",
+        "reason": "The first conversational gesture read as socializing. The selected second attempt separates still gazes and resting hands, with an unused adze and basket between."
+      },
+      {
+        "id": "cloth_short",
+        "before_record": "/Users/rexxa/work/art-batch/B4/cards/records/cloth_short-01.json",
+        "after_record": "/Users/rexxa/work/art-batch/B4/cards/records/cloth_short-02.json",
+        "decision": "select_second_attempt",
+        "reason": "The first spare fiber bundle weakened shortage. The selected second attempt centers an empty fiber basket and bare spindle beside the small unfinished swatch and patched waiting resident."
+      }
+    ],
+    "verdict": "/Users/rexxa/work/art-batch/B4/cards/reviews/final_verdict.json",
+    "independent": false,
+    "score": 93,
+    "medium": 4,
+    "line": 4,
+    "light": 4,
+    "palette": 4,
+    "evaluated_scales": [
+      "native520x260",
+      "exact2x1040x520"
+    ],
+    "regenerated_percent": 17.391304347826086
+  },
+  "interrupted_submissions": "/Users/rexxa/work/art-batch/B4/cards/interrupted_attempts.json",
+  "completed_image_outputs": 27,
+  "total_submissions_including_interrupted": 30,
+  "owner_approved": false,
+  "runtime_imported": false,
+  "notes": [
+    "A4 sheets.py reused unchanged; its title says A4 but these are B4 candidates.",
+    "All raw sources and replaced alternatives preserved externally.",
+    "No runtime game or shared code file modified by cards lane."
+  ]
+}

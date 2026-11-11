@@ -1,0 +1,31 @@
+{
+  "id": "tools_low",
+  "lane": "cards",
+  "family": "chapter",
+  "era": "paleolithic",
+  "canvas": [
+    520,
+    260
+  ],
+  "anchor": [
+    260,
+    130
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/cards/tools_low.png",
+  "sha256": "07e3d866be92b9811b91f936663e604b4fc706f16f05ca9aae4da3dcef456222",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/tools_low-02.json",
+  "attempt_record_sha256": "b7e4c114cdfebe103b847ff0441cd6bd9e1f7dc6d41586ee0c7e2e4fdb619631",
+  "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/tools_low-02.json",
+  "status": "candidate_selected",
+  "semantic_note": "A kneeling craftsperson examines a broken stone axe: clearly separated chipped stone head, snapped wooden haft and loose fiber binding on a small hide mat; a second worker holds an empty hand. Sparse useful composition makes tool shortage immediately legible.",
+  "source_runtime_ids": {
+    "verified": [
+      "tools_low"
+    ],
+    "proposed_future": [],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "assets/ui/cards.json",
+    "test_only": false
+  }
+}

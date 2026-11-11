@@ -1,0 +1,31 @@
+{
+  "id": "first_kid",
+  "lane": "cards",
+  "family": "chapter",
+  "era": "neolithic",
+  "canvas": [
+    520,
+    260
+  ],
+  "anchor": [
+    260,
+    130
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/cards/first_kid.png",
+  "sha256": "f0c17c1a2dae909e503a9d025931add0ecb5d9a7d911615c2f3aaa994d218db0",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/first_kid-01.json",
+  "attempt_record_sha256": "7d4db9ab70dfc12e07b2f416d140393062489e4b8b6f5bb97b68766c66f4555b",
+  "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/first_kid-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "First livestock kid: goat mother and small standing goat kid in a fiber-lashed pen with herder. This runtime ID does not mean a human birth.",
+  "source_runtime_ids": {
+    "verified": [
+      "first_kid"
+    ],
+    "proposed_future": [],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "assets/ui/cards.json",
+    "test_only": false
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "id": "era_change_bronze",
+  "lane": "cards",
+  "family": "chapter",
+  "era": "bronze",
+  "canvas": [
+    520,
+    260
+  ],
+  "anchor": [
+    260,
+    130
+  ],
+  "footprint": null,
+  "path": "art/style05/ui_b4/cards/era_change_bronze.png",
+  "sha256": "28fb3ffb28d7ca5fb876af93bfb7be7ef18ed4b6f67b5002dfc0d327dd7b7bde",
+  "attempt_record": "/Users/rexxa/work/art-batch/B4/cards/records/era_change_bronze-01.json",
+  "attempt_record_sha256": "88714a1b7c19762dfeb9ad18b3872d2d832e2f6491dc605925e217ce3398b3d1",
+  "normalization": "/Users/rexxa/work/art-batch/B4/cards/checks/era_change_bronze-01.json",
+  "status": "candidate_selected",
+  "semantic_note": "A crouching craftsperson beside a small clay smelting furnace with amber fire presents the first golden-brown bronze axe to a second clothed villager. Beside them a muted copper ingot, dark charcoal and a clay casting mould make the new material legible. A short low mud-brick wall fragment implies the material transition. No stone age scene transitioning through a magic portal; show one concrete moment.",
+  "source_runtime_ids": {
+    "verified": [],
+    "proposed_future": [
+      "era_change_bronze"
+    ],
+    "source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+    "source_path": "assets/ui/cards.json",
+    "test_only": false
+  }
+}
