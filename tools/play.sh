@@ -141,7 +141,8 @@ if [[ -e "$WT/.git" ]]; then
     wt_common="$(git -C "$WT" rev-parse --git-common-dir 2>/dev/null)" || { say "play: 작업 트리 확인 실패: $WT"; exit 1; }
     repo_common="$(cd "$REPO" && cd "$repo_common" && pwd -P)"
     wt_common="$(cd "$WT" && cd "$wt_common" && pwd -P)"
-    if [[ "$repo_common" != "$wt_common" ]] || ! git -C "$REPO" worktree list --porcelain | grep -Fxq "worktree $(cd "$WT" && pwd -P)"; then
+    # grep reads the whole list: -q would quit early and SIGPIPE git under pipefail once the list passes 16 KiB.
+    if [[ "$repo_common" != "$wt_common" ]] || ! git -C "$REPO" worktree list --porcelain | grep -Fx "worktree $(cd "$WT" && pwd -P)" >/dev/null; then
         say "play: 이 클론에 등록된 작업 트리가 아닙니다: $WT — 변경하지 않았습니다"
         exit 1
     fi
