@@ -1,0 +1,22 @@
+{
+  "status": "CAPPED_GAPS_NOT_COMPLETE_BIOME_COVERAGE",
+  "assets": [],
+  "edges": [],
+  "missing": [
+    "tundra",
+    "taiga_floor",
+    "steppe",
+    "temperate_meadow",
+    "mediterranean_scrub",
+    "marsh",
+    "river_gravel",
+    "highland_rock"
+  ],
+  "missing_season_frames": 32,
+  "edge_band_status": {
+    "harsh": "GAP: no accepted new ground inputs",
+    "neutral": "GAP: no accepted new ground inputs",
+    "mild": "GAP: no accepted new ground inputs"
+  },
+  "existing_art_recipe_evidence": "/Users/rexxa/work/art-batch/B2/grounds/existing_recipe_demo/recipes.json"
+}

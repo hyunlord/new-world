@@ -1,0 +1,6 @@
+{
+  "applied": false,
+  "source_commit": "LEADER_TO_PIN",
+  "files": [],
+  "reason": "No candidate passed frozen style; rejected files excluded."
+}
