@@ -1,6 +1,6 @@
 # Changelog
 
-## C2-b — implementation complete, not yet published (2026-11-12)
+## C2-b — published 8e4170c42, 2026-11-12
 
 ### Added
 - Ordinary ore mining on revealed outcrops: mine designation (code 7), job (code 26) and command; data-driven yield, exact ledger, depletion that keeps geology; `mining` knowledge gate; F7→9 order mode.
@@ -18,7 +18,7 @@
 ### Removed
 - C2-b debt text on the now-connected `mining` and `tin_sourcing` nodes.
 
-## C2-a — implementation IN_PROGRESS, 2026-11-10 (not published)
+## C2-a — published ad790ddd1, 2026-11-12
 
 ### Added
 - Registry-backed surface ore origins and factual discovery, Bronze knowledge/items/recipes/templates, and data-only extension coverage. Mining and the full tin-to-bronze chain remain C2-b.
