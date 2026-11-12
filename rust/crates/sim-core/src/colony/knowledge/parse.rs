@@ -74,6 +74,7 @@ fn designation_from_name(name: &str) -> Option<Designation> {
         "clay_pit" => Some(Designation::ClayPit),
         "hunt" => Some(Designation::Hunt),
         "harvest" => Some(Designation::Harvest),
+        "mine" => Some(Designation::Mine),
         _ => None,
     }
 }

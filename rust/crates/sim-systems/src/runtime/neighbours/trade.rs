@@ -378,6 +378,29 @@ pub fn trade(
             .cause(u32::from(c.neighbour))
             .value((give_value.min(65_535) << 16 | take_value.min(65_535)) as i64),
     );
+    // C2-b: imported ore/ingot goods keep their trade as a recorded metal source.
+    if let Some(traded) = res
+        .chronicle
+        .len()
+        .checked_sub(1)
+        .and_then(|i| u32::try_from(i).ok())
+    {
+        for &(stack, count) in take {
+            let Some(g) = c.goods.get(usize::from(stack)) else {
+                continue;
+            };
+            let tags = &g.kind.definition().tags;
+            if tags.iter().any(|t| t == "ore" || t == "ingot") {
+                res.metal.imports.push(sim_core::colony::ore::MetalImport {
+                    traded,
+                    neighbour: c.neighbour,
+                    item: g.kind,
+                    count,
+                    card: None,
+                });
+            }
+        }
+    }
     let items: u32 = give.iter().map(|g| u32::from(g.1)).sum::<u32>()
         + take.iter().map(|t| u32::from(t.1)).sum::<u32>();
     Ok(items)

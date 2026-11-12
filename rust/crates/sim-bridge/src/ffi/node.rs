@@ -804,6 +804,19 @@ impl WorldSimNode {
         ))
     }
 
+    /// C2-b order: mark every revealed, still-yielding ore deposit in the rectangle for mining.
+    #[func]
+    fn cmd_designate_mine(&mut self, x0: i32, y0: i32, x1: i32, y1: i32) -> VarDictionary {
+        result_to_dict(submit_rect(
+            &mut self.engine,
+            RectCommand::DesignateMine,
+            x0,
+            y0,
+            x1,
+            y1,
+        ))
+    }
+
     /// M2 order: add a bill (`recipe` by name, `mode` `"make"`/`"maintain"`) to a workshop.
     #[func]
     fn cmd_add_bill(
@@ -1306,6 +1319,26 @@ impl WorldSimNode {
         result_to_dict(submit_neighbours(
             &mut self.engine,
             NeighbourCommand::Trade(caravan, give.to_vec(), take.to_vec()),
+        ))
+    }
+
+    /// C2-b order: [`Self::cmd_trade`] requested from the card `card` (its data id).
+    #[func]
+    fn cmd_trade_from_card(
+        &mut self,
+        card: GString,
+        caravan: i64,
+        give: PackedInt32Array,
+        take: PackedInt32Array,
+    ) -> VarDictionary {
+        result_to_dict(submit_neighbours(
+            &mut self.engine,
+            NeighbourCommand::TradeFromCard(
+                card.to_string(),
+                caravan,
+                give.to_vec(),
+                take.to_vec(),
+            ),
         ))
     }
 

@@ -40,6 +40,7 @@ pub(super) fn decode_body(payload: &[u8]) -> Result<Body, SaveError> {
         livestock: old.livestock,
         neighbour_upper: Default::default(),
         ore: Default::default(),
+        metal: Default::default(),
     })
 }
 

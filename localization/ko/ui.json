@@ -1887,5 +1887,20 @@
   "C2_JOB_HARVEST_FIELD": "밭 수확",
   "C2_JOB_CAPTURE": "동물 포획",
   "C2_JOB_LIVESTOCK_PRODUCT": "가축 산물 수확",
-  "C2_JOB_SLAUGHTER": "가축 도축"
+  "C2_JOB_SLAUGHTER": "가축 도축",
+  "C2_STEWARD_SMELTER": "구리 광석이 쌓여 제련로와 제련 주문을 마련",
+  "C2_STEWARD_AXES": "돌도끼를 쓰는 사람을 위해 금속 도끼 주조 주문",
+  "MIND_FACT_JOB_MINING": "광맥 채굴 작업을 맡고 있음",
+  "MIND_FACT_JOB_SMELTING": "제련 작업을 맡고 있음",
+  "MIND_FACT_JOB_CASTING": "주조 작업을 맡고 있음",
+  "MIND_MINING_WORK": "광석 캐기",
+  "MIND_SMELTING_WORK": "금속 제련",
+  "MIND_CASTING_WORK": "금속 주조",
+  "C2_CHRON_FIRST_INGOT": "{person}: 처음으로 {item}을 만들었다 ← {recipe}",
+  "C2_CHRON_MINED_BY": " · 광석(채굴: {miner})",
+  "C2_CHRON_TOOL_UPGRADED": "{person}: {old}를 {new}로 바꿨다",
+  "C2_CHRON_FIRST_TOOL_USED": "{person}: 처음으로 {item}를 썼다",
+  "C2_DIAG_NO_FUEL": "{workshop}에 {fuel}이 없습니다 — {source} 확인",
+  "C2_ORDER_MINE": "광석 캐기",
+  "C2_ORDER_TOAST_MINE": "광맥 {count}곳에 채굴 표시"
 }

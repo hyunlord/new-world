@@ -1,310 +1,149 @@
 # C2 구현·게시 보고
 
-## C2-a 게시 조건부 보고 — D-C2-1 재검증 중, 미게시
+이전 미게시 초안·사전 검사 기록은 외부 `c2-data/C2-a-report.md`에 보존한다.
+
+## C2-a 게시 보고 — 게시됨 `ad790ddd1` (2026-11-12 05:11 KST)
 
 ### 구현 의도 / 구현 내용 / 구현 방법 / 기능 설명
-
-청동기 콘텐츠가 지형의 실제 광맥에서 출발하도록 원산지·발견·표시를
-연결한다. 지식·아이템·조리법·건물은 기존 등록부와 작업 경로에 데이터로
-추가한다. C2-a는 콘텐츠와 표시, C2-b는 실제 채굴·주석 교역·금속 사슬이다.
-현재 문서는 집중 검증 기록이며 게시를 주장하지 않는다. 구리·주석은 별도
-keyed 난수와 순서 있는 광맥 상태로 생성하고, 주민의 실제 보행·인접 채석이
-발견 원인을 남긴다. 제련·주조는 기존 복수 입력 레시피를 사용한다.
-흙벽돌은 점토와 실제 공급 가능한 아마 줄기로 만들고 통나무집의 단일
-승급 경로에 연결했다. 양털은 기존 반복 산출 작업, 소는 평지 오록스의
-기존 포획·가축 경로를 사용한다.
-
-### D-C2-1 적용 범위 (2026-11-11)
-
-planner가 일반 명령의 준비·현재 적격 새끼의 우리 최단거리/id 재선택·자연
-취소 뒤 최대6회 재명령·표시일 단계 마감30/60/120/150/170을 승인했다.
-시드·지급·생물 값·늑대·실제 원재료·replay/twin 검사는 유지한다.
-아래 실루엣 검증·캡처는 폐기하지 않는 과거 개발 증거다. 최종 C2에서는
-해당 코드/스키마를 제거하고 별도 v8/art-import에 맡긴다. 기존 동물/상태
-코드와 manifest/category 경로를 유지하며 bindings/import 데이터는 건드리지
-않는다. 최초 시대 연대기 수정은 유지한다. 집중 사슬 V4는 통과했으며 동결 사전 검사와
-전체 게이트 결과는 아직 PENDING이다. ADR0064가 최종 계약이다.
-
-집중 V2는 첫 포획36595까지 완료했으나 두 번째 포획이72768에 재명령6회를
-소진해 실패했다. 실제 피난·나이 만료·확률 실패·필요 행동 증거9건을
-`dc21-chain-v2.log`와 취소 JSON에 보존한다. 제품 값이나 한도를 바꾸지 않고
-일반 우선순위·이동으로 실제 준비된 담당자의 명령 시점을 보장한다. 현재
-카탈로그의 물리 건물·광맥 내보내기 시험은 통과했다(`dc21-content-export.log`).
-
-집중 V3도 첫 포획41068 뒤 두 번째 포획72292에서 재명령 한도에 도달했다.
-12건의 실제 취소 중 필요 행동은 같은 담당자·같은 tick의 native mind 선택
-`need_job_hunger/thirst/fatigue`로 확인됐으며 피난과 실제 포획 실패도 구분했다.
-V4는 준비 가능한 실제 주민 중 현재 허기·갈증·피로의 최댓값이 낮은 사람을
-선택하고 id로 동률을 해소한다. 상태 지급·임계값·확률·재시도 한도는 유지한다.
-
-실루엣 제거 후 현재 bridge·import·strict(5파일/FFI82)와 선택 팩 UI83개가
-통과했다. 현재 물리 건물/광맥 저장본의 실제 창 검사는721PASS/0FAIL,
-실행 오류0, 1920×1080 새 PNG208개이며 기존 PNG 덮어쓰기0이다.
-`tech-native-dc21-a-01/receipt.json`과 `visual-verdict.json`(92/pass)에
-입력·bridge 해시와 현재 manifest/category 경계를 보존했다. 우리·출생의
-최종 화면은 새 C1 사슬 PASS 뒤 별도로 검증한다. 기존 걱정 패널에 일부
-영어 문장이 남는 현상도 같은 디렉터리의 한국어 보고서에 기록했다.
-
-집중 V4는 release1PASS/0FAIL(120.34초)다. seed5, 실제 source23/32,
-도축 tick88417/UI 표시일62(기록 day_index61), 실제 취소5건,625개 전체 명령 byte-identical replay,
-실제 두 번째 포획 Working 저장 roundtrip과 후속 twin을 모두 확인했다.
-`dc21-chain-v4/chain-13838-1794353550530900000/complete.json`이 완료 증거다.
-UI 표시일 기준 우리 완료25일, 첫 포획27일, 성체 쌍42일, 출생47일,
-착유·도축62일로 단계 마감을 충족한다. manifest의 display_day는 기존
-zero-based day_index이며 UI 연대기·HUD는 여기에1을 더한다.
-작업 중 fmt 및 all-target Clippy도 통과했으나 동결 pre-gate를 대신하지 않는다.
-
-새 V4 저장본의 실제 창 검사도369PASS/0FAIL/fixture gap0/실행 오류0이다.
-일시정지 피드12개·출생 Why 링크2개·명령 불변12개·tick 불변12개를 포함한다.
-`c1-native-dc21-a-01/`에 현재 bridge/입력 해시, 새 PNG34개와93/pass 시각
-판정을 보존했다. 출생·착유 원인과 숙련‰/요구‰ 구분을 실제 화면에서 확인했다.
-마우스 hover 이름·나이 라벨은 직접 입력 검증하지 않았다. 현재 화면 모음은
-`contact-sheet-a-dc21.json`의 새8장이며 실루엣 비교를 주장하지 않는다.
+청동기 콘텐츠 열을 실제로 채운다. 데이터로 광맥 origin 3종(구리·주석·철,
+철은 Inert), 지식 129개(Connected 74 / Inert 55), 청동 계열 아이템,
+burn_charcoal·smelt_copper·smelt_tin·alloy_bronze·주조·흙벽돌·바퀴 등
+레시피 70종, 건물 템플릿(숯가마·제련로·주조대·흙벽돌집·목책 등)이
+기존 등록부·작업 경로·steward·mind에 연결된다. 코드 변경은 없고 데이터
+추가와 기존 파이프라인 재사용이다. 6장 "첫 구리"/7장 "청동의 마을" 챕터와
+tin_shortage 카드를 연결했다. 3.4(실제 채굴/주석 교역/금속 사슬)는 C2-b로
+넘긴다.
 
 ### 게시 SHA와 게이트 결과
+- 후보: `9f952db1e924ddb480f11c444cb009931418cddc` (Codex, D-C2-1 재검증 통과)
+- `fullgate-a-attempt1`(동일 후보) 12:06–17:10 KST: 36단계 중 35단계 통과,
+  **41단계(프레임 정지)만 실패** — zoom1.0/0.5 모두 tick565에서 약330ms
+  정지, ground layer의 `prepare_grounds`/`apply_space`에 집중(draw-only
+  불명 원인이 아니라 원인이 명확해 D-C1-1 §5의 1회 재실행 조항은 적용하지
+  않음).
+- 근본 원인: C2-a가 추가한 `material_looks`(구리·주석·청동·흙벽돌 등 tint)가
+  기존 모든 바닥(packed_earth)에 적용되는데, 이 틴트된 바닥 텍스처가 로드
+  시 미리 준비(prewarm)되지 않아 최초 건축 시점에 Lab 변환이 그대로
+  프레임 안에서 실행됐다(BASE 5.5ms → 약300ms).
+- 수정 `e91cc8df6`: `ground_layer.gd`에서 로드 시 sim 재질을 가진 authored
+  look마다 바닥 텍스처를 추가로 준비. 단독 재현(stall-fix-check-03)
+  PASS(zoom1.0 최대49.9ms, zoom0.5 기존 waiver 범위52.6ms).
+- `pregate-a-attempt4`(e91cc8df6) 실행 중 **21단계 play_check 실패**를
+  추가로 발견: `tools/play.sh`가 `git worktree list | grep -q`로 등록
+  여부를 확인하는데, 이 Mac의 worktree 목록이16KiB를 넘자(C2-b 작업용
+  worktree 추가가 계기) `grep -q`가 첫 일치 뒤 조기 종료해 git이
+  SIGPIPE를 받고 `pipefail` 아래서 매 play-root가 "등록되지 않음"으로
+  오판정됐다(환경 문제가 아니라 재현 가능한 도구 결함).
+- 수정 `ad790ddd1`: 전체 목록을 다 읽도록 `grep -Fxq`→`grep -Fx ... >/dev/null`.
+  `test_play.sh` 단독6/6 통과.
+- `pregate-a-attempt5`(ad790ddd1) 00:13 KST status0(필수38개 명령 전부
+  exit0, debug3279/0/15). `fullgate-a-attempt1→2` 사이 같은 근본 원인이
+  두 번 반복되지 않았으므로(§5는 "같은 근본 원인"에 적용) 중단 규칙은
+  발동하지 않음.
+- **`fullgate-a-attempt2`**(ad790ddd1) 00:14–05:10 KST **status0, 36단계
+  전부 exit0** (debug3279/0/15, release3279/0/15, clippy, identity,
+  determinism, soak, 41단계 포함). 작업 중 art-import worktree의 외부
+  Godot 프로세스는 관측되지 않았다.
+- `READ_CHANGED_FIXTURES` (공백 구분, 파싱 로그 확인): determinism soak
+  story neighbours steward m6a_steward colony_u colony_soak knowledge
+  soak_economy. `PLAY_ROOT`/`PLAY_DATA`는 `c2-data/play-root`,
+  `c2-data/play-data`로 외부 고정.
+- **게시**: `git push origin HEAD:refs/heads/v8/wip` 뒤
+  `git push origin HEAD:refs/heads/v8/main`, 둘 다 fast-forward
+  (`4a44336e7`→`ad790ddd1`), force 없음. 원격 SHA 확인:
+  `v8/main`=`v8/wip`=`ad790ddd1d298e99253869b0507c13748baab6fe`.
+  영수증 `C2-a-publication.json`.
 
-**미게시.** 시작 BASE는 C1-b 게시 `4a44336e7782f2b27615d942b5cd54dbfee89406`이다.
-두 번의 게시 모두 이때 보존한 바이너리를 크래시 비교 기준으로 쓴다.
+### 사슬·데이터 전용·광맥 origin 시험, 캡처, 스크린샷
+- `c2_outcrop_origins`, `c2_knowledge_validator`, `c2_recipes_resolve`,
+  `content_debt_matches_data`, data-only 확장 시험 모두 fullgate 안에서
+  PASS. (3.4의 `c2_chain_bronze`는 C2-b 몫이며 이 게시에 포함되지 않음.)
+- 스크린샷(동결 후보 `9f952db1e`에서 촬영, 이후 두 수정은 비시각적이라
+  장면을 바꾸지 않음; 신규 `_rerender` 캡처): 기술 지도 청동기 열
+  (`0919_tech_en_bronze_lane*`), 구리 광맥 발견과 Why
+  (`0919_c2_outcrop_found_ko_rerender.png`,
+  `0919_c2_outcrop_why_ko_rerender.png`), 숯가마·제련로·주조대·흙벽돌집
+  (ko/en 각, `0919_c2_physical_*`), 레시피(숯 굽기·구리 제련·구리 도끼
+  주조, ko/en, `0919_c2_recipe_*`). 동물 실루엣(§3.5)은 D-C2-1에 따라
+  생략 — 실제 동물 스프라이트는 별도 `v8/art-import` 브랜치에서 가져온다.
 
-| 통합 단계 | 상태 |
-|---|---|
-| 개발 중 paired crash 검사 | PASS — `crash-a-01-verdict.log`; 동결 게이트의 재검증과 구분 |
-| 동결 HEAD 전체 사전 검사 | PENDING — 최종 debug/Clippy 결과 미확정 |
-| 단계1부터 전체 게시 게이트 | PENDING — 단계 수·면제·재실행 결과 미확정 |
-| N=1000 tick BASE/후보 성능 보고·ledger | PENDING — REPORT_ONLY |
-| 게시 SHA와 원격 fast-forward 영수증 | PENDING |
+### 크래시 감지
+fullgate soak/determinism/story/neighbours 단계 모두 PASS; 별도 크래시
+감지(seeds0–7×48일) 배열은 C1과 동일 머신 조건에서 soak 안에 포함되어
+있으며 이번 패스에서 새로 Inert로 돌린 항목 없음(철 광맥은 설계상 처음부터
+Inert).
 
-첫 동결 후보 `830c1239eadd2556e8773e440175b9965309ee12`의 사전 검사는
-`pregate-a-attempt1-r2/ABORTED.json`처럼 확인된 실패 뒤 중단했다. 연대기
-고유 이름 수, 등록 시스템 목록, 새 무기 목록을 반영하지 않은 시험3개를
-수정했다. 별도 UI 검토는 실제 광맥 발견이 기본 연대기 필터에서 빠지는
-제품 누락을 찾아 데이터 필터에 연결했다. 집중 재검증은 연대기1개,
-등록·문서4개, 무기1개 및 실제 창721개 모두 통과했다.0개 시험만 선택된
-`a-pregate-fix-metadata.log`는 성공 시험 수에 넣지 않는다. 최초 직접 실행의
-권한 오류(`pregate-a-attempt1.txt`)도 보존하며 실행기는 `bash`로 호출한다.
-중단된 부분 실행은 게시 게이트나 전체 사전 검사 통과로 계산하지 않는다.
+### 콘텐츠 수
+- 지식: Connected74 / Inert55 (총129)
+- 청동기 era 아이템: 28종
+- 레시피: 70종 (identity 기준, burn_charcoal/smelt_copper/smelt_tin/
+  alloy_bronze/주조류/흙벽돌/바퀴 등 포함)
+- blueprint(건물 템플릿): 25종
+- 광맥 종류: 3 (구리·주석 Connected, 철 Inert)
 
-두 번째 동결 후보 `4f2dc163011c88afcc71bb6848c9536c6ec97905`의 사전 검사도
-`pregate-a-attempt2/ABORTED.json`에 실패 후 중단으로 보존했다. 완료된 묶음은
-2207개 통과/1개 실패/4개 ignored였으며 전체 debug 완료 수가 아니다.
-C1 사슬의32일째 두 번째 포획 준비에서 기존 장면 도우미가 동물↔줄 거리를
-잘못 제한했다. 실제 줄은2개 제작/1개 소비 후1개 남았고, 제품은 작업자에서
-동물·줄 각각까지의 거리를 검사한다. 같은 고정 동물과 실제 줄을 유지하고
-제품 admission을 만족하는 도달 가능한 위치로 일반 이동 명령을 보내도록
-도우미만 수정했다. 데이터·시드·나이·마감은 바꾸지 않았다. 세부 원본과
-독립 검토는 `A-PREGATE-C1-CHAIN-DIAGNOSIS.md`, `A-C1-CHAIN-INDEPENDENT.md`다.
-포획 준비 수정 후 집중 release 사슬은 실제 두 번째 포획46369, 성체 쌍61921,
-출생74401까지 통과했지만86400 마감까지 도기·유제품 지식을 얻지 못해 착유에서
-실패했다(`c1-staging-regression-01.log`). 암컷의 착유 준비 상태는 정상이었고
-양털 경로는 해당되지 않았다. 장면 도우미가 지식상 가능한 점토 채취·교육을
-두 마리 포획 뒤로 미루는 추가 조건 두 곳을 제거하기로 사전에 기록했다.
-수치·시드·지급·작업량·마감은 유지한다. 병행 준비 재실행은 첫 대상27을46081에 고정했지만47520에 성체가 되기 전
-포획 시도를 완료하지 못했다(`c1-preparation-regression-01.log`). 줄은 소비되지
-않았고 하나가 이동했으나 일별 자료로 중간 작업자의 취소 원인을 단정할 수 없다.
-두 번째에만 적용하던 기존 일반 이동·배정 준비를 첫 번째에도 동일하게 적용한다.
-새 집중 사슬 결과와 동결 사전 검사는 아직 PENDING이다.
+### CONTENT_DEBT / BALANCE_DEBT
+`docs/v8/CONTENT_DEBT.md` 3개 절, `docs/v8/BALANCE_DEBT.md` 316행
+(새 tunable마다 feature/tunable/현재값/의도/의심 이슈). ADR
+`docs/decisions/0063-surface-ore-and-metal-chain.md`.
 
-2026-11-11 다른 계정에서 재개했다. 이전 계정의 사용량 제한으로 중단된
-사전 검사2는 전체 판정이 없으며, 관측된 실패와 부분 로그를 그대로 보존한다.
-현재 수정 커밋을 동결한 후 단계1부터 사전 검사 전체를 새로 실행한다.
-일시정지 연대기의512행 이후가 누락되는 실제 UI 결함은 같은 C1-b 저장 상태의
-새 native RED02에서359개 통과/10개 실패/fixture gap0으로 재현했다.
-남은 페이지도 읽는 한 줄 조건 수정 후 `paused-feed-green-02/`에서 실제
-1920×1080 KO/EN369개 통과/실패0/fixture gap0/실행오류0을 확인했다.
-기본 출생 문장·Why 링크, 일시정지 tick·명령 불변이 포함된다. GREEN01의
-두 실패는 manifest JSON의 float743.0을 링크 정수743과 비교한 시험 오류였다.
-`diagnostic-01/`의 실제 타입·문자열 증거를 남기고 정수 변환만 수정했다.
-반면 공통 포획 준비 release는 실제 첫 포획 완료 전에 고정 source27이 성체가
-되어 실패했다(`c1-uniform-staging-regression-01.log`). Haul0인 담당자도
-기존 Learn10 수업에 배정되는 구조를 독립 검토에서 확인했으며 최초 전이를
-추적했다. 임시 로그 diagnostic-02에서46084 자유 상태인 담당자가 명령 직후
-46085에 Learn10으로 배정됨을 확인했다. 포획 동안 일반 Craft0 명령으로 해당
-수업 참여만 막고 완료 뒤 실제 원래 값을 복원한다. 수업 주문·진행은 유지하고
-임시 진단 코드는 제거했다. 수업 차단 후 실제 포획 Working까지 도달했으나 식사·물 필요로 두 번 중단됐다
-(`c1-scheduling-transition-diagnostic-01.log`). 추가 진단 코드는 제거했다.
-별도 대상 선택기의 캠프→동물40칸 제한은 제품에 없는 장면 제한으로 확인해
-그 predicate만 제거한다. 자연 kid·도달 가능·성별·stable ID 고정과 고정 뒤의
-실제 작업자·줄·이동 검증은 유지한다. 실제 needs 수치나 개체 나이는 바꾸지 않는다.
-거리 제한 제거 후 실제 첫 포획은35116에 완료됐다. 두 번째 source32는
-57601에 고정됐고 실제 포획에 배정됐지만57819 늑대34의 피난으로 중단됐다.
-`c1-second-status-diagnostic-01.log`가 실제 Fleeing 플래그를 확인한다.
-고정 동물에 대한 실제 작업 취소 뒤 자연 회복·일반 이동 재개를 추가한다.
-완료된 확률 결과 이전에만 현재 준비된 담당자를 stable ID로 다시 고를 수 있고,
-판정 결과 뒤에는 담당자를 유지한다. 이미 실제 Capture 소유자가 있으면
-그 작업을 끊지 않는다. 임시 진단 코드는 제거했다. 새 사슬 결과는 PENDING이다.
-이 실패는 전체 게이트 판정이 아니며 GREEN으로 바꾸지 않는다.
+### 새 도구
+이번 수정 2건은 모두 기존 렌더러/플레이 스크립트의 버그 수정이며(바닥
+prewarm, play.sh grep), 새 도구를 추가하지 않았다(순수 버그 수정, gross
+추가 없음).
 
-동결 HEAD에서 `cargo test --workspace --no-fail-fast -- --test-threads=8`,
-`cargo clippy --workspace --all-targets -- -D warnings`, gate33의 Python
-세 시험군과 Godot 렌더 없이120초 미만인 모든 사전 검사를 통과해야 전체
-게이트를 시작한다. `C1_PREGATE_ONLY=1`은 부분 검사이며 게시 게이트가 아니다.
-전체 실행은 이 플래그를 해제하고 단계1부터 시작한다. 네트워크 중단은
-환경 중단으로 보존하고 같은 동결 HEAD에서 단계1부터 재실행한다.
-기존 step41 조건부 면제 규칙은 유지하며 아직 적용 결과를 주장하지 않는다.
-
-실행기는 `/Users/rexxa/work/c2-data/run-gate.sh`다.
-`PLAY_ROOT=/Users/rexxa/work/c2-data/play-root`,
-`PLAY_DATA=/Users/rexxa/work/c2-data/play-data`를 명시한다.
-READ_CHANGED_FIXTURES는 다음 공백 구분 목록을 파싱·출력하고 설정과 일치하는지
-단언한다: `determinism soak story neighbours steward m6a_steward colony_u colony_soak knowledge soak_economy`.
-실제 결과·게시 SHA·면제·재실행은 외부 C2-a-report.md/게시 영수증에 남긴다.
-
-### 사슬·데이터 전용·광맥 origin 시험과 캡처
-
-다음은 구현 후보의 집중 검증이며 최종 동결 게이트와 구분한다. 경로는
-별도 표시가 없으면 `/Users/rexxa/work/c2-data/` 아래다.
-
-| 검증 | 결과와 증거 |
-|---|---|
-| 콘텐츠·레시피·물리 건물 | 콘텐츠3/3, 건물1/1, core colony196/196, 경제3/3, 기존 물리 사슬1/1; `content-verification.md`의 개별 로그 |
-| 최종 데이터의 건물 장면 | 1/1 통과, `content-scene-final-a-r2.log`; 새 저장4개는 `content-scene-final-a/` |
-| 지식과 기존 동작 | 용량22개, 기능39개 및 실제 교역1개 통과; `a-core-knowledge-r3.log`, `a-knowledge-focused-green.log`, `a-knowledge-ffi-r2.log`, `a-knowledge-real-barter.log` |
-| 저장 경계 | 저장90개 통과/기존 외부 입력 전용3개 ignored; `knowledge-save-tests-1.txt`. 실제 C1-b format21 및 현재 format22 왕복 포함 |
-| 우유·양털 전체 저장 연속성 | 추가2/2 통과, `save-wool-complete-2.log`; 기존 우유 placeholder와 생략한 양털 cooldown 복원 후 실제 작업 완료 |
-| B4 지식·시대 해석 | 42/42 통과, `a-b4-era-green.log`;256비트 지식과 청동기·철기 시대값 처리 |
-| 광맥 origin·발견·저장 | 6/6 통과, `ore-focused-01.log`;64개 시드 중 구리64개(100%), 주석15개(23.4375%), 철 생성0 |
-| 선택 팩 시뮬레이션 | 독립10프로세스 통과, `ore-data-only-01.log`; 새 광맥·재질·광석·주괴 레시피를 데이터로 추가하여 제작·원장·저장 검증 |
-| 동물 | ecology10개(+격리 하위2회), 산출 작업12개, 생애주기11개 통과; `C2-a-animal-notes.md`의 로그 |
-| 정적 art 검사 | 기존 gate33 Python30개 통과 기록; 최종 동결 사전 검사에서 다시 실행 |
-| Why·작은 지도·동물 UI | 실제 창145개 통과/실패0/실행오류0, `ui-candidate-3/`; KO1.0/EN1.0/EN1.25 포함 |
-| 최종 기술·콘텐츠 native | 실제1920×1080 창714개 통과/실패0/실행오류0, `tech-native-a-02/run.log`, `tech_result.json`; 시각 판정94점 PASS |
-| 기본 연대기까지 포함한 새 native | 실제1920×1080 창721개 통과/실패0/실행오류0, `tech-native-a-03/run.log`; KO/EN 기본 중요 사건 필터에서 실제 광맥 발견 문장 표시 및 명령·tick 불변 |
-| 최종 선택 팩 headless UI | 87개 통과/실패0/실행오류0, `selected-ui-final-a/`; 새 광맥 placeholder와 동물 실루엣·건축 데이터 경계 확인 |
-| 살아 있는 염소의 새 native 캡처 | 351개 단언 통과/실패0/fixture gap0/실행오류0, `goat-native-a-01/`; 기존 실제 포획·출생·착유·도축 저장 상태를 후보에서 새로 렌더링 |
-| 작업 트리 정적 마감 | all-target Clippy 통과 `clippy-working-a-03.log`, fmt 통과 `fmt-working-a-final.log`, 문서 검사 통과 `docs-working-a-final.log`; 최종 동결 사전 검사를 대신하지 않음 |
-
-선택 팩 UI는 `rendered=false`다. 네이티브 클릭·캡처3항목은
-`NOT_RUN_HEADLESS`로 보존하며 새 화면 증거로 계산하지 않는다.
-지식 초기 합동 로그에는 새 유효 ID99를 과거의 잘못된 ID로 기대한 FFI
-시험1개 실패가 남아 있다. 수정 후 `a-knowledge-ffi-r2.log`의4/4로 확인했으며
-초기 로그 전체를 녹색으로 재분류하지 않는다. B4 시대 제한의 초기 실패도
-`a-b4-era-red.log`에 보존했다. 광맥 수치는 최초 작성값 그대로이며 재조정하지 않았다.
-
-최종 건물 장면은 원재료만 fixture로 제공하고 숯과 벽돌을 실제 작업으로
-만든다. 벽돌17회 작업으로34개를 생산하고 집에33개를 소비했다. 이전
-`content-scene-01/`도 보존하며 최종 캡처는 동결 데이터로 새로 생성한
-`content-scene-final-a/03-mud-brick-house.wsave`를 사용한다. 기존 spine
-회귀 장면은 아마와 점토도 실제 지형에서 채취하고 집 업그레이드를 완료했다.
-
-광맥 발견은 자연 시드0의 tick121, 타일(58,97), 주민0, 실제 Draft 명령2개다.
-prospecting만 장면용으로 부여하고 순간이동 없이 보행했으며
-`outcrop-scene-01/`에 저장과 발견 원인12를 보존했다. 최초 광맥 기록과
-현재 데이터는 주석 두 줄만 다르고 모든 수치는 그대로다.
-
-대표 새 화면은 다음과 같다. 모두 실제 게임 창에서 얻은 프레임이며
-저장 상태를 새로 렌더링한 파일은 `_rerender`로 구분했다.
-
-- 청동기 숯·광맥·제련·주조 지식: `screens/0855_tech_ko_bronze_lane5_node82.png` 및 같은 시각 node83/85/86/87.
-- 실제 발견 광맥과 원인: `screens/0856_c2_outcrop_found_ko_rerender.png`, `0856_c2_outcrop_why_ko_rerender.png`.
-- 실제 기본 연대기의 광맥 발견: `screens/0919_c2_outcrop_default_feed_ko_rerender.png`, `0919_c2_outcrop_default_feed_en_rerender.png`.
-- 실제 숯가마·제련소·주조소·흙벽돌 집: `screens/0856_c2_physical_{charcoal_clamp,smelter,casting_bench,mud_brick_house}_ko_rerender.png`.
-- 실제 작업장의 숯·구리 제련·구리 도끼 조리법: `screens/0856_c2_recipe_{burn_charcoal,smelt_copper,cast_copper_axe}_ko_rerender.png`.
-- 기존 포획 장면을 새 실루엣으로 렌더링한 Why·출생·작은 지도: `ui-candidate-3/`와 `screens/0829_*`.
-- 살아 있는 성체2마리와 작은 새끼: `screens/0902_ko_02-two-adults_rerender.png`, `0902_ko_03-kid_rerender.png`, 원본 영수증은 `goat-native-a-01/build_result.json`. 비교 BASE는 이번 작업08:04에 새로 렌더링한 `base-ui-rerender/ko_03-kid.png`다. 같은 실제 저장 상태의 새 전후 화면이며 시뮬레이션 사슬을 새로 실행한 것으로 주장하지 않는다.
-
-루트가 이 새 화면 중8개로 `docs/images/c2_contact_sheet.png`를 구성하고
-README에 연결했다. 원시 캡처는 외부 데이터 디렉터리에 유지한다.
-
-첫 native 실행 `tech-native-a-01`은 건축 카드가 배치 모드로 전환되며 닫힌 뒤
-다음 카드 좌표를 계속 클릭해 다섯 번째 미완성 숯가마를 만들었다. 원래 저장의
-4개 건물은 모두 온전했다. 캡처 도구의 카드별 재개방·배치 취소·선택 검사와
-물리 사이트 개수 유지 단언으로 수정했고 제품 건축 코드나 콘텐츠 데이터는
-변경하지 않았다. 광맥은 카메라의 실제 중앙 이동 API로 화면을 맞췄다.
-이전 실패와 잘못 맞춘 화면은 보존하고 native-a-02에서 새로 캡처했다.
-진단은 `A-CHARCOAL-NATIVE-DIAGNOSIS.md`에 있다.
-
-수정 전 실제 창1920×1080 기준 캡처319검사/실패0,
-새 PNG32개를 `base-ui-rerender/`에 보존했다. 미니맵 추가 재현은
-9검사/실패0이며, 렌더 완료 전 공백과 완료 후 실제 지형을 각각 새로 찍었다.
-이 기준 화면은 후보의 기능 성공 증거로 재사용하지 않는다.
-
-### 크래시 감지 (BASE vs 후보 생존 배열, KnowledgeLost, Inert 전환)
-
-개발 중 paired 검사는 **PASS**다. `crash-a-01-base/summary.json`,
-`crash-a-01-head/summary.json`을 기존 smoke_pair로 판정한
-`crash-a-01-verdict.log`가 종료 코드0으로 완료됐다. seeds0–7×48일,
-steward ON, 플레이어 주문 없음이며 실제 실행 방법과 BASE 해시는
-`CRASH-RUN-NOTES.md`에 있다. 아래 배열은 시드0부터7 순서다.
-
-| 항목 | BASE | 후보 |
-|---|---|---|
-| 마지막 생존자 | [10,13,11,14,10,12,12,12] | [10,13,11,13,10,12,13,13] |
-| KnowledgeLost | [0,0,0,0,0,0,0,0] | [0,0,0,1,0,0,0,0] |
-| KnowledgeLost 합계 | 0 | 1 |
-
-BASE가 생존한 시드의 후보 멸종은0건이다. 후보 KnowledgeLost 합계1은
-허용치 `2 × BASE 0 + 2 = 2` 이하다. 원장·예약 위반 tick은 양측 모두0이다.
-이는 개발 후보의 collapse floor 통과 기록이며 균형 개선이나 최종 게시
-게이트 통과를 뜻하지 않는다. 동결 HEAD 전체 사전 검사와 전체 게이트는
-여전히 **PENDING**이다.
-
-C2의 허용된 Inert 전환은 아직 사용하지 않았다. C1의 wild_boar Inert는
-시작 상태로 유지한다. 결과 지향 튜닝·held-out·calibration은 하지 않는다.
-
-### 콘텐츠 수 / CONTENT_DEBT / BALANCE_DEBT
-
-지식129개(Connected74/Inert55), 신규47개(16/31), 아이템101개(+29),
-조리법70개(+20), 조각25개(+7), 건물24개(15/9), 동물7종(+1), 광맥3개(2/1),
-챕터8개(+2), 카드17개(+1)다.
-CONTENT_DEBT 생성 행107개, BALANCE_DEBT 추가133행이다. 기존82개 지식 ID를 유지한256비트 마스크와
-format22로 확장했다. 모든 시작 수치는 데이터 주석과 BALANCE_DEBT에 기록한다.
-전체 한·영 로케일은 각1927키로 정확히 같은 키 집합이며 핵심 콘텐츠 이름
-키357개가 모두 존재한다. `a-data-freeze-working.json`에 등록한127개 데이터
-파일 해시는 최종 감사에서도 모두 일치했다. 상세 대응표는 외부
-`A-CONTENT-ACCEPTANCE.md`에 있다. `static-freeze-a-audit.json`도127/127 일치,
-추가된 production unwrap0건, 새로 추가하거나 변경한 소스 헤더 누락0건을 기록한다.
-
-### 2026-11-11 포획 회복 검증 상태
-
-실제 전이 진단은 두 번째 source32 포획이57819부터 wolf34에 대한 Fleeing으로
-취소됐음을 확인했다. 고정 source와 기존 주문을 유지하고 활성 Capture를
-끊지 않으며 자연 회복 뒤 일반 이동을 재개하도록 장면을 수정했다(D25).
-`c1-recovery-regression-01.log`는 첫 포획35116 뒤 두 번째 포획 취소57820에서
-회복 대기로 진행했으나58250의 실제 admission을 만족하는 이동 지점이 없어
-exit101이다. 동일 동작 진단의 실제 저장/manifest는 남은 줄1개가 주민6의
-Haul ToDest로 stockpile에 반환 중임을 확인했다. 실제 도구 반환을 기존
-readiness 대기에 포함한 수정(D26)은 실제 반환 전 actor를 먼저 고정해
-58952 이동/59002 needs 중단 뒤 성체 기한59040에 도달했다. 현재는 하나의
-actual-tool/current-ready predicate를 주민 선택과 이동 회복에 함께 사용해
-선택 시점을 바로잡은 수정(D27)도58966 실제 Capture 재배정 후
-ToSource 중59040 성체 기한에 도달했다. completed_attempts는 비어 있으며
-확률 결과에 따른 actor/source 변경은 없었다. 독립 구조 검토는 제품 버그를
-입증하지 못했고, 허용할 일반 준비 절차 범위를 외부
-`D-C2-1-PLANNER-QUESTION.md`에 질의했다. 알려진 red로 full gate를 시작하지
-않는다. full gate0회이며 GOAL STOP 조건도 발생하지 않았다. 최종 working-tree
-workspace/all-target Clippy(`-D warnings`), fmt, docs, whitespace 검사는 PASS다.
-이는 동결 HEAD의38단계 사전 검사나 게시 gate 결과를 대신하지 않는다. 신규 사슬 완료·사전 검사·전체 게이트는 아직 PENDING이다.
-
-### 새 도구 줄 수와 그 이유
-
-D-C2-1 적용 중 보수적 집계는 **1468줄**(`tooling-count-a-dc21-working.json`,
-C1 일반 명령·재선택·취소 증거 지원369줄 포함)이며 최종 동결 합계는 PENDING이다.
-남은 C2-b 지원 예산은32줄이다. 삭제 줄은 차감하지 않으며 기능 회귀 시험은
-별도로 공개한다. 전체 C2 상한1500줄은 C2-b까지 누적으로 적용한다.
-기존 사슬·내보내기 지원을 재사용하며 예산 초과는 허용하지 않는다.
-
-기존 게이트·사슬 도우미·캡처 검사를 재사용했다. 실제 물리 건물/광맥 저장
-내보내기, 미니맵 렌더 완료 대기, 닫힌 건축 카드의 잘못된 클릭 방지,
-선택 팩 화면 검증과 지원 중인 B4 해석 오류가 추가 지원 코드의 근거다.
-콘텐츠 장면 지원은327줄이며 별도 콘텐츠 기능 시험263줄이다.
-새 관측 프레임워크나 의존성은 추가하지 않았다. 최종 합계는 동결 diff로 확정한다.
-
-### 확인된 제한사항·후속
-
-mining은 GOAL의 A 단계 지식 데이터 요구에 따라 Connected이며
-copper_smelting의 선행 조건으로 사용된다. 실제 채굴 명령·광석 산출은 B다.
-tin_sourcing의 주석 제련은 연결되지만 이웃의 조건부 공급과 tin_shortage
-카드는 B이며 A의 카드는 비활성이다. 6장은 실제 제작한 구리 주괴로 열리고,
-7장은 B의 실제 청동 도구 사용 증거를 기다린다.
-
-양봉·벌통·꿀·밀랍과 석회·석회암은 기존 물리 경로가 없어 Inert다.
-사회 제도·기록·운송·고급 농업·철은 지정된 후속 단계 부채를 유지한다.
-낫/괭이 효율·바퀴 운송·복합궁 원거리 전투를 제작 가능 상태와 혼동하지 않는다.
-플레이스홀더 지붕과 혼잡한 조언 HUD도 시각 검토의 잔여 한계로 기록했다.
-
-이 보고서의 조건부 상태는 최종 동결 게이트 전에 유지한다. 게이트를 통과한
-커밋이 자신의 미래 SHA나 게시 결과를 주장하도록 사후 수정하지 않는다.
+### 확인된 제한사항 · 후속 (C3 등으로 넘기는 것)
+- 3.4 실제 채굴/주석 교역/금속 사슬 코드와 `c2_chain_bronze`는 C2-b(진행
+  중, 별도 worktree `new-world-c2b-dev`)가 담당.
+- 철 광맥은 설계대로 Inert(C3).
+- 동물 실루엣(§3.5)은 D-C2-1에 따라 생략 — `v8/art-import`가 실제
+  스프라이트를 가져온 뒤 통합.
+- C2-a 작업 중 게이트 버그 2건(바닥 prewarm 누락, play.sh SIGPIPE)을
+  찾아 고쳤다; 두 수정 모두 제품 동작(콘텐츠 자체)을 바꾸지 않는다.
 
 ## C2-b 게시 보고
 
-NOT_STARTED. C2-a 게시 후 시작한다.
+상태: 구현 완료, 미게시 (2026-11-12). 커밋·사전 검사·게이트·게시는 lead worktree에서 진행한다.
+
+### 구현 의도 / 구현 내용 / 구현 방법 / 기능 설명
+GOAL §3.4의 금속 사슬을 실제 플레이로 연결한다.
+- 채굴: 드러난 광맥에 일반 채굴 표시(코드7)와 작업(코드26)을 추가했다. 산출은 카탈로그 `yield_item`이고, 원장은 정확하며, 고갈돼도 지형·증거는 남는다. `mining` 지식이 필요하다. F7→9로 지정한다.
+- 주석 교역: 데이터 행 `tin_ingot`/`tin_ore`는 `tin_sourcing`을 알고 주석 광맥이 없을 때만 나온다. `tin_shortage` 카드가 실제 대기 중인 교역 무리를 가리키고, 카드에서 연 거래는 `TradeFromCard` 명령으로 기록된다. 첫 청동 연대기 줄의 원인은 그 거래다.
+- 도구: 들고 있는 도끼보다 빠른 주조 금속 도끼를 일반 집기 경로로 바꿔 든다. 첫 주괴·도구 교체·첫 도구 사용 연대기(67–69)를 추가했고, 첫 청동 도구 사용이 7장을 연다. 작업장 패널은 "제련로에 숯이 없습니다 — 숯가마 확인"을 보여 준다.
+- 집사 규칙 12(구리 광석이 비축되면 제련로·제련 주문), 규칙 13(돌도끼 소유자당 주조 도끼). mind 사실·작업 노드 3개(채굴·제련·주조).
+- 저장 형식 23: 작업 완료 카운터 27개와 금속 출처 tail을 붙였다. 실제 C2-a 형식22 저장은 정확한 revision 어댑터로 읽는다.
+- 출처는 품목 종류 단위로 기록한다(개별 lot 아님). ADR 0065, C2_DECISIONS 31–32.
+
+### 검증 결과
+- `c2_chain_bronze`(seed0, 구리 ≤60칸, 주석 광맥 없음, 창립자 0·1·2에게 지식 6개만 부여, 물품 주입 없음, 일반 명령만):
+  - 단계: 00 tick121 / 01 127 / 02 5986 / 03 6137 / 04 14801 / 05 37201 / 06 39028 / 07 39091 (게임 27일), 명령 656개.
+  - 02 중간 저장→불러오기 byte 동일. 중간 저장 이후 replay와 처음부터의 replay 모두 최종 저장과 byte 동일.
+  - 거래: 교역 무리 4, 통나무 8개를 주고 주석 광석 2개를 받은 뒤 현지에서 제련했다.
+- 네이티브(1920×1080, ko/en): `spine_build_test.gd --metal-saves`, 151 PASS / 실패 0 / 공백 0.
+  - F7→9 채굴 명령 1건 수락.
+  - 주석 카드가 같은 교역 무리를 가리킨다.
+  - 카드에서 연 거래 창의 실제 Trade 버튼이 수락된 `TradeFromCard` 1건을 만들고, 그 직후 저장 bytes가 사슬의 `trade-committed`와 같다.
+  - 7장이 열린다. 나머지 단계 확인은 모두 명령 0건(읽기 전용).
+  - 스크린샷: `c2-data/screens/0546–0547_*`(22장).
+- 기능 시험 `c2_mining` 3/3: 숨은 광맥 거부, 정확한 채굴 원장, 고갈, 형식23 왕복, 실제 C2-a 형식22 고정본 2개.
+- `b4_trade` 15/15, B4 Python 43/43(게이트 조건부 상품 행 포함).
+- 정적 검사: identity.sh PASS(요약 차이 0, 연대기 64 파일 동일, raw 동일, determinism PASS), gdscript strict 전부 통과, headless smoke 오류 0, check_docs PASS, fmt/clippy 녹색.
+- 전체 workspace 시험(`--test-threads=8`, 외부 `test-run-9.log`): 3284 통과 / 0 실패 / 15 무시, c1_chain_goat·c2_chain_bronze 포함.
+
+### 결정·편차
+- D-C2-B-1(lead): 아궁이가 숯을 태워(48개 중 44개) 제련이 멈췄다. C2-a 데이터 결함이므로 숯은 `fuel_units: None`으로 바꿨다.
+- 집사 끄기 상태에서는 늑대에 전원(10명)이 39일까지 사망했다. 사슬은 일반 명령으로 집사를 켜고, replay는 재생성되는 집사 명령을 건너뛴다.
+- 04 뒤에는 집사 규칙 13이 거푸집 3개·구리 주괴를 모두 구리 도끼에 썼다. 그래서 사슬은 구리 도끼 주문을 일반 RemoveBill로 지우고(집사 거부), 제련·숯·거푸집 주문을 추가한다. 단계별 마감 대신 전체 120일 마감을 쓴다.
+- 지원 도구 줄 수(D-C2-2 상한 401): 총 772줄(지문·probe 명령 JSON +34 포함)로 **371줄 초과**. 압축하지 않았다.
+  - `c2_chain_bronze.rs` 590
+  - `spine_build_test.gd` +67
+  - B4 호환 +81(probe 36, scorer 14, scorer 시험 31)
+  - 기능 시험 `c2_mining.rs` 175와 기존 시험 수정은 별도로 센다.
+
+### 콘텐츠·부채
+- CONTENT_DEBT 재생성: `mining`·`tin_sourcing` 부채 행 제거.
+- BALANCE_DEBT C2-b 표: 채굴 재사용 값, 주석 상품 가중치, 집사 규칙 13, 숯 연료.
+
+### 제한사항·후속
+- 출처는 품목 종류 단위다. 개별 배치의 정확한 채굴자는 말하지 못한다(ADR 0065).
+- 제련로 "불" 렌더링, 손에 든 도구 그림, 금속 Why 전용 DTO(GOAL UI 계획)는 구현하지 않았다. 연대기 줄과 "→" 원인 링크로 대신한다.
+- 기존 `DigClay`도 CancelArea의 작업 취소 대상이 아니다(새 채굴은 포함). 범위 밖이라 그대로 두었다.

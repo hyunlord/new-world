@@ -553,6 +553,8 @@ pub enum NeighbourCommand {
     Decline(i64),
     /// Trade with a caravan: give flat `(x, y, count)` triples, take flat `(goods index, count)` pairs.
     Trade(i64, Vec<i32>, Vec<i32>),
+    /// C2-b: the same trade, requested from the card with this data id.
+    TradeFromCard(String, i64, Vec<i32>, Vec<i32>),
 }
 
 /// Submit an M5.5 order (unknown ids and malformed lists are refused as `Unknown`).
@@ -565,39 +567,62 @@ pub fn submit_neighbours(engine: &mut SimEngine, cmd: NeighbourCommand) -> Comma
         NeighbourCommand::Decline(w) => u32::try_from(w)
             .ok()
             .map(|wave| Command::DeclineMigrants { wave }),
-        NeighbourCommand::Trade(c, give, take) => {
-            let give: Option<Vec<(u32, u32, u16)>> = (give.len() % 3 == 0)
-                .then(|| {
-                    give.chunks(3)
-                        .map(|t| {
-                            Some((
-                                u32::try_from(t[0]).ok()?,
-                                u32::try_from(t[1]).ok()?,
-                                u16::try_from(t[2]).ok()?,
-                            ))
-                        })
-                        .collect()
-                })
-                .flatten();
-            let take: Option<Vec<(u16, u16)>> = (take.len() % 2 == 0)
-                .then(|| {
-                    take.chunks(2)
-                        .map(|t| Some((u16::try_from(t[0]).ok()?, u16::try_from(t[1]).ok()?)))
-                        .collect()
-                })
-                .flatten();
-            match (u32::try_from(c).ok(), give, take) {
-                (Some(caravan), Some(give), Some(take)) => Some(Command::Trade {
+        NeighbourCommand::Trade(c, give, take) => trade_terms(c, give, take),
+        NeighbourCommand::TradeFromCard(card, c, give, take) if !card.is_empty() => {
+            trade_terms(c, give, take).map(|cmd| match cmd {
+                Command::Trade {
                     caravan,
                     give,
                     take,
-                }),
-                _ => None,
-            }
+                } => Command::TradeFromCard {
+                    card,
+                    caravan,
+                    give,
+                    take,
+                },
+                other => other,
+            })
         }
+        NeighbourCommand::TradeFromCard(..) => None,
     };
     match command {
         Some(cmd) => submit(engine, cmd),
         None => unknown,
+    }
+}
+
+/// Parse flat trade lists into an ordinary `Trade`; `None` for malformed lists.
+fn trade_terms(c: i64, give: Vec<i32>, take: Vec<i32>) -> Option<Command> {
+    let give: Option<Vec<(u32, u32, u16)>> = give
+        .len()
+        .is_multiple_of(3)
+        .then(|| {
+            give.chunks(3)
+                .map(|t| {
+                    Some((
+                        u32::try_from(t[0]).ok()?,
+                        u32::try_from(t[1]).ok()?,
+                        u16::try_from(t[2]).ok()?,
+                    ))
+                })
+                .collect()
+        })
+        .flatten();
+    let take: Option<Vec<(u16, u16)>> = take
+        .len()
+        .is_multiple_of(2)
+        .then(|| {
+            take.chunks(2)
+                .map(|t| Some((u16::try_from(t[0]).ok()?, u16::try_from(t[1]).ok()?)))
+                .collect()
+        })
+        .flatten();
+    match (u32::try_from(c).ok(), give, take) {
+        (Some(caravan), Some(give), Some(take)) => Some(Command::Trade {
+            caravan,
+            give,
+            take,
+        }),
+        _ => None,
     }
 }

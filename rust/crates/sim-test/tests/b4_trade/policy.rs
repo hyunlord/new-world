@@ -81,6 +81,8 @@ fn t_unknown_technique_missing_producer_and_empty_table_are_not_fabricated_offer
         item: "firewood".to_owned(),
         tag: "lacked".to_owned(),
         count: (1, 2),
+        requires_knowledge: Vec::new(),
+        absent_outcrop_tag: None,
     };
     assert!(catalog
         .item(catalog.item_by_name("firewood").expect("item"))
@@ -100,7 +102,7 @@ fn t_unknown_technique_missing_producer_and_empty_table_are_not_fabricated_offer
     let staples: Vec<_> = data
         .goods
         .iter()
-        .filter(|r| r.tag == "staple")
+        .filter(|r| r.tag == "staple" && r.requires_knowledge.is_empty())
         .cloned()
         .collect();
     let rows = trade::eligible_goods(catalog, &staples, &data.rule, data.goods_policy, &input);
@@ -120,6 +122,8 @@ fn independent_legacy(
     let table: Vec<_> = data
         .goods
         .iter()
+        // C2-b knowledge-gated rows stay closed: these fixtures grant none of their nodes.
+        .filter(|row| row.requires_knowledge.is_empty())
         .filter_map(|row| {
             let kind = ItemKind::from_name(&row.item).expect("item");
             let made = kind.definition().made_by.as_deref().and_then(knowledge::id);
@@ -185,6 +189,7 @@ fn t_absent_policy_preserves_exact_legacy_vectors_and_uniform_scaling() {
     }
     let inputs = trade::GoodsInputs {
         known: knowledge::KnowledgeMask::MAX,
+        colony_known: knowledge::KnowledgeMask::MAX,
         ..Default::default()
     };
     let mut rows = trade::eligible_goods(

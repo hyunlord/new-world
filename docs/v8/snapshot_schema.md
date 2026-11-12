@@ -1049,6 +1049,8 @@ order; their bills (work order) and shelf stacks flattened, each with the row in
 | `bill_suspended` | PackedInt32Array | 1 = suspended |
 | `bill_auto` | PackedInt32Array | 1 = the hearth's auto-bill |
 | `bill_active` | PackedInt32Array | 1 = the bill the workshop works now |
+| `fuel_short_items` | PackedInt64Array | C2-b, per workshop row: `ItemKind::code` of a waiting bill's `fuel`-tagged input the shelf lacks, -1 none |
+| `fuel_short_sources` | PackedInt64Array | C2-b, per workshop row: `BlueprintKind::code` of the workshop whose recipe makes that fuel, -1 unknown |
 | `shelf_shops` | PackedInt32Array | row index of the shelf stack's workshop |
 | `shelf_kinds` | PackedInt64Array | `ItemKind::code` |
 | `shelf_counts` | PackedInt32Array | items on the shelf |
@@ -1565,6 +1567,9 @@ C1-b additive nested fields:
 | key | type | meaning |
 |---|---|---|
 | `first_copper_ingot` | bool | actual crafted ledger contains an ingot tagged metal_copper; chapter6 fact |
+| `first_bronze_tool_used` | bool | C2-b: durable first-tool-use witness of a metal_bronze item; chapter7 fact |
+| `tin_shortage` | bool | C2-b: an adult practises bronze_alloy and no world deposit (hidden or exhausted included) yields a metal_tin item |
+| `tin_caravan` | int | C2-b: lowest id of a waiting caravan offering metal_tin goods, -1 none |
 | `rumoured_upper_low` | PackedInt64Array | optional neighbour bits128–191, signed bit patterns; both upper columns omitted when all upper bits are zero |
 | `rumoured_upper_high` | PackedInt64Array | optional neighbour bits192–255, aligned with neighbour ids |
 | `age_days` | PackedInt64Array | Nested animal row current pure whole-day age; -1 non-tameable wild animal. |
@@ -1733,6 +1738,8 @@ The static checker compares the union of literal keys, including nested builders
 | `b` | `waits.b` |
 | `beds` | `rooms.beds` |
 | `bill_active` | `workshops.bill_active` |
+| `fuel_short_items` | `workshops.fuel_short_items` |
+| `fuel_short_sources` | `workshops.fuel_short_sources` |
 | `bill_auto` | `workshops.bill_auto` |
 | `bill_counts` | `workshops.bill_counts` |
 | `bill_done` | `workshops.bill_done` |

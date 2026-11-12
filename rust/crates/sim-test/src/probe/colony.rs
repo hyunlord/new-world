@@ -1454,6 +1454,10 @@ pub fn resolve(
             let (x0, y0, x1, y1) = rect(spec)?;
             vec![Command::DesignateClay { x0, y0, x1, y1 }]
         }
+        ("designate_mine", None) => {
+            let (x0, y0, x1, y1) = rect(spec)?;
+            vec![Command::DesignateMine { x0, y0, x1, y1 }]
+        }
         ("order_teach", None) => vec![Command::OrderTeach {
             teacher: spec["teacher"]
                 .as_u64()
@@ -1570,7 +1574,7 @@ pub fn resolve(
         ("decline_migrants", None) => vec![Command::DeclineMigrants {
             wave: field(spec, "wave")?,
         }],
-        ("trade", None) => {
+        ("trade" | "trade_from_card", None) => {
             let triple = |v: &Value| -> Option<(u32, u32, u16)> {
                 let a = v.as_array()?;
                 Some((
@@ -1587,10 +1591,23 @@ pub fn resolve(
                 ))
             };
             let list = |key: &str| spec[key].as_array().cloned().unwrap_or_default();
-            vec![Command::Trade {
-                caravan: field(spec, "caravan")?,
-                give: list("give").iter().filter_map(triple).collect(),
-                take: list("take").iter().filter_map(pair).collect(),
+            let (caravan, give, take) = (
+                field(spec, "caravan")?,
+                list("give").iter().filter_map(triple).collect(),
+                list("take").iter().filter_map(pair).collect(),
+            );
+            vec![match spec["card"].as_str() {
+                Some(card) => Command::TradeFromCard {
+                    card: card.to_owned(),
+                    caravan,
+                    give,
+                    take,
+                },
+                None => Command::Trade {
+                    caravan,
+                    give,
+                    take,
+                },
             }]
         }
         (other, None) => return Err(format!("unknown command {other}")),
@@ -1640,6 +1657,7 @@ pub fn command_json(tick: u64, cmd: &Command) -> Value {
         | Command::DesignateDig { x0, y0, x1, y1 }
         | Command::DesignateDeconstruct { x0, y0, x1, y1 }
         | Command::DesignateClay { x0, y0, x1, y1 }
+        | Command::DesignateMine { x0, y0, x1, y1 }
         | Command::CancelArea { x0, y0, x1, y1 }
         | Command::AddStockpile { x0, y0, x1, y1 }
         | Command::AddHousingZone { x0, y0, x1, y1 }
@@ -1663,6 +1681,12 @@ pub fn command_json(tick: u64, cmd: &Command) -> Value {
             give,
             take,
         } => json!({"caravan": caravan, "give": give, "take": take}),
+        Command::TradeFromCard {
+            card,
+            caravan,
+            give,
+            take,
+        } => json!({"card": card, "caravan": caravan, "give": give, "take": take}),
         Command::DesignateChopTiles { tiles } => {
             json!({"tiles": tiles.iter().map(|t| json!([t.0, t.1])).collect::<Vec<_>>()})
         }

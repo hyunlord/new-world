@@ -395,6 +395,7 @@ where
             processing: Default::default(),
             livestock: Default::default(),
             ore: Default::default(),
+            metal: Default::default(),
             food_supply_cache: Default::default(),
             fatal_animal_attacks: Vec::new(),
             diagnosis_cache: Default::default(),

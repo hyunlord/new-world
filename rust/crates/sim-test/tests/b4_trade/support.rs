@@ -88,7 +88,13 @@ pub(super) fn expected(e: &SimEngine, node: u8, count: u32, progress: u16) -> Ve
     let rule = neighbours::rule(&e.resources).expect("rule");
     let era = knowledge::defs().get(node).expect("node").era;
     let mut table = Vec::new();
-    for row in &neighbour_data().expect("goods").goods {
+    // C2-b knowledge-gated rows stay closed: these fixtures grant none of their nodes.
+    for row in neighbour_data()
+        .expect("goods")
+        .goods
+        .iter()
+        .filter(|row| row.requires_knowledge.is_empty())
+    {
         let kind = ItemKind::from_name(&row.item).expect("item");
         let made_by = kind.definition().made_by.as_deref().and_then(knowledge::id);
         let weight = match row.tag.as_str() {

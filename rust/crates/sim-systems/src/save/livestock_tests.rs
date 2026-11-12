@@ -251,7 +251,7 @@ fn recurring_legacy_milk_placeholder_survives_full_save_and_completes_as_milk() 
 #[test]
 fn all_twenty_three_legacy_counters_and_skills_survive_without_new_completions() {
     assert_eq!(SkillKind::ALL.len(), 8);
-    assert_eq!(JobKind::NAMES.len(), 26);
+    assert_eq!(JobKind::NAMES.len(), 27);
     let mut entries = [Skill::default(); 8];
     entries[7] = Skill { level: 4, xp: 137 };
     let mut completed = [0; 23];
@@ -265,7 +265,7 @@ fn all_twenty_three_legacy_counters_and_skills_survive_without_new_completions()
     let current: Vec<Skills> = super::super::decode(&upgraded).expect("current column");
     assert_eq!(current[0].entries, entries);
     assert_eq!(&current[0].completed[..23], &completed);
-    assert_eq!(&current[0].completed[23..], &[0; 3]);
+    assert_eq!(&current[0].completed[23..], &[0; 4]);
     assert!(
         skills_column(&bytes, 2).is_err(),
         "entity count is authenticated"
@@ -520,7 +520,7 @@ fn genuine_published_a20_keeps_counters_upper_masks_physical_state_and_slots() {
                                 .expect("same entity skills");
                             assert_eq!(current.entries, original.entries);
                             assert_eq!(&current.completed[..23], &original.completed);
-                            assert_eq!(&current.completed[23..], &[0; 3]);
+                            assert_eq!(&current.completed[23..], &[0; 4]);
                             total_completed +=
                                 original.completed.into_iter().map(u64::from).sum::<u64>();
                         }

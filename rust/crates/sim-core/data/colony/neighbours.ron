@@ -86,5 +86,9 @@
         (item: "lentil_seed", tag: "staple", count: (2, 6)),
         (item: "pea_seed", tag: "staple", count: (2, 6)),
         (item: "millet_seed", tag: "staple", count: (2, 6)),
+        // C2-b: tin comes by trade only to a colony that knows tin sourcing and whose world has
+        // no tin-yielding outcrop. Staple weight and 2–6 stacks reuse the raw-goods values (M-BAL).
+        (item: "tin_ingot", tag: "staple", count: (2, 6), requires_knowledge: ["tin_sourcing"], absent_outcrop_tag: Some("metal_tin")),
+        (item: "tin_ore", tag: "staple", count: (2, 6), requires_knowledge: ["tin_sourcing"], absent_outcrop_tag: Some("metal_tin")),
     ],
 )

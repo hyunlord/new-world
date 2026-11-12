@@ -275,6 +275,8 @@ pub struct ColonyIndex {
     pub deconstruct: ChunkIndex<()>,
     /// Every tile with a clay-pit designation (M4).
     pub clay: ChunkIndex<()>,
+    /// Every tile with a mine designation (C2-b).
+    pub mine: ChunkIndex<()>,
 }
 
 impl ColonyIndex {
@@ -291,6 +293,7 @@ impl ColonyIndex {
         self.dig.clear();
         self.deconstruct.clear();
         self.clay.clear();
+        self.mine.clear();
         for tile in colony.ground_items.keys() {
             self.ground.insert(*tile, ());
         }
@@ -304,6 +307,7 @@ impl ColonyIndex {
                 Designation::Dig => self.dig.insert(*tile, ()),
                 Designation::Deconstruct => self.deconstruct.insert(*tile, ()),
                 Designation::ClayPit => self.clay.insert(*tile, ()),
+                Designation::Mine => self.mine.insert(*tile, ()),
                 // M5: hunting is never a tile mark (deer move).
                 Designation::Hunt => {}
                 // Plant candidates use the food-version-aware harvest index.

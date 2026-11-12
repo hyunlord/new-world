@@ -26,6 +26,8 @@ pub enum RectCommand {
     RemoveZoneArea,
     /// `DesignateQuarry` (M2).
     DesignateQuarry,
+    /// `DesignateMine` (C2-b).
+    DesignateMine,
 }
 
 /// Clip a rectangle given in signed tile coordinates: a corner below 0 is
@@ -56,6 +58,7 @@ pub fn submit_rect(
         RectCommand::AddStockpile => Command::AddStockpile { x0, y0, x1, y1 },
         RectCommand::RemoveZoneArea => Command::RemoveZoneArea { x0, y0, x1, y1 },
         RectCommand::DesignateQuarry => Command::DesignateQuarry { x0, y0, x1, y1 },
+        RectCommand::DesignateMine => Command::DesignateMine { x0, y0, x1, y1 },
     };
     submit(engine, cmd)
 }

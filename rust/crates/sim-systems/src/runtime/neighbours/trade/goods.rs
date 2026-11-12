@@ -11,7 +11,7 @@ use sim_core::rules::{GoodsEntry, GoodsPolicy, NeighbourRule};
 use sim_engine::SimResources;
 
 /// All variable eligibility inputs at the instant goods are generated.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone)]
 pub struct GoodsInputs {
     /// Knowledge practiced by the source neighbour.
     pub known: KnowledgeMask,
@@ -21,6 +21,10 @@ pub struct GoodsInputs {
     pub practitioners: [u32; sim_core::colony::knowledge::MAX_NODES],
     /// Actual stored era progress at generation.
     pub progress_permille: u16,
+    /// C2-b: nodes some adult colonist practises at threshold (no recency window).
+    pub colony_known: KnowledgeMask,
+    /// C2-b: tags of every deposit's yield item, hidden and exhausted deposits included.
+    pub outcrop_yield_tags: std::collections::BTreeSet<String>,
 }
 
 impl Default for GoodsInputs {
@@ -30,6 +34,8 @@ impl Default for GoodsInputs {
             legacy_practice: KnowledgeMask::ZERO,
             practitioners: [0; sim_core::colony::knowledge::MAX_NODES],
             progress_permille: 0,
+            colony_known: KnowledgeMask::ZERO,
+            outcrop_yield_tags: Default::default(),
         }
     }
 }
@@ -53,6 +59,14 @@ pub fn generation_inputs(world: &World, res: &SimResources, known: KnowledgeMask
         progress_permille: res.colony.tech.progress_permille,
         ..GoodsInputs::default()
     };
+    let catalog = sim_core::colony::content::installed_or_bundled();
+    inputs.outcrop_yield_tags = res
+        .ore
+        .deposits
+        .values()
+        .filter_map(|d| catalog.outcrop(d.kind))
+        .flat_map(|def| def.yield_item.definition().tags.iter().cloned())
+        .collect();
     let defs = sim_core::colony::knowledge::defs();
     let today = day_of(res.current_tick);
     let window = crate::runtime::knowledge::rule(res).map_or(0, |rule| rule.practice_days);
@@ -62,6 +76,9 @@ pub fn generation_inputs(world: &World, res: &SimResources, known: KnowledgeMask
         .iter()
     {
         for entry in knowledge.entries() {
+            if entry.proficiency >= defs.threshold(entry.id()) {
+                inputs.colony_known |= bit(entry.id());
+            }
             if entry.proficiency >= defs.threshold(entry.id())
                 && u64::from(today.saturating_sub(entry.last_used)) <= window
             {
@@ -87,6 +104,18 @@ pub fn eligible_goods(
         let Some(kind) = catalog.item_by_name(&entry.item) else {
             continue;
         };
+        let gated_open = entry.requires_knowledge.iter().all(|name| {
+            catalog
+                .knowledge_defs()
+                .id_of(name)
+                .is_some_and(|node| inputs.colony_known & bit(node) != KnowledgeMask::ZERO)
+        }) && entry
+            .absent_outcrop_tag
+            .as_ref()
+            .is_none_or(|tag| !inputs.outcrop_yield_tags.contains(tag));
+        if !gated_open {
+            continue;
+        }
         let made_by = catalog
             .item(kind)
             .and_then(|item| item.made_by.as_deref())

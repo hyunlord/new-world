@@ -77,6 +77,13 @@ pub enum Action {
         winter_recipe: RecipeKind,
         /// Reserve days.
         days: u16,
+        /// C2-b: act only while every listed item has a stockpiled stack.
+        #[serde(default)]
+        stocked: Vec<ItemKind>,
+        /// C2-b: per-worker replacement. Each recipe's count is per colonist holding a chopping
+        /// tool with this item tag; only the first recipe whose knowledge is practised is ordered.
+        #[serde(default)]
+        replace_tag: Option<String>,
     },
     /// A hunt zone around the nearest matching prey home.
     Hunt {
@@ -213,9 +220,14 @@ pub fn parse_rules(text: &str) -> Result<RuleFile, String> {
                     winter_recipe,
                     days,
                     fuel,
+                    replace_tag,
+                    ..
                 },
             ) => {
-                (*days > 0 || (!recipes.is_empty() && fuel.is_none()))
+                replace_tag
+                    .as_ref()
+                    .is_none_or(|tag| !tag.is_empty() && *days == 0)
+                    && (*days > 0 || (!recipes.is_empty() && fuel.is_none()))
                     && fuel.as_ref().is_none_or(|plan| {
                         plan.warm_days > 0
                             && plan.prepare_season < 4

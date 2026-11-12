@@ -247,11 +247,16 @@ pub enum JobKind {
         /// Admitted pen gate work tile.
         at: (u32, u32),
     },
+    /// Mine one ore batch from the revealed outcrop deposit at `node` (C2-b).
+    Mine {
+        /// The deposit tile.
+        node: (u32, u32),
+    },
 }
 
 impl JobKind {
     /// Stable job names indexed by [`Self::code`]; index zero means no job.
-    pub const NAMES: [&'static str; 26] = [
+    pub const NAMES: [&'static str; 27] = [
         "none",
         "chop",
         "haul",
@@ -278,6 +283,7 @@ impl JobKind {
         "capture",
         "milk",
         "slaughter",
+        "mine",
     ];
 
     /// Resolve a named completed-job condition to the existing stable job code.
@@ -317,6 +323,7 @@ impl JobKind {
             Self::Capture { .. } => 23,
             Self::Milk { .. } => 24,
             Self::Slaughter { .. } => 25,
+            Self::Mine { .. } => 26,
         }
     }
 
@@ -348,6 +355,7 @@ impl JobKind {
             Self::Capture { .. } => "capture",
             Self::Milk { .. } => "milk",
             Self::Slaughter { .. } => "slaughter",
+            Self::Mine { .. } => "mine",
         }
     }
 
@@ -362,7 +370,7 @@ impl JobKind {
             Self::Gather { .. } => WorkType::Split,
             Self::Dig { .. } => WorkType::Mine,
             Self::Deconstruct { .. } | Self::Clear { .. } => WorkType::Build,
-            Self::DigClay { .. } => WorkType::Mine,
+            Self::DigClay { .. } | Self::Mine { .. } => WorkType::Mine,
             Self::Teach { .. } | Self::Learn { .. } => WorkType::Craft,
             Self::Hunt { .. } | Self::Capture { .. } | Self::Slaughter { .. } => WorkType::Hunt,
             Self::Milk { .. } => WorkType::Haul,
@@ -388,7 +396,7 @@ impl JobKind {
             Self::Gather { spot, .. } => spot,
             Self::Dig { tile } | Self::Deconstruct { tile } => tile,
             Self::Clear { from, .. } => from,
-            Self::DigClay { node } => node,
+            Self::DigClay { node } | Self::Mine { node } => node,
             Self::Teach { at, .. } | Self::Learn { at, .. } => at,
             // The deer moves: the job layer walks to its current tile.
             Self::Hunt { .. } | Self::Capture { .. } => (u32::MAX, u32::MAX),
@@ -430,7 +438,8 @@ impl JobKind {
             | Self::Equip { .. }
             | Self::Capture { .. }
             | Self::Milk { .. }
-            | Self::Slaughter { .. } => None,
+            | Self::Slaughter { .. }
+            | Self::Mine { .. } => None,
         }
     }
 }
@@ -506,7 +515,7 @@ impl Job {
                 vec![ReserveKey::Stack(from), ReserveKey::Cell(to)]
             }
             (JobKind::Clear { to, .. }, _) => vec![ReserveKey::Cell(to)],
-            (JobKind::DigClay { node }, _) => vec![ReserveKey::Node(node)],
+            (JobKind::DigClay { node } | JobKind::Mine { node }, _) => vec![ReserveKey::Node(node)],
             (JobKind::Teach { .. } | JobKind::Learn { .. }, _) => Vec::new(),
             (JobKind::Hunt { animal }, _) => match self.fetch {
                 Some(spear) if self.stage == JobStage::ToSource => {
@@ -656,6 +665,30 @@ mod tests {
                 assert_eq!(job.keys(), vec![ReserveKey::Livestock(9)]);
             }
         }
+    }
+
+    #[test]
+    fn mine_appends_code_26_and_reserves_its_node() {
+        let kind = JobKind::Mine { node: (2, 3) };
+        assert_eq!(
+            (kind.name(), kind.code(), kind.work()),
+            ("mine", 26, WorkType::Mine)
+        );
+        assert_eq!(JobKind::code_for_name("mine"), Some(26));
+        assert_eq!((kind.source(), kind.dest()), ((2, 3), None));
+        let job = Job {
+            kind,
+            stage: JobStage::ToSource,
+            taken_at: 0,
+            amount: 0,
+            item: ItemKind::Log,
+            material: None,
+            fetch: None,
+            best_distance: 0,
+            progress_tick: 0,
+        };
+        assert_eq!(job.keys(), vec![ReserveKey::Node((2, 3))]);
+        assert_eq!(super::super::Designation::Mine.code(), 7);
     }
 
     #[test]

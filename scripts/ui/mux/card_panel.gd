@@ -236,6 +236,8 @@ func _check_bridge_trigger(read_name: String) -> bool:
 		"first_livestock_kid":
 			var stock: Dictionary = SimReads.read(_world, "get_livestock")
 			return int(stock.get("first_kid_id", -1)) >= 0 and stock.get("ids", PackedInt64Array()).has(int(stock.get("first_kid_id", -1)))
+		"tin_shortage":
+			return bool(SimReads.read(_world, "get_ui_facts").get("tin_shortage", false))
 		"cloth_short":
 			return bool(SimReads.read(_world, "get_settlement_diagnosis").get("cloth_short", false))
 		"tools_below_need":
@@ -308,6 +310,9 @@ func _collect_trigger_data(card_def: Dictionary) -> Dictionary:
 	var kind: String = str(trigger.get("kind", ""))
 	var lang: String = _current_lang()
 	var card_id: String = str(card_def.get("id", ""))
+	if card_id == "tin_shortage":
+		data["caravan_id"] = int(SimReads.read(_world, "get_ui_facts").get("tin_caravan", -1))
+		return data
 	if card_id == "first_kid":
 		data["livestock_id"] = int(SimReads.read(_world, "get_livestock").get("first_kid_id", -1))
 		return data
@@ -474,7 +479,7 @@ func answer_card(card_id: String, option_index: int) -> void:
 		var reason: String = ""
 		if caravan < 0 or _visitor_id(SimReads.read(_world, "get_neighbours"), "caravan", caravan) != caravan:
 			reason = "no_caravan"
-		elif not get_parent().has_method("open_card_trade") or not bool(get_parent().call("open_card_trade", caravan)):
+		elif not get_parent().has_method("open_card_trade") or not bool(get_parent().call("open_card_trade", caravan, card_id)):
 			reason = "trade_panel_unavailable"
 		if not reason.is_empty():
 			_skipped_results.append({"card_id": card_id, "command": command, "reason": reason})

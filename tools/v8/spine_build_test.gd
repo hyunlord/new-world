@@ -10,6 +10,7 @@ var _out: String = ""
 var _screens: String = ""
 var _saves: String = ""
 var _livestock_saves: bool = false
+var _metal_saves: bool = false
 var _c2_ui: bool = false
 var _size := Vector2i.ZERO
 var _main: Node
@@ -32,6 +33,9 @@ func _init() -> void:
 		if args[i] == "--out": _out = args[i + 1]
 		elif args[i] == "--screens": _screens = args[i + 1]
 		elif args[i] == "--saves": _saves = args[i + 1]
+		elif args[i] == "--metal-saves":
+			_saves = args[i + 1]
+			_metal_saves = true
 		elif args[i] == "--livestock-saves":
 			_saves = args[i + 1]
 			_livestock_saves = true
@@ -131,6 +135,10 @@ func _run() -> void:
 	if _panel == null: _finish(); return
 	if _c2_ui:
 		await _c2_ui_checks()
+		_finish()
+		return
+	if _metal_saves:
+		await _metal()
 		_finish()
 		return
 	if _livestock_saves:
@@ -750,3 +758,61 @@ func _livestock_button(cards: Control, key: String) -> Button:
 		var button: Button = node as Button
 		if button.text.replace("\u2060", "").begins_with(text): return button
 	return null
+
+# C2-b: the real bronze-chain checkpoints through the ordinary loader and native input only.
+func _metal() -> void:
+	var cards: Control = _main.get_node("UI/MuxHud/CardPanel") as Control
+	var goals: Control = _main.get_node("UI/MuxHud/Goals") as Control
+	var trade: Control = _main.get_node("UI/TradePanel") as Control
+	for language: String in ["ko", "en"]:
+		_locale.call("set_language", language)
+		for stage: String in ["00-outcrop-found", "01-mining", "02-smelter-working", "03-first-copper-ingot", "04-copper-axe-used", "05-tin-trade-card", "06-first-bronze-axe", "07-chapter-seven"]:
+			if not (await _load(stage)): continue
+			var manifest: Dictionary = _manifests[stage]
+			var copper := Vector2i(int(manifest["copper"][0]), int(manifest["copper"][1]))
+			_camera.position = View.tile_centre(copper)
+			_camera.zoom = Vector2(2, 2)
+			_camera.force_update_scroll()
+			_panel.hide()
+			goals.hide()
+			await _frames()
+			await _capture(language + "_" + stage)
+			var facts: Dictionary = SimReads.read(_world, "get_ui_facts")
+			_check(stage + " copper fact", bool(facts.get("first_copper_ingot", false)) == (stage >= "03"))
+			_check(stage + " bronze-use fact", bool(facts.get("first_bronze_tool_used", false)) == (stage == "07-chapter-seven"))
+			var start: int = int(_world.call("get_command_log", 9223372036854775807).get("total", -1))
+			if stage == "00-outcrop-found":
+				await _key(KEY_F7)
+				await _key(KEY_9)
+				await _tile(copper)
+				await _key(KEY_ESCAPE)
+				var delta: Dictionary = _world.call("get_command_log", start)
+				_check("native F7-9 mine order", delta.get("kinds") == PackedStringArray(["DesignateMine"]) and delta.get("accepted") == PackedByteArray([1]), delta)
+			elif stage == "05-tin-trade-card":
+				var terms: Dictionary = manifest["trade_terms"]
+				var active: Dictionary = cards.get("_active")
+				_check("real tin shortage card pins the waiting caravan", int(active.get("tin_shortage", {}).get("trigger_data", {}).get("caravan_id", -1)) == int(terms["caravan"]), active.get("tin_shortage", {}))
+				await _capture(language + "_tin_card")
+				await _click(_livestock_button(cards, "C2_CARD_TIN_TRADE"))
+				_check("card opens the actual caravan", trade.visible and int(trade.call("shown_caravan")) == int(terms["caravan"]))
+				var rows: Array = trade.call("stock_rows")
+				for g: Array in terms["give"]:
+					for i: int in rows.size():
+						if int(rows[i]["x"]) == int(g[0]) and int(rows[i]["y"]) == int(g[1]): trade.call("pick_give", i, int(g[2]))
+				for t: Array in terms["take"]: trade.call("pick_take", int(t[0]), int(t[1]))
+				await _capture(language + "_tin_trade_panel")
+				await _click(trade.find_child("Trade", true, false) as Button)
+				var delta: Dictionary = _world.call("get_command_log", start)
+				_check("native Trade sends one accepted card trade", delta.get("kinds") == PackedStringArray(["TradeFromCard"]) and delta.get("accepted") == PackedByteArray([1]), delta)
+				var native: String = _out.path_join(language + "-native-trade.wsave")
+				_check("native card trade bytes equal the chain's", bool(SimReads.mutate(_world, "save_world", [native])) and FileAccess.get_file_as_bytes(native) == FileAccess.get_file_as_bytes(_saves.path_join("trade-committed.wsave")))
+			elif stage == "07-chapter-seven":
+				await _key(KEY_G)
+				var shown: bool = false
+				for index: int in goals.call("available_chapters"):
+					if bool(goals.call("select_chapter", index)) and str(goals.call("displayed_chapter").get("id", "")) == "bronze_village": shown = true; break
+				_check("chapter seven opens from the actual first bronze use", goals.visible and shown)
+				await _capture(language + "_chapter_seven")
+				goals.hide()
+			if stage != "00-outcrop-found" and stage != "05-tin-trade-card":
+				_check(stage + " read-only inspection no commands", int(_world.call("get_command_log", 9223372036854775807).get("total", -1)) == start)

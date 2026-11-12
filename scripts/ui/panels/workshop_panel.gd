@@ -10,7 +10,7 @@
 # M4 (goal 9.6): a bill that no living adult can work shows "기다리는 중: 토기 굽기를 아는 사람이 없음" under its status
 #   (get_knowledge_waits kind 0: a = workshop id, b = bill id); the hearth's fire_pot workshop (kind 11) is named
 #   "모닥불 (토기 굽기)".
-# Bridge methods: via SimReads get_workshops, get_recipes, get_knowledge_waits; via SimReads.mutate cmd_add_bill,
+# Bridge methods (get_workshops also gives C2-b fuel_short_items/sources): via SimReads get_workshops, get_recipes, get_knowledge_waits; via SimReads.mutate cmd_add_bill,
 #   cmd_remove_bill, cmd_set_bill_mode, cmd_move_bill, cmd_set_bill_suspended; signal world_reset.
 extends Control
 
@@ -169,6 +169,14 @@ func _refresh() -> void:
 	var textile_check: int = DiagnosisText.request_check(diagnosis, PackedStringArray(["textile"]))
 	_diagnosis.text = DiagnosisText.chain_text(diagnosis, textile_check, _locale)
 	_diagnosis.visible = textile_workshop and not _diagnosis.text.is_empty()
+	# C2-b: a waiting bill whose fuel input is missing from the shelf (bridge fuel_short columns).
+	var fuel_items: PackedInt64Array = shops.get("fuel_short_items", PackedInt64Array())
+	var fuel_sources: PackedInt64Array = shops.get("fuel_short_sources", PackedInt64Array())
+	if row < fuel_items.size() and fuel_items[row] >= 0:
+		var source: String = EconomyText.building(_locale, fuel_sources[row]) if row < fuel_sources.size() and fuel_sources[row] >= 0 else _loc("UI_UNKNOWN")
+		_diagnosis.text = _loc("C2_DIAG_NO_FUEL").format({"workshop": EconomyText.building(_locale, kind),
+			"fuel": EconomyText.item(_locale, fuel_items[row]), "source": source})
+		_diagnosis.visible = true
 	_waits = SimReads.read(_world_sim, "get_knowledge_waits")
 	var key: int = hash([bills, shelf, kind, Chronicle.language(_locale), _waits])
 	if key == _key:

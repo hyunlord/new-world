@@ -1,7 +1,8 @@
 //! OreDiscoverySystem: reveal hidden surface deposits from actual personal practice.
 //! Priority: 128; interval: 8 ticks; colony only.
 //! Reads: positions, knowledge, authored discovery radii and hidden deposits.
-//! Writes: ore visibility and immutable witnesses. Events: OreDiscovered.
+//! Writes: ore visibility and immutable witnesses; C2-b mined batches (`mine_batch`, called by
+//! JobExecuteSystem) deplete deposits and record miners. Events: OreDiscovered.
 use hecs::{Entity, World};
 use sim_core::{
     chronicle::{CauseRef, ChronicleEntry, ChronicleKind},
@@ -151,6 +152,253 @@ fn reveal(
         .push_caused(entry, Some(CauseRef::Ore { witness: index }));
     res.ore.witnesses.insert(actual, witness);
     res.ore.touch();
+}
+/// C2-b: one completed ordinary mining batch at `node`: up to the quarry rule's batch of
+/// the outcrop's catalog yield lands at the deposit (or beside the worker), the deposit
+/// depletes, the ledger creates exactly that many, and the miner is recorded. An
+/// exhausted deposit keeps its geology and witness; only its mark is removed.
+pub fn mine_batch(
+    res: &mut SimResources,
+    rule: &sim_core::rules::ColonyRule,
+    miner: sim_core::components::AgentId,
+    node: (u32, u32),
+    at: (u32, u32),
+) -> bool {
+    let batch = rule.economy.map_or(4, |e| e.quarry_batch).max(1);
+    let Some(deposit) = res.ore.deposits.get_mut(&node).filter(|d| d.revealed) else {
+        return false;
+    };
+    let Some(def) = installed_or_bundled().outcrop(deposit.kind) else {
+        return false;
+    };
+    let n = deposit.remaining.min(u16::from(batch));
+    if n == 0 {
+        return false;
+    }
+    deposit.remaining -= n;
+    if deposit.remaining == 0 {
+        res.colony.designations.remove(&node);
+    }
+    res.ore.touch();
+    res.colony.touch(false);
+    let spec = sim_core::colony::ItemSpec::raw(def.yield_item, Some(def.material));
+    res.colony.item_ledger.create(spec.kind, u64::from(n));
+    let drop = if crate::runtime::jobs::items::can_hold_items(res, node) {
+        node
+    } else {
+        at
+    };
+    crate::runtime::jobs::items::put_items(res, drop, spec, n);
+    let mined = res.metal.mined.entry((spec.kind, miner)).or_insert(0);
+    *mined = mined.saturating_add(u32::from(n));
+    true
+}
+/// Whether `item` is a metal-chain input whose sources are recorded (`ore`/`ingot` tags).
+pub fn tracked(item: sim_core::colony::ItemKind) -> bool {
+    item.definition()
+        .tags
+        .iter()
+        .any(|t| t == "ore" || t == "ingot")
+}
+
+/// C2-b: after a committed craft, record the first output of each `ingot`-tagged item with
+/// its recipe inputs' recorded sources. The line's cause is the first imported input's
+/// `Traded` entry, else the caused first-ingot line of an ingot input (tin through a local smelt).
+pub fn note_first_ingot(
+    res: &mut SimResources,
+    recipe: &sim_core::colony::Recipe,
+    worker: sim_core::components::AgentId,
+    workshop: (u32, u32),
+) {
+    use sim_core::colony::ore::{MetalInput, MetalWitness};
+    let item = recipe.output.0;
+    let first = |w: &MetalWitness, kind| matches!(w, MetalWitness::FirstIngot { item, .. } if *item == kind);
+    if !item.definition().tags.iter().any(|t| t == "ingot")
+        || res.metal.witnesses.values().any(|w| first(w, item))
+    {
+        return;
+    }
+    let Ok(index) = u32::try_from(res.chronicle.len()) else {
+        return;
+    };
+    let mut cause = None;
+    let mut inputs = Vec::new();
+    for &(input, count) in &recipe.inputs {
+        let mut record = MetalInput {
+            item: input,
+            count,
+            miners: Vec::new(),
+            imports: Vec::new(),
+        };
+        if tracked(input) {
+            record.miners = res
+                .metal
+                .mined
+                .range((input, 0)..=(input, u64::MAX))
+                .map(|(&(_, miner), &units)| (miner, units))
+                .collect();
+            for (i, import) in res.metal.imports.iter().enumerate() {
+                if import.item == input {
+                    record.imports.push(u32::try_from(i).unwrap_or(u32::MAX));
+                    cause = cause.or(Some(CauseRef::Entry(import.traded)));
+                }
+            }
+            if cause.is_none() {
+                cause = res
+                    .metal
+                    .witnesses
+                    .iter()
+                    .find(|(&i, w)| first(w, input) && res.chronicle.cause_of(i).is_some())
+                    .map(|(&i, _)| CauseRef::Entry(i));
+            }
+        }
+        inputs.push(record);
+    }
+    let miner = inputs
+        .iter()
+        .flat_map(|i| i.miners.iter().copied())
+        .max_by_key(|&(id, units)| (units, std::cmp::Reverse(id)))
+        .map(|(id, _)| id);
+    let entry = ChronicleEntry::new(res.current_tick, ChronicleKind::FirstIngot)
+        .subject(worker)
+        .other(miner)
+        .cause(recipe.id.code())
+        .value(i64::from(item.code()));
+    let actual = res.chronicle.push_caused(entry, cause);
+    debug_assert_eq!(actual, index);
+    res.metal.witnesses.insert(
+        actual,
+        MetalWitness::FirstIngot {
+            worker,
+            workshop,
+            recipe: recipe.id,
+            item,
+            inputs,
+        },
+    );
+}
+
+/// C2-b: the first successful chop with a `tool`-tagged item kind, caused by the first-ingot
+/// line of the ingot a recipe casts it from (a data lookup, not the used unit's own history).
+pub fn note_first_tool_use(
+    res: &mut SimResources,
+    worker: sim_core::components::AgentId,
+    item: sim_core::colony::ItemKind,
+) {
+    use sim_core::colony::ore::MetalWitness;
+    if res.rules.colony.is_none()
+        || !item.definition().tags.iter().any(|t| t == "tool")
+        || res
+            .metal
+            .witnesses
+            .values()
+            .any(|w| matches!(w, MetalWitness::FirstToolUsed { item: used, .. } if *used == item))
+    {
+        return;
+    }
+    let ingots: Vec<_> = sim_core::colony::recipes()
+        .iter()
+        .filter(|r| r.output.0 == item)
+        .flat_map(|r| r.inputs.iter().map(|(input, _)| *input))
+        .collect();
+    let cause = res
+        .metal
+        .witnesses
+        .iter()
+        .find(|(_, w)| matches!(w, MetalWitness::FirstIngot { item: ingot, .. } if ingots.contains(ingot)))
+        .map(|(&i, _)| CauseRef::Entry(i));
+    let entry = ChronicleEntry::new(res.current_tick, ChronicleKind::FirstToolUsed)
+        .subject(worker)
+        .cause(item.code());
+    let actual = res.chronicle.push_caused(entry, cause);
+    res.metal
+        .witnesses
+        .insert(actual, MetalWitness::FirstToolUsed { worker, item });
+}
+
+/// Whether no deposit in the world, hidden or exhausted included, yields an item tagged `tag`.
+pub fn lacks_outcrop_tag(res: &SimResources, tag: &str) -> bool {
+    let catalog = installed_or_bundled();
+    !res.ore.deposits.values().any(|d| {
+        catalog
+            .outcrop(d.kind)
+            .is_some_and(|def| def.yield_item.definition().tags.iter().any(|t| t == tag))
+    })
+}
+
+/// C2-b `tin_shortage` card trigger: an adult practises the alloy and no tin outcrop exists.
+pub fn tin_shortage(world: &World, res: &SimResources) -> bool {
+    res.rules.colony.is_some()
+        && knowledge::defs()
+            .id_of("bronze_alloy")
+            .is_some_and(|alloy| {
+                crate::runtime::knowledge::anyone_practises(world, knowledge::bit(alloy))
+            })
+        && lacks_outcrop_tag(res, "metal_tin")
+}
+
+/// The lowest-id waiting caravan whose goods include a `metal_tin`-tagged item.
+pub fn tin_caravan(res: &SimResources) -> Option<u32> {
+    res.colony
+        .neighbours
+        .caravans
+        .iter()
+        .filter(|c| {
+            matches!(
+                c.state,
+                sim_core::colony::neighbours::VisitState::Waiting { .. }
+            )
+        })
+        .filter(|c| {
+            c.goods
+                .iter()
+                .any(|g| g.count > 0 && g.kind.definition().tags.iter().any(|t| t == "metal_tin"))
+        })
+        .map(|c| c.id)
+        .min()
+}
+
+/// C2-b: saved metal records refer to real Chronicle lines of the matching kind, imports to
+/// `Traded` entries, mined items to catalog outcrop yields, and each first event is unique.
+pub fn validate_metal_at_boundary(res: &SimResources) -> Result<(), String> {
+    use sim_core::colony::ore::MetalWitness;
+    if res.rules.colony.is_none() && !res.metal.is_empty() {
+        return Err("baseline world has metal state".into());
+    }
+    let catalog = installed_or_bundled();
+    let kind_at = |i: u32| res.chronicle.entry(i).map(|e| e.kind);
+    for ((item, _), units) in &res.metal.mined {
+        let yields = catalog.outcrops().any(|d| d.yield_item == *item);
+        if !yields || *units == 0 {
+            return Err("invalid mined metal record".into());
+        }
+    }
+    for import in &res.metal.imports {
+        if kind_at(import.traded) != Some(ChronicleKind::Traded) || import.count == 0 {
+            return Err("metal import lacks its trade".into());
+        }
+    }
+    let mut firsts = BTreeSet::new();
+    for (&index, witness) in &res.metal.witnesses {
+        let (kind, item) = match witness {
+            MetalWitness::FirstIngot { item, inputs, .. } => {
+                let imports = u32::try_from(res.metal.imports.len()).unwrap_or(u32::MAX);
+                if inputs
+                    .iter()
+                    .flat_map(|i| &i.imports)
+                    .any(|&i| i >= imports)
+                {
+                    return Err("first ingot cites a missing import".into());
+                }
+                (ChronicleKind::FirstIngot, *item)
+            }
+            MetalWitness::FirstToolUsed { item, .. } => (ChronicleKind::FirstToolUsed, *item),
+        };
+        if kind_at(index) != Some(kind) || !firsts.insert((kind, item)) {
+            return Err("invalid metal witness".into());
+        }
+    }
+    Ok(())
 }
 /// Validate saved physical state and the exact one-to-one Chronicle evidence relation.
 pub fn validate_state_at_boundary(res: &SimResources) -> Result<(), String> {

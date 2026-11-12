@@ -10,4 +10,8 @@
  (id: 8, label: "M6A_STEWARD_FOOD", scope: Food, cooldown: 360, condition: FoodDeficit, action: FoodPlan((cultivation: Some((crop: Emmer, replacement_permille: 300, net_units_per_tile: 12, area_cap_permille: 1250, batch: 4)), adult_daily_milli: 2400, child_daily_milli: 1440, cold_multiplier: 1500, reserve_days: 2, reserve_start_day: 8, winter_season: 3, forage_radius: 16, harvest_batch: 16, cooked_days_milli: 1000, recipes: [Porridge, FruitPorridge, Stew, RoastMeat, RoastedRoots, DryMeat, DryBerries], vessel_recipes: [(FormPot, 2), (FirePot, 2)], winter_keep_days: 6))),
  // C1-b starting admission cadence, not a balance target; source range/lifecycle remain in animals.ron.
  (id: 11, label: "C1_STEWARD_LIVESTOCK", scope: Food, cooldown: 360, condition: Livestock, action: Livestock),
+ // C2-b: one smelt once copper smelting is practised and copper ore is stockpiled; the missing smelter is requested through the ordinary placement path.
+ (id: 12, label: "C2_STEWARD_SMELTER", scope: All, cooldown: 360, condition: Production, action: Bills(recipes: [(SmeltCopper, 1)], winter_recipe: SplitFirewood, days: 0, stocked: [CopperOre])),
+ // C2-b: one cast axe per colonist still chopping with a stone-tagged axe; bronze first, copper as the fallback.
+ (id: 13, label: "C2_STEWARD_AXES", scope: All, cooldown: 360, condition: Production, action: Bills(recipes: [(CastBronzeAxe, 1), (CastCopperAxe, 1)], winter_recipe: SplitFirewood, days: 0, replace_tag: Some("stone_tool"))),
 ])

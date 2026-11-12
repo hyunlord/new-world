@@ -61,6 +61,9 @@ pub struct CaravanGeneration {
     pub practitioner_inputs: Vec<PractitionerInput>,
     pub eligible_rows: Vec<EligibleRow>,
     pub initial_goods: Vec<GoodsRow>,
+    /// C2-b: yield-item tags of every world deposit (hidden/exhausted included), sorted.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub outcrop_yield_tags: Vec<String>,
 }
 
 /// Pin authored policy independently of the runtime goods classifier.
@@ -184,6 +187,29 @@ pub fn capture(e: &SimEngine, id: u32, config: &Config) -> Result<CaravanGenerat
     )?;
     for (index, entry) in entries.goods.iter().enumerate() {
         let kind = ItemKind::from_name(&entry.item).ok_or("unresolved authored goods item")?;
+        // C2-b gated rows, recomputed from observed adult proficiency and raw deposit yields.
+        let known_by_adult = |name: &String| {
+            knowledge::id(name).is_some_and(|node| {
+                inputs.iter().any(|p| {
+                    !p.is_child
+                        && p.knowledge.iter().any(|k| {
+                            k.node_id == node && k.proficiency >= knowledge::defs().threshold(node)
+                        })
+                })
+            })
+        };
+        let tag_present = |tag: &String| {
+            r.ore.deposits.values().any(|d| {
+                sim_core::colony::content::installed_or_bundled()
+                    .outcrop(d.kind)
+                    .is_some_and(|def| def.yield_item.definition().tags.contains(tag))
+            })
+        };
+        if !entry.requires_knowledge.iter().all(known_by_adult)
+            || entry.absent_outcrop_tag.as_ref().is_some_and(tag_present)
+        {
+            continue;
+        }
         let made_by = sim_core::colony::values::item_data(kind)
             .and_then(|d| d.made_by.as_deref())
             .and_then(knowledge::id);
@@ -242,6 +268,15 @@ pub fn capture(e: &SimEngine, id: u32, config: &Config) -> Result<CaravanGenerat
         practitioner_inputs: inputs,
         eligible_rows: eligible,
         initial_goods: goods_rows(&c.goods),
+        outcrop_yield_tags: r
+            .ore
+            .deposits
+            .values()
+            .filter_map(|d| sim_core::colony::content::installed_or_bundled().outcrop(d.kind))
+            .flat_map(|def| def.yield_item.definition().tags.iter().cloned())
+            .collect::<std::collections::BTreeSet<_>>()
+            .into_iter()
+            .collect(),
     })
 }
 
@@ -267,6 +302,7 @@ mod c1_json_tests {
             practitioner_inputs: vec![],
             eligible_rows: vec![],
             initial_goods: vec![],
+            outcrop_yield_tags: vec![],
         };
         let low = serde_json::to_value(&row).expect("legacy JSON");
         assert!(low.get("neighbour_known_mask_high").is_none());

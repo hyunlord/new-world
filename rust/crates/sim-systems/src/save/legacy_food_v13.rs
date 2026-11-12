@@ -84,6 +84,7 @@ impl From<LegacyBodyV13> for Body {
             livestock: Default::default(),
             neighbour_upper: Default::default(),
             ore: Default::default(),
+            metal: Default::default(),
         }
     }
 }

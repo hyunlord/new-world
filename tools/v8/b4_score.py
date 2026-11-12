@@ -323,7 +323,9 @@ CARAVAN = {"caravan_id": "u32", "neighbour_id": "u8", "executed_tick": "u64", "p
            "practitioner_rows": array({"node_id": "u8", "count": "u64"}),
            "practitioner_inputs": array({"agent_id": "u64", "is_child": "bool",
                "knowledge": array({"node_id": "u8", "proficiency": "u16", "last_used": "u16"})}),
-           "eligible_rows": array(ELIGIBLE), "initial_goods": array(GOOD)}
+           "eligible_rows": array(ELIGIBLE), "initial_goods": array(GOOD),
+           # C2-b: yield-item tags of every world deposit (hidden/exhausted included); omitted when none.
+           "outcrop_yield_tags": ("omittable", array("str"))}
 HAUL_START = {"agent_id": "u64", "executed_tick": "u64", "source": array("u32"),
               "destination": array("u32"), "item_code": "u32",
               "destination_class": ("enum", ("stockpile", "hearth", "other")),
@@ -389,7 +391,9 @@ ARITHMETIC = {
     "garments": array({"garment_arm": ("enum", ("hide_wrap", "fur_cloak")), "item_code": "u32", "cold_permille": "u32"}),
     "knowledge_nodes": array({"node_id": "u8", "threshold": "u16", "era": ("enum", ("paleolithic", "neolithic", "bronze", "iron"))}),
     "trade": {"goods": array({"authored_index": "u32", "item_code": "u32", "made_by": optional("u8"),
-        "tag": ("enum", ("lacked", "staple")), "count_min": "u16", "count_max": "u16"}),
+        "tag": ("enum", ("lacked", "staple")), "count_min": "u16", "count_max": "u16",
+        # C2-b gated rows: eligible only when every node is adult-known and no deposit yields the tag.
+        "requires_knowledge": ("omittable", array("u8")), "absent_outcrop_tag": ("omittable", "str")}),
         "stacks_min": "u16", "stacks_max": "u16", "quality_min": "u8", "quality_max": "u8", "practice_days": "u64"},
     "sources": array({"commit": "str", "repo_path": "str", "line_start": "u32", "line_end": "u32",
                       "sha256": "hash", "artifact_path": "str"}),
@@ -465,7 +469,14 @@ def check_caravan(row: Record, seed: int, arithmetic: Record, metadata: Record) 
     known = knowledge_mask(row, "neighbour_known_mask")
     practice = knowledge_mask(row, "old_all_knowledge_practice_mask")
     eligible = []
+    thresholds = {n["node_id"]: n["threshold"] for n in nodes}
+    colony_known = {n for n in ids if any(not p["is_child"] and any(k["node_id"] == n
+        and k["proficiency"] >= thresholds[n] for k in p["knowledge"]) for p in inputs)}
+    yield_tags = set(row.get("outcrop_yield_tags", []))
     for good in arithmetic["trade"]["goods"]:
+        if not set(good.get("requires_knowledge", [])) <= colony_known \
+                or good.get("absent_outcrop_tag") in yield_tags:
+            continue
         node = good["made_by"]
         classification = None
         if good["tag"] == "staple":
@@ -480,7 +491,7 @@ def check_caravan(row: Record, seed: int, arithmetic: Record, metadata: Record) 
                 classification = "scarce"
         if classification is not None:
             weight = (1 if classification == "staple" else 3) if row["policy"] == "old_3_1" else {"staple": 10, "rare": 1, "scarce": 30}[classification]
-            eligible.append({**{k: v for k, v in good.items() if k != "tag"}, "classification": classification, "weight": weight})
+            eligible.append({**{k: v for k, v in good.items() if k not in ("tag", "requires_knowledge", "absent_outcrop_tag")}, "classification": classification, "weight": weight})
     require(row["eligible_rows"] == eligible, "eligible goods table mismatch")
     weights = [r["weight"] for r in eligible]
     total = sum(weights)

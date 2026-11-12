@@ -324,6 +324,7 @@ enum Search {
     DeconMark,
     Restock,
     ClayMark,
+    MineMark,
 }
 
 /// Searches that found no candidate anywhere on the map this tick. Within one
@@ -345,6 +346,7 @@ struct Exhausted {
     decon: Memo,
     restock: Memo,
     clay: Memo,
+    mine: Memo,
     stocked: BTreeMap<ItemKind, Memo>,
     any_stack: BTreeMap<ItemKind, Memo>,
     supply_stocked: BTreeMap<ItemKind, Memo>,
@@ -371,6 +373,7 @@ impl Exhausted {
             Search::DeconMark => &mut self.decon,
             Search::Restock => &mut self.restock,
             Search::ClayMark => &mut self.clay,
+            Search::MineMark => &mut self.mine,
             Search::Stocked(kind) => self.stocked.entry(kind).or_default(),
             Search::AnyStack(kind) => self.any_stack.entry(kind).or_default(),
             Search::SupplyStocked(kind) => self.supply_stocked.entry(kind).or_default(),
@@ -853,8 +856,41 @@ fn pick_work(
             } else {
                 None
             };
-            if dig.is_some() || !may(sim_core::colony::Designation::ClayPit) {
+            if dig.is_some() {
                 return dig;
+            }
+            // C2-b: then the nearest marked, still-yielding ore deposit no one has taken.
+            if may(sim_core::colony::Designation::Mine) {
+                let ore = |t: (u32, u32)| {
+                    colony.designations.get(&t) == Some(&sim_core::colony::Designation::Mine)
+                        && res
+                            .ore
+                            .deposits
+                            .get(&t)
+                            .is_some_and(|d| d.revealed && d.remaining > 0)
+                        && !colony.reservations.contains_key(&ReserveKey::Node(t))
+                        && reach(t)
+                };
+                let found = search(
+                    &index.mine,
+                    pos,
+                    radius,
+                    ex.memo(Search::MineMark),
+                    |t, _| ore(t),
+                )
+                .map(|(node, ())| {
+                    (
+                        JobKind::Mine { node },
+                        0,
+                        ItemKind::role("default_placeholder"),
+                    )
+                });
+                if found.is_some() {
+                    return found;
+                }
+            }
+            if !may(sim_core::colony::Designation::ClayPit) {
+                return None;
             }
             // M4: then the nearest marked clay bank no one has taken.
             let clay = |t: (u32, u32)| {
@@ -1201,7 +1237,14 @@ fn gather_pick(res: &SimResources, ctx: &Ctx, pos: (u32, u32), ex: &mut Exhauste
 /// that the agent can walk to: the fastest (M4: a ground-stone axe before a
 /// stone axe, by `axe_permille`), then the highest quality, then the nearest
 /// `(distance, y, x)` (M2 goal 3.7).
-fn best_axe(res: &SimResources, pos: (u32, u32), reach: u32) -> Option<(u32, u32)> {
+/// `faster_than`: an upgrade search for a worker who already holds an axe of that speed;
+/// only `tool`-tagged (cast metal) axes strictly faster than it qualify.
+fn best_axe(
+    res: &SimResources,
+    pos: (u32, u32),
+    reach: u32,
+    faster_than: Option<u32>,
+) -> Option<(u32, u32)> {
     let region = res.nav.region_of(pos);
     let colony = &res.colony;
     let index = &res.spatial.colony.ground;
@@ -1219,6 +1262,11 @@ fn best_axe(res: &SimResources, pos: (u32, u32), reach: u32) -> Option<(u32, u32
             ) else {
                 continue;
             };
+            if faster_than.is_some_and(|held| {
+                speed >= held || !stack.kind.definition().tags.iter().any(|t| t == "tool")
+            }) {
+                continue;
+            }
             if d > reach
                 || !colony.zone_of_tile.contains_key(&tile)
                 || colony.reservations.contains_key(&ReserveKey::Stack(tile))
@@ -1737,8 +1785,19 @@ impl RuntimeSystem for JobAssignSystem {
                 // M5: a hunter without one for a spear (else a knife).
                 let fetch = match (kind, rule.economy) {
                     (JobKind::Chop { .. }, Some(e)) if !has_tool => {
-                        best_axe(resources, pos, e.axe_reach)
+                        best_axe(resources, pos, e.axe_reach, None)
                     }
+                    // C2-b: a chopper holding an axe stops for a faster cast-metal one.
+                    (JobKind::Chop { .. }, Some(e)) => world
+                        .get::<&Tool>(entity)
+                        .ok()
+                        .and_then(|t| {
+                            sim_core::colony::skills::axe_permille(
+                                t.item.kind,
+                                sim_core::colony::quality_bucket(t.item.quality),
+                            )
+                        })
+                        .and_then(|held| best_axe(resources, pos, e.axe_reach, Some(held))),
                     (JobKind::Hunt { .. }, Some(e)) => {
                         let held = world.get::<&Tool>(entity).ok().map(|t| t.item.kind);
                         super::hunt::hunting_fetch(resources, pos, e.axe_reach, held)

@@ -316,6 +316,8 @@ fn steward_scope_boundary_rejects_without_mutation_and_valid_changes_are_logged(
             (9, "MUX_STEWARD_RULE_9".to_string()),
             (10, "MUX_STEWARD_RULE_10".to_string()),
             (11, "C1_STEWARD_LIVESTOCK".to_string()),
+            (12, "C2_STEWARD_SMELTER".to_string()),
+            (13, "C2_STEWARD_AXES".to_string()),
         ]
     );
 }

@@ -184,6 +184,14 @@ fn target_exists(
             colony.nodes.contains_key(&node)
                 && colony.designations.get(&node) == Some(&Designation::ClayPit)
         }
+        (JobKind::Mine { node }, _) => {
+            colony.designations.get(&node) == Some(&Designation::Mine)
+                && res
+                    .ore
+                    .deposits
+                    .get(&node)
+                    .is_some_and(|d| d.revealed && d.remaining > 0)
+        }
         // Apprenticeship: `teach::step` checks the order and the partner.
         (JobKind::Teach { .. } | JobKind::Learn { .. }, _) => true,
         // M5: the hunted deer is alive; the top is still on its stack.
@@ -311,6 +319,7 @@ fn step(
                 | JobKind::Gather { spot: near, .. }
                 | JobKind::Dig { tile: near }
                 | JobKind::DigClay { node: near }
+                | JobKind::Mine { node: near }
                 | JobKind::Deconstruct { tile: near } => chebyshev(pos, near) <= 1,
                 _ => res.nav.arrived(pos, source),
             };
@@ -359,6 +368,16 @@ fn step(
                         let mask = sim_core::colony::knowledge::gates().build(kind);
                         crate::runtime::knowledge::used(world, res, entity, mask);
                     }
+                }
+                JobKind::Mine { .. } => {
+                    // C2-b: one ore batch reuses the quarry rule's work time (no new tunable).
+                    let base = rule.economy.map_or(120, |e| e.quarry_ticks);
+                    let ticks = work_ticks(world, rule, entity, base, SkillKind::Mining);
+                    let ticks =
+                        crate::runtime::story::scale_work(world, res, entity, source, ticks);
+                    job.amount = ticks.min(u32::from(u16::MAX)) as u16;
+                    job.stage = JobStage::Working { ticks_left: ticks };
+                    set_state(world, entity, WORK_JOB);
                 }
                 JobKind::DigClay { .. } => {
                     let ticks = work_ticks(world, rule, entity, CLAY_TICKS, SkillKind::Mining);
@@ -506,6 +525,15 @@ fn step(
                         sim_core::colony::knowledge::gates().designation(Designation::Quarry);
                     crate::runtime::knowledge::used(world, res, entity, mask);
                 }
+                JobKind::Mine { node } => {
+                    if !crate::runtime::ore::mine_batch(res, rule, id, node, pos) {
+                        cancel(world, res, entity, CancelReason::TargetGone);
+                        return;
+                    }
+                    craft::train(world, entity, SkillKind::Mining, u32::from(job.amount));
+                    let mask = sim_core::colony::knowledge::gates().designation(Designation::Mine);
+                    crate::runtime::knowledge::used(world, res, entity, mask);
+                }
                 JobKind::DigClay { node } => {
                     clay_batch(res, node, pos);
                     craft::train(world, entity, SkillKind::Mining, u32::from(job.amount));
@@ -623,7 +651,32 @@ fn pick_up_axe(
         .map_or(ItemKind::role("legacy_axe"), |s| s.kind);
     let (taken, spec) = take_items(res, axe, kind, 1);
     res.colony.reservations.remove(&ReserveKey::Stack(axe));
-    if taken == 1 && world.get::<&Tool>(entity).is_err() {
+    let held = world.get::<&Tool>(entity).ok().map(|t| t.item);
+    let speed = |s: ItemSpec| {
+        sim_core::colony::skills::axe_permille(s.kind, sim_core::colony::quality_bucket(s.quality))
+    };
+    if let Some(old) = held.filter(|old| taken == 1 && speed(spec) < speed(*old)) {
+        // C2-b upgrade: the old axe goes down where the worker stands; the faster one is held.
+        put_items(res, pos, old, 1);
+        let _ = world.insert_one(
+            entity,
+            Tool {
+                item: spec,
+                uses: 0,
+            },
+        );
+        if let Ok(agent) = world.get::<&sim_core::components::Agent>(entity) {
+            res.chronicle.push(
+                sim_core::chronicle::ChronicleEntry::new(
+                    res.current_tick,
+                    sim_core::chronicle::ChronicleKind::ToolUpgraded,
+                )
+                .subject(agent.id)
+                .cause(spec.kind.code())
+                .value(i64::from(old.kind.code())),
+            );
+        }
+    } else if taken == 1 && held.is_none() {
         let _ = world.insert_one(
             entity,
             Tool {
@@ -663,6 +716,7 @@ fn use_axe(
     };
     tool.uses += 1;
     res.colony.tallies.chops_with_axe += 1;
+    crate::runtime::ore::note_first_tool_use(res, id, tool.item.kind);
     let limit = rule.economy.map_or(0, |e| match chop.wear_rule.as_deref() {
         Some("ground_axe_uses") => e.ground_axe_uses,
         Some("axe_uses") => e.axe_uses,

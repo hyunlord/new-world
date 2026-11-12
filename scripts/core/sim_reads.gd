@@ -13,7 +13,8 @@
 #   cmd_set_work_priority, cmd_place_line, cmd_place_rect, cmd_designate_dig, cmd_designate_deconstruct,
 #   cmd_set_room_role, cmd_designate_clay, cmd_order_teach, cmd_cancel_teach, cmd_draft, cmd_undraft_all,
 #   cmd_draft_move, cmd_draft_attack, cmd_draft_attack_person, cmd_designate_hunt, cmd_add_hunt_zone, cmd_cancel_hunt,
-#   cmd_set_dress_order, cmd_accept_migrants, cmd_decline_migrants, cmd_trade, save_world, load_world (MUTATORS);
+#   cmd_set_dress_order, cmd_accept_migrants, cmd_decline_migrants, cmd_trade, cmd_designate_mine,
+#   cmd_trade_from_card, save_world, load_world (MUTATORS);
 #   cmd_zone_field, cmd_erase_field, cmd_set_field_work (ordinary player MUTATORS; no expiry dispatch);
 #   signal world_reset.
 class_name SimReads
@@ -74,6 +75,8 @@ const MUTATORS: Array[String] = [
 	"cmd_designate_hunt", "cmd_designate_capture", "cmd_slaughter_livestock", "cmd_add_hunt_zone", "cmd_cancel_hunt", "cmd_set_dress_order",
 	# M5.5 orders (migrant waves, barter with a caravan).
 	"cmd_accept_migrants", "cmd_decline_migrants", "cmd_trade",
+	# C2-b: ore mining and a card-originated barter.
+	"cmd_designate_mine", "cmd_trade_from_card",
 	# M1.5 save files: save_world(path) -> bool, load_world(path) -> bool (a load replaces the world).
 	"save_world", "load_world", "cmd_set_steward", "cmd_set_steward_defence", "cmd_set_steward_extended",
 ]

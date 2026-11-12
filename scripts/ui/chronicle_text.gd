@@ -33,7 +33,7 @@ const Content = preload("res://scripts/ui/content_context.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
 const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
 ## MindChoice (47) records only entry into the critical band; its node slot is not a display name.
-const LAST_KIND: int = 66
+const LAST_KIND: int = 69
 static var steward_labels: Dictionary = {}
 static var food_chronicle: Dictionary = {}
 ## M5 adds `index` (the entry's chronicle index) and its "→" link columns (absent in older reads: -1).
@@ -179,6 +179,7 @@ static func sentence(row: Dictionary, viewed: int, locale: Node, info: Dictionar
 		60: return building_complete_sentence(row, locale)
 		61, 62, 63, 64, 65: return livestock_sentence(row.get("livestock_evidence", {}), locale)
 		66: return ore_sentence(row.get("ore_evidence", {}), locale)
+		67, 68, 69: return metal_sentence(row, locale)
 		54, 55, 56:
 			var crop: Dictionary = preload("res://scripts/ui/content_context.gd").row("crops", value)
 			var key: String = ["S1_CHRON_SOWN", "S1_CHRON_HARVEST", "S1_CHRON_FROST"][kind - 54]
@@ -186,6 +187,24 @@ static func sentence(row: Dictionary, viewed: int, locale: Node, info: Dictionar
 				key = "S1_CHRON_COVERED" if cause == 1 else "S1_CHRON_FAILED"
 			return loc(locale, key).format({"crop": loc(locale, str(crop.get("name_key", "UI_UNKNOWN")))})
 	return ""
+
+
+## C2-b kinds 67–69 read only their own columns; a trade or first-ingot cause follows the "→" link.
+static func metal_sentence(row: Dictionary, locale: Node) -> String:
+	var who: String = person(int(row.get("subject", -1)), locale)
+	var cause: int = int(row.get("cause", -1))
+	match int(row.get("kind", -1)):
+		67:
+			var text: String = loc(locale, "C2_CHRON_FIRST_INGOT").format({"person": who,
+				"item": EconomyText.item(locale, int(row.get("value", -1))), "recipe": EconomyText.recipe(locale, cause)})
+			var miner: int = int(row.get("other", -1))
+			if miner >= 0:
+				text += loc(locale, "C2_CHRON_MINED_BY").format({"miner": person(miner, locale)})
+			return text
+		68:
+			return loc(locale, "C2_CHRON_TOOL_UPGRADED").format({"person": who,
+				"old": EconomyText.item(locale, int(row.get("value", -1))), "new": EconomyText.item(locale, cause)})
+	return loc(locale, "C2_CHRON_FIRST_TOOL_USED").format({"person": who, "item": EconomyText.item(locale, cause)})
 
 
 ## Kind 60 pins the completed template ordinal and cause, even after upgrade or demolition.

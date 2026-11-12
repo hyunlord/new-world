@@ -320,7 +320,7 @@
     },
     {
       "id": "tin_shortage",
-      "enabled": false,
+      "enabled": true,
       "trigger": {
         "kind": "bridge",
         "read": "tin_shortage"

@@ -196,11 +196,22 @@ pub enum ChronicleKind {
     LivestockDied = 65,
     /// A practitioner found a physical surface mineral deposit.
     OreDiscovered = 66,
+    /// C2-b: an `ingot`-tagged item was made for the first time. subject = crafter;
+    /// other = the miner with most recorded units of its inputs, if any; cause =
+    /// `RecipeKind::code`; value = the ingot's `ItemKind::code`; typed facts in
+    /// `MetalState::witnesses`; caused by its first imported input's `Traded` entry.
+    FirstIngot = 67,
+    /// C2-b: a worker swapped a held axe for a better stockpiled one. subject;
+    /// cause = new `ItemKind::code`; value = old `ItemKind::code`.
+    ToolUpgraded = 68,
+    /// C2-b: first successful chop with a `tool`-tagged item kind. subject; cause =
+    /// `ItemKind::code`; caused by the first-ingot entry of its cast metal, if any.
+    FirstToolUsed = 69,
 }
 
 impl ChronicleKind {
     /// Every kind in discriminant order.
-    pub const ALL: [ChronicleKind; 67] = [
+    pub const ALL: [ChronicleKind; 70] = [
         Self::Born,
         Self::FoundingMember,
         Self::Paired,
@@ -268,6 +279,9 @@ impl ChronicleKind {
         Self::LivestockSlaughtered,
         Self::LivestockDied,
         Self::OreDiscovered,
+        Self::FirstIngot,
+        Self::ToolUpgraded,
+        Self::FirstToolUsed,
     ];
 
     /// Stable numeric discriminant.
@@ -345,6 +359,9 @@ impl ChronicleKind {
             Self::LivestockSlaughtered => "livestock_slaughtered",
             Self::LivestockDied => "livestock_died",
             Self::OreDiscovered => "ore_discovered",
+            Self::FirstIngot => "first_ingot",
+            Self::ToolUpgraded => "tool_upgraded",
+            Self::FirstToolUsed => "first_tool_used",
         }
     }
 }
@@ -838,10 +855,13 @@ mod tests {
         assert_eq!(ChronicleKind::LivestockDied.as_u8(), 65);
         assert_eq!(ChronicleKind::OreDiscovered.as_u8(), 66);
         assert_eq!(ChronicleKind::OreDiscovered.as_str(), "ore_discovered");
-        assert_eq!(ChronicleKind::ALL.len(), 67);
+        assert_eq!(ChronicleKind::FirstIngot.as_u8(), 67);
+        assert_eq!(ChronicleKind::ToolUpgraded.as_u8(), 68);
+        assert_eq!(ChronicleKind::FirstToolUsed.as_u8(), 69);
+        assert_eq!(ChronicleKind::ALL.len(), 70);
         let names: std::collections::BTreeSet<&str> =
             ChronicleKind::ALL.iter().map(|k| k.as_str()).collect();
-        assert_eq!(names.len(), 67);
+        assert_eq!(names.len(), 70);
         assert_eq!(DepartCause::TopUp.as_u8(), 4);
     }
 

@@ -15,9 +15,13 @@ fn stage1_policy_changes_are_explicit_against_published_base() {
     );
     assert_eq!(
         current.rules.iter().map(|r| r.id).collect::<Vec<_>>(),
-        vec![1, 2, 3, 4, 5, 7, 9, 10, 8, 11]
+        vec![1, 2, 3, 4, 5, 7, 9, 10, 8, 11, 12, 13]
     );
-    let livestock = current.rules.last().expect("new ordinary livestock rule");
+    let livestock = current
+        .rules
+        .iter()
+        .find(|r| r.id == 11)
+        .expect("new ordinary livestock rule");
     assert_eq!(livestock.id, 11);
     assert_eq!(livestock.scope, StewardScope::Food);
     assert!(matches!(livestock.condition, Condition::Livestock));

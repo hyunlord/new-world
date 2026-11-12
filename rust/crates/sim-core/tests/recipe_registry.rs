@@ -189,7 +189,7 @@ fn steward_rule_boot_child() {
     content::bootstrap(content::BootSelection::Bundled).expect("explicit boot");
     let typed = steward::parse_rules(text).expect("typed rules");
     for loaded in [steward::rules().expect("rules after boot"), &typed] {
-        assert_eq!(loaded.rules.len(), 10);
+        assert_eq!(loaded.rules.len(), 12);
         let livestock = loaded
             .rules
             .iter()

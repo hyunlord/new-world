@@ -292,3 +292,25 @@ pub(super) fn preferred_bill_move(
 #[cfg(test)]
 #[path = "production_optimization_tests.rs"]
 mod optimization_tests;
+
+/// C2-b: colonists (not children) holding a chopping tool whose item carries `tag`.
+pub(super) fn tool_holders(world: &hecs::World, tag: &str) -> u32 {
+    world
+        .query::<&sim_core::colony::Tool>()
+        .without::<&sim_core::components::Child>()
+        .iter()
+        .filter(|(_, tool)| {
+            let def = tool.item.kind.definition();
+            def.chop.is_some() && def.tags.iter().any(|t| t == tag)
+        })
+        .fold(0u32, |n, _| n.saturating_add(1))
+}
+
+/// Whether someone practises both the recipe's workshop and recipe knowledge gates.
+pub(super) fn recipe_practised(world: &hecs::World, recipe: sim_core::colony::RecipeKind) -> bool {
+    let gates = sim_core::colony::knowledge::gates();
+    recipe.recipe().is_some_and(|def| {
+        crate::runtime::knowledge::anyone_practises(world, gates.build(def.workshop))
+            && crate::runtime::knowledge::anyone_practises(world, gates.recipe(recipe))
+    })
+}

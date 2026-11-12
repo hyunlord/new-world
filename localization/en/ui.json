@@ -1887,5 +1887,20 @@
   "C2_JOB_HARVEST_FIELD": "harvest field",
   "C2_JOB_CAPTURE": "capture animal",
   "C2_JOB_LIVESTOCK_PRODUCT": "collect livestock products",
-  "C2_JOB_SLAUGHTER": "slaughter livestock"
+  "C2_JOB_SLAUGHTER": "slaughter livestock",
+  "C2_STEWARD_SMELTER": "Copper ore stocked: prepared a smelter and a smelting bill",
+  "C2_STEWARD_AXES": "Ordered cast axes for people still using stone axes",
+  "MIND_FACT_JOB_MINING": "Assigned to mine an ore outcrop",
+  "MIND_FACT_JOB_SMELTING": "Assigned to smelt metal",
+  "MIND_FACT_JOB_CASTING": "Assigned to cast metal",
+  "MIND_MINING_WORK": "Mine ore",
+  "MIND_SMELTING_WORK": "Smelt metal",
+  "MIND_CASTING_WORK": "Cast metal",
+  "C2_CHRON_FIRST_INGOT": "{person} made the first {item} ← {recipe}",
+  "C2_CHRON_MINED_BY": " · ore (mined by {miner})",
+  "C2_CHRON_TOOL_UPGRADED": "{person} swapped a {old} for a {new}",
+  "C2_CHRON_FIRST_TOOL_USED": "{person} first used a {item}",
+  "C2_DIAG_NO_FUEL": "The {workshop} has no {fuel} — check the {source}",
+  "C2_ORDER_MINE": "Mine ore",
+  "C2_ORDER_TOAST_MINE": "Marked {count} ore deposits for mining"
 }

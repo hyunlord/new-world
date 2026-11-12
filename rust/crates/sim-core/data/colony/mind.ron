@@ -3383,6 +3383,46 @@
             tags: ["livestock", "job_continue"], name_key: "MIND_LIVESTOCK_WORK",
             every_ticks: 1, target: Some("job"),
         ),
+        // C2-b: the existing job owner executes mining, smelting and casting; these nodes only name the work.
+        (
+            id: "job_mining", band: "work", behaviour: "do_job",
+            when: [
+                (fact: "fleeing", op: "not", value: None),
+                (fact: "drafted", op: "not", value: None),
+                (fact: "job_owned_state", op: "has", value: None),
+                (fact: "job_mining", op: "has", value: None),
+            ],
+            score: (constant: 0, terms: []),
+            hysteresis: 0, life_stages: ["adult", "elder"],
+            tags: ["metal", "job_continue"], name_key: "MIND_MINING_WORK",
+            every_ticks: 1, target: Some("job"),
+        ),
+        (
+            id: "job_smelting", band: "work", behaviour: "do_job",
+            when: [
+                (fact: "fleeing", op: "not", value: None),
+                (fact: "drafted", op: "not", value: None),
+                (fact: "job_owned_state", op: "has", value: None),
+                (fact: "job_smelting", op: "has", value: None),
+            ],
+            score: (constant: 0, terms: []),
+            hysteresis: 0, life_stages: ["adult", "elder"],
+            tags: ["metal", "job_continue"], name_key: "MIND_SMELTING_WORK",
+            every_ticks: 1, target: Some("job"),
+        ),
+        (
+            id: "job_casting", band: "work", behaviour: "do_job",
+            when: [
+                (fact: "fleeing", op: "not", value: None),
+                (fact: "drafted", op: "not", value: None),
+                (fact: "job_owned_state", op: "has", value: None),
+                (fact: "job_casting", op: "has", value: None),
+            ],
+            score: (constant: 0, terms: []),
+            hysteresis: 0, life_stages: ["adult", "elder"],
+            tags: ["metal", "job_continue"], name_key: "MIND_CASTING_WORK",
+            every_ticks: 1, target: Some("job"),
+        ),
         (
             id: "job_continue", band: "work", behaviour: "do_job",
             when: [

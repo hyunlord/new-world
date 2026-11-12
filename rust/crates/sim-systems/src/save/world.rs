@@ -206,6 +206,26 @@ impl WorldSave {
         Ok(())
     }
 
+    /// Widen the format21/22 26-counter Skills column to the current counters (mining appended).
+    pub(super) fn migrate_mining_skills_v22(&mut self) -> Result<(), String> {
+        for archetype in &mut self.archetypes {
+            if archetype.types.len() != archetype.columns.len() {
+                return Err("legacy archetype columns and types differ".into());
+            }
+            for (&index, bytes) in archetype.types.iter().zip(&mut archetype.columns) {
+                let name = self
+                    .components
+                    .get(usize::from(index))
+                    .ok_or_else(|| "legacy component index out of range".to_owned())?;
+                if name == "Skills" {
+                    *bytes =
+                        super::legacy_metal_v22::skills_column(bytes, archetype.entities.len())?;
+                }
+            }
+        }
+        Ok(())
+    }
+
     /// Upgrade only the known pre-format17 physical component columns in place.
     pub(super) fn migrate_items_v16(&mut self) -> Result<(), String> {
         use sim_core::colony::legacy_items_v16::{ApparelV16, CarryV16, ToolV16};

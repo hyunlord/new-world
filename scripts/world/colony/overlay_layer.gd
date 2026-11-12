@@ -43,7 +43,8 @@ const TILE: int = View.TILE
 const BAR_HEIGHT: int = 6
 const SPACE_BAR: int = 4
 ## Designation kind → glyph (drawing behaviour, not content): 0 chop, 1 quarry, 2 dig, 3 deconstruct, 4 clay pit.
-const MARK_GLYPHS: Array[String] = ["axe", "pick", "spade", "cross", "spade"]
+## Indexed by Designation code (5 hunt and 6 harvest never reach here as tile marks; 7 mine).
+const MARK_GLYPHS: Array[String] = ["axe", "pick", "spade", "cross", "spade", "spade", "spade", "pick"]
 ## Culling chunk size in tiles (items and nodes).
 const CULL: int = 16
 

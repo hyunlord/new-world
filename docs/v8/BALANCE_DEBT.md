@@ -439,3 +439,12 @@ C2 retains category/manifest art and the following unchanged biological data.
 | bronze | `{"category":"Mineral","sim_id":4106632693,"tint":{"dL":-8,"da":10,"db":29}}` | Shared placeholder colour | Presentation only, no material efficacy |
 | mud_brick | `{"category":"Mineral","sim_id":2075554421,"tint":{"dL":-15,"da":10,"db":17}}` | Shared placeholder colour | Presentation only, no material efficacy |
 | packed_earth | `{"category":"Mineral","sim_id":3087221664,"tint":{"dL":-22,"da":5,"db":12}}` | Shared placeholder colour | Presentation only, no material efficacy |
+
+## C2-b 금속 사슬 (2026-11-12)
+
+| 기능 | 조정값 | 현재 값 | 의도 | 의심되는 문제 |
+| --- | --- | --- | --- | --- |
+| 광석 채굴 | 작업량·묶음 | 기존 `quarry_ticks`·`quarry_batch`(4) 재사용 | 새 조정값 없이 채석과 같은 속도 | 광석이 돌과 같은 속도로 나와 채굴이 너무 쉬울 수 있음 |
+| 주석 교역 | `neighbours.ron` tin_ingot/tin_ore 행 | staple 가중치 10, 2–6개 | 기존 원재료 상품과 같은 값 | seed0에서 25일째 처음 등장; 상품 슬롯 확률은 미측정 |
+| 집사 규칙 13 | 도끼 교체 수 | 돌도끼 보유자 1명당 1개 | 금속 도끼로 단계적 교체 | 사슬에서 구리 주괴·거푸집을 모두 구리 도끼에 써 청동이 늦어짐 |
+| 숯 | `fuel_units` | None (D-C2-B-1) | 숯은 제련 연료만 | 아궁이 연료로 쓰면 제련이 굶음 (44/48 소각) |

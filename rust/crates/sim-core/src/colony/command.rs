@@ -418,6 +418,28 @@ pub enum Command {
         /// Domesticated animal identity.
         animal: u32,
     },
+    /// C2-b: mark revealed, unexhausted ore deposits in the rectangle for mining.
+    DesignateMine {
+        /// Corner x.
+        x0: u32,
+        /// Corner y.
+        y0: u32,
+        /// Opposite corner x.
+        x1: u32,
+        /// Opposite corner y.
+        y1: u32,
+    },
+    /// C2-b: the ordinary barter of [`Command::Trade`], requested from the card `card`.
+    TradeFromCard {
+        /// Data identity of the card that opened the trade.
+        card: String,
+        /// The caravan number (`Caravan::id`).
+        caravan: u32,
+        /// What the colony gives: `(x, y, count)` of stacks on stockpile cells.
+        give: Vec<(u32, u32, u16)>,
+        /// What the colony takes: `(goods index, count)`.
+        take: Vec<(u16, u16)>,
+    },
 }
 
 impl Command {
@@ -472,6 +494,8 @@ impl Command {
             Self::AddHousingZone { .. } => "add_housing_zone",
             Self::DesignateCapture { .. } => "designate_capture",
             Self::DesignateSlaughter { .. } => "designate_slaughter",
+            Self::DesignateMine { .. } => "designate_mine",
+            Self::TradeFromCard { .. } => "trade_from_card",
         }
     }
 }

@@ -13,7 +13,14 @@ use sim_core::components::AgentId;
 use super::behaviours::{self, BehaviourEntry};
 use super::facts::{ProviderPlan, ProviderRegistry, BUILTIN_PROVIDERS};
 
-const PRE_LIVESTOCK_EXCLUDED_FACTS: &[&str] = &["job_livestock"];
+const METAL_FACTS: [&str; 3] = ["job_mining", "job_smelting", "job_casting"];
+const PRE_METAL_EXCLUDED_FACTS: &[&str] = &METAL_FACTS;
+const PRE_LIVESTOCK_EXCLUDED_FACTS: &[&str] = &[
+    "job_livestock",
+    METAL_FACTS[0],
+    METAL_FACTS[1],
+    METAL_FACTS[2],
+];
 const FORMAT13_EXCLUDED_FACTS: &[&str] = &[
     "harvest_window",
     "job_food_transport",
@@ -21,6 +28,9 @@ const FORMAT13_EXCLUDED_FACTS: &[&str] = &[
     "winter_stock_duty",
     "water_target_available",
     "job_livestock",
+    METAL_FACTS[0],
+    METAL_FACTS[1],
+    METAL_FACTS[2],
 ];
 
 /// Policy preparation fails explicitly before an executor can choose or mutate.
@@ -66,6 +76,12 @@ impl MindProgram {
         let current = Self::load(source)?;
         if history.check_policy(&current.policy).is_ok() {
             return Ok(current);
+        }
+        // Published C1-b/C2-a used the livestock registry but predate the metal job facts.
+        let before_metal =
+            Self::compile_schema(Cow::Owned(source.to_owned()), PRE_METAL_EXCLUDED_FACTS)?;
+        if history.check_policy(&before_metal.policy).is_ok() {
+            return Ok(before_metal);
         }
         // Published-a20 used the complete food registry but predates livestock.
         // An unused new registration still changes the policy revision/dictionary.

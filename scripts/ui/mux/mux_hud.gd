@@ -326,11 +326,11 @@ func _on_build_requested() -> void:
 
 
 ## Open the selected caravan's existing review UI; only its confirmation sends trade orders.
-func open_card_trade(caravan_id: int) -> bool:
+func open_card_trade(caravan_id: int, card_id: String = "") -> bool:
 	var panel: Control = get_parent().get_node_or_null("TradePanel") as Control
 	if panel == null or not panel.has_method("open_caravan"):
 		return false
-	panel.call("open_caravan", caravan_id)
+	panel.call("open_caravan", caravan_id, card_id)
 	return panel.is_visible_in_tree() and int(panel.call("shown_caravan")) == caravan_id
 
 

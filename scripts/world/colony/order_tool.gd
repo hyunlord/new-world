@@ -47,8 +47,8 @@ const Names = preload("res://scripts/ui/person_names.gd")
 const DRAFT_KEY: Key = KEY_D
 
 ## BUILD places the blueprint kind `build_kind` (M1's HUT mode, same code 3); M3 adds DIG (7) and DECONSTRUCT (8);
-## M4 adds CLAY (9, clay pits); M5 HUNT (10, click a deer) and HUNT_ZONE (11, a hunt zone rectangle).
-enum Mode { NONE, CHOP, STOCKPILE, BUILD, REMOVE_ZONE, CANCEL, QUARRY, DIG, DECONSTRUCT, CLAY, HUNT, HUNT_ZONE, HARVEST, FIELD, ERASE_FIELD, HOUSING }
+## C2-b adds MINE (16, revealed ore outcrops, `cmd_designate_mine`). M4 adds CLAY (9, clay pits); M5 HUNT (10, click a deer) and HUNT_ZONE (11, a hunt zone rectangle).
+enum Mode { NONE, CHOP, STOCKPILE, BUILD, REMOVE_ZONE, CANCEL, QUARRY, DIG, DECONSTRUCT, CLAY, HUNT, HUNT_ZONE, HARVEST, FIELD, ERASE_FIELD, HOUSING, MINE }
 ## `get_place_preview` shapes: one tile, line, hollow rectangle, filled rectangle.
 const SHAPE_TILE: int = 0
 const SHAPE_LINE: int = 1
@@ -68,6 +68,7 @@ const AREA_COMMANDS: Dictionary = {
 	Mode.DIG: "cmd_designate_dig",
 	Mode.DECONSTRUCT: "cmd_designate_deconstruct",
 	Mode.CLAY: "cmd_designate_clay",
+	Mode.MINE: "cmd_designate_mine",
 	Mode.HUNT_ZONE: "cmd_add_hunt_zone",
 }
 const RECT_COLORS: Dictionary = {
@@ -83,6 +84,7 @@ const RECT_COLORS: Dictionary = {
 	Mode.DIG: Color(0.80, 0.62, 0.40, 0.9),
 	Mode.DECONSTRUCT: Color(0.95, 0.55, 0.25, 0.9),
 	Mode.CLAY: Color(0.78, 0.52, 0.36, 0.9),
+	Mode.MINE: Color(0.72, 0.50, 0.30, 0.9),
 	Mode.HUNT_ZONE: Color(0.95, 0.72, 0.3, 0.9),
 }
 # The accepted-order toast per command ({count} = trees, tiles, blueprints or cancelled orders).
@@ -100,6 +102,7 @@ const TOAST_KEYS: Dictionary = {
 	"cmd_designate_dig": "UI_ORDER_TOAST_DIG",
 	"cmd_designate_deconstruct": "UI_ORDER_TOAST_DECONSTRUCT",
 	"cmd_designate_clay": "UI_ORDER_TOAST_CLAY",
+	"cmd_designate_mine": "C2_ORDER_TOAST_MINE",
 	"cmd_add_hunt_zone": "M5_TOAST_HUNT_ZONE",
 	"cmd_designate_hunt": "M5_TOAST_HUNT_MARK",
 }

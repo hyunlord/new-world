@@ -266,6 +266,37 @@ class KnowledgeMaskTests(unittest.TestCase):
                     self.assertEqual(result["total_weight"], 1 if practiced else 4)
 
 
+    def test_gated_goods_need_adult_knowledge_and_no_matching_outcrop(self):
+        node = 7
+        for adult, tags, open_ in ((False, [], False), (True, [], True), (True, ["metal_tin"], False),
+                                   (True, ["metal_copper"], True)):
+            with self.subTest(adult=adult, tags=tags):
+                data = arithmetic()
+                data["knowledge_nodes"][0].update(node_id=node, threshold=300)
+                staple = {"authored_index": 0, "item_code": 5, "made_by": None, "tag": "staple",
+                          "count_min": 1, "count_max": 1}
+                tin = {"authored_index": 1, "item_code": 5, "made_by": None, "tag": "staple",
+                       "count_min": 1, "count_max": 1, "requires_knowledge": [node],
+                       "absent_outcrop_tag": "metal_tin"}
+                data["trade"].update(goods=[staple, tin], stacks_min=1, stacks_max=1,
+                                     quality_min=20, quality_max=20)
+                rows = [staple, tin] if open_ else [staple]
+                eligible = [{**{k: v for k, v in g.items() if k not in ("tag", "requires_knowledge",
+                             "absent_outcrop_tag")}, "classification": "staple", "weight": 1} for g in rows]
+                row = {"caravan_id": 1, "neighbour_id": 1, "executed_tick": 1440, "policy": "old_3_1",
+                       "neighbour_known_mask": 0, "old_all_knowledge_practice_mask": 0,
+                       "tech_progress_permille": 0, "practice_days": 6,
+                       "practitioner_rows": [{"node_id": node, "count": 0}],
+                       "practitioner_inputs": [{"agent_id": 1, "is_child": not adult,
+                           "knowledge": [{"node_id": node, "proficiency": 800, "last_used": 0}]}],
+                       "eligible_rows": eligible, "outcrop_yield_tags": tags,
+                       "initial_goods": [{"item_code": 5, "count": 1, "quality": 20}]}
+                if adult:
+                    row["practitioner_rows"] = [{"node_id": node, "count": 1}]
+                total = score.check_caravan(row, 0, data, META)["total_weight"]
+                self.assertEqual(total, 2 if open_ else 1)
+
+
 class NaturalTests(unittest.TestCase):
     def check(self, report):
         return score.check_natural(report, arithmetic(), META, HASH, require_steward=False)

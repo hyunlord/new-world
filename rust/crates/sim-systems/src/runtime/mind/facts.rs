@@ -358,6 +358,18 @@ pub const BUILTIN_PROVIDERS: &[FactProvider] = &[
                 JobKind::Capture { .. } | JobKind::Milk { .. }
             ))
     ))),
+    // C2-b: Boolean observations of the actually owned job; the work band owns policy.
+    fact!("job_mining", Bool, |p, _c, r, _n| Ok(i64::from(
+        r.rules.colony.is_some()
+            && p.job
+                .is_some_and(|job| matches!(job.kind, JobKind::Mine { .. }))
+    ))),
+    fact!("job_smelting", Bool, |p, _c, r, _n| Ok(i64::from(
+        craft_workshop_tag(p.job, r, "smelting")
+    ))),
+    fact!("job_casting", Bool, |p, _c, r, _n| Ok(i64::from(
+        craft_workshop_tag(p.job, r, "casting")
+    ))),
     fact!("craft_working", Bool, |p, _c, r, _n| Ok(i64::from(
         r.rules.colony.is_some_and(|rule| rule.economy.is_some())
             && p.job
@@ -1818,6 +1830,20 @@ pub fn prepare_context(
     let mut context = TickContext::capture(world, resources)?;
     prepare_social_snapshot(&mut context, world, resources)?;
     Ok(context)
+}
+
+/// Whether `job` is a Craft whose bill's recipe declares the workshop capability `tag`.
+fn craft_workshop_tag(job: Option<sim_core::colony::Job>, r: &SimResources, tag: &str) -> bool {
+    let Some(JobKind::Craft { workshop, bill, .. }) = job.map(|job| job.kind) else {
+        return false;
+    };
+    r.rules.colony.is_some()
+        && r.colony
+            .workshops
+            .get(&workshop)
+            .and_then(|shop| shop.bill(bill))
+            .and_then(|bill| bill.recipe.recipe())
+            .is_some_and(|recipe| recipe.workshop_tags.iter().any(|t| t == tag))
 }
 
 // Only cheap, read-only observations; unlisted/custom preparations force full evaluation.

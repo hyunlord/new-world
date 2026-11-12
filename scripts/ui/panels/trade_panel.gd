@@ -11,7 +11,7 @@
 #   when get_neighbours' version or the hour changes; picks survive a re-read (clamped to the counts) and are cleared
 #   after a trade (the goods' indices shift). Closes when the caravan stops trading and on a world reset.
 # Bridge methods: get_caravan (direct, for the caravan shown); via SimReads get_neighbours, get_world_info,
-#   get_time_snapshot; via SimReads.mutate cmd_trade; signal world_reset.
+#   get_time_snapshot; via SimReads.mutate cmd_trade (cmd_trade_from_card when a card opened it); signal world_reset.
 extends Control
 
 const PanelTooltips = preload("res://scripts/ui/panels/panel_tooltips.gd")
@@ -38,6 +38,8 @@ const READ_TICKS: int = 60
 var _world_sim: Node = null
 var _locale: Node = null
 var _caravan: int = -1
+## C2-b: the card that opened this trade; sent with the trade, cleared on any other open or close.
+var _origin_card: String = ""
 var _read: Dictionary = {}
 var _read_key: Array = []
 var _rows_key: int = 0
@@ -202,7 +204,8 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 ## Show caravan `id` (a click on it or its banner; also used by tools). Picks start empty.
-func open_caravan(id: int) -> void:
+func open_caravan(id: int, origin_card: String = "") -> void:
+	_origin_card = origin_card
 	if id != _caravan:
 		_give.clear()
 		_take.clear()
@@ -217,6 +220,7 @@ func open_caravan(id: int) -> void:
 func close() -> void:
 	visible = false
 	_caravan = -1
+	_origin_card = ""
 	_give.clear()
 	_take.clear()
 
@@ -518,7 +522,8 @@ func _send(as_gift: bool) -> Dictionary:
 			if n > 0:
 				take.append_array(PackedInt32Array([int(row["index"]), n]))
 	var values: Dictionary = picked_values()
-	var result: Variant = SimReads.mutate(_world_sim, "cmd_trade", [_caravan, give, take])
+	var result: Variant = SimReads.mutate(_world_sim, "cmd_trade", [_caravan, give, take]) if _origin_card.is_empty() \
+		else SimReads.mutate(_world_sim, "cmd_trade_from_card", [_origin_card, _caravan, give, take])
 	var data: Dictionary = result if result is Dictionary else {}
 	if bool(data.get("accepted", false)):
 		var give_w: String = NeighbourText.weighted(int(values["give"]) * _buy())

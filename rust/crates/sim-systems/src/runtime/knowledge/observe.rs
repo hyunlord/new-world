@@ -45,6 +45,7 @@ pub fn job_gate(world: &World, res: &SimResources, job: &Job) -> KnowledgeMask {
         JobKind::Quarry { .. } => g.designation(Designation::Quarry),
         JobKind::Dig { .. } => g.designation(Designation::Dig),
         JobKind::DigClay { .. } => g.designation(Designation::ClayPit),
+        JobKind::Mine { .. } => g.designation(Designation::Mine),
         _ => KnowledgeMask::ZERO,
     }
 }

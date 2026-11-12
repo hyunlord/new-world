@@ -641,6 +641,7 @@ fn apply_inner(
         Command::AcceptMigrants { .. }
         | Command::DeclineMigrants { .. }
         | Command::Trade { .. }
+        | Command::TradeFromCard { .. }
             if rule.neighbours.is_none() =>
         {
             CommandResult::rejected(RejectReason::NotYet)
@@ -667,12 +668,27 @@ fn apply_inner(
             caravan,
             ref give,
             ref take,
+        }
+        | Command::TradeFromCard {
+            caravan,
+            ref give,
+            ref take,
+            ..
         } => {
             let give: Vec<((u32, u32), u16)> = give.iter().map(|&(x, y, n)| ((x, y), n)).collect();
             use crate::runtime::neighbours::trade::{trade, TradeRefusal};
             let practice = crate::runtime::neighbours::trade::colony_practice(world);
+            let imports = res.metal.imports.len();
             match trade(res, practice, caravan, &give, take) {
-                Ok(n) => CommandResult::ok(n),
+                Ok(n) => {
+                    // C2-b: the accepted card request is the imports' recorded origin.
+                    if let Command::TradeFromCard { card, .. } = &cmd {
+                        for import in res.metal.imports.iter_mut().skip(imports) {
+                            import.card = Some(card.clone());
+                        }
+                    }
+                    CommandResult::ok(n)
+                }
                 Err(TradeRefusal::NoCaravan) => CommandResult::rejected(RejectReason::NoVisitor),
                 Err(TradeRefusal::BadItems) => CommandResult::rejected(RejectReason::Unknown),
                 Err(TradeRefusal::Empty) => CommandResult::rejected(RejectReason::Nothing),
@@ -696,6 +712,10 @@ fn apply_inner(
         Command::DesignateClay { x0, y0, x1, y1 } => match rect_tiles(res, x0, y0, x1, y1) {
             None => CommandResult::rejected(RejectReason::OutOfMap),
             Some(tiles) => marked(designate_clay(res, &tiles)),
+        },
+        Command::DesignateMine { x0, y0, x1, y1 } => match rect_tiles(res, x0, y0, x1, y1) {
+            None => CommandResult::rejected(RejectReason::OutOfMap),
+            Some(tiles) => marked(designate_mine(res, &tiles)),
         },
         Command::OrderTeach {
             teacher,
@@ -994,6 +1014,34 @@ fn designate_clay(res: &mut SimResources, tiles: &[Tile]) -> (usize, usize) {
     (count, far)
 }
 
+/// C2-b: mark every revealed, unexhausted, Connected ore deposit among `tiles` for mining.
+/// Hidden deposits are rejected exactly like empty ground, so a mark never reveals one.
+fn designate_mine(res: &mut SimResources, tiles: &[Tile]) -> (usize, usize) {
+    let (mut count, mut far) = (0, 0);
+    let catalog = sim_core::colony::content::installed_or_bundled();
+    for tile in tiles {
+        let open = res.ore.deposits.get(tile).is_some_and(|d| {
+            d.revealed
+                && d.remaining > 0
+                && catalog.outcrop(d.kind).is_some_and(|def| {
+                    def.status == sim_core::colony::knowledge::ContentStatus::Connected
+                })
+        });
+        if open && !res.colony.designations.contains_key(tile) {
+            if !camp_reaches(res, *tile) {
+                far += 1;
+                continue;
+            }
+            res.colony.designations.insert(*tile, Designation::Mine);
+            count += 1;
+        }
+    }
+    if count > 0 {
+        res.colony.touch(false);
+    }
+    (count, far)
+}
+
 /// Cancel, in `AgentId` order, the jobs of every agent whose job satisfies `hit`.
 fn cancel_jobs_where(world: &mut World, res: &mut SimResources, hit: impl Fn(&Job) -> bool) {
     let mut victims: Vec<(AgentId, Entity)> = world
@@ -1026,7 +1074,7 @@ fn cancel_area(world: &mut World, res: &mut SimResources, tiles: &[Tile]) -> usi
     cancel_jobs_where(world, res, |job| match job.kind {
         JobKind::Chop { tree } => marked.contains(&tree),
         JobKind::Harvest { plant } => marked.contains(&plant),
-        JobKind::Quarry { node } => marked.contains(&node),
+        JobKind::Quarry { node } | JobKind::Mine { node } => marked.contains(&node),
         JobKind::Dig { tile } | JobKind::Deconstruct { tile } => marked.contains(&tile),
         _ => false,
     });

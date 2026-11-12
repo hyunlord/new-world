@@ -134,6 +134,12 @@ pub struct GoodsEntry {
     pub tag: String,
     /// Items in one drawn stack, `lo..=hi` (goal: an artifact 1–2, a staple 2–6).
     pub count: (u16, u16),
+    /// C2-b: the row is eligible only while an adult colonist practises every listed node.
+    #[serde(default)]
+    pub requires_knowledge: Vec<String>,
+    /// C2-b: the row is eligible only while no deposit in the world yields an item with this tag.
+    #[serde(default)]
+    pub absent_outcrop_tag: Option<String>,
 }
 
 const NEIGHBOURS_RON: &str = include_str!("../../data/colony/neighbours.ron");
@@ -176,8 +182,20 @@ pub fn parse_data_with_catalog(text: &str, catalog: &Catalog) -> Option<Neighbou
             return None;
         }
         let item = catalog.item(catalog.item_by_name(&row.item)?)?;
-        for node in item.made_by.iter().chain(&item.clue_nodes) {
+        for node in item
+            .made_by
+            .iter()
+            .chain(&item.clue_nodes)
+            .chain(&row.requires_knowledge)
+        {
             catalog.knowledge_defs().id_of(node)?;
+        }
+        if row
+            .absent_outcrop_tag
+            .as_ref()
+            .is_some_and(|tag| tag.is_empty())
+        {
+            return None;
         }
     }
     for name in &d.one_neighbour_knows {
@@ -236,7 +254,20 @@ mod tests {
         assert_eq!(d.one_neighbour_knows, ["pot_firing"]);
         assert_eq!(d.migrant_top.as_deref(), Some("hide_wrap"));
         assert_eq!(d.goods.iter().filter(|g| g.tag == "lacked").count(), 6);
-        assert_eq!(d.goods.iter().filter(|g| g.tag == "staple").count(), 10);
+        assert_eq!(d.goods.iter().filter(|g| g.tag == "staple").count(), 12);
+        let conditional: Vec<_> = d
+            .goods
+            .iter()
+            .filter(|g| g.absent_outcrop_tag.as_deref() == Some("metal_tin"))
+            .map(|g| (g.item.as_str(), g.requires_knowledge.clone()))
+            .collect();
+        assert_eq!(
+            conditional,
+            [
+                ("tin_ingot", vec!["tin_sourcing".to_owned()]),
+                ("tin_ore", vec!["tin_sourcing".to_owned()])
+            ]
+        );
         assert!(
             parse_data("(schema_version: 1)").is_none(),
             "a file without a rule is refused"

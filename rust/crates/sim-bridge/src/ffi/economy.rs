@@ -186,6 +186,9 @@ pub struct WorkshopRow {
     pub bills: Vec<BillRow>,
     /// Shelf: `(ItemKind::code, count)` per stack.
     pub shelf: Vec<(u32, u16)>,
+    /// C2-b: a waiting bill's `fuel`-tagged input the shelf lacks, and the `BlueprintKind::code`
+    /// of the workshop that makes it: `(item, source)`, -1 when unknown.
+    pub fuel_short: Option<(u32, i64)>,
 }
 
 /// Every finished workshop, in id order.
@@ -218,8 +221,39 @@ pub fn collect_workshops(resources: &SimResources) -> Vec<WorkshopRow> {
                 .iter()
                 .map(|s| (s.kind.code(), s.count))
                 .collect(),
+            fuel_short: fuel_short(shop),
         })
         .collect()
+}
+
+/// The first waiting (unsuspended, unfinished, not active) bill's missing `fuel`-tagged input.
+fn fuel_short(shop: &sim_core::colony::Workshop) -> Option<(u32, i64)> {
+    shop.bills
+        .iter()
+        .filter(|b| {
+            !b.suspended
+                && shop.active != Some(b.id)
+                && !matches!(b.mode, sim_core::colony::BillMode::Make(n) if b.done >= u32::from(n))
+        })
+        .filter_map(|b| b.recipe.recipe())
+        .flat_map(|recipe| recipe.inputs.iter().copied())
+        .find(|&(kind, need)| {
+            kind.definition().tags.iter().any(|t| t == "fuel")
+                && shop
+                    .shelf
+                    .iter()
+                    .filter(|s| s.kind == kind)
+                    .map(|s| s.count)
+                    .sum::<u16>()
+                    < need
+        })
+        .map(|(kind, _)| {
+            let source = sim_core::colony::recipes()
+                .iter()
+                .find(|r| r.output.0 == kind)
+                .map_or(-1, |r| i64::from(r.workshop.code()));
+            (kind.code(), source)
+        })
 }
 
 fn i64s(values: impl Iterator<Item = i64>) -> PackedInt64Array {
@@ -241,6 +275,17 @@ pub(super) fn workshops_to_dict(rows: &[WorkshopRow]) -> VarDictionary {
     dict.set("hs", i32s(rows.iter().map(|r| i64::from(r.rect.3))));
     dict.set("work_xs", i32s(rows.iter().map(|r| i64::from(r.work.0))));
     dict.set("work_ys", i32s(rows.iter().map(|r| i64::from(r.work.1))));
+    dict.set(
+        "fuel_short_items",
+        i64s(
+            rows.iter()
+                .map(|r| r.fuel_short.map_or(-1, |f| i64::from(f.0))),
+        ),
+    );
+    dict.set(
+        "fuel_short_sources",
+        i64s(rows.iter().map(|r| r.fuel_short.map_or(-1, |f| f.1))),
+    );
     // Bills flattened: `bill_shops[i]` is the row index of bill i's workshop.
     let bills: Vec<(usize, BillRow)> = rows
         .iter()

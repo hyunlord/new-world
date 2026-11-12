@@ -1,5 +1,23 @@
 # Changelog
 
+## C2-b — implementation complete, not yet published (2026-11-12)
+
+### Added
+- Ordinary ore mining on revealed outcrops: mine designation (code 7), job (code 26) and command; data-driven yield, exact ledger, depletion that keeps geology; `mining` knowledge gate; F7→9 order mode.
+- Tin by trade: data-gated tin goods rows (`requires_knowledge`, `absent_outcrop_tag`), the `tin_shortage` card and a card-origin `TradeFromCard` command.
+- Metal chronicle lines (first ingot, tool upgraded, first tool used) with recorded sources; chapter 7 reads the first bronze tool use; the workshop panel names missing smelter fuel.
+- Steward rules for a smelter request (copper ore stocked) and cast-axe replacement; mind facts and work nodes for mining, smelting and casting.
+- `c2_chain_bronze` (seed 0: reveal → mine → smelt → cast → copper axe → card tin trade → bronze axe used, with mid-chain and full replays) and `c2_mining`.
+
+### Changed
+- Save format 23: 27 completed-job counters and a metal-provenance tail; genuine C2-a format22 saves load through an exact-revision adapter.
+- A held axe is replaced by a strictly faster stockpiled cast-metal axe on the ordinary pick-up stop.
+- Charcoal is smelting fuel only and no longer hearth fuel (D-C2-B-1).
+- B4 observer and scorer reproduce the gated goods rows.
+
+### Removed
+- C2-b debt text on the now-connected `mining` and `tin_sourcing` nodes.
+
 ## C2-a — implementation IN_PROGRESS, 2026-11-10 (not published)
 
 ### Added

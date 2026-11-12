@@ -292,14 +292,36 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
             winter_recipe,
             days,
             fuel,
+            stocked,
+            replace_tag,
         } => {
+            if stocked
+                .iter()
+                .any(|&kind| crate::runtime::jobs::bills::stockpiled(res, kind) == 0)
+            {
+                return Vec::new();
+            }
             let mut profile = BillsProfile::new(res.current_tick);
             let mut reserved_house = None;
+            let replacing = replace_tag
+                .as_deref()
+                .map(|tag| super::production::tool_holders(world, tag));
+            let mut chosen = false;
             let mut wanted: Vec<_> = recipes
                 .iter()
                 .map(|&(kind, target)| {
                     let Some(definition) = kind.recipe() else {
                         return (kind, target);
+                    };
+                    let target = match replacing {
+                        None => target,
+                        // Only the first practised recipe replaces; later fallbacks are zeroed.
+                        Some(_) if chosen || !super::production::recipe_practised(world, kind) => 0,
+                        Some(holders) => {
+                            chosen = true;
+                            u16::try_from(u32::from(target).saturating_mul(holders))
+                                .unwrap_or(u16::MAX)
+                        }
                     };
                     let physical = maintain_count(world, res, definition.output.0);
                     let counted =
@@ -1810,6 +1832,7 @@ mod tests {
             days,
             fuel: Some(policy),
             recipes,
+            ..
         } = &fuel.action
         else {
             panic!("fuel bills");
@@ -1948,6 +1971,43 @@ mod rule_coverage {
                         holders: 1,
                         ..Default::default()
                     }];
+                }
+                // C2-b: the stock gate needs a stockpiled stack; replacement needs a stone-tagged axe.
+                Action::Bills {
+                    stocked,
+                    replace_tag,
+                    ..
+                } => {
+                    let tile = hearth_tiles(&engine.resources)[0];
+                    let zone = (tile.0 + 2, tile.1 + 2);
+                    for (i, &kind) in stocked.iter().enumerate() {
+                        let cell = (zone.0 + i as u32, zone.1);
+                        engine.resources.colony.zone_of_tile.insert(cell, 0);
+                        engine.resources.colony.item_ledger.create(kind, 1);
+                        crate::runtime::jobs::items::put_items(
+                            &mut engine.resources,
+                            cell,
+                            sim_core::colony::ItemSpec::raw(kind, None),
+                            1,
+                        );
+                    }
+                    if let Some(tag) = replace_tag {
+                        let axe = sim_core::colony::content::installed_or_bundled()
+                            .items()
+                            .find(|d| d.chop.is_some() && d.tags.iter().any(|t| t == tag))
+                            .and_then(|d| sim_core::colony::ItemKind::from_name(&d.identity.id))
+                            .expect("tagged axe");
+                        engine
+                            .world
+                            .insert_one(
+                                people[0].1,
+                                sim_core::colony::Tool {
+                                    item: sim_core::colony::ItemSpec::raw(axe, None),
+                                    uses: 0,
+                                },
+                            )
+                            .expect("held axe");
+                    }
                 }
                 _ => {}
             }

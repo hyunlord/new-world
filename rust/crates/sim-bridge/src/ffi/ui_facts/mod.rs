@@ -46,6 +46,12 @@ pub struct UiFacts {
     pub first_winter_all_alive: bool,
     /// A copper-tagged ingot has actually been crafted in this settlement.
     pub first_copper_ingot: bool,
+    /// C2-b: a bronze-tagged tool has been used successfully (its durable first-use witness).
+    pub first_bronze_tool_used: bool,
+    /// C2-b: someone knows the alloy and the world has no tin-yielding outcrop at all.
+    pub tin_shortage: bool,
+    /// C2-b: the lowest-id waiting caravan offering tin-tagged goods, or -1.
+    pub tin_caravan: i64,
     /// Actual food-chain storage and winter demand.
     pub food: Option<super::food::FoodSummaryView>,
     /// People sorted by AgentId.
@@ -107,6 +113,12 @@ pub fn collect_ui_facts(world: &hecs::World, res: &SimResources) -> UiFacts {
             && tags.iter().any(|tag| tag == "metal_copper")
             && tags.iter().any(|tag| tag == "ingot")
     });
+    out.first_bronze_tool_used = res.metal.witnesses.values().any(|w| {
+        matches!(w, sim_core::colony::ore::MetalWitness::FirstToolUsed { item, .. }
+            if item.definition().tags.iter().any(|tag| tag == "metal_bronze"))
+    });
+    out.tin_shortage = sim_systems::runtime::ore::tin_shortage(world, res);
+    out.tin_caravan = sim_systems::runtime::ore::tin_caravan(res).map_or(-1, i64::from);
     out.people = people::collect(world, res);
     out.settlements = economy::collect(world, res);
     out.stockpile_tiles = places::storage(res);

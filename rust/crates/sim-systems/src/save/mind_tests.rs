@@ -154,6 +154,7 @@ fn invalid_saved_policy_is_rejected_before_registration() {
         livestock: &body.livestock,
         neighbour_upper: &body.neighbour_upper,
         ore: &body.ore,
+        metal: &body.metal,
     })
     .expect("malformed fixture");
     let mut corrupt = MAGIC.to_vec();

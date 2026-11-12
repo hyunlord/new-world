@@ -129,6 +129,7 @@ fn designation_name(d: Designation) -> &'static str {
         Designation::ClayPit => "clay_pit",
         Designation::Hunt => "hunt",
         Designation::Harvest => "harvest",
+        Designation::Mine => "mine",
     }
 }
 

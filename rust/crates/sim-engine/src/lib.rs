@@ -401,6 +401,9 @@ pub struct SimResources {
     /// Surface deposit state, encoded in the versioned save tail.
     #[serde(skip)]
     pub ore: sim_core::colony::ore::OreState,
+    /// C2-b metal-chain provenance, encoded in the versioned save tail.
+    #[serde(skip)]
+    pub metal: sim_core::colony::ore::MetalState,
     /// Pure seasonal supply cache; rebuilt after load and navigation changes.
     #[serde(skip, default)]
     pub food_supply_cache: std::cell::RefCell<food_supply_cache::FoodSupplyCache>,
@@ -898,6 +901,7 @@ impl SimResources {
             processing: Default::default(),
             livestock: Default::default(),
             ore: Default::default(),
+            metal: Default::default(),
             food_supply_cache: Default::default(),
             fatal_animal_attacks: Vec::new(),
             building_event_queue: VecDeque::new(),

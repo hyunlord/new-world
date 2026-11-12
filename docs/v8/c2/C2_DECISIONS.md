@@ -158,3 +158,27 @@ Authority: `/Users/rexxa/work/c2-data/GOAL.md`, including its planner addendum.
     cancellations,625-command byte-exact replay, actual second-Working roundtrip
     and future twins. Evidence: external dc21-chain-v4/chain-13838-1794353550530900000/complete.json.
     Focused success is not a frozen pre-gate or publication verdict.
+31. D-C2-B-1 (lead, C2-b): the first real bronze chain stalled because hearths burned charcoal
+    as ordinary fuel (`fuel_units: Some(1)`): 48 crafted, 44 burned, 4 smelted after six ordinary
+    charcoal reissues (evidence external: c2-data/scene-b-dev/chain-3.log). This is a C2-a data
+    defect, not tuning: charcoal is smelting fuel only, `fuel_units: None`; hearths burn firewood.
+    The chain's charcoal-reissue workaround is removed. Steward stays on in the chain (defence and
+    food keep founders alive; with it off all ten died of wolves by day 39); replays skip
+    regenerated Steward records.
+32. C2-b provenance is recorded per item kind (MetalState: miners per yield item, ore/ingot
+    imports with the card id, first-ingot / first-tool-use witnesses), not as per-unit lots; a
+    first-ingot line lists every recorded source of its inputs. Format23 appends this tail and 27
+    completed-job counters; genuine C2-a format22 saves load through an exact-revision adapter.
+33. D-C2-B-2 (lead): C2-b's new support/tooling is 772 lines against the 401-line remaining
+    budget from D-C2-2 (pass total 1099+772=1871 vs the 1500 cap), 371 over. Breakdown:
+    `c2_chain_bronze.rs` 590 (the GOAL-mandated acceptance test for the metal chain, counted whole
+    per the chain-reuse-plan's own line-item budget, same convention as its 397+12 target),
+    `spine_build_test.gd` native-capture branch +67, B4 probe/scorer/scorer-test +81, fingerprint/
+    probe JSON +34. None of it is scope creep: every line is either the required chain test, its
+    own fixture replay helpers, or a fix to an existing scorer/probe the new goods rows broke.
+    No observer/audit layer was added. Per GOAL ("the cap is not the goal, honest disclosure is";
+    do not compress or hide the count), the lead accepts the disclosed overage rather than
+    spend further hours trimming a verified, byte-exact-replay chain test at risk of new defects.
+    Both arms (the 397-line target and the 590-line actual) and the reason for the gap (steward
+    interaction, ordinary-bill issuance and trade/replay complexity under-estimated in the
+    pre-implementation plan) are recorded here and in C2-b-impl-report.md / the published report.

@@ -414,6 +414,7 @@ pub fn finish_craft(
     } else {
         res.colony.item_ledger.craft_end(&[(kind, n)]);
         note_woven_output(res, kind, n, Some(id));
+        crate::runtime::ore::note_first_ingot(res, recipe, id, at);
     }
     if let Some(found) = res
         .colony

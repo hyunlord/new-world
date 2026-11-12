@@ -76,10 +76,12 @@ pub enum Designation {
     Hunt,
     /// Harvest a ripe data-defined plant on this tile.
     Harvest,
+    /// Mine a revealed ore outcrop deposit on this tile (C2-b).
+    Mine,
 }
 
 impl Designation {
-    /// Stable code for the bridge (0 chop, 1 quarry, 2 dig, 3 deconstruct, 4 clay pit, 5 hunt).
+    /// Stable code for the bridge (0 chop, 1 quarry, 2 dig, 3 deconstruct, 4 clay pit, 5 hunt, 6 harvest, 7 mine).
     pub const fn code(self) -> u8 {
         match self {
             Self::Chop => 0,
@@ -89,6 +91,7 @@ impl Designation {
             Self::ClayPit => 4,
             Self::Hunt => 5,
             Self::Harvest => 6,
+            Self::Mine => 7,
         }
     }
 }

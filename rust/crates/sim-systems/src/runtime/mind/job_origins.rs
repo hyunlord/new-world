@@ -290,7 +290,9 @@ fn origin(world: &World, res: &SimResources, job: Job) -> Option<MindFactSource>
             .map(|_| MindOrderKey::Field { tile }),
         JobKind::Chop { tree } => designation(tree),
         JobKind::Harvest { plant } => designation(plant),
-        JobKind::Quarry { node } | JobKind::DigClay { node } => designation(node),
+        JobKind::Quarry { node } | JobKind::DigClay { node } | JobKind::Mine { node } => {
+            designation(node)
+        }
         JobKind::Dig { tile } | JobKind::Deconstruct { tile } => designation(tile),
         JobKind::Build { site } | JobKind::Deliver { site, .. } => site_key(world, site, false),
         JobKind::Clear { from, .. } => site_key(world, from, true),

@@ -55,6 +55,11 @@ pub(super) fn append(hash: &mut u64, engine: &SimEngine) -> Result<(), String> {
         ron::ser::to_writer(HashWriter(hash), &engine.resources.ore)
             .map_err(|error| format!("ore fingerprint serialization failed: {error}"))?;
     }
+    if !engine.resources.metal.is_empty() {
+        super::fingerprint::feed(hash, b"\0C2-metal-v1\0");
+        ron::ser::to_writer(HashWriter(hash), &engine.resources.metal)
+            .map_err(|error| format!("metal fingerprint serialization failed: {error}"))?;
+    }
     Ok(())
 }
 
