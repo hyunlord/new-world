@@ -390,7 +390,7 @@
             work: 60, work_rule: None, placement: Wall, completion: Wall,
             workshop_tags: [], requires_economy: true, requires_knowledge: true, requires_space: true,
             planned_nav: Blocked, blocks_livestock: true,
-            material: Fixed(material: "mud_brick"), style_id: "drystone", render_wall_code: Some(1),
+            material: Fixed(material: "mud_brick"), style_id: "mud_brick", render_wall_code: Some(1),
             completion_policy: Authoritative, initial_bill: None,
         ),
         (
