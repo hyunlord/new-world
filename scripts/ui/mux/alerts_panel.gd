@@ -1,7 +1,9 @@
 # Right-edge alert list; clicks cycle through causes and request selection from the HUD.
+# ART-IMPORT part 3: an alert whose alerts.json id has a bindings `ui_alerts` row shows that icon instead of its glyph.
 # Bridge methods: get_ui_facts via SimReads at most twice per second; world_reset signal.
 extends PanelContainer
 
+const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const KoreanText = preload("res://scripts/ui/mux/korean_text.gd")
 
 signal jump_requested(target: Dictionary)
@@ -36,6 +38,8 @@ func set_available_height(height: float) -> void:
 
 ## M-LOOP §1.2e: at most 3 visible alert rows; the rest are hidden (fold count in status).
 const MAX_VISIBLE_ROWS: int = 3
+## ART-IMPORT part 3: alert icon edge inside the 40-px row.
+const ALERT_ICON_SIZE: int = 32
 
 
 func _fit_rows() -> void:
@@ -219,7 +223,12 @@ func _add_alert(alert: Dictionary) -> void:
 	button.autowrap_mode = TextServer.AUTOWRAP_WORD
 	button.custom_minimum_size.x = 280.0
 	button.custom_minimum_size.y = 40.0
-	button.text = "%s %s" % [alert["icon"], _tr("MUX_ALERTS_COUNT").format({"title": _tr(alert["text_key"]).format(alert.get("facts", {})), "count": alert["count"]})]
+	var art: Texture2D = ArtUI.bound_texture("ui_alerts", str(alert["id"]))
+	if art != null:
+		button.icon = art
+		button.expand_icon = false
+		button.add_theme_constant_override("icon_max_width", ALERT_ICON_SIZE)
+	button.text = "%s%s" % ["" if art != null else str(alert["icon"]) + " ", _tr("MUX_ALERTS_COUNT").format({"title": _tr(alert["text_key"]).format(alert.get("facts", {})), "count": alert["count"]})]
 	button.add_theme_color_override("font_color", Color(alert["color"]))
 	button.tooltip_text = "%s\n%s\n%s" % [_tr(alert["text_key"]).format(alert.get("facts", {})), _tr(alert["explanation_key"]).format(alert.get("facts", {})), _tr(alert["fix_key"]).format(alert.get("facts", {}))]
 	button.pressed.connect(activate.bind(str(alert["id"])))

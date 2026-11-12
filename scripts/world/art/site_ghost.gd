@@ -231,15 +231,31 @@ static func wall_tile(rows: Dictionary, t: Vector2i) -> Image:
 
 
 ## The door image (64 × 60, its top 16 px above the tile) of door blueprint `style`.
-static func door_image(style: String, open: bool) -> Image:
+## When `orientation` ("ew"/"ns") and `wall_style` are given and the wall style declares wall_pieces.doors,
+## returns the oriented door piece instead of the generic door texture (ADR 0033).
+static func door_image(style: String, open: bool, orientation: String = "", wall_style: String = "") -> Image:
 	_fresh()
-	var key: String = "%s|%s" % [style, str(open)]
+	var key: String = "%s|%s|%s|%s" % [style, str(open), orientation, wall_style]
 	if _doors.has(key):
 		return _doors[key]
+	# Try oriented piece door from the adjacent wall style.
+	if orientation != "" and wall_style != "":
+		var wr: Dictionary = resolver().resolve(wall_style, "", "", "wall")
+		var wp: Variant = wr.get("wall_pieces", null)
+		if wp is Dictionary:
+			var od: Dictionary = ((wp as Dictionary).get("doors", {}) as Dictionary).get(orientation, {})
+			var path: String = str(od.get("open" if open else "closed", ""))
+			if path != "":
+				var pimg: Image = ArtData.image_at(MaterialResolver.res_path(path))
+				if pimg != null:
+					var tint: Dictionary = wr.get("tint", {})
+					pimg = Tone.lab_shift(pimg, float(tint.get("dL", 0)), float(tint.get("da", 0)), float(tint.get("db", 0)))
+					_doors[key] = pimg
+					return pimg
+	# Standard (unoriented) door.
 	var r: Dictionary = resolver().resolve(style, "", "", "door")
 	var tex: Dictionary = r.get("textures", {})
 	var tint: Dictionary = r.get("tint", {})
-	# Texture roles of the material schema (as ground_layer.gd reads them), not content ids.
 	var img: Image = ArtData.image_at(MaterialResolver.res_path(str(tex.get("door_open" if open else "door_closed", ""))))
 	if img != null:
 		img = Tone.lab_shift(img, float(tint.get("dL", 0)), float(tint.get("da", 0)), float(tint.get("db", 0)))
@@ -309,8 +325,10 @@ static func ring_image(ring: Dictionary) -> Dictionary:
 		var r: Dictionary = rows[ty]
 		var strip: Image = r["image"]
 		img.blend_rect(strip, Rect2i(Vector2i.ZERO, strip.get_size()), Vector2i(int(r["x0"]) * TILE, ty * TILE))
+	var ws: String = str(ring.get("wall_style", ""))
 	for t: Vector2i in (rt["doors"] as Dictionary).keys():
-		var d: Image = door_image(str(rt["doors"][t]), false)
+		var orient: String = "ns" if (t.x == 0 or t.x == size.x - 1) else "ew"
+		var d: Image = door_image(str(rt["doors"][t]), false, orient, ws)
 		if d != null:
 			img.blend_rect(d, Rect2i(Vector2i.ZERO, d.get_size()), Vector2i(t.x * TILE, t.y * TILE))
 	return {"image": img, "base": Vector2i(size.x * (TILE >> 1), (size.y - 1) * TILE + BASE_Y + CAP), "footprint": size, "flat": false}

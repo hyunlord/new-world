@@ -50,9 +50,9 @@ class GitReader:
         self.proc = subprocess.Popen(["git", "-C", str(ROOT), "cat-file", "--batch"], stdin=subprocess.PIPE,
                                      stdout=subprocess.PIPE)
 
-    def read(self, path: str) -> bytes:
+    def read(self, path: str, commit: str | None = None) -> bytes:
         assert self.proc.stdin is not None and self.proc.stdout is not None
-        self.proc.stdin.write(f"{self.commit}:{path}\n".encode())
+        self.proc.stdin.write(f"{commit or self.commit}:{path}\n".encode())
         self.proc.stdin.flush()
         header = self.proc.stdout.readline().decode().split()
         if len(header) != 3 or header[1] != "blob":
@@ -73,6 +73,95 @@ def png_size(data: bytes) -> list[int]:
     if data[:8] != b"\x89PNG\r\n\x1a\n" or data[12:16] != b"IHDR":
         raise ValueError("not a PNG")
     return [int.from_bytes(data[16:20], "big"), int.from_bytes(data[20:24], "big")]
+
+
+# The wall_pieces capability (ADR 0033) is computed by tools/v8/compose_wall_pieces.py from the "log" style's own
+# adopted textures, not sourced from the art-line commit. These two splices keep construction_styles.json and its
+# schema reproducible from the pinned commit (a fresh import must still equal the committed file byte for byte)
+# without the art-line itself knowing about wall_pieces.
+_WALL_PIECES_STYLE = b'''"db": 0
+      },
+      "wall_pieces": {
+        "canvas": [64, 64],
+        "anchor": [32, 59],
+        "pieces": {
+          "0":  "art/materials/textures/log/pieces/mask_00.png",
+          "1":  "art/materials/textures/log/pieces/mask_01.png",
+          "2":  "art/materials/textures/log/pieces/mask_02.png",
+          "3":  "art/materials/textures/log/pieces/mask_03.png",
+          "4":  "art/materials/textures/log/pieces/mask_04.png",
+          "5":  "art/materials/textures/log/pieces/mask_05.png",
+          "6":  "art/materials/textures/log/pieces/mask_06.png",
+          "7":  "art/materials/textures/log/pieces/mask_07.png",
+          "8":  "art/materials/textures/log/pieces/mask_08.png",
+          "9":  "art/materials/textures/log/pieces/mask_09.png",
+          "10": "art/materials/textures/log/pieces/mask_10.png",
+          "11": "art/materials/textures/log/pieces/mask_11.png",
+          "12": "art/materials/textures/log/pieces/mask_12.png",
+          "13": "art/materials/textures/log/pieces/mask_13.png",
+          "14": "art/materials/textures/log/pieces/mask_14.png",
+          "15": "art/materials/textures/log/pieces/mask_15.png"
+        },
+        "doors": {
+          "ew": {
+            "closed": "art/materials/textures/log/pieces/door_ew_closed.png",
+            "open":   "art/materials/textures/log/pieces/door_ew_open.png"
+          },
+          "ns": {
+            "closed": "art/materials/textures/log/pieces/door_ns_closed.png",
+            "open":   "art/materials/textures/log/pieces/door_ns_open.png"
+          }
+        }
+      }
+    },
+    {
+      "id": "drystone",'''
+
+_WALL_PIECES_SCHEMA = b'''"db": 0.0
+          }
+        },
+        "wall_pieces": {
+          "anyOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Wall Pieces"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "era",
+        "textures",
+        "prompt_template",
+        "sim_blueprints"
+      ],
+      "title": "ConstructionStyle",'''
+
+
+def _splice_wall_pieces_style(data: bytes) -> bytes:
+    anchor = b'"db": 0\n      }\n    },\n    {\n      "id": "drystone",'
+    assert data.count(anchor) == 1, "construction_styles.json: log style anchor not found once"
+    return data.replace(anchor, _WALL_PIECES_STYLE, 1)
+
+
+def _splice_wall_pieces_schema(data: bytes) -> bytes:
+    anchor = (b'"db": 0.0\n          }\n        }\n      },\n      "required": [\n        "id",\n        "kind",\n'
+              b'        "era",\n        "textures",\n        "prompt_template",\n        "sim_blueprints"\n      ],\n'
+              b'      "title": "ConstructionStyle",')
+    assert data.count(anchor) == 1, "construction_styles.schema.json: ConstructionStyle anchor not found once"
+    return data.replace(anchor, _WALL_PIECES_SCHEMA, 1)
+
+
+WALL_PIECES_TRANSFORMS = {
+    "materials/construction_styles.json": _splice_wall_pieces_style,
+    "materials/construction_styles.schema.json": _splice_wall_pieces_schema,
+}
 
 
 def person_luminance_std(data: bytes) -> float:
@@ -96,10 +185,15 @@ def plan(config: dict, git: GitReader) -> tuple[list[dict], dict]:
     rows: list[dict] = []
     people = config["people"]
 
-    def add(role: str, source: str, dest: str, ident: str, meta: dict | None = None) -> None:
-        data = git.read(source)
+    def add(role: str, source: str, dest: str, ident: str, meta: dict | None = None, commit: str | None = None) -> None:
+        data = git.read(source, commit)
+        transform = WALL_PIECES_TRANSFORMS.get(dest)
+        if transform:
+            data = transform(data)
         row = {"id": ident, "role": role, "path": dest, "source": source,
                "sha256": hashlib.sha256(data).hexdigest(), "bytes": len(data)}
+        if commit:
+            row["source_commit"] = commit
         if dest.endswith(".png"):
             row["size"] = png_size(data)
         if meta:
@@ -121,11 +215,19 @@ def plan(config: dict, git: GitReader) -> tuple[list[dict], dict]:
         add("people_data", entry["source"], entry["dest"], entry["id"])
 
     metas = config["meta_sources"]
-    structures = {a["id"]: a for a in json.loads(git.read(metas["structure"]))["assets"]}
-    items_doc = json.loads(git.read(metas["item"]))
-    items = {a["id"]: a for a in items_doc["assets"]}
+    meta_docs: dict[tuple, dict] = {}
+
+    def meta_assets(path: str, commit: str | None) -> dict:
+        """A source manifest's assets by id; a row's own `from` / `meta_source` pick another art commit's file."""
+        if (path, commit) not in meta_docs:
+            meta_docs[(path, commit)] = {a["id"]: a for a in json.loads(git.read(path, commit))["assets"]}
+        return meta_docs[(path, commit)]
+
     for entry in config["files"]:
         role, ident = entry["role"], entry.get("id", Path(entry["dest"]).stem)
+        commit = entry.get("from")
+        structures = meta_assets(entry.get("meta_source", metas["structure"]), commit)
+        items = meta_assets(entry.get("meta_source", metas["item"]), commit) if role == "item" else {}
         meta: dict | None = None
         if role == "structure":
             s = structures[ident]
@@ -144,7 +246,7 @@ def plan(config: dict, git: GitReader) -> tuple[list[dict], dict]:
             base = items.get(ident)
             if base is not None:
                 meta = {"canvas": base["canvas_px"], "anchor": [round(v) for v in base["anchor_px"]]}
-        add(role, entry["source"], entry["dest"], ident, meta)
+        add(role, entry["source"], entry["dest"], ident, meta, commit)
 
     flora = config.get("flora")
     if flora:
@@ -180,14 +282,17 @@ def plan(config: dict, git: GitReader) -> tuple[list[dict], dict]:
             add("flora_texture", source, dest_of(source), Path(source).stem)
 
     animals = config["animals"]
-    frames = {f["image"]: f for f in json.loads(git.read(animals["meta_source"]))["frames"]}
     for species in animals["species"]:
+        # A species may come from another art commit (`species_sources`: from, source, meta_source).
+        spec = {**animals, **animals.get("species_sources", {}).get(species, {})}
+        frames = {f["image"]: f for f in json.loads(git.read(spec["meta_source"], spec.get("from")))["frames"]}
         for facing in animals["facings"]:
             for pose in animals["poses"][species]:
-                src = animals["source"].format(species=species, facing=facing, pose=pose)
+                src = spec["source"].format(species=species, facing=facing, pose=pose)
                 f = frames[src]
                 add("animal_frame", src, animals["dest"].format(species=species, facing=facing, pose=pose),
-                    f"{species}/{facing}/{pose}", {"canvas": f["canvas_px"], "anchor": f["anchor_px"]})
+                    f"{species}/{facing}/{pose}", {"canvas": f["canvas_px"], "anchor": f["anchor_px"]},
+                    spec.get("from"))
 
     grid = config["look_grid"]
     present = set(people["looks"])
@@ -214,11 +319,32 @@ def plan(config: dict, git: GitReader) -> tuple[list[dict], dict]:
         "tone_reference": {"source": tone_source, "sha256": hashlib.sha256(tone_bytes).hexdigest(),
                            "person_luminance_std": round(person_luminance_std(tone_bytes), 6)},
     }
+    rows.extend(_wall_piece_rows(ROOT / config["out"]))
     rows.sort(key=lambda r: r["dest"])
     dests = [r["dest"] for r in rows]
     if len(set(dests)) != len(dests):
         raise ValueError("two files map to the same destination")
     return rows, extra
+
+
+_WALL_PIECE_NAMES = [f"mask_{i:02d}.png" for i in range(16)] + [
+    "door_ew_closed.png", "door_ew_open.png", "door_ns_closed.png", "door_ns_open.png",
+]
+
+
+def _wall_piece_rows(out: Path) -> list[dict]:
+    """The wall_pieces capability's 16 masks + 4 doors (ADR 0033): composed locally by
+    tools/compose_wall_pieces.py from the "log" style's own adopted textures, not sourced from the art-line commit.
+    Tracked here (read straight from the committed output) so ArtData.path_of_source keeps resolving them."""
+    rows = []
+    for name in _WALL_PIECE_NAMES:
+        dest = f"materials/textures/log/pieces/{name}"
+        data = (out / dest).read_bytes()
+        rows.append({"dest": dest, "data": data,
+                     "row": {"id": Path(name).stem, "role": "wall_piece_texture", "path": dest,
+                             "source": f"art/{dest}", "sha256": hashlib.sha256(data).hexdigest(),
+                             "bytes": len(data), "size": png_size(data)}})
+    return rows
 
 
 def render(config: dict, commit: str) -> dict[str, bytes]:

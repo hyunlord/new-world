@@ -46,7 +46,11 @@ var _ink_img: Image = null
 ## Prepare one texture set: the resolved textures (material_resolver.gd `resolve` result) loaded from their imports,
 ## Lab-tinted, the tops toned. `top_override` (render_params.json `walls`) replaces the style's value / saturation /
 ## blur. Returns {} and lists problems in `out_problems` when a texture is missing or of the wrong size.
+## When the resolved style declares `wall_pieces`, loads the 16 mask pieces instead (ADR 0033 thin-wall capability).
 static func prepare_set(resolved: Dictionary, top_override: Dictionary, out_problems: Array[String]) -> Dictionary:
+	var wp: Variant = resolved.get("wall_pieces", null)
+	if wp is Dictionary and (wp as Dictionary).has("pieces"):
+		return _prepare_pieces(resolved, out_problems)
 	var tex: Dictionary = resolved.get("textures", {})
 	var tint: Dictionary = resolved.get("tint", {})
 	var top: Dictionary = resolved.get("top", {})
@@ -70,6 +74,53 @@ static func prepare_set(resolved: Dictionary, top_override: Dictionary, out_prob
 	return out
 
 
+## Load 16 mask pieces from the wall_pieces capability, Lab-tinted.  No top-tone (the pieces are pre-composed).
+static func _prepare_pieces(resolved: Dictionary, out_problems: Array[String]) -> Dictionary:
+	var wp: Dictionary = resolved["wall_pieces"]
+	var pieces_map: Dictionary = wp.get("pieces", {})
+	var tint: Dictionary = resolved.get("tint", {})
+	var canvas_a: Variant = wp.get("canvas", [TILE, STRIP])
+	var canvas: Vector2i = Vector2i(int(canvas_a[0]), int(canvas_a[1])) if canvas_a is Array and (canvas_a as Array).size() == 2 else Vector2i(TILE, STRIP)
+	var anchor_a: Variant = wp.get("anchor", [TILE / 2, CAP + 43])
+	var anchor: Vector2i = Vector2i(int(anchor_a[0]), int(anchor_a[1])) if anchor_a is Array and (anchor_a as Array).size() == 2 else Vector2i(TILE / 2, CAP + 43)
+	var dl: float = float(tint.get("dL", 0))
+	var da: float = float(tint.get("da", 0))
+	var db: float = float(tint.get("db", 0))
+	var pieces: Dictionary = {}
+	for mask_str: String in pieces_map.keys():
+		var mask: int = int(mask_str)
+		if mask < 0 or mask > 15:
+			continue
+		var art_path: String = str(pieces_map[mask_str])
+		var img: Image = ArtData.image_at(MaterialResolver.res_path(art_path))
+		if img == null:
+			out_problems.append("missing piece %s texture %s" % [mask_str, art_path])
+			return {}
+		if img.get_size() != canvas:
+			out_problems.append("piece %s is %s, expected %s" % [mask_str, img.get_size(), canvas])
+			return {}
+		pieces[mask] = Tone.lab_shift(img, dl, da, db)
+	if pieces.size() != 16:
+		out_problems.append("expected 16 pieces, got %d" % pieces.size())
+		return {}
+	# Load oriented door pieces from wall_pieces.doors (ADR 0033).
+	var doors_map: Variant = wp.get("doors", null)
+	var prepared_doors: Dictionary = {}
+	if doors_map is Dictionary:
+		for orient: String in (doors_map as Dictionary).keys():
+			var od: Variant = (doors_map as Dictionary)[orient]
+			if od is Dictionary:
+				var pd: Dictionary = {}
+				for state: String in (od as Dictionary).keys():
+					var art_path: String = str(od[state])
+					var dimg: Image = ArtData.image_at(MaterialResolver.res_path(art_path))
+					if dimg != null:
+						pd[state] = Tone.lab_shift(dimg, dl, da, db)
+				if not pd.is_empty():
+					prepared_doors[orient] = pd
+	return {"_has_pieces": true, "_pieces": pieces, "_canvas": canvas, "_anchor": anchor, "_doors": prepared_doors}
+
+
 ## Exact prepared images shared only inside this baker; callers draw but do not mutate these images.
 var _prepared_sets: Dictionary = {}
 var prepared_misses: int = 0
@@ -83,8 +134,16 @@ func prepared_set_count() -> int:
 
 ## The cache key includes effective pixel inputs, not material names. Image identity changes on ArtData.clear().
 static func _preparation_key(resolved: Dictionary, top_override: Dictionary) -> String:
-	var tex: Dictionary = resolved.get("textures", {})
 	var tint: Dictionary = resolved.get("tint", {})
+	var wp: Variant = resolved.get("wall_pieces", null)
+	if wp is Dictionary and (wp as Dictionary).has("pieces"):
+		var inputs: Array = [float(tint.get("dL", 0)), float(tint.get("da", 0)), float(tint.get("db", 0)), "pieces"]
+		for mask_str: String in (wp["pieces"] as Dictionary).keys():
+			var path: String = MaterialResolver.res_path(str(wp["pieces"][mask_str]))
+			var img: Image = ArtData.image_at(path)
+			inputs.append([mask_str, path, img.get_instance_id() if img != null else 0])
+		return JSON.stringify(inputs)
+	var tex: Dictionary = resolved.get("textures", {})
 	var top: Dictionary = resolved.get("top", {})
 	var inputs: Array = [float(tint.get("dL", 0)), float(tint.get("da", 0)), float(tint.get("db", 0)),
 		float(top_override.get("top_value", top.get("value", 0.75))),
@@ -197,6 +256,9 @@ func _blit_wrapped(dst: Image, src: Image, sx: int, sy: int, w: int, h: int, at:
 
 
 func _wall_tile(strip: Image, t: Vector2i, lx: int, s: Dictionary) -> void:
+	if s.get("_has_pieces", false):
+		_piece_tile(strip, t, lx, s)
+		return
 	var n: bool = occupancy.has(t + Vector2i(0, -1))
 	var e: bool = occupancy.has(t + Vector2i(1, 0))
 	var so: bool = occupancy.has(t + Vector2i(0, 1))
@@ -235,3 +297,15 @@ func _wall_tile(strip: Image, t: Vector2i, lx: int, s: Dictionary) -> void:
 
 func _face_visible(t: Vector2i) -> bool:
 	return occupancy.has(t) and not openings.has(t) and not occupancy.has(t + Vector2i(0, 1))
+
+
+## Draw a pre-composed mask piece (thin-wall capability) onto the strip.
+func _piece_tile(strip: Image, t: Vector2i, lx: int, s: Dictionary) -> void:
+	var n_: bool = occupancy.has(t + Vector2i(0, -1))
+	var e_: bool = occupancy.has(t + Vector2i(1, 0))
+	var s_: bool = occupancy.has(t + Vector2i(0, 1))
+	var w_: bool = occupancy.has(t + Vector2i(-1, 0))
+	var m: int = (1 if n_ else 0) | (2 if e_ else 0) | (4 if s_ else 0) | (8 if w_ else 0)
+	var piece: Image = (s["_pieces"] as Dictionary).get(m, null)
+	if piece != null:
+		strip.blend_rect(piece, Rect2i(Vector2i.ZERO, piece.get_size()), Vector2i(lx, 0))

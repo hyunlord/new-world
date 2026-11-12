@@ -4,7 +4,9 @@
 #   one pixel above the base line so a person on the same tile draws over them):
 #   - item stacks of get_colony_overlay at the tile's base point, by bindings.json `items` (count buckets 1 / 2–8 /
 #     9+ by `items.bucket_limits`: a row with `assets` has one sprite per bucket; a row with `asset` is copied 1 / 3 /
-#     9 times at the `items.stack_layout` offsets into one cached texture, and its `many` sprite replaces it at 9+);
+#     9 times at the `items.stack_layout` offsets into one cached texture, and its `many` sprite replaces it at 9+),
+#     drawn at `ArtData.item_scale` (a row's own `world_scale`, else render_params.json `items.scale_default` growing by
+#     `items.scale_bucket_step` per count bucket up to `items.scale_max`) against its 64-px canvas;
 #     an item whose row names `carcass_of` lying outside every stockpile zone draws that species' dead frame
 #     (manifest `<species>/<first facing>/<the animals row's dead pose>`) instead;
 #   - resource nodes by bindings `nodes` (`depleted` below `depleted_below_permille` of the most seen in the node);
@@ -313,7 +315,7 @@ func _sync_things() -> void:
 	var zys: PackedInt32Array = _overlay.get("zone_ys", PackedInt32Array())
 	for i: int in mini(zxs.size(), zys.size()):
 		zones[Vector2i(zxs[i], zys[i])] = true
-	# key → [texture, anchor, base point]
+	# key → [texture, anchor, base point, ident, world scale]
 	var wanted: Dictionary = {}
 	for t: Vector2i in _stacks.keys():
 		if not _in_window(t):
@@ -322,12 +324,13 @@ func _sync_things() -> void:
 		var kind: int = int(stack["kind"])
 		var dead: String = carcass_id(kind) if not zones.has(t) else ""
 		if dead != "" and ArtData.has(dead):
-			wanted["i%d_%d" % [t.x, t.y]] = [ArtData.texture(dead), ArtData.anchor(dead), View.base_point(t) - Vector2(0, 1), dead]
+			wanted["i%d_%d" % [t.x, t.y]] = [ArtData.texture(dead), ArtData.anchor(dead), View.base_point(t) - Vector2(0, 1), dead, 1.0]
 			continue
 		var look: Array = stack_look(kind, int(stack["count"]))
 		var tex: Array = _stack_texture(str(look[0]), int(look[1]), kind)
 		if tex[0] != null:
-			wanted["i%d_%d" % [t.x, t.y]] = [tex[0], tex[1], View.base_point(t) - Vector2(0, 1), "%s|%d|%d" % [look[0], look[1], kind]]
+			var item_scale: float = ArtData.item_scale(kind, bucket(int(stack["count"])))
+			wanted["i%d_%d" % [t.x, t.y]] = [tex[0], tex[1], View.base_point(t) - Vector2(0, 1), "%s|%d|%d" % [look[0], look[1], kind], item_scale]
 	for t: Vector2i in _nodes.keys():
 		if not _in_window(t):
 			continue
@@ -338,7 +341,7 @@ func _sync_things() -> void:
 		if row.get("depleted", null) is String and floori(int(node["left"]) * 1000.0 / full) < int(row.get("depleted_below_permille", 0)):
 			id = str(row["depleted"])
 		if ArtData.has(id):
-			wanted["n%d_%d" % [t.x, t.y]] = [ArtData.texture(id), ArtData.anchor(id), View.base_point(t), id]
+			wanted["n%d_%d" % [t.x, t.y]] = [ArtData.texture(id), ArtData.anchor(id), View.base_point(t), id, 1.0]
 	_sync(wanted, ["i", "n"])
 	var sites: Array[Dictionary] = _sites()
 	var key: int = hash([_overlay.get("site_xs"), _overlay.get("site_ys"), _overlay.get("site_kinds")])
@@ -347,7 +350,7 @@ func _sync_things() -> void:
 		_build_site_ghosts(sites)
 
 
-## Keep the pooled sprites of the key prefixes `prefixes` equal to `wanted` (key → [texture, anchor, base, ident]).
+## Keep the pooled sprites of the key prefixes `prefixes` equal to `wanted` (key → [texture, anchor, base, ident, scale]).
 func _sync(wanted: Dictionary, prefixes: Array) -> void:
 	for k: String in _sprites.keys():
 		if not prefixes.has(k.left(1)):
@@ -361,16 +364,17 @@ func _sync(wanted: Dictionary, prefixes: Array) -> void:
 		if _sprites.has(k):
 			continue
 		var w: Array = wanted[k]
-		_sprites[k] = _standing(w[0], w[1], w[2], str(w[3]))
+		_sprites[k] = _standing(w[0], w[1], w[2], str(w[3]), float(w[4]))
 
 
-func _standing(tex: Texture2D, anchor: Vector2i, base: Vector2, ident: String) -> Sprite2D:
+func _standing(tex: Texture2D, anchor: Vector2i, base: Vector2, ident: String, scale: float = 1.0) -> Sprite2D:
 	var s: Sprite2D = Sprite2D.new()
 	s.texture = tex
 	s.centered = false
 	s.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	s.position = base.round()
 	s.offset = -Vector2(anchor)
+	s.scale = Vector2(scale, scale)
 	s.set_meta("ident", ident)
 	_world.add_child(s)
 	return s

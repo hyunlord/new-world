@@ -16,6 +16,8 @@
 #   with no structure) is not drawn.
 # Rebuilt when the building snapshot, the workshop list or the settlement fire state changes, or the space version
 #   moves (bedrolls); F12 (params) rebuilds everything.
+# ART-IMPORT part 4: a template site draws the bindings `template_roofs` art for its template (none when the row's asset
+#   is null: its wall/door/floor pieces are the building); a template without a row keeps the placeholder roof.
 # Bridge methods: via SimReads get_building_snapshot, get_workshops, get_space, get_settlement_snapshot,
 #   get_agent_snapshot; signal world_reset.
 extends Node2D
@@ -677,7 +679,17 @@ func _sync_template_sites(rows: Array) -> void:
 		if status == "complete" and not bool(row.get("is_intact", false)): continue
 		var site_id: String = str(row["id"])
 		var footprint: Vector2i = Vector2i(int(row.get("width", 0)), int(row.get("height", 0)))
-		var texture: Texture2D = PlaceholderArt.building_texture(row, footprint * TILE)
+		# ADR 0033: a bindings `template_roofs` row (template id) names the art over the site; `asset: null` means its
+		# pieces are the art and nothing is drawn over them. Without a row the generated placeholder roof stays.
+		var art_row: Variant = ArtData.bindings().get("template_roofs", {}).get(str(row.get("template_id", "")))
+		var art_id: String = ""
+		var texture: Texture2D
+		if art_row is Dictionary:
+			if not art_row.get("asset") is String or not ArtData.has(str(art_row["asset"])): continue
+			art_id = str(art_row["asset"])
+			texture = ArtData.texture(art_id)
+		else:
+			texture = PlaceholderArt.building_texture(row, footprint * TILE)
 		if texture == null: continue
 		var anchor: Vector2i = Vector2i(int(row.get("x", 0)), int(row.get("y", 0)))
 		wanted[site_id] = true
@@ -693,7 +705,7 @@ func _sync_template_sites(rows: Array) -> void:
 		sprite.texture = texture
 		# Same physical base as the existing workshop pipeline, preserving y-sort identity.
 		sprite.position = SiteGhost.footprint_base(anchor, footprint).round()
-		sprite.offset = Vector2(-footprint.x * TILE * 0.5, -footprint.y * TILE + TILE / 3.0)
+		sprite.offset = -Vector2(ArtData.anchor(art_id)) if art_id != "" else Vector2(-footprint.x * TILE * 0.5, -footprint.y * TILE + TILE / 3.0)
 		# Construction is translucent; actual pieces below remain the completion source.
 		var wash: float = clampf(float(ArtData.param("sites.wash_alpha", 0.25)), 0.0, 1.0)
 		sprite.modulate = Color(1.0, 1.0, 1.0, wash) if status == "building" else Color.WHITE

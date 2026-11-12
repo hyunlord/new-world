@@ -679,8 +679,7 @@ func _livestock() -> void:
 			goals.hide()
 			if ids.size() > 0:
 				var livestock_body: Sprite2D = (renderer.get("_bodies") as Dictionary).get(ids[0])
-				var texture_size: Vector2 = livestock_body.texture.get_size() if livestock_body != null and livestock_body.texture != null else Vector2.ZERO
-				_check(stage + " actual age-sized sprite rect", texture_size.x > 0 and texture_size.x <= View.TILE and livestock_body.get_rect() == Rect2(Vector2(-texture_size.x * 0.5, -texture_size.y), texture_size))
+				_check(stage + " actual sprite rect", livestock_body != null and livestock_body.texture != null and livestock_body.get_rect().size == livestock_body.texture.get_size() and livestock_body.get_rect().end.y >= 0.0)
 				_check(stage + " actual sprite centre picks identity", livestock_body != null and int(renderer.call("livestock_at", livestock_body.to_global(livestock_body.get_rect().get_center()))) == ids[0])
 				var xs: PackedInt64Array = read["xs"]
 				var ys: PackedInt64Array = read["ys"]

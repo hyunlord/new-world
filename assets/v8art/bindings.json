@@ -1,5 +1,8 @@
 {
-  "plants": {"by_id": {}, "by_category": {}},
+  "plants": {
+    "by_id": {},
+    "by_category": {}
+  },
   "schema_version": 1,
   "about": "Sim codes → art ids (ADR 0033). The renderer reads every content name from here and from manifest.json; scripts/world/** names none. Codes are the bridge contracts documented in docs/v8/snapshot_schema.md. An unknown code draws its family's `fallback`.",
   "terrain": {
@@ -163,6 +166,12 @@
         "sim": "HearthFire",
         "structure": null,
         "marks_hearth_firing": true
+      },
+      {
+        "code": 16,
+        "sim": "ClayOven",
+        "structure": "bread_oven_unlit",
+        "working": "bread_oven_lit"
       }
     ]
   },
@@ -237,7 +246,7 @@
     "stump_ticks": 1440
   },
   "items": {
-    "about": "count buckets: 1, 2-8, 9+ (ENV1 stack_note); `copies` duplicates one sprite by the stack layout, `assets` names one sprite per bucket.",
+    "about": "count buckets: 1, 2-8, 9+ (ENV1 stack_note); `copies` duplicates one sprite by the stack layout, `assets` names one sprite per bucket. World size: a row's `world_scale` (world px / 64-px canvas) overrides render_params.json `items.scale_default`/`scale_bucket_step`/`scale_max`, which otherwise grow by count bucket.",
     "bucket_limits": [
       1,
       8
@@ -272,12 +281,14 @@
       {
         "code": 4,
         "sim": "FlintBlade",
-        "asset": "flint_blade"
+        "asset": "flint_blade",
+        "world_scale": 0.25
       },
       {
         "code": 5,
         "sim": "StoneAxe",
-        "asset": "stone_axe"
+        "asset": "stone_axe",
+        "world_scale": 0.333
       },
       {
         "code": 6,
@@ -288,7 +299,13 @@
       {
         "code": 7,
         "sim": "Clay",
-        "asset": "clay"
+        "asset": "clay",
+        "world_scale": 0.5
+      },
+      {
+        "code": 17,
+        "sim": "Berries",
+        "asset": "berry_basket"
       },
       {
         "code": 8,
@@ -337,6 +354,395 @@
         "sim": "WolfHide",
         "asset": "wolf_hide",
         "carcass_of": "wolf"
+      },
+      {
+        "code": 18,
+        "sim": "Hazelnuts",
+        "assets": [
+          "hazelnuts",
+          "hazelnuts_count_2_8",
+          "hazelnuts_count_9_plus"
+        ]
+      },
+      {
+        "code": 19,
+        "sim": "WildGrain",
+        "assets": [
+          "wild_grain",
+          "wild_grain_count_2_8",
+          "wild_grain_count_9_plus"
+        ]
+      },
+      {
+        "code": 20,
+        "sim": "Roots",
+        "assets": [
+          "roots",
+          "roots_count_2_8",
+          "roots_count_9_plus"
+        ]
+      },
+      {
+        "code": 21,
+        "sim": "FlaxStalks",
+        "assets": [
+          "flax_stalks",
+          "flax_stalks_count_2_8",
+          "flax_stalks_count_9_plus"
+        ]
+      },
+      {
+        "code": 22,
+        "sim": "RoastMeat",
+        "asset": "roast_meat"
+      },
+      {
+        "code": 23,
+        "sim": "Porridge",
+        "asset": "porridge"
+      },
+      {
+        "code": 24,
+        "sim": "Stew",
+        "asset": "stew"
+      },
+      {
+        "code": 25,
+        "sim": "DriedMeat",
+        "assets": [
+          "dried_meat",
+          "dried_meat_count_2_8",
+          "dried_meat_count_9_plus"
+        ]
+      },
+      {
+        "code": 26,
+        "sim": "DriedBerries",
+        "assets": [
+          "dried_berries",
+          "dried_berries_count_2_8",
+          "dried_berries_count_9_plus"
+        ]
+      },
+      {
+        "code": 27,
+        "sim": "RoastedRoots",
+        "assets": [
+          "roasted_roots",
+          "roasted_roots_count_2_8",
+          "roasted_roots_count_9_plus"
+        ]
+      },
+      {
+        "code": 28,
+        "sim": "FruitPorridge",
+        "asset": "fruit_porridge"
+      },
+      {
+        "code": 30,
+        "sim": "FlaxSeed",
+        "assets": [
+          "flax_seed",
+          "flax_seed_count_2_8",
+          "flax_seed_count_9_plus"
+        ]
+      },
+      {
+        "code": 31,
+        "sim": "EmmerSeed",
+        "assets": [
+          "emmer_seed",
+          "emmer_seed_count_2_8",
+          "emmer_seed_count_9_plus"
+        ]
+      },
+      {
+        "code": 32,
+        "sim": "FlaxFibre",
+        "assets": [
+          "flax_fibre",
+          "flax_fibre_count_2_8",
+          "flax_fibre_count_9_plus"
+        ]
+      },
+      {
+        "code": 33,
+        "sim": "LinenThread",
+        "assets": [
+          "linen_thread",
+          "linen_thread_count_2_8",
+          "linen_thread_count_9_plus"
+        ]
+      },
+      {
+        "code": 34,
+        "sim": "LinenCloth",
+        "assets": [
+          "linen_cloth",
+          "linen_cloth_count_2_8",
+          "linen_cloth_count_9_plus"
+        ]
+      },
+      {
+        "code": 35,
+        "sim": "HandSpindle",
+        "asset": "hand_spindle"
+      },
+      {
+        "code": 36,
+        "sim": "LinenTunic",
+        "asset": "linen_tunic"
+      },
+      {
+        "code": 37,
+        "sim": "LinenWrap",
+        "asset": "linen_wrap"
+      },
+      {
+        "code": 38,
+        "sim": "Cord",
+        "asset": "cord"
+      },
+      {
+        "code": 39,
+        "sim": "Basket",
+        "asset": "basket"
+      },
+      {
+        "code": 40,
+        "sim": "Sling",
+        "asset": "sling"
+      },
+      {
+        "code": 41,
+        "sim": "BoneNeedle",
+        "asset": "bone_needle"
+      },
+      {
+        "code": 42,
+        "sim": "Fish",
+        "assets": [
+          "fish",
+          "fish_count_2_8",
+          "fish_count_9_plus"
+        ]
+      },
+      {
+        "code": 43,
+        "sim": "Flour",
+        "assets": [
+          "flour",
+          "flour_count_2_8",
+          "flour_count_9_plus"
+        ]
+      },
+      {
+        "code": 44,
+        "sim": "Bread",
+        "assets": [
+          "bread",
+          "bread_count_2_8",
+          "bread_count_9_plus"
+        ]
+      },
+      {
+        "code": 45,
+        "sim": "Beer",
+        "asset": "beer"
+      },
+      {
+        "code": 46,
+        "sim": "Milk",
+        "asset": "milk_item"
+      },
+      {
+        "code": 47,
+        "sim": "Cheese",
+        "assets": [
+          "cheese",
+          "cheese_count_2_8",
+          "cheese_count_9_plus"
+        ]
+      },
+      {
+        "code": 48,
+        "sim": "SmokedMeat",
+        "assets": [
+          "smoked_meat",
+          "smoked_meat_count_2_8",
+          "smoked_meat_count_9_plus"
+        ]
+      },
+      {
+        "code": 49,
+        "sim": "Hay",
+        "assets": [
+          "hay",
+          "hay_count_2_8",
+          "hay_count_9_plus"
+        ]
+      },
+      {
+        "code": 50,
+        "sim": "Hoe",
+        "asset": "hoe"
+      },
+      {
+        "code": 51,
+        "sim": "Sickle",
+        "asset": "sickle"
+      },
+      {
+        "code": 52,
+        "sim": "Adze",
+        "asset": "adze"
+      },
+      {
+        "code": 53,
+        "sim": "Bow",
+        "asset": "bow"
+      },
+      {
+        "code": 54,
+        "sim": "Arrow",
+        "asset": "arrow"
+      },
+      {
+        "code": 55,
+        "sim": "DyedTunic",
+        "asset": "dyed_tunic"
+      },
+      {
+        "code": 56,
+        "sim": "LeatherArmor",
+        "asset": "leather_armor"
+      },
+      {
+        "code": 57,
+        "sim": "Herbs",
+        "assets": [
+          "herbs",
+          "herbs_count_2_8",
+          "herbs_count_9_plus"
+        ]
+      },
+      {
+        "code": 58,
+        "sim": "Poultice",
+        "asset": "poultice"
+      },
+      {
+        "code": 59,
+        "sim": "Barley",
+        "assets": [
+          "barley",
+          "barley_count_2_8",
+          "barley_count_9_plus"
+        ]
+      },
+      {
+        "code": 60,
+        "sim": "BarleySeed",
+        "assets": [
+          "barley_seed",
+          "barley_seed_count_2_8",
+          "barley_seed_count_9_plus"
+        ]
+      },
+      {
+        "code": 61,
+        "sim": "Rye",
+        "assets": [
+          "rye",
+          "rye_count_2_8",
+          "rye_count_9_plus"
+        ]
+      },
+      {
+        "code": 62,
+        "sim": "RyeSeed",
+        "assets": [
+          "rye_seed",
+          "rye_seed_count_2_8",
+          "rye_seed_count_9_plus"
+        ]
+      },
+      {
+        "code": 63,
+        "sim": "Lentil",
+        "assets": [
+          "lentil",
+          "lentil_count_2_8",
+          "lentil_count_9_plus"
+        ]
+      },
+      {
+        "code": 64,
+        "sim": "LentilSeed",
+        "assets": [
+          "lentil_seed",
+          "lentil_seed_count_2_8",
+          "lentil_seed_count_9_plus"
+        ]
+      },
+      {
+        "code": 65,
+        "sim": "Pea",
+        "assets": [
+          "pea",
+          "pea_count_2_8",
+          "pea_count_9_plus"
+        ]
+      },
+      {
+        "code": 66,
+        "sim": "PeaSeed",
+        "assets": [
+          "pea_seed",
+          "pea_seed_count_2_8",
+          "pea_seed_count_9_plus"
+        ]
+      },
+      {
+        "code": 67,
+        "sim": "Millet",
+        "assets": [
+          "millet",
+          "millet_count_2_8",
+          "millet_count_9_plus"
+        ]
+      },
+      {
+        "code": 68,
+        "sim": "MilletSeed",
+        "assets": [
+          "millet_seed",
+          "millet_seed_count_2_8",
+          "millet_seed_count_9_plus"
+        ]
+      },
+      {
+        "code": 69,
+        "sim": "Apple",
+        "assets": [
+          "apple",
+          "apple_count_2_8",
+          "apple_count_9_plus"
+        ]
+      },
+      {
+        "code": 70,
+        "sim": "GoatHide",
+        "asset": "goat_hide"
+      },
+      {
+        "code": 71,
+        "sim": "Wool",
+        "assets": [
+          "wool",
+          "wool_count_2_8",
+          "wool_count_9_plus"
+        ]
       }
     ],
     "stack_layout": [
@@ -428,6 +834,102 @@
           "walk",
           "run"
         ]
+      },
+      {
+        "code": 2,
+        "sim": "WildGoat",
+        "species": "goat",
+        "lod_colour": [
+          194,
+          157,
+          97
+        ],
+        "poses": {
+          "0": "graze",
+          "1": "run",
+          "2": "stand",
+          "3": "walk",
+          "4": "attack",
+          "5": "run"
+        },
+        "still": "stand",
+        "dead": "dead",
+        "moving": [
+          "walk",
+          "run"
+        ]
+      },
+      {
+        "code": 3,
+        "sim": "WildSheep",
+        "species": "sheep_fleeced",
+        "lod_colour": [
+          194,
+          157,
+          97
+        ],
+        "poses": {
+          "0": "graze",
+          "1": "run",
+          "2": "stand",
+          "3": "walk",
+          "4": "attack",
+          "5": "run"
+        },
+        "still": "stand",
+        "dead": "dead",
+        "moving": [
+          "walk",
+          "run"
+        ]
+      },
+      {
+        "code": 4,
+        "sim": "WildBoar",
+        "species": "wild_boar",
+        "lod_colour": [
+          184,
+          67,
+          54
+        ],
+        "poses": {
+          "0": "walk",
+          "1": "run",
+          "2": "stand",
+          "3": "run",
+          "4": "attack",
+          "5": "run"
+        },
+        "still": "stand",
+        "dead": "dead",
+        "moving": [
+          "walk",
+          "run"
+        ]
+      },
+      {
+        "code": 5,
+        "sim": "Reindeer",
+        "species": "reindeer",
+        "lod_colour": [
+          194,
+          157,
+          97
+        ],
+        "poses": {
+          "0": "graze",
+          "1": "run",
+          "2": "stand",
+          "3": "walk",
+          "4": "attack",
+          "5": "run"
+        },
+        "still": "stand",
+        "dead": "dead",
+        "moving": [
+          "walk",
+          "run"
+        ]
       }
     ],
     "category_fallbacks": {
@@ -501,6 +1003,11 @@
         "code": 11,
         "sim": "HearthFire",
         "building": 0
+      },
+      {
+        "code": 16,
+        "sim": "ClayOven",
+        "workshop": 16
       }
     ]
   },
@@ -679,6 +1186,420 @@
         18,
         18
       ]
+    }
+  },
+  "ui_knowledge": {
+    "about": "Tech-map card icons (tech_panel.gd): knowledge.ron id → manifest id; a node without a row draws text only.",
+    "adze": {
+      "asset": "tech_adze"
+    },
+    "animal_taming": {
+      "asset": "tech_animal_taming"
+    },
+    "atlatl": {
+      "asset": "tech_atlatl"
+    },
+    "barley": {
+      "asset": "tech_barley"
+    },
+    "barter": {
+      "asset": "tech_barter"
+    },
+    "basketry": {
+      "asset": "tech_basketry"
+    },
+    "bedding": {
+      "asset": "tech_bedding"
+    },
+    "bone_setting": {
+      "asset": "tech_bone_setting"
+    },
+    "bone_tools": {
+      "asset": "tech_bone_tools"
+    },
+    "bow": {
+      "asset": "tech_bow"
+    },
+    "clay_digging": {
+      "asset": "tech_clay_digging"
+    },
+    "clay_prep": {
+      "asset": "tech_clay_prep"
+    },
+    "cooking": {
+      "asset": "tech_cooking"
+    },
+    "cordage": {
+      "asset": "tech_cordage"
+    },
+    "crop_rotation": {
+      "asset": "tech_crop_rotation"
+    },
+    "cultivation": {
+      "asset": "tech_cultivation"
+    },
+    "dairy": {
+      "asset": "tech_dairy"
+    },
+    "digging": {
+      "asset": "tech_digging"
+    },
+    "dog_taming": {
+      "asset": "tech_dog_taming"
+    },
+    "doorway": {
+      "asset": "tech_doorway"
+    },
+    "dugout_canoe": {
+      "asset": "tech_dugout_canoe"
+    },
+    "dyeing": {
+      "asset": "tech_dyeing"
+    },
+    "elder_council": {
+      "asset": "tech_elder_council"
+    },
+    "fence": {
+      "asset": "tech_fence"
+    },
+    "fermentation": {
+      "asset": "tech_fermentation"
+    },
+    "fire_keeping": {
+      "asset": "tech_fire_keeping"
+    },
+    "firewood_splitting": {
+      "asset": "tech_firewood_splitting"
+    },
+    "fishing": {
+      "asset": "tech_fishing"
+    },
+    "flint_knapping": {
+      "asset": "tech_flint_knapping"
+    },
+    "food_drying": {
+      "asset": "tech_food_drying"
+    },
+    "food_preservation": {
+      "asset": "tech_food_preservation"
+    },
+    "foraging": {
+      "asset": "tech_foraging"
+    },
+    "grain_parching": {
+      "asset": "tech_grain_parching"
+    },
+    "granary": {
+      "asset": "tech_granary"
+    },
+    "hafting": {
+      "asset": "tech_hafting"
+    },
+    "herbalism": {
+      "asset": "tech_herbalism"
+    },
+    "herding": {
+      "asset": "tech_herding"
+    },
+    "hide_scraping": {
+      "asset": "tech_hide_scraping"
+    },
+    "hide_working": {
+      "asset": "tech_hide_working"
+    },
+    "hoe": {
+      "asset": "tech_hoe"
+    },
+    "hut_building": {
+      "asset": "tech_hut_building"
+    },
+    "instruction": {
+      "asset": "tech_instruction"
+    },
+    "kinship": {
+      "asset": "tech_kinship"
+    },
+    "leather_armor": {
+      "asset": "tech_leather_armor"
+    },
+    "lentil": {
+      "asset": "tech_lentil"
+    },
+    "lunar_calendar": {
+      "asset": "tech_lunar_calendar"
+    },
+    "megalith": {
+      "asset": "tech_megalith"
+    },
+    "millet": {
+      "asset": "tech_millet"
+    },
+    "mud_brick": {
+      "asset": "tech_mud_brick"
+    },
+    "nut_processing": {
+      "asset": "tech_nut_processing"
+    },
+    "ochre": {
+      "asset": "tech_ochre"
+    },
+    "orchard": {
+      "asset": "tech_orchard"
+    },
+    "oven": {
+      "asset": "tech_oven"
+    },
+    "packed_floor": {
+      "asset": "tech_packed_floor"
+    },
+    "pea": {
+      "asset": "tech_pea"
+    },
+    "pot_firing": {
+      "asset": "tech_pot_firing"
+    },
+    "pot_forming": {
+      "asset": "tech_pot_forming"
+    },
+    "pressure_flaking": {
+      "asset": "tech_pressure_flaking"
+    },
+    "querns": {
+      "asset": "tech_querns"
+    },
+    "ritual": {
+      "asset": "tech_ritual"
+    },
+    "rye": {
+      "asset": "tech_rye"
+    },
+    "selective_breeding": {
+      "asset": "tech_selective_breeding"
+    },
+    "sickle": {
+      "asset": "tech_sickle"
+    },
+    "sling": {
+      "asset": "tech_sling"
+    },
+    "spear": {
+      "asset": "tech_spear"
+    },
+    "spinning": {
+      "asset": "tech_spinning"
+    },
+    "stone_grinding": {
+      "asset": "tech_stone_grinding"
+    },
+    "stone_quarrying": {
+      "asset": "tech_stone_quarrying"
+    },
+    "stone_walling": {
+      "asset": "tech_stone_walling"
+    },
+    "storytelling": {
+      "asset": "tech_storytelling"
+    },
+    "taboo": {
+      "asset": "tech_taboo"
+    },
+    "tailoring": {
+      "asset": "tech_tailoring"
+    },
+    "tally": {
+      "asset": "tech_tally"
+    },
+    "thatch": {
+      "asset": "tech_thatch"
+    },
+    "timber_wall": {
+      "asset": "tech_timber_wall"
+    },
+    "tracking": {
+      "asset": "tech_tracking"
+    },
+    "trapping": {
+      "asset": "tech_trapping"
+    },
+    "water_finding": {
+      "asset": "tech_water_finding"
+    },
+    "wattle_daub": {
+      "asset": "tech_wattle_daub"
+    },
+    "weather_lore": {
+      "asset": "tech_weather_lore"
+    },
+    "weaving": {
+      "asset": "tech_weaving"
+    },
+    "well": {
+      "asset": "tech_well"
+    }
+  },
+  "ui_jobs": {
+    "about": "Work-priority column icons (priority_panel.gd): work type name → manifest id; a column without a row shows its name only.",
+    "craft": {
+      "asset": "b4_jobs_craft"
+    },
+    "build": {
+      "asset": "b4_jobs_build"
+    },
+    "quarry": {
+      "asset": "b4_jobs_quarry"
+    },
+    "chop": {
+      "asset": "b4_jobs_chop"
+    },
+    "haul": {
+      "asset": "b4_jobs_haul"
+    },
+    "mine": {
+      "asset": "b4_jobs_dig"
+    },
+    "hunt": {
+      "asset": "b4_jobs_hunt"
+    }
+  },
+  "ui_alerts": {
+    "about": "Alert-row icons (alerts_panel.gd): alerts.json id → manifest id; an alert without a row keeps its text glyph.",
+    "food_low": {
+      "asset": "b4_alerts_food_low"
+    },
+    "firewood_low": {
+      "asset": "b4_alerts_firewood_low"
+    },
+    "sleeping_outside": {
+      "asset": "b4_alerts_sleeping_outside"
+    },
+    "stockpile_missing": {
+      "asset": "b4_alerts_stockpile_missing"
+    },
+    "storehouse_full": {
+      "asset": "b4_alerts_storehouse_full"
+    },
+    "idle_adults": {
+      "asset": "b4_alerts_idle_adults"
+    },
+    "orders_unreachable": {
+      "asset": "b4_alerts_orders_unreachable"
+    },
+    "knowledge_waiting": {
+      "asset": "b4_alerts_knowledge_waiting"
+    },
+    "technique_at_risk": {
+      "asset": "b4_alerts_technique_at_risk"
+    },
+    "wolves_approaching": {
+      "asset": "b4_alerts_wolves_approaching"
+    },
+    "migrants_waiting": {
+      "asset": "b4_alerts_migrants_waiting"
+    },
+    "trader_present": {
+      "asset": "b4_alerts_trader_present"
+    },
+    "person_sick": {
+      "asset": "b4_alerts_person_sick"
+    },
+    "person_breakdown": {
+      "asset": "b4_alerts_person_breakdown"
+    },
+    "person_injured": {
+      "asset": "b4_alerts_person_injured"
+    },
+    "meat_spoiling": {
+      "asset": "b4_alerts_meat_spoiling"
+    },
+    "newborn_without_bed": {
+      "asset": "b4_alerts_newborn_without_bed"
+    },
+    "food_winter": {
+      "asset": "b4_alerts_food_winter"
+    },
+    "food_spoil": {
+      "asset": "b4_alerts_food_spoil"
+    }
+  },
+  "ui_cards": {
+    "about": "Decision-card illustrations (card_panel.gd): cards.json id → manifest id; a card without a row draws text only.",
+    "need_food": {
+      "asset": "b4_cards_need_food"
+    },
+    "need_warmth": {
+      "asset": "b4_cards_need_warmth"
+    },
+    "migrants": {
+      "asset": "b4_cards_migrants"
+    },
+    "trader": {
+      "asset": "b4_cards_trader"
+    },
+    "knowledge_risk": {
+      "asset": "b4_cards_knowledge_risk"
+    },
+    "tools_low": {
+      "asset": "b4_cards_tools_low"
+    },
+    "wolves": {
+      "asset": "b4_cards_wolves"
+    },
+    "idle_adults": {
+      "asset": "b4_cards_idle_adults"
+    },
+    "quarrel": {
+      "asset": "b4_cards_quarrel"
+    },
+    "pressure": {
+      "asset": "b4_cards_pressure"
+    },
+    "storage": {
+      "asset": "b4_cards_storage"
+    },
+    "sick_person": {
+      "asset": "b4_cards_sick_person"
+    },
+    "sowing_window": {
+      "asset": "b4_cards_sowing_window"
+    },
+    "harvest_ready": {
+      "asset": "b4_cards_harvest_ready"
+    },
+    "cloth_short": {
+      "asset": "b4_cards_cloth_short"
+    },
+    "first_kid": {
+      "asset": "b4_cards_first_kid"
+    }
+  },
+  "template_roofs": {
+    "about": "Template-site overlay (building_layer.gd _sync_template_sites): buildings.ron template id → {asset}. asset null = the site's wall/door/floor/bed pieces are its art, nothing is drawn over them; a manifest id draws that sprite at its anchor; a template without a row keeps the generated placeholder roof.",
+    "hut": {
+      "asset": null
+    },
+    "log_house": {
+      "asset": null
+    },
+    "stone_house": {
+      "asset": null
+    },
+    "workshop_shed": {
+      "asset": null
+    },
+    "storehouse": {
+      "asset": null
+    },
+    "drying_shed": {
+      "asset": null
+    },
+    "granary": {
+      "asset": null
+    },
+    "smokehouse": {
+      "asset": null
+    },
+    "oven_house": {
+      "asset": null
     }
   }
 }

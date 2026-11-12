@@ -49,5 +49,6 @@
   "marks": {"ink_rgb": [35, 29, 23], "back_rgba": [236, 228, 204, 215], "size_px": 18},
   "labels": {"font_px": 24, "follow_camera": true, "aggregate": {"padding_px": 2, "dark_width_px": 3, "light_width_px": 1, "dark_rgba": [35, 29, 23, 210], "light_rgba": [184, 216, 224, 220], "active_light_rgba": [220, 244, 250, 255], "ui_clearance_px": 2, "body_clearance_px": 1}},
   "sites": {"wash_alpha": 0.25, "outline_rgb": [218, 222, 205], "outline_alpha": 0.9, "refused_rgba": [235, 80, 64, 90]},
+  "items": {"scale_default": 0.45, "scale_bucket_step": 0.15, "scale_max": 0.85},
   "debug": {"roof_overlay_alpha": 0.35}
 }

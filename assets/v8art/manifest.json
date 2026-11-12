@@ -13,6 +13,38 @@
     "graze",
     "dead"
    ],
+   "goat": [
+    "stand",
+    "walk",
+    "run",
+    "graze",
+    "attack",
+    "dead"
+   ],
+   "reindeer": [
+    "stand",
+    "walk",
+    "run",
+    "graze",
+    "attack",
+    "dead"
+   ],
+   "sheep_fleeced": [
+    "stand",
+    "walk",
+    "run",
+    "graze",
+    "attack",
+    "dead"
+   ],
+   "wild_boar": [
+    "stand",
+    "walk",
+    "run",
+    "graze",
+    "attack",
+    "dead"
+   ],
    "wolf": [
     "stand",
     "walk",
@@ -23,7 +55,11 @@
   },
   "species": [
    "wolf",
-   "deer"
+   "deer",
+   "goat",
+   "sheep_fleeced",
+   "wild_boar",
+   "reindeer"
   ]
  },
  "config": "tools/v8/art_import.json",
@@ -48,7 +84,8 @@
     96,
     64
    ],
-   "source": "art/animal/polish/deer/try2/E/dead.png"
+   "source": "art/animal/batch_a1/adopted/deer/E/dead.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
   },
   {
    "bytes": 4956,
@@ -70,7 +107,8 @@
     96,
     80
    ],
-   "source": "art/animal/polish/deer/try2/E/graze.png"
+   "source": "art/animal/batch_a1/adopted/deer/E/graze.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
   },
   {
    "bytes": 5072,
@@ -92,7 +130,8 @@
     96,
     80
    ],
-   "source": "art/animal/polish/deer/try2/E/run.png"
+   "source": "art/animal/batch_a1/adopted/deer/E/run.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
   },
   {
    "bytes": 5673,
@@ -114,7 +153,8 @@
     96,
     80
    ],
-   "source": "art/animal/polish/deer/try2/E/stand.png"
+   "source": "art/animal/batch_a1/adopted/deer/E/stand.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
   },
   {
    "bytes": 5940,
@@ -136,7 +176,8 @@
     96,
     80
    ],
-   "source": "art/animal/polish/deer/try2/E/walk.png"
+   "source": "art/animal/batch_a1/adopted/deer/E/walk.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
   },
   {
    "bytes": 5008,
@@ -158,7 +199,8 @@
     96,
     64
    ],
-   "source": "art/animal/polish/deer/try2/S/dead.png"
+   "source": "art/animal/batch_a1/adopted/deer/S/dead.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
   },
   {
    "bytes": 4915,
@@ -180,7 +222,8 @@
     96,
     80
    ],
-   "source": "art/animal/polish/deer/try2/S/graze.png"
+   "source": "art/animal/batch_a1/adopted/deer/S/graze.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
   },
   {
    "bytes": 5984,
@@ -202,7 +245,8 @@
     96,
     80
    ],
-   "source": "art/animal/polish/deer/try2/S/run.png"
+   "source": "art/animal/batch_a1/adopted/deer/S/run.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
   },
   {
    "bytes": 5796,
@@ -224,7 +268,8 @@
     96,
     80
    ],
-   "source": "art/animal/polish/deer/try2/S/stand.png"
+   "source": "art/animal/batch_a1/adopted/deer/S/stand.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
   },
   {
    "bytes": 5822,
@@ -246,7 +291,1112 @@
     96,
     80
    ],
-   "source": "art/animal/polish/deer/try2/S/walk.png"
+   "source": "art/animal/batch_a1/adopted/deer/S/walk.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 5474,
+   "id": "goat/E/attack",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/goat/E/attack.png",
+   "role": "animal_frame",
+   "sha256": "e690b406ecd88a79a8baef4b911a713d2bfada5ca26b9c831b510dbeefda78b9",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/animal/batch_a1/adopted/goat/E/attack.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3738,
+   "id": "goat/E/dead",
+   "meta": {
+    "anchor": [
+     48,
+     56
+    ],
+    "canvas": [
+     96,
+     64
+    ]
+   },
+   "path": "animals/goat/E/dead.png",
+   "role": "animal_frame",
+   "sha256": "85fed97fe3c689d71cfe0e15307f45418a5309589f248329f7fc7bccc977cbeb",
+   "size": [
+    96,
+    64
+   ],
+   "source": "art/animal/batch_a1/adopted/goat/E/dead.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3330,
+   "id": "goat/E/graze",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/goat/E/graze.png",
+   "role": "animal_frame",
+   "sha256": "e8686d0bc65091d3c25b6bb9f44ece3ea0ea5f0ee7be8387958a907953a9890d",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/animal/batch_a1/adopted/goat/E/graze.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3257,
+   "id": "goat/E/run",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/goat/E/run.png",
+   "role": "animal_frame",
+   "sha256": "2a09e8d1e661b6618ee81f7ea9c619a1c61b8050ee0f2716383ced81b2b5793d",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/animal/batch_a1/adopted/goat/E/run.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3723,
+   "id": "goat/E/stand",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/goat/E/stand.png",
+   "role": "animal_frame",
+   "sha256": "94ea0d56a6bf79c2f8c8bc0274f6bfa740ddee03aef73eb35f6a500e327be5f9",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/animal/batch_a1/adopted/goat/E/stand.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3722,
+   "id": "goat/E/walk",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/goat/E/walk.png",
+   "role": "animal_frame",
+   "sha256": "c8bb5e1d831fdb043bac77846ccd592d7498df46473e61cdebcfff523dfbacc3",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/animal/batch_a1/adopted/goat/E/walk.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 5127,
+   "id": "goat/S/attack",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/goat/S/attack.png",
+   "role": "animal_frame",
+   "sha256": "7c3b0deab77c06248d8896723f14393c81bc1bf87d0aa8a93451696450492221",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/animal/batch_a1/adopted/goat/S/attack.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3923,
+   "id": "goat/S/dead",
+   "meta": {
+    "anchor": [
+     48,
+     56
+    ],
+    "canvas": [
+     96,
+     64
+    ]
+   },
+   "path": "animals/goat/S/dead.png",
+   "role": "animal_frame",
+   "sha256": "76d704c4d3ac9afd26da17c8d235a828d184aaef661581fcd7b45fd59bf5a83b",
+   "size": [
+    96,
+    64
+   ],
+   "source": "art/animal/batch_a1/adopted/goat/S/dead.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3023,
+   "id": "goat/S/graze",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/goat/S/graze.png",
+   "role": "animal_frame",
+   "sha256": "882fe6eb67d7d26ded15374fb9df68231d2c0694059d9d32c1ba678422b6dc34",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/animal/batch_a1/adopted/goat/S/graze.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3405,
+   "id": "goat/S/run",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/goat/S/run.png",
+   "role": "animal_frame",
+   "sha256": "46869615d4e8143bd34cb4253ae20d2843b57a4a5bc1505c7e8b1d6528eba6b0",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/animal/batch_a1/adopted/goat/S/run.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3462,
+   "id": "goat/S/stand",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/goat/S/stand.png",
+   "role": "animal_frame",
+   "sha256": "cf1eb9dc5a8041c4c7ca18c1f03e9abf3f25cd88e7efe99f0718584d7a30e84f",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/animal/batch_a1/adopted/goat/S/stand.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3621,
+   "id": "goat/S/walk",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/goat/S/walk.png",
+   "role": "animal_frame",
+   "sha256": "99a900467101934d1a6b6e06d77a1053f0f3907c858dbfa2fc6f34f7d162a808",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/animal/batch_a1/adopted/goat/S/walk.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 6828,
+   "id": "reindeer/E/attack",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/reindeer/E/attack.png",
+   "role": "animal_frame",
+   "sha256": "1b76a80813adff73dd7e304444cecb83ca0d819f800928d2bfe5ba4bb4e81100",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/style05/batch_b3/animals/reindeer/E/attack.png",
+   "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+  },
+  {
+   "bytes": 5674,
+   "id": "reindeer/E/dead",
+   "meta": {
+    "anchor": [
+     48,
+     56
+    ],
+    "canvas": [
+     96,
+     64
+    ]
+   },
+   "path": "animals/reindeer/E/dead.png",
+   "role": "animal_frame",
+   "sha256": "90c871d9447454188ef78df453cc9cda425f5b69f88337847e00c9294a91330c",
+   "size": [
+    96,
+    64
+   ],
+   "source": "art/style05/batch_b3/animals/reindeer/E/dead.png",
+   "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+  },
+  {
+   "bytes": 5424,
+   "id": "reindeer/E/graze",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/reindeer/E/graze.png",
+   "role": "animal_frame",
+   "sha256": "b82bea288b7884f7daf8c9e1e0251bf3a19f1022f11d2f0d356d93f197c4a60b",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/style05/batch_b3/animals/reindeer/E/graze.png",
+   "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+  },
+  {
+   "bytes": 5780,
+   "id": "reindeer/E/run",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/reindeer/E/run.png",
+   "role": "animal_frame",
+   "sha256": "79616ac9c38f4abec94bb6870dbba64c358d5d518cb0a6af1b81aaee67496e9b",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/style05/batch_b3/animals/reindeer/E/run.png",
+   "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+  },
+  {
+   "bytes": 6590,
+   "id": "reindeer/E/stand",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/reindeer/E/stand.png",
+   "role": "animal_frame",
+   "sha256": "d49a6be5e960979216dd8667e30d805fc85ad3009a78275f2b0ff8df0b433e3e",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/style05/batch_b3/animals/reindeer/E/stand.png",
+   "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+  },
+  {
+   "bytes": 6748,
+   "id": "reindeer/E/walk",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/reindeer/E/walk.png",
+   "role": "animal_frame",
+   "sha256": "d4417b49e265031f13f325299d7458f63c48d44a4b6f4f69e1ec975ab7cdbfd8",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/style05/batch_b3/animals/reindeer/E/walk.png",
+   "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+  },
+  {
+   "bytes": 6589,
+   "id": "reindeer/S/attack",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/reindeer/S/attack.png",
+   "role": "animal_frame",
+   "sha256": "f49c6c5dfee40c80abe28e355023dc29229dfa0ea8f227edc11f963404522cc0",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/style05/batch_b3/animals/reindeer/S/attack.png",
+   "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+  },
+  {
+   "bytes": 6105,
+   "id": "reindeer/S/dead",
+   "meta": {
+    "anchor": [
+     48,
+     56
+    ],
+    "canvas": [
+     96,
+     64
+    ]
+   },
+   "path": "animals/reindeer/S/dead.png",
+   "role": "animal_frame",
+   "sha256": "9e023892e15afe1747852ad84338362092d581487667566357ccc3a9272af226",
+   "size": [
+    96,
+    64
+   ],
+   "source": "art/style05/batch_b3/animals/reindeer/S/dead.png",
+   "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+  },
+  {
+   "bytes": 5357,
+   "id": "reindeer/S/graze",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/reindeer/S/graze.png",
+   "role": "animal_frame",
+   "sha256": "683ec09600df6ca77f96e08506b848738c519837667ea32ff3b014a01d2ccf06",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/style05/batch_b3/animals/reindeer/S/graze.png",
+   "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+  },
+  {
+   "bytes": 6324,
+   "id": "reindeer/S/run",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/reindeer/S/run.png",
+   "role": "animal_frame",
+   "sha256": "3b3b8fc80d78a1ee5fb5431a2356cf58ae7cfafe2517ec4d59b74941c43f82ff",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/style05/batch_b3/animals/reindeer/S/run.png",
+   "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+  },
+  {
+   "bytes": 6596,
+   "id": "reindeer/S/stand",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/reindeer/S/stand.png",
+   "role": "animal_frame",
+   "sha256": "863660c3e462bbf82f52890c7b84933fcd6ff67cf2028b82e43b40154f13623f",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/style05/batch_b3/animals/reindeer/S/stand.png",
+   "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+  },
+  {
+   "bytes": 6519,
+   "id": "reindeer/S/walk",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/reindeer/S/walk.png",
+   "role": "animal_frame",
+   "sha256": "7d35aed7ee905c9271cc2b80b8715a2719545832a3e3ff963a496f29b0aac2c5",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/style05/batch_b3/animals/reindeer/S/walk.png",
+   "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+  },
+  {
+   "bytes": 3740,
+   "id": "sheep_fleeced/E/attack",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/sheep_fleeced/E/attack.png",
+   "role": "animal_frame",
+   "sha256": "52fee2af1e9856aa7ccc12975b04ffd102e0093a906adadcef3389ce34bfab00",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/animal/batch_a1/adopted/sheep_fleeced/E/attack.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3507,
+   "id": "sheep_fleeced/E/dead",
+   "meta": {
+    "anchor": [
+     48,
+     56
+    ],
+    "canvas": [
+     96,
+     64
+    ]
+   },
+   "path": "animals/sheep_fleeced/E/dead.png",
+   "role": "animal_frame",
+   "sha256": "f05abd78c23d4756e1f81c931e2ef4855d7b145697ab101d2dcd1bce613a66c1",
+   "size": [
+    96,
+    64
+   ],
+   "source": "art/animal/batch_a1/adopted/sheep_fleeced/E/dead.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3132,
+   "id": "sheep_fleeced/E/graze",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/sheep_fleeced/E/graze.png",
+   "role": "animal_frame",
+   "sha256": "e8911759c926c88eb4ad1bb0a35b43d3c9e41261b4236a1d351019a9bfe97e33",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/animal/batch_a1/adopted/sheep_fleeced/E/graze.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3327,
+   "id": "sheep_fleeced/E/run",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/sheep_fleeced/E/run.png",
+   "role": "animal_frame",
+   "sha256": "aa5a13d865b95b6233bb1c65d43c399b28ff096ab4cc2cf101c39049d73d291a",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/animal/batch_a1/adopted/sheep_fleeced/E/run.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3458,
+   "id": "sheep_fleeced/E/stand",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/sheep_fleeced/E/stand.png",
+   "role": "animal_frame",
+   "sha256": "4df3eb7fcdf1c6654966bba447a2206565224d0a241440a27cdb49ff51239719",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/animal/batch_a1/adopted/sheep_fleeced/E/stand.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3573,
+   "id": "sheep_fleeced/E/walk",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/sheep_fleeced/E/walk.png",
+   "role": "animal_frame",
+   "sha256": "e297658060d897e8904abd4d434003bc8ea5ab85b7fa7d1a5708ad88fdd979ba",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/animal/batch_a1/adopted/sheep_fleeced/E/walk.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3657,
+   "id": "sheep_fleeced/S/attack",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/sheep_fleeced/S/attack.png",
+   "role": "animal_frame",
+   "sha256": "4b319c14beb6c31e2b76ae7d4c5bb54538bf8b2db2811a7ea8932d7b186262f5",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/animal/batch_a1/adopted/sheep_fleeced/S/attack.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3855,
+   "id": "sheep_fleeced/S/dead",
+   "meta": {
+    "anchor": [
+     48,
+     56
+    ],
+    "canvas": [
+     96,
+     64
+    ]
+   },
+   "path": "animals/sheep_fleeced/S/dead.png",
+   "role": "animal_frame",
+   "sha256": "156194ac439f6e99b243e674c1cbe6173c29c953e361eb411cd60aa410c2d8e2",
+   "size": [
+    96,
+    64
+   ],
+   "source": "art/animal/batch_a1/adopted/sheep_fleeced/S/dead.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3010,
+   "id": "sheep_fleeced/S/graze",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/sheep_fleeced/S/graze.png",
+   "role": "animal_frame",
+   "sha256": "f8ead0bfef5bf24f4015c6673fa45a26479bec2afa3c27e27a80df5efde7d0d8",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/animal/batch_a1/adopted/sheep_fleeced/S/graze.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3301,
+   "id": "sheep_fleeced/S/run",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/sheep_fleeced/S/run.png",
+   "role": "animal_frame",
+   "sha256": "cb476c1f595c0f654148ec8a69a779198b4089d30526dd270f8a045facde0f89",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/animal/batch_a1/adopted/sheep_fleeced/S/run.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3209,
+   "id": "sheep_fleeced/S/stand",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/sheep_fleeced/S/stand.png",
+   "role": "animal_frame",
+   "sha256": "c37edf3365b118903719669282dc7b428622c2e177d8b1b9010315231fb99f0b",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/animal/batch_a1/adopted/sheep_fleeced/S/stand.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3310,
+   "id": "sheep_fleeced/S/walk",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/sheep_fleeced/S/walk.png",
+   "role": "animal_frame",
+   "sha256": "1656dd4497218c02b57efd7ab2cf065f75bfb9ae1b80176ff34df482874ba5e1",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/animal/batch_a1/adopted/sheep_fleeced/S/walk.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3411,
+   "id": "wild_boar/E/attack",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/wild_boar/E/attack.png",
+   "role": "animal_frame",
+   "sha256": "15b74b56d9db64e4fe28c51464b162d5d4ca97f6141944b64af397d55e706f67",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/animal/batch_a1/adopted/wild_boar/E/attack.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 4003,
+   "id": "wild_boar/E/dead",
+   "meta": {
+    "anchor": [
+     48,
+     56
+    ],
+    "canvas": [
+     96,
+     64
+    ]
+   },
+   "path": "animals/wild_boar/E/dead.png",
+   "role": "animal_frame",
+   "sha256": "77d35945748aae7617677853b771e93bc121ced1ef0691a779e8f779e8e2dcb7",
+   "size": [
+    96,
+    64
+   ],
+   "source": "art/animal/batch_a1/adopted/wild_boar/E/dead.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3138,
+   "id": "wild_boar/E/graze",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/wild_boar/E/graze.png",
+   "role": "animal_frame",
+   "sha256": "c57c1959e51da29dfd49075c8a0e52ba53e33f4a5cfa864c735d8d9f4a470043",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/animal/batch_a1/adopted/wild_boar/E/graze.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3076,
+   "id": "wild_boar/E/run",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/wild_boar/E/run.png",
+   "role": "animal_frame",
+   "sha256": "5cc12e1148750a48454050210c79905a9ad11b6c83dc07ef56fc739f22fa1925",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/animal/batch_a1/adopted/wild_boar/E/run.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3325,
+   "id": "wild_boar/E/stand",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/wild_boar/E/stand.png",
+   "role": "animal_frame",
+   "sha256": "886230aab874dc3ebf527e15753aff922c841e951bfad07d062ffe2b7312a608",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/animal/batch_a1/adopted/wild_boar/E/stand.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3489,
+   "id": "wild_boar/E/walk",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/wild_boar/E/walk.png",
+   "role": "animal_frame",
+   "sha256": "a575eb3881de59ca422058cd0d937a73dccef9cb54b0c3df10d35196a8b243aa",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/animal/batch_a1/adopted/wild_boar/E/walk.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3261,
+   "id": "wild_boar/S/attack",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/wild_boar/S/attack.png",
+   "role": "animal_frame",
+   "sha256": "d2fd67b2643e22f22740483645c0a3e91b67a2d1bafde733451e0e3e795aa9b4",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/animal/batch_a1/adopted/wild_boar/S/attack.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 4116,
+   "id": "wild_boar/S/dead",
+   "meta": {
+    "anchor": [
+     48,
+     56
+    ],
+    "canvas": [
+     96,
+     64
+    ]
+   },
+   "path": "animals/wild_boar/S/dead.png",
+   "role": "animal_frame",
+   "sha256": "3b175512e0a14f9375c1534f5e79a89a6fa02eed0d13947d18418ba169c35984",
+   "size": [
+    96,
+    64
+   ],
+   "source": "art/animal/batch_a1/adopted/wild_boar/S/dead.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3080,
+   "id": "wild_boar/S/graze",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/wild_boar/S/graze.png",
+   "role": "animal_frame",
+   "sha256": "5393fc6cbe6882c87fdbb95246044451a446a60b76e4833ad97b80387b5810fe",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/animal/batch_a1/adopted/wild_boar/S/graze.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3344,
+   "id": "wild_boar/S/run",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/wild_boar/S/run.png",
+   "role": "animal_frame",
+   "sha256": "5b902dc542b7e4f9a942d59e6f9a45605c2b6a62cb75ccd20a8c69e0454b08d4",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/animal/batch_a1/adopted/wild_boar/S/run.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3293,
+   "id": "wild_boar/S/stand",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/wild_boar/S/stand.png",
+   "role": "animal_frame",
+   "sha256": "fd66f6b198ad54858390164b8ab310cb9161919f5ed3fd8dc8110f13d7f9d08c",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/animal/batch_a1/adopted/wild_boar/S/stand.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
+  },
+  {
+   "bytes": 3267,
+   "id": "wild_boar/S/walk",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/wild_boar/S/walk.png",
+   "role": "animal_frame",
+   "sha256": "ebefdbd9c56d075a52ae337dd0e2c278cd0462dd1c490d39c5be6eb18a688240",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/animal/batch_a1/adopted/wild_boar/S/walk.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
   },
   {
    "bytes": 3609,
@@ -268,7 +1418,8 @@
     96,
     80
    ],
-   "source": "art/animal/polish/wolf/try2/E/attack.png"
+   "source": "art/animal/batch_a1/adopted/wolf/E/attack.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
   },
   {
    "bytes": 3195,
@@ -290,7 +1441,8 @@
     96,
     64
    ],
-   "source": "art/animal/polish/wolf/try2/E/dead.png"
+   "source": "art/animal/batch_a1/adopted/wolf/E/dead.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
   },
   {
    "bytes": 3176,
@@ -312,7 +1464,8 @@
     96,
     80
    ],
-   "source": "art/animal/polish/wolf/try2/E/run.png"
+   "source": "art/animal/batch_a1/adopted/wolf/E/run.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
   },
   {
    "bytes": 3592,
@@ -334,7 +1487,8 @@
     96,
     80
    ],
-   "source": "art/animal/polish/wolf/try2/E/stand.png"
+   "source": "art/animal/batch_a1/adopted/wolf/E/stand.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
   },
   {
    "bytes": 3585,
@@ -356,7 +1510,8 @@
     96,
     80
    ],
-   "source": "art/animal/polish/wolf/try2/E/walk.png"
+   "source": "art/animal/batch_a1/adopted/wolf/E/walk.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
   },
   {
    "bytes": 3375,
@@ -378,7 +1533,8 @@
     96,
     80
    ],
-   "source": "art/animal/polish/wolf/try2/S/attack.png"
+   "source": "art/animal/batch_a1/adopted/wolf/S/attack.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
   },
   {
    "bytes": 3666,
@@ -400,7 +1556,8 @@
     96,
     64
    ],
-   "source": "art/animal/polish/wolf/try2/S/dead.png"
+   "source": "art/animal/batch_a1/adopted/wolf/S/dead.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
   },
   {
    "bytes": 3387,
@@ -422,7 +1579,8 @@
     96,
     80
    ],
-   "source": "art/animal/polish/wolf/try2/S/run.png"
+   "source": "art/animal/batch_a1/adopted/wolf/S/run.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
   },
   {
    "bytes": 3729,
@@ -444,7 +1602,8 @@
     96,
     80
    ],
-   "source": "art/animal/polish/wolf/try2/S/stand.png"
+   "source": "art/animal/batch_a1/adopted/wolf/S/stand.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
   },
   {
    "bytes": 3303,
@@ -466,7 +1625,8 @@
     96,
     80
    ],
-   "source": "art/animal/polish/wolf/try2/S/walk.png"
+   "source": "art/animal/batch_a1/adopted/wolf/S/walk.png",
+   "source_commit": "326822482b33edd1ac3bd4acefd0061f557756d6"
   },
   {
    "bytes": 3081,
@@ -1331,6 +2491,305 @@
    "source": "art/style05/struct/water.png"
   },
   {
+   "bytes": 3592,
+   "id": "adze",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/adze.png",
+   "role": "item",
+   "sha256": "3c44481e8d5eb94da8c4f00fb38f9e31f22b10bebacacd254dbdd0aa263e600a",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/adze.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3655,
+   "id": "apple",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/apple.png",
+   "role": "item",
+   "sha256": "66133ce6e4070ffa40a18860509204b240950691a31c53c28a4c3922e2c67d7c",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/apple.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3578,
+   "id": "apple_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/apple_count_2_8.png",
+   "role": "item",
+   "sha256": "0ecdbeaba29e88fc0d43e0606d1bd3a46296230e8632809fee5a08c6ac77f0d4",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/apple_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 4354,
+   "id": "apple_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/apple_count_9_plus.png",
+   "role": "item",
+   "sha256": "29b2dbb64b4fcafcbeeaa6ecc29362a2e27f9cd0e8a53a2c88d6088657f81a7a",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/apple_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 1474,
+   "id": "arrow",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/arrow.png",
+   "role": "item",
+   "sha256": "4c56e6c1a813db4ec74abc78966599d5556b3279b821ddde9be835bdde0229cf",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/arrow.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3771,
+   "id": "barley",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/barley.png",
+   "role": "item",
+   "sha256": "d352b1e6fdaa819377af5af5dbd584af34107465e58868636adb0bd905e3b022",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/barley.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3517,
+   "id": "barley_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/barley_count_2_8.png",
+   "role": "item",
+   "sha256": "699011348100782692dc75ebaf91cba62472da77298c4338c902cfae8c2cae42",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/barley_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3640,
+   "id": "barley_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/barley_count_9_plus.png",
+   "role": "item",
+   "sha256": "a400a80b87eb3070f063798a2a5c5846786ede98fee2045b77363b0387c57a6d",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/barley_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3071,
+   "id": "barley_seed",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/barley_seed.png",
+   "role": "item",
+   "sha256": "b9542bc43cabd8b4c67e441b6052aeaa1326fa9a1ffa2a65f92ff4d7df22ebc2",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/barley_seed.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2737,
+   "id": "barley_seed_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/barley_seed_count_2_8.png",
+   "role": "item",
+   "sha256": "4e7ef02cf8cc449352efb8b72578d9b0a0a899c6251ef7c65c5d60e2e1813698",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/barley_seed_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2824,
+   "id": "barley_seed_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/barley_seed_count_9_plus.png",
+   "role": "item",
+   "sha256": "784a51fd90c2b4f1a537ee6739ee28cdaca1d4bd799e21c866063456e864afec",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/barley_seed_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 5117,
+   "id": "basket",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/basket.png",
+   "role": "item",
+   "sha256": "65b0f5e28a497d2635f33bd7dc0a77a088b8ab8ae37d5d9076042a8c379ea6a9",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/basket.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2764,
+   "id": "beer",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/beer.png",
+   "role": "item",
+   "sha256": "bae1ecff7d476598cee75f6e1d5d03b287f054ab3eeb449a9a14897e8995bec3",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/beer.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
    "bytes": 6388,
    "id": "berry_basket",
    "meta": {
@@ -1351,6 +2810,190 @@
     64
    ],
    "source": "art/style05/polish/items/berry_basket_try1.png"
+  },
+  {
+   "bytes": 2287,
+   "id": "bone_needle",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/bone_needle.png",
+   "role": "item",
+   "sha256": "bbb25b8535ab774893b6123586429f41dc2f731aad090d4c0c4e4253940db634",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/bone_needle.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2213,
+   "id": "bow",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/bow.png",
+   "role": "item",
+   "sha256": "ae692f89dd99d12719c4ce43301e4aa00b940167b1ce5e8361a8af25bbc45df7",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/bow.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2955,
+   "id": "bread",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/bread.png",
+   "role": "item",
+   "sha256": "0e52c49793d48a2ff4479994a9cd883ee604cca87d2151e090bcd79dd6583798",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/bread.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2855,
+   "id": "bread_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/bread_count_2_8.png",
+   "role": "item",
+   "sha256": "7d82174be9421aff7951faf3b8f43337aae1ab4f0473d41a40316f029e0208b4",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/bread_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3080,
+   "id": "bread_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/bread_count_9_plus.png",
+   "role": "item",
+   "sha256": "3b13b60f9ed1828f21f4597ba31426dfcdef65e368d3bdfe0dac7d6918730b37",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/bread_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2925,
+   "id": "cheese",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/cheese.png",
+   "role": "item",
+   "sha256": "9867ba256a358812d8d748813a3da8cada95759ae0ec55975cfe7814b1c3fd22",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/cheese.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2958,
+   "id": "cheese_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/cheese_count_2_8.png",
+   "role": "item",
+   "sha256": "bb74b071770414cd6324117e61734dc564050f60b5789741a6a46dd4f9fb048d",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/cheese_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2828,
+   "id": "cheese_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/cheese_count_9_plus.png",
+   "role": "item",
+   "sha256": "04d1e9876b6e3fbb25cf52011bff0eed478f8c3f3ae0904ac925e26fcdc82c2f",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/cheese_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
   },
   {
    "bytes": 6446,
@@ -1419,6 +3062,29 @@
    "source": "art/style05/env1/items/clay_pot_filled.png"
   },
   {
+   "bytes": 3132,
+   "id": "cord",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/cord.png",
+   "role": "item",
+   "sha256": "4aae2484cdb564418d0a110e091a90174be816906c55c0dec9043cbfd14fe45d",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/cord.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
    "bytes": 7100,
    "id": "cured_hide",
    "meta": {
@@ -1441,6 +3107,236 @@
    "source": "art/style05/polish/items/cured_hide_try2.png"
   },
   {
+   "bytes": 1913,
+   "id": "dried_berries",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/dried_berries.png",
+   "role": "item",
+   "sha256": "926c8bce80137c3ed107d7d230683a8f835dea960036f8c6032890202e68b8a4",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/dried_berries.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2178,
+   "id": "dried_berries_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/dried_berries_count_2_8.png",
+   "role": "item",
+   "sha256": "8003fdea574f713bdf5bb873a2c47ac827de65656f3184cfd3ae3017ede0f616",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/dried_berries_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 1754,
+   "id": "dried_berries_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/dried_berries_count_9_plus.png",
+   "role": "item",
+   "sha256": "a6ebfb1b9ce41a0e45a63fda2386606646d29d5194997740539229c2588846ef",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/dried_berries_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2883,
+   "id": "dried_meat",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/dried_meat.png",
+   "role": "item",
+   "sha256": "6110cc5aa1a2cfdbad1fb89041b9a14c19c7bd0051d2f97d271ca90c166087e6",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/dried_meat.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2517,
+   "id": "dried_meat_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/dried_meat_count_2_8.png",
+   "role": "item",
+   "sha256": "14ddef76b15c8adab560c147e1f098c1e885ac4ac6fadc472ecd805bae55f38a",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/dried_meat_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2931,
+   "id": "dried_meat_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/dried_meat_count_9_plus.png",
+   "role": "item",
+   "sha256": "f2ecd43da979c7c46ee6fd9da246a6e0aac794bbb044acd91396f48b79f3e59e",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/dried_meat_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3681,
+   "id": "dyed_tunic",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/dyed_tunic.png",
+   "role": "item",
+   "sha256": "a702e7a8f5b48526cab59c367196410d7a1fb3911e598099d15c493948748014",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/dyed_tunic.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2648,
+   "id": "emmer_seed",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/emmer_seed.png",
+   "role": "item",
+   "sha256": "ecdb80cb15f7f235b924dd24c17975fe42b7a64f5a0225f713aee8ae07fec19d",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/emmer_seed.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2644,
+   "id": "emmer_seed_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/emmer_seed_count_2_8.png",
+   "role": "item",
+   "sha256": "5fc79049b342297b493f7347c5a3bf5f212361476c7c464b709110fd26334ccb",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/emmer_seed_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2485,
+   "id": "emmer_seed_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/emmer_seed_count_9_plus.png",
+   "role": "item",
+   "sha256": "8169121fee9fcabc946590fc11af8655adda35942770b8f48039fd62ccf8fa82",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/emmer_seed_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
    "bytes": 5864,
    "id": "firewood",
    "meta": {
@@ -1461,6 +3357,282 @@
     64
    ],
    "source": "art/style05/polish/items/firewood_try3.png"
+  },
+  {
+   "bytes": 2345,
+   "id": "fish",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/fish.png",
+   "role": "item",
+   "sha256": "d2abfd489e4db67c73e25c92865e30598c0d6039aac786a6d4df138fa69743ba",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/fish.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2092,
+   "id": "fish_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/fish_count_2_8.png",
+   "role": "item",
+   "sha256": "85ab4e908a858ceeef0e611499add5c4a506944a37a7aaa9e7457ac90cb15052",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/fish_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2261,
+   "id": "fish_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/fish_count_9_plus.png",
+   "role": "item",
+   "sha256": "e4abe07c10096d0d382d80d82906b3c759a2b5b8bdcaee0a6c3aea7c9890c662",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/fish_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3129,
+   "id": "flax_fibre",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/flax_fibre.png",
+   "role": "item",
+   "sha256": "29a60c70be4da4c5f233b1d8aeafd3d7225c9529c6ab494d137b95239174d004",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/flax_fibre.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2963,
+   "id": "flax_fibre_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/flax_fibre_count_2_8.png",
+   "role": "item",
+   "sha256": "834751b765d6a423dff636cbf2de4efc347a690c861a95d4deebd724eb58ab1e",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/flax_fibre_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2963,
+   "id": "flax_fibre_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/flax_fibre_count_9_plus.png",
+   "role": "item",
+   "sha256": "ec7de6f7b3b443c0a7f3bdf0bf5515df59df7e2c92cc7a046f261ed039258f03",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/flax_fibre_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2571,
+   "id": "flax_seed",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/flax_seed.png",
+   "role": "item",
+   "sha256": "24af0944032071a25c9f3b1ef0a9a4c2a4002f99416f2e7a05c507af05fbfd8a",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/flax_seed.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2745,
+   "id": "flax_seed_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/flax_seed_count_2_8.png",
+   "role": "item",
+   "sha256": "65f01716bd71004d00e27fb51a1aad30675daa5fc8facd95fbf9a48372f12d1e",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/flax_seed_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2531,
+   "id": "flax_seed_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/flax_seed_count_9_plus.png",
+   "role": "item",
+   "sha256": "aef9abceb26da76fa28ff3a3b4f73a7184d0224e193c2e0890e1acaa4ba986e7",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/flax_seed_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3904,
+   "id": "flax_stalks",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/flax_stalks.png",
+   "role": "item",
+   "sha256": "5e82ad4052803ce18184b829c4216b571b866366760f85144f18206af437a163",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/flax_stalks.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 4116,
+   "id": "flax_stalks_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/flax_stalks_count_2_8.png",
+   "role": "item",
+   "sha256": "e22fab3606742fd3ca1b8dd16f5368fb7da4e71da307bdfab39956899122a623",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/flax_stalks_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 4241,
+   "id": "flax_stalks_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/flax_stalks_count_9_plus.png",
+   "role": "item",
+   "sha256": "ea153589d3d2a6ac3672a82cdb426ca77ae3500e75140b727ff4c25ef6a1ab75",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/flax_stalks_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
   },
   {
    "bytes": 4761,
@@ -1529,6 +3701,98 @@
    "source": "art/style05/polish/items/flint_pile_try3.png"
   },
   {
+   "bytes": 2592,
+   "id": "flour",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/flour.png",
+   "role": "item",
+   "sha256": "5e04416992079d3253e2d7b7a9ef8525dd09999b750cbf9c61cf8337e74467fe",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/flour.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2633,
+   "id": "flour_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/flour_count_2_8.png",
+   "role": "item",
+   "sha256": "cc7a89a2fb75e241787c22f5180c519a9cdac0672a9e380b0e38553bc36040bd",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/flour_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2124,
+   "id": "flour_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/flour_count_9_plus.png",
+   "role": "item",
+   "sha256": "6578cc09722e4b1537a46a6843d00c670eda4eb84d1de917854c5c9a00e84c9a",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/flour_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3000,
+   "id": "fruit_porridge",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/fruit_porridge.png",
+   "role": "item",
+   "sha256": "0215e95681e80f8152e973f65c085f10391b65cb3f8e915d0619e1a96c04f575",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/fruit_porridge.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
    "bytes": 7430,
    "id": "fur_cloak",
    "meta": {
@@ -1551,6 +3815,29 @@
    "source": "art/style05/polish/items/fur_cloak_try2.png"
   },
   {
+   "bytes": 4698,
+   "id": "goat_hide",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/goat_hide.png",
+   "role": "item",
+   "sha256": "9f6cd3923663b7f2a103087284fd3f83639ec578a77fd651f2c39f35656a575d",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/goat_hide.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
    "bytes": 4997,
    "id": "ground_axe",
    "meta": {
@@ -1571,6 +3858,236 @@
     64
    ],
    "source": "art/style05/polish/items/ground_axe_try3.png"
+  },
+  {
+   "bytes": 2073,
+   "id": "hand_spindle",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/hand_spindle.png",
+   "role": "item",
+   "sha256": "5379cdf427c8a6e5361f9f40f80a46f812058d6d2b6d13145e0aba7736614281",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/hand_spindle.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2487,
+   "id": "hay",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/hay.png",
+   "role": "item",
+   "sha256": "9b3ce0526acbef8ac460466e36c3f5c01dd48958f882a659261197dae8546f12",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/hay.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2213,
+   "id": "hay_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/hay_count_2_8.png",
+   "role": "item",
+   "sha256": "22a944f89ff7167e1ebb6537fe5a2d871906b145e342df8e928fd3056fa96686",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/hay_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2237,
+   "id": "hay_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/hay_count_9_plus.png",
+   "role": "item",
+   "sha256": "9e4d0af0a74fc6efcb56419a0754051618c8b2b56f75f32aa3670c4857e87f9d",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/hay_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3219,
+   "id": "hazelnuts",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/hazelnuts.png",
+   "role": "item",
+   "sha256": "d164288bd0268b71f18c527956d913bdd453bcf69e0bd09e2e7c9dd57a0a0b6e",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/hazelnuts.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3372,
+   "id": "hazelnuts_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/hazelnuts_count_2_8.png",
+   "role": "item",
+   "sha256": "353d1d33d52f9269b3609a4bb600b07855c0ce142f5a1d6131a3d1287fa4db6e",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/hazelnuts_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3499,
+   "id": "hazelnuts_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/hazelnuts_count_9_plus.png",
+   "role": "item",
+   "sha256": "88b23b112956e527a8d89386423aeb4040eec7cff2a8f4c0c5de83466c5160e4",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/hazelnuts_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2921,
+   "id": "herbs",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/herbs.png",
+   "role": "item",
+   "sha256": "cd6cb9cea46a79fab4d8fdbed37ff6d30257b643fb8d35b715f195ff24f2159e",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/herbs.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2797,
+   "id": "herbs_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/herbs_count_2_8.png",
+   "role": "item",
+   "sha256": "7b9cccb87a232f22d708293803ead4209a866e7b864a9f7767158ae692665a8a",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/herbs_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3085,
+   "id": "herbs_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/herbs_count_9_plus.png",
+   "role": "item",
+   "sha256": "dadf5c4146e51e86dc86a6969947fc770234d9cc24715e020325f0e2431e6e4e",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/herbs_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
   },
   {
    "bytes": 8278,
@@ -1615,6 +4132,374 @@
     64
    ],
    "source": "art/style05/polish/items/hide_wrap_try2.png"
+  },
+  {
+   "bytes": 2129,
+   "id": "hoe",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/hoe.png",
+   "role": "item",
+   "sha256": "47e14e1a4382ccf90a1f1b605579e283754b3efd4e0ee6f7f3a35c47702c7c0c",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/hoe.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 5129,
+   "id": "leather_armor",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/leather_armor.png",
+   "role": "item",
+   "sha256": "a9e63a503292dbbf1d387cb89e954cb29752f052b889e6bc8cff79704f7db7a4",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/leather_armor.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2356,
+   "id": "lentil",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/lentil.png",
+   "role": "item",
+   "sha256": "e5326fd8014547c4c4e21f801a10f95d577be9072d3630397209426c9d9ec74b",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/lentil.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2361,
+   "id": "lentil_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/lentil_count_2_8.png",
+   "role": "item",
+   "sha256": "a55143a849a6080665819bd2be5a74f549e6e139f4494bce45886211cfa58230",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/lentil_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2336,
+   "id": "lentil_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/lentil_count_9_plus.png",
+   "role": "item",
+   "sha256": "a22d89425daf2598f7bf1b9eb36928c51e0039d54d2df9b352a7119c24cf145f",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/lentil_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3341,
+   "id": "lentil_seed",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/lentil_seed.png",
+   "role": "item",
+   "sha256": "3c114d1ce5e8bdf4a60a7963a8f6ea698a491fe7d1e0e98ba269c6446ce6944c",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/lentil_seed.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3279,
+   "id": "lentil_seed_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/lentil_seed_count_2_8.png",
+   "role": "item",
+   "sha256": "4ecb3e571fd466f77b4848cdc3684e6bbc5033ba9fc01ed22450ffeeaad50add",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/lentil_seed_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3296,
+   "id": "lentil_seed_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/lentil_seed_count_9_plus.png",
+   "role": "item",
+   "sha256": "2c11c2bae73303de0e3fa6be99d53a886dc2c140ba53a1ecb5b498754a7e733f",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/lentil_seed_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3616,
+   "id": "linen_cloth",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/linen_cloth.png",
+   "role": "item",
+   "sha256": "a4908d4b647570a33af458c0cf54ba463b2245625bad7fbc12bcdd178c579f1c",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/linen_cloth.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3429,
+   "id": "linen_cloth_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/linen_cloth_count_2_8.png",
+   "role": "item",
+   "sha256": "802969080ddb701efcdc544e1875e4bf0b6ec87a7811df4b1f31be4f3e5f9d28",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/linen_cloth_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3685,
+   "id": "linen_cloth_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/linen_cloth_count_9_plus.png",
+   "role": "item",
+   "sha256": "2ab155665745a01a5515116566c6a3b6f7bd057b254a5b67042137fab0ad754e",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/linen_cloth_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2510,
+   "id": "linen_thread",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/linen_thread.png",
+   "role": "item",
+   "sha256": "796678db93607edffb80888f89569e6f1e1368f54c56ac13e59e778bcc02b6be",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/linen_thread.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2432,
+   "id": "linen_thread_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/linen_thread_count_2_8.png",
+   "role": "item",
+   "sha256": "b01415deb596c52137218f2ff4bbebe11bc10796cea5f0805201d4c4341365e8",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/linen_thread_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2337,
+   "id": "linen_thread_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/linen_thread_count_9_plus.png",
+   "role": "item",
+   "sha256": "dbb102701d17ebe5b402b7e15afaa22dc51fb581488905bcb8529890eb1c0886",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/linen_thread_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3566,
+   "id": "linen_tunic",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/linen_tunic.png",
+   "role": "item",
+   "sha256": "0e78f87b36fce146a0e06a1cb3551e9fce48a4fab8b3982baa4649281777fe05",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/linen_tunic.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 4192,
+   "id": "linen_wrap",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/linen_wrap.png",
+   "role": "item",
+   "sha256": "b7ab46054b0e781864fc8df84965da360d8a1883caf920d6118754468aac033f",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/linen_wrap.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
   },
   {
    "bytes": 6908,
@@ -1717,6 +4602,341 @@
    "source": "art/style05/env1/items/meat_spoiled.png"
   },
   {
+   "bytes": 4329,
+   "id": "milk_item",
+   "path": "items/milk.png",
+   "role": "item",
+   "sha256": "8f7393472c99fef3beb9023cc2c856d3b3f4a833c8225c944427afc55f1028f2",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/milk.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2867,
+   "id": "millet",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/millet.png",
+   "role": "item",
+   "sha256": "cbabfd17fa4b4cf8a5bb4457468d530df1358c76ea1101925d346264a51ccf34",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/millet.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3096,
+   "id": "millet_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/millet_count_2_8.png",
+   "role": "item",
+   "sha256": "2c9afb7022dfc8527eda6f87e61dd02ba4a8d617dcdac5b148496149209c1759",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/millet_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2550,
+   "id": "millet_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/millet_count_9_plus.png",
+   "role": "item",
+   "sha256": "e83c0705cc66013429b75990a3bc1c806f5580e6693a61e458951f36d99aca34",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/millet_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2150,
+   "id": "millet_seed",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/millet_seed.png",
+   "role": "item",
+   "sha256": "97a0636f8387b793f6eadcc1374e165fa7554d57d023693d78b5dfeca01f222c",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/millet_seed.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2181,
+   "id": "millet_seed_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/millet_seed_count_2_8.png",
+   "role": "item",
+   "sha256": "9230475de796886df2d86e34f8e90849b5e1bfd9c25686f7c88b91cbf0a2a7f0",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/millet_seed_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2238,
+   "id": "millet_seed_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/millet_seed_count_9_plus.png",
+   "role": "item",
+   "sha256": "374bd4c4b9ad1069387d3caa57e52dbcad96a37babe8a3d2052a7ec1ed9e9a83",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/millet_seed_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3635,
+   "id": "pea",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/pea.png",
+   "role": "item",
+   "sha256": "812988df318efc7391c89df86e813b06a9d16fe817ec955ae01db62f9a4bf29b",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/pea.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3900,
+   "id": "pea_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/pea_count_2_8.png",
+   "role": "item",
+   "sha256": "3fe914e364d74ad4d4e639bc9dcc62f71d348e340a20b746253f7dacf0851cb0",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/pea_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 4112,
+   "id": "pea_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/pea_count_9_plus.png",
+   "role": "item",
+   "sha256": "6ac48401a03e0eaec57a364cffcd91ec02f5f2ad9fcc94640b8ce162a1d0b772",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/pea_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2535,
+   "id": "pea_seed",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/pea_seed.png",
+   "role": "item",
+   "sha256": "162d3b47ad3c78c10fdb3954f54f46a009c8ad8f4070cc3064433d0e5af0de11",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/pea_seed.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2573,
+   "id": "pea_seed_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/pea_seed_count_2_8.png",
+   "role": "item",
+   "sha256": "66ed2b889b4748af259cb3708f1c9df4b84b37f05c8ae992e8c877e5485e9801",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/pea_seed_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2576,
+   "id": "pea_seed_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/pea_seed_count_9_plus.png",
+   "role": "item",
+   "sha256": "92cf1069f465d3a949f46ab37762abe69596a482d66ea40ddb992e4f9788a11d",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/pea_seed_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2665,
+   "id": "porridge",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/porridge.png",
+   "role": "item",
+   "sha256": "53f18f4cebe0d5071bc7d370ce5048405413f52cebbf7ce741014553d795b5ed",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/porridge.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2563,
+   "id": "poultice",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/poultice.png",
+   "role": "item",
+   "sha256": "039ea4db878a2c0657454224250ea818c90b029caefeca812ef272c33fd89239",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/poultice.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
    "bytes": 5598,
    "id": "raw_pot",
    "meta": {
@@ -1739,6 +4959,420 @@
    "source": "art/style05/polish/items/raw_pot_try2.png"
   },
   {
+   "bytes": 2502,
+   "id": "roast_meat",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/roast_meat.png",
+   "role": "item",
+   "sha256": "fa789cf5aebcaff728b95e5688cd50b74447aabe1abbd7b2a061dab96e313897",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/roast_meat.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3056,
+   "id": "roasted_roots",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/roasted_roots.png",
+   "role": "item",
+   "sha256": "31f33445191ec6c54a2b8cbd49fad1dc66646250b160c2786e416b092055197d",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/roasted_roots.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2917,
+   "id": "roasted_roots_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/roasted_roots_count_2_8.png",
+   "role": "item",
+   "sha256": "da272d7e518b81bc2827ef460ddb4e7fc0bd7e382a782022a6d61b4a1068538b",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/roasted_roots_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2931,
+   "id": "roasted_roots_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/roasted_roots_count_9_plus.png",
+   "role": "item",
+   "sha256": "c50d664d1e6c1d1fab3b77250c5027f9eb54288755bc9fce07d6a0a3a4a00d8d",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/roasted_roots_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2486,
+   "id": "roots",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/roots.png",
+   "role": "item",
+   "sha256": "aa614a79fc38a70ca68685be7079640c4cf6e41476f8fae96b71e4e76859602b",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/roots.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2696,
+   "id": "roots_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/roots_count_2_8.png",
+   "role": "item",
+   "sha256": "b96f681652f943a5cea3d27ccfe24a67dac80e04eaa9e856c88765104870e9ca",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/roots_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2229,
+   "id": "roots_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/roots_count_9_plus.png",
+   "role": "item",
+   "sha256": "53246da23ad72c615c7b3ae7b1751aae39161f45b3f03fdbf4202954f21b946f",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/roots_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2550,
+   "id": "rye",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/rye.png",
+   "role": "item",
+   "sha256": "74ce45cc99a1f27ca40dc380e7ea32bb2b02f9b2931869b8b4eb8994f82ff89d",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/rye.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2728,
+   "id": "rye_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/rye_count_2_8.png",
+   "role": "item",
+   "sha256": "3e4489710170521e663ad26bced0f54b248078fdc34af83a7f2c63cf37ea36c4",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/rye_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2176,
+   "id": "rye_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/rye_count_9_plus.png",
+   "role": "item",
+   "sha256": "ac74c7a130747eaadc25967a8a1f5c18b8e329b6d749dbee42774a9de1dd337b",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/rye_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2410,
+   "id": "rye_seed",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/rye_seed.png",
+   "role": "item",
+   "sha256": "a7875796e9ef15f5b15d989f50487b8d29c95fd21e3fd6d89636b44500b32cfe",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/rye_seed.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2326,
+   "id": "rye_seed_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/rye_seed_count_2_8.png",
+   "role": "item",
+   "sha256": "99cf1bcf699b382a33aa8fa9b3723d1e103b521d5abf792937b0e5dfedb4da7d",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/rye_seed_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2457,
+   "id": "rye_seed_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/rye_seed_count_9_plus.png",
+   "role": "item",
+   "sha256": "af6ef06eca252887ccce693dd9b5772234e79945010854393a8e2c75c985d2dd",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/rye_seed_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3301,
+   "id": "sickle",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/sickle.png",
+   "role": "item",
+   "sha256": "c56dbad9190254b7e4065142c482f0278ccd27a365cbc25f6856aad674bb2dc1",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/sickle.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2303,
+   "id": "sling",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/sling.png",
+   "role": "item",
+   "sha256": "798c6ae6b6f2707d9b029790d0fc71a6d7b9706bf850c838a66773b162ea21b3",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/sling.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2570,
+   "id": "smoked_meat",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/smoked_meat.png",
+   "role": "item",
+   "sha256": "f5465d53e285a48bde1319a862ccc056995c04c390b88673f4a2702f9f190006",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/smoked_meat.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2582,
+   "id": "smoked_meat_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/smoked_meat_count_2_8.png",
+   "role": "item",
+   "sha256": "91f1320bf4ec6ead410b57985704eda2cef5715f72e7277422d60eef75befee8",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/smoked_meat_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2450,
+   "id": "smoked_meat_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/smoked_meat_count_9_plus.png",
+   "role": "item",
+   "sha256": "1ef6f22538bec810f683cb86c53f3d6f110de0072eb848173bd9e9b33962374b",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/smoked_meat_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
    "bytes": 2025,
    "id": "spear",
    "meta": {
@@ -1759,6 +5393,29 @@
     64
    ],
    "source": "art/style05/env1/items/spear.png"
+  },
+  {
+   "bytes": 3148,
+   "id": "stew",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/stew.png",
+   "role": "item",
+   "sha256": "563fbfc59fc6c38b18f05bd24b070981da8e660160f1215a43f809afbacd9749",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/stew.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
   },
   {
    "bytes": 4781,
@@ -1805,6 +5462,75 @@
    "source": "art/style05/env/items/stone_pile.png"
   },
   {
+   "bytes": 3158,
+   "id": "wild_grain",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/wild_grain.png",
+   "role": "item",
+   "sha256": "ab54616c85498758970500bc7080cee6d10cb5a68144b0e459f531106c9fa86f",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/wild_grain.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3096,
+   "id": "wild_grain_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/wild_grain_count_2_8.png",
+   "role": "item",
+   "sha256": "96deefa9ade2c3f78b6a42367388b9ab037d8eecd39c69d279cc5faa22ed1492",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/wild_grain_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2694,
+   "id": "wild_grain_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/wild_grain_count_9_plus.png",
+   "role": "item",
+   "sha256": "eafe122d92713380630c8b3de80b5603a79c430c82c84f40009482d9905b46ee",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/wild_grain_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
    "bytes": 6616,
    "id": "wolf_hide",
    "meta": {
@@ -1827,6 +5553,75 @@
    "source": "art/style05/polish/items/wolf_hide_try2.png"
   },
   {
+   "bytes": 2761,
+   "id": "wool",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/wool.png",
+   "role": "item",
+   "sha256": "784d0176b8a4d4b17c55a80e4c468f7cbe6dd38998e219caa94e5acda013c8ec",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/wool.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2826,
+   "id": "wool_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/wool_count_2_8.png",
+   "role": "item",
+   "sha256": "16041d9458e6865cb844669e2393ce862a00700a10d4684be2539dec7f6e6cef",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/wool_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2684,
+   "id": "wool_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/wool_count_9_plus.png",
+   "role": "item",
+   "sha256": "69a56ce03f9d4d21ef5ab26320577858d42ee60e6b6637cc6d03f0708f659d45",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/wool_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
    "bytes": 1642,
    "id": "category_defaults",
    "path": "materials/category_defaults.json",
@@ -1843,19 +5638,19 @@
    "source": "art/materials/category_defaults.schema.json"
   },
   {
-   "bytes": 5726,
+   "bytes": 7280,
    "id": "construction_styles",
    "path": "materials/construction_styles.json",
    "role": "material_data",
-   "sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f",
+   "sha256": "92a1824ecb83c465dbb94ff087b37454875f106c370923d4dfc27bb6e3ea7718",
    "source": "art/materials/construction_styles.json"
   },
   {
-   "bytes": 11891,
+   "bytes": 12138,
    "id": "construction_styles_schema",
    "path": "materials/construction_styles.schema.json",
    "role": "material_schema",
-   "sha256": "5cb62f03449c7cb736c81f87a131ddf9667cc16ee64450c79b18df9307d06be3",
+   "sha256": "4ba7403a79fd70378fc5e4335f7fd951ba3aa7aaf70edc7ad6778b6db1a7787c",
    "source": "art/materials/construction_styles.schema.json"
   },
   {
@@ -2101,6 +5896,246 @@
     64
    ],
    "source": "art/materials/textures/log/junction.png"
+  },
+  {
+   "bytes": 11408,
+   "id": "door_ew_closed",
+   "path": "materials/textures/log/pieces/door_ew_closed.png",
+   "role": "wall_piece_texture",
+   "sha256": "ffbfd5649d847829303dc287d407f94e42671a5242f1fa79758630a7ee5542ba",
+   "size": [
+    64,
+    60
+   ],
+   "source": "art/materials/textures/log/pieces/door_ew_closed.png"
+  },
+  {
+   "bytes": 9043,
+   "id": "door_ew_open",
+   "path": "materials/textures/log/pieces/door_ew_open.png",
+   "role": "wall_piece_texture",
+   "sha256": "801fcd7f155a1ead32429454d9980b976f16798f001b1a3f2d8b9efb49ed62b7",
+   "size": [
+    64,
+    60
+   ],
+   "source": "art/materials/textures/log/pieces/door_ew_open.png"
+  },
+  {
+   "bytes": 10688,
+   "id": "door_ns_closed",
+   "path": "materials/textures/log/pieces/door_ns_closed.png",
+   "role": "wall_piece_texture",
+   "sha256": "db4c78ec6c076f1ccadbc13c20f6d0829024fc90f92a8e03e04ffd7a43611441",
+   "size": [
+    64,
+    60
+   ],
+   "source": "art/materials/textures/log/pieces/door_ns_closed.png"
+  },
+  {
+   "bytes": 7930,
+   "id": "door_ns_open",
+   "path": "materials/textures/log/pieces/door_ns_open.png",
+   "role": "wall_piece_texture",
+   "sha256": "245e3d4da165c2ac92674967bd3e2037c8f935a899f10b400adf2e9acf096d8f",
+   "size": [
+    64,
+    60
+   ],
+   "source": "art/materials/textures/log/pieces/door_ns_open.png"
+  },
+  {
+   "bytes": 4408,
+   "id": "mask_00",
+   "path": "materials/textures/log/pieces/mask_00.png",
+   "role": "wall_piece_texture",
+   "sha256": "b62add745a792a3cc9f835a5c75b329ff2f07122b9ce21ba31cb6394977747c5",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/materials/textures/log/pieces/mask_00.png"
+  },
+  {
+   "bytes": 2512,
+   "id": "mask_01",
+   "path": "materials/textures/log/pieces/mask_01.png",
+   "role": "wall_piece_texture",
+   "sha256": "2a90e80eaa14e30ad6a8b940ce739309d8eaeca8450812d50a5e6cfa8c154d8a",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/materials/textures/log/pieces/mask_01.png"
+  },
+  {
+   "bytes": 5916,
+   "id": "mask_02",
+   "path": "materials/textures/log/pieces/mask_02.png",
+   "role": "wall_piece_texture",
+   "sha256": "5d8e95363948a3bace154c8d81099e930612b2ec9704137cc34217868f444904",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/materials/textures/log/pieces/mask_02.png"
+  },
+  {
+   "bytes": 6148,
+   "id": "mask_03",
+   "path": "materials/textures/log/pieces/mask_03.png",
+   "role": "wall_piece_texture",
+   "sha256": "6308e93263faab04c6e432bf349e2da35c071579c3d558fafd741fc3b6c210b7",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/materials/textures/log/pieces/mask_03.png"
+  },
+  {
+   "bytes": 3977,
+   "id": "mask_04",
+   "path": "materials/textures/log/pieces/mask_04.png",
+   "role": "wall_piece_texture",
+   "sha256": "9c872bf9587b6628d33674f9086978ac064a62ae6a10733775ecf375cebb8614",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/materials/textures/log/pieces/mask_04.png"
+  },
+  {
+   "bytes": 4084,
+   "id": "mask_05",
+   "path": "materials/textures/log/pieces/mask_05.png",
+   "role": "wall_piece_texture",
+   "sha256": "8ec37d3bc4337ca2984c297a444d86429302843e6ac7aa2d85b93faa7f3a5e97",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/materials/textures/log/pieces/mask_05.png"
+  },
+  {
+   "bytes": 5628,
+   "id": "mask_06",
+   "path": "materials/textures/log/pieces/mask_06.png",
+   "role": "wall_piece_texture",
+   "sha256": "9b303ca24a3eb99448e3be27b47bcce76002ea7dee1da9519e9e137b67762c59",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/materials/textures/log/pieces/mask_06.png"
+  },
+  {
+   "bytes": 5852,
+   "id": "mask_07",
+   "path": "materials/textures/log/pieces/mask_07.png",
+   "role": "wall_piece_texture",
+   "sha256": "5c70326786c767cc7e627b06f00ce4f2f63e8cf354ed83a9e5e8107951cd9501",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/materials/textures/log/pieces/mask_07.png"
+  },
+  {
+   "bytes": 6010,
+   "id": "mask_08",
+   "path": "materials/textures/log/pieces/mask_08.png",
+   "role": "wall_piece_texture",
+   "sha256": "e1252c3e68051884efb180b8b9da2cc8f8d433bedc6d93decb65fa9b21755f7e",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/materials/textures/log/pieces/mask_08.png"
+  },
+  {
+   "bytes": 6232,
+   "id": "mask_09",
+   "path": "materials/textures/log/pieces/mask_09.png",
+   "role": "wall_piece_texture",
+   "sha256": "9e75691e2f6c6cac321ec41ba0618fc998e32313a35f944a6756c1599744469e",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/materials/textures/log/pieces/mask_09.png"
+  },
+  {
+   "bytes": 5576,
+   "id": "mask_10",
+   "path": "materials/textures/log/pieces/mask_10.png",
+   "role": "wall_piece_texture",
+   "sha256": "cac41895c13194d91fd4d49e91908ee5d25def047b9177329d7de1fc0eba8d25",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/materials/textures/log/pieces/mask_10.png"
+  },
+  {
+   "bytes": 5960,
+   "id": "mask_11",
+   "path": "materials/textures/log/pieces/mask_11.png",
+   "role": "wall_piece_texture",
+   "sha256": "dd87b2ca4ecd989249266aa8cbb5ae6e3cfee6fd478c29d0870a2262c2e47f15",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/materials/textures/log/pieces/mask_11.png"
+  },
+  {
+   "bytes": 5652,
+   "id": "mask_12",
+   "path": "materials/textures/log/pieces/mask_12.png",
+   "role": "wall_piece_texture",
+   "sha256": "ca35e17e4e014719e11944fc04349ab2c5f8f89ed1a7021ed2bedec1e76127d8",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/materials/textures/log/pieces/mask_12.png"
+  },
+  {
+   "bytes": 5862,
+   "id": "mask_13",
+   "path": "materials/textures/log/pieces/mask_13.png",
+   "role": "wall_piece_texture",
+   "sha256": "75e31bb6ef6b917488ad5c05b63f5c7232e729e4445454878cfbf4def2f9688b",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/materials/textures/log/pieces/mask_13.png"
+  },
+  {
+   "bytes": 7125,
+   "id": "mask_14",
+   "path": "materials/textures/log/pieces/mask_14.png",
+   "role": "wall_piece_texture",
+   "sha256": "d50d981b07ce780f8fceb91162f69601136f72c73d74c4da833f6b625cad7d35",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/materials/textures/log/pieces/mask_14.png"
+  },
+  {
+   "bytes": 7446,
+   "id": "mask_15",
+   "path": "materials/textures/log/pieces/mask_15.png",
+   "role": "wall_piece_texture",
+   "sha256": "73092bfc69d1330125bccd7d3ff7e474306911d1113487d3175eb3fe44612ba9",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/materials/textures/log/pieces/mask_15.png"
   },
   {
    "bytes": 43043,
@@ -12183,6 +16218,54 @@
    "source": "art/character/variant_transforms.json"
   },
   {
+   "bytes": 3492,
+   "id": "bread_oven_lit",
+   "meta": {
+    "anchor": [
+     23,
+     35
+    ],
+    "family": "buildings",
+    "footprint": [
+     1,
+     1
+    ]
+   },
+   "path": "structures/a2/neolithic/bread_oven_lit.png",
+   "role": "structure",
+   "sha256": "92977a97bed350303db3784f8dbb5201a5538f01000631f453290e71527c896c",
+   "size": [
+    47,
+    40
+   ],
+   "source": "art/style05/struct/a2/neolithic/bread_oven_lit.png",
+   "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+  },
+  {
+   "bytes": 3423,
+   "id": "bread_oven_unlit",
+   "meta": {
+    "anchor": [
+     23,
+     35
+    ],
+    "family": "buildings",
+    "footprint": [
+     1,
+     1
+    ]
+   },
+   "path": "structures/a2/neolithic/bread_oven_unlit.png",
+   "role": "structure",
+   "sha256": "37a38b65f87013417b4e68c9473dfde5311b9bb565b1aa8ff63041f6608cef3f",
+   "size": [
+    47,
+    40
+   ],
+   "source": "art/style05/struct/a2/neolithic/bread_oven_unlit.png",
+   "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+  },
+  {
    "bytes": 3821,
    "id": "bedroll",
    "meta": {
@@ -12640,6 +16723,1618 @@
     44
    ],
    "source": "art/style05/struct/woodworking_bench.png"
+  },
+  {
+   "bytes": 5391,
+   "id": "b4_alerts_firewood_low",
+   "path": "ui/b4/alerts/firewood_low.png",
+   "role": "ui_alert_icon",
+   "sha256": "e017276caa0117a215f9c7dfcd757381ddda6c783c3461bde29ac30e114094b0",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/firewood_low.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 7257,
+   "id": "b4_alerts_food_low",
+   "path": "ui/b4/alerts/food_low.png",
+   "role": "ui_alert_icon",
+   "sha256": "b43088318a0008e08ca2699d437c05da4b8f987ac76762f2c8db0fe5a62e68a9",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/food_low.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 7305,
+   "id": "b4_alerts_food_spoil",
+   "path": "ui/b4/alerts/food_spoil.png",
+   "role": "ui_alert_icon",
+   "sha256": "fb612ccae948873b80b9e80705e63b8e5c3c878dd69ca7e6a252ea562a652918",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/food_spoil.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 8992,
+   "id": "b4_alerts_food_winter",
+   "path": "ui/b4/alerts/food_winter.png",
+   "role": "ui_alert_icon",
+   "sha256": "5a67b35d2abaa475df7479ffe85d4e55570c6d4519bfb3acf72c2a0f8d34a2a8",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/food_winter.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 6431,
+   "id": "b4_alerts_idle_adults",
+   "path": "ui/b4/alerts/idle_adults.png",
+   "role": "ui_alert_icon",
+   "sha256": "5ee50e0d389db709f57350c3991be4be5a86c32bc56f46d280df82e2c448fc8b",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/idle_adults.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 5481,
+   "id": "b4_alerts_knowledge_waiting",
+   "path": "ui/b4/alerts/knowledge_waiting.png",
+   "role": "ui_alert_icon",
+   "sha256": "56cdbd9ca486940c6ef54b7188f132e1596af08e39b5a9267e636ac25a0e8fed",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/knowledge_waiting.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 3140,
+   "id": "b4_alerts_meat_spoiling",
+   "path": "ui/b4/alerts/meat_spoiling.png",
+   "role": "ui_alert_icon",
+   "sha256": "b41809bacda2d90d0cd0fb54ae5921ddcb032949b178c1ac34c40a84942fbaee",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/meat_spoiling.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 8348,
+   "id": "b4_alerts_migrants_waiting",
+   "path": "ui/b4/alerts/migrants_waiting.png",
+   "role": "ui_alert_icon",
+   "sha256": "3609306a0d1980340f51ad97497a30490dba57f9d816ff030aa195374fc2fa78",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/migrants_waiting.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 6117,
+   "id": "b4_alerts_newborn_without_bed",
+   "path": "ui/b4/alerts/newborn_without_bed.png",
+   "role": "ui_alert_icon",
+   "sha256": "47589cb007525178b82af1e4bc929e1c0f1ad280ae79ebbed8deedb7c927edbd",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/newborn_without_bed.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 8068,
+   "id": "b4_alerts_orders_unreachable",
+   "path": "ui/b4/alerts/orders_unreachable.png",
+   "role": "ui_alert_icon",
+   "sha256": "a33db2cb1c274e945bbe3c7568482f7c624e0d7ea94ccc7ef15c7f87ed84d210",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/orders_unreachable.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 7597,
+   "id": "b4_alerts_person_breakdown",
+   "path": "ui/b4/alerts/person_breakdown.png",
+   "role": "ui_alert_icon",
+   "sha256": "1ddd6af99c7981c1f5060071448cd1660febad9043f1df261790b439b4e91782",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/person_breakdown.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 5438,
+   "id": "b4_alerts_person_injured",
+   "path": "ui/b4/alerts/person_injured.png",
+   "role": "ui_alert_icon",
+   "sha256": "eb9f5bd953df7c039d86b3c22fd33ee391459a242263d926f807bc88b0fe3ddd",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/person_injured.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 8277,
+   "id": "b4_alerts_person_sick",
+   "path": "ui/b4/alerts/person_sick.png",
+   "role": "ui_alert_icon",
+   "sha256": "dd0765ef339862aa55d23697c382b229d5716feed374b36acaac51c7fb4c1e39",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/person_sick.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 5885,
+   "id": "b4_alerts_sleeping_outside",
+   "path": "ui/b4/alerts/sleeping_outside.png",
+   "role": "ui_alert_icon",
+   "sha256": "1f523264f886070a8d0e7441c4035a68bba5f6b13faddfd624c79d7dd0dbd9df",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/sleeping_outside.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 4108,
+   "id": "b4_alerts_stockpile_missing",
+   "path": "ui/b4/alerts/stockpile_missing.png",
+   "role": "ui_alert_icon",
+   "sha256": "34c00c01097e38dffa1c79db6f4b0cf7b5a4e46c0051dfbff03bc2d67a3618de",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/stockpile_missing.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 8712,
+   "id": "b4_alerts_storehouse_full",
+   "path": "ui/b4/alerts/storehouse_full.png",
+   "role": "ui_alert_icon",
+   "sha256": "fc6635dc6dd352a18950f11327cc4099b27c4a815e48bdef97da93a2859f1613",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/storehouse_full.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 5278,
+   "id": "b4_alerts_technique_at_risk",
+   "path": "ui/b4/alerts/technique_at_risk.png",
+   "role": "ui_alert_icon",
+   "sha256": "5853a37adb414855a1c09dcebf9198efc2cc6608002dfb41581bc9caa1ba7b9b",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/technique_at_risk.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 9545,
+   "id": "b4_alerts_trader_present",
+   "path": "ui/b4/alerts/trader_present.png",
+   "role": "ui_alert_icon",
+   "sha256": "161fabdf8cc8daa9e763dea4f215b32a7679ca9e34da0d2e5a732db62587c2c8",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/trader_present.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 8100,
+   "id": "b4_alerts_wolves_approaching",
+   "path": "ui/b4/alerts/wolves_approaching.png",
+   "role": "ui_alert_icon",
+   "sha256": "2350da08616a0c26cd5125ef1b58ce572f0a578129554608f97886b04bea33fa",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/alerts/wolves_approaching.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 180320,
+   "id": "b4_cards_cloth_short",
+   "path": "ui/b4/cards/cloth_short.png",
+   "role": "ui_decision_illustration",
+   "sha256": "cbebaa3673826c2de0493ec37cd48928d6239e9a1d0fbca06b317617ff1e0cf7",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/cloth_short.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 272272,
+   "id": "b4_cards_first_kid",
+   "path": "ui/b4/cards/first_kid.png",
+   "role": "ui_decision_illustration",
+   "sha256": "f0c17c1a2dae909e503a9d025931add0ecb5d9a7d911615c2f3aaa994d218db0",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/first_kid.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 211410,
+   "id": "b4_cards_harvest_ready",
+   "path": "ui/b4/cards/harvest_ready.png",
+   "role": "ui_decision_illustration",
+   "sha256": "3aaff79d55697544307d3b3f94c629707476261c5dadc7048385d294f282cb21",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/harvest_ready.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 197490,
+   "id": "b4_cards_idle_adults",
+   "path": "ui/b4/cards/idle_adults.png",
+   "role": "ui_decision_illustration",
+   "sha256": "3b58d52aca7588d21d04d7bea7ac47e15c49c0b9d0839fc2279cd65ef65a957d",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/idle_adults.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 169454,
+   "id": "b4_cards_knowledge_risk",
+   "path": "ui/b4/cards/knowledge_risk.png",
+   "role": "ui_decision_illustration",
+   "sha256": "413b32f8c1575b97d3be51657c371769027e044bd439c7b927d3c8d91c55370c",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/knowledge_risk.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 225410,
+   "id": "b4_cards_migrants",
+   "path": "ui/b4/cards/migrants.png",
+   "role": "ui_decision_illustration",
+   "sha256": "a0b4b1613af89344e52e9e8ee687ea54dd4f5744fdb83009d567826f2adfd458",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/migrants.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 212397,
+   "id": "b4_cards_need_food",
+   "path": "ui/b4/cards/need_food.png",
+   "role": "ui_decision_illustration",
+   "sha256": "a7098fe2a0206d37bdddfd9eb01cf2d36019c9ddd84d300e332f622bce7a2cec",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/need_food.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 208670,
+   "id": "b4_cards_need_warmth",
+   "path": "ui/b4/cards/need_warmth.png",
+   "role": "ui_decision_illustration",
+   "sha256": "088ff995c119d30562dca2043f37ff48a56f463d1024f51025a0c58a8b04afb3",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/need_warmth.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 237920,
+   "id": "b4_cards_pressure",
+   "path": "ui/b4/cards/pressure.png",
+   "role": "ui_decision_illustration",
+   "sha256": "0492fb80cf3448eef944a52ba1680bef39bd25f486d4edbb9a27f914e4e29922",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/pressure.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 196661,
+   "id": "b4_cards_quarrel",
+   "path": "ui/b4/cards/quarrel.png",
+   "role": "ui_decision_illustration",
+   "sha256": "19a3d403799f8e49a940c074967df19c180972e4775fc5f9eb34624c563dc587",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/quarrel.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 216880,
+   "id": "b4_cards_sick_person",
+   "path": "ui/b4/cards/sick_person.png",
+   "role": "ui_decision_illustration",
+   "sha256": "04b1c41c539803ff36aba0fd2e1d2818b40da50038fe67c032b3862265732597",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/sick_person.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 133817,
+   "id": "b4_cards_sowing_window",
+   "path": "ui/b4/cards/sowing_window.png",
+   "role": "ui_decision_illustration",
+   "sha256": "e138473919d78d955356e2669a903333f1ca2a6f430ce0d1bc52e65ca0659291",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/sowing_window.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 247195,
+   "id": "b4_cards_storage",
+   "path": "ui/b4/cards/storage.png",
+   "role": "ui_decision_illustration",
+   "sha256": "5b4f4797333497a6b81802ee435ab26a7e4ab4fafe9434d9bf1010d877fb7008",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/storage.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 144492,
+   "id": "b4_cards_tools_low",
+   "path": "ui/b4/cards/tools_low.png",
+   "role": "ui_decision_illustration",
+   "sha256": "07e3d866be92b9811b91f936663e604b4fc706f16f05ca9aae4da3dcef456222",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/tools_low.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 143622,
+   "id": "b4_cards_trader",
+   "path": "ui/b4/cards/trader.png",
+   "role": "ui_decision_illustration",
+   "sha256": "21160e2bcf51a01e03ecd48db810974fa568c600a6dc212576166e141da29768",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/trader.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 186423,
+   "id": "b4_cards_wolves",
+   "path": "ui/b4/cards/wolves.png",
+   "role": "ui_decision_illustration",
+   "sha256": "28da50b7da1deb03cd1861d68072083e2af855e6849dba455329b22295c6cebc",
+   "size": [
+    520,
+    260
+   ],
+   "source": "art/style05/ui_b4/cards/wolves.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 6123,
+   "id": "b4_jobs_build",
+   "path": "ui/b4/jobs/build.png",
+   "role": "ui_job_icon",
+   "sha256": "6712b9c8cafed2bcf8bdd3379ce0f4a49d94ba09bee3a934a29fdb7fee43b463",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/jobs/build.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 6482,
+   "id": "b4_jobs_chop",
+   "path": "ui/b4/jobs/chop.png",
+   "role": "ui_job_icon",
+   "sha256": "36411bf470bf6be4808b20433a952c4586c2f81f77103ceaf0ddde63b79abe20",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/jobs/chop.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 8157,
+   "id": "b4_jobs_craft",
+   "path": "ui/b4/jobs/craft.png",
+   "role": "ui_job_icon",
+   "sha256": "bb3e565cbab08caf2a372181fea97cf4571d0154b5dee9500dcf3b9e8a5e1c98",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/jobs/craft.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 5239,
+   "id": "b4_jobs_dig",
+   "path": "ui/b4/jobs/dig.png",
+   "role": "ui_job_icon",
+   "sha256": "3681d3688f67475ef2cf85efd33bd7990fc369088a97dc41756ab2d6c696fd18",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/jobs/dig.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 7457,
+   "id": "b4_jobs_haul",
+   "path": "ui/b4/jobs/haul.png",
+   "role": "ui_job_icon",
+   "sha256": "98ac7f61ad40a89c758f478cbbb26962c6b638700671bf100b023b4d6bc6c75d",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/jobs/haul.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 5563,
+   "id": "b4_jobs_hunt",
+   "path": "ui/b4/jobs/hunt.png",
+   "role": "ui_job_icon",
+   "sha256": "bf472205474e8a17abdc70aebc23b44fdcd7ec40fc211a3ffc312b25d69388db",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/jobs/hunt.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 6565,
+   "id": "b4_jobs_quarry",
+   "path": "ui/b4/jobs/quarry.png",
+   "role": "ui_job_icon",
+   "sha256": "026f413641d962c1947a34df839abcce270e8cea2942b2f788ea2b307e79beff",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/ui_b4/jobs/quarry.png",
+   "source_commit": "0eb2492676140a294ad319045602e72bae760c8c"
+  },
+  {
+   "bytes": 4733,
+   "id": "tech_adze",
+   "path": "ui/knowledge/adze.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "a0474fcb91859739af3563d7c23fbfcf1d3c0a6868aeae7345c83ab16a54c0b1",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/adze.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7324,
+   "id": "tech_animal_taming",
+   "path": "ui/knowledge/animal_taming.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "4509d205698872a0b6293a38d874f56508567b0e8cbdfed0915737e407c00336",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/animal_taming.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 3276,
+   "id": "tech_atlatl",
+   "path": "ui/knowledge/atlatl.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "2ac324f1ea70404fadb7ccbc74816e20f7607359e6d9a303f2df99fc807da710",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/atlatl.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6379,
+   "id": "tech_barley",
+   "path": "ui/knowledge/barley.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "28e2379caf5490784977e57d41df5ce9f6008948445b4d28f2ed05ad212b301d",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/barley.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 5815,
+   "id": "tech_barter",
+   "path": "ui/knowledge/barter.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "65ca2857fa250e05cbdf51177718f5fce540cbd70b9a17a74544f3fb9e10cd42",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/barter.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7491,
+   "id": "tech_basketry",
+   "path": "ui/knowledge/basketry.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "96297de94f1e8ce5b2492f73d65ddd73c51eac1e3eb35cfd4c67737796ea85ae",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/basketry.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 4917,
+   "id": "tech_bedding",
+   "path": "ui/knowledge/bedding.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "d41fb01b139c3b7210399a8eb3c9add6741de286238e5b7ebbc52aac30e61f0e",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/bedding.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 4594,
+   "id": "tech_bone_setting",
+   "path": "ui/knowledge/bone_setting.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "c568e45208ef131b023b957bb8e1154c7f4921550afd0e64b9e00d361beca6e2",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/bone_setting.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 5314,
+   "id": "tech_bone_tools",
+   "path": "ui/knowledge/bone_tools.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "a670e56385c3d09e1e6c2d17fe1f0d95f7620a6cb8fa3ce8f2bae457df90282c",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/bone_tools.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 5808,
+   "id": "tech_bow",
+   "path": "ui/knowledge/bow.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "81fc3f9daea6b26c18947f508e690b78e4a459230319fde136b50f0302081582",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/bow.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 4620,
+   "id": "tech_clay_digging",
+   "path": "ui/knowledge/clay_digging.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "21393511293d00609ff7ff2355dc4dee6cc8e1478e96b8cdb07023b3aba06829",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/clay_digging.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7812,
+   "id": "tech_clay_prep",
+   "path": "ui/knowledge/clay_prep.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "d21ad3256326058fb190c3a38c66391ea21a72dd6a09a507c9c5ef1bd300c0ba",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/clay_prep.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 5773,
+   "id": "tech_cooking",
+   "path": "ui/knowledge/cooking.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "a8114a5a1528997c135384b341493a727cece650aaab46a2582b6c70af117437",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/cooking.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7902,
+   "id": "tech_cordage",
+   "path": "ui/knowledge/cordage.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "409f86d53894f676b2d828d25e1be1911364d97609e8485c16168f58cf5c40d8",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/cordage.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 8319,
+   "id": "tech_crop_rotation",
+   "path": "ui/knowledge/crop_rotation.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "36ee75de4b4abd27b0e8c3736f090d9a3d9a912e64c53bd0d3d9c23db783466b",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/crop_rotation.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 5856,
+   "id": "tech_cultivation",
+   "path": "ui/knowledge/cultivation.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "9d12f2151fbb697c7d1712f78e5df268084bbb4cb21294d360d1543a65d68279",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/cultivation.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7256,
+   "id": "tech_dairy",
+   "path": "ui/knowledge/dairy.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "eff9d8ebc2d2d5f77d2c7678f3c584799d5567d3237a52b8058691f5e2c40cf0",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/dairy.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 3326,
+   "id": "tech_digging",
+   "path": "ui/knowledge/digging.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "bb27be5a6d7ebee6e0e894013cb231d92e85594b68e12a14827a99a6eeead478",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/digging.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 5574,
+   "id": "tech_dog_taming",
+   "path": "ui/knowledge/dog_taming.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "6cec4857a8ffa93a5fb39bed0ec1add0762b51a5dc1a776d6f1b0118daa59c65",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/dog_taming.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7710,
+   "id": "tech_doorway",
+   "path": "ui/knowledge/doorway.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "533b7ce5bc0d9fc485a071ecb079e710f136ca272395c1825dcaa8a0a8c918bb",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/doorway.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 3983,
+   "id": "tech_dugout_canoe",
+   "path": "ui/knowledge/dugout_canoe.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "bda7869287a52ffd90500f299469824c1ba5ce6349ed26b9d6b82c86e585be2b",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/dugout_canoe.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7024,
+   "id": "tech_dyeing",
+   "path": "ui/knowledge/dyeing.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "67af72038e392cc3a6bd9ad819447af38a28789a2c84a2b3549b9246961e41c8",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/dyeing.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7395,
+   "id": "tech_elder_council",
+   "path": "ui/knowledge/elder_council.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "4331494fcee73196029f6bba0c479cc956072e5ea7a2c7cb66026e67cd565121",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/elder_council.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6570,
+   "id": "tech_fence",
+   "path": "ui/knowledge/fence.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "2404e8c6ed7b904ea545b6011c534591e7d5fba082c6610a181242d25b5e8aec",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/fence.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7417,
+   "id": "tech_fermentation",
+   "path": "ui/knowledge/fermentation.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "58a072c5f6a167a06e758684baf100293ecd88b2bd12d651beef545bcf3a2f20",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/fermentation.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 5353,
+   "id": "tech_fire_keeping",
+   "path": "ui/knowledge/fire_keeping.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "88ea5d6f7abc0571c9caba351b90fd321378f912f42516142c49d281c598a580",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/fire_keeping.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7445,
+   "id": "tech_firewood_splitting",
+   "path": "ui/knowledge/firewood_splitting.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "580ca11f4dc1f53bbbf73be995d776eb1a1117dd84b7182ce050a10dc63ec08a",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/firewood_splitting.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6553,
+   "id": "tech_fishing",
+   "path": "ui/knowledge/fishing.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "9b58b584215c8dd6a0540170dd1f2d9cb738b243791fdee987f2a5fbd105910e",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/fishing.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6723,
+   "id": "tech_flint_knapping",
+   "path": "ui/knowledge/flint_knapping.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "7cf5a2daeb773281dfc5f3eaf6984d17d8f8ff10f4845222c2c6c6b210f57e17",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/flint_knapping.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7605,
+   "id": "tech_food_drying",
+   "path": "ui/knowledge/food_drying.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "6bedae457ebfab28868c4ee30ebb09ed1c9870178f6caef9d76e017b05d1f98f",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/food_drying.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 9203,
+   "id": "tech_food_preservation",
+   "path": "ui/knowledge/food_preservation.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "43b8ac2fa0f9c65009f0738b33e2c414a35f9d694f30576488bd80c7c76b9e5a",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/food_preservation.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7309,
+   "id": "tech_foraging",
+   "path": "ui/knowledge/foraging.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "f82d2a992d4c317a95f26c65be05600b2ce5579d1c4996f6f3d89817c115055a",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/foraging.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 5361,
+   "id": "tech_grain_parching",
+   "path": "ui/knowledge/grain_parching.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "fc10f0a02e38dde1ec0d9b8031a9ae7854d115ef21e9b23403d4408e7686e8b2",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/grain_parching.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 8922,
+   "id": "tech_granary",
+   "path": "ui/knowledge/granary.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "4447257944730621d2e7dad66ed3304c8dc881409eb2289dbb5ebaa3bfc23d74",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/granary.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 4715,
+   "id": "tech_hafting",
+   "path": "ui/knowledge/hafting.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "bfedbba79ca17f2207d9ed8b297531c5fe34436082760dd3fc149d7792da912b",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/hafting.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7807,
+   "id": "tech_herbalism",
+   "path": "ui/knowledge/herbalism.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "c7a4e499fef97a5a43855728a2673002ea835ea39528bbfd1f3fe7478a9cc98e",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/herbalism.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7011,
+   "id": "tech_herding",
+   "path": "ui/knowledge/herding.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "d65cf887440e4c7328f4d3361c5183498c2a7c2f4ec8bac7bd3e94cbb772e488",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/herding.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6108,
+   "id": "tech_hide_scraping",
+   "path": "ui/knowledge/hide_scraping.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "9696bf90935d827f64fc987fd55293da291fc455dc38569274b8ce20ceb9eb80",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/hide_scraping.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7762,
+   "id": "tech_hide_working",
+   "path": "ui/knowledge/hide_working.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "0fb3d7ddbb99d92930b60626d8215ee322569799d6f58822a4f14e0c1e15ef32",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/hide_working.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 3992,
+   "id": "tech_hoe",
+   "path": "ui/knowledge/hoe.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "bee9dac18e681aaa2e8b9cbc4809fa78ddf9d2f336256bc86f7781ffa230ae37",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/hoe.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6131,
+   "id": "tech_hut_building",
+   "path": "ui/knowledge/hut_building.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "5f137e3e9b29ba0940a839aafa7156f8af4f077016b489a2e078de8b94568b25",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/hut_building.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 8206,
+   "id": "tech_instruction",
+   "path": "ui/knowledge/instruction.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "058fc8866e37f3dd328d4556714e30373ec443bbd09035d45906f747e016b08f",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/instruction.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6599,
+   "id": "tech_kinship",
+   "path": "ui/knowledge/kinship.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "a85cebce09a27d6b3953ca24194c14864715b4355afeae1078d27bce83cd3f9f",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/kinship.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7920,
+   "id": "tech_leather_armor",
+   "path": "ui/knowledge/leather_armor.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "c2021e3871457f363a624499b5a032f5a87ffefaca059a09209dda9a58382517",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/leather_armor.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7824,
+   "id": "tech_lentil",
+   "path": "ui/knowledge/lentil.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "2e38d47975a98c889a0a6628e62695822ba5b2b62d24b666272a6163dc620512",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/lentil.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6227,
+   "id": "tech_lunar_calendar",
+   "path": "ui/knowledge/lunar_calendar.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "f9dcb506d199ad16044b3d9f6df74b31ebaf8e00a49fe3603f6e039349c3d933",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/lunar_calendar.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 5104,
+   "id": "tech_megalith",
+   "path": "ui/knowledge/megalith.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "818bb02b1e271cc6e179ae8817339788bf03e4bc514cb8c664a4fb792f8c4d68",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/megalith.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7720,
+   "id": "tech_millet",
+   "path": "ui/knowledge/millet.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "c02b05a7da3b9e0f178a71355b7e52e1c8be0152d6e064a6a167b0eeb440e520",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/millet.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7752,
+   "id": "tech_mud_brick",
+   "path": "ui/knowledge/mud_brick.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "5bcedc63e1d8dd70ffa4f4410d0e8ac78af381105ffa9e079f8dc14663fb1f12",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/mud_brick.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6638,
+   "id": "tech_nut_processing",
+   "path": "ui/knowledge/nut_processing.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "af7e4484f2259e5a4b2595bef175491cf29215a7a4b3f9686780bddae811b095",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/nut_processing.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6393,
+   "id": "tech_ochre",
+   "path": "ui/knowledge/ochre.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "92c0b59dd0f4c6a3f8b0d98653a40cbda50909226caca2649762656d21541a9c",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/ochre.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7836,
+   "id": "tech_orchard",
+   "path": "ui/knowledge/orchard.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "f502f31d67c8d07d984827fd582dd1fd592eb1d81c0ede9bc0c3dbabb66652f1",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/orchard.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6759,
+   "id": "tech_oven",
+   "path": "ui/knowledge/oven.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "caf8adaceee48357df9d3ec6a4860c37f92b41facb7eb77604dbaff137320c48",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/oven.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 4245,
+   "id": "tech_packed_floor",
+   "path": "ui/knowledge/packed_floor.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "ae3404fabbaa7beafac52b8275c1842868b16c640a068726070388ec935a5e77",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/packed_floor.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7428,
+   "id": "tech_pea",
+   "path": "ui/knowledge/pea.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "2d61b901a018af35b096d93b77bae7d54829d2fa68be924d50c665ed9a09f7b5",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/pea.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7991,
+   "id": "tech_pot_firing",
+   "path": "ui/knowledge/pot_firing.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "98845c1ea8d412ac8108ca2cdaf9ff63ec053c0d6aa2ff22f29c4a7a9b8815be",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/pot_firing.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6502,
+   "id": "tech_pot_forming",
+   "path": "ui/knowledge/pot_forming.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "366608d441d9e26e6b7c990fc5d2b2cb544667b1e78c6cf06a8b8a483f10fd33",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/pot_forming.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 4436,
+   "id": "tech_pressure_flaking",
+   "path": "ui/knowledge/pressure_flaking.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "77ec859c5a0976ef0fd42f30efaaae0ac31672f834449972d93a591820518346",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/pressure_flaking.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6658,
+   "id": "tech_querns",
+   "path": "ui/knowledge/querns.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "080a8273b717f487076d4b27faa48c3587d6a2bae5eca482e154e2c3e9901e75",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/querns.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6188,
+   "id": "tech_ritual",
+   "path": "ui/knowledge/ritual.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "4503a333bf5bf62cbc34b08e627705ea492aa61dea3e6a244b902c96374026a6",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/ritual.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 4660,
+   "id": "tech_rye",
+   "path": "ui/knowledge/rye.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "c4f214d75718ca446b1f9d4a00691fdd8188263abba5643eecc1d580c395358c",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/rye.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 8725,
+   "id": "tech_selective_breeding",
+   "path": "ui/knowledge/selective_breeding.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "738a5fa9ac7a0a92ab3a695a99632bd6de7e8f5178fcfec1d2f430bb754935f0",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/selective_breeding.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6009,
+   "id": "tech_sickle",
+   "path": "ui/knowledge/sickle.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "425684d47b357d3979b9ef73ab6ca635907259fe78c69f474bbc35c8ed68775d",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/sickle.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 5808,
+   "id": "tech_sling",
+   "path": "ui/knowledge/sling.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "2150d3cdd369ff5786f335db63b0afe907430b16793af52b8ca062c04b933b00",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/sling.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 3027,
+   "id": "tech_spear",
+   "path": "ui/knowledge/spear.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "4b1094795ca377548a283ae49d9eace01beeca5d05ebe6349607139f2fb64250",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/spear.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6042,
+   "id": "tech_spinning",
+   "path": "ui/knowledge/spinning.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "ebab51e24582961f6721c01d3830fa61acaa23d81986c9cee6f8e4ea5ec6af9e",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/spinning.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6771,
+   "id": "tech_stone_grinding",
+   "path": "ui/knowledge/stone_grinding.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "4ffc7574485a20602724fc9f84ec1d47a1720adbf59890a88b201413295ab072",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/stone_grinding.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7036,
+   "id": "tech_stone_quarrying",
+   "path": "ui/knowledge/stone_quarrying.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "a4704b0b70e094523316d0cf40bade92a3e0e873089dca3ed09b6d664c596f0a",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/stone_quarrying.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 5670,
+   "id": "tech_stone_walling",
+   "path": "ui/knowledge/stone_walling.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "a560a79e6c4724a51e7ae3da1fa1f7e6e70ff062bac17c2ea0c0eb40c90e5ea6",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/stone_walling.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7258,
+   "id": "tech_storytelling",
+   "path": "ui/knowledge/storytelling.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "de5e707d2b0debdd8dcfeb3b999463b6a9de0e19948f2703ed7a68c5916b7b63",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/storytelling.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7143,
+   "id": "tech_taboo",
+   "path": "ui/knowledge/taboo.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "ba945a6cea4eac73761784640551a3cbec0b75f4ea05505baba42fa662bf8177",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/taboo.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 8227,
+   "id": "tech_tailoring",
+   "path": "ui/knowledge/tailoring.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "6724c62cf09623083ae7e646b517d26bcfbd611c1401a7d39d85d650d21c58f2",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/tailoring.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6652,
+   "id": "tech_tally",
+   "path": "ui/knowledge/tally.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "fd69721ec83458d1b3d2f2a4c6298f99b9c7f09ec3a7a3217c422993f5ae82be",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/tally.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6799,
+   "id": "tech_thatch",
+   "path": "ui/knowledge/thatch.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "9adbe5cc5925a934b7e3b8366dbcb8d9dcc335aafc90d5b9b0a45c5c23f4b9cc",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/thatch.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7740,
+   "id": "tech_timber_wall",
+   "path": "ui/knowledge/timber_wall.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "ecd4ec28b6a31cf825e6d0d9c16e832c3dc0aee082868de57bc72062bcfb60d2",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/timber_wall.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 5024,
+   "id": "tech_tracking",
+   "path": "ui/knowledge/tracking.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "4f39b85a4820778afee14aba1d950567b13362a8e29a757e7088aa289e1cb080",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/tracking.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 5746,
+   "id": "tech_trapping",
+   "path": "ui/knowledge/trapping.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "768b1cb39fcd0921458efe7d122102dd2d80754c56188884307e8983e31ab6e1",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/trapping.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7091,
+   "id": "tech_water_finding",
+   "path": "ui/knowledge/water_finding.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "d0c84c8dcdfcc61fcac7a5cd0090c328689a89157a395ce81c59f7ea614d0b51",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/water_finding.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7242,
+   "id": "tech_wattle_daub",
+   "path": "ui/knowledge/wattle_daub.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "272d4bda8110f543129ffc95a5f8aec29b0c7f596be0e0f5dcf7ddf88a602de3",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/wattle_daub.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6441,
+   "id": "tech_weather_lore",
+   "path": "ui/knowledge/weather_lore.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "a458c4b0ef6f2753d4ee33448433d0c9be22632454d44be5c916cce7cadd6b36",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/paleolithic/weather_lore.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 6977,
+   "id": "tech_weaving",
+   "path": "ui/knowledge/weaving.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "e3115b8b7ac8c20ffd9bd36634fa265b198d3d6d935d243859082b2b2b168687",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/weaving.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
+  },
+  {
+   "bytes": 7919,
+   "id": "tech_well",
+   "path": "ui/knowledge/well.png",
+   "role": "ui_knowledge_icon",
+   "sha256": "d532a4b28eee35503e6ba4a479677f82dedd33e85fabc431ac27ac0d5beda381",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/techmap/icons/neolithic/well.png",
+   "source_commit": "6e8576a8247378d77eac8c1bee64c37598be69f3"
   }
  ],
  "generated_by": "tools/v8/art_import.py",
@@ -13059,5 +18754,5 @@
   "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
   "source": "art/style05/anchors/person.png"
  },
- "total_bytes": 14155684
+ "total_bytes": 18720961
 }
