@@ -133,6 +133,8 @@ func _run() -> void:
 	_panel = _main.get_node_or_null("UI/BuildPanel") as Control
 	_check("integrated actual BuildPanel exists", _panel != null)
 	if _panel == null: _finish(); return
+	# Every named capture must show its subject, not the first-run lesson helper/highlight overlay.
+	_main.get_node("UI/MuxHud").get("store").set_value("helper_on", false)
 	if _c2_ui:
 		await _c2_ui_checks()
 		_finish()
@@ -763,19 +765,33 @@ func _metal() -> void:
 	var cards: Control = _main.get_node("UI/MuxHud/CardPanel") as Control
 	var goals: Control = _main.get_node("UI/MuxHud/Goals") as Control
 	var trade: Control = _main.get_node("UI/TradePanel") as Control
+	var why: Control = _main.get_node("UI/WhyPanel") as Control
 	for language: String in ["ko", "en"]:
 		_locale.call("set_language", language)
 		for stage: String in ["00-outcrop-found", "01-mining", "02-smelter-working", "03-first-copper-ingot", "04-copper-axe-used", "05-tin-trade-card", "06-first-bronze-axe", "07-chapter-seven"]:
 			if not (await _load(stage)): continue
 			var manifest: Dictionary = _manifests[stage]
+			var ui: Dictionary = manifest.get("ui", {})
 			var copper := Vector2i(int(manifest["copper"][0]), int(manifest["copper"][1]))
-			_camera.position = View.tile_centre(copper)
+			var smelter: Variant = ui.get("smelter_anchor")
+			var subject: Vector2i = Vector2i(int(smelter[0]), int(smelter[1])) if smelter != null else copper
+			_camera.position = View.tile_centre(subject)
 			_camera.zoom = Vector2(2, 2)
 			_camera.force_update_scroll()
 			_panel.hide()
 			goals.hide()
 			await _frames()
+			var cards_color: Color = cards.modulate
+			cards.modulate = Color(cards_color, 0.0)
 			await _capture(language + "_" + stage)
+			cards.modulate = cards_color
+			for event: String in ["ore", "ingot", "tool_upgraded", "tool_used"]:
+				var entry: int = int(ui.get(event + "_entry", -1) if ui.get(event + "_entry") != null else -1)
+				if entry < 0: continue
+				_check(stage + " real Why " + event, bool(why.call("open", entry)))
+				var plain: String = str(why.call("plain_text"))
+				_check(stage + " localized Why " + event, not plain.contains("C1_") and not plain.contains(str(_locale.call("ltr", "UI_UNKNOWN"))), {"text": plain})
+				why.call("close")
 			var facts: Dictionary = SimReads.read(_world, "get_ui_facts")
 			_check(stage + " copper fact", bool(facts.get("first_copper_ingot", false)) == (stage >= "03"))
 			_check(stage + " bronze-use fact", bool(facts.get("first_bronze_tool_used", false)) == (stage == "07-chapter-seven"))

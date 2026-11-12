@@ -109,9 +109,36 @@ impl Run {
         let bytes = sim_systems::save::save(&mut self.e).expect("scene save");
         std::fs::write(dir.join(format!("{label}.wsave")), bytes).expect("save bytes");
         self.receipt["steps"][label] = serde_json::json!(self.e.current_tick());
+        let event_index = |code: u8| {
+            self.e
+                .resources
+                .chronicle
+                .entries()
+                .iter()
+                .enumerate()
+                .filter(|(_, entry)| entry.kind as u8 == code)
+                .map(|(index, _)| index as i64)
+                .max()
+        };
+        let smelter_anchor = self
+            .e
+            .resources
+            .colony
+            .buildings
+            .sites
+            .values()
+            .find(|site| site.template == "smelter")
+            .map(|site| site.anchor);
         // The native driver's manifest: exact tick plus the chain facts recorded so far.
         let mut manifest = self.receipt.clone();
         manifest["tick"] = serde_json::json!(self.e.current_tick());
+        manifest["ui"] = serde_json::json!({
+            "smelter_anchor": smelter_anchor,
+            "ore_entry": event_index(66),
+            "ingot_entry": event_index(67),
+            "tool_upgraded_entry": event_index(68),
+            "tool_used_entry": event_index(69),
+        });
         let text = serde_json::to_vec_pretty(&manifest).expect("manifest");
         std::fs::write(dir.join(format!("{label}.json")), text).expect("manifest file");
     }
