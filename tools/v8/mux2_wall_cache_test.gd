@@ -15,7 +15,10 @@ func _run() -> void:
 	resolver.load_imported()
 	var style: String = ""
 	for row: Dictionary in resolver.styles:
-		if str(row.get("kind", "")) == "wall":
+		# A wall_pieces style (the 16-mask thin-wall capability, ADR 0033) takes prepare_set's
+		# _prepare_pieces branch, a different cache-key shape; this oracle covers the plain
+		# per-role texture path, so skip styles that opted into wall_pieces.
+		if str(row.get("kind", "")) == "wall" and not (row.get("wall_pieces", null) is Dictionary and (row["wall_pieces"] as Dictionary).has("pieces")):
 			style = str(row["id"])
 			break
 	_check(not style.is_empty() and resolver.problems.is_empty(), "resolver")
