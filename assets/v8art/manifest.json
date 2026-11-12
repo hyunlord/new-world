@@ -5898,11 +5898,11 @@
    "source": "art/materials/textures/log/junction.png"
   },
   {
-   "bytes": 11408,
+   "bytes": 4737,
    "id": "door_ew_closed",
    "path": "materials/textures/log/pieces/door_ew_closed.png",
    "role": "wall_piece_texture",
-   "sha256": "ffbfd5649d847829303dc287d407f94e42671a5242f1fa79758630a7ee5542ba",
+   "sha256": "dd912b4925561eaf33846a8a9c12bf2339a51f852556ea1569340fcf204ec43c",
    "size": [
     64,
     60
@@ -5910,11 +5910,11 @@
    "source": "art/materials/textures/log/pieces/door_ew_closed.png"
   },
   {
-   "bytes": 9043,
+   "bytes": 2076,
    "id": "door_ew_open",
    "path": "materials/textures/log/pieces/door_ew_open.png",
    "role": "wall_piece_texture",
-   "sha256": "801fcd7f155a1ead32429454d9980b976f16798f001b1a3f2d8b9efb49ed62b7",
+   "sha256": "ab9cae26b0f790b2ac4e113581989e7f5c6a513312149253574b506b3983a125",
    "size": [
     64,
     60
@@ -5922,11 +5922,11 @@
    "source": "art/materials/textures/log/pieces/door_ew_open.png"
   },
   {
-   "bytes": 10688,
+   "bytes": 5059,
    "id": "door_ns_closed",
    "path": "materials/textures/log/pieces/door_ns_closed.png",
    "role": "wall_piece_texture",
-   "sha256": "db4c78ec6c076f1ccadbc13c20f6d0829024fc90f92a8e03e04ffd7a43611441",
+   "sha256": "430bf519326071c8d6b37644df39502c9857f0db7c6b1ad8d33f0965a7c3c75e",
    "size": [
     64,
     60
@@ -5934,11 +5934,11 @@
    "source": "art/materials/textures/log/pieces/door_ns_closed.png"
   },
   {
-   "bytes": 7930,
+   "bytes": 3481,
    "id": "door_ns_open",
    "path": "materials/textures/log/pieces/door_ns_open.png",
    "role": "wall_piece_texture",
-   "sha256": "245e3d4da165c2ac92674967bd3e2037c8f935a899f10b400adf2e9acf096d8f",
+   "sha256": "1e13c30b95411f3ab6ee5f44b49faaf8bb2586d9ecab7154d762f1333837ed6f",
    "size": [
     64,
     60
@@ -5946,11 +5946,11 @@
    "source": "art/materials/textures/log/pieces/door_ns_open.png"
   },
   {
-   "bytes": 4408,
+   "bytes": 2441,
    "id": "mask_00",
    "path": "materials/textures/log/pieces/mask_00.png",
    "role": "wall_piece_texture",
-   "sha256": "b62add745a792a3cc9f835a5c75b329ff2f07122b9ce21ba31cb6394977747c5",
+   "sha256": "13419476ed501aeb04f114bb021cc984ec5b97de7b29fea7efd0780faed7fabb",
    "size": [
     64,
     64
@@ -5970,11 +5970,11 @@
    "source": "art/materials/textures/log/pieces/mask_01.png"
   },
   {
-   "bytes": 5916,
+   "bytes": 4104,
    "id": "mask_02",
    "path": "materials/textures/log/pieces/mask_02.png",
    "role": "wall_piece_texture",
-   "sha256": "5d8e95363948a3bace154c8d81099e930612b2ec9704137cc34217868f444904",
+   "sha256": "9c191ffec2bdbe2a4eeefafcaaafdc3270faf0332355262986c965d9f90b8e77",
    "size": [
     64,
     64
@@ -5982,11 +5982,11 @@
    "source": "art/materials/textures/log/pieces/mask_02.png"
   },
   {
-   "bytes": 6148,
+   "bytes": 4333,
    "id": "mask_03",
    "path": "materials/textures/log/pieces/mask_03.png",
    "role": "wall_piece_texture",
-   "sha256": "6308e93263faab04c6e432bf349e2da35c071579c3d558fafd741fc3b6c210b7",
+   "sha256": "731c4013a325824f1ca41aaf8b150d8b5df16e9403a2c8586b3bfb42890b4417",
    "size": [
     64,
     64
@@ -6042,11 +6042,11 @@
    "source": "art/materials/textures/log/pieces/mask_07.png"
   },
   {
-   "bytes": 6010,
+   "bytes": 4181,
    "id": "mask_08",
    "path": "materials/textures/log/pieces/mask_08.png",
    "role": "wall_piece_texture",
-   "sha256": "e1252c3e68051884efb180b8b9da2cc8f8d433bedc6d93decb65fa9b21755f7e",
+   "sha256": "97fdfc668c714770662cd568b35ba3c6f53c0d15daf254330086c0add3ee7f0f",
    "size": [
     64,
     64
@@ -6054,11 +6054,11 @@
    "source": "art/materials/textures/log/pieces/mask_08.png"
   },
   {
-   "bytes": 6232,
+   "bytes": 4398,
    "id": "mask_09",
    "path": "materials/textures/log/pieces/mask_09.png",
    "role": "wall_piece_texture",
-   "sha256": "9e75691e2f6c6cac321ec41ba0618fc998e32313a35f944a6756c1599744469e",
+   "sha256": "453c35be1f10b2c77a844d521eccf6d3770f6ea427f1fedae053a7a5df383e29",
    "size": [
     64,
     64
@@ -6066,11 +6066,11 @@
    "source": "art/materials/textures/log/pieces/mask_09.png"
   },
   {
-   "bytes": 5576,
+   "bytes": 5575,
    "id": "mask_10",
    "path": "materials/textures/log/pieces/mask_10.png",
    "role": "wall_piece_texture",
-   "sha256": "cac41895c13194d91fd4d49e91908ee5d25def047b9177329d7de1fc0eba8d25",
+   "sha256": "8a359858747c7fc474dfa107a05d177d41307f790cd23b8ad6db94ef62cfada0",
    "size": [
     64,
     64
@@ -18754,5 +18754,5 @@
   "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
   "source": "art/style05/anchors/person.png"
  },
- "total_bytes": 18720961
+ "total_bytes": 18687987
 }
