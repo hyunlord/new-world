@@ -5,6 +5,16 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## R1 people candidates — 2026-11-14
+
+### Added
+- `art/batch_r1/`: frozen shipped-rig measurement regions, normalization and hash-bound body/portrait adoption checks, focused tests, style contract and draft import handoff.
+- `art/character/batch_r1/` and `art/portrait/batch_r1/`: accepted wardrobe candidates only. Rejected generations and measurements remain outside the repository in `/Users/rexxa/work/art-batch/R1/`.
+- ADR 0016 records the five strict ±10% comparisons and complete ten-pose visual gate. These are art-line candidates; the live game importer and simulation remain unchanged.
+
+### Changed
+- The pitfalls skill records the native-size antialiasing measurement lesson.
+
 ## M1-ART — 2026-10-21
 
 The colony view drawn like the mock-up: real ground, a canopy that reads as forest, buildings and log piles you can read, people you can find (`docs/v8/m1art/ART_GOAL.md`, report `docs/v8/m1art/ART_REPORT.md`). No simulation change (`rust/` untouched; identity, colony determinism and replay pass).

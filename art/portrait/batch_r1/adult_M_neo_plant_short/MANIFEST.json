@@ -1,0 +1,41 @@
+{
+  "look": "adult_M_neo_plant_short",
+  "generation": {
+    "path": "/Users/rexxa/work/art-batch/R1/portraits/adult_M_neo_plant_short/try1/generation.json",
+    "sha256": "ac107cce915187cd208d2391bdcbe6d0e3046ee2b75119bc1ff52c8733faa99c"
+  },
+  "raw": {
+    "path": "/Users/rexxa/work/art-batch/R1/portraits/adult_M_neo_plant_short/try1/raw.png",
+    "sha256": "3f4830e1e27409a24b9378568719f3b3c4d75f8468d1c1d6c41ef3a5e3b1f77b"
+  },
+  "frames": {
+    "v1": {
+      "image_sha256": "6c695345db3ad4297f0223c2bb6d39cdf4b50c751a5be500593c9726d65a41f5",
+      "sidecar_sha256": "863e792f278c316cf6ca3965235f0119b9776a75c59d9376e62a6841b1ca0cf6"
+    },
+    "v2": {
+      "image_sha256": "8186a01264589efa08736a1d38d50a467704864963d593e47894c3aed75042c2",
+      "sidecar_sha256": "b2382388acd80323875573cec36090260f9ef67f365589b478e7c532da2e62cf"
+    },
+    "v3": {
+      "image_sha256": "1ad3195883355727e4dda5f3933a2a667fe5728b386c74cffc173a58a81fa8e1",
+      "sidecar_sha256": "6f18c74838699dd087e3f3fc8f7e4341a4cde2782a28ad10c021c88d6cfa0b3f"
+    },
+    "v4": {
+      "image_sha256": "df2cc27376120a130c132abbf46619484b604d0dc56ff64f8655bd103de98ca9",
+      "sidecar_sha256": "5adfce57a80573ca923988b7d871c4688d7bf81df447fdc26e600a3de32c4041"
+    },
+    "v5": {
+      "image_sha256": "8f514a3ef30df311a4778e5ac35752491551581add5bb28cd2a8a25e74c30e8c",
+      "sidecar_sha256": "3d6f1392fab7602b592d152f3178c9e77b6bc85d9b6b761a82e4eff099d1b1cd"
+    },
+    "v6": {
+      "image_sha256": "4bad4a02688026a15a005a51b44d3ddb1739fb9c34fb88724f8d7db43f71b628",
+      "sidecar_sha256": "ed1fc560057af1596fc37347a285717fe98fc3d71a228409f189f0b3ca7abb40"
+    }
+  },
+  "visual_review": {
+    "path": "/Users/rexxa/work/art-batch/R1/portraits/adult_M_neo_plant_short/try1/visual_verdict.json",
+    "sha256": "c9c9b16271ba7a314c6716b8dde9bfa16edff0a009df85d325a4d2a5bf3dcc6f"
+  }
+}
