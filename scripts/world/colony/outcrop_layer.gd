@@ -28,6 +28,13 @@ func _ready() -> void:
 static func warmup() -> void:
 	for definition: Dictionary in Content.rows("outcrops"):
 		Icons.item_texture(definition)
+	# Load bound structure art up front so a mid-run depletion switch never stalls a frame (step 41).
+	for row: Variant in (ArtData.bindings().get("outcrops", {}) as Dictionary).get("codes", []):
+		if row is Dictionary:
+			for key: String in ["structure", "depleted"]:
+				var id: String = str((row as Dictionary).get(key, ""))
+				if not id.is_empty():
+					ArtData.texture(id)
 
 
 func _reset() -> void:
