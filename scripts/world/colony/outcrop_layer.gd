@@ -23,18 +23,45 @@ func _ready() -> void:
 	_world.connect("world_reset", _reset)
 	_font = load("res://assets/fonts/galmuri/Galmuri11.ttf") as Font
 	warmup()
+	_render_warmup(bound_outcrop_textures())
 
 
 static func warmup() -> void:
 	for definition: Dictionary in Content.rows("outcrops"):
 		Icons.item_texture(definition)
 	# Load bound structure art up front so a mid-run depletion switch never stalls a frame (step 41).
+	bound_outcrop_textures()
+
+
+## Every bound outcrop structure/depleted texture, loaded through the ordinary cache.
+static func bound_outcrop_textures() -> Array[Texture2D]:
+	var textures: Array[Texture2D] = []
 	for row: Variant in (ArtData.bindings().get("outcrops", {}) as Dictionary).get("codes", []):
 		if row is Dictionary:
 			for key: String in ["structure", "depleted"]:
 				var id: String = str((row as Dictionary).get(key, ""))
 				if not id.is_empty():
-					ArtData.texture(id)
+					var tex: Texture2D = ArtData.texture(id)
+					if tex != null:
+						textures.append(tex)
+	return textures
+
+
+## A loaded texture's GPU upload is otherwise deferred to its first real draw; force that
+## off-screen, once, during warmup instead of during a mid-run depletion switch (step 41).
+func _render_warmup(textures: Array[Texture2D]) -> void:
+	if textures.is_empty() or DisplayServer.get_name() == "headless":
+		return
+	var viewport := SubViewport.new()
+	viewport.size = Vector2i(4, 4)
+	viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
+	for tex: Texture2D in textures:
+		var sprite := Sprite2D.new()
+		sprite.texture = tex
+		viewport.add_child(sprite)
+	add_child(viewport)
+	await RenderingServer.frame_post_draw
+	viewport.queue_free()
 
 
 func _reset() -> void:
