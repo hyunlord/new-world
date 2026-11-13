@@ -6,6 +6,14 @@
   ],
   "frame_path": "animals/{species}/{facing}/{pose}.png",
   "poses": {
+   "aurochs": [
+    "stand",
+    "walk",
+    "run",
+    "graze",
+    "dead",
+    "attack"
+   ],
    "deer": [
     "stand",
     "walk",
@@ -59,11 +67,288 @@
    "goat",
    "sheep_fleeced",
    "wild_boar",
-   "reindeer"
+   "reindeer",
+   "aurochs"
   ]
  },
  "config": "tools/v8/art_import.json",
  "files": [
+  {
+   "bytes": 6468,
+   "id": "aurochs/E/attack",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/aurochs/E/attack.png",
+   "role": "animal_frame",
+   "sha256": "dfaf466e3574d9c9be4ed273c023c55ebeb7b43ea2ca86fc4c0e3f06ac86da32",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/style05/batch_b3/animals/aurochs/E/attack.png",
+   "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+  },
+  {
+   "bytes": 5857,
+   "id": "aurochs/E/dead",
+   "meta": {
+    "anchor": [
+     48,
+     56
+    ],
+    "canvas": [
+     96,
+     64
+    ]
+   },
+   "path": "animals/aurochs/E/dead.png",
+   "role": "animal_frame",
+   "sha256": "22b49fbd894c65826b79e45d39ef74659ee0aa2c68f9d0c4e200a1e562a52cf3",
+   "size": [
+    96,
+    64
+   ],
+   "source": "art/style05/batch_b3/animals/aurochs/E/dead.png",
+   "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+  },
+  {
+   "bytes": 5572,
+   "id": "aurochs/E/graze",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/aurochs/E/graze.png",
+   "role": "animal_frame",
+   "sha256": "198fb1828b0f273cbc2e06aadb8cbb958c92995e1f91a7e64cb7792f0d7b853d",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/style05/batch_b3/animals/aurochs/E/graze.png",
+   "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+  },
+  {
+   "bytes": 5824,
+   "id": "aurochs/E/run",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/aurochs/E/run.png",
+   "role": "animal_frame",
+   "sha256": "5997cb1800e706b8a61f185e4035bb84c529d3995ab5aa7ad3b6ad0e07393662",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/style05/batch_b3/animals/aurochs/E/run.png",
+   "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+  },
+  {
+   "bytes": 5847,
+   "id": "aurochs/E/stand",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/aurochs/E/stand.png",
+   "role": "animal_frame",
+   "sha256": "10b6f16ccc200e247d50648b86aa502236c128ce9f264243825948b73bed83fa",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/style05/batch_b3/animals/aurochs/E/stand.png",
+   "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+  },
+  {
+   "bytes": 5975,
+   "id": "aurochs/E/walk",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/aurochs/E/walk.png",
+   "role": "animal_frame",
+   "sha256": "99c4b0f5b501d733da52cab0f11af6536eb040e3acef44bed38b0514cb52a91b",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/style05/batch_b3/animals/aurochs/E/walk.png",
+   "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+  },
+  {
+   "bytes": 6351,
+   "id": "aurochs/S/attack",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/aurochs/S/attack.png",
+   "role": "animal_frame",
+   "sha256": "5b9fafe2c6b93474bb325137438a4f39d22747039cd0dd3d30e2f3b3844508cd",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/style05/batch_b3/animals/aurochs/S/attack.png",
+   "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+  },
+  {
+   "bytes": 6609,
+   "id": "aurochs/S/dead",
+   "meta": {
+    "anchor": [
+     48,
+     56
+    ],
+    "canvas": [
+     96,
+     64
+    ]
+   },
+   "path": "animals/aurochs/S/dead.png",
+   "role": "animal_frame",
+   "sha256": "b7f1d5bf68b4bee5be0ed364f492ea3974869c37748d707297d5b6ff96073ae3",
+   "size": [
+    96,
+    64
+   ],
+   "source": "art/style05/batch_b3/animals/aurochs/S/dead.png",
+   "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+  },
+  {
+   "bytes": 5656,
+   "id": "aurochs/S/graze",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/aurochs/S/graze.png",
+   "role": "animal_frame",
+   "sha256": "8f6bba174f94553af6cc89e9d3f4d46f493e3b9263c1ab7f3737d6e2309b3116",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/style05/batch_b3/animals/aurochs/S/graze.png",
+   "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+  },
+  {
+   "bytes": 6400,
+   "id": "aurochs/S/run",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/aurochs/S/run.png",
+   "role": "animal_frame",
+   "sha256": "92f536ca63de2e84eda9be85bc61316853126bad76c7dbd06fff0d20faf13c6f",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/style05/batch_b3/animals/aurochs/S/run.png",
+   "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+  },
+  {
+   "bytes": 5947,
+   "id": "aurochs/S/stand",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/aurochs/S/stand.png",
+   "role": "animal_frame",
+   "sha256": "df997743f4b0d77c86fcf3dd2f754f1ac5b450de43131823ce92068cf5fce37e",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/style05/batch_b3/animals/aurochs/S/stand.png",
+   "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+  },
+  {
+   "bytes": 5982,
+   "id": "aurochs/S/walk",
+   "meta": {
+    "anchor": [
+     48,
+     72
+    ],
+    "canvas": [
+     96,
+     80
+    ]
+   },
+   "path": "animals/aurochs/S/walk.png",
+   "role": "animal_frame",
+   "sha256": "fb2a9dc9a5f26dbe5bf66861904283da8a0d1ea4b13728c82df343bd5a297b62",
+   "size": [
+    96,
+    80
+   ],
+   "source": "art/style05/batch_b3/animals/aurochs/S/walk.png",
+   "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+  },
   {
    "bytes": 4865,
    "id": "deer/E/dead",
@@ -2927,6 +3212,259 @@
    "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
   },
   {
+   "bytes": 3607,
+   "id": "bronze_axe",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/bronze_axe.png",
+   "role": "item",
+   "sha256": "32ffe955e15ae3f07514d9067f3eda6d04599cf83bb3936fe76854dc0a7c6818",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/bronze_axe.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 1535,
+   "id": "bronze_dagger",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/bronze_dagger.png",
+   "role": "item",
+   "sha256": "986ee825993b8563efa005c7ddb844eb637b7c01ff551819dd85cb44b488a491",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/bronze_dagger.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 1891,
+   "id": "bronze_hoe",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/bronze_hoe.png",
+   "role": "item",
+   "sha256": "9fadf263dac83c529d75ed6890b5984be9e7b58e8763ed14bcceed931d4cd63a",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/bronze_hoe.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2659,
+   "id": "bronze_ingot",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/bronze_ingot.png",
+   "role": "item",
+   "sha256": "237f1946005e60abf515da069e89030461b87891a48c79160d325663181e80df",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/bronze_ingot.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2518,
+   "id": "bronze_ingot_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/bronze_ingot_count_2_8.png",
+   "role": "item",
+   "sha256": "8387b44d381b00d506041f5845216e73a917af77267a3a6536c681708b4a047b",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/bronze_ingot_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2802,
+   "id": "bronze_ingot_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/bronze_ingot_count_9_plus.png",
+   "role": "item",
+   "sha256": "6cc3dbbe41326a5b0c821644cb4f7ff8c57cce3d80a894c7e89a336af73062d9",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/bronze_ingot_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 4678,
+   "id": "bronze_sickle",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/bronze_sickle.png",
+   "role": "item",
+   "sha256": "591e5a773d1cec4fcde77ed78a0d1d2533326ea484ee9b3d2fc3f6e08a035154",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/bronze_sickle.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 1016,
+   "id": "bronze_spear",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/bronze_spear.png",
+   "role": "item",
+   "sha256": "c4fa82a56f6752149d991fd438b1a3419b9d2a0f595805ea74a05ec389d22606",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/bronze_spear.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2850,
+   "id": "charcoal",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/charcoal.png",
+   "role": "item",
+   "sha256": "ca3bb8e08954cf7310e4b614ab9c69e87e8d9990801a58ee64b8d2f7e524f7f4",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/charcoal.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2727,
+   "id": "charcoal_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/charcoal_count_2_8.png",
+   "role": "item",
+   "sha256": "8f5b3f3c46402cdf2430385a10a48aeb9b2f30a625f30ff5bdc8b8fdd81d73ce",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/charcoal_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2930,
+   "id": "charcoal_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/charcoal_count_9_plus.png",
+   "role": "item",
+   "sha256": "86c8acc2b2b611d49a40ceb5c3b3198b3b0506ff9b2638e7ed234e29cb986ed8",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/charcoal_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
    "bytes": 2925,
    "id": "cheese",
    "meta": {
@@ -3018,6 +3556,75 @@
    "source": "art/style05/polish/items/clay_try3.png"
   },
   {
+   "bytes": 3803,
+   "id": "clay_mould",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/clay_mould.png",
+   "role": "item",
+   "sha256": "2ec503716df61b5b779e41eb3134df4a63edd4ade461134c2b9b33cd6ceb67fc",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/clay_mould.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3411,
+   "id": "clay_mould_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/clay_mould_count_2_8.png",
+   "role": "item",
+   "sha256": "c3e55ef7275b58c6a45499afff50a661d8b6f672c23fc08e9a3ee8e429f422b5",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/clay_mould_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 4216,
+   "id": "clay_mould_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/clay_mould_count_9_plus.png",
+   "role": "item",
+   "sha256": "0918332b66c81ed8757701e89ffec55e507e34d4cebcbc978a693c3252e98935",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/clay_mould_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
    "bytes": 5459,
    "id": "clay_pot_empty",
    "meta": {
@@ -3060,6 +3667,213 @@
     64
    ],
    "source": "art/style05/env1/items/clay_pot_filled.png"
+  },
+  {
+   "bytes": 1504,
+   "id": "copper_awl",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/copper_awl.png",
+   "role": "item",
+   "sha256": "3d8bbc14820c8c21d6d9509a129434298fd2257543c76ed3c276059fd575a152",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/copper_awl.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3457,
+   "id": "copper_axe",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/copper_axe.png",
+   "role": "item",
+   "sha256": "f5f0ba088084fd8ce8aad41264c6b7ce1cd58582186154abb139d86592c4c395",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/copper_axe.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3053,
+   "id": "copper_ingot",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/copper_ingot.png",
+   "role": "item",
+   "sha256": "98f2ceaed75877f048b2bd43bfe95e469bc550fea409cd732688e6f3129bb16b",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/copper_ingot.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2680,
+   "id": "copper_ingot_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/copper_ingot_count_2_8.png",
+   "role": "item",
+   "sha256": "9412b3ff8d294e9b3b2326d37325e6dbc1e9ab930f833189e28ca5b572b85adf",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/copper_ingot_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3172,
+   "id": "copper_ingot_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/copper_ingot_count_9_plus.png",
+   "role": "item",
+   "sha256": "52e85476006da7641ecdd32d256362597ebc1197a3bbc805df0b985f547b0aec",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/copper_ingot_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 1050,
+   "id": "copper_needle",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/copper_needle.png",
+   "role": "item",
+   "sha256": "7a37e88ee57633fdf9bddc205639f5a169b2668ea91b5ceb5b2290e028102028",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/copper_needle.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3586,
+   "id": "copper_ore",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/copper_ore.png",
+   "role": "item",
+   "sha256": "2024ae862eb6cfb95915ddde51c3e8b5ecade1f8280b7dce3ab91eabf97ca6d7",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/copper_ore.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3553,
+   "id": "copper_ore_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/copper_ore_count_2_8.png",
+   "role": "item",
+   "sha256": "b95b330a12855dab1057d1477e89dcbd4250b601dca8278836968173ae421cc5",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/copper_ore_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3949,
+   "id": "copper_ore_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/copper_ore_count_9_plus.png",
+   "role": "item",
+   "sha256": "b35a8b8a069e50d4fc988646c60f9a43813b32360776442d64095de3462726b7",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/copper_ore_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
   },
   {
    "bytes": 3132,
@@ -4318,6 +5132,75 @@
    "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
   },
   {
+   "bytes": 3116,
+   "id": "lime",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/lime.png",
+   "role": "item",
+   "sha256": "cb5cdcb9a96b869f6a4f8874b643413542692ac7944483c0920940a9ae6327e1",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/lime.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3029,
+   "id": "lime_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/lime_count_2_8.png",
+   "role": "item",
+   "sha256": "dffdbe338e644adff072c0e3c2b24ddf4d0babcde6a9a4dad14510255ac13f4d",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/lime_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3254,
+   "id": "lime_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/lime_count_9_plus.png",
+   "role": "item",
+   "sha256": "ab1077a20cbc37a8277a0213ea437dc4c6a12b12dc2d5d4ceba391eab7a705dd",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/lime_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
    "bytes": 3616,
    "id": "linen_cloth",
    "meta": {
@@ -4750,6 +5633,75 @@
     64
    ],
    "source": "art/style05/batch_a3/items/millet_seed_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2206,
+   "id": "mud_brick",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/mud_brick.png",
+   "role": "item",
+   "sha256": "fa0be9ece58be238d8bfc7ff7117105b48c1f033f7cfcfc029b8ac4dbb2435b8",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/mud_brick.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2057,
+   "id": "mud_brick_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/mud_brick_count_2_8.png",
+   "role": "item",
+   "sha256": "0b2248c9d6d311d27d7ff68d3c0e6603f2d18879235dbc022f77c0f97bd65721",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/mud_brick_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2359,
+   "id": "mud_brick_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/mud_brick_count_9_plus.png",
+   "role": "item",
+   "sha256": "71fff709bafaf4a23ab7966499f985a9b96ca5ab445ec4101e7241d22fd29674",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/mud_brick_count_9_plus.png",
    "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
   },
   {
@@ -5460,6 +6412,144 @@
     64
    ],
    "source": "art/style05/env/items/stone_pile.png"
+  },
+  {
+   "bytes": 2375,
+   "id": "tin_ingot",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/tin_ingot.png",
+   "role": "item",
+   "sha256": "d62a48f85f55eb6e6829f6b6c29a957e1f53e4d99357ea48ddad6a64ed35b638",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/tin_ingot.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2142,
+   "id": "tin_ingot_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/tin_ingot_count_2_8.png",
+   "role": "item",
+   "sha256": "daff12101fcf337e04cd998b302ad3575f962cf83551f3f6ca814597fd883092",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/tin_ingot_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 2523,
+   "id": "tin_ingot_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/tin_ingot_count_9_plus.png",
+   "role": "item",
+   "sha256": "9b6e2b51094949acf2464a5720b6571048dd6e1d3257d2b365a2f6439f921fb7",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/tin_ingot_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3120,
+   "id": "tin_ore",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/tin_ore.png",
+   "role": "item",
+   "sha256": "0eb0b636189a66ee12bfc0507346a73e134cad7eb8fee809396b1ac99f04e892",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/tin_ore.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3270,
+   "id": "tin_ore_count_2_8",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/tin_ore_count_2_8.png",
+   "role": "item",
+   "sha256": "4183a8501764b4c2e57147b904b97e00b71393c26d856f5b05d44ebde7e0f3c5",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/tin_ore_count_2_8.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
+  },
+  {
+   "bytes": 3419,
+   "id": "tin_ore_count_9_plus",
+   "meta": {
+    "anchor": [
+     32,
+     32
+    ],
+    "canvas": [
+     64,
+     64
+    ]
+   },
+   "path": "items/tin_ore_count_9_plus.png",
+   "role": "item",
+   "sha256": "5239608d8264c22dafc1407525e374f80942999b5c1b030a1a959f41d7cafc5d",
+   "size": [
+    64,
+    64
+   ],
+   "source": "art/style05/batch_a3/items/tin_ore_count_9_plus.png",
+   "source_commit": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a"
   },
   {
    "bytes": 3158,
@@ -16218,6 +17308,126 @@
    "source": "art/character/variant_transforms.json"
   },
   {
+   "bytes": 5490,
+   "id": "casting_bench_empty",
+   "meta": {
+    "anchor": [
+     35,
+     39
+    ],
+    "family": "buildings",
+    "footprint": [
+     2,
+     1
+    ]
+   },
+   "path": "structures/a2/bronze/casting_bench_empty.png",
+   "role": "structure",
+   "sha256": "21b6d3c83c4b04a99a256a3f65d5737f18c778a9146a83a0fa0a8b2006593fd8",
+   "size": [
+    70,
+    44
+   ],
+   "source": "art/style05/struct/a2/bronze/casting_bench_empty.png",
+   "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+  },
+  {
+   "bytes": 5552,
+   "id": "casting_bench_working",
+   "meta": {
+    "anchor": [
+     34,
+     39
+    ],
+    "family": "buildings",
+    "footprint": [
+     2,
+     1
+    ]
+   },
+   "path": "structures/a2/bronze/casting_bench_working.png",
+   "role": "structure",
+   "sha256": "a6d0129921da55fff2c852e79a7488dc92caa77fd65421821690dfc1384871de",
+   "size": [
+    69,
+    44
+   ],
+   "source": "art/style05/struct/a2/bronze/casting_bench_working.png",
+   "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+  },
+  {
+   "bytes": 10937,
+   "id": "charcoal_clamp_burning",
+   "meta": {
+    "anchor": [
+     50,
+     67
+    ],
+    "family": "buildings",
+    "footprint": [
+     2,
+     2
+    ]
+   },
+   "path": "structures/a2/bronze/charcoal_clamp_burning.png",
+   "role": "structure",
+   "sha256": "7913c93849cef814ce6e905ed24e474a9540bb8bfb27a885f64399528e1cca2b",
+   "size": [
+    101,
+    72
+   ],
+   "source": "art/style05/struct/a2/bronze/charcoal_clamp_burning.png",
+   "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+  },
+  {
+   "bytes": 10952,
+   "id": "charcoal_clamp_idle",
+   "meta": {
+    "anchor": [
+     53,
+     59
+    ],
+    "family": "buildings",
+    "footprint": [
+     2,
+     2
+    ]
+   },
+   "path": "structures/a2/bronze/charcoal_clamp_idle.png",
+   "role": "structure",
+   "sha256": "aabdce7698ec44bdcc97c284ea498e56a8b81da50d7feb7b891988b291e27af1",
+   "size": [
+    106,
+    64
+   ],
+   "source": "art/style05/struct/a2/bronze/charcoal_clamp_idle.png",
+   "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+  },
+  {
+   "bytes": 8015,
+   "id": "charcoal_clamp_spent",
+   "meta": {
+    "anchor": [
+     48,
+     45
+    ],
+    "family": "buildings",
+    "footprint": [
+     2,
+     2
+    ]
+   },
+   "path": "structures/a2/bronze/charcoal_clamp_spent.png",
+   "role": "structure",
+   "sha256": "115887961836f19dfa59cb14041c2fa276bb76e069428b923e5ba827afef1e8f",
+   "size": [
+    96,
+    50
+   ],
+   "source": "art/style05/struct/a2/bronze/charcoal_clamp_spent.png",
+   "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+  },
+  {
    "bytes": 3492,
    "id": "bread_oven_lit",
    "meta": {
@@ -16264,6 +17474,150 @@
    ],
    "source": "art/style05/struct/a2/neolithic/bread_oven_unlit.png",
    "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+  },
+  {
+   "bytes": 3429,
+   "id": "copper_outcrop_depleted",
+   "meta": {
+    "anchor": [
+     28,
+     29
+    ],
+    "family": "buildings",
+    "footprint": [
+     1,
+     1
+    ]
+   },
+   "path": "structures/a2/ores/copper_outcrop_depleted.png",
+   "role": "structure",
+   "sha256": "4f54b5dfbbe076cbdc3fcf67e8556f587da3ff6e602beecf7fa66b376f36d7aa",
+   "size": [
+    57,
+    34
+   ],
+   "source": "art/style05/struct/a2/ores/copper_outcrop_depleted.png",
+   "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+  },
+  {
+   "bytes": 4757,
+   "id": "copper_outcrop_full",
+   "meta": {
+    "anchor": [
+     34,
+     35
+    ],
+    "family": "buildings",
+    "footprint": [
+     1,
+     1
+    ]
+   },
+   "path": "structures/a2/ores/copper_outcrop_full.png",
+   "role": "structure",
+   "sha256": "23f79d744cdb3aa791d0d31de3878a7a284e310a2c8412f7045df67aafdb5a31",
+   "size": [
+    68,
+    40
+   ],
+   "source": "art/style05/struct/a2/ores/copper_outcrop_full.png",
+   "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+  },
+  {
+   "bytes": 3794,
+   "id": "tin_outcrop_depleted",
+   "meta": {
+    "anchor": [
+     29,
+     29
+    ],
+    "family": "buildings",
+    "footprint": [
+     1,
+     1
+    ]
+   },
+   "path": "structures/a2/ores/tin_outcrop_depleted.png",
+   "role": "structure",
+   "sha256": "6ef32d35a09bfa5963cc127b7dcbfa443ae5d7aadabd2c51ac33304021ef5bbe",
+   "size": [
+    59,
+    34
+   ],
+   "source": "art/style05/struct/a2/ores/tin_outcrop_depleted.png",
+   "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+  },
+  {
+   "bytes": 5417,
+   "id": "tin_outcrop_full",
+   "meta": {
+    "anchor": [
+     35,
+     35
+    ],
+    "family": "buildings",
+    "footprint": [
+     1,
+     1
+    ]
+   },
+   "path": "structures/a2/ores/tin_outcrop_full.png",
+   "role": "structure",
+   "sha256": "004d934f772aa4984ee9c35aac3bcc367e4ae2d67e2cdabaf7bb16c3fbc52721",
+   "size": [
+    71,
+    40
+   ],
+   "source": "art/style05/struct/a2/ores/tin_outcrop_full.png",
+   "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+  },
+  {
+   "bytes": 5192,
+   "id": "copper_smelter_lit",
+   "meta": {
+    "anchor": [
+     33,
+     43
+    ],
+    "family": "buildings",
+    "footprint": [
+     1,
+     1
+    ]
+   },
+   "path": "structures/b3/round3_smelter/copper_smelter_lit.png",
+   "role": "structure",
+   "sha256": "6aa6542405f0ac2c2802d6052e25a46705ac707ff6b63aded68bad42b28326bf",
+   "size": [
+    67,
+    48
+   ],
+   "source": "art/style05/struct/b3/round3_smelter/copper_smelter_lit.png",
+   "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
+  },
+  {
+   "bytes": 5185,
+   "id": "copper_smelter_unlit",
+   "meta": {
+    "anchor": [
+     33,
+     43
+    ],
+    "family": "buildings",
+    "footprint": [
+     1,
+     1
+    ]
+   },
+   "path": "structures/b3/round3_smelter/copper_smelter_unlit.png",
+   "role": "structure",
+   "sha256": "96fb0edf959b80b9bc67c7a4893333ebb6c94740e68ef09afe2446066da99af7",
+   "size": [
+    67,
+    48
+   ],
+   "source": "art/style05/struct/b3/round3_smelter/copper_smelter_unlit.png",
+   "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c"
   },
   {
    "bytes": 3821,
@@ -18754,5 +20108,5 @@
   "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
   "source": "art/style05/anchors/person.png"
  },
- "total_bytes": 18687987
+ "total_bytes": 18928712
 }

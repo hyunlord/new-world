@@ -1,4 +1,4 @@
-# Revealed finite surface deposits, rendered from selected ore metadata.
+# Revealed finite surface deposits, rendered from bound art or procedural placeholder.
 # Bridge methods: get_outcrops via SimReads; world_reset clears presentation nodes.
 extends Node2D
 
@@ -65,6 +65,7 @@ func _refresh() -> void:
 	var xs: PackedInt64Array = _rows.get("xs", PackedInt64Array())
 	var ys: PackedInt64Array = _rows.get("ys", PackedInt64Array())
 	var kinds: PackedInt64Array = _rows.get("kinds", PackedInt64Array())
+	var remaining: PackedInt64Array = _rows.get("remaining", PackedInt64Array())
 	var wanted: Dictionary = {}
 	for i: int in mini(xs.size(), mini(ys.size(), kinds.size())):
 		var tile := Vector2i(xs[i], ys[i])
@@ -76,15 +77,31 @@ func _refresh() -> void:
 			get_node("../World").add_child(body)
 			_bodies[tile] = body
 		var definition: Dictionary = Content.row("outcrops", kinds[i])
-		body.texture = Icons.item_texture(definition)
+		var tex: Texture2D = _bound_texture(kinds[i], remaining[i] if i < remaining.size() else -1, definition)
+		body.texture = tex
 		body.scale = Vector2.ONE
 		body.position = View.base_point(tile) - Vector2(0, floorf(body.texture.get_height() * 0.5))
 		body.set_meta("definition", definition)
+		body.set_meta("bound", tex != Icons.item_texture(definition))
 	for tile: Vector2i in _bodies.keys():
 		if not wanted.has(tile):
 			(_bodies[tile] as Sprite2D).queue_free()
 			_bodies.erase(tile)
 	queue_redraw()
+
+
+## Authored art from bindings when available, with depleted state; procedural placeholder otherwise.
+static func _bound_texture(kind: int, units: int, definition: Dictionary) -> Texture2D:
+	var row: Dictionary = ArtData.binding("outcrops", kind)
+	var id: String = str(row.get("structure", ""))
+	if id.is_empty() or not ArtData.has(id):
+		return Icons.item_texture(definition)
+	var full: int = maxi(1, int(definition.get("units", 1)))
+	if row.get("depleted", null) is String and units >= 0 and floori(float(units) * 1000.0 / full) < int(row.get("depleted_below_permille", 0)):
+		var dep: String = str(row["depleted"])
+		if ArtData.has(dep):
+			return ArtData.texture(dep)
+	return ArtData.texture(id)
 
 
 func _draw() -> void:
@@ -95,10 +112,12 @@ func _draw() -> void:
 		var body: Sprite2D = _bodies[tile]
 		if not body.visible: continue
 		var definition: Dictionary = body.get_meta("definition", {})
-		var label: String = str(definition.get("glyph", ""))
+		var bound: bool = bool(body.get_meta("bound", false))
+		var label: String = "" if bound else str(definition.get("glyph", ""))
 		if tile == _hover:
 			label = Text.ltr(get_node_or_null("/root/Locale"), str(definition.get("name_key", "")))
-		Overlay.draw_label(self, _font, label, View.base_point(tile) - Vector2(0, float(View.TILE) * 0.6), zoom)
+		if not label.is_empty():
+			Overlay.draw_label(self, _font, label, View.base_point(tile) - Vector2(0, float(View.TILE) * 0.6), zoom)
 
 
 func outcrop_at(point: Vector2) -> Vector2i:

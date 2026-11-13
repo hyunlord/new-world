@@ -172,6 +172,24 @@
         "sim": "ClayOven",
         "structure": "bread_oven_unlit",
         "working": "bread_oven_lit"
+      },
+      {
+        "code": 18,
+        "sim": "CharcoalClamp",
+        "structure": "charcoal_clamp_idle",
+        "working": "charcoal_clamp_burning"
+      },
+      {
+        "code": 19,
+        "sim": "Smelter",
+        "structure": "copper_smelter_unlit",
+        "working": "copper_smelter_lit"
+      },
+      {
+        "code": 20,
+        "sim": "CastingBench",
+        "structure": "casting_bench_empty",
+        "working": "casting_bench_working"
       }
     ]
   },
@@ -743,6 +761,127 @@
           "wool_count_2_8",
           "wool_count_9_plus"
         ]
+      },
+      {
+        "code": 72,
+        "sim": "Charcoal",
+        "assets": [
+          "charcoal",
+          "charcoal_count_2_8",
+          "charcoal_count_9_plus"
+        ]
+      },
+      {
+        "code": 73,
+        "sim": "CopperOre",
+        "assets": [
+          "copper_ore",
+          "copper_ore_count_2_8",
+          "copper_ore_count_9_plus"
+        ]
+      },
+      {
+        "code": 74,
+        "sim": "TinOre",
+        "assets": [
+          "tin_ore",
+          "tin_ore_count_2_8",
+          "tin_ore_count_9_plus"
+        ]
+      },
+      {
+        "code": 76,
+        "sim": "CopperIngot",
+        "assets": [
+          "copper_ingot",
+          "copper_ingot_count_2_8",
+          "copper_ingot_count_9_plus"
+        ]
+      },
+      {
+        "code": 77,
+        "sim": "TinIngot",
+        "assets": [
+          "tin_ingot",
+          "tin_ingot_count_2_8",
+          "tin_ingot_count_9_plus"
+        ]
+      },
+      {
+        "code": 78,
+        "sim": "BronzeIngot",
+        "assets": [
+          "bronze_ingot",
+          "bronze_ingot_count_2_8",
+          "bronze_ingot_count_9_plus"
+        ]
+      },
+      {
+        "code": 79,
+        "sim": "ClayMould",
+        "assets": [
+          "clay_mould",
+          "clay_mould_count_2_8",
+          "clay_mould_count_9_plus"
+        ]
+      },
+      {
+        "code": 80,
+        "sim": "CopperAwl",
+        "asset": "copper_awl"
+      },
+      {
+        "code": 81,
+        "sim": "CopperNeedle",
+        "asset": "copper_needle"
+      },
+      {
+        "code": 82,
+        "sim": "CopperAxe",
+        "asset": "copper_axe"
+      },
+      {
+        "code": 83,
+        "sim": "BronzeAxe",
+        "asset": "bronze_axe"
+      },
+      {
+        "code": 84,
+        "sim": "BronzeSickle",
+        "asset": "bronze_sickle"
+      },
+      {
+        "code": 85,
+        "sim": "BronzeHoe",
+        "asset": "bronze_hoe"
+      },
+      {
+        "code": 86,
+        "sim": "BronzeSpear",
+        "asset": "bronze_spear"
+      },
+      {
+        "code": 87,
+        "sim": "BronzeDagger",
+        "asset": "bronze_dagger"
+      },
+      {
+        "code": 94,
+        "sim": "MudBrick",
+        "assets": [
+          "mud_brick",
+          "mud_brick_count_2_8",
+          "mud_brick_count_9_plus"
+        ]
+      },
+      {
+        "code": 95,
+        "sim": "Lime",
+        "assets": [
+          "lime",
+          "lime_count_2_8",
+          "lime_count_9_plus"
+        ]
       }
     ],
     "stack_layout": [
@@ -911,6 +1050,30 @@
         "code": 5,
         "sim": "Reindeer",
         "species": "reindeer",
+        "lod_colour": [
+          194,
+          157,
+          97
+        ],
+        "poses": {
+          "0": "graze",
+          "1": "run",
+          "2": "stand",
+          "3": "walk",
+          "4": "attack",
+          "5": "run"
+        },
+        "still": "stand",
+        "dead": "dead",
+        "moving": [
+          "walk",
+          "run"
+        ]
+      },
+      {
+        "code": 6,
+        "sim": "Aurochs",
+        "species": "aurochs",
         "lod_colour": [
           194,
           157,
@@ -1601,5 +1764,23 @@
     "oven_house": {
       "asset": null
     }
+  },
+  "outcrops": {
+    "codes": [
+      {
+        "code": 1,
+        "sim": "CopperOutcrop",
+        "structure": "copper_outcrop_full",
+        "depleted": "copper_outcrop_depleted",
+        "depleted_below_permille": 100
+      },
+      {
+        "code": 2,
+        "sim": "TinOutcrop",
+        "structure": "tin_outcrop_full",
+        "depleted": "tin_outcrop_depleted",
+        "depleted_below_permille": 100
+      }
+    ]
   }
 }

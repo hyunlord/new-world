@@ -2439,6 +2439,374 @@
       "source": "art/style05/ui_b4/alerts/food_spoil.png",
       "dest": "ui/b4/alerts/food_spoil.png",
       "from": "0eb2492676140a294ad319045602e72bae760c8c"
+    },
+    {
+      "role": "structure",
+      "id": "copper_outcrop_full",
+      "source": "art/style05/struct/a2/ores/copper_outcrop_full.png",
+      "dest": "structures/a2/ores/copper_outcrop_full.png",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "meta_source": "docs/v8/artstruct/assets.json"
+    },
+    {
+      "role": "structure",
+      "id": "copper_outcrop_depleted",
+      "source": "art/style05/struct/a2/ores/copper_outcrop_depleted.png",
+      "dest": "structures/a2/ores/copper_outcrop_depleted.png",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "meta_source": "docs/v8/artstruct/assets.json"
+    },
+    {
+      "role": "structure",
+      "id": "tin_outcrop_full",
+      "source": "art/style05/struct/a2/ores/tin_outcrop_full.png",
+      "dest": "structures/a2/ores/tin_outcrop_full.png",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "meta_source": "docs/v8/artstruct/assets.json"
+    },
+    {
+      "role": "structure",
+      "id": "tin_outcrop_depleted",
+      "source": "art/style05/struct/a2/ores/tin_outcrop_depleted.png",
+      "dest": "structures/a2/ores/tin_outcrop_depleted.png",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "meta_source": "docs/v8/artstruct/assets.json"
+    },
+    {
+      "role": "structure",
+      "id": "charcoal_clamp_idle",
+      "source": "art/style05/struct/a2/bronze/charcoal_clamp_idle.png",
+      "dest": "structures/a2/bronze/charcoal_clamp_idle.png",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "meta_source": "docs/v8/artstruct/assets.json"
+    },
+    {
+      "role": "structure",
+      "id": "charcoal_clamp_burning",
+      "source": "art/style05/struct/a2/bronze/charcoal_clamp_burning.png",
+      "dest": "structures/a2/bronze/charcoal_clamp_burning.png",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "meta_source": "docs/v8/artstruct/assets.json"
+    },
+    {
+      "role": "structure",
+      "id": "charcoal_clamp_spent",
+      "source": "art/style05/struct/a2/bronze/charcoal_clamp_spent.png",
+      "dest": "structures/a2/bronze/charcoal_clamp_spent.png",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "meta_source": "docs/v8/artstruct/assets.json"
+    },
+    {
+      "role": "structure",
+      "id": "casting_bench_empty",
+      "source": "art/style05/struct/a2/bronze/casting_bench_empty.png",
+      "dest": "structures/a2/bronze/casting_bench_empty.png",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "meta_source": "docs/v8/artstruct/assets.json"
+    },
+    {
+      "role": "structure",
+      "id": "casting_bench_working",
+      "source": "art/style05/struct/a2/bronze/casting_bench_working.png",
+      "dest": "structures/a2/bronze/casting_bench_working.png",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "meta_source": "docs/v8/artstruct/assets.json"
+    },
+    {
+      "role": "structure",
+      "id": "copper_smelter_unlit",
+      "source": "art/style05/struct/b3/round3_smelter/copper_smelter_unlit.png",
+      "dest": "structures/b3/round3_smelter/copper_smelter_unlit.png",
+      "from": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+      "meta_source": "art/batch_b3/round3_smelter/assets.json"
+    },
+    {
+      "role": "structure",
+      "id": "copper_smelter_lit",
+      "source": "art/style05/struct/b3/round3_smelter/copper_smelter_lit.png",
+      "dest": "structures/b3/round3_smelter/copper_smelter_lit.png",
+      "from": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+      "meta_source": "art/batch_b3/round3_smelter/assets.json"
+    },
+    {
+      "role": "item",
+      "id": "charcoal",
+      "source": "art/style05/batch_a3/items/charcoal.png",
+      "dest": "items/charcoal.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "charcoal_count_2_8",
+      "source": "art/style05/batch_a3/items/charcoal_count_2_8.png",
+      "dest": "items/charcoal_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "charcoal_count_9_plus",
+      "source": "art/style05/batch_a3/items/charcoal_count_9_plus.png",
+      "dest": "items/charcoal_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "copper_ore",
+      "source": "art/style05/batch_a3/items/copper_ore.png",
+      "dest": "items/copper_ore.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "copper_ore_count_2_8",
+      "source": "art/style05/batch_a3/items/copper_ore_count_2_8.png",
+      "dest": "items/copper_ore_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "copper_ore_count_9_plus",
+      "source": "art/style05/batch_a3/items/copper_ore_count_9_plus.png",
+      "dest": "items/copper_ore_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "tin_ore",
+      "source": "art/style05/batch_a3/items/tin_ore.png",
+      "dest": "items/tin_ore.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "tin_ore_count_2_8",
+      "source": "art/style05/batch_a3/items/tin_ore_count_2_8.png",
+      "dest": "items/tin_ore_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "tin_ore_count_9_plus",
+      "source": "art/style05/batch_a3/items/tin_ore_count_9_plus.png",
+      "dest": "items/tin_ore_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "copper_ingot",
+      "source": "art/style05/batch_a3/items/copper_ingot.png",
+      "dest": "items/copper_ingot.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "copper_ingot_count_2_8",
+      "source": "art/style05/batch_a3/items/copper_ingot_count_2_8.png",
+      "dest": "items/copper_ingot_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "copper_ingot_count_9_plus",
+      "source": "art/style05/batch_a3/items/copper_ingot_count_9_plus.png",
+      "dest": "items/copper_ingot_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "tin_ingot",
+      "source": "art/style05/batch_a3/items/tin_ingot.png",
+      "dest": "items/tin_ingot.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "tin_ingot_count_2_8",
+      "source": "art/style05/batch_a3/items/tin_ingot_count_2_8.png",
+      "dest": "items/tin_ingot_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "tin_ingot_count_9_plus",
+      "source": "art/style05/batch_a3/items/tin_ingot_count_9_plus.png",
+      "dest": "items/tin_ingot_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "bronze_ingot",
+      "source": "art/style05/batch_a3/items/bronze_ingot.png",
+      "dest": "items/bronze_ingot.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "bronze_ingot_count_2_8",
+      "source": "art/style05/batch_a3/items/bronze_ingot_count_2_8.png",
+      "dest": "items/bronze_ingot_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "bronze_ingot_count_9_plus",
+      "source": "art/style05/batch_a3/items/bronze_ingot_count_9_plus.png",
+      "dest": "items/bronze_ingot_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "clay_mould",
+      "source": "art/style05/batch_a3/items/clay_mould.png",
+      "dest": "items/clay_mould.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "clay_mould_count_2_8",
+      "source": "art/style05/batch_a3/items/clay_mould_count_2_8.png",
+      "dest": "items/clay_mould_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "clay_mould_count_9_plus",
+      "source": "art/style05/batch_a3/items/clay_mould_count_9_plus.png",
+      "dest": "items/clay_mould_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "mud_brick",
+      "source": "art/style05/batch_a3/items/mud_brick.png",
+      "dest": "items/mud_brick.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "mud_brick_count_2_8",
+      "source": "art/style05/batch_a3/items/mud_brick_count_2_8.png",
+      "dest": "items/mud_brick_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "mud_brick_count_9_plus",
+      "source": "art/style05/batch_a3/items/mud_brick_count_9_plus.png",
+      "dest": "items/mud_brick_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "lime",
+      "source": "art/style05/batch_a3/items/lime.png",
+      "dest": "items/lime.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "lime_count_2_8",
+      "source": "art/style05/batch_a3/items/lime_count_2_8.png",
+      "dest": "items/lime_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "lime_count_9_plus",
+      "source": "art/style05/batch_a3/items/lime_count_9_plus.png",
+      "dest": "items/lime_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "copper_awl",
+      "source": "art/style05/batch_a3/items/copper_awl.png",
+      "dest": "items/copper_awl.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "copper_needle",
+      "source": "art/style05/batch_a3/items/copper_needle.png",
+      "dest": "items/copper_needle.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "copper_axe",
+      "source": "art/style05/batch_a3/items/copper_axe.png",
+      "dest": "items/copper_axe.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "bronze_axe",
+      "source": "art/style05/batch_a3/items/bronze_axe.png",
+      "dest": "items/bronze_axe.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "bronze_sickle",
+      "source": "art/style05/batch_a3/items/bronze_sickle.png",
+      "dest": "items/bronze_sickle.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "bronze_hoe",
+      "source": "art/style05/batch_a3/items/bronze_hoe.png",
+      "dest": "items/bronze_hoe.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "bronze_spear",
+      "source": "art/style05/batch_a3/items/bronze_spear.png",
+      "dest": "items/bronze_spear.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "bronze_dagger",
+      "source": "art/style05/batch_a3/items/bronze_dagger.png",
+      "dest": "items/bronze_dagger.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
     }
   ],
   "animals": {
@@ -2448,7 +2816,8 @@
       "goat",
       "sheep_fleeced",
       "wild_boar",
-      "reindeer"
+      "reindeer",
+      "aurochs"
     ],
     "facings": [
       "S",
@@ -2500,6 +2869,14 @@
         "graze",
         "attack",
         "dead"
+      ],
+      "aurochs": [
+        "stand",
+        "walk",
+        "run",
+        "graze",
+        "dead",
+        "attack"
       ]
     },
     "source": "art/animal/batch_a1/adopted/{species}/{facing}/{pose}.png",
@@ -2508,6 +2885,11 @@
     "from": "326822482b33edd1ac3bd4acefd0061f557756d6",
     "species_sources": {
       "reindeer": {
+        "from": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+        "source": "art/style05/batch_b3/animals/{species}/{facing}/{pose}.png",
+        "meta_source": "art/batch_b3/round3_animals/animal_manifest.json"
+      },
+      "aurochs": {
         "from": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
         "source": "art/style05/batch_b3/animals/{species}/{facing}/{pose}.png",
         "meta_source": "art/batch_b3/round3_animals/animal_manifest.json"
