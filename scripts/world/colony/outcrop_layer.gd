@@ -8,6 +8,7 @@ const ArtData = preload("res://scripts/world/art/art_data.gd")
 const Icons = preload("res://scripts/ui/item_icons.gd")
 const Overlay = preload("res://scripts/world/colony/overlay_layer.gd")
 const Text = preload("res://scripts/ui/story_text.gd")
+const Building = preload("res://scripts/world/colony/building_layer.gd")
 var _world: Node
 var _bodies: Dictionary = {}
 var _rows: Dictionary = {}
@@ -23,7 +24,7 @@ func _ready() -> void:
 	_world.connect("world_reset", _reset)
 	_font = load("res://assets/fonts/galmuri/Galmuri11.ttf") as Font
 	warmup()
-	_render_warmup(bound_outcrop_textures())
+	Building.prepay_draw(self, bound_outcrop_textures())
 
 
 static func warmup() -> void:
@@ -45,23 +46,6 @@ static func bound_outcrop_textures() -> Array[Texture2D]:
 					if tex != null:
 						textures.append(tex)
 	return textures
-
-
-## A loaded texture's GPU upload is otherwise deferred to its first real draw; force that
-## off-screen, once, during warmup instead of during a mid-run depletion switch (step 41).
-func _render_warmup(textures: Array[Texture2D]) -> void:
-	if textures.is_empty() or DisplayServer.get_name() == "headless":
-		return
-	var viewport := SubViewport.new()
-	viewport.size = Vector2i(4, 4)
-	viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
-	for tex: Texture2D in textures:
-		var sprite := Sprite2D.new()
-		sprite.texture = tex
-		viewport.add_child(sprite)
-	add_child(viewport)
-	await RenderingServer.frame_post_draw
-	viewport.queue_free()
 
 
 func _reset() -> void:

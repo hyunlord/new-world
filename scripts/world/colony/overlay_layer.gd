@@ -35,6 +35,7 @@ const SiteGhost = preload("res://scripts/world/art/site_ghost.gd")
 const ItemIcons = preload("res://scripts/ui/item_icons.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const RoomLayer = preload("res://scripts/world/colony/room_layer.gd")
+const Building = preload("res://scripts/world/colony/building_layer.gd")
 const FONT_PATH: String = "res://assets/fonts/galmuri/Galmuri11.ttf"
 const BACK: Color = Color(0.094, 0.082, 0.075, 0.92)
 const BACK_LINE: Color = Color(0.275, 0.243, 0.212, 1.0)
@@ -107,6 +108,25 @@ func _ready() -> void:
 	_world_sim = get_node_or_null("/root/Main/WorldSim")
 	if _world_sim != null:
 		_world_sim.connect("world_reset", _on_world_reset)
+	Building.prepay_draw(self, _item_warm_textures())
+
+
+## Every look an item stack can take (each bound code at each count bucket, stack composites included), built through
+## the same cache as the draw, so a first stack mid-run neither composites nor uploads (step 41).
+func _item_warm_textures() -> Array[Texture2D]:
+	var items: Dictionary = ArtData.bindings().get("items", {})
+	var counts: Array[int] = [1]
+	for lim: Variant in items.get("bucket_limits", [1, 8]):
+		counts.append(int(lim) + 1)
+	var out: Array[Texture2D] = []
+	for row: Variant in items.get("codes", []):
+		if not row is Dictionary: continue
+		var kind: int = int((row as Dictionary).get("code", -1))
+		for count: int in counts:
+			var look: Array = stack_look(kind, count)
+			var texture: Variant = _stack_texture(str(look[0]), int(look[1]), kind)[0]
+			if texture is Texture2D: out.append(texture)
+	return out
 
 
 func _on_world_reset() -> void:

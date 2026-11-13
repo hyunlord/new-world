@@ -169,16 +169,26 @@ func _process_body(_delta: float) -> void:
 ## The private 2D world never contributes pixels or input to the main viewport.
 static func make_warm_viewport(ids: Array[String]) -> SubViewport:
 	if ids.is_empty() or ids.size() > 64: return null
-	var cell: Vector2i = Vector2i.ONE
 	var textures: Array[Texture2D] = []
 	for id: String in ids:
 		var texture: Texture2D = ArtData.texture(id)
 		if texture == null: return null
 		textures.append(texture)
+	var viewport: SubViewport = make_warm_viewport_of(textures)
+	if viewport != null: viewport.add_to_group("mux2_render_warmup")
+	return viewport
+
+
+## The same one-shot offscreen grid for already-loaded textures (at most 64; null when it would not fit).
+static func make_warm_viewport_of(textures: Array[Texture2D]) -> SubViewport:
+	if textures.is_empty() or textures.size() > 64: return null
+	var cell: Vector2i = Vector2i.ONE
+	for texture: Texture2D in textures:
+		if texture == null: return null
 		cell.x = maxi(cell.x, texture.get_width())
 		cell.y = maxi(cell.y, texture.get_height())
-	var columns: int = ceili(sqrt(float(ids.size())))
-	var rows: int = ceili(float(ids.size()) / columns)
+	var columns: int = ceili(sqrt(float(textures.size())))
+	var rows: int = ceili(float(textures.size()) / columns)
 	var size: Vector2i = Vector2i(maxi(2, cell.x * columns), maxi(2, cell.y * rows))
 	if size.x > 2048 or size.y > 2048 or size.x * size.y > 4194304: return null
 	var viewport: SubViewport = SubViewport.new()
@@ -189,7 +199,6 @@ static func make_warm_viewport(ids: Array[String]) -> SubViewport:
 	viewport.gui_disable_input = true
 	viewport.transparent_bg = true
 	viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
-	viewport.add_to_group("mux2_render_warmup")
 	for index: int in textures.size():
 		var sprite: Sprite2D = Sprite2D.new()
 		sprite.texture = textures[index]
@@ -198,6 +207,30 @@ static func make_warm_viewport(ids: Array[String]) -> SubViewport:
 		sprite.position = Vector2((index % columns) * cell.x, floori(float(index) / columns) * cell.y)
 		viewport.add_child(sprite)
 	return viewport
+
+
+## Shared by every layer that binds art (ADR 0033): a loaded texture's GPU upload waits for its first real draw,
+## so draw each one once off-screen during warm-up instead of mid-run (step 41), in batches the grid accepts.
+static func prepay_draw(parent: Node, textures: Array[Texture2D]) -> void:
+	if DisplayServer.get_name() == "headless": return
+	var unique: Array[Texture2D] = []
+	for texture: Texture2D in textures:
+		if texture != null and not unique.has(texture): unique.append(texture)
+	var batch: int = 64
+	var start: int = 0
+	while start < unique.size():
+		var viewport: SubViewport = make_warm_viewport_of(unique.slice(start, start + batch))
+		if viewport == null:
+			if batch == 1:
+				start += 1
+			else:
+				batch = maxi(1, batch >> 1)
+			continue
+		parent.add_child(viewport)
+		await RenderingServer.frame_post_draw
+		if is_instance_valid(viewport): viewport.queue_free()
+		if not is_instance_valid(parent): return
+		start += batch
 
 ## Copy actual runtime light resources/settings into a fresh private node; never mutate the source.
 const WARM_LIGHT_FIELDS: Array[String] = ["texture", "texture_scale", "offset", "height", "blend_mode", "color", "texture_filter", "texture_repeat", "range_item_cull_mask", "range_layer_min", "range_layer_max", "range_z_min", "range_z_max", "shadow_enabled", "shadow_filter", "shadow_filter_smooth", "shadow_item_cull_mask", "shadow_color"]

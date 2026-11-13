@@ -25,6 +25,7 @@ const ArtData = preload("res://scripts/world/art/art_data.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
 const VisitorLayer = preload("res://scripts/world/colony/visitor_layer.gd")
 const OverlayLayer = preload("res://scripts/world/colony/overlay_layer.gd")
+const Building = preload("res://scripts/world/colony/building_layer.gd")
 const FONT_PATH: String = "res://assets/fonts/galmuri/Galmuri11.ttf"
 const TILE: int = View.TILE
 const ZONE_ALPHA: float = 0.12
@@ -87,6 +88,18 @@ func _ready() -> void:
 		var visitors: Node2D = VisitorLayer.new()
 		visitors.name = "VisitorLayer"
 		get_parent().add_child.call_deferred(visitors)
+	Building.prepay_draw(self, frame_textures())
+
+
+## Every imported animal frame (wild animals and livestock share them), so a first pose or species mid-run never
+## uploads on its first draw (step 41).
+static func frame_textures() -> Array[Texture2D]:
+	var out: Array[Texture2D] = []
+	for row: Variant in ArtData.manifest().get("files", []):
+		if row is Dictionary and str((row as Dictionary).get("role", "")) == "animal_frame":
+			var texture: Texture2D = ArtData.texture(str((row as Dictionary).get("id", "")))
+			if texture != null: out.append(texture)
+	return out
 
 
 func _on_world_reset() -> void:
