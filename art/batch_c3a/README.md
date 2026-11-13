@@ -50,5 +50,5 @@ passes unchanged style/projection and independent visual review; its28px PNG
 and built smithy layers are now included. No more anvil generations are needed.
 CompositeBow remains held. New wall pieces and native/log comparison rooms
 are under walls_pass2; its manifest and README record the accepted native wall verdict.
-Pass1 output counts above remain historical. The root importer fragment will
-pin the additional anvil to the Pass2 asset commit. No game import is applied.
+Pass1 output counts above remain historical. The root importer fragment pins
+the additional anvil to the immutable Pass2 asset commit. No game import is applied.

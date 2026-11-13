@@ -2,7 +2,7 @@
   "schema_version": 1,
   "status": "APPEND_FRAGMENT_NOT_APPLIED",
   "schema_reference_commit": "87c67b1de93894bc5959e6ad619b7769d5eb3f68",
-  "source_commit": "dade1d7878803db94f09542cddc0bb51d0398fa4",
+  "source_commit": "f12977128235814e707bd909d374eb95e40c1c52",
   "merge_instruction": "Append files; preserve existing config/meta_sources. Requires per-row from/meta_source. Walls and road selector excluded.",
   "meta_sources": {
     "structure": "art/batch_c3a/workshops/stations_manifest.json",
@@ -435,11 +435,20 @@
     },
     {
       "role": "structure",
+      "id": "anvil",
+      "source": "art/batch_c3a/workshops/stations/anvil.png",
+      "dest": "structures/c3a/anvil.png",
+      "from": "f12977128235814e707bd909d374eb95e40c1c52",
+      "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
+    },
+    {
+      "role": "structure",
       "id": "mason_bench",
       "source": "art/batch_c3a/workshops/stations/mason_bench.png",
       "dest": "structures/c3a/mason_bench.png",
-      "from": "dade1d7878803db94f09542cddc0bb51d0398fa4",
+      "from": "f12977128235814e707bd909d374eb95e40c1c52",
       "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
     }
-  ]
+  ],
+  "pass2_wall_fragment": "art/batch_c3a/walls_pass2/outputs/art_import.draft.json"
 }
