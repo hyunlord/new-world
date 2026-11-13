@@ -84,3 +84,62 @@ def test_cli_refuses_to_overwrite_exports(tmp_path: Path) -> None:
     # Then it fails and preserves that data.
     assert result.returncode != 0
     assert (tmp_path / "owner.txt").read_text() == "keep"
+
+
+class NativeGeometry(BaseModel):
+    """The immutable shipped W2 dimensions required by pass2."""
+
+    model_config: ClassVar[ConfigDict] = ConfigDict(frozen=True)
+    wall_width: int
+    cap_height: int
+    face_height: int
+    anchor: tuple[int, int]
+
+
+def test_native_cli_exports_thin_wall_masks_caps_and_oriented_doors(
+    tmp_path: Path,
+) -> None:
+    # Given the sharp native stone field and an empty destination.
+    target = tmp_path / "native"
+    # When the actual wall-piece CLI composes a pass2 delivery.
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "tools.v8.compose_wall_pieces",
+            "--native",
+            "art/materials/textures/drystone/face.png",
+            str(target),
+        ],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    # Then all topology/cap/door images exist with unchanged W2 dimensions.
+    assert result.returncode == 0, result.stderr
+    geometry = NativeGeometry.model_validate_json(
+        (target / "manifest.json").read_bytes()
+    )
+    assert (geometry.wall_width, geometry.cap_height, geometry.face_height) == (
+        26,
+        16,
+        22,
+    )
+    assert geometry.anchor == (32, 59)
+    assert len(list(target.glob("mask_*.png"))) == 16
+    assert len(list(target.glob("corner_*.png"))) == 4
+    assert len(list(target.glob("end_*.png"))) == 4
+    assert (target / "corner_ne.png").read_bytes() == (
+        target / "mask_03.png"
+    ).read_bytes()
+    for orientation in ("ew", "ns"):
+        for state in ("closed", "open"):
+            with Image.open(target / f"door_{orientation}_{state}.png") as image:
+                assert image.size == (64, 60)
+                assert image.getchannel("A").getbbox() is not None
+    with (
+        Image.open(target / "rooms_1x.png") as one,
+        Image.open(target / "rooms_2x.png") as two,
+    ):
+        assert two.size == (one.width * 2, one.height * 2)

@@ -1,0 +1,231 @@
+{
+  "status": "LEADER_AND_INDEPENDENT_VISUAL_APPROVED_NOT_IMPORTED",
+  "era": "iron",
+  "style": "drystone",
+  "material": "granite",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    59
+  ],
+  "world_origin": [
+    0,
+    -16
+  ],
+  "wall_width": 26,
+  "cap_height": 16,
+  "face_height": 22,
+  "bits": {
+    "N": 1,
+    "E": 2,
+    "S": 4,
+    "W": 8
+  },
+  "course": {
+    "source": "art/materials/textures/drystone/face.png",
+    "sha256": "517c4f431303d3ae01362fb451a6757f77cc18797875760c0eabae945c73c682",
+    "native_crop": {
+      "x": 48,
+      "y": 9,
+      "horizontal": 30.78125,
+      "vertical": 32.96875,
+      "width": 64,
+      "height": 32
+    },
+    "operation": "crop64x32 at native1:1; repeat twice vertically; no resampling, blur, recolouring or seam blending",
+    "selection_rule": "minimum worst horizontal/vertical edge RGB discontinuity, then sum,y,x; all phases in external evidence"
+  },
+  "reference": {
+    "commit": "d086d7c54d1b29421c9f7540f3a9358f0c054314",
+    "paths": "assets/v8art/materials/textures/log/pieces/{mask_00..15,door_ew/ns_open/closed}.png",
+    "door_policy": "Reuse unchanged shipped wooden doors in stone walls; no generated/rotated NS substitute."
+  },
+  "composition": "W2 geometry; one native field for every top/front surface. No separate dark blurred cap, no rescaled face/end patches. W2 exposed2px ink and3row contact shadow retained.",
+  "caps": {
+    "end_n": 1,
+    "end_e": 2,
+    "end_s": 4,
+    "end_w": 8,
+    "corner_ne": 3,
+    "corner_se": 6,
+    "corner_nw": 9,
+    "corner_sw": 12
+  },
+  "outputs": [
+    {
+      "path": "contact_1x.png",
+      "sha256": "05eca7d87f00c3026dadab84f79112edf71dc39cbaba5bd70bb239dfc273d56f"
+    },
+    {
+      "path": "contact_2x.png",
+      "sha256": "715dddd47c426b5e7aa43d71903ad12c6cc4f49102c50f5fc65efb62a292d02e"
+    },
+    {
+      "path": "corner_ne.png",
+      "sha256": "e2c3ab25e8f5460aa7010d0cbb139bda15b827a6da31c917dbcc0126259c50e4"
+    },
+    {
+      "path": "corner_nw.png",
+      "sha256": "17f2ecec9acb106873c0d969679d3e9e136aa300866e24be7fbc56b1bfb5b69f"
+    },
+    {
+      "path": "corner_se.png",
+      "sha256": "270e227d1759832431097265bb9e0504945d1ae715b1ce5b292b88af0f85be06"
+    },
+    {
+      "path": "corner_sw.png",
+      "sha256": "51dfeb34c7a6e84117acee2df1f3254f9acfe1f4856521eb92dce379e08d8052"
+    },
+    {
+      "path": "door_ew_closed.png",
+      "sha256": "ffbfd5649d847829303dc287d407f94e42671a5242f1fa79758630a7ee5542ba"
+    },
+    {
+      "path": "door_ew_open.png",
+      "sha256": "801fcd7f155a1ead32429454d9980b976f16798f001b1a3f2d8b9efb49ed62b7"
+    },
+    {
+      "path": "door_ns_closed.png",
+      "sha256": "db4c78ec6c076f1ccadbc13c20f6d0829024fc90f92a8e03e04ffd7a43611441"
+    },
+    {
+      "path": "door_ns_open.png",
+      "sha256": "245e3d4da165c2ac92674967bd3e2037c8f935a899f10b400adf2e9acf096d8f"
+    },
+    {
+      "path": "end_e.png",
+      "sha256": "da1fbeba3df6676edb6c395f03567c858d942dc910ecd345a072bcc339b7f73e"
+    },
+    {
+      "path": "end_n.png",
+      "sha256": "c0e1f8527162a16cc4db6b94eed7338f95c4b5dc6d3e529b9c3ee39ab6f0c784"
+    },
+    {
+      "path": "end_s.png",
+      "sha256": "060e9ce4954cf977d4bc0bb53474ff03831cdc9bfcf4e9a203aff2690c075ca4"
+    },
+    {
+      "path": "end_w.png",
+      "sha256": "929946f62c2332c84c4d877c93bd84f8de8a173143534fb335b96ecdef9008d4"
+    },
+    {
+      "path": "mask_00.png",
+      "sha256": "ad083cd78b713560ff896cb6c12ea4c84c8ec94102ee23b65a112b4b21b6ed97"
+    },
+    {
+      "path": "mask_01.png",
+      "sha256": "c0e1f8527162a16cc4db6b94eed7338f95c4b5dc6d3e529b9c3ee39ab6f0c784"
+    },
+    {
+      "path": "mask_02.png",
+      "sha256": "da1fbeba3df6676edb6c395f03567c858d942dc910ecd345a072bcc339b7f73e"
+    },
+    {
+      "path": "mask_03.png",
+      "sha256": "e2c3ab25e8f5460aa7010d0cbb139bda15b827a6da31c917dbcc0126259c50e4"
+    },
+    {
+      "path": "mask_04.png",
+      "sha256": "060e9ce4954cf977d4bc0bb53474ff03831cdc9bfcf4e9a203aff2690c075ca4"
+    },
+    {
+      "path": "mask_05.png",
+      "sha256": "9fb327d732d78ad8ac20d72271324b3a5447193e81dffd340215d9335d93d1c1"
+    },
+    {
+      "path": "mask_06.png",
+      "sha256": "270e227d1759832431097265bb9e0504945d1ae715b1ce5b292b88af0f85be06"
+    },
+    {
+      "path": "mask_07.png",
+      "sha256": "d4260c7acbb9e8ba9a09426a0aaae15df4af3511666d286ca5cfa50558cf9041"
+    },
+    {
+      "path": "mask_08.png",
+      "sha256": "929946f62c2332c84c4d877c93bd84f8de8a173143534fb335b96ecdef9008d4"
+    },
+    {
+      "path": "mask_09.png",
+      "sha256": "17f2ecec9acb106873c0d969679d3e9e136aa300866e24be7fbc56b1bfb5b69f"
+    },
+    {
+      "path": "mask_10.png",
+      "sha256": "c85124649916e2535b7a345d02809b471e1863795a3a5c8c2395f556721c14d7"
+    },
+    {
+      "path": "mask_11.png",
+      "sha256": "fce3c4a75e31922fe39feb1e12b99ede6cf85109b1339021b4ce87188dcb3374"
+    },
+    {
+      "path": "mask_12.png",
+      "sha256": "51dfeb34c7a6e84117acee2df1f3254f9acfe1f4856521eb92dce379e08d8052"
+    },
+    {
+      "path": "mask_13.png",
+      "sha256": "a6f78e13e32b4479441dcc580c85b461bd5bf803e97159bacbbd829b29f9d14b"
+    },
+    {
+      "path": "mask_14.png",
+      "sha256": "b3919dbed91f9886119c26925ab9f1a97865040cd1265eb37a2af0209e9c8a76"
+    },
+    {
+      "path": "mask_15.png",
+      "sha256": "0c340e5af35ad6c726d2dc13bb6e89bb491fa69b76552a393156f6fffb9f1ec2"
+    },
+    {
+      "path": "rooms_1x.png",
+      "sha256": "88d5b9423c75b9d1bb3d116885e89426dbc178ba82920944118daba598ee31c5"
+    },
+    {
+      "path": "rooms_2x.png",
+      "sha256": "93b7c788dde3af5ee29679fb59db7d8baefcaa4dcf3817ddbdc84ef2e8c88799"
+    },
+    {
+      "path": "stone_course_native.png",
+      "sha256": "e872ad86987bc72faa25e73a9088c66f60dba869fa10a303012b9be3ea48075c"
+    }
+  ],
+  "capability": {
+    "status": "VISUAL_APPROVED_DRAFT_NOT_APPLIED",
+    "runtime_rows_to_append": [],
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      59
+    ],
+    "pieces": {
+      "0": "mask_00.png",
+      "1": "mask_01.png",
+      "2": "mask_02.png",
+      "3": "mask_03.png",
+      "4": "mask_04.png",
+      "5": "mask_05.png",
+      "6": "mask_06.png",
+      "7": "mask_07.png",
+      "8": "mask_08.png",
+      "9": "mask_09.png",
+      "10": "mask_10.png",
+      "11": "mask_11.png",
+      "12": "mask_12.png",
+      "13": "mask_13.png",
+      "14": "mask_14.png",
+      "15": "mask_15.png"
+    },
+    "doors": {
+      "ew": {
+        "closed": "door_ew_closed.png",
+        "open": "door_ew_open.png"
+      },
+      "ns": {
+        "closed": "door_ns_closed.png",
+        "open": "door_ns_open.png"
+      }
+    }
+  }
+}

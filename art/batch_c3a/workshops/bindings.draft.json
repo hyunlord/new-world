@@ -6,6 +6,11 @@
     "world_scale": 1
   },
   "stations": {
+    "anvil": {
+      "structure": "anvil",
+      "era": "iron",
+      "world_scale": 1
+    },
     "mason_bench": {
       "structure": "mason_bench",
       "era": "iron",

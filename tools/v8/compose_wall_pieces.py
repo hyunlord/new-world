@@ -163,7 +163,16 @@ def export(output: Path) -> None:
 
 def main() -> int:
     """Read one destination argument; all source material is fixed by this pass."""
-    export(Path(sys.argv[1]))
+    if sys.argv[1] in ("--native", "--native-approved"):
+        from art.batch_c3a.walls_pass2.build import export as export_native
+
+        export_native(
+            Path(sys.argv[2]).resolve(),
+            Path(sys.argv[3]),
+            approved=sys.argv[1] == "--native-approved",
+        )
+    else:
+        export(Path(sys.argv[1]))
     return 0
 
 

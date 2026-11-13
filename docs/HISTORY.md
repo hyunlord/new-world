@@ -1,5 +1,7 @@
 # WorldSim 역사
 
+- 2026-11-14 — C3A Pass2: 통나무 기준 네이티브 석벽 재조립과 4차 모루 검증·인계 (`art/batch_c3a/walls_pass2/`, `art/batch_c3a/workshops/README.md`); 게임 미적용.
+
 - 2026-11-14 — C3A 철기 아트 인계: A2/A3/B3 고정 소스 재사용, 누락 물품·작업장 레이어·도로 경계 후보를 추가하고 스타일 실패 공백을 보존 (`art/batch_c3a/README.md`, ADR0016); 게임 미적용.
 
 > 날짜순 기록. 한 줄에 한 항목, 측정 결과는 그 패스 보고서의 숫자를 옮긴 것이다(다시 재지 않음). 자세한 내용은 태그에 있다: 시뮬레이션 줄기 `v7-final-sim` (= `354e4a13`), 아트 줄기 `v7-final-art` (= `b1ca032f`, 시뮬레이션 줄기 전체를 포함). 지운 문서는 `git show v7-final-art:<경로>`로 읽는다. 지운 것의 목록은 [archive/INDEX.md](archive/INDEX.md).

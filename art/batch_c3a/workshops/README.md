@@ -35,7 +35,7 @@ Known visual limitation: inherited NS top surfaces are broad/blurred compared
 with EW faces. Working glow is supplied by the original A2 state and subtle at
 native scale. No Godot import, runtime state selector or engine gate was run.
 
-## Final anvil gap
+## Pass1 anvil gap (historical)
 
 No anvil attempt passed both unchanged gates. Try1 failed wash_flatness, try2
 failed edge_density, and try3 passed all8 style metrics but failed the existing
@@ -46,3 +46,17 @@ omit it. The final try3 normalized image remains external in
 `C3A/candidates/workshops/anvil_try3.png` for review. The standalone bench passes
 all8 style metrics and projection. A smithy shell/forge recipe is therefore
 available; a complete forge-plus-anvil production template still has this gap.
+
+## Pass2 approved anvil
+
+BRIEF4 grants the anvil up to three more attempts. Cumulative try4 (first new
+attempt) passes all8 unchanged style metrics and normalized projection
+(height28px, base error0, light247.33degrees). Independent visual review passes
+at native and nearest2x beside the adult and forge, on grey/green alpha mattes.
+The raw generation includes a warm glow outside the object; the unchanged
+opaque-bounds+2px-fringe crop leaves no conspicuous halo in the normalized
+output. No alpha editing or gate change was used. The anvil PNG and built
+idle/working smithy layers are now included. Other stages follow the existing
+state recipe. Remaining native stone-wall replacement is delivered separately
+under ../walls_pass2; these historical room recipes still use the legacy wall
+kit and are not a runtime wall-selector update.

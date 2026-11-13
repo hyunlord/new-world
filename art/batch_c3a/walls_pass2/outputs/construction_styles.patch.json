@@ -1,0 +1,58 @@
+{
+  "status": "PROPOSED_NOT_APPLIED",
+  "target_style": "drystone",
+  "material": "granite",
+  "era_binding": "iron",
+  "operation": "Set only styles[id=drystone].wall_pieces after importing the pinned rows; preserve default_styles, textures, material looks, palettes and all unrelated keys.",
+  "wall_pieces": {
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      59
+    ],
+    "pieces": {
+      "0": "art/batch_c3a/walls_pass2/outputs/mask_00.png",
+      "1": "art/batch_c3a/walls_pass2/outputs/mask_01.png",
+      "2": "art/batch_c3a/walls_pass2/outputs/mask_02.png",
+      "3": "art/batch_c3a/walls_pass2/outputs/mask_03.png",
+      "4": "art/batch_c3a/walls_pass2/outputs/mask_04.png",
+      "5": "art/batch_c3a/walls_pass2/outputs/mask_05.png",
+      "6": "art/batch_c3a/walls_pass2/outputs/mask_06.png",
+      "7": "art/batch_c3a/walls_pass2/outputs/mask_07.png",
+      "8": "art/batch_c3a/walls_pass2/outputs/mask_08.png",
+      "9": "art/batch_c3a/walls_pass2/outputs/mask_09.png",
+      "10": "art/batch_c3a/walls_pass2/outputs/mask_10.png",
+      "11": "art/batch_c3a/walls_pass2/outputs/mask_11.png",
+      "12": "art/batch_c3a/walls_pass2/outputs/mask_12.png",
+      "13": "art/batch_c3a/walls_pass2/outputs/mask_13.png",
+      "14": "art/batch_c3a/walls_pass2/outputs/mask_14.png",
+      "15": "art/batch_c3a/walls_pass2/outputs/mask_15.png"
+    },
+    "doors": {
+      "ew": {
+        "closed": "art/batch_c3a/walls_pass2/outputs/door_ew_closed.png",
+        "open": "art/batch_c3a/walls_pass2/outputs/door_ew_open.png"
+      },
+      "ns": {
+        "closed": "art/batch_c3a/walls_pass2/outputs/door_ns_closed.png",
+        "open": "art/batch_c3a/walls_pass2/outputs/door_ns_open.png"
+      }
+    }
+  },
+  "caps": {
+    "end_n": "art/batch_c3a/walls_pass2/outputs/end_n.png",
+    "end_e": "art/batch_c3a/walls_pass2/outputs/end_e.png",
+    "end_s": "art/batch_c3a/walls_pass2/outputs/end_s.png",
+    "end_w": "art/batch_c3a/walls_pass2/outputs/end_w.png",
+    "corner_ne": "art/batch_c3a/walls_pass2/outputs/corner_ne.png",
+    "corner_se": "art/batch_c3a/walls_pass2/outputs/corner_se.png",
+    "corner_nw": "art/batch_c3a/walls_pass2/outputs/corner_nw.png",
+    "corner_sw": "art/batch_c3a/walls_pass2/outputs/corner_sw.png"
+  },
+  "caps_policy": "Mask pieces already include exposed ends and corners; aliases are review/integration references, never extra runtime overlays.",
+  "runtime_rows_to_append": [],
+  "limits": "Visual art pass only. Game occupancy, chunk joins, tinting, construction-state and site-ghost parity require integration verification. Geometry matches shipped W2; old pass1 atlas remains held."
+}

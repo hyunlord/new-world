@@ -77,11 +77,16 @@
   "held": [
     "composite_bow",
     "iron_hoe",
-    "iron_plough",
-    "anvil",
-    "drystone_wall_pieces",
-    "ns_door"
+    "iron_plough"
   ],
   "road_selector": "Disabled proposal: roads/bindings.draft.json; strict vertical wrap failure remains.",
-  "runtime_rows_to_append": []
+  "runtime_rows_to_append": [],
+  "pass2": "Anvil added after BRIEF4; wall status in walls_pass2, no runtime selector applied.",
+  "stone_walls": {
+    "era": "iron",
+    "status": "VISUAL_APPROVED_NOT_APPLIED",
+    "patch": "art/batch_c3a/walls_pass2/outputs/construction_styles.patch.json",
+    "import": "art/batch_c3a/walls_pass2/outputs/art_import.draft.json",
+    "world_scale": 1
+  }
 }

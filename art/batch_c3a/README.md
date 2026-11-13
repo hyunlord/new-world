@@ -1,4 +1,4 @@
-# C3A art delivery
+# C3A first-pass art delivery
 
 Art-only candidates; nothing has been imported into the game. Read STYLE.md,
 ADR0016 and the per-family READMEs before selecting files.
@@ -42,3 +42,13 @@ family directories contain test_build.py. Full engine gate/play is not an
 art-line verification. Docs check has unchanged baseline binary-PNG/UID faults;
 see external checks/docs_check_final.txt. The legacy walls, subtle furnace glow,
 road absolute wrap limit and held anvil remain integration risks.
+
+## Pass2
+
+BRIEF4 supersedes the anvil and stone-wall hold above. Cumulative anviltry4
+passes unchanged style/projection and independent visual review; its28px PNG
+and built smithy layers are now included. No more anvil generations are needed.
+CompositeBow remains held. New wall pieces and native/log comparison rooms
+are under walls_pass2; its manifest and README record the accepted native wall verdict.
+Pass1 output counts above remain historical. The root importer fragment will
+pin the additional anvil to the Pass2 asset commit. No game import is applied.

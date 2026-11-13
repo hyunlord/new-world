@@ -466,6 +466,25 @@
       "source_sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
     },
     {
+      "path": "art/batch_c3a/workshops/layers/812fc31ffee33254639e45e736610f7f233ccf9193b59acf7c7a63c3532de9e9.png",
+      "sha256": "4d92fbdb03db7369b02c46be232dacb1cc621c91db977e0d7810fce5a9bf526d",
+      "kind": "prop",
+      "cell": [
+        2,
+        2
+      ],
+      "anchor": [
+        20,
+        31
+      ],
+      "origin": [
+        140,
+        140
+      ],
+      "source": "art/batch_c3a/workshops/stations/anvil.png",
+      "source_sha256": "4d92fbdb03db7369b02c46be232dacb1cc621c91db977e0d7810fce5a9bf526d"
+    },
+    {
       "path": "art/batch_c3a/workshops/layers/9f02c0222b0c34a134973ae49061019cf0068fd418bc1426f801a9dff73ee30c.png",
       "sha256": "a9274f84e93cd62b87d9370cd3fa2eae9086bca163344f48529b3cf40d00016b",
       "kind": "wall",

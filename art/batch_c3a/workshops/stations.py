@@ -6,10 +6,10 @@ import hashlib
 import json
 from dataclasses import asdict
 from pathlib import Path
-from typing import ClassVar, Final
+from typing import ClassVar, Final, Literal, Self
 
 from PIL import Image
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from art.compositor.projection_check import ProjectionSpec, check_projection
 from art.pipeline2.judge import judge, load_calibration
@@ -31,19 +31,31 @@ class Raw(BaseModel):
     """Read only generation fields relevant to deterministic normalization."""
 
     model_config: ClassVar[ConfigDict] = ConfigDict(frozen=True, extra="ignore")
-    id: str = Field(pattern=r"^[a-z][a-z0-9_]*$")
+    id: Literal["anvil", "mason_bench"]
     raw: Path
-    attempt: int = Field(ge=1, le=3)
+    attempt: int = Field(ge=1, le=6)
     prompt: str
+
+    @model_validator(mode="after")
+    def attempt_budget(self) -> Self:
+        """BRIEF4 grants only the anvil three additional attempts."""
+        if self.attempt > {"anvil": 6, "mason_bench": 3}[self.id]:
+            message = f"Attempt budget exceeded for {self.id}"
+            raise ValueError(message)
+        return self
 
 
 def station(asset: str, height: int, footprint: Point) -> bool:
     """Leave numeric failures outside adoption, preserving the original alpha."""
-    records = sorted(DATA.glob(f"{asset}_try[1-3].json"))
+    maximum = {"anvil": 6, "mason_bench": 3}[asset]
+    records = sorted(DATA.glob(f"{asset}_try[1-{maximum}].json"))
     record = records[-1] if records else DATA / f"{asset}_try1.json"
     if not record.exists():
         return False
     row = Raw.model_validate_json(record.read_bytes())
+    if row.id != asset:
+        message = f"Record id {row.id} does not match station {asset}"
+        raise ValueError(message)
     with Image.open(row.raw) as source:
         normalized = normalize_sprite(source, height)
     target = OUT / "stations" / f"{asset}.png"

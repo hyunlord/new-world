@@ -1,6 +1,23 @@
 {
   "assets": [
     {
+      "id": "anvil",
+      "path": "art/batch_c3a/workshops/stations/anvil.png",
+      "width": 41,
+      "height": 36,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        20.0,
+        31.0
+      ],
+      "count_buckets": [],
+      "family": "structure",
+      "status": "candidate"
+    },
+    {
       "id": "mason_bench",
       "path": "art/batch_c3a/workshops/stations/mason_bench.png",
       "width": 62,

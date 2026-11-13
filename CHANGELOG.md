@@ -5,6 +5,18 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## C3A Pass2 native walls and anvil — 2026-11-14
+
+### Added
+- Native1:1 stone-course wall topology and shipped-log comparison rooms under
+  `art/batch_c3a/walls_pass2/`, without the legacy enlarged blurred top field.
+- Approved cumulative anviltry4, smithy placement, and bounded retry tests;
+  unchanged style/projection checks and external independent visual evidence.
+
+### Changed
+- Only the anvil receives BRIEF4's extra three-attempt allowance. CompositeBow
+  remains held; import/binding drafts remain unapplied.
+
 ## C3A art candidates — 2026-11-14
 
 ### Added
