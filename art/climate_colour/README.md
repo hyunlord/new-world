@@ -78,5 +78,5 @@ External Korean report: `/Users/rexxa/work/art-batch/R2/REPORT.md`.
 
 The modules own colour transport, typed handoff parsing, reference selection,
 export, contact sheets, or verification respectively. No new project dependency,
-game code or runtime configuration was introduced. Export is235 non-comment
+game code or runtime configuration was introduced. Export stays below250 non-comment
 lines; split its ground lane if future scope grows.
