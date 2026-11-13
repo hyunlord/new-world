@@ -289,6 +289,10 @@ func _layout_widgets() -> void:
 	helper.position = Vector2(12, bottom - helper.get_combined_minimum_size().y * factor)
 	_legacy.set_content_top(alerts.position.y)
 	_legacy.apply_scale(factor, area, minf(alerts.position.x, _right.position.x) - 12)
+	# Lift the helper above the story column it would overlap, so it stays visible (D-V3-1).
+	var story: Control = get_parent().get_node_or_null("StoryBanner/Column") as Control
+	if story != null and story.is_visible_in_tree() and story.get_global_rect().intersects(helper.get_global_rect()):
+		helper.position.y = story.get_global_rect().position.y - LegacyLayout.GAP - helper.get_combined_minimum_size().y * factor
 	var plaque: Node = get_node_or_null("../TaskPlaque")
 	if plaque != null and plaque.is_node_ready():
 		plaque.call("_place")

@@ -114,6 +114,8 @@ func _run() -> void:
 	_check("camera event completes added lesson", hud.helper.can_advance())
 	var next: Button = hud.helper.find_child("Next", true, false) as Button
 	_check("new lesson enables Next", next != null and not next.disabled)
+	var story_column: Control = main.get_node_or_null("UI/StoryBanner/Column") as Control
+	_check("helper clear of story column", story_column == null or not story_column.is_visible_in_tree() or hud.helper.get_global_rect().end.y <= story_column.get_global_rect().position.y - 8.0 or not hud.helper.get_global_rect().intersects(story_column.get_global_rect()))
 	# Wait for the ordinary incremental minimap publisher, without changing its timer or snapshots.
 	var minimap_frames: int = 0
 	while hud.minimap.map_image() == null and minimap_frames < 600:
