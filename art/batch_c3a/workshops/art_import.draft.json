@@ -1,7 +1,7 @@
 {
   "status": "DRAFT_NOT_APPLIED_REVIEW_REQUIRED",
   "source_branch": "v8/art-batch-c3a",
-  "source_commit_requirement": "Replace PIN_C3A_ASSET_COMMIT with the immutable commit containing PNGs and metadata; require final visual review first.",
+  "source_commit_requirement": "Pinned immutable art commit; preserve per-row from and meta_source.",
   "merge_instruction": "Add files; preserve existing config. Per-row from/meta_source require v8/visual-v3 importer capability.",
   "meta_sources": {
     "structure": "art/batch_c3a/workshops/stations_manifest.json"
@@ -12,7 +12,7 @@
       "id": "mason_bench",
       "source": "art/batch_c3a/workshops/stations/mason_bench.png",
       "dest": "structures/c3a/mason_bench.png",
-      "from": "PIN_C3A_ASSET_COMMIT",
+      "from": "dade1d7878803db94f09542cddc0bb51d0398fa4",
       "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
     }
   ],

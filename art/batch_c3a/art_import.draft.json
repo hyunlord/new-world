@@ -1,0 +1,445 @@
+{
+  "schema_version": 1,
+  "status": "APPEND_FRAGMENT_NOT_APPLIED",
+  "schema_reference_commit": "87c67b1de93894bc5959e6ad619b7769d5eb3f68",
+  "source_commit": "dade1d7878803db94f09542cddc0bb51d0398fa4",
+  "merge_instruction": "Append files; preserve existing config/meta_sources. Requires per-row from/meta_source. Walls and road selector excluded.",
+  "meta_sources": {
+    "structure": "art/batch_c3a/workshops/stations_manifest.json",
+    "item": "art/batch_c3a/items/items_manifest.draft.json"
+  },
+  "files": [
+    {
+      "role": "item",
+      "id": "iron_ore",
+      "source": "art/style05/batch_a3/items/iron_ore.png",
+      "dest": "items/iron_ore.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "iron_ore_count_2_8",
+      "source": "art/style05/batch_a3/items/iron_ore_count_2_8.png",
+      "dest": "items/iron_ore_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "iron_ore_count_9_plus",
+      "source": "art/style05/batch_a3/items/iron_ore_count_9_plus.png",
+      "dest": "items/iron_ore_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "iron_bloom",
+      "source": "art/style05/batch_a3/items/iron_bloom.png",
+      "dest": "items/iron_bloom.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "iron_bloom_count_2_8",
+      "source": "art/style05/batch_a3/items/iron_bloom_count_2_8.png",
+      "dest": "items/iron_bloom_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "iron_bloom_count_9_plus",
+      "source": "art/style05/batch_a3/items/iron_bloom_count_9_plus.png",
+      "dest": "items/iron_bloom_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "iron_ingot",
+      "source": "art/style05/batch_a3/items/iron_ingot.png",
+      "dest": "items/iron_ingot.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "iron_ingot_count_2_8",
+      "source": "art/style05/batch_a3/items/iron_ingot_count_2_8.png",
+      "dest": "items/iron_ingot_count_2_8.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "iron_ingot_count_9_plus",
+      "source": "art/style05/batch_a3/items/iron_ingot_count_9_plus.png",
+      "dest": "items/iron_ingot_count_9_plus.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "iron_axe",
+      "source": "art/style05/batch_a3/items/iron_axe.png",
+      "dest": "items/iron_axe.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "iron_sickle",
+      "source": "art/style05/batch_a3/items/iron_sickle.png",
+      "dest": "items/iron_sickle.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "iron_saw",
+      "source": "art/style05/batch_a3/items/iron_saw.png",
+      "dest": "items/iron_saw.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "iron_sword",
+      "source": "art/style05/batch_a3/items/iron_sword.png",
+      "dest": "items/iron_sword.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "iron_helmet",
+      "source": "art/style05/batch_a3/items/iron_helmet.png",
+      "dest": "items/iron_helmet.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "meta_source": "art/style05/batch_a3/items_manifest.json"
+    },
+    {
+      "role": "item",
+      "id": "iron_spear",
+      "source": "art/style05/batch_b3/items/iron_spear.png",
+      "dest": "items/iron_spear.png",
+      "from": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+      "meta_source": "art/batch_b3/items/items_manifest.json"
+    },
+    {
+      "role": "structure",
+      "id": "bloomery_unlit",
+      "source": "art/style05/struct/a2/iron/bloomery_unlit.png",
+      "dest": "structures/bloomery_unlit.png",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "meta_source": "docs/v8/artstruct/assets.json"
+    },
+    {
+      "role": "structure",
+      "id": "bloomery_lit",
+      "source": "art/style05/struct/a2/iron/bloomery_lit.png",
+      "dest": "structures/bloomery_lit.png",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "meta_source": "docs/v8/artstruct/assets.json"
+    },
+    {
+      "role": "structure",
+      "id": "forge_idle",
+      "source": "art/style05/struct/a2/iron/forge_idle.png",
+      "dest": "structures/forge_idle.png",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "meta_source": "docs/v8/artstruct/assets.json"
+    },
+    {
+      "role": "structure",
+      "id": "forge_working",
+      "source": "art/style05/struct/a2/iron/forge_working.png",
+      "dest": "structures/forge_working.png",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "meta_source": "docs/v8/artstruct/assets.json"
+    },
+    {
+      "role": "structure",
+      "id": "iron_outcrop_full",
+      "source": "art/style05/struct/a2/ores/iron_outcrop_full.png",
+      "dest": "structures/iron_outcrop_full.png",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "meta_source": "docs/v8/artstruct/assets.json"
+    },
+    {
+      "role": "structure",
+      "id": "iron_outcrop_depleted",
+      "source": "art/style05/struct/a2/ores/iron_outcrop_depleted.png",
+      "dest": "structures/iron_outcrop_depleted.png",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "meta_source": "docs/v8/artstruct/assets.json"
+    },
+    {
+      "role": "structure",
+      "id": "bog_iron_outcrop_full",
+      "source": "art/style05/struct/a2/ores/bog_iron_outcrop_full.png",
+      "dest": "structures/bog_iron_outcrop_full.png",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "meta_source": "docs/v8/artstruct/assets.json"
+    },
+    {
+      "role": "structure",
+      "id": "bog_iron_outcrop_depleted",
+      "source": "art/style05/struct/a2/ores/bog_iron_outcrop_depleted.png",
+      "dest": "structures/bog_iron_outcrop_depleted.png",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "meta_source": "docs/v8/artstruct/assets.json"
+    },
+    {
+      "role": "ground_texture",
+      "id": "paved_road",
+      "source": "art/style05/env/ground/a2/iron/paved_road.png",
+      "dest": "ground/paved_road.png",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "meta_source": "art/batch_a2/ground_assets.json"
+    },
+    {
+      "role": "ground_texture",
+      "id": "paved_road_ew",
+      "source": "art/style05/env/ground/a2/iron/paved_road_ew.png",
+      "dest": "ground/paved_road_ew.png",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "meta_source": "art/batch_a2/ground_assets.json"
+    },
+    {
+      "role": "ground_texture",
+      "id": "paved_road_damaged",
+      "source": "art/style05/env/ground/a2/iron/paved_road_damaged.png",
+      "dest": "ground/paved_road_damaged.png",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "meta_source": "art/batch_a2/ground_assets.json"
+    },
+    {
+      "role": "ground_texture",
+      "id": "paved_road_junction",
+      "source": "art/style05/env/ground/a2/iron/paved_road_junction.png",
+      "dest": "ground/paved_road_junction.png",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "meta_source": "art/batch_a2/ground_assets.json"
+    },
+    {
+      "role": "ground_texture",
+      "id": "paved_road_corner",
+      "source": "art/style05/env/ground/a2/iron/paved_road_corner.png",
+      "dest": "ground/paved_road_corner.png",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "meta_source": "art/batch_a2/ground_assets.json"
+    },
+    {
+      "role": "structure",
+      "id": "bloomery_damaged",
+      "source": "art/style05/struct/b3/stages_iron/bloomery_damaged.png",
+      "dest": "structures/bloomery_damaged.png",
+      "from": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+      "meta_source": "art/batch_b3/stages_iron/assets.json"
+    },
+    {
+      "role": "structure",
+      "id": "bloomery_foundation",
+      "source": "art/style05/struct/b3/stages_iron/bloomery_foundation.png",
+      "dest": "structures/bloomery_foundation.png",
+      "from": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+      "meta_source": "art/batch_b3/stages_iron/assets.json"
+    },
+    {
+      "role": "structure",
+      "id": "bloomery_half_built",
+      "source": "art/style05/struct/b3/stages_iron/bloomery_half_built.png",
+      "dest": "structures/bloomery_half_built.png",
+      "from": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+      "meta_source": "art/batch_b3/stages_iron/assets.json"
+    },
+    {
+      "role": "structure",
+      "id": "bloomery_ruined",
+      "source": "art/style05/struct/b3/stages_iron/bloomery_ruined.png",
+      "dest": "structures/bloomery_ruined.png",
+      "from": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+      "meta_source": "art/batch_b3/stages_iron/assets.json"
+    },
+    {
+      "role": "structure",
+      "id": "forge_damaged",
+      "source": "art/style05/struct/b3/stages_iron/forge_damaged.png",
+      "dest": "structures/forge_damaged.png",
+      "from": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+      "meta_source": "art/batch_b3/stages_iron/assets.json"
+    },
+    {
+      "role": "structure",
+      "id": "forge_half_built",
+      "source": "art/style05/struct/b3/stages_iron/forge_half_built.png",
+      "dest": "structures/forge_half_built.png",
+      "from": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+      "meta_source": "art/batch_b3/stages_iron/assets.json"
+    },
+    {
+      "role": "structure",
+      "id": "forge_ruined",
+      "source": "art/style05/struct/b3/stages_iron/forge_ruined.png",
+      "dest": "structures/forge_ruined.png",
+      "from": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+      "meta_source": "art/batch_b3/stages_iron/assets.json"
+    },
+    {
+      "role": "item",
+      "id": "bog_iron",
+      "source": "art/batch_c3a/items/bog_iron.png",
+      "dest": "items/c3a/bog_iron.png",
+      "from": "dade1d7878803db94f09542cddc0bb51d0398fa4",
+      "meta_source": "art/batch_c3a/items/items_manifest.draft.json"
+    },
+    {
+      "role": "item",
+      "id": "bog_iron_count_2_8",
+      "source": "art/batch_c3a/items/bog_iron_count_2_8.png",
+      "dest": "items/c3a/bog_iron_count_2_8.png",
+      "from": "dade1d7878803db94f09542cddc0bb51d0398fa4",
+      "meta_source": "art/batch_c3a/items/items_manifest.draft.json"
+    },
+    {
+      "role": "item",
+      "id": "bog_iron_count_9_plus",
+      "source": "art/batch_c3a/items/bog_iron_count_9_plus.png",
+      "dest": "items/c3a/bog_iron_count_9_plus.png",
+      "from": "dade1d7878803db94f09542cddc0bb51d0398fa4",
+      "meta_source": "art/batch_c3a/items/items_manifest.draft.json"
+    },
+    {
+      "role": "item",
+      "id": "cut_stone",
+      "source": "art/batch_c3a/items/cut_stone.png",
+      "dest": "items/c3a/cut_stone.png",
+      "from": "dade1d7878803db94f09542cddc0bb51d0398fa4",
+      "meta_source": "art/batch_c3a/items/items_manifest.draft.json"
+    },
+    {
+      "role": "item",
+      "id": "cut_stone_count_2_8",
+      "source": "art/batch_c3a/items/cut_stone_count_2_8.png",
+      "dest": "items/c3a/cut_stone_count_2_8.png",
+      "from": "dade1d7878803db94f09542cddc0bb51d0398fa4",
+      "meta_source": "art/batch_c3a/items/items_manifest.draft.json"
+    },
+    {
+      "role": "item",
+      "id": "cut_stone_count_9_plus",
+      "source": "art/batch_c3a/items/cut_stone_count_9_plus.png",
+      "dest": "items/c3a/cut_stone_count_9_plus.png",
+      "from": "dade1d7878803db94f09542cddc0bb51d0398fa4",
+      "meta_source": "art/batch_c3a/items/items_manifest.draft.json"
+    },
+    {
+      "role": "item",
+      "id": "iron_adze",
+      "source": "art/batch_c3a/items/iron_adze.png",
+      "dest": "items/c3a/iron_adze.png",
+      "from": "dade1d7878803db94f09542cddc0bb51d0398fa4",
+      "meta_source": "art/batch_c3a/items/items_manifest.draft.json"
+    },
+    {
+      "role": "item",
+      "id": "iron_knife",
+      "source": "art/batch_c3a/items/iron_knife.png",
+      "dest": "items/c3a/iron_knife.png",
+      "from": "dade1d7878803db94f09542cddc0bb51d0398fa4",
+      "meta_source": "art/batch_c3a/items/items_manifest.draft.json"
+    },
+    {
+      "role": "item",
+      "id": "iron_shield_boss",
+      "source": "art/batch_c3a/items/iron_shield_boss.png",
+      "dest": "items/c3a/iron_shield_boss.png",
+      "from": "dade1d7878803db94f09542cddc0bb51d0398fa4",
+      "meta_source": "art/batch_c3a/items/items_manifest.draft.json"
+    },
+    {
+      "role": "item",
+      "id": "limestone",
+      "source": "art/batch_c3a/items/limestone.png",
+      "dest": "items/c3a/limestone.png",
+      "from": "dade1d7878803db94f09542cddc0bb51d0398fa4",
+      "meta_source": "art/batch_c3a/items/items_manifest.draft.json"
+    },
+    {
+      "role": "item",
+      "id": "limestone_count_2_8",
+      "source": "art/batch_c3a/items/limestone_count_2_8.png",
+      "dest": "items/c3a/limestone_count_2_8.png",
+      "from": "dade1d7878803db94f09542cddc0bb51d0398fa4",
+      "meta_source": "art/batch_c3a/items/items_manifest.draft.json"
+    },
+    {
+      "role": "item",
+      "id": "limestone_count_9_plus",
+      "source": "art/batch_c3a/items/limestone_count_9_plus.png",
+      "dest": "items/c3a/limestone_count_9_plus.png",
+      "from": "dade1d7878803db94f09542cddc0bb51d0398fa4",
+      "meta_source": "art/batch_c3a/items/items_manifest.draft.json"
+    },
+    {
+      "role": "item",
+      "id": "nails",
+      "source": "art/batch_c3a/items/nails.png",
+      "dest": "items/c3a/nails.png",
+      "from": "dade1d7878803db94f09542cddc0bb51d0398fa4",
+      "meta_source": "art/batch_c3a/items/items_manifest.draft.json"
+    },
+    {
+      "role": "item",
+      "id": "nails_count_2_8",
+      "source": "art/batch_c3a/items/nails_count_2_8.png",
+      "dest": "items/c3a/nails_count_2_8.png",
+      "from": "dade1d7878803db94f09542cddc0bb51d0398fa4",
+      "meta_source": "art/batch_c3a/items/items_manifest.draft.json"
+    },
+    {
+      "role": "item",
+      "id": "nails_count_9_plus",
+      "source": "art/batch_c3a/items/nails_count_9_plus.png",
+      "dest": "items/c3a/nails_count_9_plus.png",
+      "from": "dade1d7878803db94f09542cddc0bb51d0398fa4",
+      "meta_source": "art/batch_c3a/items/items_manifest.draft.json"
+    },
+    {
+      "role": "item",
+      "id": "wool_cloth",
+      "source": "art/batch_c3a/items/wool_cloth.png",
+      "dest": "items/c3a/wool_cloth.png",
+      "from": "dade1d7878803db94f09542cddc0bb51d0398fa4",
+      "meta_source": "art/batch_c3a/items/items_manifest.draft.json"
+    },
+    {
+      "role": "item",
+      "id": "wool_cloth_count_2_8",
+      "source": "art/batch_c3a/items/wool_cloth_count_2_8.png",
+      "dest": "items/c3a/wool_cloth_count_2_8.png",
+      "from": "dade1d7878803db94f09542cddc0bb51d0398fa4",
+      "meta_source": "art/batch_c3a/items/items_manifest.draft.json"
+    },
+    {
+      "role": "item",
+      "id": "wool_cloth_count_9_plus",
+      "source": "art/batch_c3a/items/wool_cloth_count_9_plus.png",
+      "dest": "items/c3a/wool_cloth_count_9_plus.png",
+      "from": "dade1d7878803db94f09542cddc0bb51d0398fa4",
+      "meta_source": "art/batch_c3a/items/items_manifest.draft.json"
+    },
+    {
+      "role": "structure",
+      "id": "mason_bench",
+      "source": "art/batch_c3a/workshops/stations/mason_bench.png",
+      "dest": "structures/c3a/mason_bench.png",
+      "from": "dade1d7878803db94f09542cddc0bb51d0398fa4",
+      "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
+    }
+  ]
+}
