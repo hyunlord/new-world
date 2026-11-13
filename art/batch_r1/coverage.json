@@ -1,0 +1,4193 @@
+{
+  "planned_looks": 84,
+  "accepted_body_looks": 13,
+  "accepted_portrait_looks": 13,
+  "rows": [
+    {
+      "look": "child_M_neo_plant_short",
+      "wardrobe": "neo_plant",
+      "age": "child",
+      "sex": "M",
+      "hair": "short",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9772727272727274,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.1113225400806719,
+            "clothing_value": 1.0504009163802976,
+            "outline_thickness": 0.8486111217892042
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 0.9629629629629629,
+            "clothing_saturation": 1.012683990657527,
+            "clothing_value": 0.9947635411552936,
+            "outline_thickness": 0.8948250543942061
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.222879678357114,
+            "clothing_value": 1.0085092456226477,
+            "outline_thickness": 0.9038202800052278
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_M_neo_plant_long_tied",
+      "wardrobe": "neo_plant",
+      "age": "child",
+      "sex": "M",
+      "hair": "long_tied",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": false,
+          "ratios": {
+            "shoulder_width": 1.119047619047619,
+            "hip_width": 0.875,
+            "clothing_saturation": 1.2057024920328523,
+            "clothing_value": 0.9820893682588598,
+            "outline_thickness": 1.179451414260693
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.1428571428571428,
+            "hip_width": 0.875,
+            "clothing_saturation": 1.1931701580810026,
+            "clothing_value": 0.908326656394453,
+            "outline_thickness": 0.9314228199621173
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0952380952380953,
+            "hip_width": 0.875,
+            "clothing_saturation": 1.3162983440867986,
+            "clothing_value": 0.923640929064658,
+            "outline_thickness": 0.6988563865619477
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_M_neo_plant_bun",
+      "wardrobe": "neo_plant",
+      "age": "child",
+      "sex": "M",
+      "hair": "bun",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0454545454545456,
+            "hip_width": 0.9622641509433961,
+            "clothing_saturation": 1.2005444874338782,
+            "clothing_value": 1.0074716354579836,
+            "outline_thickness": 0.7849107274185207
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.090909090909091,
+            "hip_width": 0.9245283018867924,
+            "clothing_saturation": 1.1878257235471068,
+            "clothing_value": 1.01788580389263,
+            "outline_thickness": 0.6943143590546549
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0681818181818181,
+            "hip_width": 0.9433962264150944,
+            "clothing_saturation": 1.2243387398892782,
+            "clothing_value": 0.907319435476432,
+            "outline_thickness": 0.9059352151035068
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_F_neo_plant_short",
+      "wardrobe": "neo_plant",
+      "age": "child",
+      "sex": "F",
+      "hair": "short",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.027027027027027,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.0966801183882728,
+            "clothing_value": 0.9538424649322623,
+            "outline_thickness": 1.2264698190809022
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.054054054054054,
+            "hip_width": 0.9799999999999999,
+            "clothing_saturation": 1.0194566550900162,
+            "clothing_value": 0.8448627262918116,
+            "outline_thickness": 0.7309868530537527
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": false,
+          "ratios": null,
+          "error": "[Errno 2] No such file or directory: '/Users/rexxa/work/art-batch/R1/trials/child_F_neo_plant_short/try3/S/idle.png'"
+        }
+      ]
+    },
+    {
+      "look": "child_F_neo_plant_long_tied",
+      "wardrobe": "neo_plant",
+      "age": "child",
+      "sex": "F",
+      "hair": "long_tied",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9444444444444445,
+            "hip_width": 1.0196078431372548,
+            "clothing_saturation": 0.9688014657423589,
+            "clothing_value": 1.1211937401431518,
+            "outline_thickness": 1.2392171765152957
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 1.0392156862745099,
+            "clothing_saturation": 0.9435955423677213,
+            "clothing_value": 1.0134659711270169,
+            "outline_thickness": 1.1584172525175755
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": false,
+          "ratios": null,
+          "error": "[Errno 2] No such file or directory: '/Users/rexxa/work/art-batch/R1/trials/child_F_neo_plant_long_tied/try3/S/idle.png'"
+        }
+      ]
+    },
+    {
+      "look": "child_F_neo_plant_bun",
+      "wardrobe": "neo_plant",
+      "age": "child",
+      "sex": "F",
+      "hair": "bun",
+      "attempts": 2,
+      "body": "accepted",
+      "portraits": 6,
+      "selected_trial": "/Users/rexxa/work/art-batch/R1/trials/child_F_neo_plant_bun/try2",
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 0.9787234042553192,
+            "clothing_saturation": 1.080337953018485,
+            "clothing_value": 1.0670200681560016,
+            "outline_thickness": 1.3133921127756865
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": true,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 0.9574468085106383,
+            "clothing_saturation": 0.998542961508918,
+            "clothing_value": 0.9333585762968573,
+            "outline_thickness": 1.006745319960589
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_M_neo_plant_short",
+      "wardrobe": "neo_plant",
+      "age": "adult",
+      "sex": "M",
+      "hair": "short",
+      "attempts": 3,
+      "body": "accepted",
+      "portraits": 6,
+      "selected_trial": "/Users/rexxa/work/art-batch/R1/trials/adult_M_neo_plant_short/try3",
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": true,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0416666666666667,
+            "hip_width": 0.9390243902439025,
+            "clothing_saturation": 1.0567059121781173,
+            "clothing_value": 1.0028912322131236,
+            "outline_thickness": 0.9027342085899075
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": false,
+          "ratios": null,
+          "error": "[Errno 2] No such file or directory: '/Users/rexxa/work/art-batch/R1/trials/adult_M_neo_plant_short/try2/S/idle.png'"
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": true,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0138888888888888,
+            "hip_width": 0.9146341463414634,
+            "clothing_saturation": 1.0646654264253967,
+            "clothing_value": 0.9146467135624355,
+            "outline_thickness": 1.033906510204872
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_M_neo_plant_long_tied",
+      "wardrobe": "neo_plant",
+      "age": "adult",
+      "sex": "M",
+      "hair": "long_tied",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.106060606060606,
+            "hip_width": 0.974025974025974,
+            "clothing_saturation": 1.0226342725241733,
+            "clothing_value": 1.0250103426228891,
+            "outline_thickness": 0.9984882495762518
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.1363636363636365,
+            "hip_width": 0.8701298701298701,
+            "clothing_saturation": 1.004847395640538,
+            "clothing_value": 1.020572417164993,
+            "outline_thickness": 0.9068822819796296
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": false,
+          "ratios": null,
+          "error": "[Errno 2] No such file or directory: '/Users/rexxa/work/art-batch/R1/trials/adult_M_neo_plant_long_tied/try3/S/idle.png'"
+        }
+      ]
+    },
+    {
+      "look": "adult_M_neo_plant_bun",
+      "wardrobe": "neo_plant",
+      "age": "adult",
+      "sex": "M",
+      "hair": "bun",
+      "attempts": 1,
+      "body": "accepted",
+      "portraits": 6,
+      "selected_trial": "/Users/rexxa/work/art-batch/R1/trials/adult_M_neo_plant_bun/try1",
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": true,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9696969696969696,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.0963359384743934,
+            "clothing_value": 1.0750394405284338,
+            "outline_thickness": 0.9876769435155069
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_F_neo_plant_short",
+      "wardrobe": "neo_plant",
+      "age": "adult",
+      "sex": "F",
+      "hair": "short",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 0.9848484848484849,
+            "clothing_saturation": 1.037126588621172,
+            "clothing_value": 0.9882541377469302,
+            "outline_thickness": 1.1102275424734647
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0204081632653064,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.0139866017699808,
+            "clothing_value": 0.9918134899448301,
+            "outline_thickness": 1.1343212723388383
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": false,
+          "ratios": null,
+          "error": "[Errno 2] No such file or directory: '/Users/rexxa/work/art-batch/R1/trials/adult_F_neo_plant_short/try3/S/idle.png'"
+        }
+      ]
+    },
+    {
+      "look": "adult_F_neo_plant_long_tied",
+      "wardrobe": "neo_plant",
+      "age": "adult",
+      "sex": "F",
+      "hair": "long_tied",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9807692307692308,
+            "hip_width": 0.9729729729729729,
+            "clothing_saturation": 1.048342214313459,
+            "clothing_value": 1.0239944433920565,
+            "outline_thickness": 1.12675410694907
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9615384615384617,
+            "hip_width": 0.9729729729729729,
+            "clothing_saturation": 0.9595080960744321,
+            "clothing_value": 0.9807848007128174,
+            "outline_thickness": 1.215086255285709
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": true,
+          "structural_pass": false,
+          "ratios": {
+            "shoulder_width": 0.9615384615384617,
+            "hip_width": 0.9729729729729729,
+            "clothing_saturation": 1.0655810221887598,
+            "clothing_value": 1.0205215634274167,
+            "outline_thickness": 0.9955749728698124
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_F_neo_plant_bun",
+      "wardrobe": "neo_plant",
+      "age": "adult",
+      "sex": "F",
+      "hair": "bun",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9583333333333334,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.0280535826112773,
+            "clothing_value": 1.0801840928242692,
+            "outline_thickness": 1.1351764251136591
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 1.0303030303030303,
+            "clothing_saturation": 1.0618800398279151,
+            "clothing_value": 1.0053153561936863,
+            "outline_thickness": 1.1415450311988071
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": false,
+          "ratios": null,
+          "error": "[Errno 2] No such file or directory: '/Users/rexxa/work/art-batch/R1/trials/adult_F_neo_plant_bun/try3/S/idle.png'"
+        }
+      ]
+    },
+    {
+      "look": "child_M_neo_first_wool_short",
+      "wardrobe": "neo_first_wool",
+      "age": "child",
+      "sex": "M",
+      "hair": "short",
+      "attempts": 2,
+      "body": "accepted",
+      "portraits": 6,
+      "selected_trial": "/Users/rexxa/work/art-batch/R1/trials/child_M_neo_first_wool_short/try2",
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 0.9444444444444444,
+            "clothing_saturation": 1.1760897027024768,
+            "clothing_value": 0.8232695139911634,
+            "outline_thickness": 1.208112617149359
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": true,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9772727272727274,
+            "hip_width": 0.9629629629629629,
+            "clothing_saturation": 1.0015154050294226,
+            "clothing_value": 1.0981836033382424,
+            "outline_thickness": 0.9608131068894201
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_M_neo_first_wool_long_tied",
+      "wardrobe": "neo_first_wool",
+      "age": "child",
+      "sex": "M",
+      "hair": "long_tied",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.1428571428571428,
+            "hip_width": 0.8541666666666666,
+            "clothing_saturation": 1.3777354106983983,
+            "clothing_value": 0.7657501569365976,
+            "outline_thickness": 0.8484613128967579
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0714285714285714,
+            "hip_width": 0.8333333333333334,
+            "clothing_saturation": 1.108709924291831,
+            "clothing_value": 1.0183790446841294,
+            "outline_thickness": 0.7063774479113006
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0952380952380953,
+            "hip_width": 0.8333333333333334,
+            "clothing_saturation": 1.2964294238280711,
+            "clothing_value": 0.9427426810477658,
+            "outline_thickness": 0.8181947867711743
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_M_neo_first_wool_bun",
+      "wardrobe": "neo_first_wool",
+      "age": "child",
+      "sex": "M",
+      "hair": "bun",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0681818181818181,
+            "hip_width": 0.8867924528301886,
+            "clothing_saturation": 1.2286155747645389,
+            "clothing_value": 0.7164775697198905,
+            "outline_thickness": 0.9114581109229024
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0681818181818181,
+            "hip_width": 0.8679245283018868,
+            "clothing_saturation": 1.111272072315992,
+            "clothing_value": 1.0480828951818713,
+            "outline_thickness": 0.5868314045900768
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0454545454545456,
+            "hip_width": 0.830188679245283,
+            "clothing_saturation": 1.3228778519230204,
+            "clothing_value": 0.9546782277157703,
+            "outline_thickness": 0.6833871863123284
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_F_neo_first_wool_short",
+      "wardrobe": "neo_first_wool",
+      "age": "child",
+      "sex": "F",
+      "hair": "short",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": false,
+          "ratios": {
+            "shoulder_width": 1.027027027027027,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.1308489765060086,
+            "clothing_value": 0.7997841985373456,
+            "outline_thickness": 1.0632860233459336
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.020740129745668,
+            "clothing_value": 1.0249370579067258,
+            "outline_thickness": 0.5677911703872761
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.027027027027027,
+            "hip_width": 1.02,
+            "clothing_saturation": 1.1088295780923438,
+            "clothing_value": 0.9562402589617552,
+            "outline_thickness": 0.8959299146518316
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_F_neo_first_wool_long_tied",
+      "wardrobe": "neo_first_wool",
+      "age": "child",
+      "sex": "F",
+      "hair": "long_tied",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.1215823034740438,
+            "clothing_value": 0.8596384811355088,
+            "outline_thickness": 0.8264060421812653
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9722222222222222,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.009919507685157,
+            "clothing_value": 1.1234987261919203,
+            "outline_thickness": 0.8660934828044843
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.1084683712216772,
+            "clothing_value": 0.981317481499454,
+            "outline_thickness": 1.1459481284438535
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_F_neo_first_wool_bun",
+      "wardrobe": "neo_first_wool",
+      "age": "child",
+      "sex": "F",
+      "hair": "bun",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9705882352941176,
+            "hip_width": 0.9787234042553192,
+            "clothing_saturation": 1.1159510486356792,
+            "clothing_value": 0.7983087214438974,
+            "outline_thickness": 1.1482201955384888
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 0.9574468085106383,
+            "clothing_saturation": 0.9704319226024516,
+            "clothing_value": 1.034330430392528,
+            "outline_thickness": 0.8059520501225272
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.1625556014263363,
+            "clothing_value": 0.970213303041777,
+            "outline_thickness": 1.0518404365510445
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_M_neo_first_wool_short",
+      "wardrobe": "neo_first_wool",
+      "age": "adult",
+      "sex": "M",
+      "hair": "short",
+      "attempts": 3,
+      "body": "accepted",
+      "portraits": 6,
+      "selected_trial": "/Users/rexxa/work/art-batch/R1/trials/adult_M_neo_first_wool_short/try3",
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 0.951219512195122,
+            "clothing_saturation": 1.0478333976423015,
+            "clothing_value": 0.7845295921137396,
+            "outline_thickness": 1.0753908317519334
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": true,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0138888888888888,
+            "hip_width": 0.951219512195122,
+            "clothing_saturation": 0.9159857386247678,
+            "clothing_value": 1.0500605995344057,
+            "outline_thickness": 1.0019622271277902
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": true,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.027777777777778,
+            "hip_width": 0.9390243902439025,
+            "clothing_saturation": 1.082525905989607,
+            "clothing_value": 0.9829210594583279,
+            "outline_thickness": 1.0292784942488673
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_M_neo_first_wool_long_tied",
+      "wardrobe": "neo_first_wool",
+      "age": "adult",
+      "sex": "M",
+      "hair": "long_tied",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.106060606060606,
+            "hip_width": 0.8311688311688311,
+            "clothing_saturation": 1.1692581970734115,
+            "clothing_value": 0.777727631727406,
+            "outline_thickness": 1.1129460809015532
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.1515151515151514,
+            "hip_width": 0.8311688311688311,
+            "clothing_saturation": 0.8472142015026731,
+            "clothing_value": 1.0747677611042161,
+            "outline_thickness": 0.9265961183135584
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 0.935064935064935,
+            "clothing_saturation": 1.11373532120615,
+            "clothing_value": 1.0509955640539914,
+            "outline_thickness": 0.8971093499473178
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_M_neo_first_wool_bun",
+      "wardrobe": "neo_first_wool",
+      "age": "adult",
+      "sex": "M",
+      "hair": "bun",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 0.9480519480519479,
+            "clothing_saturation": 1.1903223473614808,
+            "clothing_value": 0.799202186171145,
+            "outline_thickness": 0.9951669797058958
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 0.922077922077922,
+            "clothing_saturation": 0.9247389004503209,
+            "clothing_value": 1.1276997214914755,
+            "outline_thickness": 0.9703147189518531
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9848484848484849,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.0576986857503696,
+            "clothing_value": 1.0964045527697457,
+            "outline_thickness": 0.7605860705178127
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_F_neo_first_wool_short",
+      "wardrobe": "neo_first_wool",
+      "age": "adult",
+      "sex": "F",
+      "hair": "short",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0204081632653064,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.157820955370675,
+            "clothing_value": 0.8274900634751142,
+            "outline_thickness": 1.0964173081488011
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.979591836734694,
+            "hip_width": 0.9848484848484849,
+            "clothing_saturation": 0.89991231987259,
+            "clothing_value": 1.0950940262205613,
+            "outline_thickness": 1.0330207874122554
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0408163265306123,
+            "hip_width": 0.9848484848484849,
+            "clothing_saturation": 1.153244618691708,
+            "clothing_value": 0.9973898083882067,
+            "outline_thickness": 1.112126555664824
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_F_neo_first_wool_long_tied",
+      "wardrobe": "neo_first_wool",
+      "age": "adult",
+      "sex": "F",
+      "hair": "long_tied",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9807692307692308,
+            "hip_width": 0.9864864864864864,
+            "clothing_saturation": 1.1223050995811934,
+            "clothing_value": 0.8336806213297973,
+            "outline_thickness": 1.1123751075852262
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": false,
+          "ratios": {
+            "shoulder_width": 0.9423076923076923,
+            "hip_width": 0.9459459459459458,
+            "clothing_saturation": 0.9044880096362837,
+            "clothing_value": 1.1329165877375766,
+            "outline_thickness": 0.9544212850353627
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": false,
+          "ratios": {
+            "shoulder_width": 0.9615384615384617,
+            "hip_width": 0.9729729729729729,
+            "clothing_saturation": 1.0606118805935034,
+            "clothing_value": 1.0333396476605419,
+            "outline_thickness": 0.8726003816936722
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_F_neo_first_wool_bun",
+      "wardrobe": "neo_first_wool",
+      "age": "adult",
+      "sex": "F",
+      "hair": "bun",
+      "attempts": 3,
+      "body": "accepted",
+      "portraits": 6,
+      "selected_trial": "/Users/rexxa/work/art-batch/R1/trials/adult_F_neo_first_wool_bun/try3",
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": false,
+          "ratios": null,
+          "error": "[Errno 2] No such file or directory: '/Users/rexxa/work/art-batch/R1/trials/adult_F_neo_first_wool_bun/try1/S/idle.png'"
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9583333333333334,
+            "hip_width": 1.0,
+            "clothing_saturation": 0.8583836489525238,
+            "clothing_value": 1.146561223828353,
+            "outline_thickness": 1.006028088129728
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": true,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9583333333333334,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.0269533893203966,
+            "clothing_value": 1.0530239191028716,
+            "outline_thickness": 1.0097001601354707
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_M_bronze_linen_short",
+      "wardrobe": "bronze_linen",
+      "age": "child",
+      "sex": "M",
+      "hair": "short",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9772727272727274,
+            "hip_width": 1.0,
+            "clothing_saturation": 0.956453216705263,
+            "clothing_value": 1.261332024218622,
+            "outline_thickness": 1.1483520285386986
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 0.9444444444444444,
+            "clothing_saturation": 1.050075869505879,
+            "clothing_value": 1.078352853168759,
+            "outline_thickness": 0.6665231530956646
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0454545454545456,
+            "hip_width": 1.0370370370370372,
+            "clothing_saturation": 1.185622544682565,
+            "clothing_value": 0.905416462117493,
+            "outline_thickness": 1.5262283864717956
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_M_bronze_linen_long_tied",
+      "wardrobe": "bronze_linen",
+      "age": "child",
+      "sex": "M",
+      "hair": "long_tied",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0952380952380953,
+            "hip_width": 0.8958333333333334,
+            "clothing_saturation": 1.007560449483455,
+            "clothing_value": 1.1093004622496148,
+            "outline_thickness": 1.026747715546961
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0952380952380953,
+            "hip_width": 0.9166666666666666,
+            "clothing_saturation": 0.9975116882915308,
+            "clothing_value": 0.8379167950693375,
+            "outline_thickness": 1.2374325363174539
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": false,
+          "ratios": {
+            "shoulder_width": 1.0476190476190477,
+            "hip_width": 0.9375,
+            "clothing_saturation": 1.2002338826985115,
+            "clothing_value": 0.8475808936825886,
+            "outline_thickness": 0.8202236505282179
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_M_bronze_linen_bun",
+      "wardrobe": "bronze_linen",
+      "age": "child",
+      "sex": "M",
+      "hair": "bun",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0227272727272727,
+            "hip_width": 0.8867924528301886,
+            "clothing_saturation": 1.0401575182681615,
+            "clothing_value": 1.1771976754911908,
+            "outline_thickness": 0.7856793778676119
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.1136363636363635,
+            "hip_width": 0.9245283018867924,
+            "clothing_saturation": 1.1084455728477587,
+            "clothing_value": 0.8940134673923069,
+            "outline_thickness": 1.2519085780441166
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9090909090909092,
+            "hip_width": 0.830188679245283,
+            "clothing_saturation": 0.9010855792170572,
+            "clothing_value": 1.0801524032275465,
+            "outline_thickness": 0.6178431288818034
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_F_bronze_linen_short",
+      "wardrobe": "bronze_linen",
+      "age": "child",
+      "sex": "F",
+      "hair": "short",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 1.0,
+            "clothing_saturation": 0.8851852959725214,
+            "clothing_value": 1.1786356551972186,
+            "outline_thickness": 0.46912963887502085
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.1081081081081081,
+            "hip_width": 1.0799999999999998,
+            "clothing_saturation": 1.1937399602703718,
+            "clothing_value": 0.8696798944970627,
+            "outline_thickness": 1.3439959108955615
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 1.02,
+            "clothing_saturation": 1.0018248711458497,
+            "clothing_value": 1.1094592974463495,
+            "outline_thickness": 0.7596819057128591
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_F_bronze_linen_long_tied",
+      "wardrobe": "bronze_linen",
+      "age": "child",
+      "sex": "F",
+      "hair": "long_tied",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 1.0,
+            "clothing_saturation": 0.9422260888464625,
+            "clothing_value": 1.1507946136115492,
+            "outline_thickness": 0.34578662359870793
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 1.0392156862745099,
+            "clothing_saturation": 0.9663493633578037,
+            "clothing_value": 0.9330340895305107,
+            "outline_thickness": 2.3700123503705113
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9722222222222222,
+            "hip_width": 1.0196078431372548,
+            "clothing_saturation": 0.9047848518790929,
+            "clothing_value": 1.0479194468033481,
+            "outline_thickness": 0.5710621318639559
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_F_bronze_linen_bun",
+      "wardrobe": "bronze_linen",
+      "age": "child",
+      "sex": "F",
+      "hair": "bun",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 1.0,
+            "clothing_saturation": 0.8982965442433251,
+            "clothing_value": 1.1933611005932097,
+            "outline_thickness": 1.3183942601621905
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0294117647058822,
+            "hip_width": 0.9787234042553192,
+            "clothing_saturation": 1.0580009092059168,
+            "clothing_value": 1.0023980815347722,
+            "outline_thickness": 0.5589268120152591
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.1281489561879567,
+            "clothing_value": 1.0083301779628928,
+            "outline_thickness": 1.5075158527650756
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_M_bronze_linen_short",
+      "wardrobe": "bronze_linen",
+      "age": "adult",
+      "sex": "M",
+      "hair": "short",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0138888888888888,
+            "hip_width": 0.9390243902439025,
+            "clothing_saturation": 0.9101873011778255,
+            "clothing_value": 1.1371251309789563,
+            "outline_thickness": 0.9728063720744098
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 0.902439024390244,
+            "clothing_saturation": 0.7980110583972126,
+            "clothing_value": 0.8866847065901946,
+            "outline_thickness": 0.6672669532551025
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 0.9878048780487805,
+            "clothing_saturation": 0.9128622770574223,
+            "clothing_value": 0.9804360832105592,
+            "outline_thickness": 1.332449040186928
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_M_bronze_linen_long_tied",
+      "wardrobe": "bronze_linen",
+      "age": "adult",
+      "sex": "M",
+      "hair": "long_tied",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0303030303030303,
+            "hip_width": 0.961038961038961,
+            "clothing_saturation": 0.9177854146580088,
+            "clothing_value": 1.1645466764055574,
+            "outline_thickness": 1.2289920136821049
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.075757575757576,
+            "hip_width": 0.922077922077922,
+            "clothing_saturation": 0.9443271389105047,
+            "clothing_value": 0.9639700628079282,
+            "outline_thickness": 0.6393940782139966
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0454545454545454,
+            "hip_width": 0.961038961038961,
+            "clothing_saturation": 0.9968958309825321,
+            "clothing_value": 0.9522358870209485,
+            "outline_thickness": 1.6460900636767601
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_M_bronze_linen_bun",
+      "wardrobe": "bronze_linen",
+      "age": "adult",
+      "sex": "M",
+      "hair": "bun",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 1.0,
+            "clothing_saturation": 0.8431322619378401,
+            "clothing_value": 1.229617535582187,
+            "outline_thickness": 1.0935071082810328
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.1943081809042444,
+            "clothing_value": 0.9335129741843707,
+            "outline_thickness": 1.3853818315085438
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9696969696969696,
+            "hip_width": 1.0129870129870129,
+            "clothing_saturation": 0.880108308400395,
+            "clothing_value": 0.9769829628793862,
+            "outline_thickness": 0.589498679127155
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_F_bronze_linen_short",
+      "wardrobe": "bronze_linen",
+      "age": "adult",
+      "sex": "F",
+      "hair": "short",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0408163265306123,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.0019100773020915,
+            "clothing_value": 1.194162662395444,
+            "outline_thickness": 1.234867238631354
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0408163265306123,
+            "hip_width": 0.9848484848484849,
+            "clothing_saturation": 0.9620409712406491,
+            "clothing_value": 0.9593640624073085,
+            "outline_thickness": 0.7658533690528673
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0816326530612246,
+            "hip_width": 1.0454545454545454,
+            "clothing_saturation": 1.0593657524725495,
+            "clothing_value": 0.9387791421961204,
+            "outline_thickness": 1.4625029672081116
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_F_bronze_linen_long_tied",
+      "wardrobe": "bronze_linen",
+      "age": "adult",
+      "sex": "F",
+      "hair": "long_tied",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9807692307692308,
+            "hip_width": 1.0,
+            "clothing_saturation": 0.9235600623030809,
+            "clothing_value": 1.214876554903075,
+            "outline_thickness": 1.433933315870224
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9230769230769231,
+            "hip_width": 0.9594594594594594,
+            "clothing_saturation": 0.8643610589958981,
+            "clothing_value": 0.9463913620003789,
+            "outline_thickness": 0.6151910339408
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": false,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 0.9864864864864864,
+            "clothing_saturation": 1.0757695401370453,
+            "clothing_value": 0.9619877502052157,
+            "outline_thickness": 1.5614171313101073
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_F_bronze_linen_bun",
+      "wardrobe": "bronze_linen",
+      "age": "adult",
+      "sex": "F",
+      "hair": "bun",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9791666666666666,
+            "hip_width": 1.0,
+            "clothing_saturation": 0.8631791567461727,
+            "clothing_value": 1.2268749594866144,
+            "outline_thickness": 1.2488265935319995
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9583333333333334,
+            "hip_width": 1.0151515151515151,
+            "clothing_saturation": 1.1104518043366913,
+            "clothing_value": 1.0486808841641277,
+            "outline_thickness": 0.6323694527784424
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0208333333333333,
+            "hip_width": 1.0303030303030303,
+            "clothing_saturation": 1.0615435345428,
+            "clothing_value": 1.016205354249044,
+            "outline_thickness": 1.2589961162546706
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_M_bronze_wool_cloak_short",
+      "wardrobe": "bronze_wool_cloak",
+      "age": "child",
+      "sex": "M",
+      "hair": "short",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 1.0153846153846153,
+            "clothing_saturation": 1.0781635565575367,
+            "clothing_value": 1.0105720481862608,
+            "outline_thickness": 0.7411915543852862
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0625,
+            "hip_width": 1.0615384615384615,
+            "clothing_saturation": 1.1247973196977628,
+            "clothing_value": 0.9690737528950447,
+            "outline_thickness": 0.8999452392585331
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.125,
+            "hip_width": 1.0615384615384615,
+            "clothing_saturation": 0.8718485534929912,
+            "clothing_value": 1.0183924958616883,
+            "outline_thickness": 1.0897026852437839
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_M_bronze_wool_cloak_long_tied",
+      "wardrobe": "bronze_wool_cloak",
+      "age": "child",
+      "sex": "M",
+      "hair": "long_tied",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0652173913043477,
+            "hip_width": 0.9696969696969696,
+            "clothing_saturation": 1.1175429849218521,
+            "clothing_value": 0.9047619047619048,
+            "outline_thickness": 1.1660576327915453
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0652173913043477,
+            "hip_width": 0.9545454545454546,
+            "clothing_saturation": 0.9279607883221582,
+            "clothing_value": 1.060065847586927,
+            "outline_thickness": 0.8741065083331423
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0869565217391304,
+            "hip_width": 0.9848484848484849,
+            "clothing_saturation": 0.9788183870687861,
+            "clothing_value": 1.0921063197623064,
+            "outline_thickness": 1.118933541184292
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_M_bronze_wool_cloak_bun",
+      "wardrobe": "bronze_wool_cloak",
+      "age": "child",
+      "sex": "M",
+      "hair": "bun",
+      "attempts": 3,
+      "body": "accepted",
+      "portraits": 6,
+      "selected_trial": "/Users/rexxa/work/art-batch/R1/trials/child_M_bronze_wool_cloak_bun/try2/processed",
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 1.0491803278688525,
+            "clothing_saturation": 1.1531727178916145,
+            "clothing_value": 0.8685494602986841,
+            "outline_thickness": 0.7672967074128232
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": true,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0799999999999998,
+            "hip_width": 1.0327868852459017,
+            "clothing_saturation": 0.9589225224677934,
+            "clothing_value": 1.0441372172112968,
+            "outline_thickness": 0.982150446238844
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9799999999999999,
+            "hip_width": 1.0,
+            "clothing_saturation": 0.8967945190721647,
+            "clothing_value": 1.2022031642762088,
+            "outline_thickness": 0.5476816469418774
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_F_bronze_wool_cloak_short",
+      "wardrobe": "bronze_wool_cloak",
+      "age": "child",
+      "sex": "F",
+      "hair": "short",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": false,
+          "ratios": null,
+          "error": "[Errno 2] No such file or directory: '/Users/rexxa/work/art-batch/R1/trials/child_F_bronze_wool_cloak_short/try1/processed/S/idle.png'"
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": false,
+          "ratios": null,
+          "error": "[Errno 2] No such file or directory: '/Users/rexxa/work/art-batch/R1/trials/child_F_bronze_wool_cloak_short/try2/processed/S/idle.png'"
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": false,
+          "ratios": null,
+          "error": "[Errno 2] No such file or directory: '/Users/rexxa/work/art-batch/R1/trials/child_F_bronze_wool_cloak_short/try3/processed/S/idle.png'"
+        }
+      ]
+    },
+    {
+      "look": "child_F_bronze_wool_cloak_long_tied",
+      "wardrobe": "bronze_wool_cloak",
+      "age": "child",
+      "sex": "F",
+      "hair": "long_tied",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0222222222222224,
+            "hip_width": 0.9454545454545454,
+            "clothing_saturation": 1.1867391539883814,
+            "clothing_value": 0.8573336447223879,
+            "outline_thickness": 1.018647462800458
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0888888888888888,
+            "hip_width": 0.9454545454545454,
+            "clothing_saturation": 0.869715737577262,
+            "clothing_value": 1.1096063523367152,
+            "outline_thickness": 0.6212561999236933
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0666666666666667,
+            "hip_width": 1.0181818181818183,
+            "clothing_saturation": 1.2289610418114474,
+            "clothing_value": 1.0145496535796765,
+            "outline_thickness": 0.9250007948620121
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_F_bronze_wool_cloak_bun",
+      "wardrobe": "bronze_wool_cloak",
+      "age": "child",
+      "sex": "F",
+      "hair": "bun",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.021276595744681,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.0487749433258053,
+            "clothing_value": 0.9127601429472356,
+            "outline_thickness": 0.8703853925458326
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9787234042553192,
+            "hip_width": 1.0158730158730158,
+            "clothing_saturation": 1.1311397001446144,
+            "clothing_value": 0.8738700861887744,
+            "outline_thickness": 1.1563177534254656
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 1.0317460317460319,
+            "clothing_saturation": 0.8981685660038554,
+            "clothing_value": 1.2469669502161482,
+            "outline_thickness": 0.516423061606761
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_M_bronze_wool_cloak_short",
+      "wardrobe": "bronze_wool_cloak",
+      "age": "adult",
+      "sex": "M",
+      "hair": "short",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0133333333333332,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.1498678369491855,
+            "clothing_value": 1.1026449372161369,
+            "outline_thickness": 0.8675895958004914
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0266666666666666,
+            "hip_width": 1.03,
+            "clothing_saturation": 0.924728281199895,
+            "clothing_value": 1.0310980496927598,
+            "outline_thickness": 1.260207227730048
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 0.9899999999999999,
+            "clothing_saturation": 0.9376787772969577,
+            "clothing_value": 1.228666844776917,
+            "outline_thickness": 0.7362782717603494
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_M_bronze_wool_cloak_long_tied",
+      "wardrobe": "bronze_wool_cloak",
+      "age": "adult",
+      "sex": "M",
+      "hair": "long_tied",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9710144927536232,
+            "hip_width": 1.0125,
+            "clothing_saturation": 1.1305640691259882,
+            "clothing_value": 0.9332359431821715,
+            "outline_thickness": 1.0631286853971558
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9710144927536232,
+            "hip_width": 1.0125,
+            "clothing_saturation": 0.912827149334341,
+            "clothing_value": 1.0839523824324744,
+            "outline_thickness": 0.7621539559737994
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9855072463768116,
+            "hip_width": 1.025,
+            "clothing_saturation": 1.0059955634766258,
+            "clothing_value": 1.079414415814503,
+            "outline_thickness": 1.266600310666727
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_M_bronze_wool_cloak_bun",
+      "wardrobe": "bronze_wool_cloak",
+      "age": "adult",
+      "sex": "M",
+      "hair": "bun",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9855072463768116,
+            "hip_width": 0.95,
+            "clothing_saturation": 1.1775491647611247,
+            "clothing_value": 0.9914213781742455,
+            "outline_thickness": 0.9902577327361295
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9710144927536232,
+            "hip_width": 0.95,
+            "clothing_saturation": 0.9046587427112235,
+            "clothing_value": 1.0560718614987723,
+            "outline_thickness": 0.8397653410547589
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 0.975,
+            "clothing_saturation": 0.9645588813048952,
+            "clothing_value": 1.0901687750598328,
+            "outline_thickness": 1.2686462873315336
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_F_bronze_wool_cloak_short",
+      "wardrobe": "bronze_wool_cloak",
+      "age": "adult",
+      "sex": "F",
+      "hair": "short",
+      "attempts": 3,
+      "body": "accepted",
+      "portraits": 6,
+      "selected_trial": "/Users/rexxa/work/art-batch/R1/trials/adult_F_bronze_wool_cloak_short/try3/processed",
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0526315789473684,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.2267975205438448,
+            "clothing_value": 0.9433214532687909,
+            "outline_thickness": 1.1498315788487394
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0701754385964912,
+            "hip_width": 1.0,
+            "clothing_saturation": 0.9154387519367381,
+            "clothing_value": 1.0813607106760998,
+            "outline_thickness": 0.8052170735478067
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": true,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0526315789473684,
+            "hip_width": 1.0108695652173914,
+            "clothing_saturation": 0.9950440522353097,
+            "clothing_value": 0.930661205383265,
+            "outline_thickness": 1.0840653445957658
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_F_bronze_wool_cloak_long_tied",
+      "wardrobe": "bronze_wool_cloak",
+      "age": "adult",
+      "sex": "F",
+      "hair": "long_tied",
+      "attempts": 2,
+      "body": "accepted",
+      "portraits": 6,
+      "selected_trial": "/Users/rexxa/work/art-batch/R1/trials/adult_F_bronze_wool_cloak_long_tied/try1/processed",
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": true,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 0.9882352941176471,
+            "clothing_saturation": 1.0516594923821267,
+            "clothing_value": 1.0172892402389715,
+            "outline_thickness": 0.9842143007441951
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": true,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0357142857142856,
+            "hip_width": 1.023529411764706,
+            "clothing_saturation": 1.0338359700756967,
+            "clothing_value": 1.0506607929515417,
+            "outline_thickness": 0.9942499860436553
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_F_bronze_wool_cloak_bun",
+      "wardrobe": "bronze_wool_cloak",
+      "age": "adult",
+      "sex": "F",
+      "hair": "bun",
+      "attempts": 1,
+      "body": "accepted",
+      "portraits": 6,
+      "selected_trial": "/Users/rexxa/work/art-batch/R1/trials/adult_F_bronze_wool_cloak_bun/try1/processed",
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": true,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 1.0253164556962027,
+            "clothing_saturation": 1.093904492623728,
+            "clothing_value": 1.0209163724708652,
+            "outline_thickness": 0.9536625587374769
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_M_bronze_earth_linen_short",
+      "wardrobe": "bronze_earth_linen",
+      "age": "child",
+      "sex": "M",
+      "hair": "short",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.3907757272835775,
+            "clothing_value": 1.0626738667975781,
+            "outline_thickness": 1.0439074644996116
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0227272727272727,
+            "hip_width": 0.925925925925926,
+            "clothing_saturation": 0.9813421581272757,
+            "clothing_value": 0.9304673071977931,
+            "outline_thickness": 1.3162014007949625
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9772727272727274,
+            "hip_width": 1.0,
+            "clothing_saturation": 0.959136426267412,
+            "clothing_value": 1.0515463917525774,
+            "outline_thickness": 0.527343179389401
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_M_bronze_earth_linen_long_tied",
+      "wardrobe": "bronze_earth_linen",
+      "age": "child",
+      "sex": "M",
+      "hair": "long_tied",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0714285714285714,
+            "hip_width": 0.8541666666666666,
+            "clothing_saturation": 1.5601702928983954,
+            "clothing_value": 0.9271617873651773,
+            "outline_thickness": 0.945331632046537
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0952380952380953,
+            "hip_width": 0.9583333333333334,
+            "clothing_saturation": 0.9813713530717048,
+            "clothing_value": 0.8062619414483823,
+            "outline_thickness": 0.8105231456898533
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.119047619047619,
+            "hip_width": 1.0208333333333333,
+            "clothing_saturation": 1.1261977767623261,
+            "clothing_value": 0.9015012106537531,
+            "outline_thickness": 1.5169322945973578
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_M_bronze_earth_linen_bun",
+      "wardrobe": "bronze_earth_linen",
+      "age": "child",
+      "sex": "M",
+      "hair": "bun",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0681818181818181,
+            "hip_width": 0.9056603773584905,
+            "clothing_saturation": 1.4794277642778975,
+            "clothing_value": 0.9333902161547212,
+            "outline_thickness": 0.6914675055395025
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": false,
+          "ratios": null,
+          "error": "[Errno 2] No such file or directory: '/Users/rexxa/work/art-batch/R1/trials/child_M_bronze_earth_linen_bun/try2/processed/S/idle.png'"
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0454545454545456,
+            "hip_width": 0.9433962264150944,
+            "clothing_saturation": 1.2064384839464026,
+            "clothing_value": 0.9294345540079327,
+            "outline_thickness": 0.6651673238153532
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_F_bronze_earth_linen_short",
+      "wardrobe": "bronze_earth_linen",
+      "age": "child",
+      "sex": "F",
+      "hair": "short",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.027027027027027,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.267088879713733,
+            "clothing_value": 0.9685888982136435,
+            "outline_thickness": 0.8045194113591517
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.054054054054054,
+            "hip_width": 1.02,
+            "clothing_saturation": 0.9655372438332374,
+            "clothing_value": 0.8932981656875675,
+            "outline_thickness": 0.9370705845992916
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.054054054054054,
+            "hip_width": 1.02,
+            "clothing_saturation": 0.9893982965581706,
+            "clothing_value": 0.9964033089557608,
+            "outline_thickness": 0.7765494615220027
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_F_bronze_earth_linen_long_tied",
+      "wardrobe": "bronze_earth_linen",
+      "age": "child",
+      "sex": "F",
+      "hair": "long_tied",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9722222222222222,
+            "hip_width": 1.0588235294117647,
+            "clothing_saturation": 1.2751899723807252,
+            "clothing_value": 0.9679728254276356,
+            "outline_thickness": 1.3060279308379252
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9722222222222222,
+            "hip_width": 1.0,
+            "clothing_saturation": 0.9293487610125093,
+            "clothing_value": 0.993085041853694,
+            "outline_thickness": 1.215846475394262
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.1111111111111112,
+            "hip_width": 0.8039215686274509,
+            "clothing_saturation": 0.9159741972953334,
+            "clothing_value": 1.030207448744389,
+            "outline_thickness": 0.01852555576667299
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_F_bronze_earth_linen_bun",
+      "wardrobe": "bronze_earth_linen",
+      "age": "child",
+      "sex": "F",
+      "hair": "bun",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0294117647058822,
+            "hip_width": 0.9787234042553192,
+            "clothing_saturation": 1.3562079887043186,
+            "clothing_value": 0.9862425848794649,
+            "outline_thickness": 1.3690725816638454
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 0.9787234042553192,
+            "clothing_saturation": 0.9267223151830589,
+            "clothing_value": 0.9997475703647607,
+            "outline_thickness": 0.7512821160599247
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0588235294117647,
+            "hip_width": 1.0,
+            "clothing_saturation": 0.9879357234740043,
+            "clothing_value": 0.8691152341284866,
+            "outline_thickness": 0.9545764595912384
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_M_bronze_earth_linen_short",
+      "wardrobe": "bronze_earth_linen",
+      "age": "adult",
+      "sex": "M",
+      "hair": "short",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9861111111111112,
+            "hip_width": 0.9878048780487805,
+            "clothing_saturation": 1.3019501722078508,
+            "clothing_value": 0.9280256750758012,
+            "outline_thickness": 0.855879581219421
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9861111111111112,
+            "hip_width": 1.0,
+            "clothing_saturation": 0.9156929662722476,
+            "clothing_value": 0.8476028074207415,
+            "outline_thickness": 1.1649755367078478
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": false,
+          "ratios": {
+            "shoulder_width": 0.9722222222222222,
+            "hip_width": 0.9146341463414634,
+            "clothing_saturation": 1.0450750131708013,
+            "clothing_value": 0.8085660896376112,
+            "outline_thickness": 0.7777971418612758
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_M_bronze_earth_linen_long_tied",
+      "wardrobe": "bronze_earth_linen",
+      "age": "adult",
+      "sex": "M",
+      "hair": "long_tied",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.106060606060606,
+            "hip_width": 0.961038961038961,
+            "clothing_saturation": 1.368276760842808,
+            "clothing_value": 0.8714882094099063,
+            "outline_thickness": 1.1837845679295127
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9393939393939394,
+            "hip_width": 0.922077922077922,
+            "clothing_saturation": 0.8715155368021198,
+            "clothing_value": 1.0456990524375929,
+            "outline_thickness": 0.4470887351688122
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9696969696969696,
+            "hip_width": 0.9480519480519479,
+            "clothing_saturation": 1.0669635990241129,
+            "clothing_value": 0.974862972618277,
+            "outline_thickness": 1.7830332737795287
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_M_bronze_earth_linen_bun",
+      "wardrobe": "bronze_earth_linen",
+      "age": "adult",
+      "sex": "M",
+      "hair": "bun",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0151515151515151,
+            "hip_width": 0.961038961038961,
+            "clothing_saturation": 1.3144763114894018,
+            "clothing_value": 0.9673935140016867,
+            "outline_thickness": 1.1192145005879028
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": false,
+          "ratios": null,
+          "error": "[Errno 2] No such file or directory: '/Users/rexxa/work/art-batch/R1/trials/adult_M_bronze_earth_linen_bun/try2/processed/S/idle.png'"
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.0449833988658386,
+            "clothing_value": 1.0129376809959005,
+            "outline_thickness": 0.7219524485775802
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_F_bronze_earth_linen_short",
+      "wardrobe": "bronze_earth_linen",
+      "age": "adult",
+      "sex": "F",
+      "hair": "short",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0612244897959184,
+            "hip_width": 1.0454545454545454,
+            "clothing_saturation": 1.2872772218864155,
+            "clothing_value": 1.0491783828676515,
+            "outline_thickness": 1.2644036759469632
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0408163265306123,
+            "hip_width": 1.0454545454545454,
+            "clothing_saturation": 0.9392543464779477,
+            "clothing_value": 0.9876015898439817,
+            "outline_thickness": 0.7941011902743397
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0816326530612246,
+            "hip_width": 1.0606060606060606,
+            "clothing_saturation": 1.1197977626000057,
+            "clothing_value": 0.9682031203654268,
+            "outline_thickness": 1.6843823120485606
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_F_bronze_earth_linen_long_tied",
+      "wardrobe": "bronze_earth_linen",
+      "age": "adult",
+      "sex": "F",
+      "hair": "long_tied",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9807692307692308,
+            "hip_width": 0.9459459459459458,
+            "clothing_saturation": 1.3396683807480523,
+            "clothing_value": 1.0873271452926692,
+            "outline_thickness": 1.2753059162519178
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9615384615384617,
+            "hip_width": 0.9729729729729729,
+            "clothing_saturation": 0.9565858273265365,
+            "clothing_value": 1.0254467386499968,
+            "outline_thickness": 0.6827639112375107
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": false,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.000514617874626,
+            "clothing_value": 1.039022542148134,
+            "outline_thickness": 1.5872843617857275
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_F_bronze_earth_linen_bun",
+      "wardrobe": "bronze_earth_linen",
+      "age": "adult",
+      "sex": "F",
+      "hair": "bun",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9583333333333334,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.4037857224676231,
+            "clothing_value": 0.9126855513061515,
+            "outline_thickness": 1.2910048040641275
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9791666666666666,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.0082257060538633,
+            "clothing_value": 0.9446425098852661,
+            "outline_thickness": 0.7278709344917079
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9791666666666666,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.0969489212050558,
+            "clothing_value": 0.8227134245154598,
+            "outline_thickness": 1.5033223508623386
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_M_iron_work_short",
+      "wardrobe": "iron_work",
+      "age": "child",
+      "sex": "M",
+      "hair": "short",
+      "attempts": 3,
+      "body": "accepted",
+      "portraits": 6,
+      "selected_trial": "/Users/rexxa/work/art-batch/R1/trials/child_M_iron_work_short/try3/processed",
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0227272727272727,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.1795940848944957,
+            "clothing_value": 0.7449680903289151,
+            "outline_thickness": 1.0486587887967156
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 0.8333333333333334,
+            "clothing_saturation": 1.2362582648276081,
+            "clothing_value": 1.1120461930476657,
+            "outline_thickness": 1.1486518693923993
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": true,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.090909090909091,
+            "hip_width": 0.9074074074074073,
+            "clothing_saturation": 1.0203068071770045,
+            "clothing_value": 0.9790985810131613,
+            "outline_thickness": 1.0991781285317792
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_M_iron_work_long_tied",
+      "wardrobe": "iron_work",
+      "age": "child",
+      "sex": "M",
+      "hair": "long_tied",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0476190476190477,
+            "hip_width": 0.9375,
+            "clothing_saturation": 1.2735411309069034,
+            "clothing_value": 0.6676997578692494,
+            "outline_thickness": 1.0545891154629534
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0714285714285714,
+            "hip_width": 0.8541666666666666,
+            "clothing_saturation": 1.3273180434362095,
+            "clothing_value": 1.0477657935285054,
+            "outline_thickness": 1.0507453696732418
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.119047619047619,
+            "hip_width": 0.875,
+            "clothing_saturation": 1.0169607230978133,
+            "clothing_value": 0.8236178736517719,
+            "outline_thickness": 0.8945387108789895
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_M_iron_work_bun",
+      "wardrobe": "iron_work",
+      "age": "child",
+      "sex": "M",
+      "hair": "bun",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0227272727272727,
+            "hip_width": 0.8867924528301886,
+            "clothing_saturation": 1.312362074597227,
+            "clothing_value": 0.7127263782553884,
+            "outline_thickness": 0.6777931191550539
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0681818181818181,
+            "hip_width": 0.8490566037735848,
+            "clothing_saturation": 1.3597129979491922,
+            "clothing_value": 1.0790302247640131,
+            "outline_thickness": 0.6337570400315052
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0454545454545456,
+            "hip_width": 0.981132075471698,
+            "clothing_saturation": 1.0869392245765512,
+            "clothing_value": 0.9203025551148417,
+            "outline_thickness": 0.8037331739095366
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_F_iron_work_short",
+      "wardrobe": "iron_work",
+      "age": "child",
+      "sex": "F",
+      "hair": "short",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.027027027027027,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.1507437980824666,
+            "clothing_value": 0.6965067138232827,
+            "outline_thickness": 0.7507548201507263
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.027027027027027,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.1285679204610253,
+            "clothing_value": 1.1251648483395278,
+            "outline_thickness": 0.9292846444618786
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.135135135135135,
+            "hip_width": 0.9799999999999999,
+            "clothing_saturation": 0.9127419026223335,
+            "clothing_value": 0.9007313271789954,
+            "outline_thickness": 1.0140860138363883
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_F_iron_work_long_tied",
+      "wardrobe": "iron_work",
+      "age": "child",
+      "sex": "F",
+      "hair": "long_tied",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.0558591966647277,
+            "clothing_value": 0.756763314327308,
+            "outline_thickness": 0.9524748242447273
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 1.0196078431372548,
+            "clothing_saturation": 1.0322709537357948,
+            "clothing_value": 1.1973795948077155,
+            "outline_thickness": 1.2275793273798214
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 1.0,
+            "clothing_saturation": 0.8623443517837068,
+            "clothing_value": 0.9625136479437097,
+            "outline_thickness": 1.4506935208056242
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_F_iron_work_bun",
+      "wardrobe": "iron_work",
+      "age": "child",
+      "sex": "F",
+      "hair": "bun",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 0.9361702127659575,
+            "clothing_saturation": 1.1304143706365732,
+            "clothing_value": 0.6029281837687744,
+            "outline_thickness": 1.0120253644241213
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0588235294117647,
+            "hip_width": 0.9574468085106383,
+            "clothing_saturation": 1.124910551226224,
+            "clothing_value": 1.0798939795531994,
+            "outline_thickness": 1.1624939999494732
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.088235294117647,
+            "hip_width": 0.9787234042553192,
+            "clothing_saturation": 0.9336381609588845,
+            "clothing_value": 0.9091253313138963,
+            "outline_thickness": 1.183993128363186
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_M_iron_work_short",
+      "wardrobe": "iron_work",
+      "age": "adult",
+      "sex": "M",
+      "hair": "short",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.027777777777778,
+            "hip_width": 0.9146341463414634,
+            "clothing_saturation": 1.1069278817879122,
+            "clothing_value": 0.624226033439497,
+            "outline_thickness": 1.0234692691994889
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 0.9146341463414634,
+            "clothing_saturation": 1.1029832599287324,
+            "clothing_value": 1.0225451352636579,
+            "outline_thickness": 0.9607425480552007
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.027777777777778,
+            "hip_width": 0.9634146341463414,
+            "clothing_saturation": 0.9033470224582548,
+            "clothing_value": 0.9406312818599369,
+            "outline_thickness": 0.8601913171449597
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_M_iron_work_long_tied",
+      "wardrobe": "iron_work",
+      "age": "adult",
+      "sex": "M",
+      "hair": "long_tied",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0909090909090908,
+            "hip_width": 0.961038961038961,
+            "clothing_saturation": 1.1231873346084742,
+            "clothing_value": 0.6272142615367257,
+            "outline_thickness": 1.1180845053216668
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.1212121212121213,
+            "hip_width": 0.8571428571428571,
+            "clothing_saturation": 1.2215769043356097,
+            "clothing_value": 0.9973297228177066,
+            "outline_thickness": 1.1879533342495459
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.1212121212121213,
+            "hip_width": 0.8831168831168831,
+            "clothing_saturation": 0.9961347430588122,
+            "clothing_value": 0.8828086802813192,
+            "outline_thickness": 1.1651549162429184
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_M_iron_work_bun",
+      "wardrobe": "iron_work",
+      "age": "adult",
+      "sex": "M",
+      "hair": "bun",
+      "attempts": 3,
+      "body": "accepted",
+      "portraits": 6,
+      "selected_trial": "/Users/rexxa/work/art-batch/R1/trials/adult_M_iron_work_bun/try3/processed",
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0303030303030303,
+            "hip_width": 0.935064935064935,
+            "clothing_saturation": 1.2083337980065063,
+            "clothing_value": 0.741473521895679,
+            "outline_thickness": 1.09373616137554
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0151515151515151,
+            "hip_width": 0.9480519480519479,
+            "clothing_saturation": 1.190988742085194,
+            "clothing_value": 1.0683158817703622,
+            "outline_thickness": 0.9750332126987037
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": true,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9848484848484849,
+            "hip_width": 0.974025974025974,
+            "clothing_saturation": 0.9448137513947028,
+            "clothing_value": 0.9489201023471056,
+            "outline_thickness": 1.0776719043474277
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_F_iron_work_short",
+      "wardrobe": "iron_work",
+      "age": "adult",
+      "sex": "F",
+      "hair": "short",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0408163265306123,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.085179550639228,
+            "clothing_value": 0.6815566233612149,
+            "outline_thickness": 1.1116602801044457
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0204081632653064,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.1534326012131917,
+            "clothing_value": 1.0315595894880465,
+            "outline_thickness": 1.1306588897555023
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.1020408163265307,
+            "hip_width": 1.0,
+            "clothing_saturation": 0.9319898912049197,
+            "clothing_value": 0.9192027051076704,
+            "outline_thickness": 1.0545372850893555
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_F_iron_work_long_tied",
+      "wardrobe": "iron_work",
+      "age": "adult",
+      "sex": "F",
+      "hair": "long_tied",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9807692307692308,
+            "hip_width": 0.9729729729729729,
+            "clothing_saturation": 1.0565061069216746,
+            "clothing_value": 0.6650880848645576,
+            "outline_thickness": 1.0150993526175953
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9615384615384617,
+            "hip_width": 0.9459459459459458,
+            "clothing_saturation": 1.1328137784864036,
+            "clothing_value": 1.093641472501105,
+            "outline_thickness": 1.060790330426973
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9230769230769231,
+            "hip_width": 0.9729729729729729,
+            "clothing_saturation": 0.8492659263195838,
+            "clothing_value": 0.8794594935909579,
+            "outline_thickness": 0.895090371590016
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_F_iron_work_bun",
+      "wardrobe": "iron_work",
+      "age": "adult",
+      "sex": "F",
+      "hair": "bun",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9375,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.12598504357616,
+            "clothing_value": 0.6768004148570689,
+            "outline_thickness": 1.2066759925638242
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9791666666666666,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.14292547420642,
+            "clothing_value": 1.0545796331107797,
+            "outline_thickness": 1.06117359053176
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9791666666666666,
+            "hip_width": 1.0151515151515151,
+            "clothing_saturation": 0.962560546293268,
+            "clothing_value": 0.9154080508199909,
+            "outline_thickness": 1.1979421671667065
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_M_iron_winter_short",
+      "wardrobe": "iron_winter",
+      "age": "child",
+      "sex": "M",
+      "hair": "short",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9791666666666666,
+            "hip_width": 1.0153846153846153,
+            "clothing_saturation": 0.9141851004177285,
+            "clothing_value": 0.7754712687393034,
+            "outline_thickness": 0.9706259447867446
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9791666666666666,
+            "hip_width": 1.0153846153846153,
+            "clothing_saturation": 1.0485083661561896,
+            "clothing_value": 0.9542480225490967,
+            "outline_thickness": 0.8510901322455512
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 1.0153846153846153,
+            "clothing_saturation": 1.0266281738510223,
+            "clothing_value": 0.805055892751313,
+            "outline_thickness": 0.9833520787767697
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_M_iron_winter_long_tied",
+      "wardrobe": "iron_winter",
+      "age": "child",
+      "sex": "M",
+      "hair": "long_tied",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0434782608695652,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.108600264708731,
+            "clothing_value": 0.763842151753752,
+            "outline_thickness": 1.1854244515256414
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0434782608695652,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.058291629474533,
+            "clothing_value": 0.8999437886453063,
+            "outline_thickness": 1.1647876023016437
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0869565217391304,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.08610805162306,
+            "clothing_value": 0.8798683048261463,
+            "outline_thickness": 0.9629169436739184
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_M_iron_winter_bun",
+      "wardrobe": "iron_winter",
+      "age": "child",
+      "sex": "M",
+      "hair": "bun",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9199999999999999,
+            "hip_width": 0.9836065573770493,
+            "clothing_saturation": 1.078329182940012,
+            "clothing_value": 0.8575336389176401,
+            "outline_thickness": 0.9313029886117254
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9799999999999999,
+            "hip_width": 1.0327868852459017,
+            "clothing_saturation": 1.0701434352206314,
+            "clothing_value": 1.009685051012864,
+            "outline_thickness": 0.898992991276913
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.06,
+            "hip_width": 1.0327868852459017,
+            "clothing_saturation": 1.0645266882066604,
+            "clothing_value": 0.7559515008132486,
+            "outline_thickness": 0.9761573757266239
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_F_iron_winter_short",
+      "wardrobe": "iron_winter",
+      "age": "child",
+      "sex": "F",
+      "hair": "short",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9111111111111111,
+            "hip_width": 1.0327868852459017,
+            "clothing_saturation": 1.053498816619338,
+            "clothing_value": 0.8894374006840647,
+            "outline_thickness": 1.0319924340578255
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 1.0327868852459017,
+            "clothing_saturation": 1.060047051338938,
+            "clothing_value": 1.044766708701135,
+            "outline_thickness": 1.1085144563537979
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0444444444444445,
+            "hip_width": 1.0491803278688525,
+            "clothing_saturation": 0.9956582394344605,
+            "clothing_value": 0.7985848395684461,
+            "outline_thickness": 1.011556768816124
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_F_iron_winter_long_tied",
+      "wardrobe": "iron_winter",
+      "age": "child",
+      "sex": "F",
+      "hair": "long_tied",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0444444444444445,
+            "hip_width": 0.9454545454545454,
+            "clothing_saturation": 1.057730996717925,
+            "clothing_value": 0.6676371625537363,
+            "outline_thickness": 0.8115382169655349
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": false,
+          "ratios": null,
+          "error": "[Errno 2] No such file or directory: '/Users/rexxa/work/art-batch/R1/trials/child_F_iron_winter_long_tied/try2/processed/S/idle.png'"
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0666666666666667,
+            "hip_width": 0.9272727272727274,
+            "clothing_saturation": 1.0721740326083586,
+            "clothing_value": 0.6858196884379514,
+            "outline_thickness": 1.0757622726694647
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_F_iron_winter_bun",
+      "wardrobe": "iron_winter",
+      "age": "child",
+      "sex": "F",
+      "hair": "bun",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.8936170212765958,
+            "hip_width": 0.9841269841269842,
+            "clothing_saturation": 1.0088228964329553,
+            "clothing_value": 0.729249698618148,
+            "outline_thickness": 0.8869116974675889
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0425531914893618,
+            "hip_width": 1.0317460317460319,
+            "clothing_saturation": 0.9919216582095102,
+            "clothing_value": 0.8788452105668838,
+            "outline_thickness": 0.936933083582838
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0638297872340428,
+            "hip_width": 1.0158730158730158,
+            "clothing_saturation": 0.9725294295039463,
+            "clothing_value": 0.67913951369911,
+            "outline_thickness": 1.1680616805061872
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_M_iron_winter_short",
+      "wardrobe": "iron_winter",
+      "age": "adult",
+      "sex": "M",
+      "hair": "short",
+      "attempts": 2,
+      "body": "accepted",
+      "portraits": 6,
+      "selected_trial": "/Users/rexxa/work/art-batch/R1/trials/adult_M_iron_winter_short/try2/processed",
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9333333333333332,
+            "hip_width": 0.96,
+            "clothing_saturation": 1.0990576045855944,
+            "clothing_value": 0.8464641504983476,
+            "outline_thickness": 0.7879446242519704
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": true,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.08,
+            "hip_width": 1.0499999999999998,
+            "clothing_saturation": 1.018562056233201,
+            "clothing_value": 0.9133582687683677,
+            "outline_thickness": 1.0220423081961347
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_M_iron_winter_long_tied",
+      "wardrobe": "iron_winter",
+      "age": "adult",
+      "sex": "M",
+      "hair": "long_tied",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 1.0125,
+            "clothing_saturation": 1.1518181279667712,
+            "clothing_value": 0.7137967234010499,
+            "outline_thickness": 0.8288216280344047
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0579710144927537,
+            "hip_width": 1.0125,
+            "clothing_saturation": 1.0833901011293483,
+            "clothing_value": 0.8168650731980233,
+            "outline_thickness": 1.4108642868992143
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.1014492753623188,
+            "hip_width": 1.0875,
+            "clothing_saturation": 1.0856765654949243,
+            "clothing_value": 0.7787896683554534,
+            "outline_thickness": 1.3690398990584485
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_M_iron_winter_bun",
+      "wardrobe": "iron_winter",
+      "age": "adult",
+      "sex": "M",
+      "hair": "bun",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.1172344850803222,
+            "clothing_value": 0.6843231818521658,
+            "outline_thickness": 1.0623243702463718
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9275362318840579,
+            "hip_width": 1.0625,
+            "clothing_saturation": 1.0244462261720553,
+            "clothing_value": 0.8158613498028535,
+            "outline_thickness": 0.8868378852543898
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9565217391304348,
+            "hip_width": 1.075,
+            "clothing_saturation": 1.04341956866949,
+            "clothing_value": 0.7202883506067945,
+            "outline_thickness": 0.9091324958401826
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_F_iron_winter_short",
+      "wardrobe": "iron_winter",
+      "age": "adult",
+      "sex": "F",
+      "hair": "short",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0350877192982457,
+            "hip_width": 0.9565217391304347,
+            "clothing_saturation": 1.1639425940785175,
+            "clothing_value": 0.8318402042661844,
+            "outline_thickness": 1.3697347893915754
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0175438596491226,
+            "hip_width": 0.9891304347826086,
+            "clothing_saturation": 1.0918895801318806,
+            "clothing_value": 0.9079149346849757,
+            "outline_thickness": 1.2945613320028295
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0175438596491226,
+            "hip_width": 1.0326086956521738,
+            "clothing_saturation": 1.103827597475615,
+            "clothing_value": 0.9373303642633418,
+            "outline_thickness": 1.1572430464786156
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_F_iron_winter_long_tied",
+      "wardrobe": "iron_winter",
+      "age": "adult",
+      "sex": "F",
+      "hair": "long_tied",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.1419130623643414,
+            "clothing_value": 0.8367328465391346,
+            "outline_thickness": 0.9267957521181437
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9642857142857142,
+            "hip_width": 1.035294117647059,
+            "clothing_saturation": 1.1037641460343046,
+            "clothing_value": 0.870143715838001,
+            "outline_thickness": 1.281780743679923
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0892857142857142,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.0871527126240428,
+            "clothing_value": 0.9761631766338785,
+            "outline_thickness": 1.1114532204801841
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_F_iron_winter_bun",
+      "wardrobe": "iron_winter",
+      "age": "adult",
+      "sex": "F",
+      "hair": "bun",
+      "attempts": 3,
+      "body": "withheld",
+      "portraits": 0,
+      "selected_trial": null,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9464285714285714,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.1434029960383847,
+            "clothing_value": 0.8189206964649715,
+            "outline_thickness": 1.1163826580370602
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "numeric_pass": true,
+          "structural_pass": false,
+          "ratios": {
+            "shoulder_width": 0.9642857142857142,
+            "hip_width": 1.0253164556962027,
+            "clothing_saturation": 1.0206359633455164,
+            "clothing_value": 1.0367839653797972,
+            "outline_thickness": 0.9264757513964005
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "numeric_pass": false,
+          "structural_pass": false,
+          "ratios": {
+            "shoulder_width": 0.982142857142857,
+            "hip_width": 0.9873417721518988,
+            "clothing_saturation": 1.0617695202722965,
+            "clothing_value": 0.927502209227287,
+            "outline_thickness": 1.1616278038833232
+          },
+          "error": null
+        }
+      ]
+    }
+  ]
+}

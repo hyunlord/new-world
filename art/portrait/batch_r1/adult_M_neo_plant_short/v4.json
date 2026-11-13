@@ -1,9 +1,9 @@
 {
   "variant": "v4",
-  "image_sha256": "df2cc27376120a130c132abbf46619484b604d0dc56ff64f8655bd103de98ca9",
+  "image_sha256": "26a7dd7a86e3a5b62f3fed57af6def7a63a865f5b507588c976a7fab94afb5e5",
   "source": {
-    "path": "/Users/rexxa/work/art-batch/R1/portraits/adult_M_neo_plant_short/try1/raw.png",
-    "sha256": "3f4830e1e27409a24b9378568719f3b3c4d75f8468d1c1d6c41ef3a5e3b1f77b"
+    "path": "/Users/rexxa/work/art-batch/R1/portraits/adult_M_neo_plant_short/try2/raw.png",
+    "sha256": "23ad50da489062d02c3842ba27a04931d3f8a4f09ce7b185a63a1e8c70a92985"
   },
   "source_box": [
     0,

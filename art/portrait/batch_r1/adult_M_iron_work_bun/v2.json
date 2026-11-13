@@ -1,0 +1,23 @@
+{
+  "variant": "v2",
+  "image_sha256": "9d8e841cbea7bc6909b80c85b6207134f3000d802c785f78d447b0dab6f46dc7",
+  "source": {
+    "path": "/Users/rexxa/work/art-batch/R1/portraits/adult_M_iron_work_bun/try1/raw.png",
+    "sha256": "4199587135311138cf3a903b035d52282ee0d042ae3e0d3da05eab930b8e132f"
+  },
+  "source_box": [
+    512,
+    0,
+    1024,
+    512
+  ],
+  "anchor": [
+    64,
+    64
+  ],
+  "footprint": null,
+  "operations": [
+    "full-cell RGB conversion",
+    "full-cell Lanczos resize to128x128"
+  ]
+}

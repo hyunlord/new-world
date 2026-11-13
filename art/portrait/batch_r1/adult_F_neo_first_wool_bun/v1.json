@@ -1,0 +1,23 @@
+{
+  "variant": "v1",
+  "image_sha256": "f07b6fefb60b2d1965ea3599d459e62b9e1e015500d7744e79f24ec777d5e0de",
+  "source": {
+    "path": "/Users/rexxa/work/art-batch/R1/portraits/adult_F_neo_first_wool_bun/try1/raw.png",
+    "sha256": "967d3253992db95d3ebaec0ede625c3d3969523646039efb10be3c1756b06c5d"
+  },
+  "source_box": [
+    0,
+    0,
+    512,
+    512
+  ],
+  "anchor": [
+    64,
+    64
+  ],
+  "footprint": null,
+  "operations": [
+    "full-cell RGB conversion",
+    "full-cell Lanczos resize to128x128"
+  ]
+}

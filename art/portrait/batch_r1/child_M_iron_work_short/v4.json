@@ -1,0 +1,23 @@
+{
+  "variant": "v4",
+  "image_sha256": "83cc48da41d0adc1cb9861ba6aa68ec2a10975f6424a64cd2aa939ce4aa9058a",
+  "source": {
+    "path": "/Users/rexxa/work/art-batch/R1/portraits/child_M_iron_work_short/try1/raw.png",
+    "sha256": "c253363f81634be125768452cbfb39d8080babe2789276e55b09472319090387"
+  },
+  "source_box": [
+    0,
+    512,
+    512,
+    1024
+  ],
+  "anchor": [
+    64,
+    64
+  ],
+  "footprint": null,
+  "operations": [
+    "full-cell RGB conversion",
+    "full-cell Lanczos resize to128x128"
+  ]
+}

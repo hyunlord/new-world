@@ -32,7 +32,8 @@ capture, contact sheet, inventory, docs checks), `tools/play.sh` and `tools/play
 in its own worktree; the owner's double-click launchers), `docs/` (this file and the owner docs).
 
 Art-line R1 candidates live in `art/character/batch_r1/` and
-`art/portrait/batch_r1/`. `art/batch_r1/` owns frozen comparison masks and
+`art/portrait/batch_r1/`; supplemental activity sheets live in
+`art/character/batch_r1_tools/`. `art/batch_r1/` owns frozen comparison masks and
 replays normalization before hash-bound adoption; it is outside the runtime
 data flow. Import drafts do not alter appearance ordering or live bindings.
 

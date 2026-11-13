@@ -1,0 +1,23 @@
+{
+  "variant": "v6",
+  "image_sha256": "3eb479d07b9cde91d4e6bbdaf76d13a9246b540d743a8a1b79935ffe85656d75",
+  "source": {
+    "path": "/Users/rexxa/work/art-batch/R1/portraits/child_M_neo_first_wool_short/try1/raw.png",
+    "sha256": "8d0b2cc2154f1b2b4dfe9aac742e7d91d5d0ac84877132d90fb31fb501cf52a2"
+  },
+  "source_box": [
+    1024,
+    512,
+    1536,
+    1024
+  ],
+  "anchor": [
+    64,
+    64
+  ],
+  "footprint": null,
+  "operations": [
+    "full-cell RGB conversion",
+    "full-cell Lanczos resize to128x128"
+  ]
+}

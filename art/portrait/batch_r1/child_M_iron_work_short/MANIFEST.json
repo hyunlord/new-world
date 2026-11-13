@@ -1,0 +1,41 @@
+{
+  "look": "child_M_iron_work_short",
+  "generation": {
+    "path": "/Users/rexxa/work/art-batch/R1/portraits/child_M_iron_work_short/try1/generation.json",
+    "sha256": "14c7689f05c476f0ad86464a5114c004b62aead4926cc9eb0affb29a9f28e0b7"
+  },
+  "raw": {
+    "path": "/Users/rexxa/work/art-batch/R1/portraits/child_M_iron_work_short/try1/raw.png",
+    "sha256": "c253363f81634be125768452cbfb39d8080babe2789276e55b09472319090387"
+  },
+  "frames": {
+    "v1": {
+      "image_sha256": "a948eeb3da18af50b4fcb1c5371ae484dc91e4d60bfc0754c52e4485b7b311f4",
+      "sidecar_sha256": "9753d519d11472f1f7d851435bbac849a7a42cbd88572ebdf7c6dcf08f5d095e"
+    },
+    "v2": {
+      "image_sha256": "783a0413ba41f80614af33218f35d39bb0064484674a544a4e78dce209d937b7",
+      "sidecar_sha256": "ba5453c06691864f1789e6c1a980602658eba1cc6bb723b62a8721c985914407"
+    },
+    "v3": {
+      "image_sha256": "dae5308f6433ee3b38ab02993a8c1a0b81d965f8a6f43e3363b7ca7ced038bec",
+      "sidecar_sha256": "9b96f5515d76975b552b9a31a041d700f819cbba5ca3a042e9b0af28324392f8"
+    },
+    "v4": {
+      "image_sha256": "83cc48da41d0adc1cb9861ba6aa68ec2a10975f6424a64cd2aa939ce4aa9058a",
+      "sidecar_sha256": "56f22a8239b4e9a1e7936efbd78d6292a2aaa74f90b24273ed21de2ff3d0ff50"
+    },
+    "v5": {
+      "image_sha256": "79941b8f82bf22c77cbd198b45dda96a31915b9517b654bb4a0d4b3ce8d57b77",
+      "sidecar_sha256": "de99e77b621574d074b97f7503b46cc7ecc64a6bf3f75cbf48069b1b94ec4e5f"
+    },
+    "v6": {
+      "image_sha256": "d5de4fac0229cf2d5f986cf805cb757d33a1325ef133b56f6c8447f0b5fdd517",
+      "sidecar_sha256": "53b4c287949ba2490be2873d2a0e77420044c828054a693548ce41c0ea232a37"
+    }
+  },
+  "visual_review": {
+    "path": "/Users/rexxa/work/art-batch/R1/portraits/child_M_iron_work_short/try1/visual_verdict.json",
+    "sha256": "fd4f521e136f0069058619af8369f733095e527f4a7936bee1eec4efc3a9a19a"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "variant": "v4",
+  "image_sha256": "fc4058dcf5983d8696b2d76a68d9147a3d537bff93adcd6cc06f2f499420204f",
+  "source": {
+    "path": "/Users/rexxa/work/art-batch/R1/portraits/adult_M_neo_plant_bun/try2/raw.png",
+    "sha256": "7875fa1b44e6145f2128135a0bebd05a702c4efe812bf19e679104a8f554a4c3"
+  },
+  "source_box": [
+    0,
+    512,
+    512,
+    1024
+  ],
+  "anchor": [
+    64,
+    64
+  ],
+  "footprint": null,
+  "operations": [
+    "full-cell RGB conversion",
+    "full-cell Lanczos resize to128x128"
+  ]
+}

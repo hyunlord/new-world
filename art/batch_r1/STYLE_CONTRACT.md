@@ -22,7 +22,10 @@ Generate complete figures by editing the matching original source sheet.
 Preserve the stocky shoulders/hips, skin, head scale, outline and actual poses:
 idle, walking step, axe raised overhead, logs over shoulders, horizontal sleep.
 S and E remain the shipped directions; N reuses S and W mirrors E at display.
-Do not replace work with standing or shoulder loads with chest bundles.
+Do not replace generic wardrobe work with standing or shoulder loads with chest bundles.
+Supplemental activity sheets are explicitly separate: their declared grinding,
+spinning, hoe or tongs work and named carried loads replace only those actions
+(see `TOOLS_SCOPE.md`); all source/body and strict measurement gates remain.
 
 ## Shape and image acceptance
 

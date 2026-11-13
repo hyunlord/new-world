@@ -1,0 +1,546 @@
+{
+  "status": "art_only_no_runtime_selector",
+  "planned_sets": 8,
+  "accepted_sets": 8,
+  "age_sex_hair_scope": "adult M short only; no cross-product implied",
+  "rows": [
+    {
+      "set": "neo_field",
+      "look": "adult_M_tools_neo_field_short",
+      "era": "neolithic",
+      "work_a": "flint_sickle",
+      "carry": "grain_sack",
+      "status": "accepted",
+      "attempts": 2,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "structural_pass": true,
+          "numeric_pass": false,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 0.9146341463414634,
+            "clothing_saturation": 0.9065030127270578,
+            "clothing_value": 1.0995342175581644,
+            "outline_thickness": 0.8353536527116172
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "structural_pass": true,
+          "numeric_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 0.9634146341463414,
+            "clothing_saturation": 0.9778042765726532,
+            "clothing_value": 1.015412876921009,
+            "outline_thickness": 1.0286330247989366
+          },
+          "error": null
+        }
+      ],
+      "manifest": "art/character/batch_r1_tools/adult_M_tools_neo_field_short/MANIFEST.json",
+      "reference": "adult_M_hide_wrap_short",
+      "measurements": {
+        "reference": {
+          "shoulder_width": 24,
+          "hip_width": 27.333333333333332,
+          "clothing_saturation": 0.6858353083472366,
+          "clothing_value": 0.7293790849673203,
+          "outline_thickness": 0.5956401384083044
+        },
+        "candidate": {
+          "shoulder_width": 24,
+          "hip_width": 26.333333333333332,
+          "clothing_saturation": 0.6706126975264523,
+          "clothing_value": 0.7406209150326797,
+          "outline_thickness": 0.6126951172625914
+        },
+        "ratios": {
+          "shoulder_width": 1.0,
+          "hip_width": 0.9634146341463414,
+          "clothing_saturation": 0.9778042765726532,
+          "clothing_value": 1.015412876921009,
+          "outline_thickness": 1.0286330247989366
+        },
+        "passed": true
+      },
+      "trial": "/Users/rexxa/work/art-batch/R1/trials/adult_M_tools_neo_field_short/try2"
+    },
+    {
+      "set": "neo_food",
+      "look": "adult_M_tools_neo_food_short",
+      "era": "neolithic",
+      "work_a": "hand_quern",
+      "carry": "wooden_milk_pail",
+      "status": "accepted",
+      "attempts": 3,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "structural_pass": true,
+          "numeric_pass": false,
+          "ratios": {
+            "shoulder_width": 1.0138888888888888,
+            "hip_width": 0.902439024390244,
+            "clothing_saturation": 1.0149044079145304,
+            "clothing_value": 1.0525907571684976,
+            "outline_thickness": 0.8179066134799842
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "structural_pass": true,
+          "numeric_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9722222222222222,
+            "hip_width": 0.9634146341463414,
+            "clothing_saturation": 0.9828501031617926,
+            "clothing_value": 1.0089003565940915,
+            "outline_thickness": 0.9866775105534257
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "structural_pass": true,
+          "numeric_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9583333333333334,
+            "hip_width": 0.9634146341463414,
+            "clothing_saturation": 0.9639171305026888,
+            "clothing_value": 1.039442973748485,
+            "outline_thickness": 0.905477453752114
+          },
+          "error": null
+        }
+      ],
+      "manifest": "art/character/batch_r1_tools/adult_M_tools_neo_food_short/MANIFEST.json",
+      "reference": "adult_M_hide_wrap_short",
+      "measurements": {
+        "reference": {
+          "shoulder_width": 24,
+          "hip_width": 27.333333333333332,
+          "clothing_saturation": 0.6858353083472366,
+          "clothing_value": 0.7293790849673203,
+          "outline_thickness": 0.5956401384083044
+        },
+        "candidate": {
+          "shoulder_width": 23,
+          "hip_width": 26.333333333333332,
+          "clothing_saturation": 0.6610884024194951,
+          "clothing_value": 0.7581479650683803,
+          "outline_thickness": 0.5393387158785082
+        },
+        "ratios": {
+          "shoulder_width": 0.9583333333333334,
+          "hip_width": 0.9634146341463414,
+          "clothing_saturation": 0.9639171305026888,
+          "clothing_value": 1.039442973748485,
+          "outline_thickness": 0.905477453752114
+        },
+        "passed": true
+      },
+      "trial": "/Users/rexxa/work/art-batch/R1/trials/adult_M_tools_neo_food_short/try3"
+    },
+    {
+      "set": "neo_textile",
+      "look": "adult_M_tools_neo_textile_short",
+      "era": "neolithic",
+      "work_a": "wooden_spindle",
+      "carry": "wool_basket",
+      "status": "accepted",
+      "attempts": 3,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "structural_pass": true,
+          "numeric_pass": false,
+          "ratios": {
+            "shoulder_width": 0.9861111111111112,
+            "hip_width": 0.926829268292683,
+            "clothing_saturation": 0.94928176928384,
+            "clothing_value": 1.1203176552667753,
+            "outline_thickness": 0.9914023469269201
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "structural_pass": true,
+          "numeric_pass": false,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 0.951219512195122,
+            "clothing_saturation": 0.9754874332039739,
+            "clothing_value": 1.0050599387566308,
+            "outline_thickness": 1.1021907233130657
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "structural_pass": true,
+          "numeric_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 0.9756097560975611,
+            "clothing_saturation": 0.9740695418784103,
+            "clothing_value": 1.0139791209283568,
+            "outline_thickness": 1.074422627577037
+          },
+          "error": null
+        }
+      ],
+      "manifest": "art/character/batch_r1_tools/adult_M_tools_neo_textile_short/MANIFEST.json",
+      "reference": "adult_M_hide_wrap_short",
+      "measurements": {
+        "reference": {
+          "shoulder_width": 24,
+          "hip_width": 27.333333333333332,
+          "clothing_saturation": 0.6858353083472366,
+          "clothing_value": 0.7293790849673203,
+          "outline_thickness": 0.5956401384083044
+        },
+        "candidate": {
+          "shoulder_width": 24,
+          "hip_width": 26.666666666666668,
+          "clothing_saturation": 0.6680512846058311,
+          "clothing_value": 0.7395751633986928,
+          "outline_thickness": 0.6399692425990005
+        },
+        "ratios": {
+          "shoulder_width": 1.0,
+          "hip_width": 0.9756097560975611,
+          "clothing_saturation": 0.9740695418784103,
+          "clothing_value": 1.0139791209283568,
+          "outline_thickness": 1.074422627577037
+        },
+        "passed": true
+      },
+      "trial": "/Users/rexxa/work/art-batch/R1/trials/adult_M_tools_neo_textile_short/try3"
+    },
+    {
+      "set": "bronze_field",
+      "look": "adult_M_tools_bronze_field_short",
+      "era": "bronze",
+      "work_a": "bronze_hoe",
+      "carry": "grain_sack",
+      "status": "accepted",
+      "attempts": 2,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "structural_pass": true,
+          "numeric_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 0.9390243902439025,
+            "clothing_saturation": 0.9558859065364849,
+            "clothing_value": 1.0956486183343805,
+            "outline_thickness": 0.9026567522559158
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "structural_pass": true,
+          "numeric_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0138888888888888,
+            "hip_width": 1.0,
+            "clothing_saturation": 0.9507365777244478,
+            "clothing_value": 1.0164908294963668,
+            "outline_thickness": 0.9421207544246932
+          },
+          "error": null
+        }
+      ],
+      "manifest": "art/character/batch_r1_tools/adult_M_tools_bronze_field_short/MANIFEST.json",
+      "reference": "adult_M_hide_wrap_short",
+      "measurements": {
+        "reference": {
+          "shoulder_width": 24,
+          "hip_width": 27.333333333333332,
+          "clothing_saturation": 0.6858353083472366,
+          "clothing_value": 0.7293790849673203,
+          "outline_thickness": 0.5956401384083044
+        },
+        "candidate": {
+          "shoulder_width": 24.333333333333332,
+          "hip_width": 27.333333333333332,
+          "clothing_saturation": 0.6520487139406431,
+          "clothing_value": 0.7414071510957324,
+          "outline_thickness": 0.5611649365628605
+        },
+        "ratios": {
+          "shoulder_width": 1.0138888888888888,
+          "hip_width": 1.0,
+          "clothing_saturation": 0.9507365777244478,
+          "clothing_value": 1.0164908294963668,
+          "outline_thickness": 0.9421207544246932
+        },
+        "passed": true
+      },
+      "trial": "/Users/rexxa/work/art-batch/R1/trials/adult_M_tools_bronze_field_short/try2"
+    },
+    {
+      "set": "bronze_wood",
+      "look": "adult_M_tools_bronze_wood_short",
+      "era": "bronze",
+      "work_a": "bronze_axe",
+      "carry": "mud_brick_hod",
+      "status": "accepted",
+      "attempts": 2,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "structural_pass": true,
+          "numeric_pass": false,
+          "ratios": {
+            "shoulder_width": 0.9861111111111112,
+            "hip_width": 0.926829268292683,
+            "clothing_saturation": 0.9756463363884001,
+            "clothing_value": 1.1265978679656816,
+            "outline_thickness": 0.9385964912280703
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "structural_pass": true,
+          "numeric_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0138888888888888,
+            "hip_width": 1.0,
+            "clothing_saturation": 0.9758752680443473,
+            "clothing_value": 0.9987345446714014,
+            "outline_thickness": 1.0037824509765954
+          },
+          "error": null
+        }
+      ],
+      "manifest": "art/character/batch_r1_tools/adult_M_tools_bronze_wood_short/MANIFEST.json",
+      "reference": "adult_M_hide_wrap_short",
+      "measurements": {
+        "reference": {
+          "shoulder_width": 24,
+          "hip_width": 27.333333333333332,
+          "clothing_saturation": 0.6858353083472366,
+          "clothing_value": 0.7293790849673203,
+          "outline_thickness": 0.5956401384083044
+        },
+        "candidate": {
+          "shoulder_width": 24.333333333333332,
+          "hip_width": 27.333333333333332,
+          "clothing_saturation": 0.6692897153676372,
+          "clothing_value": 0.72845608831768,
+          "outline_thickness": 0.5978931180315263
+        },
+        "ratios": {
+          "shoulder_width": 1.0138888888888888,
+          "hip_width": 1.0,
+          "clothing_saturation": 0.9758752680443473,
+          "clothing_value": 0.9987345446714014,
+          "outline_thickness": 1.0037824509765954
+        },
+        "passed": true
+      },
+      "trial": "/Users/rexxa/work/art-batch/R1/trials/adult_M_tools_bronze_wood_short/try2"
+    },
+    {
+      "set": "bronze_casting",
+      "look": "adult_M_tools_bronze_casting_short",
+      "era": "bronze",
+      "work_a": "wooden_casting_tongs_clay_crucible",
+      "carry": "copper_ore_basket",
+      "status": "accepted",
+      "attempts": 3,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "structural_pass": true,
+          "numeric_pass": false,
+          "ratios": {
+            "shoulder_width": 1.0,
+            "hip_width": 0.9146341463414634,
+            "clothing_saturation": 0.964207681797002,
+            "clothing_value": 1.0880294284492729,
+            "outline_thickness": 0.8134206008029641
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "structural_pass": true,
+          "numeric_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0138888888888888,
+            "hip_width": 0.9146341463414634,
+            "clothing_saturation": 0.9689608409271554,
+            "clothing_value": 1.020789461893454,
+            "outline_thickness": 0.9918735396253697
+          },
+          "error": null
+        },
+        {
+          "attempt": "try3",
+          "structural_pass": true,
+          "numeric_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0138888888888888,
+            "hip_width": 0.9146341463414634,
+            "clothing_saturation": 0.9402096509645649,
+            "clothing_value": 1.0175187060352167,
+            "outline_thickness": 0.9966306494713608
+          },
+          "error": null
+        }
+      ],
+      "manifest": "art/character/batch_r1_tools/adult_M_tools_bronze_casting_short/MANIFEST.json",
+      "reference": "adult_M_hide_wrap_short",
+      "measurements": {
+        "reference": {
+          "shoulder_width": 24,
+          "hip_width": 27.333333333333332,
+          "clothing_saturation": 0.6858353083472366,
+          "clothing_value": 0.7293790849673203,
+          "outline_thickness": 0.5956401384083044
+        },
+        "candidate": {
+          "shoulder_width": 24.333333333333332,
+          "hip_width": 25,
+          "clothing_saturation": 0.6448289758803301,
+          "clothing_value": 0.7421568627450981,
+          "outline_thickness": 0.5936332179930797
+        },
+        "ratios": {
+          "shoulder_width": 1.0138888888888888,
+          "hip_width": 0.9146341463414634,
+          "clothing_saturation": 0.9402096509645649,
+          "clothing_value": 1.0175187060352167,
+          "outline_thickness": 0.9966306494713608
+        },
+        "passed": true
+      },
+      "trial": "/Users/rexxa/work/art-batch/R1/trials/adult_M_tools_bronze_casting_short/try3"
+    },
+    {
+      "set": "iron_field",
+      "look": "adult_M_tools_iron_field_short",
+      "era": "iron",
+      "work_a": "iron_plough_share",
+      "carry": "grain_sack",
+      "status": "accepted",
+      "attempts": 2,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "structural_pass": true,
+          "numeric_pass": false,
+          "ratios": {
+            "shoulder_width": 1.0138888888888888,
+            "hip_width": 0.902439024390244,
+            "clothing_saturation": 0.9766510266291687,
+            "clothing_value": 1.1021095565785792,
+            "outline_thickness": 0.9763629087435293
+          },
+          "error": null
+        },
+        {
+          "attempt": "try2",
+          "structural_pass": true,
+          "numeric_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9861111111111112,
+            "hip_width": 0.9390243902439025,
+            "clothing_saturation": 0.9881020673448552,
+            "clothing_value": 1.0409516555401228,
+            "outline_thickness": 1.0806772265468676
+          },
+          "error": null
+        }
+      ],
+      "manifest": "art/character/batch_r1_tools/adult_M_tools_iron_field_short/MANIFEST.json",
+      "reference": "adult_M_hide_wrap_short",
+      "measurements": {
+        "reference": {
+          "shoulder_width": 24,
+          "hip_width": 27.333333333333332,
+          "clothing_saturation": 0.6858353083472366,
+          "clothing_value": 0.7293790849673203,
+          "outline_thickness": 0.5956401384083044
+        },
+        "candidate": {
+          "shoulder_width": 23.666666666666668,
+          "hip_width": 25.666666666666668,
+          "clothing_saturation": 0.6776752860360007,
+          "clothing_value": 0.7592483660130719,
+          "outline_thickness": 0.6436947327950788
+        },
+        "ratios": {
+          "shoulder_width": 0.9861111111111112,
+          "hip_width": 0.9390243902439025,
+          "clothing_saturation": 0.9881020673448552,
+          "clothing_value": 1.0409516555401228,
+          "outline_thickness": 1.0806772265468676
+        },
+        "passed": true
+      },
+      "trial": "/Users/rexxa/work/art-batch/R1/trials/adult_M_tools_iron_field_short/try2"
+    },
+    {
+      "set": "iron_forge",
+      "look": "adult_M_tools_iron_forge_short",
+      "era": "iron",
+      "work_a": "iron_hammer",
+      "carry": "iron_ingot",
+      "status": "accepted",
+      "attempts": 1,
+      "attempt_results": [
+        {
+          "attempt": "try1",
+          "structural_pass": true,
+          "numeric_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9722222222222222,
+            "hip_width": 0.9146341463414634,
+            "clothing_saturation": 1.0372541719395834,
+            "clothing_value": 1.0923428469017429,
+            "outline_thickness": 0.9370280004647381
+          },
+          "error": null
+        }
+      ],
+      "manifest": "art/character/batch_r1_tools/adult_M_tools_iron_forge_short/MANIFEST.json",
+      "reference": "adult_M_hide_wrap_short",
+      "measurements": {
+        "reference": {
+          "shoulder_width": 24,
+          "hip_width": 27.333333333333332,
+          "clothing_saturation": 0.6858353083472366,
+          "clothing_value": 0.7293790849673203,
+          "outline_thickness": 0.5956401384083044
+        },
+        "candidate": {
+          "shoulder_width": 23.333333333333332,
+          "hip_width": 25,
+          "clothing_saturation": 0.7113855348466418,
+          "clothing_value": 0.7967320261437908,
+          "outline_thickness": 0.5581314878892734
+        },
+        "ratios": {
+          "shoulder_width": 0.9722222222222222,
+          "hip_width": 0.9146341463414634,
+          "clothing_saturation": 1.0372541719395834,
+          "clothing_value": 1.0923428469017429,
+          "outline_thickness": 0.9370280004647381
+        },
+        "passed": true
+      },
+      "trial": "/Users/rexxa/work/art-batch/R1/trials/adult_M_tools_iron_forge_short/try1"
+    }
+  ]
+}

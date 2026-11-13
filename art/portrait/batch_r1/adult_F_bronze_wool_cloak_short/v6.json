@@ -1,0 +1,23 @@
+{
+  "variant": "v6",
+  "image_sha256": "839531aabe0716b6a51a93f038438d97b82c5b87d4fe69fffc6fd7cac9251286",
+  "source": {
+    "path": "/Users/rexxa/work/art-batch/R1/portraits/adult_F_bronze_wool_cloak_short/try1/raw.png",
+    "sha256": "a642375baba3fb573d48c7b82bbe44b0e38dff413fda0d9d2d0336e7ac16ef19"
+  },
+  "source_box": [
+    1024,
+    512,
+    1536,
+    1024
+  ],
+  "anchor": [
+    64,
+    64
+  ],
+  "footprint": null,
+  "operations": [
+    "full-cell RGB conversion",
+    "full-cell Lanczos resize to128x128"
+  ]
+}

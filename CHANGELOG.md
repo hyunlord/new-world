@@ -9,11 +9,11 @@ tags `v7-final-sim` and `v7-final-art`.
 
 ### Added
 - `art/batch_r1/`: frozen shipped-rig measurement regions, normalization and hash-bound body/portrait adoption checks, focused tests, style contract and draft import handoff.
-- `art/character/batch_r1/` and `art/portrait/batch_r1/`: accepted wardrobe candidates only. Rejected generations and measurements remain outside the repository in `/Users/rexxa/work/art-batch/R1/`.
+- `art/character/batch_r1/`, `art/character/batch_r1_tools/` and `art/portrait/batch_r1/`: 13 wardrobe looks (130 frames), eight activity sets (80 frames), and 78 portraits. All 84 wardrobe combinations were attempted; 71 remain withheld after three calls each. Rejected generations and measurements remain outside the repository in `/Users/rexxa/work/art-batch/R1/`.
 - ADR 0016 records the five strict ±10% comparisons and complete ten-pose visual gate. These are art-line candidates; the live game importer and simulation remain unchanged.
 
 ### Changed
-- The pitfalls skill records the native-size antialiasing measurement lesson.
+- The pitfalls skill records native-size antialiasing, immutable provenance, raw-body portrait linkage and watcher snapshot lessons.
 
 ## M1-ART — 2026-10-21
 

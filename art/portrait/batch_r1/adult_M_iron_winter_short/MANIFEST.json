@@ -1,0 +1,41 @@
+{
+  "look": "adult_M_iron_winter_short",
+  "generation": {
+    "path": "/Users/rexxa/work/art-batch/R1/portraits/adult_M_iron_winter_short/try1/generation.json",
+    "sha256": "1f90921d2314795c01da75ed09c250110e43203c27666988775ff13d85d3a2b5"
+  },
+  "raw": {
+    "path": "/Users/rexxa/work/art-batch/R1/portraits/adult_M_iron_winter_short/try1/raw.png",
+    "sha256": "2b61f2145d580bb8f4e63fb535044e2ab0dd5bd189828088bb9cc24426e0582d"
+  },
+  "frames": {
+    "v1": {
+      "image_sha256": "9f9869a235af530601fb7cb8165ead7193c8b0bdd1b499b70b393033494a2322",
+      "sidecar_sha256": "4ab05987650496af8f5194dce09ad40a23ebd565b79135690fcd1bdc5027b675"
+    },
+    "v2": {
+      "image_sha256": "889332a8a3ea0a2009cddd222845058174042e887ecf6ffe677d8eb463662a65",
+      "sidecar_sha256": "1bdedc2768b255691e9cb7aeee7eee3e37268d6b22a565c002dee1dc92cdb088"
+    },
+    "v3": {
+      "image_sha256": "b1745c248e7b650e05b4b032ad6e2739549931c0258ac5df04cea10f610f24c2",
+      "sidecar_sha256": "bed8338c4458d6774102385c01ce3b0a2b1ccfb515fc64a9d2b14054ce1184b0"
+    },
+    "v4": {
+      "image_sha256": "b734b4ebaa892fc12477f23500e4acbbca5dea97f8ba86513524d0b29bd784b7",
+      "sidecar_sha256": "c995d76ec0fca6386857d293dd86a041eb97eebd399e6bc87eecfbd63a8c072d"
+    },
+    "v5": {
+      "image_sha256": "a90d27bf8423047eb658eb20f3fe1b19743039b5f0962772efe3a8931d2e34a1",
+      "sidecar_sha256": "8cba189ebf6e2cd19f96cf61694c385afc13baffc35af2bb57ecefcdf47085fc"
+    },
+    "v6": {
+      "image_sha256": "2ea130c55fc54735414e7d13607f849bf6c5b3efcd3475a5638e0de343f00079",
+      "sidecar_sha256": "0a50632837e9b676a7a2a665490a252161623b2880e80d208726ac6f32781409"
+    }
+  },
+  "visual_review": {
+    "path": "/Users/rexxa/work/art-batch/R1/portraits/adult_M_iron_winter_short/try1/visual_verdict.json",
+    "sha256": "b744feab4d28f29d748fcb5214ff2017d5c5c80d63f63628a02ac04a4b752d80"
+  }
+}

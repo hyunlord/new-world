@@ -1,0 +1,23 @@
+{
+  "variant": "v1",
+  "image_sha256": "4fd851ae1e16396d69c83c90e4baf8ff861342075e94a1128a369d53bf68320d",
+  "source": {
+    "path": "/Users/rexxa/work/art-batch/R1/portraits/adult_F_bronze_wool_cloak_long_tied/try2/raw.png",
+    "sha256": "d5799004be5fc1b27d3875f1b2be52da8cb5eaec960b753ce0341c0035d0a399"
+  },
+  "source_box": [
+    0,
+    0,
+    512,
+    512
+  ],
+  "anchor": [
+    64,
+    64
+  ],
+  "footprint": null,
+  "operations": [
+    "full-cell RGB conversion",
+    "full-cell Lanczos resize to128x128"
+  ]
+}

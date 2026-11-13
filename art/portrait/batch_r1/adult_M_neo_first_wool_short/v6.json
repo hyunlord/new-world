@@ -1,0 +1,23 @@
+{
+  "variant": "v6",
+  "image_sha256": "c380d1049c9b0e5fe3b6fedc95d79da469bf2a4fb5ff4ec95b263220b77e23a8",
+  "source": {
+    "path": "/Users/rexxa/work/art-batch/R1/portraits/adult_M_neo_first_wool_short/try1/raw.png",
+    "sha256": "18fe9b8f67614f3a232f107c7f04080f3b263f1db52553512b734b9fe9608208"
+  },
+  "source_box": [
+    1024,
+    512,
+    1536,
+    1024
+  ],
+  "anchor": [
+    64,
+    64
+  ],
+  "footprint": null,
+  "operations": [
+    "full-cell RGB conversion",
+    "full-cell Lanczos resize to128x128"
+  ]
+}

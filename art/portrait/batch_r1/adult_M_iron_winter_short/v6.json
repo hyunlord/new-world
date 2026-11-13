@@ -1,0 +1,23 @@
+{
+  "variant": "v6",
+  "image_sha256": "2ea130c55fc54735414e7d13607f849bf6c5b3efcd3475a5638e0de343f00079",
+  "source": {
+    "path": "/Users/rexxa/work/art-batch/R1/portraits/adult_M_iron_winter_short/try1/raw.png",
+    "sha256": "2b61f2145d580bb8f4e63fb535044e2ab0dd5bd189828088bb9cc24426e0582d"
+  },
+  "source_box": [
+    1024,
+    512,
+    1536,
+    1024
+  ],
+  "anchor": [
+    64,
+    64
+  ],
+  "footprint": null,
+  "operations": [
+    "full-cell RGB conversion",
+    "full-cell Lanczos resize to128x128"
+  ]
+}
