@@ -1,0 +1,21 @@
+{
+  "assets": [
+    {
+      "id": "mason_bench",
+      "path": "art/batch_c3a/workshops/stations/mason_bench.png",
+      "width": 62,
+      "height": 38,
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "anchor": [
+        31.0,
+        33.0
+      ],
+      "count_buckets": [],
+      "family": "structure",
+      "status": "candidate"
+    }
+  ]
+}

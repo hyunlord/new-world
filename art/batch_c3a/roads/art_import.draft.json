@@ -1,0 +1,201 @@
+{
+  "schema_version": 1,
+  "status": "DRAFT_NOT_APPLIED",
+  "source_branch": "v8/art-batch-c3a",
+  "source_commit": null,
+  "source_commit_requirement": "Set to the commit containing these exported bytes before applying.",
+  "files": [
+    {
+      "role": "ground_texture",
+      "id": "paved_road_00",
+      "source": "art/batch_c3a/roads/tiles/paved_road_00.png",
+      "dest": "ground/c3a/paved_road_00.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "paved_road_01",
+      "source": "art/batch_c3a/roads/tiles/paved_road_01.png",
+      "dest": "ground/c3a/paved_road_01.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "paved_road_02",
+      "source": "art/batch_c3a/roads/tiles/paved_road_02.png",
+      "dest": "ground/c3a/paved_road_02.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "paved_road_03",
+      "source": "art/batch_c3a/roads/tiles/paved_road_03.png",
+      "dest": "ground/c3a/paved_road_03.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "paved_road_04",
+      "source": "art/batch_c3a/roads/tiles/paved_road_04.png",
+      "dest": "ground/c3a/paved_road_04.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "paved_road_05",
+      "source": "art/batch_c3a/roads/tiles/paved_road_05.png",
+      "dest": "ground/c3a/paved_road_05.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "paved_road_06",
+      "source": "art/batch_c3a/roads/tiles/paved_road_06.png",
+      "dest": "ground/c3a/paved_road_06.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "paved_road_07",
+      "source": "art/batch_c3a/roads/tiles/paved_road_07.png",
+      "dest": "ground/c3a/paved_road_07.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "paved_road_08",
+      "source": "art/batch_c3a/roads/tiles/paved_road_08.png",
+      "dest": "ground/c3a/paved_road_08.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "paved_road_09",
+      "source": "art/batch_c3a/roads/tiles/paved_road_09.png",
+      "dest": "ground/c3a/paved_road_09.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "paved_road_10",
+      "source": "art/batch_c3a/roads/tiles/paved_road_10.png",
+      "dest": "ground/c3a/paved_road_10.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "paved_road_11",
+      "source": "art/batch_c3a/roads/tiles/paved_road_11.png",
+      "dest": "ground/c3a/paved_road_11.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "paved_road_12",
+      "source": "art/batch_c3a/roads/tiles/paved_road_12.png",
+      "dest": "ground/c3a/paved_road_12.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "paved_road_13",
+      "source": "art/batch_c3a/roads/tiles/paved_road_13.png",
+      "dest": "ground/c3a/paved_road_13.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "paved_road_14",
+      "source": "art/batch_c3a/roads/tiles/paved_road_14.png",
+      "dest": "ground/c3a/paved_road_14.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "paved_road_15",
+      "source": "art/batch_c3a/roads/tiles/paved_road_15.png",
+      "dest": "ground/c3a/paved_road_15.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "meadow_edge_00",
+      "source": "art/batch_c3a/roads/tiles/meadow_edge_00.png",
+      "dest": "ground/c3a/meadow_edge_00.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "meadow_edge_01",
+      "source": "art/batch_c3a/roads/tiles/meadow_edge_01.png",
+      "dest": "ground/c3a/meadow_edge_01.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "meadow_edge_02",
+      "source": "art/batch_c3a/roads/tiles/meadow_edge_02.png",
+      "dest": "ground/c3a/meadow_edge_02.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "meadow_edge_03",
+      "source": "art/batch_c3a/roads/tiles/meadow_edge_03.png",
+      "dest": "ground/c3a/meadow_edge_03.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "meadow_edge_04",
+      "source": "art/batch_c3a/roads/tiles/meadow_edge_04.png",
+      "dest": "ground/c3a/meadow_edge_04.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "meadow_edge_05",
+      "source": "art/batch_c3a/roads/tiles/meadow_edge_05.png",
+      "dest": "ground/c3a/meadow_edge_05.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "meadow_edge_06",
+      "source": "art/batch_c3a/roads/tiles/meadow_edge_06.png",
+      "dest": "ground/c3a/meadow_edge_06.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "meadow_edge_07",
+      "source": "art/batch_c3a/roads/tiles/meadow_edge_07.png",
+      "dest": "ground/c3a/meadow_edge_07.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "meadow_edge_08",
+      "source": "art/batch_c3a/roads/tiles/meadow_edge_08.png",
+      "dest": "ground/c3a/meadow_edge_08.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "meadow_edge_09",
+      "source": "art/batch_c3a/roads/tiles/meadow_edge_09.png",
+      "dest": "ground/c3a/meadow_edge_09.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "meadow_edge_10",
+      "source": "art/batch_c3a/roads/tiles/meadow_edge_10.png",
+      "dest": "ground/c3a/meadow_edge_10.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "meadow_edge_11",
+      "source": "art/batch_c3a/roads/tiles/meadow_edge_11.png",
+      "dest": "ground/c3a/meadow_edge_11.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "meadow_edge_12",
+      "source": "art/batch_c3a/roads/tiles/meadow_edge_12.png",
+      "dest": "ground/c3a/meadow_edge_12.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "meadow_edge_13",
+      "source": "art/batch_c3a/roads/tiles/meadow_edge_13.png",
+      "dest": "ground/c3a/meadow_edge_13.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "meadow_edge_14",
+      "source": "art/batch_c3a/roads/tiles/meadow_edge_14.png",
+      "dest": "ground/c3a/meadow_edge_14.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "meadow_edge_15",
+      "source": "art/batch_c3a/roads/tiles/meadow_edge_15.png",
+      "dest": "ground/c3a/meadow_edge_15.png"
+    }
+  ]
+}

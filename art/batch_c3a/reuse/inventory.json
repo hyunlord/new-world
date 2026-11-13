@@ -1,0 +1,785 @@
+{
+  "schema_version": 1,
+  "status": "PINNED_REUSE_CANDIDATES_NOT_GAME_IMPORTED",
+  "assets": [
+    {
+      "id": "iron_ore",
+      "era": "iron",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "source": "art/style05/batch_a3/items/iron_ore.png",
+      "sha256": "0e1cb593f67879bd6ccc09ef7cc911958c60e9d5084ef747b7d06a6f67a9d46e",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing A3 pass; C3A sheet review required",
+      "semantic_alias": null
+    },
+    {
+      "id": "iron_ore_count_2_8",
+      "era": "iron",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "source": "art/style05/batch_a3/items/iron_ore_count_2_8.png",
+      "sha256": "fc9dbf7ec440d700bc741a6e56faacb4ba7baf7c1711e63386afaa708eef20d8",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing A3 pass; C3A sheet review required",
+      "semantic_alias": null
+    },
+    {
+      "id": "iron_ore_count_9_plus",
+      "era": "iron",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "source": "art/style05/batch_a3/items/iron_ore_count_9_plus.png",
+      "sha256": "b085aaa6e7a2e9d6e38189acb701e85d8855ddadb09f94dfebecdbc719e42ca7",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing A3 pass; C3A sheet review required",
+      "semantic_alias": null
+    },
+    {
+      "id": "iron_bloom",
+      "era": "iron",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "source": "art/style05/batch_a3/items/iron_bloom.png",
+      "sha256": "d0be92277df017e667e138371f6e6d1861bbc05d5ec728e87505fd097e25c9d0",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing A3 pass; C3A sheet review required",
+      "semantic_alias": null
+    },
+    {
+      "id": "iron_bloom_count_2_8",
+      "era": "iron",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "source": "art/style05/batch_a3/items/iron_bloom_count_2_8.png",
+      "sha256": "bbbfa25ed6b7c71c1946900053b6895c64f666c72c22ba17b8e0899cbe2d064c",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing A3 pass; C3A sheet review required",
+      "semantic_alias": null
+    },
+    {
+      "id": "iron_bloom_count_9_plus",
+      "era": "iron",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "source": "art/style05/batch_a3/items/iron_bloom_count_9_plus.png",
+      "sha256": "e1929769088446ba143c2f213abc17ca85f63f901e1be49f1e8e241153b88326",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing A3 pass; C3A sheet review required",
+      "semantic_alias": null
+    },
+    {
+      "id": "iron_ingot",
+      "era": "iron",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "source": "art/style05/batch_a3/items/iron_ingot.png",
+      "sha256": "dd9fc20745e127e432c3845c2c09dcf075670dd3855cdb6021632711d0575953",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing A3 pass; C3A sheet review required",
+      "semantic_alias": "wrought_iron"
+    },
+    {
+      "id": "iron_ingot_count_2_8",
+      "era": "iron",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "source": "art/style05/batch_a3/items/iron_ingot_count_2_8.png",
+      "sha256": "46b58ba0299c18e2190654506a6b72a185da9c74d9fd7e9aec07cfb33eeae2b2",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing A3 pass; C3A sheet review required",
+      "semantic_alias": "wrought_iron"
+    },
+    {
+      "id": "iron_ingot_count_9_plus",
+      "era": "iron",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "source": "art/style05/batch_a3/items/iron_ingot_count_9_plus.png",
+      "sha256": "d53ce4a5caf3148bdf6d0451203e2c884676e0746245ee50bff1afddcec06e0c",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing A3 pass; C3A sheet review required",
+      "semantic_alias": "wrought_iron"
+    },
+    {
+      "id": "iron_axe",
+      "era": "iron",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "source": "art/style05/batch_a3/items/iron_axe.png",
+      "sha256": "015c86ea70ae0eccab90ad9193a463d60a25bc9f73072986bb11f53fa27f0878",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing A3 pass; C3A sheet review required",
+      "semantic_alias": null
+    },
+    {
+      "id": "iron_sickle",
+      "era": "iron",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "source": "art/style05/batch_a3/items/iron_sickle.png",
+      "sha256": "af7d85950085b070e4b542d1d6a4e1d76c678bd78c6b083e6b826adfc5d98d86",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing A3 pass; C3A sheet review required",
+      "semantic_alias": null
+    },
+    {
+      "id": "iron_saw",
+      "era": "iron",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "source": "art/style05/batch_a3/items/iron_saw.png",
+      "sha256": "34943b42449fd6b8607ab86571de9b1b2953e4cba3c3cc6bb5e8a3e84cb74d7e",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing A3 pass; C3A sheet review required",
+      "semantic_alias": null
+    },
+    {
+      "id": "iron_sword",
+      "era": "iron",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "source": "art/style05/batch_a3/items/iron_sword.png",
+      "sha256": "6e269616bcd6f07f485701002842289c0493f4b122e1272c29eafe3214022f72",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing A3 pass; C3A sheet review required",
+      "semantic_alias": null
+    },
+    {
+      "id": "iron_helmet",
+      "era": "iron",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "source": "art/style05/batch_a3/items/iron_helmet.png",
+      "sha256": "42c6436475ed5ca6bbe46bb2579bc5d602de41a13f97ddb5dc88739f4f299daf",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing A3 pass; C3A sheet review required",
+      "semantic_alias": null
+    },
+    {
+      "id": "iron_spear",
+      "era": "iron",
+      "from": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+      "source": "art/style05/batch_b3/items/iron_spear.png",
+      "sha256": "9680b0c16772b3d8e494e22798b8f920a0ec04fdf2c751e2a2fde5f3deeca4bd",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing B3 independent pass; C3A sheet review required"
+    },
+    {
+      "id": "bloomery_unlit",
+      "era": "iron",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "source": "art/style05/struct/a2/iron/bloomery_unlit.png",
+      "sha256": "34d0c1f13298c2d625f7a217943310b5dda69450b16b807f0102360f3a6f5471",
+      "canvas": [
+        49,
+        64
+      ],
+      "anchor": [
+        24,
+        59
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing A2 adopted; C3A sheet review required"
+    },
+    {
+      "id": "bloomery_lit",
+      "era": "iron",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "source": "art/style05/struct/a2/iron/bloomery_lit.png",
+      "sha256": "b955eaeadeb13682ed319944d84a63ff8cb991565595dfcd36b20092dd78cfee",
+      "canvas": [
+        51,
+        64
+      ],
+      "anchor": [
+        25,
+        59
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing A2 adopted; C3A sheet review required"
+    },
+    {
+      "id": "forge_idle",
+      "era": "iron",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "source": "art/style05/struct/a2/iron/forge_idle.png",
+      "sha256": "6f7bce88ef5ae6de102ed09e7567ecb1f2f099e6bc98c14d750de1004e249e59",
+      "canvas": [
+        76,
+        46
+      ],
+      "anchor": [
+        38,
+        41
+      ],
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing A2 adopted; C3A sheet review required"
+    },
+    {
+      "id": "forge_working",
+      "era": "iron",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "source": "art/style05/struct/a2/iron/forge_working.png",
+      "sha256": "14fdf4aa25ec1d31b44b5a50ee6c7669329b40b489c105db91edf9151872cd22",
+      "canvas": [
+        76,
+        46
+      ],
+      "anchor": [
+        38,
+        41
+      ],
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing A2 adopted; C3A sheet review required"
+    },
+    {
+      "id": "iron_outcrop_full",
+      "era": "iron",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "source": "art/style05/struct/a2/ores/iron_outcrop_full.png",
+      "sha256": "75921c23cdb5a81ad92f706368e5e8ab7d658cf118fcca66fd0bf63d2fbc609f",
+      "canvas": [
+        68,
+        40
+      ],
+      "anchor": [
+        34,
+        35
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing A2 adopted; C3A sheet review required"
+    },
+    {
+      "id": "iron_outcrop_depleted",
+      "era": "iron",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "source": "art/style05/struct/a2/ores/iron_outcrop_depleted.png",
+      "sha256": "2b1a5935f07979ba920f435dc54e1e44fd8e57f9b698e621f0c569b034b6f7c0",
+      "canvas": [
+        57,
+        34
+      ],
+      "anchor": [
+        28,
+        29
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing A2 adopted; C3A sheet review required"
+    },
+    {
+      "id": "bog_iron_outcrop_full",
+      "era": "iron",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "source": "art/style05/struct/a2/ores/bog_iron_outcrop_full.png",
+      "sha256": "bdd6f2307e147b9bcdddbefe4fadb6fe5c252da6fe3028936d18938dd0f4e429",
+      "canvas": [
+        40,
+        24
+      ],
+      "anchor": [
+        20,
+        19
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing A2 adopted; C3A sheet review required"
+    },
+    {
+      "id": "bog_iron_outcrop_depleted",
+      "era": "iron",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "source": "art/style05/struct/a2/ores/bog_iron_outcrop_depleted.png",
+      "sha256": "16538ebb339f7e2307fb6e786260ebf09b407819e1a6ea7203ebac0fe6814d3c",
+      "canvas": [
+        40,
+        24
+      ],
+      "anchor": [
+        20,
+        19
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing A2 adopted; C3A sheet review required"
+    },
+    {
+      "id": "paved_road",
+      "era": "iron",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "source": "art/style05/env/ground/a2/iron/paved_road.png",
+      "sha256": "dcb2ba7f262f77a5b443f506f0841aba1692637859097f44e7c24ed0084fa2da",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        43
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing A2 adopted; C3A sheet review required"
+    },
+    {
+      "id": "paved_road_ew",
+      "era": "iron",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "source": "art/style05/env/ground/a2/iron/paved_road_ew.png",
+      "sha256": "0974ff43343bcfcbdadd41b1781c639adb8fdd1a901948ac29e2467a53635b25",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        43
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing A2 adopted; C3A sheet review required"
+    },
+    {
+      "id": "paved_road_damaged",
+      "era": "iron",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "source": "art/style05/env/ground/a2/iron/paved_road_damaged.png",
+      "sha256": "5048dceae8d2f8b21569a08dbf71c6d78fb9345607b80db042746ae087bfb6d1",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        43
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing A2 adopted; C3A sheet review required"
+    },
+    {
+      "id": "paved_road_junction",
+      "era": "iron",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "source": "art/style05/env/ground/a2/iron/paved_road_junction.png",
+      "sha256": "b925a68ec758a0aceec4d36bbbcf379ed9671a6e9861d4293629486618daa35d",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        43
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing A2 adopted; C3A sheet review required"
+    },
+    {
+      "id": "paved_road_corner",
+      "era": "iron",
+      "from": "227529c26307bc3a854eb7bf819e88d02af39046",
+      "source": "art/style05/env/ground/a2/iron/paved_road_corner.png",
+      "sha256": "668526a032ab725451169ba48a93160b8d7e7cd7308eae4870a1ed7ccbd0b8d1",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        43
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing A2 adopted; C3A sheet review required"
+    },
+    {
+      "id": "bloomery_damaged",
+      "era": "iron",
+      "from": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+      "source": "art/style05/struct/b3/stages_iron/bloomery_damaged.png",
+      "sha256": "5ab9480972e02857212c942465c98cec9ecd67e9db96ecb213165a0017df023d",
+      "canvas": [
+        50,
+        64
+      ],
+      "anchor": [
+        25,
+        59
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing B3 independent pass; C3A sheet review required"
+    },
+    {
+      "id": "bloomery_foundation",
+      "era": "iron",
+      "from": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+      "source": "art/style05/struct/b3/stages_iron/bloomery_foundation.png",
+      "sha256": "290270599adea938f5fdae682a987553b87f90af9e9c70e7c0a5c6c4949f329f",
+      "canvas": [
+        41,
+        26
+      ],
+      "anchor": [
+        20,
+        21
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing B3 independent pass; C3A sheet review required"
+    },
+    {
+      "id": "bloomery_half_built",
+      "era": "iron",
+      "from": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+      "source": "art/style05/struct/b3/stages_iron/bloomery_half_built.png",
+      "sha256": "9d308854f34093a8a74bfbface1b88f9c88f3e0d4ca6b5f80e074e94ea823fe2",
+      "canvas": [
+        44,
+        42
+      ],
+      "anchor": [
+        22,
+        37
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing B3 independent pass; C3A sheet review required"
+    },
+    {
+      "id": "bloomery_ruined",
+      "era": "iron",
+      "from": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+      "source": "art/style05/struct/b3/stages_iron/bloomery_ruined.png",
+      "sha256": "ddd76371060f8e32092658424a0913c60e254d1e5d35d5ec56da116078bfc769",
+      "canvas": [
+        41,
+        28
+      ],
+      "anchor": [
+        20,
+        23
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing B3 independent pass; C3A sheet review required"
+    },
+    {
+      "id": "forge_damaged",
+      "era": "iron",
+      "from": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+      "source": "art/style05/struct/b3/stages_iron/forge_damaged.png",
+      "sha256": "796e4aab76adfb986e49472ab5edc3628a505409ba55ba6da0017b5d56d675b4",
+      "canvas": [
+        69,
+        46
+      ],
+      "anchor": [
+        34,
+        41
+      ],
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing B3 independent pass; C3A sheet review required"
+    },
+    {
+      "id": "forge_half_built",
+      "era": "iron",
+      "from": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+      "source": "art/style05/struct/b3/stages_iron/forge_half_built.png",
+      "sha256": "633932db1c1b4ea7b07e2aebe21020ec9ffd4e03f38641798cf11e1c712c3e08",
+      "canvas": [
+        55,
+        34
+      ],
+      "anchor": [
+        27,
+        29
+      ],
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing B3 independent pass; C3A sheet review required"
+    },
+    {
+      "id": "forge_ruined",
+      "era": "iron",
+      "from": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+      "source": "art/style05/struct/b3/stages_iron/forge_ruined.png",
+      "sha256": "529a2f7ad1f9a1cbe523f336b7b82e1e107bede6e9d8914d00aac9a7a0496230",
+      "canvas": [
+        39,
+        26
+      ],
+      "anchor": [
+        19,
+        21
+      ],
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "numeric_pass": true,
+      "visual_review": "existing B3 independent pass; C3A sheet review required"
+    }
+  ],
+  "held": [
+    {
+      "id": "composite_bow",
+      "source": "art/style05/batch_a3/items/composite_bow.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "reason": "Existing visual adoption does not pass frozen numeric style checks; leader regeneration/review required.",
+      "failed_checks": [
+        "wash_flatness"
+      ]
+    },
+    {
+      "id": "iron_hoe",
+      "source": "art/style05/batch_a3/items/iron_hoe.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "reason": "Existing visual adoption does not pass frozen numeric style checks; leader regeneration/review required.",
+      "failed_checks": [
+        "wash_flatness"
+      ]
+    },
+    {
+      "id": "iron_plough",
+      "source": "art/style05/batch_a3/items/iron_plough.png",
+      "from": "8cb145d8cd0edf3f534b10384f5f95ff56ce562a",
+      "reason": "Existing visual adoption does not pass frozen numeric style checks; leader regeneration/review required.",
+      "failed_checks": [
+        "wash_flatness"
+      ]
+    }
+  ],
+  "era_note": "IronOre is requested under bronze gaps but remains iron era; no iron before iron."
+}

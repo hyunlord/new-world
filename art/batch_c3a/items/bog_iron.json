@@ -1,0 +1,201 @@
+{
+  "id": "bog_iron",
+  "era": "iron",
+  "attempt": 2,
+  "status": "ADOPTED_NUMERIC_AND_LEADER_VISUAL",
+  "generation_record": "/Users/rexxa/work/art-batch/C3A/bog_iron_try2.json",
+  "record_sha256": "0399ad7841d60b5d200f792ef3181622072f182fbcc6d898d5ec3487eabd9c5f",
+  "generation": {
+    "id": "bog_iron",
+    "attempt": 2,
+    "era": "iron",
+    "raw": "/Users/rexxa/work/art-batch/C3A/bog_iron_try2_raw.png",
+    "prompt": "Use case: stylized-concept. One WorldSim concept05 isolated ancient inventory item: a single bog iron ore nodule, low broad irregular porous rusty orange-brown mineral lump with dark umber cavities and muted ochre weathered crust, no moss or soil base. Distinct from dark grey metallic forged iron. Sparse warm brown-black ink contour main/detail2:1,3\u20135 large facet seams2 short / hatch groups, restrained earth pigment wash, not photorealistic noise. Front three-quarter20degrees down, narrow top face, upper-left light. Match reference game item ink language. Truly transparent background, ample clear margins, no ground, cast shadow, labels, backdrop, grid, glare or other objects. Readable64/32px. Correction: substantially mute all orange to GREY-BROWN UMBER and dull ochre, low saturation weathered mineral. Broad calm grey-brown facets with only small muted rust accents. Preserve porous irregular bog-iron nodule silhouette, no glowing orange. Style quiet pigment wash.",
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1d57e-16dc-7a71-b9bf-dc04de81a98b as /Users/rexxa/.codex/generated_images/01a1d57e-16dc-7a71-b9bf-dc04de81a98b/exec-0f10db0b-e060-44fd-986d-126f01c0861e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "reference": "reference_iron.png"
+  },
+  "raw_sha256": "3855273d253e6e310eac85eb78fd77da36036d4c15d991dc077e6dd43b0b0711",
+  "reference": {
+    "path": "/Users/rexxa/work/art-batch/C3A/reference_iron.png",
+    "sha256": "015c86ea70ae0eccab90ad9193a463d60a25bc9f73072986bb11f53fa27f0878"
+  },
+  "calibration": "docs/v8/arttrial2/JUDGE_V2_CALIBRATION.json",
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "source_alpha": {
+    "has_alpha": true,
+    "minimum": 0,
+    "maximum": 254,
+    "border_maximum": 1,
+    "nonzero_bbox": [
+      0,
+      21,
+      1460,
+      1024
+    ]
+  },
+  "structural_pass": true,
+  "style": {
+    "candidate": "/Users/rexxa/work/art-batch/C3A/bog_iron_try2_raw.png",
+    "sha256": "3855273d253e6e310eac85eb78fd77da36036d4c15d991dc077e6dd43b0b0711",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.19914942973129712,
+      "saturation_q25": 0.4057967944907321,
+      "saturation_q75": 0.5491189161507206,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.010735557738844924,
+      "foreground_pixels": 27059
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "exports": [
+    {
+      "id": "bog_iron",
+      "candidate": "/Users/rexxa/work/art-batch/C3A/candidates/items/bog_iron_try2.png",
+      "sha256": "f563edb52600d72013911aa91d43c6c6ca158321f564d47cd5429d90d4ffcbdb",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "safe_bounds": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          43
+        ],
+        "height_band": [
+          4,
+          58
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 684,
+        "base_row": 43,
+        "base_error": 0,
+        "height": 25,
+        "gradient_x": -0.8005301972685888,
+        "gradient_y": -2.4730674961119745,
+        "light_angle_degrees": 252.06326953601135,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "bog_iron_count_2_8",
+      "candidate": "/Users/rexxa/work/art-batch/C3A/candidates/items/bog_iron_try2_count_2_8.png",
+      "sha256": "b4abe37e1bc46198fe7a4361d3b724cb6b6ca1f99154f35a4719f93ba973fe51",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "safe_bounds": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          48
+        ],
+        "height_band": [
+          4,
+          58
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 793,
+        "base_row": 48,
+        "base_error": 0,
+        "height": 33,
+        "gradient_x": -1.2404735449735447,
+        "gradient_y": -3.742813774104683,
+        "light_angle_degrees": 251.66335446939345,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "bog_iron_count_9_plus",
+      "candidate": "/Users/rexxa/work/art-batch/C3A/candidates/items/bog_iron_try2_count_9_plus.png",
+      "sha256": "f93799f9dbf88be3384d1a17eafffd0be8e0c83d61e88e33b670091e20bc7279",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "safe_bounds": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          53
+        ],
+        "height_band": [
+          4,
+          58
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1227,
+        "base_row": 53,
+        "base_error": 0,
+        "height": 42,
+        "gradient_x": -1.6106584642233859,
+        "gradient_y": -5.21125782688766,
+        "light_angle_degrees": 252.82503930466333,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      }
+    }
+  ],
+  "operations": [
+    "ENV1 nonzero-alpha crop/proportional Lanczos fit58/pad64",
+    "ENV1 whole-icon 1/3/9 copy layouts"
+  ],
+  "visual_review": "PASS_LEADER",
+  "selection_sha256": "4c05bc8ef824ccf15a3d42e70dda7c7f0c8c170276e9ae8358b21616e87d819d",
+  "seam": "N/A isolated inventory item"
+}

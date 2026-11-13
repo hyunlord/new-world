@@ -1,0 +1,28 @@
+{
+  "status": "PROPOSED_NOT_APPLIED",
+  "numeric_codes": "UNASSIGNED_DO_NOT_INVENT",
+  "scales": {
+    "item_scale": "N/A_station",
+    "world_scale": 1
+  },
+  "stations": {
+    "mason_bench": {
+      "structure": "mason_bench",
+      "era": "iron",
+      "world_scale": 1
+    }
+  },
+  "templates": {
+    "smithy": {
+      "idle": "rooms/smithy_built/manifest.json",
+      "working": "rooms/smithy_built_working/manifest.json"
+    },
+    "bloomery_house": {
+      "idle": "rooms/bloomery_house_built/manifest.json",
+      "working": "rooms/bloomery_house_built_working/manifest.json"
+    }
+  },
+  "template_stages": "rooms/<family>_<foundation|half_built|damaged|ruined>/manifest.json",
+  "blueprints": "blueprints.json",
+  "limits": "Layered manifests are not accepted full-room sprite import rows; integration must preserve independent origins/anchors and depth order."
+}

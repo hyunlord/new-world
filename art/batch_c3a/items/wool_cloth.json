@@ -1,0 +1,201 @@
+{
+  "id": "wool_cloth",
+  "era": "bronze",
+  "attempt": 1,
+  "status": "ADOPTED_NUMERIC_AND_LEADER_VISUAL",
+  "generation_record": "/Users/rexxa/work/art-batch/C3A/wool_cloth_try1.json",
+  "record_sha256": "04675701e22fbf9eea9f5e73f0e1e2666d1697de0f4a846ab095b518ac4eaed3",
+  "generation": {
+    "id": "wool_cloth",
+    "attempt": 1,
+    "era": "bronze",
+    "raw": "/Users/rexxa/work/art-batch/C3A/wool_try1_raw.png",
+    "prompt": "Use case: stylized-concept. One WorldSim concept05 inventory item: a single folded thick undyed sheep-wool cloth bolt, visibly fuzzy woven edges and three broad soft folds. Bronze era, natural warm oatmeal beige, no dye, no modern fabric labels. Style matches reference linen item but thicker wool weave: warm brown-black hand ink, main/detail strokes 2:1, 3\u20135 folds and two short weave groups, sparse lower-left-to-upper-right shadow hatching. Restrained earth pigment wash, upper-left light, front three-quarter about20 degrees down, narrow top face, low wide naturally resting silhouette. Readable at64 and32px. One isolated object, generous transparent margins, no ground, no cast shadow, no text, no border, no scenery, no white speckling, no photorealism or pixel art. Reference is style only. Truly transparent background.",
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1d57e-16dc-7a71-b9bf-dc04de81a98b as /Users/rexxa/.codex/generated_images/01a1d57e-16dc-7a71-b9bf-dc04de81a98b/exec-1cd0adbf-159b-4143-963e-4cfa20087908.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "reference": "reference_linen.png"
+  },
+  "raw_sha256": "f3e255353f5a01d843356380bd3bf4432e42edeb51ea69e06186f2fc86de8e37",
+  "reference": {
+    "path": "/Users/rexxa/work/art-batch/C3A/reference_linen.png",
+    "sha256": "a4908d4b647570a33af458c0cf54ba463b2245625bad7fbc12bcdd178c579f1c"
+  },
+  "calibration": "docs/v8/arttrial2/JUDGE_V2_CALIBRATION.json",
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "source_alpha": {
+    "has_alpha": true,
+    "minimum": 0,
+    "maximum": 254,
+    "border_maximum": 5,
+    "nonzero_bbox": [
+      0,
+      0,
+      1522,
+      1024
+    ]
+  },
+  "structural_pass": true,
+  "style": {
+    "candidate": "/Users/rexxa/work/art-batch/C3A/wool_try1_raw.png",
+    "sha256": "f3e255353f5a01d843356380bd3bf4432e42edeb51ea69e06186f2fc86de8e37",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.2604416801165217,
+      "saturation_q25": 0.33513683219854074,
+      "saturation_q75": 0.4792715291273115,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.01055609388767669,
+      "foreground_pixels": 26613
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "exports": [
+    {
+      "id": "wool_cloth",
+      "candidate": "/Users/rexxa/work/art-batch/C3A/candidates/items/wool_cloth_try1.png",
+      "sha256": "fb6377d18760a3ed4b4f62515a4bbf2df7ad9223e04dbcc7d967e38b7c4f110a",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "safe_bounds": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          42
+        ],
+        "height_band": [
+          4,
+          58
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 564,
+        "base_row": 42,
+        "base_error": 0,
+        "height": 22,
+        "gradient_x": -0.9021546125461256,
+        "gradient_y": -2.42053358633776,
+        "light_angle_degrees": 249.55912351967748,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "wool_cloth_count_2_8",
+      "candidate": "/Users/rexxa/work/art-batch/C3A/candidates/items/wool_cloth_try1_count_2_8.png",
+      "sha256": "5cc6f51acb4277065af7c2bbfcb5e143b3fe01cdaf8e3a2e8fba62eb30c5d858",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "safe_bounds": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          47
+        ],
+        "height_band": [
+          4,
+          58
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 660,
+        "base_row": 47,
+        "base_error": 0,
+        "height": 31,
+        "gradient_x": -2.5588437699680515,
+        "gradient_y": -5.691725208681136,
+        "light_angle_degrees": 245.7926217784704,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "wool_cloth_count_9_plus",
+      "candidate": "/Users/rexxa/work/art-batch/C3A/candidates/items/wool_cloth_try1_count_9_plus.png",
+      "sha256": "717d4eec665b4e2cb0db014bb3d0528226abefeb918a3a9e5b4cb6538c9a41d8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "safe_bounds": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          52
+        ],
+        "height_band": [
+          4,
+          58
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1022,
+        "base_row": 52,
+        "base_error": 0,
+        "height": 41,
+        "gradient_x": -2.949329535864979,
+        "gradient_y": -5.000250681818183,
+        "light_angle_degrees": 239.4663515999829,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      }
+    }
+  ],
+  "operations": [
+    "ENV1 nonzero-alpha crop/proportional Lanczos fit58/pad64",
+    "ENV1 whole-icon 1/3/9 copy layouts"
+  ],
+  "visual_review": "PASS_LEADER",
+  "selection_sha256": "4c05bc8ef824ccf15a3d42e70dda7c7f0c8c170276e9ae8358b21616e87d819d",
+  "seam": "N/A isolated inventory item"
+}

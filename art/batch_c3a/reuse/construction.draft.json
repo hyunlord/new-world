@@ -1,0 +1,642 @@
+{
+  "status": "PINNED_EXISTING_RECIPES_NOT_RUNTIME_CONNECTED",
+  "from": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+  "families": [
+    {
+      "family": "bloomery",
+      "era": "iron",
+      "owner": "stages_iron",
+      "states": {
+        "blueprint": {
+          "status": "RECIPE_READY",
+          "record": "art/batch_b3/blueprints.json",
+          "source": {
+            "kind": "sprite",
+            "asset_id": "bloomery_unlit",
+            "path": "art/style05/struct/a2/iron/bloomery_unlit.png",
+            "sha256": "34d0c1f13298c2d625f7a217943310b5dda69450b16b807f0102360f3a6f5471",
+            "anchor": [
+              24,
+              59
+            ],
+            "footprint": [
+              1.0,
+              1.0
+            ],
+            "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+          }
+        },
+        "foundation": {
+          "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+          "record": "art/batch_b3/stages_iron/coverage.json",
+          "disposition": {
+            "family": "bloomery",
+            "state": "foundation",
+            "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+            "source": "art/style05/struct/b3/stages_iron/bloomery_foundation.png",
+            "attempts": 1,
+            "reasons": [
+              "Distinct state; all unchanged numeric checks pass."
+            ]
+          }
+        },
+        "half_built": {
+          "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+          "record": "art/batch_b3/stages_iron/coverage.json",
+          "disposition": {
+            "family": "bloomery",
+            "state": "half_built",
+            "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+            "source": "art/style05/struct/b3/stages_iron/bloomery_half_built.png",
+            "attempts": 1,
+            "reasons": [
+              "Distinct state; all unchanged numeric checks pass."
+            ]
+          }
+        },
+        "built": {
+          "status": "REUSED_A2",
+          "record": "art/batch_b3/stages_iron/coverage.json",
+          "disposition": {
+            "family": "bloomery",
+            "state": "built",
+            "status": "REUSED_A2",
+            "source": "art/style05/struct/a2/iron/bloomery_unlit.png",
+            "attempts": 0,
+            "reasons": [
+              "Existing accepted A2 physical state reused byte-for-byte."
+            ],
+            "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+            "sha256": "34d0c1f13298c2d625f7a217943310b5dda69450b16b807f0102360f3a6f5471"
+          }
+        },
+        "damaged": {
+          "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+          "record": "art/batch_b3/stages_iron/coverage.json",
+          "disposition": {
+            "family": "bloomery",
+            "state": "damaged",
+            "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+            "source": "art/style05/struct/b3/stages_iron/bloomery_damaged.png",
+            "attempts": 1,
+            "reasons": [
+              "Distinct state; all unchanged numeric checks pass."
+            ]
+          }
+        },
+        "ruined": {
+          "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+          "record": "art/batch_b3/stages_iron/coverage.json",
+          "disposition": {
+            "family": "bloomery",
+            "state": "ruined",
+            "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+            "source": "art/style05/struct/b3/stages_iron/bloomery_ruined.png",
+            "attempts": 1,
+            "reasons": [
+              "Distinct state; all unchanged numeric checks pass."
+            ]
+          }
+        }
+      },
+      "a2_variants": [
+        {
+          "family": "bloomery",
+          "variant": "unlit",
+          "asset_id": "bloomery_unlit",
+          "era": "iron",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/iron/bloomery_unlit.png"
+        },
+        {
+          "family": "bloomery",
+          "variant": "lit",
+          "asset_id": "bloomery_lit",
+          "era": "iron",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/iron/bloomery_lit.png"
+        }
+      ]
+    },
+    {
+      "family": "forge",
+      "era": "iron",
+      "owner": "stages_iron",
+      "states": {
+        "blueprint": {
+          "status": "RECIPE_READY",
+          "record": "art/batch_b3/blueprints.json",
+          "source": {
+            "kind": "sprite",
+            "asset_id": "forge_idle",
+            "path": "art/style05/struct/a2/iron/forge_idle.png",
+            "sha256": "6f7bce88ef5ae6de102ed09e7567ecb1f2f099e6bc98c14d750de1004e249e59",
+            "anchor": [
+              38,
+              41
+            ],
+            "footprint": [
+              2.0,
+              1.0
+            ],
+            "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+          }
+        },
+        "foundation": {
+          "status": "REJECTED_CAPPED",
+          "record": "art/batch_b3/stages_iron/coverage.json",
+          "disposition": {
+            "family": "forge",
+            "state": "foundation",
+            "status": "REJECTED_CAPPED",
+            "source": null,
+            "attempts": 3,
+            "reasons": [
+              "Three attempts failed source geometry: try3 includes raised timbers, opaque25 vs built68px, and wash_flatness fails."
+            ]
+          }
+        },
+        "half_built": {
+          "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+          "record": "art/batch_b3/stages_iron/coverage.json",
+          "disposition": {
+            "family": "forge",
+            "state": "half_built",
+            "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+            "source": "art/style05/struct/b3/stages_iron/forge_half_built.png",
+            "attempts": 1,
+            "reasons": [
+              "Distinct state; all unchanged numeric checks pass."
+            ]
+          }
+        },
+        "built": {
+          "status": "REUSED_A2",
+          "record": "art/batch_b3/stages_iron/coverage.json",
+          "disposition": {
+            "family": "forge",
+            "state": "built",
+            "status": "REUSED_A2",
+            "source": "art/style05/struct/a2/iron/forge_idle.png",
+            "attempts": 0,
+            "reasons": [
+              "Existing accepted A2 physical state reused byte-for-byte."
+            ],
+            "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+            "sha256": "6f7bce88ef5ae6de102ed09e7567ecb1f2f099e6bc98c14d750de1004e249e59"
+          }
+        },
+        "damaged": {
+          "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+          "record": "art/batch_b3/stages_iron/coverage.json",
+          "disposition": {
+            "family": "forge",
+            "state": "damaged",
+            "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+            "source": "art/style05/struct/b3/stages_iron/forge_damaged.png",
+            "attempts": 1,
+            "reasons": [
+              "Distinct state; all unchanged numeric checks pass."
+            ]
+          }
+        },
+        "ruined": {
+          "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+          "record": "art/batch_b3/stages_iron/coverage.json",
+          "disposition": {
+            "family": "forge",
+            "state": "ruined",
+            "status": "ADOPTED_NUMERIC_SELF_AND_INDEPENDENT_REVIEW",
+            "source": "art/style05/struct/b3/stages_iron/forge_ruined.png",
+            "attempts": 1,
+            "reasons": [
+              "Distinct state; all unchanged numeric checks pass."
+            ]
+          }
+        }
+      },
+      "a2_variants": [
+        {
+          "family": "forge",
+          "variant": "idle",
+          "asset_id": "forge_idle",
+          "era": "iron",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/iron/forge_idle.png"
+        },
+        {
+          "family": "forge",
+          "variant": "working",
+          "asset_id": "forge_working",
+          "era": "iron",
+          "kind": "structure",
+          "status": "ADOPTED_CANDIDATE",
+          "detail": "art/style05/struct/a2/iron/forge_working.png"
+        }
+      ]
+    },
+    {
+      "family": "paved_road",
+      "era": "iron",
+      "owner": "retries_ground",
+      "states": {
+        "blueprint": {
+          "status": "RECIPE_READY",
+          "record": "art/batch_b3/blueprints.json",
+          "source": {
+            "kind": "sprite",
+            "asset_id": "paved_road_ew",
+            "path": "art/style05/env/ground/a2/iron/paved_road_ew.png",
+            "sha256": "0974ff43343bcfcbdadd41b1781c639adb8fdd1a901948ac29e2467a53635b25",
+            "anchor": [
+              32,
+              43
+            ],
+            "footprint": [
+              1,
+              1
+            ],
+            "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046"
+          }
+        },
+        "foundation": {
+          "status": "TILE_LAYER_RECIPE",
+          "record": "art/batch_b3/retries_ground/terraincoverage.json",
+          "disposition": {
+            "family": "paved_road",
+            "state": "foundation",
+            "status": "TILE_LAYER_RECIPE",
+            "source": {
+              "path": "art/style05/env/ground/a2/iron/paved_road.png",
+              "branch": "v8/art-batch-a2",
+              "pin": "227529c26307bc3a854eb7bf819e88d02af39046",
+              "sha256": "dcb2ba7f262f77a5b443f506f0841aba1692637859097f44e7c24ed0084fa2da",
+              "size": [
+                64,
+                64
+              ],
+              "anchor": [
+                32,
+                43
+              ],
+              "footprint": [
+                1,
+                1
+              ]
+            },
+            "attempts": 0,
+            "reason": "Reviewable layer recipe for terrain jobs; no invented frame sprite. A 2x2 terrace uses its whole 128px composite atomically.",
+            "recipe": {
+              "operation": "replace completed cells with exact built tile; retain existing base terrain in incomplete cells",
+              "progress_scope": "ordered world cells (y, x), never per-pixel crop, alpha fade or painted overlay",
+              "completed_cells": "0 for foundation; floor(total occupied cells / 2) for half_built; single-cell jobs switch atomically when complete",
+              "layers": [
+                {
+                  "z": 0,
+                  "source": "existing world terrain unchanged"
+                },
+                {
+                  "z": 1,
+                  "source": "art/style05/env/ground/a2/iron/paved_road.png",
+                  "mask": "completed whole cells only"
+                }
+              ],
+              "anchor": [
+                32,
+                43
+              ],
+              "runtime_implemented": false
+            }
+          }
+        },
+        "half_built": {
+          "status": "TILE_LAYER_RECIPE",
+          "record": "art/batch_b3/retries_ground/terraincoverage.json",
+          "disposition": {
+            "family": "paved_road",
+            "state": "half_built",
+            "status": "TILE_LAYER_RECIPE",
+            "source": {
+              "path": "art/style05/env/ground/a2/iron/paved_road.png",
+              "branch": "v8/art-batch-a2",
+              "pin": "227529c26307bc3a854eb7bf819e88d02af39046",
+              "sha256": "dcb2ba7f262f77a5b443f506f0841aba1692637859097f44e7c24ed0084fa2da",
+              "size": [
+                64,
+                64
+              ],
+              "anchor": [
+                32,
+                43
+              ],
+              "footprint": [
+                1,
+                1
+              ]
+            },
+            "attempts": 0,
+            "reason": "Reviewable layer recipe for terrain jobs; no invented frame sprite. A 2x2 terrace uses its whole 128px composite atomically.",
+            "recipe": {
+              "operation": "replace completed cells with exact built tile; retain existing base terrain in incomplete cells",
+              "progress_scope": "ordered world cells (y, x), never per-pixel crop, alpha fade or painted overlay",
+              "completed_cells": "0 for foundation; floor(total occupied cells / 2) for half_built; single-cell jobs switch atomically when complete",
+              "layers": [
+                {
+                  "z": 0,
+                  "source": "existing world terrain unchanged"
+                },
+                {
+                  "z": 1,
+                  "source": "art/style05/env/ground/a2/iron/paved_road.png",
+                  "mask": "completed whole cells only"
+                }
+              ],
+              "anchor": [
+                32,
+                43
+              ],
+              "runtime_implemented": false
+            }
+          }
+        },
+        "built": {
+          "status": "PINNED_A2_REUSE",
+          "record": "art/batch_b3/retries_ground/terraincoverage.json",
+          "disposition": {
+            "family": "paved_road",
+            "state": "built",
+            "status": "PINNED_A2_REUSE",
+            "source": {
+              "path": "art/style05/env/ground/a2/iron/paved_road.png",
+              "branch": "v8/art-batch-a2",
+              "pin": "227529c26307bc3a854eb7bf819e88d02af39046",
+              "sha256": "dcb2ba7f262f77a5b443f506f0841aba1692637859097f44e7c24ed0084fa2da",
+              "size": [
+                64,
+                64
+              ],
+              "anchor": [
+                32,
+                43
+              ],
+              "footprint": [
+                1,
+                1
+              ]
+            },
+            "attempts": 0,
+            "reason": "Exact existing top-down terrain tile, unchanged pixels.",
+            "recipe": null
+          }
+        },
+        "damaged": {
+          "status": "PINNED_A2_REUSE",
+          "record": "art/batch_b3/retries_ground/terraincoverage.json",
+          "disposition": {
+            "family": "paved_road",
+            "state": "damaged",
+            "status": "PINNED_A2_REUSE",
+            "source": {
+              "path": "art/style05/env/ground/a2/iron/paved_road_damaged.png",
+              "branch": "v8/art-batch-a2",
+              "pin": "227529c26307bc3a854eb7bf819e88d02af39046",
+              "sha256": "5048dceae8d2f8b21569a08dbf71c6d78fb9345607b80db042746ae087bfb6d1",
+              "size": [
+                64,
+                64
+              ],
+              "anchor": [
+                32,
+                43
+              ],
+              "footprint": [
+                1,
+                1
+              ]
+            },
+            "attempts": 0,
+            "reason": "Exact existing damaged paved-road tile.",
+            "recipe": null
+          }
+        },
+        "ruined": {
+          "status": "NOT_APPLICABLE",
+          "record": "art/batch_b3/retries_ground/terraincoverage.json",
+          "disposition": {
+            "family": "paved_road",
+            "state": "ruined",
+            "status": "NOT_APPLICABLE",
+            "source": null,
+            "attempts": 0,
+            "reason": "Road wear has the existing damaged tile; no further discrete ruin appearance is defined. Terrain remains terrain.",
+            "recipe": null
+          }
+        }
+      },
+      "a2_variants": [
+        {
+          "family": "paved_road",
+          "variant": "straight_ew",
+          "asset_id": "paved_road_ew",
+          "era": "iron",
+          "kind": "structure",
+          "status": "ADOPTED_GROUND_CANDIDATE",
+          "detail": "art/style05/env/ground/a2/iron/paved_road_ew.png"
+        },
+        {
+          "family": "paved_road",
+          "variant": "straight_ns",
+          "asset_id": "paved_road",
+          "era": "iron",
+          "kind": "structure",
+          "status": "ADOPTED_GROUND_CANDIDATE",
+          "detail": "art/style05/env/ground/a2/iron/paved_road.png"
+        },
+        {
+          "family": "paved_road",
+          "variant": "corner",
+          "asset_id": "paved_road_corner",
+          "era": "iron",
+          "kind": "structure",
+          "status": "ADOPTED_GROUND_CANDIDATE",
+          "detail": "art/style05/env/ground/a2/iron/paved_road_corner.png"
+        },
+        {
+          "family": "paved_road",
+          "variant": "junction",
+          "asset_id": "paved_road_junction",
+          "era": "iron",
+          "kind": "structure",
+          "status": "ADOPTED_GROUND_CANDIDATE",
+          "detail": "art/style05/env/ground/a2/iron/paved_road_junction.png"
+        },
+        {
+          "family": "paved_road",
+          "variant": "damaged",
+          "asset_id": "paved_road_damaged",
+          "era": "iron",
+          "kind": "structure",
+          "status": "ADOPTED_GROUND_CANDIDATE",
+          "detail": "art/style05/env/ground/a2/iron/paved_road_damaged.png"
+        }
+      ]
+    },
+    {
+      "family": "stone_house",
+      "era": "iron",
+      "owner": "rooms",
+      "states": {
+        "blueprint": {
+          "status": "RECIPE_READY",
+          "record": "art/batch_b3/blueprints.json",
+          "source": {
+            "kind": "layered_recipe",
+            "path": "art/batch_b3/rooms/recipes.json",
+            "recipe": "stone_house_built",
+            "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
+            "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+            "preview_sha256": "f2bdf825487237a2dc6773ae0564a1225786e6533e8e028bc36448b2720ca547",
+            "recipe_source_sha256": "a1a0e5c523417b59626f14fbbc70f7b044f061af9d08c93ae5121af132efa91e"
+          }
+        },
+        "foundation": {
+          "status": "RECIPE_VISUALLY_ACCEPTED",
+          "record": "art/batch_b3/rooms/recipes.json",
+          "recipe_ids": [
+            "stone_house_foundation"
+          ]
+        },
+        "half_built": {
+          "status": "RECIPE_VISUALLY_ACCEPTED",
+          "record": "art/batch_b3/rooms/recipes.json",
+          "recipe_ids": [
+            "stone_house_half_built"
+          ]
+        },
+        "built": {
+          "status": "RECIPE_VISUALLY_ACCEPTED",
+          "record": "art/batch_b3/rooms/recipes.json",
+          "recipe_ids": [
+            "stone_house_built"
+          ]
+        },
+        "damaged": {
+          "status": "RECIPE_VISUALLY_ACCEPTED",
+          "record": "art/batch_b3/rooms/recipes.json",
+          "recipe_ids": [
+            "stone_house_damaged"
+          ]
+        },
+        "ruined": {
+          "status": "RECIPE_VISUALLY_ACCEPTED",
+          "record": "art/batch_b3/rooms/recipes.json",
+          "recipe_ids": [
+            "stone_house_ruined"
+          ]
+        }
+      },
+      "a2_variants": [
+        {
+          "family": "stone_house",
+          "variant": "intact",
+          "asset_id": "stone_house_intact",
+          "era": "iron",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/stone_house_intact/manifest.json"
+        },
+        {
+          "family": "stone_house",
+          "variant": "damaged",
+          "asset_id": "stone_house_damaged",
+          "era": "iron",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/stone_house_damaged/manifest.json"
+        }
+      ]
+    },
+    {
+      "family": "warehouse",
+      "era": "iron",
+      "owner": "rooms",
+      "states": {
+        "blueprint": {
+          "status": "RECIPE_READY",
+          "record": "art/batch_b3/blueprints.json",
+          "source": {
+            "kind": "layered_recipe",
+            "path": "art/batch_b3/rooms/recipes.json",
+            "recipe": "warehouse_built",
+            "anchor_convention": "See rooms/exports.json preview_anchor and per-layer origin/anchor",
+            "source_commit": "abd82d7daf08df4de2b768a37f605faf669dbd7c",
+            "preview_sha256": "e4e3a7b778fbaf8d97fa7dfec25f807407f92ec4d3e17d5dd66686d935a01ad9",
+            "recipe_source_sha256": "a1a0e5c523417b59626f14fbbc70f7b044f061af9d08c93ae5121af132efa91e"
+          }
+        },
+        "foundation": {
+          "status": "RECIPE_VISUALLY_ACCEPTED",
+          "record": "art/batch_b3/rooms/recipes.json",
+          "recipe_ids": [
+            "warehouse_foundation"
+          ]
+        },
+        "half_built": {
+          "status": "RECIPE_VISUALLY_ACCEPTED",
+          "record": "art/batch_b3/rooms/recipes.json",
+          "recipe_ids": [
+            "warehouse_half_built"
+          ]
+        },
+        "built": {
+          "status": "RECIPE_VISUALLY_ACCEPTED",
+          "record": "art/batch_b3/rooms/recipes.json",
+          "recipe_ids": [
+            "warehouse_built"
+          ]
+        },
+        "damaged": {
+          "status": "RECIPE_VISUALLY_ACCEPTED",
+          "record": "art/batch_b3/rooms/recipes.json",
+          "recipe_ids": [
+            "warehouse_damaged"
+          ]
+        },
+        "ruined": {
+          "status": "RECIPE_VISUALLY_ACCEPTED",
+          "record": "art/batch_b3/rooms/recipes.json",
+          "recipe_ids": [
+            "warehouse_ruined"
+          ]
+        }
+      },
+      "a2_variants": [
+        {
+          "family": "warehouse",
+          "variant": "empty",
+          "asset_id": "warehouse_empty",
+          "era": "iron",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/warehouse_empty/manifest.json"
+        },
+        {
+          "family": "warehouse",
+          "variant": "filled",
+          "asset_id": "warehouse_full",
+          "era": "iron",
+          "kind": "structure",
+          "status": "DERIVED_REVIEWED_RECIPE",
+          "detail": "/Users/rexxa/work/art-batch/A2/rooms/warehouse_full/manifest.json"
+        }
+      ]
+    }
+  ],
+  "room_recipe_source": "art/batch_b3/rooms/recipes.json",
+  "layer_export_source": "art/batch_b3/rooms/exports.json",
+  "blueprint_source": "art/batch_b3/blueprints.json",
+  "integration_required": "Reuse physical layers and exact origins/anchors; never use room previews as a single runtime sprite. Stone house wall_pieces are delivered separately by C3A. Forge foundation stays capped gap."
+}

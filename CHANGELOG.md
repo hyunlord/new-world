@@ -5,6 +5,18 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## C3A art candidates — 2026-11-14
+
+### Added
+- `art/batch_c3a/`: source-pinned iron reuse inventory, missing item/station
+  candidates, layered workshop recipes, terrain transitions and import drafts.
+- `tools/v8/compose_wall_pieces.py`: existing material-compositor export with
+  N1/E2/S4/W8 metadata; failed visual topology remains disabled, not adopted.
+
+### Changed
+- Stale bronze-gap claims are reconciled against A3 Git objects; numeric/visual
+  failures and cumulative three-attempt gaps remain explicit (ADR0016).
+
 ## M1-ART — 2026-10-21
 
 The colony view drawn like the mock-up: real ground, a canopy that reads as forest, buildings and log piles you can read, people you can find (`docs/v8/m1art/ART_GOAL.md`, report `docs/v8/m1art/ART_REPORT.md`). No simulation change (`rust/` untouched; identity, colony determinism and replay pass).

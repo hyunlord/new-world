@@ -1,0 +1,87 @@
+{
+  "status": "SYMBOLIC_PROPOSALS_NOT_APPLIED",
+  "preserve_existing_config": true,
+  "fragments": [
+    "art/batch_c3a/reuse/bindings.draft.json",
+    "art/batch_c3a/workshops/bindings.draft.json"
+  ],
+  "new_items": {
+    "wool_cloth": {
+      "era": "bronze",
+      "code": null,
+      "assets": [
+        "wool_cloth",
+        "wool_cloth_count_2_8",
+        "wool_cloth_count_9_plus"
+      ]
+    },
+    "limestone": {
+      "era": "bronze",
+      "code": null,
+      "assets": [
+        "limestone",
+        "limestone_count_2_8",
+        "limestone_count_9_plus"
+      ]
+    },
+    "cut_stone": {
+      "era": "iron",
+      "code": null,
+      "assets": [
+        "cut_stone",
+        "cut_stone_count_2_8",
+        "cut_stone_count_9_plus"
+      ]
+    },
+    "bog_iron": {
+      "era": "iron",
+      "code": null,
+      "assets": [
+        "bog_iron",
+        "bog_iron_count_2_8",
+        "bog_iron_count_9_plus"
+      ]
+    },
+    "iron_knife": {
+      "era": "iron",
+      "code": null,
+      "assets": [
+        "iron_knife"
+      ]
+    },
+    "nails": {
+      "era": "iron",
+      "code": null,
+      "assets": [
+        "nails",
+        "nails_count_2_8",
+        "nails_count_9_plus"
+      ]
+    },
+    "iron_shield_boss": {
+      "era": "iron",
+      "code": null,
+      "assets": [
+        "iron_shield_boss"
+      ]
+    },
+    "iron_adze": {
+      "era": "iron",
+      "code": null,
+      "assets": [
+        "iron_adze"
+      ]
+    }
+  },
+  "item_scale": "Retain existing0.45 +0.15*bucket capped0.85; no override.",
+  "held": [
+    "composite_bow",
+    "iron_hoe",
+    "iron_plough",
+    "anvil",
+    "drystone_wall_pieces",
+    "ns_door"
+  ],
+  "road_selector": "Disabled proposal: roads/bindings.draft.json; strict vertical wrap failure remains.",
+  "runtime_rows_to_append": []
+}

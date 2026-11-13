@@ -1,0 +1,52 @@
+{
+  "status": "PROPOSED_NOT_APPLIED",
+  "stations": {
+    "anvil": {
+      "built": null,
+      "built_status": "HELD_CAPPED3_STYLE_OR_PROJECTION_FAILURE",
+      "blueprint": {
+        "status": "BLOCKED_MISSING_ACCEPTED_BUILT_ANVIL"
+      },
+      "foundation": {
+        "status": "NOT_APPLICABLE_ASSEMBLED_STATION",
+        "reason": "Anvil/bench are placed assembled equipment, matching B3 workbench/loom convention; room shell carries construction stages."
+      },
+      "half_built": {
+        "status": "NOT_APPLICABLE_ASSEMBLED_STATION",
+        "reason": "Room shell independently supplies partial build layers."
+      },
+      "damaged": {
+        "status": "NO_STATE_DECLARED_IN_C3_PLAN",
+        "reason": "C3 goal specifies station recipes, not a visible station damage selector. Do not substitute intact sprite for damage."
+      },
+      "ruined": {
+        "status": "NO_STATE_DECLARED_IN_C3_PLAN",
+        "reason": "No station-ruin selector is authored by this art pass; shell ruin recipe supplied."
+      }
+    },
+    "mason_bench": {
+      "built": "stations/mason_bench.png",
+      "built_status": "candidate only; requires numeric and visual acceptance",
+      "blueprint": {
+        "operation": "existing B3 blueprint display operation",
+        "source": "built"
+      },
+      "foundation": {
+        "status": "NOT_APPLICABLE_ASSEMBLED_STATION",
+        "reason": "Anvil/bench are placed assembled equipment, matching B3 workbench/loom convention; room shell carries construction stages."
+      },
+      "half_built": {
+        "status": "NOT_APPLICABLE_ASSEMBLED_STATION",
+        "reason": "Room shell independently supplies partial build layers."
+      },
+      "damaged": {
+        "status": "NO_STATE_DECLARED_IN_C3_PLAN",
+        "reason": "C3 goal specifies station recipes, not a visible station damage selector. Do not substitute intact sprite for damage."
+      },
+      "ruined": {
+        "status": "NO_STATE_DECLARED_IN_C3_PLAN",
+        "reason": "No station-ruin selector is authored by this art pass; shell ruin recipe supplied."
+      }
+    }
+  }
+}

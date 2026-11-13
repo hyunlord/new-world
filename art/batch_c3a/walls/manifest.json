@@ -1,0 +1,387 @@
+{
+  "schema_version": 1,
+  "status": "COMPOSED_CANDIDATE_NOT_IMPORTED",
+  "style": "drystone",
+  "material": "granite",
+  "era": "iron",
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    59
+  ],
+  "footprint": [
+    1,
+    1
+  ],
+  "world_base": [
+    32,
+    43
+  ],
+  "image_origin": [
+    0,
+    -16
+  ],
+  "bits": {
+    "N": 1,
+    "E": 2,
+    "S": 4,
+    "W": 8
+  },
+  "operations": [
+    "existing wall_tiles topology composition",
+    "transparent bottom padding to 64px"
+  ],
+  "pieces": [
+    {
+      "id": "stone_wall_00",
+      "mask": 0,
+      "path": "stone_wall_00.png",
+      "sha256": "3f24eb6af88eb73aab3213e929da2f68fd6ba9398807da4b07c849554e41f1fa",
+      "source_size": [
+        64,
+        60
+      ]
+    },
+    {
+      "id": "stone_wall_01",
+      "mask": 1,
+      "path": "stone_wall_01.png",
+      "sha256": "0c3331c1142866c489cd9f724f58c5adc9e57c9c443eddb95e52cc01268aa793",
+      "source_size": [
+        64,
+        60
+      ]
+    },
+    {
+      "id": "stone_wall_02",
+      "mask": 2,
+      "path": "stone_wall_02.png",
+      "sha256": "ffdd7082a344db7a8187a31eab5bc85e5ca183c356a55c11e20d143f21e317f8",
+      "source_size": [
+        64,
+        60
+      ]
+    },
+    {
+      "id": "stone_wall_03",
+      "mask": 3,
+      "path": "stone_wall_03.png",
+      "sha256": "4b05991c024d6545a83175344c3ebf8887cecca3d9257fbd06abbe6e62f03c28",
+      "source_size": [
+        64,
+        60
+      ]
+    },
+    {
+      "id": "stone_wall_04",
+      "mask": 4,
+      "path": "stone_wall_04.png",
+      "sha256": "06d756242afeabd8755cde90ce166fa2ceb476158284cfbb3e97f446a990d7eb",
+      "source_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "stone_wall_05",
+      "mask": 5,
+      "path": "stone_wall_05.png",
+      "sha256": "afba3065db119fac6f8863c5b4d911bd33b2d84777a91d529fed408c092b2b62",
+      "source_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "stone_wall_06",
+      "mask": 6,
+      "path": "stone_wall_06.png",
+      "sha256": "6e02d1b2b4acc4e4438da03c64031e8bf713ef709c052a2a5016117ace8eaa9d",
+      "source_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "stone_wall_07",
+      "mask": 7,
+      "path": "stone_wall_07.png",
+      "sha256": "3854785c6035202eea9e0eb9ab2a0f4a53e6486fb28e446de84bfd81722353a5",
+      "source_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "stone_wall_08",
+      "mask": 8,
+      "path": "stone_wall_08.png",
+      "sha256": "df401378186673d87c6de44638101678886371fa51e1cde081481af60fd58cf0",
+      "source_size": [
+        64,
+        60
+      ]
+    },
+    {
+      "id": "stone_wall_09",
+      "mask": 9,
+      "path": "stone_wall_09.png",
+      "sha256": "21867e3f91f1cdcdf7bd835c2fedde55d1acac94dfde2837341e1b89aa82a136",
+      "source_size": [
+        64,
+        60
+      ]
+    },
+    {
+      "id": "stone_wall_10",
+      "mask": 10,
+      "path": "stone_wall_10.png",
+      "sha256": "e06abe96db8bf61164553e6b8edc4d65e0bdd353e7628cf8c5e62cc3f7010885",
+      "source_size": [
+        64,
+        60
+      ]
+    },
+    {
+      "id": "stone_wall_11",
+      "mask": 11,
+      "path": "stone_wall_11.png",
+      "sha256": "6aada6ff32f8c5a7b747840ff5bddc4655bf7066cdcc38e69718e38ed535a091",
+      "source_size": [
+        64,
+        60
+      ]
+    },
+    {
+      "id": "stone_wall_12",
+      "mask": 12,
+      "path": "stone_wall_12.png",
+      "sha256": "9a5f97d46d0c4fb5af86c00c24e07829adcc6bc618f6a3f9db9e3f90e6cd05ef",
+      "source_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "stone_wall_13",
+      "mask": 13,
+      "path": "stone_wall_13.png",
+      "sha256": "04a215cb3bcf8eaa739344ed20c330ae025027854b815dbed657646c1453f622",
+      "source_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "stone_wall_14",
+      "mask": 14,
+      "path": "stone_wall_14.png",
+      "sha256": "0a67cbb778d1187e2d527f0acb197f05c606ce9975739aea48a51b52480d38a3",
+      "source_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "stone_wall_15",
+      "mask": 15,
+      "path": "stone_wall_15.png",
+      "sha256": "88f6ea0b0a82fb3d9bbd00804fef56e2ea84eaf79c9a94219034e9f64b3e477d",
+      "source_size": [
+        64,
+        64
+      ]
+    }
+  ],
+  "caps": {
+    "end_cap_n": 1,
+    "end_cap_e": 2,
+    "end_cap_s": 4,
+    "end_cap_w": 8,
+    "corner_cap_ne": 3,
+    "corner_cap_se": 6,
+    "corner_cap_nw": 9,
+    "corner_cap_sw": 12
+  },
+  "auxiliary_outputs": [
+    {
+      "path": "assembly_5x4_1x.png",
+      "sha256": "97df05d163f084c4c3dccb859e5302e1931291ff7c9af0103b879dcfd9e4fcff"
+    },
+    {
+      "path": "contact_sheet_2x.png",
+      "sha256": "c1995e36720a30a0cc6d02dd50a9f7c8e477c8ad70ddffc56f4d3f90b3b4905c"
+    },
+    {
+      "path": "corner_cap_ne.png",
+      "sha256": "4b05991c024d6545a83175344c3ebf8887cecca3d9257fbd06abbe6e62f03c28"
+    },
+    {
+      "path": "corner_cap_nw.png",
+      "sha256": "21867e3f91f1cdcdf7bd835c2fedde55d1acac94dfde2837341e1b89aa82a136"
+    },
+    {
+      "path": "corner_cap_se.png",
+      "sha256": "6e02d1b2b4acc4e4438da03c64031e8bf713ef709c052a2a5016117ace8eaa9d"
+    },
+    {
+      "path": "corner_cap_sw.png",
+      "sha256": "9a5f97d46d0c4fb5af86c00c24e07829adcc6bc618f6a3f9db9e3f90e6cd05ef"
+    },
+    {
+      "path": "end_cap_e.png",
+      "sha256": "ffdd7082a344db7a8187a31eab5bc85e5ca183c356a55c11e20d143f21e317f8"
+    },
+    {
+      "path": "end_cap_n.png",
+      "sha256": "0c3331c1142866c489cd9f724f58c5adc9e57c9c443eddb95e52cc01268aa793"
+    },
+    {
+      "path": "end_cap_s.png",
+      "sha256": "06d756242afeabd8755cde90ce166fa2ceb476158284cfbb3e97f446a990d7eb"
+    },
+    {
+      "path": "end_cap_w.png",
+      "sha256": "df401378186673d87c6de44638101678886371fa51e1cde081481af60fd58cf0"
+    },
+    {
+      "path": "stone_door_ew_closed.png",
+      "sha256": "a4e3ae3454fb6864fba768cdab2a9bcb65d93bf9d61a705a7fba6bb9bd4a125d"
+    },
+    {
+      "path": "stone_door_ew_open.png",
+      "sha256": "5414761f236f347aaf295c347359afe0c0cad7da1db87a0d2a433648e0e30e8f"
+    }
+  ],
+  "sources": [
+    {
+      "path": "art/materials/textures/drystone/door_closed.json",
+      "sha256": "b33b968113808f6c1ebe1edbe096d80dadd90b98eb08e3e4a127d6bd0b50c073"
+    },
+    {
+      "path": "art/materials/textures/drystone/door_closed.png",
+      "sha256": "5758040c4a94f9ad1f143e5f708f8f04c0941d4cb087c8dba108773791b61644"
+    },
+    {
+      "path": "art/materials/textures/drystone/door_open.json",
+      "sha256": "14c0acbb9c8fef05ccdd99bb579b300584fa3eeae6b2f84edc43e152d9416fcf"
+    },
+    {
+      "path": "art/materials/textures/drystone/door_open.png",
+      "sha256": "feb3d8a4b9471e041a9d9df593c57acb8380049e078e97472f57812f8381952a"
+    },
+    {
+      "path": "art/materials/textures/drystone/end.json",
+      "sha256": "8722ffd11924abbb56613269fb15755c2ef48d23b94d83b817e60f10ad608686"
+    },
+    {
+      "path": "art/materials/textures/drystone/end.png",
+      "sha256": "e650e43d754dd224e0a7fe071c4cd4509085bda1ec5c1d85e093532a27223736"
+    },
+    {
+      "path": "art/materials/textures/drystone/face.json",
+      "sha256": "e616b6f3fc6627f88b1e22004a59477407574f9cf8ae38a935b1912495c1f51c"
+    },
+    {
+      "path": "art/materials/textures/drystone/face.png",
+      "sha256": "517c4f431303d3ae01362fb451a6757f77cc18797875760c0eabae945c73c682"
+    },
+    {
+      "path": "art/materials/textures/drystone/junction.json",
+      "sha256": "7d1c1e0b377c0ee1abdfcc9ad99aec54a5ea09ce3cd2403351b3846a3a260e26"
+    },
+    {
+      "path": "art/materials/textures/drystone/junction.png",
+      "sha256": "7f23847290dc8f0540c32acf456bdfee845e6aa5515ff900a135ac607f44d832"
+    },
+    {
+      "path": "art/materials/textures/drystone/top_ew.json",
+      "sha256": "a060a76d9a71e81096963dfd4f7e1213c2cf7576511cdff31719c4010a76863d"
+    },
+    {
+      "path": "art/materials/textures/drystone/top_ew.png",
+      "sha256": "da69983a6b11042dd1bfb6f492636f194b4142b78d9b2523c030f636234efd20"
+    },
+    {
+      "path": "art/materials/textures/drystone/top_ns.json",
+      "sha256": "b4332981458f9d85c9b4d2009db8e9550b8f236261546c507bbc2ea873b1b199"
+    },
+    {
+      "path": "art/materials/textures/drystone/top_ns.png",
+      "sha256": "31ba8122524c41166e55514cd62b7025b85ee975dbaa03c52379fa085b21758e"
+    },
+    {
+      "path": "art/compositor/walls.py",
+      "sha256": "1ae47c570dcc4dcef83e2e82bd68ed146277a59ec9a8b1d22dd91e2a6c0e135f"
+    },
+    {
+      "path": "art/materials/render.py",
+      "sha256": "9004df0455562f49e8c3e41a700743012f3f539aa2b9cf01a78d11c6d8655223"
+    },
+    {
+      "path": "art/materials/resolve.py",
+      "sha256": "d1b31e1cf624d45529870e95c369b979f3ca3a25e235b414c33f59d02a5db1a0"
+    },
+    {
+      "path": "art/materials/construction_styles.json",
+      "sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+    },
+    {
+      "path": "art/materials/material_looks.json",
+      "sha256": "a2aa8b157fcc65a795b3f35c106cd01bb07ee65c037cfe64b1cf0599741b486f"
+    },
+    {
+      "path": "art/materials/category_defaults.json",
+      "sha256": "c0f763cdc93cdbd1ba6f42891fb39fb0f45fcbcea2c790af3345446a7f19eaae"
+    },
+    {
+      "path": "art/materials/tone.py",
+      "sha256": "7d6c9dff9e66d03f2d35dfccef38da5f6ce5c95300e86fa5883cd9199fba4c19"
+    },
+    {
+      "path": "tools/v8/compose_wall_pieces.py",
+      "sha256": "83e9f19ff26210d143e12d73c34a45aa9c71477e2eebd3c4ff0f96ba6765a3d2"
+    }
+  ],
+  "capability": {
+    "status": "PROPOSED_DISABLED_NOT_IMPORTED",
+    "runtime_rows_to_append": [],
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      59
+    ],
+    "pieces": {
+      "0": "stone_wall_00.png",
+      "1": "stone_wall_01.png",
+      "2": "stone_wall_02.png",
+      "3": "stone_wall_03.png",
+      "4": "stone_wall_04.png",
+      "5": "stone_wall_05.png",
+      "6": "stone_wall_06.png",
+      "7": "stone_wall_07.png",
+      "8": "stone_wall_08.png",
+      "9": "stone_wall_09.png",
+      "10": "stone_wall_10.png",
+      "11": "stone_wall_11.png",
+      "12": "stone_wall_12.png",
+      "13": "stone_wall_13.png",
+      "14": "stone_wall_14.png",
+      "15": "stone_wall_15.png"
+    },
+    "doors": {
+      "ew": {
+        "open": "stone_door_ew_open.png",
+        "closed": "stone_door_ew_closed.png"
+      },
+      "ns": null
+    },
+    "gap": "NS doors require an independently projected source; no rotation substitute."
+  }
+}

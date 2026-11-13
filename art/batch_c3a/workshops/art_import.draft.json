@@ -1,0 +1,29 @@
+{
+  "status": "DRAFT_NOT_APPLIED_REVIEW_REQUIRED",
+  "source_branch": "v8/art-batch-c3a",
+  "source_commit_requirement": "Replace PIN_C3A_ASSET_COMMIT with the immutable commit containing PNGs and metadata; require final visual review first.",
+  "merge_instruction": "Add files; preserve existing config. Per-row from/meta_source require v8/visual-v3 importer capability.",
+  "meta_sources": {
+    "structure": "art/batch_c3a/workshops/stations_manifest.json"
+  },
+  "files": [
+    {
+      "role": "structure",
+      "id": "mason_bench",
+      "source": "art/batch_c3a/workshops/stations/mason_bench.png",
+      "dest": "structures/c3a/mason_bench.png",
+      "from": "PIN_C3A_ASSET_COMMIT",
+      "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
+    }
+  ],
+  "layered_recipes": {
+    "smithy": {
+      "idle": "rooms/smithy_built/manifest.json",
+      "working": "rooms/smithy_built_working/manifest.json"
+    },
+    "bloomery_house": {
+      "idle": "rooms/bloomery_house_built/manifest.json",
+      "working": "rooms/bloomery_house_built_working/manifest.json"
+    }
+  }
+}

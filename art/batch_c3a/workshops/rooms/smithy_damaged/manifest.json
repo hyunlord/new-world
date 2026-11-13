@@ -1,0 +1,536 @@
+{
+  "id": "smithy_damaged",
+  "era": "iron",
+  "footprint": [
+    4,
+    4
+  ],
+  "state": "damaged",
+  "status": "LAYERED_RECIPE_VISUAL_REVIEW_PENDING",
+  "source_commit": "227529c26307bc3a854eb7bf819e88d02af39046",
+  "layers": [
+    {
+      "path": "art/batch_c3a/workshops/layers/2dc69220ec7f67c931abf5b1dda38d23f79ba847c87039925d462d4e9312ff43.png",
+      "sha256": "7bee105c55b8c447a971f825d82fcb8c001b403afddd8ab2bde5a0dd6c15cb37",
+      "kind": "floor",
+      "cell": [
+        0,
+        0
+      ],
+      "anchor": [
+        32,
+        43
+      ],
+      "origin": [
+        0,
+        0
+      ],
+      "source": "art/materials/textures/packed_earth/floor.png",
+      "source_sha256": "c4cef172345fbbdb287c3ba7c83b6116e00c1b77effc44995593d9905d1693c1"
+    },
+    {
+      "path": "art/batch_c3a/workshops/layers/0a3698be060b1b8da20f500d3cec0db396ca5ad1eb9f57bdace6667f704d034e.png",
+      "sha256": "878f794dbcb6d2ebc8a4ef59914c319ce4772ba755b765a4a51e89a03b3909d5",
+      "kind": "floor",
+      "cell": [
+        1,
+        0
+      ],
+      "anchor": [
+        32,
+        43
+      ],
+      "origin": [
+        64,
+        0
+      ],
+      "source": "art/materials/textures/packed_earth/floor.png",
+      "source_sha256": "c4cef172345fbbdb287c3ba7c83b6116e00c1b77effc44995593d9905d1693c1"
+    },
+    {
+      "path": "art/batch_c3a/workshops/layers/c1a8a7323391bc280fd135a67b5494c9024c991b78be1959bdb3022a9d579c8d.png",
+      "sha256": "de4467b444d521c03ea87d1fe6a249df696621e6b6c5162512110dcc75fa7696",
+      "kind": "floor",
+      "cell": [
+        2,
+        0
+      ],
+      "anchor": [
+        32,
+        43
+      ],
+      "origin": [
+        128,
+        0
+      ],
+      "source": "art/materials/textures/packed_earth/floor.png",
+      "source_sha256": "c4cef172345fbbdb287c3ba7c83b6116e00c1b77effc44995593d9905d1693c1"
+    },
+    {
+      "path": "art/batch_c3a/workshops/layers/19fd3f57360507c2f4929c0753306552372c161279e899cfe4203be5ffbc5883.png",
+      "sha256": "c6c4a5b5f5c9b0408e48ca02f0783ef08683402ddd9aabbc539acdb06343fd73",
+      "kind": "floor",
+      "cell": [
+        3,
+        0
+      ],
+      "anchor": [
+        32,
+        43
+      ],
+      "origin": [
+        192,
+        0
+      ],
+      "source": "art/materials/textures/packed_earth/floor.png",
+      "source_sha256": "c4cef172345fbbdb287c3ba7c83b6116e00c1b77effc44995593d9905d1693c1"
+    },
+    {
+      "path": "art/batch_c3a/workshops/layers/1514491a1d79c0bda7aaa0d8912eac71f3ac0f07eedd28be3cfcb460d4c29504.png",
+      "sha256": "08039cdef2ea8de2172018fdeace0fd69e07b8bb0bcb2762b437e2c70abbf0f8",
+      "kind": "floor",
+      "cell": [
+        0,
+        1
+      ],
+      "anchor": [
+        32,
+        43
+      ],
+      "origin": [
+        0,
+        64
+      ],
+      "source": "art/materials/textures/packed_earth/floor.png",
+      "source_sha256": "c4cef172345fbbdb287c3ba7c83b6116e00c1b77effc44995593d9905d1693c1"
+    },
+    {
+      "path": "art/batch_c3a/workshops/layers/91c8e49e88ce328544ae9ddf14be368ba74046c6769b17fe9d072a8dfc0f60b4.png",
+      "sha256": "3288916ac1ecab089dd74941e22048cb8e159ec611d403173921766eb87ee923",
+      "kind": "floor",
+      "cell": [
+        1,
+        1
+      ],
+      "anchor": [
+        32,
+        43
+      ],
+      "origin": [
+        64,
+        64
+      ],
+      "source": "art/materials/textures/packed_earth/floor.png",
+      "source_sha256": "c4cef172345fbbdb287c3ba7c83b6116e00c1b77effc44995593d9905d1693c1"
+    },
+    {
+      "path": "art/batch_c3a/workshops/layers/2cff8e6d2ab95833a703f631194ba180b1320b3778678c773b32d5c403d426ba.png",
+      "sha256": "4788493f107af3a991fd9b6e51cff06cc15657f8ac4d0a0d1d4fa2b0cfb14e8c",
+      "kind": "floor",
+      "cell": [
+        2,
+        1
+      ],
+      "anchor": [
+        32,
+        43
+      ],
+      "origin": [
+        128,
+        64
+      ],
+      "source": "art/materials/textures/packed_earth/floor.png",
+      "source_sha256": "c4cef172345fbbdb287c3ba7c83b6116e00c1b77effc44995593d9905d1693c1"
+    },
+    {
+      "path": "art/batch_c3a/workshops/layers/ed1f8ea5202983192ffdd0d7650f41a28b5552dc69ba4c78ba7a0312ca080494.png",
+      "sha256": "bc93af1bbe207e8305fb4c7b45f5d8e297587966c7368533d1996d6d21b6add5",
+      "kind": "floor",
+      "cell": [
+        3,
+        1
+      ],
+      "anchor": [
+        32,
+        43
+      ],
+      "origin": [
+        192,
+        64
+      ],
+      "source": "art/materials/textures/packed_earth/floor.png",
+      "source_sha256": "c4cef172345fbbdb287c3ba7c83b6116e00c1b77effc44995593d9905d1693c1"
+    },
+    {
+      "path": "art/batch_c3a/workshops/layers/b7a73ed6636fe519ad768b4048c29fde49661fe044238259323989edde707a0d.png",
+      "sha256": "6db54bfffa33e0d5a8c45e6d58eb62a0463127713af930019238a2b5679a2566",
+      "kind": "floor",
+      "cell": [
+        0,
+        2
+      ],
+      "anchor": [
+        32,
+        43
+      ],
+      "origin": [
+        0,
+        128
+      ],
+      "source": "art/materials/textures/packed_earth/floor.png",
+      "source_sha256": "c4cef172345fbbdb287c3ba7c83b6116e00c1b77effc44995593d9905d1693c1"
+    },
+    {
+      "path": "art/batch_c3a/workshops/layers/37bec3bf0eb44435c52c36cb0eaa2824ca91f6ef270e1a694b378b08855a8e3e.png",
+      "sha256": "dd28189a75dd636aa0064c0c2e0345e18c77ce79f2789f52c5b30a9f883c883c",
+      "kind": "floor",
+      "cell": [
+        1,
+        2
+      ],
+      "anchor": [
+        32,
+        43
+      ],
+      "origin": [
+        64,
+        128
+      ],
+      "source": "art/materials/textures/packed_earth/floor.png",
+      "source_sha256": "c4cef172345fbbdb287c3ba7c83b6116e00c1b77effc44995593d9905d1693c1"
+    },
+    {
+      "path": "art/batch_c3a/workshops/layers/a5289214a57e8db5519f185874fad12f91660af00eeb360e45c2cce3a2547c4b.png",
+      "sha256": "aa818b73d08bc7d947b8f7f4765d14fd47d0fa65afd6ef3c6469486612dd8e82",
+      "kind": "floor",
+      "cell": [
+        2,
+        2
+      ],
+      "anchor": [
+        32,
+        43
+      ],
+      "origin": [
+        128,
+        128
+      ],
+      "source": "art/materials/textures/packed_earth/floor.png",
+      "source_sha256": "c4cef172345fbbdb287c3ba7c83b6116e00c1b77effc44995593d9905d1693c1"
+    },
+    {
+      "path": "art/batch_c3a/workshops/layers/95053c3438737e3a0e9ef114b06249b0dc3357dd7971a926645bb4f64c48d1a1.png",
+      "sha256": "fb17819ac18a66b1e67379c74e1d815e73c2c626c986e984c75ceae729eb3aa9",
+      "kind": "floor",
+      "cell": [
+        3,
+        2
+      ],
+      "anchor": [
+        32,
+        43
+      ],
+      "origin": [
+        192,
+        128
+      ],
+      "source": "art/materials/textures/packed_earth/floor.png",
+      "source_sha256": "c4cef172345fbbdb287c3ba7c83b6116e00c1b77effc44995593d9905d1693c1"
+    },
+    {
+      "path": "art/batch_c3a/workshops/layers/162933cfed419265ad090d4f3c033e59a3fa5f2306101c27c03f00337d25beb8.png",
+      "sha256": "3e367c34b032123c4e7377ce1e8611bc945d093a8ee6c377ea0179735fd6e8ba",
+      "kind": "floor",
+      "cell": [
+        0,
+        3
+      ],
+      "anchor": [
+        32,
+        43
+      ],
+      "origin": [
+        0,
+        192
+      ],
+      "source": "art/materials/textures/packed_earth/floor.png",
+      "source_sha256": "c4cef172345fbbdb287c3ba7c83b6116e00c1b77effc44995593d9905d1693c1"
+    },
+    {
+      "path": "art/batch_c3a/workshops/layers/b9846279614983de8ea66a50396b580776c6f092d15f8fc5b2604dcb644eda46.png",
+      "sha256": "194621097f73da88a1386e7c53e77417bf19360c6bf9ec7c024766d631ad06c1",
+      "kind": "floor",
+      "cell": [
+        1,
+        3
+      ],
+      "anchor": [
+        32,
+        43
+      ],
+      "origin": [
+        64,
+        192
+      ],
+      "source": "art/materials/textures/packed_earth/floor.png",
+      "source_sha256": "c4cef172345fbbdb287c3ba7c83b6116e00c1b77effc44995593d9905d1693c1"
+    },
+    {
+      "path": "art/batch_c3a/workshops/layers/5ae527b1a794bf7b04730475bf4f67a13c681717ca57c171db56d0d16eda4177.png",
+      "sha256": "967939983bb745c9e0ffb360bacea570dce62365abf49d5e438f39d87d311daa",
+      "kind": "floor",
+      "cell": [
+        2,
+        3
+      ],
+      "anchor": [
+        32,
+        43
+      ],
+      "origin": [
+        128,
+        192
+      ],
+      "source": "art/materials/textures/packed_earth/floor.png",
+      "source_sha256": "c4cef172345fbbdb287c3ba7c83b6116e00c1b77effc44995593d9905d1693c1"
+    },
+    {
+      "path": "art/batch_c3a/workshops/layers/f0984d97174c460d20ea177abcee9290b9c04b87d4b17b7557d24b146052eaab.png",
+      "sha256": "f64e0fa52b09a420125226b2c79511e9cb79a0d0b15f22ce5a5674e888f77eac",
+      "kind": "floor",
+      "cell": [
+        3,
+        3
+      ],
+      "anchor": [
+        32,
+        43
+      ],
+      "origin": [
+        192,
+        192
+      ],
+      "source": "art/materials/textures/packed_earth/floor.png",
+      "source_sha256": "c4cef172345fbbdb287c3ba7c83b6116e00c1b77effc44995593d9905d1693c1"
+    },
+    {
+      "path": "art/batch_c3a/workshops/layers/55c8aa151ffc56db35229370479915782fa1a10aef83ca3f64d9155d0737b100.png",
+      "sha256": "6e02d1b2b4acc4e4438da03c64031e8bf713ef709c052a2a5016117ace8eaa9d",
+      "kind": "wall",
+      "cell": [
+        0,
+        0
+      ],
+      "anchor": [
+        32,
+        59
+      ],
+      "origin": [
+        0,
+        -16
+      ],
+      "source": "art/materials/construction_styles.json",
+      "source_sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+    },
+    {
+      "path": "art/batch_c3a/workshops/layers/3958e7d7c7f0ccd726d1d1f67b9b35c0b1e864dc7873da38b5cc0b7301fed249.png",
+      "sha256": "1e9455cc7f91d125c8b2e11e28f35f283bd98bc84e589b8823dfb8349e6a42ad",
+      "kind": "wall",
+      "cell": [
+        1,
+        0
+      ],
+      "anchor": [
+        32,
+        59
+      ],
+      "origin": [
+        64,
+        -16
+      ],
+      "source": "art/materials/construction_styles.json",
+      "source_sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+    },
+    {
+      "path": "art/batch_c3a/workshops/layers/ba1cf6a2c1cda525e1d0fce62fd2d09fc67dd63a9e0da2051973bf7a2d5363d8.png",
+      "sha256": "14a040d845b5f268d869e672fd480bbbbb593e4d650ed8523458e71117427a67",
+      "kind": "wall",
+      "cell": [
+        2,
+        0
+      ],
+      "anchor": [
+        32,
+        59
+      ],
+      "origin": [
+        128,
+        -16
+      ],
+      "source": "art/materials/construction_styles.json",
+      "source_sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+    },
+    {
+      "path": "art/batch_c3a/workshops/layers/40dd6a279babb3a98f6674a6dcd7d76b62864772ab7ab22ffd36d948a2b0e1d6.png",
+      "sha256": "9a5f97d46d0c4fb5af86c00c24e07829adcc6bc618f6a3f9db9e3f90e6cd05ef",
+      "kind": "wall",
+      "cell": [
+        3,
+        0
+      ],
+      "anchor": [
+        32,
+        59
+      ],
+      "origin": [
+        192,
+        -16
+      ],
+      "source": "art/materials/construction_styles.json",
+      "source_sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+    },
+    {
+      "path": "art/batch_c3a/workshops/layers/8f207250e7fe043bf06b4303bf489d6e7766befdc956c5c1b474098c946c72eb.png",
+      "sha256": "bd9299891dbdfb3f6ed53662e3b6058907fc08ba7064f6f6c8522d024a65c713",
+      "kind": "wall",
+      "cell": [
+        0,
+        1
+      ],
+      "anchor": [
+        32,
+        59
+      ],
+      "origin": [
+        0,
+        48
+      ],
+      "source": "art/materials/construction_styles.json",
+      "source_sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+    },
+    {
+      "path": "art/batch_c3a/workshops/layers/8f207250e7fe043bf06b4303bf489d6e7766befdc956c5c1b474098c946c72eb.png",
+      "sha256": "bd9299891dbdfb3f6ed53662e3b6058907fc08ba7064f6f6c8522d024a65c713",
+      "kind": "wall",
+      "cell": [
+        3,
+        1
+      ],
+      "anchor": [
+        32,
+        59
+      ],
+      "origin": [
+        192,
+        48
+      ],
+      "source": "art/materials/construction_styles.json",
+      "source_sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+    },
+    {
+      "path": "art/batch_c3a/workshops/layers/9f02c0222b0c34a134973ae49061019cf0068fd418bc1426f801a9dff73ee30c.png",
+      "sha256": "a9274f84e93cd62b87d9370cd3fa2eae9086bca163344f48529b3cf40d00016b",
+      "kind": "wall",
+      "cell": [
+        0,
+        2
+      ],
+      "anchor": [
+        32,
+        23
+      ],
+      "origin": [
+        0,
+        148
+      ],
+      "source": "art/materials/construction_styles.json",
+      "source_sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+    },
+    {
+      "path": "art/batch_c3a/workshops/layers/9f02c0222b0c34a134973ae49061019cf0068fd418bc1426f801a9dff73ee30c.png",
+      "sha256": "a9274f84e93cd62b87d9370cd3fa2eae9086bca163344f48529b3cf40d00016b",
+      "kind": "wall",
+      "cell": [
+        3,
+        2
+      ],
+      "anchor": [
+        32,
+        23
+      ],
+      "origin": [
+        192,
+        148
+      ],
+      "source": "art/materials/construction_styles.json",
+      "source_sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+    },
+    {
+      "path": "art/batch_c3a/workshops/layers/63b7a4c37119039ca3038981700ed0efe6c53bbafb9fb708bdd43258f27bfe5b.png",
+      "sha256": "650c315df54378a6e9d3941903c3b3fa2404a76c84afd75ff1271f9081f60971",
+      "kind": "wall",
+      "cell": [
+        0,
+        3
+      ],
+      "anchor": [
+        32,
+        23
+      ],
+      "origin": [
+        0,
+        212
+      ],
+      "source": "art/materials/construction_styles.json",
+      "source_sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+    },
+    {
+      "path": "art/batch_c3a/workshops/layers/c2573854b69d6d5f5f457a5153b1eed1f14b5428756265c004ef2a96b0ff2b8a.png",
+      "sha256": "ddd1703068de13db4a9be80e4d81a1262b29a184e712e440b426db79446f0e7a",
+      "kind": "wall",
+      "cell": [
+        1,
+        3
+      ],
+      "anchor": [
+        32,
+        23
+      ],
+      "origin": [
+        64,
+        212
+      ],
+      "source": "art/materials/construction_styles.json",
+      "source_sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+    },
+    {
+      "path": "art/batch_c3a/workshops/layers/c48e22566391f67583261370157ba2defcc7ed3186a55a2d428572b1648b253e.png",
+      "sha256": "9d2092e058263078085fed888b93779e3ed3f8133f9649f68503a08ce65d7adb",
+      "kind": "wall",
+      "cell": [
+        3,
+        3
+      ],
+      "anchor": [
+        32,
+        23
+      ],
+      "origin": [
+        192,
+        212
+      ],
+      "source": "art/materials/construction_styles.json",
+      "source_sha256": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f"
+    }
+  ],
+  "preview_origin": [
+    0,
+    -16
+  ],
+  "preview_only": true,
+  "notes": [
+    "Proposed visual states; runtime construction selector not applied.",
+    "Exact B3 top/face crop; no facade rescale or alpha construction trick.",
+    "Damaged removes south upper courses; ruined retains north low courses."
+  ]
+}

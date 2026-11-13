@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "status": "SYMBOLIC_DRAFT_NOT_RUNTIME_CONFIG",
+  "items": {
+    "proposals": [
+      {
+        "sim": "IronOre",
+        "content_id": "iron_ore",
+        "code": 75,
+        "assets": [
+          "iron_ore",
+          "iron_ore_count_2_8",
+          "iron_ore_count_9_plus"
+        ],
+        "era": "iron",
+        "scale_policy": "ArtData.item_scale: retain render_params items defaults 0.45 + 0.15*bucket capped0.85; no arbitrary override.",
+        "world_scale": null
+      },
+      {
+        "sim": "IronBloom",
+        "content_id": "iron_bloom",
+        "code": null,
+        "assets": [
+          "iron_bloom",
+          "iron_bloom_count_2_8",
+          "iron_bloom_count_9_plus"
+        ],
+        "era": "iron",
+        "scale_policy": "ArtData.item_scale: retain render_params items defaults 0.45 + 0.15*bucket capped0.85; no arbitrary override.",
+        "world_scale": null
+      },
+      {
+        "sim": "WroughtIron",
+        "content_id": "wrought_iron",
+        "code": null,
+        "assets": [
+          "iron_ingot",
+          "iron_ingot_count_2_8",
+          "iron_ingot_count_9_plus"
+        ],
+        "era": "iron",
+        "scale_policy": "ArtData.item_scale: retain render_params items defaults 0.45 + 0.15*bucket capped0.85; no arbitrary override.",
+        "world_scale": null
+      },
+      {
+        "sim": "IronAxe",
+        "content_id": "iron_axe",
+        "code": null,
+        "assets": [
+          "iron_axe"
+        ],
+        "era": "iron",
+        "scale_policy": "ArtData.item_scale: retain render_params items defaults 0.45 + 0.15*bucket capped0.85; no arbitrary override.",
+        "world_scale": null
+      },
+      {
+        "sim": "IronSickle",
+        "content_id": "iron_sickle",
+        "code": null,
+        "assets": [
+          "iron_sickle"
+        ],
+        "era": "iron",
+        "scale_policy": "ArtData.item_scale: retain render_params items defaults 0.45 + 0.15*bucket capped0.85; no arbitrary override.",
+        "world_scale": null
+      },
+      {
+        "sim": "IronSaw",
+        "content_id": "iron_saw",
+        "code": null,
+        "assets": [
+          "iron_saw"
+        ],
+        "era": "iron",
+        "scale_policy": "ArtData.item_scale: retain render_params items defaults 0.45 + 0.15*bucket capped0.85; no arbitrary override.",
+        "world_scale": null
+      },
+      {
+        "sim": "IronSword",
+        "content_id": "iron_sword",
+        "code": null,
+        "assets": [
+          "iron_sword"
+        ],
+        "era": "iron",
+        "scale_policy": "ArtData.item_scale: retain render_params items defaults 0.45 + 0.15*bucket capped0.85; no arbitrary override.",
+        "world_scale": null
+      },
+      {
+        "sim": "IronHelmet",
+        "content_id": "iron_helmet",
+        "code": null,
+        "assets": [
+          "iron_helmet"
+        ],
+        "era": "iron",
+        "scale_policy": "ArtData.item_scale: retain render_params items defaults 0.45 + 0.15*bucket capped0.85; no arbitrary override.",
+        "world_scale": null
+      },
+      {
+        "sim": "IronSpear",
+        "content_id": "iron_spear",
+        "code": null,
+        "assets": [
+          "iron_spear"
+        ],
+        "era": "iron",
+        "scale_policy": "ArtData.item_scale: retain render_params items defaults 0.45 + 0.15*bucket capped0.85; no arbitrary override.",
+        "world_scale": null
+      }
+    ]
+  },
+  "outcrops": {
+    "proposals": [
+      {
+        "content_id": "iron_ore",
+        "structure": "iron_outcrop_full",
+        "depleted": "iron_outcrop_depleted"
+      },
+      {
+        "content_id": "bog_iron",
+        "structure": "bog_iron_outcrop_full",
+        "depleted": "bog_iron_outcrop_depleted"
+      }
+    ]
+  },
+  "workshops": {
+    "proposals": [
+      {
+        "content_id": "bloomery",
+        "idle": "bloomery_unlit",
+        "working": "bloomery_lit"
+      },
+      {
+        "content_id": "forge",
+        "idle": "forge_idle",
+        "working": "forge_working"
+      }
+    ]
+  },
+  "scale_contract": {
+    "item_scale": "Use inherited data-driven item scale; null world_scale is explanatory and must be omitted in actual runtime rows.",
+    "structures": "Native64px tile projection; no world_scale override or pixel rescaling.",
+    "ground": "64x64 full-cell tile, anchor(32,43)."
+  },
+  "integration_required": [
+    "Resolve new numeric codes against C3 registry; IronOre75 is existing bronze inventory identity.",
+    "Do not apply proposals or null scale fields directly; merge only actual binding-shape fields.",
+    "Preserve unrelated global meta_sources and bindings."
+  ]
+}

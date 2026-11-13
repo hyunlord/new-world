@@ -1,0 +1,97 @@
+{
+  "id": "mason_bench",
+  "era": "iron",
+  "footprint": [
+    2,
+    1
+  ],
+  "anchor": [
+    31,
+    33
+  ],
+  "canvas": [
+    62,
+    38
+  ],
+  "target_height": 30,
+  "raw_sha256": "3c14b07221f70eece035c1b1351c7db5ae0a7a0eb2a9d8218a6b7f7367ad76ec",
+  "record_sha256": "d7640979d9fd8d4b344e8c68daa2c600aeff2b8cf8136d6340de59468a463884",
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "operations": [
+    "existing normalize_sprite:opaque alpha bounds+2px fringe crop",
+    "uniform Lanczos height fit",
+    "4px transparent padding; anchor opaque bottom"
+  ],
+  "generation": {
+    "id": "mason_bench",
+    "attempt": 1,
+    "era": "iron",
+    "raw": "/Users/rexxa/work/art-batch/C3A/mason_bench_try1_raw.png",
+    "prompt": "Use case: stylized-concept. One isolated WorldSim concept05 ancient game workshop sprite, Iron Age mason's bench: a low sturdy rough oak trestle workbench supporting one pale squared stone block, small dark iron chisel and simple wooden mallet lying on it. No metal vise or modern equipment. Full front3/4 view about20 degrees down, visible narrow top face, upper-left light. Warm sepia hand-ink main/detail2:1, muted earth wash, wood3 broken grain groups, stone3 facet groups, sparse parallel / hatching in shade. Match reference existing forge scale and line language; furniture height about30 pixels when adult height56, footprint2x1 tiles64px. Fully isolated genuine transparent background, generous margins, no ground, cast shadow, labels, roof, border or scenery.",
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1d57e-16dc-7a71-b9bf-dc04de81a98b as /Users/rexxa/.codex/generated_images/01a1d57e-16dc-7a71-b9bf-dc04de81a98b/exec-c352d8b5-e398-40e4-a1a9-591f806a6cfd.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "reference": "reference_forge.png",
+    "target_height": 30,
+    "footprint": [
+      2,
+      1
+    ]
+  },
+  "numeric": {
+    "candidate": "/Users/rexxa/work/art-batch/C3A/mason_bench_try1_raw.png",
+    "sha256": "3c14b07221f70eece035c1b1351c7db5ae0a7a0eb2a9d8218a6b7f7367ad76ec",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.2580226904376013,
+      "saturation_q25": 0.5443552643286269,
+      "saturation_q75": 0.6352082951266638,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.020327475664271354,
+      "foreground_pixels": 23488
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "projection": {
+    "family": "mason_bench",
+    "anchor": [
+      31,
+      33
+    ],
+    "height_band": [
+      30,
+      30
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1034,
+    "base_row": 33,
+    "base_error": 0,
+    "height": 30,
+    "gradient_x": -1.252227364185111,
+    "gradient_y": -2.3931964546402504,
+    "light_angle_degrees": 242.37942486756214,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "projection_band_reason": "New station family target declared in C3A before generation; bench30px/anvil28px, adult56px",
+  "status": "CANDIDATE_VISUAL_REVIEW_PENDING",
+  "sha256": "29d597b438b9b0369888153fb0fe1bd3ed12bca24e08f7cb3bf66d6fcb082f6f"
+}

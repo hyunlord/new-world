@@ -1,0 +1,96 @@
+{
+  "id": "anvil",
+  "era": "iron",
+  "footprint": [
+    1,
+    1
+  ],
+  "anchor": [
+    20,
+    31
+  ],
+  "canvas": [
+    40,
+    36
+  ],
+  "target_height": 28,
+  "raw_sha256": "70b007d9f5ef85618d071e39c2eb8c18627d11390372d08c5e379381a7fef98d",
+  "record_sha256": "79bd35b551ab9d41b5e8cf3418a945ac50cf9e91f48938abc765403e2a3a750e",
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "operations": [
+    "existing normalize_sprite:opaque alpha bounds+2px fringe crop",
+    "uniform Lanczos height fit",
+    "4px transparent padding; anchor opaque bottom"
+  ],
+  "generation": {
+    "id": "anvil",
+    "attempt": 3,
+    "era": "iron",
+    "raw": "/Users/rexxa/work/art-batch/C3A/anvil_try3_raw.png",
+    "prompt": "Use case: stylized-concept. One isolated WorldSim concept05 ancient iron smithing station sprite: small early Iron Age squat rectangular wrought-iron block anvil fastened to a short broad rough oak stump. Historically simple flat hammering block with NO long modern horn and no modern waist shape. Dark neutral grey iron and ochre umber stump. Full front three-quarter20degrees down, narrow top visible upper-left light. Match reference forge ink and wash: warm sepia-black contour main/detail2:1, metal2\u20133 edge accents one / hatch group, wood3 broken grain marks, muted earth pigment wash. Occupied height28px adult56px, footprint1x1tile64px, generously framed on real transparent background. No ground, cast shadow, backdrop, labels, roof, tools or scenery. Correction for next candidate: iron top and front must be large QUIET FLAT wash planes with subtle continuous upper-left shading, exactly2edge lines and1 small hatch group. No mottled hammered spots or stippling. Preserve simple block on stump silhouette. Use only3 broken woodgrain groups. Final: make anvil smaller iron block on stump with visible irregular rectangular hammered EDGE FACETS,3 short seam groups on iron front/top,2 compact / hatch groups of3strokes. Stump shows3 broken grain groups and two natural cracks. Do not add mottled wash. Clear drawn marks create ink density, not stippling. Preserve simple ancient block no horn.",
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1d57e-16dc-7a71-b9bf-dc04de81a98b as /Users/rexxa/.codex/generated_images/01a1d57e-16dc-7a71-b9bf-dc04de81a98b/exec-e25a6ac3-5210-4ab8-a6f1-f3123f348771.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "reference": "reference_forge.png",
+    "target_height": 28,
+    "footprint": [
+      1,
+      1
+    ]
+  },
+  "numeric": {
+    "candidate": "/Users/rexxa/work/art-batch/C3A/anvil_try3_raw.png",
+    "sha256": "70b007d9f5ef85618d071e39c2eb8c18627d11390372d08c5e379381a7fef98d",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.1629051416935347,
+      "saturation_q25": 0.3711772347835652,
+      "saturation_q75": 0.6435405146711366,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.008078782495178481,
+      "foreground_pixels": 48741
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "projection": {
+    "family": "anvil",
+    "anchor": [
+      20,
+      31
+    ],
+    "height_band": [
+      28,
+      28
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 739,
+    "base_row": 31,
+    "base_error": 0,
+    "height": 28,
+    "gradient_x": -0.7460149295774648,
+    "gradient_y": 0.04712673267326709,
+    "light_angle_degrees": 176.3853542541533,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": false,
+    "passed": false
+  },
+  "projection_band_reason": "New station family target declared in C3A before generation; bench30px/anvil28px, adult56px",
+  "status": "HELD_NUMERIC_OR_PROJECTION_FAILURE"
+}

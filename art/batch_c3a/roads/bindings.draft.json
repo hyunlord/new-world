@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "status": "PROPOSED_DISABLED_NOT_IMPORTED",
+  "runtime_rows_to_append": [],
+  "proposal": {
+    "piece": "paved_road",
+    "era": "iron",
+    "bits": {
+      "N": 1,
+      "E": 2,
+      "S": 4,
+      "W": 8
+    },
+    "mask_meaning": "same-material cardinal neighbours; absent bits blend to other material",
+    "paved_tiles": {
+      "0": "paved_road_00",
+      "1": "paved_road_01",
+      "2": "paved_road_02",
+      "3": "paved_road_03",
+      "4": "paved_road_04",
+      "5": "paved_road_05",
+      "6": "paved_road_06",
+      "7": "paved_road_07",
+      "8": "paved_road_08",
+      "9": "paved_road_09",
+      "10": "paved_road_10",
+      "11": "paved_road_11",
+      "12": "paved_road_12",
+      "13": "paved_road_13",
+      "14": "paved_road_14",
+      "15": "paved_road_15"
+    },
+    "reciprocal_meadow_tiles": {
+      "0": "meadow_edge_00",
+      "1": "meadow_edge_01",
+      "2": "meadow_edge_02",
+      "3": "meadow_edge_03",
+      "4": "meadow_edge_04",
+      "5": "meadow_edge_05",
+      "6": "meadow_edge_06",
+      "7": "meadow_edge_07",
+      "8": "meadow_edge_08",
+      "9": "meadow_edge_09",
+      "10": "meadow_edge_10",
+      "11": "meadow_edge_11",
+      "12": "meadow_edge_12",
+      "13": "meadow_edge_13",
+      "14": "meadow_edge_14",
+      "15": "meadow_edge_15"
+    },
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      43
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "selection_requirement": "Choose same-material occupancy including adjacent paved floor pieces; reverse family on meadow. No runtime enum/code invented."
+  }
+}

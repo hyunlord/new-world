@@ -1,0 +1,201 @@
+{
+  "id": "cut_stone",
+  "era": "iron",
+  "attempt": 3,
+  "status": "ADOPTED_NUMERIC_AND_LEADER_VISUAL",
+  "generation_record": "/Users/rexxa/work/art-batch/C3A/cut_stone_try3.json",
+  "record_sha256": "5d6782ab52a217ed442fcad264bca0281938342b6ac81a755c18c0c46a4b2af5",
+  "generation": {
+    "id": "cut_stone",
+    "attempt": 3,
+    "era": "iron",
+    "raw": "/Users/rexxa/work/art-batch/C3A/cut_stone_try3_raw.png",
+    "prompt": "Use case: stylized-concept. WorldSim concept05 inventory sprite: a small rough dressed GREY cut-stone masonry block with three chipped corners and clearly inked3facet seams per major face. Low broad roughly squared block, not smooth cube. Two compact / hatch groups of3strokes, main warm brown-black contour twice detail width; internal facet/crack lines must be visible at64px. Quiet restrained grey-brown pigment wash upper-left light, front3/4 about20degrees down. Match existing hand ink illustration, no vector smoothness or noisy stippling, no modern polished stone. Entire item on genuinely transparent background with ample clear margins, no ground, cast shadow, text or border, readable32px.",
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1d57e-16dc-7a71-b9bf-dc04de81a98b as /Users/rexxa/.codex/generated_images/01a1d57e-16dc-7a71-b9bf-dc04de81a98b/exec-eb7eb36c-25c6-4ee8-9362-fe1d745ca39c.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "reference": "reference_iron.png"
+  },
+  "raw_sha256": "2620233358a102bdf519b9eba7a7e0801772be164a7af3c187a0ff1f73a37f40",
+  "reference": {
+    "path": "/Users/rexxa/work/art-batch/C3A/reference_iron.png",
+    "sha256": "015c86ea70ae0eccab90ad9193a463d60a25bc9f73072986bb11f53fa27f0878"
+  },
+  "calibration": "docs/v8/arttrial2/JUDGE_V2_CALIBRATION.json",
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "source_alpha": {
+    "has_alpha": true,
+    "minimum": 0,
+    "maximum": 254,
+    "border_maximum": 1,
+    "nonzero_bbox": [
+      0,
+      21,
+      1482,
+      1000
+    ]
+  },
+  "structural_pass": true,
+  "style": {
+    "candidate": "/Users/rexxa/work/art-batch/C3A/cut_stone_try3_raw.png",
+    "sha256": "2620233358a102bdf519b9eba7a7e0801772be164a7af3c187a0ff1f73a37f40",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.18184906301307818,
+      "saturation_q25": 0.23219925352812518,
+      "saturation_q75": 0.3098577996200308,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.8284271247461903,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.47213595499958,
+      "wash_flatness": 0.004064008969011679,
+      "foreground_pixels": 36673
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "exports": [
+    {
+      "id": "cut_stone",
+      "candidate": "/Users/rexxa/work/art-batch/C3A/candidates/items/cut_stone_try3.png",
+      "sha256": "996d1768d7db78f753f0b0279954258545793534e1e07a8ccbcf1fee6e8353eb",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "safe_bounds": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          42
+        ],
+        "height_band": [
+          4,
+          58
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 532,
+        "base_row": 42,
+        "base_error": 0,
+        "height": 22,
+        "gradient_x": -1.2905419607843136,
+        "gradient_y": -1.2335536926147708,
+        "light_angle_degrees": 223.70661296027598,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "cut_stone_count_2_8",
+      "candidate": "/Users/rexxa/work/art-batch/C3A/candidates/items/cut_stone_try3_count_2_8.png",
+      "sha256": "f0a27608da747c9c0f9a69907b4b599f7b83976a115ce6f2be1cc919c3a900ca",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "safe_bounds": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          47
+        ],
+        "height_band": [
+          4,
+          58
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 630,
+        "base_row": 47,
+        "base_error": 0,
+        "height": 31,
+        "gradient_x": -1.4817832775919733,
+        "gradient_y": -4.315095667244368,
+        "light_angle_degrees": 251.0477728220967,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "cut_stone_count_9_plus",
+      "candidate": "/Users/rexxa/work/art-batch/C3A/candidates/items/cut_stone_try3_count_9_plus.png",
+      "sha256": "acec4ff87bd0d49d56a895a175e6237ca6db3c26bd41bf4a1f9ef309fb189948",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "safe_bounds": true,
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          52
+        ],
+        "height_band": [
+          4,
+          58
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 978,
+        "base_row": 52,
+        "base_error": 0,
+        "height": 41,
+        "gradient_x": -3.357909070548712,
+        "gradient_y": -5.29448815943728,
+        "light_angle_degrees": 237.6160131191381,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      }
+    }
+  ],
+  "operations": [
+    "ENV1 nonzero-alpha crop/proportional Lanczos fit58/pad64",
+    "ENV1 whole-icon 1/3/9 copy layouts"
+  ],
+  "visual_review": "PASS_LEADER",
+  "selection_sha256": "4c05bc8ef824ccf15a3d42e70dda7c7f0c8c170276e9ae8358b21616e87d819d",
+  "seam": "N/A isolated inventory item"
+}

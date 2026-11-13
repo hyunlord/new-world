@@ -1,0 +1,12 @@
+{
+  "art/materials/textures/drystone/door_closed.png": "5758040c4a94f9ad1f143e5f708f8f04c0941d4cb087c8dba108773791b61644",
+  "art/materials/textures/drystone/door_open.png": "feb3d8a4b9471e041a9d9df593c57acb8380049e078e97472f57812f8381952a",
+  "art/materials/textures/drystone/end.png": "e650e43d754dd224e0a7fe071c4cd4509085bda1ec5c1d85e093532a27223736",
+  "art/materials/textures/drystone/face.png": "517c4f431303d3ae01362fb451a6757f77cc18797875760c0eabae945c73c682",
+  "art/materials/textures/drystone/junction.png": "7f23847290dc8f0540c32acf456bdfee845e6aa5515ff900a135ac607f44d832",
+  "art/materials/textures/drystone/top_ew.png": "da69983a6b11042dd1bfb6f492636f194b4142b78d9b2523c030f636234efd20",
+  "art/materials/textures/drystone/top_ns.png": "31ba8122524c41166e55514cd62b7025b85ee975dbaa03c52379fa085b21758e",
+  "art/materials/construction_styles.json": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f",
+  "art/materials/material_looks.json": "a2aa8b157fcc65a795b3f35c106cd01bb07ee65c037cfe64b1cf0599741b486f",
+  "art/materials/category_defaults.json": "c0f763cdc93cdbd1ba6f42891fb39fb0f45fcbcea2c790af3345446a7f19eaae"
+}

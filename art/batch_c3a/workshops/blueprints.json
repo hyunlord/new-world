@@ -1,0 +1,12 @@
+{
+  "smithy": {
+    "source": "smithy_built",
+    "operation": "existing B3 blueprint:25%alpha wash,alpha96 silhouette,4-neighbour1px pale outline",
+    "status": "DISPLAY_RECIPE_NOT_RUNTIME_APPLIED"
+  },
+  "bloomery_house": {
+    "source": "bloomery_house_built",
+    "operation": "existing B3 blueprint:25%alpha wash,alpha96 silhouette,4-neighbour1px pale outline",
+    "status": "DISPLAY_RECIPE_NOT_RUNTIME_APPLIED"
+  }
+}
