@@ -1,0 +1,58 @@
+{
+  "facing": "S",
+  "frame": "work_a",
+  "raw_sha256": "8f2bd0e03f9d1c8a0d880cdac71084d2921444566fc96491a819d2c9b843de62",
+  "reference_sha256": "2eefbcddfd0e31c3a8dc001ddb31a611b7413c6c5dab62f1b3b9187bdad9761f",
+  "image_sha256": "a5b88ce566fe304616aebfc147ef78dc6a64e666205ee18a13cb195523f7f0ed",
+  "pixel_sha256": "09918a09fd8ecd0df68583839d6918ca42d9f5fe425eff259875adca3582cb18",
+  "standing_scale": 0.13114754098360656,
+  "source_box": [
+    476,
+    0,
+    840,
+    520
+  ],
+  "normalization": {
+    "scaled_size": [
+      48,
+      68
+    ],
+    "trim_box": [
+      9,
+      1,
+      45,
+      68
+    ],
+    "placement": [
+      22,
+      38
+    ],
+    "resized_to_canvas_offset": [
+      13,
+      37
+    ],
+    "visible_pixels": 1035,
+    "rotation_degrees": 0,
+    "scale": 0.13114754098360656,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "passed": true,
+    "findings": [],
+    "coverage": 0.10167410714285714,
+    "component_count": 1,
+    "largest_hole": 0,
+    "contact_ok": true,
+    "sleep_axis_ok": true,
+    "opaque_height": 66,
+    "opaque_width": 34,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+    "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+    "visible_height": 67,
+    "visible_width": 36,
+    "visibility_threshold": 16
+  },
+  "error": null
+}

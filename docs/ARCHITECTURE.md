@@ -35,7 +35,10 @@ Art-line R1 candidates live in `art/character/batch_r1/` and
 `art/portrait/batch_r1/`; supplemental activity sheets live in
 `art/character/batch_r1_tools/`. `art/batch_r1/` owns frozen comparison masks and
 replays normalization before hash-bound adoption; it is outside the runtime
-data flow. Import drafts do not alter appearance ordering or live bindings.
+data flow. Its recorded global colour retry helper preserves source geometry
+and the frozen acceptance gates. Only complete 12-look wardrobes enter draft
+import lists; portrait readiness is explicit in `art/batch_r1/importability.json`.
+Drafts do not alter appearance ordering or live bindings.
 
 ## 2. Data flow
 

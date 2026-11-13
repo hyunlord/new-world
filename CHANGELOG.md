@@ -5,6 +5,17 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## R1 complete-wardrobe retry pass — 2026-11-14
+
+### Added
+- Recorded global colour retry helper and 28 tests, using existing dependencies; all frozen measurement masks and gates remain unchanged.
+- 45 additional wardrobe looks (450 frames), per-wardrobe 1×/2× comparisons, complete-wardrobe importability records and ADR 0017.
+
+### Changed
+- Wardrobe coverage: 13/84 → 58/84. No wardrobe reaches 12/12; 26 missing combinations exhausted six total attempts. Draft import/identity lists now exclude every incomplete wardrobe.
+- Retained the eight tool sets (80 frames) and 13 historical portrait sets (78 portraits). No new portraits or game import; rejected raw generations and retry records remain external.
+- Replaced the first-pass body overview sheets with per-wardrobe comparisons; the first-pass evidence remains outside the repository and in commit `01f844598`.
+
 ## R1 people candidates — 2026-11-14
 
 ### Added

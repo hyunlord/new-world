@@ -9,40 +9,213 @@
       "idle": "idle"
     },
     "proposed_wardrobes_by_era": {
-      "neolithic": [
-        "neo_plant",
-        "neo_first_wool"
-      ],
-      "bronze": [
-        "bronze_linen",
-        "bronze_wool_cloak",
-        "bronze_earth_linen"
-      ],
-      "iron": [
-        "iron_work",
-        "iron_winter"
-      ]
+      "neolithic": [],
+      "bronze": [],
+      "iron": []
     },
-    "accepted_looks": [
-      "adult_F_bronze_wool_cloak_bun",
-      "adult_F_bronze_wool_cloak_long_tied",
-      "adult_F_bronze_wool_cloak_short",
-      "adult_F_neo_first_wool_bun",
-      "adult_M_iron_winter_short",
-      "adult_M_iron_work_bun",
-      "adult_M_neo_first_wool_short",
-      "adult_M_neo_plant_bun",
-      "adult_M_neo_plant_short",
-      "child_F_neo_plant_bun",
-      "child_M_bronze_wool_cloak_bun",
-      "child_M_iron_work_short",
-      "child_M_neo_first_wool_short"
-    ],
+    "accepted_looks": [],
     "availability": "../coverage.json",
     "unresolved": [
       "Era/top appearance selectors and numeric top codes",
       "Stable appearance.ron ordering plus per-look colour/transform data",
       "Job-specific held-tool and load selectors; no supplemental activity frames certified by R1"
+    ],
+    "wardrobe_importability": [
+      {
+        "wardrobe": "neo_plant",
+        "before": 3,
+        "after": 10,
+        "total": 12,
+        "body_importable": false,
+        "portrait_ready": false,
+        "integration_pending": false,
+        "portrait_looks_available": 3,
+        "missing_body_looks": [
+          "child_M_neo_plant_long_tied",
+          "child_F_neo_plant_short"
+        ],
+        "missing_portrait_looks": [
+          "child_M_neo_plant_short",
+          "child_M_neo_plant_long_tied",
+          "child_M_neo_plant_bun",
+          "child_F_neo_plant_short",
+          "child_F_neo_plant_long_tied",
+          "adult_M_neo_plant_long_tied",
+          "adult_F_neo_plant_short",
+          "adult_F_neo_plant_long_tied",
+          "adult_F_neo_plant_bun"
+        ]
+      },
+      {
+        "wardrobe": "neo_first_wool",
+        "before": 3,
+        "after": 10,
+        "total": 12,
+        "body_importable": false,
+        "portrait_ready": false,
+        "integration_pending": false,
+        "portrait_looks_available": 3,
+        "missing_body_looks": [
+          "child_M_neo_first_wool_long_tied",
+          "child_M_neo_first_wool_bun"
+        ],
+        "missing_portrait_looks": [
+          "child_M_neo_first_wool_long_tied",
+          "child_M_neo_first_wool_bun",
+          "child_F_neo_first_wool_short",
+          "child_F_neo_first_wool_long_tied",
+          "child_F_neo_first_wool_bun",
+          "adult_M_neo_first_wool_long_tied",
+          "adult_M_neo_first_wool_bun",
+          "adult_F_neo_first_wool_short",
+          "adult_F_neo_first_wool_long_tied"
+        ]
+      },
+      {
+        "wardrobe": "bronze_linen",
+        "before": 0,
+        "after": 2,
+        "total": 12,
+        "body_importable": false,
+        "portrait_ready": false,
+        "integration_pending": false,
+        "portrait_looks_available": 0,
+        "missing_body_looks": [
+          "child_M_bronze_linen_short",
+          "child_M_bronze_linen_bun",
+          "child_F_bronze_linen_short",
+          "child_F_bronze_linen_long_tied",
+          "child_F_bronze_linen_bun",
+          "adult_M_bronze_linen_long_tied",
+          "adult_M_bronze_linen_bun",
+          "adult_F_bronze_linen_short",
+          "adult_F_bronze_linen_long_tied",
+          "adult_F_bronze_linen_bun"
+        ],
+        "missing_portrait_looks": [
+          "child_M_bronze_linen_short",
+          "child_M_bronze_linen_long_tied",
+          "child_M_bronze_linen_bun",
+          "child_F_bronze_linen_short",
+          "child_F_bronze_linen_long_tied",
+          "child_F_bronze_linen_bun",
+          "adult_M_bronze_linen_short",
+          "adult_M_bronze_linen_long_tied",
+          "adult_M_bronze_linen_bun",
+          "adult_F_bronze_linen_short",
+          "adult_F_bronze_linen_long_tied",
+          "adult_F_bronze_linen_bun"
+        ]
+      },
+      {
+        "wardrobe": "bronze_wool_cloak",
+        "before": 4,
+        "after": 11,
+        "total": 12,
+        "body_importable": false,
+        "portrait_ready": false,
+        "integration_pending": false,
+        "portrait_looks_available": 4,
+        "missing_body_looks": [
+          "child_M_bronze_wool_cloak_long_tied"
+        ],
+        "missing_portrait_looks": [
+          "child_M_bronze_wool_cloak_short",
+          "child_M_bronze_wool_cloak_long_tied",
+          "child_F_bronze_wool_cloak_short",
+          "child_F_bronze_wool_cloak_long_tied",
+          "child_F_bronze_wool_cloak_bun",
+          "adult_M_bronze_wool_cloak_short",
+          "adult_M_bronze_wool_cloak_long_tied",
+          "adult_M_bronze_wool_cloak_bun"
+        ]
+      },
+      {
+        "wardrobe": "bronze_earth_linen",
+        "before": 0,
+        "after": 7,
+        "total": 12,
+        "body_importable": false,
+        "portrait_ready": false,
+        "integration_pending": false,
+        "portrait_looks_available": 0,
+        "missing_body_looks": [
+          "child_M_bronze_earth_linen_long_tied",
+          "child_M_bronze_earth_linen_bun",
+          "child_F_bronze_earth_linen_long_tied",
+          "adult_M_bronze_earth_linen_long_tied",
+          "adult_F_bronze_earth_linen_bun"
+        ],
+        "missing_portrait_looks": [
+          "child_M_bronze_earth_linen_short",
+          "child_M_bronze_earth_linen_long_tied",
+          "child_M_bronze_earth_linen_bun",
+          "child_F_bronze_earth_linen_short",
+          "child_F_bronze_earth_linen_long_tied",
+          "child_F_bronze_earth_linen_bun",
+          "adult_M_bronze_earth_linen_short",
+          "adult_M_bronze_earth_linen_long_tied",
+          "adult_M_bronze_earth_linen_bun",
+          "adult_F_bronze_earth_linen_short",
+          "adult_F_bronze_earth_linen_long_tied",
+          "adult_F_bronze_earth_linen_bun"
+        ]
+      },
+      {
+        "wardrobe": "iron_work",
+        "before": 2,
+        "after": 8,
+        "total": 12,
+        "body_importable": false,
+        "portrait_ready": false,
+        "integration_pending": false,
+        "portrait_looks_available": 2,
+        "missing_body_looks": [
+          "child_M_iron_work_long_tied",
+          "child_M_iron_work_bun",
+          "child_F_iron_work_long_tied",
+          "adult_M_iron_work_long_tied"
+        ],
+        "missing_portrait_looks": [
+          "child_M_iron_work_long_tied",
+          "child_M_iron_work_bun",
+          "child_F_iron_work_short",
+          "child_F_iron_work_long_tied",
+          "child_F_iron_work_bun",
+          "adult_M_iron_work_short",
+          "adult_M_iron_work_long_tied",
+          "adult_F_iron_work_short",
+          "adult_F_iron_work_long_tied",
+          "adult_F_iron_work_bun"
+        ]
+      },
+      {
+        "wardrobe": "iron_winter",
+        "before": 1,
+        "after": 10,
+        "total": 12,
+        "body_importable": false,
+        "portrait_ready": false,
+        "integration_pending": false,
+        "portrait_looks_available": 1,
+        "missing_body_looks": [
+          "adult_M_iron_winter_long_tied",
+          "adult_M_iron_winter_bun"
+        ],
+        "missing_portrait_looks": [
+          "child_M_iron_winter_short",
+          "child_M_iron_winter_long_tied",
+          "child_M_iron_winter_bun",
+          "child_F_iron_winter_short",
+          "child_F_iron_winter_long_tied",
+          "child_F_iron_winter_bun",
+          "adult_M_iron_winter_long_tied",
+          "adult_M_iron_winter_bun",
+          "adult_F_iron_winter_short",
+          "adult_F_iron_winter_long_tied",
+          "adult_F_iron_winter_bun"
+        ]
+      }
     ]
   },
   "supplemental_activity_proposals": [

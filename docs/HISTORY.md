@@ -99,3 +99,5 @@
 - 2026-10-21 — 지움: 임시 타일셋 `assets/v8/temp/`(2파일)와 `tools/v8/gen_temp_tiles.py`(540줄), 커밋 `bba3110e`(V8-PLAY)에 남아 있다.
 
 - 2026-11-14 — R1 인물 아트 시도 종료: 출시 리그 비교 다섯 수치 ±10%·10동작 검사 후 의상13/84조합(130프레임), 도구8세트(80프레임), 초상78장을 별도 채택. 나머지71조합은3회 한도 후 보류, 게임 미반영 (`art/batch_r1/README.md`, `docs/decisions/0016-r1-shipped-rig-style-gates.md`).
+
+- 2026-11-14 — R1 Pass 2 한도 종료: 의상13→58/84조합, 옷장별12/12는0/7. 미채택26조합은총6회 한도, 수치 통과·실물 실패도 보류. 새 초상과 게임 import 없음 (`art/batch_r1/importability.json`, `docs/decisions/0017-r1-complete-wardrobe-retries.md`).
