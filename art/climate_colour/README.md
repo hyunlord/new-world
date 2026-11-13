@@ -14,6 +14,8 @@ This branch contains candidate art and additive drafts, never runtime imports.
   Original-mask summer hue passes all12; this does not waive the other checks.
 - Eight latest B2 ground tiles corrected for review only. All still fail the
   existing wrap-seam check; no ground, season or edge is promoted to active import.
+  Seven also exceed the legacy source saturation ceiling0.35 when matched to
+  the more saturated shipped grounds; the frozen ceiling is not relaxed.
 - No regenerated images. B2 generation budgets and missing states stay closed.
 
 ## Recorded transform

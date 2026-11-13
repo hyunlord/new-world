@@ -1,0 +1,211 @@
+{
+  "schema_version": 1,
+  "status": "DRAFT_NOT_APPLIED",
+  "mode": "additive_proposals_only",
+  "runtime_source_commit": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+  "runtime_evidence": "/Users/rexxa/work/art-batch/B2/references/main_rust__crates__sim-core__data__colony__plants.ron",
+  "climate_codes": [
+    {
+      "code": 0,
+      "id": "mild"
+    },
+    {
+      "code": 1,
+      "id": "neutral"
+    },
+    {
+      "code": 2,
+      "id": "harsh"
+    }
+  ],
+  "runtime_rows_to_append": [],
+  "selector_status": {
+    "climate": "PENDING_IMPORTER",
+    "state": "PENDING_IMPORTER",
+    "season": "PENDING_IMPORTER"
+  },
+  "instructions": [
+    "Preserve unrelated runtime rows and fallback behavior.",
+    "Resolve only selected assets from each lane manifest; rejected or missing states remain gaps.",
+    "These proposed rows are not the current bindings.json schema and do not activate a plant, climate origin or selector.",
+    "Recheck verified identities against the integration commit before applying."
+  ],
+  "verified_plants": [
+    {
+      "code": 0,
+      "sim_id": "berry_bush",
+      "art_families": [
+        "berry_mild",
+        "berry_neutral",
+        "berry_harsh"
+      ],
+      "lane_manifest": "art/climate_colour/art_import.draft.json",
+      "selection": "Climate chooses art variant; this does not create three species."
+    },
+    {
+      "code": 1,
+      "sim_id": "hazel",
+      "art_families": [
+        "wild_hazel"
+      ],
+      "lane_manifest": "art/climate_colour/art_import.draft.json"
+    },
+    {
+      "code": 2,
+      "sim_id": "wild_flax",
+      "art_families": [
+        "wild_flax"
+      ],
+      "lane_manifest": "art/climate_colour/art_import.draft.json"
+    },
+    {
+      "code": 3,
+      "sim_id": "wild_grain",
+      "art_families": [
+        "wild_grain"
+      ],
+      "lane_manifest": "art/climate_colour/art_import.draft.json",
+      "selection": "Wild wheat/emmer source; do not alias einkorn."
+    },
+    {
+      "code": 4,
+      "sim_id": "wild_root",
+      "art_families": [
+        "wild_root"
+      ],
+      "lane_manifest": "art/climate_colour/art_import.draft.json"
+    },
+    {
+      "code": 5,
+      "sim_id": "wild_barley",
+      "art_families": [
+        "wild_barley"
+      ],
+      "lane_manifest": "art/climate_colour/art_import.draft.json"
+    },
+    {
+      "code": 6,
+      "sim_id": "wild_rye",
+      "art_families": [
+        "wild_rye"
+      ],
+      "lane_manifest": "art/climate_colour/art_import.draft.json",
+      "selection": "Bible rye/oats share this wild source; no separate oat identity asserted."
+    },
+    {
+      "code": 7,
+      "sim_id": "wild_lentil",
+      "art_families": [
+        "wild_lentil"
+      ],
+      "lane_manifest": "art/climate_colour/art_import.draft.json"
+    },
+    {
+      "code": 8,
+      "sim_id": "wild_pea",
+      "art_families": [
+        "wild_pea"
+      ],
+      "lane_manifest": "art/climate_colour/art_import.draft.json"
+    },
+    {
+      "code": 9,
+      "sim_id": "wild_millet",
+      "art_families": [
+        "wild_millet"
+      ],
+      "lane_manifest": "art/climate_colour/art_import.draft.json"
+    }
+  ],
+  "proposed_plants": [
+    {
+      "art_family": "wild_einkorn",
+      "runtime_code": null,
+      "lane_manifest": "art/climate_colour/art_import.draft.json",
+      "reason": "Explicit B2 botanical candidate; no separate verified runtime identity."
+    },
+    {
+      "art_family": "wild_grape",
+      "runtime_code": null,
+      "climate_proposal": [
+        "mild"
+      ],
+      "lane_manifest": "art/climate_colour/art_import.draft.json",
+      "reason": "Bible wild source; identity and state selector require integration."
+    },
+    {
+      "art_family": "wild_hemp",
+      "runtime_code": null,
+      "lane_manifest": "art/climate_colour/art_import.draft.json",
+      "reason": "Bible wild source; identity requires integration."
+    },
+    {
+      "art_family": "wild_olive",
+      "runtime_code": null,
+      "climate_proposal": [
+        "mild"
+      ],
+      "lane_manifest": "art/climate_colour/art_import.draft.json",
+      "reason": "Bible wild source; no verified olive wood material. Fruit picking retains evergreen foliage."
+    },
+    {
+      "art_family": "reeds",
+      "runtime_code": null,
+      "lane_manifest": "art/climate_colour/art_import.draft.json",
+      "reason": "Wet-margin art proposal; runtime identity unverified."
+    },
+    {
+      "art_family": "mediterranean_scrub",
+      "runtime_code": null,
+      "climate_proposal": [
+        "mild"
+      ],
+      "lane_manifest": "art/climate_colour/art_import.draft.json",
+      "reason": "Botanical placement proposal; runtime identity unverified."
+    },
+    {
+      "art_family": "tundra_willow",
+      "runtime_code": null,
+      "climate_proposal": [
+        "harsh"
+      ],
+      "lane_manifest": "art/climate_colour/art_import.draft.json",
+      "reason": "Botanical placement proposal; runtime identity unverified."
+    }
+  ],
+  "existing_tree_reuse": {
+    "lane_manifest": "art/climate_colour/art_import.draft.json",
+    "species": [
+      "oak",
+      "birch",
+      "pine"
+    ],
+    "source_catalog": "art/flora/species.json",
+    "harvested": "Existing species stump; do not substitute fruit-picked olive.",
+    "instruction": "Preserve existing species/material bindings and registered seasonal operations."
+  },
+  "ground_proposals": {
+    "lane_manifest": "art/climate_colour/ground_review.json",
+    "families": [
+      "tundra",
+      "taiga_floor",
+      "steppe",
+      "temperate_meadow",
+      "mediterranean_scrub",
+      "marsh",
+      "river_gravel",
+      "highland_rock"
+    ],
+    "instruction": "Ground climate/elevation assignment and derived edge/season selectors are pending; preserve existing terrain code mappings."
+  },
+  "deferred": [
+    {
+      "sim_id": "wild_apple",
+      "runtime_code": 10,
+      "status": "OPTIONAL_EXPANSION_SKIPPED",
+      "reason": "Planner economy instruction; malformed candidate attempts are not import assets."
+    }
+  ],
+  "source_commit": "545319726266c96cb3f8927351b36e763cbfc83c",
+  "source_branch": "v8/art-batch-r2"
+}
