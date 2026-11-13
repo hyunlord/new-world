@@ -1763,6 +1763,18 @@
     },
     "oven_house": {
       "asset": null
+    },
+    "mud_brick_house": {
+      "asset": null
+    },
+    "charcoal_clamp": {
+      "asset": null
+    },
+    "smelter": {
+      "asset": null
+    },
+    "casting_bench": {
+      "asset": null
     }
   },
   "outcrops": {
