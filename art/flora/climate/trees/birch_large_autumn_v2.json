@@ -1,0 +1,82 @@
+{
+  "r2": {
+    "id": "birch_large_autumn_v2",
+    "path": "art/flora/climate/trees/birch_large_autumn_v2.png",
+    "sha256": "55fe5c32d2c829f6d51efaee0c846591d3a5876068fe9acacbb3b8c3c0dcaef7",
+    "canvas": [
+      192,
+      192
+    ],
+    "anchor": [
+      96,
+      180
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "trees",
+    "role": "tree",
+    "type": "flora",
+    "size": "large",
+    "mask": "art/flora/masks/birch_large_v2.png",
+    "species": "birch",
+    "state": "full",
+    "season": "autumn",
+    "climate": null,
+    "dest": "flora/climate/trees/birch_large_autumn_v2.png",
+    "source": "art/flora/climate/trees/birch_large_autumn_v2.png",
+    "source_sha256": "55fe5c32d2c829f6d51efaee0c846591d3a5876068fe9acacbb3b8c3c0dcaef7",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "55fe5c32d2c829f6d51efaee0c846591d3a5876068fe9acacbb3b8c3c0dcaef7",
+    "sidecar": "art/flora/climate/trees/birch_large_autumn_v2.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/flora/sprites/birch_large_v2.png|art/flora/masks/birch_large_v2.png|autumn|full",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "birch_large_autumn_v2",
+    "path": "art/flora/climate/trees/birch_large_autumn_v2.png",
+    "sha256": "55fe5c32d2c829f6d51efaee0c846591d3a5876068fe9acacbb3b8c3c0dcaef7",
+    "canvas": [
+      192,
+      192
+    ],
+    "anchor": [
+      96,
+      180
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "trees",
+    "species": "birch",
+    "size": "large",
+    "state": "full",
+    "season": "autumn",
+    "climate": null,
+    "kind": "derived_season",
+    "dest": "flora/climate/trees/birch_large_autumn_v2.png",
+    "mask": "art/flora/masks/birch_large_v2.png",
+    "sidecar": "",
+    "tint": {
+      "delta_lab": [
+        8.0,
+        10.0,
+        32.0
+      ],
+      "frame": "foliage",
+      "snow_cap": {
+        "depth_px": 0,
+        "alpha": 0.0
+      }
+    },
+    "source": "art/flora/climate/trees/birch_large_autumn_v2.png",
+    "source_sha256": "20edfbe6ba0486c3e3c35e60501da563739e402416e1b2a048bd5099028062f5",
+    "mask_sha256": "79c46d1e540a412bcb55342795df92fadc23d3b314cbb9f5dd5adc40f2d9926e",
+    "role": "tree",
+    "type": "flora",
+    "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "r2": {
+    "id": "wild_grain_harvested",
+    "path": "art/flora/climate/herbaceous/wild_grain_harvested.png",
+    "sha256": "a106ca6dce69dd5df8e50ae17fa896ca1838e4b4a5f5e27c81961cf5c4596ecb",
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "role": "flora",
+    "type": "flora",
+    "size": "",
+    "mask": "",
+    "species": "wild_grain",
+    "state": "harvested",
+    "season": "summer",
+    "climate": [
+      "mild",
+      "neutral",
+      "harsh"
+    ],
+    "dest": "flora/climate/herbaceous/wild_grain_harvested.png",
+    "source": "art/flora/climate/herbaceous/wild_grain_harvested.png",
+    "source_sha256": "a106ca6dce69dd5df8e50ae17fa896ca1838e4b4a5f5e27c81961cf5c4596ecb",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "2a60494810eece45292543b839bc1ded4ec02def535f34599cff6d1d22fe9bb1",
+    "sidecar": "art/flora/climate/herbaceous/wild_grain_harvested.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/style05/env/plants/reeds.png|summer|harvested",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "wild_grain_harvested",
+    "path": "art/flora/climate/herbaceous/wild_grain_harvested.png",
+    "sha256": "2a60494810eece45292543b839bc1ded4ec02def535f34599cff6d1d22fe9bb1",
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "species": "wild_grain",
+    "size": "",
+    "state": "harvested",
+    "season": "summer",
+    "climate": [
+      "mild",
+      "neutral",
+      "harsh"
+    ],
+    "kind": "",
+    "dest": "flora/climate/herbaceous/wild_grain_harvested.png",
+    "mask": "",
+    "sidecar": "",
+    "tint": {},
+    "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+    "runtime_code": null,
+    "placement_status": "VERIFIED_ORIGIN",
+    "source": "art/flora/climate/herbaceous/wild_grain_harvested.png",
+    "role": "flora",
+    "type": "flora"
+  }
+}

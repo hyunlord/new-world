@@ -1,0 +1,138 @@
+{
+  "r2": {
+    "id": "wild_olive_full_v2_large",
+    "path": "art/flora/climate/trees/wild_olive_full_v2_large.png",
+    "sha256": "c76f24abb902361326426594da961d1637a5e4d2acbf97e59b10286f4e854116",
+    "canvas": [
+      192,
+      192
+    ],
+    "anchor": [
+      96,
+      180
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "trees",
+    "role": "tree",
+    "type": "flora",
+    "size": "large",
+    "mask": "art/flora/climate/trees/wild_olive_full_v2_large_mask.png",
+    "species": "wild_olive",
+    "state": "full",
+    "season": "summer",
+    "climate": null,
+    "dest": "",
+    "source": "art/flora/climate/trees/wild_olive_full_v2_large.png",
+    "source_sha256": "c76f24abb902361326426594da961d1637a5e4d2acbf97e59b10286f4e854116",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "12c073f5b98b71c41490b4e1cb823ace472a40ffb2983507e415c39708c7f198",
+    "sidecar": "art/flora/climate/trees/wild_olive_full_v2_large.json",
+    "status": "PROPOSAL_NOT_ACTIVE",
+    "reference": "art/flora/sprites/oak_large_v2.png|art/flora/masks/oak_large_v2.png|summer|full",
+    "olive": {
+      "pass": 3,
+      "prior_pass": "R2/measurements-pass1.json and measurements-pass2.json; incorrect shrub proxy superseded by same-size tree control",
+      "original_mask_summer": {
+        "mean_hue_degrees": 103.40441784124087,
+        "mean_saturation": 0.5652391545607952,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": true
+      },
+      "reclassified_mask_summer": {
+        "mean_hue_degrees": 94.6323962795158,
+        "mean_saturation": 0.5316561135109004,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": true
+      },
+      "mask": {
+        "trunk_box_fraction": 0.02497789566755084,
+        "foliage_cluster_coverage": 0.5138596206840655,
+        "mask_pixels": 4761,
+        "foliage_pixels": 6169,
+        "passed": false,
+        "foliage_gate_applicable": true
+      },
+      "status": "PROPOSED_SPECIES_NOT_ACTIVE"
+    }
+  },
+  "b2_metadata": {
+    "id": "wild_olive_full_v2_large",
+    "path": "art/flora/climate/trees/wild_olive_full_v2_large.png",
+    "sha256": "12c073f5b98b71c41490b4e1cb823ace472a40ffb2983507e415c39708c7f198",
+    "canvas": [
+      192,
+      192
+    ],
+    "anchor": [
+      96,
+      180
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "trees",
+    "species": "wild_olive",
+    "size": "large",
+    "state": "full",
+    "season": "summer",
+    "climate": null,
+    "kind": "new_generation",
+    "dest": "",
+    "mask": "",
+    "sidecar": "art/flora/climate/trees/wild_olive_full_v2_large.json",
+    "tint": {},
+    "source": "/Users/rexxa/work/art-batch/B2/trees/raw/wild_olive_full_v2_try2.png",
+    "source_sha256": "3841d260843feb170690db34c5ac853f9839c9da97c22f4f201c1e9d0ba7ae90",
+    "role": "tree",
+    "type": "flora",
+    "adoption_state": "PROPOSED_ART_CANDIDATE_NOT_PRODUCTION_SPECIES",
+    "qualification": {
+      "raw_style_projection_structure": "passed",
+      "production_canopy": "FAILED",
+      "diagnostics": {
+        "id": "wild_olive_full_v2_large",
+        "failures": [],
+        "checks": {
+          "alpha_min": 0,
+          "alpha_max": 255,
+          "opaque_height": 160,
+          "opaque_components": 1,
+          "visible_border": false,
+          "raw_transparent": true,
+          "raw_opaque_border": false,
+          "source_opaque_outside_crop": 0,
+          "canvas_matches": true,
+          "passed": true
+        },
+        "mask": {
+          "trunk_box_fraction": 0.02497789566755084,
+          "foliage_cluster_coverage": 1.0,
+          "mask_pixels": 4761,
+          "foliage_pixels": 4761,
+          "passed": false,
+          "foliage_gate_applicable": true
+        },
+        "summer": {
+          "mean_hue_degrees": 51.10297939549769,
+          "mean_saturation": 0.45977982500752074,
+          "palette_hue_range_degrees": [
+            88.88888888888891,
+            112.5
+          ],
+          "passed": false
+        }
+      },
+      "required_followup": "C2 species validation; no runtime species or fabricated wood material"
+    }
+  }
+}

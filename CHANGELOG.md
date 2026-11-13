@@ -5,6 +5,18 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## ART-BATCH R2 — 2026-11-14
+
+### Added
+- `art/climate_colour/`: recorded shipped HSV controls, deterministic colour-only
+  transport, regression tests, climate before/after sheets and additive handoff.
+- `art/flora/climate/`:41 recoloured herb/shrub candidates,26 unchanged tree
+  seasons and12 explicitly blocked olive proposals with original geometry.
+
+### Changed
+- R2 drafts retain B2's eight rejected grounds and all missing states; no runtime
+  imports, selectors or game code changed. ADR0016 records the boundary.
+
 ## M1-ART — 2026-10-21
 
 The colony view drawn like the mock-up: real ground, a canopy that reads as forest, buildings and log piles you can read, people you can find (`docs/v8/m1art/ART_GOAL.md`, report `docs/v8/m1art/ART_REPORT.md`). No simulation change (`rust/` untouched; identity, colony determinism and replay pass).

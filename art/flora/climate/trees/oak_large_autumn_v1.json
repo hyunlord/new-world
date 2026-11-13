@@ -1,0 +1,82 @@
+{
+  "r2": {
+    "id": "oak_large_autumn_v1",
+    "path": "art/flora/climate/trees/oak_large_autumn_v1.png",
+    "sha256": "a3c1d929a3382b9a253c1f75f4580568577d21cfbd9f19c17ee3e469969d8c06",
+    "canvas": [
+      192,
+      192
+    ],
+    "anchor": [
+      96,
+      180
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "trees",
+    "role": "tree",
+    "type": "flora",
+    "size": "large",
+    "mask": "art/flora/masks/oak_large_v1.png",
+    "species": "oak",
+    "state": "full",
+    "season": "autumn",
+    "climate": null,
+    "dest": "flora/climate/trees/oak_large_autumn_v1.png",
+    "source": "art/flora/climate/trees/oak_large_autumn_v1.png",
+    "source_sha256": "a3c1d929a3382b9a253c1f75f4580568577d21cfbd9f19c17ee3e469969d8c06",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "a3c1d929a3382b9a253c1f75f4580568577d21cfbd9f19c17ee3e469969d8c06",
+    "sidecar": "art/flora/climate/trees/oak_large_autumn_v1.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/flora/sprites/oak_large_v1.png|art/flora/masks/oak_large_v1.png|autumn|full",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "oak_large_autumn_v1",
+    "path": "art/flora/climate/trees/oak_large_autumn_v1.png",
+    "sha256": "a3c1d929a3382b9a253c1f75f4580568577d21cfbd9f19c17ee3e469969d8c06",
+    "canvas": [
+      192,
+      192
+    ],
+    "anchor": [
+      96,
+      180
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "trees",
+    "species": "oak",
+    "size": "large",
+    "state": "full",
+    "season": "autumn",
+    "climate": null,
+    "kind": "derived_season",
+    "dest": "flora/climate/trees/oak_large_autumn_v1.png",
+    "mask": "art/flora/masks/oak_large_v1.png",
+    "sidecar": "",
+    "tint": {
+      "delta_lab": [
+        -8.0,
+        35.0,
+        15.0
+      ],
+      "frame": "foliage",
+      "snow_cap": {
+        "depth_px": 0,
+        "alpha": 0.0
+      }
+    },
+    "source": "art/flora/climate/trees/oak_large_autumn_v1.png",
+    "source_sha256": "409c1005a4c4987a88a0e09b075ae5bce0b2dea90806a68e9d0f8989e1297cad",
+    "mask_sha256": "83bbed04aedbb28d80a4bd54cf5b0c916853880575054499f63a80fb98d7cf41",
+    "role": "tree",
+    "type": "flora",
+    "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+  }
+}

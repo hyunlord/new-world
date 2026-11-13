@@ -1,0 +1,77 @@
+{
+  "r2": {
+    "id": "wild_rye_harvested",
+    "path": "art/flora/climate/herbaceous/wild_rye_harvested.png",
+    "sha256": "777bee09186e24ccf780ee97ba428580c2a9a8a4dd907b94bbc14eb650445590",
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "role": "flora",
+    "type": "flora",
+    "size": "",
+    "mask": "",
+    "species": "wild_rye",
+    "state": "harvested",
+    "season": "summer",
+    "climate": [
+      "neutral",
+      "harsh"
+    ],
+    "dest": "flora/climate/herbaceous/wild_rye_harvested.png",
+    "source": "art/flora/climate/herbaceous/wild_rye_harvested.png",
+    "source_sha256": "777bee09186e24ccf780ee97ba428580c2a9a8a4dd907b94bbc14eb650445590",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "ac1259430252edfd40f5340b4c01d96713a284bb6a6c58e34beaf4272aa22c8a",
+    "sidecar": "art/flora/climate/herbaceous/wild_rye_harvested.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/style05/env/plants/reeds.png|summer|harvested",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "wild_rye_harvested",
+    "path": "art/flora/climate/herbaceous/wild_rye_harvested.png",
+    "sha256": "ac1259430252edfd40f5340b4c01d96713a284bb6a6c58e34beaf4272aa22c8a",
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "species": "wild_rye",
+    "size": "",
+    "state": "harvested",
+    "season": "summer",
+    "climate": [
+      "neutral",
+      "harsh"
+    ],
+    "kind": "",
+    "dest": "flora/climate/herbaceous/wild_rye_harvested.png",
+    "mask": "",
+    "sidecar": "",
+    "tint": {},
+    "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+    "runtime_code": null,
+    "placement_status": "VERIFIED_ORIGIN",
+    "source": "art/flora/climate/herbaceous/wild_rye_harvested.png",
+    "role": "flora",
+    "type": "flora"
+  }
+}

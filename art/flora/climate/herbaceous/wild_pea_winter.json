@@ -1,0 +1,77 @@
+{
+  "r2": {
+    "id": "wild_pea_winter",
+    "path": "art/flora/climate/herbaceous/wild_pea_winter.png",
+    "sha256": "72a7920062c3612eb07d6f1c4ed07f27f434e909af2a8c85d1dc2a8450710bbf",
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "role": "flora",
+    "type": "flora",
+    "size": "",
+    "mask": "",
+    "species": "wild_pea",
+    "state": "winter",
+    "season": "summer",
+    "climate": [
+      "mild",
+      "neutral"
+    ],
+    "dest": "flora/climate/herbaceous/wild_pea_winter.png",
+    "source": "art/flora/climate/herbaceous/wild_pea_winter.png",
+    "source_sha256": "72a7920062c3612eb07d6f1c4ed07f27f434e909af2a8c85d1dc2a8450710bbf",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "751fcc87225aabf105d30d9f5896013029f498c471cf70a346c7d948a4399496",
+    "sidecar": "art/flora/climate/herbaceous/wild_pea_winter.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/flora/sprites/oak_small_bare.png|summer|winter",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "wild_pea_winter",
+    "path": "art/flora/climate/herbaceous/wild_pea_winter.png",
+    "sha256": "751fcc87225aabf105d30d9f5896013029f498c471cf70a346c7d948a4399496",
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "species": "wild_pea",
+    "size": "",
+    "state": "winter",
+    "season": "summer",
+    "climate": [
+      "mild",
+      "neutral"
+    ],
+    "kind": "",
+    "dest": "flora/climate/herbaceous/wild_pea_winter.png",
+    "mask": "",
+    "sidecar": "",
+    "tint": {},
+    "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+    "runtime_code": null,
+    "placement_status": "VERIFIED_ORIGIN",
+    "source": "art/flora/climate/herbaceous/wild_pea_winter.png",
+    "role": "flora",
+    "type": "flora"
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "r2": {
+    "id": "wild_hemp_winter",
+    "path": "art/flora/climate/herbaceous/wild_hemp_winter.png",
+    "sha256": "ac2bff1312aea033461ebe4119aba1803168494c34257caa3f0717af59c68f26",
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "role": "flora",
+    "type": "flora",
+    "size": "",
+    "mask": "",
+    "species": "wild_hemp",
+    "state": "winter",
+    "season": "summer",
+    "climate": null,
+    "dest": "flora/climate/herbaceous/wild_hemp_winter.png",
+    "source": "art/flora/climate/herbaceous/wild_hemp_winter.png",
+    "source_sha256": "ac2bff1312aea033461ebe4119aba1803168494c34257caa3f0717af59c68f26",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "ab53711fda1e4f2b3e967d55efcf271a5fc34a1b0ecc2e60f92610432a31b8d4",
+    "sidecar": "art/flora/climate/herbaceous/wild_hemp_winter.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/flora/sprites/oak_small_bare.png|summer|winter",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "wild_hemp_winter",
+    "path": "art/flora/climate/herbaceous/wild_hemp_winter.png",
+    "sha256": "ab53711fda1e4f2b3e967d55efcf271a5fc34a1b0ecc2e60f92610432a31b8d4",
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "species": "wild_hemp",
+    "size": "",
+    "state": "winter",
+    "season": "summer",
+    "climate": null,
+    "kind": "",
+    "dest": "flora/climate/herbaceous/wild_hemp_winter.png",
+    "mask": "",
+    "sidecar": "",
+    "tint": {},
+    "runtime_binding": "PROPOSED_ID",
+    "runtime_code": null,
+    "placement_status": "PROPOSED_NOT_APPLIED",
+    "source": "art/flora/climate/herbaceous/wild_hemp_winter.png",
+    "role": "flora",
+    "type": "flora"
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "r2": {
+    "id": "wild_einkorn_winter",
+    "path": "art/flora/climate/herbaceous/wild_einkorn_winter.png",
+    "sha256": "6858b9e0be6093f02c13bffc2a43b33b650d954a74c46376dfbb8f14aaa1c928",
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "role": "flora",
+    "type": "flora",
+    "size": "",
+    "mask": "",
+    "species": "wild_einkorn",
+    "state": "winter",
+    "season": "summer",
+    "climate": null,
+    "dest": "flora/climate/herbaceous/wild_einkorn_winter.png",
+    "source": "art/flora/climate/herbaceous/wild_einkorn_winter.png",
+    "source_sha256": "6858b9e0be6093f02c13bffc2a43b33b650d954a74c46376dfbb8f14aaa1c928",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "3f1aa88e2a309f33074cf05a070ac51785e7f61a7558dafe336d6d0139836686",
+    "sidecar": "art/flora/climate/herbaceous/wild_einkorn_winter.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/flora/sprites/oak_small_bare.png|summer|winter",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "wild_einkorn_winter",
+    "path": "art/flora/climate/herbaceous/wild_einkorn_winter.png",
+    "sha256": "3f1aa88e2a309f33074cf05a070ac51785e7f61a7558dafe336d6d0139836686",
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "species": "wild_einkorn",
+    "size": "",
+    "state": "winter",
+    "season": "summer",
+    "climate": null,
+    "kind": "",
+    "dest": "flora/climate/herbaceous/wild_einkorn_winter.png",
+    "mask": "",
+    "sidecar": "",
+    "tint": {},
+    "runtime_binding": "PROPOSED_ID",
+    "runtime_code": null,
+    "placement_status": "PROPOSED_NOT_APPLIED",
+    "source": "art/flora/climate/herbaceous/wild_einkorn_winter.png",
+    "role": "flora",
+    "type": "flora"
+  }
+}

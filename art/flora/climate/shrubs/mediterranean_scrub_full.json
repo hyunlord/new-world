@@ -1,0 +1,71 @@
+{
+  "r2": {
+    "id": "mediterranean_scrub_full",
+    "path": "art/flora/climate/shrubs/mediterranean_scrub_full.png",
+    "sha256": "ae566b1f184bae93634e506ab8b58df10b3564c9488df69bd47d444f0eaaff9f",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "shrubs",
+    "role": "flora",
+    "type": "flora",
+    "size": "",
+    "mask": "",
+    "species": "mediterranean_scrub",
+    "state": "full",
+    "season": "summer",
+    "climate": [
+      "mild"
+    ],
+    "dest": "flora/climate/shrubs/mediterranean_scrub_full.png",
+    "source": "art/flora/climate/shrubs/mediterranean_scrub_full.png",
+    "source_sha256": "ae566b1f184bae93634e506ab8b58df10b3564c9488df69bd47d444f0eaaff9f",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "042ed2d187dec6a85e80da68cba741af2647bca4fa3ef726a21e85e6164c612d",
+    "sidecar": "art/flora/climate/shrubs/mediterranean_scrub_full.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/flora/sprites/berry_bush_bare.png|summer|full",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "mediterranean_scrub_full",
+    "path": "art/flora/climate/shrubs/mediterranean_scrub_full.png",
+    "sha256": "042ed2d187dec6a85e80da68cba741af2647bca4fa3ef726a21e85e6164c612d",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "shrubs",
+    "species": "mediterranean_scrub",
+    "size": "",
+    "state": "full",
+    "season": "summer",
+    "climate": [
+      "mild"
+    ],
+    "kind": "",
+    "dest": "flora/climate/shrubs/mediterranean_scrub_full.png",
+    "mask": "",
+    "sidecar": "",
+    "tint": {},
+    "role": "flora",
+    "type": "flora"
+  }
+}

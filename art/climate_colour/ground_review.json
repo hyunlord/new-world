@@ -1,0 +1,810 @@
+[
+  {
+    "id": "tundra",
+    "source": "/Users/rexxa/work/art-batch/B2/grounds/working/tundra_summer_try3.png",
+    "source_sha256": "f7f2a9ba4685d81cf93bd02fb812412bb9675d828a3a1a3e4cb370fa46ee3d94",
+    "path": "/Users/rexxa/work/art-batch/R2/grounds/tundra_summer.png",
+    "sha256": "307251458cef081c9bee31e7806c2990b72b08e02c919bee9070e2935b0b3711",
+    "attempt": 3,
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      43
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "before": [
+      [
+        0.08333333333333337,
+        0.09523809523809523,
+        0.10897435897435903
+      ],
+      [
+        0.27867965367965375,
+        0.35211267605633806,
+        0.40672316384180796
+      ],
+      [
+        0.43137254901960786,
+        0.5294117647058824,
+        0.6196078431372549
+      ]
+    ],
+    "after": [
+      [
+        0.0923423423423424,
+        0.10606060606060608,
+        0.14035087719298245
+      ],
+      [
+        0.2834577114427861,
+        0.5473684210526315,
+        0.7906976744186047
+      ],
+      [
+        0.23921568627450981,
+        0.5176470588235295,
+        0.788235294117647
+      ]
+    ],
+    "reference": "tundra",
+    "seam_before": {
+      "horizontal_mae": 11.270833333333334,
+      "vertical_mae": 13.026041666666666,
+      "horizontal_ratio": 1.1453775582215948,
+      "vertical_ratio": 0.9999873068257543,
+      "passed": true
+    },
+    "seam_after": {
+      "horizontal_mae": 29.604166666666668,
+      "vertical_mae": 34.421875,
+      "horizontal_ratio": 1.0813719628200251,
+      "vertical_ratio": 0.9685814182328268,
+      "passed": false
+    },
+    "inherited_style": {
+      "candidate": "/Users/rexxa/work/art-batch/B2/grounds/raw/tundra_summer_try3.png",
+      "sha256": "1a6c6dc48fb67acb70a3c08d813b0adb1709b230ee544a2f3bd394394474117c",
+      "family": "ground",
+      "metrics": {
+        "edge_density": 0.28733623078861176,
+        "saturation_q25": 0.5102779555868627,
+        "saturation_q75": 0.5883986738289727,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.0,
+        "wash_flatness": 0.0037536507128794,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": false,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    "status": "BLOCKED_PRIOR_NONCOLOUR_GATES_NOT_WAIVED",
+    "alpha_canvas_hidden_unchanged": true
+  },
+  {
+    "id": "taiga_floor",
+    "source": "/Users/rexxa/work/art-batch/B2/grounds/working/taiga_floor_summer_try3.png",
+    "source_sha256": "3acb765fe7e47d2cd96c7cfd1e19b0aef72aa2e663c85d4fe5884165072b2391",
+    "path": "/Users/rexxa/work/art-batch/R2/grounds/taiga_floor_summer.png",
+    "sha256": "fcce6291fad14663c01522acf0b7782c6ebe358b6adcff17a3a291127f8b1dd2",
+    "attempt": 3,
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      43
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "before": [
+      [
+        0.0736434108527132,
+        0.07692307692307698,
+        0.08943089430894302
+      ],
+      [
+        0.3232702969545075,
+        0.34862385321100914,
+        0.371900826446281
+      ],
+      [
+        0.39215686274509803,
+        0.4588235294117647,
+        0.5294117647058824
+      ]
+    ],
+    "after": [
+      [
+        0.07526881720430112,
+        0.09090909090909094,
+        0.1408591408591408
+      ],
+      [
+        0.46794871794871795,
+        0.6666666666666666,
+        0.7922077922077922
+      ],
+      [
+        0.1803921568627451,
+        0.43529411764705883,
+        0.7529411764705882
+      ]
+    ],
+    "reference": "taiga_floor",
+    "seam_before": {
+      "horizontal_mae": 8.859375,
+      "vertical_mae": 10.994791666666666,
+      "horizontal_ratio": 1.1206822626355584,
+      "vertical_ratio": 1.0328670948501486,
+      "passed": true
+    },
+    "seam_after": {
+      "horizontal_mae": 30.875,
+      "vertical_mae": 34.869791666666664,
+      "horizontal_ratio": 1.1122083708075978,
+      "vertical_ratio": 0.9474205569269956,
+      "passed": false
+    },
+    "inherited_style": {
+      "candidate": "/Users/rexxa/work/art-batch/B2/grounds/raw/taiga_floor_summer_try3.png",
+      "sha256": "8282cc3890e7686019fe535404c3c9d32937f95a660f57f4ef38bf9d0f427888",
+      "family": "ground",
+      "metrics": {
+        "edge_density": 0.30031179138321995,
+        "saturation_q25": 0.6336394417831395,
+        "saturation_q75": 0.6701627983085456,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.0,
+        "wash_flatness": 0.0028666924641197987,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": false,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    "status": "BLOCKED_PRIOR_NONCOLOUR_GATES_NOT_WAIVED",
+    "alpha_canvas_hidden_unchanged": true
+  },
+  {
+    "id": "steppe",
+    "source": "/Users/rexxa/work/art-batch/B2/grounds/working/steppe_summer_try3.png",
+    "source_sha256": "d92e3d714f27e12858a88eaa960f375976bc9a43d8cd982b709fe65c707bd775",
+    "path": "/Users/rexxa/work/art-batch/R2/grounds/steppe_summer.png",
+    "sha256": "23dfadfb2d1a3b9648ca10e9c1727a7121f42ac97211d33629b1c235e1f4a9f7",
+    "attempt": 3,
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      43
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "before": [
+      [
+        0.08695652173913038,
+        0.0968992248062015,
+        0.1076388888888889
+      ],
+      [
+        0.32608695652173914,
+        0.34931506849315064,
+        0.36879432624113484
+      ],
+      [
+        0.4470588235294118,
+        0.5215686274509804,
+        0.596078431372549
+      ]
+    ],
+    "after": [
+      [
+        0.09999999999999998,
+        0.1333333333333333,
+        0.16666666666666663
+      ],
+      [
+        0.5454545454545455,
+        0.6847826086956522,
+        0.7894736842105263
+      ],
+      [
+        0.21176470588235294,
+        0.4470588235294118,
+        0.7215686274509804
+      ]
+    ],
+    "reference": "steppe",
+    "seam_before": {
+      "horizontal_mae": 7.1875,
+      "vertical_mae": 11.015625,
+      "horizontal_ratio": 0.9316330904414916,
+      "vertical_ratio": 1.101371289706648,
+      "passed": true
+    },
+    "seam_after": {
+      "horizontal_mae": 22.182291666666668,
+      "vertical_mae": 31.947916666666668,
+      "horizontal_ratio": 0.8978707455904056,
+      "vertical_ratio": 1.02688640639449,
+      "passed": false
+    },
+    "inherited_style": {
+      "candidate": "/Users/rexxa/work/art-batch/B2/grounds/raw/steppe_summer_try3.png",
+      "sha256": "8db2b515eb5ceb9f3cfca3688ffd9f23db596f690cefecdd91b3cc1646731c8d",
+      "family": "ground",
+      "metrics": {
+        "edge_density": 0.31840513983371127,
+        "saturation_q25": 0.6760587342093332,
+        "saturation_q75": 0.7157125894538839,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.0,
+        "wash_flatness": 0.003163027557315072,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": false,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    "status": "BLOCKED_PRIOR_NONCOLOUR_GATES_NOT_WAIVED",
+    "alpha_canvas_hidden_unchanged": true
+  },
+  {
+    "id": "temperate_meadow",
+    "source": "/Users/rexxa/work/art-batch/B2/grounds/working/temperate_meadow_summer_try3.png",
+    "source_sha256": "7081c8937d566974b7c5efbe20304f88eedb41f833d6c863e8fb5a0d41f58c78",
+    "path": "/Users/rexxa/work/art-batch/R2/grounds/temperate_meadow_summer.png",
+    "sha256": "213470496bf6b9fdcb2d5edc1bdb99e4b3f5f87f6a92b65fcbfffcedab4d2b5c",
+    "attempt": 3,
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      43
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "before": [
+      [
+        0.10377358490566035,
+        0.125,
+        0.13265306122448983
+      ],
+      [
+        0.327915240852856,
+        0.3478260869565217,
+        0.3671875
+      ],
+      [
+        0.47843137254901963,
+        0.5411764705882353,
+        0.615686274509804
+      ]
+    ],
+    "after": [
+      [
+        0.09966307733983476,
+        0.1342592592592593,
+        0.16666666666666663
+      ],
+      [
+        0.5350943138326955,
+        0.6842105263157895,
+        0.787878787878788
+      ],
+      [
+        0.21176470588235294,
+        0.4470588235294118,
+        0.7215686274509804
+      ]
+    ],
+    "reference": "temperate_meadow",
+    "seam_before": {
+      "horizontal_mae": 7.151041666666667,
+      "vertical_mae": 6.401041666666667,
+      "horizontal_ratio": 1.112598880956975,
+      "vertical_ratio": 0.7055559099317471,
+      "passed": true
+    },
+    "seam_after": {
+      "horizontal_mae": 25.958333333333332,
+      "vertical_mae": 22.463541666666668,
+      "horizontal_ratio": 1.101131318515609,
+      "vertical_ratio": 0.6945835474198423,
+      "passed": false
+    },
+    "inherited_style": {
+      "candidate": "/Users/rexxa/work/art-batch/B2/grounds/raw/temperate_meadow_summer_try3.png",
+      "sha256": "f17a1c0cf1eb606154289e448448316715fa35b7b9e7b7a6adac3b1b615cb4ba",
+      "family": "ground",
+      "metrics": {
+        "edge_density": 0.26437704711514237,
+        "saturation_q25": 0.5833057251030711,
+        "saturation_q75": 0.6144342630159969,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.0,
+        "wash_flatness": 0.0021277180596748924,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": false,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    "status": "BLOCKED_PRIOR_NONCOLOUR_GATES_NOT_WAIVED",
+    "alpha_canvas_hidden_unchanged": true
+  },
+  {
+    "id": "mediterranean_scrub",
+    "source": "/Users/rexxa/work/art-batch/B2/grounds/working/mediterranean_scrub_summer_try3.png",
+    "source_sha256": "a762137243363bb05d22c4a2e440f557fcc188ddcd837a919bef3454384ad9f8",
+    "path": "/Users/rexxa/work/art-batch/R2/grounds/mediterranean_scrub_summer.png",
+    "sha256": "6b028de8c421fbdedbabc91fa0853af79f6a0cd167df02423aeb22ee988b5020",
+    "attempt": 3,
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      43
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "before": [
+      [
+        0.08611111111111114,
+        0.08908045977011492,
+        0.10069444444444442
+      ],
+      [
+        0.3221849366144669,
+        0.34682080924855496,
+        0.375
+      ],
+      [
+        0.5294117647058824,
+        0.6392156862745098,
+        0.7058823529411765
+      ]
+    ],
+    "after": [
+      [
+        0.10688405797101452,
+        0.14367816091954022,
+        0.18253968253968256
+      ],
+      [
+        0.4935897435897436,
+        0.6829268292682926,
+        0.8142857142857144
+      ],
+      [
+        0.1568627450980392,
+        0.35294117647058826,
+        0.6666666666666666
+      ]
+    ],
+    "reference": "mediterranean_scrub",
+    "seam_before": {
+      "horizontal_mae": 9.984375,
+      "vertical_mae": 11.338541666666666,
+      "horizontal_ratio": 1.3579387656430957,
+      "vertical_ratio": 1.1541102518575865,
+      "passed": true
+    },
+    "seam_after": {
+      "horizontal_mae": 23.609375,
+      "vertical_mae": 29.161458333333332,
+      "horizontal_ratio": 1.0366257817916504,
+      "vertical_ratio": 1.0019599655727787,
+      "passed": false
+    },
+    "inherited_style": {
+      "candidate": "/Users/rexxa/work/art-batch/B2/grounds/raw/mediterranean_scrub_summer_try3.png",
+      "sha256": "f84769625459f9f00750080d080b019ff754e698e648a6828ab0f8b57d5262b6",
+      "family": "ground",
+      "metrics": {
+        "edge_density": 0.25431468883849834,
+        "saturation_q25": 0.5489133835191972,
+        "saturation_q75": 0.5903372306508072,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.0,
+        "wash_flatness": 0.0024586139271473933,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": false,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    "status": "BLOCKED_PRIOR_NONCOLOUR_GATES_NOT_WAIVED",
+    "alpha_canvas_hidden_unchanged": true
+  },
+  {
+    "id": "marsh",
+    "source": "/Users/rexxa/work/art-batch/B2/grounds/working/marsh_summer_try3.png",
+    "source_sha256": "af2f51ae6e14345b31c48846a468a00f50264fb758bdb853e0a274ad3c321b1d",
+    "path": "/Users/rexxa/work/art-batch/R2/grounds/marsh_summer.png",
+    "sha256": "b90b3fbb2a56846813621dab4353d3df998ad6cf3d8ab32433e25be747609d7e",
+    "attempt": 3,
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      43
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "before": [
+      [
+        0.0652173913043479,
+        0.07333333333333336,
+        0.08666666666666667
+      ],
+      [
+        0.31471077819392423,
+        0.34567901234567894,
+        0.38661064425770314
+      ],
+      [
+        0.2627450980392157,
+        0.30980392156862746,
+        0.3803921568627451
+      ]
+    ],
+    "after": [
+      [
+        0.10574782432705931,
+        0.14492753623188404,
+        0.18181818181818177
+      ],
+      [
+        0.4923076923076922,
+        0.6842105263157895,
+        0.8148148148148148
+      ],
+      [
+        0.1568627450980392,
+        0.35294117647058826,
+        0.6666666666666666
+      ]
+    ],
+    "reference": "marsh",
+    "seam_before": {
+      "horizontal_mae": 5.395833333333333,
+      "vertical_mae": 7.026041666666667,
+      "horizontal_ratio": 0.9638490164805954,
+      "vertical_ratio": 0.870902290311011,
+      "passed": true
+    },
+    "seam_after": {
+      "horizontal_mae": 21.354166666666668,
+      "vertical_mae": 25.890625,
+      "horizontal_ratio": 0.9942952167586668,
+      "vertical_ratio": 0.8577896590731677,
+      "passed": false
+    },
+    "inherited_style": {
+      "candidate": "/Users/rexxa/work/art-batch/B2/grounds/raw/marsh_summer_try3.png",
+      "sha256": "4564d70c1a373744ea86c903be63e41c8a8c0048503edebdf79050d02845eb96",
+      "family": "ground",
+      "metrics": {
+        "edge_density": 0.2126952632905014,
+        "saturation_q25": 0.47067146719309677,
+        "saturation_q75": 0.5139565539292394,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.0,
+        "wash_flatness": 0.0013671885905798499,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": false,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    "status": "BLOCKED_PRIOR_NONCOLOUR_GATES_NOT_WAIVED",
+    "alpha_canvas_hidden_unchanged": true
+  },
+  {
+    "id": "river_gravel",
+    "source": "/Users/rexxa/work/art-batch/B2/grounds/working/river_gravel_summer_try3.png",
+    "source_sha256": "3d0044eaff7b30ddfba28c2bce932251c67f433ca958a7f256d55ee551f941bd",
+    "path": "/Users/rexxa/work/art-batch/R2/grounds/river_gravel_summer.png",
+    "sha256": "c1f67f8cef90e650e73287ad7472d3970875b450a80995e100c2d21c8e88e306",
+    "attempt": 3,
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      43
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "before": [
+      [
+        0.08870967741935487,
+        0.09302325581395354,
+        0.09909909909909909
+      ],
+      [
+        0.2666666666666667,
+        0.35398230088495575,
+        0.41756552691187576
+      ],
+      [
+        0.4470588235294118,
+        0.5607843137254902,
+        0.6666666666666666
+      ]
+    ],
+    "after": [
+      [
+        0.1049382716049383,
+        0.1228070175438597,
+        0.16666666666666663
+      ],
+      [
+        0.14410597037715686,
+        0.3040935672514619,
+        0.5390625
+      ],
+      [
+        0.2901960784313726,
+        0.49019607843137253,
+        0.7607843137254902
+      ]
+    ],
+    "reference": "river_gravel",
+    "seam_before": {
+      "horizontal_mae": 11.776041666666666,
+      "vertical_mae": 13.979166666666666,
+      "horizontal_ratio": 0.8354379153201447,
+      "vertical_ratio": 0.7868477137991046,
+      "passed": true
+    },
+    "seam_after": {
+      "horizontal_mae": 27.526041666666668,
+      "vertical_mae": 31.104166666666668,
+      "horizontal_ratio": 0.8657919166231112,
+      "vertical_ratio": 0.79342544791983,
+      "passed": false
+    },
+    "inherited_style": {
+      "candidate": "/Users/rexxa/work/art-batch/B2/grounds/raw/river_gravel_summer_try3.png",
+      "sha256": "0ad1f379f2c75bff0d8922bc1111e4e05f081ebfad37182dd179d55ea60136dc",
+      "family": "ground",
+      "metrics": {
+        "edge_density": 0.30190224237843283,
+        "saturation_q25": 0.3344791781065621,
+        "saturation_q75": 0.4234653132497606,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.0,
+        "wash_flatness": 0.005237243016527195,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": false,
+        "wash_flatness": true
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    "status": "BLOCKED_PRIOR_NONCOLOUR_GATES_NOT_WAIVED",
+    "alpha_canvas_hidden_unchanged": true
+  },
+  {
+    "id": "highland_rock",
+    "source": "/Users/rexxa/work/art-batch/B2/grounds/working/highland_rock_summer_try3.png",
+    "source_sha256": "3ef14de8f1307a79e4c3b0b8282d5986747da762d322c16d9c247a26f0574f11",
+    "path": "/Users/rexxa/work/art-batch/R2/grounds/highland_rock_summer.png",
+    "sha256": "e04c4ab2d1971e32dd795e6c6e51ece752e8be84343205324639665ff7b0c128",
+    "attempt": 3,
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      43
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "before": [
+      [
+        0.08333333333333326,
+        0.08564993564993562,
+        0.09935897435897434
+      ],
+      [
+        0.25736784204736257,
+        0.3333333333333333,
+        0.4585244648318043
+      ],
+      [
+        0.47843137254901963,
+        0.6039215686274509,
+        0.7058823529411765
+      ]
+    ],
+    "after": [
+      [
+        0.09195402298850575,
+        0.10569105691056913,
+        0.14015151515151514
+      ],
+      [
+        0.2820512820512821,
+        0.5449256414446805,
+        0.7924528301886793
+      ],
+      [
+        0.23921568627450981,
+        0.5176470588235295,
+        0.788235294117647
+      ]
+    ],
+    "reference": "highland_rock",
+    "seam_before": {
+      "horizontal_mae": 12.604166666666666,
+      "vertical_mae": 13.911458333333334,
+      "horizontal_ratio": 1.1562263006218716,
+      "vertical_ratio": 0.9473284204718825,
+      "passed": true
+    },
+    "seam_after": {
+      "horizontal_mae": 28.354166666666668,
+      "vertical_mae": 31.208333333333332,
+      "horizontal_ratio": 1.1299666583202645,
+      "vertical_ratio": 0.9509961002448684,
+      "passed": false
+    },
+    "inherited_style": {
+      "candidate": "/Users/rexxa/work/art-batch/B2/grounds/raw/highland_rock_summer_try3.png",
+      "sha256": "52f99af0d9d3b29bbc8b9adee5f07d36bf975f1929fc7a2a5d36a7693420be5e",
+      "family": "ground",
+      "metrics": {
+        "edge_density": 0.27236079617032,
+        "saturation_q25": 0.36423488847938834,
+        "saturation_q75": 0.5082876847591375,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.0,
+        "wash_flatness": 0.0032292551324442508,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": false,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    "status": "BLOCKED_PRIOR_NONCOLOUR_GATES_NOT_WAIVED",
+    "alpha_canvas_hidden_unchanged": true
+  }
+]

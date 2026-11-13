@@ -1,0 +1,79 @@
+{
+  "r2": {
+    "id": "wild_flax_harvested",
+    "path": "art/flora/climate/herbaceous/wild_flax_harvested.png",
+    "sha256": "977e1d76ceb7552114f74dae16b1e95aa18c0e0d10331ead25173a8836a2a327",
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "role": "flora",
+    "type": "flora",
+    "size": "",
+    "mask": "",
+    "species": "wild_flax",
+    "state": "harvested",
+    "season": "summer",
+    "climate": [
+      "mild",
+      "neutral",
+      "harsh"
+    ],
+    "dest": "flora/climate/herbaceous/wild_flax_harvested.png",
+    "source": "art/flora/climate/herbaceous/wild_flax_harvested.png",
+    "source_sha256": "977e1d76ceb7552114f74dae16b1e95aa18c0e0d10331ead25173a8836a2a327",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "d81cc4ae664655c0cb10ea3fb4177bdcf18fd63ccb499a0ac508270ef86dbf03",
+    "sidecar": "art/flora/climate/herbaceous/wild_flax_harvested.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/flora/sprites/berry_bush_bare.png|summer|harvested",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "wild_flax_harvested",
+    "path": "art/flora/climate/herbaceous/wild_flax_harvested.png",
+    "sha256": "d81cc4ae664655c0cb10ea3fb4177bdcf18fd63ccb499a0ac508270ef86dbf03",
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "species": "wild_flax",
+    "size": "",
+    "state": "harvested",
+    "season": "summer",
+    "climate": [
+      "mild",
+      "neutral",
+      "harsh"
+    ],
+    "kind": "",
+    "dest": "flora/climate/herbaceous/wild_flax_harvested.png",
+    "mask": "",
+    "sidecar": "",
+    "tint": {},
+    "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+    "runtime_code": null,
+    "placement_status": "VERIFIED_ORIGIN",
+    "source": "art/flora/climate/herbaceous/wild_flax_harvested.png",
+    "role": "flora",
+    "type": "flora"
+  }
+}

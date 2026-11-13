@@ -1,0 +1,71 @@
+{
+  "r2": {
+    "id": "mediterranean_scrub_winter",
+    "path": "art/flora/climate/shrubs/mediterranean_scrub_winter.png",
+    "sha256": "04c7567493cc1ac61022ff31898e3db46b2c307e8f940f1fcef7ffcf0a972430",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "shrubs",
+    "role": "flora",
+    "type": "flora",
+    "size": "",
+    "mask": "",
+    "species": "mediterranean_scrub",
+    "state": "winter",
+    "season": "summer",
+    "climate": [
+      "mild"
+    ],
+    "dest": "flora/climate/shrubs/mediterranean_scrub_winter.png",
+    "source": "art/flora/climate/shrubs/mediterranean_scrub_winter.png",
+    "source_sha256": "04c7567493cc1ac61022ff31898e3db46b2c307e8f940f1fcef7ffcf0a972430",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "820f47398f4022cb291d1a7d4d304926ef4417e25b054e92bbd4908233cf12c9",
+    "sidecar": "art/flora/climate/shrubs/mediterranean_scrub_winter.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/flora/sprites/berry_bush_bare.png|summer|winter",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "mediterranean_scrub_winter",
+    "path": "art/flora/climate/shrubs/mediterranean_scrub_winter.png",
+    "sha256": "820f47398f4022cb291d1a7d4d304926ef4417e25b054e92bbd4908233cf12c9",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "shrubs",
+    "species": "mediterranean_scrub",
+    "size": "",
+    "state": "winter",
+    "season": "summer",
+    "climate": [
+      "mild"
+    ],
+    "kind": "",
+    "dest": "flora/climate/shrubs/mediterranean_scrub_winter.png",
+    "mask": "",
+    "sidecar": "",
+    "tint": {},
+    "role": "flora",
+    "type": "flora"
+  }
+}

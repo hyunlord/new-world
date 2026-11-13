@@ -1,0 +1,82 @@
+{
+  "r2": {
+    "id": "birch_large_spring_v1",
+    "path": "art/flora/climate/trees/birch_large_spring_v1.png",
+    "sha256": "4022d99ab41b683ecfa84b44ff8f1d6fd069f7df0713f257c402f113e5259b7f",
+    "canvas": [
+      192,
+      192
+    ],
+    "anchor": [
+      96,
+      180
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "trees",
+    "role": "tree",
+    "type": "flora",
+    "size": "large",
+    "mask": "art/flora/masks/birch_large_v1.png",
+    "species": "birch",
+    "state": "full",
+    "season": "spring",
+    "climate": null,
+    "dest": "flora/climate/trees/birch_large_spring_v1.png",
+    "source": "art/flora/climate/trees/birch_large_spring_v1.png",
+    "source_sha256": "4022d99ab41b683ecfa84b44ff8f1d6fd069f7df0713f257c402f113e5259b7f",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "4022d99ab41b683ecfa84b44ff8f1d6fd069f7df0713f257c402f113e5259b7f",
+    "sidecar": "art/flora/climate/trees/birch_large_spring_v1.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/flora/sprites/birch_large_v1.png|art/flora/masks/birch_large_v1.png|spring|full",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "birch_large_spring_v1",
+    "path": "art/flora/climate/trees/birch_large_spring_v1.png",
+    "sha256": "4022d99ab41b683ecfa84b44ff8f1d6fd069f7df0713f257c402f113e5259b7f",
+    "canvas": [
+      192,
+      192
+    ],
+    "anchor": [
+      96,
+      180
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "trees",
+    "species": "birch",
+    "size": "large",
+    "state": "full",
+    "season": "spring",
+    "climate": null,
+    "kind": "derived_season",
+    "dest": "flora/climate/trees/birch_large_spring_v1.png",
+    "mask": "art/flora/masks/birch_large_v1.png",
+    "sidecar": "",
+    "tint": {
+      "delta_lab": [
+        6.0,
+        0.0,
+        6.0
+      ],
+      "frame": "foliage",
+      "snow_cap": {
+        "depth_px": 0,
+        "alpha": 0.0
+      }
+    },
+    "source": "art/flora/climate/trees/birch_large_spring_v1.png",
+    "source_sha256": "2683048c36fe7cd7f24cdcef5046f27ab87ca8d39db245448654ae83858fac5f",
+    "mask_sha256": "744c5e6a1a234f6ac8ca08b2c80a41916361a34f23f7f1507ab847e40e72eb2a",
+    "role": "tree",
+    "type": "flora",
+    "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+  }
+}

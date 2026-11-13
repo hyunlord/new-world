@@ -1,0 +1,82 @@
+{
+  "r2": {
+    "id": "pine_large_autumn_v1",
+    "path": "art/flora/climate/trees/pine_large_autumn_v1.png",
+    "sha256": "c69d226cebddcb92d5023fd820565d64fbabd1a92cb1e2fb285d89f6721d30e6",
+    "canvas": [
+      192,
+      192
+    ],
+    "anchor": [
+      96,
+      180
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "trees",
+    "role": "tree",
+    "type": "flora",
+    "size": "large",
+    "mask": "art/flora/masks/pine_large_v1.png",
+    "species": "pine",
+    "state": "full",
+    "season": "autumn",
+    "climate": null,
+    "dest": "flora/climate/trees/pine_large_autumn_v1.png",
+    "source": "art/flora/climate/trees/pine_large_autumn_v1.png",
+    "source_sha256": "c69d226cebddcb92d5023fd820565d64fbabd1a92cb1e2fb285d89f6721d30e6",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "c69d226cebddcb92d5023fd820565d64fbabd1a92cb1e2fb285d89f6721d30e6",
+    "sidecar": "art/flora/climate/trees/pine_large_autumn_v1.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/flora/sprites/pine_large_v1.png|art/flora/masks/pine_large_v1.png|autumn|full",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "pine_large_autumn_v1",
+    "path": "art/flora/climate/trees/pine_large_autumn_v1.png",
+    "sha256": "c69d226cebddcb92d5023fd820565d64fbabd1a92cb1e2fb285d89f6721d30e6",
+    "canvas": [
+      192,
+      192
+    ],
+    "anchor": [
+      96,
+      180
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "trees",
+    "species": "pine",
+    "size": "large",
+    "state": "full",
+    "season": "autumn",
+    "climate": null,
+    "kind": "derived_season",
+    "dest": "flora/climate/trees/pine_large_autumn_v1.png",
+    "mask": "art/flora/masks/pine_large_v1.png",
+    "sidecar": "",
+    "tint": {
+      "delta_lab": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "frame": "foliage",
+      "snow_cap": {
+        "depth_px": 0,
+        "alpha": 0.0
+      }
+    },
+    "source": "art/flora/climate/trees/pine_large_autumn_v1.png",
+    "source_sha256": "c69d226cebddcb92d5023fd820565d64fbabd1a92cb1e2fb285d89f6721d30e6",
+    "mask_sha256": "9b0d55bce8477dd23df571182cea58eda0e3f83eeb2760dda6c7e8a85e2da01c",
+    "role": "tree",
+    "type": "flora",
+    "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+  }
+}

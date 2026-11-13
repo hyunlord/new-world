@@ -1,0 +1,71 @@
+{
+  "r2": {
+    "id": "berry_harsh_full",
+    "path": "art/flora/climate/shrubs/berry_harsh_full.png",
+    "sha256": "6c01cd175bc3031a0cf7593c4c6ecb093da06585d9b60fbf50c1938531357140",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "shrubs",
+    "role": "flora",
+    "type": "flora",
+    "size": "",
+    "mask": "",
+    "species": "berry_harsh",
+    "state": "full",
+    "season": "summer",
+    "climate": [
+      "harsh"
+    ],
+    "dest": "flora/climate/shrubs/berry_harsh_full.png",
+    "source": "art/flora/climate/shrubs/berry_harsh_full.png",
+    "source_sha256": "6c01cd175bc3031a0cf7593c4c6ecb093da06585d9b60fbf50c1938531357140",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "89f5b4ec2173941c4185b44bb650e2cad07cc065f0939f9a96e8546e61922d90",
+    "sidecar": "art/flora/climate/shrubs/berry_harsh_full.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/flora/sprites/berry_bush_full.png|summer|full",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "berry_harsh_full",
+    "path": "art/flora/climate/shrubs/berry_harsh_full.png",
+    "sha256": "89f5b4ec2173941c4185b44bb650e2cad07cc065f0939f9a96e8546e61922d90",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "shrubs",
+    "species": "berry_harsh",
+    "size": "",
+    "state": "full",
+    "season": "summer",
+    "climate": [
+      "harsh"
+    ],
+    "kind": "",
+    "dest": "flora/climate/shrubs/berry_harsh_full.png",
+    "mask": "",
+    "sidecar": "",
+    "tint": {},
+    "role": "flora",
+    "type": "flora"
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "r2": {
+    "id": "berry_neutral_harvested",
+    "path": "art/flora/climate/shrubs/berry_neutral_harvested.png",
+    "sha256": "3ce2cd0091523e02a91057f775a77b8325b103299ec1559e1d3611a725002d79",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "shrubs",
+    "role": "flora",
+    "type": "flora",
+    "size": "",
+    "mask": "",
+    "species": "berry_neutral",
+    "state": "harvested",
+    "season": "summer",
+    "climate": [
+      "neutral"
+    ],
+    "dest": "flora/climate/shrubs/berry_neutral_harvested.png",
+    "source": "art/flora/climate/shrubs/berry_neutral_harvested.png",
+    "source_sha256": "3ce2cd0091523e02a91057f775a77b8325b103299ec1559e1d3611a725002d79",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "e379fedf5b5b2eccb89ddfc2f46cf5f2a4bdfdb9656c85993df351fbf7e17933",
+    "sidecar": "art/flora/climate/shrubs/berry_neutral_harvested.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/flora/sprites/berry_bush_bare.png|summer|harvested",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "berry_neutral_harvested",
+    "path": "art/flora/climate/shrubs/berry_neutral_harvested.png",
+    "sha256": "e379fedf5b5b2eccb89ddfc2f46cf5f2a4bdfdb9656c85993df351fbf7e17933",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "shrubs",
+    "species": "berry_neutral",
+    "size": "",
+    "state": "harvested",
+    "season": "summer",
+    "climate": [
+      "neutral"
+    ],
+    "kind": "",
+    "dest": "flora/climate/shrubs/berry_neutral_harvested.png",
+    "mask": "",
+    "sidecar": "",
+    "tint": {},
+    "role": "flora",
+    "type": "flora"
+  }
+}

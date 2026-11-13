@@ -1,0 +1,79 @@
+{
+  "r2": {
+    "id": "wild_barley_full",
+    "path": "art/flora/climate/herbaceous/wild_barley_full.png",
+    "sha256": "471f2877fc53e43cbffad5681d4b2d6cabee50e6e09968063e2c87378aca7de8",
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "role": "flora",
+    "type": "flora",
+    "size": "",
+    "mask": "",
+    "species": "wild_barley",
+    "state": "full",
+    "season": "summer",
+    "climate": [
+      "mild",
+      "neutral",
+      "harsh"
+    ],
+    "dest": "flora/climate/herbaceous/wild_barley_full.png",
+    "source": "art/flora/climate/herbaceous/wild_barley_full.png",
+    "source_sha256": "471f2877fc53e43cbffad5681d4b2d6cabee50e6e09968063e2c87378aca7de8",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "0adc9814b82a44a396631c0272c7b22c27e609193d51bb84bcbc05cb86d4de2d",
+    "sidecar": "art/flora/climate/herbaceous/wild_barley_full.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/style05/env/plants/reeds.png|summer|full",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "wild_barley_full",
+    "path": "art/flora/climate/herbaceous/wild_barley_full.png",
+    "sha256": "0adc9814b82a44a396631c0272c7b22c27e609193d51bb84bcbc05cb86d4de2d",
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "species": "wild_barley",
+    "size": "",
+    "state": "full",
+    "season": "summer",
+    "climate": [
+      "mild",
+      "neutral",
+      "harsh"
+    ],
+    "kind": "",
+    "dest": "flora/climate/herbaceous/wild_barley_full.png",
+    "mask": "",
+    "sidecar": "",
+    "tint": {},
+    "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+    "runtime_code": null,
+    "placement_status": "VERIFIED_ORIGIN",
+    "source": "art/flora/climate/herbaceous/wild_barley_full.png",
+    "role": "flora",
+    "type": "flora"
+  }
+}

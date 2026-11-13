@@ -1,0 +1,71 @@
+{
+  "r2": {
+    "id": "berry_harsh_winter",
+    "path": "art/flora/climate/shrubs/berry_harsh_winter.png",
+    "sha256": "fdd45d0d8b032b2540f412ab7d0d90bb1a503d8306f0b2897d2e2d1b58feb009",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "shrubs",
+    "role": "flora",
+    "type": "flora",
+    "size": "",
+    "mask": "",
+    "species": "berry_harsh",
+    "state": "winter",
+    "season": "summer",
+    "climate": [
+      "harsh"
+    ],
+    "dest": "flora/climate/shrubs/berry_harsh_winter.png",
+    "source": "art/flora/climate/shrubs/berry_harsh_winter.png",
+    "source_sha256": "fdd45d0d8b032b2540f412ab7d0d90bb1a503d8306f0b2897d2e2d1b58feb009",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "d4f0117c42cd8aee5eecdb52c29a8bb7767ce5ad451d5f514a796f92f350aa6a",
+    "sidecar": "art/flora/climate/shrubs/berry_harsh_winter.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/flora/sprites/berry_bush_bare.png|summer|winter",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "berry_harsh_winter",
+    "path": "art/flora/climate/shrubs/berry_harsh_winter.png",
+    "sha256": "d4f0117c42cd8aee5eecdb52c29a8bb7767ce5ad451d5f514a796f92f350aa6a",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "shrubs",
+    "species": "berry_harsh",
+    "size": "",
+    "state": "winter",
+    "season": "summer",
+    "climate": [
+      "harsh"
+    ],
+    "kind": "",
+    "dest": "flora/climate/shrubs/berry_harsh_winter.png",
+    "mask": "",
+    "sidecar": "",
+    "tint": {},
+    "role": "flora",
+    "type": "flora"
+  }
+}

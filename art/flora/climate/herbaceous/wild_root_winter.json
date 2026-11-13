@@ -1,0 +1,79 @@
+{
+  "r2": {
+    "id": "wild_root_winter",
+    "path": "art/flora/climate/herbaceous/wild_root_winter.png",
+    "sha256": "e9b04721894640bcedee183eda9acd8e6da9a4ff97e94130d4cc3b53bad1ca6c",
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "role": "flora",
+    "type": "flora",
+    "size": "",
+    "mask": "",
+    "species": "wild_root",
+    "state": "winter",
+    "season": "summer",
+    "climate": [
+      "mild",
+      "neutral",
+      "harsh"
+    ],
+    "dest": "flora/climate/herbaceous/wild_root_winter.png",
+    "source": "art/flora/climate/herbaceous/wild_root_winter.png",
+    "source_sha256": "e9b04721894640bcedee183eda9acd8e6da9a4ff97e94130d4cc3b53bad1ca6c",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "9f1ee2da25ef046cbaaea402271f6f9e171f0b6ca2421c5ed95a2df3910f915b",
+    "sidecar": "art/flora/climate/herbaceous/wild_root_winter.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/flora/sprites/oak_small_bare.png|summer|winter",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "wild_root_winter",
+    "path": "art/flora/climate/herbaceous/wild_root_winter.png",
+    "sha256": "9f1ee2da25ef046cbaaea402271f6f9e171f0b6ca2421c5ed95a2df3910f915b",
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "species": "wild_root",
+    "size": "",
+    "state": "winter",
+    "season": "summer",
+    "climate": [
+      "mild",
+      "neutral",
+      "harsh"
+    ],
+    "kind": "",
+    "dest": "flora/climate/herbaceous/wild_root_winter.png",
+    "mask": "",
+    "sidecar": "",
+    "tint": {},
+    "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+    "runtime_code": null,
+    "placement_status": "VERIFIED_ORIGIN",
+    "source": "art/flora/climate/herbaceous/wild_root_winter.png",
+    "role": "flora",
+    "type": "flora"
+  }
+}

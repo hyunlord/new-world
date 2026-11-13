@@ -1,0 +1,75 @@
+{
+  "r2": {
+    "id": "wild_hazel_harvested",
+    "path": "art/flora/climate/shrubs/wild_hazel_harvested.png",
+    "sha256": "6e9ab971062088263dc3979ec57b758886812a2944c9ef5bef4ddcdfac2f71de",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "shrubs",
+    "role": "flora",
+    "type": "flora",
+    "size": "",
+    "mask": "",
+    "species": "wild_hazel",
+    "state": "harvested",
+    "season": "summer",
+    "climate": [
+      "harsh",
+      "neutral",
+      "mild"
+    ],
+    "dest": "flora/climate/shrubs/wild_hazel_harvested.png",
+    "source": "art/flora/climate/shrubs/wild_hazel_harvested.png",
+    "source_sha256": "6e9ab971062088263dc3979ec57b758886812a2944c9ef5bef4ddcdfac2f71de",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "2530f354621ffa5378d8a2a8d81b192db8af1d5eabc7d6f63b37cee9a8473935",
+    "sidecar": "art/flora/climate/shrubs/wild_hazel_harvested.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/flora/sprites/berry_bush_bare.png|summer|harvested",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "wild_hazel_harvested",
+    "path": "art/flora/climate/shrubs/wild_hazel_harvested.png",
+    "sha256": "2530f354621ffa5378d8a2a8d81b192db8af1d5eabc7d6f63b37cee9a8473935",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "shrubs",
+    "species": "wild_hazel",
+    "size": "",
+    "state": "harvested",
+    "season": "summer",
+    "climate": [
+      "harsh",
+      "neutral",
+      "mild"
+    ],
+    "kind": "",
+    "dest": "flora/climate/shrubs/wild_hazel_harvested.png",
+    "mask": "",
+    "sidecar": "",
+    "tint": {},
+    "role": "flora",
+    "type": "flora"
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "r2": {
+    "id": "wild_einkorn_harvested",
+    "path": "art/flora/climate/herbaceous/wild_einkorn_harvested.png",
+    "sha256": "a8d3aa74f95588d9d698ecd8b68014f4f330468d062cfedb883b30848591fc62",
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "role": "flora",
+    "type": "flora",
+    "size": "",
+    "mask": "",
+    "species": "wild_einkorn",
+    "state": "harvested",
+    "season": "summer",
+    "climate": null,
+    "dest": "flora/climate/herbaceous/wild_einkorn_harvested.png",
+    "source": "art/flora/climate/herbaceous/wild_einkorn_harvested.png",
+    "source_sha256": "a8d3aa74f95588d9d698ecd8b68014f4f330468d062cfedb883b30848591fc62",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "fba276da529183c504900ea87b00fee20e9148c71413b8cc0f1f5bd9049d849b",
+    "sidecar": "art/flora/climate/herbaceous/wild_einkorn_harvested.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/style05/env/plants/reeds.png|summer|harvested",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "wild_einkorn_harvested",
+    "path": "art/flora/climate/herbaceous/wild_einkorn_harvested.png",
+    "sha256": "fba276da529183c504900ea87b00fee20e9148c71413b8cc0f1f5bd9049d849b",
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "species": "wild_einkorn",
+    "size": "",
+    "state": "harvested",
+    "season": "summer",
+    "climate": null,
+    "kind": "",
+    "dest": "flora/climate/herbaceous/wild_einkorn_harvested.png",
+    "mask": "",
+    "sidecar": "",
+    "tint": {},
+    "runtime_binding": "PROPOSED_ID",
+    "runtime_code": null,
+    "placement_status": "PROPOSED_NOT_APPLIED",
+    "source": "art/flora/climate/herbaceous/wild_einkorn_harvested.png",
+    "role": "flora",
+    "type": "flora"
+  }
+}

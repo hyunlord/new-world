@@ -1,0 +1,77 @@
+{
+  "r2": {
+    "id": "wild_pea_harvested",
+    "path": "art/flora/climate/herbaceous/wild_pea_harvested.png",
+    "sha256": "e84d8d77cd3c9847bfa257e6cb7e36d42d54a0197327c17ddb709e20f6401245",
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "role": "flora",
+    "type": "flora",
+    "size": "",
+    "mask": "",
+    "species": "wild_pea",
+    "state": "harvested",
+    "season": "summer",
+    "climate": [
+      "mild",
+      "neutral"
+    ],
+    "dest": "flora/climate/herbaceous/wild_pea_harvested.png",
+    "source": "art/flora/climate/herbaceous/wild_pea_harvested.png",
+    "source_sha256": "e84d8d77cd3c9847bfa257e6cb7e36d42d54a0197327c17ddb709e20f6401245",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "362bf7408c501765d29b0f0f9a4eb2865b2826e4d52fd973784cc8190ab415bd",
+    "sidecar": "art/flora/climate/herbaceous/wild_pea_harvested.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/flora/sprites/berry_bush_bare.png|summer|harvested",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "wild_pea_harvested",
+    "path": "art/flora/climate/herbaceous/wild_pea_harvested.png",
+    "sha256": "362bf7408c501765d29b0f0f9a4eb2865b2826e4d52fd973784cc8190ab415bd",
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "species": "wild_pea",
+    "size": "",
+    "state": "harvested",
+    "season": "summer",
+    "climate": [
+      "mild",
+      "neutral"
+    ],
+    "kind": "",
+    "dest": "flora/climate/herbaceous/wild_pea_harvested.png",
+    "mask": "",
+    "sidecar": "",
+    "tint": {},
+    "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+    "runtime_code": null,
+    "placement_status": "VERIFIED_ORIGIN",
+    "source": "art/flora/climate/herbaceous/wild_pea_harvested.png",
+    "role": "flora",
+    "type": "flora"
+  }
+}

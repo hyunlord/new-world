@@ -1,0 +1,82 @@
+{
+  "r2": {
+    "id": "oak_small_spring_v1",
+    "path": "art/flora/climate/trees/oak_small_spring_v1.png",
+    "sha256": "5a20f65684f5d727d2e1349b6a4fab447ce57be11d0f9632400ebd44aff7dac8",
+    "canvas": [
+      128,
+      112
+    ],
+    "anchor": [
+      64,
+      100
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "trees",
+    "role": "tree",
+    "type": "flora",
+    "size": "small",
+    "mask": "art/flora/masks/oak_small_v1.png",
+    "species": "oak",
+    "state": "full",
+    "season": "spring",
+    "climate": null,
+    "dest": "flora/climate/trees/oak_small_spring_v1.png",
+    "source": "art/flora/climate/trees/oak_small_spring_v1.png",
+    "source_sha256": "5a20f65684f5d727d2e1349b6a4fab447ce57be11d0f9632400ebd44aff7dac8",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "5a20f65684f5d727d2e1349b6a4fab447ce57be11d0f9632400ebd44aff7dac8",
+    "sidecar": "art/flora/climate/trees/oak_small_spring_v1.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/flora/sprites/oak_small_v1.png|art/flora/masks/oak_small_v1.png|spring|full",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "oak_small_spring_v1",
+    "path": "art/flora/climate/trees/oak_small_spring_v1.png",
+    "sha256": "5a20f65684f5d727d2e1349b6a4fab447ce57be11d0f9632400ebd44aff7dac8",
+    "canvas": [
+      128,
+      112
+    ],
+    "anchor": [
+      64,
+      100
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "trees",
+    "species": "oak",
+    "size": "small",
+    "state": "full",
+    "season": "spring",
+    "climate": null,
+    "kind": "derived_season",
+    "dest": "flora/climate/trees/oak_small_spring_v1.png",
+    "mask": "art/flora/masks/oak_small_v1.png",
+    "sidecar": "",
+    "tint": {
+      "delta_lab": [
+        6.0,
+        0.0,
+        6.0
+      ],
+      "frame": "foliage",
+      "snow_cap": {
+        "depth_px": 0,
+        "alpha": 0.0
+      }
+    },
+    "source": "art/flora/climate/trees/oak_small_spring_v1.png",
+    "source_sha256": "38c6970cf65a5144291399da25068eec09c6209e826c5ccd244155b4e086773f",
+    "mask_sha256": "aed50a4c5445cee6efe02c4cc52bc607eca736c5f7b86fbadab22d6314e23d4a",
+    "role": "tree",
+    "type": "flora",
+    "adoption_state": "DERIVED_FROM_EXISTING_CATALOG"
+  }
+}

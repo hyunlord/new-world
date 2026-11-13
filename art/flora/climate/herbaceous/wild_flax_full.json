@@ -1,0 +1,79 @@
+{
+  "r2": {
+    "id": "wild_flax_full",
+    "path": "art/flora/climate/herbaceous/wild_flax_full.png",
+    "sha256": "2691f15a9a1c86df83e2683f72a1285696039f7c8e4b35bc6736538896506503",
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "role": "flora",
+    "type": "flora",
+    "size": "",
+    "mask": "",
+    "species": "wild_flax",
+    "state": "full",
+    "season": "summer",
+    "climate": [
+      "mild",
+      "neutral",
+      "harsh"
+    ],
+    "dest": "flora/climate/herbaceous/wild_flax_full.png",
+    "source": "art/flora/climate/herbaceous/wild_flax_full.png",
+    "source_sha256": "2691f15a9a1c86df83e2683f72a1285696039f7c8e4b35bc6736538896506503",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "4b4f92eb5cd4d1c264f554db8449bebe0e29121e501646782bf325de252eab5d",
+    "sidecar": "art/flora/climate/herbaceous/wild_flax_full.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/flora/sprites/berry_bush_bare.png|summer|full",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "wild_flax_full",
+    "path": "art/flora/climate/herbaceous/wild_flax_full.png",
+    "sha256": "4b4f92eb5cd4d1c264f554db8449bebe0e29121e501646782bf325de252eab5d",
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "species": "wild_flax",
+    "size": "",
+    "state": "full",
+    "season": "summer",
+    "climate": [
+      "mild",
+      "neutral",
+      "harsh"
+    ],
+    "kind": "",
+    "dest": "flora/climate/herbaceous/wild_flax_full.png",
+    "mask": "",
+    "sidecar": "",
+    "tint": {},
+    "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+    "runtime_code": null,
+    "placement_status": "VERIFIED_ORIGIN",
+    "source": "art/flora/climate/herbaceous/wild_flax_full.png",
+    "role": "flora",
+    "type": "flora"
+  }
+}

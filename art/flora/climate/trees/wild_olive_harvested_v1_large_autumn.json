@@ -1,0 +1,138 @@
+{
+  "r2": {
+    "id": "wild_olive_harvested_v1_large_autumn",
+    "path": "art/flora/climate/trees/wild_olive_harvested_v1_large_autumn.png",
+    "sha256": "b4ab0cea8de915b89abd3615835f142a7011bf0d20ad301589efcd6411cb458b",
+    "canvas": [
+      192,
+      192
+    ],
+    "anchor": [
+      96,
+      180
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "trees",
+    "role": "tree",
+    "type": "flora",
+    "size": "large",
+    "mask": "art/flora/climate/trees/wild_olive_harvested_v1_large_autumn_mask.png",
+    "species": "wild_olive",
+    "state": "harvested",
+    "season": "autumn",
+    "climate": null,
+    "dest": "",
+    "source": "art/flora/climate/trees/wild_olive_harvested_v1_large_autumn.png",
+    "source_sha256": "b4ab0cea8de915b89abd3615835f142a7011bf0d20ad301589efcd6411cb458b",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "061ecbe7ce30f0d4c54d3e50d3461c57e6af898cfa575d1e5645ad1299634ae7",
+    "sidecar": "art/flora/climate/trees/wild_olive_harvested_v1_large_autumn.json",
+    "status": "PROPOSAL_NOT_ACTIVE",
+    "reference": "art/flora/sprites/oak_large_v1.png|art/flora/masks/oak_large_v1.png|autumn|harvested",
+    "olive": {
+      "pass": 3,
+      "prior_pass": "R2/measurements-pass1.json and measurements-pass2.json; incorrect shrub proxy superseded by same-size tree control",
+      "original_mask_summer": {
+        "mean_hue_degrees": 100.64159947721676,
+        "mean_saturation": 0.6119241217213235,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": true
+      },
+      "reclassified_mask_summer": {
+        "mean_hue_degrees": 93.373509691036,
+        "mean_saturation": 0.5600049998323943,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": true
+      },
+      "mask": {
+        "trunk_box_fraction": 0.01856763925729443,
+        "foliage_cluster_coverage": 0.35385008300344784,
+        "mask_pixels": 4283,
+        "foliage_pixels": 7831,
+        "passed": false,
+        "foliage_gate_applicable": true
+      },
+      "status": "PROPOSED_SPECIES_NOT_ACTIVE"
+    }
+  },
+  "b2_metadata": {
+    "id": "wild_olive_harvested_v1_large_autumn",
+    "path": "art/flora/climate/trees/wild_olive_harvested_v1_large_autumn.png",
+    "sha256": "061ecbe7ce30f0d4c54d3e50d3461c57e6af898cfa575d1e5645ad1299634ae7",
+    "canvas": [
+      192,
+      192
+    ],
+    "anchor": [
+      96,
+      180
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "trees",
+    "species": "wild_olive",
+    "size": "large",
+    "state": "harvested",
+    "season": "autumn",
+    "climate": null,
+    "kind": "derived_season",
+    "dest": "",
+    "mask": "",
+    "sidecar": "art/flora/climate/trees/wild_olive_harvested_v1_large_autumn.json",
+    "tint": {},
+    "source": "/Users/rexxa/work/art-batch/B2/trees/raw/wild_olive_harvested_v1_try3.png",
+    "source_sha256": "ab9e17a2e55e78907c0559a2dd7fd2869655e20512299308d63435ee1230222b",
+    "role": "tree",
+    "type": "flora",
+    "adoption_state": "PROPOSED_ART_CANDIDATE_NOT_PRODUCTION_SPECIES",
+    "qualification": {
+      "raw_style_projection_structure": "passed",
+      "production_canopy": "FAILED",
+      "diagnostics": {
+        "id": "wild_olive_harvested_v1_large_autumn",
+        "failures": [],
+        "checks": {
+          "alpha_min": 0,
+          "alpha_max": 255,
+          "opaque_height": 159,
+          "opaque_components": 1,
+          "visible_border": false,
+          "raw_transparent": true,
+          "raw_opaque_border": false,
+          "source_opaque_outside_crop": 0,
+          "canvas_matches": true,
+          "passed": true
+        },
+        "mask": {
+          "trunk_box_fraction": 0.01856763925729443,
+          "foliage_cluster_coverage": 1.0,
+          "mask_pixels": 4283,
+          "foliage_pixels": 4283,
+          "passed": true,
+          "foliage_gate_applicable": true
+        },
+        "summer": {
+          "mean_hue_degrees": 49.56327268062972,
+          "mean_saturation": 0.4299328968484125,
+          "palette_hue_range_degrees": [
+            88.88888888888891,
+            112.5
+          ],
+          "passed": false
+        }
+      },
+      "required_followup": "C2 species validation; no runtime species or fabricated wood material"
+    }
+  }
+}

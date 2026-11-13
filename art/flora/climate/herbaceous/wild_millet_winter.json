@@ -1,0 +1,75 @@
+{
+  "r2": {
+    "id": "wild_millet_winter",
+    "path": "art/flora/climate/herbaceous/wild_millet_winter.png",
+    "sha256": "4a9cc19f91fa86085367899d62117773b67ac39ec0e0f26ecc4ab20ccdb75419",
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "role": "flora",
+    "type": "flora",
+    "size": "",
+    "mask": "",
+    "species": "wild_millet",
+    "state": "winter",
+    "season": "summer",
+    "climate": [
+      "mild"
+    ],
+    "dest": "flora/climate/herbaceous/wild_millet_winter.png",
+    "source": "art/flora/climate/herbaceous/wild_millet_winter.png",
+    "source_sha256": "4a9cc19f91fa86085367899d62117773b67ac39ec0e0f26ecc4ab20ccdb75419",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "349ef24fceabd8f9d3aa3d124515bc2f47c728153e91fbd6080a35a1ac242634",
+    "sidecar": "art/flora/climate/herbaceous/wild_millet_winter.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/flora/sprites/oak_small_bare.png|summer|winter",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "wild_millet_winter",
+    "path": "art/flora/climate/herbaceous/wild_millet_winter.png",
+    "sha256": "349ef24fceabd8f9d3aa3d124515bc2f47c728153e91fbd6080a35a1ac242634",
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "species": "wild_millet",
+    "size": "",
+    "state": "winter",
+    "season": "summer",
+    "climate": [
+      "mild"
+    ],
+    "kind": "",
+    "dest": "flora/climate/herbaceous/wild_millet_winter.png",
+    "mask": "",
+    "sidecar": "",
+    "tint": {},
+    "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+    "runtime_code": null,
+    "placement_status": "VERIFIED_ORIGIN",
+    "source": "art/flora/climate/herbaceous/wild_millet_winter.png",
+    "role": "flora",
+    "type": "flora"
+  }
+}

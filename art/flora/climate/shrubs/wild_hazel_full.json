@@ -1,0 +1,75 @@
+{
+  "r2": {
+    "id": "wild_hazel_full",
+    "path": "art/flora/climate/shrubs/wild_hazel_full.png",
+    "sha256": "8736daf78dc940cf8b1c550cbf3651cf1f96a5b6023b6bf8ef79552f7b020ca4",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "shrubs",
+    "role": "flora",
+    "type": "flora",
+    "size": "",
+    "mask": "",
+    "species": "wild_hazel",
+    "state": "full",
+    "season": "summer",
+    "climate": [
+      "harsh",
+      "neutral",
+      "mild"
+    ],
+    "dest": "flora/climate/shrubs/wild_hazel_full.png",
+    "source": "art/flora/climate/shrubs/wild_hazel_full.png",
+    "source_sha256": "8736daf78dc940cf8b1c550cbf3651cf1f96a5b6023b6bf8ef79552f7b020ca4",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "8dde09c9edcc5b7c881acdb577da51a52253d34a5dbcbffc83e635fc1609ff53",
+    "sidecar": "art/flora/climate/shrubs/wild_hazel_full.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/flora/sprites/berry_bush_bare.png|summer|full",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "wild_hazel_full",
+    "path": "art/flora/climate/shrubs/wild_hazel_full.png",
+    "sha256": "8dde09c9edcc5b7c881acdb577da51a52253d34a5dbcbffc83e635fc1609ff53",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "shrubs",
+    "species": "wild_hazel",
+    "size": "",
+    "state": "full",
+    "season": "summer",
+    "climate": [
+      "harsh",
+      "neutral",
+      "mild"
+    ],
+    "kind": "",
+    "dest": "flora/climate/shrubs/wild_hazel_full.png",
+    "mask": "",
+    "sidecar": "",
+    "tint": {},
+    "role": "flora",
+    "type": "flora"
+  }
+}

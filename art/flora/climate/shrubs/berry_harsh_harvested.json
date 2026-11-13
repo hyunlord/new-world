@@ -1,0 +1,71 @@
+{
+  "r2": {
+    "id": "berry_harsh_harvested",
+    "path": "art/flora/climate/shrubs/berry_harsh_harvested.png",
+    "sha256": "47787933bea1324507ba482eb8b0df2c8d8bd321310a3eb3363f6c0eca1667f5",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "shrubs",
+    "role": "flora",
+    "type": "flora",
+    "size": "",
+    "mask": "",
+    "species": "berry_harsh",
+    "state": "harvested",
+    "season": "summer",
+    "climate": [
+      "harsh"
+    ],
+    "dest": "flora/climate/shrubs/berry_harsh_harvested.png",
+    "source": "art/flora/climate/shrubs/berry_harsh_harvested.png",
+    "source_sha256": "47787933bea1324507ba482eb8b0df2c8d8bd321310a3eb3363f6c0eca1667f5",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "632de1c8a6ac7f0b7afbc8048c3606845f2a53cbc05965417e892e9c335d8367",
+    "sidecar": "art/flora/climate/shrubs/berry_harsh_harvested.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/flora/sprites/berry_bush_bare.png|summer|harvested",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "berry_harsh_harvested",
+    "path": "art/flora/climate/shrubs/berry_harsh_harvested.png",
+    "sha256": "632de1c8a6ac7f0b7afbc8048c3606845f2a53cbc05965417e892e9c335d8367",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "shrubs",
+    "species": "berry_harsh",
+    "size": "",
+    "state": "harvested",
+    "season": "summer",
+    "climate": [
+      "harsh"
+    ],
+    "kind": "",
+    "dest": "flora/climate/shrubs/berry_harsh_harvested.png",
+    "mask": "",
+    "sidecar": "",
+    "tint": {},
+    "role": "flora",
+    "type": "flora"
+  }
+}

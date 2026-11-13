@@ -1,0 +1,77 @@
+{
+  "r2": {
+    "id": "wild_rye_full",
+    "path": "art/flora/climate/herbaceous/wild_rye_full.png",
+    "sha256": "880ccd537fecc8bccfbaf93f5eae046d811720220e531da1e49d3305944964f3",
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "role": "flora",
+    "type": "flora",
+    "size": "",
+    "mask": "",
+    "species": "wild_rye",
+    "state": "full",
+    "season": "summer",
+    "climate": [
+      "neutral",
+      "harsh"
+    ],
+    "dest": "flora/climate/herbaceous/wild_rye_full.png",
+    "source": "art/flora/climate/herbaceous/wild_rye_full.png",
+    "source_sha256": "880ccd537fecc8bccfbaf93f5eae046d811720220e531da1e49d3305944964f3",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "10bba40936d99d17ca0f7b490a7a94295b0879c3f82b2021307eeb74a2741a82",
+    "sidecar": "art/flora/climate/herbaceous/wild_rye_full.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/style05/env/plants/reeds.png|summer|full",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "wild_rye_full",
+    "path": "art/flora/climate/herbaceous/wild_rye_full.png",
+    "sha256": "10bba40936d99d17ca0f7b490a7a94295b0879c3f82b2021307eeb74a2741a82",
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "species": "wild_rye",
+    "size": "",
+    "state": "full",
+    "season": "summer",
+    "climate": [
+      "neutral",
+      "harsh"
+    ],
+    "kind": "",
+    "dest": "flora/climate/herbaceous/wild_rye_full.png",
+    "mask": "",
+    "sidecar": "",
+    "tint": {},
+    "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+    "runtime_code": null,
+    "placement_status": "VERIFIED_ORIGIN",
+    "source": "art/flora/climate/herbaceous/wild_rye_full.png",
+    "role": "flora",
+    "type": "flora"
+  }
+}

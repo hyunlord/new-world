@@ -1,0 +1,77 @@
+{
+  "r2": {
+    "id": "wild_lentil_full",
+    "path": "art/flora/climate/herbaceous/wild_lentil_full.png",
+    "sha256": "fdc87024882a4a59ea7c3522cd52a992890ff18bb76ec0543e40c7a7f596a930",
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "role": "flora",
+    "type": "flora",
+    "size": "",
+    "mask": "",
+    "species": "wild_lentil",
+    "state": "full",
+    "season": "summer",
+    "climate": [
+      "mild",
+      "neutral"
+    ],
+    "dest": "flora/climate/herbaceous/wild_lentil_full.png",
+    "source": "art/flora/climate/herbaceous/wild_lentil_full.png",
+    "source_sha256": "fdc87024882a4a59ea7c3522cd52a992890ff18bb76ec0543e40c7a7f596a930",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "6823936b20df568a580c2d1d8a55abcf71009e01d50f95b6d3a2a5c69a4e4938",
+    "sidecar": "art/flora/climate/herbaceous/wild_lentil_full.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/flora/sprites/berry_bush_bare.png|summer|full",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "wild_lentil_full",
+    "path": "art/flora/climate/herbaceous/wild_lentil_full.png",
+    "sha256": "6823936b20df568a580c2d1d8a55abcf71009e01d50f95b6d3a2a5c69a4e4938",
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "species": "wild_lentil",
+    "size": "",
+    "state": "full",
+    "season": "summer",
+    "climate": [
+      "mild",
+      "neutral"
+    ],
+    "kind": "",
+    "dest": "flora/climate/herbaceous/wild_lentil_full.png",
+    "mask": "",
+    "sidecar": "",
+    "tint": {},
+    "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+    "runtime_code": null,
+    "placement_status": "VERIFIED_ORIGIN",
+    "source": "art/flora/climate/herbaceous/wild_lentil_full.png",
+    "role": "flora",
+    "type": "flora"
+  }
+}

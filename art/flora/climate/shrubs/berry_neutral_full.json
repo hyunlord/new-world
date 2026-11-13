@@ -1,0 +1,71 @@
+{
+  "r2": {
+    "id": "berry_neutral_full",
+    "path": "art/flora/climate/shrubs/berry_neutral_full.png",
+    "sha256": "7e4b76dd18984b59dfaa0712d890189efb6fdadd3d558f319606d58d3f668103",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "shrubs",
+    "role": "flora",
+    "type": "flora",
+    "size": "",
+    "mask": "",
+    "species": "berry_neutral",
+    "state": "full",
+    "season": "summer",
+    "climate": [
+      "neutral"
+    ],
+    "dest": "flora/climate/shrubs/berry_neutral_full.png",
+    "source": "art/flora/climate/shrubs/berry_neutral_full.png",
+    "source_sha256": "7e4b76dd18984b59dfaa0712d890189efb6fdadd3d558f319606d58d3f668103",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "789eee4cddd3e8f7f10d590c1594ed4316b845fcd41b39b22afe102d7b3ee7c5",
+    "sidecar": "art/flora/climate/shrubs/berry_neutral_full.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/flora/sprites/berry_bush_full.png|summer|full",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "berry_neutral_full",
+    "path": "art/flora/climate/shrubs/berry_neutral_full.png",
+    "sha256": "789eee4cddd3e8f7f10d590c1594ed4316b845fcd41b39b22afe102d7b3ee7c5",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "shrubs",
+    "species": "berry_neutral",
+    "size": "",
+    "state": "full",
+    "season": "summer",
+    "climate": [
+      "neutral"
+    ],
+    "kind": "",
+    "dest": "flora/climate/shrubs/berry_neutral_full.png",
+    "mask": "",
+    "sidecar": "",
+    "tint": {},
+    "role": "flora",
+    "type": "flora"
+  }
+}

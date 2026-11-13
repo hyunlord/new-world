@@ -1,0 +1,71 @@
+{
+  "r2": {
+    "id": "tundra_willow_full",
+    "path": "art/flora/climate/shrubs/tundra_willow_full.png",
+    "sha256": "9ffac73ca6ccefec46ef11796ed42082e31bbe1e1daddd96bdc0e18113179492",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "shrubs",
+    "role": "flora",
+    "type": "flora",
+    "size": "",
+    "mask": "",
+    "species": "tundra_willow",
+    "state": "full",
+    "season": "summer",
+    "climate": [
+      "harsh"
+    ],
+    "dest": "flora/climate/shrubs/tundra_willow_full.png",
+    "source": "art/flora/climate/shrubs/tundra_willow_full.png",
+    "source_sha256": "9ffac73ca6ccefec46ef11796ed42082e31bbe1e1daddd96bdc0e18113179492",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "24fe9fa3278e59333cbb90b0fd713bddb921d4eb31f6befa8c48f77891c3318b",
+    "sidecar": "art/flora/climate/shrubs/tundra_willow_full.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/flora/sprites/berry_bush_bare.png|summer|full",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "tundra_willow_full",
+    "path": "art/flora/climate/shrubs/tundra_willow_full.png",
+    "sha256": "24fe9fa3278e59333cbb90b0fd713bddb921d4eb31f6befa8c48f77891c3318b",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "shrubs",
+    "species": "tundra_willow",
+    "size": "",
+    "state": "full",
+    "season": "summer",
+    "climate": [
+      "harsh"
+    ],
+    "kind": "",
+    "dest": "flora/climate/shrubs/tundra_willow_full.png",
+    "mask": "",
+    "sidecar": "",
+    "tint": {},
+    "role": "flora",
+    "type": "flora"
+  }
+}

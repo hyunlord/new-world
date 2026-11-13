@@ -1,0 +1,71 @@
+{
+  "r2": {
+    "id": "berry_mild_full",
+    "path": "art/flora/climate/shrubs/berry_mild_full.png",
+    "sha256": "205c54a3b225faa37f77e391377f6f54227b8ebb69a140a64a4f5ae47a5730c2",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "shrubs",
+    "role": "flora",
+    "type": "flora",
+    "size": "",
+    "mask": "",
+    "species": "berry_mild",
+    "state": "full",
+    "season": "summer",
+    "climate": [
+      "mild"
+    ],
+    "dest": "flora/climate/shrubs/berry_mild_full.png",
+    "source": "art/flora/climate/shrubs/berry_mild_full.png",
+    "source_sha256": "205c54a3b225faa37f77e391377f6f54227b8ebb69a140a64a4f5ae47a5730c2",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "2f83f90e6316abb96a8b1ee7119bf5a3327d7337758441f4d0b44cd730326449",
+    "sidecar": "art/flora/climate/shrubs/berry_mild_full.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/flora/sprites/berry_bush_full.png|summer|full",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "berry_mild_full",
+    "path": "art/flora/climate/shrubs/berry_mild_full.png",
+    "sha256": "2f83f90e6316abb96a8b1ee7119bf5a3327d7337758441f4d0b44cd730326449",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "shrubs",
+    "species": "berry_mild",
+    "size": "",
+    "state": "full",
+    "season": "summer",
+    "climate": [
+      "mild"
+    ],
+    "kind": "",
+    "dest": "flora/climate/shrubs/berry_mild_full.png",
+    "mask": "",
+    "sidecar": "",
+    "tint": {},
+    "role": "flora",
+    "type": "flora"
+  }
+}

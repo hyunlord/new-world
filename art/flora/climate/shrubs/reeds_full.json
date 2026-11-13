@@ -1,0 +1,75 @@
+{
+  "r2": {
+    "id": "reeds_full",
+    "path": "art/flora/climate/shrubs/reeds_full.png",
+    "sha256": "d58dd087a0a09b172d197bac2f7131899ba30a2d4ed763ce9f1f7d62cf58cfc5",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "shrubs",
+    "role": "flora",
+    "type": "flora",
+    "size": "",
+    "mask": "",
+    "species": "reeds",
+    "state": "full",
+    "season": "summer",
+    "climate": [
+      "harsh",
+      "neutral",
+      "mild"
+    ],
+    "dest": "flora/climate/shrubs/reeds_full.png",
+    "source": "art/flora/climate/shrubs/reeds_full.png",
+    "source_sha256": "d58dd087a0a09b172d197bac2f7131899ba30a2d4ed763ce9f1f7d62cf58cfc5",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "1c6896fffcf20b4aec92e30baae08f795d52ab9b2b237664c69cafeaffe63613",
+    "sidecar": "art/flora/climate/shrubs/reeds_full.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/style05/env/plants/reeds.png|summer|full",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "reeds_full",
+    "path": "art/flora/climate/shrubs/reeds_full.png",
+    "sha256": "1c6896fffcf20b4aec92e30baae08f795d52ab9b2b237664c69cafeaffe63613",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "shrubs",
+    "species": "reeds",
+    "size": "",
+    "state": "full",
+    "season": "summer",
+    "climate": [
+      "harsh",
+      "neutral",
+      "mild"
+    ],
+    "kind": "",
+    "dest": "flora/climate/shrubs/reeds_full.png",
+    "mask": "",
+    "sidecar": "",
+    "tint": {},
+    "role": "flora",
+    "type": "flora"
+  }
+}

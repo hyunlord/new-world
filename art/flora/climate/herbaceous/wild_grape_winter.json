@@ -1,0 +1,75 @@
+{
+  "r2": {
+    "id": "wild_grape_winter",
+    "path": "art/flora/climate/herbaceous/wild_grape_winter.png",
+    "sha256": "bd4e769c3543da7a3d4817348c1162e0a9c2a3ba1cdda11d5ce2fc91d1444246",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "role": "flora",
+    "type": "flora",
+    "size": "",
+    "mask": "",
+    "species": "wild_grape",
+    "state": "winter",
+    "season": "summer",
+    "climate": [
+      "mild"
+    ],
+    "dest": "flora/climate/herbaceous/wild_grape_winter.png",
+    "source": "art/flora/climate/herbaceous/wild_grape_winter.png",
+    "source_sha256": "bd4e769c3543da7a3d4817348c1162e0a9c2a3ba1cdda11d5ce2fc91d1444246",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "1ac2b57be5d5ce62f1653635ee1dcae6bb9c08a27c816b31bac86be2688642e1",
+    "sidecar": "art/flora/climate/herbaceous/wild_grape_winter.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/flora/sprites/oak_small_bare.png|summer|winter",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "wild_grape_winter",
+    "path": "art/flora/climate/herbaceous/wild_grape_winter.png",
+    "sha256": "1ac2b57be5d5ce62f1653635ee1dcae6bb9c08a27c816b31bac86be2688642e1",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "species": "wild_grape",
+    "size": "",
+    "state": "winter",
+    "season": "summer",
+    "climate": [
+      "mild"
+    ],
+    "kind": "",
+    "dest": "flora/climate/herbaceous/wild_grape_winter.png",
+    "mask": "",
+    "sidecar": "",
+    "tint": {},
+    "runtime_binding": "PROPOSED_ID",
+    "runtime_code": null,
+    "placement_status": "PROPOSED_NOT_APPLIED",
+    "source": "art/flora/climate/herbaceous/wild_grape_winter.png",
+    "role": "flora",
+    "type": "flora"
+  }
+}

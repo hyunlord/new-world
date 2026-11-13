@@ -1,0 +1,77 @@
+{
+  "r2": {
+    "id": "wild_rye_winter",
+    "path": "art/flora/climate/herbaceous/wild_rye_winter.png",
+    "sha256": "819085deab399a8333519cb438af8136eab9c1dd7c1ccfb4168338fa2f4c7207",
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "role": "flora",
+    "type": "flora",
+    "size": "",
+    "mask": "",
+    "species": "wild_rye",
+    "state": "winter",
+    "season": "summer",
+    "climate": [
+      "neutral",
+      "harsh"
+    ],
+    "dest": "flora/climate/herbaceous/wild_rye_winter.png",
+    "source": "art/flora/climate/herbaceous/wild_rye_winter.png",
+    "source_sha256": "819085deab399a8333519cb438af8136eab9c1dd7c1ccfb4168338fa2f4c7207",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "e635aa03eec7cae43a1123b595452695580dd4fc70f7064cc2c86efaee3e55d1",
+    "sidecar": "art/flora/climate/herbaceous/wild_rye_winter.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/flora/sprites/oak_small_bare.png|summer|winter",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "wild_rye_winter",
+    "path": "art/flora/climate/herbaceous/wild_rye_winter.png",
+    "sha256": "e635aa03eec7cae43a1123b595452695580dd4fc70f7064cc2c86efaee3e55d1",
+    "canvas": [
+      64,
+      64
+    ],
+    "anchor": [
+      32,
+      56
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "species": "wild_rye",
+    "size": "",
+    "state": "winter",
+    "season": "summer",
+    "climate": [
+      "neutral",
+      "harsh"
+    ],
+    "kind": "",
+    "dest": "flora/climate/herbaceous/wild_rye_winter.png",
+    "mask": "",
+    "sidecar": "",
+    "tint": {},
+    "runtime_binding": "VERIFIED_SYMBOLIC_ID",
+    "runtime_code": null,
+    "placement_status": "VERIFIED_ORIGIN",
+    "source": "art/flora/climate/herbaceous/wild_rye_winter.png",
+    "role": "flora",
+    "type": "flora"
+  }
+}

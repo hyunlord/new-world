@@ -1,0 +1,75 @@
+{
+  "r2": {
+    "id": "wild_grape_harvested",
+    "path": "art/flora/climate/herbaceous/wild_grape_harvested.png",
+    "sha256": "a153344e38fbdd096547fcc3a995e316824744b63a27d409844eec0df8d81091",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "role": "flora",
+    "type": "flora",
+    "size": "",
+    "mask": "",
+    "species": "wild_grape",
+    "state": "harvested",
+    "season": "summer",
+    "climate": [
+      "mild"
+    ],
+    "dest": "flora/climate/herbaceous/wild_grape_harvested.png",
+    "source": "art/flora/climate/herbaceous/wild_grape_harvested.png",
+    "source_sha256": "a153344e38fbdd096547fcc3a995e316824744b63a27d409844eec0df8d81091",
+    "b2_commit": "403caffd81174d4ecdc00b79d3dd2c465f1ab236",
+    "b2_sha256": "5a903587108dbfbc653bd60d8a7c8aa2415c8ca77d82e3f651202f7a7c5c127f",
+    "sidecar": "art/flora/climate/herbaceous/wild_grape_harvested.json",
+    "status": "COLOUR_CORRECTED_CANDIDATE",
+    "reference": "art/flora/sprites/berry_bush_bare.png|summer|harvested",
+    "olive": {}
+  },
+  "b2_metadata": {
+    "id": "wild_grape_harvested",
+    "path": "art/flora/climate/herbaceous/wild_grape_harvested.png",
+    "sha256": "5a903587108dbfbc653bd60d8a7c8aa2415c8ca77d82e3f651202f7a7c5c127f",
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "footprint": [
+      1,
+      1
+    ],
+    "lane": "herbaceous",
+    "species": "wild_grape",
+    "size": "",
+    "state": "harvested",
+    "season": "summer",
+    "climate": [
+      "mild"
+    ],
+    "kind": "",
+    "dest": "flora/climate/herbaceous/wild_grape_harvested.png",
+    "mask": "",
+    "sidecar": "",
+    "tint": {},
+    "runtime_binding": "PROPOSED_ID",
+    "runtime_code": null,
+    "placement_status": "PROPOSED_NOT_APPLIED",
+    "source": "art/flora/climate/herbaceous/wild_grape_harvested.png",
+    "role": "flora",
+    "type": "flora"
+  }
+}
