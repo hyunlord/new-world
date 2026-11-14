@@ -4,33 +4,80 @@
   "models_dir": "res://assets/3d/models",
   "flora": {
     "species": {
-      "oak": {"models": ["tree_oak_a", "tree_oak_b", "tree_oak_c"], "habit": "deciduous"},
-      "birch": {"models": ["tree_birch_a", "tree_birch_b"], "habit": "deciduous"},
-      "pine": {"models": ["tree_pine_a", "tree_pine_b", "tree_pine_c"], "habit": "conifer"}
+      "oak": {
+        "models": ["tree_oak_a", "tree_oak_b", "tree_oak_c"],
+        "habit": "deciduous"
+      },
+      "birch": {
+        "models": ["tree_birch_a", "tree_birch_b"],
+        "habit": "deciduous"
+      },
+      "pine": {
+        "models": ["tree_pine_a", "tree_pine_b", "tree_pine_c"],
+        "habit": "conifer"
+      }
     },
     "habits": {
-      "deciduous": {"models": ["tree_oak_a", "tree_oak_b", "tree_oak_c"]},
-      "conifer": {"models": ["tree_pine_a", "tree_pine_b", "tree_pine_c"]}
+      "deciduous": {
+        "models": ["tree_oak_a", "tree_oak_b", "tree_oak_c"]
+      },
+      "conifer": {
+        "models": ["tree_pine_a", "tree_pine_b", "tree_pine_c"]
+      }
     },
     "fallback_habit": "deciduous",
     "stump": "stump",
     "canopy_by_season": {
-      "deciduous": [[0.40, 0.62, 0.24], [0.30, 0.52, 0.19], [0.82, 0.46, 0.14], [0.0, 0.0, 0.0]],
-      "conifer": [[0.20, 0.40, 0.24], [0.17, 0.36, 0.21], [0.19, 0.36, 0.22], [0.20, 0.33, 0.24]]
+      "deciduous": [
+        [0.4, 0.62, 0.24],
+        [0.3, 0.52, 0.19],
+        [0.82, 0.46, 0.14],
+        [0.0, 0.0, 0.0]
+      ],
+      "conifer": [
+        [0.2, 0.4, 0.24],
+        [0.17, 0.36, 0.21],
+        [0.19, 0.36, 0.22],
+        [0.2, 0.33, 0.24]
+      ]
     },
     "species_canopy_by_season": {
-      "birch": [[0.52, 0.70, 0.30], [0.42, 0.62, 0.24], [0.92, 0.74, 0.20], [0.0, 0.0, 0.0]]
+      "birch": [
+        [0.52, 0.7, 0.3],
+        [0.42, 0.62, 0.24],
+        [0.92, 0.74, 0.2],
+        [0.0, 0.0, 0.0]
+      ]
     },
-    "trunk": {"default": [0.36, 0.26, 0.17], "birch": [0.86, 0.84, 0.78]},
-    "bare_in_season": {"deciduous": [3]}
+    "trunk": {
+      "default": [0.36, 0.26, 0.17],
+      "birch": [0.86, 0.84, 0.78]
+    },
+    "bare_in_season": {
+      "deciduous": [3]
+    }
   },
   "resources": {
     "about": "get_resource_snapshot kinds (bridge codes, schema): model while amount > 0, depleted model at 0.",
-    "codes": {"0": {"model": "berry_bush", "depleted": "bush"}, "3": {"model": "firewood"}}
+    "codes": {
+      "0": {
+        "model": "berry_bush",
+        "depleted": "bush"
+      },
+      "3": {
+        "model": "firewood"
+      }
+    }
   },
   "nodes": {
     "about": "get_colony_overlay node_kinds use the 2D bindings' nodes rows (code -> structure id); this maps that structure id to a model.",
-    "by_structure": {"boulder_large": "boulder_large", "boulder_small": "boulder_small", "flint_outcrop": "flint_outcrop", "claybank_full": "clay_bank", "claybank_depleted": "clay_bank"},
+    "by_structure": {
+      "boulder_large": "boulder_large",
+      "boulder_small": "boulder_small",
+      "flint_outcrop": "flint_outcrop",
+      "claybank_full": "clay_bank",
+      "claybank_depleted": "clay_bank"
+    },
     "fallback": "boulder_small"
   },
   "outcrops": {
@@ -40,59 +87,216 @@
   "stations": {
     "about": "blueprint construction_style (or the 2D workshop structure id) -> model; unknown styles use `fallback`.",
     "by_style": {
-      "hearth_fire": "hearth", "hearth": "hearth", "knapping_spot": "knapping_spot", "wood_bench": "wood_bench",
-      "woodworking_bench": "wood_bench", "drying_rack": "drying_rack", "grinding_stone": "grinding_stone",
-      "pottery_bench": "pottery_bench", "loom": "loom", "retting_pit": "retting_pit", "clay_oven": "clay_oven",
-      "charcoal_clamp": "charcoal_clamp", "smelter": "smelter", "casting_bench": "casting_bench", "anvil": "anvil",
-      "kiln": "kiln", "Bedroll": "bedroll", "bedroll": "bedroll", "lean_to": "lean_to", "well_body": "well_body",
-      "bee_skep_body": "bee_skep", "storage_shelf": "storage_shelf"
+      "hearth_fire": "hearth",
+      "hearth": "hearth",
+      "knapping_spot": "knapping_spot",
+      "wood_bench": "wood_bench",
+      "woodworking_bench": "wood_bench",
+      "drying_rack": "drying_rack",
+      "grinding_stone": "grinding_stone",
+      "pottery_bench": "pottery_bench",
+      "loom": "loom",
+      "retting_pit": "retting_pit",
+      "clay_oven": "clay_oven",
+      "charcoal_clamp": "charcoal_clamp",
+      "smelter": "smelter",
+      "casting_bench": "casting_bench",
+      "anvil": "anvil",
+      "kiln": "kiln",
+      "Bedroll": "bedroll",
+      "bedroll": "bedroll",
+      "lean_to": "lean_to",
+      "well_body": "well_body",
+      "bee_skep_body": "bee_skep",
+      "storage_shelf": "storage_shelf"
     },
-    "lit": {"hearth": true, "smelter": true, "kiln": true, "charcoal_clamp": true, "clay_oven": true},
+    "lit": {
+      "hearth": true,
+      "smelter": true,
+      "kiln": true,
+      "charcoal_clamp": true,
+      "clay_oven": true
+    },
     "fallback": "wood_bench"
   },
   "buildings": {
     "about": "get_building_snapshot legacy kinds through the 2D bindings' buildings rows (structure id) -> model.",
-    "by_structure": {"hearth_1": "hearth", "hearth_unlit": "hearth_unlit", "hearth_pots": "hearth", "lean_to": "lean_to"},
+    "by_structure": {
+      "hearth_1": "hearth",
+      "hearth_unlit": "hearth_unlit",
+      "hearth_pots": "hearth",
+      "lean_to": "lean_to"
+    },
     "fallback": "lean_to"
   },
   "items": {
     "about": "Ground stacks: 2D item binding asset ids first, then the catalogue art_shape, then fallback. Colours from art_tint_material (materials below).",
-    "by_asset": {"log_pile_small": "log_pile_s", "log_pile_medium": "log_pile_m", "log_pile_large": "log_pile_l", "firewood": "firewood",
-      "stone_pile": "stone_pile", "flint_nodule": "flint_pile", "flint_pile": "flint_pile", "hide": "hide", "stone_axe": "tool",
-      "flint_blade": "tool", "spear": "tool", "raw_pot": "pot", "clay_pot": "pot", "meat": "meat"},
-    "by_shape": {"lump": "stone_pile", "ore": "ore_pile", "ingot": "ingot_stack", "rod": "log_pile_s", "blade": "tool",
-      "cloth": "cloth_bolt", "vessel": "pot", "grain": "sack"},
+    "by_asset": {
+      "log_pile_small": "log_pile_s",
+      "log_pile_medium": "log_pile_m",
+      "log_pile_large": "log_pile_l",
+      "firewood": "firewood",
+      "stone_pile": "stone_pile",
+      "flint_nodule": "flint_pile",
+      "flint_pile": "flint_pile",
+      "hide": "hide",
+      "stone_axe": "tool",
+      "flint_blade": "tool",
+      "spear": "tool",
+      "raw_pot": "pot",
+      "clay_pot": "pot",
+      "meat": "meat"
+    },
+    "by_shape": {
+      "lump": "stone_pile",
+      "ore": "ore_pile",
+      "ingot": "ingot_stack",
+      "rod": "log_pile_s",
+      "blade": "tool",
+      "cloth": "cloth_bolt",
+      "vessel": "pot",
+      "grain": "sack"
+    },
     "fallback": "sack"
   },
   "animals": {
-    "by_id": {"wolf": "wolf", "deer": "deer", "wild_goat": "wild_goat", "wild_sheep": "wild_sheep", "wild_boar": "wild_boar",
-      "reindeer": "reindeer", "aurochs": "aurochs"},
-    "by_category": {"predator": "wolf", "grazer": "deer"},
-    "fallback": "deer"
+    "by_id": {
+      "wolf": "wolf",
+      "deer": "deer",
+      "wild_goat": "wild_goat",
+      "wild_sheep": "wild_sheep",
+      "wild_boar": "wild_boar",
+      "reindeer": "reindeer",
+      "aurochs": "aurochs"
+    },
+    "by_category": {
+      "predator": "wolf",
+      "grazer": "deer"
+    },
+    "fallback": "deer",
+    "clip_for_pose": {
+      "walk": "walk",
+      "run": "run",
+      "stand": "idle",
+      "graze": "graze",
+      "attack": "attack",
+      "dead": "rest",
+      "rest": "rest"
+    },
+    "colours": {
+      "wolf": {
+        "fur": [0.42, 0.4, 0.38],
+        "fur_light": [0.7, 0.66, 0.6],
+        "horn": [0.9, 0.88, 0.8],
+        "other": [0.18, 0.16, 0.15]
+      },
+      "deer": {
+        "fur": [0.58, 0.4, 0.24],
+        "fur_light": [0.85, 0.76, 0.62],
+        "horn": [0.8, 0.72, 0.58],
+        "other": [0.2, 0.15, 0.1]
+      },
+      "reindeer": {
+        "fur": [0.48, 0.42, 0.36],
+        "fur_light": [0.88, 0.85, 0.8],
+        "horn": [0.8, 0.72, 0.58],
+        "other": [0.2, 0.17, 0.14]
+      },
+      "wild_goat": {
+        "fur": [0.55, 0.47, 0.38],
+        "fur_light": [0.8, 0.74, 0.64],
+        "horn": [0.45, 0.4, 0.34],
+        "other": [0.2, 0.17, 0.14]
+      },
+      "wild_sheep": {
+        "fur": [0.4, 0.32, 0.26],
+        "fur_light": [0.88, 0.85, 0.78],
+        "horn": [0.7, 0.62, 0.5],
+        "other": [0.2, 0.17, 0.14]
+      },
+      "wild_boar": {
+        "fur": [0.3, 0.24, 0.2],
+        "fur_light": [0.45, 0.38, 0.3],
+        "horn": [0.92, 0.9, 0.82],
+        "other": [0.15, 0.12, 0.1]
+      },
+      "aurochs": {
+        "fur": [0.22, 0.17, 0.14],
+        "fur_light": [0.55, 0.45, 0.35],
+        "horn": [0.88, 0.85, 0.75],
+        "other": [0.12, 0.1, 0.08]
+      }
+    }
   },
   "walls": {
     "about": "2D wall style ids (material resolver) -> 3D wall profile. log: stacked logs; block: masonry/brick slab; palisade: pointed stakes.",
-    "by_style": {"log": "log", "drystone": "block", "mud_brick": "block", "fired_brick": "block", "packed_earth": "block", "palisade": "palisade"},
+    "by_style": {
+      "log": "log",
+      "drystone": "block",
+      "mud_brick": "block",
+      "fired_brick": "block",
+      "packed_earth": "block",
+      "palisade": "palisade"
+    },
     "fallback": "block"
   },
   "roofs": {
     "about": "Roof cover by the era of the template site holding the room, else by the room's wall material category.",
-    "by_era": {"paleolithic": "thatch", "neolithic": "thatch", "bronze": "plank", "iron": "plank"},
-    "by_wall_category": {"Wood": "bark", "Stone": "thatch", "Mineral": "thatch", "Plant": "thatch"},
+    "by_era": {
+      "paleolithic": "thatch",
+      "neolithic": "thatch",
+      "bronze": "plank",
+      "iron": "plank"
+    },
+    "by_wall_category": {
+      "Wood": "bark",
+      "Stone": "thatch",
+      "Mineral": "thatch",
+      "Plant": "thatch"
+    },
     "fallback": "thatch",
-    "colours": {"thatch": [0.60, 0.50, 0.29], "bark": [0.38, 0.28, 0.21], "plank": [0.47, 0.34, 0.23]}
+    "colours": {
+      "thatch": [0.6, 0.5, 0.29],
+      "bark": [0.38, 0.28, 0.21],
+      "plank": [0.47, 0.34, 0.23]
+    }
   },
   "materials": {
     "about": "Base albedo for a material id or, failing that, its registry category (2D material_looks.json categories).",
     "by_id": {
-      "oak": [0.50, 0.36, 0.22], "pine": [0.60, 0.46, 0.30], "birch": [0.80, 0.74, 0.62], "granite": [0.58, 0.57, 0.55],
-      "clay": [0.66, 0.45, 0.30], "mud_brick": [0.66, 0.52, 0.36], "packed_earth": [0.48, 0.38, 0.27],
-      "copper_ore": [0.20, 0.62, 0.52], "tin_ore": [0.72, 0.74, 0.80], "iron_ore": [0.55, 0.25, 0.16],
-      "copper": [0.78, 0.45, 0.25], "tin": [0.78, 0.80, 0.82], "bronze": [0.72, 0.52, 0.24], "charcoal": [0.12, 0.11, 0.11],
-      "flint": [0.25, 0.25, 0.28], "hide": [0.62, 0.48, 0.34], "straw": [0.80, 0.70, 0.40], "bark": [0.40, 0.30, 0.22]
+      "oak": [0.5, 0.36, 0.22],
+      "pine": [0.6, 0.46, 0.3],
+      "birch": [0.8, 0.74, 0.62],
+      "granite": [0.58, 0.57, 0.55],
+      "clay": [0.66, 0.45, 0.3],
+      "mud_brick": [0.66, 0.52, 0.36],
+      "packed_earth": [0.48, 0.38, 0.27],
+      "copper_ore": [0.2, 0.62, 0.52],
+      "tin_ore": [0.72, 0.74, 0.8],
+      "iron_ore": [0.55, 0.25, 0.16],
+      "copper": [0.78, 0.45, 0.25],
+      "tin": [0.78, 0.8, 0.82],
+      "bronze": [0.72, 0.52, 0.24],
+      "charcoal": [0.12, 0.11, 0.11],
+      "flint": [0.25, 0.25, 0.28],
+      "hide": [0.62, 0.48, 0.34],
+      "straw": [0.8, 0.7, 0.4],
+      "bark": [0.4, 0.3, 0.22]
     },
-    "by_category": {"Wood": [0.52, 0.38, 0.24], "Stone": [0.56, 0.55, 0.52], "Mineral": [0.55, 0.52, 0.48],
-      "Animal": [0.62, 0.50, 0.38], "Plant": [0.62, 0.58, 0.36], "Mod": [0.6, 0.6, 0.6]},
+    "by_category": {
+      "Wood": [0.52, 0.38, 0.24],
+      "Stone": [0.56, 0.55, 0.52],
+      "Mineral": [0.55, 0.52, 0.48],
+      "Animal": [0.62, 0.5, 0.38],
+      "Plant": [0.62, 0.58, 0.36],
+      "Mod": [0.6, 0.6, 0.6]
+    },
     "fallback": [0.6, 0.55, 0.5]
+  },
+  "people": {
+    "about": "The placeholder villager (tools/3d/blender/people.py) and its tint rules; skin/hair/clothing come from the 2D appearance data (people3d.gd).",
+    "model": "villager",
+    "other_colour": [0.3, 0.22, 0.15],
+    "bare_torso_tops": ["loincloth"]
   }
 }

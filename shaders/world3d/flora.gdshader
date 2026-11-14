@@ -10,6 +10,10 @@ uniform float sway = 0.0;
 uniform float snow = 0.0;
 uniform float glow = 0.0;
 uniform float vein = 0.0;
+// Set every frame by camera_rig.gd: the camera, the look target and the x-ray radius (metres).
+global uniform vec3 w3d_camera;
+global uniform vec3 w3d_focus;
+global uniform float w3d_xray;
 
 varying vec3 world_normal;
 varying vec3 world_pos;
@@ -24,7 +28,28 @@ void vertex() {
 	world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 }
 
+float bayer4(vec2 p) {
+	ivec2 q = ivec2(mod(p, 4.0));
+	int idx = q.x + q.y * 4;
+	float m[16] = float[](0.0, 8.0, 2.0, 10.0, 12.0, 4.0, 14.0, 6.0, 3.0, 11.0, 1.0, 9.0, 15.0, 7.0, 13.0, 5.0);
+	return (m[idx] + 0.5) / 16.0;
+}
+
 void fragment() {
+	// X-ray: plants between the camera and the look target dissolve inside a cylinder around that line.
+	vec3 axis = w3d_focus - w3d_camera;
+	float len = length(axis);
+	if (w3d_xray > 0.0 && len > 0.01) {
+		vec3 dir = axis / len;
+		float t = dot(world_pos - w3d_camera, dir);
+		if (t < len - 0.8) {
+			float d = length(world_pos - (w3d_camera + dir * t));
+			float keep = smoothstep(w3d_xray * 0.7, w3d_xray * 1.15, d);
+			if (bayer4(FRAGCOORD.xy) > keep) {
+				discard;
+			}
+		}
+	}
 	vec3 c = albedo * COLOR.rgb;
 	float up = clamp(world_normal.y, 0.0, 1.0);
 	c = mix(c, vec3(0.92, 0.94, 0.98), snow * smoothstep(0.45, 0.85, up));

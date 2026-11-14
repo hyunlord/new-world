@@ -13,6 +13,10 @@ varying vec3 world_pos;
 varying float profile;
 varying float cut_top;
 
+vec3 srgb_to_linear(vec3 c) {
+	return mix(c / 12.92, pow((c + 0.055) / 1.055, vec3(2.4)), step(0.04045, c));
+}
+
 void vertex() {
 	vec3 wp = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	float lim = cut_all;
@@ -27,7 +31,7 @@ void vertex() {
 }
 
 void fragment() {
-	vec3 c = COLOR.rgb;
+	vec3 c = srgb_to_linear(COLOR.rgb);
 	if (profile < 0.5) {
 		// Masonry: courses of 0.22 m, joints every 0.4 m offset by half on alternate courses.
 		float course = world_pos.y / 0.22;

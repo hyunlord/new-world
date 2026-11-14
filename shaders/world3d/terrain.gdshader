@@ -34,22 +34,26 @@ float vnoise(vec2 p) {
 	return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
 }
 
+vec3 srgb_to_linear(vec3 c) {
+	return mix(c / 12.92, pow((c + 0.055) / 1.055, vec3(2.4)), step(0.04045, c));
+}
+
 void vertex() {
 	world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	world_normal = normalize((MODEL_MATRIX * vec4(NORMAL, 0.0)).xyz);
 }
 
 void fragment() {
-	vec3 c = COLOR.rgb * season_tint;
+	vec3 c = srgb_to_linear(COLOR.rgb) * season_tint;
 	float n = vnoise(world_pos.xz * 3.0) * 0.6 + vnoise(world_pos.xz * 11.0) * 0.4;
 	c *= 0.90 + 0.20 * n;
 	float up = clamp(world_normal.y, 0.0, 1.0);
 	float cover = snow * smoothstep(0.55, 0.9, up) * smoothstep(0.25, 0.55, n + snow * 0.4);
-	c = mix(c, vec3(0.90, 0.93, 0.97), cover);
+	c = mix(c, vec3(0.80, 0.85, 0.92), cover);
 	vec2 uv = world_pos.xz / map_size;
 	if (overlay_on > 0.5 && uv.x >= 0.0 && uv.y >= 0.0 && uv.x <= 1.0 && uv.y <= 1.0) {
 		vec4 o = texture(overlay_tex, uv);
-		c = mix(c, o.rgb, o.a);
+		c = mix(c, srgb_to_linear(o.rgb), o.a);
 		float fr = texture(frame_tex, uv).r;
 		vec2 f = fract(world_pos.xz);
 		float edge = min(min(f.x, f.y), min(1.0 - f.x, 1.0 - f.y));

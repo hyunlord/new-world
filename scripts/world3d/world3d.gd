@@ -18,6 +18,8 @@ const RigScript = preload("res://scripts/world3d/camera_rig.gd")
 const SkyScript = preload("res://scripts/world3d/sky3d.gd")
 const StructuresScript = preload("res://scripts/world3d/structures3d.gd")
 const PropsScript = preload("res://scripts/world3d/props3d.gd")
+const PeopleScript = preload("res://scripts/world3d/people3d.gd")
+const AnimalsScript = preload("res://scripts/world3d/animals3d.gd")
 
 var world_sim: Node = null
 var camera2d: Camera2D = null
@@ -27,11 +29,20 @@ var rig: Node3D = null
 var sky: Node3D = null
 var structures: Node3D = null
 var props: Node3D = null
-## Optional pickers: nodes with `pick(screen: Vector2, camera: Camera3D) -> Vector2` (world px, or (-1, -1)).
+var people: Node3D = null
+var animals: Node3D = null
+## Pickers: nodes with `pick(screen: Vector2, camera: Camera3D, order_mode: int) -> Vector2` (world px, or (-1, -1)).
 var pickers: Array[Node] = []
+static var _globals_added: bool = false
 
 
 func _ready() -> void:
+	# Global shader parameters the flora x-ray reads (camera_rig.gd writes them every frame).
+	if not _globals_added:
+		_globals_added = true
+		RenderingServer.global_shader_parameter_add("w3d_camera", RenderingServer.GLOBAL_VAR_TYPE_VEC3, Vector3.ZERO)
+		RenderingServer.global_shader_parameter_add("w3d_focus", RenderingServer.GLOBAL_VAR_TYPE_VEC3, Vector3.ZERO)
+		RenderingServer.global_shader_parameter_add("w3d_xray", RenderingServer.GLOBAL_VAR_TYPE_FLOAT, 0.0)
 	var main: Node = get_parent()
 	world_sim = main.get_node_or_null("WorldSim")
 	camera2d = main.get_node_or_null("Camera2D") as Camera2D
@@ -45,6 +56,12 @@ func _ready() -> void:
 	structures.call("setup", world_sim, terrain)
 	props = _layer("Props", PropsScript)
 	props.call("setup", world_sim, terrain, sky)
+	people = _layer("People", PeopleScript)
+	people.call("setup", world_sim, terrain)
+	animals = _layer("Animals", AnimalsScript)
+	animals.call("setup", world_sim, terrain)
+	add_picker(people)
+	add_picker(animals)
 	rig = _layer("CameraRig", RigScript)
 	rig.call("setup", camera2d, terrain)
 	ViewProjection.provider = self
@@ -78,9 +95,11 @@ func screen_to_world(screen: Vector2) -> Vector2:
 	var cam: Camera3D = camera()
 	if cam == null:
 		return Vector2(-1, -1)
+	var tool: Node = get_parent().get_node_or_null("ColonyView/OrderTool")
+	var mode: int = int(tool.get("mode")) if tool != null else 0
 	for picker: Node in pickers:
 		if is_instance_valid(picker):
-			var hit: Vector2 = picker.call("pick", screen, cam)
+			var hit: Vector2 = picker.call("pick", screen, cam, mode)
 			if hit.x >= 0.0:
 				return hit
 	var p: Vector3 = ground_hit(screen)

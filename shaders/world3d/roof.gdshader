@@ -20,6 +20,10 @@ float bayer4(vec2 p) {
 	return (m[idx] + 0.5) / 16.0;
 }
 
+vec3 srgb_to_linear(vec3 c) {
+	return mix(c / 12.92, pow((c + 0.055) / 1.055, vec3(2.4)), step(0.04045, c));
+}
+
 void vertex() {
 	world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	ridge_z = UV.x;
@@ -29,7 +33,7 @@ void fragment() {
 	if (fade < 0.999 && bayer4(FRAGCOORD.xy) > fade) {
 		discard;
 	}
-	vec3 c = COLOR.rgb;
+	vec3 c = srgb_to_linear(COLOR.rgb);
 	if (COLOR.a > 0.5) {
 		c *= cover;
 		float h = world_pos.y;

@@ -5,7 +5,8 @@
 #   64·zoom screen pixels at the target (so 2D pan speeds and drags feel the same), narrow FOV (params3d
 #   `camera.fov_deg`, 30°) and pitch `camera.pitch_deg` (50°) for a near-isometric look. Q/E turn the view in 90° steps,
 #   eased over `camera.rotate_seconds`; the 2D camera's `screen_rotation` follows, so W stays "up on screen". The 3D
-#   zoom ladder is params3d `camera.zooms` (Z1–Z5, Z5 = close-up cutaway).
+#   zoom ladder is params3d `camera.zooms` (Z1–Z5, Z5 = close-up cutaway). Each frame it also sets the global
+#   shader parameters of the flora x-ray (trees between the camera and the target dissolve; `camera.xray_radius`).
 # Bridge methods called: none (the terrain height comes from Terrain3D).
 extends Node3D
 
@@ -106,3 +107,7 @@ func update_camera(delta: float = 0.0) -> void:
 	var back: Vector3 = Vector3(sin(_yaw), 0.0, cos(_yaw))
 	camera.global_position = t + back * cos(pitch) * d + Vector3.UP * sin(pitch) * d
 	camera.look_at(t, Vector3.UP)
+	# Flora x-ray (shaders/world3d/flora.gdshader): wider when the camera is close, off when far.
+	RenderingServer.global_shader_parameter_set("w3d_camera", camera.global_position)
+	RenderingServer.global_shader_parameter_set("w3d_focus", t)
+	RenderingServer.global_shader_parameter_set("w3d_xray", clampf(float(Data3D.param("camera.xray_radius", 4.5)) * (1.6 - d / 40.0), 0.0, 6.0) if d < 40.0 else 0.0)
