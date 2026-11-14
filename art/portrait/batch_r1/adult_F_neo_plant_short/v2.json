@@ -1,0 +1,23 @@
+{
+  "variant": "v2",
+  "image_sha256": "478145c71496757002963eb257e8c4a5f982b685fef590031c6a20ca0dec2426",
+  "source": {
+    "path": "/Users/rexxa/work/art-batch/R1/pass3/portraits/neo_plant/adult_F_neo_plant_short/try1/raw.png",
+    "sha256": "42f848b5362f7a358c5275f4a0786050c022ae8200c9d64b5496d6c779a1865e"
+  },
+  "source_box": [
+    512,
+    0,
+    1024,
+    512
+  ],
+  "anchor": [
+    64,
+    64
+  ],
+  "footprint": null,
+  "operations": [
+    "full-cell RGB conversion",
+    "full-cell Lanczos resize to128x128"
+  ]
+}

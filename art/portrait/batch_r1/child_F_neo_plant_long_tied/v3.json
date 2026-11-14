@@ -1,0 +1,23 @@
+{
+  "variant": "v3",
+  "image_sha256": "274689e7936ab4d918467ec8c41b2326b2702cea0cf8fc075e4f169396868c8a",
+  "source": {
+    "path": "/Users/rexxa/work/art-batch/R1/pass3/portraits/neo_plant/child_F_neo_plant_long_tied/try1/raw.png",
+    "sha256": "49cfb43075d9ab13347b3ff2e29356551f020dac950be71493cd47159f27d204"
+  },
+  "source_box": [
+    1024,
+    0,
+    1536,
+    512
+  ],
+  "anchor": [
+    64,
+    64
+  ],
+  "footprint": null,
+  "operations": [
+    "full-cell RGB conversion",
+    "full-cell Lanczos resize to128x128"
+  ]
+}

@@ -41,6 +41,37 @@
       "trial": "/Users/rexxa/work/art-batch/R1/pass2/trials/child_M_neo_plant_short/try4/processed"
     },
     {
+      "look": "child_M_neo_plant_long_tied",
+      "reference": "child_M_hide_wrap_long_tied",
+      "reference_values": {
+        "shoulder_width": 14,
+        "hip_width": 16,
+        "clothing_saturation": 0.5442457225285701,
+        "clothing_value": 0.7230392156862745,
+        "outline_thickness": 0.48511726259131105
+      },
+      "candidate_values": {
+        "shoulder_width": 14.666666666666666,
+        "hip_width": 14.666666666666666,
+        "clothing_saturation": 0.5928257272764546,
+        "clothing_value": 0.666096256684492,
+        "outline_thickness": 0.49803152633602454
+      },
+      "ratios": {
+        "shoulder_width": 1.0476190476190477,
+        "hip_width": 0.9166666666666666,
+        "clothing_saturation": 1.0892611604225044,
+        "clothing_value": 0.9212449922958398,
+        "outline_thickness": 1.0266209115621456
+      },
+      "passed": true,
+      "regions": {
+        "path": "/Users/rexxa/work/art-batch-r1/art/batch_r1/regions/child_M_hide_wrap_long_tied.json",
+        "sha256": "9fda55fce69d9ab8715f80b68df7753ca5e510e4cc3c3e99fa195cd3216823ee"
+      },
+      "trial": "/Users/rexxa/work/art-batch/R1/pass3/trials/child_M_neo_plant_long_tied/try10/processed"
+    },
+    {
       "look": "child_M_neo_plant_bun",
       "reference": "child_M_hide_wrap_bun",
       "reference_values": {
@@ -70,6 +101,37 @@
         "sha256": "327c5489123169d8159d684fca0189896cb1b3ed68bdb3fa0c3924cd1c80cc8b"
       },
       "trial": "/Users/rexxa/work/art-batch/R1/pass2/trials/child_M_neo_plant_bun/try4/processed"
+    },
+    {
+      "look": "child_F_neo_plant_short",
+      "reference": "child_F_hide_wrap_short",
+      "reference_values": {
+        "shoulder_width": 12.333333333333334,
+        "hip_width": 16.666666666666668,
+        "clothing_saturation": 0.6280784394108098,
+        "clothing_value": 0.667547018807523,
+        "outline_thickness": 0.6468742791234141
+      },
+      "candidate_values": {
+        "shoulder_width": 12.666666666666666,
+        "hip_width": 16.666666666666668,
+        "clothing_saturation": 0.6870505609010881,
+        "clothing_value": 0.7105242096838735,
+        "outline_thickness": 0.7002229911572472
+      },
+      "ratios": {
+        "shoulder_width": 1.027027027027027,
+        "hip_width": 1.0,
+        "clothing_saturation": 1.093892924497773,
+        "clothing_value": 1.0643807696918834,
+        "outline_thickness": 1.0824715307990393
+      },
+      "passed": true,
+      "regions": {
+        "path": "/Users/rexxa/work/art-batch-r1/art/batch_r1/regions/child_F_hide_wrap_short.json",
+        "sha256": "28331c8e950801b64c3d2ad31941e24c77aacdb8b13c7ec86ca5632de4fdf141"
+      },
+      "trial": "/Users/rexxa/work/art-batch/R1/pass3/trials/child_F_neo_plant_short/try8/processed"
     },
     {
       "look": "child_F_neo_plant_long_tied",
@@ -349,6 +411,37 @@
         "sha256": "f32e5f1a5fd18640382a5d553888cec672d19768eec23f197e58523fad396cc7"
       },
       "trial": "/Users/rexxa/work/art-batch/R1/trials/child_M_neo_first_wool_short/try2"
+    },
+    {
+      "look": "child_M_neo_first_wool_long_tied",
+      "reference": "child_M_hide_wrap_long_tied",
+      "reference_values": {
+        "shoulder_width": 14,
+        "hip_width": 16,
+        "clothing_saturation": 0.5442457225285701,
+        "clothing_value": 0.7230392156862745,
+        "outline_thickness": 0.48511726259131105
+      },
+      "candidate_values": {
+        "shoulder_width": 15.333333333333334,
+        "hip_width": 14.666666666666666,
+        "clothing_saturation": 0.5487119132454545,
+        "clothing_value": 0.7111586452762924,
+        "outline_thickness": 0.5210380622837371
+      },
+      "ratios": {
+        "shoulder_width": 1.0952380952380953,
+        "hip_width": 0.9166666666666666,
+        "clothing_saturation": 1.008206202698543,
+        "clothing_value": 0.9835685670261942,
+        "outline_thickness": 1.074045601883039
+      },
+      "passed": true,
+      "regions": {
+        "path": "/Users/rexxa/work/art-batch-r1/art/batch_r1/regions/child_M_hide_wrap_long_tied.json",
+        "sha256": "9fda55fce69d9ab8715f80b68df7753ca5e510e4cc3c3e99fa195cd3216823ee"
+      },
+      "trial": "/Users/rexxa/work/art-batch/R1/pass3/trials/child_M_neo_first_wool_long_tied/try9/processed"
     },
     {
       "look": "child_F_neo_first_wool_short",
@@ -721,6 +814,37 @@
         "sha256": "0be264c2451188ad4a27a57e01ee45f50e59b4eeaa3a01a3764c462cebfc0172"
       },
       "trial": "/Users/rexxa/work/art-batch/R1/pass2/trials/child_M_bronze_wool_cloak_short/try4/processed"
+    },
+    {
+      "look": "child_M_bronze_wool_cloak_long_tied",
+      "reference": "child_M_fur_cloak_long_tied",
+      "reference_values": {
+        "shoulder_width": 15.333333333333334,
+        "hip_width": 22,
+        "clothing_saturation": 0.5830389828307129,
+        "clothing_value": 0.503456640388114,
+        "outline_thickness": 0.8385428681276432
+      },
+      "candidate_values": {
+        "shoulder_width": 16.333333333333332,
+        "hip_width": 21.333333333333332,
+        "clothing_saturation": 0.5838305894097783,
+        "clothing_value": 0.5039013543561754,
+        "outline_thickness": 0.9170549788542868
+      },
+      "ratios": {
+        "shoulder_width": 1.0652173913043477,
+        "hip_width": 0.9696969696969696,
+        "clothing_saturation": 1.0013577249590107,
+        "clothing_value": 1.000883321288043,
+        "outline_thickness": 1.0936292152862153
+      },
+      "passed": true,
+      "regions": {
+        "path": "/Users/rexxa/work/art-batch-r1/art/batch_r1/regions/child_M_fur_cloak_long_tied.json",
+        "sha256": "cd04e747d326d6974843f26bfc8999546871034e56243f138072fbb232e7ba37"
+      },
+      "trial": "/Users/rexxa/work/art-batch/R1/pass3/trials/child_M_bronze_wool_cloak_long_tied/try8/processed"
     },
     {
       "look": "child_M_bronze_wool_cloak_bun",
@@ -1713,6 +1837,37 @@
         "sha256": "56b738a231223487e74322aac21e52e0641a7968de7536c7162509d46f615280"
       },
       "trial": "/Users/rexxa/work/art-batch/R1/trials/adult_M_iron_winter_short/try2/processed"
+    },
+    {
+      "look": "adult_M_iron_winter_bun",
+      "reference": "adult_M_fur_cloak_bun",
+      "reference_values": {
+        "shoulder_width": 23,
+        "hip_width": 26.666666666666668,
+        "clothing_saturation": 0.6137508097905598,
+        "clothing_value": 0.5657785984348896,
+        "outline_thickness": 0.7648096885813148
+      },
+      "candidate_values": {
+        "shoulder_width": 22.666666666666668,
+        "hip_width": 28.333333333333332,
+        "clothing_saturation": 0.6340348192882234,
+        "clothing_value": 0.5395761892200827,
+        "outline_thickness": 0.82759323337178
+      },
+      "ratios": {
+        "shoulder_width": 0.9855072463768116,
+        "hip_width": 1.0625,
+        "clothing_saturation": 1.0330492590381841,
+        "clothing_value": 0.9536878749261803,
+        "outline_thickness": 1.0820904150768875
+      },
+      "passed": true,
+      "regions": {
+        "path": "/Users/rexxa/work/art-batch-r1/art/batch_r1/regions/adult_M_fur_cloak_bun.json",
+        "sha256": "fcd6ed2f0dd3dda6c2612b6de854b5c6d22ed4f46dbdf335fdf3cdcc9b04b275"
+      },
+      "trial": "/Users/rexxa/work/art-batch/R1/pass3/trials/adult_M_iron_winter_bun/try8/processed"
     },
     {
       "look": "adult_F_iron_winter_short",

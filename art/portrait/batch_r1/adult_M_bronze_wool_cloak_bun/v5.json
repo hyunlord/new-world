@@ -1,0 +1,23 @@
+{
+  "variant": "v5",
+  "image_sha256": "47e793048fdf4ca2aa80dfe1682262427327c4ced6a1c61203c6d3590ffa8ee4",
+  "source": {
+    "path": "/Users/rexxa/work/art-batch/R1/pass3/portraits/cloak/adult_M_bronze_wool_cloak_bun/try1/raw.png",
+    "sha256": "72f4510b7a5b079990661cc093c1b284a88d4a2a4db17a87f5a044309df3bc37"
+  },
+  "source_box": [
+    512,
+    512,
+    1024,
+    1024
+  ],
+  "anchor": [
+    64,
+    64
+  ],
+  "footprint": null,
+  "operations": [
+    "full-cell RGB conversion",
+    "full-cell Lanczos resize to128x128"
+  ]
+}

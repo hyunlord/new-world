@@ -1,7 +1,7 @@
 {
   "planned_looks": 84,
-  "accepted_body_looks": 58,
-  "accepted_portrait_looks": 13,
+  "accepted_body_looks": 63,
+  "accepted_portrait_looks": 29,
   "rows": [
     {
       "look": "child_M_neo_plant_short",
@@ -11,7 +11,7 @@
       "hair": "short",
       "attempts": 5,
       "body": "accepted",
-      "portraits": 0,
+      "portraits": 6,
       "selected_trial": "/Users/rexxa/work/art-batch/R1/pass2/trials/child_M_neo_plant_short/try4/processed",
       "attempt_results": [
         {
@@ -87,10 +87,10 @@
       "age": "child",
       "sex": "M",
       "hair": "long_tied",
-      "attempts": 6,
-      "body": "withheld",
-      "portraits": 0,
-      "selected_trial": null,
+      "attempts": 10,
+      "body": "accepted",
+      "portraits": 6,
+      "selected_trial": "/Users/rexxa/work/art-batch/R1/pass3/trials/child_M_neo_plant_long_tied/try10/processed",
       "attempt_results": [
         {
           "attempt": "try1",
@@ -169,6 +169,58 @@
             "outline_thickness": 1.3240634336934036
           },
           "error": null
+        },
+        {
+          "attempt": "try7",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0952380952380953,
+            "hip_width": 0.7916666666666666,
+            "clothing_saturation": 1.1632269504658337,
+            "clothing_value": 0.9365300462249615,
+            "outline_thickness": 1.0388495708477639
+          },
+          "error": null
+        },
+        {
+          "attempt": "try8",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0476190476190477,
+            "hip_width": 0.9166666666666666,
+            "clothing_saturation": 1.3227825164283946,
+            "clothing_value": 0.8953097072419106,
+            "outline_thickness": 1.0674755704198002
+          },
+          "error": null
+        },
+        {
+          "attempt": "try9",
+          "numeric_pass": true,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0476190476190477,
+            "hip_width": 0.9166666666666666,
+            "clothing_saturation": 1.0236251649987593,
+            "clothing_value": 0.9835685670261942,
+            "outline_thickness": 0.9559039142805061
+          },
+          "error": null
+        },
+        {
+          "attempt": "try10",
+          "numeric_pass": true,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0476190476190477,
+            "hip_width": 0.9166666666666666,
+            "clothing_saturation": 1.0892611604225044,
+            "clothing_value": 0.9212449922958398,
+            "outline_thickness": 1.0266209115621456
+          },
+          "error": null
         }
       ]
     },
@@ -180,7 +232,7 @@
       "hair": "bun",
       "attempts": 5,
       "body": "accepted",
-      "portraits": 0,
+      "portraits": 6,
       "selected_trial": "/Users/rexxa/work/art-batch/R1/pass2/trials/child_M_neo_plant_bun/try4/processed",
       "attempt_results": [
         {
@@ -256,10 +308,10 @@
       "age": "child",
       "sex": "F",
       "hair": "short",
-      "attempts": 6,
-      "body": "withheld",
-      "portraits": 0,
-      "selected_trial": null,
+      "attempts": 8,
+      "body": "accepted",
+      "portraits": 6,
+      "selected_trial": "/Users/rexxa/work/art-batch/R1/pass3/trials/child_F_neo_plant_short/try8/processed",
       "attempt_results": [
         {
           "attempt": "try1",
@@ -332,6 +384,32 @@
             "outline_thickness": 1.1246225899246367
           },
           "error": null
+        },
+        {
+          "attempt": "try7",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.027027027027027,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.0924368455787992,
+            "clothing_value": 1.0407624985013788,
+            "outline_thickness": 1.1359389487197775
+          },
+          "error": null
+        },
+        {
+          "attempt": "try8",
+          "numeric_pass": true,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.027027027027027,
+            "hip_width": 1.0,
+            "clothing_saturation": 1.093892924497773,
+            "clothing_value": 1.0643807696918834,
+            "outline_thickness": 1.0824715307990393
+          },
+          "error": null
         }
       ]
     },
@@ -343,7 +421,7 @@
       "hair": "long_tied",
       "attempts": 5,
       "body": "accepted",
-      "portraits": 0,
+      "portraits": 6,
       "selected_trial": "/Users/rexxa/work/art-batch/R1/pass2/trials/child_F_neo_plant_long_tied/try5/processed",
       "attempt_results": [
         {
@@ -500,7 +578,7 @@
       "hair": "long_tied",
       "attempts": 6,
       "body": "accepted",
-      "portraits": 0,
+      "portraits": 6,
       "selected_trial": "/Users/rexxa/work/art-batch/R1/pass2/trials/adult_M_neo_plant_long_tied/try6/processed",
       "attempt_results": [
         {
@@ -611,7 +689,7 @@
       "hair": "short",
       "attempts": 5,
       "body": "accepted",
-      "portraits": 0,
+      "portraits": 6,
       "selected_trial": "/Users/rexxa/work/art-batch/R1/pass2/trials/adult_F_neo_plant_short/try5/processed",
       "attempt_results": [
         {
@@ -683,7 +761,7 @@
       "hair": "long_tied",
       "attempts": 5,
       "body": "accepted",
-      "portraits": 0,
+      "portraits": 6,
       "selected_trial": "/Users/rexxa/work/art-batch/R1/pass2/trials/adult_F_neo_plant_long_tied/try5/processed",
       "attempt_results": [
         {
@@ -761,7 +839,7 @@
       "hair": "bun",
       "attempts": 6,
       "body": "accepted",
-      "portraits": 0,
+      "portraits": 6,
       "selected_trial": "/Users/rexxa/work/art-batch/R1/pass2/trials/adult_F_neo_plant_bun/try6/processed",
       "attempt_results": [
         {
@@ -883,10 +961,10 @@
       "age": "child",
       "sex": "M",
       "hair": "long_tied",
-      "attempts": 6,
-      "body": "withheld",
+      "attempts": 9,
+      "body": "accepted",
       "portraits": 0,
-      "selected_trial": null,
+      "selected_trial": "/Users/rexxa/work/art-batch/R1/pass3/trials/child_M_neo_first_wool_long_tied/try9/processed",
       "attempt_results": [
         {
           "attempt": "try1",
@@ -965,6 +1043,45 @@
             "outline_thickness": 1.7496255319823426
           },
           "error": null
+        },
+        {
+          "attempt": "try7",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.119047619047619,
+            "hip_width": 0.7916666666666666,
+            "clothing_saturation": 1.2052973182024647,
+            "clothing_value": 0.9924437596302003,
+            "outline_thickness": 0.8999516559807891
+          },
+          "error": null
+        },
+        {
+          "attempt": "try8",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0952380952380953,
+            "hip_width": 0.9166666666666666,
+            "clothing_saturation": 1.1541117508880037,
+            "clothing_value": 0.8603020030816642,
+            "outline_thickness": 1.2105817925328304
+          },
+          "error": null
+        },
+        {
+          "attempt": "try9",
+          "numeric_pass": true,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0952380952380953,
+            "hip_width": 0.9166666666666666,
+            "clothing_saturation": 1.008206202698543,
+            "clothing_value": 0.9835685670261942,
+            "outline_thickness": 1.074045601883039
+          },
+          "error": null
         }
       ]
     },
@@ -974,7 +1091,7 @@
       "age": "child",
       "sex": "M",
       "hair": "bun",
-      "attempts": 6,
+      "attempts": 10,
       "body": "withheld",
       "portraits": 0,
       "selected_trial": null,
@@ -1048,6 +1165,58 @@
             "clothing_saturation": 1.1718676580159169,
             "clothing_value": 1.0229499123697074,
             "outline_thickness": 0.6209889020160467
+          },
+          "error": null
+        },
+        {
+          "attempt": "try7",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.090909090909091,
+            "hip_width": 0.830188679245283,
+            "clothing_saturation": 1.1698817086654782,
+            "clothing_value": 0.9913461242812778,
+            "outline_thickness": 0.5790405154702765
+          },
+          "error": null
+        },
+        {
+          "attempt": "try8",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0454545454545456,
+            "hip_width": 0.8867924528301886,
+            "clothing_saturation": 0.6912462354238562,
+            "clothing_value": 1.1258263382836762,
+            "outline_thickness": 0.6773708358836396
+          },
+          "error": null
+        },
+        {
+          "attempt": "try9",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.272727272727273,
+            "hip_width": 0.7358490566037735,
+            "clothing_saturation": 0.9441023756112977,
+            "clothing_value": 0.9580297020570057,
+            "outline_thickness": 0.26919372363695027
+          },
+          "error": null
+        },
+        {
+          "attempt": "try10",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0681818181818181,
+            "hip_width": 0.9245283018867924,
+            "clothing_saturation": 0.8571261870323713,
+            "clothing_value": 1.0024121391015588,
+            "outline_thickness": 0.7067313851365778
           },
           "error": null
         }
@@ -2756,10 +2925,10 @@
       "age": "child",
       "sex": "M",
       "hair": "long_tied",
-      "attempts": 6,
-      "body": "withheld",
-      "portraits": 0,
-      "selected_trial": null,
+      "attempts": 9,
+      "body": "accepted",
+      "portraits": 6,
+      "selected_trial": "/Users/rexxa/work/art-batch/R1/pass3/trials/child_M_bronze_wool_cloak_long_tied/try8/processed",
       "attempt_results": [
         {
           "attempt": "try1",
@@ -2838,6 +3007,45 @@
             "outline_thickness": 1.1076087205703675
           },
           "error": null
+        },
+        {
+          "attempt": "try7",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.2826086956521738,
+            "hip_width": 0.9848484848484849,
+            "clothing_saturation": 1.0500807024948198,
+            "clothing_value": 1.0015725795658341,
+            "outline_thickness": 1.2733270672382566
+          },
+          "error": null
+        },
+        {
+          "attempt": "try8",
+          "numeric_pass": true,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.0652173913043477,
+            "hip_width": 0.9696969696969696,
+            "clothing_saturation": 1.0013577249590107,
+            "clothing_value": 1.000883321288043,
+            "outline_thickness": 1.0936292152862153
+          },
+          "error": null
+        },
+        {
+          "attempt": "try9",
+          "numeric_pass": false,
+          "structural_pass": false,
+          "ratios": {
+            "shoulder_width": 1.0217391304347825,
+            "hip_width": 0.9545454545454546,
+            "clothing_saturation": 0.9648732959623604,
+            "clothing_value": 1.0474106042976912,
+            "outline_thickness": 0.852896540657023
+          },
+          "error": null
         }
       ]
     },
@@ -2901,7 +3109,7 @@
       "hair": "short",
       "attempts": 6,
       "body": "accepted",
-      "portraits": 0,
+      "portraits": 6,
       "selected_trial": "/Users/rexxa/work/art-batch/R1/pass2/trials/child_F_bronze_wool_cloak_short/try6/processed",
       "attempt_results": [
         {
@@ -2974,7 +3182,7 @@
       "hair": "long_tied",
       "attempts": 4,
       "body": "accepted",
-      "portraits": 0,
+      "portraits": 6,
       "selected_trial": "/Users/rexxa/work/art-batch/R1/pass2/trials/child_F_bronze_wool_cloak_long_tied/try4/processed",
       "attempt_results": [
         {
@@ -3039,7 +3247,7 @@
       "hair": "bun",
       "attempts": 6,
       "body": "accepted",
-      "portraits": 0,
+      "portraits": 6,
       "selected_trial": "/Users/rexxa/work/art-batch/R1/pass2/trials/child_F_bronze_wool_cloak_bun/try6/processed",
       "attempt_results": [
         {
@@ -3130,7 +3338,7 @@
       "hair": "short",
       "attempts": 5,
       "body": "accepted",
-      "portraits": 0,
+      "portraits": 6,
       "selected_trial": "/Users/rexxa/work/art-batch/R1/pass2/trials/adult_M_bronze_wool_cloak_short/try5/processed",
       "attempt_results": [
         {
@@ -3208,7 +3416,7 @@
       "hair": "long_tied",
       "attempts": 4,
       "body": "accepted",
-      "portraits": 0,
+      "portraits": 6,
       "selected_trial": "/Users/rexxa/work/art-batch/R1/pass2/trials/adult_M_bronze_wool_cloak_long_tied/try4/processed",
       "attempt_results": [
         {
@@ -3273,7 +3481,7 @@
       "hair": "bun",
       "attempts": 4,
       "body": "accepted",
-      "portraits": 0,
+      "portraits": 6,
       "selected_trial": "/Users/rexxa/work/art-batch/R1/pass2/trials/adult_M_bronze_wool_cloak_bun/try4/processed",
       "attempt_results": [
         {
@@ -5737,7 +5945,7 @@
       "age": "adult",
       "sex": "M",
       "hair": "long_tied",
-      "attempts": 6,
+      "attempts": 10,
       "body": "withheld",
       "portraits": 0,
       "selected_trial": null,
@@ -5819,6 +6027,58 @@
             "outline_thickness": 0.7173385211660559
           },
           "error": null
+        },
+        {
+          "attempt": "try7",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.2173913043478262,
+            "hip_width": 1.1624999999999999,
+            "clothing_saturation": 1.0647699922470146,
+            "clothing_value": 0.9908308208746465,
+            "outline_thickness": 1.5266203180061029
+          },
+          "error": null
+        },
+        {
+          "attempt": "try8",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.028985507246377,
+            "hip_width": 1.0875,
+            "clothing_saturation": 1.0289151957546974,
+            "clothing_value": 0.9840860348739626,
+            "outline_thickness": 1.2679927812715217
+          },
+          "error": null
+        },
+        {
+          "attempt": "try9",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.028985507246377,
+            "hip_width": 1.0875,
+            "clothing_saturation": 1.0267092799330526,
+            "clothing_value": 0.9850806576943401,
+            "outline_thickness": 1.1716307992379114
+          },
+          "error": null
+        },
+        {
+          "attempt": "try10",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 1.028985507246377,
+            "hip_width": 1.0875,
+            "clothing_saturation": 1.0317864787962052,
+            "clothing_value": 1.0422714698660367,
+            "outline_thickness": 1.1836402298330544
+          },
+          "error": null
         }
       ]
     },
@@ -5828,10 +6088,10 @@
       "age": "adult",
       "sex": "M",
       "hair": "bun",
-      "attempts": 6,
-      "body": "withheld",
+      "attempts": 8,
+      "body": "accepted",
       "portraits": 0,
-      "selected_trial": null,
+      "selected_trial": "/Users/rexxa/work/art-batch/R1/pass3/trials/adult_M_iron_winter_bun/try8/processed",
       "attempt_results": [
         {
           "attempt": "try1",
@@ -5908,6 +6168,32 @@
             "clothing_saturation": 1.0042986789513368,
             "clothing_value": 0.9522701453823823,
             "outline_thickness": 0.8844551016201924
+          },
+          "error": null
+        },
+        {
+          "attempt": "try7",
+          "numeric_pass": false,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9855072463768116,
+            "hip_width": 1.0625,
+            "clothing_saturation": 1.147055807182401,
+            "clothing_value": 0.9536878749261803,
+            "outline_thickness": 1.0820904150768875
+          },
+          "error": null
+        },
+        {
+          "attempt": "try8",
+          "numeric_pass": true,
+          "structural_pass": true,
+          "ratios": {
+            "shoulder_width": 0.9855072463768116,
+            "hip_width": 1.0625,
+            "clothing_saturation": 1.0330492590381841,
+            "clothing_value": 0.9536878749261803,
+            "outline_thickness": 1.0820904150768875
           },
           "error": null
         }

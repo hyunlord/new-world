@@ -5,6 +5,17 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## R1 targeted third pass — 2026-11-14
+
+### Added
+- Five accepted bodies (50 frames) from seven specifically authorized gaps, with per-attempt approaches and unchanged comparison gates.
+- Missing six-identity portraits only for the two wardrobes that reached twelve bodies; rejected identities and failed tool raws remain explicit external evidence.
+- ADR 0018 distinguishing selective ten-attempt body budgets, complete bodies, portrait readiness and pending game integration.
+
+### Changed
+- Coverage: 58/84 → 63/84. Bronze wool cloak and neolithic plant fibre reach 12/12; first wool and iron winter reach 11/12 and remain excluded. Other three wardrobes and historical assets are unchanged.
+- Draft import lists contain only the two complete body wardrobes. Missing portrait sets still block portrait readiness; no aliases, runtime import or appearance-index changes.
+
 ## R1 complete-wardrobe retry pass — 2026-11-14
 
 ### Added

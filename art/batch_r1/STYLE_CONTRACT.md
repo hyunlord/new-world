@@ -88,3 +88,19 @@ ratios before execution; no unrecorded parameter sweeps. Frozen measurements,
 annotations, thresholds and structural checks remain unchanged. A wardrobe
 needs all twelve accepted bodies before portrait work and draft importability.
 Partial wardrobes are evidence only, with no fallback aliases.
+
+## Pass 3 selective extension
+
+BRIEF5 adds four attempts only for seven missing combinations: cloak child M
+long_tied; plant child M long_tied and child F short; first wool child M
+long_tied/bun; winter adult M long_tied/bun. Their total limit is ten; every
+other body keeps its prior limit and assets. Every new approach is recorded
+before execution. All five ratios, masks/probes and ten-frame/visual gates
+remain frozen. A hair edit must preserve crown extent: fixed normalization
+otherwise changes apparent body width.
+
+Portraits start only for twelve-body wardrobes and keep the existing three-call
+limit per six-identity sheet, including failed calls. Their parchment sheets
+are opaque (`transparent_background=false`); body cutouts remain transparent.
+Never flatten a failed portrait raw or invent alpha. Body completeness, complete
+v1–v6 portrait readiness and pending downstream integration are separate fields.

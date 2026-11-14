@@ -1,0 +1,23 @@
+{
+  "variant": "v4",
+  "image_sha256": "7c5fd08ea19d5f518c063b4615c90381df8bbc838abb666337a3dc1c4e64fefe",
+  "source": {
+    "path": "/Users/rexxa/work/art-batch/R1/pass3/portraits/cloak/child_F_bronze_wool_cloak_long_tied/try1/raw.png",
+    "sha256": "4c63b1dd2fc48df9137ae9e01912a283ecb25d79588f2898741c1c2625406f19"
+  },
+  "source_box": [
+    0,
+    512,
+    512,
+    1024
+  ],
+  "anchor": [
+    64,
+    64
+  ],
+  "footprint": null,
+  "operations": [
+    "full-cell RGB conversion",
+    "full-cell Lanczos resize to128x128"
+  ]
+}

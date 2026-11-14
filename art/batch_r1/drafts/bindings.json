@@ -9,11 +9,40 @@
       "idle": "idle"
     },
     "proposed_wardrobes_by_era": {
-      "neolithic": [],
-      "bronze": [],
+      "neolithic": [
+        "neo_plant"
+      ],
+      "bronze": [
+        "bronze_wool_cloak"
+      ],
       "iron": []
     },
-    "accepted_looks": [],
+    "accepted_looks": [
+      "adult_F_bronze_wool_cloak_bun",
+      "adult_F_bronze_wool_cloak_long_tied",
+      "adult_F_bronze_wool_cloak_short",
+      "adult_F_neo_plant_bun",
+      "adult_F_neo_plant_long_tied",
+      "adult_F_neo_plant_short",
+      "adult_M_bronze_wool_cloak_bun",
+      "adult_M_bronze_wool_cloak_long_tied",
+      "adult_M_bronze_wool_cloak_short",
+      "adult_M_neo_plant_bun",
+      "adult_M_neo_plant_long_tied",
+      "adult_M_neo_plant_short",
+      "child_F_bronze_wool_cloak_bun",
+      "child_F_bronze_wool_cloak_long_tied",
+      "child_F_bronze_wool_cloak_short",
+      "child_F_neo_plant_bun",
+      "child_F_neo_plant_long_tied",
+      "child_F_neo_plant_short",
+      "child_M_bronze_wool_cloak_bun",
+      "child_M_bronze_wool_cloak_long_tied",
+      "child_M_bronze_wool_cloak_short",
+      "child_M_neo_plant_bun",
+      "child_M_neo_plant_long_tied",
+      "child_M_neo_plant_short"
+    ],
     "availability": "../coverage.json",
     "unresolved": [
       "Era/top appearance selectors and numeric top codes",
@@ -23,40 +52,26 @@
     "wardrobe_importability": [
       {
         "wardrobe": "neo_plant",
-        "before": 3,
-        "after": 10,
+        "before": 10,
+        "after": 12,
         "total": 12,
-        "body_importable": false,
-        "portrait_ready": false,
-        "integration_pending": false,
-        "portrait_looks_available": 3,
-        "missing_body_looks": [
-          "child_M_neo_plant_long_tied",
-          "child_F_neo_plant_short"
-        ],
-        "missing_portrait_looks": [
-          "child_M_neo_plant_short",
-          "child_M_neo_plant_long_tied",
-          "child_M_neo_plant_bun",
-          "child_F_neo_plant_short",
-          "child_F_neo_plant_long_tied",
-          "adult_M_neo_plant_long_tied",
-          "adult_F_neo_plant_short",
-          "adult_F_neo_plant_long_tied",
-          "adult_F_neo_plant_bun"
-        ]
+        "body_importable": true,
+        "portrait_ready": true,
+        "integration_pending": true,
+        "portrait_looks_available": 12,
+        "missing_body_looks": [],
+        "missing_portrait_looks": []
       },
       {
         "wardrobe": "neo_first_wool",
-        "before": 3,
-        "after": 10,
+        "before": 10,
+        "after": 11,
         "total": 12,
         "body_importable": false,
         "portrait_ready": false,
         "integration_pending": false,
         "portrait_looks_available": 3,
         "missing_body_looks": [
-          "child_M_neo_first_wool_long_tied",
           "child_M_neo_first_wool_bun"
         ],
         "missing_portrait_looks": [
@@ -73,7 +88,7 @@
       },
       {
         "wardrobe": "bronze_linen",
-        "before": 0,
+        "before": 2,
         "after": 2,
         "total": 12,
         "body_importable": false,
@@ -109,30 +124,21 @@
       },
       {
         "wardrobe": "bronze_wool_cloak",
-        "before": 4,
-        "after": 11,
+        "before": 11,
+        "after": 12,
         "total": 12,
-        "body_importable": false,
+        "body_importable": true,
         "portrait_ready": false,
-        "integration_pending": false,
-        "portrait_looks_available": 4,
-        "missing_body_looks": [
-          "child_M_bronze_wool_cloak_long_tied"
-        ],
+        "integration_pending": true,
+        "portrait_looks_available": 11,
+        "missing_body_looks": [],
         "missing_portrait_looks": [
-          "child_M_bronze_wool_cloak_short",
-          "child_M_bronze_wool_cloak_long_tied",
-          "child_F_bronze_wool_cloak_short",
-          "child_F_bronze_wool_cloak_long_tied",
-          "child_F_bronze_wool_cloak_bun",
-          "adult_M_bronze_wool_cloak_short",
-          "adult_M_bronze_wool_cloak_long_tied",
-          "adult_M_bronze_wool_cloak_bun"
+          "child_M_bronze_wool_cloak_short"
         ]
       },
       {
         "wardrobe": "bronze_earth_linen",
-        "before": 0,
+        "before": 7,
         "after": 7,
         "total": 12,
         "body_importable": false,
@@ -163,7 +169,7 @@
       },
       {
         "wardrobe": "iron_work",
-        "before": 2,
+        "before": 8,
         "after": 8,
         "total": 12,
         "body_importable": false,
@@ -191,16 +197,15 @@
       },
       {
         "wardrobe": "iron_winter",
-        "before": 1,
-        "after": 10,
+        "before": 10,
+        "after": 11,
         "total": 12,
         "body_importable": false,
         "portrait_ready": false,
         "integration_pending": false,
         "portrait_looks_available": 1,
         "missing_body_looks": [
-          "adult_M_iron_winter_long_tied",
-          "adult_M_iron_winter_bun"
+          "adult_M_iron_winter_long_tied"
         ],
         "missing_portrait_looks": [
           "child_M_iron_winter_short",

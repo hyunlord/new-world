@@ -31,3 +31,9 @@ upright80×112 anchor(40,104). These draft rows do not implement runtime selecti
 The eight supplemental activity sets retain their adult-male-short scope.
 They have no runtime job selector or inspector portrait mapping and do not
 complete any wardrobe. Rejected B1 assets are not substituted for missing art.
+
+## Pass 3 complete-wardrobe proposals
+
+Complete body wardrobes: neo_plant, bronze_wool_cloak.
+Portrait-ready wardrobes (all 12 looks, all v1-v6): neo_plant.
+Historical valid portraits are reused; missing sets are generated only after twelve bodies pass. No live importer or appearance indices changed.

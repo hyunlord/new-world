@@ -1,0 +1,41 @@
+{
+  "look": "child_F_bronze_wool_cloak_bun",
+  "generation": {
+    "path": "/Users/rexxa/work/art-batch/R1/pass3/portraits/cloak/child_F_bronze_wool_cloak_bun/try1/generation.json",
+    "sha256": "32f1c6b4e989a68a7acc114b8debc850db569aa3d8860b2d5ec4ffb05a1d28df"
+  },
+  "raw": {
+    "path": "/Users/rexxa/work/art-batch/R1/pass3/portraits/cloak/child_F_bronze_wool_cloak_bun/try1/raw.png",
+    "sha256": "0253ab5d9015b61f31a2c81760fee7fee8938a97b06926a94f3addbc06d3afac"
+  },
+  "frames": {
+    "v1": {
+      "image_sha256": "a2f73a9dfa646872080d96c522be5a25cfec9391fcc62f32243e54fc109f3655",
+      "sidecar_sha256": "184289a08722c9199114f05f338358380f26fd0bf050a4a652dc0fea5042614d"
+    },
+    "v2": {
+      "image_sha256": "4623042836bfd1c1f958f692dbf2221c1807a9b58533d9b573cb25b6a827aa73",
+      "sidecar_sha256": "0c70a3f2209d8a97e8c0fc08717d52eff7aa689e6bc83298ac25ecfd0816400b"
+    },
+    "v3": {
+      "image_sha256": "b7f5cfeaa56137169839968fe8df0716e72e4a4bf328badd6f473d621572caf5",
+      "sidecar_sha256": "487b9d119362f5c5e4d4d1b655c6fb89f73ac0646b02d65d63b3d2e894ea224f"
+    },
+    "v4": {
+      "image_sha256": "c16f72c0d781306de159861a2d01d012fe15b5e0c18d20e915671288c9eac754",
+      "sidecar_sha256": "3a0c4ad663786a6e4935d2072e454aebe62e8a57ec0b652f2d0d95649844e0ba"
+    },
+    "v5": {
+      "image_sha256": "a3581cf78f86c3fc25348c75697a32a715b18aa164d011847b2706b29e61350e",
+      "sidecar_sha256": "b5aab781c575f826ec1800577f9847424c961efd4f902384c428880054a6e325"
+    },
+    "v6": {
+      "image_sha256": "62ef49df874339d1e99163a6573d1a3d7d2946ee042d425a3fbd2daf4842bf73",
+      "sidecar_sha256": "c0e5e0eab0ad7ec217ea870cc82a0a775e79ef2102e04aca36d09ccfdfc38242"
+    }
+  },
+  "visual_review": {
+    "path": "/Users/rexxa/work/art-batch/R1/pass3/portraits/cloak/child_F_bronze_wool_cloak_bun/try1/visual_verdict.json",
+    "sha256": "4e5d67f200952b490e38d65a43a8e8d7e8f016206a27c6f7f7d02d7a8d8d8625"
+  }
+}

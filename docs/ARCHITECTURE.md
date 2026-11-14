@@ -38,7 +38,9 @@ replays normalization before hash-bound adoption; it is outside the runtime
 data flow. Its recorded global colour retry helper preserves source geometry
 and the frozen acceptance gates. Only complete 12-look wardrobes enter draft
 import lists; portrait readiness is explicit in `art/batch_r1/importability.json`.
-Drafts do not alter appearance ordering or live bindings.
+Selective third-pass retries change only seven approved gaps; portrait readiness
+is separate from twelve-body completeness and pending integration. Drafts do
+not alter appearance ordering or live bindings.
 
 ## 2. Data flow
 

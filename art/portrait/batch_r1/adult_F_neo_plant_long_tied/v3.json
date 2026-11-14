@@ -1,0 +1,23 @@
+{
+  "variant": "v3",
+  "image_sha256": "fa10a70f761f541cb977b193814e2028a0df3391fff98c8c944d47667131c574",
+  "source": {
+    "path": "/Users/rexxa/work/art-batch/R1/pass3/portraits/neo_plant/adult_F_neo_plant_long_tied/try2/raw.png",
+    "sha256": "33492a753391e52922eb10f2fe7d4c9141467be8e7d995053379e9643369a430"
+  },
+  "source_box": [
+    1024,
+    0,
+    1536,
+    512
+  ],
+  "anchor": [
+    64,
+    64
+  ],
+  "footprint": null,
+  "operations": [
+    "full-cell RGB conversion",
+    "full-cell Lanczos resize to128x128"
+  ]
+}

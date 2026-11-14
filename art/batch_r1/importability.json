@@ -2,40 +2,26 @@
   "wardrobes": [
     {
       "wardrobe": "neo_plant",
-      "before": 3,
-      "after": 10,
+      "before": 10,
+      "after": 12,
       "total": 12,
-      "body_importable": false,
-      "portrait_ready": false,
-      "integration_pending": false,
-      "portrait_looks_available": 3,
-      "missing_body_looks": [
-        "child_M_neo_plant_long_tied",
-        "child_F_neo_plant_short"
-      ],
-      "missing_portrait_looks": [
-        "child_M_neo_plant_short",
-        "child_M_neo_plant_long_tied",
-        "child_M_neo_plant_bun",
-        "child_F_neo_plant_short",
-        "child_F_neo_plant_long_tied",
-        "adult_M_neo_plant_long_tied",
-        "adult_F_neo_plant_short",
-        "adult_F_neo_plant_long_tied",
-        "adult_F_neo_plant_bun"
-      ]
+      "body_importable": true,
+      "portrait_ready": true,
+      "integration_pending": true,
+      "portrait_looks_available": 12,
+      "missing_body_looks": [],
+      "missing_portrait_looks": []
     },
     {
       "wardrobe": "neo_first_wool",
-      "before": 3,
-      "after": 10,
+      "before": 10,
+      "after": 11,
       "total": 12,
       "body_importable": false,
       "portrait_ready": false,
       "integration_pending": false,
       "portrait_looks_available": 3,
       "missing_body_looks": [
-        "child_M_neo_first_wool_long_tied",
         "child_M_neo_first_wool_bun"
       ],
       "missing_portrait_looks": [
@@ -52,7 +38,7 @@
     },
     {
       "wardrobe": "bronze_linen",
-      "before": 0,
+      "before": 2,
       "after": 2,
       "total": 12,
       "body_importable": false,
@@ -88,30 +74,21 @@
     },
     {
       "wardrobe": "bronze_wool_cloak",
-      "before": 4,
-      "after": 11,
+      "before": 11,
+      "after": 12,
       "total": 12,
-      "body_importable": false,
+      "body_importable": true,
       "portrait_ready": false,
-      "integration_pending": false,
-      "portrait_looks_available": 4,
-      "missing_body_looks": [
-        "child_M_bronze_wool_cloak_long_tied"
-      ],
+      "integration_pending": true,
+      "portrait_looks_available": 11,
+      "missing_body_looks": [],
       "missing_portrait_looks": [
-        "child_M_bronze_wool_cloak_short",
-        "child_M_bronze_wool_cloak_long_tied",
-        "child_F_bronze_wool_cloak_short",
-        "child_F_bronze_wool_cloak_long_tied",
-        "child_F_bronze_wool_cloak_bun",
-        "adult_M_bronze_wool_cloak_short",
-        "adult_M_bronze_wool_cloak_long_tied",
-        "adult_M_bronze_wool_cloak_bun"
+        "child_M_bronze_wool_cloak_short"
       ]
     },
     {
       "wardrobe": "bronze_earth_linen",
-      "before": 0,
+      "before": 7,
       "after": 7,
       "total": 12,
       "body_importable": false,
@@ -142,7 +119,7 @@
     },
     {
       "wardrobe": "iron_work",
-      "before": 2,
+      "before": 8,
       "after": 8,
       "total": 12,
       "body_importable": false,
@@ -170,16 +147,15 @@
     },
     {
       "wardrobe": "iron_winter",
-      "before": 1,
-      "after": 10,
+      "before": 10,
+      "after": 11,
       "total": 12,
       "body_importable": false,
       "portrait_ready": false,
       "integration_pending": false,
       "portrait_looks_available": 1,
       "missing_body_looks": [
-        "adult_M_iron_winter_long_tied",
-        "adult_M_iron_winter_bun"
+        "adult_M_iron_winter_long_tied"
       ],
       "missing_portrait_looks": [
         "child_M_iron_winter_short",
@@ -196,15 +172,23 @@
       ]
     }
   ],
-  "body_importable_wardrobes": [],
-  "portrait_ready_wardrobes": [],
-  "accepted_body_looks": 58,
-  "accepted_portrait_looks": 13,
-  "importable_body_looks": 0,
+  "body_importable_wardrobes": [
+    "neo_plant",
+    "bronze_wool_cloak"
+  ],
+  "portrait_ready_wardrobes": [
+    "neo_plant"
+  ],
+  "accepted_body_looks": 63,
+  "accepted_portrait_looks": 29,
+  "importable_body_looks": 24,
   "historical_portraits_retained": true,
-  "phase2_audit": {
-    "phase": 2,
-    "attempt_limit": 6,
+  "phase3_audit": {
+    "phase": 3,
+    "attempt_limit": {
+      "targets": 10,
+      "other_looks": 6
+    },
     "attempt_limit_passed": true,
     "fixed_region_masks_unchanged": true,
     "checked_masks": [
@@ -234,8 +218,16 @@
     "source": "/Users/rexxa/work/art-batch/R1/baseline_measurements.json",
     "full_audit_run": true,
     "proof": {
-      "path": "/Users/rexxa/work/art-batch/R1/pass2/records/final-audit.json",
-      "sha256": "eab1144ed95e05fabf175fb0206c9e18bfed5dc43c6f656dff6d9491219edb01"
+      "path": "/Users/rexxa/work/art-batch/R1/pass3/records/final-audit.json",
+      "sha256": "c12a64316b4a11323df4327751b437316de2403c6fc26a363172c8202a397f7c"
+    },
+    "portrait_call_proof": {
+      "path": "/Users/rexxa/work/art-batch/R1/pass3/records/portrait-calls-final.json",
+      "sha256": "22dbfe057325b8482c045f321392ae554438575f2a81010993cfe79ec6036e42"
+    },
+    "portrait_board_proof": {
+      "path": "/Users/rexxa/work/art-batch/R1/pass3/records/portrait-boards.json",
+      "sha256": "61ba0c78d4bdba2a2c1ec3fa48b24535bc3c75c26a6b80c67fc987ec427d98f1"
     }
   }
 }

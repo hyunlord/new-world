@@ -17,7 +17,10 @@
       "M",
       "F"
     ],
-    "proposed_tops": [],
+    "proposed_tops": [
+      "neo_plant",
+      "bronze_wool_cloak"
+    ],
     "hairs": [
       "short",
       "long_tied",
@@ -26,8 +29,57 @@
     "availability": "../coverage.json; only 12/12 wardrobes are importable"
   },
   "people": {
-    "looks": [],
-    "portrait_looks": [],
+    "looks": [
+      "adult_F_bronze_wool_cloak_bun",
+      "adult_F_bronze_wool_cloak_long_tied",
+      "adult_F_bronze_wool_cloak_short",
+      "adult_F_neo_plant_bun",
+      "adult_F_neo_plant_long_tied",
+      "adult_F_neo_plant_short",
+      "adult_M_bronze_wool_cloak_bun",
+      "adult_M_bronze_wool_cloak_long_tied",
+      "adult_M_bronze_wool_cloak_short",
+      "adult_M_neo_plant_bun",
+      "adult_M_neo_plant_long_tied",
+      "adult_M_neo_plant_short",
+      "child_F_bronze_wool_cloak_bun",
+      "child_F_bronze_wool_cloak_long_tied",
+      "child_F_bronze_wool_cloak_short",
+      "child_F_neo_plant_bun",
+      "child_F_neo_plant_long_tied",
+      "child_F_neo_plant_short",
+      "child_M_bronze_wool_cloak_bun",
+      "child_M_bronze_wool_cloak_long_tied",
+      "child_M_bronze_wool_cloak_short",
+      "child_M_neo_plant_bun",
+      "child_M_neo_plant_long_tied",
+      "child_M_neo_plant_short"
+    ],
+    "portrait_looks": [
+      "adult_F_bronze_wool_cloak_bun",
+      "adult_F_bronze_wool_cloak_long_tied",
+      "adult_F_bronze_wool_cloak_short",
+      "adult_F_neo_plant_bun",
+      "adult_F_neo_plant_long_tied",
+      "adult_F_neo_plant_short",
+      "adult_M_bronze_wool_cloak_bun",
+      "adult_M_bronze_wool_cloak_long_tied",
+      "adult_M_bronze_wool_cloak_short",
+      "adult_M_neo_plant_bun",
+      "adult_M_neo_plant_long_tied",
+      "adult_M_neo_plant_short",
+      "child_F_bronze_wool_cloak_bun",
+      "child_F_bronze_wool_cloak_long_tied",
+      "child_F_bronze_wool_cloak_short",
+      "child_F_neo_plant_bun",
+      "child_F_neo_plant_long_tied",
+      "child_F_neo_plant_short",
+      "child_M_bronze_wool_cloak_bun",
+      "child_M_bronze_wool_cloak_long_tied",
+      "child_M_neo_plant_bun",
+      "child_M_neo_plant_long_tied",
+      "child_M_neo_plant_short"
+    ],
     "facings": [
       "S",
       "E"
@@ -50,7 +102,6776 @@
     "frame_source": "art/character/batch_r1/{look}/{facing}/{pose}.png",
     "portrait_source": "art/portrait/batch_r1/{look}/{variant}.png"
   },
-  "files": [],
+  "files": [
+    {
+      "role": "people_frame",
+      "id": "adult_F_bronze_wool_cloak_bun/S/idle",
+      "source": "art/character/batch_r1/adult_F_bronze_wool_cloak_bun/S/idle.png",
+      "dest": "people/frames/adult_F_bronze_wool_cloak_bun/S/idle.png",
+      "sha256": "29bc3e37592ee28d9d5640aa82265d306a333c84095854ac309ea1bb0f533b36",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_bronze_wool_cloak_bun/S/walk_a",
+      "source": "art/character/batch_r1/adult_F_bronze_wool_cloak_bun/S/walk_a.png",
+      "dest": "people/frames/adult_F_bronze_wool_cloak_bun/S/walk_a.png",
+      "sha256": "db47ce22c2c76b038785230b5cb46fd7aa3420980d5545fe5702619b3fbecdcc",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_bronze_wool_cloak_bun/S/work_a",
+      "source": "art/character/batch_r1/adult_F_bronze_wool_cloak_bun/S/work_a.png",
+      "dest": "people/frames/adult_F_bronze_wool_cloak_bun/S/work_a.png",
+      "sha256": "4678a69f259d4930efc176d5892d2c477f6a3a4f011a16ca892c10c06a507f42",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_bronze_wool_cloak_bun/S/carry",
+      "source": "art/character/batch_r1/adult_F_bronze_wool_cloak_bun/S/carry.png",
+      "dest": "people/frames/adult_F_bronze_wool_cloak_bun/S/carry.png",
+      "sha256": "71f400f717aebbff49c34e3a949e3ab1ef91f93f6b49ee2d882da7de241ccda2",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_bronze_wool_cloak_bun/S/sleep",
+      "source": "art/character/batch_r1/adult_F_bronze_wool_cloak_bun/S/sleep.png",
+      "dest": "people/frames/adult_F_bronze_wool_cloak_bun/S/sleep.png",
+      "sha256": "09e69c1ccac8b25ae6952cdc86b6e5f224392fb2726294ca94034d12d5c8a894",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_bronze_wool_cloak_bun/E/idle",
+      "source": "art/character/batch_r1/adult_F_bronze_wool_cloak_bun/E/idle.png",
+      "dest": "people/frames/adult_F_bronze_wool_cloak_bun/E/idle.png",
+      "sha256": "94e9ea74a5f862fb6d691a65bc5c0adf15cab31936d5b70b477c57e63f45ebb0",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_bronze_wool_cloak_bun/E/walk_a",
+      "source": "art/character/batch_r1/adult_F_bronze_wool_cloak_bun/E/walk_a.png",
+      "dest": "people/frames/adult_F_bronze_wool_cloak_bun/E/walk_a.png",
+      "sha256": "421ee9c00df2a6ff4ab1805b5ef9c1ccdca8b8beee2aa6236f90c579797a18b9",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_bronze_wool_cloak_bun/E/work_a",
+      "source": "art/character/batch_r1/adult_F_bronze_wool_cloak_bun/E/work_a.png",
+      "dest": "people/frames/adult_F_bronze_wool_cloak_bun/E/work_a.png",
+      "sha256": "b7497c516dfdffdc813d5df038c6748daf2db1d59b1fa869de5a160f3f0552e7",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_bronze_wool_cloak_bun/E/carry",
+      "source": "art/character/batch_r1/adult_F_bronze_wool_cloak_bun/E/carry.png",
+      "dest": "people/frames/adult_F_bronze_wool_cloak_bun/E/carry.png",
+      "sha256": "96e2cf10eb64a571816cbca7a7a4c4aa949917c40ae70335c19545ce14cf9426",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_bronze_wool_cloak_bun/E/sleep",
+      "source": "art/character/batch_r1/adult_F_bronze_wool_cloak_bun/E/sleep.png",
+      "dest": "people/frames/adult_F_bronze_wool_cloak_bun/E/sleep.png",
+      "sha256": "8295474a27babcc68c1d0c84790ba424fc71103edaa77077f05b8d520cbb1af3",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_bronze_wool_cloak_bun/v1",
+      "source": "art/portrait/batch_r1/adult_F_bronze_wool_cloak_bun/v1.png",
+      "dest": "people/portraits/adult_F_bronze_wool_cloak_bun/v1.png",
+      "sha256": "8ab1ca7ff0d221432670c66d1167ee39e058804fc91cbe7b441a98b861b30f59",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_bronze_wool_cloak_bun/v2",
+      "source": "art/portrait/batch_r1/adult_F_bronze_wool_cloak_bun/v2.png",
+      "dest": "people/portraits/adult_F_bronze_wool_cloak_bun/v2.png",
+      "sha256": "54c4d4059e98b9ba280fd652b9f8ac791a585fd6180f4f782a790ff411b915c3",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_bronze_wool_cloak_bun/v3",
+      "source": "art/portrait/batch_r1/adult_F_bronze_wool_cloak_bun/v3.png",
+      "dest": "people/portraits/adult_F_bronze_wool_cloak_bun/v3.png",
+      "sha256": "2bcf3390c57263104d23e4a971651a12d18484d69f9ce54a046422fa5b0ae962",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_bronze_wool_cloak_bun/v4",
+      "source": "art/portrait/batch_r1/adult_F_bronze_wool_cloak_bun/v4.png",
+      "dest": "people/portraits/adult_F_bronze_wool_cloak_bun/v4.png",
+      "sha256": "6a59e4ac99c383de02e06cd9dca7a757b64a9a007942afd203b536b385d0c00d",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_bronze_wool_cloak_bun/v5",
+      "source": "art/portrait/batch_r1/adult_F_bronze_wool_cloak_bun/v5.png",
+      "dest": "people/portraits/adult_F_bronze_wool_cloak_bun/v5.png",
+      "sha256": "9c44e98c08ca41588fe5957c03460ba2772933e2ee6efc9a2e6ce3246ebad24f",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_bronze_wool_cloak_bun/v6",
+      "source": "art/portrait/batch_r1/adult_F_bronze_wool_cloak_bun/v6.png",
+      "dest": "people/portraits/adult_F_bronze_wool_cloak_bun/v6.png",
+      "sha256": "33377642595ee7e82d670c409b0d850dd898870992ac2a78f92f383831e57894",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_bronze_wool_cloak_long_tied/S/idle",
+      "source": "art/character/batch_r1/adult_F_bronze_wool_cloak_long_tied/S/idle.png",
+      "dest": "people/frames/adult_F_bronze_wool_cloak_long_tied/S/idle.png",
+      "sha256": "e5176900a499ce3ff62390401ed386711c9c183270d87f1c444dca247c2b6759",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_bronze_wool_cloak_long_tied/S/walk_a",
+      "source": "art/character/batch_r1/adult_F_bronze_wool_cloak_long_tied/S/walk_a.png",
+      "dest": "people/frames/adult_F_bronze_wool_cloak_long_tied/S/walk_a.png",
+      "sha256": "0e64edc9c6ab624de3db9591b3fa32b528a03d4e4600d3a7b9f124155cbf5d0f",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_bronze_wool_cloak_long_tied/S/work_a",
+      "source": "art/character/batch_r1/adult_F_bronze_wool_cloak_long_tied/S/work_a.png",
+      "dest": "people/frames/adult_F_bronze_wool_cloak_long_tied/S/work_a.png",
+      "sha256": "e3514ae0ab1055897bcc42c2accecd220f2cf5a0e516d95ea36cf8b8346da1bb",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_bronze_wool_cloak_long_tied/S/carry",
+      "source": "art/character/batch_r1/adult_F_bronze_wool_cloak_long_tied/S/carry.png",
+      "dest": "people/frames/adult_F_bronze_wool_cloak_long_tied/S/carry.png",
+      "sha256": "701e460d579ac2b03d1e6d63970dc8fbb0415c0ab52ee8ca06ca059527d19e77",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_bronze_wool_cloak_long_tied/S/sleep",
+      "source": "art/character/batch_r1/adult_F_bronze_wool_cloak_long_tied/S/sleep.png",
+      "dest": "people/frames/adult_F_bronze_wool_cloak_long_tied/S/sleep.png",
+      "sha256": "5aeeee72c3ce3305fd178802d46e8d8b00a184b4878067a6ed5b506847e59e41",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_bronze_wool_cloak_long_tied/E/idle",
+      "source": "art/character/batch_r1/adult_F_bronze_wool_cloak_long_tied/E/idle.png",
+      "dest": "people/frames/adult_F_bronze_wool_cloak_long_tied/E/idle.png",
+      "sha256": "75f13a09966f0b2b5a85cf1a770f63ffb2ee7deb4e3af5457b9fce166543afe1",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_bronze_wool_cloak_long_tied/E/walk_a",
+      "source": "art/character/batch_r1/adult_F_bronze_wool_cloak_long_tied/E/walk_a.png",
+      "dest": "people/frames/adult_F_bronze_wool_cloak_long_tied/E/walk_a.png",
+      "sha256": "80a1a70d49501673a186a6b7c8ce4107a92da78367898f8c0d89e2bfb0defbf7",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_bronze_wool_cloak_long_tied/E/work_a",
+      "source": "art/character/batch_r1/adult_F_bronze_wool_cloak_long_tied/E/work_a.png",
+      "dest": "people/frames/adult_F_bronze_wool_cloak_long_tied/E/work_a.png",
+      "sha256": "62f4f2bed3d39f945d9d246f937a6591bda974a91f3b893765354e3a01311309",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_bronze_wool_cloak_long_tied/E/carry",
+      "source": "art/character/batch_r1/adult_F_bronze_wool_cloak_long_tied/E/carry.png",
+      "dest": "people/frames/adult_F_bronze_wool_cloak_long_tied/E/carry.png",
+      "sha256": "be2aecae9f0729624ec7cfbf0ad1ed6a78347c23e2767a092f3a39c5917c64b3",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_bronze_wool_cloak_long_tied/E/sleep",
+      "source": "art/character/batch_r1/adult_F_bronze_wool_cloak_long_tied/E/sleep.png",
+      "dest": "people/frames/adult_F_bronze_wool_cloak_long_tied/E/sleep.png",
+      "sha256": "1f87b428b5928e9c1c47c50d937154ea00ad1099be27e249e9f779d49bc0e3ae",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_bronze_wool_cloak_long_tied/v1",
+      "source": "art/portrait/batch_r1/adult_F_bronze_wool_cloak_long_tied/v1.png",
+      "dest": "people/portraits/adult_F_bronze_wool_cloak_long_tied/v1.png",
+      "sha256": "4fd851ae1e16396d69c83c90e4baf8ff861342075e94a1128a369d53bf68320d",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_bronze_wool_cloak_long_tied/v2",
+      "source": "art/portrait/batch_r1/adult_F_bronze_wool_cloak_long_tied/v2.png",
+      "dest": "people/portraits/adult_F_bronze_wool_cloak_long_tied/v2.png",
+      "sha256": "92a0b58d2adacce964fc308f7118ea88ba2f23c4796aac108558c5d72b426d5d",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_bronze_wool_cloak_long_tied/v3",
+      "source": "art/portrait/batch_r1/adult_F_bronze_wool_cloak_long_tied/v3.png",
+      "dest": "people/portraits/adult_F_bronze_wool_cloak_long_tied/v3.png",
+      "sha256": "2a8956479c2229bdc039a22310a4e16a17bd3586cf7b267562b7653254f8694e",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_bronze_wool_cloak_long_tied/v4",
+      "source": "art/portrait/batch_r1/adult_F_bronze_wool_cloak_long_tied/v4.png",
+      "dest": "people/portraits/adult_F_bronze_wool_cloak_long_tied/v4.png",
+      "sha256": "d6a6b2426e9ddb15a0794150ff4ac8b79fb1fec33089820523ad1798cb5de486",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_bronze_wool_cloak_long_tied/v5",
+      "source": "art/portrait/batch_r1/adult_F_bronze_wool_cloak_long_tied/v5.png",
+      "dest": "people/portraits/adult_F_bronze_wool_cloak_long_tied/v5.png",
+      "sha256": "fcd31585093c59c317c5b8f0ca3d3bf85fbfa5844f71f3a04b0201bb3c1d840c",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_bronze_wool_cloak_long_tied/v6",
+      "source": "art/portrait/batch_r1/adult_F_bronze_wool_cloak_long_tied/v6.png",
+      "dest": "people/portraits/adult_F_bronze_wool_cloak_long_tied/v6.png",
+      "sha256": "4eac617deba63f98d58816cb838840c989f3556dee513be305e67371553eb84e",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_bronze_wool_cloak_short/S/idle",
+      "source": "art/character/batch_r1/adult_F_bronze_wool_cloak_short/S/idle.png",
+      "dest": "people/frames/adult_F_bronze_wool_cloak_short/S/idle.png",
+      "sha256": "56abc2853444484d88b79ca1ef24329d7016c2a3e799f7895003049fadd4bb4e",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_bronze_wool_cloak_short/S/walk_a",
+      "source": "art/character/batch_r1/adult_F_bronze_wool_cloak_short/S/walk_a.png",
+      "dest": "people/frames/adult_F_bronze_wool_cloak_short/S/walk_a.png",
+      "sha256": "da598e857257e101aad50dfd209868713732c76679592d96293e00967eec1468",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_bronze_wool_cloak_short/S/work_a",
+      "source": "art/character/batch_r1/adult_F_bronze_wool_cloak_short/S/work_a.png",
+      "dest": "people/frames/adult_F_bronze_wool_cloak_short/S/work_a.png",
+      "sha256": "89e4fe3f19bd6dbc4f6bc12bbbb3b3febaa630e3e11067c320acf96e80ee0d29",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_bronze_wool_cloak_short/S/carry",
+      "source": "art/character/batch_r1/adult_F_bronze_wool_cloak_short/S/carry.png",
+      "dest": "people/frames/adult_F_bronze_wool_cloak_short/S/carry.png",
+      "sha256": "2eb7881d486a434e7a2ce46cb8ad11141faf1baba664afe9d35a514f88418dde",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_bronze_wool_cloak_short/S/sleep",
+      "source": "art/character/batch_r1/adult_F_bronze_wool_cloak_short/S/sleep.png",
+      "dest": "people/frames/adult_F_bronze_wool_cloak_short/S/sleep.png",
+      "sha256": "cc6b2d42ad3f1ac30cc0eaf87e1a374b7a4cdaf95bba60826c74cd4ca7c9b2f2",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_bronze_wool_cloak_short/E/idle",
+      "source": "art/character/batch_r1/adult_F_bronze_wool_cloak_short/E/idle.png",
+      "dest": "people/frames/adult_F_bronze_wool_cloak_short/E/idle.png",
+      "sha256": "687f7326e48ce31c40dee46c3cf3324f5a0a5c4fbb5590cce0b31b0fa273728b",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_bronze_wool_cloak_short/E/walk_a",
+      "source": "art/character/batch_r1/adult_F_bronze_wool_cloak_short/E/walk_a.png",
+      "dest": "people/frames/adult_F_bronze_wool_cloak_short/E/walk_a.png",
+      "sha256": "e746baa5411e190612b94e81e20fdbe4339376266d1c4c276097f473183cfb43",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_bronze_wool_cloak_short/E/work_a",
+      "source": "art/character/batch_r1/adult_F_bronze_wool_cloak_short/E/work_a.png",
+      "dest": "people/frames/adult_F_bronze_wool_cloak_short/E/work_a.png",
+      "sha256": "ba5a4642b4c053ed4a35aa0dd98352e5697b33f029ac118b8e284ccd20dc0c05",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_bronze_wool_cloak_short/E/carry",
+      "source": "art/character/batch_r1/adult_F_bronze_wool_cloak_short/E/carry.png",
+      "dest": "people/frames/adult_F_bronze_wool_cloak_short/E/carry.png",
+      "sha256": "e9e1fe10833172ab420132133b68b94dea9ae443380d399580465c952e2a293c",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_bronze_wool_cloak_short/E/sleep",
+      "source": "art/character/batch_r1/adult_F_bronze_wool_cloak_short/E/sleep.png",
+      "dest": "people/frames/adult_F_bronze_wool_cloak_short/E/sleep.png",
+      "sha256": "bb4f9911cbe6d5dafc1bf320a8bf5193a874e9a75db9145f0211976ef10b1af9",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_bronze_wool_cloak_short/v1",
+      "source": "art/portrait/batch_r1/adult_F_bronze_wool_cloak_short/v1.png",
+      "dest": "people/portraits/adult_F_bronze_wool_cloak_short/v1.png",
+      "sha256": "23ee64447795f3ef45e73ac9a9c46d259180edd05971cb9a38ae1c29aa0b2c22",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_bronze_wool_cloak_short/v2",
+      "source": "art/portrait/batch_r1/adult_F_bronze_wool_cloak_short/v2.png",
+      "dest": "people/portraits/adult_F_bronze_wool_cloak_short/v2.png",
+      "sha256": "66c11ff53b256e0de57cc528d2ec801895ab45cab2c34d1388732b791bf9a9ba",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_bronze_wool_cloak_short/v3",
+      "source": "art/portrait/batch_r1/adult_F_bronze_wool_cloak_short/v3.png",
+      "dest": "people/portraits/adult_F_bronze_wool_cloak_short/v3.png",
+      "sha256": "e491bd5a5249a61733a16350e1b5269f88a4ad2cac07351cbdae938054f475fe",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_bronze_wool_cloak_short/v4",
+      "source": "art/portrait/batch_r1/adult_F_bronze_wool_cloak_short/v4.png",
+      "dest": "people/portraits/adult_F_bronze_wool_cloak_short/v4.png",
+      "sha256": "f08e732296c6f0878306b7996d7a9176d993fe22ba5878f94602e5ccaf281db3",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_bronze_wool_cloak_short/v5",
+      "source": "art/portrait/batch_r1/adult_F_bronze_wool_cloak_short/v5.png",
+      "dest": "people/portraits/adult_F_bronze_wool_cloak_short/v5.png",
+      "sha256": "48117f3156d3d9b0baec05113f8faef85a4ce9b43c4a232a55361d7f94c1194e",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_bronze_wool_cloak_short/v6",
+      "source": "art/portrait/batch_r1/adult_F_bronze_wool_cloak_short/v6.png",
+      "dest": "people/portraits/adult_F_bronze_wool_cloak_short/v6.png",
+      "sha256": "839531aabe0716b6a51a93f038438d97b82c5b87d4fe69fffc6fd7cac9251286",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_neo_plant_bun/S/idle",
+      "source": "art/character/batch_r1/adult_F_neo_plant_bun/S/idle.png",
+      "dest": "people/frames/adult_F_neo_plant_bun/S/idle.png",
+      "sha256": "b21cab4434931f64162f7eecef7083f11cc2cb2a2a2536db088966ca74da52a4",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_neo_plant_bun/S/walk_a",
+      "source": "art/character/batch_r1/adult_F_neo_plant_bun/S/walk_a.png",
+      "dest": "people/frames/adult_F_neo_plant_bun/S/walk_a.png",
+      "sha256": "3a93214b20d0046da5e7a4beb0c8f3cf916e7ea54329d0d8baea50f9b0bd7cd8",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_neo_plant_bun/S/work_a",
+      "source": "art/character/batch_r1/adult_F_neo_plant_bun/S/work_a.png",
+      "dest": "people/frames/adult_F_neo_plant_bun/S/work_a.png",
+      "sha256": "dd23f707aa600f3767560b6ad0315eb75b58eb5bffa67448878e9e19aa31aacc",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_neo_plant_bun/S/carry",
+      "source": "art/character/batch_r1/adult_F_neo_plant_bun/S/carry.png",
+      "dest": "people/frames/adult_F_neo_plant_bun/S/carry.png",
+      "sha256": "d827cc89066aaf9fa59936dea82379c25bfe1ed5f319bea161a233c6e8121d44",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_neo_plant_bun/S/sleep",
+      "source": "art/character/batch_r1/adult_F_neo_plant_bun/S/sleep.png",
+      "dest": "people/frames/adult_F_neo_plant_bun/S/sleep.png",
+      "sha256": "2aff87c390511161f8d0af9095cbe3f7218f0be79d441726720cc1b6045f87d1",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_neo_plant_bun/E/idle",
+      "source": "art/character/batch_r1/adult_F_neo_plant_bun/E/idle.png",
+      "dest": "people/frames/adult_F_neo_plant_bun/E/idle.png",
+      "sha256": "2d96df3f6b8d872938a9761da48f7e9772edad5862e5deb715bab9d28637659e",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_neo_plant_bun/E/walk_a",
+      "source": "art/character/batch_r1/adult_F_neo_plant_bun/E/walk_a.png",
+      "dest": "people/frames/adult_F_neo_plant_bun/E/walk_a.png",
+      "sha256": "64503ed383c798ed62dbf58ea265ba729485ee74740cae2078a7569bc14c351e",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_neo_plant_bun/E/work_a",
+      "source": "art/character/batch_r1/adult_F_neo_plant_bun/E/work_a.png",
+      "dest": "people/frames/adult_F_neo_plant_bun/E/work_a.png",
+      "sha256": "50761a83e16004c08e2dd959cde4ed48b8fbd3bfb4b3bbedaafe2c9b923414bc",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_neo_plant_bun/E/carry",
+      "source": "art/character/batch_r1/adult_F_neo_plant_bun/E/carry.png",
+      "dest": "people/frames/adult_F_neo_plant_bun/E/carry.png",
+      "sha256": "fe8e4e013a6c86f32ac4769e89e70f59aca84a6354db1a9172dd89ae34383629",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_neo_plant_bun/E/sleep",
+      "source": "art/character/batch_r1/adult_F_neo_plant_bun/E/sleep.png",
+      "dest": "people/frames/adult_F_neo_plant_bun/E/sleep.png",
+      "sha256": "d76b73d655e4d52f02fe928abf1b2d60fbe097716c51aa315ccef44532928936",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_neo_plant_bun/v1",
+      "source": "art/portrait/batch_r1/adult_F_neo_plant_bun/v1.png",
+      "dest": "people/portraits/adult_F_neo_plant_bun/v1.png",
+      "sha256": "985f5b0e6c47793667933b74a882ec5102370ec653543b3e21e37ef9dea5f3b8",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_neo_plant_bun/v2",
+      "source": "art/portrait/batch_r1/adult_F_neo_plant_bun/v2.png",
+      "dest": "people/portraits/adult_F_neo_plant_bun/v2.png",
+      "sha256": "3369bdfef43e83c732cb2dd58280c68b8b15b0f8d8cb8068b50219f43e51f863",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_neo_plant_bun/v3",
+      "source": "art/portrait/batch_r1/adult_F_neo_plant_bun/v3.png",
+      "dest": "people/portraits/adult_F_neo_plant_bun/v3.png",
+      "sha256": "bce28c76c4aff25108bddf007a3fa7f27701f2b71afb6f4aea5bf175e8c6178e",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_neo_plant_bun/v4",
+      "source": "art/portrait/batch_r1/adult_F_neo_plant_bun/v4.png",
+      "dest": "people/portraits/adult_F_neo_plant_bun/v4.png",
+      "sha256": "270b226cfa996c857f975babd8c379a3576d9e9575356dae3c8738c83d3b0183",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_neo_plant_bun/v5",
+      "source": "art/portrait/batch_r1/adult_F_neo_plant_bun/v5.png",
+      "dest": "people/portraits/adult_F_neo_plant_bun/v5.png",
+      "sha256": "e85f4d72b6b79df7d2aea30ae059b56eda1a683e5c7994ecf2ee9ea4f5a92545",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_neo_plant_bun/v6",
+      "source": "art/portrait/batch_r1/adult_F_neo_plant_bun/v6.png",
+      "dest": "people/portraits/adult_F_neo_plant_bun/v6.png",
+      "sha256": "f3a4dc80b08670ee2458881ad517aca5d9b5b1e31fc392ca82512cae28fb4717",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_neo_plant_long_tied/S/idle",
+      "source": "art/character/batch_r1/adult_F_neo_plant_long_tied/S/idle.png",
+      "dest": "people/frames/adult_F_neo_plant_long_tied/S/idle.png",
+      "sha256": "aa6f92b7f88c78597b7e56cf19f6db164d83bbc7a6f15f1c03f69cb28873cc5b",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_neo_plant_long_tied/S/walk_a",
+      "source": "art/character/batch_r1/adult_F_neo_plant_long_tied/S/walk_a.png",
+      "dest": "people/frames/adult_F_neo_plant_long_tied/S/walk_a.png",
+      "sha256": "1463bd2774c34b80f6ad8d0312e4753d70a6aa99dffb275d94e8cff55f5ac116",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_neo_plant_long_tied/S/work_a",
+      "source": "art/character/batch_r1/adult_F_neo_plant_long_tied/S/work_a.png",
+      "dest": "people/frames/adult_F_neo_plant_long_tied/S/work_a.png",
+      "sha256": "33ce8bf7101c6f74373438765280e51642af455004ac2c83a852259c2df32f91",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_neo_plant_long_tied/S/carry",
+      "source": "art/character/batch_r1/adult_F_neo_plant_long_tied/S/carry.png",
+      "dest": "people/frames/adult_F_neo_plant_long_tied/S/carry.png",
+      "sha256": "298e82fb33437bf82b8c340c8cc5815e021837d777645aedc381fc0b88dce230",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_neo_plant_long_tied/S/sleep",
+      "source": "art/character/batch_r1/adult_F_neo_plant_long_tied/S/sleep.png",
+      "dest": "people/frames/adult_F_neo_plant_long_tied/S/sleep.png",
+      "sha256": "acb6632d4f5548a369b896129a12e357fe9ce083b5af8cf7c16290b13f36b1e1",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_neo_plant_long_tied/E/idle",
+      "source": "art/character/batch_r1/adult_F_neo_plant_long_tied/E/idle.png",
+      "dest": "people/frames/adult_F_neo_plant_long_tied/E/idle.png",
+      "sha256": "786d51b28b663b3832bee3adef524ad6923241394907c6152728279563c55ffa",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_neo_plant_long_tied/E/walk_a",
+      "source": "art/character/batch_r1/adult_F_neo_plant_long_tied/E/walk_a.png",
+      "dest": "people/frames/adult_F_neo_plant_long_tied/E/walk_a.png",
+      "sha256": "d4b0846ce388788af7262fb37648061215ec7d71fca28b7f27869ab366b913ba",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_neo_plant_long_tied/E/work_a",
+      "source": "art/character/batch_r1/adult_F_neo_plant_long_tied/E/work_a.png",
+      "dest": "people/frames/adult_F_neo_plant_long_tied/E/work_a.png",
+      "sha256": "b2730a8523b2c059a81386e8d6c7e7f14bcf700043b4db45acc5e6cee1328b68",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_neo_plant_long_tied/E/carry",
+      "source": "art/character/batch_r1/adult_F_neo_plant_long_tied/E/carry.png",
+      "dest": "people/frames/adult_F_neo_plant_long_tied/E/carry.png",
+      "sha256": "31a2b4aca36eb0ee4a68b98ed4dcba18f666f30565ce17e75b6cbb0c941ebc50",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_neo_plant_long_tied/E/sleep",
+      "source": "art/character/batch_r1/adult_F_neo_plant_long_tied/E/sleep.png",
+      "dest": "people/frames/adult_F_neo_plant_long_tied/E/sleep.png",
+      "sha256": "2057e9a6c170fe50d3d8294b48147abed0f28669f01eb33757373c4d4ba81c4a",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_neo_plant_long_tied/v1",
+      "source": "art/portrait/batch_r1/adult_F_neo_plant_long_tied/v1.png",
+      "dest": "people/portraits/adult_F_neo_plant_long_tied/v1.png",
+      "sha256": "9630cbf89738ad99d3ab8cfaea68867b8dc26e54806abcadbb56039146ce44cc",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_neo_plant_long_tied/v2",
+      "source": "art/portrait/batch_r1/adult_F_neo_plant_long_tied/v2.png",
+      "dest": "people/portraits/adult_F_neo_plant_long_tied/v2.png",
+      "sha256": "9c4e252af3ddfde16310d0578e792b0ccfe39c2771e9272835e7ac2b9cdbf34c",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_neo_plant_long_tied/v3",
+      "source": "art/portrait/batch_r1/adult_F_neo_plant_long_tied/v3.png",
+      "dest": "people/portraits/adult_F_neo_plant_long_tied/v3.png",
+      "sha256": "fa10a70f761f541cb977b193814e2028a0df3391fff98c8c944d47667131c574",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_neo_plant_long_tied/v4",
+      "source": "art/portrait/batch_r1/adult_F_neo_plant_long_tied/v4.png",
+      "dest": "people/portraits/adult_F_neo_plant_long_tied/v4.png",
+      "sha256": "46655e2cd702fc4b5d7a9cb1f0ba3d9abea02591ed3b667270d18daa8f9e4058",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_neo_plant_long_tied/v5",
+      "source": "art/portrait/batch_r1/adult_F_neo_plant_long_tied/v5.png",
+      "dest": "people/portraits/adult_F_neo_plant_long_tied/v5.png",
+      "sha256": "4329ccd85b076437dda931553710803605b3fbb78c878c2ddad17311c11b22b0",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_neo_plant_long_tied/v6",
+      "source": "art/portrait/batch_r1/adult_F_neo_plant_long_tied/v6.png",
+      "dest": "people/portraits/adult_F_neo_plant_long_tied/v6.png",
+      "sha256": "c11a7700f9ccdc11db3eaa8d3d4c2d439590484ac82476d1b9011a22b53dcba8",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_neo_plant_short/S/idle",
+      "source": "art/character/batch_r1/adult_F_neo_plant_short/S/idle.png",
+      "dest": "people/frames/adult_F_neo_plant_short/S/idle.png",
+      "sha256": "9a6d154d4c2af230a13c9de8cadc873bf4874b819152eca986f019848b3ef18e",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_neo_plant_short/S/walk_a",
+      "source": "art/character/batch_r1/adult_F_neo_plant_short/S/walk_a.png",
+      "dest": "people/frames/adult_F_neo_plant_short/S/walk_a.png",
+      "sha256": "b0820c96f2e1a64967dc890c8077ec60cb84aa0df270552bcb000c5d1ea62822",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_neo_plant_short/S/work_a",
+      "source": "art/character/batch_r1/adult_F_neo_plant_short/S/work_a.png",
+      "dest": "people/frames/adult_F_neo_plant_short/S/work_a.png",
+      "sha256": "a0aae4bc83ccba9fd885c0c734250a4287fbe2c8298f1d7d52880c023f96ee23",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_neo_plant_short/S/carry",
+      "source": "art/character/batch_r1/adult_F_neo_plant_short/S/carry.png",
+      "dest": "people/frames/adult_F_neo_plant_short/S/carry.png",
+      "sha256": "c0689cb11f0bf44ccd3229104be5cb8d520e6ebcc21f5d5e28b0faaf6535be38",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_neo_plant_short/S/sleep",
+      "source": "art/character/batch_r1/adult_F_neo_plant_short/S/sleep.png",
+      "dest": "people/frames/adult_F_neo_plant_short/S/sleep.png",
+      "sha256": "7dcc9b05c7226969254dfbbb1b9ad5934268a80c56d5bb3126f0552f932de2cf",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_neo_plant_short/E/idle",
+      "source": "art/character/batch_r1/adult_F_neo_plant_short/E/idle.png",
+      "dest": "people/frames/adult_F_neo_plant_short/E/idle.png",
+      "sha256": "97f50ffc2fb93d53b71a9aadc7e068078a9512939153df0a0909104d6f49ebae",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_neo_plant_short/E/walk_a",
+      "source": "art/character/batch_r1/adult_F_neo_plant_short/E/walk_a.png",
+      "dest": "people/frames/adult_F_neo_plant_short/E/walk_a.png",
+      "sha256": "12544bebab49c610b968385baa2120cddba0a704fcda0b995de00a1bdfc27b70",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_neo_plant_short/E/work_a",
+      "source": "art/character/batch_r1/adult_F_neo_plant_short/E/work_a.png",
+      "dest": "people/frames/adult_F_neo_plant_short/E/work_a.png",
+      "sha256": "13c6c8228918008870a155346e6d19336bdf09c5cbac282be7b25a77a4f69e4a",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_neo_plant_short/E/carry",
+      "source": "art/character/batch_r1/adult_F_neo_plant_short/E/carry.png",
+      "dest": "people/frames/adult_F_neo_plant_short/E/carry.png",
+      "sha256": "481132d172ddb024b73b2e7dd005123c6b3ded0d307f3aea67fb0dcba93866a1",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_F_neo_plant_short/E/sleep",
+      "source": "art/character/batch_r1/adult_F_neo_plant_short/E/sleep.png",
+      "dest": "people/frames/adult_F_neo_plant_short/E/sleep.png",
+      "sha256": "0aba33aa4a6957d078776648d0538e73768cdaed8aed9868a324f922b76bb5e2",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_neo_plant_short/v1",
+      "source": "art/portrait/batch_r1/adult_F_neo_plant_short/v1.png",
+      "dest": "people/portraits/adult_F_neo_plant_short/v1.png",
+      "sha256": "4e5347526bd847f4ce4d8ac6aa56c5fdff34cd1cff0fdd9632b7848a807e147c",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_neo_plant_short/v2",
+      "source": "art/portrait/batch_r1/adult_F_neo_plant_short/v2.png",
+      "dest": "people/portraits/adult_F_neo_plant_short/v2.png",
+      "sha256": "478145c71496757002963eb257e8c4a5f982b685fef590031c6a20ca0dec2426",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_neo_plant_short/v3",
+      "source": "art/portrait/batch_r1/adult_F_neo_plant_short/v3.png",
+      "dest": "people/portraits/adult_F_neo_plant_short/v3.png",
+      "sha256": "013f72e56dda875469277034b1312ad60ec36ea9d5d4c20f5caf1a3dc2e3f809",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_neo_plant_short/v4",
+      "source": "art/portrait/batch_r1/adult_F_neo_plant_short/v4.png",
+      "dest": "people/portraits/adult_F_neo_plant_short/v4.png",
+      "sha256": "55207e2ac69cfa776049efa3af10781d7cd1b61de65a215bc448a0fa78a45774",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_neo_plant_short/v5",
+      "source": "art/portrait/batch_r1/adult_F_neo_plant_short/v5.png",
+      "dest": "people/portraits/adult_F_neo_plant_short/v5.png",
+      "sha256": "c5004935c484a5cc2c7bed989a54797fc2adcdd843443cee7ec9402b95e8c26a",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_F_neo_plant_short/v6",
+      "source": "art/portrait/batch_r1/adult_F_neo_plant_short/v6.png",
+      "dest": "people/portraits/adult_F_neo_plant_short/v6.png",
+      "sha256": "a5738c52876dc758e0f964f704afdd681c1ddcd674791059770463a744578380",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_bronze_wool_cloak_bun/S/idle",
+      "source": "art/character/batch_r1/adult_M_bronze_wool_cloak_bun/S/idle.png",
+      "dest": "people/frames/adult_M_bronze_wool_cloak_bun/S/idle.png",
+      "sha256": "f592340ac8078471abdbb4fc74c7b8cb461655191811d25e74bca25ceb8f7c7b",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_bronze_wool_cloak_bun/S/walk_a",
+      "source": "art/character/batch_r1/adult_M_bronze_wool_cloak_bun/S/walk_a.png",
+      "dest": "people/frames/adult_M_bronze_wool_cloak_bun/S/walk_a.png",
+      "sha256": "ce77a12d9b92d02c441c85f5c14d173495631157b6cc51b08ce1a7912b29a41e",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_bronze_wool_cloak_bun/S/work_a",
+      "source": "art/character/batch_r1/adult_M_bronze_wool_cloak_bun/S/work_a.png",
+      "dest": "people/frames/adult_M_bronze_wool_cloak_bun/S/work_a.png",
+      "sha256": "978e50bcd46b224f1c530c7634c8175a119c2680d66c2de9d881df5a8a7d9168",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_bronze_wool_cloak_bun/S/carry",
+      "source": "art/character/batch_r1/adult_M_bronze_wool_cloak_bun/S/carry.png",
+      "dest": "people/frames/adult_M_bronze_wool_cloak_bun/S/carry.png",
+      "sha256": "7f89877c1aeb51a5109734054c849a2934a743a8f2d8850767a5de19a7261763",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_bronze_wool_cloak_bun/S/sleep",
+      "source": "art/character/batch_r1/adult_M_bronze_wool_cloak_bun/S/sleep.png",
+      "dest": "people/frames/adult_M_bronze_wool_cloak_bun/S/sleep.png",
+      "sha256": "23620fef7f8cba4e32e250d4b5d398fedc1fe64b17fc1240b3bac9e371c2703e",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_bronze_wool_cloak_bun/E/idle",
+      "source": "art/character/batch_r1/adult_M_bronze_wool_cloak_bun/E/idle.png",
+      "dest": "people/frames/adult_M_bronze_wool_cloak_bun/E/idle.png",
+      "sha256": "f63693756683e3f0a05f7545244eccb4cb4c3aa5fb0dcc58f9bf8592363015f4",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_bronze_wool_cloak_bun/E/walk_a",
+      "source": "art/character/batch_r1/adult_M_bronze_wool_cloak_bun/E/walk_a.png",
+      "dest": "people/frames/adult_M_bronze_wool_cloak_bun/E/walk_a.png",
+      "sha256": "ba02d4a51222750918e317a0907db8c6893f151e89ea680fc70996f012bc0e59",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_bronze_wool_cloak_bun/E/work_a",
+      "source": "art/character/batch_r1/adult_M_bronze_wool_cloak_bun/E/work_a.png",
+      "dest": "people/frames/adult_M_bronze_wool_cloak_bun/E/work_a.png",
+      "sha256": "b53facf025fef2dc0cd6b409a96448ff9551f01fa74efc488bacb423d8f611ea",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_bronze_wool_cloak_bun/E/carry",
+      "source": "art/character/batch_r1/adult_M_bronze_wool_cloak_bun/E/carry.png",
+      "dest": "people/frames/adult_M_bronze_wool_cloak_bun/E/carry.png",
+      "sha256": "eadc9ba159349a60384e0082d0380e5adf2165b793c0f6ecdc179caec6b68ac7",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_bronze_wool_cloak_bun/E/sleep",
+      "source": "art/character/batch_r1/adult_M_bronze_wool_cloak_bun/E/sleep.png",
+      "dest": "people/frames/adult_M_bronze_wool_cloak_bun/E/sleep.png",
+      "sha256": "d102c2805a71eea4597defbf68086ccef4c1d27bd7394db9526ea77cea21695b",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_bronze_wool_cloak_bun/v1",
+      "source": "art/portrait/batch_r1/adult_M_bronze_wool_cloak_bun/v1.png",
+      "dest": "people/portraits/adult_M_bronze_wool_cloak_bun/v1.png",
+      "sha256": "fea89c19b65b79040697743f069b34dd25e1867db8fcdc4bf55b81a165039a7e",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_bronze_wool_cloak_bun/v2",
+      "source": "art/portrait/batch_r1/adult_M_bronze_wool_cloak_bun/v2.png",
+      "dest": "people/portraits/adult_M_bronze_wool_cloak_bun/v2.png",
+      "sha256": "06abc0819f648733f3f7fdab994d02943bd0985a7647b95818e28875488b8df9",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_bronze_wool_cloak_bun/v3",
+      "source": "art/portrait/batch_r1/adult_M_bronze_wool_cloak_bun/v3.png",
+      "dest": "people/portraits/adult_M_bronze_wool_cloak_bun/v3.png",
+      "sha256": "ef217281a2185afed9b61b60d3fdab3572dbd19ef2fc2bd425cfaf12b15fc0d0",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_bronze_wool_cloak_bun/v4",
+      "source": "art/portrait/batch_r1/adult_M_bronze_wool_cloak_bun/v4.png",
+      "dest": "people/portraits/adult_M_bronze_wool_cloak_bun/v4.png",
+      "sha256": "3789f8ef30bb7859df527ba1b1a9e16c27671a122af7cc3ed025082b5e53a75c",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_bronze_wool_cloak_bun/v5",
+      "source": "art/portrait/batch_r1/adult_M_bronze_wool_cloak_bun/v5.png",
+      "dest": "people/portraits/adult_M_bronze_wool_cloak_bun/v5.png",
+      "sha256": "47e793048fdf4ca2aa80dfe1682262427327c4ced6a1c61203c6d3590ffa8ee4",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_bronze_wool_cloak_bun/v6",
+      "source": "art/portrait/batch_r1/adult_M_bronze_wool_cloak_bun/v6.png",
+      "dest": "people/portraits/adult_M_bronze_wool_cloak_bun/v6.png",
+      "sha256": "9044517d40af5e39ffa12d08c369fb046e5c08bfe0abb9004dfb777213286c59",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_bronze_wool_cloak_long_tied/S/idle",
+      "source": "art/character/batch_r1/adult_M_bronze_wool_cloak_long_tied/S/idle.png",
+      "dest": "people/frames/adult_M_bronze_wool_cloak_long_tied/S/idle.png",
+      "sha256": "a6645f0ea32d7d8129469002c6b58849875a1f7d6eb051882b89a8e347c4cf87",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_bronze_wool_cloak_long_tied/S/walk_a",
+      "source": "art/character/batch_r1/adult_M_bronze_wool_cloak_long_tied/S/walk_a.png",
+      "dest": "people/frames/adult_M_bronze_wool_cloak_long_tied/S/walk_a.png",
+      "sha256": "5dbc78cdd75dcb4232f561f0fcd4cecf209c301ba2fb163b7bacff4978a6e378",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_bronze_wool_cloak_long_tied/S/work_a",
+      "source": "art/character/batch_r1/adult_M_bronze_wool_cloak_long_tied/S/work_a.png",
+      "dest": "people/frames/adult_M_bronze_wool_cloak_long_tied/S/work_a.png",
+      "sha256": "a07109d803cd9747b19b1bc95aa7817b9f474fbb3c39d5414dfb603d27cb5ead",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_bronze_wool_cloak_long_tied/S/carry",
+      "source": "art/character/batch_r1/adult_M_bronze_wool_cloak_long_tied/S/carry.png",
+      "dest": "people/frames/adult_M_bronze_wool_cloak_long_tied/S/carry.png",
+      "sha256": "e43a710fc2c2ac1482ae68f1c3c953abf7a9cf10e23d171c4df07a3b65aad260",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_bronze_wool_cloak_long_tied/S/sleep",
+      "source": "art/character/batch_r1/adult_M_bronze_wool_cloak_long_tied/S/sleep.png",
+      "dest": "people/frames/adult_M_bronze_wool_cloak_long_tied/S/sleep.png",
+      "sha256": "ecbeebbf882da43af9b0266439999751e922d8540e6f95b6e1284fadc87e5581",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_bronze_wool_cloak_long_tied/E/idle",
+      "source": "art/character/batch_r1/adult_M_bronze_wool_cloak_long_tied/E/idle.png",
+      "dest": "people/frames/adult_M_bronze_wool_cloak_long_tied/E/idle.png",
+      "sha256": "fe8cf3188f4e5b58f192ea7ee9b2a20d3ca1ab7b0018296b2d77468a7057865f",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_bronze_wool_cloak_long_tied/E/walk_a",
+      "source": "art/character/batch_r1/adult_M_bronze_wool_cloak_long_tied/E/walk_a.png",
+      "dest": "people/frames/adult_M_bronze_wool_cloak_long_tied/E/walk_a.png",
+      "sha256": "cb670eea3f792779d8d193cec41718a5cc0943b3f58568fd58677d52533874da",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_bronze_wool_cloak_long_tied/E/work_a",
+      "source": "art/character/batch_r1/adult_M_bronze_wool_cloak_long_tied/E/work_a.png",
+      "dest": "people/frames/adult_M_bronze_wool_cloak_long_tied/E/work_a.png",
+      "sha256": "6126fd7f1ed43c2b6b241793c19add450413040d0e818a23bd1476702d70f48f",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_bronze_wool_cloak_long_tied/E/carry",
+      "source": "art/character/batch_r1/adult_M_bronze_wool_cloak_long_tied/E/carry.png",
+      "dest": "people/frames/adult_M_bronze_wool_cloak_long_tied/E/carry.png",
+      "sha256": "a12b157f42e5b4d70958fc21b1150afcdb75e99843be9778e9da2b0f1e0adacc",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_bronze_wool_cloak_long_tied/E/sleep",
+      "source": "art/character/batch_r1/adult_M_bronze_wool_cloak_long_tied/E/sleep.png",
+      "dest": "people/frames/adult_M_bronze_wool_cloak_long_tied/E/sleep.png",
+      "sha256": "d1ecac2eebcb8ef2b56f81f6dfce6e94f052aa3c05610a75fd1f5fea4f0aa553",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_bronze_wool_cloak_long_tied/v1",
+      "source": "art/portrait/batch_r1/adult_M_bronze_wool_cloak_long_tied/v1.png",
+      "dest": "people/portraits/adult_M_bronze_wool_cloak_long_tied/v1.png",
+      "sha256": "2eaa7a05b0e9eed68a42006322ae4e72db335a8d005c1e323659a0101a66874b",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_bronze_wool_cloak_long_tied/v2",
+      "source": "art/portrait/batch_r1/adult_M_bronze_wool_cloak_long_tied/v2.png",
+      "dest": "people/portraits/adult_M_bronze_wool_cloak_long_tied/v2.png",
+      "sha256": "7c4018b06a2e3a9484b1a0b2840e9034ed9a8452e2799dbd2182bc150e445c80",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_bronze_wool_cloak_long_tied/v3",
+      "source": "art/portrait/batch_r1/adult_M_bronze_wool_cloak_long_tied/v3.png",
+      "dest": "people/portraits/adult_M_bronze_wool_cloak_long_tied/v3.png",
+      "sha256": "fcda7aabcfcdd5877b44a5a4d5c52023f57fe205dd2346b139de8ccc2d08357b",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_bronze_wool_cloak_long_tied/v4",
+      "source": "art/portrait/batch_r1/adult_M_bronze_wool_cloak_long_tied/v4.png",
+      "dest": "people/portraits/adult_M_bronze_wool_cloak_long_tied/v4.png",
+      "sha256": "9e11c49fac7342014d19f24d2383c9e4174f407df6309d7367ea89128ee2a6b7",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_bronze_wool_cloak_long_tied/v5",
+      "source": "art/portrait/batch_r1/adult_M_bronze_wool_cloak_long_tied/v5.png",
+      "dest": "people/portraits/adult_M_bronze_wool_cloak_long_tied/v5.png",
+      "sha256": "393af4d58bb668a7574acfcb2cd7c1f876da09fa4cfb26c755994ff33ef364d1",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_bronze_wool_cloak_long_tied/v6",
+      "source": "art/portrait/batch_r1/adult_M_bronze_wool_cloak_long_tied/v6.png",
+      "dest": "people/portraits/adult_M_bronze_wool_cloak_long_tied/v6.png",
+      "sha256": "db22615d1194d64e2dae40b22f718dd2f9531122e5d64994c402f7c561d0bab3",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_bronze_wool_cloak_short/S/idle",
+      "source": "art/character/batch_r1/adult_M_bronze_wool_cloak_short/S/idle.png",
+      "dest": "people/frames/adult_M_bronze_wool_cloak_short/S/idle.png",
+      "sha256": "4a2edc048c6ecd57814f7298220e81c36525a0a5eb812b1161095275732c2712",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_bronze_wool_cloak_short/S/walk_a",
+      "source": "art/character/batch_r1/adult_M_bronze_wool_cloak_short/S/walk_a.png",
+      "dest": "people/frames/adult_M_bronze_wool_cloak_short/S/walk_a.png",
+      "sha256": "2f348db8a8e618ba7c433b6d09fc2fe2b7c05ba45ed8737bcf27a18e9424d1b0",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_bronze_wool_cloak_short/S/work_a",
+      "source": "art/character/batch_r1/adult_M_bronze_wool_cloak_short/S/work_a.png",
+      "dest": "people/frames/adult_M_bronze_wool_cloak_short/S/work_a.png",
+      "sha256": "df7228634976643153ee189aa4f161d84a4d016d67e35b32baf75928bd4365bf",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_bronze_wool_cloak_short/S/carry",
+      "source": "art/character/batch_r1/adult_M_bronze_wool_cloak_short/S/carry.png",
+      "dest": "people/frames/adult_M_bronze_wool_cloak_short/S/carry.png",
+      "sha256": "d48194ef6ec8b5b6ed2acb9fa4dba71cd36dbf4ceac450409363ba72747c67b7",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_bronze_wool_cloak_short/S/sleep",
+      "source": "art/character/batch_r1/adult_M_bronze_wool_cloak_short/S/sleep.png",
+      "dest": "people/frames/adult_M_bronze_wool_cloak_short/S/sleep.png",
+      "sha256": "4999532c4d6c8b969e9da74c82c008182d089e7394f6f3f7c42c4c974d0198a3",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_bronze_wool_cloak_short/E/idle",
+      "source": "art/character/batch_r1/adult_M_bronze_wool_cloak_short/E/idle.png",
+      "dest": "people/frames/adult_M_bronze_wool_cloak_short/E/idle.png",
+      "sha256": "33d58f2afbaf305db9c2d2b11845e2f5efe5989063e8507b730a2e46093cf18b",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_bronze_wool_cloak_short/E/walk_a",
+      "source": "art/character/batch_r1/adult_M_bronze_wool_cloak_short/E/walk_a.png",
+      "dest": "people/frames/adult_M_bronze_wool_cloak_short/E/walk_a.png",
+      "sha256": "40494452226472deadc2f7ae42ade4a08e0d964f449c3dc3d483ffb3fcd8c40b",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_bronze_wool_cloak_short/E/work_a",
+      "source": "art/character/batch_r1/adult_M_bronze_wool_cloak_short/E/work_a.png",
+      "dest": "people/frames/adult_M_bronze_wool_cloak_short/E/work_a.png",
+      "sha256": "8ad335da0ef806c39c121f980884ef6efc3b0b0d6801d8319caadcbdfafedd71",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_bronze_wool_cloak_short/E/carry",
+      "source": "art/character/batch_r1/adult_M_bronze_wool_cloak_short/E/carry.png",
+      "dest": "people/frames/adult_M_bronze_wool_cloak_short/E/carry.png",
+      "sha256": "de257b716031e77981e6a3f994ee6d77aba034a64e78f8c51b840667b6ba7348",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_bronze_wool_cloak_short/E/sleep",
+      "source": "art/character/batch_r1/adult_M_bronze_wool_cloak_short/E/sleep.png",
+      "dest": "people/frames/adult_M_bronze_wool_cloak_short/E/sleep.png",
+      "sha256": "579a36a0d9ebb1b0c56d39f3182d2524c7f066046763279e391d9f43bad60d6f",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_bronze_wool_cloak_short/v1",
+      "source": "art/portrait/batch_r1/adult_M_bronze_wool_cloak_short/v1.png",
+      "dest": "people/portraits/adult_M_bronze_wool_cloak_short/v1.png",
+      "sha256": "323b407b9a117fb6f0ca59e6ef9d6aa89fba6e0510e1f4950a5a5c2f0ef0bd7b",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_bronze_wool_cloak_short/v2",
+      "source": "art/portrait/batch_r1/adult_M_bronze_wool_cloak_short/v2.png",
+      "dest": "people/portraits/adult_M_bronze_wool_cloak_short/v2.png",
+      "sha256": "07e40be1a98f18b967de99b0d4c28809d23c0bb6ef2450601aecd0c56a82f116",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_bronze_wool_cloak_short/v3",
+      "source": "art/portrait/batch_r1/adult_M_bronze_wool_cloak_short/v3.png",
+      "dest": "people/portraits/adult_M_bronze_wool_cloak_short/v3.png",
+      "sha256": "35cc1a6f0255e2875cf86b6da96b093be78300c25ec11e240fea30be780a529a",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_bronze_wool_cloak_short/v4",
+      "source": "art/portrait/batch_r1/adult_M_bronze_wool_cloak_short/v4.png",
+      "dest": "people/portraits/adult_M_bronze_wool_cloak_short/v4.png",
+      "sha256": "7c09cfaa0034c89566cd47008bf1885455716ebb7c02be1a1a337d3827bc7f0b",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_bronze_wool_cloak_short/v5",
+      "source": "art/portrait/batch_r1/adult_M_bronze_wool_cloak_short/v5.png",
+      "dest": "people/portraits/adult_M_bronze_wool_cloak_short/v5.png",
+      "sha256": "4164d41a2ed76022aef03516e8e7ef87c374d7dd64e31b1d4e228b11398e3e38",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_bronze_wool_cloak_short/v6",
+      "source": "art/portrait/batch_r1/adult_M_bronze_wool_cloak_short/v6.png",
+      "dest": "people/portraits/adult_M_bronze_wool_cloak_short/v6.png",
+      "sha256": "467bbda01df788226d43046127ca3760e6eb3ef8b0ed02029ed187417c9413d3",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_neo_plant_bun/S/idle",
+      "source": "art/character/batch_r1/adult_M_neo_plant_bun/S/idle.png",
+      "dest": "people/frames/adult_M_neo_plant_bun/S/idle.png",
+      "sha256": "606d0d138d1872475a6a6ea980f4ff5689ff77f22bf459880b184efb4942243d",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_neo_plant_bun/S/walk_a",
+      "source": "art/character/batch_r1/adult_M_neo_plant_bun/S/walk_a.png",
+      "dest": "people/frames/adult_M_neo_plant_bun/S/walk_a.png",
+      "sha256": "05f9b533a7de938ad06d585c50f18834f1d85698ccd73fcba0ed1c622537e605",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_neo_plant_bun/S/work_a",
+      "source": "art/character/batch_r1/adult_M_neo_plant_bun/S/work_a.png",
+      "dest": "people/frames/adult_M_neo_plant_bun/S/work_a.png",
+      "sha256": "f86f17ab856dfa104e5ef7182bf7511cc2b386d4a33bdf460fca5aa122ca6bc8",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_neo_plant_bun/S/carry",
+      "source": "art/character/batch_r1/adult_M_neo_plant_bun/S/carry.png",
+      "dest": "people/frames/adult_M_neo_plant_bun/S/carry.png",
+      "sha256": "8bd714c5183ec7178f03eda796ee2df161d1e78c92c1d673b22e40a05580d713",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_neo_plant_bun/S/sleep",
+      "source": "art/character/batch_r1/adult_M_neo_plant_bun/S/sleep.png",
+      "dest": "people/frames/adult_M_neo_plant_bun/S/sleep.png",
+      "sha256": "2031859c9a9b91b4080967bd4a4ea9f3b2eb27a36792e54d08a21bcb4539706a",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_neo_plant_bun/E/idle",
+      "source": "art/character/batch_r1/adult_M_neo_plant_bun/E/idle.png",
+      "dest": "people/frames/adult_M_neo_plant_bun/E/idle.png",
+      "sha256": "6c355f414511d1bea1537a2ec669b9568e013b49016bb5d106d45630f87bc4b2",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_neo_plant_bun/E/walk_a",
+      "source": "art/character/batch_r1/adult_M_neo_plant_bun/E/walk_a.png",
+      "dest": "people/frames/adult_M_neo_plant_bun/E/walk_a.png",
+      "sha256": "2b77e974d8a840d2e28db58cb018ef4874e17bf8fffd26fb616a64893afb61ea",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_neo_plant_bun/E/work_a",
+      "source": "art/character/batch_r1/adult_M_neo_plant_bun/E/work_a.png",
+      "dest": "people/frames/adult_M_neo_plant_bun/E/work_a.png",
+      "sha256": "ecd437d07da2796f3d293e1a6379611ea803340a264060e1f32570fc38634a49",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_neo_plant_bun/E/carry",
+      "source": "art/character/batch_r1/adult_M_neo_plant_bun/E/carry.png",
+      "dest": "people/frames/adult_M_neo_plant_bun/E/carry.png",
+      "sha256": "749c5b1467067b75d4e98b23de804c573e958cd39fa25eaa24a6536a10f35ad4",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_neo_plant_bun/E/sleep",
+      "source": "art/character/batch_r1/adult_M_neo_plant_bun/E/sleep.png",
+      "dest": "people/frames/adult_M_neo_plant_bun/E/sleep.png",
+      "sha256": "66cc85458728734368113fa5ef6c3e83333ca9ecc33f61f9cd5873144436fc80",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_neo_plant_bun/v1",
+      "source": "art/portrait/batch_r1/adult_M_neo_plant_bun/v1.png",
+      "dest": "people/portraits/adult_M_neo_plant_bun/v1.png",
+      "sha256": "3a4e922a578ed3dfa6c80964d7a8daad97989516831a2ae5fe9b34380cba4574",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_neo_plant_bun/v2",
+      "source": "art/portrait/batch_r1/adult_M_neo_plant_bun/v2.png",
+      "dest": "people/portraits/adult_M_neo_plant_bun/v2.png",
+      "sha256": "a512fe7a688f4f4667bd02ee2e118f5aec22aff83ab4abc0578305225aeaeb0e",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_neo_plant_bun/v3",
+      "source": "art/portrait/batch_r1/adult_M_neo_plant_bun/v3.png",
+      "dest": "people/portraits/adult_M_neo_plant_bun/v3.png",
+      "sha256": "ef5ffa706838838b8fc8f638e3d0cd28a02cb01c07825ec6247e0e6351316edc",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_neo_plant_bun/v4",
+      "source": "art/portrait/batch_r1/adult_M_neo_plant_bun/v4.png",
+      "dest": "people/portraits/adult_M_neo_plant_bun/v4.png",
+      "sha256": "fc4058dcf5983d8696b2d76a68d9147a3d537bff93adcd6cc06f2f499420204f",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_neo_plant_bun/v5",
+      "source": "art/portrait/batch_r1/adult_M_neo_plant_bun/v5.png",
+      "dest": "people/portraits/adult_M_neo_plant_bun/v5.png",
+      "sha256": "6cf0efc167b7593797d1afcece8ef430ea6b05800ff139543a55b49ec6f0f463",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_neo_plant_bun/v6",
+      "source": "art/portrait/batch_r1/adult_M_neo_plant_bun/v6.png",
+      "dest": "people/portraits/adult_M_neo_plant_bun/v6.png",
+      "sha256": "221f44109580fb0e6928acf371a9fff202aa4b0b8e711d862994840aa54d2fcb",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_neo_plant_long_tied/S/idle",
+      "source": "art/character/batch_r1/adult_M_neo_plant_long_tied/S/idle.png",
+      "dest": "people/frames/adult_M_neo_plant_long_tied/S/idle.png",
+      "sha256": "171a45e1d56f8d94df49fe86b57b9ecbbc67162a5d08e916bbf5cf4e2f29e16d",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_neo_plant_long_tied/S/walk_a",
+      "source": "art/character/batch_r1/adult_M_neo_plant_long_tied/S/walk_a.png",
+      "dest": "people/frames/adult_M_neo_plant_long_tied/S/walk_a.png",
+      "sha256": "83eed3affe93e8a3f9191a56d55788a6548bdb5142242119c482a43924f55c08",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_neo_plant_long_tied/S/work_a",
+      "source": "art/character/batch_r1/adult_M_neo_plant_long_tied/S/work_a.png",
+      "dest": "people/frames/adult_M_neo_plant_long_tied/S/work_a.png",
+      "sha256": "efb2c42d9789a2aa764d91ccac607bfe21cbca34b3eab97e093f68317b5b620b",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_neo_plant_long_tied/S/carry",
+      "source": "art/character/batch_r1/adult_M_neo_plant_long_tied/S/carry.png",
+      "dest": "people/frames/adult_M_neo_plant_long_tied/S/carry.png",
+      "sha256": "d6972813313e6d59b9a05df105d0a8705e445f2a6d09eba2e3b52da3fcc3f3db",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_neo_plant_long_tied/S/sleep",
+      "source": "art/character/batch_r1/adult_M_neo_plant_long_tied/S/sleep.png",
+      "dest": "people/frames/adult_M_neo_plant_long_tied/S/sleep.png",
+      "sha256": "dad4adc9a28ac62ed5fe08df296f630055118e62418770f8f752359f65f5757d",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_neo_plant_long_tied/E/idle",
+      "source": "art/character/batch_r1/adult_M_neo_plant_long_tied/E/idle.png",
+      "dest": "people/frames/adult_M_neo_plant_long_tied/E/idle.png",
+      "sha256": "bbbbeb5f65ff3d140e049340906d5920cc482a09bb7e7e50ac651c80bef4f455",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_neo_plant_long_tied/E/walk_a",
+      "source": "art/character/batch_r1/adult_M_neo_plant_long_tied/E/walk_a.png",
+      "dest": "people/frames/adult_M_neo_plant_long_tied/E/walk_a.png",
+      "sha256": "1ec6e84d1d772d6844f3dd5419a952f482434eaa0d6a07f00c7443f216bd5815",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_neo_plant_long_tied/E/work_a",
+      "source": "art/character/batch_r1/adult_M_neo_plant_long_tied/E/work_a.png",
+      "dest": "people/frames/adult_M_neo_plant_long_tied/E/work_a.png",
+      "sha256": "deee97bf02cbaeb4a3f299c50d7e8282d84e9f6dc72d6fc9b8cf36ebbfe61378",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_neo_plant_long_tied/E/carry",
+      "source": "art/character/batch_r1/adult_M_neo_plant_long_tied/E/carry.png",
+      "dest": "people/frames/adult_M_neo_plant_long_tied/E/carry.png",
+      "sha256": "65e2e311945a33ad7db4ff74f7895ea09c766d6522d1cbebe052c5a57cb1f1c4",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_neo_plant_long_tied/E/sleep",
+      "source": "art/character/batch_r1/adult_M_neo_plant_long_tied/E/sleep.png",
+      "dest": "people/frames/adult_M_neo_plant_long_tied/E/sleep.png",
+      "sha256": "499782a57e41830fbe2612a5d639d3bd5cf416ae68f747ba4ed46107eedf02cf",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_neo_plant_long_tied/v1",
+      "source": "art/portrait/batch_r1/adult_M_neo_plant_long_tied/v1.png",
+      "dest": "people/portraits/adult_M_neo_plant_long_tied/v1.png",
+      "sha256": "47291bf3d7da68307e8494ea4919fd2c7346d2a8940db9c23f8e916ef22ad520",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_neo_plant_long_tied/v2",
+      "source": "art/portrait/batch_r1/adult_M_neo_plant_long_tied/v2.png",
+      "dest": "people/portraits/adult_M_neo_plant_long_tied/v2.png",
+      "sha256": "46968e899a523b655a379e8110ed1586d5926411ade555b0258a2f6f75de6eec",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_neo_plant_long_tied/v3",
+      "source": "art/portrait/batch_r1/adult_M_neo_plant_long_tied/v3.png",
+      "dest": "people/portraits/adult_M_neo_plant_long_tied/v3.png",
+      "sha256": "99c68e0b6280d047161e2bd3fc131288d8f01879385aea7c3a1e2902c563459d",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_neo_plant_long_tied/v4",
+      "source": "art/portrait/batch_r1/adult_M_neo_plant_long_tied/v4.png",
+      "dest": "people/portraits/adult_M_neo_plant_long_tied/v4.png",
+      "sha256": "adc57139e7c0a2d0de36b57ff4946e4f3b0b8289e7c54bd4610fe2a7363a4393",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_neo_plant_long_tied/v5",
+      "source": "art/portrait/batch_r1/adult_M_neo_plant_long_tied/v5.png",
+      "dest": "people/portraits/adult_M_neo_plant_long_tied/v5.png",
+      "sha256": "5d676d85bda4bd8b429e7659acee1b5e7a260cfbc670198f64009288b2644e89",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_neo_plant_long_tied/v6",
+      "source": "art/portrait/batch_r1/adult_M_neo_plant_long_tied/v6.png",
+      "dest": "people/portraits/adult_M_neo_plant_long_tied/v6.png",
+      "sha256": "e02cb3d73599cfa1cd15225992e0158a586e9d9db36495f6ad42721c7b48f78a",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_neo_plant_short/S/idle",
+      "source": "art/character/batch_r1/adult_M_neo_plant_short/S/idle.png",
+      "dest": "people/frames/adult_M_neo_plant_short/S/idle.png",
+      "sha256": "7f50fed9717be70532d69bbc775424b62dc2151c46652ea142ac068317079531",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_neo_plant_short/S/walk_a",
+      "source": "art/character/batch_r1/adult_M_neo_plant_short/S/walk_a.png",
+      "dest": "people/frames/adult_M_neo_plant_short/S/walk_a.png",
+      "sha256": "eaf057e56ceef41edd4d7b1b1ece88f2b1e6cfe4317a6b6ac85f024d4d6d5357",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_neo_plant_short/S/work_a",
+      "source": "art/character/batch_r1/adult_M_neo_plant_short/S/work_a.png",
+      "dest": "people/frames/adult_M_neo_plant_short/S/work_a.png",
+      "sha256": "bb812e993a927dd917b6518411f21956bedfd3307778f8810ce410a80e4b08bc",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_neo_plant_short/S/carry",
+      "source": "art/character/batch_r1/adult_M_neo_plant_short/S/carry.png",
+      "dest": "people/frames/adult_M_neo_plant_short/S/carry.png",
+      "sha256": "f5a68bd1596c97d0a1fb791e98fd7c3a41bcb2dbb0aaf77d628f4f92dfefa3cb",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_neo_plant_short/S/sleep",
+      "source": "art/character/batch_r1/adult_M_neo_plant_short/S/sleep.png",
+      "dest": "people/frames/adult_M_neo_plant_short/S/sleep.png",
+      "sha256": "817142cc714da5b23f14795d6c2fff87fb5dbf70ad58f0eb44039a51af94faa6",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_neo_plant_short/E/idle",
+      "source": "art/character/batch_r1/adult_M_neo_plant_short/E/idle.png",
+      "dest": "people/frames/adult_M_neo_plant_short/E/idle.png",
+      "sha256": "a35cea9fe224699ff5d40a8ae043daa0ea60fada8208b8a39c589deeb0060138",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_neo_plant_short/E/walk_a",
+      "source": "art/character/batch_r1/adult_M_neo_plant_short/E/walk_a.png",
+      "dest": "people/frames/adult_M_neo_plant_short/E/walk_a.png",
+      "sha256": "9e182eb70cf7334d12a77ef7763c5f415e34f9ce197df219051ec62bc7937049",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_neo_plant_short/E/work_a",
+      "source": "art/character/batch_r1/adult_M_neo_plant_short/E/work_a.png",
+      "dest": "people/frames/adult_M_neo_plant_short/E/work_a.png",
+      "sha256": "21c4c616fbccbe7c8b6dba9a536b5e18048df967a6cbe942f450cc63aa62313c",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_neo_plant_short/E/carry",
+      "source": "art/character/batch_r1/adult_M_neo_plant_short/E/carry.png",
+      "dest": "people/frames/adult_M_neo_plant_short/E/carry.png",
+      "sha256": "d540e8c368f08e5a060622b97deef469af67d71891807aa70b7d8d785ba68c53",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "adult_M_neo_plant_short/E/sleep",
+      "source": "art/character/batch_r1/adult_M_neo_plant_short/E/sleep.png",
+      "dest": "people/frames/adult_M_neo_plant_short/E/sleep.png",
+      "sha256": "0d4d5316a1ebc20fe39e04d3151ac6eb3cec43b01588a94e4e4417a24785f3fd",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_neo_plant_short/v1",
+      "source": "art/portrait/batch_r1/adult_M_neo_plant_short/v1.png",
+      "dest": "people/portraits/adult_M_neo_plant_short/v1.png",
+      "sha256": "8302343ecce8f8e5944bf3827f6ff16c2cccdadea16762d5f65f2105cef2ffc1",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_neo_plant_short/v2",
+      "source": "art/portrait/batch_r1/adult_M_neo_plant_short/v2.png",
+      "dest": "people/portraits/adult_M_neo_plant_short/v2.png",
+      "sha256": "a79af4b1ebe476c27450d102083893b65bd52ee81bf3150ecca8c3a2958fb555",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_neo_plant_short/v3",
+      "source": "art/portrait/batch_r1/adult_M_neo_plant_short/v3.png",
+      "dest": "people/portraits/adult_M_neo_plant_short/v3.png",
+      "sha256": "83a1db98ce77681ff4c7d315d4b6f3db630dd437944e965f2d5c4d17e76aecb6",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_neo_plant_short/v4",
+      "source": "art/portrait/batch_r1/adult_M_neo_plant_short/v4.png",
+      "dest": "people/portraits/adult_M_neo_plant_short/v4.png",
+      "sha256": "26a7dd7a86e3a5b62f3fed57af6def7a63a865f5b507588c976a7fab94afb5e5",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_neo_plant_short/v5",
+      "source": "art/portrait/batch_r1/adult_M_neo_plant_short/v5.png",
+      "dest": "people/portraits/adult_M_neo_plant_short/v5.png",
+      "sha256": "bc9c77659dfaa74a968c9d14df950d219b3f4b304966059049fad4054041743c",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "adult_M_neo_plant_short/v6",
+      "source": "art/portrait/batch_r1/adult_M_neo_plant_short/v6.png",
+      "dest": "people/portraits/adult_M_neo_plant_short/v6.png",
+      "sha256": "fbe644f92607ca825c7fe906ab15f6ad8a05e4062eed0f360668d6be4d8e3ea1",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_bronze_wool_cloak_bun/S/idle",
+      "source": "art/character/batch_r1/child_F_bronze_wool_cloak_bun/S/idle.png",
+      "dest": "people/frames/child_F_bronze_wool_cloak_bun/S/idle.png",
+      "sha256": "4084a2f8b14e8eb1551a7c906a2dbb1a75566adc473f335c31e088b315e97005",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_bronze_wool_cloak_bun/S/walk_a",
+      "source": "art/character/batch_r1/child_F_bronze_wool_cloak_bun/S/walk_a.png",
+      "dest": "people/frames/child_F_bronze_wool_cloak_bun/S/walk_a.png",
+      "sha256": "f91ca481c87a3f0152022031d56d237b6a831921f5b349a9a8aa0d3ff3a7538e",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_bronze_wool_cloak_bun/S/work_a",
+      "source": "art/character/batch_r1/child_F_bronze_wool_cloak_bun/S/work_a.png",
+      "dest": "people/frames/child_F_bronze_wool_cloak_bun/S/work_a.png",
+      "sha256": "b251c49cf335e35989cf0aa4ce8b7396149bf09a0bed6896c11b540b536674d5",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_bronze_wool_cloak_bun/S/carry",
+      "source": "art/character/batch_r1/child_F_bronze_wool_cloak_bun/S/carry.png",
+      "dest": "people/frames/child_F_bronze_wool_cloak_bun/S/carry.png",
+      "sha256": "91791fdc6646cc0a0a28624774bc88b7cecc103152c6d6531566b3570427923c",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_bronze_wool_cloak_bun/S/sleep",
+      "source": "art/character/batch_r1/child_F_bronze_wool_cloak_bun/S/sleep.png",
+      "dest": "people/frames/child_F_bronze_wool_cloak_bun/S/sleep.png",
+      "sha256": "7c0fd0ac941926d5446c3660d41f953323f0731b98a2a4b1f68897558d57bb95",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_bronze_wool_cloak_bun/E/idle",
+      "source": "art/character/batch_r1/child_F_bronze_wool_cloak_bun/E/idle.png",
+      "dest": "people/frames/child_F_bronze_wool_cloak_bun/E/idle.png",
+      "sha256": "ce4ed8e1499a62f8a3fc6693b1018996cc1047356f1ef961b77aa1bf33e648af",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_bronze_wool_cloak_bun/E/walk_a",
+      "source": "art/character/batch_r1/child_F_bronze_wool_cloak_bun/E/walk_a.png",
+      "dest": "people/frames/child_F_bronze_wool_cloak_bun/E/walk_a.png",
+      "sha256": "6922f88617ea54426bb3ee37373ede5fe00442917410b9e3463b09521df620c2",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_bronze_wool_cloak_bun/E/work_a",
+      "source": "art/character/batch_r1/child_F_bronze_wool_cloak_bun/E/work_a.png",
+      "dest": "people/frames/child_F_bronze_wool_cloak_bun/E/work_a.png",
+      "sha256": "c9ee41f012c4db845f8459d3b627f902305ed310568393b14935392ff4409cca",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_bronze_wool_cloak_bun/E/carry",
+      "source": "art/character/batch_r1/child_F_bronze_wool_cloak_bun/E/carry.png",
+      "dest": "people/frames/child_F_bronze_wool_cloak_bun/E/carry.png",
+      "sha256": "ef8f4c55f89524b417fbb7ae0dc3204c04950f9e5a77dbc8a0965b855a69c713",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_bronze_wool_cloak_bun/E/sleep",
+      "source": "art/character/batch_r1/child_F_bronze_wool_cloak_bun/E/sleep.png",
+      "dest": "people/frames/child_F_bronze_wool_cloak_bun/E/sleep.png",
+      "sha256": "61c6d5b4507ef69a10848e589306ceca5148ae868f938b51130f2855b87708f8",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_bronze_wool_cloak_bun/v1",
+      "source": "art/portrait/batch_r1/child_F_bronze_wool_cloak_bun/v1.png",
+      "dest": "people/portraits/child_F_bronze_wool_cloak_bun/v1.png",
+      "sha256": "a2f73a9dfa646872080d96c522be5a25cfec9391fcc62f32243e54fc109f3655",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_bronze_wool_cloak_bun/v2",
+      "source": "art/portrait/batch_r1/child_F_bronze_wool_cloak_bun/v2.png",
+      "dest": "people/portraits/child_F_bronze_wool_cloak_bun/v2.png",
+      "sha256": "4623042836bfd1c1f958f692dbf2221c1807a9b58533d9b573cb25b6a827aa73",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_bronze_wool_cloak_bun/v3",
+      "source": "art/portrait/batch_r1/child_F_bronze_wool_cloak_bun/v3.png",
+      "dest": "people/portraits/child_F_bronze_wool_cloak_bun/v3.png",
+      "sha256": "b7f5cfeaa56137169839968fe8df0716e72e4a4bf328badd6f473d621572caf5",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_bronze_wool_cloak_bun/v4",
+      "source": "art/portrait/batch_r1/child_F_bronze_wool_cloak_bun/v4.png",
+      "dest": "people/portraits/child_F_bronze_wool_cloak_bun/v4.png",
+      "sha256": "c16f72c0d781306de159861a2d01d012fe15b5e0c18d20e915671288c9eac754",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_bronze_wool_cloak_bun/v5",
+      "source": "art/portrait/batch_r1/child_F_bronze_wool_cloak_bun/v5.png",
+      "dest": "people/portraits/child_F_bronze_wool_cloak_bun/v5.png",
+      "sha256": "a3581cf78f86c3fc25348c75697a32a715b18aa164d011847b2706b29e61350e",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_bronze_wool_cloak_bun/v6",
+      "source": "art/portrait/batch_r1/child_F_bronze_wool_cloak_bun/v6.png",
+      "dest": "people/portraits/child_F_bronze_wool_cloak_bun/v6.png",
+      "sha256": "62ef49df874339d1e99163a6573d1a3d7d2946ee042d425a3fbd2daf4842bf73",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_bronze_wool_cloak_long_tied/S/idle",
+      "source": "art/character/batch_r1/child_F_bronze_wool_cloak_long_tied/S/idle.png",
+      "dest": "people/frames/child_F_bronze_wool_cloak_long_tied/S/idle.png",
+      "sha256": "f5be038779dda71ed37fcb2d1338d47504e344a020eadb1df3ff0fb17f656e52",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_bronze_wool_cloak_long_tied/S/walk_a",
+      "source": "art/character/batch_r1/child_F_bronze_wool_cloak_long_tied/S/walk_a.png",
+      "dest": "people/frames/child_F_bronze_wool_cloak_long_tied/S/walk_a.png",
+      "sha256": "9ce8ef0b3a7a2cec54d83797c85e886fb088546c22ca059d4496831fefcfc2e8",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_bronze_wool_cloak_long_tied/S/work_a",
+      "source": "art/character/batch_r1/child_F_bronze_wool_cloak_long_tied/S/work_a.png",
+      "dest": "people/frames/child_F_bronze_wool_cloak_long_tied/S/work_a.png",
+      "sha256": "0dadb54b1a993e8ee7223aeff74bc038d9a7db7c82a19a3057f5ef55fab19995",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_bronze_wool_cloak_long_tied/S/carry",
+      "source": "art/character/batch_r1/child_F_bronze_wool_cloak_long_tied/S/carry.png",
+      "dest": "people/frames/child_F_bronze_wool_cloak_long_tied/S/carry.png",
+      "sha256": "63f1c4fb71becce0c3bde656e39fbc0027d9a4d9ff9f2def55f5053bc3ec5c55",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_bronze_wool_cloak_long_tied/S/sleep",
+      "source": "art/character/batch_r1/child_F_bronze_wool_cloak_long_tied/S/sleep.png",
+      "dest": "people/frames/child_F_bronze_wool_cloak_long_tied/S/sleep.png",
+      "sha256": "cca34efbd3cc77d467590ff223493b6f4cdc08b7186d435d8babec2b3b12131a",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_bronze_wool_cloak_long_tied/E/idle",
+      "source": "art/character/batch_r1/child_F_bronze_wool_cloak_long_tied/E/idle.png",
+      "dest": "people/frames/child_F_bronze_wool_cloak_long_tied/E/idle.png",
+      "sha256": "bf2e7e85a437ff3bde6471b4cf38eec0acec6867ea43a38da080ac151c0ea1d5",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_bronze_wool_cloak_long_tied/E/walk_a",
+      "source": "art/character/batch_r1/child_F_bronze_wool_cloak_long_tied/E/walk_a.png",
+      "dest": "people/frames/child_F_bronze_wool_cloak_long_tied/E/walk_a.png",
+      "sha256": "39fc4d39d845bd510af0db0975f3791a40b88bf799ee8093e1e6d951682ba98a",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_bronze_wool_cloak_long_tied/E/work_a",
+      "source": "art/character/batch_r1/child_F_bronze_wool_cloak_long_tied/E/work_a.png",
+      "dest": "people/frames/child_F_bronze_wool_cloak_long_tied/E/work_a.png",
+      "sha256": "50c84c666b6c05e06f7e76dedd0baaa7a1d73ee5231cb70b1ca4d532cba203d5",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_bronze_wool_cloak_long_tied/E/carry",
+      "source": "art/character/batch_r1/child_F_bronze_wool_cloak_long_tied/E/carry.png",
+      "dest": "people/frames/child_F_bronze_wool_cloak_long_tied/E/carry.png",
+      "sha256": "996133599520ba7597f50be759f04c125d37ae0ff702cbd8685daeb578ac48c2",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_bronze_wool_cloak_long_tied/E/sleep",
+      "source": "art/character/batch_r1/child_F_bronze_wool_cloak_long_tied/E/sleep.png",
+      "dest": "people/frames/child_F_bronze_wool_cloak_long_tied/E/sleep.png",
+      "sha256": "160bbbb1ca7ba710aa78f4450ef50399be23f543dabfd10a78e80ca55678554f",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_bronze_wool_cloak_long_tied/v1",
+      "source": "art/portrait/batch_r1/child_F_bronze_wool_cloak_long_tied/v1.png",
+      "dest": "people/portraits/child_F_bronze_wool_cloak_long_tied/v1.png",
+      "sha256": "c199bcf25b0f4cf63022a4ac8a4a507e67dfb47a7af53b9d98b6c2de3b5e3a7a",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_bronze_wool_cloak_long_tied/v2",
+      "source": "art/portrait/batch_r1/child_F_bronze_wool_cloak_long_tied/v2.png",
+      "dest": "people/portraits/child_F_bronze_wool_cloak_long_tied/v2.png",
+      "sha256": "cb394fabb827306b155d90c7e1454e3a5df36f8c195eb8b8d290c4fcd800934f",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_bronze_wool_cloak_long_tied/v3",
+      "source": "art/portrait/batch_r1/child_F_bronze_wool_cloak_long_tied/v3.png",
+      "dest": "people/portraits/child_F_bronze_wool_cloak_long_tied/v3.png",
+      "sha256": "22cf8e143c5ab0579035f5bc338ee19d17c4268ed79fec1a68dbaca9e43c3a2b",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_bronze_wool_cloak_long_tied/v4",
+      "source": "art/portrait/batch_r1/child_F_bronze_wool_cloak_long_tied/v4.png",
+      "dest": "people/portraits/child_F_bronze_wool_cloak_long_tied/v4.png",
+      "sha256": "7c5fd08ea19d5f518c063b4615c90381df8bbc838abb666337a3dc1c4e64fefe",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_bronze_wool_cloak_long_tied/v5",
+      "source": "art/portrait/batch_r1/child_F_bronze_wool_cloak_long_tied/v5.png",
+      "dest": "people/portraits/child_F_bronze_wool_cloak_long_tied/v5.png",
+      "sha256": "af3fef718a0f3e860edbd7beed9d03b06ccc75e0c5c1dc4062af67b9f50a4b78",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_bronze_wool_cloak_long_tied/v6",
+      "source": "art/portrait/batch_r1/child_F_bronze_wool_cloak_long_tied/v6.png",
+      "dest": "people/portraits/child_F_bronze_wool_cloak_long_tied/v6.png",
+      "sha256": "921c2e55ef0a6f6c0d7455b8319388f5b9036c1f1fea52b826e374791c85fa68",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_bronze_wool_cloak_short/S/idle",
+      "source": "art/character/batch_r1/child_F_bronze_wool_cloak_short/S/idle.png",
+      "dest": "people/frames/child_F_bronze_wool_cloak_short/S/idle.png",
+      "sha256": "5281b980efabe9f2e855cc6bd88c48c81fbb8e26b44de41693024c324f3ec4db",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_bronze_wool_cloak_short/S/walk_a",
+      "source": "art/character/batch_r1/child_F_bronze_wool_cloak_short/S/walk_a.png",
+      "dest": "people/frames/child_F_bronze_wool_cloak_short/S/walk_a.png",
+      "sha256": "584b2c076df22bcb19c119f7b8040a56390a74e3d02619230f392bed44584dce",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_bronze_wool_cloak_short/S/work_a",
+      "source": "art/character/batch_r1/child_F_bronze_wool_cloak_short/S/work_a.png",
+      "dest": "people/frames/child_F_bronze_wool_cloak_short/S/work_a.png",
+      "sha256": "98f04907669602dc8859ad8ee42139e66c0d701613e8c6346b8b54c32137af2a",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_bronze_wool_cloak_short/S/carry",
+      "source": "art/character/batch_r1/child_F_bronze_wool_cloak_short/S/carry.png",
+      "dest": "people/frames/child_F_bronze_wool_cloak_short/S/carry.png",
+      "sha256": "0d4cf8cb5528bf7f51b451f0a76ba20ab8223a362f860e08e2ac56c9dda5867f",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_bronze_wool_cloak_short/S/sleep",
+      "source": "art/character/batch_r1/child_F_bronze_wool_cloak_short/S/sleep.png",
+      "dest": "people/frames/child_F_bronze_wool_cloak_short/S/sleep.png",
+      "sha256": "7594683c1606afde3262fce01dc65c97df6f29a90ade4cc75dfe74892ece0ea2",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_bronze_wool_cloak_short/E/idle",
+      "source": "art/character/batch_r1/child_F_bronze_wool_cloak_short/E/idle.png",
+      "dest": "people/frames/child_F_bronze_wool_cloak_short/E/idle.png",
+      "sha256": "6c2e4c25102f19405457b47a5a6710373a04113918a04cec8e8053ddaa8e8e0d",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_bronze_wool_cloak_short/E/walk_a",
+      "source": "art/character/batch_r1/child_F_bronze_wool_cloak_short/E/walk_a.png",
+      "dest": "people/frames/child_F_bronze_wool_cloak_short/E/walk_a.png",
+      "sha256": "1dcdb628a5e0ba872f15e7ed2cde72fafaee7ef27cfe5d4ed0faa896df6e883b",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_bronze_wool_cloak_short/E/work_a",
+      "source": "art/character/batch_r1/child_F_bronze_wool_cloak_short/E/work_a.png",
+      "dest": "people/frames/child_F_bronze_wool_cloak_short/E/work_a.png",
+      "sha256": "461afe424f0464a5e16df1e56902e3a8596feab28cbd799f916d370894b99a9d",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_bronze_wool_cloak_short/E/carry",
+      "source": "art/character/batch_r1/child_F_bronze_wool_cloak_short/E/carry.png",
+      "dest": "people/frames/child_F_bronze_wool_cloak_short/E/carry.png",
+      "sha256": "714bd4da7c789906857b3394ff262a07a81581505a83cafe6f96ffadfee9f947",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_bronze_wool_cloak_short/E/sleep",
+      "source": "art/character/batch_r1/child_F_bronze_wool_cloak_short/E/sleep.png",
+      "dest": "people/frames/child_F_bronze_wool_cloak_short/E/sleep.png",
+      "sha256": "42acf7d6ceb387698fa13af24b709a6f453990c7256caf7b8b37a1380fcb4534",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_bronze_wool_cloak_short/v1",
+      "source": "art/portrait/batch_r1/child_F_bronze_wool_cloak_short/v1.png",
+      "dest": "people/portraits/child_F_bronze_wool_cloak_short/v1.png",
+      "sha256": "92004f271e8d5ab5f56de35bab0a002f9fe7c4aedb90e20c99279a0fd92c9e57",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_bronze_wool_cloak_short/v2",
+      "source": "art/portrait/batch_r1/child_F_bronze_wool_cloak_short/v2.png",
+      "dest": "people/portraits/child_F_bronze_wool_cloak_short/v2.png",
+      "sha256": "3ac1cbfc4f26a4da62ecc0c6f9e2c156e9d8c7c88f331aa2b176790b65bcdb37",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_bronze_wool_cloak_short/v3",
+      "source": "art/portrait/batch_r1/child_F_bronze_wool_cloak_short/v3.png",
+      "dest": "people/portraits/child_F_bronze_wool_cloak_short/v3.png",
+      "sha256": "e12918c0c7f24da39af89de31107559aeb379880ecd8b7a2f668cd3d27e3ca97",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_bronze_wool_cloak_short/v4",
+      "source": "art/portrait/batch_r1/child_F_bronze_wool_cloak_short/v4.png",
+      "dest": "people/portraits/child_F_bronze_wool_cloak_short/v4.png",
+      "sha256": "6bb62cdd3b848ee55074f1cf97004cd6d164415d52e26fba08ceb66fc76f0472",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_bronze_wool_cloak_short/v5",
+      "source": "art/portrait/batch_r1/child_F_bronze_wool_cloak_short/v5.png",
+      "dest": "people/portraits/child_F_bronze_wool_cloak_short/v5.png",
+      "sha256": "c828a616502eaa92c441059c8435048b4d5ba3a4f0824df09a2641d68813eaa6",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_bronze_wool_cloak_short/v6",
+      "source": "art/portrait/batch_r1/child_F_bronze_wool_cloak_short/v6.png",
+      "dest": "people/portraits/child_F_bronze_wool_cloak_short/v6.png",
+      "sha256": "99736d95b04e4e73a6a11567c25ca54e411d31b963235b9117fd0752a1e81fc4",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_neo_plant_bun/S/idle",
+      "source": "art/character/batch_r1/child_F_neo_plant_bun/S/idle.png",
+      "dest": "people/frames/child_F_neo_plant_bun/S/idle.png",
+      "sha256": "5183ec5c61bd94ad9980bb46474dca442805175b6b6a3bb65de9e51c650a85f7",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_neo_plant_bun/S/walk_a",
+      "source": "art/character/batch_r1/child_F_neo_plant_bun/S/walk_a.png",
+      "dest": "people/frames/child_F_neo_plant_bun/S/walk_a.png",
+      "sha256": "2f1ae0a9bbb5e5e93bc2373b2271659aed66ab6b3844a2da4dc81fda231dc6fe",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_neo_plant_bun/S/work_a",
+      "source": "art/character/batch_r1/child_F_neo_plant_bun/S/work_a.png",
+      "dest": "people/frames/child_F_neo_plant_bun/S/work_a.png",
+      "sha256": "52fd57d584952faf2dcf12479b0876b73a2f08e102f2e83f183f34477f9e70fd",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_neo_plant_bun/S/carry",
+      "source": "art/character/batch_r1/child_F_neo_plant_bun/S/carry.png",
+      "dest": "people/frames/child_F_neo_plant_bun/S/carry.png",
+      "sha256": "1a76a4db7ea490ed8271b8c0ae5220b02e984723d6376c2f62a2731a12c77636",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_neo_plant_bun/S/sleep",
+      "source": "art/character/batch_r1/child_F_neo_plant_bun/S/sleep.png",
+      "dest": "people/frames/child_F_neo_plant_bun/S/sleep.png",
+      "sha256": "58c1e07eb6c4392b07a81e84b0ae86adc70a61e30dc35facfcb19c04c3667def",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_neo_plant_bun/E/idle",
+      "source": "art/character/batch_r1/child_F_neo_plant_bun/E/idle.png",
+      "dest": "people/frames/child_F_neo_plant_bun/E/idle.png",
+      "sha256": "0f7b0badb3647208e7204c9c68e2e6df9ecb1da30390567b419b688b43508e74",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_neo_plant_bun/E/walk_a",
+      "source": "art/character/batch_r1/child_F_neo_plant_bun/E/walk_a.png",
+      "dest": "people/frames/child_F_neo_plant_bun/E/walk_a.png",
+      "sha256": "04532bcf82bfb608a520084aa6b1b79e45fd13cae223d1659f7210ea9ea1e14f",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_neo_plant_bun/E/work_a",
+      "source": "art/character/batch_r1/child_F_neo_plant_bun/E/work_a.png",
+      "dest": "people/frames/child_F_neo_plant_bun/E/work_a.png",
+      "sha256": "fcb85d6c093866db55932fb9c32aa4bb90df0bbfe01343e23ba1a3a6a457f664",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_neo_plant_bun/E/carry",
+      "source": "art/character/batch_r1/child_F_neo_plant_bun/E/carry.png",
+      "dest": "people/frames/child_F_neo_plant_bun/E/carry.png",
+      "sha256": "0330c85c27bcd35a2140a0df59f13e1e2c7e7d43bf5e4177e79295ab7aee27f5",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_neo_plant_bun/E/sleep",
+      "source": "art/character/batch_r1/child_F_neo_plant_bun/E/sleep.png",
+      "dest": "people/frames/child_F_neo_plant_bun/E/sleep.png",
+      "sha256": "386b7a934fa418d4c617954884f4953a2f4748b102720befde2335f07f1ebc90",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_neo_plant_bun/v1",
+      "source": "art/portrait/batch_r1/child_F_neo_plant_bun/v1.png",
+      "dest": "people/portraits/child_F_neo_plant_bun/v1.png",
+      "sha256": "dbe8e230dd511935bac86ef73140b8b0a94a5d0f3b68d822963ab94caa5c6a02",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_neo_plant_bun/v2",
+      "source": "art/portrait/batch_r1/child_F_neo_plant_bun/v2.png",
+      "dest": "people/portraits/child_F_neo_plant_bun/v2.png",
+      "sha256": "bb4d60285d49cedda3d1bf6a4c6efe9e1b7ddea504dd22aa43cefc2d2169db12",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_neo_plant_bun/v3",
+      "source": "art/portrait/batch_r1/child_F_neo_plant_bun/v3.png",
+      "dest": "people/portraits/child_F_neo_plant_bun/v3.png",
+      "sha256": "66331576e0973dde1e795e33e5e568085c26eae20a24a8e521373729bb9d4f34",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_neo_plant_bun/v4",
+      "source": "art/portrait/batch_r1/child_F_neo_plant_bun/v4.png",
+      "dest": "people/portraits/child_F_neo_plant_bun/v4.png",
+      "sha256": "f6601ee03f9cbad34d498d762070426c69f8af8101f4d8d37221d7f87eb9f5b5",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_neo_plant_bun/v5",
+      "source": "art/portrait/batch_r1/child_F_neo_plant_bun/v5.png",
+      "dest": "people/portraits/child_F_neo_plant_bun/v5.png",
+      "sha256": "4e8916ae7bb275384b90902419606dbbc5b262c49ae0db73757b3bf481521f33",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_neo_plant_bun/v6",
+      "source": "art/portrait/batch_r1/child_F_neo_plant_bun/v6.png",
+      "dest": "people/portraits/child_F_neo_plant_bun/v6.png",
+      "sha256": "229348a4bf61d5209687102c6db36ad13baa483c292de28e97753d58b475c801",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_neo_plant_long_tied/S/idle",
+      "source": "art/character/batch_r1/child_F_neo_plant_long_tied/S/idle.png",
+      "dest": "people/frames/child_F_neo_plant_long_tied/S/idle.png",
+      "sha256": "4b193d3d8549e34543e905b053a23835e6f44215f64ad97d8bddff2c7d679f79",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_neo_plant_long_tied/S/walk_a",
+      "source": "art/character/batch_r1/child_F_neo_plant_long_tied/S/walk_a.png",
+      "dest": "people/frames/child_F_neo_plant_long_tied/S/walk_a.png",
+      "sha256": "10b6ed07d1efa1acda11bf3614a18957038f3b40dcace3e05ddb86e7c5033cfc",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_neo_plant_long_tied/S/work_a",
+      "source": "art/character/batch_r1/child_F_neo_plant_long_tied/S/work_a.png",
+      "dest": "people/frames/child_F_neo_plant_long_tied/S/work_a.png",
+      "sha256": "439fced5f6a108d44d2407a8cc5cb8c82c4b5084632c034c2fc6f2f5da3b411d",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_neo_plant_long_tied/S/carry",
+      "source": "art/character/batch_r1/child_F_neo_plant_long_tied/S/carry.png",
+      "dest": "people/frames/child_F_neo_plant_long_tied/S/carry.png",
+      "sha256": "c25130c40407ab5b0538300cf84e46b04e6b61184f430e2ca0aca828a61f0b02",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_neo_plant_long_tied/S/sleep",
+      "source": "art/character/batch_r1/child_F_neo_plant_long_tied/S/sleep.png",
+      "dest": "people/frames/child_F_neo_plant_long_tied/S/sleep.png",
+      "sha256": "64f4ae8f789294d09f5891ac4c8b31fa9743b4dcdc9a202797fdc553e158e3d1",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_neo_plant_long_tied/E/idle",
+      "source": "art/character/batch_r1/child_F_neo_plant_long_tied/E/idle.png",
+      "dest": "people/frames/child_F_neo_plant_long_tied/E/idle.png",
+      "sha256": "8629a0b96094558ef31111a0aedb3de32bc9c8b8047fa16e9e5d4b8d3d80d5cf",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_neo_plant_long_tied/E/walk_a",
+      "source": "art/character/batch_r1/child_F_neo_plant_long_tied/E/walk_a.png",
+      "dest": "people/frames/child_F_neo_plant_long_tied/E/walk_a.png",
+      "sha256": "7102b756629c668452cce7bc19c39a60ec56b0f044a71590f5e7a5e9bd63fa4e",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_neo_plant_long_tied/E/work_a",
+      "source": "art/character/batch_r1/child_F_neo_plant_long_tied/E/work_a.png",
+      "dest": "people/frames/child_F_neo_plant_long_tied/E/work_a.png",
+      "sha256": "f91fde2a269159c945e257fc9aafc4b06ca3c3227ea0b7a9578583642d6b9308",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_neo_plant_long_tied/E/carry",
+      "source": "art/character/batch_r1/child_F_neo_plant_long_tied/E/carry.png",
+      "dest": "people/frames/child_F_neo_plant_long_tied/E/carry.png",
+      "sha256": "67e8efd3b5a625d0981c6d8a1cd42588b6aa4e10626d42039c8ee19a89b3572b",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_neo_plant_long_tied/E/sleep",
+      "source": "art/character/batch_r1/child_F_neo_plant_long_tied/E/sleep.png",
+      "dest": "people/frames/child_F_neo_plant_long_tied/E/sleep.png",
+      "sha256": "87ec27c017593028b2f242cb3891fd82d1658f1b49b0276a1902f3f9beb1531e",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_neo_plant_long_tied/v1",
+      "source": "art/portrait/batch_r1/child_F_neo_plant_long_tied/v1.png",
+      "dest": "people/portraits/child_F_neo_plant_long_tied/v1.png",
+      "sha256": "9a90579d0e55e39bf803566727234e1b1d2efd5a5c0aafb23bcca6f277cd8ed8",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_neo_plant_long_tied/v2",
+      "source": "art/portrait/batch_r1/child_F_neo_plant_long_tied/v2.png",
+      "dest": "people/portraits/child_F_neo_plant_long_tied/v2.png",
+      "sha256": "19d0e23e656fd058977ee9408a812f7f3ed88c2f47294abc5accadd2d19e3d2b",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_neo_plant_long_tied/v3",
+      "source": "art/portrait/batch_r1/child_F_neo_plant_long_tied/v3.png",
+      "dest": "people/portraits/child_F_neo_plant_long_tied/v3.png",
+      "sha256": "274689e7936ab4d918467ec8c41b2326b2702cea0cf8fc075e4f169396868c8a",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_neo_plant_long_tied/v4",
+      "source": "art/portrait/batch_r1/child_F_neo_plant_long_tied/v4.png",
+      "dest": "people/portraits/child_F_neo_plant_long_tied/v4.png",
+      "sha256": "cc87630d5deaeea800cc22c3b5acc5d4aa28b42fc8e18e36df86f2a6f253c9b0",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_neo_plant_long_tied/v5",
+      "source": "art/portrait/batch_r1/child_F_neo_plant_long_tied/v5.png",
+      "dest": "people/portraits/child_F_neo_plant_long_tied/v5.png",
+      "sha256": "e47bcfd76ee3555922ed90793312d9e58f5cc9ac84e4eb5fff77800b9119a79a",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_neo_plant_long_tied/v6",
+      "source": "art/portrait/batch_r1/child_F_neo_plant_long_tied/v6.png",
+      "dest": "people/portraits/child_F_neo_plant_long_tied/v6.png",
+      "sha256": "5fea06c99694507c5e87534200f53b5b72b072a46d80ca2e2b7c279e05bdd125",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_neo_plant_short/S/idle",
+      "source": "art/character/batch_r1/child_F_neo_plant_short/S/idle.png",
+      "dest": "people/frames/child_F_neo_plant_short/S/idle.png",
+      "sha256": "3578177ec54caf63d1eaaefc0cba2437c218682af2f5be27cd8efb8dcce1bb05",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_neo_plant_short/S/walk_a",
+      "source": "art/character/batch_r1/child_F_neo_plant_short/S/walk_a.png",
+      "dest": "people/frames/child_F_neo_plant_short/S/walk_a.png",
+      "sha256": "1232c6d870f5f21d9069cbb19b875918cd1c749d00dce4a6797c5aaa41f98041",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_neo_plant_short/S/work_a",
+      "source": "art/character/batch_r1/child_F_neo_plant_short/S/work_a.png",
+      "dest": "people/frames/child_F_neo_plant_short/S/work_a.png",
+      "sha256": "997fef60b26fe294ce8afcea1c6ea98f84e5ea61acb71e63a6610390c1a29f30",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_neo_plant_short/S/carry",
+      "source": "art/character/batch_r1/child_F_neo_plant_short/S/carry.png",
+      "dest": "people/frames/child_F_neo_plant_short/S/carry.png",
+      "sha256": "ed55fdb74dda80b1f724c17fddebf8c9bbfb1294800f418f0738f9ad17863054",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_neo_plant_short/S/sleep",
+      "source": "art/character/batch_r1/child_F_neo_plant_short/S/sleep.png",
+      "dest": "people/frames/child_F_neo_plant_short/S/sleep.png",
+      "sha256": "8749ff68a74f841f5873453aafe0b642dcad64fe356ea47f856b2ca9226a6700",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_neo_plant_short/E/idle",
+      "source": "art/character/batch_r1/child_F_neo_plant_short/E/idle.png",
+      "dest": "people/frames/child_F_neo_plant_short/E/idle.png",
+      "sha256": "e76089e9c241f222afff5a29074c529e4501117172ec31393d90e046224754a8",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_neo_plant_short/E/walk_a",
+      "source": "art/character/batch_r1/child_F_neo_plant_short/E/walk_a.png",
+      "dest": "people/frames/child_F_neo_plant_short/E/walk_a.png",
+      "sha256": "b02381512cd3b1d404d11048b5adef554094fc8ab9e1de21dab96806b4ccac58",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_neo_plant_short/E/work_a",
+      "source": "art/character/batch_r1/child_F_neo_plant_short/E/work_a.png",
+      "dest": "people/frames/child_F_neo_plant_short/E/work_a.png",
+      "sha256": "f60b90aaa8158fbac29da50b92dbfa3264dbbe2fdcf46b676e3063d4e056c90c",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_neo_plant_short/E/carry",
+      "source": "art/character/batch_r1/child_F_neo_plant_short/E/carry.png",
+      "dest": "people/frames/child_F_neo_plant_short/E/carry.png",
+      "sha256": "27e99c31afdbe0159b80e92e11748c86167c955df92fa44dbb866b7ebe684347",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_F_neo_plant_short/E/sleep",
+      "source": "art/character/batch_r1/child_F_neo_plant_short/E/sleep.png",
+      "dest": "people/frames/child_F_neo_plant_short/E/sleep.png",
+      "sha256": "770cd482d09735e48f10af8f3cec8e3621b6d305b0f2adfc13792fd13cacf21a",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_neo_plant_short/v1",
+      "source": "art/portrait/batch_r1/child_F_neo_plant_short/v1.png",
+      "dest": "people/portraits/child_F_neo_plant_short/v1.png",
+      "sha256": "0fd8ae642a19ef8932f85ed33cd2949eb66897121dce645491f618c99169dc99",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_neo_plant_short/v2",
+      "source": "art/portrait/batch_r1/child_F_neo_plant_short/v2.png",
+      "dest": "people/portraits/child_F_neo_plant_short/v2.png",
+      "sha256": "1b1b720f722777c47231011e6e4a5321f2bebd9f438ba7cf0b390347726f8612",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_neo_plant_short/v3",
+      "source": "art/portrait/batch_r1/child_F_neo_plant_short/v3.png",
+      "dest": "people/portraits/child_F_neo_plant_short/v3.png",
+      "sha256": "a09346c70474d3b3b9cf0ea96f122b83252433dd8e7d279387b9a6b205f9167f",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_neo_plant_short/v4",
+      "source": "art/portrait/batch_r1/child_F_neo_plant_short/v4.png",
+      "dest": "people/portraits/child_F_neo_plant_short/v4.png",
+      "sha256": "b198ad97cf0642fa46c1e8c510f4899739fa0821d35d7f40af59c091e39f2f32",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_neo_plant_short/v5",
+      "source": "art/portrait/batch_r1/child_F_neo_plant_short/v5.png",
+      "dest": "people/portraits/child_F_neo_plant_short/v5.png",
+      "sha256": "18366cce9459d925f3b6b63554d6efebab017347eda11ddfd868e97eaecd16ca",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_F_neo_plant_short/v6",
+      "source": "art/portrait/batch_r1/child_F_neo_plant_short/v6.png",
+      "dest": "people/portraits/child_F_neo_plant_short/v6.png",
+      "sha256": "cf534068701990b0d86aec237ac208aaaf9acc9c2715cd7c8eaf21624dfd322f",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_bronze_wool_cloak_bun/S/idle",
+      "source": "art/character/batch_r1/child_M_bronze_wool_cloak_bun/S/idle.png",
+      "dest": "people/frames/child_M_bronze_wool_cloak_bun/S/idle.png",
+      "sha256": "e4ec94cc7442e835956fc28d7be6b9d9303cbca6674572e6cca182fb5bab838e",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_bronze_wool_cloak_bun/S/walk_a",
+      "source": "art/character/batch_r1/child_M_bronze_wool_cloak_bun/S/walk_a.png",
+      "dest": "people/frames/child_M_bronze_wool_cloak_bun/S/walk_a.png",
+      "sha256": "3f3e2cbef158aa00d980b925a8ee94704ff4a1d74e18c549c20ab95168454307",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_bronze_wool_cloak_bun/S/work_a",
+      "source": "art/character/batch_r1/child_M_bronze_wool_cloak_bun/S/work_a.png",
+      "dest": "people/frames/child_M_bronze_wool_cloak_bun/S/work_a.png",
+      "sha256": "256231dd6742cb09deb2dbedaf235ebd2f715169789b3f46081bcc6af366615c",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_bronze_wool_cloak_bun/S/carry",
+      "source": "art/character/batch_r1/child_M_bronze_wool_cloak_bun/S/carry.png",
+      "dest": "people/frames/child_M_bronze_wool_cloak_bun/S/carry.png",
+      "sha256": "41d57111376cb8650ea7c16722c722b7323f8c387653cde8ee21ed42a54c081d",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_bronze_wool_cloak_bun/S/sleep",
+      "source": "art/character/batch_r1/child_M_bronze_wool_cloak_bun/S/sleep.png",
+      "dest": "people/frames/child_M_bronze_wool_cloak_bun/S/sleep.png",
+      "sha256": "fecf4fb10a444b82a32fbf39af35f51386e69bf336bbb308460076a9243a49d4",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_bronze_wool_cloak_bun/E/idle",
+      "source": "art/character/batch_r1/child_M_bronze_wool_cloak_bun/E/idle.png",
+      "dest": "people/frames/child_M_bronze_wool_cloak_bun/E/idle.png",
+      "sha256": "5ed51dfb332139e5634bef5c72c39fc7841e8492bb32835487e9e9b4bf13c70c",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_bronze_wool_cloak_bun/E/walk_a",
+      "source": "art/character/batch_r1/child_M_bronze_wool_cloak_bun/E/walk_a.png",
+      "dest": "people/frames/child_M_bronze_wool_cloak_bun/E/walk_a.png",
+      "sha256": "f423739e0c33ecfe08ffb68137e4b1a36431f2ab064aeb8095122aa06f2b3720",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_bronze_wool_cloak_bun/E/work_a",
+      "source": "art/character/batch_r1/child_M_bronze_wool_cloak_bun/E/work_a.png",
+      "dest": "people/frames/child_M_bronze_wool_cloak_bun/E/work_a.png",
+      "sha256": "fce647debdc4ec8de89529adc187ebc1cd9ec469f6dab16d53da5fb08e9977d3",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_bronze_wool_cloak_bun/E/carry",
+      "source": "art/character/batch_r1/child_M_bronze_wool_cloak_bun/E/carry.png",
+      "dest": "people/frames/child_M_bronze_wool_cloak_bun/E/carry.png",
+      "sha256": "a84d50ddee4c94e0d25812e0b8dcc0505a75eb5c5f3a21b8858f233c3b2d8922",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_bronze_wool_cloak_bun/E/sleep",
+      "source": "art/character/batch_r1/child_M_bronze_wool_cloak_bun/E/sleep.png",
+      "dest": "people/frames/child_M_bronze_wool_cloak_bun/E/sleep.png",
+      "sha256": "25095b4bb8381838b2d5f5be539be4ad32724c36b93d0b55299694ab055c85fe",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_M_bronze_wool_cloak_bun/v1",
+      "source": "art/portrait/batch_r1/child_M_bronze_wool_cloak_bun/v1.png",
+      "dest": "people/portraits/child_M_bronze_wool_cloak_bun/v1.png",
+      "sha256": "954c8d3f1d0bed1c6d323a320487eaa90ef03f710c919dbeb6d407b728962857",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_M_bronze_wool_cloak_bun/v2",
+      "source": "art/portrait/batch_r1/child_M_bronze_wool_cloak_bun/v2.png",
+      "dest": "people/portraits/child_M_bronze_wool_cloak_bun/v2.png",
+      "sha256": "9183a71962e2a26ee9fbfa868e581dc7874e72bbe6499e86156dba85478b7611",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_M_bronze_wool_cloak_bun/v3",
+      "source": "art/portrait/batch_r1/child_M_bronze_wool_cloak_bun/v3.png",
+      "dest": "people/portraits/child_M_bronze_wool_cloak_bun/v3.png",
+      "sha256": "f63abe5edfde7261b75561946bc8e2120e2397ec179aa7ced3aa056eb133c1ed",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_M_bronze_wool_cloak_bun/v4",
+      "source": "art/portrait/batch_r1/child_M_bronze_wool_cloak_bun/v4.png",
+      "dest": "people/portraits/child_M_bronze_wool_cloak_bun/v4.png",
+      "sha256": "3629bc8677d67d33b1fb2f3721147709fa036602e8f0b415e0ad26791aa2d75b",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_M_bronze_wool_cloak_bun/v5",
+      "source": "art/portrait/batch_r1/child_M_bronze_wool_cloak_bun/v5.png",
+      "dest": "people/portraits/child_M_bronze_wool_cloak_bun/v5.png",
+      "sha256": "b6a01442563cbae7ce4fbd2ff1213322f4544b117b5e7e6c3c642c53ae0f913f",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_M_bronze_wool_cloak_bun/v6",
+      "source": "art/portrait/batch_r1/child_M_bronze_wool_cloak_bun/v6.png",
+      "dest": "people/portraits/child_M_bronze_wool_cloak_bun/v6.png",
+      "sha256": "43e2d484feeba44c767de7135c998049f4e159cc72b0544d9c41efd61933a64d",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_bronze_wool_cloak_long_tied/S/idle",
+      "source": "art/character/batch_r1/child_M_bronze_wool_cloak_long_tied/S/idle.png",
+      "dest": "people/frames/child_M_bronze_wool_cloak_long_tied/S/idle.png",
+      "sha256": "f4aeda989f939c12d6d1e4066f22bebef6d8a0c8ffc25a7a325cd8b28885e9ba",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_bronze_wool_cloak_long_tied/S/walk_a",
+      "source": "art/character/batch_r1/child_M_bronze_wool_cloak_long_tied/S/walk_a.png",
+      "dest": "people/frames/child_M_bronze_wool_cloak_long_tied/S/walk_a.png",
+      "sha256": "202ff7dc3f0704fe7f8e86433b698f39bb0511308682c88112c74d1cc61de4f0",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_bronze_wool_cloak_long_tied/S/work_a",
+      "source": "art/character/batch_r1/child_M_bronze_wool_cloak_long_tied/S/work_a.png",
+      "dest": "people/frames/child_M_bronze_wool_cloak_long_tied/S/work_a.png",
+      "sha256": "9d0e79cb76227410d2bfdbcf2109dff30bdfad5545e529e45e1ef08c386d505d",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_bronze_wool_cloak_long_tied/S/carry",
+      "source": "art/character/batch_r1/child_M_bronze_wool_cloak_long_tied/S/carry.png",
+      "dest": "people/frames/child_M_bronze_wool_cloak_long_tied/S/carry.png",
+      "sha256": "3d3a83d77ab546adc58867a513fc0e8893737185e7dfc74276f0cfc0576b154f",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_bronze_wool_cloak_long_tied/S/sleep",
+      "source": "art/character/batch_r1/child_M_bronze_wool_cloak_long_tied/S/sleep.png",
+      "dest": "people/frames/child_M_bronze_wool_cloak_long_tied/S/sleep.png",
+      "sha256": "3c31406318c3e5311d257890724f4038398648b4182f5494af1cdabd92145d4c",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_bronze_wool_cloak_long_tied/E/idle",
+      "source": "art/character/batch_r1/child_M_bronze_wool_cloak_long_tied/E/idle.png",
+      "dest": "people/frames/child_M_bronze_wool_cloak_long_tied/E/idle.png",
+      "sha256": "19646b33253c9ef44e72a1fec695e948de9e5ea6176b53c7844d77350f44caac",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_bronze_wool_cloak_long_tied/E/walk_a",
+      "source": "art/character/batch_r1/child_M_bronze_wool_cloak_long_tied/E/walk_a.png",
+      "dest": "people/frames/child_M_bronze_wool_cloak_long_tied/E/walk_a.png",
+      "sha256": "303249af6fb5e0d276debbb3b236921b4ae3eb66866159ac74bafcb5a5a11297",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_bronze_wool_cloak_long_tied/E/work_a",
+      "source": "art/character/batch_r1/child_M_bronze_wool_cloak_long_tied/E/work_a.png",
+      "dest": "people/frames/child_M_bronze_wool_cloak_long_tied/E/work_a.png",
+      "sha256": "f450b66eca8e4b2da139c2b820bcf2ac3d07e0d96d62339bde061c085e4ff903",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_bronze_wool_cloak_long_tied/E/carry",
+      "source": "art/character/batch_r1/child_M_bronze_wool_cloak_long_tied/E/carry.png",
+      "dest": "people/frames/child_M_bronze_wool_cloak_long_tied/E/carry.png",
+      "sha256": "ffda8a3348d49ca263734c889e349729bff9d01bace3dd43519821ac4f45f136",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_bronze_wool_cloak_long_tied/E/sleep",
+      "source": "art/character/batch_r1/child_M_bronze_wool_cloak_long_tied/E/sleep.png",
+      "dest": "people/frames/child_M_bronze_wool_cloak_long_tied/E/sleep.png",
+      "sha256": "30308577e332b4ba50057729305948e4ce09f096d103e2c73f445278ef502bdd",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_M_bronze_wool_cloak_long_tied/v1",
+      "source": "art/portrait/batch_r1/child_M_bronze_wool_cloak_long_tied/v1.png",
+      "dest": "people/portraits/child_M_bronze_wool_cloak_long_tied/v1.png",
+      "sha256": "f91372040e9e45c34c4e9fa1c340dffe387021a0bdc07a914037bf726c5bb190",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_M_bronze_wool_cloak_long_tied/v2",
+      "source": "art/portrait/batch_r1/child_M_bronze_wool_cloak_long_tied/v2.png",
+      "dest": "people/portraits/child_M_bronze_wool_cloak_long_tied/v2.png",
+      "sha256": "673ec182765312b6a2b70ce7d1b4b5c8ce1919b7703aa1d76fb8ddd73ac58c1c",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_M_bronze_wool_cloak_long_tied/v3",
+      "source": "art/portrait/batch_r1/child_M_bronze_wool_cloak_long_tied/v3.png",
+      "dest": "people/portraits/child_M_bronze_wool_cloak_long_tied/v3.png",
+      "sha256": "8e8d99204050ad7fad5f626a54fc809eb834d88c0785074413be0c0f562d2119",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_M_bronze_wool_cloak_long_tied/v4",
+      "source": "art/portrait/batch_r1/child_M_bronze_wool_cloak_long_tied/v4.png",
+      "dest": "people/portraits/child_M_bronze_wool_cloak_long_tied/v4.png",
+      "sha256": "36ce69c3fb6778246ff97ee5195c72796fe82c4553d6a46cc9a40feda7997626",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_M_bronze_wool_cloak_long_tied/v5",
+      "source": "art/portrait/batch_r1/child_M_bronze_wool_cloak_long_tied/v5.png",
+      "dest": "people/portraits/child_M_bronze_wool_cloak_long_tied/v5.png",
+      "sha256": "4907d09030232df8ecbbfd6a67fb0bcffd5f6664db8259459cb0d285fbb915d1",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_M_bronze_wool_cloak_long_tied/v6",
+      "source": "art/portrait/batch_r1/child_M_bronze_wool_cloak_long_tied/v6.png",
+      "dest": "people/portraits/child_M_bronze_wool_cloak_long_tied/v6.png",
+      "sha256": "5e3c6c41a11b163ab6272a52eae645ee1c9a4cea302c78fa905fc6449322ada5",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_bronze_wool_cloak_short/S/idle",
+      "source": "art/character/batch_r1/child_M_bronze_wool_cloak_short/S/idle.png",
+      "dest": "people/frames/child_M_bronze_wool_cloak_short/S/idle.png",
+      "sha256": "380225c49f4760c9a53b4979f877fcc4a53bfc12ab558b3a3298c4df98316545",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_bronze_wool_cloak_short/S/walk_a",
+      "source": "art/character/batch_r1/child_M_bronze_wool_cloak_short/S/walk_a.png",
+      "dest": "people/frames/child_M_bronze_wool_cloak_short/S/walk_a.png",
+      "sha256": "1916f689fc97151c55a4cd6b9aaad5aceb23a970517b4b94f7fa3c44da27c13b",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_bronze_wool_cloak_short/S/work_a",
+      "source": "art/character/batch_r1/child_M_bronze_wool_cloak_short/S/work_a.png",
+      "dest": "people/frames/child_M_bronze_wool_cloak_short/S/work_a.png",
+      "sha256": "a9f3e773a36976389af6940a5a3acf019ce21df2b4dd93e3b528643ad8c3960f",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_bronze_wool_cloak_short/S/carry",
+      "source": "art/character/batch_r1/child_M_bronze_wool_cloak_short/S/carry.png",
+      "dest": "people/frames/child_M_bronze_wool_cloak_short/S/carry.png",
+      "sha256": "8447e577d04486e3a740bd46a5f8267da72c3c49e223f0a40c265737f9ea5873",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_bronze_wool_cloak_short/S/sleep",
+      "source": "art/character/batch_r1/child_M_bronze_wool_cloak_short/S/sleep.png",
+      "dest": "people/frames/child_M_bronze_wool_cloak_short/S/sleep.png",
+      "sha256": "f1eaf929297c7f693525fb94c237f7c2887b60a8f123d1ce9967cfb7eee144ec",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_bronze_wool_cloak_short/E/idle",
+      "source": "art/character/batch_r1/child_M_bronze_wool_cloak_short/E/idle.png",
+      "dest": "people/frames/child_M_bronze_wool_cloak_short/E/idle.png",
+      "sha256": "41607b5a180b5f0eea37b18ac6fb24be020abb8d8df5f358ca2cd2aa88de51f9",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_bronze_wool_cloak_short/E/walk_a",
+      "source": "art/character/batch_r1/child_M_bronze_wool_cloak_short/E/walk_a.png",
+      "dest": "people/frames/child_M_bronze_wool_cloak_short/E/walk_a.png",
+      "sha256": "7a46370804cd9c261ab047766e6c45dbc93e75eb92fdd0fbd00873bf82294b52",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_bronze_wool_cloak_short/E/work_a",
+      "source": "art/character/batch_r1/child_M_bronze_wool_cloak_short/E/work_a.png",
+      "dest": "people/frames/child_M_bronze_wool_cloak_short/E/work_a.png",
+      "sha256": "7a75567e38026fbced895e6c75d17c0767a15a88ecd49d787574e0615eb66951",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_bronze_wool_cloak_short/E/carry",
+      "source": "art/character/batch_r1/child_M_bronze_wool_cloak_short/E/carry.png",
+      "dest": "people/frames/child_M_bronze_wool_cloak_short/E/carry.png",
+      "sha256": "2f1919c609014d32ab1cc6e5cb5cf1e4bd9386e88fe06d4f1eb73c3059cc993c",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_bronze_wool_cloak_short/E/sleep",
+      "source": "art/character/batch_r1/child_M_bronze_wool_cloak_short/E/sleep.png",
+      "dest": "people/frames/child_M_bronze_wool_cloak_short/E/sleep.png",
+      "sha256": "950a8e54e34f3c0252e996b2cef35c17dffb1a35835868c915448a000b41e26a",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_neo_plant_bun/S/idle",
+      "source": "art/character/batch_r1/child_M_neo_plant_bun/S/idle.png",
+      "dest": "people/frames/child_M_neo_plant_bun/S/idle.png",
+      "sha256": "1a34235bb01c93f9a37f5e17ced633733cb9e9949734d5e49106fdbf7ed27821",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_neo_plant_bun/S/walk_a",
+      "source": "art/character/batch_r1/child_M_neo_plant_bun/S/walk_a.png",
+      "dest": "people/frames/child_M_neo_plant_bun/S/walk_a.png",
+      "sha256": "260953c78bf961d63a3c670c98a453599f751279fdf62a53fe6d0d6ba8d14cdd",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_neo_plant_bun/S/work_a",
+      "source": "art/character/batch_r1/child_M_neo_plant_bun/S/work_a.png",
+      "dest": "people/frames/child_M_neo_plant_bun/S/work_a.png",
+      "sha256": "e98344f7b07631a8be39702b93f7e36be4000252174126eb6e812126355adcf7",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_neo_plant_bun/S/carry",
+      "source": "art/character/batch_r1/child_M_neo_plant_bun/S/carry.png",
+      "dest": "people/frames/child_M_neo_plant_bun/S/carry.png",
+      "sha256": "eed1fc34840290e258b793a92d173cc5849d00eb10f16bdabb05898787dd58b0",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_neo_plant_bun/S/sleep",
+      "source": "art/character/batch_r1/child_M_neo_plant_bun/S/sleep.png",
+      "dest": "people/frames/child_M_neo_plant_bun/S/sleep.png",
+      "sha256": "1097fa780fad58a77fbe5755682a3ec218a8ef4eecc70c53dfb279bf7a0ff0e2",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_neo_plant_bun/E/idle",
+      "source": "art/character/batch_r1/child_M_neo_plant_bun/E/idle.png",
+      "dest": "people/frames/child_M_neo_plant_bun/E/idle.png",
+      "sha256": "248fec6d464daf030f77ff96bfb855acff77254a93374902a035ff32cbe82813",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_neo_plant_bun/E/walk_a",
+      "source": "art/character/batch_r1/child_M_neo_plant_bun/E/walk_a.png",
+      "dest": "people/frames/child_M_neo_plant_bun/E/walk_a.png",
+      "sha256": "93dada4eec926c300edcff38e2bcef68fe79ec2b59f8d98278b902975f2b13c6",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_neo_plant_bun/E/work_a",
+      "source": "art/character/batch_r1/child_M_neo_plant_bun/E/work_a.png",
+      "dest": "people/frames/child_M_neo_plant_bun/E/work_a.png",
+      "sha256": "e9b61016833b003cb5aab76fd4d6ae63127f66e7448d31cf0cb001581245e69c",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_neo_plant_bun/E/carry",
+      "source": "art/character/batch_r1/child_M_neo_plant_bun/E/carry.png",
+      "dest": "people/frames/child_M_neo_plant_bun/E/carry.png",
+      "sha256": "7eba7c7ec1a9e738fe02f0c05450cdf581a6a0918dc0de32cbb0a22ab3d257a8",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_neo_plant_bun/E/sleep",
+      "source": "art/character/batch_r1/child_M_neo_plant_bun/E/sleep.png",
+      "dest": "people/frames/child_M_neo_plant_bun/E/sleep.png",
+      "sha256": "cdaab36bae59a8545db3a4e2f961a3b0f3a276ec3097f6e89dc61ae20a322f55",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_M_neo_plant_bun/v1",
+      "source": "art/portrait/batch_r1/child_M_neo_plant_bun/v1.png",
+      "dest": "people/portraits/child_M_neo_plant_bun/v1.png",
+      "sha256": "f3b3972bc271b013229b1b1ff0a6b2e7bbbd53f962e00c0ec88723d62abe0f73",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_M_neo_plant_bun/v2",
+      "source": "art/portrait/batch_r1/child_M_neo_plant_bun/v2.png",
+      "dest": "people/portraits/child_M_neo_plant_bun/v2.png",
+      "sha256": "ac8bf3c91f0a7c90ba30e884c9c90983bc8fd356430bea515d64c1f50a325080",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_M_neo_plant_bun/v3",
+      "source": "art/portrait/batch_r1/child_M_neo_plant_bun/v3.png",
+      "dest": "people/portraits/child_M_neo_plant_bun/v3.png",
+      "sha256": "9e8038f82c3fd65d0aefbe6ef7ddd24aa7e39f49d7e747bab1a42030055e3fdc",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_M_neo_plant_bun/v4",
+      "source": "art/portrait/batch_r1/child_M_neo_plant_bun/v4.png",
+      "dest": "people/portraits/child_M_neo_plant_bun/v4.png",
+      "sha256": "b2c12c6ea25ae5c5dc55b5f1007934733509d92e7be3479d1fdd839041c31b2d",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_M_neo_plant_bun/v5",
+      "source": "art/portrait/batch_r1/child_M_neo_plant_bun/v5.png",
+      "dest": "people/portraits/child_M_neo_plant_bun/v5.png",
+      "sha256": "4320b8e9a4d13e922ae59f5644142f285eda02d085b4fe3c230bdeddf9a049f1",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_M_neo_plant_bun/v6",
+      "source": "art/portrait/batch_r1/child_M_neo_plant_bun/v6.png",
+      "dest": "people/portraits/child_M_neo_plant_bun/v6.png",
+      "sha256": "345ee4ade2908f85fc43da137f19bdce8452e06d9c6e9d90be6e2dd6039b866f",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_neo_plant_long_tied/S/idle",
+      "source": "art/character/batch_r1/child_M_neo_plant_long_tied/S/idle.png",
+      "dest": "people/frames/child_M_neo_plant_long_tied/S/idle.png",
+      "sha256": "73f5897214189953f7106589ed6b1f19b65aab252dfc5f7dd3db18b9a0a7bb44",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_neo_plant_long_tied/S/walk_a",
+      "source": "art/character/batch_r1/child_M_neo_plant_long_tied/S/walk_a.png",
+      "dest": "people/frames/child_M_neo_plant_long_tied/S/walk_a.png",
+      "sha256": "ac699b420d0f2d442fa62721fbe379a47e17a68de2bab6c8ca9fc3b43226fec4",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_neo_plant_long_tied/S/work_a",
+      "source": "art/character/batch_r1/child_M_neo_plant_long_tied/S/work_a.png",
+      "dest": "people/frames/child_M_neo_plant_long_tied/S/work_a.png",
+      "sha256": "4dd212f8b564bfe0470b7b0050b82ac2b0de119f2c3f7fbcb07e062f552ccc4b",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_neo_plant_long_tied/S/carry",
+      "source": "art/character/batch_r1/child_M_neo_plant_long_tied/S/carry.png",
+      "dest": "people/frames/child_M_neo_plant_long_tied/S/carry.png",
+      "sha256": "43a1004ccde9ab800c7d7023bffd7af19af86b360fb0e475d10fe003295133eb",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_neo_plant_long_tied/S/sleep",
+      "source": "art/character/batch_r1/child_M_neo_plant_long_tied/S/sleep.png",
+      "dest": "people/frames/child_M_neo_plant_long_tied/S/sleep.png",
+      "sha256": "054ea6940f782391220d004765ee12d07b4f4ac6b1225531c17463721756faf1",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_neo_plant_long_tied/E/idle",
+      "source": "art/character/batch_r1/child_M_neo_plant_long_tied/E/idle.png",
+      "dest": "people/frames/child_M_neo_plant_long_tied/E/idle.png",
+      "sha256": "2c7326e98897f5791f6665e66c85f297c6ce976a39aafe97f345645fc715fbc4",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_neo_plant_long_tied/E/walk_a",
+      "source": "art/character/batch_r1/child_M_neo_plant_long_tied/E/walk_a.png",
+      "dest": "people/frames/child_M_neo_plant_long_tied/E/walk_a.png",
+      "sha256": "8eceec201cdb2794c10a512832a33d970aac9866d29156e6a6b3985fa108cb46",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_neo_plant_long_tied/E/work_a",
+      "source": "art/character/batch_r1/child_M_neo_plant_long_tied/E/work_a.png",
+      "dest": "people/frames/child_M_neo_plant_long_tied/E/work_a.png",
+      "sha256": "84db5813c475e5f56511d0b7ad62fb07d80d4d9432cfae6d6ba57e91c8537771",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_neo_plant_long_tied/E/carry",
+      "source": "art/character/batch_r1/child_M_neo_plant_long_tied/E/carry.png",
+      "dest": "people/frames/child_M_neo_plant_long_tied/E/carry.png",
+      "sha256": "4d45b1883dfc3a5b86ec44084002115e21a84b6440426576b1e97791d5dcd0e7",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_neo_plant_long_tied/E/sleep",
+      "source": "art/character/batch_r1/child_M_neo_plant_long_tied/E/sleep.png",
+      "dest": "people/frames/child_M_neo_plant_long_tied/E/sleep.png",
+      "sha256": "2afe24d88922cfd9076b0d3cbfc211412ba31a2f745099aa58b0a314c969fa58",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_M_neo_plant_long_tied/v1",
+      "source": "art/portrait/batch_r1/child_M_neo_plant_long_tied/v1.png",
+      "dest": "people/portraits/child_M_neo_plant_long_tied/v1.png",
+      "sha256": "63634adad1b3c6d2f2d055ddf36f34d877a94225496179635619a2f33200125e",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_M_neo_plant_long_tied/v2",
+      "source": "art/portrait/batch_r1/child_M_neo_plant_long_tied/v2.png",
+      "dest": "people/portraits/child_M_neo_plant_long_tied/v2.png",
+      "sha256": "d9794b19fa0d0b57d8e6afc3d5cd23aefa91161b0de6aec99d30c32f122a56c7",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_M_neo_plant_long_tied/v3",
+      "source": "art/portrait/batch_r1/child_M_neo_plant_long_tied/v3.png",
+      "dest": "people/portraits/child_M_neo_plant_long_tied/v3.png",
+      "sha256": "babffa78d718b3e1a8931ce04ec7e37edecdd1ddd3c2eaffa2fa17727ee90814",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_M_neo_plant_long_tied/v4",
+      "source": "art/portrait/batch_r1/child_M_neo_plant_long_tied/v4.png",
+      "dest": "people/portraits/child_M_neo_plant_long_tied/v4.png",
+      "sha256": "f6e9f551a6130633f84b770247dde528dfc7371885a622371e6bf1343eb5b2c0",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_M_neo_plant_long_tied/v5",
+      "source": "art/portrait/batch_r1/child_M_neo_plant_long_tied/v5.png",
+      "dest": "people/portraits/child_M_neo_plant_long_tied/v5.png",
+      "sha256": "01edfe7491e3c65bed9c2c7051fccfe6bd0980bd62a583dc6ac797b3337f0dc4",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_M_neo_plant_long_tied/v6",
+      "source": "art/portrait/batch_r1/child_M_neo_plant_long_tied/v6.png",
+      "dest": "people/portraits/child_M_neo_plant_long_tied/v6.png",
+      "sha256": "e058dd51a58e4bb088721e371dad031ca5415d6ea40dabd824eb013d907be3b9",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_neo_plant_short/S/idle",
+      "source": "art/character/batch_r1/child_M_neo_plant_short/S/idle.png",
+      "dest": "people/frames/child_M_neo_plant_short/S/idle.png",
+      "sha256": "15d83e85fa3e66db942d56b2a13546e671b5f7838c881e006c05fd095b834ef7",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_neo_plant_short/S/walk_a",
+      "source": "art/character/batch_r1/child_M_neo_plant_short/S/walk_a.png",
+      "dest": "people/frames/child_M_neo_plant_short/S/walk_a.png",
+      "sha256": "881ab4a58c59be35c56b16b68285c04c89448f93c7e1880d475011f1f296846e",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_neo_plant_short/S/work_a",
+      "source": "art/character/batch_r1/child_M_neo_plant_short/S/work_a.png",
+      "dest": "people/frames/child_M_neo_plant_short/S/work_a.png",
+      "sha256": "74126f7a7ffe30ab534b2a372231cae6f07f09665f5b8be0197a26225fe729a5",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_neo_plant_short/S/carry",
+      "source": "art/character/batch_r1/child_M_neo_plant_short/S/carry.png",
+      "dest": "people/frames/child_M_neo_plant_short/S/carry.png",
+      "sha256": "3e7b087c829065e5adf0692ad25acf48342290704a1e39e95e3985ccd82896ad",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_neo_plant_short/S/sleep",
+      "source": "art/character/batch_r1/child_M_neo_plant_short/S/sleep.png",
+      "dest": "people/frames/child_M_neo_plant_short/S/sleep.png",
+      "sha256": "182e4bad6484c2e715603a15a45043e32f5ad2318c3b582e5861ca3c993107f6",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_neo_plant_short/E/idle",
+      "source": "art/character/batch_r1/child_M_neo_plant_short/E/idle.png",
+      "dest": "people/frames/child_M_neo_plant_short/E/idle.png",
+      "sha256": "60095fd39ddb50d829461b8836911944a248873abba1620ec372208d1458cc06",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_neo_plant_short/E/walk_a",
+      "source": "art/character/batch_r1/child_M_neo_plant_short/E/walk_a.png",
+      "dest": "people/frames/child_M_neo_plant_short/E/walk_a.png",
+      "sha256": "acfeee53635a6cabb057fd4ed3d8757b4dcf6f98aa88e7c5ee239217a346e734",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_neo_plant_short/E/work_a",
+      "source": "art/character/batch_r1/child_M_neo_plant_short/E/work_a.png",
+      "dest": "people/frames/child_M_neo_plant_short/E/work_a.png",
+      "sha256": "549a9ffe630b97804890fdc0a54ccf5c064f704fccead21c0a3157fa647ff188",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_neo_plant_short/E/carry",
+      "source": "art/character/batch_r1/child_M_neo_plant_short/E/carry.png",
+      "dest": "people/frames/child_M_neo_plant_short/E/carry.png",
+      "sha256": "46d1f4083e7edecfd650b7850f4d9ba426cf437e772ddb25182e2a6166345810",
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_frame",
+      "id": "child_M_neo_plant_short/E/sleep",
+      "source": "art/character/batch_r1/child_M_neo_plant_short/E/sleep.png",
+      "dest": "people/frames/child_M_neo_plant_short/E/sleep.png",
+      "sha256": "f843b0b46ac93fb23a70003d71ce4a8ba945fd31749bc79aba338c8c88fedb3b",
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ],
+      "footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_M_neo_plant_short/v1",
+      "source": "art/portrait/batch_r1/child_M_neo_plant_short/v1.png",
+      "dest": "people/portraits/child_M_neo_plant_short/v1.png",
+      "sha256": "f4dd9ca7bd8ca3c4e3f9de39c393f8665bcafc9d61a52d61284d517fe52832f8",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_M_neo_plant_short/v2",
+      "source": "art/portrait/batch_r1/child_M_neo_plant_short/v2.png",
+      "dest": "people/portraits/child_M_neo_plant_short/v2.png",
+      "sha256": "5b98a1eeede475588dfbd763e56ec58b662e3d6bbe1c199ec14c3298a4a7f59e",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_M_neo_plant_short/v3",
+      "source": "art/portrait/batch_r1/child_M_neo_plant_short/v3.png",
+      "dest": "people/portraits/child_M_neo_plant_short/v3.png",
+      "sha256": "7a048c70367d2f72819974baa8869e6f0ae73b1e4b6656e9efc7e4857e06cf95",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_M_neo_plant_short/v4",
+      "source": "art/portrait/batch_r1/child_M_neo_plant_short/v4.png",
+      "dest": "people/portraits/child_M_neo_plant_short/v4.png",
+      "sha256": "80f2e715e5363dfe47384708289dc92a6f21936379f65208509f724ecd001674",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_M_neo_plant_short/v5",
+      "source": "art/portrait/batch_r1/child_M_neo_plant_short/v5.png",
+      "dest": "people/portraits/child_M_neo_plant_short/v5.png",
+      "sha256": "267cdaaea65eea998930b5d7aee0cd761a56f92a13a04af3b07bada94330373a",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    },
+    {
+      "role": "people_portrait",
+      "id": "child_M_neo_plant_short/v6",
+      "source": "art/portrait/batch_r1/child_M_neo_plant_short/v6.png",
+      "dest": "people/portraits/child_M_neo_plant_short/v6.png",
+      "sha256": "a8fcb24d61df7f09b7af725e893c0057c67e520170a5d354c1f25db6af17b559",
+      "canvas": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "footprint": null
+    }
+  ],
   "supplemental_activity_files": [
     {
       "role": "people_activity_frame",
@@ -1576,40 +8397,26 @@
   "wardrobe_importability": [
     {
       "wardrobe": "neo_plant",
-      "before": 3,
-      "after": 10,
+      "before": 10,
+      "after": 12,
       "total": 12,
-      "body_importable": false,
-      "portrait_ready": false,
-      "integration_pending": false,
-      "portrait_looks_available": 3,
-      "missing_body_looks": [
-        "child_M_neo_plant_long_tied",
-        "child_F_neo_plant_short"
-      ],
-      "missing_portrait_looks": [
-        "child_M_neo_plant_short",
-        "child_M_neo_plant_long_tied",
-        "child_M_neo_plant_bun",
-        "child_F_neo_plant_short",
-        "child_F_neo_plant_long_tied",
-        "adult_M_neo_plant_long_tied",
-        "adult_F_neo_plant_short",
-        "adult_F_neo_plant_long_tied",
-        "adult_F_neo_plant_bun"
-      ]
+      "body_importable": true,
+      "portrait_ready": true,
+      "integration_pending": true,
+      "portrait_looks_available": 12,
+      "missing_body_looks": [],
+      "missing_portrait_looks": []
     },
     {
       "wardrobe": "neo_first_wool",
-      "before": 3,
-      "after": 10,
+      "before": 10,
+      "after": 11,
       "total": 12,
       "body_importable": false,
       "portrait_ready": false,
       "integration_pending": false,
       "portrait_looks_available": 3,
       "missing_body_looks": [
-        "child_M_neo_first_wool_long_tied",
         "child_M_neo_first_wool_bun"
       ],
       "missing_portrait_looks": [
@@ -1626,7 +8433,7 @@
     },
     {
       "wardrobe": "bronze_linen",
-      "before": 0,
+      "before": 2,
       "after": 2,
       "total": 12,
       "body_importable": false,
@@ -1662,30 +8469,21 @@
     },
     {
       "wardrobe": "bronze_wool_cloak",
-      "before": 4,
-      "after": 11,
+      "before": 11,
+      "after": 12,
       "total": 12,
-      "body_importable": false,
+      "body_importable": true,
       "portrait_ready": false,
-      "integration_pending": false,
-      "portrait_looks_available": 4,
-      "missing_body_looks": [
-        "child_M_bronze_wool_cloak_long_tied"
-      ],
+      "integration_pending": true,
+      "portrait_looks_available": 11,
+      "missing_body_looks": [],
       "missing_portrait_looks": [
-        "child_M_bronze_wool_cloak_short",
-        "child_M_bronze_wool_cloak_long_tied",
-        "child_F_bronze_wool_cloak_short",
-        "child_F_bronze_wool_cloak_long_tied",
-        "child_F_bronze_wool_cloak_bun",
-        "adult_M_bronze_wool_cloak_short",
-        "adult_M_bronze_wool_cloak_long_tied",
-        "adult_M_bronze_wool_cloak_bun"
+        "child_M_bronze_wool_cloak_short"
       ]
     },
     {
       "wardrobe": "bronze_earth_linen",
-      "before": 0,
+      "before": 7,
       "after": 7,
       "total": 12,
       "body_importable": false,
@@ -1716,7 +8514,7 @@
     },
     {
       "wardrobe": "iron_work",
-      "before": 2,
+      "before": 8,
       "after": 8,
       "total": 12,
       "body_importable": false,
@@ -1744,16 +8542,15 @@
     },
     {
       "wardrobe": "iron_winter",
-      "before": 1,
-      "after": 10,
+      "before": 10,
+      "after": 11,
       "total": 12,
       "body_importable": false,
       "portrait_ready": false,
       "integration_pending": false,
       "portrait_looks_available": 1,
       "missing_body_looks": [
-        "adult_M_iron_winter_long_tied",
-        "adult_M_iron_winter_bun"
+        "adult_M_iron_winter_long_tied"
       ],
       "missing_portrait_looks": [
         "child_M_iron_winter_short",
@@ -1774,9 +8571,6 @@
     "body_looks": [
       "adult_F_bronze_earth_linen_long_tied",
       "adult_F_bronze_earth_linen_short",
-      "adult_F_bronze_wool_cloak_bun",
-      "adult_F_bronze_wool_cloak_long_tied",
-      "adult_F_bronze_wool_cloak_short",
       "adult_F_iron_winter_bun",
       "adult_F_iron_winter_long_tied",
       "adult_F_iron_winter_short",
@@ -1786,29 +8580,18 @@
       "adult_F_neo_first_wool_bun",
       "adult_F_neo_first_wool_long_tied",
       "adult_F_neo_first_wool_short",
-      "adult_F_neo_plant_bun",
-      "adult_F_neo_plant_long_tied",
-      "adult_F_neo_plant_short",
       "adult_M_bronze_earth_linen_bun",
       "adult_M_bronze_earth_linen_short",
       "adult_M_bronze_linen_short",
-      "adult_M_bronze_wool_cloak_bun",
-      "adult_M_bronze_wool_cloak_long_tied",
-      "adult_M_bronze_wool_cloak_short",
+      "adult_M_iron_winter_bun",
       "adult_M_iron_winter_short",
       "adult_M_iron_work_bun",
       "adult_M_iron_work_short",
       "adult_M_neo_first_wool_bun",
       "adult_M_neo_first_wool_long_tied",
       "adult_M_neo_first_wool_short",
-      "adult_M_neo_plant_bun",
-      "adult_M_neo_plant_long_tied",
-      "adult_M_neo_plant_short",
       "child_F_bronze_earth_linen_bun",
       "child_F_bronze_earth_linen_short",
-      "child_F_bronze_wool_cloak_bun",
-      "child_F_bronze_wool_cloak_long_tied",
-      "child_F_bronze_wool_cloak_short",
       "child_F_iron_winter_bun",
       "child_F_iron_winter_long_tied",
       "child_F_iron_winter_short",
@@ -1817,32 +8600,20 @@
       "child_F_neo_first_wool_bun",
       "child_F_neo_first_wool_long_tied",
       "child_F_neo_first_wool_short",
-      "child_F_neo_plant_bun",
-      "child_F_neo_plant_long_tied",
       "child_M_bronze_earth_linen_short",
       "child_M_bronze_linen_long_tied",
-      "child_M_bronze_wool_cloak_bun",
-      "child_M_bronze_wool_cloak_short",
       "child_M_iron_winter_bun",
       "child_M_iron_winter_long_tied",
       "child_M_iron_winter_short",
       "child_M_iron_work_short",
-      "child_M_neo_first_wool_short",
-      "child_M_neo_plant_bun",
-      "child_M_neo_plant_short"
+      "child_M_neo_first_wool_long_tied",
+      "child_M_neo_first_wool_short"
     ],
     "portrait_looks": [
-      "adult_F_bronze_wool_cloak_bun",
-      "adult_F_bronze_wool_cloak_long_tied",
-      "adult_F_bronze_wool_cloak_short",
       "adult_F_neo_first_wool_bun",
       "adult_M_iron_winter_short",
       "adult_M_iron_work_bun",
       "adult_M_neo_first_wool_short",
-      "adult_M_neo_plant_bun",
-      "adult_M_neo_plant_short",
-      "child_F_neo_plant_bun",
-      "child_M_bronze_wool_cloak_bun",
       "child_M_iron_work_short",
       "child_M_neo_first_wool_short"
     ],
