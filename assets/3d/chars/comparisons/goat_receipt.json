@@ -1,0 +1,54 @@
+{
+  "camera_params": "/Users/rexxa/work/new-world-3d/assets/3d/params3d.json",
+  "params_sha256": "36b279b0d8bc90abc06c9b37ed488b13e9d1a921d0be566daf27c9e441dbbb35",
+  "viewport": [
+    1920,
+    1080
+  ],
+  "crop": [
+    704,
+    360,
+    512,
+    512
+  ],
+  "measurements": [
+    {
+      "zoom": 1,
+      "distance_m": 31.48917777123858,
+      "projected_ground_metre_px": 64.00005340576172
+    },
+    {
+      "zoom": 2,
+      "distance_m": 15.74458888561929,
+      "projected_ground_metre_px": 127.99999237060547
+    }
+  ],
+  "inputs": [
+    {
+      "label": "A",
+      "path": "/Users/rexxa/work/art-3d-chars/assets/3d/chars/A/goat/goat.glb",
+      "sha256": "58af2c139e310568c96ca057b50177e09a090cf7dcc70897bf32e082e827a8d8"
+    },
+    {
+      "label": "B",
+      "path": "/Users/rexxa/work/art-3d-chars/assets/3d/chars/B/goat/goat.glb",
+      "sha256": "e056c7b55cabf47121ec0b0489a1ebd666e68a47ac86e461b75699b565c57507"
+    },
+    {
+      "label": "M3D-1 placeholder",
+      "path": "/Users/rexxa/work/new-world-3d/assets/3d/models/wild_goat.glb",
+      "sha256": "d36bf0db25f3fb6abdacdc45db66c97194e571ead8d25ec2cc526993d2051246"
+    }
+  ],
+  "columns": [
+    "A",
+    "B",
+    "M3D-1 placeholder"
+  ],
+  "rows": [
+    "1x",
+    "2x"
+  ],
+  "child_placeholder_scale": 1,
+  "qualification": "Camera projection matched; Blender lighting approximates Godot, not renderer parity"
+}

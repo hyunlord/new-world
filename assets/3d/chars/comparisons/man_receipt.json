@@ -1,0 +1,54 @@
+{
+  "camera_params": "/Users/rexxa/work/new-world-3d/assets/3d/params3d.json",
+  "params_sha256": "36b279b0d8bc90abc06c9b37ed488b13e9d1a921d0be566daf27c9e441dbbb35",
+  "viewport": [
+    1920,
+    1080
+  ],
+  "crop": [
+    704,
+    360,
+    512,
+    512
+  ],
+  "measurements": [
+    {
+      "zoom": 1,
+      "distance_m": 31.48917777123858,
+      "projected_ground_metre_px": 64.00005340576172
+    },
+    {
+      "zoom": 2,
+      "distance_m": 15.74458888561929,
+      "projected_ground_metre_px": 127.99999237060547
+    }
+  ],
+  "inputs": [
+    {
+      "label": "A",
+      "path": "/Users/rexxa/work/art-3d-chars/assets/3d/chars/A/man/man.glb",
+      "sha256": "e90fdf5fbba414200b8f3798b9ececee77938c87de1151cee7b10d7b10dd3d2b"
+    },
+    {
+      "label": "B",
+      "path": "/Users/rexxa/work/art-3d-chars/assets/3d/chars/B/man/man.glb",
+      "sha256": "18b8c71c8f97ff6f2a2a4cb9d571db3497b165eec67648a7b17c358b83775b36"
+    },
+    {
+      "label": "M3D-1 placeholder",
+      "path": "/Users/rexxa/work/new-world-3d/assets/3d/models/villager.glb",
+      "sha256": "59f78ee8164e829e8bcc7eee61542f836ddb10be6b450624ae45d12add978c47"
+    }
+  ],
+  "columns": [
+    "A",
+    "B",
+    "M3D-1 placeholder"
+  ],
+  "rows": [
+    "1x",
+    "2x"
+  ],
+  "child_placeholder_scale": 1,
+  "qualification": "Camera projection matched; Blender lighting approximates Godot, not renderer parity"
+}

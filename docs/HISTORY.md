@@ -1,4 +1,5 @@
 # WorldSim 역사
+- 2026-11-15 — M3D-2a 재개: A/B 10개 실제 GLB·공유 뼈대·전 클립 렌더·5종 게임 크기 비교를 완성했다. 피사체 관측 최고54°C, B 화풍은 후보이며 기존 자산 일괄 교체는 권고하지 않는다([ADR0067](decisions/0067-resume-character-style-comparison.md), `assets/3d/chars/`, 외부 `m3d2-art/REPORT.md`).
 - 2026-11-14 — M3D-2a 입력5종·턴어라운드와 DGX 안전 실행·Blender 후처리 도구를 준비했으나 공식 샘플의 DINOv3 접근401·UniRig ARM 의존성 실패로 실제 메시·자리표시자 교체는 미완료다([ADR0066](decisions/0066-isolated-ai-character-trial.md), 외부 `m3d2-art/REPORT.md`).
 - 2026-11-11 — C2 검토본의 동물 실루엣 스크립트·uid 2파일을 제거하고 별도 아트 라인으로 이월했다. 원본은 `ebb04ee3d:scripts/world/colony/animal_silhouette.gd`에 보존한다. C1 사슬은 일반 명령 준비·현재 적격 대상 재선택·실제 취소 증거 계약으로 재검증하며 미게시다([ADR0064](decisions/0064-scripted-chain-preparation.md)).
 - 2026-11-08 — C1-a 원산지·신석기 지식82개·물리 조리법·곡식 창고/우리/훈제집/화덕집을 통합했다. 실제 format19→20 저장 재개, 신규 focused 검사와 한·영 화면 검증을 수행했다. 가축 사슬은 C1-b 대기이며 고정 SHA 전체 게이트·게시는 아직 대기다([보고](v8/c1/C1_REPORT.md), [ADR0062](decisions/0062-neolithic-origins-and-livestock.md)). 이전 M-SPINE 화면은 d30dbfc5b Git 이력에 보존하고 현재 시트를 교체했다.

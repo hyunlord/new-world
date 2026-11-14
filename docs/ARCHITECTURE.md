@@ -941,4 +941,10 @@ monitored inference tools; `tools/3d/chars/blender/` contains atlas baking, shar
 template rigs, procedural clips and comparison capture tools. These trial assets
 are not registered in the game catalogue. Raw outputs and execution evidence
 remain external; synthetic smoke tests establish tool behavior only. See
-[ADR0066](decisions/0066-isolated-ai-character-trial.md).
+[ADR0066](decisions/0066-isolated-ai-character-trial.md). The resume adds a
+pinned MIT BiRefNet RGBA path without RMBG-2.0 construction, set B inputs under
+`assets/3d/chars/concepts_b/`, and native-pixel A/B/placeholder comparison.
+Final assets live under `assets/3d/chars/A/` and `assets/3d/chars/B/`, with native
+comparison sheets under `assets/3d/chars/comparisons/`. Applied armatures share
+bone names and proportions; cross-height motion transfer scales root translation
+and recalibrates resting-pose grounding to the target mesh. See [ADR0067](decisions/0067-resume-character-style-comparison.md).

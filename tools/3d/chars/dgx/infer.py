@@ -14,6 +14,8 @@ from pathlib import Path
 os.environ["OPENCV_IO_ENABLE_OPENEXR"] = "1"
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
 
+os.environ["HF_TOKEN"] = Path("/workspace/.hf_token").read_text().strip()
+
 import o_voxel
 from PIL import Image
 from trellis2.pipelines import Trellis2ImageTo3DPipeline
@@ -27,9 +29,11 @@ assert source.is_relative_to(workspace) and target.is_relative_to(workspace)
 assert not target.exists(), "Preserve raw output; use a new attempt filename"
 target.parent.mkdir(parents=True, exist_ok=True)
 started = time.monotonic()
-pipeline = Trellis2ImageTo3DPipeline.from_pretrained("microsoft/TRELLIS.2-4B")
+pipeline = Trellis2ImageTo3DPipeline.from_pretrained("/workspace/pipeline-rgba")
 pipeline.cuda()
 with Image.open(source) as image:
+    assert image.mode == "RGBA" and image.getextrema()[3][0] < 255
+    assert pipeline.rembg_model is None
     mesh = pipeline.run(image, seed=0, pipeline_type="512")[0]
 mesh.simplify(16777216)
 glb = o_voxel.postprocess.to_glb(

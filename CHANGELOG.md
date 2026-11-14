@@ -1,5 +1,17 @@
 # Changelog
 
+## M3D-2a resume — 2026-11-15
+
+### Added
+- Ten textured, rigged A/B GLBs with per-clip/four-view sheets, receipts and five native game-camera placeholder comparisons (`assets/3d/chars/`).
+- Chunky low-poly set B reconstruction inputs and turnaround references for the same five subjects (`assets/3d/chars/concepts_b/`).
+- Pinned MIT BiRefNet RGBA preprocessing and a TRELLIS configuration that does not construct RMBG-2.0; the authorized credential is read silently from a private external workspace file.
+- Native-pixel A/B/placeholder comparison at the read-only M3D-1 camera projection; applied armature transforms and height-scaled shared motion transfer.
+
+### Changed
+- The first access failure is historical: the owner-approved resume authorizes the existing DINOv3 account. UniRig is skipped in favor of the Mac Blender fallback ([ADR0067](docs/decisions/0067-resume-character-style-comparison.md)).
+- Actual per-subject results and replacement recommendations are recorded in the external Korean report; runtime integration remains separate.
+
 ## M3D-2a — character pipeline experiment, 2026-11-14
 
 ### Added

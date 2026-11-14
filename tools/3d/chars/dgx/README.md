@@ -50,24 +50,90 @@ sample emits `ModuleNotFoundError: bpy`; its shell script prints `done` and may
 exit zero despite failure. A real nonempty output is required for success.
 The brief's Blender template/automatic-weights fallback remains applicable.
 
-After owner-approved model access is configured **inside this workspace**, and
-a permitted background-removal model is selected, resume with:
-
-```bash
-cd ~/worldsim-3d
-bash generate-safe.sh bash -c 'cd /workspace/TRELLIS.2 && python example.py && test -s sample.glb' > logs/trellis-upstream-sample-resume.log 2>&1
-# Only after the sample really succeeds, run one item at a time:
-bash generate-safe.sh python /workspace/infer.py /workspace/concepts/man.png /workspace/raw/man-attempt1.glb > logs/man-attempt1.log 2>&1
-```
-
-The other subjects are `woman`, `child`, `goat`, `aurochs`. Keep every attempt's
-raw output/log; at most three per subject. The upstream giraffe invocation is:
-
-```bash
-bash generate-safe.sh bash -c 'cd /workspace/UniRig && export PATH=/workspace/unirig-venv/bin:/usr/local/bin:/usr/bin:/bin && bash launch/inference/generate_skeleton.sh --input examples/giraffe.glb --output /workspace/raw/unirig-giraffe-skeleton.fbx && test -s /workspace/raw/unirig-giraffe-skeleton.fbx' > logs/unirig-upstream-sample-resume.log 2>&1
-```
-
 The tested NGC image is arm64, image ID
 `sha256:eea3fe49e8a583008e4ea66fbeb36b2a7a111db8e1e322d2f310fd697baad95b`;
 setup and generation pin its manifest digest. Final package freezes and failed
 logs are retained externally in `m3d2-art/dgx/` and on DGX under `logs/`.
+
+
+## Owner-approved resume (2026-11-15, current procedure)
+
+The initial authentication block above is historical. The owner explicitly
+approved one copy of the existing DGX token into `/workspace/.hf_token` (mode
+0600); that copy is complete. Never print/copy that file into logs or Git.
+Scripts read it inside the container into process-local `HF_TOKEN` only.
+
+Do **not** run the original `example.py` unchanged: it constructs RMBG-2.0 even
+for RGBA inputs. `prepare_pipeline.py` instead pins the official pipeline config
+revision, writes a local config with `rembg_model=null`, and applies one exact
+conditional-construction patch to the upstream pipeline. `prepare_rgba.py` uses
+MIT `ZhengPeng7/BiRefNet` revision
+`e2bf8e4460fc8fa32bba5ea4d94b3233d367b0e4` on CPU with two threads. It asserts
+nonopaque foreground/background alpha. `infer.py` asserts RGBA/nonopaque alpha
+and no constructed remover, then uses upstream alpha preprocessing. No RMBG-2.0
+model is downloaded, constructed or used. UniRig is explicitly skipped on resume;
+Mac Blender template skeleton/automatic weights is the approved rigging path.
+
+The resume sample used the official `assets/example_image/T.png`, converted to
+RGBA with BiRefNet and passed through the same 512 pipeline/export as the items.
+It exported `raw/sample-resume-attempt1.glb`: pipeline 214.856s, guarded total
+293s including initial preprocessing/downloads and 30s cooldown, peak observed
+62°C. This proves sampling/native CUDA/export, which the initial blocked run
+could not exercise. Actual later item statistics live in external `items.json`.
+
+On the existing workspace, prepare the config once, then run one item at a time:
+
+```bash
+cd ~/worldsim-3d
+bash generate-safe.sh python /workspace/prepare_pipeline.py > logs/resume/prepare.log 2>&1
+bash run-item.sh A man 1 > logs/resume/A/man-attempt1.log 2>&1
+```
+
+Use sets `A` and `B`, subjects `man woman child goat aurochs`, attempts `1..3`.
+Set A inputs are `concepts/<subject>.png`; B inputs are
+`concepts/B/<subject>.png`. Each item creates `rgba/<set>/<subject>.png` if absent,
+then retains its raw `raw/<set>/<subject>-attempt<N>.glb`. Existing raw output is
+never overwritten. After any failure, diagnose before consuming another attempt.
+`generate-safe.sh` owns exclusive GPU admission, temperature monitoring and 30s
+cooldown; never overlap it or bypass it for another GPU workload.
+
+After copying logs into the external evidence directory, extract metadata:
+
+```bash
+python3 tools/3d/chars/dgx/summarize.py /Users/rexxa/work/3d-data/m3d2-art/resume/dgx > /Users/rexxa/work/3d-data/m3d2-art/resume/dgx/items.json
+```
+
+`pipeline_elapsed_seconds` covers pipeline loading/inference/export;
+`guarded_elapsed_seconds_including_30s_cooldown` additionally includes any
+preprocessing in the item command. Temperature is the maximum sampled value,
+not a claim about unobserved instantaneous peaks.
+
+
+## Completed A/B generation
+
+All ten subjects exported on attempt 1, no retries or safety pauses. The same
+512 pipeline, seed 0, 100,000-triangle export target and 1024 texture setting
+were used for both sets. Raw outputs and RGBA inputs are retained externally.
+Cleanup/rig/animation and visual acceptance are separate Mac Blender checks.
+
+| Item | Pipeline seconds | Guarded seconds incl. preprocessing + cooldown | Peak sampled °C |
+|---|---:|---:|---:|
+| A/aurochs | 154.882 | 221 | 48 |
+| A/child | 142.196 | 210 | 48 |
+| A/goat | 148.660 | 214 | 48 |
+| A/man | 193.126 | 261 | 54 |
+| A/woman | 145.527 | 212 | 49 |
+| B/aurochs | 147.181 | 214 | 49 |
+| B/child | 145.439 | 212 | 47 |
+| B/goat | 159.011 | 225 | 52 |
+| B/man | 150.675 | 216 | 48 |
+| B/woman | 145.859 | 212 | 48 |
+
+Ten item pipeline times total 1532.556s; guarded commands total 2197s. Subject
+peak observed temperature was 54°C; the separate initial sample peaked at62°C.
+Final evidence confirms zero owned running containers, GPU34°C and one-minute
+load0.458. DINO's actual cached revision is
+`ea8dc2863c51be0a264bab82070e3e8836b02d51`. All ten retained GLBs passed binary
+header/length, triangle indices, nonempty materials/images and SHA256 evidence
+checks (`raw-validation.json`). Generation success does not certify visual
+quality or deformation; consult the final Korean REPORT and Blender sheets.

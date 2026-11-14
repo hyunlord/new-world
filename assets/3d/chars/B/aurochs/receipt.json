@@ -1,0 +1,53 @@
+{
+  "subject": "aurochs",
+  "triangles": 1990,
+  "carry_load": null,
+  "texture": "512x512 atlas.png",
+  "bones": [
+    "Root",
+    "Neck",
+    "Head",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "BackUpper.L",
+    "BackLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "BackUpper.R",
+    "BackLower.R"
+  ],
+  "clips": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down"
+  ],
+  "applied_object_transforms": true,
+  "height_reference_m": 1.6,
+  "cleanup": "seam weld + voxel remesh + decimate",
+  "debris_vertices_removed": 15,
+  "rest_bounds_xyz": [
+    [
+      -0.5820655226707458,
+      -1.2084903717041016,
+      0.0
+    ],
+    [
+      0.5820655226707458,
+      1.2084903717041016,
+      1.9922935962677002
+    ]
+  ],
+  "height_landmark_xyz": [
+    0.023984888568520546,
+    -0.25485846400260925,
+    1.600000023841858
+  ],
+  "height_landmark_method": "front trunk withers band (40% length from nose, central10% width)",
+  "weight_method": "automatic heat",
+  "heat_uncovered_vertices": 0,
+  "shared_motion_transfer": "same names/hierarchy, scale root location by target/source height",
+  "front": "Godot +Z / Blender -Y",
+  "rig": "Blender automatic weights",
+  "source": "/Users/rexxa/work/3d-data/m3d2-art/resume/raw/B/aurochs-attempt1.glb"
+}

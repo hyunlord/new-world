@@ -230,3 +230,30 @@ fresh dictionary on reset instead of clearing it. Compare JSON-parsed numeric
 fixtures in the same numeric domain; integer-versus-float Dictionary equality
 can fail despite identical printed values. Source:
 `scripts/world/colony/outcrop_layer.gd`; `tools/v8/mart2_ground_test.gd`.
+
+### Generated GLB topology and selected-to-active atlas baking (M3D2, 2026-11-15)
+Imported UV seams can duplicate mesh vertices and leave loose edges. Weld coincident
+geometry while preserving loop UV before decimation or heat weighting; inspect
+connected components and uncovered vertices rather than accepting finite weights.
+Keep the high-resolution source UV unchanged for selected-to-active baking. Explicitly
+deselect the source before entering target edit mode: an inherited selected source
+silently joins multi-object UV editing and destroys texture correspondence. Pin image
+nodes to the original UV layer. The nonuniform checker and seam/loose-geometry
+regression lives in `tools/3d/chars/blender/test_topology_bake.py`.
+
+Blender5.3 NLA export drops constant object transforms even with animation-size
+optimization disabled. Set `export_optimize_animation_keep_anim_object=True`
+when per-clip constant scales control attachments; inspect exported binary samples
+for carry1/noncarry0. A correct render and the right clip names do not prove GLB
+animation visibility. Regression: `tools/3d/chars/blender/self_test.py`.
+
+A quadruped band maximum may hit a swept horn instead of its withers. Validate an
+actual surface-point marker in side views; use a narrow centreline band only when
+it excludes horns and marks the neck-to-back junction. Record the approximation.
+Sequential Blender renders also require an explicit dependency-graph update after
+visibility changes. A real blank-placeholder failure motivated compare.py's
+matched-ground foreground check and projected-vertex crop-containment assertions.
+
+- Hidden animated attachments need a small positive scale (1e-6), not zero: Godot
+  imports zero bases with quaternion normalization errors. Check the actual engine
+  import in addition to Blender render and GLB accessor tests.

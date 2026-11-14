@@ -8,7 +8,7 @@ from mathutils import Vector
 
 
 def capture(mesh: bpy.types.Object, arm: bpy.types.Object, out: Path) -> None:
-    """Render 30-degree FOV, 50-degree pitch; game-size references are 32/64 px."""
+    """Render 30-degree FOV, 50-degree pitch; diagnostic thumbnails are 32/64 px."""
     scene = bpy.context.scene
     scene.render.engine = "CYCLES"
     scene.cycles.samples = 8
@@ -39,23 +39,35 @@ def capture(mesh: bpy.types.Object, arm: bpy.types.Object, out: Path) -> None:
     label.data.materials.append(ink)
     height = max(v.co.z for v in mesh.data.vertices)
     centre = Vector((0, 0, height*.5))
-    distance = max(height*3.2, 3)
     paths = []
     actions = [(track.name, strip.action) for track in arm.animation_data.nla_tracks for strip in track.strips]
     views = [(f"view_{angle}", angle, None) for angle in (0, 90, 180, 270)]
     views += [(name, 35, action) for name, action in actions]
     for name, angle, action in views:
         label.data.body = name
+        load = bpy.data.objects.get("CarryLoad")
+        if load:
+            load.animation_data.action = next((track.strips[0].action for track in load.animation_data.nla_tracks
+                                               if track.name == name), None)
+            if action is None:
+                load.scale = (0, 0, 0)
         arm.animation_data.action = action
         if action is None:
             for bone in arm.pose.bones:
                 bone.rotation_euler = (0, 0, 0)
                 bone.location = (0, 0, 0)
-        scene.frame_set(8)
+        scene.frame_set(23 if name == "work" else 8)
         yaw, pitch = math.radians(angle), math.radians(50)
         offset = Vector((math.sin(yaw)*math.cos(pitch), -math.cos(yaw)*math.cos(pitch), math.sin(pitch)))
+        rotation = (-offset).to_track_quat("-Z", "Y")
+        evaluated = mesh.evaluated_get(bpy.context.evaluated_depsgraph_get())
+        # Fit every posed vertex in both camera axes with a 12% cell margin.
+        camera_points = [rotation.inverted() @ (evaluated.matrix_world @ v.co-centre)
+                         for v in evaluated.data.vertices]
+        tangent = math.tan(camera.data.angle/2)*.76
+        distance = max(max(abs(p.x), abs(p.y))/tangent+p.z for p in camera_points)
         camera.location = centre+offset*distance
-        camera.rotation_euler = (-offset).to_track_quat("-Z", "Y").to_euler()
+        camera.rotation_euler = rotation.to_euler()
         path = out/f"{name}.png"
         scene.render.filepath = str(path)
         bpy.ops.render.render(write_still=True)
@@ -68,12 +80,12 @@ def capture(mesh: bpy.types.Object, arm: bpy.types.Object, out: Path) -> None:
     for size in (32, 64):
         image = images[0].copy()
         image.scale(size, size)
-        image.filepath_raw = str(out/f"game_{size}px.png")
+        image.filepath_raw = str(out/f"thumbnail_{size}px.png")
         image.file_format = "PNG"
         image.save()
-        label.data.body = f"game {size}px ({size//32}x)"
+        label.data.body = f"thumbnail {size}px ({size//32}x)"
         mesh.hide_render = True
-        scene.render.filepath = str(out/f"game_{size}px_cell.png")
+        scene.render.filepath = str(out/f"thumbnail_{size}px_cell.png")
         bpy.ops.render.render(write_still=True)
         mesh.hide_render = False
         cell = bpy.data.images.load(scene.render.filepath, check_existing=False)

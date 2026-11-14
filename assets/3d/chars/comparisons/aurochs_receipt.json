@@ -1,0 +1,54 @@
+{
+  "camera_params": "/Users/rexxa/work/new-world-3d/assets/3d/params3d.json",
+  "params_sha256": "36b279b0d8bc90abc06c9b37ed488b13e9d1a921d0be566daf27c9e441dbbb35",
+  "viewport": [
+    1920,
+    1080
+  ],
+  "crop": [
+    704,
+    360,
+    512,
+    512
+  ],
+  "measurements": [
+    {
+      "zoom": 1,
+      "distance_m": 31.48917777123858,
+      "projected_ground_metre_px": 64.00005340576172
+    },
+    {
+      "zoom": 2,
+      "distance_m": 15.74458888561929,
+      "projected_ground_metre_px": 127.99999237060547
+    }
+  ],
+  "inputs": [
+    {
+      "label": "A",
+      "path": "/Users/rexxa/work/art-3d-chars/assets/3d/chars/A/aurochs/aurochs.glb",
+      "sha256": "4ec5254e035acb70a3ff2fae82e91c7963f0b631b73d2e2b78a74307077b761a"
+    },
+    {
+      "label": "B",
+      "path": "/Users/rexxa/work/art-3d-chars/assets/3d/chars/B/aurochs/aurochs.glb",
+      "sha256": "cea9995a823a92650bb510d4292b3d2eb61ecd13eb68fe08a096d1548e27ff87"
+    },
+    {
+      "label": "M3D-1 placeholder",
+      "path": "/Users/rexxa/work/new-world-3d/assets/3d/models/aurochs.glb",
+      "sha256": "21bab43c41a9242810df39d74be235c04c1949a1ed12a08cad289503850f3880"
+    }
+  ],
+  "columns": [
+    "A",
+    "B",
+    "M3D-1 placeholder"
+  ],
+  "rows": [
+    "1x",
+    "2x"
+  ],
+  "child_placeholder_scale": 1,
+  "qualification": "Camera projection matched; Blender lighting approximates Godot, not renderer parity"
+}

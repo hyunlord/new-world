@@ -2,7 +2,9 @@
 
 blender -b --factory-startup -P tools/3d/chars/blender/self_test.py -- EXTERNAL_OUTPUT
 """
+import json
 import math
+import struct
 import sys
 from pathlib import Path
 
@@ -11,6 +13,7 @@ from mathutils import Vector
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import prepare
+from rig import shared_action
 
 out = Path(sys.argv[sys.argv.index("--")+1]).resolve()
 out.mkdir(parents=True, exist_ok=True)
@@ -58,13 +61,14 @@ sys.argv = ["blender", "--", str(source), str(out/"synthetic_child"), "child"]
 prepare.main()
 arm = bpy.data.objects["Humanoid"]
 mesh = bpy.data.objects["child"]
+human_actions = [shared_action(action, 1.2/1.7) for action in human_actions]
 for action in human_actions:
     arm.animation_data.action = action
     for frame in (1, 8, 16, 23, 31):
         bpy.context.scene.frame_set(frame)
         evaluated = mesh.evaluated_get(bpy.context.evaluated_depsgraph_get())
         assert all(math.isfinite(c) for v in evaluated.data.vertices for c in v.co)
-        if action.name == "sleep":
+        if action.name.startswith("sleep"):
             bottom = min((evaluated.matrix_world @ v.co).z for v in evaluated.data.vertices)
             assert abs(bottom) < .01, (action.name, frame, bottom)
 print("M3D2_SHARED_HUMAN_ACTION_TRANSFER_PASS")
@@ -77,6 +81,25 @@ sys.argv = ["blender", "--", str(source), str(out/"synthetic_goat"), "goat"]
 prepare.main()
 assert (out/"synthetic_goat"/"goat.glb").stat().st_size > 0
 assert (out/"synthetic_goat"/"contact_sheet.png").stat().st_size > 0
+quad_actions = [strip.action for track in bpy.data.objects["Quadruped"].animation_data.nla_tracks for strip in track.strips]
+sys.argv = ["blender", "--", str(source), str(out/"synthetic_aurochs"), "aurochs"]
+prepare.main()
+arm, mesh = bpy.data.objects["Quadruped"], bpy.data.objects["aurochs"]
+quad_actions = [shared_action(action, 1.6/.75) for action in quad_actions]
+for track, action in zip(arm.animation_data.nla_tracks, quad_actions):
+    track.strips[0].action = action
+    arm.animation_data.action = action
+    for frame in (1, 8, 16, 23, 31):
+        bpy.context.scene.frame_set(frame)
+        evaluated = mesh.evaluated_get(bpy.context.evaluated_depsgraph_get())
+        assert all(math.isfinite(c) for v in evaluated.data.vertices for c in v.co)
+        if action.name.startswith("lie_down"):
+            bottom = min((evaluated.matrix_world @ v.co).z for v in evaluated.data.vertices)
+            assert abs(bottom) < .01, (action.name, frame, bottom)
+shared = out/"shared_quad_clips"
+shared.mkdir(exist_ok=True)
+prepare.capture(mesh, arm, shared)
+print("M3D2_SHARED_QUAD_ACTION_TRANSFER_PASS")
 collision = out/"collision"
 collision.mkdir(exist_ok=True)
 raw = collision/"man.glb"
@@ -91,6 +114,15 @@ else:
     raise AssertionError("Raw collision was admitted")
 assert raw.read_bytes() == original
 print("M3D2_RAW_COLLISION_REJECTED_PASS")
+sys.argv = ["blender", "--", str(source), str(collision), "man"]
+try:
+    prepare.main()
+except AssertionError as error:
+    assert str(error) == "Output directory must be new"
+else:
+    raise AssertionError("Existing output directory was admitted")
+assert raw.read_bytes() == original
+print("M3D2_EXISTING_OUTPUT_PRESERVED_PASS")
 bpy.ops.object.select_all(action="SELECT")
 bpy.ops.object.delete(use_global=False)
 bpy.ops.mesh.primitive_cube_add()
@@ -103,4 +135,28 @@ except AssertionError as error:
 else:
     raise AssertionError("Tiny mesh was admitted")
 print("M3D2_TINY_MESH_REJECTED_PASS")
+for subject, directory, expected_clips in (("man", "synthetic_man", {"idle", "walk", "work", "carry", "sleep"}),
+                                            ("child", "synthetic_child", {"idle", "walk", "work", "carry", "sleep"}),
+                                            ("goat", "synthetic_goat", {"idle", "walk", "graze", "lie_down"}),
+                                            ("aurochs", "synthetic_aurochs", {"idle", "walk", "graze", "lie_down"})):
+    content = (out/directory/f"{subject}.glb").read_bytes()
+    length = struct.unpack_from("<I", content, 12)[0]
+    document = json.loads(content[20:20+length])
+    assert {a["name"] for a in document["animations"]} == expected_clips
+    assert len(document["skins"]) == 1
+    assert len(document["images"]) == 1 and document["images"][0]["mimeType"] == "image/png"
+    if subject in ("man", "child"):
+        load_index = next(i for i, node in enumerate(document["nodes"]) if node.get("name") == "CarryLoad")
+        assert all(abs(v-1e-6) < 1e-12 for v in document["nodes"][load_index]["scale"])
+        for animation in document["animations"]:
+            channel = next(c for c in animation["channels"]
+                           if c["target"]["node"] == load_index and c["target"]["path"] == "scale")
+            accessor = document["accessors"][animation["samplers"][channel["sampler"]]["output"]]
+            view = document["bufferViews"][accessor["bufferView"]]
+            offset = 28+length+view.get("byteOffset", 0)+accessor.get("byteOffset", 0)
+            values = struct.unpack_from("<"+"f"*(accessor["count"]*3), content, offset)
+            assert all(abs(v-(1 if animation["name"] == "carry" else 1e-6)) < 1e-12 for v in values)
+        names = {node.get("name") for node in document["nodes"]}
+        assert {"hips", "spine", "chest", "neck", "head", "hand_L", "hand_R", "foot_L", "foot_R"} <= names
+print("M3D2_GLB_ROUNDTRIP_CONTRACT_PASS")
 print("M3D2_SYNTHETIC_SELF_TEST_PASS")

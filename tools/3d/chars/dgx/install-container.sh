@@ -18,11 +18,5 @@ done
 python -m pip install ./TRELLIS.2/o-voxel --no-build-isolation --no-deps
 python -m pip install flash_attn --no-build-isolation
 python -m pip freeze > logs/trellis-pip-freeze.txt
-python -m venv --system-site-packages unirig-venv
-source unirig-venv/bin/activate
-python -m pip install transformers==4.51.3 python-box einops omegaconf pytorch_lightning lightning addict fast-simplification pyrender huggingface_hub wandb
-# UniRig's bpy==4.2/open3d/flash_attn/spconv wheels may require aarch64 builds.
-python -m pip install bpy==4.2 open3d spconv torch_scatter torch_cluster --no-build-isolation
-python -m pip freeze > logs/pip-freeze.txt
+# Owner-approved resume skips UniRig: aarch64 bpy==4.2 is unavailable.
 git -C TRELLIS.2 rev-parse HEAD > logs/trellis-commit.txt
-git -C UniRig rev-parse HEAD > logs/unirig-commit.txt

@@ -1,0 +1,52 @@
+{
+  "subject": "goat",
+  "triangles": 1992,
+  "texture": "512x512 atlas.png",
+  "bones": [
+    "Root",
+    "Neck",
+    "Head",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "BackUpper.L",
+    "BackLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "BackUpper.R",
+    "BackLower.R"
+  ],
+  "clips": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down"
+  ],
+  "applied_object_transforms": true,
+  "height_reference_m": 0.75,
+  "cleanup": "seam weld + voxel remesh + decimate",
+  "debris_vertices_removed": 9,
+  "rest_bounds_xyz": [
+    [
+      -0.2142532467842102,
+      -0.5951308608055115,
+      0.0
+    ],
+    [
+      0.2142532467842102,
+      0.5951308608055115,
+      1.0307050943374634
+    ]
+  ],
+  "height_landmark_xyz": [
+    -0.03696935623884201,
+    -0.16567565500736237,
+    0.75
+  ],
+  "height_landmark_method": "front trunk withers band (40% length from nose, central40% width)",
+  "weight_method": "automatic heat + bounded nearest-bone residual repair (<=1%)",
+  "heat_uncovered_vertices": 5,
+  "shared_motion_transfer": "same names/hierarchy, scale root location by target/source height",
+  "front": "Godot +Z / Blender -Y",
+  "rig": "Blender automatic weights",
+  "source": "/Users/rexxa/work/3d-data/m3d2-art/resume/raw/A/goat-attempt1.glb"
+}

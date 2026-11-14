@@ -1,0 +1,60 @@
+{
+  "subject": "woman",
+  "triangles": 2406,
+  "carry_load": "12-triangle atlas-textured package, visible only in carry",
+  "texture": "512x512 atlas.png",
+  "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+  ],
+  "clips": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+  ],
+  "applied_object_transforms": true,
+  "height_reference_m": 1.7,
+  "cleanup": "seam weld + voxel remesh + decimate",
+  "debris_vertices_removed": 9,
+  "rest_bounds_xyz": [
+    [
+      -0.4528784453868866,
+      -0.2049628049135208,
+      0.0
+    ],
+    [
+      0.4528784453868866,
+      0.2049628049135208,
+      1.7000000476837158
+    ]
+  ],
+  "height_landmark_xyz": [
+    0.009392420761287212,
+    -0.04161878302693367,
+    1.7000000476837158
+  ],
+  "height_landmark_method": "crown",
+  "weight_method": "automatic heat",
+  "heat_uncovered_vertices": 0,
+  "shared_motion_transfer": "same names/hierarchy, scale root location by target/source height",
+  "front": "Godot +Z / Blender -Y",
+  "rig": "Blender automatic weights",
+  "source": "/Users/rexxa/work/3d-data/m3d2-art/resume/raw/A/woman-attempt1.glb"
+}
