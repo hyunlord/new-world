@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "about": "Tunables of the 3D view (M3D-1). 1 tile = 1 world unit (about 1 m). Read by scripts/world3d/*.gd through data3d.gd; nothing here is simulation state.",
+  "camera": {
+    "fov_deg": 30.0,
+    "pitch_deg": 50.0,
+    "zooms": [0.25, 0.5, 1.0, 2.0, 4.0],
+    "default_zoom": 1.0,
+    "px_per_tile_at_1x": 64.0,
+    "rotate_seconds": 0.35,
+    "near": 0.3,
+    "far": 900.0
+  },
+  "terrain": {
+    "chunk_tiles": 32,
+    "elevation_metres": 3.0,
+    "raise": {"2": 2.6, "3": 1.8},
+    "water_codes": [4, 5],
+    "water_bed": -0.95,
+    "water_level": -0.25,
+    "noise_scale_tiles": 7,
+    "noise_tint": 0.14,
+    "colours": {
+      "0": [0.34, 0.47, 0.19],
+      "1": [0.25, 0.36, 0.15],
+      "2": [0.40, 0.38, 0.35],
+      "3": [0.36, 0.38, 0.27],
+      "4": [0.30, 0.27, 0.20],
+      "5": [0.78, 0.72, 0.52],
+      "6": [0.82, 0.72, 0.48],
+      "7": [0.68, 0.70, 0.62],
+      "8": [0.33, 0.38, 0.22],
+      "9": [0.25, 0.23, 0.22]
+    },
+    "cliff_colour": [0.36, 0.33, 0.29],
+    "clearing_colour": [0.50, 0.41, 0.27],
+    "dug_colour": [0.40, 0.34, 0.28],
+    "ford_colour": [0.55, 0.52, 0.45],
+    "field_colour": [0.40, 0.29, 0.18],
+    "season_tint": {"0": [1.0, 1.04, 0.96], "1": [1.04, 1.0, 0.88], "2": [1.08, 0.94, 0.78], "3": [1.0, 1.0, 1.0]},
+    "snow_cover": {"3": 0.85},
+    "water_colour": [0.10, 0.26, 0.36, 0.88]
+  },
+  "flora": {
+    "jitter_tiles": 0.22,
+    "scale_min": 0.85,
+    "scale_max": 1.2,
+    "large_scale": 1.18
+  },
+  "structures": {
+    "wall_height": 2.2,
+    "wall_thickness": 0.35,
+    "floor_height": 0.06,
+    "door_width": 0.9,
+    "door_height": 2.0,
+    "fence_height": 1.1,
+    "roof_overhang": 0.3,
+    "roof_pitch_deg": 38.0,
+    "roof_thickness": 0.12,
+    "cutaway_zoom": 4.0,
+    "cutaway_wall_height": 0.9,
+    "cutaway_seconds": 0.25
+  },
+  "people": {
+    "adult_height": 1.7,
+    "child_scale": 0.62,
+    "near_lod_tiles": 14,
+    "pick_radius_px": 18
+  },
+  "light": {
+    "sun_energy": 1.5,
+    "ambient_energy": 0.32,
+    "night_sun_energy": 0.06,
+    "night_ambient": [0.18, 0.22, 0.38],
+    "day_ambient": [0.70, 0.76, 0.86],
+    "dawn_hours": [5.0, 7.0],
+    "dusk_hours": [18.0, 20.0],
+    "shadow_distance": 90.0,
+    "fire_light_range": 7.0,
+    "fire_light_energy": 2.2,
+    "fire_colour": [1.0, 0.62, 0.30]
+  }
+}

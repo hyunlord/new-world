@@ -15,6 +15,7 @@
 extends Camera2D
 
 const View = preload("res://scripts/world/colony/view.gd")
+const ViewProjection = preload("res://scripts/world/view_projection.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 const MarkerLayout = preload("res://scripts/world/colony/marker_layout.gd")
 const TOAST_SECONDS: float = 2.0
@@ -61,10 +62,16 @@ var _frame_stable: int = 0
 var _camp_report: Dictionary = {"status": "idle"}
 var _toast: Label = null
 var _toast_left: float = 0.0
+## M3D-1: the 3D view's screen rotation (radians; 0 in 2D) — screen-space pans turn by it so W stays "up on screen".
+var screen_rotation: float = 0.0
+## M3D-1: the 3D view's zoom ladder (empty in 2D: render_params.json `camera.zooms`).
+var zoom_steps_override: Array[float] = []
 
 
 ## The zoom ladder (camera zoom factors, ascending) from render_params.json.
 func zoom_steps() -> Array[float]:
+	if not zoom_steps_override.is_empty():
+		return zoom_steps_override.duplicate()
 	var out: Array[float] = []
 	var raw: Variant = ArtData.param("camera.zooms", [0.25, 0.5, 1.0, 2.0])
 	if raw is Array:
@@ -226,8 +233,9 @@ func _release_pointer() -> void:
 ## A screen-space drag; settings affect gestures, not keyboard direction.
 func pan_screen(distance: Vector2) -> void:
 	_cancel_camp_framing()
-	position -= distance * (-1.0 if _invert_pan else 1.0) / zoom.x
-	_zoom_anchor_world -= distance * (-1.0 if _invert_pan else 1.0) / zoom.x
+	var world_distance: Vector2 = (distance * (-1.0 if _invert_pan else 1.0) / zoom.x).rotated(screen_rotation)
+	position -= world_distance
+	_zoom_anchor_world -= world_distance
 	_clamp_position()
 	camera_activity.emit("pan")
 
@@ -311,7 +319,7 @@ func step_zoom(direction: int, screen_anchor: Vector2 = Vector2(-1, -1)) -> void
 	_zoom_target = steps[index]
 	_zoom_elapsed = 0.0
 	_zoom_anchor_screen = get_viewport().get_mouse_position() if screen_anchor.x < 0 else screen_anchor
-	_zoom_anchor_world = get_canvas_transform().affine_inverse() * _zoom_anchor_screen
+	_zoom_anchor_world = ViewProjection.screen_to_world(self, _zoom_anchor_screen)
 	camera_activity.emit("zoom")
 
 
@@ -325,7 +333,7 @@ func _animate_zoom(delta: float) -> void:
 		return
 	_zoom_elapsed = minf(ZOOM_SECONDS, _zoom_elapsed + delta)
 	zoom = Vector2.ONE * lerpf(_zoom_from, _zoom_target, _zoom_elapsed / ZOOM_SECONDS)
-	position = _zoom_anchor_world - (_zoom_anchor_screen - get_viewport_rect().size * 0.5) / zoom.x
+	position = _zoom_anchor_world - ((_zoom_anchor_screen - get_viewport_rect().size * 0.5) / zoom.x).rotated(screen_rotation)
 	_clamp_position()
 
 
@@ -365,7 +373,7 @@ func _process(delta: float) -> void:
 			direction += Vector2(float(cursor.x > viewport_size.x - EDGE_PAN_MARGIN) - float(cursor.x < EDGE_PAN_MARGIN), float(cursor.y > viewport_size.y - EDGE_PAN_MARGIN) - float(cursor.y < EDGE_PAN_MARGIN))
 	if direction != Vector2.ZERO:
 		_cancel_camp_framing()
-		var movement: Vector2 = direction * float(ArtData.param("camera.pan_px_per_second", 900.0)) * delta / zoom.x
+		var movement: Vector2 = (direction * float(ArtData.param("camera.pan_px_per_second", 900.0)) * delta / zoom.x).rotated(screen_rotation)
 		position += movement
 		_zoom_anchor_world += movement
 		_clamp_position()

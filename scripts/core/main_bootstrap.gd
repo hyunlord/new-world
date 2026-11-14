@@ -1,4 +1,6 @@
 # main_bootstrap.gd — selected content preflight before gameplay children enter the tree.
+# M3D-1: when renderer_switch.gd wants 3D (`--renderer=3d` or the `renderer_3d` setting) it adds
+#   scenes/world3d/World3D.tscn under Main and hides ColonyView (its layers keep running for hit-tests and orders).
 # Bridge methods: WorldSimNode.bootstrap_catalog, WorldSimNode.create.
 extends Node2D
 
@@ -33,6 +35,16 @@ func _ready() -> void:
 	panel.connect("template_chosen", Callable(get_node("ColonyView/OrderTool"), "set_template"))
 	panel.connect("housing_requested", Callable(get_node("UI/OrderBar"), "select_mode").bind(15))
 	panel.connect("source_requested", _open_building_source)
+	if preload("res://scripts/world3d/renderer_switch.gd").wants_3d():
+		_enable_3d()
+
+
+## M3D-1: draw the world in 3D; the 2D view stays in the tree, hidden.
+func _enable_3d() -> void:
+	var world3d: Node = (load("res://scenes/world3d/World3D.tscn") as PackedScene).instantiate()
+	add_child(world3d)
+	move_child(world3d, get_node("ColonyView").get_index())
+	(get_node("ColonyView") as CanvasItem).visible = false
 
 
 func _open_building_source(site: int, record: int) -> void:
