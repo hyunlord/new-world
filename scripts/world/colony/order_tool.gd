@@ -37,6 +37,7 @@
 extends Node2D
 
 const View = preload("res://scripts/world/colony/view.gd")
+const ViewProjection = preload("res://scripts/world/view_projection.gd")
 const TemplatePreview = preload("res://scripts/world/colony/template_preview.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 const SiteGhost = preload("res://scripts/world/art/site_ghost.gd")
@@ -555,7 +556,7 @@ func _set_shift(on: bool) -> void:
 func _track(screen: Vector2) -> void:
 	_hover_screen = screen
 	_has_template_cursor = true
-	_hover_world = get_canvas_transform().affine_inverse() * screen
+	_hover_world = ViewProjection.screen_to_world(self, screen)
 	var tile: Vector2i = View.world_to_tile(_hover_world)
 	if tile == _hover:
 		_refresh_template()

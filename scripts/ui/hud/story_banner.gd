@@ -20,6 +20,7 @@ const StoryText = preload("res://scripts/ui/story_text.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
 const View = preload("res://scripts/world/colony/view.gd")
+const ViewProjection = preload("res://scripts/world/view_projection.gd")
 const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
 const VISITOR: Color = Color("f0c040")
 const COLUMN: Rect2 = Rect2(648, 124, 880, 0)
@@ -301,7 +302,7 @@ func pulse() -> Dictionary:
 
 
 func _screen_of(tile: Vector2i) -> Vector2:
-	return get_viewport().get_canvas_transform() * (View.tile_to_world(tile) + Vector2(View.TILE * 0.5, View.TILE * 0.5))
+	return ViewProjection.world_to_screen(self, View.tile_to_world(tile) + Vector2(View.TILE * 0.5, View.TILE * 0.5))
 
 
 ## The point on the screen's edge (inset by EDGE) toward `at` from the screen's centre.
