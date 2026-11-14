@@ -1348,9 +1348,18 @@ fn c1_chain_goat() {
                             .iter()
                             .any(|p| p.id == id && s.e.world.get::<&Fleeing>(p.entity).is_ok())
                     });
-                    assert!(!eligible || attempt_advanced || fleeing || choice.is_some(),"capture loss needs a target/attempt/flight or same-actor same-tick native choice witness");
+                    // Commit rechecks capture knowledge (livestock/commit.rs `knowledge`); decay below threshold cancels.
+                    let knowledge_lapsed = previous_owner.is_some_and(|id| {
+                        let need = node(&policy.capture_knowledge);
+                        people(&s.e.world, &s.e.resources).iter().any(|p| {
+                            p.id == id
+                                && knowledge_of(&s.e.world, p.entity).proficiency(need)
+                                    < knowledge::defs().threshold(need)
+                        })
+                    });
+                    assert!(!eligible || attempt_advanced || fleeing || knowledge_lapsed || choice.is_some(),"capture loss needs a target/attempt/flight/knowledge-lapse or same-actor same-tick native choice witness");
                     let cause = json!({"wild":wild,"step":index,"reissue":reissues,"operator":previous_owner,"tick":s.e.current_tick(),
-                        "native_choice_witness":choice,"attempt_advanced":attempt_advanced,"chronicle":s.e.resources.chronicle.entries(),"witnesses":s.e.resources.livestock.witnesses,
+                        "native_choice_witness":choice,"attempt_advanced":attempt_advanced,"knowledge_lapsed":knowledge_lapsed,"chronicle":s.e.resources.chronicle.entries(),"witnesses":s.e.resources.livestock.witnesses,
                         "capture_attempts":s.e.resources.livestock.capture_attempts,"source_profiles":source_rows(&s.e,source.kind),"target":s.e.resources.colony.wildlife.animals.get(&wild),
                         "people":people(&s.e.world,&s.e.resources).into_iter().filter(|p|Some(p.id)==previous_owner).map(|p|json!({"id":p.id,
                             "health":s.e.world.get::<&BodyHealth>(p.entity).ok().map(|v|*v),"fleeing":s.e.world.get::<&Fleeing>(p.entity).ok().map(|v|*v),"hunger":s.e.world.get::<&Hunger>(p.entity).ok().map(|v|*v),

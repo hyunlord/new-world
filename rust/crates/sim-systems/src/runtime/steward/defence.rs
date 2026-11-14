@@ -36,6 +36,10 @@ fn issue(world: &mut World, res: &mut SimResources, rule: u16, command: Command)
     );
 }
 
+/// Saved `quiet_since` marker: deployed early, the responded pack has not yet entered the
+/// release radius, so the quiet window has not started (no save-format change).
+const AWAITING_APPROACH: u64 = u64::MAX;
+
 /// Fast defence is independent of the slow basic-order planning cadence.
 #[derive(Default)]
 pub struct StewardDefenceSystem;
@@ -138,7 +142,8 @@ impl RuntimeSystem for StewardDefenceSystem {
             .steward
             .defence
             .quiet_since
-            .is_some_and(|start| tick.saturating_sub(start) >= release_ticks);
+            .and_then(|start| tick.checked_sub(start))
+            .is_some_and(|elapsed| elapsed >= release_ticks);
         let release =
             !res.steward.enabled || !res.steward.defence.enabled || threats.is_empty() || quiet;
         if quiet {
@@ -153,6 +158,10 @@ impl RuntimeSystem for StewardDefenceSystem {
             && pack != res.steward.defence.responded_pack;
         if respond {
             res.steward.defence.responded_pack = pack;
+            if !near {
+                // An early response waits for the pack's approach before its quiet window opens.
+                res.steward.defence.quiet_since = Some(AWAITING_APPROACH);
+            }
         }
         let before = res.steward.defence.owned_ids.clone();
         if res.steward.replay {
