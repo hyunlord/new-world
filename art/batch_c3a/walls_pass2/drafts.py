@@ -26,9 +26,9 @@ def write_drafts(output: Path, approved: bool) -> None:
     draft = {
         "status": "VISUAL_APPROVED_DRAFT_NOT_APPLIED"
         if approved
-        else "PENDING_VISUAL_DRAFT_NOT_APPLIED",
+        else "HOLD_REFERENCE_DOOR_GAP_NOT_APPLIED",
         "source_branch": "v8/art-batch-c3a",
-        "source_commit": "PIN_C3A_PASS2_ASSET_COMMIT",
+        "source_commit": "PIN_C3A_PASS4_ASSET_COMMIT",
         "meta_sources": {"structure": "art/batch_c3a/workshops/stations_manifest.json"},
         "merge_instruction": "Append files only; retain existing config. Ground/item/structure metadata does not apply to wall_piece_texture. The importer eagerly reads this valid existing assets list but does not index it for this role.",
         "files": [
@@ -37,7 +37,7 @@ def write_drafts(output: Path, approved: bool) -> None:
                 "id": f"drystone_{name}",
                 "source": f"{prefix}/{name}.png",
                 "dest": f"materials/textures/drystone/pieces/{name}.png",
-                "from": "PIN_C3A_PASS2_ASSET_COMMIT",
+                "from": "PIN_C3A_PASS4_ASSET_COMMIT",
                 "meta_source": "art/batch_c3a/workshops/stations_manifest.json",
             }
             for name in names
@@ -45,7 +45,7 @@ def write_drafts(output: Path, approved: bool) -> None:
     }
     runtime_rows: list[str] = []
     patch = {
-        "status": "PROPOSED_NOT_APPLIED",
+        "status": "HOLD_REFERENCE_DOOR_GAP_NOT_APPLIED",
         "target_style": "drystone",
         "material": "granite",
         "era_binding": "iron",

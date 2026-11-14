@@ -1,4 +1,4 @@
-"""Native stone field on W2 thin runs and solid connected junction footprints."""
+"""Native stone RGB inside immutable shipped W2 alpha stencils."""
 
 from __future__ import annotations
 
@@ -9,11 +9,6 @@ from typing import Final
 from PIL import Image, ImageDraw
 
 TILE: Final = 64
-CAP: Final = 16
-FACE_H: Final = 22
-WALL_W: Final = 26
-MARGIN: Final = 19
-INK: Final = (20, 18, 16, 204)
 
 
 @dataclass(frozen=True, slots=True)
@@ -78,94 +73,70 @@ def course_field(source: Path) -> tuple[Image.Image, CropScore]:
     return field, selected
 
 
-def _ink(
-    image: Image.Image, rectangle: tuple[int, int, int, int], sides: set[str]
-) -> None:
-    """Apply W2's2px exposed-edge ink, never ink an internal neighbour seam."""
-    x, y, width, height = rectangle
-    draw = ImageDraw.Draw(image)
-    for side in sides:
-        match side:
-            case "n":
-                box = (x, y, x + width - 1, y + 1)
-            case "s":
-                box = (x, y + height - 2, x + width - 1, y + height - 1)
-            case "w":
-                box = (x, y, x + 1, y + height - 1)
-            case "e":
-                box = (x + width - 2, y, x + width - 1, y + height - 1)
-            case _:
-                message = f"unknown ink side:{side}"
-                raise ValueError(message)
-        draw.rectangle(box, fill=INK)
-
-
-def _shadow(image: Image.Image) -> None:
-    """Retain the shipped W2 three-row contact shadow."""
-    alpha_values = image.getchannel("A").tobytes()
-    for x in range(64):
-        for y in range(63, 0, -1):
-            if alpha_values[y * 64 + x] >= 96:
-                for step, alpha in ((1, 70), (2, 46), (3, 23)):
-                    target = y + step
-                    if target < 64 and alpha_values[target * 64 + x] < 10:
-                        image.putpixel((x, target), (10, 8, 6, alpha))
-                break
-
-
-def compose_piece(mask: int, field: Image.Image) -> Image.Image:
-    """Keep26px runs while filling the connected footprint of corner/T/X joins."""
-    if not 0 <= mask <= 15 or field.size != (64, 64) or field.mode != "RGBA":
-        message = "mask must be0..15 and native field must be64×64 RGBA"
+def compose_piece(
+    stencil: Image.Image, field: Image.Image, *, tile: tuple[int, int] = (0, 0)
+) -> Image.Image:
+    """Sample world-periodic stone RGB inside exact shipped alpha, retaining contact."""
+    if stencil.width != 64 or stencil.height not in (60, 64) or field.size != (64, 64):
+        message = "stencil must be64×64 or shipped64×60 door; field must be64×64"
         raise ValueError(message)
-    north, east, south, west = (bool(mask & bit) for bit in (1, 2, 4, 8))
-    horizontal, vertical = east or west, north or south
-    x0, x1 = (0 if west else MARGIN), (64 if east else MARGIN + WALL_W)
-    cap_height = 64 if south else CAP
-    image = Image.new("RGBA", (64, 64))
-    horizontal_rect = (x0, 0, x1 - x0, min(WALL_W, cap_height))
-    vertical_rect = (MARGIN, 0, WALL_W, cap_height)
-    rectangles: list[tuple[int, int, int, int]] = []
-    if horizontal or not vertical:
-        rectangles.append(horizontal_rect)
-    if vertical:
-        rectangles.append(vertical_rect)
-    for x, y, width, height in rectangles:
-        image.paste(field.crop((x, y, x + width, y + height)), (x, y))
-    face_x0 = min(rect[0] for rect in rectangles)
-    face_x1 = max(rect[0] + rect[2] for rect in rectangles)
-    faces = [(face_x0, face_x1)] if not south else []
-    # S-bearing side quadrants join the next tile; a short front leaves hollow L/T/X joins.
-    if south and west:
-        faces.append((0, MARGIN))
-    if south and east:
-        faces.append((MARGIN + WALL_W, TILE))
-    face_height = TILE - CAP if south else FACE_H
-    source_y = CAP if south else 0
-    for left, right in faces:
-        image.paste(
-            field.crop((left, source_y, right, source_y + face_height)), (left, CAP)
-        )
-    for rect in rectangles:
-        sides: set[str] = set()
-        if not north:
-            sides.add("n")
-        if not west:
-            sides.add("w")
-        if not east:
-            sides.add("e")
-        if not south and rect == horizontal_rect:
-            sides.add("s")
-        _ink(image, rect, sides)
-    if not south:
-        sides = {"s"}
-        if not west:
-            sides.add("w")
-        if not east:
-            sides.add("e")
-        _ink(image, (face_x0, CAP, face_x1 - face_x0, FACE_H), sides)
+    result = bytearray(stencil.convert("RGBA").tobytes())
+    alpha = stencil.getchannel("A").tobytes()
+    texture = field.convert("RGB").tobytes()
+    for y in range(stencil.height):
+        for x in range(stencil.width):
+            # Contact/shadow pixels use the shipped low-alpha black/brown unchanged.
+            if alpha[y * 64 + x] < 96:
+                continue
+            neighbours = [
+                (x + dx, y + dy)
+                for dx, dy in ((-1, 0), (1, 0), (0, -1), (0, 1))
+                if 0 <= x + dx < stencil.width and 0 <= y + dy < stencil.height
+            ]
+            edge = any(alpha[point[1] * 64 + point[0]] < 96 for point in neighbours)
+            # Tile boundaries are never outlined: their adjacent tile continues the band.
+            sample_x = (tile[0] * TILE + x) % field.width
+            sample_y = (tile[1] * TILE + y) % field.height
+            offset = (sample_y * field.width + sample_x) * 3
+            rgb = texture[offset : offset + 3]
+            lit_edge = any(
+                alpha[ny * 64 + nx] < 96 for nx, ny in neighbours if nx < x or ny < y
+            )
+            shade = (24 if lit_edge else 48) if edge else 0
+            offset = (y * 64 + x) * 4
+            result[offset : offset + 3] = bytes(max(0, value - shade) for value in rgb)
+    return Image.frombytes("RGBA", stencil.size, bytes(result))
+
+
+def door_frame(name: str) -> Image.Image:
+    """Conservative hand-inspected frame mask excludes every wooden moving leaf."""
+    if name not in {
+        f"door_{orientation}_{state}"
+        for orientation in ("ew", "ns")
+        for state in ("closed", "open")
+    }:
+        message = f"unknown shipped door: {name}"
+        raise ValueError(message)
+    frame = Image.new("L", (64, 64))
+    draw = ImageDraw.Draw(frame)
+    if "_ew_" in name:
+        draw.rectangle((0, 0, 19, 63), fill=255)
+        draw.rectangle((0, 0, 63, 7), fill=255)
+        if name.endswith("closed"):
+            draw.rectangle((50, 0, 63, 63), fill=255)
+        else:
+            draw.rectangle((61, 0, 63, 63), fill=255)
     else:
-        for left, right in faces:
-            _ink(image, (left, CAP, right - left, face_height), {"s"})
-    _shadow(image)
-    return image
+        draw.rectangle((0, 0, 63, 14 if name.endswith("closed") else 6), fill=255)
+        draw.rectangle((0, 48 if name.endswith("closed") else 47, 63, 63), fill=255)
+        draw.rectangle((0, 24, 8, 56), fill=255)
+    return frame
+
+
+def compose_door(name: str, stencil: Image.Image, field: Image.Image) -> Image.Image:
+    """Recolour only fixed frame pixels; wood and hardware remain shipped RGBA."""
+    return Image.composite(
+        compose_piece(stencil, field),
+        stencil,
+        door_frame(name).crop((0, 0, *stencil.size)),
+    )

@@ -14,7 +14,12 @@ from typing import Final
 from PIL import Image, ImageDraw
 
 from art.batch_c3a.walls_pass2.drafts import write_drafts
-from art.batch_c3a.walls_pass2.native import compose_piece, course_field, crop_scores
+from art.batch_c3a.walls_pass2.native import (
+    compose_door,
+    compose_piece,
+    course_field,
+    crop_scores,
+)
 from art.batch_c3a.walls_pass2.review_boards import JoinView, plans, write_zooms
 
 ROOT: Final = Path(__file__).resolve().parents[3]
@@ -70,6 +75,7 @@ def comparison(
     stone: Mapping[int, Image.Image],
     log: Mapping[int, Image.Image],
     doors: Mapping[str, Image.Image],
+    stone_doors: Mapping[str, Image.Image],
 ) -> Image.Image:
     """Show5×4, L and T/X plans against the shipped log rooms at identical pixel density."""
     board = Image.new("RGBA", (704, 984), "#d0ccbb")
@@ -84,7 +90,17 @@ def comparison(
             (("shipped log", log), ("native stone", stone))
         ):
             board.alpha_composite(
-                room(pieces, plan.cells, placed_doors), (col * 352, row * 328 + 20)
+                room(
+                    pieces,
+                    plan.cells,
+                    {
+                        cell: (stone_doors if col else doors)[
+                            ("ew" if cell == plan.ew else "ns") + "_" + plan.state
+                        ]
+                        for cell in placed_doors
+                    },
+                ),
+                (col * 352, row * 328 + 20),
             )
             draw.text(
                 (col * 352 + 10, row * 328 + 5),
@@ -99,8 +115,8 @@ def export(source: Path, output: Path, *, approved: bool = False) -> None:
     output.mkdir(parents=True, exist_ok=False)
     field, selected = course_field(source)
     field.save(output / "stone_course_native.png")
-    stone = {mask: compose_piece(mask, field) for mask in range(16)}
     log = {mask: log_image(f"mask_{mask:02}") for mask in range(16)}
+    stone = {mask: compose_piece(log[mask], field) for mask in range(16)}
     for mask, image in stone.items():
         image.save(output / f"mask_{mask:02}.png")
     for name, mask in CAPS.items():
@@ -110,9 +126,13 @@ def export(source: Path, output: Path, *, approved: bool = False) -> None:
         for orientation in ("ew", "ns")
         for state in ("closed", "open")
     }
-    for name, image in doors.items():
+    stone_doors = {
+        name: compose_door(f"door_{name}", image, field)
+        for name, image in doors.items()
+    }
+    for name, image in stone_doors.items():
         image.save(output / f"door_{name}.png")
-    board = comparison(stone, log, doors)
+    board = comparison(stone, log, doors, stone_doors)
     board.convert("RGB").save(output / "rooms_1x.png")
     board.resize((board.width * 2, board.height * 2), Image.Resampling.NEAREST).convert(
         "RGB"
@@ -126,7 +146,16 @@ def export(source: Path, output: Path, *, approved: bool = False) -> None:
         )
         images = {
             "shipped log": room(log, plan.cells, placed),
-            "native stone": room(stone, plan.cells, placed),
+            "native stone": room(
+                stone,
+                plan.cells,
+                {
+                    cell: stone_doors[
+                        ("ew" if cell == plan.ew else "ns") + "_" + plan.state
+                    ]
+                    for cell in placed
+                },
+            ),
         }
         for cell in sorted(plan.cells, key=lambda c: (c[1], c[0])):
             mask = topology(cell, plan.cells)
@@ -140,7 +169,7 @@ def export(source: Path, output: Path, *, approved: bool = False) -> None:
         contact.alpha_composite(image, (x + 32, y))
         draw.text((x + 5, y - 14), f"mask{mask:02}", fill="#302923")
     for index, (name, image) in enumerate(doors.items()):
-        contact.alpha_composite(image, (index * 128 + 32, 362))
+        contact.alpha_composite(stone_doors[name], (index * 128 + 32, 362))
         draw.text((index * 128 + 4, 347), name, fill="#302923")
     contact.convert("RGB").save(output / "contact_1x.png")
     contact.resize((1024, 848), Image.Resampling.NEAREST).convert("RGB").save(
@@ -153,7 +182,7 @@ def export(source: Path, output: Path, *, approved: bool = False) -> None:
     manifest = {
         "status": "LEADER_AND_INDEPENDENT_VISUAL_APPROVED_NOT_IMPORTED"
         if approved
-        else "CANDIDATE_PENDING_INDEPENDENT_VISUAL",
+        else "HOLD_REFERENCE_DOOR_GAP_NOT_IMPORTED",
         "era": "iron",
         "style": "drystone",
         "material": "granite",
@@ -161,10 +190,10 @@ def export(source: Path, output: Path, *, approved: bool = False) -> None:
         "anchor": [32, 59],
         "world_origin": [0, -16],
         "wall_width": 26,
-        "width_policy": "26px straight shafts; south-connected corner/T/X side quadrants are solid native stone through row63",
+        "width_policy": "Exact shipped alpha for every pixel; no added junction fill",
         "cap_height": 16,
         "face_height": 22,
-        "face_policy": "22px straight front; junction continuation uses native field through tile depth, not a stretched front",
+        "face_policy": "Exact shipped stencil; native world-periodic RGB only",
         "bits": {"N": 1, "E": 2, "S": 4, "W": 8},
         "course": {
             "source": str(source.relative_to(ROOT)),
@@ -178,18 +207,20 @@ def export(source: Path, output: Path, *, approved: bool = False) -> None:
                 ["git", "rev-parse", REFERENCE], cwd=ROOT, text=True
             ).strip(),
             "paths": PREFIX + "{mask_00..15,door_ew/ns_open/closed}.png",
-            "door_policy": "Reuse unchanged shipped wooden doors in stone walls; no generated/rotated NS substitute.",
+            "door_policy": "Shipped RGBA outside explicit fixed frame regions; frame RGB stone, alpha exact.",
+            "caps_policy": "No separate cap PNG exists in source tree; cap exports use named mask stencils, verified pixel-identical to that selected source mask.",
         },
-        "composition": "W2 straight geometry; full connected corner/T/X coverage; one native field for every top/front surface. No separate dark blurred cap, no rescaled face/end patches. W2 exposed2px ink and3row contact shadow retained.",
+        "composition": "Shipped alpha unchanged. Native64px-period stone at world phase (tile*64+local);1px RGB edge shade, low-alpha contact/shadow RGBA retained.",
         "caps": CAPS,
-        "pass": 3,
+        "acceptance_limit": "Exact alpha and floor parity; inherited64x60 NS door leaves4px gap at64px stride. Literal no-background criterion is HELD, never repaired by altering alpha.",
+        "pass": 4,
         "join_zoom_count": len(views),
         "join_zoom_policy": "Every corner/T/X instance in all three rooms, with16px neighbour context, nearest4x",
         "outputs": rows,
         "capability": {
             "status": "VISUAL_APPROVED_DRAFT_NOT_APPLIED"
             if approved
-            else "DRAFT_NOT_APPLIED_PENDING_REVIEW",
+            else "HOLD_REFERENCE_DOOR_GAP_NOT_APPLIED",
             "runtime_rows_to_append": [],
             "canvas": [64, 64],
             "anchor": [32, 59],
@@ -205,7 +236,7 @@ def export(source: Path, output: Path, *, approved: bool = False) -> None:
     }
     _ = (output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     write_drafts(output, approved)
-    evidence = Path("/Users/rexxa/work/art-batch/C3A/pass3")
+    evidence = Path("/Users/rexxa/work/art-batch/C3A/pass4")
     evidence.mkdir(parents=True, exist_ok=True)
     _ = (evidence / "wall_crop_scores.json").write_text(
         json.dumps(

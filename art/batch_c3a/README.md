@@ -61,3 +61,12 @@ path. Straight pieces, native density and doors remain unchanged. The new
 5x4/L/T+X comparison and26 individual4x join views are the acceptance evidence.
 See walls_pass2/README.md for the deliberate solid junction footprint and the
 rejected first repair. No new generation or game import is involved.
+
+## Pass4 stone geometry supersedes Pass3
+
+The current wall export uses shipped log-alpha stencils rather than Pass3 solid
+junction quadrants. See `walls_pass2/README.md` and ADR0019. No game import is
+performed; other art deliveries and held candidates retain their prior status.
+
+Overall Pass4 wall adoption is held for the inherited NS door/wall4px gap: exact
+source alpha is delivered without claiming the no-background criterion passed.

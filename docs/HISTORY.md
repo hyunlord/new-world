@@ -1,5 +1,7 @@
 # WorldSim 역사
 
+- 2026-11-14 — C3A Pass4: 통나무 알파 스텐실로 석벽 형상을 고정해 Pass3의 방 내부 소실을 대체 (`art/batch_c3a/walls_pass2/`, ADR0019); 게임 미적용.
+
 - 2026-11-14 — C3A Pass3: 석벽 안쪽 모서리·T/X 접합의 투명 공백을 수정하고 3개 방·26곳 확대 검증으로 이전 판정을 대체 (`art/batch_c3a/walls_pass2/README.md`, ADR0018); 게임 미적용.
 
 - 2026-11-14 — C3A Pass2: 통나무 기준 네이티브 석벽 재조립과 4차 모루 검증·인계 (`art/batch_c3a/walls_pass2/`, `art/batch_c3a/workshops/README.md`); 게임 미적용.

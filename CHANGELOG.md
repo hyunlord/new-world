@@ -5,6 +5,20 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## C3A Pass4 log-alpha stone stencils — 2026-11-14
+
+### Changed
+- Supersede Pass3 full junction blocks with the exact shipped log alpha for
+  stone masks and caps; retain wooden doors and contact/shadow pixels (ADR0019).
+- Preserve room interiors with native world-coordinate stone sampling and
+  restrained edge/light RGB treatment; import drafts remain unapplied.
+- Hold overall visual adoption: pinned64x60 NS doors retain a4px connection
+  gap at64px stride, which cannot be filled under exact-alpha requirements.
+
+### Added
+- Complete-piece alpha and room-coverage regression checks alongside the
+  three room comparisons and26 individual4x join contexts.
+
 ## C3A Pass3 solid stone joins — 2026-11-14
 
 ### Changed

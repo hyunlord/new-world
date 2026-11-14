@@ -1,5 +1,5 @@
 {
-  "status": "LEADER_AND_INDEPENDENT_VISUAL_APPROVED_NOT_IMPORTED",
+  "status": "HOLD_REFERENCE_DOOR_GAP_NOT_IMPORTED",
   "era": "iron",
   "style": "drystone",
   "material": "granite",
@@ -16,10 +16,10 @@
     -16
   ],
   "wall_width": 26,
-  "width_policy": "26px straight shafts; south-connected corner/T/X side quadrants are solid native stone through row63",
+  "width_policy": "Exact shipped alpha for every pixel; no added junction fill",
   "cap_height": 16,
   "face_height": 22,
-  "face_policy": "22px straight front; junction continuation uses native field through tile depth, not a stretched front",
+  "face_policy": "Exact shipped stencil; native world-periodic RGB only",
   "bits": {
     "N": 1,
     "E": 2,
@@ -43,9 +43,10 @@
   "reference": {
     "commit": "d086d7c54d1b29421c9f7540f3a9358f0c054314",
     "paths": "assets/v8art/materials/textures/log/pieces/{mask_00..15,door_ew/ns_open/closed}.png",
-    "door_policy": "Reuse unchanged shipped wooden doors in stone walls; no generated/rotated NS substitute."
+    "door_policy": "Shipped RGBA outside explicit fixed frame regions; frame RGB stone, alpha exact.",
+    "caps_policy": "No separate cap PNG exists in source tree; cap exports use named mask stencils, verified pixel-identical to that selected source mask."
   },
-  "composition": "W2 straight geometry; full connected corner/T/X coverage; one native field for every top/front surface. No separate dark blurred cap, no rescaled face/end patches. W2 exposed2px ink and3row contact shadow retained.",
+  "composition": "Shipped alpha unchanged. Native64px-period stone at world phase (tile*64+local);1px RGB edge shade, low-alpha contact/shadow RGBA retained.",
   "caps": {
     "end_n": 1,
     "end_e": 2,
@@ -56,241 +57,242 @@
     "corner_nw": 9,
     "corner_sw": 12
   },
-  "pass": 3,
+  "acceptance_limit": "Exact alpha and floor parity; inherited64x60 NS door leaves4px gap at64px stride. Literal no-background criterion is HELD, never repaired by altering alpha.",
+  "pass": 4,
   "join_zoom_count": 26,
   "join_zoom_policy": "Every corner/T/X instance in all three rooms, with16px neighbour context, nearest4x",
   "outputs": [
     {
       "path": "contact_1x.png",
-      "sha256": "b49131f10b41bca918aabe36ea603bc4d2cb2e0ad191c929651218fc779361cd"
+      "sha256": "e52ba2ad8ce0e5cd17f43b3b7e4b03f148ca9a2424ac17b90cd09c867a6e2fcf"
     },
     {
       "path": "contact_2x.png",
-      "sha256": "8893759daa795527b327476f0a29f2e3bc78c8e363b60662abc8de53dc42efd4"
+      "sha256": "80b10653eed1e243a02a2afa534eef456ef0ac5e4f66760508cc47ceda035b53"
     },
     {
       "path": "corner_ne.png",
-      "sha256": "e2c3ab25e8f5460aa7010d0cbb139bda15b827a6da31c917dbcc0126259c50e4"
+      "sha256": "4fd0b4a208af07c2a2b63feaf90ea5c7952c5ef376b129071a0ba8b97a1c7918"
     },
     {
       "path": "corner_nw.png",
-      "sha256": "17f2ecec9acb106873c0d969679d3e9e136aa300866e24be7fbc56b1bfb5b69f"
+      "sha256": "aacb95a891e41386e2f6701451c33e173ea0b7a44f6e460ca99541d49ea86220"
     },
     {
       "path": "corner_se.png",
-      "sha256": "e2fe1220ab2ad37c50c6fd00b0070c5849002538cad06842ba833b18fd47852f"
+      "sha256": "c8d811ce52f7cac24fb8d047745cdaafa564ea9c3af6177fa8922838ac10b529"
     },
     {
       "path": "corner_sw.png",
-      "sha256": "7bb7ef7233a290d0751b9b10b97cfcdc091d5ba1808a55e2cf9feb66c2885257"
+      "sha256": "63faf80ba3c618c86dd6ecf8294d267b8deb3f91c9c0e23b4dc1b92b085d7a85"
     },
     {
       "path": "door_ew_closed.png",
-      "sha256": "ffbfd5649d847829303dc287d407f94e42671a5242f1fa79758630a7ee5542ba"
+      "sha256": "5301dbd8943766fa96aa3e971b34092d17008a216240ed5c212c21be7e8c5eea"
     },
     {
       "path": "door_ew_open.png",
-      "sha256": "801fcd7f155a1ead32429454d9980b976f16798f001b1a3f2d8b9efb49ed62b7"
+      "sha256": "f6a62bc5de143465a07a2e387df70c6028d0cee4f179ea2d736cbcbf4b4ab615"
     },
     {
       "path": "door_ns_closed.png",
-      "sha256": "db4c78ec6c076f1ccadbc13c20f6d0829024fc90f92a8e03e04ffd7a43611441"
+      "sha256": "c516cd1f58cd7533e54545c0da4a659563e0a97f294607860a9fa19addbaaa56"
     },
     {
       "path": "door_ns_open.png",
-      "sha256": "245e3d4da165c2ac92674967bd3e2037c8f935a899f10b400adf2e9acf096d8f"
+      "sha256": "4dceade616e317974b4f22dfeaf322ed0c37806ba96f8d71fe9265b190ffdde0"
     },
     {
       "path": "end_e.png",
-      "sha256": "da1fbeba3df6676edb6c395f03567c858d942dc910ecd345a072bcc339b7f73e"
+      "sha256": "3619fde6c0e4e0429b1d88dc479df62df4c602f90c9692e2bff28b4f13889d85"
     },
     {
       "path": "end_n.png",
-      "sha256": "c0e1f8527162a16cc4db6b94eed7338f95c4b5dc6d3e529b9c3ee39ab6f0c784"
+      "sha256": "8067ecd92029b0fbd34858f6a8838576ca204fb91595d8401ab20055dfe39b84"
     },
     {
       "path": "end_s.png",
-      "sha256": "060e9ce4954cf977d4bc0bb53474ff03831cdc9bfcf4e9a203aff2690c075ca4"
+      "sha256": "c25d36831801a97de4b4f3bc23f8b6fd44d11ee37f5f09f23586ce5d5bf02112"
     },
     {
       "path": "end_w.png",
-      "sha256": "929946f62c2332c84c4d877c93bd84f8de8a173143534fb335b96ecdef9008d4"
+      "sha256": "5d3df92c323db58f9e2d67e791fabaa27fcc2aca1a9211ac9c03872121e75c68"
     },
     {
       "path": "join_zooms_4x/00_5x4_0_0_mask06.png",
-      "sha256": "cddf300d40ebca4bf79dcf35d95c5691d8017d209aa25d79e9a1985f19326c8d"
+      "sha256": "0e8542663e1cd4683d28a752e3c4db9e458de63cfc11a72271f4bbef1ab73e1b"
     },
     {
       "path": "join_zooms_4x/01_5x4_4_0_mask12.png",
-      "sha256": "418bf4422e2c84f8d8c2d9c9cfef94f8f65133b381b89a5cca361c367e17f0c4"
+      "sha256": "80a19776ad22ea85624cde31f0d6ea50b98313f99a2d31cebf6745c0a93c6330"
     },
     {
       "path": "join_zooms_4x/02_5x4_0_3_mask03.png",
-      "sha256": "8311744376836d8aa0485cf777f7e7150cfdd26c6d79f308ef4d6b57aa64c881"
+      "sha256": "a302fd00de6238784665413b554234faa89ec8e9fdd73635a9a5ef71a491b738"
     },
     {
       "path": "join_zooms_4x/03_5x4_4_3_mask09.png",
-      "sha256": "a99808ef6afd05844d9e358a797706f2c2dead4460974a7790f9321517e695c5"
+      "sha256": "8fefb5bdb48912b3790d20749ab5ef40aa2d68c7a8e974e0803733591fc46507"
     },
     {
       "path": "join_zooms_4x/04_L_0_0_mask06.png",
-      "sha256": "3bf18a1258cf31575d367679323180ad51b98f7c6ea05d73ffca11446918cec3"
+      "sha256": "d1f899257b607ff09aa68cb7924bd59c28289683a0f858c0866bc9d2dc067221"
     },
     {
       "path": "join_zooms_4x/05_L_2_0_mask14.png",
-      "sha256": "0b2c805062338d406504c38f7830d39aef69ca3a2595509e9d7483a624fa2a2d"
+      "sha256": "c8c18069fea8fe157cbc9cc7958861604bd8519626eb32ead3297e151a057d2d"
     },
     {
       "path": "join_zooms_4x/06_L_3_0_mask14.png",
-      "sha256": "3663e89a7c75061db8fc2e02d26e574e6c869a999bbdf3d8842ebd1a04d6ca8f"
+      "sha256": "e61a9ee5897034514f78f488414f4fc12dbe8e5dea02aed78c7a13f7fbf21ccd"
     },
     {
       "path": "join_zooms_4x/07_L_4_0_mask12.png",
-      "sha256": "57633ec4bcfe546fec5b783629385f38fbfaed2661c05fe4687e1d92a6697dd2"
+      "sha256": "5bf53515f9f023541ab98dcffc1dc94dec0d84687604148e991e7a63a6c4d998"
     },
     {
       "path": "join_zooms_4x/08_L_2_1_mask07.png",
-      "sha256": "1a7ab6ee9f2f22f10f0b8b1c1f6693e6553a57514693b061176c64802c28e9a9"
+      "sha256": "05f1e2b475227e5ef66eb8f2f1a359f03768652bf14a38c0cb4f8c05bc4e5e14"
     },
     {
       "path": "join_zooms_4x/09_L_3_1_mask11.png",
-      "sha256": "e706f21770d0288726282129b1cb055bc0a82ae7b5629ac2de3ec4f164e05151"
+      "sha256": "3d0b88a9b3ddc5132fee3f7a1b0ab0dce4605afd6f976dddcf608b14e70c648a"
     },
     {
       "path": "join_zooms_4x/10_L_4_1_mask09.png",
-      "sha256": "ede90983bfe58ccfd87f21860319afd80d9ed1cfc62bbcd34beeb62faa4f02fc"
+      "sha256": "09ac3e080ff5bfea23524520866e864a0f5fbabb3ab69db71a629232b5cecb46"
     },
     {
       "path": "join_zooms_4x/11_L_0_3_mask03.png",
-      "sha256": "2fc6a5f628ae42c08e0d16f60fc4b79a672534652977c78e9588e2d78dd7103a"
+      "sha256": "338cf7e6c8726bab42ad3b3e8f4d2bd3beaf1c6efb54e1601497749c23d0e6c2"
     },
     {
       "path": "join_zooms_4x/12_L_2_3_mask09.png",
-      "sha256": "7a3a8cae49a49dee2726613a8f09fec47c3b44daec55c9f00a6fbc5195f01d17"
+      "sha256": "d778377369f99c1c418ccd874d6f6abcf58d3505a44484250baf1726fed9b010"
     },
     {
       "path": "join_zooms_4x/13_T_X_0_0_mask06.png",
-      "sha256": "ee916e962483a9303198ad7d052db353df08f2e30d18447addd353fd028bd455"
+      "sha256": "0ffa70e8e99998dff6fc9d1b661382156ebfda099f8929b1eaea96fb058471b9"
     },
     {
       "path": "join_zooms_4x/14_T_X_2_0_mask14.png",
-      "sha256": "1f645adae59606c5bee69d797e48ffd55eb2350f0a744237477a1c92a8e3b730"
+      "sha256": "867cc3e1f18ff497c640e9ca19b158f13667eb8552f8e3e3959168cb2724b2e1"
     },
     {
       "path": "join_zooms_4x/15_T_X_4_0_mask12.png",
-      "sha256": "73e05c948dd1c45ea15d451940c07bb9cdb4ff44aa2f6a6618c67189f7a15ef2"
+      "sha256": "54a229ffcaec02a84f39e8011044bfc8a904f7ac9bf0841c36982ab5ac5ca045"
     },
     {
       "path": "join_zooms_4x/16_T_X_0_2_mask07.png",
-      "sha256": "f34e558cf889a792cc51e43fd95f6ff1a84d80126a579d06a3b444084e2659b9"
+      "sha256": "f06520b79a3fa766a28e0afef25db453fe0a25db53604e2e30f2fa435322a977"
     },
     {
       "path": "join_zooms_4x/17_T_X_1_2_mask14.png",
-      "sha256": "5bb2a8a6ab69aa228d3812a8810a90ebb6fa61ca608f5fbaf97b01a85a75ec83"
+      "sha256": "30f712d88e39279f1f4015d572b52aee2561b620e8b4e76d78af2f684ef6e307"
     },
     {
       "path": "join_zooms_4x/18_T_X_2_2_mask15.png",
-      "sha256": "78548dabffa414292dade32fd2ab5c69dcb8b32cae816bdcbf0afd1be3b26c25"
+      "sha256": "c1ff294ff0107967789763ff53b130cef2292cddba2f48ad0b847d2c21398a2b"
     },
     {
       "path": "join_zooms_4x/19_T_X_3_2_mask14.png",
-      "sha256": "c430587ad39b71e3295bd1dde5c27b8a97b28048dcf612be6c31b8a230894aeb"
+      "sha256": "37befca6fdd5d7d1f7af1a2f72df5815255682346a0d028d4e0f58506978716b"
     },
     {
       "path": "join_zooms_4x/20_T_X_4_2_mask13.png",
-      "sha256": "398e915f516fb9a0c9d13ce67543001e49676d7ac10dd4f0e4450f5af3d13eab"
+      "sha256": "7b5a7d6524f5d9f76aea93699539c8395cc2b5f63a5a19a6748e6455bfa0dabb"
     },
     {
       "path": "join_zooms_4x/21_T_X_0_3_mask03.png",
-      "sha256": "1ac933f2c044be9eb297daab666ebc8ea84b027fd44acb796e0b6c8254ceb8cb"
+      "sha256": "b30184cbeb048bfdb572d8d6a254469466f4317c0c0e18037840d6ce5ae51a43"
     },
     {
       "path": "join_zooms_4x/22_T_X_1_3_mask11.png",
-      "sha256": "37712db6d714d794c481938570fa0113cc61fd27ff7d6ff3e7fa92272122d460"
+      "sha256": "0e19f61ad85b4ab93972e6b78c91a22fbdeec759ad4d71049ee1c8c564527509"
     },
     {
       "path": "join_zooms_4x/23_T_X_2_3_mask11.png",
-      "sha256": "3df5de62be12f39aaffeeb0d289d34ae9f9bad058a1f1af7216f9b47a6ddd2f1"
+      "sha256": "c2da146de2107f784f6043aaa1ac0ad78a2bee748b320233fb62f2d1d0e6305c"
     },
     {
       "path": "join_zooms_4x/24_T_X_3_3_mask11.png",
-      "sha256": "50a5c48e2c60403f448933902f61c9203a94cdd2195b99914f866973def3d1ee"
+      "sha256": "ec62642e90c90bb6f0f0a59a542b7647ad34d83f607baa7d598711a72fd79a37"
     },
     {
       "path": "join_zooms_4x/25_T_X_4_3_mask09.png",
-      "sha256": "121a9195d94815e7e5a04d5f8bbbcae5e02ae55a9b721de00821f4253a192a59"
+      "sha256": "7e9f438c13586dac6a9191bafa1e9f3249099c4fca54eba9c5c356855aa699ff"
     },
     {
       "path": "mask_00.png",
-      "sha256": "ad083cd78b713560ff896cb6c12ea4c84c8ec94102ee23b65a112b4b21b6ed97"
+      "sha256": "8ae65c5778370d37eba4a5a01d153d9dc219089e603cc09e224354cd1b26835b"
     },
     {
       "path": "mask_01.png",
-      "sha256": "c0e1f8527162a16cc4db6b94eed7338f95c4b5dc6d3e529b9c3ee39ab6f0c784"
+      "sha256": "8067ecd92029b0fbd34858f6a8838576ca204fb91595d8401ab20055dfe39b84"
     },
     {
       "path": "mask_02.png",
-      "sha256": "da1fbeba3df6676edb6c395f03567c858d942dc910ecd345a072bcc339b7f73e"
+      "sha256": "3619fde6c0e4e0429b1d88dc479df62df4c602f90c9692e2bff28b4f13889d85"
     },
     {
       "path": "mask_03.png",
-      "sha256": "e2c3ab25e8f5460aa7010d0cbb139bda15b827a6da31c917dbcc0126259c50e4"
+      "sha256": "4fd0b4a208af07c2a2b63feaf90ea5c7952c5ef376b129071a0ba8b97a1c7918"
     },
     {
       "path": "mask_04.png",
-      "sha256": "060e9ce4954cf977d4bc0bb53474ff03831cdc9bfcf4e9a203aff2690c075ca4"
+      "sha256": "c25d36831801a97de4b4f3bc23f8b6fd44d11ee37f5f09f23586ce5d5bf02112"
     },
     {
       "path": "mask_05.png",
-      "sha256": "9fb327d732d78ad8ac20d72271324b3a5447193e81dffd340215d9335d93d1c1"
+      "sha256": "02630be0ce7c1a6c45f740de4c820aa058a900ada94e344e10b587bd71d1d161"
     },
     {
       "path": "mask_06.png",
-      "sha256": "e2fe1220ab2ad37c50c6fd00b0070c5849002538cad06842ba833b18fd47852f"
+      "sha256": "c8d811ce52f7cac24fb8d047745cdaafa564ea9c3af6177fa8922838ac10b529"
     },
     {
       "path": "mask_07.png",
-      "sha256": "0487b477a0e2707f4865b4c95efa80fd23cf5a22b63d043c3f71a0cde3bfcc2a"
+      "sha256": "ff49a16cb1c66774f69375bc3e7c5aad9cb1371574a8b5927b7f7ad209f7fb5c"
     },
     {
       "path": "mask_08.png",
-      "sha256": "929946f62c2332c84c4d877c93bd84f8de8a173143534fb335b96ecdef9008d4"
+      "sha256": "5d3df92c323db58f9e2d67e791fabaa27fcc2aca1a9211ac9c03872121e75c68"
     },
     {
       "path": "mask_09.png",
-      "sha256": "17f2ecec9acb106873c0d969679d3e9e136aa300866e24be7fbc56b1bfb5b69f"
+      "sha256": "aacb95a891e41386e2f6701451c33e173ea0b7a44f6e460ca99541d49ea86220"
     },
     {
       "path": "mask_10.png",
-      "sha256": "c85124649916e2535b7a345d02809b471e1863795a3a5c8c2395f556721c14d7"
+      "sha256": "f4f162f04414d3432f402f6fcb4f992d67f7161cc37eb4e58f74fe91c8111294"
     },
     {
       "path": "mask_11.png",
-      "sha256": "fce3c4a75e31922fe39feb1e12b99ede6cf85109b1339021b4ce87188dcb3374"
+      "sha256": "d91a792a2bd8682a441ca31b5f48c87955dab4888617c09bc5224703a22237a3"
     },
     {
       "path": "mask_12.png",
-      "sha256": "7bb7ef7233a290d0751b9b10b97cfcdc091d5ba1808a55e2cf9feb66c2885257"
+      "sha256": "63faf80ba3c618c86dd6ecf8294d267b8deb3f91c9c0e23b4dc1b92b085d7a85"
     },
     {
       "path": "mask_13.png",
-      "sha256": "742c527fdf5c198feb96056aa0ef31c5af75c31c8002fd287007b56181bc48ef"
+      "sha256": "0d59207e2cb6b8594bfcec67be720708d0d5a7300afd168ea1b85369cc8dbd47"
     },
     {
       "path": "mask_14.png",
-      "sha256": "0ec85abbb3ce99ef38668e08d0c2b698646fe4822582a29a2d68bbc618103095"
+      "sha256": "8ce6d8e0a96130a45d6b53d26c68fd0d4e8ad685d6e719fdebd3c55a32787f55"
     },
     {
       "path": "mask_15.png",
-      "sha256": "a0f1986b728a57c4d016eecfb941d270a7e6f3ca61269a013f3fc6b1924a41d2"
+      "sha256": "e266ae4caf3ca4c0bb89d5d4f393158fd0e09e19353c86ea4bb9b181f89b76f8"
     },
     {
       "path": "rooms_1x.png",
-      "sha256": "84682b88d093513c4cd38a8d6400348b18d682bde4f5209ae36e15e0eb08a145"
+      "sha256": "8c85d6f7d8468698c09a71495771ce1adc1bc2eb8ea3ef1fad5bee1b3e0eeb18"
     },
     {
       "path": "rooms_2x.png",
-      "sha256": "bfed8b386ec5b89e3e4017f1903618ad49ee97a72256ae428c92fb03475a36e7"
+      "sha256": "44b0b4d5cc37a9bd2dce3e6e362761b4b60d32aa14f9bae180b2c47e61503df3"
     },
     {
       "path": "stone_course_native.png",
@@ -298,7 +300,7 @@
     }
   ],
   "capability": {
-    "status": "VISUAL_APPROVED_DRAFT_NOT_APPLIED",
+    "status": "HOLD_REFERENCE_DOOR_GAP_NOT_APPLIED",
     "runtime_rows_to_append": [],
     "canvas": [
       64,
