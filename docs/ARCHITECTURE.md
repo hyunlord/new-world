@@ -932,3 +932,16 @@ pen marker. Recurring wool production uses the existing livestock work path,
 physical placement and ledger. Material-look overlays in handwritten render
 parameters extend the pinned import through the same resolver used by walls
 and item icons. See [ADR0063](decisions/0063-surface-ore-and-metal-chain.md).
+
+## 3D view (M3D-1, ADR 0066)
+
+`scenes/world3d/World3D.tscn` (`scripts/world3d/world3d.gd`) is added under `Main` by `scripts/core/main_bootstrap.gd`
+when `scripts/world3d/renderer_switch.gd` asks for 3D; the 2D `ColonyView` stays hidden in the tree. Layers, each a
+`Node3D` made in code: `terrain3d.gd` (chunked ground, water), `flora3d.gd` (trees, bushes, nodes, outcrops as
+MultiMeshes), `structures3d.gd` (walls, doors, fences, floors, roofs, cutaway, sites), `props3d.gd` (stations, camp
+buildings, bedrolls, items, fire lights), `people3d.gd` and `animals3d.gd` (VAT crowds through `vat3d.gd`),
+`overlay3d.gd` (per-tile overlay texture), `sky3d.gd` (sun, sky, seasons) and `camera_rig.gd` (follows the Camera2D).
+`world3d.gd` publishes a per-frame change stamp (colony versions, tick) that gates every heavy snapshot read, and is
+the `scripts/world/view_projection.gd` provider for screen ↔ world conversion. Data: `assets/3d/params3d.json`,
+`assets/3d/bindings3d.json`, models and VAT from `tools/3d/blender/build_all.py`.
+

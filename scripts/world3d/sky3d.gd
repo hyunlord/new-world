@@ -93,6 +93,8 @@ func _process(_delta: float) -> void:
 			var tint: Color = Data3D.colour((Data3D.param("terrain.season_tint", {}) as Dictionary).get(str(season), []), Color.WHITE)
 			mat.set_shader_parameter("season_tint", Vector3(tint.r, tint.g, tint.b))
 			mat.set_shader_parameter("snow", float((Data3D.param("terrain.snow_cover", {}) as Dictionary).get(str(season), 0.0)))
+		# Roofs and plants read the same cover (global `w3d_snow`).
+		RenderingServer.global_shader_parameter_set("w3d_snow", float((Data3D.param("terrain.snow_cover", {}) as Dictionary).get(str(season), 0.0)))
 
 
 func _apply_hour(hour: float) -> void:
@@ -124,5 +126,6 @@ func _apply_hour(hour: float) -> void:
 	var amb_day: Color = Data3D.colour(Data3D.param("light.day_ambient", []), Color(0.8, 0.82, 0.86))
 	var amb_night: Color = Data3D.colour(Data3D.param("light.night_ambient", []), Color(0.18, 0.22, 0.38))
 	environment.ambient_light_color = amb_night.lerp(amb_day, day)
+	environment.ambient_light_energy = lerpf(float(Data3D.param("light.night_ambient_energy", 0.5)), float(Data3D.param("light.ambient_energy", 0.32)), day)
 	environment.background_energy_multiplier = lerpf(0.12, 1.0, day)
 	environment.fog_light_color = Color(0.12, 0.14, 0.22).lerp(Color(0.7, 0.76, 0.82), day)

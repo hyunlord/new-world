@@ -2,11 +2,11 @@
 // One merged surface per model variant (flora3d.gd `_mesh_variant`): COLOR is the baked surface colour (sRGB) × the
 // MultiMesh instance colour (per-plant value variation); UV.y is the sway (bends vertices above 1 m with a slow wind),
 // UV.x the kind (1 glow: emissive embers; 2 vein: a faint self-light and a sparkle so ore veins read at the default
-// zoom); `snow` whitens upward faces (winter).
+// zoom); the global `w3d_snow` whitens upward faces (winter).
 shader_type spatial;
 render_mode diffuse_lambert, specular_disabled;
 
-uniform float snow = 0.0;
+global uniform float w3d_snow;
 varying float kind;
 // Set every frame by camera_rig.gd: the camera, the look target and the x-ray radius (metres).
 global uniform vec3 w3d_camera;
@@ -65,7 +65,7 @@ void fragment() {
 		c = mix(c, mark.rgb * mark.rgb, clamp(mark.a * 1.6, 0.0, 0.75));
 	}
 	float up = clamp(world_normal.y, 0.0, 1.0);
-	c = mix(c, vec3(0.92, 0.94, 0.98), snow * smoothstep(0.45, 0.85, up));
+	c = mix(c, vec3(0.80, 0.85, 0.92), w3d_snow * smoothstep(0.45, 0.85, up));
 	ALBEDO = c;
 	ROUGHNESS = 0.9;
 	if (kind > 0.5 && kind < 1.5) {

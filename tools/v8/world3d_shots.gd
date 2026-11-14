@@ -4,9 +4,11 @@
 #   zoom; in 3D also the yaw in 90° steps and a pinned hour) and saves `<prefix>_<i>_z<zoom>.png`. Prints
 #   `W3D_SHOT <json>` per shot and `W3D_SHOTS_DONE n=<count>`; any failure quits 1.
 #   `Godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script res://tools/v8/world3d_shots.gd -- ...`
+#   `--rooms 1` shows the room overlay (R); `--channel N` (3D) shows influence channel N (O pressed N+1 times);
+#   `--advance T` runs the clock T ticks before the shots (both renderers replay the same world).
 #   `--ui off` hides the HUD/panels CanvasLayer for clean world frames.
 #   (3D needs a real renderer: use the default Forward+ driver, not opengl3, for 3D shots.)
-# Bridge methods called: load_world (direct); via SimReads get_time_snapshot.
+# Bridge methods called: load_world, advance_ticks (direct); via SimReads get_time_snapshot.
 extends SceneTree
 
 const View = preload("res://scripts/world/colony/view.gd")
@@ -60,6 +62,15 @@ func _run() -> void:
 	var w3d: Node = _main.get_node_or_null("World3D")
 	if w3d != null and _arg("--hour") != "":
 		w3d.get_node("Sky").call("set_hour_override", float(_arg("--hour")))
+	# `--advance N` runs the clock N ticks first (e.g. into winter); the 2D and 3D runs replay the same world.
+	if _arg("--advance") != "":
+		_world.call("advance_ticks", int(_arg("--advance")))
+		await _frames(10)
+	if _arg("--rooms") == "1":
+		_main.get_node("ColonyView/OverlayLayer/Rooms").call("toggle")
+	if w3d != null and _arg("--channel") != "":
+		for _k: int in int(_arg("--channel")) + 1:
+			w3d.get_node("Overlay").call("cycle_channel")
 	if _arg("--ui") == "off":
 		(_main.get_node("UI") as CanvasLayer).visible = false
 	if _arg("--dump") != "":
@@ -109,6 +120,11 @@ func _dump() -> void:
 	print("W3D_ROOMS ids=%s roofed=%s cx=%s cy=%s tiles=%s" % [r.get("ids"), r.get("roofed"), r.get("centre_xs"), r.get("centre_ys"), r.get("tiles")])
 	var a: Dictionary = SimReads.read(_world, "get_agent_snapshot")
 	print("W3D_AGENTS n=%d xs=%s ys=%s" % [(a.get("xs", PackedInt32Array()) as PackedInt32Array).size(), a.get("xs"), a.get("ys")])
+	print("W3D_TIME %s" % JSON.stringify(SimReads.read(_world, "get_time_snapshot")))
+	var an: Dictionary = SimReads.read(_world, "get_animals")
+	print("W3D_ANIMALS names=%s xs=%s ys=%s" % [an.get("names"), an.get("xs"), an.get("ys")])
+	var lv: Dictionary = SimReads.read(_world, "get_livestock")
+	print("W3D_LIVESTOCK kinds=%s xs=%s ys=%s" % [lv.get("kinds"), lv.get("xs"), lv.get("ys")])
 	var o: Dictionary = SimReads.read(_world, "get_outcrops")
 	print("W3D_OUTCROPS %s %s %s" % [o.get("xs"), o.get("ys"), o.get("kinds")])
 	var sp: Dictionary = SimReads.read(_world, "get_space")

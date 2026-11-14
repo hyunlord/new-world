@@ -117,7 +117,8 @@
       "charcoal_clamp": true,
       "clay_oven": true
     },
-    "fallback": "wood_bench"
+    "fallback": "wood_bench",
+    "bed": "bedroll"
   },
   "buildings": {
     "about": "get_building_snapshot legacy kinds through the 2D bindings' buildings rows (structure id) -> model.",
@@ -255,6 +256,7 @@
       "Plant": "thatch"
     },
     "fallback": "thatch",
+    "patterns": {"thatch": 0, "bark": 1, "plank": 2},
     "colours": {
       "thatch": [0.6, 0.5, 0.29],
       "bark": [0.38, 0.28, 0.21],

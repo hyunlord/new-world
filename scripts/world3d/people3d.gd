@@ -47,7 +47,7 @@ func setup(world_sim: Node, terrain: Node) -> void:
 
 
 func _ready() -> void:
-	_vat = Vat.load_character(str(Data3D.binding("people.model", "villager")))
+	_vat = Vat.load_character(str(Data3D.binding("people.model", "")))
 	_mmi = MultiMeshInstance3D.new()
 	_mmi.name = "Crowd"
 	add_child(_mmi)

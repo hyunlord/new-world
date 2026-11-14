@@ -1,8 +1,8 @@
 # vat3d.gd — vertex-animation crowds for the 3D view (people and animals, M3D-1 scope 6).
 # Purpose: loads a character's VAT built by tools/3d/blender/{people,animals}.py — assets/3d/vat/<id>_static.glb (rest
-#   mesh, faces split, UV2.x = vertex column, COLOR_0 = tint region) and <id>_vat.bin/.json (float32 RGBA rows: one
-#   row of positions per frame, then the same rows of normals) — into an RGBAF ImageTexture read raw with FileAccess
-#   (no import), and rebuilds the mesh so the region code sits in UV.x and the vertex colour is gone (the MultiMesh
+#   mesh, faces split, UV2.x = the unsplit vertex's column, COLOR_0 = tint region) and <id>_vat.bin/.json (float16
+#   RGBA rows, one row of positions per frame; flat normals are derived in the shader) — into an RGBAH ImageTexture
+#   read raw with FileAccess (no import), and rebuilds the mesh so the region code sits in UV.x and the vertex colour is gone (the MultiMesh
 #   instance colour then carries the first tint). `material()` is a ShaderMaterial on shaders/world3d/vat.gdshader;
 #   per instance: COLOR.rgb = region-1 tint, INSTANCE_CUSTOM = (clip start × 256 + clip count, phase seconds,
 #   region-2 colour, region-3 colour) with colours packed as r·65536 + g·256 + b (exact in a float).
@@ -37,12 +37,12 @@ func _load(character: String) -> void:
 		return
 	meta = parsed
 	var width: int = int(meta.get("width", 0))
-	var rows: int = int(meta.get("frames", 0)) * 2
+	var rows: int = int(meta.get("frames", 0))
 	var bytes: PackedByteArray = FileAccess.get_file_as_bytes(bin_path)
-	if width <= 0 or rows <= 0 or bytes.size() != width * rows * 16:
+	if width <= 0 or rows <= 0 or bytes.size() != width * rows * 8:
 		push_error("vat3d: %s size mismatch" % character)
 		return
-	var image: Image = Image.create_from_data(width, rows, false, Image.FORMAT_RGBAF, bytes)
+	var image: Image = Image.create_from_data(width, rows, false, Image.FORMAT_RGBAH, bytes)
 	texture = ImageTexture.create_from_image(image)
 	var root: Node = (load(glb_path) as PackedScene).instantiate()
 	mesh = _regions(root)
@@ -91,7 +91,6 @@ func material(other: Color) -> ShaderMaterial:
 	mat.shader = VAT_SHADER
 	mat.set_shader_parameter("vat", texture)
 	mat.set_shader_parameter("width", float(meta.get("width", 1)))
-	mat.set_shader_parameter("normals_offset", float(meta.get("normals_offset", meta.get("frames", 0))))
 	mat.set_shader_parameter("fps", float(meta.get("fps", 15)))
 	mat.set_shader_parameter("other_colour", other)
 	return mat

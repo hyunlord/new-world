@@ -1,5 +1,26 @@
 # Changelog
 
+## M3D-1 — 3D view (branch v8/3d, not published; 2D stays the default)
+
+### Added
+- A 3D view of the colony (`--renderer=3d` or the "3D 보기" setting; ADR 0066): chunked terrain from elevation with
+  hill plateaus, sloped river banks and animated water; seasonal low-poly trees, bushes, boulders and tinted ore
+  outcrops with markers; walls extruded from the wall grid (log, block and palisade profiles joined by geometry), doors
+  with frames and swinging leaves, fences, floor slabs; per-room gable roofs (thatch, bark, plank by era) with a
+  cutaway at Z5, with the room overlay (R) and for the selected room or inspected person; construction outlines and
+  rising wall sites; Blender-script stations (smelter and kiln lit with emissive and an OmniLight), camp buildings,
+  bedrolls and item stacks; vertex-animated placeholder villagers tinted from the appearance data and placeholder
+  animals; picking that opens the same inspector and panels as 2D; overlays and order feedback on terrain and plants;
+  influence-channel maps on O; a sun and moon on the sim clock with seasonal tint and winter snow.
+- `tools/3d/blender/` (deterministic model, rig, animation and VAT scripts), `assets/3d/` (models, VAT, bindings,
+  params), `tools/v8/world3d_shots.gd`, `world3d_gui_test.gd` and `world3d_fps.gd`.
+
+### Changed
+- Screen ↔ world conversion in OrderTool, the camera zoom anchor, the causal panel and the story banner goes through
+  `scripts/world/view_projection.gd` (identical in 2D).
+- The camera controller takes a 3D zoom ladder and a screen rotation (both inert in 2D); the hidden AgentLayer skips
+  its drawing-only badge work.
+
 ## C2-b — published 8e4170c42, 2026-11-12
 
 ### Added

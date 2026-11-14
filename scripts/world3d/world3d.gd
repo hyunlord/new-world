@@ -53,6 +53,7 @@ func _ready() -> void:
 		RenderingServer.global_shader_parameter_add("w3d_overlay", RenderingServer.GLOBAL_VAR_TYPE_SAMPLER2D, null)
 		RenderingServer.global_shader_parameter_add("w3d_frame", RenderingServer.GLOBAL_VAR_TYPE_SAMPLER2D, null)
 		RenderingServer.global_shader_parameter_add("w3d_map_size", RenderingServer.GLOBAL_VAR_TYPE_VEC2, Vector2(192, 192))
+		RenderingServer.global_shader_parameter_add("w3d_snow", RenderingServer.GLOBAL_VAR_TYPE_FLOAT, 0.0)
 	var main: Node = get_parent()
 	world_sim = main.get_node_or_null("WorldSim")
 	camera2d = main.get_node_or_null("Camera2D") as Camera2D

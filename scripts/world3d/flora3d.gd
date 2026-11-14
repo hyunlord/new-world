@@ -33,7 +33,6 @@ var _materials: Dictionary = {}
 var _variants: Dictionary = {}
 var _previous_trees: Dictionary = {}
 var _stumps: Dictionary = {}
-var _snow: float = 0.0
 var _chunk: int = 32
 var _markers: MultiMeshInstance3D = null
 
@@ -66,7 +65,6 @@ func _process(_delta: float) -> void:
 	var outcrops: Dictionary = SimReads.read(_world_sim, "get_outcrops")
 	_seed = int(SimReads.read(_world_sim, "get_world_info").get("seed", 0))
 	_chunk = maxi(4, int(Data3D.param("flora.chunk_tiles", 16)))
-	_snow = float((Data3D.param("terrain.snow_cover", {}) as Dictionary).get(str(season), 0.0))
 	_season = season
 	var tick: int = int(time.get("tick", 0))
 	var width: int = int(_terrain.get("width"))
@@ -134,7 +132,7 @@ func _build_trees(batches: Dictionary, trees: Dictionary, tick: int) -> void:
 			size *= large_scale
 		_add(batches, model + "|" + _variant_key(sp), t, h, jitter, size)
 	_update_stumps(now, tick)
-	var stump_model: String = str(Data3D.binding("flora.stump", "stump"))
+	var stump_model: String = str(Data3D.binding("flora.stump", ""))
 	for t: Vector2i in _stumps:
 		_add(batches, stump_model + "|", t, View.key_hash(_seed, t.x, t.y, 31), jitter, 1.0)
 
@@ -161,7 +159,7 @@ func _build_nodes(batches: Dictionary, overlay: Dictionary) -> void:
 	var jitter: float = float(Data3D.param("flora.jitter_tiles", 0.22))
 	# Resource nodes (boulders, flint, clay) through the 2D node bindings.
 	var by_structure: Dictionary = Data3D.binding("nodes.by_structure", {})
-	var node_fallback: String = str(Data3D.binding("nodes.fallback", "boulder_small"))
+	var node_fallback: String = str(Data3D.binding("nodes.fallback", ""))
 	var nx: PackedInt32Array = overlay.get("node_xs", PackedInt32Array())
 	var ny: PackedInt32Array = overlay.get("node_ys", PackedInt32Array())
 	var nk: PackedInt32Array = overlay.get("node_kinds", PackedInt32Array())
@@ -179,7 +177,7 @@ func _build_nodes(batches: Dictionary, overlay: Dictionary) -> void:
 
 func _build_ore(batches: Dictionary, outcrops: Dictionary) -> void:
 	# Ore outcrops: vein tint by the catalogue's art tint material, plus a marker.
-	var ore_model: String = str(Data3D.binding("outcrops.model", "ore_outcrop"))
+	var ore_model: String = str(Data3D.binding("outcrops.model", ""))
 	var ox: PackedInt64Array = outcrops.get("xs", PackedInt64Array())
 	var oy: PackedInt64Array = outcrops.get("ys", PackedInt64Array())
 	var ok: PackedInt64Array = outcrops.get("kinds", PackedInt64Array())
@@ -199,18 +197,18 @@ func _species_models(sp: String) -> Array:
 	var row: Variant = (Data3D.binding("flora.species", {}) as Dictionary).get(sp)
 	if row is Dictionary and (row as Dictionary).get("models") is Array and not ((row as Dictionary)["models"] as Array).is_empty():
 		return row["models"]
-	var habit: String = str(Data3D.binding("flora.fallback_habit", "deciduous"))
+	var habit: String = str(Data3D.binding("flora.fallback_habit", ""))
 	var hrow: Variant = (Data3D.binding("flora.habits", {}) as Dictionary).get(habit, {})
 	if hrow is Dictionary and (hrow as Dictionary).get("models") is Array:
 		return hrow["models"]
-	return ["tree_oak_a"]
+	return [""]
 
 
 func _habit(sp: String) -> String:
 	var row: Variant = (Data3D.binding("flora.species", {}) as Dictionary).get(sp)
 	if row is Dictionary:
-		return str((row as Dictionary).get("habit", Data3D.binding("flora.fallback_habit", "deciduous")))
-	return str(Data3D.binding("flora.fallback_habit", "deciduous"))
+		return str((row as Dictionary).get("habit", Data3D.binding("flora.fallback_habit", "")))
+	return str(Data3D.binding("flora.fallback_habit", ""))
 
 
 ## The material variant of a species this season: "species=<sp>" (canopy/trunk colours are looked up from it).
@@ -403,7 +401,6 @@ func _shared_material() -> Material:
 		return _materials[mkey]
 	var mat: ShaderMaterial = ShaderMaterial.new()
 	mat.shader = FLORA_SHADER
-	mat.set_shader_parameter("snow", _snow)
 	_materials[mkey] = mat
 	return mat
 

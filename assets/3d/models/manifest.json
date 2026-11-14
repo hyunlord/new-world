@@ -1,0 +1,1423 @@
+{
+ "models": {
+  "anvil": {
+   "file": "models/anvil.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.62,
+   "triangles": 204,
+   "materials": [
+    "trunk",
+    "wood",
+    "stone",
+    "metal"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     0.85
+    ]
+   },
+   "family": "station"
+  },
+  "aurochs": {
+   "file": "models/aurochs.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 2.124,
+   "triangles": 610,
+   "materials": [
+    "fur",
+    "fur_light",
+    "horn"
+   ],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "run",
+    "graze",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "hips",
+    "chest",
+    "neck",
+    "head",
+    "front_upper_L",
+    "front_lower_L",
+    "front_upper_R",
+    "front_lower_R",
+    "tail",
+    "back_upper_L",
+    "back_lower_L",
+    "back_upper_R",
+    "back_lower_R"
+   ],
+   "vat": {
+    "static": "vat/aurochs_static.glb",
+    "bin": "vat/aurochs_vat.bin",
+    "json": "vat/aurochs_vat.json",
+    "vertex_count": 1400
+   },
+   "shoulder_height": 1.7,
+   "species": "aurochs"
+  },
+  "basket": {
+   "file": "models/basket.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.431,
+   "triangles": 74,
+   "materials": [
+    "thatch",
+    "earth",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "item"
+  },
+  "bedroll": {
+   "file": "models/bedroll.glb",
+   "footprint": [
+    2,
+    1
+   ],
+   "height": 0.27,
+   "triangles": 200,
+   "materials": [
+    "hide",
+    "fur",
+    "leather"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     0.85
+    ]
+   },
+   "family": "station"
+  },
+  "bee_skep": {
+   "file": "models/bee_skep.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.98,
+   "triangles": 348,
+   "materials": [
+    "stone",
+    "thatch",
+    "wood_dark"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     0.85
+    ]
+   },
+   "family": "station"
+  },
+  "berry_bush": {
+   "file": "models/berry_bush.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.818,
+   "triangles": 340,
+   "materials": [
+    "canopy",
+    "fruit"
+   ],
+   "sockets": {},
+   "family": "flora",
+   "overhang": true
+  },
+  "boulder_large": {
+   "file": "models/boulder_large.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.844,
+   "triangles": 100,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "rocks",
+   "overhang": true
+  },
+  "boulder_small": {
+   "file": "models/boulder_small.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.409,
+   "triangles": 40,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "rocks"
+  },
+  "bush": {
+   "file": "models/bush.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.804,
+   "triangles": 160,
+   "materials": [
+    "canopy"
+   ],
+   "sockets": {},
+   "family": "flora",
+   "overhang": true
+  },
+  "casting_bench": {
+   "file": "models/casting_bench.glb",
+   "footprint": [
+    2,
+    1
+   ],
+   "height": 0.57,
+   "triangles": 224,
+   "materials": [
+    "stone",
+    "wood",
+    "metal",
+    "glow",
+    "clay",
+    "wood_dark"
+   ],
+   "sockets": {
+    "light": [
+     0.62,
+     0.3,
+     0.05
+    ],
+    "work": [
+     0,
+     0,
+     0.85
+    ]
+   },
+   "family": "station"
+  },
+  "charcoal_clamp": {
+   "file": "models/charcoal_clamp.glb",
+   "footprint": [
+    3,
+    3
+   ],
+   "height": 0.869,
+   "triangles": 496,
+   "materials": [
+    "earth",
+    "glow",
+    "trunk",
+    "wood"
+   ],
+   "sockets": {
+    "light": [
+     0,
+     0.9,
+     0
+    ],
+    "work": [
+     0,
+     0,
+     1.85
+    ]
+   },
+   "family": "station"
+  },
+  "clay_bank": {
+   "file": "models/clay_bank.glb",
+   "footprint": [
+    2,
+    2
+   ],
+   "height": 0.316,
+   "triangles": 120,
+   "materials": [
+    "earth",
+    "clay"
+   ],
+   "sockets": {},
+   "family": "rocks"
+  },
+  "clay_oven": {
+   "file": "models/clay_oven.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.59,
+   "triangles": 216,
+   "materials": [
+    "stone",
+    "clay",
+    "wood_dark",
+    "glow",
+    "trunk",
+    "wood"
+   ],
+   "sockets": {
+    "light": [
+     0,
+     0.22,
+     0.36
+    ],
+    "work": [
+     0,
+     0,
+     0.85
+    ]
+   },
+   "family": "station"
+  },
+  "cloth_bolt": {
+   "file": "models/cloth_bolt.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.205,
+   "triangles": 96,
+   "materials": [
+    "cloth",
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item"
+  },
+  "deer": {
+   "file": "models/deer.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 2.022,
+   "triangles": 622,
+   "materials": [
+    "fur",
+    "fur_light",
+    "horn"
+   ],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "run",
+    "graze",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "hips",
+    "chest",
+    "neck",
+    "head",
+    "front_upper_L",
+    "front_lower_L",
+    "front_upper_R",
+    "front_lower_R",
+    "tail",
+    "back_upper_L",
+    "back_lower_L",
+    "back_upper_R",
+    "back_lower_R"
+   ],
+   "vat": {
+    "static": "vat/deer_static.glb",
+    "bin": "vat/deer_vat.bin",
+    "json": "vat/deer_vat.json",
+    "vertex_count": 1440
+   },
+   "shoulder_height": 1.1,
+   "species": "deer"
+  },
+  "door": {
+   "file": "models/door.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 2.0,
+   "triangles": 216,
+   "materials": [
+    "wood",
+    "wood_dark",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "station",
+   "pivot": "left edge (x=0); leaf spans +X to width, front faces +Z",
+   "overhang": true
+  },
+  "drying_rack": {
+   "file": "models/drying_rack.glb",
+   "footprint": [
+    2,
+    1
+   ],
+   "height": 1.61,
+   "triangles": 208,
+   "materials": [
+    "wood",
+    "hide",
+    "leather"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     0.85
+    ]
+   },
+   "family": "station"
+  },
+  "firewood": {
+   "file": "models/firewood.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.165,
+   "triangles": 68,
+   "materials": [
+    "wood",
+    "trunk",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item"
+  },
+  "flint_outcrop": {
+   "file": "models/flint_outcrop.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.331,
+   "triangles": 140,
+   "materials": [
+    "stone",
+    "vein"
+   ],
+   "sockets": {},
+   "family": "rocks",
+   "overhang": true
+  },
+  "flint_pile": {
+   "file": "models/flint_pile.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.221,
+   "triangles": 120,
+   "materials": [
+    "vein",
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item"
+  },
+  "grinding_stone": {
+   "file": "models/grinding_stone.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.294,
+   "triangles": 216,
+   "materials": [
+    "hide",
+    "stone",
+    "thatch",
+    "earth"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     0.85
+    ]
+   },
+   "family": "station"
+  },
+  "hearth": {
+   "file": "models/hearth.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.54,
+   "triangles": 320,
+   "materials": [
+    "stone",
+    "earth",
+    "wood_dark",
+    "glow"
+   ],
+   "sockets": {
+    "light": [
+     0,
+     0.35,
+     0
+    ],
+    "work": [
+     0,
+     0,
+     0.85
+    ]
+   },
+   "family": "station",
+   "overhang": true
+  },
+  "hearth_unlit": {
+   "file": "models/hearth_unlit.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.352,
+   "triangles": 276,
+   "materials": [
+    "stone",
+    "earth",
+    "wood_dark"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     0.85
+    ]
+   },
+   "family": "station",
+   "overhang": true
+  },
+  "hide": {
+   "file": "models/hide.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.03,
+   "triangles": 72,
+   "materials": [
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item"
+  },
+  "ingot_stack": {
+   "file": "models/ingot_stack.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.15,
+   "triangles": 96,
+   "materials": [
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item"
+  },
+  "kiln": {
+   "file": "models/kiln.glb",
+   "footprint": [
+    2,
+    2
+   ],
+   "height": 1.44,
+   "triangles": 424,
+   "materials": [
+    "earth",
+    "clay",
+    "glow",
+    "trunk",
+    "wood"
+   ],
+   "sockets": {
+    "light": [
+     0,
+     0.22,
+     0.82
+    ],
+    "work": [
+     0,
+     0,
+     1.35
+    ]
+   },
+   "family": "station"
+  },
+  "knapping_spot": {
+   "file": "models/knapping_spot.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.257,
+   "triangles": 296,
+   "materials": [
+    "hide",
+    "trunk",
+    "wood",
+    "stone",
+    "vein"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     0.85
+    ]
+   },
+   "family": "station"
+  },
+  "lean_to": {
+   "file": "models/lean_to.glb",
+   "footprint": [
+    2,
+    2
+   ],
+   "height": 1.962,
+   "triangles": 496,
+   "materials": [
+    "wood",
+    "wood_dark",
+    "thatch",
+    "canopy",
+    "hide"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     0.2
+    ]
+   },
+   "family": "station",
+   "overhang": true
+  },
+  "log_pile_l": {
+   "file": "models/log_pile_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.55,
+   "triangles": 120,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "item"
+  },
+  "log_pile_m": {
+   "file": "models/log_pile_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.338,
+   "triangles": 100,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "item"
+  },
+  "log_pile_s": {
+   "file": "models/log_pile_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.18,
+   "triangles": 40,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "item"
+  },
+  "loom": {
+   "file": "models/loom.glb",
+   "footprint": [
+    2,
+    1
+   ],
+   "height": 1.911,
+   "triangles": 348,
+   "materials": [
+    "wood",
+    "wood_dark",
+    "cloth",
+    "clay"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     0.85
+    ]
+   },
+   "family": "station"
+  },
+  "meat": {
+   "file": "models/meat.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.19,
+   "triangles": 116,
+   "materials": [
+    "fruit",
+    "horn"
+   ],
+   "sockets": {},
+   "family": "item"
+  },
+  "ore_outcrop": {
+   "file": "models/ore_outcrop.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.145,
+   "triangles": 148,
+   "materials": [
+    "stone",
+    "vein"
+   ],
+   "sockets": {},
+   "family": "rocks",
+   "overhang": true
+  },
+  "ore_pile": {
+   "file": "models/ore_pile.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.218,
+   "triangles": 120,
+   "materials": [
+    "vein",
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item"
+  },
+  "pot": {
+   "file": "models/pot.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.38,
+   "triangles": 86,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item"
+  },
+  "pot_stack": {
+   "file": "models/pot_stack.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.49,
+   "triangles": 150,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item"
+  },
+  "pottery_bench": {
+   "file": "models/pottery_bench.glb",
+   "footprint": [
+    2,
+    1
+   ],
+   "height": 0.805,
+   "triangles": 476,
+   "materials": [
+    "wood",
+    "wood_dark",
+    "clay",
+    "earth",
+    "stone"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     0.85
+    ]
+   },
+   "family": "station",
+   "overhang": true
+  },
+  "reindeer": {
+   "file": "models/reindeer.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 2.284,
+   "triangles": 658,
+   "materials": [
+    "fur",
+    "fur_light",
+    "horn"
+   ],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "run",
+    "graze",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "hips",
+    "chest",
+    "neck",
+    "head",
+    "front_upper_L",
+    "front_lower_L",
+    "front_upper_R",
+    "front_lower_R",
+    "tail",
+    "back_upper_L",
+    "back_lower_L",
+    "back_upper_R",
+    "back_lower_R"
+   ],
+   "vat": {
+    "static": "vat/reindeer_static.glb",
+    "bin": "vat/reindeer_vat.bin",
+    "json": "vat/reindeer_vat.json",
+    "vertex_count": 1536
+   },
+   "shoulder_height": 1.1,
+   "species": "reindeer"
+  },
+  "retting_pit": {
+   "file": "models/retting_pit.glb",
+   "footprint": [
+    2,
+    2
+   ],
+   "height": 0.206,
+   "triangles": 484,
+   "materials": [
+    "earth",
+    "metal",
+    "thatch",
+    "leather",
+    "stone"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     1.35
+    ]
+   },
+   "family": "station",
+   "overhang": true
+  },
+  "sack": {
+   "file": "models/sack.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.45,
+   "triangles": 120,
+   "materials": [
+    "cloth",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item"
+  },
+  "sapling": {
+   "file": "models/sapling.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.82,
+   "triangles": 120,
+   "materials": [
+    "trunk",
+    "earth",
+    "canopy"
+   ],
+   "sockets": {},
+   "family": "flora"
+  },
+  "smelter": {
+   "file": "models/smelter.glb",
+   "footprint": [
+    2,
+    2
+   ],
+   "height": 1.62,
+   "triangles": 596,
+   "materials": [
+    "stone",
+    "clay",
+    "glow",
+    "leather",
+    "wood",
+    "thatch",
+    "earth",
+    "wood_dark"
+   ],
+   "sockets": {
+    "light": [
+     0,
+     0.2,
+     0.5
+    ],
+    "work": [
+     0,
+     0,
+     1.35
+    ]
+   },
+   "family": "station"
+  },
+  "stone_pile": {
+   "file": "models/stone_pile.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.224,
+   "triangles": 120,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item"
+  },
+  "storage_shelf": {
+   "file": "models/storage_shelf.glb",
+   "footprint": [
+    2,
+    1
+   ],
+   "height": 1.65,
+   "triangles": 544,
+   "materials": [
+    "wood_dark",
+    "wood",
+    "clay",
+    "earth",
+    "thatch"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     0.85
+    ]
+   },
+   "family": "station"
+  },
+  "stump": {
+   "file": "models/stump.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.388,
+   "triangles": 92,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "flora"
+  },
+  "tool": {
+   "file": "models/tool.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.055,
+   "triangles": 48,
+   "materials": [
+    "wood",
+    "stone",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item"
+  },
+  "tree_birch_a": {
+   "file": "models/tree_birch_a.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 6.482,
+   "triangles": 252,
+   "materials": [
+    "trunk",
+    "canopy"
+   ],
+   "sockets": {},
+   "family": "flora",
+   "species": "birch",
+   "overhang": true
+  },
+  "tree_birch_b": {
+   "file": "models/tree_birch_b.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 5.643,
+   "triangles": 252,
+   "materials": [
+    "trunk",
+    "canopy"
+   ],
+   "sockets": {},
+   "family": "flora",
+   "species": "birch",
+   "overhang": true
+  },
+  "tree_oak_a": {
+   "file": "models/tree_oak_a.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 5.333,
+   "triangles": 232,
+   "materials": [
+    "trunk",
+    "canopy"
+   ],
+   "sockets": {},
+   "family": "flora",
+   "species": "oak",
+   "overhang": true
+  },
+  "tree_oak_b": {
+   "file": "models/tree_oak_b.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 5.387,
+   "triangles": 272,
+   "materials": [
+    "trunk",
+    "canopy"
+   ],
+   "sockets": {},
+   "family": "flora",
+   "species": "oak",
+   "overhang": true
+  },
+  "tree_oak_c": {
+   "file": "models/tree_oak_c.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 5.29,
+   "triangles": 248,
+   "materials": [
+    "trunk",
+    "canopy"
+   ],
+   "sockets": {},
+   "family": "flora",
+   "species": "oak",
+   "overhang": true
+  },
+  "tree_pine_a": {
+   "file": "models/tree_pine_a.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 5.677,
+   "triangles": 172,
+   "materials": [
+    "trunk",
+    "canopy"
+   ],
+   "sockets": {},
+   "family": "flora",
+   "species": "pine",
+   "overhang": true
+  },
+  "tree_pine_b": {
+   "file": "models/tree_pine_b.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 6.807,
+   "triangles": 210,
+   "materials": [
+    "trunk",
+    "canopy"
+   ],
+   "sockets": {},
+   "family": "flora",
+   "species": "pine",
+   "overhang": true
+  },
+  "tree_pine_c": {
+   "file": "models/tree_pine_c.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 4.912,
+   "triangles": 172,
+   "materials": [
+    "trunk",
+    "canopy"
+   ],
+   "sockets": {},
+   "family": "flora",
+   "species": "pine",
+   "overhang": true
+  },
+  "villager": {
+   "file": "models/villager.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.78,
+   "triangles": 704,
+   "materials": [
+    "leather",
+    "cloth",
+    "skin",
+    "hair"
+   ],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/villager_static.glb",
+    "bin": "vat/villager_vat.bin",
+    "json": "vat/villager_vat.json",
+    "vertex_count": 1556
+   }
+  },
+  "well_body": {
+   "file": "models/well_body.glb",
+   "footprint": [
+    3,
+    3
+   ],
+   "height": 2.358,
+   "triangles": 460,
+   "materials": [
+    "stone",
+    "metal",
+    "wood",
+    "wood_dark",
+    "leather",
+    "thatch"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     1.85
+    ]
+   },
+   "family": "station"
+  },
+  "wild_boar": {
+   "file": "models/wild_boar.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.071,
+   "triangles": 612,
+   "materials": [
+    "fur",
+    "fur_light",
+    "horn"
+   ],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "run",
+    "graze",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "hips",
+    "chest",
+    "neck",
+    "head",
+    "front_upper_L",
+    "front_lower_L",
+    "front_upper_R",
+    "front_lower_R",
+    "tail",
+    "back_upper_L",
+    "back_lower_L",
+    "back_upper_R",
+    "back_lower_R"
+   ],
+   "vat": {
+    "static": "vat/wild_boar_static.glb",
+    "bin": "vat/wild_boar_vat.bin",
+    "json": "vat/wild_boar_vat.json",
+    "vertex_count": 1432
+   },
+   "shoulder_height": 0.9,
+   "species": "wild_boar"
+  },
+  "wild_goat": {
+   "file": "models/wild_goat.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.187,
+   "triangles": 606,
+   "materials": [
+    "fur",
+    "fur_light",
+    "horn"
+   ],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "run",
+    "graze",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "hips",
+    "chest",
+    "neck",
+    "head",
+    "front_upper_L",
+    "front_lower_L",
+    "front_upper_R",
+    "front_lower_R",
+    "tail",
+    "back_upper_L",
+    "back_lower_L",
+    "back_upper_R",
+    "back_lower_R"
+   ],
+   "vat": {
+    "static": "vat/wild_goat_static.glb",
+    "bin": "vat/wild_goat_vat.bin",
+    "json": "vat/wild_goat_vat.json",
+    "vertex_count": 1396
+   },
+   "shoulder_height": 0.75,
+   "species": "wild_goat"
+  },
+  "wild_sheep": {
+   "file": "models/wild_sheep.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.966,
+   "triangles": 774,
+   "materials": [
+    "fur_light",
+    "fur",
+    "horn"
+   ],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "run",
+    "graze",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "hips",
+    "chest",
+    "neck",
+    "head",
+    "front_upper_L",
+    "front_lower_L",
+    "front_upper_R",
+    "front_lower_R",
+    "tail",
+    "back_upper_L",
+    "back_lower_L",
+    "back_upper_R",
+    "back_lower_R"
+   ],
+   "vat": {
+    "static": "vat/wild_sheep_static.glb",
+    "bin": "vat/wild_sheep_vat.bin",
+    "json": "vat/wild_sheep_vat.json",
+    "vertex_count": 1816
+   },
+   "shoulder_height": 0.75,
+   "species": "wild_sheep"
+  },
+  "wolf": {
+   "file": "models/wolf.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.054,
+   "triangles": 542,
+   "materials": [
+    "fur",
+    "fur_light"
+   ],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "run",
+    "graze",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "hips",
+    "chest",
+    "neck",
+    "head",
+    "front_upper_L",
+    "front_lower_L",
+    "front_upper_R",
+    "front_lower_R",
+    "tail",
+    "back_upper_L",
+    "back_lower_L",
+    "back_upper_R",
+    "back_lower_R"
+   ],
+   "vat": {
+    "static": "vat/wolf_static.glb",
+    "bin": "vat/wolf_vat.bin",
+    "json": "vat/wolf_vat.json",
+    "vertex_count": 1352
+   },
+   "shoulder_height": 0.8,
+   "species": "wolf"
+  },
+  "wood_bench": {
+   "file": "models/wood_bench.glb",
+   "footprint": [
+    2,
+    1
+   ],
+   "height": 1.005,
+   "triangles": 224,
+   "materials": [
+    "wood",
+    "wood_dark",
+    "trunk",
+    "stone"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     0.85
+    ]
+   },
+   "family": "station",
+   "overhang": true
+  }
+ },
+ "units": "1 unit = 1 m = 1 tile; Godot coords (Y up, front +Z); origin = footprint centre on ground"
+}

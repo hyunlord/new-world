@@ -45,7 +45,7 @@ func _species_model(name: String, category: String) -> String:
 	var by_cat: Dictionary = Data3D.binding("animals.by_category", {})
 	if by_cat.has(category):
 		return str(by_cat[category])
-	return str(Data3D.binding("animals.fallback", "deer"))
+	return str(Data3D.binding("animals.fallback", ""))
 
 
 func _step_seconds() -> float:

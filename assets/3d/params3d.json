@@ -72,8 +72,9 @@
   "light": {
     "sun_energy": 1.5,
     "ambient_energy": 0.32,
-    "night_sun_energy": 0.06,
-    "night_ambient": [0.18, 0.22, 0.38],
+    "night_sun_energy": 0.22,
+    "night_ambient_energy": 0.55,
+    "night_ambient": [0.36, 0.44, 0.72],
     "day_ambient": [0.70, 0.76, 0.86],
     "dawn_hours": [5.0, 7.0],
     "dusk_hours": [18.0, 20.0],

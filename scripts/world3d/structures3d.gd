@@ -173,7 +173,7 @@ func _wall_entry(style: String, raw_material: int, category: String, is_door: bo
 	c.a = 1.0
 	var by_style: Dictionary = Data3D.binding("walls.by_style", {})
 	var wall_style: String = str(r.get("style_id", style))
-	var profile: String = str(by_style.get(wall_style, by_style.get(style, Data3D.binding("walls.fallback", "block"))))
+	var profile: String = str(by_style.get(wall_style, by_style.get(style, Data3D.binding("walls.fallback", ""))))
 	return {"door": is_door, "fence": false, "profile": profile, "colour": c, "category": cat, "material": key}
 
 
@@ -488,7 +488,7 @@ func _rebuild_roofs(rooms: Dictionary, sites: Array) -> void:
 		var mat: ShaderMaterial = ShaderMaterial.new()
 		mat.shader = ROOF_SHADER
 		mat.set_shader_parameter("cover", Data3D.colour((Data3D.binding("roofs.colours", {}) as Dictionary).get(cover, []), Color(0.7, 0.6, 0.35)))
-		mat.set_shader_parameter("pattern", ["thatch", "bark", "plank"].find(cover) if cover in ["thatch", "bark", "plank"] else 0)
+		mat.set_shader_parameter("pattern", int((Data3D.binding("roofs.patterns", {}) as Dictionary).get(cover, 0)))
 		mat.set_shader_parameter("fade", float(_roof_fade.get(id, 1.0)))
 		mi.mesh = _roof_mesh(tiles, _gable_colour(tiles), mat)
 		add_child(mi)
@@ -512,7 +512,7 @@ func _roof_cover(tiles: Array, sites: Array) -> String:
 			var w: Variant = _walls.get(t + dd)
 			if w is Dictionary and by_cat.has(str((w as Dictionary)["category"])):
 				return str(by_cat[str(w["category"])])
-	return str(Data3D.binding("roofs.fallback", "thatch"))
+	return str(Data3D.binding("roofs.fallback", ""))
 
 
 func _gable_colour(tiles: Array) -> Color:

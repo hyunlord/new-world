@@ -108,7 +108,7 @@ func _station_model(code: int, styles: Dictionary) -> String:
 	var structure: Variant = ArtData.binding("workshops", code).get("structure")
 	if structure is String and by_style.has(structure):
 		return str(by_style[structure])
-	return str(Data3D.binding("stations.fallback", "wood_bench"))
+	return str(Data3D.binding("stations.fallback", ""))
 
 
 func _rebuild_stations(shops: Dictionary, buildings: Dictionary, settlements: Dictionary, space: Dictionary) -> void:
@@ -130,12 +130,16 @@ func _rebuild_stations(shops: Dictionary, buildings: Dictionary, settlements: Di
 		if bill_active[i] == 1:
 			active[bill_shops[i]] = true
 	var footprints: Array[Rect2i] = []
+	var firing: Dictionary = {}
 	for i: int in mini(kinds.size(), mini(xs.size(), ys.size())):
 		var rect: Rect2i = Rect2i(xs[i], ys[i], ws[i] if i < ws.size() else 1, hs[i] if i < hs.size() else 1)
-		footprints.append(rect)
 		var b: Dictionary = ArtData.binding("workshops", int(kinds[i]))
+		# The hearth's fire-pot workshop is not drawn and does not hide the hearth (the 2D rule); it marks firing.
 		if bool(b.get("marks_hearth_firing", false)):
+			if active.has(i):
+				firing[rect.position] = true
 			continue
+		footprints.append(rect)
 		_place(_station_model(int(kinds[i]), styles), rect, active.has(i), "shop%d" % (ids[i] if i < ids.size() else i))
 	# Legacy camp buildings.
 	var bx: PackedInt32Array = buildings.get("xs", PackedInt32Array())
@@ -158,10 +162,12 @@ func _rebuild_stations(shops: Dictionary, buildings: Dictionary, settlements: Di
 		var lit: bool = _fire_lit(settlements, t)
 		if not lit and row.get("unlit") is String:
 			structure = str(row["unlit"])
-		var model: String = str(by_structure.get(structure, Data3D.binding("buildings.fallback", "lean_to")))
+		elif firing.has(t) and row.get("firing") is String:
+			structure = str(row["firing"])
+		var model: String = str(by_structure.get(structure, Data3D.binding("buildings.fallback", "")))
 		_place(model, Rect2i(t, Vector2i.ONE), lit and bool(row.get("light", false)), "b%d" % i)
 	# Bedrolls (2 × 1 from the bed tile).
-	var bed_model: String = str((Data3D.binding("stations.by_style", {}) as Dictionary).get("bedroll", "bedroll"))
+	var bed_model: String = str(Data3D.binding("stations.bed", ""))
 	var bedx: PackedInt32Array = space.get("bed_xs", PackedInt32Array())
 	var bedy: PackedInt32Array = space.get("bed_ys", PackedInt32Array())
 	var fp: Array = (ArtData.bindings().get("space", {}) as Dictionary).get("bed", {}).get("footprint", [2, 1])
@@ -285,7 +291,7 @@ func _item_model(code: int, bucket: int, row: Dictionary) -> String:
 	var shape: String = str(row.get("art_shape", ""))
 	if by_shape.has(shape):
 		return str(by_shape[shape])
-	return str(Data3D.binding("items.fallback", "sack"))
+	return str(Data3D.binding("items.fallback", ""))
 
 
 ## Model `id` with its `vein` / `metal` surfaces in material `tint`'s colour (cached).

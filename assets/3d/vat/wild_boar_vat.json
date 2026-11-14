@@ -1,0 +1,58 @@
+{
+ "width": 368,
+ "vertex_count": 368,
+ "split_vertex_count": 1432,
+ "frames": 151,
+ "fps": 15,
+ "normals_offset": -1,
+ "clips": {
+  "idle": {
+   "start": 0,
+   "count": 30,
+   "loop": true,
+   "duration": 2.0
+  },
+  "walk": {
+   "start": 30,
+   "count": 15,
+   "loop": true,
+   "duration": 1.0
+  },
+  "run": {
+   "start": 45,
+   "count": 9,
+   "loop": true,
+   "duration": 0.6
+  },
+  "graze": {
+   "start": 54,
+   "count": 36,
+   "loop": true,
+   "duration": 2.4
+  },
+  "rest": {
+   "start": 90,
+   "count": 45,
+   "loop": true,
+   "duration": 3.0
+  },
+  "attack": {
+   "start": 135,
+   "count": 16,
+   "loop": false,
+   "duration": 1.0
+  }
+ },
+ "bounds_min": [
+  -0.2598,
+  -0.042,
+  -0.8397
+ ],
+ "bounds_max": [
+  0.2843,
+  1.0911,
+  1.0638
+ ],
+ "height": 1.071,
+ "format": "float16 LE RGBA, row-major; one row of positions (Godot xyz, w=1) per frame; texel x = UV2.x * width (the unsplit vertex); no normal rows: the shader derives flat face normals"
+}

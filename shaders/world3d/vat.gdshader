@@ -1,6 +1,6 @@
 // vat.gdshader — vertex-animation-texture crowds (scripts/world3d/vat3d.gd; people3d.gd, animals3d.gd).
-// Each vertex reads its position and normal for the current frame from `vat` (column = UV2.x · width, rows: the clip's
-// frames, normals `normals_offset` rows below), blending two frames. Tint by region (UV.x): 1 → instance COLOR,
+// Each vertex reads its position for the current frame from `vat` (column = UV2.x · width, the unsplit vertex; rows:
+// the clip's frames), blending two frames; the fragment derives the flat face normal from screen derivatives. Tint by region (UV.x): 1 → instance COLOR,
 // 2 → INSTANCE_CUSTOM.b, 3 → INSTANCE_CUSTOM.a (packed r·65536 + g·256 + b), 0 → `other_colour`.
 // INSTANCE_CUSTOM.r = clip start × 256 + clip frame count, .g = phase in seconds (per instance, so a crowd is not in step).
 shader_type spatial;
@@ -8,7 +8,6 @@ render_mode diffuse_lambert, specular_disabled;
 
 uniform sampler2D vat : filter_nearest, repeat_disable;
 uniform float width = 1.0;
-uniform float normals_offset = 0.0;
 uniform float fps = 15.0;
 uniform vec3 other_colour : source_color = vec3(0.28, 0.2, 0.14);
 
@@ -34,10 +33,7 @@ void vertex() {
 	float a = fract(f);
 	vec3 p0 = texelFetch(vat, ivec2(column, int(start) + f0), 0).xyz;
 	vec3 p1 = texelFetch(vat, ivec2(column, int(start) + f1), 0).xyz;
-	vec3 n0 = texelFetch(vat, ivec2(column, int(start + normals_offset) + f0), 0).xyz;
-	vec3 n1 = texelFetch(vat, ivec2(column, int(start + normals_offset) + f1), 0).xyz;
 	VERTEX = mix(p0, p1, a);
-	NORMAL = normalize(mix(n0, n1, a));
 	int region = int(UV.x + 0.5);
 	if (region == 1) {
 		tint = COLOR.rgb;
@@ -51,6 +47,8 @@ void vertex() {
 }
 
 void fragment() {
+	vec3 n = normalize(cross(dFdx(VERTEX), dFdy(VERTEX)));
+	NORMAL = dot(n, -VERTEX) < 0.0 ? -n : n;
 	ALBEDO = srgb_to_linear(tint);
 	ROUGHNESS = 0.85;
 }
