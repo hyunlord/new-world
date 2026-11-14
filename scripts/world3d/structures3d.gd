@@ -57,6 +57,9 @@ var _cut_all: float = 99.0
 var _cut_rect_h: float = 99.0
 var _cut_rect: Rect2 = Rect2()
 var _chunk: int = 32
+var _stamp_key: String = ""
+var _occupied: Dictionary = {}
+var _occupied_tick: int = -2
 
 
 func setup(world_sim: Node, terrain: Node) -> void:
@@ -81,6 +84,13 @@ func _process(delta: float) -> void:
 	if _world_sim == null or _terrain == null or not bool(_terrain.call("is_complete")):
 		return
 	_chunk = maxi(4, int(Data3D.param("terrain.chunk_tiles", 32)))
+	var stamp: Dictionary = get_parent().get("stamp") if get_parent() != null else {}
+	var stamp_key: String = "%s|%s|%s" % [stamp.get("overlay", -1), stamp.get("rooms", -1), stamp.get("tick", -1)]
+	if stamp_key == _stamp_key and not stamp.is_empty():
+		_update_doors()
+		_update_cutaway(delta)
+		return
+	_stamp_key = stamp_key
 	var space: Dictionary = SimReads.read(_world_sim, "get_space")
 	var buildings: Dictionary = SimReads.read(_world_sim, "get_building_snapshot")
 	var version: int = int(space.get("version", 0))
@@ -408,12 +418,16 @@ func _collect_doors() -> void:
 func _update_doors() -> void:
 	if _doors.is_empty():
 		return
-	var agents: Dictionary = SimReads.read(_world_sim, "get_agent_snapshot")
-	var xs: PackedInt32Array = agents.get("xs", PackedInt32Array())
-	var ys: PackedInt32Array = agents.get("ys", PackedInt32Array())
-	var occupied: Dictionary = {}
-	for i: int in mini(xs.size(), ys.size()):
-		occupied[Vector2i(xs[i], ys[i])] = true
+	var tick: int = int((get_parent().get("stamp") as Dictionary).get("tick", -1)) if get_parent() != null else -1
+	if tick != _occupied_tick:
+		_occupied_tick = tick
+		_occupied.clear()
+		var agents: Dictionary = SimReads.read(_world_sim, "get_agent_snapshot")
+		var xs: PackedInt32Array = agents.get("xs", PackedInt32Array())
+		var ys: PackedInt32Array = agents.get("ys", PackedInt32Array())
+		for i: int in mini(xs.size(), ys.size()):
+			_occupied[Vector2i(xs[i], ys[i])] = true
+	var occupied: Dictionary = _occupied
 	var door_w: float = float(Data3D.param("structures.door_width", 0.9))
 	var door_h: float = float(Data3D.param("structures.door_height", 2.0))
 	var has_model: bool = Data3D.has_model("door")
@@ -677,7 +691,7 @@ func _outline(b: Builder, r: Rect2i, g: float, c: Color, stake_h: float) -> void
 
 func _blueprint_categories() -> Dictionary:
 	var out: Dictionary = {}
-	for row: Variant in SimReads.read(_world_sim, "get_content_catalog").get("blueprints", []):
+	for row: Variant in (get_parent().call("catalog") as Dictionary).get("blueprints", []):
 		if row is Dictionary:
 			out[int((row as Dictionary).get("code", -1))] = str((row as Dictionary).get("completion_category", ""))
 	return out

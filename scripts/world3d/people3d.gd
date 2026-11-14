@@ -28,12 +28,22 @@ var _motion: Dictionary = {}
 var _transforms: Dictionary = {}
 var _top_colours: Dictionary = {}
 var _drawn: Array[Dictionary] = []
+## Tools only (world3d_fps.gd `--replicate`): draw every person this many times, offset, to load the renderer past the
+## bridge's stress cap. Never set in the game.
+var replicate: int = 1
+var _looks: Dictionary = {}
+var _snap: Dictionary = {}
+var _snap_tick: int = -1
+var _clip_packs: Dictionary = {}
 
 
 func setup(world_sim: Node, terrain: Node) -> void:
 	_world_sim = world_sim
 	_terrain = terrain
-	_world_sim.connect("world_reset", func() -> void: _motion.clear())
+	_world_sim.connect("world_reset", func() -> void:
+		_motion.clear()
+		_snap = {}
+		_looks.clear())
 
 
 func _ready() -> void:
@@ -81,7 +91,11 @@ func _step_seconds() -> float:
 func _process(delta: float) -> void:
 	if _world_sim == null or _terrain == null or int(_terrain.get("width")) <= 0 or not bool(_vat.get("ok")):
 		return
-	var snap: Dictionary = SimReads.read(_world_sim, "get_agent_snapshot")
+	var stamp: Dictionary = get_parent().get("stamp") if get_parent() != null else {}
+	if _snap.is_empty() or stamp.is_empty() or int(stamp.get("tick", -1)) != _snap_tick:
+		_snap = SimReads.read(_world_sim, "get_agent_snapshot")
+		_snap_tick = int(stamp.get("tick", -1))
+	var snap: Dictionary = _snap
 	var ids: PackedInt64Array = snap.get("ids", PackedInt64Array())
 	var aids: PackedInt64Array = snap.get("agent_ids", PackedInt64Array())
 	var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
@@ -92,13 +106,14 @@ func _process(delta: float) -> void:
 	var seen: Dictionary = {}
 	_drawn.clear()
 	var mm: MultiMesh = _mmi.multimesh
-	if mm == null or mm.instance_count != n:
+	var copies: int = maxi(1, replicate)
+	if mm == null or mm.instance_count != n * copies:
 		mm = MultiMesh.new()
 		mm.transform_format = MultiMesh.TRANSFORM_3D
 		mm.use_colors = true
 		mm.use_custom_data = true
 		mm.mesh = _vat.get("mesh")
-		mm.instance_count = n
+		mm.instance_count = n * copies
 		_mmi.multimesh = mm
 	var child_scale: float = float(Data3D.param("people.child_scale", 0.62))
 	var selected: int = _selected_bits()
@@ -131,10 +146,21 @@ func _process(delta: float) -> void:
 		var y: float = float(_terrain.call("height_at", p.x, p.y))
 		var basis: Basis = Basis(Vector3.UP, float(m["yaw"])).scaled(Vector3(scale, scale, scale))
 		mm.set_instance_transform(i, Transform3D(basis, Vector3(p.x, y, p.y)))
-		var look: Dictionary = _appearance(snap, i)
+		var akey: int = hash([aid, _int(snap, "look_ids", i), _byte(snap, "variants", i), _byte(snap, "tops", i), stage])
+		var look: Dictionary = _looks.get(akey, {})
+		if look.is_empty():
+			look = _appearance(snap, i)
+			look["hair_p"] = Vat.pack(look["hair"])
+			look["cloth_p"] = Vat.pack(look["cloth"])
+			_looks[akey] = look
 		mm.set_instance_color(i, look["skin"])
 		var clip: String = _clip(snap, i, moving)
-		mm.set_instance_custom_data(i, Color(float(_vat.call("clip_pack", clip)), float(aid % 97) * 0.173, Vat.pack(look["hair"]), Vat.pack(look["cloth"])))
+		mm.set_instance_custom_data(i, Color(_clip_pack(clip), float(aid % 97) * 0.173, float(look["hair_p"]), float(look["cloth_p"])))
+		for c: int in range(1, copies):
+			var off: Vector3 = Vector3(float((c * 7) % 5) - 2.0, 0.0, float((c * 3) % 5) - 2.0) * 0.6
+			mm.set_instance_transform(n * c + i, Transform3D(basis, Vector3(p.x, y, p.y) + off))
+			mm.set_instance_color(n * c + i, look["skin"])
+			mm.set_instance_custom_data(n * c + i, mm.get_instance_custom_data(i))
 		var bits: int = ids[i] if i < ids.size() else -1
 		_drawn.append({"bits": bits, "pos": Vector3(p.x, y, p.y), "h": float(Data3D.param("people.adult_height", 1.7)) * scale})
 		if bits == selected and bits != -1:
@@ -148,6 +174,19 @@ func _process(delta: float) -> void:
 static func _pos(m: Dictionary) -> Vector2:
 	var t: float = float(m["t"])
 	return (m["from"] as Vector2).lerp(m["to"], t * t * (3.0 - 2.0 * t))
+
+
+func _clip_pack(clip: String) -> float:
+	if not _clip_packs.has(clip):
+		_clip_packs[clip] = float(_vat.call("clip_pack", clip))
+	return _clip_packs[clip]
+
+
+static func _int(snap: Dictionary, key: String, i: int) -> int:
+	var col: Variant = snap.get(key)
+	if col is PackedInt32Array and i < (col as PackedInt32Array).size():
+		return (col as PackedInt32Array)[i]
+	return 0
 
 
 static func _byte(snap: Dictionary, key: String, i: int) -> int:

@@ -1,6 +1,7 @@
 # flora3d.gd (World3D/Flora, made by world3d.gd): trees, stumps, bushes, deadwood, boulders and outcrops of the 3D
 #   view (M3D-1 scope 4).
-# Purpose: one MultiMeshInstance3D per (model, 32×32 chunk) so the frustum culls by chunk and a tree costs one instance.
+# Purpose: one MultiMeshInstance3D per (model, params3d `flora.chunk_tiles` chunk, 16×16) so the frustum culls by chunk
+#   and a tree costs one instance (32×32 batches drew ~4× the visible trees: 1.0M primitives at Z3).
 #   Trees come from get_trees (species = persisted wood material) → bindings3d `flora.species` (else the habit
 #   fallback); variant, yaw, scale and position jitter are integer hashes of (world seed, tile) (View.key_hash), never
 #   randf(). Canopy colour per (habit or species, season) from bindings3d `flora.canopy_by_season`; a habit listed
@@ -22,7 +23,10 @@ const FLORA_SHADER = preload("res://shaders/world3d/flora.gdshader")
 var _world_sim: Node = null
 var _terrain: Node = null
 var _seed: int = 0
-var _key: String = ""
+var _keys: Dictionary = {}
+var _stamp_key: String = ""
+var _amounts_hash: int = 0
+var _resource_flags: int = 0
 var _season: int = -1
 var _instances: Dictionary = {}
 var _materials: Dictionary = {}
@@ -41,7 +45,7 @@ func setup(world_sim: Node, terrain: Node) -> void:
 
 
 func _on_world_reset() -> void:
-	_key = ""
+	_keys.clear()
 	_previous_trees.clear()
 	_stumps.clear()
 
@@ -49,22 +53,43 @@ func _on_world_reset() -> void:
 func _process(_delta: float) -> void:
 	if _world_sim == null or _terrain == null or int(_terrain.get("width")) <= 0:
 		return
+	var stamp: Dictionary = get_parent().get("stamp") if get_parent() != null else {}
+	var skey: String = "%s|%s|%s|%d" % [stamp.get("trees", -1), stamp.get("overlay", -1), stamp.get("tick", -1), int(_terrain.get("width"))]
+	if skey == _stamp_key and not stamp.is_empty():
+		return
+	_stamp_key = skey
 	var time: Dictionary = SimReads.read(_world_sim, "get_time_snapshot")
 	var season: int = int(time.get("season", 0))
 	var trees: Dictionary = SimReads.read(_world_sim, "get_trees")
 	var overlay: Dictionary = SimReads.read(_world_sim, "get_colony_overlay")
 	var resources: Dictionary = SimReads.read(_world_sim, "get_resource_snapshot")
 	var outcrops: Dictionary = SimReads.read(_world_sim, "get_outcrops")
-	var key: String = "%d|%d|%d|%d|%d|%d|%d" % [int(trees.get("version", 0)), season, int(overlay.get("version", 0)),
-		hash(resources.get("amounts", PackedInt32Array())), int(outcrops.get("version", 0)), int(_terrain.get("width")), _stump_epoch(time)]
-	if key == _key:
-		return
-	_key = key
-	_season = season
 	_seed = int(SimReads.read(_world_sim, "get_world_info").get("seed", 0))
-	_chunk = maxi(4, int(Data3D.param("terrain.chunk_tiles", 32)))
+	_chunk = maxi(4, int(Data3D.param("flora.chunk_tiles", 16)))
 	_snow = float((Data3D.param("terrain.snow_cover", {}) as Dictionary).get(str(season), 0.0))
-	_rebuild(trees, overlay, resources, outcrops, int(time.get("tick", 0)))
+	_season = season
+	var tick: int = int(time.get("tick", 0))
+	var width: int = int(_terrain.get("width"))
+	# Each family rebuilds only when its own data moves (bush amounts change every tick; only full/empty matters).
+	var amounts: PackedInt32Array = resources.get("amounts", PackedInt32Array())
+	var amounts_hash: int = hash(amounts)
+	if amounts_hash != _amounts_hash:
+		_amounts_hash = amounts_hash
+		var flags: PackedByteArray = PackedByteArray()
+		flags.resize(amounts.size())
+		for i: int in amounts.size():
+			flags[i] = 1 if amounts[i] > 0 else 0
+		_resource_flags = hash([flags, resources.get("xs")])
+	var keys: Dictionary = {
+		"trees": "%d|%d|%d|%d" % [int(trees.get("version", 0)), season, _stump_epoch(time), width],
+		"res": "%d|%d|%d" % [_resource_flags, season, width],
+		"nodes": "%d|%d|%d" % [int(overlay.get("version", 0)), season, width],
+		"ore": "%d|%d|%d" % [int(outcrops.get("version", 0)), season, width],
+	}
+	for family: String in keys:
+		if str(_keys.get(family, "")) != str(keys[family]):
+			_keys[family] = keys[family]
+			_rebuild_family(family, trees, overlay, resources, outcrops, tick)
 
 
 ## Stumps expire by tick; re-key once an hour of game time so expiry is seen without a per-frame rebuild.
@@ -72,8 +97,21 @@ func _stump_epoch(time: Dictionary) -> int:
 	return int(float(time.get("tick", 0)) / 60.0) if not _stumps.is_empty() else 0
 
 
-func _rebuild(trees: Dictionary, overlay: Dictionary, resources: Dictionary, outcrops: Dictionary, tick: int) -> void:
+func _rebuild_family(family: String, trees: Dictionary, overlay: Dictionary, resources: Dictionary, outcrops: Dictionary, tick: int) -> void:
 	var batches: Dictionary = {}
+	match family:
+		"trees":
+			_build_trees(batches, trees, tick)
+		"res":
+			_build_resources(batches, resources)
+		"nodes":
+			_build_nodes(batches, overlay)
+		_:
+			_build_ore(batches, outcrops)
+	_apply(family, batches)
+
+
+func _build_trees(batches: Dictionary, trees: Dictionary, tick: int) -> void:
 	var jitter: float = float(Data3D.param("flora.jitter_tiles", 0.22))
 	var smin: float = float(Data3D.param("flora.scale_min", 0.85))
 	var smax: float = float(Data3D.param("flora.scale_max", 1.2))
@@ -99,7 +137,10 @@ func _rebuild(trees: Dictionary, overlay: Dictionary, resources: Dictionary, out
 	var stump_model: String = str(Data3D.binding("flora.stump", "stump"))
 	for t: Vector2i in _stumps:
 		_add(batches, stump_model + "|", t, View.key_hash(_seed, t.x, t.y, 31), jitter, 1.0)
-	# Bushes and deadwood.
+
+
+func _build_resources(batches: Dictionary, resources: Dictionary) -> void:
+	var jitter: float = float(Data3D.param("flora.jitter_tiles", 0.22))
 	var codes: Dictionary = Data3D.binding("resources.codes", {})
 	var rx: PackedInt32Array = resources.get("xs", PackedInt32Array())
 	var ry: PackedInt32Array = resources.get("ys", PackedInt32Array())
@@ -114,6 +155,10 @@ func _rebuild(trees: Dictionary, overlay: Dictionary, resources: Dictionary, out
 			m = str(row["depleted"])
 		var t2: Vector2i = Vector2i(rx[i], ry[i])
 		_add(batches, m + "|", t2, View.key_hash(_seed, t2.x, t2.y, 37), jitter * 0.5, 1.0)
+
+
+func _build_nodes(batches: Dictionary, overlay: Dictionary) -> void:
+	var jitter: float = float(Data3D.param("flora.jitter_tiles", 0.22))
 	# Resource nodes (boulders, flint, clay) through the 2D node bindings.
 	var by_structure: Dictionary = Data3D.binding("nodes.by_structure", {})
 	var node_fallback: String = str(Data3D.binding("nodes.fallback", "boulder_small"))
@@ -130,6 +175,9 @@ func _rebuild(trees: Dictionary, overlay: Dictionary, resources: Dictionary, out
 		var m2: String = str(by_structure.get(structure, node_fallback))
 		var t3: Vector2i = Vector2i(nx[i], ny[i])
 		_add(batches, m2 + "|", t3, View.key_hash(_seed, t3.x, t3.y, 41), jitter * 0.3, 1.0)
+
+
+func _build_ore(batches: Dictionary, outcrops: Dictionary) -> void:
 	# Ore outcrops: vein tint by the catalogue's art tint material, plus a marker.
 	var ore_model: String = str(Data3D.binding("outcrops.model", "ore_outcrop"))
 	var ox: PackedInt64Array = outcrops.get("xs", PackedInt64Array())
@@ -144,7 +192,6 @@ func _rebuild(trees: Dictionary, overlay: Dictionary, resources: Dictionary, out
 		var top: float = float(_terrain.call("stand_height", t4)) + float(Data3D.binding("outcrops.marker_height", 1.9))
 		marker_points.append(Transform3D(Basis.IDENTITY.scaled(Vector3(0.22, 0.32, 0.22)), Vector3(t4.x + 0.5, top, t4.y + 0.5)))
 		marker_colours.append(Data3D.material_colour(tint, "Mineral"))
-	_apply(batches)
 	_apply_markers(marker_points, marker_colours)
 
 
@@ -172,7 +219,7 @@ func _variant_key(sp: String) -> String:
 
 
 func _outcrop_tint(code: int) -> String:
-	var catalog: Dictionary = SimReads.read(_world_sim, "get_content_catalog")
+	var catalog: Dictionary = get_parent().call("catalog")
 	for row: Variant in catalog.get("outcrops", []):
 		if row is Dictionary and int((row as Dictionary).get("code", -1)) == code:
 			var art: Variant = (row as Dictionary).get("art", {})
@@ -214,15 +261,16 @@ func _add(batches: Dictionary, key: String, t: Vector2i, h: int, jitter: float, 
 	(batches[bkey][1] as Array).append(Color(v, v, v))
 
 
-func _apply(batches: Dictionary) -> void:
+func _apply(family: String, batches: Dictionary) -> void:
 	for k: String in _instances.keys():
-		if not batches.has(k):
+		if k.begins_with(family + ":") and not batches.has(k.trim_prefix(family + ":")):
 			(_instances[k] as Node).queue_free()
 			_instances.erase(k)
-	for k: String in batches:
-		var parts: PackedStringArray = k.split("|")
+	for bk: String in batches:
+		var k: String = family + ":" + bk
+		var parts: PackedStringArray = bk.split("|")
 		var mesh: Mesh = _mesh_variant(parts[0], parts[1])
-		var data: Array = batches[k]
+		var data: Array = batches[bk]
 		var xforms: Array = data[0]
 		var cols: Array = data[1]
 		var mm: MultiMesh = MultiMesh.new()
@@ -266,7 +314,9 @@ func _apply_markers(points: Array[Transform3D], colours: Array[Color]) -> void:
 	_markers.multimesh = mm
 
 
-## Model `id` with its surfaces recoloured for variant `variant` ("species=<sp>", "vein=<material>" or "").
+## Model `id` recoloured for variant `variant` ("species=<sp>", "vein=<material>" or "") as ONE surface: each source
+## surface's colour is baked into the vertex colour and its sway / glow / vein flags into UV, so a tree is one draw per
+## pass (two surfaces per tree doubled the draw calls, the measured bottleneck of a forested view).
 func _mesh_variant(id: String, variant: String) -> Mesh:
 	var vkey: String = "%s|%s|%d" % [id, variant, _season]
 	if _variants.has(vkey):
@@ -276,23 +326,60 @@ func _mesh_variant(id: String, variant: String) -> Mesh:
 		_variants[vkey] = base
 		return base
 	var src: ArrayMesh = base
-	var out: ArrayMesh = ArrayMesh.new()
 	var sp: String = variant.trim_prefix("species=") if variant.begins_with("species=") else ""
 	var habit: String = _habit(sp)
 	var bare: bool = sp != "" and ((Data3D.binding("flora.bare_in_season", {}) as Dictionary).get(habit, []) as Array).has(_season)
+	var verts: PackedVector3Array = PackedVector3Array()
+	var normals: PackedVector3Array = PackedVector3Array()
+	var cols: PackedColorArray = PackedColorArray()
+	var uvs: PackedVector2Array = PackedVector2Array()
+	var index: PackedInt32Array = PackedInt32Array()
 	for s: int in src.get_surface_count():
 		var name: String = Data3D.surface_key(src, s)
 		if bare and name == "canopy":
 			continue
-		out.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, src.surface_get_arrays(s))
-		var idx: int = out.get_surface_count() - 1
-		out.surface_set_name(idx, name)
-		out.surface_set_material(idx, _surface_material(name, src.surface_get_material(s), variant, sp, habit))
+		var params: Array = _surface_params(name, src.surface_get_material(s), variant, sp, habit)
+		var arrays: Array = src.surface_get_arrays(s)
+		var sv: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+		var sn: Variant = arrays[Mesh.ARRAY_NORMAL]
+		var si: Variant = arrays[Mesh.ARRAY_INDEX]
+		var offset: int = verts.size()
+		verts.append_array(sv)
+		if sn is PackedVector3Array and (sn as PackedVector3Array).size() == sv.size():
+			normals.append_array(sn)
+		else:
+			for _i: int in sv.size():
+				normals.append(Vector3.UP)
+		var c: Color = params[0]
+		var flags: Vector2 = Vector2(float(params[2]), float(params[1]))
+		for _i: int in sv.size():
+			cols.append(c)
+			uvs.append(flags)
+		if si is PackedInt32Array and not (si as PackedInt32Array).is_empty():
+			for v: int in si:
+				index.append(v + offset)
+		else:
+			for v: int in sv.size():
+				index.append(v + offset)
+	var out: ArrayMesh = ArrayMesh.new()
+	if verts.is_empty():
+		_variants[vkey] = out
+		return out
+	var merged: Array = []
+	merged.resize(Mesh.ARRAY_MAX)
+	merged[Mesh.ARRAY_VERTEX] = verts
+	merged[Mesh.ARRAY_NORMAL] = normals
+	merged[Mesh.ARRAY_COLOR] = cols
+	merged[Mesh.ARRAY_TEX_UV] = uvs
+	merged[Mesh.ARRAY_INDEX] = index
+	out.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, merged)
+	out.surface_set_material(0, _shared_material())
 	_variants[vkey] = out
 	return out
 
 
-func _surface_material(name: String, original: Material, variant: String, sp: String, habit: String) -> Material:
+## [colour, sway, kind (0 plain, 1 glow, 2 vein)] of a source surface for this variant and season.
+func _surface_params(name: String, original: Material, variant: String, sp: String, habit: String) -> Array:
 	var c: Color = _original_colour(original)
 	var sway: float = 0.0
 	if sp != "" and name == "canopy":
@@ -307,16 +394,16 @@ func _surface_material(name: String, original: Material, variant: String, sp: St
 		sway = 0.3
 	elif variant.begins_with("vein=") and name == "vein":
 		c = Data3D.material_colour(variant.trim_prefix("vein="), "Mineral")
-	var mkey: String = "%s|%s|%.3f|%d" % [name, c.to_html(), sway, _season]
+	return [c, sway, 1.0 if name == "glow" else (2.0 if name == "vein" else 0.0)]
+
+
+func _shared_material() -> Material:
+	var mkey: String = "shared|%d" % _season
 	if _materials.has(mkey):
 		return _materials[mkey]
 	var mat: ShaderMaterial = ShaderMaterial.new()
 	mat.shader = FLORA_SHADER
-	mat.set_shader_parameter("albedo", c)
-	mat.set_shader_parameter("sway", sway)
 	mat.set_shader_parameter("snow", _snow)
-	mat.set_shader_parameter("glow", 1.0 if name == "glow" else 0.0)
-	mat.set_shader_parameter("vein", 1.0 if name == "vein" else 0.0)
 	_materials[mkey] = mat
 	return mat
 

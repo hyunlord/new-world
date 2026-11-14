@@ -33,6 +33,7 @@ var _live_key: String = ""
 var _influence: PackedByteArray = PackedByteArray()
 var _influence_tick: int = -1
 var _label: Label = null
+var _stamp_key: String = ""
 
 
 func setup(world_sim: Node, terrain: Node) -> void:
@@ -99,6 +100,14 @@ func _process(_delta: float) -> void:
 		_influence_tick = tick
 		_influence = _world_sim.call("get_influence_overlay", channel)
 		_base_key = ""
+	var stamp: Dictionary = get_parent().get("stamp") if get_parent() != null else {}
+	var room_layer0: Node = get_node_or_null("/root/Main/ColonyView/OverlayLayer/Rooms")
+	var skey: String = "%s|%s|%s|%s|%d|%d" % [stamp.get("overlay", -1), stamp.get("rooms", -1), stamp.get("tick", -1),
+		room_layer0 != null and bool(room_layer0.call("is_shown")), channel, _influence_tick]
+	if skey == _stamp_key and not stamp.is_empty():
+		_apply_live()
+		return
+	_stamp_key = skey
 	var overlay: Dictionary = SimReads.read(_world_sim, "get_colony_overlay")
 	var rooms: Dictionary = SimReads.read(_world_sim, "get_rooms")
 	var animals: Dictionary = SimReads.read(_world_sim, "get_animals")

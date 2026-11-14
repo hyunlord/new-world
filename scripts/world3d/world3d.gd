@@ -36,6 +36,11 @@ var overlay: Node3D = null
 ## Pickers: nodes with `pick(screen: Vector2, camera: Camera3D, order_mode: int) -> Vector2` (world px, or (-1, -1)).
 var pickers: Array[Node] = []
 static var _globals_added: bool = false
+## Once per frame (World3D processes before its layers): the colony change counters and the tick. Layers read heavy
+## snapshots only when the part of this stamp they depend on moved — a per-frame FFI read of get_trees alone cost
+## ~6.5 ms (no 2D layer shares the SimReads frame cache in 3D).
+var stamp: Dictionary = {}
+var _catalog: Dictionary = {}
 
 
 func _ready() -> void:
@@ -72,6 +77,21 @@ func _ready() -> void:
 	rig = _layer("CameraRig", RigScript)
 	rig.call("setup", camera2d, terrain)
 	ViewProjection.provider = self
+
+
+func _process(_delta: float) -> void:
+	if world_sim == null:
+		return
+	var v: Dictionary = SimReads.read(world_sim, "get_colony_versions")
+	stamp = {"tick": int(SimReads.read(world_sim, "get_time_snapshot").get("tick", 0)), "trees": int(v.get("trees_version", 0)),
+		"overlay": int(v.get("overlay_version", 0)), "rooms": int(v.get("rooms_version", 0)), "frame": Engine.get_process_frames()}
+
+
+## The content catalogue, read once (it is immutable for a world).
+func catalog() -> Dictionary:
+	if _catalog.is_empty() and world_sim != null:
+		_catalog = SimReads.read(world_sim, "get_content_catalog")
+	return _catalog
 
 
 func _exit_tree() -> void:

@@ -48,6 +48,7 @@ var _dirty: Dictionary = {}
 var _meshes: Dictionary = {}
 var _water: Dictionary = {}
 var _ready_world: bool = false
+var _stamp_key: String = ""
 
 
 func setup(world_sim: Node) -> void:
@@ -81,7 +82,11 @@ func _process(_delta: float) -> void:
 		_load_world()
 		if not _ready_world:
 			return
-	_poll_space()
+	var stamp: Dictionary = get_parent().get("stamp") if get_parent() != null else {}
+	var key: String = "%s|%s" % [stamp.get("overlay", -1), stamp.get("tick", -1)]
+	if key != _stamp_key or stamp.is_empty():
+		_stamp_key = key
+		_poll_space()
 	_build_some(CHUNKS_PER_FRAME)
 
 

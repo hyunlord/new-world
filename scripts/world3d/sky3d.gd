@@ -60,7 +60,7 @@ func _ready() -> void:
 	sun.name = "Sun"
 	sun.shadow_enabled = true
 	sun.shadow_blur = 1.5
-	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS
+	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
 	sun.directional_shadow_max_distance = float(Data3D.param("light.shadow_distance", 90.0))
 	sun.light_color = Color(1.0, 0.96, 0.88)
 	add_child(sun)
@@ -78,6 +78,10 @@ func night_factor() -> float:
 func _process(_delta: float) -> void:
 	if _world_sim == null:
 		return
+	# Shadows only as far as the view needs (the camera distance scales with the zoom).
+	var cam: Camera3D = get_viewport().get_camera_3d()
+	if cam != null:
+		sun.directional_shadow_max_distance = clampf(cam.global_position.y * 2.2, 25.0, float(Data3D.param("light.shadow_distance", 90.0)))
 	var time: Dictionary = SimReads.read(_world_sim, "get_time_snapshot")
 	var hour: float = _hour_override if _hour_override >= 0.0 else float(time.get("time_of_day", 12.0))
 	_apply_hour(hour)

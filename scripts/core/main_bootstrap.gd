@@ -45,6 +45,11 @@ func _enable_3d() -> void:
 	add_child(world3d)
 	move_child(world3d, get_node("ColonyView").get_index())
 	(get_node("ColonyView") as CanvasItem).visible = false
+	# Purely visual 2D layers have no reader in 3D; people, animals, rooms and OrderTool keep running for hit-tests.
+	for layer_name: String in ["GroundLayer", "PlantLayer", "TreeLayer", "BuildingLayer", "OutcropLayer", "LivestockLayer"]:
+		var layer: Node = get_node_or_null("ColonyView/" + layer_name)
+		if layer != null:
+			layer.process_mode = Node.PROCESS_MODE_DISABLED
 
 
 func _open_building_source(site: int, record: int) -> void:

@@ -31,6 +31,7 @@ var _item_nodes: Dictionary = {}
 var _glow_on: StandardMaterial3D
 var _glow_off: StandardMaterial3D
 var _tinted: Dictionary = {}
+var _stamp_key: String = ""
 
 
 func setup(world_sim: Node, terrain: Node, sky: Node) -> void:
@@ -59,6 +60,12 @@ func _on_world_reset() -> void:
 func _process(_delta: float) -> void:
 	if _world_sim == null or _terrain == null or not bool(_terrain.call("is_complete")):
 		return
+	var stamp: Dictionary = get_parent().get("stamp") if get_parent() != null else {}
+	var skey: String = "%s|%s" % [stamp.get("overlay", -1), stamp.get("tick", -1)]
+	if skey == _stamp_key and not stamp.is_empty():
+		_flicker()
+		return
+	_stamp_key = skey
 	var shops: Dictionary = SimReads.read(_world_sim, "get_workshops")
 	var buildings: Dictionary = SimReads.read(_world_sim, "get_building_snapshot")
 	var settlements: Dictionary = SimReads.read(_world_sim, "get_settlement_snapshot")
@@ -73,6 +80,10 @@ func _process(_delta: float) -> void:
 	if ikey != _items_key:
 		_items_key = ikey
 		_rebuild_items(overlay)
+	_flicker()
+
+
+func _flicker() -> void:
 	var night: float = float(_sky.call("night_factor")) if _sky != null else 0.0
 	var base_energy: float = float(Data3D.param("light.fire_light_energy", 2.2))
 	for l: Dictionary in _lights:
@@ -83,7 +94,7 @@ func _process(_delta: float) -> void:
 
 func _catalog_styles() -> Dictionary:
 	var out: Dictionary = {}
-	for row: Variant in SimReads.read(_world_sim, "get_content_catalog").get("blueprints", []):
+	for row: Variant in (get_parent().call("catalog") as Dictionary).get("blueprints", []):
 		if row is Dictionary:
 			out[int((row as Dictionary).get("code", -1))] = str((row as Dictionary).get("construction_style", ""))
 	return out
@@ -215,7 +226,7 @@ func _rebuild_items(overlay: Dictionary) -> void:
 	var kinds: PackedInt64Array = overlay.get("item_kinds", PackedInt64Array())
 	var counts: PackedInt32Array = overlay.get("item_counts", PackedInt32Array())
 	var catalog: Dictionary = {}
-	for row: Variant in SimReads.read(_world_sim, "get_content_catalog").get("items", []):
+	for row: Variant in (get_parent().call("catalog") as Dictionary).get("items", []):
 		if row is Dictionary:
 			catalog[int((row as Dictionary).get("code", -1))] = row
 	var limits: Array = (ArtData.bindings().get("items", {}) as Dictionary).get("bucket_limits", [1, 8])

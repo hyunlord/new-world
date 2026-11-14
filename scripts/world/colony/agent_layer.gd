@@ -551,7 +551,8 @@ func _update(delta: float) -> void:
 		else:
 			person.position = person.to_pos
 	phase = _profile_span("cleanup_placement_usec", phase)
-	if not lod and _zoom < 1.0:
+	# M3D-1: the badges are drawing only; the 3D view hides this layer (it keeps people for hit-tests).
+	if not lod and _zoom < 1.0 and is_visible_in_tree():
 		_show_overlapping_figures()
 	elif not _coincident_badges.is_empty():
 		_clear_coincident_badges()

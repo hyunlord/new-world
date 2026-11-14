@@ -22,6 +22,8 @@ var _vats: Dictionary = {}
 var _crowds: Dictionary = {}
 var _motion: Dictionary = {}
 var _drawn: Array[Dictionary] = []
+var _rows: Array[Dictionary] = []
+var _rows_tick: int = -1
 
 
 func setup(world_sim: Node, terrain: Node) -> void:
@@ -56,6 +58,11 @@ func _step_seconds() -> float:
 func _process(delta: float) -> void:
 	if _world_sim == null or _terrain == null or int(_terrain.get("width")) <= 0:
 		return
+	var stamp: Dictionary = get_parent().get("stamp") if get_parent() != null else {}
+	if not _rows.is_empty() and not stamp.is_empty() and int(stamp.get("tick", -1)) == _rows_tick:
+		_update(_rows, delta)
+		return
+	_rows_tick = int(stamp.get("tick", -1))
 	var rows: Array[Dictionary] = []
 	var wild: Dictionary = SimReads.read(_world_sim, "get_animals")
 	var ids: PackedInt64Array = wild.get("ids", PackedInt64Array())
@@ -77,7 +84,7 @@ func _process(delta: float) -> void:
 	var lxs: PackedInt64Array = tame.get("xs", PackedInt64Array())
 	var lys: PackedInt64Array = tame.get("ys", PackedInt64Array())
 	var catalog: Dictionary = {}
-	for row: Variant in SimReads.read(_world_sim, "get_content_catalog").get("animals", []):
+	for row: Variant in (get_parent().call("catalog") as Dictionary).get("animals", []):
 		if row is Dictionary:
 			catalog[int((row as Dictionary).get("code", -1))] = row
 	for i: int in mini(lids.size(), mini(lxs.size(), lys.size())):
@@ -85,6 +92,7 @@ func _process(delta: float) -> void:
 		rows.append({"key": "l%d" % lids[i], "id": -1, "kind": int(lkinds[i]) if i < lkinds.size() else -1,
 			"model": _species_model(str(crow.get("id", "")), str(crow.get("mechanic", crow.get("category", "")))),
 			"tile": Vector2i(int(lxs[i]), int(lys[i])), "state": 2, "wild": false})
+	_rows = rows
 	_update(rows, delta)
 
 
