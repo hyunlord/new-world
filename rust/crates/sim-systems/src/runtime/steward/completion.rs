@@ -1,5 +1,7 @@
-//! Pure House role completion from accepted ownership; manual role intent always wins.
+//! Pure House role completion from accepted ownership (blueprint orders, steward template sites); manual role intent always wins.
 use sim_core::colony::{
+    building_site::{BuildCause, PiecePhase},
+    content::{installed_or_bundled, CompletionCategory},
     steward::{Action, Rule},
     Command, RejectReason,
 };
@@ -94,6 +96,46 @@ pub(super) fn plan(res: &SimResources, rule: &Rule) -> Option<Command> {
                     compatible_boundary.insert((x, y));
                 }
             }
+            // ADR 0061 houses are template sites: their completed wall/door pieces count too,
+            // unless a later placement replaced the tile.
+            for site in res.colony.buildings.sites.values() {
+                let BuildCause::Steward(source) = site.cause else {
+                    continue;
+                };
+                if !data.rules.iter().any(|rule| {
+                    u32::from(rule.id) == source && matches!(rule.action, Action::House { .. })
+                }) {
+                    continue;
+                }
+                for piece in &site.pieces {
+                    let tile = piece.tile;
+                    if piece.phase == PiecePhase::Complete
+                        && installed_or_bundled()
+                            .blueprint(piece.kind)
+                            .is_some_and(|def| {
+                                matches!(
+                                    def.completion,
+                                    CompletionCategory::Wall | CompletionCategory::Door
+                                )
+                            })
+                        && !res
+                            .colony
+                            .command_log
+                            .iter()
+                            .skip(site.source_record as usize)
+                            .any(|record| {
+                                let command = match &record.command {
+                                    Command::Steward { command, .. } => &**command,
+                                    command => command,
+                                };
+                                record.result.accepted
+                                    && matches!(command, Command::PlaceBlueprint { x, y, .. } if (*x, *y) == tile)
+                            })
+                    {
+                        compatible_boundary.insert(tile);
+                    }
+                }
+            }
         }
     }
     for room in res.colony.rooms.values() {
@@ -140,7 +182,7 @@ pub(super) fn plan(res: &SimResources, rule: &Rule) -> Option<Command> {
             })
             .chain(room.doors.iter().copied())
             .collect();
-        // A store may reuse steward house walls, but must contribute its own real boundary.
+        // A store may reuse steward house walls (blueprint or template), but must contribute its own real boundary.
         if built_boundary.iter().any(|tile| boundary.contains(tile))
             && built_boundary
                 .iter()
