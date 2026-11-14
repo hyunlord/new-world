@@ -100,7 +100,7 @@ func _process(delta: float) -> void:
 	if _state.is_empty() or stamp.is_empty() or int(stamp.get("tick", -1)) != _snap_tick:
 		_snap_tick = int(stamp.get("tick", -1))
 		_refresh(SimReads.read(_world_sim, "get_agent_snapshot"))
-	var running: bool = _world_sim.can_process()
+	var running: bool = _world_sim.process_mode != Node.PROCESS_MODE_DISABLED
 	var mm: MultiMesh = _mmi.multimesh
 	var copies: int = maxi(1, replicate)
 	var cap: int = _cap(mm, copies)

@@ -97,7 +97,7 @@ func _process(delta: float) -> void:
 
 
 func _update(rows: Array[Dictionary], delta: float) -> void:
-	var running: bool = _world_sim.can_process()
+	var running: bool = _world_sim.process_mode != Node.PROCESS_MODE_DISABLED
 	var dur: float = _step_seconds()
 	var by_model: Dictionary = {}
 	var seen: Dictionary = {}
