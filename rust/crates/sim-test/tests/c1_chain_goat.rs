@@ -192,8 +192,32 @@ fn admit(out: &Path) -> (SimEngine, [u32; 2], usize, Value) {
             )
             .accepted
         );
+        // The admission window had no food store: Haul 0 keeps the D-SIMCHECK-1 hearth pile from
+        // opening R2-1C stocking in it; each level is restored at tick 12, before any scene order.
+        let hauls: Vec<_> = people(&e.world, &e.resources)
+            .into_iter()
+            .filter(|p| p.adult)
+            .map(|p| {
+                let current = e.world.get::<&WorkPriorities>(p.entity).map_or_else(
+                    |_| WorkPriorities::defaults(e.world.get::<&Elder>(p.entity).is_ok()),
+                    |w| *w,
+                );
+                (p.id, current.level(WorkType::Haul))
+            })
+            .filter(|&(_, level)| level != 0)
+            .collect();
+        let haul = |e: &mut SimEngine, agent, level| {
+            let work = WorkType::Haul;
+            assert!(submit(e, Command::SetWorkPriority { agent, work, level }).accepted);
+        };
+        for &(agent, _) in &hauls {
+            haul(&mut e, agent, 0);
+        }
         for _ in 0..12 {
             e.tick();
+        }
+        for &(agent, level) in &hauls {
+            haul(&mut e, agent, level);
         }
         let rows = source_rows(&e, goat);
         let mut kids: Vec<_> = e

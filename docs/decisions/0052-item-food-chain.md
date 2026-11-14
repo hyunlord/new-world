@@ -121,3 +121,21 @@ requirements. No inherited UI-pass waiver certifies this simulation change.
 [M6A_DESIGN](../v8/m6a/M6A_DESIGN.md),
 [ADR 0016](0016-simulation-contract.md) and
 [ADR 0033](0033-extensibility-contract.md).
+
+## Amendment M-SIMCHECK D-SIMCHECK-1 — the hearth pile stores food when no zone exists (2026-11-15)
+
+[M6A_DECISIONS](../v8/m6a/M6A_DECISIONS.md) R2-1C gives colonies whose winter food nobody plans
+(steward off, or a non-food scope) the winter duty and the `stock_*` nodes. Every such node
+requires `harvest_storage_available`, and the storage selector searched only stockpile-zone
+cells, which only commands create; a steward-OFF colony with no orders therefore never stocked
+food and went extinct at its first winter. That contradicted R2-1C and is fixed as a bug.
+A colony with **no stockpile zone at all and no steward food plan** (the R2-1C condition) and a
+standing hearth now uses its hearth pile (the tiles within `HEARTH_PILE_REACH` of the hearth) as
+its food store, as firewood's `Gather` and the hunter's meat haul already do:
+harvest output and loose food are hauled there, stacks already there are not re-hauled, and
+the settlement reserve counts them as stored. Ground lifetimes still apply on the pile (it is
+not a stockpile or roofed store). Once any zone exists, zones are the only food store again;
+a steward food plan (ON, scope All or Food) never uses the pile, so steward-ON colonies are
+unchanged (probe fingerprints identical on seeds 0-4). Whether this food carries
+an OFF colony through winter is balance (M-BAL). Hunting still needs a player mark or hunt
+zone ([ADR 0028](0028-animals-hunting-drafting.md)); hunting without one is out of scope.

@@ -1,4 +1,5 @@
 //! Choose existing food storage without mixing production dates when separate room exists.
+//! Storage is a stockpile zone; with no zone and no steward food plan, the hearth pile (D-SIMCHECK-1).
 use crate::runtime::food::storage;
 use sim_core::colony::food::{FoodAge, FoodOwner, FoodStackKey};
 use sim_core::colony::{ItemSpec, ReserveKey};
@@ -109,11 +110,14 @@ fn choose(
             && res.nav.reaches(region, tile)
             && (!covered_only || crate::runtime::rooms::covered(res, tile))
     };
-    let (nearest, ()) = res
+    let Some((nearest, ())) = res
         .spatial
         .colony
         .cells
-        .nearest_where(from, u32::MAX, |tile, _| open(tile))?;
+        .nearest_where(from, u32::MAX, |tile, _| open(tile))
+    else {
+        return hearth_pile(res, from, open).map(|tile| (tile, room(tile)));
+    };
     let Some(bonus) = res
         .rules
         .colony
@@ -139,6 +143,43 @@ fn choose(
         nearest
     };
     Some((to, room(to)))
+}
+
+/// D-SIMCHECK-1 (M6a R2-1C): a colony whose food nobody plans (no steward food plan) and that has
+/// no stockpile zone at all keeps its food on the hearth pile, as firewood's `Gather` does. Like the
+/// hunter's meat haul, the pile needs a standing hearth building.
+fn hearth_fallback(res: &SimResources) -> bool {
+    res.colony.zone_of_tile.is_empty()
+        && !crate::runtime::mind::context::steward_plans_food(res)
+        && crate::worldgen::colony::hearth(res).is_some()
+}
+
+/// Whether `tile` is on the hearth pile while that pile is the food store; ground lifetimes apply.
+pub fn hearth_store(res: &SimResources, tile: Tile) -> bool {
+    hearth_fallback(res)
+        && super::hearth::hearth_tiles(res)
+            .iter()
+            .any(|hearth| chebyshev(tile, *hearth) <= super::hearth::HEARTH_PILE_REACH)
+}
+
+/// The open hearth-pile tile nearest `from` `(distance, y, x)`, never `from` itself.
+fn hearth_pile(res: &SimResources, from: Tile, open: impl Fn(Tile) -> bool) -> Option<Tile> {
+    if !hearth_fallback(res) {
+        return None;
+    }
+    let reach = super::hearth::HEARTH_PILE_REACH;
+    let (width, height) = (res.tile_grid.width, res.tile_grid.height);
+    super::hearth::hearth_tiles(res)
+        .into_iter()
+        .flat_map(|(x, y)| {
+            (y.saturating_sub(reach)..=y.saturating_add(reach).min(height.saturating_sub(1)))
+                .flat_map(move |ty| {
+                    (x.saturating_sub(reach)..=x.saturating_add(reach).min(width.saturating_sub(1)))
+                        .map(move |tx| (tx, ty))
+                })
+        })
+        .filter(|tile| *tile != from && open(*tile))
+        .min_by_key(|tile| (chebyshev(from, *tile), tile.1, tile.0))
 }
 
 /// No retained absence memo: different ages of one item have different clean capacity.

@@ -42,6 +42,7 @@ pub(super) fn start(
             || stack.count == 0
             || stack.kind.definition().food.is_none()
             || res.colony.zone_of_tile.contains_key(&from)
+            || super::food_storage::hearth_store(res, from)
             || res
                 .colony
                 .reservations

@@ -274,6 +274,8 @@ fn admitted_routine_without_weighted_place_records_denial_and_thirty_tick_cooldo
     rule.adult_weights = [0; 5];
     rule.elder_weights = [0; 2];
     engine.resources.food_tiles.clear();
+    // No plants: the D-SIMCHECK-1 hearth-pile fallback would otherwise let stock_forage_idle win.
+    engine.resources.food.plants.clear();
     for (entity, _) in &people {
         engine
             .world

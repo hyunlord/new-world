@@ -1121,6 +1121,7 @@ fn loose_haul(
             ex.memo(source),
             |tile, _| {
                 !colony.zone_of_tile.contains_key(&tile)
+                    && !super::food_storage::hearth_store(res, tile)
                     && !colony.reservations.contains_key(&ReserveKey::Stack(tile))
                     && res.nav.reaches(ctx.region, tile)
                     && colony.ground_items.get(&tile).is_some_and(|stack| {
