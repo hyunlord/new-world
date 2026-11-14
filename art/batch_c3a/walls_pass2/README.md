@@ -42,7 +42,7 @@ uv run --with pytest --with pillow --with numpy --with pydantic python -m pytest
 ```
 
 `outputs/art_import.draft.json` has28 additive wall_piece_texture rows with a
-fixed art source `f12977128235814e707bd909d374eb95e40c1c52`.
+fixed art source `f71dc34b19517893798967bfc1c9257944e25fdd`.
 `construction_styles.patch.json` proposes only drystone.wall_pieces and preserves
 all defaults/material looks. Paths are the imported C3A source paths resolved
 through the visual-v3 ArtData.path_of_source contract, not guessed res:// paths.
