@@ -17,8 +17,9 @@
 #   dissolves and walls drop to `structures.cutaway_wall_height`; with a room selected (RoomPanel) or a person in the
 #   inspector standing in a roofed room, that room's roof dissolves and the walls around it drop. Construction: a
 #   blueprint site of get_colony_overlay shows its footprint outline (stakes and sills); a wall or door site rises with
-#   its work progress; a template site still building shows its whole footprint outline. Walls rebuild per 32×32 chunk
-#   when the space version moves; roofs when the rooms version or the template sites change.
+#   its work progress; a template site still building shows its whole footprint outline. Snapshots are read when the
+#   overlay or rooms counter moves (or every `flora.slow_read_ticks`); walls rebuild per 32×32 chunk only when the
+#   wall/floor content changes, roofs when the rooms version or the template sites change.
 # Bridge methods called: via SimReads get_space, get_rooms, get_building_snapshot, get_colony_overlay,
 #   get_agent_snapshot, get_content_catalog; signal world_reset.
 extends Node3D
@@ -85,7 +86,8 @@ func _process(delta: float) -> void:
 		return
 	_chunk = maxi(4, int(Data3D.param("terrain.chunk_tiles", 32)))
 	var stamp: Dictionary = get_parent().get("stamp") if get_parent() != null else {}
-	var stamp_key: String = "%s|%s|%s" % [stamp.get("overlay", -1), stamp.get("rooms", -1), stamp.get("tick", -1)]
+	@warning_ignore("integer_division")
+	var stamp_key: String = "%s|%s|%s" % [stamp.get("overlay", -1), stamp.get("rooms", -1), int(stamp.get("tick", -1)) / maxi(1, int(Data3D.param("flora.slow_read_ticks", 24)))]
 	if stamp_key == _stamp_key and not stamp.is_empty():
 		_update_doors()
 		_update_cutaway(delta)
@@ -93,7 +95,9 @@ func _process(delta: float) -> void:
 	_stamp_key = stamp_key
 	var space: Dictionary = SimReads.read(_world_sim, "get_space")
 	var buildings: Dictionary = SimReads.read(_world_sim, "get_building_snapshot")
-	var version: int = int(space.get("version", 0))
+	# Rebuild walls on wall/floor content, not on the shared overlay counter (hauling moves it every few ticks).
+	var version: int = hash([space.get("wall_xs"), space.get("wall_ys"), space.get("wall_materials"), space.get("wall_styles"),
+		space.get("wall_is_door"), space.get("floor_xs"), space.get("floor_ys"), space.get("floor_materials")])
 	var bkey: int = hash([buildings.get("kinds"), buildings.get("xs"), buildings.get("ys")])
 	if version != _space_version or bkey != int(_walls.get("_bkey", -1)):
 		_space_version = version

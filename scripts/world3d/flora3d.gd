@@ -25,8 +25,7 @@ var _terrain: Node = null
 var _seed: int = 0
 var _keys: Dictionary = {}
 var _stamp_key: String = ""
-var _amounts_hash: int = 0
-var _resource_flags: int = 0
+var _slow_tick: int = -1000000
 var _season: int = -1
 var _instances: Dictionary = {}
 var _materials: Dictionary = {}
@@ -59,54 +58,57 @@ func _process(_delta: float) -> void:
 	_stamp_key = skey
 	var time: Dictionary = SimReads.read(_world_sim, "get_time_snapshot")
 	var season: int = int(time.get("season", 0))
-	var trees: Dictionary = SimReads.read(_world_sim, "get_trees")
-	var overlay: Dictionary = SimReads.read(_world_sim, "get_colony_overlay")
-	var resources: Dictionary = SimReads.read(_world_sim, "get_resource_snapshot")
-	var outcrops: Dictionary = SimReads.read(_world_sim, "get_outcrops")
 	_seed = int(SimReads.read(_world_sim, "get_world_info").get("seed", 0))
 	_chunk = maxi(4, int(Data3D.param("flora.chunk_tiles", 16)))
 	_season = season
 	var tick: int = int(time.get("tick", 0))
 	var width: int = int(_terrain.get("width"))
-	# Each family rebuilds only when its own data moves (bush amounts change every tick; only full/empty matters).
-	var amounts: PackedInt32Array = resources.get("amounts", PackedInt32Array())
-	var amounts_hash: int = hash(amounts)
-	if amounts_hash != _amounts_hash:
-		_amounts_hash = amounts_hash
+	# Each family reads its snapshot only when its own counter moved (an FFI read of every tree each tick cost
+	# milliseconds), and rebuilds only when its content changed.
+	var tkey: String = "%d|%d|%d|%d" % [int(stamp.get("trees", -1)), season, _stump_epoch(time), width]
+	if str(_keys.get("trees", "")) != tkey:
+		_keys["trees"] = tkey
+		var batches: Dictionary = {}
+		_build_trees(batches, SimReads.read(_world_sim, "get_trees"), tick)
+		_apply("trees", batches)
+	var cadence: int = int(Data3D.param("flora.slow_read_ticks", 24))
+	if tick - _slow_tick >= cadence or tick < _slow_tick or str(_keys.get("season", "")) != "%d|%d" % [season, width]:
+		_slow_tick = tick
+		_keys["season"] = "%d|%d" % [season, width]
+		var resources: Dictionary = SimReads.read(_world_sim, "get_resource_snapshot")
+		var amounts: PackedInt32Array = resources.get("amounts", PackedInt32Array())
 		var flags: PackedByteArray = PackedByteArray()
 		flags.resize(amounts.size())
 		for i: int in amounts.size():
 			flags[i] = 1 if amounts[i] > 0 else 0
-		_resource_flags = hash([flags, resources.get("xs")])
-	var keys: Dictionary = {
-		"trees": "%d|%d|%d|%d" % [int(trees.get("version", 0)), season, _stump_epoch(time), width],
-		"res": "%d|%d|%d" % [_resource_flags, season, width],
-		"nodes": "%d|%d|%d" % [int(overlay.get("version", 0)), season, width],
-		"ore": "%d|%d|%d" % [int(outcrops.get("version", 0)), season, width],
-	}
-	for family: String in keys:
-		if str(_keys.get(family, "")) != str(keys[family]):
-			_keys[family] = keys[family]
-			_rebuild_family(family, trees, overlay, resources, outcrops, tick)
+		var rkey: String = "%d|%d|%d" % [hash([flags, resources.get("xs"), resources.get("kinds")]), season, width]
+		if str(_keys.get("res", "")) != rkey:
+			_keys["res"] = rkey
+			var rb: Dictionary = {}
+			_build_resources(rb, resources)
+			_apply("res", rb)
+		var outcrops: Dictionary = SimReads.read(_world_sim, "get_outcrops")
+		var okey: String = "%d|%d|%d" % [int(outcrops.get("version", 0)), season, width]
+		if str(_keys.get("ore", "")) != okey:
+			_keys["ore"] = okey
+			var ob: Dictionary = {}
+			_build_ore(ob, outcrops)
+			_apply("ore", ob)
+	var nvkey: String = "%s|%d|%d" % [stamp.get("overlay", -1), season, width]
+	if str(_keys.get("nodes_v", "")) != nvkey:
+		_keys["nodes_v"] = nvkey
+		var overlay: Dictionary = SimReads.read(_world_sim, "get_colony_overlay")
+		var nkey: String = "%d|%d|%d" % [hash([overlay.get("node_xs"), overlay.get("node_ys"), overlay.get("node_kinds"), overlay.get("node_left")]), season, width]
+		if str(_keys.get("nodes", "")) != nkey:
+			_keys["nodes"] = nkey
+			var nb: Dictionary = {}
+			_build_nodes(nb, overlay)
+			_apply("nodes", nb)
 
 
 ## Stumps expire by tick; re-key once an hour of game time so expiry is seen without a per-frame rebuild.
 func _stump_epoch(time: Dictionary) -> int:
 	return int(float(time.get("tick", 0)) / 60.0) if not _stumps.is_empty() else 0
-
-
-func _rebuild_family(family: String, trees: Dictionary, overlay: Dictionary, resources: Dictionary, outcrops: Dictionary, tick: int) -> void:
-	var batches: Dictionary = {}
-	match family:
-		"trees":
-			_build_trees(batches, trees, tick)
-		"res":
-			_build_resources(batches, resources)
-		"nodes":
-			_build_nodes(batches, overlay)
-		_:
-			_build_ore(batches, outcrops)
-	_apply(family, batches)
 
 
 func _build_trees(batches: Dictionary, trees: Dictionary, tick: int) -> void:

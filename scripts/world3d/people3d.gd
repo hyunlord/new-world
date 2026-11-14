@@ -27,13 +27,15 @@ var _ring: MeshInstance3D = null
 var _motion: Dictionary = {}
 var _transforms: Dictionary = {}
 var _top_colours: Dictionary = {}
-var _drawn: Array[Dictionary] = []
 ## Tools only (world3d_fps.gd `--replicate`): draw every person this many times, offset, to load the renderer past the
 ## bridge's stress cap. Never set in the game.
 var replicate: int = 1
 var _looks: Dictionary = {}
-var _snap: Dictionary = {}
 var _snap_tick: int = -1
+## AgentId → {look, scale, bits, flags, clip, dirty, feet, h}; AgentId → MultiMesh slot (stable while they live).
+var _state: Dictionary = {}
+var _slot: Dictionary = {}
+var _free: Array[int] = []
 var _clip_packs: Dictionary = {}
 
 
@@ -42,7 +44,10 @@ func setup(world_sim: Node, terrain: Node) -> void:
 	_terrain = terrain
 	_world_sim.connect("world_reset", func() -> void:
 		_motion.clear()
-		_snap = {}
+		_state.clear()
+		_slot.clear()
+		_free.clear()
+		_mmi.multimesh = null
 		_looks.clear())
 
 
@@ -92,35 +97,91 @@ func _process(delta: float) -> void:
 	if _world_sim == null or _terrain == null or int(_terrain.get("width")) <= 0 or not bool(_vat.get("ok")):
 		return
 	var stamp: Dictionary = get_parent().get("stamp") if get_parent() != null else {}
-	if _snap.is_empty() or stamp.is_empty() or int(stamp.get("tick", -1)) != _snap_tick:
-		_snap = SimReads.read(_world_sim, "get_agent_snapshot")
+	if _state.is_empty() or stamp.is_empty() or int(stamp.get("tick", -1)) != _snap_tick:
 		_snap_tick = int(stamp.get("tick", -1))
-	var snap: Dictionary = _snap
+		_refresh(SimReads.read(_world_sim, "get_agent_snapshot"))
+	var running: bool = _world_sim.can_process()
+	var mm: MultiMesh = _mmi.multimesh
+	var copies: int = maxi(1, replicate)
+	var cap: int = _cap(mm, copies)
+	var height: float = float(Data3D.param("people.adult_height", 1.7))
+	var selected: int = _selected_bits()
+	_ring.visible = false
+	# Only people who move, or whose clip or look changed, are written: a still crowd costs nothing per frame.
+	for aid: int in _state:
+		var st: Dictionary = _state[aid]
+		var m: Dictionary = _motion[aid]
+		var moving: bool = float(m["t"]) < 1.0
+		if running and moving:
+			m["t"] = minf(1.0, float(m["t"]) + delta / maxf(0.01, float(m["dur"])))
+		var slot: int = int(_slot[aid])
+		if moving or bool(st["dirty"]):
+			var p: Vector2 = _pos(m)
+			var y: float = float(_terrain.call("height_at", p.x, p.y))
+			var scale: float = float(st["scale"])
+			var basis: Basis = Basis(Vector3.UP, float(m["yaw"])).scaled(Vector3(scale, scale, scale))
+			var feet: Vector3 = Vector3(p.x, y, p.y)
+			st["feet"] = feet
+			st["h"] = height * scale
+			for c: int in copies:
+				var off: Vector3 = Vector3(float((c * 7) % 5) - 2.0, 0.0, float((c * 3) % 5) - 2.0) * 0.6 if c > 0 else Vector3.ZERO
+				mm.set_instance_transform(cap * c + slot, Transform3D(basis, feet + off))
+		var clip: float = _clip_pack(_clip_of(st, float(m["t"]) < 1.0))
+		if clip != float(st["clip"]) or bool(st["dirty"]):
+			st["clip"] = clip
+			var look: Dictionary = st["look"]
+			var custom: Color = Color(clip, float(aid % 97) * 0.173, float(look["hair_p"]), float(look["cloth_p"]))
+			for c: int in copies:
+				mm.set_instance_color(cap * c + slot, look["skin"])
+				mm.set_instance_custom_data(cap * c + slot, custom)
+		st["dirty"] = false
+		if int(st["bits"]) == selected and selected != -1:
+			_ring.visible = true
+			_ring.position = (st["feet"] as Vector3) + Vector3(0, 0.04, 0)
+
+
+## Instances per copy of the crowd MultiMesh.
+static func _cap(mm: MultiMesh, copies: int) -> int:
+	if mm == null:
+		return 0
+	@warning_ignore("integer_division")
+	return mm.instance_count / maxi(1, copies)
+
+
+## A new snapshot (once per tick): motion targets, appearance and state flags per AgentId, stable instance slots.
+func _refresh(snap: Dictionary) -> void:
 	var ids: PackedInt64Array = snap.get("ids", PackedInt64Array())
 	var aids: PackedInt64Array = snap.get("agent_ids", PackedInt64Array())
 	var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
 	var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
 	var n: int = mini(aids.size(), mini(xs.size(), ys.size()))
-	var running: bool = _world_sim.can_process()
 	var dur: float = _step_seconds()
-	var seen: Dictionary = {}
-	_drawn.clear()
-	var mm: MultiMesh = _mmi.multimesh
+	var child_scale: float = float(Data3D.param("people.child_scale", 0.62))
 	var copies: int = maxi(1, replicate)
-	if mm == null or mm.instance_count != n * copies:
+	var mm: MultiMesh = _mmi.multimesh
+	var seen: Dictionary = {}
+	var grow: bool = mm == null or mm.instance_count < n * copies or mm.instance_count % copies != 0
+	if grow:
 		mm = MultiMesh.new()
 		mm.transform_format = MultiMesh.TRANSFORM_3D
 		mm.use_colors = true
 		mm.use_custom_data = true
 		mm.mesh = _vat.get("mesh")
-		mm.instance_count = n * copies
+		mm.instance_count = maxi(16, n + (n >> 2)) * copies
 		_mmi.multimesh = mm
-	var child_scale: float = float(Data3D.param("people.child_scale", 0.62))
-	var selected: int = _selected_bits()
-	_ring.visible = false
+		_slot.clear()
+		_free.clear()
+		for k: int in _cap(mm, copies):
+			_free.append(_cap(mm, copies) - 1 - k)
+			for c: int in copies:
+				mm.set_instance_transform(_cap(mm, copies) * c + k, Transform3D(Basis().scaled(Vector3.ZERO), Vector3.ZERO))
+		for st0: Dictionary in _state.values():
+			st0["dirty"] = true
 	for i: int in n:
 		var aid: int = aids[i]
 		seen[aid] = true
+		if not _slot.has(aid):
+			_slot[aid] = _free.pop_back()
 		var tile: Vector2i = Vector2i(xs[i], ys[i])
 		var target: Vector2 = Vector2(tile) + Vector2(0.5, 0.5)
 		var m: Dictionary = _motion.get(aid, {})
@@ -137,15 +198,7 @@ func _process(delta: float) -> void:
 			var d: Vector2 = target - now_pos
 			if d.length_squared() > 0.0001:
 				m["yaw"] = atan2(d.x, d.y)
-		if running:
-			m["t"] = minf(1.0, float(m["t"]) + delta / maxf(0.01, float(m["dur"])))
-		var p: Vector2 = _pos(m)
-		var moving: bool = float(m["t"]) < 1.0
 		var stage: int = _byte(snap, "life_stages", i)
-		var scale: float = (child_scale * (0.75 if _byte(snap, "infants", i) == 1 else 1.0)) if stage == 1 else 1.0
-		var y: float = float(_terrain.call("height_at", p.x, p.y))
-		var basis: Basis = Basis(Vector3.UP, float(m["yaw"])).scaled(Vector3(scale, scale, scale))
-		mm.set_instance_transform(i, Transform3D(basis, Vector3(p.x, y, p.y)))
 		var akey: int = hash([aid, _int(snap, "look_ids", i), _byte(snap, "variants", i), _byte(snap, "tops", i), stage])
 		var look: Dictionary = _looks.get(akey, {})
 		if look.is_empty():
@@ -153,21 +206,23 @@ func _process(delta: float) -> void:
 			look["hair_p"] = Vat.pack(look["hair"])
 			look["cloth_p"] = Vat.pack(look["cloth"])
 			_looks[akey] = look
-		mm.set_instance_color(i, look["skin"])
-		var clip: String = _clip(snap, i, moving)
-		mm.set_instance_custom_data(i, Color(_clip_pack(clip), float(aid % 97) * 0.173, float(look["hair_p"]), float(look["cloth_p"])))
-		for c: int in range(1, copies):
-			var off: Vector3 = Vector3(float((c * 7) % 5) - 2.0, 0.0, float((c * 3) % 5) - 2.0) * 0.6
-			mm.set_instance_transform(n * c + i, Transform3D(basis, Vector3(p.x, y, p.y) + off))
-			mm.set_instance_color(n * c + i, look["skin"])
-			mm.set_instance_custom_data(n * c + i, mm.get_instance_custom_data(i))
-		var bits: int = ids[i] if i < ids.size() else -1
-		_drawn.append({"bits": bits, "pos": Vector3(p.x, y, p.y), "h": float(Data3D.param("people.adult_height", 1.7)) * scale})
-		if bits == selected and bits != -1:
-			_ring.visible = true
-			_ring.position = Vector3(p.x, y + 0.04, p.y)
-	for aid: int in _motion.keys():
+		var st: Dictionary = _state.get(aid, {"clip": -1.0, "dirty": true, "feet": Vector3(target.x, 0.0, target.y), "h": 1.7})
+		var scale: float = (child_scale * (0.75 if _byte(snap, "infants", i) == 1 else 1.0)) if stage == 1 else 1.0
+		if st.get("look") != look or float(st.get("scale", -1.0)) != scale:
+			st["dirty"] = true
+		st["look"] = look
+		st["scale"] = scale
+		st["bits"] = ids[i] if i < ids.size() else -1
+		st["flags"] = _flags(snap, i)
+		_state[aid] = st
+	for aid: int in _state.keys():
 		if not seen.has(aid):
+			var slot: int = int(_slot[aid])
+			for c: int in copies:
+				mm.set_instance_transform(_cap(mm, copies) * c + slot, Transform3D(Basis().scaled(Vector3.ZERO), Vector3.ZERO))
+			_free.append(slot)
+			_slot.erase(aid)
+			_state.erase(aid)
 			_motion.erase(aid)
 
 
@@ -196,20 +251,24 @@ static func _byte(snap: Dictionary, key: String, i: int) -> int:
 	return 0
 
 
-func _clip(snap: Dictionary, i: int, moving: bool) -> String:
+## [sleeping, carrying, working] of row `i`.
+func _flags(snap: Dictionary, i: int) -> Array:
 	var states: PackedByteArray = snap.get("states", PackedByteArray())
 	var targets: PackedByteArray = snap.get("target_kinds", PackedByteArray())
-	if i < states.size() and i < targets.size() and states[i] == 3 and targets[i] == 3:
-		return "sleep"
 	var carry: PackedInt64Array = snap.get("carry_kinds", PackedInt64Array())
 	var woods: PackedInt32Array = snap.get("carried_woods", PackedInt32Array())
-	var carrying: bool = (i < carry.size() and carry[i] >= 0) or (i < woods.size() and woods[i] > 0)
-	if moving:
-		return "carry" if carrying else "walk"
 	var jobs: PackedByteArray = snap.get("jobs", PackedByteArray())
-	if i < jobs.size() and jobs[i] != 0:
-		return "work"
-	return "idle"
+	return [i < states.size() and i < targets.size() and states[i] == 3 and targets[i] == 3,
+		(i < carry.size() and carry[i] >= 0) or (i < woods.size() and woods[i] > 0), i < jobs.size() and jobs[i] != 0]
+
+
+func _clip_of(st: Dictionary, moving: bool) -> String:
+	var f: Array = st["flags"]
+	if bool(f[0]):
+		return "sleep"
+	if moving:
+		return "carry" if bool(f[1]) else "walk"
+	return "work" if bool(f[2]) else "idle"
 
 
 ## Skin, hair and clothing colours of row `i` from the 2D appearance data.
@@ -254,8 +313,8 @@ func pick(screen: Vector2, camera: Camera3D, mode: int) -> Vector2:
 	var radius: float = float(Data3D.param("people.pick_radius_px", 18))
 	var best: int = -1
 	var best_depth: float = INF
-	for d: Dictionary in _drawn:
-		var feet: Vector3 = d["pos"]
+	for d: Dictionary in _state.values():
+		var feet: Vector3 = d["feet"]
 		var head: Vector3 = feet + Vector3(0, float(d["h"]), 0)
 		if camera.is_position_behind(feet) or camera.is_position_behind(head):
 			continue
@@ -281,14 +340,14 @@ func pick(screen: Vector2, camera: Camera3D, mode: int) -> Vector2:
 
 ## Tools: the 3D feet position of entity `bits`, or Vector3.INF.
 func feet_of(bits: int) -> Vector3:
-	for d: Dictionary in _drawn:
+	for d: Dictionary in _state.values():
 		if int(d["bits"]) == bits:
-			return d["pos"]
+			return d["feet"]
 	return Vector3.INF
 
 
 func count() -> int:
-	return _drawn.size()
+	return _state.size()
 
 
 ## A body is pickable only when both ends project inside the viewport and it spans a sane height on screen.

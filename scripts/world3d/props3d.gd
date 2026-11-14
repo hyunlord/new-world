@@ -61,7 +61,8 @@ func _process(_delta: float) -> void:
 	if _world_sim == null or _terrain == null or not bool(_terrain.call("is_complete")):
 		return
 	var stamp: Dictionary = get_parent().get("stamp") if get_parent() != null else {}
-	var skey: String = "%s|%s" % [stamp.get("overlay", -1), stamp.get("tick", -1)]
+	@warning_ignore("integer_division")
+	var skey: String = "%s|%s" % [stamp.get("overlay", -1), int(stamp.get("tick", -1)) / 12]
 	if skey == _stamp_key and not stamp.is_empty():
 		_flicker()
 		return

@@ -78,6 +78,22 @@ func _ready() -> void:
 	rig = _layer("CameraRig", RigScript)
 	rig.call("setup", camera2d, terrain)
 	ViewProjection.provider = self
+	_apply_render_scale()
+
+
+## 3D resolution scale (params3d `render.scale_3d`, FSR upscaling): the HUD and panels stay at native resolution.
+## On a HiDPI window the 3D pass was fragment-bound at 2× the logical pixels.
+func _apply_render_scale() -> void:
+	var vp: Viewport = get_viewport()
+	var scale: float = clampf(float(Data3D.param("render.scale_3d", 1.0)), 0.25, 1.0)
+	var arg_scale: String = ""
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--scale3d="):
+			arg_scale = arg.trim_prefix("--scale3d=")
+	if arg_scale != "":
+		scale = clampf(float(arg_scale), 0.25, 1.0)
+	vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_FSR if scale < 1.0 else Viewport.SCALING_3D_MODE_BILINEAR
+	vp.scaling_3d_scale = scale
 
 
 func _process(_delta: float) -> void:

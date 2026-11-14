@@ -42,8 +42,12 @@
     "snow_cover": {"3": 0.85},
     "water_colour": [0.10, 0.26, 0.36, 0.88]
   },
+  "render": {
+    "scale_3d": 1.0
+  },
   "flora": {
     "chunk_tiles": 16,
+    "slow_read_ticks": 24,
     "jitter_tiles": 0.22,
     "scale_min": 0.85,
     "scale_max": 1.2,

@@ -83,7 +83,8 @@ func _process(_delta: float) -> void:
 		if not _ready_world:
 			return
 	var stamp: Dictionary = get_parent().get("stamp") if get_parent() != null else {}
-	var key: String = "%s|%s" % [stamp.get("overlay", -1), stamp.get("tick", -1)]
+	@warning_ignore("integer_division")
+	var key: String = "%s|%s" % [stamp.get("overlay", -1), int(stamp.get("tick", -1)) / maxi(1, int(Data3D.param("flora.slow_read_ticks", 24)))]
 	if key != _stamp_key or stamp.is_empty():
 		_stamp_key = key
 		_poll_space()
@@ -143,11 +144,13 @@ func _compute_corners() -> void:
 ## Space/fields/hearths changed → recompute raises and colours, mark touched chunks.
 func _poll_space() -> void:
 	var space: Dictionary = SimReads.read(_world_sim, "get_space")
-	var version: int = int(space.get("version", 0))
+	# The space counter is the shared overlay counter (it moves with every hauled stack): key on the content.
+	var version: int = hash([space.get("dug_xs"), space.get("dug_ys"), space.get("floor_xs"), space.get("floor_ys"),
+		space.get("ford_xs"), space.get("ford_ys")])
 	var fields: Dictionary = SimReads.read(_world_sim, "get_field_tiles")
 	var fxs: PackedInt64Array = fields.get("xs", PackedInt64Array())
 	var fphases: PackedInt64Array = fields.get("phases", PackedInt64Array())
-	var field_key: String = "%d:%d" % [fxs.size(), hash(fphases)]
+	var field_key: String = "%d:%d:%d" % [fxs.size(), hash(fphases), hash(fxs)]
 	if version == _space_version and field_key == _field_key and not _raise.is_empty():
 		return
 	var old_raise: PackedFloat32Array = _raise.duplicate()
