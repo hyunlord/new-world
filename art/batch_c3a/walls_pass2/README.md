@@ -41,3 +41,5 @@ no assets are imported and runtime rows remain empty.
 The importer/selector drafts preserve every unrelated material/default.
 Runtime occupancy, mixed materials, chunk joins, tint, construction and ghosts
 remain integration work. No Rust, Godot runtime or other art is changed here.
+
+Held art source commit: `5aa67f48ce1a7fcf47c1cd5531110a51a91448dc`. This pin is reproducibility, not approval.
