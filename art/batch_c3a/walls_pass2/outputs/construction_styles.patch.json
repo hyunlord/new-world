@@ -54,6 +54,5 @@
   },
   "caps_policy": "Mask pieces already include exposed ends and corners; aliases are review/integration references, never extra runtime overlays.",
   "runtime_rows_to_append": [],
-  "limits": "Visual art pass only. Game occupancy, chunk joins, tinting, construction-state and site-ghost parity require integration verification. Geometry matches shipped W2; old pass1 atlas remains held.",
-  "source_commit": "f12977128235814e707bd909d374eb95e40c1c52"
+  "limits": "Visual art pass only. Game occupancy, chunk joins, tinting, construction-state and site-ghost parity require integration verification. Geometry matches shipped W2; old pass1 atlas remains held."
 }

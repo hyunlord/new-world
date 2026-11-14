@@ -5,6 +5,18 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## C3A Pass3 solid stone joins — 2026-11-14
+
+### Changed
+- Fill the connected side quadrants of south-bearing corner/T/X masks6,7,12,
+  13,14,15 with unchanged native stone pixels; preserve the ten other masks.
+- Replace insufficient Pass2 approval with5x4/L/T+X comparisons and all26 joins
+  at4x, backed by failing-first full-coverage regression tests (ADR0018).
+
+### Added
+- Required-plan and literal nearest4x review-board checks. No new image
+  generation, dependencies or game integration.
+
 ## C3A Pass2 native walls and anvil — 2026-11-14
 
 ### Added

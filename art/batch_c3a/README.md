@@ -52,3 +52,12 @@ CompositeBow remains held. New wall pieces and native/log comparison rooms
 are under walls_pass2; its manifest and README record the accepted native wall verdict.
 Pass1 output counts above remain historical. The root importer fragment pins
 the additional anvil to the immutable Pass2 asset commit. No game import is applied.
+
+## Pass3
+
+BRIEF5 supersedes the Pass2 wall-join approval. Six south-connected corner/T/X
+masks and their two corner aliases are repaired in the existing walls_pass2
+path. Straight pieces, native density and doors remain unchanged. The new
+5x4/L/T+X comparison and26 individual4x join views are the acceptance evidence.
+See walls_pass2/README.md for the deliberate solid junction footprint and the
+rejected first repair. No new generation or game import is involved.

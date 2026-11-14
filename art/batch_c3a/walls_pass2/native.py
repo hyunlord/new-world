@@ -1,4 +1,4 @@
-"""W2 thin geometry, with one unfiltered stone field copied at native1:1 scale."""
+"""Native stone field on W2 thin runs and solid connected junction footprints."""
 
 from __future__ import annotations
 
@@ -114,7 +114,7 @@ def _shadow(image: Image.Image) -> None:
 
 
 def compose_piece(mask: int, field: Image.Image) -> Image.Image:
-    """Compose W2's26px strip/16px cap/22px face geometry from one native field."""
+    """Keep26px runs while filling the connected footprint of corner/T/X joins."""
     if not 0 <= mask <= 15 or field.size != (64, 64) or field.mode != "RGBA":
         message = "mask must be0..15 and native field must be64×64 RGBA"
         raise ValueError(message)
@@ -134,8 +134,18 @@ def compose_piece(mask: int, field: Image.Image) -> Image.Image:
         image.paste(field.crop((x, y, x + width, y + height)), (x, y))
     face_x0 = min(rect[0] for rect in rectangles)
     face_x1 = max(rect[0] + rect[2] for rect in rectangles)
-    if not south:
-        image.paste(field.crop((face_x0, 0, face_x1, FACE_H)), (face_x0, CAP))
+    faces = [(face_x0, face_x1)] if not south else []
+    # S-bearing side quadrants join the next tile; a short front leaves hollow L/T/X joins.
+    if south and west:
+        faces.append((0, MARGIN))
+    if south and east:
+        faces.append((MARGIN + WALL_W, TILE))
+    face_height = TILE - CAP if south else FACE_H
+    source_y = CAP if south else 0
+    for left, right in faces:
+        image.paste(
+            field.crop((left, source_y, right, source_y + face_height)), (left, CAP)
+        )
     for rect in rectangles:
         sides: set[str] = set()
         if not north:
@@ -154,5 +164,8 @@ def compose_piece(mask: int, field: Image.Image) -> Image.Image:
         if not east:
             sides.add("e")
         _ink(image, (face_x0, CAP, face_x1 - face_x0, FACE_H), sides)
+    else:
+        for left, right in faces:
+            _ink(image, (left, CAP, right - left, face_height), {"s"})
     _shadow(image)
     return image

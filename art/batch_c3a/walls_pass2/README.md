@@ -1,4 +1,4 @@
-# C3A pass2 native stone walls
+# C3A native stone walls (Pass3 correction)
 
 The pass1 atlas stays held. This pass replaces its blurred broad top with one
 sharp native stone-course field used on every cap and front, with the shipped
@@ -55,3 +55,30 @@ non-overwrite), Ruff/format, basedpyright and export/hash checks. Raw diagnostic
 all crop phases, source/door ledgers and visual verdicts live externally under
 /Users/rexxa/work/art-batch/C3A/pass2/. Existing workshop room shells still use
 the pass1 legacy material renderer; this atlas does not silently replace them.
+
+## Pass3: supersedes the earlier corner/junction approval
+
+BRIEF5 found background notches and hollow junction squares that the Pass2
+nonempty/width tests and visual review missed. The `south` condition omitted
+EW-arm fill. A first repair of only the22px front still left the L/T/X holes;
+that intermediate result was rejected and remains external evidence.
+
+Masks6,7,12,13,14,15 now copy the same native field into their complete connected
+side quadrants through row63. Thus6/7 cover x19..63,12/13 cover x0..44 and14/15
+are solid64px junction blocks. This is deliberate join coverage, not a blanket
+full-tile fill: unconnected-side floor remains transparent and ten unaffected
+masks retain their prior bytes. The26px width and22px front describe straight
+shafts/faces; no source pixels are stretched to create the deeper joint.
+Corner aliases6/12 inherit the repair; the other caps and all doors stay intact.
+
+`rooms_1x.png`/2x now compare5x4,L and a T+X cross-partition room against pinned
+logs. `join_zooms_4x/` contains all26 corner/junction instances with16px neighbour
+context, using nearest4x. Every instance is checked, not only a representative
+mask. The T+X plan exercises all four T orientations and mask15. Background
+inside a legitimate room floor is retained; background through a connected
+stone junction is prohibited. The exact pinned log comparator remains unchanged,
+including its own texture/alpha peculiarities; it is not a gap-free oracle.
+
+Pass3 raw diagnostics and intermediate failures are external in C3A/pass3.
+Final source pins are in outputs/art_import.draft.json; only the corrected
+28-row wall fragment supersedes Pass2. Other art and game integration are unchanged.

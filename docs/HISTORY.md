@@ -1,5 +1,7 @@
 # WorldSim 역사
 
+- 2026-11-14 — C3A Pass3: 석벽 안쪽 모서리·T/X 접합의 투명 공백을 수정하고 3개 방·26곳 확대 검증으로 이전 판정을 대체 (`art/batch_c3a/walls_pass2/README.md`, ADR0018); 게임 미적용.
+
 - 2026-11-14 — C3A Pass2: 통나무 기준 네이티브 석벽 재조립과 4차 모루 검증·인계 (`art/batch_c3a/walls_pass2/`, `art/batch_c3a/workshops/README.md`); 게임 미적용.
 
 - 2026-11-14 — C3A 철기 아트 인계: A2/A3/B3 고정 소스 재사용, 누락 물품·작업장 레이어·도로 경계 후보를 추가하고 스타일 실패 공백을 보존 (`art/batch_c3a/README.md`, ADR0016); 게임 미적용.

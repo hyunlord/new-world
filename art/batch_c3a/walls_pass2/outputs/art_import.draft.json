@@ -1,7 +1,7 @@
 {
   "status": "VISUAL_APPROVED_DRAFT_NOT_APPLIED",
   "source_branch": "v8/art-batch-c3a",
-  "source_commit": "f12977128235814e707bd909d374eb95e40c1c52",
+  "source_commit": "PIN_C3A_PASS2_ASSET_COMMIT",
   "meta_sources": {
     "structure": "art/batch_c3a/workshops/stations_manifest.json"
   },
@@ -12,7 +12,7 @@
       "id": "drystone_mask_00",
       "source": "art/batch_c3a/walls_pass2/outputs/mask_00.png",
       "dest": "materials/textures/drystone/pieces/mask_00.png",
-      "from": "f12977128235814e707bd909d374eb95e40c1c52",
+      "from": "PIN_C3A_PASS2_ASSET_COMMIT",
       "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
     },
     {
@@ -20,7 +20,7 @@
       "id": "drystone_mask_01",
       "source": "art/batch_c3a/walls_pass2/outputs/mask_01.png",
       "dest": "materials/textures/drystone/pieces/mask_01.png",
-      "from": "f12977128235814e707bd909d374eb95e40c1c52",
+      "from": "PIN_C3A_PASS2_ASSET_COMMIT",
       "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
     },
     {
@@ -28,7 +28,7 @@
       "id": "drystone_mask_02",
       "source": "art/batch_c3a/walls_pass2/outputs/mask_02.png",
       "dest": "materials/textures/drystone/pieces/mask_02.png",
-      "from": "f12977128235814e707bd909d374eb95e40c1c52",
+      "from": "PIN_C3A_PASS2_ASSET_COMMIT",
       "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
     },
     {
@@ -36,7 +36,7 @@
       "id": "drystone_mask_03",
       "source": "art/batch_c3a/walls_pass2/outputs/mask_03.png",
       "dest": "materials/textures/drystone/pieces/mask_03.png",
-      "from": "f12977128235814e707bd909d374eb95e40c1c52",
+      "from": "PIN_C3A_PASS2_ASSET_COMMIT",
       "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
     },
     {
@@ -44,7 +44,7 @@
       "id": "drystone_mask_04",
       "source": "art/batch_c3a/walls_pass2/outputs/mask_04.png",
       "dest": "materials/textures/drystone/pieces/mask_04.png",
-      "from": "f12977128235814e707bd909d374eb95e40c1c52",
+      "from": "PIN_C3A_PASS2_ASSET_COMMIT",
       "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
     },
     {
@@ -52,7 +52,7 @@
       "id": "drystone_mask_05",
       "source": "art/batch_c3a/walls_pass2/outputs/mask_05.png",
       "dest": "materials/textures/drystone/pieces/mask_05.png",
-      "from": "f12977128235814e707bd909d374eb95e40c1c52",
+      "from": "PIN_C3A_PASS2_ASSET_COMMIT",
       "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
     },
     {
@@ -60,7 +60,7 @@
       "id": "drystone_mask_06",
       "source": "art/batch_c3a/walls_pass2/outputs/mask_06.png",
       "dest": "materials/textures/drystone/pieces/mask_06.png",
-      "from": "f12977128235814e707bd909d374eb95e40c1c52",
+      "from": "PIN_C3A_PASS2_ASSET_COMMIT",
       "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
     },
     {
@@ -68,7 +68,7 @@
       "id": "drystone_mask_07",
       "source": "art/batch_c3a/walls_pass2/outputs/mask_07.png",
       "dest": "materials/textures/drystone/pieces/mask_07.png",
-      "from": "f12977128235814e707bd909d374eb95e40c1c52",
+      "from": "PIN_C3A_PASS2_ASSET_COMMIT",
       "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
     },
     {
@@ -76,7 +76,7 @@
       "id": "drystone_mask_08",
       "source": "art/batch_c3a/walls_pass2/outputs/mask_08.png",
       "dest": "materials/textures/drystone/pieces/mask_08.png",
-      "from": "f12977128235814e707bd909d374eb95e40c1c52",
+      "from": "PIN_C3A_PASS2_ASSET_COMMIT",
       "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
     },
     {
@@ -84,7 +84,7 @@
       "id": "drystone_mask_09",
       "source": "art/batch_c3a/walls_pass2/outputs/mask_09.png",
       "dest": "materials/textures/drystone/pieces/mask_09.png",
-      "from": "f12977128235814e707bd909d374eb95e40c1c52",
+      "from": "PIN_C3A_PASS2_ASSET_COMMIT",
       "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
     },
     {
@@ -92,7 +92,7 @@
       "id": "drystone_mask_10",
       "source": "art/batch_c3a/walls_pass2/outputs/mask_10.png",
       "dest": "materials/textures/drystone/pieces/mask_10.png",
-      "from": "f12977128235814e707bd909d374eb95e40c1c52",
+      "from": "PIN_C3A_PASS2_ASSET_COMMIT",
       "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
     },
     {
@@ -100,7 +100,7 @@
       "id": "drystone_mask_11",
       "source": "art/batch_c3a/walls_pass2/outputs/mask_11.png",
       "dest": "materials/textures/drystone/pieces/mask_11.png",
-      "from": "f12977128235814e707bd909d374eb95e40c1c52",
+      "from": "PIN_C3A_PASS2_ASSET_COMMIT",
       "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
     },
     {
@@ -108,7 +108,7 @@
       "id": "drystone_mask_12",
       "source": "art/batch_c3a/walls_pass2/outputs/mask_12.png",
       "dest": "materials/textures/drystone/pieces/mask_12.png",
-      "from": "f12977128235814e707bd909d374eb95e40c1c52",
+      "from": "PIN_C3A_PASS2_ASSET_COMMIT",
       "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
     },
     {
@@ -116,7 +116,7 @@
       "id": "drystone_mask_13",
       "source": "art/batch_c3a/walls_pass2/outputs/mask_13.png",
       "dest": "materials/textures/drystone/pieces/mask_13.png",
-      "from": "f12977128235814e707bd909d374eb95e40c1c52",
+      "from": "PIN_C3A_PASS2_ASSET_COMMIT",
       "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
     },
     {
@@ -124,7 +124,7 @@
       "id": "drystone_mask_14",
       "source": "art/batch_c3a/walls_pass2/outputs/mask_14.png",
       "dest": "materials/textures/drystone/pieces/mask_14.png",
-      "from": "f12977128235814e707bd909d374eb95e40c1c52",
+      "from": "PIN_C3A_PASS2_ASSET_COMMIT",
       "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
     },
     {
@@ -132,7 +132,7 @@
       "id": "drystone_mask_15",
       "source": "art/batch_c3a/walls_pass2/outputs/mask_15.png",
       "dest": "materials/textures/drystone/pieces/mask_15.png",
-      "from": "f12977128235814e707bd909d374eb95e40c1c52",
+      "from": "PIN_C3A_PASS2_ASSET_COMMIT",
       "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
     },
     {
@@ -140,7 +140,7 @@
       "id": "drystone_end_n",
       "source": "art/batch_c3a/walls_pass2/outputs/end_n.png",
       "dest": "materials/textures/drystone/pieces/end_n.png",
-      "from": "f12977128235814e707bd909d374eb95e40c1c52",
+      "from": "PIN_C3A_PASS2_ASSET_COMMIT",
       "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
     },
     {
@@ -148,7 +148,7 @@
       "id": "drystone_end_e",
       "source": "art/batch_c3a/walls_pass2/outputs/end_e.png",
       "dest": "materials/textures/drystone/pieces/end_e.png",
-      "from": "f12977128235814e707bd909d374eb95e40c1c52",
+      "from": "PIN_C3A_PASS2_ASSET_COMMIT",
       "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
     },
     {
@@ -156,7 +156,7 @@
       "id": "drystone_end_s",
       "source": "art/batch_c3a/walls_pass2/outputs/end_s.png",
       "dest": "materials/textures/drystone/pieces/end_s.png",
-      "from": "f12977128235814e707bd909d374eb95e40c1c52",
+      "from": "PIN_C3A_PASS2_ASSET_COMMIT",
       "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
     },
     {
@@ -164,7 +164,7 @@
       "id": "drystone_end_w",
       "source": "art/batch_c3a/walls_pass2/outputs/end_w.png",
       "dest": "materials/textures/drystone/pieces/end_w.png",
-      "from": "f12977128235814e707bd909d374eb95e40c1c52",
+      "from": "PIN_C3A_PASS2_ASSET_COMMIT",
       "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
     },
     {
@@ -172,7 +172,7 @@
       "id": "drystone_corner_ne",
       "source": "art/batch_c3a/walls_pass2/outputs/corner_ne.png",
       "dest": "materials/textures/drystone/pieces/corner_ne.png",
-      "from": "f12977128235814e707bd909d374eb95e40c1c52",
+      "from": "PIN_C3A_PASS2_ASSET_COMMIT",
       "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
     },
     {
@@ -180,7 +180,7 @@
       "id": "drystone_corner_se",
       "source": "art/batch_c3a/walls_pass2/outputs/corner_se.png",
       "dest": "materials/textures/drystone/pieces/corner_se.png",
-      "from": "f12977128235814e707bd909d374eb95e40c1c52",
+      "from": "PIN_C3A_PASS2_ASSET_COMMIT",
       "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
     },
     {
@@ -188,7 +188,7 @@
       "id": "drystone_corner_nw",
       "source": "art/batch_c3a/walls_pass2/outputs/corner_nw.png",
       "dest": "materials/textures/drystone/pieces/corner_nw.png",
-      "from": "f12977128235814e707bd909d374eb95e40c1c52",
+      "from": "PIN_C3A_PASS2_ASSET_COMMIT",
       "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
     },
     {
@@ -196,7 +196,7 @@
       "id": "drystone_corner_sw",
       "source": "art/batch_c3a/walls_pass2/outputs/corner_sw.png",
       "dest": "materials/textures/drystone/pieces/corner_sw.png",
-      "from": "f12977128235814e707bd909d374eb95e40c1c52",
+      "from": "PIN_C3A_PASS2_ASSET_COMMIT",
       "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
     },
     {
@@ -204,7 +204,7 @@
       "id": "drystone_door_ew_closed",
       "source": "art/batch_c3a/walls_pass2/outputs/door_ew_closed.png",
       "dest": "materials/textures/drystone/pieces/door_ew_closed.png",
-      "from": "f12977128235814e707bd909d374eb95e40c1c52",
+      "from": "PIN_C3A_PASS2_ASSET_COMMIT",
       "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
     },
     {
@@ -212,7 +212,7 @@
       "id": "drystone_door_ew_open",
       "source": "art/batch_c3a/walls_pass2/outputs/door_ew_open.png",
       "dest": "materials/textures/drystone/pieces/door_ew_open.png",
-      "from": "f12977128235814e707bd909d374eb95e40c1c52",
+      "from": "PIN_C3A_PASS2_ASSET_COMMIT",
       "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
     },
     {
@@ -220,7 +220,7 @@
       "id": "drystone_door_ns_closed",
       "source": "art/batch_c3a/walls_pass2/outputs/door_ns_closed.png",
       "dest": "materials/textures/drystone/pieces/door_ns_closed.png",
-      "from": "f12977128235814e707bd909d374eb95e40c1c52",
+      "from": "PIN_C3A_PASS2_ASSET_COMMIT",
       "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
     },
     {
@@ -228,7 +228,7 @@
       "id": "drystone_door_ns_open",
       "source": "art/batch_c3a/walls_pass2/outputs/door_ns_open.png",
       "dest": "materials/textures/drystone/pieces/door_ns_open.png",
-      "from": "f12977128235814e707bd909d374eb95e40c1c52",
+      "from": "PIN_C3A_PASS2_ASSET_COMMIT",
       "meta_source": "art/batch_c3a/workshops/stations_manifest.json"
     }
   ]

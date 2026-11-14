@@ -15,6 +15,7 @@ from PIL import Image, ImageDraw
 
 from art.batch_c3a.walls_pass2.drafts import write_drafts
 from art.batch_c3a.walls_pass2.native import compose_piece, course_field, crop_scores
+from art.batch_c3a.walls_pass2.review_boards import JoinView, plans, write_zooms
 
 ROOT: Final = Path(__file__).resolve().parents[3]
 REFERENCE: Final = "d086d7c54d1b29421c9f7540f3a9358f0c054314"
@@ -70,36 +71,24 @@ def comparison(
     log: Mapping[int, Image.Image],
     doors: Mapping[str, Image.Image],
 ) -> Image.Image:
-    """Show5×4 and L plans against the shipped log rooms at identical pixel density."""
-    rectangle = frozenset(
-        (x, y) for y in range(4) for x in range(5) if x in (0, 4) or y in (0, 3)
-    )
-    shaped = frozenset(
-        {
-            *((x, 0) for x in range(5)),
-            *((0, y) for y in range(4)),
-            *((x, 3) for x in range(3)),
-            (2, 2),
-            (2, 1),
-            (3, 1),
-            (4, 1),
-        }
-    )
-    board = Image.new("RGBA", (704, 656), "#d0ccbb")
+    """Show5×4, L and T/X plans against the shipped log rooms at identical pixel density."""
+    board = Image.new("RGBA", (704, 984), "#d0ccbb")
     draw = ImageDraw.Draw(board)
-    for row, (name, cells, ew, state) in enumerate(
-        (("5x4", rectangle, (2, 3), "closed"), ("L", shaped, (1, 3), "open"))
-    ):
-        placed_doors = {ew: doors[f"ew_{state}"], (0, 1): doors[f"ns_{state}"]}
+    for row, plan in enumerate(plans()):
+        placed_doors = (
+            {plan.ew: doors[f"ew_{plan.state}"], (0, 1): doors[f"ns_{plan.state}"]}
+            if plan.ew is not None
+            else {}
+        )
         for col, (material, pieces) in enumerate(
             (("shipped log", log), ("native stone", stone))
         ):
             board.alpha_composite(
-                room(pieces, cells, placed_doors), (col * 352, row * 328 + 20)
+                room(pieces, plan.cells, placed_doors), (col * 352, row * 328 + 20)
             )
             draw.text(
                 (col * 352 + 10, row * 328 + 5),
-                f"{name}: {material} / {state} doors / 1x",
+                f"{plan.name}: {material} / 1x",
                 fill="#302923",
             )
     return board
@@ -128,6 +117,22 @@ def export(source: Path, output: Path, *, approved: bool = False) -> None:
     board.resize((board.width * 2, board.height * 2), Image.Resampling.NEAREST).convert(
         "RGB"
     ).save(output / "rooms_2x.png")
+    views: list[JoinView] = []
+    for plan in plans():
+        placed = (
+            {plan.ew: doors[f"ew_{plan.state}"], (0, 1): doors[f"ns_{plan.state}"]}
+            if plan.ew is not None
+            else {}
+        )
+        images = {
+            "shipped log": room(log, plan.cells, placed),
+            "native stone": room(stone, plan.cells, placed),
+        }
+        for cell in sorted(plan.cells, key=lambda c: (c[1], c[0])):
+            mask = topology(cell, plan.cells)
+            if mask in (3, 6, 9, 12, 7, 11, 13, 14, 15) and cell not in placed:
+                views.append(JoinView(plan.name, cell, mask, images))
+    write_zooms(tuple(views), output)
     contact = Image.new("RGBA", (512, 424), "#d0ccbb")
     draw = ImageDraw.Draw(contact)
     for mask, image in stone.items():
@@ -142,8 +147,8 @@ def export(source: Path, output: Path, *, approved: bool = False) -> None:
         output / "contact_2x.png"
     )
     rows = [
-        {"path": path.name, "sha256": digest(path)}
-        for path in sorted(output.glob("*.png"))
+        {"path": str(path.relative_to(output)), "sha256": digest(path)}
+        for path in sorted(output.rglob("*.png"))
     ]
     manifest = {
         "status": "LEADER_AND_INDEPENDENT_VISUAL_APPROVED_NOT_IMPORTED"
@@ -156,8 +161,10 @@ def export(source: Path, output: Path, *, approved: bool = False) -> None:
         "anchor": [32, 59],
         "world_origin": [0, -16],
         "wall_width": 26,
+        "width_policy": "26px straight shafts; south-connected corner/T/X side quadrants are solid native stone through row63",
         "cap_height": 16,
         "face_height": 22,
+        "face_policy": "22px straight front; junction continuation uses native field through tile depth, not a stretched front",
         "bits": {"N": 1, "E": 2, "S": 4, "W": 8},
         "course": {
             "source": str(source.relative_to(ROOT)),
@@ -173,8 +180,11 @@ def export(source: Path, output: Path, *, approved: bool = False) -> None:
             "paths": PREFIX + "{mask_00..15,door_ew/ns_open/closed}.png",
             "door_policy": "Reuse unchanged shipped wooden doors in stone walls; no generated/rotated NS substitute.",
         },
-        "composition": "W2 geometry; one native field for every top/front surface. No separate dark blurred cap, no rescaled face/end patches. W2 exposed2px ink and3row contact shadow retained.",
+        "composition": "W2 straight geometry; full connected corner/T/X coverage; one native field for every top/front surface. No separate dark blurred cap, no rescaled face/end patches. W2 exposed2px ink and3row contact shadow retained.",
         "caps": CAPS,
+        "pass": 3,
+        "join_zoom_count": len(views),
+        "join_zoom_policy": "Every corner/T/X instance in all three rooms, with16px neighbour context, nearest4x",
         "outputs": rows,
         "capability": {
             "status": "VISUAL_APPROVED_DRAFT_NOT_APPLIED"
@@ -195,7 +205,7 @@ def export(source: Path, output: Path, *, approved: bool = False) -> None:
     }
     _ = (output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     write_drafts(output, approved)
-    evidence = Path("/Users/rexxa/work/art-batch/C3A/pass2")
+    evidence = Path("/Users/rexxa/work/art-batch/C3A/pass3")
     evidence.mkdir(parents=True, exist_ok=True)
     _ = (evidence / "wall_crop_scores.json").write_text(
         json.dumps(
