@@ -1,4 +1,5 @@
 # WorldSim 역사
+- 2026-11-14 — M3D-2a 입력5종·턴어라운드와 DGX 안전 실행·Blender 후처리 도구를 준비했으나 공식 샘플의 DINOv3 접근401·UniRig ARM 의존성 실패로 실제 메시·자리표시자 교체는 미완료다([ADR0066](decisions/0066-isolated-ai-character-trial.md), 외부 `m3d2-art/REPORT.md`).
 - 2026-11-11 — C2 검토본의 동물 실루엣 스크립트·uid 2파일을 제거하고 별도 아트 라인으로 이월했다. 원본은 `ebb04ee3d:scripts/world/colony/animal_silhouette.gd`에 보존한다. C1 사슬은 일반 명령 준비·현재 적격 대상 재선택·실제 취소 증거 계약으로 재검증하며 미게시다([ADR0064](decisions/0064-scripted-chain-preparation.md)).
 - 2026-11-08 — C1-a 원산지·신석기 지식82개·물리 조리법·곡식 창고/우리/훈제집/화덕집을 통합했다. 실제 format19→20 저장 재개, 신규 focused 검사와 한·영 화면 검증을 수행했다. 가축 사슬은 C1-b 대기이며 고정 SHA 전체 게이트·게시는 아직 대기다([보고](v8/c1/C1_REPORT.md), [ADR0062](decisions/0062-neolithic-origins-and-livestock.md)). 이전 M-SPINE 화면은 d30dbfc5b Git 이력에 보존하고 현재 시트를 교체했다.
 - 2026-11-08 — M-SPINE-b (물리적 건물 템플릿·주거 구역/집사·건물 패널)은 전체 게이트 세 차례(`437f9b6` 48/49 step41 바닥준비 FAIL, `d575f90` renderer 16px 고정 검사 FAIL, 최초 시도 DEBUG FAIL)에서 매번 실제 원인을 고쳤으나 게시에 이르지 못한 채 C1로 작업이 넘어가 별도로는 게시되지 않았다; 세 시도의 전체 기록은 [b 보고서](v8/spine/M_SPINE_B_REPORT.md)에 보존한다.

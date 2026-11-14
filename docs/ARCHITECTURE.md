@@ -932,3 +932,13 @@ pen marker. Recurring wool production uses the existing livestock work path,
 physical placement and ledger. Material-look overlays in handwritten render
 parameters extend the pinned import through the same resolver used by walls
 and item icons. See [ADR0063](decisions/0063-surface-ore-and-metal-chain.md).
+
+## Isolated AI character trial (M3D-2a)
+
+`assets/3d/chars/concepts/` holds reconstruction inputs and turnaround references.
+`tools/3d/chars/dgx/` contains workspace-contained setup and serial, thermally
+monitored inference tools; `tools/3d/chars/blender/` contains atlas baking, shared
+template rigs, procedural clips and comparison capture tools. These trial assets
+are not registered in the game catalogue. Raw outputs and execution evidence
+remain external; synthetic smoke tests establish tool behavior only. See
+[ADR0066](decisions/0066-isolated-ai-character-trial.md).

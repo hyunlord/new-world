@@ -1,5 +1,15 @@
 # Changelog
 
+## M3D-2a — character pipeline experiment, 2026-11-14
+
+### Added
+- Five Neolithic character/animal reconstruction concepts and turnaround references (`assets/3d/chars/concepts/`).
+- Workspace-contained DGX setup, serialized temperature/load admission and generation scripts, with local safety mocks (`tools/3d/chars/dgx/`).
+- Blender atlas cleanup, shared skeleton templates, procedural clips and contact-sheet tooling, with a synthetic UV/animation smoke check (`tools/3d/chars/blender/`).
+
+### Changed
+- No runtime integration is claimed; generated-model acceptance and placeholder replacement are recorded in the external M3D-2a report.
+
 ## C2-b — published 8e4170c42, 2026-11-12
 
 ### Added
