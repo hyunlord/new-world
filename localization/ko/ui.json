@@ -1902,5 +1902,14 @@
   "C2_CHRON_FIRST_TOOL_USED": "{person}: 처음으로 {item}를 썼다",
   "C2_DIAG_NO_FUEL": "{workshop}에 {fuel}이 없습니다 — {source} 확인",
   "C2_ORDER_MINE": "광석 캐기",
-  "C2_ORDER_TOAST_MINE": "광맥 {count}곳에 채굴 표시"
+  "C2_ORDER_TOAST_MINE": "광맥 {count}곳에 채굴 표시",
+  "W3D_OVERLAY_WARMTH": "온기 지도 (O)",
+  "W3D_OVERLAY_LIGHT": "빛 지도 (O)",
+  "W3D_OVERLAY_NOISE": "소음 지도 (O)",
+  "W3D_OVERLAY_FOOD": "음식 냄새 지도 (O)",
+  "W3D_OVERLAY_DANGER": "위험 지도 (O)",
+  "W3D_OVERLAY_SOCIAL": "어울림 지도 (O)",
+  "W3D_OVERLAY_SPIRITUAL": "영성 지도 (O)",
+  "W3D_OVERLAY_BEAUTY": "아름다움 지도 (O)",
+  "MUX_SETTING_RENDERER_3D": "3D 보기 (다시 시작하면 적용)"
 }

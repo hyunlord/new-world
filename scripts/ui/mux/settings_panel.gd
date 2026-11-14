@@ -12,7 +12,7 @@ const Catalog = preload("res://scripts/ui/mux/controls_catalog.gd")
 const Tooltips = preload("res://scripts/ui/panels/panel_tooltips.gd")
 const Store = preload("res://scripts/ui/mux/settings_store.gd")
 const THEME = preload("res://assets/ui/worldsim_theme.tres")
-const BOOLEAN_KEYS: Dictionary = {"edge_pan": "MUX_SETTING_EDGE_PAN", "invert_pan": "MUX_SETTING_INVERT_PAN", "helper_on": "MUX_SETTING_HELPER", "steward_default": "MUX_SETTING_STEWARD"}
+const BOOLEAN_KEYS: Dictionary = {"edge_pan": "MUX_SETTING_EDGE_PAN", "invert_pan": "MUX_SETTING_INVERT_PAN", "helper_on": "MUX_SETTING_HELPER", "steward_default": "MUX_SETTING_STEWARD", "renderer_3d": "MUX_SETTING_RENDERER_3D"}
 var _store: Store
 var _checks: Dictionary = {}
 var _title: Label

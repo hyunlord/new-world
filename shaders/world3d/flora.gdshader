@@ -14,6 +14,11 @@ uniform float vein = 0.0;
 global uniform vec3 w3d_camera;
 global uniform vec3 w3d_focus;
 global uniform float w3d_xray;
+// The per-tile overlay (overlay3d.gd): a plant on a framed tile (marked, dragged over) takes its colour.
+global uniform sampler2D w3d_overlay : filter_nearest, repeat_disable;
+global uniform sampler2D w3d_frame : filter_nearest, repeat_disable;
+global uniform vec2 w3d_map_size;
+varying vec4 mark;
 
 varying vec3 world_normal;
 varying vec3 world_pos;
@@ -26,6 +31,8 @@ void vertex() {
 	VERTEX.z += cos(TIME * 1.1 + phase * 1.3) * bend * 0.018;
 	world_normal = normalize((MODEL_MATRIX * vec4(NORMAL, 0.0)).xyz);
 	world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	vec2 uv = (floor(origin.xz) + 0.5) / max(w3d_map_size, vec2(1.0));
+	mark = vec4(textureLod(w3d_overlay, uv, 0.0).rgb, textureLod(w3d_frame, uv, 0.0).r * textureLod(w3d_overlay, uv, 0.0).a);
 }
 
 float bayer4(vec2 p) {
@@ -51,6 +58,9 @@ void fragment() {
 		}
 	}
 	vec3 c = albedo * COLOR.rgb;
+	if (mark.a > 0.01) {
+		c = mix(c, mark.rgb * mark.rgb, clamp(mark.a * 1.6, 0.0, 0.75));
+	}
 	float up = clamp(world_normal.y, 0.0, 1.0);
 	c = mix(c, vec3(0.92, 0.94, 0.98), snow * smoothstep(0.45, 0.85, up));
 	ALBEDO = c;

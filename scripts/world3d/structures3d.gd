@@ -47,6 +47,8 @@ var _chunks: Dictionary = {}
 var _roofs: Dictionary = {}
 var _roof_fade: Dictionary = {}
 var _room_rects: Dictionary = {}
+## Room id → wall-top height (the plane a click on that roof resolves at).
+var _roof_top: Dictionary = {}
 var _tile_room: Dictionary = {}
 var _doors: Array[Dictionary] = []
 var _door_nodes: Array[MeshInstance3D] = []
@@ -442,6 +444,7 @@ func _rebuild_roofs(rooms: Dictionary, sites: Array) -> void:
 		(_roofs[k] as Node).queue_free()
 	_roofs.clear()
 	_room_rects.clear()
+	_roof_top.clear()
 	_tile_room.clear()
 	var ids: PackedInt32Array = rooms.get("ids", PackedInt32Array())
 	var roofed: PackedByteArray = rooms.get("roofed", PackedByteArray())
@@ -550,6 +553,7 @@ func _roof_mesh(tiles: Array, gable_colour: Color, mat: Material) -> ArrayMesh:
 			if _walls.has(t + dd):
 				ground = maxf(ground, float(_terrain.call("stand_height", t + dd)))
 	var top: float = ground + hgt
+	_roof_top[_tile_room.get(tiles[0], -1)] = top
 	b.base = ground
 	# One ridge direction per room (its bounding box's long side), so the parts of an L meet in valleys.
 	var bounds: Rect2i = Rect2i(tiles[0], Vector2i.ONE)
@@ -738,6 +742,26 @@ func _update_cutaway(delta: float) -> void:
 	wall_material.set_shader_parameter("cut_all", _cut_all)
 	wall_material.set_shader_parameter("cut_rect", Vector4(_cut_rect.position.x, _cut_rect.position.y, _cut_rect.end.x, _cut_rect.end.y))
 	wall_material.set_shader_parameter("cut_rect_height", _cut_rect_h)
+
+
+## The ray parameter where `origin + dir · t` meets a visible roof (its wall-top plane over the roofed rectangle
+## plus the eaves), or INF. A click on a roof then lands on the room's tiles, not on the ground behind the house.
+func roof_hit(origin: Vector3, dir: Vector3) -> float:
+	if absf(dir.y) < 1e-5:
+		return INF
+	var over: float = float(Data3D.param("structures.roof_overhang", 0.3)) + 0.5
+	var best: float = INF
+	for id: int in _roofs:
+		if float(_roof_fade.get(id, 1.0)) < 0.5 or not _room_rects.has(id) or not _roof_top.has(id):
+			continue
+		var t: float = (float(_roof_top[id]) - origin.y) / dir.y
+		if t <= 0.0 or t >= best:
+			continue
+		var p: Vector3 = origin + dir * t
+		var r: Rect2i = _room_rects[id]
+		if Rect2(Vector2(r.position) - Vector2(over, over), Vector2(r.size) + Vector2(over, over) * 2.0).has_point(Vector2(p.x, p.z)):
+			best = t
+	return best
 
 
 ## Test/tool hooks.

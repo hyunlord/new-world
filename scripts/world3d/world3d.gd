@@ -20,6 +20,7 @@ const StructuresScript = preload("res://scripts/world3d/structures3d.gd")
 const PropsScript = preload("res://scripts/world3d/props3d.gd")
 const PeopleScript = preload("res://scripts/world3d/people3d.gd")
 const AnimalsScript = preload("res://scripts/world3d/animals3d.gd")
+const OverlayScript = preload("res://scripts/world3d/overlay3d.gd")
 
 var world_sim: Node = null
 var camera2d: Camera2D = null
@@ -31,6 +32,7 @@ var structures: Node3D = null
 var props: Node3D = null
 var people: Node3D = null
 var animals: Node3D = null
+var overlay: Node3D = null
 ## Pickers: nodes with `pick(screen: Vector2, camera: Camera3D, order_mode: int) -> Vector2` (world px, or (-1, -1)).
 var pickers: Array[Node] = []
 static var _globals_added: bool = false
@@ -43,6 +45,9 @@ func _ready() -> void:
 		RenderingServer.global_shader_parameter_add("w3d_camera", RenderingServer.GLOBAL_VAR_TYPE_VEC3, Vector3.ZERO)
 		RenderingServer.global_shader_parameter_add("w3d_focus", RenderingServer.GLOBAL_VAR_TYPE_VEC3, Vector3.ZERO)
 		RenderingServer.global_shader_parameter_add("w3d_xray", RenderingServer.GLOBAL_VAR_TYPE_FLOAT, 0.0)
+		RenderingServer.global_shader_parameter_add("w3d_overlay", RenderingServer.GLOBAL_VAR_TYPE_SAMPLER2D, null)
+		RenderingServer.global_shader_parameter_add("w3d_frame", RenderingServer.GLOBAL_VAR_TYPE_SAMPLER2D, null)
+		RenderingServer.global_shader_parameter_add("w3d_map_size", RenderingServer.GLOBAL_VAR_TYPE_VEC2, Vector2(192, 192))
 	var main: Node = get_parent()
 	world_sim = main.get_node_or_null("WorldSim")
 	camera2d = main.get_node_or_null("Camera2D") as Camera2D
@@ -60,6 +65,8 @@ func _ready() -> void:
 	people.call("setup", world_sim, terrain)
 	animals = _layer("Animals", AnimalsScript)
 	animals.call("setup", world_sim, terrain)
+	overlay = _layer("Overlay", OverlayScript)
+	overlay.call("setup", world_sim, terrain)
 	add_picker(people)
 	add_picker(animals)
 	rig = _layer("CameraRig", RigScript)
@@ -103,6 +110,11 @@ func screen_to_world(screen: Vector2) -> Vector2:
 			if hit.x >= 0.0:
 				return hit
 	var p: Vector3 = ground_hit(screen)
+	var origin: Vector3 = cam.project_ray_origin(screen)
+	var dir: Vector3 = cam.project_ray_normal(screen)
+	var t_roof: float = float(structures.call("roof_hit", origin, dir)) if structures != null else INF
+	if t_roof < origin.distance_to(p):
+		p = origin + dir * t_roof
 	return Vector2(p.x, p.z) * float(Data3D.param("camera.px_per_tile_at_1x", 64.0))
 
 

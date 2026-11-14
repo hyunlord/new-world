@@ -1902,5 +1902,14 @@
   "C2_CHRON_FIRST_TOOL_USED": "{person} first used a {item}",
   "C2_DIAG_NO_FUEL": "The {workshop} has no {fuel} — check the {source}",
   "C2_ORDER_MINE": "Mine ore",
-  "C2_ORDER_TOAST_MINE": "Marked {count} ore deposits for mining"
+  "C2_ORDER_TOAST_MINE": "Marked {count} ore deposits for mining",
+  "W3D_OVERLAY_WARMTH": "Warmth map (O)",
+  "W3D_OVERLAY_LIGHT": "Light map (O)",
+  "W3D_OVERLAY_NOISE": "Noise map (O)",
+  "W3D_OVERLAY_FOOD": "Food smell map (O)",
+  "W3D_OVERLAY_DANGER": "Danger map (O)",
+  "W3D_OVERLAY_SOCIAL": "Social map (O)",
+  "W3D_OVERLAY_SPIRITUAL": "Spiritual map (O)",
+  "W3D_OVERLAY_BEAUTY": "Beauty map (O)",
+  "MUX_SETTING_RENDERER_3D": "3D view (applies after restart)"
 }

@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 1942,
+    "active_key_count": 1951,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 1942,
+    "key_count": 1951,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -1481,6 +1481,7 @@
     "MUX_SETTING_EDGE_PAN": "화면 가장자리에서 이동",
     "MUX_SETTING_HELPER": "학습 도우미 켜기",
     "MUX_SETTING_INVERT_PAN": "트랙패드 이동 방향 반전",
+    "MUX_SETTING_RENDERER_3D": "3D 보기 (다시 시작하면 적용)",
     "MUX_SETTING_STEWARD": "새 마을에서 마을 스스로 켜기",
     "MUX_SETTING_STEWARD_NOTE": "현재 마을은 위쪽 마을 스스로 버튼으로 바꿔요.",
     "MUX_SETTING_UI_SCALE": "화면 글자·버튼 크기",
@@ -1959,6 +1960,14 @@
     "VILLAGE_RESTLESS_CALM": "평온",
     "VILLAGE_RESTLESS_READY": "갈라질 기세",
     "VILLAGE_RESTLESS_UNEASY": "술렁임",
+    "W3D_OVERLAY_BEAUTY": "아름다움 지도 (O)",
+    "W3D_OVERLAY_DANGER": "위험 지도 (O)",
+    "W3D_OVERLAY_FOOD": "음식 냄새 지도 (O)",
+    "W3D_OVERLAY_LIGHT": "빛 지도 (O)",
+    "W3D_OVERLAY_NOISE": "소음 지도 (O)",
+    "W3D_OVERLAY_SOCIAL": "어울림 지도 (O)",
+    "W3D_OVERLAY_SPIRITUAL": "영성 지도 (O)",
+    "W3D_OVERLAY_WARMTH": "온기 지도 (O)",
     "WORK_BUILD": "건축",
     "WORK_CHOP": "벌목",
     "WORK_CRAFT": "제작",
