@@ -201,10 +201,13 @@ func pick(screen: Vector2, camera: Camera3D, mode: int) -> Vector2:
 		if not bool(d["wild"]):
 			continue
 		var feet: Vector3 = d["pos"]
-		if camera.is_position_behind(feet):
+		var top: Vector3 = feet + Vector3(0, float(d["h"]), 0)
+		if camera.is_position_behind(feet) or camera.is_position_behind(top):
 			continue
 		var a: Vector2 = camera.unproject_position(feet)
-		var b: Vector2 = camera.unproject_position(feet + Vector3(0, float(d["h"]), 0))
+		var b: Vector2 = camera.unproject_position(top)
+		if not _on_screen(a, b):
+			continue
 		if Geometry2D.get_closest_point_to_segment(screen, a, b).distance_to(screen) <= maxf(radius, (a - b).length() * 0.5):
 			var depth: float = camera.global_position.distance_to(feet)
 			if depth < best_depth:
@@ -222,3 +225,9 @@ func pick(screen: Vector2, camera: Camera3D, mode: int) -> Vector2:
 
 func count() -> int:
 	return _drawn.size()
+
+
+## A body is pickable only when both ends project inside the viewport and it spans a sane height on screen.
+func _on_screen(a: Vector2, b: Vector2) -> bool:
+	var view: Rect2 = get_viewport().get_visible_rect().grow(8.0)
+	return view.has_point(a) and view.has_point(b) and a.distance_to(b) < view.size.y * 0.5

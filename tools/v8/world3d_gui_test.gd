@@ -254,7 +254,8 @@ func _run() -> void:
 		await _button(sb, MOUSE_BUTTON_LEFT, false)
 		await _frames(5)
 		var after_marks: int = (SimReads.read(_world, "get_colony_overlay").get("designation_xs", PackedInt32Array()) as PackedInt32Array).size()
-		_check("chop_drag", after_marks > before_marks, "marks %d -> %d around %s" % [before_marks, after_marks, centre])
+		_check("chop_drag", after_marks > before_marks, "marks %d -> %d around %s result %s drag %s→%s" % [before_marks, after_marks, centre,
+			tool.call("last_result"), tool.get("_drag_from"), tool.get("_drag_to")])
 		tool.call("set_mode", 0)
 	print("W3D_GUI_DONE failures=%d" % _failures)
 	quit(1 if _failures > 0 else 0)
