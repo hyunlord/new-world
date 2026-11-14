@@ -51,10 +51,34 @@
     1.1999999284744263
   ],
   "height_landmark_method": "crown",
-  "weight_method": "automatic heat",
+  "weight_method": "UV-seam weld then fitted-family automatic heat, normalized side-local max3",
   "heat_uncovered_vertices": 0,
-  "shared_motion_transfer": "same names/hierarchy, scale root location by target/source height",
+  "shared_motion_transfer": "shared B family rest template; shared procedural policy with target-surface hand, elbow, head and ground clearance",
   "front": "Godot +Z / Blender -Y",
   "rig": "Blender automatic weights",
-  "source": "/Users/rexxa/work/3d-data/m3d2-art/resume/raw/B/child-attempt1.glb"
+  "source": "/Users/rexxa/work/3d-data/m3d2-art/resume/raw/B/child-attempt1.glb",
+  "reconstruction_source": "/Users/rexxa/work/3d-data/m3d2-art/resume/raw/B/child-attempt1.glb",
+  "motion_correction": {
+    "subject": "child",
+    "source": "/Users/rexxa/work/3d-data/m3d2-art/m3d2b/before/child/child.glb",
+    "clips": [
+      "idle",
+      "walk",
+      "work",
+      "carry",
+      "sleep"
+    ],
+    "welded_geometry_uv_sha256": "3afe1f5491dfedae0d65d16dbc686a33e4ff6dcd13b590ade34b6d1f22d1ebb4",
+    "max_influences": 3,
+    "weights": "fitted-rig heat, max3 normalized same-side",
+    "source_geometry_uv_sha256": "225bbe1afd5cd17d3c939df9f0777fce0383352c269aeb9d1523a6cd78f9b2b6",
+    "seam_weld": true,
+    "source_vertices": 2745,
+    "working_vertices": 1201,
+    "motion": "world-directed analytic two-link arms, side sleep, folded-under-body quadruped rest"
+  },
+  "motion_review": "8 phases per clip, native game2x at128px/m plus close, side and4x human work shoulder/elbow review",
+  "contact_sheet_provenance": "Four static rest views and surface thumbnails retained from unchanged source surface; clip cells replaced with reviewed final frames, diagnostic scaling explicitly labelled",
+  "glb_sha256": "3aeae2822394d062221191cff220fe429ed0c54e53f1e6892831d669059055a0",
+  "visual_review_score": 90
 }

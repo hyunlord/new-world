@@ -1,5 +1,19 @@
 # Changelog
 
+## M3D-2b — 2026-11-15
+
+### Added
+- Eight-phase native game2x and close motion review, fourfold work joint crops, and before/after B work/rest sheets (`tools/3d/chars/blender/`, `assets/3d/chars/B/`).
+- Focused exported-skin checks for local max3 normalized influences, grounded finite loops and carry visibility.
+
+### Changed
+- Refit B family joints before seam-welded automatic heat weights; preserve existing surface/UV/atlas and A assets ([ADR0068](docs/decisions/0068-b-character-motion-review.md)).
+- Reauthor breathing, gait, two-hand strike, chest carry and side sleep; fold animal legs under the body and isolate a shared Tail joint for resting support.
+- Keep failed visual/numerical evidence and the Korean outcome in external `m3d2-art/m3d2b/` and `REPORT.md`; runtime registration remains separate.
+
+### Removed
+- Discarded capsule-weight experiment and optional heat switch; the correction CLI follows the validated seam-weld/heat path only.
+
 ## M3D-2a resume — 2026-11-15
 
 ### Added

@@ -5,16 +5,17 @@
   "texture": "512x512 atlas.png",
   "bones": [
     "Root",
-    "Neck",
-    "Head",
-    "FrontUpper.L",
-    "FrontLower.L",
     "BackUpper.L",
     "BackLower.L",
+    "BackUpper.R",
+    "BackLower.R",
+    "FrontUpper.L",
+    "FrontLower.L",
     "FrontUpper.R",
     "FrontLower.R",
-    "BackUpper.R",
-    "BackLower.R"
+    "Neck",
+    "Head",
+    "Tail"
   ],
   "clips": [
     "idle",
@@ -44,10 +45,33 @@
     1.600000023841858
   ],
   "height_landmark_method": "front trunk withers band (40% length from nose, central10% width)",
-  "weight_method": "automatic heat",
+  "weight_method": "UV-seam weld then fitted-family automatic heat, normalized side-local max3",
   "heat_uncovered_vertices": 0,
-  "shared_motion_transfer": "same names/hierarchy, scale root location by target/source height",
+  "shared_motion_transfer": "shared B family rest template; shared procedural policy with target-surface hand, elbow, head and ground clearance",
   "front": "Godot +Z / Blender -Y",
   "rig": "Blender automatic weights",
-  "source": "/Users/rexxa/work/3d-data/m3d2-art/resume/raw/B/aurochs-attempt1.glb"
+  "source": "/Users/rexxa/work/3d-data/m3d2-art/resume/raw/B/aurochs-attempt1.glb",
+  "reconstruction_source": "/Users/rexxa/work/3d-data/m3d2-art/resume/raw/B/aurochs-attempt1.glb",
+  "motion_correction": {
+    "subject": "aurochs",
+    "source": "/Users/rexxa/work/3d-data/m3d2-art/m3d2b/before/aurochs/aurochs.glb",
+    "clips": [
+      "idle",
+      "walk",
+      "graze",
+      "lie_down"
+    ],
+    "welded_geometry_uv_sha256": "a627b52702eeca14c7b54a811b3364ceb0d23be6da3c0336e05495b1f0022e56",
+    "max_influences": 3,
+    "weights": "fitted-rig heat, max3 normalized same-side",
+    "source_geometry_uv_sha256": "9d70b6cf012f96d2a17f2d31028186d5b1c562eaaa65ec7a7184aaec6f70b4e5",
+    "seam_weld": true,
+    "source_vertices": 2291,
+    "working_vertices": 995,
+    "motion": "world-directed analytic two-link arms, side sleep, folded-under-body quadruped rest"
+  },
+  "motion_review": "8 phases per clip, native game2x at128px/m plus close, side and4x human work shoulder/elbow review",
+  "contact_sheet_provenance": "Four static rest views and surface thumbnails retained from unchanged source surface; clip cells replaced with reviewed final frames, diagnostic scaling explicitly labelled",
+  "glb_sha256": "714631f09c184a77186113d80bf02745f1997a283d7fe753a5a4dcb330c4741b",
+  "visual_review_score": 90
 }

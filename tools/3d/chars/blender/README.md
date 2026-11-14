@@ -69,3 +69,41 @@ Synthetic smoke test (not an AI asset, no quality acceptance):
 
 Blender may exit zero after a Python exception: require `M3D2_PREPARE_DONE` for each
 subject and `M3D2_SYNTHETIC_SELF_TEST_PASS`, and inspect logs for `Traceback`.
+
+## B motion correction (M3D-2b)
+
+Reanimate a preserved B GLB without rerunning reconstruction or atlas baking:
+
+```sh
+blender -b --factory-startup -P tools/3d/chars/blender/reanimate.py -- \
+  INPUT.glb NEW_EXTERNAL_DIRECTORY man
+```
+
+The correction retains mesh coordinates, polygons and UVs. B uses anatomical
+joint placement, coincident-seam welding (loop UVs retained), Blender automatic
+heat weighting, and localized normalized influences capped at three. Work and
+carry solve hand-surface positions; resting clips calibrate target clearance.
+The B humanoid family retains17 bones. The B quadruped family retains its
+existing11 names and adds a common `Tail` child of `Root` (12 bones). A stays
+unchanged. Oversized-head surfaces also calibrate work anticipation and the
+elbow core weights; the shared policy is not a promise of identical curves. Keep the original GLB and every failed output.
+Bone/clip names remain the integration contract; motion acceptance additionally
+requires a visible eight-frame review, not just valid GLB weights.
+
+Render the exported asset for review:
+
+```sh
+blender -b --factory-startup -P tools/3d/chars/blender/motion_review.py -- \
+  INPUT.glb NEW_EXTERNAL_REVIEW_DIRECTORY
+python3 tools/3d/chars/blender/motion_labels.py NEW_EXTERNAL_REVIEW_DIRECTORY
+# Host Pillow is used by the sheet helpers.
+python3 tools/3d/chars/blender/motion_compare.py BEFORE_REVIEW AFTER_REVIEW CURATED_SUBJECT_DIRECTORY
+```
+
+Every clip gets eight phase samples, native game2x at128px per ground metre,
+close views, and work side views with nearest-neighbour4x shoulder/elbow crops.
+Labels sit outside native render cells. The game view is an exact512px central
+crop equivalent of the1920x1080,30-degree vertical-FOV,50-degree pitch camera;
+close views use their own fitted camera. Full images, measurements and failed
+visual verdicts stay external. Ground minima and finite coordinates are diagnostic:
+inspect the actual body support, limb shapes and contact in every sample.

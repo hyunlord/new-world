@@ -56,8 +56,6 @@ every agent must know even when it is not working in that area. Sources are comm
 
 ## Lessons
 
-| date | symptom | root cause | fix | source |
-|---|---|---|---|---|
 | 2026-11-14 | **art** — a new atlas UV layer silently changed image-texture sampling during a Blender bake | source textures implicitly read the active UV map | connect source image nodes to their original UV map before activating the bake UV; test nonuniform texel correspondence and retain a deliberately broken negative check | `tools/3d/chars/blender/prepare.py`; `tools/3d/chars/blender/self_test.py` |
 | 2026-11-06 | The scripted chain tailored both garments but neither was worn | All16 stockpile cells were occupied; garments remained outside storage and the ordinary Dress prerequisite was unmet | Inspect real item owners and destination capacity first. Use a recorded stockpile expansion and ordinary hauling in the demonstration; do not tune Dress priorities or inject/equip garments to force success | `rust/crates/sim-test/tests/weaving_chain.rs`; external `stage2/WEAVING_SCENE.md`, `scene-r3.log`, `scene-r4.log` |
 | 2026-11-05 | **food** — immediate stores met their target but a winter deficit still admitted perishable diversity forage | edible, durable, seed and accepted-output budgets were conflated | allocate physical supply and accepted output once; keep immediate and winter deficits distinct, and admit fresh diversity only for an immediate deficit | `docs/v8/m6b/M6B_DECISIONS.md` S1-CAL-13/21; `runtime/steward/food/` |
@@ -138,6 +136,9 @@ every agent must know even when it is not working in that area. Sources are comm
 | 2026-10-25 | Moving an intact collector section made strict clippy fail | The old section placed its test module before later marshallers; the new child exposes items_after_test_module | Keep test bodies but place the module after production items; rerun strict workspace clippy after structural moves | `docs/v8/mux/B6_VERIFICATION.md`; `docs/decisions/0039-preserve-domain-extraction.md` |
 | 2026-10-25 | Controlled fixture assumed the first Agent ID was1 | Fresh allocator starts at0; repeated cold/craft fixtures all violated the frozen identity contract | Reserve unused0 through issue_agent_id before spawning; assert actual IDs, lineage and settlement membership before sampling. Preserve invalid exports and rerun the fixed grid without changing thresholds | `docs/v8/mux/B4_PREREGISTRATION.md`; `rust/crates/sim-test/tests/b4_controlled.rs`; ISS286 |
 | 2026-10-25 | Refactor ON comparison used a different player script | Reconstructed invocation added M55-U commands although timing.script was null in every frozen reference | Read reference timing/argv before launch, assert script equality, preserve failed input-non-equivalent run, then rerun exact inputs without changing goldens | `docs/v8/mux/B4_O_VERIFICATION.md`; ISS288 |
+| 2026-11-15 | Work arms became ribbons despite local max3 weights | Generic joints sat inside B's chunky torso; posed wrist targets differed from actual asymmetric hand surfaces | Fit family joints first, weld UV-split seams before heat diffusion, preserve loop UVs and solve actual hand-surface centroids | `tools/3d/chars/blender/weights.py`, `motion.py`; ADR0068 |
+| 2026-11-15 | A resting animal passed floor checks while its torso visibly floated | Hind-leg heat pulled the tail down; a single extremity defined the ground plane | Isolate tail anatomy and review full native-size side frames; never infer body support from minimum Z alone | `tools/3d/chars/blender/motion_review.py`; ADR0068 |
+| 2026-11-15 | An eight-column overview hid a thin collapsing forearm | Display downscaling erased the defect | Review four-column grids with unscaled512px cells, both work shoulders at4x, and original side frames before accepting | `tools/3d/chars/blender/motion_labels.py` |
 
 | 2026-10-26 | **godot** — lit-warm fixture B1 called nonexistent `Sprite2D.get_parent_item` | an engine-internal CanvasItem helper is not a public GDScript method | use immediate `get_parent() as CanvasItem`, stop at `top_level` or a non-CanvasItem parent; prove inherited-state boundaries with controls before drawing | `scripts/world/colony/lit_warm_representatives.gd`; `tools/v8/mux2_building_render_warm_test.gd`; external `mux2-data/lit-warm-fixture-B1.log` |
 | 2026-10-26 | **testing** — local badge baseline failed4 checks against a1920-wide fixture | the logical viewport was960wide; requested window dimensions did not establish the coordinates used by layout | read the actual viewport rectangle and canvas transform, assert the fixture coordinate contract, and preserve the failed run before rerunning; do not loosen geometry bounds | `tools/v8/mux2_badge_local_test.gd`; external `mux2-data/D16-record-draft.md` |
@@ -257,3 +258,12 @@ matched-ground foreground check and projected-vertex crop-containment assertions
 - Hidden animated attachments need a small positive scale (1e-6), not zero: Godot
   imports zero bases with quaternion normalization errors. Check the actual engine
   import in addition to Blender render and GLB accessor tests.
+
+### Imported rig helpers are not deforming body geometry (M3D-2b)
+Blender glTF imports can create hidden `glTF_not_exported` bone-display helpers
+such as an Icosphere. Exclude hidden collections/objects from pose bounds and
+floor metrics; otherwise a hidden unit sphere reports false -1m penetration and
+pushes close cameras away. Use the actual subject surface and inspect central
+body contact separately from the lowest hand/foot. Regression assertions and
+filter: `tools/3d/chars/blender/motion_review.py`; external evidence:
+`m3d2-art/m3d2b/inspect-ground3.log`.

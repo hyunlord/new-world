@@ -948,3 +948,12 @@ Final assets live under `assets/3d/chars/A/` and `assets/3d/chars/B/`, with nati
 comparison sheets under `assets/3d/chars/comparisons/`. Applied armatures share
 bone names and proportions; cross-height motion transfer scales root translation
 and recalibrates resting-pose grounding to the target mesh. See [ADR0067](decisions/0067-resume-character-style-comparison.md).
+
+M3D-2b reweights and reanimates accepted B geometry through
+`tools/3d/chars/blender/reanimate.py`, `weights.py` and `motion.py`.
+`motion_review.py` samples exported clips at native game2x and close range;
+`motion_labels.py` labels the external review sheets without resizing cells.
+`motion_compare.py` composes native-pixel before/after work and sleep sheets.
+B joint placement follows its chunky anatomy while preserving existing bone/clip names
+and adding a shared quadruped Tail joint;
+set A remains historical. See [ADR0068](decisions/0068-b-character-motion-review.md).
