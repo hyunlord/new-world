@@ -1,0 +1,38 @@
+{
+  "species": "deer",
+  "ground_fragment_vertices_removed": 0,
+  "raw_sha256": "0608d604da142b4eb31583a26a4450828ac52734515d26d55f62c2eb5c6bddd4",
+  "seed": 0,
+  "trellis_revision": "75fbf0183001ed9876c8dbb35de6b68552ee08bd",
+  "source": "/Users/rexxa/work/3d-data/m3d-assets/living/raw/deer-attempt1.glb",
+  "triangles": 1998,
+  "shoulder_height_m": 1.1,
+  "height_landmark_xyz": [
+    0.0039322227239608765,
+    -0.20561794936656952,
+    1.100000023841858
+  ],
+  "bones": [
+    "Root",
+    "Neck",
+    "Head",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "BackUpper.L",
+    "BackLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "BackUpper.R",
+    "BackLower.R",
+    "Tail"
+  ],
+  "animations": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down"
+  ],
+  "texture": "512x512 embedded atlas",
+  "pipeline": "TRELLIS.2 -> set-B remesh/atlas -> fitted shared quadruped -> shared clips",
+  "front": "Godot +Z / Blender -Y"
+}

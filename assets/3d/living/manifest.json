@@ -1,0 +1,1312 @@
+{
+  "models": {
+    "living_aurochs": {
+      "file": "living/aurochs/aurochs.glb",
+      "family": "character",
+      "height": 1.9922928634873642,
+      "footprint": [
+        1.1641310453414917,
+        2.4169812202453613
+      ],
+      "triangles": 1990,
+      "materials": [
+        "BakedAtlas"
+      ],
+      "bones": [
+        "Root",
+        "BackUpper.L",
+        "BackLower.L",
+        "BackUpper.R",
+        "BackLower.R",
+        "FrontUpper.L",
+        "FrontLower.L",
+        "FrontUpper.R",
+        "FrontLower.R",
+        "Neck",
+        "Head",
+        "Tail"
+      ],
+      "sockets": {},
+      "animations": [
+        "graze",
+        "idle",
+        "lie_down",
+        "walk"
+      ],
+      "integration": "skinned_glb_animation_player; no VAT baked",
+      "sha256": "714631f09c184a77186113d80bf02745f1997a283d7fe753a5a4dcb330c4741b",
+      "species": "aurochs",
+      "provenance": "TRELLIS.2 set B + M3D-2b corrected rig",
+      "source_commit": "f0b91f999e96c9095e32b9d649a835b40e37f6e7"
+    },
+    "living_child": {
+      "file": "living/child/child.glb",
+      "family": "character",
+      "height": 1.2000000075750634,
+      "footprint": [
+        0.7179999649524689,
+        0.4053282141685486
+      ],
+      "triangles": 2410,
+      "materials": [
+        "BakedAtlas.001"
+      ],
+      "bones": [
+        "hips",
+        "spine",
+        "chest",
+        "neck",
+        "head",
+        "upper_arm_L",
+        "lower_arm_L",
+        "hand_L",
+        "upper_arm_R",
+        "lower_arm_R",
+        "hand_R",
+        "upper_leg_L",
+        "lower_leg_L",
+        "foot_L",
+        "upper_leg_R",
+        "lower_leg_R",
+        "foot_R"
+      ],
+      "sockets": {},
+      "animations": [
+        "carry",
+        "idle",
+        "sleep",
+        "walk",
+        "work"
+      ],
+      "integration": "skinned_glb_animation_player; no VAT baked",
+      "sha256": "3aeae2822394d062221191cff220fe429ed0c54e53f1e6892831d669059055a0",
+      "species": "human",
+      "provenance": "TRELLIS.2 set B + M3D-2b corrected rig",
+      "source_commit": "f0b91f999e96c9095e32b9d649a835b40e37f6e7"
+    },
+    "living_deer": {
+      "file": "living/deer/deer.glb",
+      "family": "character",
+      "height": 1.8188444762415656,
+      "footprint": [
+        1.14392751455307,
+        1.5348408222198486
+      ],
+      "triangles": 1998,
+      "materials": [
+        "BakedAtlas.002"
+      ],
+      "bones": [
+        "Root",
+        "BackUpper.L",
+        "BackLower.L",
+        "BackUpper.R",
+        "BackLower.R",
+        "FrontUpper.L",
+        "FrontLower.L",
+        "FrontUpper.R",
+        "FrontLower.R",
+        "Neck",
+        "Head",
+        "Tail"
+      ],
+      "sockets": {},
+      "animations": [
+        "graze",
+        "idle",
+        "lie_down",
+        "walk"
+      ],
+      "integration": "skinned_glb_animation_player; no VAT baked",
+      "sha256": "cb940e9f284e427809b90ade00a6df69e4372e16e9926b7b1a56dd52dbe99eb1",
+      "species": "deer",
+      "provenance": "TRELLIS.2 -> set-B remesh/atlas -> fitted shared quadruped -> shared clips",
+      "raw_sha256": "0608d604da142b4eb31583a26a4450828ac52734515d26d55f62c2eb5c6bddd4"
+    },
+    "living_goat": {
+      "file": "living/goat/goat.glb",
+      "family": "character",
+      "height": 1.0751233117543961,
+      "footprint": [
+        0.6443834900856018,
+        0.9892855584621429
+      ],
+      "triangles": 2000,
+      "materials": [
+        "BakedAtlas.003"
+      ],
+      "bones": [
+        "Root",
+        "BackUpper.L",
+        "BackLower.L",
+        "BackUpper.R",
+        "BackLower.R",
+        "FrontUpper.L",
+        "FrontLower.L",
+        "FrontUpper.R",
+        "FrontLower.R",
+        "Neck",
+        "Head",
+        "Tail"
+      ],
+      "sockets": {},
+      "animations": [
+        "graze",
+        "idle",
+        "lie_down",
+        "walk"
+      ],
+      "integration": "skinned_glb_animation_player; no VAT baked",
+      "sha256": "afb232500298f3ec52b89c952c69ae49709d80229db131953a6990e2f5f5a9fe",
+      "species": "wild_goat",
+      "provenance": "TRELLIS.2 set B + M3D-2b corrected rig",
+      "source_commit": "f0b91f999e96c9095e32b9d649a835b40e37f6e7"
+    },
+    "living_man": {
+      "file": "living/man/man.glb",
+      "family": "character",
+      "height": 1.7000002127125953,
+      "footprint": [
+        1.1848347187042236,
+        0.4515160918235779
+      ],
+      "triangles": 2404,
+      "materials": [
+        "BakedAtlas.004"
+      ],
+      "bones": [
+        "hips",
+        "spine",
+        "chest",
+        "neck",
+        "head",
+        "upper_arm_L",
+        "lower_arm_L",
+        "hand_L",
+        "upper_arm_R",
+        "lower_arm_R",
+        "hand_R",
+        "upper_leg_L",
+        "lower_leg_L",
+        "foot_L",
+        "upper_leg_R",
+        "lower_leg_R",
+        "foot_R"
+      ],
+      "sockets": {},
+      "animations": [
+        "carry",
+        "idle",
+        "sleep",
+        "walk",
+        "work"
+      ],
+      "integration": "skinned_glb_animation_player; no VAT baked",
+      "sha256": "fe9c6c0051742c21a961288dcfeba15095938c60ce66e2a25b48e059ed1db622",
+      "species": "human",
+      "provenance": "TRELLIS.2 set B + M3D-2b corrected rig",
+      "source_commit": "f0b91f999e96c9095e32b9d649a835b40e37f6e7"
+    },
+    "living_person_adult_F_bronze": {
+      "file": "living/people/person_adult_F_bronze.glb",
+      "family": "character",
+      "source_subject": "woman",
+      "age": "adult",
+      "sex": "F",
+      "era": "bronze",
+      "wardrobe": "bronze garment pin and shoulder wrap",
+      "animations": [
+        "carry",
+        "idle",
+        "sleep",
+        "walk",
+        "work"
+      ],
+      "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments",
+      "height": 1.7000001460181409,
+      "footprint": [
+        1.2036165595054626,
+        0.5875200033187866
+      ],
+      "triangles": 2452,
+      "materials": [
+        "BakedAtlas.010",
+        "bronze_shoulder_cloth.003",
+        "bronze_wardrobe.003"
+      ],
+      "bones": [
+        "hips",
+        "spine",
+        "chest",
+        "neck",
+        "head",
+        "upper_arm_L",
+        "lower_arm_L",
+        "hand_L",
+        "upper_arm_R",
+        "lower_arm_R",
+        "hand_R",
+        "upper_leg_L",
+        "lower_leg_L",
+        "foot_L",
+        "upper_leg_R",
+        "lower_leg_R",
+        "foot_R"
+      ],
+      "sockets": {},
+      "integration": "skinned_glb_animation_player; no VAT baked",
+      "sha256": "bb5652673150f312088ebc8d63ca58e4af87387382d12beb5579f800b610f779"
+    },
+    "living_person_adult_F_iron": {
+      "file": "living/people/person_adult_F_iron.glb",
+      "family": "character",
+      "source_subject": "woman",
+      "age": "adult",
+      "sex": "F",
+      "era": "iron",
+      "wardrobe": "iron garment pin and shoulder wrap",
+      "animations": [
+        "carry",
+        "idle",
+        "sleep",
+        "walk",
+        "work"
+      ],
+      "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments",
+      "height": 1.7000001460181409,
+      "footprint": [
+        1.2036165595054626,
+        0.5875200033187866
+      ],
+      "triangles": 2452,
+      "materials": [
+        "BakedAtlas.011",
+        "iron_shoulder_cloth.003",
+        "iron_wardrobe.003"
+      ],
+      "bones": [
+        "hips",
+        "spine",
+        "chest",
+        "neck",
+        "head",
+        "upper_arm_L",
+        "lower_arm_L",
+        "hand_L",
+        "upper_arm_R",
+        "lower_arm_R",
+        "hand_R",
+        "upper_leg_L",
+        "lower_leg_L",
+        "foot_L",
+        "upper_leg_R",
+        "lower_leg_R",
+        "foot_R"
+      ],
+      "sockets": {},
+      "integration": "skinned_glb_animation_player; no VAT baked",
+      "sha256": "111a3b596c0b59751b04d67d600d00740121f3872a8a6dce54bfcb2fb852e4e6"
+    },
+    "living_person_adult_F_neolithic": {
+      "file": "living/people/person_adult_F_neolithic.glb",
+      "family": "character",
+      "source_subject": "woman",
+      "age": "adult",
+      "sex": "F",
+      "era": "neolithic",
+      "wardrobe": "fibre chest fastening",
+      "animations": [
+        "carry",
+        "idle",
+        "sleep",
+        "walk",
+        "work"
+      ],
+      "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments",
+      "height": 1.7000001460181409,
+      "footprint": [
+        1.2036165595054626,
+        0.5519879460334778
+      ],
+      "triangles": 2424,
+      "materials": [
+        "BakedAtlas.009",
+        "neolithic_wardrobe.003"
+      ],
+      "bones": [
+        "hips",
+        "spine",
+        "chest",
+        "neck",
+        "head",
+        "upper_arm_L",
+        "lower_arm_L",
+        "hand_L",
+        "upper_arm_R",
+        "lower_arm_R",
+        "hand_R",
+        "upper_leg_L",
+        "lower_leg_L",
+        "foot_L",
+        "upper_leg_R",
+        "lower_leg_R",
+        "foot_R"
+      ],
+      "sockets": {},
+      "integration": "skinned_glb_animation_player; no VAT baked",
+      "sha256": "a250047e38a3748f7a32db10514e5e7ad443da5aeca69fc37c49a0e8b96ab820"
+    },
+    "living_person_adult_M_bronze": {
+      "file": "living/people/person_adult_M_bronze.glb",
+      "family": "character",
+      "source_subject": "man",
+      "age": "adult",
+      "sex": "M",
+      "era": "bronze",
+      "wardrobe": "bronze garment pin and shoulder wrap",
+      "animations": [
+        "carry",
+        "idle",
+        "sleep",
+        "walk",
+        "work"
+      ],
+      "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments",
+      "height": 1.7000002541932986,
+      "footprint": [
+        1.1848347783088684,
+        0.5875200033187866
+      ],
+      "triangles": 2444,
+      "materials": [
+        "BakedAtlas.007",
+        "bronze_shoulder_cloth.002",
+        "bronze_wardrobe.002"
+      ],
+      "bones": [
+        "hips",
+        "spine",
+        "chest",
+        "neck",
+        "head",
+        "upper_arm_L",
+        "lower_arm_L",
+        "hand_L",
+        "upper_arm_R",
+        "lower_arm_R",
+        "hand_R",
+        "upper_leg_L",
+        "lower_leg_L",
+        "foot_L",
+        "upper_leg_R",
+        "lower_leg_R",
+        "foot_R"
+      ],
+      "sockets": {},
+      "integration": "skinned_glb_animation_player; no VAT baked",
+      "sha256": "44ff7e08823203384c5b3ef6b81b0d00cb156ad7481302397888442684bdf0ab"
+    },
+    "living_person_adult_M_iron": {
+      "file": "living/people/person_adult_M_iron.glb",
+      "family": "character",
+      "source_subject": "man",
+      "age": "adult",
+      "sex": "M",
+      "era": "iron",
+      "wardrobe": "iron garment pin and shoulder wrap",
+      "animations": [
+        "carry",
+        "idle",
+        "sleep",
+        "walk",
+        "work"
+      ],
+      "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments",
+      "height": 1.7000002541932986,
+      "footprint": [
+        1.1848347783088684,
+        0.5875200033187866
+      ],
+      "triangles": 2444,
+      "materials": [
+        "BakedAtlas.008",
+        "iron_shoulder_cloth.002",
+        "iron_wardrobe.002"
+      ],
+      "bones": [
+        "hips",
+        "spine",
+        "chest",
+        "neck",
+        "head",
+        "upper_arm_L",
+        "lower_arm_L",
+        "hand_L",
+        "upper_arm_R",
+        "lower_arm_R",
+        "hand_R",
+        "upper_leg_L",
+        "lower_leg_L",
+        "foot_L",
+        "upper_leg_R",
+        "lower_leg_R",
+        "foot_R"
+      ],
+      "sockets": {},
+      "integration": "skinned_glb_animation_player; no VAT baked",
+      "sha256": "7ce039492d19a80b568eff830cb83dd51aa843df9bf1d4c8875cb0ce7ac4a6d7"
+    },
+    "living_person_adult_M_neolithic": {
+      "file": "living/people/person_adult_M_neolithic.glb",
+      "family": "character",
+      "source_subject": "man",
+      "age": "adult",
+      "sex": "M",
+      "era": "neolithic",
+      "wardrobe": "fibre chest fastening",
+      "animations": [
+        "carry",
+        "idle",
+        "sleep",
+        "walk",
+        "work"
+      ],
+      "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments",
+      "height": 1.7000002541932986,
+      "footprint": [
+        1.1848347783088684,
+        0.4515161067247391
+      ],
+      "triangles": 2416,
+      "materials": [
+        "BakedAtlas.006",
+        "neolithic_wardrobe.002"
+      ],
+      "bones": [
+        "hips",
+        "spine",
+        "chest",
+        "neck",
+        "head",
+        "upper_arm_L",
+        "lower_arm_L",
+        "hand_L",
+        "upper_arm_R",
+        "lower_arm_R",
+        "hand_R",
+        "upper_leg_L",
+        "lower_leg_L",
+        "foot_L",
+        "upper_leg_R",
+        "lower_leg_R",
+        "foot_R"
+      ],
+      "sockets": {},
+      "integration": "skinned_glb_animation_player; no VAT baked",
+      "sha256": "00f3a45ceb023fa38eb3920c3554bb4b6776e0d6ede2a7bcb03068b4edcacc21"
+    },
+    "living_person_child_F_bronze": {
+      "file": "living/people/person_child_F_bronze.glb",
+      "family": "character",
+      "source_subject": "child",
+      "age": "child",
+      "sex": "F",
+      "era": "bronze",
+      "wardrobe": "bronze garment pin and shoulder wrap",
+      "animations": [
+        "carry",
+        "idle",
+        "sleep",
+        "walk",
+        "work"
+      ],
+      "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments",
+      "height": 1.1999999774356667,
+      "footprint": [
+        0.7179999947547913,
+        0.41471999883651733
+      ],
+      "triangles": 2450,
+      "materials": [
+        "BakedAtlas.005",
+        "bronze_shoulder_cloth.001",
+        "bronze_wardrobe.001"
+      ],
+      "bones": [
+        "hips",
+        "spine",
+        "chest",
+        "neck",
+        "head",
+        "upper_arm_L",
+        "lower_arm_L",
+        "hand_L",
+        "upper_arm_R",
+        "lower_arm_R",
+        "hand_R",
+        "upper_leg_L",
+        "lower_leg_L",
+        "foot_L",
+        "upper_leg_R",
+        "lower_leg_R",
+        "foot_R"
+      ],
+      "sockets": {},
+      "integration": "skinned_glb_animation_player; no VAT baked",
+      "sha256": "55bba73751d2409523a5b7a53ff53e64c1622c8e20871eaf16590f0b2d26c7c0"
+    },
+    "living_person_child_F_iron": {
+      "file": "living/people/person_child_F_iron.glb",
+      "family": "character",
+      "source_subject": "child",
+      "age": "child",
+      "sex": "F",
+      "era": "iron",
+      "wardrobe": "iron garment pin and shoulder wrap",
+      "animations": [
+        "carry",
+        "idle",
+        "sleep",
+        "walk",
+        "work"
+      ],
+      "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments",
+      "height": 1.1999999774356667,
+      "footprint": [
+        0.7179999947547913,
+        0.41471999883651733
+      ],
+      "triangles": 2450,
+      "materials": [
+        "BakedAtlas.012",
+        "iron_shoulder_cloth.001",
+        "iron_wardrobe.001"
+      ],
+      "bones": [
+        "hips",
+        "spine",
+        "chest",
+        "neck",
+        "head",
+        "upper_arm_L",
+        "lower_arm_L",
+        "hand_L",
+        "upper_arm_R",
+        "lower_arm_R",
+        "hand_R",
+        "upper_leg_L",
+        "lower_leg_L",
+        "foot_L",
+        "upper_leg_R",
+        "lower_leg_R",
+        "foot_R"
+      ],
+      "sockets": {},
+      "integration": "skinned_glb_animation_player; no VAT baked",
+      "sha256": "daf8c180c64ff125b21bbbf410b979f1d43d925610b1d2990eb1ed458793bb73"
+    },
+    "living_person_child_F_neolithic": {
+      "file": "living/people/person_child_F_neolithic.glb",
+      "family": "character",
+      "source_subject": "child",
+      "age": "child",
+      "sex": "F",
+      "era": "neolithic",
+      "wardrobe": "fibre chest fastening",
+      "animations": [
+        "carry",
+        "idle",
+        "sleep",
+        "walk",
+        "work"
+      ],
+      "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments",
+      "height": 1.1999999774356667,
+      "footprint": [
+        0.7179999947547913,
+        0.4053282141685486
+      ],
+      "triangles": 2422,
+      "materials": [
+        "BakedAtlas.013",
+        "neolithic_wardrobe.001"
+      ],
+      "bones": [
+        "hips",
+        "spine",
+        "chest",
+        "neck",
+        "head",
+        "upper_arm_L",
+        "lower_arm_L",
+        "hand_L",
+        "upper_arm_R",
+        "lower_arm_R",
+        "hand_R",
+        "upper_leg_L",
+        "lower_leg_L",
+        "foot_L",
+        "upper_leg_R",
+        "lower_leg_R",
+        "foot_R"
+      ],
+      "sockets": {},
+      "integration": "skinned_glb_animation_player; no VAT baked",
+      "sha256": "8fc027ecb9effcc1a23b9a78295c81476b303d44f019a47a5126fdd260fb4fa6"
+    },
+    "living_person_child_M_bronze": {
+      "file": "living/people/person_child_M_bronze.glb",
+      "family": "character",
+      "source_subject": "child",
+      "age": "child",
+      "sex": "M",
+      "era": "bronze",
+      "wardrobe": "bronze garment pin and shoulder wrap",
+      "animations": [
+        "carry",
+        "idle",
+        "sleep",
+        "walk",
+        "work"
+      ],
+      "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments",
+      "height": 1.1999999774356667,
+      "footprint": [
+        0.7179999947547913,
+        0.41471999883651733
+      ],
+      "triangles": 2450,
+      "materials": [
+        "BakedAtlas.014",
+        "bronze_shoulder_cloth",
+        "bronze_wardrobe"
+      ],
+      "bones": [
+        "hips",
+        "spine",
+        "chest",
+        "neck",
+        "head",
+        "upper_arm_L",
+        "lower_arm_L",
+        "hand_L",
+        "upper_arm_R",
+        "lower_arm_R",
+        "hand_R",
+        "upper_leg_L",
+        "lower_leg_L",
+        "foot_L",
+        "upper_leg_R",
+        "lower_leg_R",
+        "foot_R"
+      ],
+      "sockets": {},
+      "integration": "skinned_glb_animation_player; no VAT baked",
+      "sha256": "167d3a4ac31e5958360427f54bc488096f09b36518b28a316bd0cee874a7c8c5"
+    },
+    "living_person_child_M_iron": {
+      "file": "living/people/person_child_M_iron.glb",
+      "family": "character",
+      "source_subject": "child",
+      "age": "child",
+      "sex": "M",
+      "era": "iron",
+      "wardrobe": "iron garment pin and shoulder wrap",
+      "animations": [
+        "carry",
+        "idle",
+        "sleep",
+        "walk",
+        "work"
+      ],
+      "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments",
+      "height": 1.1999999774356667,
+      "footprint": [
+        0.7179999947547913,
+        0.41471999883651733
+      ],
+      "triangles": 2450,
+      "materials": [
+        "BakedAtlas.015",
+        "iron_shoulder_cloth",
+        "iron_wardrobe"
+      ],
+      "bones": [
+        "hips",
+        "spine",
+        "chest",
+        "neck",
+        "head",
+        "upper_arm_L",
+        "lower_arm_L",
+        "hand_L",
+        "upper_arm_R",
+        "lower_arm_R",
+        "hand_R",
+        "upper_leg_L",
+        "lower_leg_L",
+        "foot_L",
+        "upper_leg_R",
+        "lower_leg_R",
+        "foot_R"
+      ],
+      "sockets": {},
+      "integration": "skinned_glb_animation_player; no VAT baked",
+      "sha256": "048f792738cc33a38d5d3a553fef6bbfb7d0f13692908b4c2dbb42f4f5f98787"
+    },
+    "living_person_child_M_neolithic": {
+      "file": "living/people/person_child_M_neolithic.glb",
+      "family": "character",
+      "source_subject": "child",
+      "age": "child",
+      "sex": "M",
+      "era": "neolithic",
+      "wardrobe": "fibre chest fastening",
+      "animations": [
+        "carry",
+        "idle",
+        "sleep",
+        "walk",
+        "work"
+      ],
+      "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments",
+      "height": 1.1999999774356667,
+      "footprint": [
+        0.7179999947547913,
+        0.4053282141685486
+      ],
+      "triangles": 2422,
+      "materials": [
+        "BakedAtlas.016",
+        "neolithic_wardrobe"
+      ],
+      "bones": [
+        "hips",
+        "spine",
+        "chest",
+        "neck",
+        "head",
+        "upper_arm_L",
+        "lower_arm_L",
+        "hand_L",
+        "upper_arm_R",
+        "lower_arm_R",
+        "hand_R",
+        "upper_leg_L",
+        "lower_leg_L",
+        "foot_L",
+        "upper_leg_R",
+        "lower_leg_R",
+        "foot_R"
+      ],
+      "sockets": {},
+      "integration": "skinned_glb_animation_player; no VAT baked",
+      "sha256": "da29f5462bdf8477503dd8a778942d2ea87d21d968881edb0f14b2936f33e85c"
+    },
+    "living_person_elder_F_bronze": {
+      "file": "living/people/person_elder_F_bronze.glb",
+      "family": "character",
+      "source_subject": "woman",
+      "age": "elder",
+      "sex": "F",
+      "era": "bronze",
+      "wardrobe": "bronze garment pin and shoulder wrap",
+      "animations": [
+        "carry",
+        "idle",
+        "sleep",
+        "walk",
+        "work"
+      ],
+      "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments",
+      "height": 1.7000001460181409,
+      "footprint": [
+        1.2036165595054626,
+        0.5875200033187866
+      ],
+      "triangles": 2464,
+      "materials": [
+        "BakedAtlas.017",
+        "bronze_shoulder_cloth.005",
+        "bronze_wardrobe.005",
+        "elder_silver_hair.004"
+      ],
+      "bones": [
+        "hips",
+        "spine",
+        "chest",
+        "neck",
+        "head",
+        "upper_arm_L",
+        "lower_arm_L",
+        "hand_L",
+        "upper_arm_R",
+        "lower_arm_R",
+        "hand_R",
+        "upper_leg_L",
+        "lower_leg_L",
+        "foot_L",
+        "upper_leg_R",
+        "lower_leg_R",
+        "foot_R"
+      ],
+      "sockets": {},
+      "integration": "skinned_glb_animation_player; no VAT baked",
+      "sha256": "aa4e115e4b2d0c8b6b7781689edae23852bbc417f9538b399e60802a114ca68f"
+    },
+    "living_person_elder_F_iron": {
+      "file": "living/people/person_elder_F_iron.glb",
+      "family": "character",
+      "source_subject": "woman",
+      "age": "elder",
+      "sex": "F",
+      "era": "iron",
+      "wardrobe": "iron garment pin and shoulder wrap",
+      "animations": [
+        "carry",
+        "idle",
+        "sleep",
+        "walk",
+        "work"
+      ],
+      "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments",
+      "height": 1.7000001460181409,
+      "footprint": [
+        1.2036165595054626,
+        0.5875200033187866
+      ],
+      "triangles": 2464,
+      "materials": [
+        "BakedAtlas.018",
+        "elder_silver_hair.005",
+        "iron_shoulder_cloth.005",
+        "iron_wardrobe.005"
+      ],
+      "bones": [
+        "hips",
+        "spine",
+        "chest",
+        "neck",
+        "head",
+        "upper_arm_L",
+        "lower_arm_L",
+        "hand_L",
+        "upper_arm_R",
+        "lower_arm_R",
+        "hand_R",
+        "upper_leg_L",
+        "lower_leg_L",
+        "foot_L",
+        "upper_leg_R",
+        "lower_leg_R",
+        "foot_R"
+      ],
+      "sockets": {},
+      "integration": "skinned_glb_animation_player; no VAT baked",
+      "sha256": "b5e3ff7a33d00e7330dcca8518f9b557cabf1a32d9be0b20ed6fdbde9e246494"
+    },
+    "living_person_elder_F_neolithic": {
+      "file": "living/people/person_elder_F_neolithic.glb",
+      "family": "character",
+      "source_subject": "woman",
+      "age": "elder",
+      "sex": "F",
+      "era": "neolithic",
+      "wardrobe": "fibre chest fastening",
+      "animations": [
+        "carry",
+        "idle",
+        "sleep",
+        "walk",
+        "work"
+      ],
+      "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments",
+      "height": 1.7000001460181409,
+      "footprint": [
+        1.2036165595054626,
+        0.5519879460334778
+      ],
+      "triangles": 2436,
+      "materials": [
+        "BakedAtlas.019",
+        "elder_silver_hair.003",
+        "neolithic_wardrobe.005"
+      ],
+      "bones": [
+        "hips",
+        "spine",
+        "chest",
+        "neck",
+        "head",
+        "upper_arm_L",
+        "lower_arm_L",
+        "hand_L",
+        "upper_arm_R",
+        "lower_arm_R",
+        "hand_R",
+        "upper_leg_L",
+        "lower_leg_L",
+        "foot_L",
+        "upper_leg_R",
+        "lower_leg_R",
+        "foot_R"
+      ],
+      "sockets": {},
+      "integration": "skinned_glb_animation_player; no VAT baked",
+      "sha256": "4fc5e24fb97f9784969a417bcef69c950894734a1683ae859857fd8f1353f898"
+    },
+    "living_person_elder_M_bronze": {
+      "file": "living/people/person_elder_M_bronze.glb",
+      "family": "character",
+      "source_subject": "man",
+      "age": "elder",
+      "sex": "M",
+      "era": "bronze",
+      "wardrobe": "bronze garment pin and shoulder wrap",
+      "animations": [
+        "carry",
+        "idle",
+        "sleep",
+        "walk",
+        "work"
+      ],
+      "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments",
+      "height": 1.7000002541932986,
+      "footprint": [
+        1.1848347783088684,
+        0.5875200033187866
+      ],
+      "triangles": 2456,
+      "materials": [
+        "BakedAtlas.020",
+        "bronze_shoulder_cloth.004",
+        "bronze_wardrobe.004",
+        "elder_silver_hair.001"
+      ],
+      "bones": [
+        "hips",
+        "spine",
+        "chest",
+        "neck",
+        "head",
+        "upper_arm_L",
+        "lower_arm_L",
+        "hand_L",
+        "upper_arm_R",
+        "lower_arm_R",
+        "hand_R",
+        "upper_leg_L",
+        "lower_leg_L",
+        "foot_L",
+        "upper_leg_R",
+        "lower_leg_R",
+        "foot_R"
+      ],
+      "sockets": {},
+      "integration": "skinned_glb_animation_player; no VAT baked",
+      "sha256": "cc9916956efcf367c5dec78075e2e067a8f0e8b8e2116dbc7a3f094dfe62a2ca"
+    },
+    "living_person_elder_M_iron": {
+      "file": "living/people/person_elder_M_iron.glb",
+      "family": "character",
+      "source_subject": "man",
+      "age": "elder",
+      "sex": "M",
+      "era": "iron",
+      "wardrobe": "iron garment pin and shoulder wrap",
+      "animations": [
+        "carry",
+        "idle",
+        "sleep",
+        "walk",
+        "work"
+      ],
+      "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments",
+      "height": 1.7000002541932986,
+      "footprint": [
+        1.1848347783088684,
+        0.5875200033187866
+      ],
+      "triangles": 2456,
+      "materials": [
+        "BakedAtlas.021",
+        "elder_silver_hair.002",
+        "iron_shoulder_cloth.004",
+        "iron_wardrobe.004"
+      ],
+      "bones": [
+        "hips",
+        "spine",
+        "chest",
+        "neck",
+        "head",
+        "upper_arm_L",
+        "lower_arm_L",
+        "hand_L",
+        "upper_arm_R",
+        "lower_arm_R",
+        "hand_R",
+        "upper_leg_L",
+        "lower_leg_L",
+        "foot_L",
+        "upper_leg_R",
+        "lower_leg_R",
+        "foot_R"
+      ],
+      "sockets": {},
+      "integration": "skinned_glb_animation_player; no VAT baked",
+      "sha256": "abe3498eff4dd046be0ccaea0a7a3d3c575f62461bb8dc315008bc9efa2e0323"
+    },
+    "living_person_elder_M_neolithic": {
+      "file": "living/people/person_elder_M_neolithic.glb",
+      "family": "character",
+      "source_subject": "man",
+      "age": "elder",
+      "sex": "M",
+      "era": "neolithic",
+      "wardrobe": "fibre chest fastening",
+      "animations": [
+        "carry",
+        "idle",
+        "sleep",
+        "walk",
+        "work"
+      ],
+      "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments",
+      "height": 1.7000002541932986,
+      "footprint": [
+        1.1848347783088684,
+        0.4515161067247391
+      ],
+      "triangles": 2428,
+      "materials": [
+        "BakedAtlas.022",
+        "elder_silver_hair",
+        "neolithic_wardrobe.004"
+      ],
+      "bones": [
+        "hips",
+        "spine",
+        "chest",
+        "neck",
+        "head",
+        "upper_arm_L",
+        "lower_arm_L",
+        "hand_L",
+        "upper_arm_R",
+        "lower_arm_R",
+        "hand_R",
+        "upper_leg_L",
+        "lower_leg_L",
+        "foot_L",
+        "upper_leg_R",
+        "lower_leg_R",
+        "foot_R"
+      ],
+      "sockets": {},
+      "integration": "skinned_glb_animation_player; no VAT baked",
+      "sha256": "ede425434183f6eaff979a8dea57ede47aa8ff81388063d3028da254c55949dd"
+    },
+    "living_reindeer": {
+      "file": "living/reindeer/reindeer.glb",
+      "family": "character",
+      "height": 1.9060513971082855,
+      "footprint": [
+        1.767060101032257,
+        1.930469572544098
+      ],
+      "triangles": 2000,
+      "materials": [
+        "BakedAtlas.023"
+      ],
+      "bones": [
+        "Root",
+        "BackUpper.L",
+        "BackLower.L",
+        "BackUpper.R",
+        "BackLower.R",
+        "FrontUpper.L",
+        "FrontLower.L",
+        "FrontUpper.R",
+        "FrontLower.R",
+        "Neck",
+        "Head",
+        "Tail"
+      ],
+      "sockets": {},
+      "animations": [
+        "graze",
+        "idle",
+        "lie_down",
+        "walk"
+      ],
+      "integration": "skinned_glb_animation_player; no VAT baked",
+      "sha256": "3eba107237281b106482389ab0316ea48c56cfdabba4514db40c35b1c265af37",
+      "species": "reindeer",
+      "provenance": "TRELLIS.2 -> set-B remesh/atlas -> fitted shared quadruped -> shared clips",
+      "raw_sha256": "ff3a76e521e0224a5cd11fa73501912d00b86ae51d5b0c5dc4800480259f6b1c"
+    },
+    "living_wild_boar": {
+      "file": "living/wild_boar/wild_boar.glb",
+      "family": "character",
+      "height": 0.8999966920084717,
+      "footprint": [
+        0.7443473637104034,
+        1.3124499917030334
+      ],
+      "triangles": 1988,
+      "materials": [
+        "BakedAtlas.024"
+      ],
+      "bones": [
+        "Root",
+        "BackUpper.L",
+        "BackLower.L",
+        "BackUpper.R",
+        "BackLower.R",
+        "FrontUpper.L",
+        "FrontLower.L",
+        "FrontUpper.R",
+        "FrontLower.R",
+        "Neck",
+        "Head",
+        "Tail"
+      ],
+      "sockets": {},
+      "animations": [
+        "graze",
+        "idle",
+        "lie_down",
+        "walk"
+      ],
+      "integration": "skinned_glb_animation_player; no VAT baked",
+      "sha256": "01704bc114e88cfe94c66b84ee12809821fd8a813af9de4df897b1ecbc18f06a",
+      "species": "wild_boar",
+      "provenance": "TRELLIS.2 -> set-B remesh/atlas -> fitted shared quadruped -> shared clips",
+      "raw_sha256": "2cf6f1925ff2a3983585278c2436e95d5139dd0178cb03e541e0893cd88830e7"
+    },
+    "living_wild_sheep": {
+      "file": "living/wild_sheep/wild_sheep.glb",
+      "family": "character",
+      "height": 0.9666361289939118,
+      "footprint": [
+        0.8480591177940369,
+        1.0697773694992065
+      ],
+      "triangles": 2000,
+      "materials": [
+        "BakedAtlas.025"
+      ],
+      "bones": [
+        "Root",
+        "BackUpper.L",
+        "BackLower.L",
+        "BackUpper.R",
+        "BackLower.R",
+        "FrontUpper.L",
+        "FrontLower.L",
+        "FrontUpper.R",
+        "FrontLower.R",
+        "Neck",
+        "Head",
+        "Tail"
+      ],
+      "sockets": {},
+      "animations": [
+        "graze",
+        "idle",
+        "lie_down",
+        "walk"
+      ],
+      "integration": "skinned_glb_animation_player; no VAT baked",
+      "sha256": "f3f486e00e2c1af96d2d4eaebfaab3347ce4a2a5086134ee91d382cc0a301898",
+      "species": "wild_sheep",
+      "provenance": "TRELLIS.2 -> set-B remesh/atlas -> fitted shared quadruped -> shared clips",
+      "raw_sha256": "17414a3714bc4b199a0bd800ac08d81fe53e4cbef08e29bc3e3c3123d1acc59f"
+    },
+    "living_wolf": {
+      "file": "living/wolf/wolf.glb",
+      "family": "character",
+      "height": 0.9659828621476976,
+      "footprint": [
+        0.7065331041812897,
+        1.046051561832428
+      ],
+      "triangles": 1944,
+      "materials": [
+        "BakedAtlas.026"
+      ],
+      "bones": [
+        "Root",
+        "BackUpper.L",
+        "BackLower.L",
+        "BackUpper.R",
+        "BackLower.R",
+        "FrontUpper.L",
+        "FrontLower.L",
+        "FrontUpper.R",
+        "FrontLower.R",
+        "Neck",
+        "Head",
+        "Tail"
+      ],
+      "sockets": {},
+      "animations": [
+        "graze",
+        "idle",
+        "lie_down",
+        "walk"
+      ],
+      "integration": "skinned_glb_animation_player; no VAT baked",
+      "sha256": "913e4eef0be6d241b38a8bbd03e5f0728c5a318c7de8ee78f3f6f783fbd964e8",
+      "species": "wolf",
+      "provenance": "TRELLIS.2 -> set-B remesh/atlas -> fitted shared quadruped -> shared clips",
+      "raw_sha256": "bb4cb869561e8dac90cf1302560e34b579f9d4a45ec6dcdaa2cd1790d2c88900"
+    },
+    "living_woman": {
+      "file": "living/woman/woman.glb",
+      "family": "character",
+      "height": 1.7000002388829927,
+      "footprint": [
+        1.2036170959472656,
+        0.5519879758358002
+      ],
+      "triangles": 2412,
+      "materials": [
+        "BakedAtlas.027"
+      ],
+      "bones": [
+        "hips",
+        "spine",
+        "chest",
+        "neck",
+        "head",
+        "upper_arm_L",
+        "lower_arm_L",
+        "hand_L",
+        "upper_arm_R",
+        "lower_arm_R",
+        "hand_R",
+        "upper_leg_L",
+        "lower_leg_L",
+        "foot_L",
+        "upper_leg_R",
+        "lower_leg_R",
+        "foot_R"
+      ],
+      "sockets": {},
+      "animations": [
+        "carry",
+        "idle",
+        "sleep",
+        "walk",
+        "work"
+      ],
+      "integration": "skinned_glb_animation_player; no VAT baked",
+      "sha256": "1e123fe8307032be4bf22382071d66b688b9efa8ec3afd57b7fda23aee1d346f",
+      "species": "human",
+      "provenance": "TRELLIS.2 set B + M3D-2b corrected rig",
+      "source_commit": "f0b91f999e96c9095e32b9d649a835b40e37f6e7"
+    }
+  }
+}

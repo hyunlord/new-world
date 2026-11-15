@@ -1,0 +1,77 @@
+{
+  "subject": "goat",
+  "triangles": 2000,
+  "carry_load": null,
+  "texture": "512x512 atlas.png",
+  "bones": [
+    "Root",
+    "BackUpper.L",
+    "BackLower.L",
+    "BackUpper.R",
+    "BackLower.R",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "Neck",
+    "Head",
+    "Tail"
+  ],
+  "clips": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down"
+  ],
+  "applied_object_transforms": true,
+  "height_reference_m": 0.75,
+  "cleanup": "seam weld + voxel remesh + decimate",
+  "debris_vertices_removed": 0,
+  "rest_bounds_xyz": [
+    [
+      -0.3221917152404785,
+      -0.49464282393455505,
+      0.0
+    ],
+    [
+      0.3221917152404785,
+      0.49464282393455505,
+      1.075117826461792
+    ]
+  ],
+  "height_landmark_xyz": [
+    -0.004779167007654905,
+    -0.11625983566045761,
+    0.75
+  ],
+  "height_landmark_method": "front trunk withers band (40% length from nose, central10% width)",
+  "weight_method": "UV-seam weld then fitted-family automatic heat, normalized side-local max3",
+  "heat_uncovered_vertices": 0,
+  "shared_motion_transfer": "shared B family rest template; shared procedural policy with target-surface hand, elbow, head and ground clearance",
+  "front": "Godot +Z / Blender -Y",
+  "rig": "Blender automatic weights",
+  "source": "/Users/rexxa/work/3d-data/m3d2-art/resume/raw/B/goat-attempt1.glb",
+  "reconstruction_source": "/Users/rexxa/work/3d-data/m3d2-art/resume/raw/B/goat-attempt1.glb",
+  "motion_correction": {
+    "subject": "goat",
+    "source": "/Users/rexxa/work/3d-data/m3d2-art/m3d2b/before/goat/goat.glb",
+    "clips": [
+      "idle",
+      "walk",
+      "graze",
+      "lie_down"
+    ],
+    "welded_geometry_uv_sha256": "c7d96f8ce4141826340787d54a37fc7c621bd616ca498e92ac3b39d725a1a9cf",
+    "max_influences": 3,
+    "weights": "fitted-rig heat, max3 normalized same-side",
+    "source_geometry_uv_sha256": "15ca42ab3e5f49db79da9b247a8c912cead0a1bdd28e48bfcc312ca1f2d58dfa",
+    "seam_weld": true,
+    "source_vertices": 2059,
+    "working_vertices": 1002,
+    "motion": "world-directed analytic two-link arms, side sleep, folded-under-body quadruped rest"
+  },
+  "motion_review": "8 phases per clip, native game2x at128px/m plus close, side and4x human work shoulder/elbow review",
+  "contact_sheet_provenance": "Four static rest views and surface thumbnails retained from unchanged source surface; clip cells replaced with reviewed final frames, diagnostic scaling explicitly labelled",
+  "glb_sha256": "afb232500298f3ec52b89c952c69ae49709d80229db131953a6990e2f5f5a9fe",
+  "visual_review_score": 90
+}

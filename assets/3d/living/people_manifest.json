@@ -1,0 +1,308 @@
+{
+  "person_child_M_neolithic": {
+    "file": "living/people/person_child_M_neolithic.glb",
+    "family": "character",
+    "source_subject": "child",
+    "age": "child",
+    "sex": "M",
+    "era": "neolithic",
+    "wardrobe": "fibre chest fastening",
+    "animations": [
+      "idle",
+      "walk",
+      "work",
+      "carry",
+      "sleep"
+    ],
+    "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments"
+  },
+  "person_child_M_bronze": {
+    "file": "living/people/person_child_M_bronze.glb",
+    "family": "character",
+    "source_subject": "child",
+    "age": "child",
+    "sex": "M",
+    "era": "bronze",
+    "wardrobe": "bronze garment pin and shoulder wrap",
+    "animations": [
+      "idle",
+      "walk",
+      "work",
+      "carry",
+      "sleep"
+    ],
+    "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments"
+  },
+  "person_child_M_iron": {
+    "file": "living/people/person_child_M_iron.glb",
+    "family": "character",
+    "source_subject": "child",
+    "age": "child",
+    "sex": "M",
+    "era": "iron",
+    "wardrobe": "iron garment pin and shoulder wrap",
+    "animations": [
+      "idle",
+      "walk",
+      "work",
+      "carry",
+      "sleep"
+    ],
+    "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments"
+  },
+  "person_child_F_neolithic": {
+    "file": "living/people/person_child_F_neolithic.glb",
+    "family": "character",
+    "source_subject": "child",
+    "age": "child",
+    "sex": "F",
+    "era": "neolithic",
+    "wardrobe": "fibre chest fastening",
+    "animations": [
+      "idle",
+      "walk",
+      "work",
+      "carry",
+      "sleep"
+    ],
+    "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments"
+  },
+  "person_child_F_bronze": {
+    "file": "living/people/person_child_F_bronze.glb",
+    "family": "character",
+    "source_subject": "child",
+    "age": "child",
+    "sex": "F",
+    "era": "bronze",
+    "wardrobe": "bronze garment pin and shoulder wrap",
+    "animations": [
+      "idle",
+      "walk",
+      "work",
+      "carry",
+      "sleep"
+    ],
+    "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments"
+  },
+  "person_child_F_iron": {
+    "file": "living/people/person_child_F_iron.glb",
+    "family": "character",
+    "source_subject": "child",
+    "age": "child",
+    "sex": "F",
+    "era": "iron",
+    "wardrobe": "iron garment pin and shoulder wrap",
+    "animations": [
+      "idle",
+      "walk",
+      "work",
+      "carry",
+      "sleep"
+    ],
+    "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments"
+  },
+  "person_adult_M_neolithic": {
+    "file": "living/people/person_adult_M_neolithic.glb",
+    "family": "character",
+    "source_subject": "man",
+    "age": "adult",
+    "sex": "M",
+    "era": "neolithic",
+    "wardrobe": "fibre chest fastening",
+    "animations": [
+      "idle",
+      "walk",
+      "work",
+      "carry",
+      "sleep"
+    ],
+    "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments"
+  },
+  "person_adult_M_bronze": {
+    "file": "living/people/person_adult_M_bronze.glb",
+    "family": "character",
+    "source_subject": "man",
+    "age": "adult",
+    "sex": "M",
+    "era": "bronze",
+    "wardrobe": "bronze garment pin and shoulder wrap",
+    "animations": [
+      "idle",
+      "walk",
+      "work",
+      "carry",
+      "sleep"
+    ],
+    "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments"
+  },
+  "person_adult_M_iron": {
+    "file": "living/people/person_adult_M_iron.glb",
+    "family": "character",
+    "source_subject": "man",
+    "age": "adult",
+    "sex": "M",
+    "era": "iron",
+    "wardrobe": "iron garment pin and shoulder wrap",
+    "animations": [
+      "idle",
+      "walk",
+      "work",
+      "carry",
+      "sleep"
+    ],
+    "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments"
+  },
+  "person_adult_F_neolithic": {
+    "file": "living/people/person_adult_F_neolithic.glb",
+    "family": "character",
+    "source_subject": "woman",
+    "age": "adult",
+    "sex": "F",
+    "era": "neolithic",
+    "wardrobe": "fibre chest fastening",
+    "animations": [
+      "idle",
+      "walk",
+      "work",
+      "carry",
+      "sleep"
+    ],
+    "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments"
+  },
+  "person_adult_F_bronze": {
+    "file": "living/people/person_adult_F_bronze.glb",
+    "family": "character",
+    "source_subject": "woman",
+    "age": "adult",
+    "sex": "F",
+    "era": "bronze",
+    "wardrobe": "bronze garment pin and shoulder wrap",
+    "animations": [
+      "idle",
+      "walk",
+      "work",
+      "carry",
+      "sleep"
+    ],
+    "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments"
+  },
+  "person_adult_F_iron": {
+    "file": "living/people/person_adult_F_iron.glb",
+    "family": "character",
+    "source_subject": "woman",
+    "age": "adult",
+    "sex": "F",
+    "era": "iron",
+    "wardrobe": "iron garment pin and shoulder wrap",
+    "animations": [
+      "idle",
+      "walk",
+      "work",
+      "carry",
+      "sleep"
+    ],
+    "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments"
+  },
+  "person_elder_M_neolithic": {
+    "file": "living/people/person_elder_M_neolithic.glb",
+    "family": "character",
+    "source_subject": "man",
+    "age": "elder",
+    "sex": "M",
+    "era": "neolithic",
+    "wardrobe": "fibre chest fastening",
+    "animations": [
+      "idle",
+      "walk",
+      "work",
+      "carry",
+      "sleep"
+    ],
+    "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments"
+  },
+  "person_elder_M_bronze": {
+    "file": "living/people/person_elder_M_bronze.glb",
+    "family": "character",
+    "source_subject": "man",
+    "age": "elder",
+    "sex": "M",
+    "era": "bronze",
+    "wardrobe": "bronze garment pin and shoulder wrap",
+    "animations": [
+      "idle",
+      "walk",
+      "work",
+      "carry",
+      "sleep"
+    ],
+    "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments"
+  },
+  "person_elder_M_iron": {
+    "file": "living/people/person_elder_M_iron.glb",
+    "family": "character",
+    "source_subject": "man",
+    "age": "elder",
+    "sex": "M",
+    "era": "iron",
+    "wardrobe": "iron garment pin and shoulder wrap",
+    "animations": [
+      "idle",
+      "walk",
+      "work",
+      "carry",
+      "sleep"
+    ],
+    "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments"
+  },
+  "person_elder_F_neolithic": {
+    "file": "living/people/person_elder_F_neolithic.glb",
+    "family": "character",
+    "source_subject": "woman",
+    "age": "elder",
+    "sex": "F",
+    "era": "neolithic",
+    "wardrobe": "fibre chest fastening",
+    "animations": [
+      "idle",
+      "walk",
+      "work",
+      "carry",
+      "sleep"
+    ],
+    "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments"
+  },
+  "person_elder_F_bronze": {
+    "file": "living/people/person_elder_F_bronze.glb",
+    "family": "character",
+    "source_subject": "woman",
+    "age": "elder",
+    "sex": "F",
+    "era": "bronze",
+    "wardrobe": "bronze garment pin and shoulder wrap",
+    "animations": [
+      "idle",
+      "walk",
+      "work",
+      "carry",
+      "sleep"
+    ],
+    "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments"
+  },
+  "person_elder_F_iron": {
+    "file": "living/people/person_elder_F_iron.glb",
+    "family": "character",
+    "source_subject": "woman",
+    "age": "elder",
+    "sex": "F",
+    "era": "iron",
+    "wardrobe": "iron garment pin and shoulder wrap",
+    "animations": [
+      "idle",
+      "walk",
+      "work",
+      "carry",
+      "sleep"
+    ],
+    "provenance": "TRELLIS.2 set B + M3D-2b rig + rigid wardrobe attachments"
+  }
+}

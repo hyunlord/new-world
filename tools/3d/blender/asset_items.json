@@ -1,0 +1,839 @@
+{
+ "source_ref": "v8/c3 (local; origin/v8/c3 unavailable)",
+ "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+ "items": [
+  {
+   "code": 0,
+   "id": "log",
+   "stack_max": 25,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 1,
+   "id": "firewood",
+   "stack_max": 50,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 2,
+   "id": "stone",
+   "stack_max": 30,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 3,
+   "id": "flint",
+   "stack_max": 30,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 4,
+   "id": "flint_blade",
+   "stack_max": 20,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 5,
+   "id": "stone_axe",
+   "stack_max": 5,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 6,
+   "id": "hide",
+   "stack_max": 10,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 7,
+   "id": "clay",
+   "stack_max": 30,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 8,
+   "id": "raw_pot",
+   "stack_max": 10,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 9,
+   "id": "clay_pot",
+   "stack_max": 10,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 10,
+   "id": "ground_axe",
+   "stack_max": 5,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 11,
+   "id": "meat",
+   "stack_max": 20,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 12,
+   "id": "cured_hide",
+   "stack_max": 10,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 13,
+   "id": "hide_wrap",
+   "stack_max": 5,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 14,
+   "id": "fur_cloak",
+   "stack_max": 5,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 15,
+   "id": "spear",
+   "stack_max": 5,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 16,
+   "id": "wolf_hide",
+   "stack_max": 10,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 17,
+   "id": "berries",
+   "stack_max": 30,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 18,
+   "id": "hazelnuts",
+   "stack_max": 30,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 19,
+   "id": "wild_grain",
+   "stack_max": 30,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 20,
+   "id": "roots",
+   "stack_max": 30,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 21,
+   "id": "flax_stalks",
+   "stack_max": 30,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 22,
+   "id": "roast_meat",
+   "stack_max": 30,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 23,
+   "id": "porridge",
+   "stack_max": 30,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 24,
+   "id": "stew",
+   "stack_max": 30,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 25,
+   "id": "dried_meat",
+   "stack_max": 30,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 26,
+   "id": "dried_berries",
+   "stack_max": 30,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 27,
+   "id": "roasted_roots",
+   "stack_max": 30,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 28,
+   "id": "fruit_porridge",
+   "stack_max": 30,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 29,
+   "id": "legacy_food",
+   "stack_max": 30,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 30,
+   "id": "flax_seed",
+   "stack_max": 30,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 31,
+   "id": "emmer_seed",
+   "stack_max": 30,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 32,
+   "id": "flax_fibre",
+   "stack_max": 30,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 33,
+   "id": "linen_thread",
+   "stack_max": 30,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 34,
+   "id": "linen_cloth",
+   "stack_max": 30,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 35,
+   "id": "hand_spindle",
+   "stack_max": 10,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 36,
+   "id": "linen_tunic",
+   "stack_max": 1,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 37,
+   "id": "linen_wrap",
+   "stack_max": 1,
+   "shape": "",
+   "tint": ""
+  },
+  {
+   "code": 38,
+   "id": "cord",
+   "stack_max": 20,
+   "shape": "Rod",
+   "tint": "birch"
+  },
+  {
+   "code": 39,
+   "id": "basket",
+   "stack_max": 20,
+   "shape": "Vessel",
+   "tint": "pine"
+  },
+  {
+   "code": 40,
+   "id": "sling",
+   "stack_max": 20,
+   "shape": "Cloth",
+   "tint": "oak"
+  },
+  {
+   "code": 41,
+   "id": "bone_needle",
+   "stack_max": 20,
+   "shape": "Rod",
+   "tint": "limestone"
+  },
+  {
+   "code": 42,
+   "id": "fish",
+   "stack_max": 20,
+   "shape": "Lump",
+   "tint": "limestone"
+  },
+  {
+   "code": 43,
+   "id": "flour",
+   "stack_max": 30,
+   "shape": "Grain",
+   "tint": "limestone"
+  },
+  {
+   "code": 44,
+   "id": "bread",
+   "stack_max": 30,
+   "shape": "Lump",
+   "tint": "pine"
+  },
+  {
+   "code": 45,
+   "id": "beer",
+   "stack_max": 20,
+   "shape": "Vessel",
+   "tint": "oak"
+  },
+  {
+   "code": 46,
+   "id": "milk",
+   "stack_max": 20,
+   "shape": "Vessel",
+   "tint": "limestone"
+  },
+  {
+   "code": 47,
+   "id": "cheese",
+   "stack_max": 20,
+   "shape": "Lump",
+   "tint": "limestone"
+  },
+  {
+   "code": 48,
+   "id": "smoked_meat",
+   "stack_max": 30,
+   "shape": "Lump",
+   "tint": "oak"
+  },
+  {
+   "code": 49,
+   "id": "hay",
+   "stack_max": 30,
+   "shape": "Cloth",
+   "tint": "pine"
+  },
+  {
+   "code": 50,
+   "id": "hoe",
+   "stack_max": 5,
+   "shape": "Rod",
+   "tint": "granite"
+  },
+  {
+   "code": 51,
+   "id": "sickle",
+   "stack_max": 5,
+   "shape": "Blade",
+   "tint": "flint"
+  },
+  {
+   "code": 52,
+   "id": "adze",
+   "stack_max": 5,
+   "shape": "Blade",
+   "tint": "granite"
+  },
+  {
+   "code": 53,
+   "id": "bow",
+   "stack_max": 5,
+   "shape": "Rod",
+   "tint": "oak"
+  },
+  {
+   "code": 54,
+   "id": "arrow",
+   "stack_max": 30,
+   "shape": "Rod",
+   "tint": "flint"
+  },
+  {
+   "code": 55,
+   "id": "dyed_tunic",
+   "stack_max": 5,
+   "shape": "Cloth",
+   "tint": "clay"
+  },
+  {
+   "code": 56,
+   "id": "leather_armor",
+   "stack_max": 5,
+   "shape": "Cloth",
+   "tint": "oak"
+  },
+  {
+   "code": 57,
+   "id": "herbs",
+   "stack_max": 30,
+   "shape": "Cloth",
+   "tint": "birch"
+  },
+  {
+   "code": 58,
+   "id": "poultice",
+   "stack_max": 20,
+   "shape": "Cloth",
+   "tint": "limestone"
+  },
+  {
+   "code": 59,
+   "id": "barley",
+   "stack_max": 30,
+   "shape": "Grain",
+   "tint": "pine"
+  },
+  {
+   "code": 60,
+   "id": "barley_seed",
+   "stack_max": 30,
+   "shape": "Grain",
+   "tint": "pine"
+  },
+  {
+   "code": 61,
+   "id": "rye",
+   "stack_max": 30,
+   "shape": "Grain",
+   "tint": "oak"
+  },
+  {
+   "code": 62,
+   "id": "rye_seed",
+   "stack_max": 30,
+   "shape": "Grain",
+   "tint": "oak"
+  },
+  {
+   "code": 63,
+   "id": "lentil",
+   "stack_max": 30,
+   "shape": "Grain",
+   "tint": "clay"
+  },
+  {
+   "code": 64,
+   "id": "lentil_seed",
+   "stack_max": 30,
+   "shape": "Grain",
+   "tint": "clay"
+  },
+  {
+   "code": 65,
+   "id": "pea",
+   "stack_max": 30,
+   "shape": "Grain",
+   "tint": "birch"
+  },
+  {
+   "code": 66,
+   "id": "pea_seed",
+   "stack_max": 30,
+   "shape": "Grain",
+   "tint": "birch"
+  },
+  {
+   "code": 67,
+   "id": "millet",
+   "stack_max": 30,
+   "shape": "Grain",
+   "tint": "pine"
+  },
+  {
+   "code": 68,
+   "id": "millet_seed",
+   "stack_max": 30,
+   "shape": "Grain",
+   "tint": "pine"
+  },
+  {
+   "code": 69,
+   "id": "apple",
+   "stack_max": 30,
+   "shape": "Lump",
+   "tint": "clay"
+  },
+  {
+   "code": 70,
+   "id": "goat_hide",
+   "stack_max": 10,
+   "shape": "Cloth",
+   "tint": "oak"
+  },
+  {
+   "code": 71,
+   "id": "wool",
+   "stack_max": 30,
+   "shape": "Cloth",
+   "tint": "limestone"
+  },
+  {
+   "code": 72,
+   "id": "charcoal",
+   "stack_max": 30,
+   "shape": "Lump",
+   "tint": "granite"
+  },
+  {
+   "code": 73,
+   "id": "copper_ore",
+   "stack_max": 30,
+   "shape": "Ore",
+   "tint": "copper_ore"
+  },
+  {
+   "code": 74,
+   "id": "tin_ore",
+   "stack_max": 30,
+   "shape": "Ore",
+   "tint": "tin_ore"
+  },
+  {
+   "code": 75,
+   "id": "iron_ore",
+   "stack_max": 30,
+   "shape": "Ore",
+   "tint": "iron_ore"
+  },
+  {
+   "code": 76,
+   "id": "copper_ingot",
+   "stack_max": 30,
+   "shape": "Ingot",
+   "tint": "copper"
+  },
+  {
+   "code": 77,
+   "id": "tin_ingot",
+   "stack_max": 30,
+   "shape": "Ingot",
+   "tint": "tin"
+  },
+  {
+   "code": 78,
+   "id": "bronze_ingot",
+   "stack_max": 30,
+   "shape": "Ingot",
+   "tint": "bronze"
+  },
+  {
+   "code": 79,
+   "id": "clay_mould",
+   "stack_max": 30,
+   "shape": "Vessel",
+   "tint": "clay"
+  },
+  {
+   "code": 80,
+   "id": "copper_awl",
+   "stack_max": 5,
+   "shape": "Rod",
+   "tint": "copper"
+  },
+  {
+   "code": 81,
+   "id": "copper_needle",
+   "stack_max": 5,
+   "shape": "Rod",
+   "tint": "copper"
+  },
+  {
+   "code": 82,
+   "id": "copper_axe",
+   "stack_max": 5,
+   "shape": "Blade",
+   "tint": "copper"
+  },
+  {
+   "code": 83,
+   "id": "bronze_axe",
+   "stack_max": 5,
+   "shape": "Blade",
+   "tint": "bronze"
+  },
+  {
+   "code": 84,
+   "id": "bronze_sickle",
+   "stack_max": 5,
+   "shape": "Blade",
+   "tint": "bronze"
+  },
+  {
+   "code": 85,
+   "id": "bronze_hoe",
+   "stack_max": 5,
+   "shape": "Rod",
+   "tint": "bronze"
+  },
+  {
+   "code": 86,
+   "id": "bronze_spear",
+   "stack_max": 5,
+   "shape": "Rod",
+   "tint": "bronze"
+  },
+  {
+   "code": 87,
+   "id": "bronze_dagger",
+   "stack_max": 5,
+   "shape": "Blade",
+   "tint": "bronze"
+  },
+  {
+   "code": 88,
+   "id": "honey",
+   "stack_max": 30,
+   "shape": "Vessel",
+   "tint": "pine"
+  },
+  {
+   "code": 89,
+   "id": "beeswax",
+   "stack_max": 30,
+   "shape": "Lump",
+   "tint": "pine"
+  },
+  {
+   "code": 90,
+   "id": "wool_yarn",
+   "stack_max": 30,
+   "shape": "Rod",
+   "tint": "limestone"
+  },
+  {
+   "code": 91,
+   "id": "wool_cloth",
+   "stack_max": 30,
+   "shape": "Cloth",
+   "tint": "limestone"
+  },
+  {
+   "code": 92,
+   "id": "wool_tunic",
+   "stack_max": 5,
+   "shape": "Cloth",
+   "tint": "limestone"
+  },
+  {
+   "code": 93,
+   "id": "wheel",
+   "stack_max": 30,
+   "shape": "Lump",
+   "tint": "oak"
+  },
+  {
+   "code": 94,
+   "id": "mud_brick",
+   "stack_max": 30,
+   "shape": "Ingot",
+   "tint": "mud_brick"
+  },
+  {
+   "code": 95,
+   "id": "lime",
+   "stack_max": 30,
+   "shape": "Lump",
+   "tint": "limestone"
+  },
+  {
+   "code": 96,
+   "id": "seal",
+   "stack_max": 30,
+   "shape": "Lump",
+   "tint": "clay"
+  },
+  {
+   "code": 97,
+   "id": "tablet",
+   "stack_max": 30,
+   "shape": "Ingot",
+   "tint": "clay"
+  },
+  {
+   "code": 98,
+   "id": "glass_bead",
+   "stack_max": 30,
+   "shape": "Lump",
+   "tint": "tin"
+  },
+  {
+   "code": 99,
+   "id": "composite_bow",
+   "stack_max": 5,
+   "shape": "Rod",
+   "tint": "oak"
+  },
+  {
+   "code": 100,
+   "id": "limestone",
+   "stack_max": 30,
+   "shape": "Ore",
+   "tint": "limestone"
+  },
+  {
+   "code": 101,
+   "id": "bog_iron",
+   "stack_max": 30,
+   "shape": "Ore",
+   "tint": "bog_iron"
+  },
+  {
+   "code": 102,
+   "id": "iron_bloom",
+   "stack_max": 30,
+   "shape": "Lump",
+   "tint": "iron"
+  },
+  {
+   "code": 103,
+   "id": "wrought_iron",
+   "stack_max": 30,
+   "shape": "Ingot",
+   "tint": "iron"
+  },
+  {
+   "code": 104,
+   "id": "iron_axe",
+   "stack_max": 5,
+   "shape": "Blade",
+   "tint": "iron"
+  },
+  {
+   "code": 105,
+   "id": "iron_hoe",
+   "stack_max": 5,
+   "shape": "Rod",
+   "tint": "iron"
+  },
+  {
+   "code": 106,
+   "id": "iron_sickle",
+   "stack_max": 5,
+   "shape": "Blade",
+   "tint": "iron"
+  },
+  {
+   "code": 107,
+   "id": "iron_saw",
+   "stack_max": 5,
+   "shape": "Blade",
+   "tint": "iron"
+  },
+  {
+   "code": 108,
+   "id": "iron_knife",
+   "stack_max": 5,
+   "shape": "Blade",
+   "tint": "iron"
+  },
+  {
+   "code": 109,
+   "id": "iron_adze",
+   "stack_max": 5,
+   "shape": "Blade",
+   "tint": "iron"
+  },
+  {
+   "code": 110,
+   "id": "iron_spear",
+   "stack_max": 5,
+   "shape": "Rod",
+   "tint": "iron"
+  },
+  {
+   "code": 111,
+   "id": "iron_sword",
+   "stack_max": 5,
+   "shape": "Blade",
+   "tint": "iron"
+  },
+  {
+   "code": 112,
+   "id": "iron_helmet",
+   "stack_max": 5,
+   "shape": "Vessel",
+   "tint": "iron"
+  },
+  {
+   "code": 113,
+   "id": "iron_shield_boss",
+   "stack_max": 30,
+   "shape": "Vessel",
+   "tint": "iron"
+  },
+  {
+   "code": 114,
+   "id": "nails",
+   "stack_max": 30,
+   "shape": "Rod",
+   "tint": "iron"
+  },
+  {
+   "code": 115,
+   "id": "cut_stone",
+   "stack_max": 30,
+   "shape": "Ingot",
+   "tint": "granite"
+  },
+  {
+   "code": 116,
+   "id": "coin",
+   "stack_max": 30,
+   "shape": "Lump",
+   "tint": "bronze"
+  },
+  {
+   "code": 117,
+   "id": "book",
+   "stack_max": 30,
+   "shape": "Ingot",
+   "tint": "oak"
+  },
+  {
+   "code": 118,
+   "id": "steel_edge",
+   "stack_max": 30,
+   "shape": "Blade",
+   "tint": "iron"
+  }
+ ]
+}

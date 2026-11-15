@@ -1,0 +1,38 @@
+{
+  "species": "wild_sheep",
+  "ground_fragment_vertices_removed": 0,
+  "raw_sha256": "17414a3714bc4b199a0bd800ac08d81fe53e4cbef08e29bc3e3c3123d1acc59f",
+  "seed": 0,
+  "trellis_revision": "75fbf0183001ed9876c8dbb35de6b68552ee08bd",
+  "source": "/Users/rexxa/work/3d-data/m3d-assets/living/raw/wild_sheep-attempt1.glb",
+  "triangles": 2000,
+  "shoulder_height_m": 0.75,
+  "height_landmark_xyz": [
+    0.00021655058662872761,
+    -0.12036842107772827,
+    0.75
+  ],
+  "bones": [
+    "Root",
+    "Neck",
+    "Head",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "BackUpper.L",
+    "BackLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "BackUpper.R",
+    "BackLower.R",
+    "Tail"
+  ],
+  "animations": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down"
+  ],
+  "texture": "512x512 embedded atlas",
+  "pipeline": "TRELLIS.2 -> set-B remesh/atlas -> fitted shared quadruped -> shared clips",
+  "front": "Godot +Z / Blender -Y"
+}

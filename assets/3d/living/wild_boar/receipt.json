@@ -1,0 +1,38 @@
+{
+  "species": "wild_boar",
+  "ground_fragment_vertices_removed": 0,
+  "raw_sha256": "2cf6f1925ff2a3983585278c2436e95d5139dd0178cb03e541e0893cd88830e7",
+  "seed": 0,
+  "trellis_revision": "75fbf0183001ed9876c8dbb35de6b68552ee08bd",
+  "source": "/Users/rexxa/work/3d-data/m3d-assets/living/raw/wild_boar-attempt1.glb",
+  "triangles": 1988,
+  "shoulder_height_m": 0.9,
+  "height_landmark_xyz": [
+    0.000760676572099328,
+    -0.09218082576990128,
+    0.8999999165534973
+  ],
+  "bones": [
+    "Root",
+    "Neck",
+    "Head",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "BackUpper.L",
+    "BackLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "BackUpper.R",
+    "BackLower.R",
+    "Tail"
+  ],
+  "animations": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down"
+  ],
+  "texture": "512x512 embedded atlas",
+  "pipeline": "TRELLIS.2 -> set-B remesh/atlas -> fitted shared quadruped -> shared clips",
+  "front": "Godot +Z / Blender -Y"
+}
