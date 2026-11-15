@@ -153,7 +153,10 @@ pub fn metal_causes(res: &SimResources, index: u32) -> Option<MetalCauses> {
         .buildings
         .iter()
         .find(|t| t.stations.contains(&station_def.identity.id))
-        .map_or_else(|| station_def.identity.name_key.clone(), |t| t.name_key.clone());
+        .map_or_else(
+            || station_def.identity.name_key.clone(),
+            |t| t.name_key.clone(),
+        );
     let inputs = if event == "first_ingot" {
         recipe
             .inputs

@@ -112,6 +112,9 @@ fn saved_pre_iron_registry_keeps_metal_facts_and_excludes_iron_facts() {
     assert_eq!(restored.policy.revision(), old.policy.revision());
     assert!(restored.policy.fact_id("job_casting").is_some());
     for fact in ["job_bloomery", "job_forging"] {
-        assert!(restored.policy.fact_id(fact).is_none(), "iron fact excluded: {fact}");
+        assert!(
+            restored.policy.fact_id(fact).is_none(),
+            "iron fact excluded: {fact}"
+        );
     }
 }
