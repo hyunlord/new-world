@@ -4,6 +4,7 @@
 shader_type spatial;
 render_mode blend_mix, depth_draw_opaque, cull_back, specular_schlick_ggx;
 
+global uniform float w3d_time;
 uniform vec4 water_colour : source_color = vec4(0.16, 0.36, 0.45, 0.82);
 uniform sampler2D depth_tex : hint_depth_texture, filter_linear;
 
@@ -28,7 +29,7 @@ void vertex() {
 
 void fragment() {
 	vec2 p = world_pos.xz;
-	float t = TIME;
+	float t = w3d_time;
 	float a = vnoise(p * 1.7 + vec2(t * 0.35, t * 0.21));
 	float b = vnoise(p * 3.1 - vec2(t * 0.27, -t * 0.31));
 	vec3 nrm = normalize(vec3((a - 0.5) * 0.35 + (b - 0.5) * 0.2, 1.0, (b - 0.5) * 0.35 - (a - 0.5) * 0.2));

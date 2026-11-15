@@ -7,6 +7,7 @@ shader_type spatial;
 render_mode diffuse_lambert, specular_disabled;
 
 global uniform float w3d_snow;
+global uniform float w3d_time;
 varying float kind;
 // Set every frame by camera_rig.gd: the camera, the look target and the x-ray radius (metres).
 global uniform vec3 w3d_camera;
@@ -26,8 +27,8 @@ void vertex() {
 	float phase = origin.x * 0.37 + origin.z * 0.61;
 	float bend = max(VERTEX.y - 1.0, 0.0) * UV.y;
 	kind = UV.x;
-	VERTEX.x += sin(TIME * 1.3 + phase) * bend * 0.025;
-	VERTEX.z += cos(TIME * 1.1 + phase * 1.3) * bend * 0.018;
+	VERTEX.x += sin(w3d_time * 1.3 + phase) * bend * 0.025;
+	VERTEX.z += cos(w3d_time * 1.1 + phase * 1.3) * bend * 0.018;
 	world_normal = normalize((MODEL_MATRIX * vec4(NORMAL, 0.0)).xyz);
 	world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	vec2 uv = (floor(origin.xz) + 0.5) / max(w3d_map_size, vec2(1.0));

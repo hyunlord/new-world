@@ -26,6 +26,8 @@ const OverlayScript = preload("res://scripts/world3d/overlay3d.gd")
 const VisitorsScript = preload("res://scripts/world3d/visitors3d.gd")
 const LabelsScript = preload("res://scripts/world3d/labels3d.gd")
 
+## Seconds of scaled frame time (global shader param `w3d_time`); stops while Engine.time_scale is 0.
+var anim_time: float = 0.0
 var world_sim: Node = null
 var camera2d: Camera2D = null
 var terrain: Node3D = null
@@ -60,6 +62,9 @@ func _ready() -> void:
 		RenderingServer.global_shader_parameter_add("w3d_frame", RenderingServer.GLOBAL_VAR_TYPE_SAMPLER2D, null)
 		RenderingServer.global_shader_parameter_add("w3d_map_size", RenderingServer.GLOBAL_VAR_TYPE_VEC2, Vector2(192, 192))
 		RenderingServer.global_shader_parameter_add("w3d_snow", RenderingServer.GLOBAL_VAR_TYPE_FLOAT, 0.0)
+		# Animation clock of the 3D shaders (VAT crowds, sway, water): scaled frame time, so Engine.time_scale = 0
+		# freezes every animated pixel (pixel oracles compare frames).
+		RenderingServer.global_shader_parameter_add("w3d_time", RenderingServer.GLOBAL_VAR_TYPE_FLOAT, 0.0)
 	var main: Node = get_parent()
 	world_sim = main.get_node_or_null("WorldSim")
 	camera2d = main.get_node_or_null("Camera2D") as Camera2D
@@ -113,7 +118,9 @@ func _apply_render_scale() -> void:
 	vp.scaling_3d_scale = scale
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	anim_time += delta
+	RenderingServer.global_shader_parameter_set("w3d_time", anim_time)
 	if world_sim == null:
 		return
 	var v: Dictionary = SimReads.read(world_sim, "get_colony_versions")

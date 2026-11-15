@@ -9,6 +9,7 @@
 shader_type spatial;
 render_mode diffuse_lambert, specular_disabled;
 
+global uniform float w3d_time;
 uniform sampler2D vat : filter_nearest, repeat_disable;
 uniform float width = 1.0;
 uniform float fps = 15.0;
@@ -45,7 +46,7 @@ void vertex() {
 	float pack = floor(INSTANCE_CUSTOM.r + 0.5);
 	float start = floor(pack / 256.0);
 	float count = max(1.0, mod(pack, 256.0));
-	float f = mod((TIME + INSTANCE_CUSTOM.g) * fps, count);
+	float f = mod((w3d_time + INSTANCE_CUSTOM.g) * fps, count);
 	int f0 = int(floor(f));
 	int f1 = int(mod(float(f0 + 1), count));
 	float a = fract(f);
