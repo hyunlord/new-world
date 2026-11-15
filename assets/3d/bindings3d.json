@@ -365,19 +365,19 @@
   },
   "animals": {
     "by_id": {
-      "wolf": "wolf",
-      "deer": "deer",
-      "wild_goat": "b_goat",
-      "wild_sheep": "wild_sheep",
-      "wild_boar": "wild_boar",
-      "reindeer": "reindeer",
-      "aurochs": "b_aurochs"
+      "wolf": "c_wolf",
+      "deer": "c_deer",
+      "wild_goat": "c_wild_goat",
+      "wild_sheep": "c_wild_sheep",
+      "wild_boar": "c_wild_boar",
+      "reindeer": "c_reindeer",
+      "aurochs": "c_aurochs"
     },
     "by_category": {
-      "predator": "wolf",
-      "grazer": "deer"
+      "predator": "c_wolf",
+      "grazer": "c_deer"
     },
-    "fallback": "deer",
+    "fallback": "c_deer",
     "clip_for_pose": {
       "walk": "walk",
       "run": "run",
@@ -506,6 +506,7 @@
     "about": "Set B characters (models by sex/child; villager is the fallback) and their tint rules; skin/hair/clothing come from the 2D appearance data (people3d.gd).",
     "model": "villager",
     "models": {"male": "b_man", "female": "b_woman", "child": "b_child"},
+    "by_era": {"neolithic": {"child_male": "p_child_M_neolithic", "child_female": "p_child_F_neolithic", "elder_male": "p_elder_M_neolithic", "elder_female": "p_elder_F_neolithic", "male": "p_adult_M_neolithic", "female": "p_adult_F_neolithic"}, "bronze": {"child_male": "p_child_M_bronze", "child_female": "p_child_F_bronze", "elder_male": "p_elder_M_bronze", "elder_female": "p_elder_F_bronze", "male": "p_adult_M_bronze", "female": "p_adult_F_bronze"}, "iron": {"child_male": "p_child_M_iron", "child_female": "p_child_F_iron", "elder_male": "p_elder_M_iron", "elder_female": "p_elder_F_iron", "male": "p_adult_M_iron", "female": "p_adult_F_iron"}},
     "other_colour": [0.3, 0.22, 0.15],
     "bare_torso_tops": ["loincloth"]
   }

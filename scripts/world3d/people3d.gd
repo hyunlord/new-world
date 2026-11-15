@@ -1,7 +1,8 @@
 # people3d.gd (World3D/People, made by world3d.gd): the colony's people in 3D (M3D-1 scope 6 and 7; M3D-SWITCH set B).
 # Purpose: every row of get_agent_snapshot is one instance of a vertex-animated MultiMesh (vat3d.gd): no per-person
-#   node. bindings3d `people.models` picks the character by life stage and sex (`child`, `female`, `male`; else
-#   `people.model`). Crowds are binned by model and map chunk (`people.chunk_tiles`), so off-screen chunks are culled;
+#   node. bindings3d `people.by_era[<era id>]` (else `people.models`) picks the character by life stage and sex
+#   (`elder_female`, `child_male`, … then `child`/`elder`, then `female`/`male`; else `people.model`); the era is
+#   get_tech's current era order resolved through the catalogue's era rows. Crowds are binned by model and map chunk (`people.chunk_tiles`), so off-screen chunks are culled;
 #   each bin draws the full character near the camera and its `<model>_lod` bake (same clips) beyond
 #   `people.lod_distance` through Godot visibility ranges. A person who moves to another chunk or grows up changes
 #   bin. A soft dark disc under every near person (`people.contact_shadow` radius/alpha), an outline pass (dark by day,
@@ -16,7 +17,7 @@
 #   chronicle's highlighted people (Main/PeopleView) get a ring in PeopleView.HIGHLIGHT_RGBA.
 #   Picking: `bodies(mode)` lists every person's feet and height (entity bits as id) for world3d.gd's pick (no mode
 #   only); `body_of(bits)` is one person's (camp framing, lesson highlight).
-# Bridge methods called: via SimReads get_agent_snapshot, get_world_info; signal world_reset.
+# Bridge methods called: via SimReads get_agent_snapshot, get_world_info, get_tech; signal world_reset.
 extends Node3D
 
 const Data3D = preload("res://scripts/world3d/data3d.gd")
@@ -49,6 +50,9 @@ var _snap_tick: int = -1
 var _state: Dictionary = {}
 var _clip_packs: Dictionary = {}
 var _blob_mesh: QuadMesh = null
+## Current era id (bindings3d `people.by_era` picks the age/sex/era variant).
+var _era: String = ""
+var _era_tick: int = -1000000
 
 
 func setup(world_sim: Node, terrain: Node) -> void:
@@ -130,6 +134,9 @@ func _process(delta: float) -> void:
 	var stamp: Dictionary = get_parent().get("stamp") if get_parent() != null else {}
 	if _state.is_empty() or stamp.is_empty() or int(stamp.get("tick", -1)) != _snap_tick:
 		_snap_tick = int(stamp.get("tick", -1))
+		if absi(_snap_tick - _era_tick) >= int(Data3D.param("flora.slow_read_ticks", 24)):
+			_era_tick = _snap_tick
+			_refresh_era()
 		_refresh(SimReads.read(_world_sim, "get_agent_snapshot"))
 	var running: bool = _world_sim.process_mode != Node.PROCESS_MODE_DISABLED
 	var copies: int = maxi(1, replicate)
@@ -267,12 +274,28 @@ func _bin_node(node_name: String, mat: Material) -> MultiMeshInstance3D:
 
 ## The model of row `i`: by life stage (1 child) and sex (1 female), falling back to `people.model`.
 func _model_of(snap: Dictionary, i: int) -> String:
-	var models: Dictionary = Data3D.binding("people.models", {})
-	var key: String = "child" if _byte(snap, "life_stages", i) == 1 else ("female" if _byte(snap, "sexes", i) == 1 else "male")
-	var id: String = str(models.get(key, ""))
-	if id.is_empty() or _model(id).is_empty():
-		id = str(Data3D.binding("people.model", ""))
-	return id
+	var stage: int = _byte(snap, "life_stages", i)
+	var sex: String = "female" if _byte(snap, "sexes", i) == 1 else "male"
+	var age: String = "child" if stage == 1 else ("elder" if stage == 2 else "")
+	var table: Dictionary = (Data3D.binding("people.by_era", {}) as Dictionary).get(_era, Data3D.binding("people.models", {}))
+	# Most specific first: "elder_female", then "elder", then "female"; else the default table, else people.model.
+	for t: Dictionary in [table, Data3D.binding("people.models", {})]:
+		for key: String in ([age + "_" + sex, age] if not age.is_empty() else []) + [sex]:
+			var id: String = str(t.get(key, ""))
+			if not id.is_empty() and not _model(id).is_empty():
+				return id
+	return str(Data3D.binding("people.model", ""))
+
+
+## The colony's current era id (get_tech current_era_order → the catalogue era row), read on the slow cadence.
+func _refresh_era() -> void:
+	var tech: Dictionary = SimReads.read(_world_sim, "get_tech")
+	var order: int = int(tech.get("current_era_order", 0))
+	var catalog: Dictionary = get_parent().call("catalog") if get_parent() != null and get_parent().has_method("catalog") else {}
+	for row: Variant in catalog.get("eras", []):
+		if row is Dictionary and int((row as Dictionary).get("order", -1)) == order:
+			_era = str((row as Dictionary).get("id", ""))
+			return
 
 
 ## Grows bin `key` to fit `need` people (keeping no slots: everyone in it is rewritten). Every MultiMesh of a bin has
