@@ -2,11 +2,11 @@
 # M3D-SWITCH E2: measured on the 3D view. The ground control hides every World3D layer but the terrain, the built
 #   walls/roofs, the sky and the camera (and the HUD and map labels); a person's bounds are an independent projection of
 #   a box around their figure (feet ± BODY_HALF_WIDTH tiles, feet to head; World3D/People `bodies`); a person is removed
-#   by scaling their own instance of their character crowd to zero (People's crowd MultiMesh, contact shadow kept), so
-#   unchanged shadows and labels cannot count. The 3D view has no LOD: both zooms draw the full figures.
+#   by scaling every instance of their figure to zero (People.figure_instances: full and LOD crowd of their bin,
+#   contact shadow kept), so unchanged shadows and labels cannot count. Beyond `people.lod_distance` the figure is the
+#   LOD bake (still a figure, not a marker).
 # Bridge methods: load_world/get_time_snapshot/get_world_info/get_agent_snapshot; others via normal scene.
-# Run windowed: --manifest /absolute/manifest.json --out /absolute/new-directory. No product hooks; reads People's
-#   private `_state` / `_crowds` to hide one instance (no public toggle exists).
+# Run windowed: --manifest /absolute/manifest.json --out /absolute/new-directory.
 extends SceneTree
 
 const Provenance = preload("res://tools/v8/mux2_visibility_provenance.gd")
@@ -179,8 +179,8 @@ func _measure_scene(input: Dictionary, clock: Dictionary, zoom: float) -> void:
 	for row_index: int in all_bits.size():
 		var bits: int = all_bits[row_index]
 		var body: Dictionary = _people.call("body_of", bits)
-		var instance: Array = _instance_of(row_index < agent_ids.size() and not body.is_empty(), agent_ids[row_index] if row_index < agent_ids.size() else -1)
-		if body.is_empty() or instance.is_empty():
+		var instances: Array = _people.call("figure_instances", bits) if not body.is_empty() else []
+		if body.is_empty() or instances.is_empty():
 			_failures.append("missing render ID %d in %s" % [bits, id])
 			continue
 		var bounds: Rect2i = Metrics.box_bounds(cam, body["feet"], float(body["h"]), BODY_HALF_WIDTH, 1.0)
@@ -192,12 +192,14 @@ func _measure_scene(input: Dictionary, clock: Dictionary, zoom: float) -> void:
 			continue
 		expected.append(bits)
 		var before: Image = await _capture(directory.path_join("person-%d.png" % bits))
-		var multimesh: MultiMesh = instance[0]
-		var slot: int = instance[1]
-		var transform: Transform3D = multimesh.get_instance_transform(slot)
-		multimesh.set_instance_transform(slot, Transform3D(Basis().scaled(Vector3.ZERO), transform.origin))
+		var saved: Array[Transform3D] = []
+		for inst: Array in instances:
+			var transform: Transform3D = (inst[0] as MultiMesh).get_instance_transform(int(inst[1]))
+			saved.append(transform)
+			(inst[0] as MultiMesh).set_instance_transform(int(inst[1]), Transform3D(Basis().scaled(Vector3.ZERO), transform.origin))
 		var removed: Image = await _capture(directory.path_join("without-%d.png" % bits))
-		multimesh.set_instance_transform(slot, transform)
+		for k: int in instances.size():
+			(instances[k][0] as MultiMesh).set_instance_transform(int(instances[k][1]), saved[k])
 		var restored: Image = await _capture(directory.path_join("restored-%d.png" % bits))
 		var result: Dictionary = Metrics.measure(before, removed, ground, bounds, 60 if zoom == 0.5 else 140, restored)
 		var mask: Image = result.get("mask") as Image
@@ -218,17 +220,6 @@ func _measure_scene(input: Dictionary, clock: Dictionary, zoom: float) -> void:
 	_scenes.append(result)
 	_write(directory.path_join("result.json"), result)
 	print("MUX2_VISIBILITY_SCENE " + JSON.stringify(result))
-
-
-## [crowd MultiMesh, instance index] of the person with AgentId `aid` in People (one copy: index = their slot), or [].
-func _instance_of(drawn: bool, aid: int) -> Array:
-	var state: Dictionary = (_people.get("_state") as Dictionary).get(aid, {}) if drawn else {}
-	var crowd: Dictionary = (_people.get("_crowds") as Dictionary).get(state.get("model", ""), {})
-	if crowd.is_empty() or not (crowd["slot"] as Dictionary).has(aid) or int(_people.get("replicate")) != 1:
-		return []
-	var multimesh: MultiMesh = (crowd["mmi"] as MultiMeshInstance3D).multimesh
-	var slot: int = int(crowd["slot"][aid])
-	return [multimesh, slot] if multimesh != null and slot < multimesh.instance_count else []
 
 
 func _write(path: String, value: Dictionary) -> void:

@@ -521,6 +521,25 @@ func state_of(bits: int) -> Dictionary:
 	return {}
 
 
+## Tools (gate step 39): every drawn figure instance of entity `bits` as [MultiMesh, index] pairs — the full and the
+## LOD crowd of its bin, all replicate copies; contact shadows excluded. [] when not drawn.
+func figure_instances(bits: int) -> Array:
+	var out: Array = []
+	for aid: int in _state:
+		if int(_state[aid]["bits"]) != bits:
+			continue
+		var crowd: Dictionary = _crowds.get(_state[aid].get("bin", ""), {})
+		if crowd.is_empty() or not (crowd["slot"] as Dictionary).has(aid):
+			return out
+		var copies: int = maxi(1, replicate)
+		var cap: int = _cap(crowd["mmi"].multimesh, copies)
+		for n: Variant in [crowd["mmi"], crowd["lod"]]:
+			if n != null:
+				for c: int in copies:
+					out.append([(n as MultiMeshInstance3D).multimesh, cap * c + int(crowd["slot"][aid])])
+	return out
+
+
 ## Tools: the 3D feet position of entity `bits`, or Vector3.INF.
 func feet_of(bits: int) -> Vector3:
 	for d: Dictionary in _state.values():
