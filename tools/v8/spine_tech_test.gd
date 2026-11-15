@@ -405,6 +405,19 @@ func _capture_c1(world: Node) -> void:
 					_check("c3_upgrade_ready_" + language, (build.get("_upgrade") as Button).visible and not (build.get("_upgrade") as Button).disabled)
 					await _capture("c3_upgrade_mud_brick_house_" + language + "_rerender")
 					build.hide()
+				if _c3 and str(site["template_id"]) == "cut_stone_house":
+					# D-C3-1: c2_buildings lays a 4-tile paved road in the first placeable row above/below this house.
+					var space: Dictionary = SimReads.read(world, "get_space")
+					var road: Array[Vector2i] = []
+					for i: int in (space.get("floor_xs", PackedInt32Array()) as PackedInt32Array).size():
+						var t := Vector2i(int(space["floor_xs"][i]), int(space["floor_ys"][i]))
+						if t.x >= int(site["x"]) and t.x < int(site["x"]) + 4 and t.y in [int(site["y"]) - 1, int(site["y"]) + int(site["height"]), int(site["y"]) + int(site["height"]) + 1]:
+							road.append(t)
+					_check("c3_paved_road_built_" + language, road.size() == 4)
+					if not road.is_empty():
+						camera.call("center_on_tile", road[floori(road.size() * 0.5)])
+						await _frames(8)
+						await _capture("c3_physical_paved_road_" + language + "_rerender")
 		for recipe_id: String in recipe_ids:
 			var recipe: Dictionary = Content.row("recipes", Content.code("recipes", recipe_id))
 			var compatible: PackedInt64Array = recipe.get("compatible_workshops", PackedInt64Array())

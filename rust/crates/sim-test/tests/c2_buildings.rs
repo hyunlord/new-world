@@ -209,11 +209,11 @@ fn c3_buildings_scene_when_requested() {
         ("stone", 20),
         ("clay", 20),
         ("mud_brick", 66),
-        ("cut_stone", 66),
+        ("cut_stone", 70),
     ] {
         raw_stock(&mut engine, name, count);
     }
-    let fixture = "C3-a raw log/stone/clay plus fixture mud_brick and cut_stone stocks; every station and house is built by jobs";
+    let fixture = "C3-a raw log/stone/clay plus fixture mud_brick and cut_stone stocks; every station, house and the paved road is built by jobs";
     let bloomery = build(&mut engine, "bloomery");
     let smithy = build(&mut engine, "forge");
     let old = build(&mut engine, "mud_brick_house");
@@ -223,6 +223,54 @@ fn c3_buildings_scene_when_requested() {
         complete(e, house)
             && e.resources.colony.buildings.sites[&house].template == "cut_stone_house"
     });
-    println!("C3_SCENE bloomery={bloomery} smithy={smithy} mud_brick_house={old} cut_stone_house={house}");
+    // D-C3-1: a 4-tile paved road on the first row next to the house (below, above, two below) that the UI's
+    // floor-line preview shows fully placeable, dragged as that line.
+    let site = &engine.resources.colony.buildings.sites[&house];
+    let x = site.anchor.0;
+    let rows = [
+        site.anchor.1 + site.footprint.1,
+        site.anchor.1 - 1,
+        site.anchor.1 + site.footprint.1 + 1,
+    ];
+    let previews = rows.map(|y| {
+        sim_bridge::ffi::space::collect_place_preview(
+            &engine.world,
+            &engine.resources,
+            "paved_road",
+            (x as i32, y as i32, x as i32 + 3, y as i32),
+            1,
+        )
+    });
+    let y = rows[previews
+        .iter()
+        .position(|p| p.tiles.len() == 4 && p.reasons.iter().all(|r| r.is_empty()))
+        .unwrap_or_else(|| {
+            panic!(
+                "no placeable paved road row: {:?}",
+                previews.iter().map(|p| &p.reasons).collect::<Vec<_>>()
+            )
+        })];
+    let road = BlueprintKind::from_name("paved_road").expect("paved road floor");
+    let placed = sim_systems::commands::submit(
+        &mut engine,
+        Command::PlaceLine {
+            kind: road,
+            x0: x,
+            y0: y,
+            x1: x + 3,
+            y1: y,
+        },
+    );
+    assert_eq!(
+        placed.count, 4,
+        "paved road line beside the house: {placed:?}"
+    );
+    until(&mut engine, "paved road built by jobs", |e| {
+        (x..x + 4).all(|rx| {
+            !e.resources.colony.space_sites.contains_key(&(rx, y))
+                && e.resources.tile_grid.floor_material[e.resources.tile_grid.idx(rx, y)].is_some()
+        })
+    });
+    println!("C3_SCENE bloomery={bloomery} smithy={smithy} mud_brick_house={old} cut_stone_house={house} paved_road=({x},{y})+4");
     capture(&mut engine, "c3-buildings", house, fixture);
 }
