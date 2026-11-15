@@ -32,6 +32,11 @@ var _models: Dictionary = {}
 var _variants: Dictionary = {}
 var _key: String = ""
 var _rows_hash: int = 0
+## Tile → [jitter x, jitter y, yaw] (seeded hashes, computed once per tile); "kind|phase" → wild model; batch key →
+## hash of its rows (only changed batches are refilled).
+var _tile_rand: Dictionary = {}
+var _wild_cache: Dictionary = {}
+var _batch_hash: Dictionary = {}
 
 
 func setup(world_sim: Node, terrain: Node) -> void:
@@ -39,7 +44,9 @@ func setup(world_sim: Node, terrain: Node) -> void:
 	_terrain = terrain
 	_world_sim.connect("world_reset", func() -> void:
 		_key = ""
-		_rows_hash = 0)
+		_rows_hash = 0
+		_tile_rand.clear()
+		_batch_hash.clear())
 
 
 func _ready() -> void:
@@ -153,11 +160,19 @@ func _rebuild(plants: Dictionary, fields: Array[Dictionary], season: int) -> voi
 	for i: int in mini(mini(xs.size(), ys.size()), phases.size()):
 		var phase: int = clampi(phases[i], 0, 3)
 		var t: Vector2i = Vector2i(xs[i], ys[i])
-		var j: Vector2 = Vector2(float(hash([seed, t, 11]) % 1000), float(hash([seed, t, 23]) % 1000)) / 1000.0 - Vector2(0.5, 0.5)
+		var rnd: Array = _tile_rand.get(t, [])
+		if rnd.is_empty():
+			rnd = [float(hash([seed, t, 11]) % 1000) / 1000.0 - 0.5, float(hash([seed, t, 23]) % 1000) / 1000.0 - 0.5, float(hash([seed, t, 31]) % 360) * PI / 180.0]
+			_tile_rand[t] = rnd
+		var j: Vector2 = Vector2(float(rnd[0]), float(rnd[1]))
 		var p: Vector2 = Vector2(t) + Vector2(0.5, 0.5) + j * 0.4
-		var model: String = wild_model(plant_ids.get(int(kinds[i]) if i < kinds.size() else -1, ""), phase)
+		var kind: int = int(kinds[i]) if i < kinds.size() else -1
+		var wkey: int = kind * 8 + phase
+		if not _wild_cache.has(wkey):
+			_wild_cache[wkey] = wild_model(plant_ids.get(kind, ""), phase)
+		var model: String = _wild_cache[wkey]
 		if model != "":
-			_put(placed, model, [p, float(hash([seed, t, 31]) % 360) * PI / 180.0, 0.9 + 0.2 * (j.x + 0.5)])
+			_put(placed, model, [p, float(rnd[2]), 0.9 + 0.2 * (j.x + 0.5)])
 			continue
 		var size: float = [0.32, 0.5, 0.55, 0.3][phase]
 		var col: Color = _winter(Color(str(phase_cols[clampi(phase, 0, phase_cols.size() - 1)])), winter)
@@ -194,8 +209,11 @@ func _rebuild(plants: Dictionary, fields: Array[Dictionary], season: int) -> voi
 				tufts.append([p, size * (0.9 + 0.2 * float((gx + gy * 2) % 3) / 2.0), col])
 				if phase == 4:
 					heads.append([p, size, ripe])
-	_fill(_tufts.multimesh, tufts)
-	_fill(_heads.multimesh, heads)
+	for pair: Array in [["tufts", _tufts.multimesh, tufts], ["heads", _heads.multimesh, heads]]:
+		var h: int = hash(pair[2])
+		if int(_batch_hash.get(pair[0], 0)) != h:
+			_batch_hash[pair[0]] = h
+			_fill(pair[1], pair[2])
 	_fill_models(placed, winter)
 
 
@@ -227,8 +245,14 @@ func _fill_models(placed: Dictionary, saturation: float) -> void:
 		if not placed.has(id):
 			(_models[id] as Node).queue_free()
 			_models.erase(id)
+			_batch_hash.erase(id)
 	for id: String in placed:
 		var rows: Array = placed[id]
+		# A plant changing phase moves it between batches: refill only batches whose rows changed.
+		var h: int = hash([rows, saturation])
+		if _models.has(id) and int(_batch_hash.get(id, 0)) == h:
+			continue
+		_batch_hash[id] = h
 		var mm: MultiMesh = MultiMesh.new()
 		mm.transform_format = MultiMesh.TRANSFORM_3D
 		mm.mesh = _desaturated(id.get_slice("|", 0), saturation)

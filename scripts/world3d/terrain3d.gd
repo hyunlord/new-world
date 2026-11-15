@@ -491,18 +491,36 @@ func _build_chunk(key: Vector2i) -> void:
 	var water_codes: Array = Data3D.param("terrain.water_codes", [4])
 	var level: float = float(Data3D.param("terrain.water_level", -0.18))
 	var w1: int = width + 1
+	# Corner lattice of the chunk, computed once: shared corner heights (plateau raise averaged) and blended colours.
+	# Tiles at a dug room use tile_corners (their corners keep their own raise).
+	var lw: int = x1 - x0 + 1
+	var lat_h: PackedFloat32Array = PackedFloat32Array()
+	var lat_c: PackedColorArray = PackedColorArray()
+	lat_h.resize(lw * (y1 - y0 + 1))
+	lat_c.resize(lw * (y1 - y0 + 1))
+	for cy: int in range(y0, y1 + 1):
+		for cx: int in range(x0, x1 + 1):
+			var li: int = (cy - y0) * lw + (cx - x0)
+			lat_h[li] = _ch(cy * w1 + cx) + _craise[cy * w1 + cx]
+			lat_c[li] = _corner_colour(cx, cy)
 	for ty: int in range(y0, y1):
 		for tx: int in range(x0, x1):
 			var i: int = ty * width + tx
-			var hc: PackedFloat32Array = tile_corners(tx, ty)
+			var li: int = (ty - y0) * lw + (tx - x0)
+			var hc: PackedFloat32Array
+			if _dug.is_empty() or not (_dug.has(Vector2i(tx, ty)) or _corner_touches_dug(tx, ty) or _corner_touches_dug(tx + 1, ty)
+					or _corner_touches_dug(tx, ty + 1) or _corner_touches_dug(tx + 1, ty + 1)):
+				hc = PackedFloat32Array([lat_h[li], lat_h[li + 1], lat_h[li + lw], lat_h[li + lw + 1]])
+			else:
+				hc = tile_corners(tx, ty)
 			var p00: Vector3 = Vector3(tx, hc[0], ty)
 			var p10: Vector3 = Vector3(tx + 1, hc[1], ty)
 			var p01: Vector3 = Vector3(tx, hc[2], ty + 1)
 			var p11: Vector3 = Vector3(tx + 1, hc[3], ty + 1)
-			var c00: Color = _corner_colour(tx, ty)
-			var c10: Color = _corner_colour(tx + 1, ty)
-			var c01: Color = _corner_colour(tx, ty + 1)
-			var c11: Color = _corner_colour(tx + 1, ty + 1)
+			var c00: Color = lat_c[li]
+			var c10: Color = lat_c[li + 1]
+			var c01: Color = lat_c[li + lw]
+			var c11: Color = lat_c[li + lw + 1]
 			# Clockwise seen from above (Godot front faces are clockwise); split along the flatter diagonal.
 			if absf(hc[0] - hc[3]) <= absf(hc[1] - hc[2]):
 				verts.append_array([p00, p10, p11, p00, p11, p01])
