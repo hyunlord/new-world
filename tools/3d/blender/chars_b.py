@@ -172,14 +172,16 @@ def _decimate_body(body, width_budget):
     body.data.update()
 
 
-def _hand_tool(cid, subject, arm):
+def _hand_tool(cid, subject, arm, wood_uv=None, head_uv=None):
     """Low-poly hand tool (hex haft + wedge head, 20 verts) for set B humans: built directly in the
     armature's rest space, grip centred on TOOL_HAND_BONE with the haft along that bone's rest
     head->tail axis, then rigidly skinned 100% to it (the standard rigid-part technique: see
     common.Model), so normal skin deformation carries it through every pose unchanged -- no manual
-    per-frame tracking needed. UV0 is two solid texels from TOOL_UV (wood haft, grey-ish head).
-    Scale is keyframed per clip (1 in `work`, 0 elsewhere), same mechanism as CarryLoad's NLA tracks,
-    so it is picked up by `_clip_bindings` like any other extra and appears only during `work`."""
+    per-frame tracking needed. UV0 is two solid texels from TOOL_UV (wood haft, grey-ish head), or
+    from `wood_uv`/`head_uv` if given (chars_c.py's subjects reuse this with texels found in their
+    own, different atlas). Scale is keyframed per clip (1 in `work`, 0 elsewhere), same mechanism as
+    CarryLoad's NLA tracks, so it is picked up by `_clip_bindings` like any other extra and appears
+    only during `work`."""
     bone = arm.data.bones[TOOL_HAND_BONE]
     head_pt, tail_pt = Vector(bone.head_local), Vector(bone.tail_local)
     axis = (tail_pt - head_pt).normalized()
@@ -203,7 +205,8 @@ def _hand_tool(cid, subject, arm):
     uv = me.uv_layers.new(name="UVMap")
     lv = np.empty(len(me.loops), dtype=np.int64)
     me.loops.foreach_get("vertex_index", lv)
-    wood, head = TOOL_UV[subject]["wood"], TOOL_UV[subject]["head"]
+    wood = wood_uv if wood_uv is not None else TOOL_UV[subject]["wood"]
+    head = head_uv if head_uv is not None else TOOL_UV[subject]["head"]
     uv.data.foreach_set("uv", np.array([c for vi in lv for c in (wood if vi < n_haft else head)]))
     obj = bpy.data.objects.new(cid + "_HandTool", me)
     bpy.context.scene.collection.objects.link(obj)

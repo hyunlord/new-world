@@ -11,9 +11,11 @@ blender -b --factory-startup -P tools/3d/blender/build_all.py          # everyth
 blender -b --factory-startup -P tools/3d/blender/stations.py           # one family (merges into manifest)
 blender -b --factory-startup -P tools/3d/blender/animals.py -- wolf    # one species
 blender -b --factory-startup -P tools/3d/blender/chars_b.py -- b_man   # set B (textured) chars + their _lod bake
+blender -b --factory-startup -P tools/3d/blender/chars_c.py -- c_wolf  # living animals/people chars + _lod
 python3 tools/3d/blender/verify_vat.py                                 # VAT + glb checks, exit 1 on failure
 blender -b --factory-startup -P tools/3d/blender/render_contact.py -- [out_dir] [id filters...]
 blender -b --factory-startup -P tools/3d/blender/render_b_lod_contact.py -- [out_dir]  # set B full vs LOD
+blender -b --factory-startup -P tools/3d/blender/chars_c.py -- contact [out_dir]       # living full vs LOD
 ```
 
 `render_contact.py` writes `blender_models_<stamp>.png` (every glb, front-3/4, labelled with id and
@@ -36,6 +38,7 @@ place and rewrites `manifest.json`.
 | `people.py` | `BODY` proportions, bone list, `CLIPS`, procedural actions for `villager` |
 | `animals.py` | `SPECIES` table driving one quadruped generator, `CLIPS`, shared actions |
 | `chars_b.py` | bakes the accepted, atlas-textured set B glbs (`assets/3d/source/chars/B/`) into `vat/b_*`, plus a decimated `vat/b_*_lod` crowd bake per subject |
+| `chars_c.py` | bakes the M3D-ASSETS living animals/people glbs (`assets/3d/living/`) into `vat/c_*`/`vat/p_*`, same shape as `chars_b.py` (shares its helpers), plus their `_lod` bake; writes its own fragment `vat_c_manifest.json` |
 | `build_all.py` | runs all families, writes `assets/3d/models/manifest.json` |
 | `verify_vat.py` | plain python3 checker (no Blender) |
 | `render_contact.py` | review images |
@@ -160,6 +163,40 @@ entry, so `b_<subject>_lod` is checked the same way as `b_<subject>` automatical
 `render_b_lod_contact.py` renders a full-vs-LOD contact sheet (each character re-posed from its VAT at
 the middle of `walk`, both columns textured from the shared atlas) for visual review; it is not part of
 the asset build.
+
+## Living characters (textured, `chars_c.py`)
+
+`c_<species>` (`aurochs deer wild_goat reindeer wild_boar wild_sheep wolf`) and `p_<age>_<sex>_<era>`
+(18 combinations of `adult/child/elder`, `M/F`, `neolithic/bronze/iron`) bake the M3D-ASSETS skinned
+glbs from `assets/3d/living/` the same way `chars_b.py` bakes set B (same helpers, same static/bin/json
+shape, same `_lod` crowd bake); `assets/3d/models/manifest.json` is never touched, since this pass owns
+only VAT output -- rows go to the fragment `assets/3d/models/vat_c_manifest.json` (same pattern as
+`stations_w3d.py`), and `verify_vat.py` reads it alongside the main manifest automatically.
+
+* Animals: one skinned body mesh, no extras; same `run -> walk`, `rest -> lie_down`, `attack -> idle`
+  aliases as `b_goat`. The body mesh's object name is the source directory (`aurochs/deer/goat/
+  reindeer/wild_boar/wild_sheep/wolf`; `wild_goat`'s source directory kept its old name `goat`).
+* People: the 18 `person_<age>_<sex>_<era>.glb` files share one of three bodies (`man`/`woman`/`child`,
+  by sex/age) but each adds its own era wardrobe: extra skinned mesh objects (same armature, so they
+  pose for free) with solid-colour materials that have **no texture of their own** -- unlike the body
+  and the atlas-textured `CarryLoad` bundle, which both keep their real UVs. Since the baked VAT keeps
+  one shared material/atlas, every wardrobe mesh's UV0 is overwritten with a single texel sampled from
+  the body's own `atlas.png`: the atlas pixel closest to the wardrobe material's base colour, matched
+  against a 3x3 box-blur of the atlas so a single noisy/AA pixel can't win the search by chance
+  (`chars_c._solid_texel`). Wardrobe meshes are tiny (24-48 verts, like `CarryLoad`) and are never
+  decimated, in the full bake or the `_lod` one. A `HandTool` is added exactly as for `b_man`/`b_woman`/
+  `b_child`, with its own wood/grey texels found the same automatic way (nearest-to-brown for the haft,
+  least-saturated patch for the head) in the living atlas, instead of `chars_b.TOOL_UV` (hand-picked
+  from a different, unrelated atlas image).
+* `source_commit` reuses `chars_b.SOURCE_COMMIT`: `tools/3d/chars/README.md` documents the whole living
+  pipeline (set B bodies, the shared-rig animal extension and the wardrobe attachments) as built on the
+  same `v8/art-3d-chars` commit.
+* `vat/<id>_atlas.png` is a byte copy of the subject's own `assets/3d/living/<dir>/atlas.png` (every
+  era variant of the same body shares identical atlas bytes, verified by sha256, but still gets its own
+  copy per id, matching every other output).
+* `blender -b --factory-startup -P tools/3d/blender/chars_c.py -- contact [out_dir]` renders a
+  full-vs-LOD contact sheet the same way as `render_b_lod_contact.py` (reusing its `render_walk_mid`,
+  since that helper is already generic by id); not part of the asset build.
 
 ## W3D craft stations (`stations_w3d.py`)
 

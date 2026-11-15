@@ -1,0 +1,56 @@
+{
+ "width": 2904,
+ "vertex_count": 2904,
+ "split_vertex_count": 7452,
+ "frames": 100,
+ "fps": 15,
+ "normals_offset": -1,
+ "clips": {
+  "idle": {
+   "start": 0,
+   "count": 20,
+   "loop": true,
+   "duration": 1.3333
+  },
+  "walk": {
+   "start": 20,
+   "count": 20,
+   "loop": true,
+   "duration": 1.3333
+  },
+  "work": {
+   "start": 40,
+   "count": 20,
+   "loop": true,
+   "duration": 1.3333
+  },
+  "carry": {
+   "start": 60,
+   "count": 20,
+   "loop": true,
+   "duration": 1.3333
+  },
+  "sleep": {
+   "start": 80,
+   "count": 20,
+   "loop": true,
+   "duration": 1.3333
+  }
+ },
+ "bounds_min": [
+  -0.6517,
+  -0.0376,
+  -0.3868
+ ],
+ "bounds_max": [
+  1.0851,
+  1.7451,
+  0.813
+ ],
+ "height": 1.7,
+ "format": "float16 LE RGBA, row-major; one row of positions (Godot xyz, w=1) per frame; texel x = UV2.x * width (the unsplit vertex); no normal rows: the shader derives flat face normals; UV0 = atlas UVs",
+ "textured": true,
+ "atlas": "p_elder_F_bronze_atlas.png",
+ "source_commit": "f0b91f999",
+ "source": "living/people/person_elder_F_bronze.glb"
+}

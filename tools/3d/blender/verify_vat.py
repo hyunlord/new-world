@@ -167,6 +167,10 @@ def check(cid, entry):
 def main():
     manifest = json.load(open(os.path.join(ASSETS, "models", "manifest.json")))
     chars = {k: e for k, e in manifest["models"].items() if e.get("family") == "character"}
+    frag_path = os.path.join(ASSETS, "models", "vat_c_manifest.json")  # chars_c.py's characters (c_*/p_*)
+    if os.path.exists(frag_path):
+        frag = json.load(open(frag_path))
+        chars.update({k: e for k, e in frag["models"].items() if e.get("family") == "character"})
     want = sys.argv[1:] or sorted(chars)
     failed = False
     if not chars:
