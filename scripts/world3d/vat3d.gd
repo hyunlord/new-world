@@ -179,8 +179,9 @@ func material(other: Color) -> ShaderMaterial:
 func with_findability(mat: ShaderMaterial) -> ShaderMaterial:
 	var far: Array = Data3D.param("people.far_scale", [60.0, 1.6])
 	mat.set_shader_parameter("far_scale", Vector2(float(far[0]), float(far[1])))
-	var fill: Color = Data3D.colour(Data3D.param("people.far_fill", []), Color(0.85, 0.82, 0.74))
-	mat.set_shader_parameter("far_fill", Color(fill, float(Data3D.param("people.far_fill_strength", 0.8))))
+	var fill: Color = Data3D.colour(Data3D.param("people.far_fill", []), Color(0.16, 0.13, 0.11))
+	mat.set_shader_parameter("far_fill", Color(fill, float(Data3D.param("people.far_fill_strength", 1.0))))
+	mat.set_shader_parameter("far_fill_night", Data3D.colour(Data3D.param("people.far_fill_night", []), Color(0.91, 0.89, 0.81)))
 	var line: ShaderMaterial = ShaderMaterial.new()
 	line.shader = OUTLINE_SHADER
 	_set_anim(line)

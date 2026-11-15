@@ -19,9 +19,11 @@ uniform vec2 skin_value = vec2(0.8, 1.2);
 uniform float hair_mix = 0.6;
 uniform float cloth_hue_mix = 0.3;
 uniform vec2 cloth_value = vec2(0.8, 1.2);
-// Far figures turn toward a light, unlit fill (rgb, strength) between far_scale.x and twice that distance: at ¼× a
-// person reads as a bright figure with a dark rim, like the 2D view's high-key markers.
-uniform vec4 far_fill = vec4(0.85, 0.82, 0.74, 0.0);
+// Far figures turn toward an unlit fill (rgb, strength) between far_scale.x and twice that distance: dark by day
+// (contrast on grass, soil and snow alike), `far_fill_night` at night, so at ¼× a person reads like the 2D markers.
+global uniform float w3d_night;
+uniform vec4 far_fill = vec4(0.16, 0.13, 0.11, 0.0);
+uniform vec3 far_fill_night : source_color = vec3(0.91, 0.89, 0.81);
 
 varying vec3 tint;
 varying float mean_luma;
@@ -86,7 +88,7 @@ void fragment() {
 		ALBEDO = clamp(c, 0.0, 1.0);
 	}
 	if (far_k > 0.0) {
-		vec3 fill = srgb_to_linear(far_fill.rgb);
+		vec3 fill = srgb_to_linear(mix(far_fill.rgb, far_fill_night, clamp(w3d_night, 0.0, 1.0)));
 		ALBEDO = mix(ALBEDO, fill * 0.35, far_k);
 		EMISSION = fill * 0.65 * far_k;
 	}
