@@ -1,7 +1,7 @@
 {
- "width": 399,
- "vertex_count": 399,
- "split_vertex_count": 744,
+ "width": 400,
+ "vertex_count": 400,
+ "split_vertex_count": 750,
  "frames": 100,
  "fps": 15,
  "normals_offset": -1,
@@ -45,7 +45,7 @@
  "bounds_max": [
   1.0841,
   1.7219,
-  0.4937
+  0.8855
  ],
  "height": 1.6998,
  "format": "float16 LE RGBA, row-major; one row of positions (Godot xyz, w=1) per frame; texel x = UV2.x * width (the unsplit vertex); no normal rows: the shader derives flat face normals; UV0 = atlas UVs",

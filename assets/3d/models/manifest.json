@@ -167,7 +167,7 @@
     1
    ],
    "height": 1.2,
-   "triangles": 2410,
+   "triangles": 2442,
    "materials": [],
    "sockets": {},
    "family": "character",
@@ -202,7 +202,7 @@
     "bin": "vat/b_child_vat.bin",
     "json": "vat/b_child_vat.json",
     "atlas": "vat/b_child_atlas.png",
-    "vertex_count": 7230
+    "vertex_count": 7290
    },
    "textured": true,
    "source_commit": "f0b91f999",
@@ -215,7 +215,7 @@
     1
    ],
    "height": 1.198,
-   "triangles": 255,
+   "triangles": 273,
    "materials": [],
    "sockets": {},
    "family": "character",
@@ -250,7 +250,7 @@
     "bin": "vat/b_child_lod_vat.bin",
     "json": "vat/b_child_lod_vat.json",
     "atlas": "vat/b_child_atlas.png",
-    "vertex_count": 765
+    "vertex_count": 783
    },
    "textured": true,
    "source_commit": "f0b91f999",
@@ -353,7 +353,7 @@
     1
    ],
    "height": 1.7,
-   "triangles": 2404,
+   "triangles": 2436,
    "materials": [],
    "sockets": {},
    "family": "character",
@@ -388,7 +388,7 @@
     "bin": "vat/b_man_vat.bin",
     "json": "vat/b_man_vat.json",
     "atlas": "vat/b_man_atlas.png",
-    "vertex_count": 7212
+    "vertex_count": 7272
    },
    "textured": true,
    "source_commit": "f0b91f999",
@@ -401,7 +401,7 @@
     1
    ],
    "height": 1.7,
-   "triangles": 248,
+   "triangles": 262,
    "materials": [],
    "sockets": {},
    "family": "character",
@@ -436,7 +436,7 @@
     "bin": "vat/b_man_lod_vat.bin",
     "json": "vat/b_man_lod_vat.json",
     "atlas": "vat/b_man_atlas.png",
-    "vertex_count": 744
+    "vertex_count": 750
    },
    "textured": true,
    "source_commit": "f0b91f999",
@@ -449,7 +449,7 @@
     1
    ],
    "height": 1.7,
-   "triangles": 2412,
+   "triangles": 2444,
    "materials": [],
    "sockets": {},
    "family": "character",
@@ -484,7 +484,7 @@
     "bin": "vat/b_woman_vat.bin",
     "json": "vat/b_woman_vat.json",
     "atlas": "vat/b_woman_atlas.png",
-    "vertex_count": 7236
+    "vertex_count": 7296
    },
    "textured": true,
    "source_commit": "f0b91f999",
@@ -497,7 +497,7 @@
     1
    ],
    "height": 1.697,
-   "triangles": 253,
+   "triangles": 274,
    "materials": [],
    "sockets": {},
    "family": "character",
@@ -532,7 +532,7 @@
     "bin": "vat/b_woman_lod_vat.bin",
     "json": "vat/b_woman_lod_vat.json",
     "atlas": "vat/b_woman_atlas.png",
-    "vertex_count": 759
+    "vertex_count": 786
    },
    "textured": true,
    "source_commit": "f0b91f999",

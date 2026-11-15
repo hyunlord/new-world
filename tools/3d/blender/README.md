@@ -108,7 +108,17 @@ glbs from `v8/art-3d-chars` commit `f0b91f999`, copied once into `assets/3d/sour
   `COLOR_0` (all black: no tint region) and the single material are as above. It is posed at **idle frame 0**
   (the bind pose is an A-pose; the shader replaces positions anyway).
 * VAT columns are the body's vertices followed by any object-animated mesh (the humans' 24-vertex `CarryLoad`,
-  scaled to ~0 outside `carry`), so the bundle appears only in `carry`.
+  scaled to ~0 outside `carry`; then a procedurally-built ~20-vertex `HandTool`, scaled to ~0 outside `work`),
+  so each bundle appears only in its own clip.
+* `HandTool` (`_hand_tool` in `chars_b.py`) is a hex-section haft (~0.55 m) with a small wedge head, built
+  directly in the armature's rest space with the grip centred on `hand_R` and the haft along that bone's
+  rest head->tail axis, then rigidly skinned 100 % to `hand_R` (the same technique as the body's own rigid
+  low-poly parts), so it follows `work` automatically; scale is keyframed per clip (1 in `work`, 0 elsewhere)
+  through its own NLA tracks, same mechanism as `CarryLoad`. UV0 is two solid texels hand-picked from the
+  subject's own `atlas.png` (`TOOL_UV`): a wood-brown patch for the haft and the atlas's least-saturated
+  patch for the head. Man and child have no true grey pixel anywhere in their atlas (every uniform patch is
+  a skin/hair/cloth brown); for them the "head" texel is simply the darkest, most desaturated patch found,
+  not literal grey. Woman's atlas does have a genuinely near-neutral grey patch (used as-is).
 * Clips are sampled at 15 fps from the source actions (1.333 s each); `loop` is true when the last pose matches
   the first within 1 cm (all do). Game names the source lacks are **aliases** with `"alias_of"` and the same
   rows: animals `run -> walk`, `rest -> lie_down`, `attack -> idle`. Source names (`lie_down`) are kept too.
@@ -133,11 +143,12 @@ It is built by `_decimate_body` in `chars_b.py`:
   vertex-group layer over when it merges vertices). The body is many disconnected low-poly islands, so
   Decimate can collapse a small island's faces away while leaving its vertices in the mesh; any vertex
   left with no face after applying is deleted.
-* the humans' 24-vertex `CarryLoad` bundle is kept at full resolution (already tiny; decimating it
-  further would risk breaking its shape for no real savings) and still becomes extra VAT columns, as
-  in the full bake.
+* the humans' 24-vertex `CarryLoad` bundle and ~20-vertex `HandTool` are kept at full resolution
+  (already tiny; decimating them further would risk breaking their shape for no real savings) and
+  still become extra VAT columns, as in the full bake; the body's own decimate budget is reduced by
+  their combined vertex count first, so the character total still fits.
 * budgets are asserted at bake time: width (VAT columns) <= 400, `split_vertex_count` (static mesh,
-  one vertex per loop) <= 900; actual sizes are man 399/744, woman 400/759, child 400/765, goat
+  one vertex per loop) <= 900; actual sizes are man 400/750, woman 399/786, child 398/783, goat
   400/792, aurochs 400/816 (width/split).
 * the manifest gets a `b_<subject>_lod` entry alongside `b_<subject>`, same shape (family, animations,
   bones, `vat`), so the game loads it exactly like the full character.
@@ -149,6 +160,24 @@ entry, so `b_<subject>_lod` is checked the same way as `b_<subject>` automatical
 `render_b_lod_contact.py` renders a full-vs-LOD contact sheet (each character re-posed from its VAT at
 the middle of `walk`, both columns textured from the shared atlas) for visual review; it is not part of
 the asset build.
+
+## W3D craft stations (`stations_w3d.py`)
+
+Recognisable replacements for the M3D-ASSETS station primitives (`asset_smelter_*`, `asset_bloomery_*`,
+`asset_forge_*`, `asset_charcoal_clamp_*`, `asset_casting_bench_*`, `asset_kiln_*`):
+`w3d_<station>_idle` / `w3d_<station>_working` for smelter, bloomery, forge, casting_bench, kiln, plus
+`w3d_charcoal_clamp_{idle,working,done}` (stacked wood / smoking turf mound / opened charcoal heap).
+Rows go to the fragment `assets/3d/models/w3d_stations_manifest.json` (same row schema, `family: station`,
+`state`); `manifest.json` is not touched. `build_all.py` runs it after the main manifest.
+
+* Footprints: smelter, bloomery, forge, kiln 2x2; charcoal_clamp 3x3; casting_bench 2x1.
+* Only `working` has `glow` (embers, fire, molten metal) and a `light` socket; smoke puffs use `snow`
+  with a grey default colour. Every model is asserted to stay inside its footprint, z >= 0, <= 3000 tris.
+* Reuses `stations.py` helpers (`pot`, `basket`, `log`, `stone_ring`, `anvil`); `placed(m, x, y, yaw, z, k)`
+  moves/turns/scales the parts built inside it (bellows, the anvil).
+* Review: `blender -b --factory-startup -P tools/3d/blender/stations_w3d.py -- contact [out_dir]` writes
+  `blender_w3d_stations_<stamp>.png`: per row the replaced primitive at game zoom (FOV 30, pitch 50,
+  64 px/m), the new model at the same zoom, and the new model at 2x.
 
 ## Adding a model by data
 

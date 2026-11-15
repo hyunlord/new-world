@@ -1,0 +1,388 @@
+{
+ "models": {
+  "w3d_bloomery_idle": {
+   "file": "models/w3d_bloomery_idle.glb",
+   "footprint": [
+    2,
+    2
+   ],
+   "height": 2.07,
+   "triangles": 920,
+   "materials": [
+    "stone",
+    "clay",
+    "wood_dark",
+    "hide",
+    "metal",
+    "earth",
+    "wood",
+    "thatch",
+    "vein"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     1.35
+    ]
+   },
+   "family": "station",
+   "state": "idle"
+  },
+  "w3d_bloomery_working": {
+   "file": "models/w3d_bloomery_working.glb",
+   "footprint": [
+    2,
+    2
+   ],
+   "height": 3.584,
+   "triangles": 1184,
+   "materials": [
+    "stone",
+    "clay",
+    "glow",
+    "wood_dark",
+    "hide",
+    "metal",
+    "wood",
+    "thatch",
+    "earth",
+    "vein",
+    "snow"
+   ],
+   "sockets": {
+    "light": [
+     0,
+     0.35,
+     0.5
+    ],
+    "work": [
+     0,
+     0,
+     1.35
+    ]
+   },
+   "family": "station",
+   "state": "working"
+  },
+  "w3d_casting_bench_idle": {
+   "file": "models/w3d_casting_bench_idle.glb",
+   "footprint": [
+    2,
+    1
+   ],
+   "height": 0.782,
+   "triangles": 552,
+   "materials": [
+    "wood",
+    "wood_dark",
+    "thatch",
+    "metal",
+    "stone",
+    "clay",
+    "earth"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     0.85
+    ]
+   },
+   "family": "station",
+   "state": "idle"
+  },
+  "w3d_casting_bench_working": {
+   "file": "models/w3d_casting_bench_working.glb",
+   "footprint": [
+    2,
+    1
+   ],
+   "height": 0.782,
+   "triangles": 552,
+   "materials": [
+    "wood",
+    "wood_dark",
+    "thatch",
+    "metal",
+    "glow",
+    "stone",
+    "clay"
+   ],
+   "sockets": {
+    "light": [
+     0.6,
+     0.4,
+     0.05
+    ],
+    "work": [
+     0,
+     0,
+     0.85
+    ]
+   },
+   "family": "station",
+   "state": "working"
+  },
+  "w3d_charcoal_clamp_done": {
+   "file": "models/w3d_charcoal_clamp_done.glb",
+   "footprint": [
+    3,
+    3
+   ],
+   "height": 0.865,
+   "triangles": 796,
+   "materials": [
+    "wood_dark",
+    "earth",
+    "thatch",
+    "wood"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     1.85
+    ]
+   },
+   "family": "station",
+   "state": "done"
+  },
+  "w3d_charcoal_clamp_idle": {
+   "file": "models/w3d_charcoal_clamp_idle.glb",
+   "footprint": [
+    3,
+    3
+   ],
+   "height": 1.45,
+   "triangles": 1100,
+   "materials": [
+    "trunk",
+    "wood",
+    "canopy",
+    "earth",
+    "wood_dark"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     1.85
+    ]
+   },
+   "family": "station",
+   "state": "idle"
+  },
+  "w3d_charcoal_clamp_working": {
+   "file": "models/w3d_charcoal_clamp_working.glb",
+   "footprint": [
+    3,
+    3
+   ],
+   "height": 2.957,
+   "triangles": 780,
+   "materials": [
+    "earth",
+    "glow",
+    "canopy",
+    "snow",
+    "trunk",
+    "wood",
+    "wood_dark"
+   ],
+   "sockets": {
+    "light": [
+     0,
+     1.0,
+     0
+    ],
+    "work": [
+     0,
+     0,
+     1.85
+    ]
+   },
+   "family": "station",
+   "state": "working"
+  },
+  "w3d_forge_idle": {
+   "file": "models/w3d_forge_idle.glb",
+   "footprint": [
+    2,
+    2
+   ],
+   "height": 2.62,
+   "triangles": 550,
+   "materials": [
+    "stone",
+    "wood_dark",
+    "clay",
+    "hide",
+    "trunk",
+    "wood",
+    "metal"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     1.35
+    ]
+   },
+   "family": "station",
+   "state": "idle"
+  },
+  "w3d_forge_working": {
+   "file": "models/w3d_forge_working.glb",
+   "footprint": [
+    2,
+    2
+   ],
+   "height": 2.62,
+   "triangles": 586,
+   "materials": [
+    "stone",
+    "glow",
+    "clay",
+    "wood_dark",
+    "hide",
+    "trunk",
+    "wood",
+    "metal"
+   ],
+   "sockets": {
+    "light": [
+     -0.35,
+     0.9,
+     -0.4
+    ],
+    "work": [
+     0,
+     0,
+     1.35
+    ]
+   },
+   "family": "station",
+   "state": "working"
+  },
+  "w3d_kiln_idle": {
+   "file": "models/w3d_kiln_idle.glb",
+   "footprint": [
+    2,
+    2
+   ],
+   "height": 1.5,
+   "triangles": 858,
+   "materials": [
+    "earth",
+    "clay",
+    "horn",
+    "wood_dark",
+    "trunk",
+    "wood"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     1.35
+    ]
+   },
+   "family": "station",
+   "state": "idle"
+  },
+  "w3d_kiln_working": {
+   "file": "models/w3d_kiln_working.glb",
+   "footprint": [
+    2,
+    2
+   ],
+   "height": 2.766,
+   "triangles": 1122,
+   "materials": [
+    "earth",
+    "clay",
+    "glow",
+    "horn",
+    "snow",
+    "trunk",
+    "wood"
+   ],
+   "sockets": {
+    "light": [
+     0,
+     0.3,
+     0.62
+    ],
+    "work": [
+     0,
+     0,
+     1.35
+    ]
+   },
+   "family": "station",
+   "state": "working"
+  },
+  "w3d_smelter_idle": {
+   "file": "models/w3d_smelter_idle.glb",
+   "footprint": [
+    2,
+    2
+   ],
+   "height": 1.32,
+   "triangles": 1024,
+   "materials": [
+    "stone",
+    "clay",
+    "wood_dark",
+    "hide",
+    "earth",
+    "thatch",
+    "vein"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     1.35
+    ]
+   },
+   "family": "station",
+   "state": "idle"
+  },
+  "w3d_smelter_working": {
+   "file": "models/w3d_smelter_working.glb",
+   "footprint": [
+    2,
+    2
+   ],
+   "height": 2.778,
+   "triangles": 1288,
+   "materials": [
+    "stone",
+    "clay",
+    "glow",
+    "wood_dark",
+    "hide",
+    "earth",
+    "thatch",
+    "vein",
+    "snow"
+   ],
+   "sockets": {
+    "light": [
+     0,
+     0.3,
+     0.55
+    ],
+    "work": [
+     0,
+     0,
+     1.35
+    ]
+   },
+   "family": "station",
+   "state": "working"
+  }
+ }
+}

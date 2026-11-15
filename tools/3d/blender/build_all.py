@@ -34,6 +34,7 @@ def main():
         fam.build(entries)
         print(f"[build_all] {fam.__name__}: {len(entries) - n} models")
     C.update_manifest(entries, replace=True)
+    C.reset_scene(); __import__("stations_w3d").build()  # writes its own fragment, not manifest.json
     print(f"[build_all] {len(entries)} models -> {C.MANIFEST} in {time.time() - t0:.1f}s")
 
 

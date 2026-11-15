@@ -7,8 +7,8 @@ v8/art-3d-chars (commit SOURCE_COMMIT) are copied once into assets/3d/source/cha
 and this script bakes them like common.export_character, with three differences:
   * the static mesh keeps the source UV0 (atlas UVs, copied per loop by the split) and is posed at idle
     frame 0 (the bind pose is an A-pose; the VAT shader replaces positions anyway);
-  * extra meshes animated as objects (the humans' CarryLoad, scaled to ~0 outside `carry`) become extra
-    VAT columns after the body's;
+  * extra meshes animated as objects (the humans' CarryLoad, scaled to ~0 outside `carry`; and a
+    procedurally-built HandTool, scaled to ~0 outside `work`) become extra VAT columns after the body's;
   * the json adds textured/atlas/source_commit, and clip names the game asks for that the source lacks
     are aliases (same rows, "alias_of"). The atlas is byte-copied to vat/<id>_atlas.png.
 The source scale is kept (man 1.7 m, woman 1.7 m, child 1.2 m as in the receipts).
@@ -26,6 +26,7 @@ import sys
 import bmesh
 import bpy
 import numpy as np
+from mathutils import Matrix, Vector
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import common as C  # noqa: E402
@@ -40,6 +41,20 @@ SUBJECTS = {"b_man": ("man", HUMAN), "b_woman": ("woman", HUMAN), "b_child": ("c
 LOOP_TOL = 0.01  # m: a clip loops when its last pose matches its first
 LOD_WIDTH_BUDGET = 400   # VAT columns (unsplit vertices) ceiling for the whole character
 LOD_SPLIT_BUDGET = 900   # static mesh (one vertex per loop) ceiling for the whole character
+
+TOOL_LEN = 0.55          # haft length, m
+TOOL_HAFT_R = 0.016      # haft radius, m
+TOOL_HAND_BONE = "hand_R"
+# (u, v) texels hand-picked (by scanning the atlas for locally-uniform patches, see SOURCE.md
+# commit) from each subject's own source atlas.png: a neutral wood-brown patch for the haft and
+# the atlas's least-saturated patch for the head. man and child have no true grey pixel anywhere in
+# their atlas (every uniform patch is a skin/hair/cloth brown); their "head" texel is simply the
+# darkest, most desaturated patch found there, not literal grey -- see README's Set B section.
+TOOL_UV = {
+    "man":   {"wood": (0.7588, 0.6279), "head": (0.0400, 0.6553)},
+    "woman": {"wood": (0.8389, 0.2510), "head": (0.6279, 0.9365)},
+    "child": {"wood": (0.0596, 0.0146), "head": (0.1670, 0.3135)},
+}
 
 
 def _clip_bindings(objs):
@@ -157,6 +172,65 @@ def _decimate_body(body, width_budget):
     body.data.update()
 
 
+def _hand_tool(cid, subject, arm):
+    """Low-poly hand tool (hex haft + wedge head, 20 verts) for set B humans: built directly in the
+    armature's rest space, grip centred on TOOL_HAND_BONE with the haft along that bone's rest
+    head->tail axis, then rigidly skinned 100% to it (the standard rigid-part technique: see
+    common.Model), so normal skin deformation carries it through every pose unchanged -- no manual
+    per-frame tracking needed. UV0 is two solid texels from TOOL_UV (wood haft, grey-ish head).
+    Scale is keyframed per clip (1 in `work`, 0 elsewhere), same mechanism as CarryLoad's NLA tracks,
+    so it is picked up by `_clip_bindings` like any other extra and appears only during `work`."""
+    bone = arm.data.bones[TOOL_HAND_BONE]
+    head_pt, tail_pt = Vector(bone.head_local), Vector(bone.tail_local)
+    axis = (tail_pt - head_pt).normalized()
+    grip = head_pt.lerp(tail_pt, 0.5)
+    rot = Vector((0, 0, 1)).rotation_difference(axis).to_matrix().to_4x4()
+    base = Matrix.Translation(grip - axis * 0.15) @ rot  # local z=0.15 lands on the grip
+
+    bm = bmesh.new()
+    haft = bmesh.ops.create_cone(bm, cap_ends=True, cap_tris=False, segments=6,
+                                 radius1=TOOL_HAFT_R, radius2=TOOL_HAFT_R, depth=TOOL_LEN,
+                                 matrix=Matrix.Translation((0, 0, TOOL_LEN / 2)))["verts"]
+    n_haft = len(haft)
+    bmesh.ops.create_cube(bm, size=1.0, matrix=Matrix.Translation((0, 0, TOOL_LEN)) @
+                          Matrix.Diagonal((0.05, 0.035, 0.09, 1.0)))
+    bm.verts.ensure_lookup_table()
+    for v in bm.verts:
+        v.co = base @ v.co
+    me = bpy.data.meshes.new(cid + "_HandTool")
+    bm.to_mesh(me)
+    bm.free()
+    uv = me.uv_layers.new(name="UVMap")
+    lv = np.empty(len(me.loops), dtype=np.int64)
+    me.loops.foreach_get("vertex_index", lv)
+    wood, head = TOOL_UV[subject]["wood"], TOOL_UV[subject]["head"]
+    uv.data.foreach_set("uv", np.array([c for vi in lv for c in (wood if vi < n_haft else head)]))
+    obj = bpy.data.objects.new(cid + "_HandTool", me)
+    bpy.context.scene.collection.objects.link(obj)
+    obj.vertex_groups.new(name=TOOL_HAND_BONE).add(range(len(me.vertices)), 1.0, "REPLACE")
+    C.skin_to(obj, arm)
+
+    ad = obj.animation_data_create()
+    for t in arm.animation_data.nla_tracks:
+        name = t.strips[0].name
+        f0, f1 = t.strips[0].action.frame_range
+        n = round(f1 - f0)
+        act = bpy.data.actions.new(f"{cid}_tool_{name}")
+        act.use_fake_user = True
+        ad.action = act
+        s = 1.0 if name == "work" else 0.0
+        obj.scale = (s, s, s)
+        obj.keyframe_insert("scale", frame=0)
+        obj.keyframe_insert("scale", frame=n)
+        track = ad.nla_tracks.new()
+        track.name = name
+        strip = track.strips.new(name, 0, act)
+        if hasattr(strip, "action_slot") and act.slots:
+            strip.action_slot = act.slots[0]
+    ad.action = None
+    return obj
+
+
 def build_one(cid, entries, lod=False):
     subject, game_clips = SUBJECTS[cid]
     out_id = f"{cid}_lod" if lod else cid
@@ -168,6 +242,8 @@ def build_one(cid, entries, lod=False):
     body = next(o for o in bpy.data.objects if o.type == "MESH" and any(m.type == "ARMATURE" for m in o.modifiers))
     extras = sorted((o for o in bpy.data.objects if o.type == "MESH" and o is not body and o.animation_data),
                     key=lambda o: o.name)
+    if game_clips is HUMAN:
+        extras.append(_hand_tool(out_id, subject, arm))  # appended after existing extras (e.g. CarryLoad)
     if lod:
         # extras (e.g. the humans' CarryLoad) are kept at full resolution: they're already tiny (24
         # verts) and decimating them further risks breaking their silhouette for no real VAT savings.
