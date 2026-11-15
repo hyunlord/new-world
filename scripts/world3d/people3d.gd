@@ -143,6 +143,7 @@ func _process(delta: float) -> void:
 			_era_tick = _snap_tick
 			_refresh_era()
 		_refresh(SimReads.read(_world_sim, "get_agent_snapshot"))
+		_simplify_far(_state.size() * maxi(1, replicate) > int(Data3D.param("people.simple_above", 2000)))
 	var running: bool = _world_sim.process_mode != Node.PROCESS_MODE_DISABLED
 	var copies: int = maxi(1, replicate)
 	var height: float = float(Data3D.param("people.adult_height", 1.7))
@@ -245,6 +246,20 @@ func _model(model: String) -> Dictionary:
 		row["lod_mat"] = lod.call("with_findability", lod.call("material", other))
 	_models[model] = row
 	return row
+
+
+## Very large crowds: far (LOD) figures drop their outline and x-ray passes (they cost most of the frame at 10 000
+## people); near figures keep them.
+func _simplify_far(on: bool) -> void:
+	for row: Dictionary in _models.values():
+		var mat: ShaderMaterial = row.get("lod_mat")
+		if mat == null:
+			continue
+		if on and mat.next_pass != null:
+			row["lod_pass"] = mat.next_pass
+			mat.next_pass = null
+		elif not on and mat.next_pass == null and row.has("lod_pass"):
+			mat.next_pass = row["lod_pass"]
 
 
 ## The bin of `model` in the chunk holding `tile`, made on first use.
