@@ -97,7 +97,10 @@ func _process(_delta: float) -> void:
 					_near_changed[_chunk_of(t)] = true
 			_near_built = near
 	var tkey: String = "%d|%d|%d|%d|%d" % [int(stamp.get("trees", -1)), season, _stump_epoch(time), width, int(_keys.get("built", 0))]
-	if str(_keys.get("trees", "")) != tkey:
+	if str(_keys.get("trees", "")) != tkey and not _claim():
+		# Not this frame (World3D's heavy-work slot is taken): look again next frame.
+		_stamp_key = ""
+	elif str(_keys.get("trees", "")) != tkey:
 		_keys["trees"] = tkey
 		var batches: Dictionary = {}
 		var first: bool = _tree_keys.is_empty()
@@ -141,6 +144,10 @@ func _process(_delta: float) -> void:
 			var nb: Dictionary = {}
 			_build_nodes(nb, overlay)
 			_apply("nodes", nb)
+
+
+func _claim() -> bool:
+	return get_parent() == null or not get_parent().has_method("claim_heavy") or bool(get_parent().call("claim_heavy"))
 
 
 ## Tiles within `flora.near_built_scale`.size() steps (Chebyshev) of a wall or floor → their distance (1…n), so trees

@@ -125,6 +125,9 @@ func _process(_delta: float) -> void:
 	var key: String = "%d" % (int(stamp.get("tick", -1)) / maxi(1, int(Data3D.param("flora.slow_read_ticks", 24))))
 	if key == _key:
 		return
+	# The read and rebuild take World3D's heavy-work slot (one per frame); otherwise retry next frame.
+	if get_parent() != null and get_parent().has_method("claim_heavy") and not bool(get_parent().call("claim_heavy")):
+		return
 	_key = key
 	var width: int = int(_terrain.get("width"))
 	var height: int = int(_terrain.get("height"))

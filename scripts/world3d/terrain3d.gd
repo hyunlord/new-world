@@ -22,6 +22,8 @@ const WATER_SHADER = preload("res://shaders/world3d/water.gdshader")
 const CHUNKS_PER_FRAME: int = 3
 const SIDES: Array[Vector2i] = [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)]
 
+## Every chunk has been meshed once; from then on rebuilds take World3D's heavy-work slot.
+var _loaded: bool = false
 var material: ShaderMaterial
 var water_material: ShaderMaterial
 var width: int = 0
@@ -69,11 +71,17 @@ func _ready() -> void:
 
 func _on_world_reset() -> void:
 	_ready_world = false
+	_loaded = false
 	_space_version = -1
 	_field_key = ""
 
 
 ## True once every chunk of the current world is built.
+## Chunks of the map (columns × rows).
+func _chunk_count() -> int:
+	return ceili(float(width) / _chunk) * ceili(float(height) / _chunk) if width > 0 and height > 0 else 1 << 30
+
+
 func is_complete() -> bool:
 	return _ready_world and _dirty.is_empty()
 
@@ -88,10 +96,20 @@ func _process(_delta: float) -> void:
 	var stamp: Dictionary = get_parent().get("stamp") if get_parent() != null else {}
 	@warning_ignore("integer_division")
 	var key: String = "%s|%s" % [stamp.get("overlay", -1), int(stamp.get("tick", -1)) / maxi(1, int(Data3D.param("flora.slow_read_ticks", 24)))]
-	if key != _stamp_key or stamp.is_empty():
+	# After the first full build, recomputes and chunk meshing take World3D's heavy-work slot (one per frame).
+	if _meshes.size() >= _chunk_count():
+		_loaded = true
+	if (key != _stamp_key or stamp.is_empty()) and (not _loaded or _claim()):
 		_stamp_key = key
 		_poll_space()
-	_build_some(CHUNKS_PER_FRAME)
+	elif _loaded and not _dirty.is_empty() and _claim():
+		_build_some(1)
+	if not _loaded:
+		_build_some(CHUNKS_PER_FRAME)
+
+
+func _claim() -> bool:
+	return get_parent() == null or not get_parent().has_method("claim_heavy") or bool(get_parent().call("claim_heavy"))
 
 
 func _load_world() -> void:
@@ -110,6 +128,7 @@ func _load_world() -> void:
 		child.queue_free()
 	_meshes.clear()
 	_water.clear()
+	_loaded = false
 	_compute_corners()
 	_ready_world = true
 	_space_version = -1

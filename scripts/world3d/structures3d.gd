@@ -96,7 +96,10 @@ func _process(delta: float) -> void:
 	var stamp: Dictionary = get_parent().get("stamp") if get_parent() != null else {}
 	@warning_ignore("integer_division")
 	var stamp_key: String = "%s|%s|%s" % [stamp.get("overlay", -1), stamp.get("rooms", -1), int(stamp.get("tick", -1)) / maxi(1, int(Data3D.param("flora.slow_read_ticks", 24)))]
-	if stamp_key == _stamp_key and not stamp.is_empty():
+	# A rebuild takes World3D's heavy-work slot (one per frame, none on a simulation step); else try next frame.
+	var claimed: bool = stamp_key != _stamp_key and (get_parent() == null or not get_parent().has_method("claim_heavy")
+		or bool(get_parent().call("claim_heavy")))
+	if (stamp_key == _stamp_key and not stamp.is_empty()) or not claimed:
 		_update_doors()
 		_update_cutaway(delta)
 		return

@@ -26,6 +26,9 @@ const OverlayScript = preload("res://scripts/world3d/overlay3d.gd")
 const VisitorsScript = preload("res://scripts/world3d/visitors3d.gd")
 const LabelsScript = preload("res://scripts/world3d/labels3d.gd")
 
+var _last_tick: int = -1
+var _tick_frame: int = -1
+var _heavy_frame: int = -1
 ## Seconds of scaled frame time (global shader param `w3d_time`); stops while Engine.time_scale is 0.
 var anim_time: float = 0.0
 var world_sim: Node = null
@@ -127,6 +130,20 @@ func _process(delta: float) -> void:
 	var v: Dictionary = SimReads.read(world_sim, "get_colony_versions")
 	stamp = {"tick": int(SimReads.read(world_sim, "get_time_snapshot").get("tick", 0)), "trees": int(v.get("trees_version", 0)),
 		"overlay": int(v.get("overlay_version", 0)), "rooms": int(v.get("rooms_version", 0)), "frame": Engine.get_process_frames()}
+	if int(stamp["tick"]) != _last_tick:
+		_last_tick = int(stamp["tick"])
+		_tick_frame = Engine.get_process_frames()
+
+
+## Frame scheduler for the layers' heavy rebuilds (tree diff, terrain recompute and meshing, walls/roofs, plants): at
+## most one per frame and none on a frame where the simulation stepped, so their costs never stack into a stall. A
+## layer that is refused keeps its work for a later frame (a few frames at most at 12 ticks/s and 60 fps).
+func claim_heavy() -> bool:
+	var f: int = Engine.get_process_frames()
+	if f == _tick_frame or f == _heavy_frame:
+		return false
+	_heavy_frame = f
+	return true
 
 
 ## The content catalogue, read once (it is immutable for a world).
