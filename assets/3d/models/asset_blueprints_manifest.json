@@ -1,0 +1,153 @@
+{
+ "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+ "models": {
+  "floor_packed": {
+   "file": "models/floor_packed.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.03,
+   "triangles": 12,
+   "materials": [
+    "earth"
+   ],
+   "sockets": {},
+   "family": "floor"
+  }
+ },
+ "blueprints": {
+  "0": {
+   "content_id": "hut",
+   "model": "lean_to"
+  },
+  "1": {
+   "content_id": "knapping_spot",
+   "model": "knapping_spot"
+  },
+  "2": {
+   "content_id": "wood_bench",
+   "model": "wood_bench"
+  },
+  "3": {
+   "content_id": "drying_rack",
+   "model": "drying_rack"
+  },
+  "4": {
+   "content_id": "log_wall",
+   "model": "wall_log_complete"
+  },
+  "5": {
+   "content_id": "stone_wall",
+   "model": "wall_stone_complete"
+  },
+  "6": {
+   "content_id": "door",
+   "model": "door"
+  },
+  "7": {
+   "content_id": "packed_floor",
+   "model": "floor_packed"
+  },
+  "8": {
+   "content_id": "bedroll",
+   "model": "bedroll"
+  },
+  "9": {
+   "content_id": "grinding_stone",
+   "model": "grinding_stone"
+  },
+  "10": {
+   "content_id": "pottery_bench",
+   "model": "pottery_bench"
+  },
+  "11": {
+   "content_id": "hearth_fire",
+   "model": "asset_hearth_lit"
+  },
+  "12": {
+   "content_id": "food_drying_rack",
+   "model": "drying_rack"
+  },
+  "13": {
+   "content_id": "retting_pit",
+   "model": "retting_pit"
+  },
+  "14": {
+   "content_id": "loom",
+   "model": "loom"
+  },
+  "15": {
+   "content_id": "fence",
+   "model": "pen_fence_0a"
+  },
+  "16": {
+   "content_id": "clay_oven",
+   "model": "clay_oven"
+  },
+  "17": {
+   "content_id": "smoking_rack",
+   "model": "drying_rack"
+  },
+  "18": {
+   "content_id": "charcoal_clamp",
+   "model": "asset_charcoal_clamp_idle"
+  },
+  "19": {
+   "content_id": "smelter",
+   "model": "asset_smelter_unlit"
+  },
+  "20": {
+   "content_id": "casting_bench",
+   "model": "asset_casting_bench_empty"
+  },
+  "21": {
+   "content_id": "mud_brick_wall",
+   "model": "wall_mud_brick_complete"
+  },
+  "22": {
+   "content_id": "palisade",
+   "model": "palisade_0a"
+  },
+  "23": {
+   "content_id": "kiln",
+   "model": "asset_kiln_unlit"
+  },
+  "24": {
+   "content_id": "stone_masonry_wall",
+   "model": "wall_stone_complete"
+  },
+  "25": {
+   "content_id": "bloomery",
+   "model": "asset_bloomery_unlit"
+  },
+  "26": {
+   "content_id": "forge",
+   "model": "asset_forge_idle"
+  },
+  "27": {
+   "content_id": "anvil",
+   "model": "asset_anvil_idle"
+  },
+  "28": {
+   "content_id": "mason_bench",
+   "model": "mason_bench_idle"
+  },
+  "29": {
+   "content_id": "cut_stone_wall",
+   "model": "wall_stone_complete"
+  },
+  "30": {
+   "content_id": "town_wall",
+   "model": "wall_stone_complete"
+  },
+  "31": {
+   "content_id": "town_gate",
+   "model": "door"
+  },
+  "32": {
+   "content_id": "paved_road",
+   "model": "floor_paved_road"
+  }
+ }
+}

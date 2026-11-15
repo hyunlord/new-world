@@ -67,8 +67,8 @@ def item(m, row):
         if "awl" in name:
             m.box("wood", (0.13, 0.045, 0.045), loc=(-0.15, 0, 0.025))
     elif name == "hand_spindle":
-        m.rod("wood", (-0.25, 0, 0.06), (0.25, 0, 0.06), 0.015)
-        m.cyl("stone", 0.09, 0.025, loc=(-0.1, 0, 0.06), rot=(0, 1.57079632679, 0))
+        m.rod("wood", (-0.25, 0, 0.09), (0.25, 0, 0.09), 0.015)
+        m.cyl("stone", 0.09, 0.025, loc=(-0.1, 0, 0.09), rot=(0, 1.57079632679, 0))
     elif "spear" in name or name == "arrow":
         length, radius = (0.25, 0.009) if name == "arrow" else (0.36, 0.018)
         m.rod("wood", (-length, 0, 0.03), (length * 0.65, 0, 0.03), radius)

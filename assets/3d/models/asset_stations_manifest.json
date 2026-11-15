@@ -1,0 +1,1412 @@
+{
+ "models": {
+  "asset_smelter_lit": {
+   "file": "models/asset_smelter_lit.glb",
+   "footprint": [
+    2,
+    2
+   ],
+   "height": 1.62,
+   "triangles": 596,
+   "materials": [
+    "stone",
+    "clay",
+    "glow",
+    "leather",
+    "wood",
+    "thatch",
+    "earth",
+    "wood_dark"
+   ],
+   "sockets": {
+    "light": [
+     0,
+     0.2,
+     0.5
+    ],
+    "work": [
+     0,
+     0,
+     1.35
+    ]
+   },
+   "family": "station",
+   "state": "lit"
+  },
+  "asset_smelter_unlit": {
+   "file": "models/asset_smelter_unlit.glb",
+   "footprint": [
+    2,
+    2
+   ],
+   "height": 1.62,
+   "triangles": 596,
+   "materials": [
+    "stone",
+    "clay",
+    "glow",
+    "leather",
+    "wood",
+    "thatch",
+    "earth",
+    "wood_dark"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     1.35
+    ]
+   },
+   "family": "station",
+   "state": "unlit"
+  },
+  "asset_charcoal_clamp_idle": {
+   "file": "models/asset_charcoal_clamp_idle.glb",
+   "footprint": [
+    3,
+    3
+   ],
+   "height": 0.869,
+   "triangles": 496,
+   "materials": [
+    "earth",
+    "glow",
+    "trunk",
+    "wood",
+    "wood_dark"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     1.85
+    ]
+   },
+   "family": "station",
+   "state": "idle"
+  },
+  "asset_charcoal_clamp_burning": {
+   "file": "models/asset_charcoal_clamp_burning.glb",
+   "footprint": [
+    3,
+    3
+   ],
+   "height": 0.869,
+   "triangles": 496,
+   "materials": [
+    "earth",
+    "glow",
+    "trunk",
+    "wood"
+   ],
+   "sockets": {
+    "light": [
+     0,
+     0.9,
+     0
+    ],
+    "work": [
+     0,
+     0,
+     1.85
+    ]
+   },
+   "family": "station",
+   "state": "burning"
+  },
+  "asset_charcoal_clamp_spent": {
+   "file": "models/asset_charcoal_clamp_spent.glb",
+   "footprint": [
+    3,
+    3
+   ],
+   "height": 0.217,
+   "triangles": 496,
+   "materials": [
+    "earth",
+    "glow",
+    "trunk",
+    "wood",
+    "wood_dark"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     1.85
+    ]
+   },
+   "family": "station",
+   "state": "spent"
+  },
+  "asset_casting_bench_empty": {
+   "file": "models/asset_casting_bench_empty.glb",
+   "footprint": [
+    2,
+    1
+   ],
+   "height": 0.55,
+   "triangles": 188,
+   "materials": [
+    "stone",
+    "wood",
+    "metal",
+    "glow",
+    "clay",
+    "wood_dark"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     0.85
+    ]
+   },
+   "family": "station",
+   "state": "empty"
+  },
+  "asset_casting_bench_working": {
+   "file": "models/asset_casting_bench_working.glb",
+   "footprint": [
+    2,
+    1
+   ],
+   "height": 0.57,
+   "triangles": 224,
+   "materials": [
+    "stone",
+    "wood",
+    "metal",
+    "glow",
+    "clay",
+    "wood_dark"
+   ],
+   "sockets": {
+    "light": [
+     0.62,
+     0.3,
+     0.05
+    ],
+    "work": [
+     0,
+     0,
+     0.85
+    ]
+   },
+   "family": "station",
+   "state": "working"
+  },
+  "asset_kiln_lit": {
+   "file": "models/asset_kiln_lit.glb",
+   "footprint": [
+    2,
+    2
+   ],
+   "height": 1.44,
+   "triangles": 424,
+   "materials": [
+    "earth",
+    "clay",
+    "glow",
+    "trunk",
+    "wood"
+   ],
+   "sockets": {
+    "light": [
+     0,
+     0.22,
+     0.82
+    ],
+    "work": [
+     0,
+     0,
+     1.35
+    ]
+   },
+   "family": "station",
+   "state": "lit"
+  },
+  "asset_kiln_unlit": {
+   "file": "models/asset_kiln_unlit.glb",
+   "footprint": [
+    2,
+    2
+   ],
+   "height": 1.44,
+   "triangles": 424,
+   "materials": [
+    "earth",
+    "clay",
+    "glow",
+    "trunk",
+    "wood",
+    "wood_dark"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     1.35
+    ]
+   },
+   "family": "station",
+   "state": "unlit"
+  },
+  "asset_anvil_idle": {
+   "file": "models/asset_anvil_idle.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.62,
+   "triangles": 204,
+   "materials": [
+    "trunk",
+    "wood",
+    "stone",
+    "metal"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     0.85
+    ]
+   },
+   "family": "station",
+   "state": "idle"
+  },
+  "asset_anvil_working": {
+   "file": "models/asset_anvil_working.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.67,
+   "triangles": 236,
+   "materials": [
+    "trunk",
+    "wood",
+    "stone",
+    "metal",
+    "glow"
+   ],
+   "sockets": {
+    "light": [
+     0,
+     0.5,
+     0
+    ],
+    "work": [
+     0,
+     0,
+     0.85
+    ]
+   },
+   "family": "station",
+   "state": "working"
+  },
+  "asset_hearth_lit": {
+   "file": "models/asset_hearth_lit.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.54,
+   "triangles": 320,
+   "materials": [
+    "stone",
+    "earth",
+    "wood_dark",
+    "glow"
+   ],
+   "sockets": {
+    "light": [
+     0,
+     0.35,
+     0
+    ],
+    "work": [
+     0,
+     0,
+     0.85
+    ]
+   },
+   "family": "station",
+   "state": "lit",
+   "overhang": true
+  },
+  "asset_hearth_unlit": {
+   "file": "models/asset_hearth_unlit.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.54,
+   "triangles": 320,
+   "materials": [
+    "stone",
+    "earth",
+    "wood_dark",
+    "glow"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     0.85
+    ]
+   },
+   "family": "station",
+   "state": "unlit"
+  },
+  "asset_bloomery_lit": {
+   "file": "models/asset_bloomery_lit.glb",
+   "footprint": [
+    2,
+    2
+   ],
+   "height": 2.2,
+   "triangles": 632,
+   "materials": [
+    "stone",
+    "clay",
+    "glow",
+    "leather",
+    "wood",
+    "thatch",
+    "earth",
+    "wood_dark"
+   ],
+   "sockets": {
+    "light": [
+     0,
+     0.2,
+     0.5
+    ],
+    "work": [
+     0,
+     0,
+     1.35
+    ]
+   },
+   "family": "station",
+   "state": "lit"
+  },
+  "asset_bloomery_unlit": {
+   "file": "models/asset_bloomery_unlit.glb",
+   "footprint": [
+    2,
+    2
+   ],
+   "height": 2.2,
+   "triangles": 632,
+   "materials": [
+    "stone",
+    "clay",
+    "glow",
+    "leather",
+    "wood",
+    "thatch",
+    "earth",
+    "wood_dark"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     1.35
+    ]
+   },
+   "family": "station",
+   "state": "unlit"
+  },
+  "asset_forge_idle": {
+   "file": "models/asset_forge_idle.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.62,
+   "triangles": 564,
+   "materials": [
+    "stone",
+    "earth",
+    "wood_dark",
+    "glow",
+    "trunk",
+    "wood",
+    "metal",
+    "leather",
+    "clay"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     0.85
+    ]
+   },
+   "family": "station",
+   "state": "idle",
+   "overhang": true
+  },
+  "asset_forge_working": {
+   "file": "models/asset_forge_working.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.62,
+   "triangles": 564,
+   "materials": [
+    "stone",
+    "earth",
+    "wood_dark",
+    "glow",
+    "trunk",
+    "wood",
+    "metal",
+    "leather",
+    "clay"
+   ],
+   "sockets": {
+    "light": [
+     0,
+     0.35,
+     0
+    ],
+    "work": [
+     0,
+     0,
+     0.85
+    ]
+   },
+   "family": "station",
+   "state": "working",
+   "overhang": true
+  },
+  "mason_bench_idle": {
+   "file": "models/mason_bench_idle.glb",
+   "footprint": [
+    2,
+    1
+   ],
+   "height": 1.056,
+   "triangles": 104,
+   "materials": [
+    "wood_dark",
+    "wood",
+    "stone"
+   ],
+   "sockets": {},
+   "family": "station"
+  },
+  "mason_bench_working": {
+   "file": "models/mason_bench_working.glb",
+   "footprint": [
+    2,
+    1
+   ],
+   "height": 1.063,
+   "triangles": 124,
+   "materials": [
+    "wood_dark",
+    "wood",
+    "stone",
+    "clay"
+   ],
+   "sockets": {},
+   "family": "station"
+  },
+  "pottery_wheel_idle": {
+   "file": "models/pottery_wheel_idle.glb",
+   "footprint": [
+    2,
+    1
+   ],
+   "height": 1.13,
+   "triangles": 180,
+   "materials": [
+    "wood_dark",
+    "wood",
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "station"
+  },
+  "pottery_wheel_working": {
+   "file": "models/pottery_wheel_working.glb",
+   "footprint": [
+    2,
+    1
+   ],
+   "height": 1.13,
+   "triangles": 200,
+   "materials": [
+    "wood_dark",
+    "wood",
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "station"
+  },
+  "wall_mud_brick_foundation": {
+   "file": "models/wall_mud_brick_foundation.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.197,
+   "triangles": 48,
+   "materials": [
+    "clay"
+   ],
+   "sockets": {},
+   "family": "wall",
+   "stage": "foundation"
+  },
+  "wall_mud_brick_half_built": {
+   "file": "models/wall_mud_brick_half_built.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.997,
+   "triangles": 240,
+   "materials": [
+    "clay"
+   ],
+   "sockets": {},
+   "family": "wall",
+   "stage": "half_built"
+  },
+  "wall_mud_brick_complete": {
+   "file": "models/wall_mud_brick_complete.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.997,
+   "triangles": 480,
+   "materials": [
+    "clay"
+   ],
+   "sockets": {},
+   "family": "wall",
+   "stage": "complete"
+  },
+  "wall_stone_foundation": {
+   "file": "models/wall_stone_foundation.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.197,
+   "triangles": 48,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "wall",
+   "stage": "foundation"
+  },
+  "wall_stone_half_built": {
+   "file": "models/wall_stone_half_built.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.997,
+   "triangles": 240,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "wall",
+   "stage": "half_built"
+  },
+  "wall_stone_complete": {
+   "file": "models/wall_stone_complete.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.997,
+   "triangles": 480,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "wall",
+   "stage": "complete"
+  },
+  "wall_log_foundation": {
+   "file": "models/wall_log_foundation.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.187,
+   "triangles": 20,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "wall",
+   "stage": "foundation"
+  },
+  "wall_log_half_built": {
+   "file": "models/wall_log_half_built.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.987,
+   "triangles": 100,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "wall",
+   "stage": "half_built"
+  },
+  "wall_log_complete": {
+   "file": "models/wall_log_complete.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.987,
+   "triangles": 200,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "wall",
+   "stage": "complete"
+  },
+  "pen_fence_00": {
+   "file": "models/pen_fence_00.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 0.9,
+   "triangles": 20,
+   "materials": [
+    "trunk"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 0,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "pen_fence_01": {
+   "file": "models/pen_fence_01.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 0.9,
+   "triangles": 52,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 1,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "pen_fence_02": {
+   "file": "models/pen_fence_02.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 0.9,
+   "triangles": 52,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 2,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "pen_fence_03": {
+   "file": "models/pen_fence_03.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 0.9,
+   "triangles": 84,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 3,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "pen_fence_04": {
+   "file": "models/pen_fence_04.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 0.9,
+   "triangles": 52,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 4,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "pen_fence_05": {
+   "file": "models/pen_fence_05.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 0.9,
+   "triangles": 84,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 5,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "pen_fence_06": {
+   "file": "models/pen_fence_06.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 0.9,
+   "triangles": 84,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 6,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "pen_fence_07": {
+   "file": "models/pen_fence_07.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 0.9,
+   "triangles": 116,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 7,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "pen_fence_08": {
+   "file": "models/pen_fence_08.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 0.9,
+   "triangles": 52,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 8,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "pen_fence_09": {
+   "file": "models/pen_fence_09.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 0.9,
+   "triangles": 84,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 9,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "pen_fence_0a": {
+   "file": "models/pen_fence_0a.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 0.9,
+   "triangles": 84,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 10,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "pen_fence_0b": {
+   "file": "models/pen_fence_0b.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 0.9,
+   "triangles": 116,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 11,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "pen_fence_0c": {
+   "file": "models/pen_fence_0c.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 0.9,
+   "triangles": 84,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 12,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "pen_fence_0d": {
+   "file": "models/pen_fence_0d.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 0.9,
+   "triangles": 116,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 13,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "pen_fence_0e": {
+   "file": "models/pen_fence_0e.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 0.9,
+   "triangles": 116,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 14,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "pen_fence_0f": {
+   "file": "models/pen_fence_0f.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 0.9,
+   "triangles": 148,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 15,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "palisade_00": {
+   "file": "models/palisade_00.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 1.8,
+   "triangles": 20,
+   "materials": [
+    "trunk"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 0,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "palisade_01": {
+   "file": "models/palisade_01.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 1.8,
+   "triangles": 116,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 1,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "palisade_02": {
+   "file": "models/palisade_02.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 1.8,
+   "triangles": 116,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 2,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "palisade_03": {
+   "file": "models/palisade_03.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 1.8,
+   "triangles": 212,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 3,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "palisade_04": {
+   "file": "models/palisade_04.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 1.8,
+   "triangles": 116,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 4,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "palisade_05": {
+   "file": "models/palisade_05.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 1.8,
+   "triangles": 212,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 5,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "palisade_06": {
+   "file": "models/palisade_06.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 1.8,
+   "triangles": 212,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 6,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "palisade_07": {
+   "file": "models/palisade_07.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 1.8,
+   "triangles": 308,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 7,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "palisade_08": {
+   "file": "models/palisade_08.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 1.8,
+   "triangles": 116,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 8,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "palisade_09": {
+   "file": "models/palisade_09.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 1.8,
+   "triangles": 212,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 9,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "palisade_0a": {
+   "file": "models/palisade_0a.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 1.8,
+   "triangles": 212,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 10,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "palisade_0b": {
+   "file": "models/palisade_0b.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 1.8,
+   "triangles": 308,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 11,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "palisade_0c": {
+   "file": "models/palisade_0c.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 1.8,
+   "triangles": 212,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 12,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "palisade_0d": {
+   "file": "models/palisade_0d.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 1.8,
+   "triangles": 308,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 13,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "palisade_0e": {
+   "file": "models/palisade_0e.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 1.8,
+   "triangles": 308,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 14,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "palisade_0f": {
+   "file": "models/palisade_0f.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 1.8,
+   "triangles": 404,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "fence",
+   "connections": 15,
+   "connection_bits": [
+    "north",
+    "east",
+    "south",
+    "west"
+   ]
+  },
+  "floor_paved_road": {
+   "file": "models/floor_paved_road.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.04,
+   "triangles": 192,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "floor"
+  }
+ }
+}
