@@ -158,34 +158,53 @@ func _poll_space() -> void:
 	var field_key: String = "%d:%d:%d" % [fxs.size(), hash(fxs), hash(fields.get("ys"))] + ":" + str(hash(_lit_hearths()))
 	if version == _space_version and field_key == _field_key and not _raise.is_empty():
 		return
-	var old_raise: PackedFloat32Array = _raise.duplicate()
-	var old_colour: PackedColorArray = _colour.duplicate()
-	_space_version = version
-	_field_key = field_key
-	_dug = _tileset(space.get("dug_xs", PackedInt32Array()), space.get("dug_ys", PackedInt32Array()))
-	_floor = _tileset(space.get("floor_xs", PackedInt32Array()), space.get("floor_ys", PackedInt32Array()))
-	_ford = _tileset(space.get("ford_xs", PackedInt32Array()), space.get("ford_ys", PackedInt32Array()))
-	_field = {}
+	var dug: Dictionary = _tileset(space.get("dug_xs", PackedInt32Array()), space.get("dug_ys", PackedInt32Array()))
+	var floor: Dictionary = _tileset(space.get("floor_xs", PackedInt32Array()), space.get("floor_ys", PackedInt32Array()))
+	var ford: Dictionary = _tileset(space.get("ford_xs", PackedInt32Array()), space.get("ford_ys", PackedInt32Array()))
+	var field: Dictionary = {}
 	var fys: PackedInt64Array = fields.get("ys", PackedInt64Array())
 	for i: int in mini(fxs.size(), fys.size()):
-		_field[Vector2i(int(fxs[i]), int(fys[i]))] = int(fphases[i]) if i < fphases.size() else 0
-	_compute_clearing()
-	_compute_tiles()
-	if old_raise.size() != _raise.size():
-		return
-	for i: int in _raise.size():
-		if old_raise[i] != _raise[i] or old_colour[i] != _colour[i]:
-			@warning_ignore("integer_division")
-			var cx: int = (i % width) / _chunk
-			@warning_ignore("integer_division")
-			var cy: int = (i / width) / _chunk
-			# A step changes the skirts of the neighbouring chunk too.
-			for d: Vector2i in [Vector2i.ZERO, Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
-				var t: Vector2i = Vector2i(i % width, int(float(i) / float(width))) + d
-				if t.x >= 0 and t.y >= 0 and t.x < width and t.y < height:
-					@warning_ignore("integer_division")
-					_dirty[Vector2i(t.x / _chunk, t.y / _chunk)] = true
-			_dirty[Vector2i(cx, cy)] = true
+		field[Vector2i(int(fxs[i]), int(fys[i]))] = int(fphases[i]) if i < fphases.size() else 0
+	var hearths: String = field_key.get_slice(":", 3)
+	# Dug, floor and field tiles only change their own tile and its corners: recompute just those. Fords (water dip)
+	# and lit hearths (camp clearings) recompute the map.
+	var incremental: bool = not _raise.is_empty() and _raise.size() == width * height and ford.hash() == _ford.hash() \
+		and hearths == _field_key.get_slice(":", 3)
+	var changed: Dictionary = {}
+	if incremental:
+		for pair: Array in [[_dug, dug], [_floor, floor], [_field, field]]:
+			for t: Vector2i in pair[0]:
+				if not (pair[1] as Dictionary).has(t):
+					changed[t.y * width + t.x] = true
+			for t: Vector2i in pair[1]:
+				if not (pair[0] as Dictionary).has(t):
+					changed[t.y * width + t.x] = true
+	var old_raise: PackedFloat32Array = _raise.duplicate() if not incremental else PackedFloat32Array()
+	var old_colour: PackedColorArray = _colour.duplicate() if not incremental else PackedColorArray()
+	_space_version = version
+	_field_key = field_key
+	_dug = dug
+	_floor = floor
+	_ford = ford
+	_field = field
+	if incremental:
+		_compute_some(changed)
+	else:
+		_compute_clearing()
+		_compute_tiles()
+		if old_raise.size() != _raise.size():
+			return
+		for i: int in _raise.size():
+			if old_raise[i] != _raise[i] or old_colour[i] != _colour[i]:
+				changed[i] = true
+	for i: int in changed:
+		var tile: Vector2i = Vector2i(i % width, int(float(i) / float(width)))
+		# A step changes the skirts of the neighbouring chunk too.
+		for d: Vector2i in [Vector2i.ZERO, Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+			var t: Vector2i = tile + d
+			if t.x >= 0 and t.y >= 0 and t.x < width and t.y < height:
+				@warning_ignore("integer_division")
+				_dirty[Vector2i(t.x / _chunk, t.y / _chunk)] = true
 
 
 static func _tileset(xs: Variant, ys: Variant) -> Dictionary:
@@ -260,28 +279,61 @@ func _compute_tiles() -> void:
 	var seed: int = int(SimReads.read(_world_sim, "get_world_info").get("seed", 0))
 	_compute_water_dip(water_codes, bed)
 	for i: int in n:
-		var code: int = _terrain[i]
-		var t: Vector2i = Vector2i(i % width, int(float(i) / float(width)))
-		var r: float = 0.0
-		if water_codes.has(code) or water_codes.has(float(code)):
-			r = 0.0
-		elif not _dug.has(t):
-			r = float(raises.get(str(code), 0.0))
-		_raise[i] = r
-		var c: Color = Data3D.colour(colours.get(str(code), []), Color(0.4, 0.5, 0.3))
-		if _ford.has(t):
-			c = ford_c
-		elif _dug.has(t):
-			c = dug_c
-		elif _field.has(t):
-			c = field_c
-		elif _floor.has(t):
-			c = clearing_c
-		elif _clearing.has(t) and r == 0.0:
-			c = c.lerp(clearing_c, float(_clearing[t]))
-		var v: float = 1.0 + (View.value_noise(seed, t.x, t.y, noise_scale, 5) - 0.5) * 2.0 * noise_tint
-		_colour[i] = Color(c.r * v, c.g * v, c.b * v)
+		_compute_tile(i, raises, water_codes, colours, clearing_c, dug_c, field_c, ford_c, noise_scale, noise_tint, seed)
 	_compute_corner_raise()
+
+
+## Recomputes only tiles `changed` (indices) and the corners around them; returns them for chunk marking.
+func _compute_some(changed: Dictionary) -> void:
+	var raises: Dictionary = Data3D.param("terrain.raise", {})
+	var water_codes: Array = Data3D.param("terrain.water_codes", [4])
+	var colours: Dictionary = Data3D.param("terrain.colours", {})
+	var clearing_c: Color = Data3D.colour(Data3D.param("terrain.clearing_colour", []), Color(0.52, 0.44, 0.3))
+	var dug_c: Color = Data3D.colour(Data3D.param("terrain.dug_colour", []), Color(0.4, 0.34, 0.28))
+	var field_c: Color = Data3D.colour(Data3D.param("terrain.field_colour", []), Color(0.4, 0.29, 0.18))
+	var ford_c: Color = Data3D.colour(Data3D.param("terrain.ford_colour", []), Color(0.55, 0.52, 0.45))
+	var noise_scale: int = int(Data3D.param("terrain.noise_scale_tiles", 7))
+	var noise_tint: float = float(Data3D.param("terrain.noise_tint", 0.1))
+	var seed: int = int(SimReads.read(_world_sim, "get_world_info").get("seed", 0))
+	var w1: int = width + 1
+	for i: int in changed:
+		_compute_tile(i, raises, water_codes, colours, clearing_c, dug_c, field_c, ford_c, noise_scale, noise_tint, seed)
+	for i: int in changed:
+		var tx: int = i % width
+		@warning_ignore("integer_division")
+		var ty: int = i / width
+		for cy: int in [ty, ty + 1]:
+			for cx: int in [tx, tx + 1]:
+				var total: float = 0.0
+				for dy: int in [-1, 0]:
+					for dx: int in [-1, 0]:
+						total += _raise[clampi(cy + dy, 0, height - 1) * width + clampi(cx + dx, 0, width - 1)]
+				_craise[cy * w1 + cx] = total * 0.25
+
+
+func _compute_tile(i: int, raises: Dictionary, water_codes: Array, colours: Dictionary, clearing_c: Color, dug_c: Color,
+		field_c: Color, ford_c: Color, noise_scale: int, noise_tint: float, seed: int) -> void:
+	var code: int = _terrain[i]
+	var t: Vector2i = Vector2i(i % width, int(float(i) / float(width)))
+	var r: float = 0.0
+	if water_codes.has(code) or water_codes.has(float(code)):
+		r = 0.0
+	elif not _dug.has(t):
+		r = float(raises.get(str(code), 0.0))
+	_raise[i] = r
+	var c: Color = Data3D.colour(colours.get(str(code), []), Color(0.4, 0.5, 0.3))
+	if _ford.has(t):
+		c = ford_c
+	elif _dug.has(t):
+		c = dug_c
+	elif _field.has(t):
+		c = field_c
+	elif _floor.has(t):
+		c = clearing_c
+	elif _clearing.has(t) and r == 0.0:
+		c = c.lerp(clearing_c, float(_clearing[t]))
+	var v: float = 1.0 + (View.value_noise(seed, t.x, t.y, noise_scale, 5) - 0.5) * 2.0 * noise_tint
+	_colour[i] = Color(c.r * v, c.g * v, c.b * v)
 
 
 ## Per-corner water dip: a corner sinks by the bed depth times the share of its four tiles that are water (a ford

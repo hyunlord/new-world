@@ -35,6 +35,8 @@ var _tree_keys: PackedInt64Array = PackedInt64Array()
 var _tree_species: PackedStringArray = PackedStringArray()
 var _chunk_trees: Dictionary = {}
 var _tree_shared: String = ""
+## Chunks whose near-building tree sizes changed since the last tree build.
+var _near_changed: Dictionary = {}
 var _keys: Dictionary = {}
 var _stamp_key: String = ""
 var _slow_tick: int = -1000000
@@ -85,13 +87,22 @@ func _process(_delta: float) -> void:
 		var built_key: int = hash([space.get("wall_xs"), space.get("wall_ys"), space.get("floor_xs"), space.get("floor_ys")])
 		if built_key != int(_keys.get("built", 0)):
 			_keys["built"] = built_key
-			_near_built = _built_distance(space)
+			# Only chunks whose near-building distances changed need their trees resized.
+			var near: Dictionary = _built_distance(space)
+			for t: Vector2i in near:
+				if int(_near_built.get(t, 0)) != int(near[t]):
+					_near_changed[_chunk_of(t)] = true
+			for t: Vector2i in _near_built:
+				if not near.has(t):
+					_near_changed[_chunk_of(t)] = true
+			_near_built = near
 	var tkey: String = "%d|%d|%d|%d|%d" % [int(stamp.get("trees", -1)), season, _stump_epoch(time), width, int(_keys.get("built", 0))]
 	if str(_keys.get("trees", "")) != tkey:
 		_keys["trees"] = tkey
 		var batches: Dictionary = {}
 		var first: bool = _tree_keys.is_empty()
-		var changed: Dictionary = _build_trees(batches, SimReads.read(_world_sim, "get_trees"), tick, "%d|%d" % [season, int(_keys.get("built", 0))])
+		var changed: Dictionary = _build_trees(batches, SimReads.read(_world_sim, "get_trees"), tick, str(season), _near_changed)
+		_near_changed = {}
 		# The first build (load, world reset) replaces every tree batch; later builds only the changed chunks.
 		if first:
 			_apply("trees", batches)
@@ -166,10 +177,10 @@ func _stump_epoch(time: Dictionary) -> int:
 	return int(float(time.get("tick", 0)) / 60.0) if not _stumps.is_empty() else 0
 
 
-## Batches only the chunks whose trees, stumps or shared inputs (`shared`: season, built space) changed since the
-## last build and returns them (a felled tree costs one chunk, not the forest). Trees are diffed by a native sort of
+## Batches only the chunks whose trees or stumps changed since the last build, plus `also` (chunks whose
+## near-building sizes changed), or every chunk when `shared` (the season) changed, and returns them (a felled tree costs one chunk, not the forest). Trees are diffed by a native sort of
 ## `tile << 16 | row` keys against the previous read, so a change costs a few milliseconds even with 10 000 trees.
-func _build_trees(batches: Dictionary, trees: Dictionary, tick: int, shared: String) -> Dictionary:
+func _build_trees(batches: Dictionary, trees: Dictionary, tick: int, shared: String, also: Dictionary = {}) -> Dictionary:
 	var jitter: float = float(Data3D.param("flora.jitter_tiles", 0.22))
 	var smin: float = float(Data3D.param("flora.scale_min", 0.85))
 	var smax: float = float(Data3D.param("flora.scale_max", 1.2))
@@ -185,7 +196,7 @@ func _build_trees(batches: Dictionary, trees: Dictionary, tick: int, shared: Str
 	for i: int in n:
 		keys[i] = (((xs[i] << 10) | ys[i]) << 16) | i
 	keys.sort()
-	var changed: Dictionary = {}
+	var changed: Dictionary = also.duplicate()
 	if shared != _tree_shared or _tree_keys.is_empty():
 		# Everything: first build, world reset, season or built space changed.
 		for c: Vector2i in _chunk_trees:
