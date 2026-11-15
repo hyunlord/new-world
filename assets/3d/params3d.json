@@ -76,6 +76,9 @@
     "pick_radius_px": 18,
     "contact_shadow": {"radius": 0.42, "alpha": 0.45}
   },
+  "stations": {
+    "work_puffs": {"amount": 10, "colour": [0.78, 0.7, 0.55]}
+  },
   "plants": {
     "growing": [0.36, 0.5, 0.2],
     "ripe": [0.78, 0.64, 0.3],

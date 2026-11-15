@@ -12,7 +12,8 @@
 #   `items.fallback`; `vein` and `metal` surfaces take the item's `art_tint_material` colour; 2–8 items show two
 #   copies and 9+ three. Lit models (bindings3d `stations.lit`) carry an OmniLight3D at the manifest `light` socket and
 #   glow while lit: the hearth while its settlement's fire burns, a workshop while it works an active bill. Light
-#   energy follows the night (Sky.night_factor) but never reaches zero, so a working smelter reads by day too.
+#   energy follows the night (Sky.night_factor) but never reaches zero, so a working smelter reads by day too. A
+#   working station without a fire throws up chips and dust instead (`stations.work_puffs`).
 # Bridge methods called: via SimReads get_workshops, get_building_snapshot, get_settlement_snapshot, get_space,
 #   get_colony_overlay, get_content_catalog; signal world_reset.
 extends Node3D
@@ -210,6 +211,8 @@ func _place(id: String, rect: Rect2i, lit: bool, node_name: String) -> void:
 	for surface: int in mesh.get_surface_count():
 		if Data3D.surface_key(mesh, surface) == "glow":
 			mi.set_surface_override_material(surface, _glow_on if lit else _glow_off)
+	if lit and not is_lit_model:
+		mi.add_child(_work_puffs(row))
 	if is_lit_model and lit:
 		var light: OmniLight3D = OmniLight3D.new()
 		var sockets: Dictionary = row.get("sockets", {})
@@ -223,6 +226,35 @@ func _place(id: String, rect: Rect2i, lit: bool, node_name: String) -> void:
 		light.shadow_enabled = false
 		mi.add_child(light)
 		_lights.append({"light": light, "phase": float(rect.position.x * 7 + rect.position.y * 3)})
+
+
+## Chips and dust rising off a station without a fire while it works a bill (params3d `stations.work_puffs`), so a
+## working bench reads apart from an idle one.
+func _work_puffs(row: Dictionary) -> CPUParticles3D:
+	var p: CPUParticles3D = CPUParticles3D.new()
+	p.name = "Working"
+	var socket: Variant = (row.get("sockets", {}) as Dictionary).get("work")
+	p.position = Vector3(float(socket[0]), float(socket[1]), float(socket[2])) if socket is Array and (socket as Array).size() >= 3 else Vector3(0, 0.85, 0)
+	p.amount = int(Data3D.param("stations.work_puffs.amount", 10))
+	p.lifetime = 0.9
+	p.explosiveness = 0.2
+	p.direction = Vector3.UP
+	p.spread = 35.0
+	p.initial_velocity_min = 0.4
+	p.initial_velocity_max = 0.9
+	p.gravity = Vector3(0, -1.2, 0)
+	p.scale_amount_min = 0.5
+	p.scale_amount_max = 1.0
+	var quad: QuadMesh = QuadMesh.new()
+	quad.size = Vector2(0.05, 0.05)
+	var mat: StandardMaterial3D = StandardMaterial3D.new()
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	mat.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+	mat.albedo_color = Data3D.colour(Data3D.param("stations.work_puffs.colour", []), Color(0.78, 0.7, 0.55))
+	quad.material = mat
+	p.mesh = quad
+	p.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	return p
 
 
 # --- items -------------------------------------------------------------------------------------------------
