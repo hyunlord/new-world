@@ -14,6 +14,7 @@ extends RefCounted
 
 const VAT_SHADER = preload("res://shaders/world3d/vat.gdshader")
 const OUTLINE_SHADER = preload("res://shaders/world3d/vat_outline.gdshader")
+const XRAY_SHADER = preload("res://shaders/world3d/vat_xray.gdshader")
 const Data3D = preload("res://scripts/world3d/data3d.gd")
 const DIR: String = "res://assets/3d/vat"
 
@@ -172,8 +173,9 @@ func material(other: Color) -> ShaderMaterial:
 	return mat
 
 
-## People only: far figures enlarged (params3d `people.far_scale` [from metres, max]) and a screen-constant outline
-## pass (`people.outline` px, day and night colours) as the material's next pass.
+## People only: far figures enlarged (params3d `people.far_scale` [from metres, max]), a screen-constant outline pass
+## (`people.outline`: px, far_px, day and night colours) and a see-through silhouette where something stands in front
+## (`people.xray`), chained as next passes.
 func with_findability(mat: ShaderMaterial) -> ShaderMaterial:
 	var far: Array = Data3D.param("people.far_scale", [60.0, 1.6])
 	mat.set_shader_parameter("far_scale", Vector2(float(far[0]), float(far[1])))
@@ -185,6 +187,16 @@ func with_findability(mat: ShaderMaterial) -> ShaderMaterial:
 	line.set_shader_parameter("outline_px", float(Data3D.param("people.outline.px", 1.5)))
 	line.set_shader_parameter("day_colour", Data3D.colour(Data3D.param("people.outline.day", []), Color(0.14, 0.11, 0.09)))
 	line.set_shader_parameter("night_colour", Data3D.colour(Data3D.param("people.outline.night", []), Color(0.91, 0.89, 0.81)))
+	line.set_shader_parameter("outline_far_px", float(Data3D.param("people.outline.far_px", 4.0)))
+	var xray: ShaderMaterial = ShaderMaterial.new()
+	xray.shader = XRAY_SHADER
+	_set_anim(xray)
+	xray.set_shader_parameter("far_scale", Vector2(float(far[0]), float(far[1])))
+	var dc: Color = Data3D.colour(Data3D.param("people.xray.day", []), Color(0.14, 0.11, 0.09))
+	var nc: Color = Data3D.colour(Data3D.param("people.xray.night", []), Color(0.91, 0.89, 0.81))
+	xray.set_shader_parameter("day_colour", Color(dc, float(Data3D.param("people.xray.day_alpha", 0.55))))
+	xray.set_shader_parameter("night_colour", Color(nc, float(Data3D.param("people.xray.night_alpha", 0.7))))
+	line.next_pass = xray
 	mat.next_pass = line
 	return mat
 
