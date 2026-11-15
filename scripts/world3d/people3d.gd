@@ -50,6 +50,10 @@ var _snap_tick: int = -1
 var _state: Dictionary = {}
 var _clip_packs: Dictionary = {}
 var _blob_mesh: QuadMesh = null
+## Entity bits → AgentId of everyone drawn (O(1) lookups for body_of / state_of / figure_instances, which panels and
+## labels call per person per frame).
+var _aid_of: Dictionary = {}
+var _far_param: Array = []
 ## Current era id (bindings3d `people.by_era` picks the age/sex/era variant).
 var _era: String = ""
 var _era_tick: int = -1000000
@@ -61,6 +65,7 @@ func setup(world_sim: Node, terrain: Node) -> void:
 	_world_sim.connect("world_reset", func() -> void:
 		_motion.clear()
 		_state.clear()
+		_aid_of.clear()
 		for crowd: Dictionary in _crowds.values():
 			for n: Variant in [crowd["mmi"], crowd["lod"], crowd["blob"]]:
 				if n != null:
@@ -423,11 +428,13 @@ func _refresh(snap: Dictionary) -> void:
 		st["look"] = look
 		st["scale"] = scale
 		st["bits"] = ids[i] if i < ids.size() else -1
+		_aid_of[st["bits"]] = aid
 		st["flags"] = _flags(snap, i)
 		_state[aid] = st
 	for aid: int in _state.keys():
 		if not seen.has(aid):
 			_release(aid, copies)
+			_aid_of.erase(_state[aid]["bits"])
 			_state.erase(aid)
 			_motion.erase(aid)
 
@@ -530,59 +537,57 @@ func _far_scale(feet: Vector3) -> float:
 	var cam: Camera3D = get_viewport().get_camera_3d() if is_inside_tree() else null
 	if cam == null:
 		return 1.0
-	var far: Array = Data3D.param("people.far_scale", [55.0, 2.2])
-	return clampf(cam.global_position.distance_to(feet) / float(far[0]), 1.0, float(far[1]))
+	if _far_param.is_empty():
+		_far_param = Data3D.param("people.far_scale", [55.0, 2.2])
+	return clampf(cam.global_position.distance_to(feet) / float(_far_param[0]), 1.0, float(_far_param[1]))
 
 
 ## The body ({feet, h, far: the far-figure enlargement included in h}) of the person with entity bits `bits`, or {}
 ## when not drawn.
 func body_of(bits: int) -> Dictionary:
-	for d: Dictionary in _state.values():
-		if int(d["bits"]) == bits:
-			var k: float = _far_scale(d["feet"])
-			return {"feet": d["feet"], "h": float(d["h"]) * k, "far": k}
-	return {}
+	var d: Dictionary = _state.get(_aid_of.get(bits, -1), {})
+	if d.is_empty():
+		return {}
+	var k: float = _far_scale(d["feet"])
+	return {"feet": d["feet"], "h": float(d["h"]) * k, "far": k}
 
 
 ## Tools and gate checks: what is drawn for entity `bits` — {tile (the tile the figure stands on or walks to),
 ## settled (not mid-step), feet, model, look_id, variant, clip, scale} — or {} when not drawn.
 func state_of(bits: int) -> Dictionary:
-	for aid: int in _state:
-		var d: Dictionary = _state[aid]
-		if int(d["bits"]) != bits:
-			continue
-		var m: Dictionary = _motion.get(aid, {})
-		return {"tile": m.get("tile", Vector2i(-1, -1)), "settled": float(m.get("t", 1.0)) >= 1.0, "feet": d["feet"],
-			"model": d["model"], "look_id": int(d.get("look_id", 0)), "variant": int(d.get("variant", 0)),
-			"clip": _clip_of(d, _world_sim.process_mode != Node.PROCESS_MODE_DISABLED and float(m.get("t", 1.0)) < 1.0), "scale": float(d["scale"])}
-	return {}
+	var aid: int = int(_aid_of.get(bits, -1))
+	if not _state.has(aid):
+		return {}
+	var d: Dictionary = _state[aid]
+	var m: Dictionary = _motion.get(aid, {})
+	return {"tile": m.get("tile", Vector2i(-1, -1)), "settled": float(m.get("t", 1.0)) >= 1.0, "feet": d["feet"],
+		"model": d["model"], "look_id": int(d.get("look_id", 0)), "variant": int(d.get("variant", 0)),
+		"clip": _clip_of(d, _world_sim.process_mode != Node.PROCESS_MODE_DISABLED and float(m.get("t", 1.0)) < 1.0), "scale": float(d["scale"])}
 
 
 ## Tools (gate step 39): every drawn figure instance of entity `bits` as [MultiMesh, index] pairs — the full and the
 ## LOD crowd of its bin, all replicate copies; contact shadows excluded. [] when not drawn.
 func figure_instances(bits: int) -> Array:
 	var out: Array = []
-	for aid: int in _state:
-		if int(_state[aid]["bits"]) != bits:
-			continue
-		var crowd: Dictionary = _crowds.get(_state[aid].get("bin", ""), {})
-		if crowd.is_empty() or not (crowd["slot"] as Dictionary).has(aid):
-			return out
-		var copies: int = maxi(1, replicate)
-		var cap: int = _cap(crowd["mmi"].multimesh, copies)
-		for n: Variant in [crowd["mmi"], crowd["lod"]]:
-			if n != null:
-				for c: int in copies:
-					out.append([(n as MultiMeshInstance3D).multimesh, cap * c + int(crowd["slot"][aid])])
+	var aid: int = int(_aid_of.get(bits, -1))
+	if not _state.has(aid):
+		return out
+	var crowd: Dictionary = _crowds.get(_state[aid].get("bin", ""), {})
+	if crowd.is_empty() or not (crowd["slot"] as Dictionary).has(aid):
+		return out
+	var copies: int = maxi(1, replicate)
+	var cap: int = _cap(crowd["mmi"].multimesh, copies)
+	for n: Variant in [crowd["mmi"], crowd["lod"]]:
+		if n != null:
+			for c: int in copies:
+				out.append([(n as MultiMeshInstance3D).multimesh, cap * c + int(crowd["slot"][aid])])
 	return out
 
 
 ## Tools: the 3D feet position of entity `bits`, or Vector3.INF.
 func feet_of(bits: int) -> Vector3:
-	for d: Dictionary in _state.values():
-		if int(d["bits"]) == bits:
-			return d["feet"]
-	return Vector3.INF
+	var d: Dictionary = _state.get(_aid_of.get(bits, -1), {})
+	return d["feet"] if not d.is_empty() else Vector3.INF
 
 
 func count() -> int:
