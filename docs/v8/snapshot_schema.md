@@ -1570,6 +1570,10 @@ C1-b additive nested fields:
 | `first_bronze_tool_used` | bool | C2-b: durable first-tool-use witness of a metal_bronze item; chapter7 fact |
 | `tin_shortage` | bool | C2-b: an adult practises bronze_alloy and no world deposit (hidden or exhausted included) yields a metal_tin item |
 | `tin_caravan` | int | C2-b: lowest id of a waiting caravan offering metal_tin goods, -1 none |
+| `first_iron_bloom` | bool | C3: actual crafted ledger contains an ingot tagged metal_iron (bloom or bar); chapter8 fact |
+| `first_iron_tool_used` | bool | C3: durable first-tool-use witness of a metal_iron item; chapter9 fact |
+| `no_iron_nearby` | bool | C3: an adult practises iron_smelting (false when the catalogue lacks it) and no revealed deposit yielding a metal_iron item lies within 80 Chebyshev tiles of the camp hearth |
+| `iron_caravan` | int | C3: lowest id of a waiting caravan offering metal_iron goods, -1 none |
 | `rumoured_upper_low` | PackedInt64Array | optional neighbour bits128–191, signed bit patterns; both upper columns omitted when all upper bits are zero |
 | `rumoured_upper_high` | PackedInt64Array | optional neighbour bits192–255, aligned with neighbour ids |
 | `age_days` | PackedInt64Array | Nested animal row current pure whole-day age; -1 non-tameable wild animal. |

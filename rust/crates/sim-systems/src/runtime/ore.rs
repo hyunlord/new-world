@@ -337,8 +337,45 @@ pub fn tin_shortage(world: &World, res: &SimResources) -> bool {
         && lacks_outcrop_tag(res, "metal_tin")
 }
 
-/// The lowest-id waiting caravan whose goods include a `metal_tin`-tagged item.
-pub fn tin_caravan(res: &SimResources) -> Option<u32> {
+/// Whether no *revealed* deposit yielding an item tagged `tag` lies within `range` Chebyshev
+/// tiles of the camp hearth; false without a hearth.
+pub fn lacks_revealed_outcrop_near(res: &SimResources, tag: &str, range: u32) -> bool {
+    let Some(camp) = crate::worldgen::colony::hearth(res) else {
+        return false;
+    };
+    let catalog = installed_or_bundled();
+    !res.ore.deposits.iter().any(|(&tile, d)| {
+        d.revealed
+            && chebyshev(tile, camp) <= range
+            && catalog
+                .outcrop(d.kind)
+                .is_some_and(|def| def.yield_item.definition().tags.iter().any(|t| t == tag))
+    })
+}
+
+/// Card trigger: an adult practises `knowledge` (false when the catalogue lacks it) and no
+/// revealed `tag` outcrop lies within `range` of the camp.
+pub fn outcrop_missing_near(
+    world: &World,
+    res: &SimResources,
+    knowledge: &str,
+    tag: &str,
+    range: u32,
+) -> bool {
+    res.rules.colony.is_some()
+        && knowledge::defs().id_of(knowledge).is_some_and(|id| {
+            crate::runtime::knowledge::anyone_practises(world, knowledge::bit(id))
+        })
+        && lacks_revealed_outcrop_near(res, tag, range)
+}
+
+/// C3 `no_iron_nearby` card trigger; 80 tiles is the iron outcrops' authored camp radius.
+pub fn no_iron_nearby(world: &World, res: &SimResources) -> bool {
+    outcrop_missing_near(world, res, "iron_smelting", "metal_iron", 80)
+}
+
+/// The lowest-id waiting caravan whose goods include an item tagged `tag`.
+pub fn caravan_offering(res: &SimResources, tag: &str) -> Option<u32> {
     res.colony
         .neighbours
         .caravans
@@ -352,10 +389,15 @@ pub fn tin_caravan(res: &SimResources) -> Option<u32> {
         .filter(|c| {
             c.goods
                 .iter()
-                .any(|g| g.count > 0 && g.kind.definition().tags.iter().any(|t| t == "metal_tin"))
+                .any(|g| g.count > 0 && g.kind.definition().tags.iter().any(|t| t == tag))
         })
         .map(|c| c.id)
         .min()
+}
+
+/// The lowest-id waiting caravan whose goods include a `metal_tin`-tagged item.
+pub fn tin_caravan(res: &SimResources) -> Option<u32> {
+    caravan_offering(res, "metal_tin")
 }
 
 /// C2-b: saved metal records refer to real Chronicle lines of the matching kind, imports to
@@ -491,4 +533,72 @@ pub fn validate_state_at_boundary(res: &SimResources) -> Result<(), String> {
         }
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use sim_core::colony::{knowledge::Source, ore::OreDeposit};
+
+    #[test]
+    fn outcrop_missing_near_needs_knowledge_and_ignores_hidden_or_distant_deposits() {
+        sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
+            .expect("bundled catalog");
+        // Given a colony camp, nobody practising copper smelting, and no deposits.
+        let mut engine = sim_engine::SimEngine::new(8, 8, sim_core::MaterialRegistry::new());
+        engine.resources.rules.colony = Some(sim_core::rules::ColonyRule::M4);
+        let camp = (100, 100);
+        engine
+            .resources
+            .building_kinds
+            .insert(camp, sim_core::components::BuildingKind::Hearth);
+        let missing = |e: &sim_engine::SimEngine| {
+            outcrop_missing_near(
+                &e.world,
+                &e.resources,
+                "copper_smelting",
+                "metal_copper",
+                80,
+            )
+        };
+        assert!(!missing(&engine), "unknown knowledge never triggers");
+        let mut known = Knowledge::default();
+        let smelting = knowledge::defs().id_of("copper_smelting").expect("C2 node");
+        known.set(smelting, 1000, Source::Migrant, 0);
+        engine.world.spawn((known,));
+        assert!(missing(&engine), "known with no deposits");
+        let kind = installed_or_bundled()
+            .outcrop_by_name("copper_outcrop")
+            .expect("copper outcrop");
+        let place = |e: &mut sim_engine::SimEngine, tile, revealed| {
+            e.resources.ore.deposits.clear();
+            e.resources.ore.deposits.insert(
+                tile,
+                OreDeposit {
+                    kind,
+                    remaining: 24,
+                    revealed,
+                    cluster: tile,
+                },
+            );
+        };
+        // Then only a revealed deposit within range clears it.
+        place(&mut engine, (181, 100), true);
+        assert!(missing(&engine), "revealed out of range");
+        place(&mut engine, (150, 150), false);
+        assert!(missing(&engine), "hidden in range");
+        place(&mut engine, (150, 150), true);
+        assert!(!missing(&engine), "revealed in range");
+        place(&mut engine, (180, 20), true);
+        assert!(!missing(&engine), "revealed exactly at the range");
+        assert!(!outcrop_missing_near(
+            &engine.world,
+            &engine.resources,
+            "no_such_node",
+            "metal_copper",
+            80
+        ));
+        // Nobody practises iron smelting, and catalogues without the node never trigger.
+        assert!(!no_iron_nearby(&engine.world, &engine.resources));
+    }
 }

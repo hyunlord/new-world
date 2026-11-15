@@ -2,7 +2,7 @@
 # four-era, grey-content and prerequisite-chain UI coverage. No simulation writes.
 # Bridge methods: get_tech/get_tech_node/get_time_snapshot; simulation runs at normal 1x speed.
 # Run with external WORLDSIM_TEST_SETTINGS_DIR and -- --out /absolute/evidence/dir.
-# Optional --c1-save / --c2-save loads an external real crafting save; re-render captures are labelled.
+# Optional --c1-save / --c2-save / --c3-save loads an external real crafting save; re-render captures are labelled.
 # Additional bridge methods: load_world, get_workshops, get_building_snapshot, get_outcrops via SimReads.
 extends SceneTree
 
@@ -14,6 +14,7 @@ var _out: String = ""
 var _c1_save: String = ""
 var _c1_resave: String = ""
 var _c2_save: bool = false
+var _c3: bool = false
 var _ore_save: String = ""
 var _window_size: Vector2i = Vector2i.ZERO
 var _main: Node
@@ -27,9 +28,10 @@ func _init() -> void:
 	for i: int in args.size() - 1:
 		if args[i] == "--out":
 			_out = args[i + 1]
-		if args[i] in ["--c1-save", "--c2-save"]:
+		if args[i] in ["--c1-save", "--c2-save", "--c3-save"]:
 			_c1_save = args[i + 1]
-			_c2_save = args[i] == "--c2-save"
+			_c2_save = args[i] != "--c1-save"
+			_c3 = args[i] == "--c3-save"
 		if args[i] == "--c1-resave":
 			_c1_resave = args[i + 1]
 		if args[i] == "--c2-outcrop-save":
@@ -160,8 +162,12 @@ func _observe_frames(language: String, context: String) -> void:
 func _capture(name: String) -> void:
 	if _out.is_empty():
 		return
+	var cards: CanvasItem = _main.get_node("UI/MuxHud/CardPanel") as CanvasItem
+	cards.modulate.a = 0.0  # V3: the Decisions cards never cover a named capture's subject.
+	await process_frame
 	await RenderingServer.frame_post_draw
 	var image: Image = root.get_texture().get_image()
+	cards.modulate.a = 1.0
 	_check("capture_" + name, image != null and not image.is_empty())
 	if image != null and not image.is_empty():
 		var stamp: String = Time.get_time_string_from_system().replace(":", "").left(4) + "_" if _c2_save or not _ore_save.is_empty() else ""
@@ -206,6 +212,7 @@ func _run() -> void:
 	if world == null or _panel == null or _locale == null:
 		_finish()
 		return
+	_main.get_node("UI/MuxHud").get("store").set_value("helper_on", false)
 	var camera: Node = _main.get_node("Camera2D")
 	camera.call("set_paused", false)
 	camera.call("set_speed", 1.0)
@@ -215,7 +222,7 @@ func _run() -> void:
 	var rows: Array[Dictionary] = Text.nodes(tech)
 	_check("four_eras", eras.size() == 4)
 	_check("ten_lanes", lanes.size() == 10)
-	_check("authored_nodes", rows.size() == 129)
+	_check("authored_nodes", rows.size() == 166)
 	var inert: int = -1
 	for row: Dictionary in rows:
 		if not bool(row.get("connected", true)):
@@ -271,6 +278,13 @@ func _run() -> void:
 					detail_fits = detail_fits and line.get_global_rect().end.x <= detail_box.get_global_rect().end.x + 1.0
 			_check("detail_labels_fit_" + language, detail_fits)
 			await _capture("tech_" + language + "_inert")
+		for node_name: String in (["iron_smelting", "writing"] if _c3 else []):
+			var node_id: int = Content.code("knowledge", node_name)
+			_check("c3_node_" + node_name + "_" + language, _panel.call("card", node_id) != null)
+			if _panel.call("card", node_id) == null: continue
+			await _click(_panel.call("card", node_id))
+			_check("c3_node_selected_" + node_name + "_" + language, int(_panel.call("selected_node")) == node_id)
+			await _capture("c3_tech_" + node_name + "_" + language)
 		var jump: OptionButton = _panel.find_child("LaneJump", true, false) as OptionButton
 		_check("ten_lane_jumps_" + language, jump != null and jump.item_count == 10)
 		if jump != null:
@@ -306,16 +320,16 @@ func _capture_outcrop(world: Node) -> void:
 	var tile := Vector2i(int(receipt["ore"][0]), int(receipt["ore"][1]))
 	camera.zoom = Vector2(2, 2)
 	camera.call("center_on_tile", tile)
-	camera.call("pan_screen", Vector2(-400, 0))
 	await _frames(12)
 	var rows: Dictionary = SimReads.read(world, "get_outcrops")
 	_check("revealed_outcrop_rendered", int(_main.get_node("ColonyView/OutcropLayer").call("counts").get("outcrops", 0)) > 0 and rows.get("xs", PackedInt64Array()).size() > 0)
 	_check("revealed_outcrop_in_viewport", root.get_visible_rect().has_point(camera.get_canvas_transform() * preload("res://scripts/world/colony/view.gd").tile_centre(tile)))
-	await _capture("c2_outcrop_found_ko_rerender")
+	var prefix: String = "c3_seed%d" % int(receipt["seed"]) if _c3 else "c2"
+	await _capture(prefix + "_outcrop_found_ko_rerender")
 	var why: Control = _main.get_node("UI/WhyPanel") as Control
 	_check("outcrop_actual_cause", bool(why.call("open", int(receipt["chronicle_index"]))))
 	await _frames()
-	await _capture("c2_outcrop_why_ko_rerender")
+	await _capture(prefix + "_outcrop_why_ko_rerender")
 	why.call("close")
 	var feed: Control = _main.get_node("UI/ChroniclePanel") as Control
 	var entry: Dictionary = preload("res://scripts/ui/chronicle_text.gd").rows(world.call("get_chronicle_since", int(receipt["chronicle_index"]), 1))[0]
@@ -326,7 +340,7 @@ func _capture_outcrop(world: Node) -> void:
 		await _frames()
 		var expected: String = preload("res://scripts/ui/chronicle_text.gd").ore_sentence(entry.get("ore_evidence", {}), _locale)
 		_check("outcrop_default_feed_" + language, feed.visible and (feed.find_child("NotableFilter", true, false) as Button).button_pressed and int(entry.get("kind", -1)) == 66 and bool(feed.call("keeps_kind", 66)) and bool(feed.call("passes_filtered", entry, 0, -1)) and str(feed.call("plain_text")).contains(expected))
-		await _capture("c2_outcrop_default_feed_" + language + "_rerender")
+		await _capture(prefix + "_outcrop_default_feed_" + language + "_rerender")
 		await _key(KEY_C)
 	_check("outcrop_feed_inspection_read_only", world.call("get_command_log", 0) == commands and int(world.call("get_time_snapshot")["tick"]) == int(receipt["tick"]))
 
@@ -347,11 +361,11 @@ func _capture_c1(world: Node) -> void:
 	await _frames()
 	var build: Control = _main.get_node("UI/BuildPanel") as Control
 	var workshop: Control = _main.get_node("UI/WorkshopPanel") as Control
-	var prefix: String = "c2" if _c2_save else "c1"
+	var prefix: String = "c3" if _c3 else ("c2" if _c2_save else "c1")
 	var building_ids: Array[String] = []
-	building_ids.assign(["charcoal_clamp", "smelter", "casting_bench", "mud_brick_house"] if _c2_save else ["granary", "pen", "smokehouse", "oven_house"])
+	building_ids.assign(["bloomery", "forge", "mud_brick_house", "cut_stone_house"] if _c3 else (["charcoal_clamp", "smelter", "casting_bench", "mud_brick_house"] if _c2_save else ["granary", "pen", "smokehouse", "oven_house"]))
 	var recipe_ids: Array[String] = []
-	recipe_ids.assign(["burn_charcoal", "smelt_copper", "cast_copper_axe"] if _c2_save else ["bake_bread", "brew_beer", "ferment_milk"])
+	recipe_ids.assign(["smelt_bloom", "refine_bloom", "forge_iron_axe"] if _c3 else (["burn_charcoal", "smelt_copper", "cast_copper_axe"] if _c2_save else ["bake_bread", "brew_beer", "ferment_milk"]))
 	var shops: Dictionary = SimReads.read(world, "get_workshops")
 	var site_count: int = (SimReads.read(world, "get_building_snapshot").get("template_sites", []) as Array).size()
 	var ids: PackedInt32Array = shops.get("ids", PackedInt32Array())
@@ -383,9 +397,14 @@ func _capture_c1(world: Node) -> void:
 				var camera: Camera2D = _main.get_node("Camera2D") as Camera2D
 				camera.zoom = Vector2(2, 2)
 				camera.call("center_on_tile", centre)
-				camera.call("pan_screen", Vector2(-320, 0))
 				await _frames(8)
-				await _capture("c2_physical_" + str(site["template_id"]) + "_" + language + "_rerender")
+				await _capture(prefix + "_physical_" + str(site["template_id"]) + "_" + language + "_rerender")
+				if _c3 and str(site["template_id"]) == "mud_brick_house":
+					build.call("open_site", int(site["id"]))
+					await _frames()
+					_check("c3_upgrade_ready_" + language, (build.get("_upgrade") as Button).visible and not (build.get("_upgrade") as Button).disabled)
+					await _capture("c3_upgrade_mud_brick_house_" + language + "_rerender")
+					build.hide()
 		for recipe_id: String in recipe_ids:
 			var recipe: Dictionary = Content.row("recipes", Content.code("recipes", recipe_id))
 			var compatible: PackedInt64Array = recipe.get("compatible_workshops", PackedInt64Array())

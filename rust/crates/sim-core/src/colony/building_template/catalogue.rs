@@ -72,7 +72,7 @@ impl TemplateCatalog {
             if template.id.is_empty()
                 || !ids.insert(&template.id)
                 || template.name_key.is_empty()
-                || !(1..=4).contains(&template.tier)
+                || !(1..=5).contains(&template.tier)
                 || template.footprint.0 == 0
                 || template.footprint.1 == 0
                 || template.footprint.0 > 64

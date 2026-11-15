@@ -835,6 +835,20 @@ fn ore_extension() {
         save::load(&bytes).expect("selected ore load").resources.ore,
         generated.resources.ore
     );
+    // C3 pieces by data: an elevation-band outcrop and a recipe at the bloomery station.
+    let bog = catalog
+        .outcrop_by_name("test_bog_outcrop")
+        .expect("band ore");
+    let (bog_tile, _) = (generated.resources.ore.deposits.iter())
+        .find(|(_, d)| d.kind == bog)
+        .expect("band generated");
+    let at = generated.resources.tile_grid.idx(bog_tile.0, bog_tile.1);
+    assert!(generated.resources.tile_grid.elevation[at] <= 140);
+    let bloom = catalog
+        .recipe_by_name("test_bloom")
+        .and_then(|r| r.recipe());
+    let bloomery = catalog.blueprint_by_name("bloomery").expect("C3 station");
+    assert!(bloom.is_some_and(|r| r.compatible_workshops.contains(&bloomery)));
 
     let mut engine = job_world_m2(32, 32);
     let person = worker(&mut engine, 6, 6);

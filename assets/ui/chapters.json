@@ -121,6 +121,40 @@
       "unlock_fact": "first_bronze_tool_used",
       "reward_text_key": "C2_CH7_REWARD",
       "next_preview_key": "C2_CH7_NEXT"
+    },
+    {
+      "id": "first_iron",
+      "number": 8,
+      "title_key": "C3_CH8_TITLE",
+      "year_hint_key": "C3_CH8_YEAR",
+      "conditions": [
+        {
+          "id": "smelted",
+          "fact": "first_iron_bloom",
+          "text_key": "C3_CH8_COND"
+        }
+      ],
+      "locked": false,
+      "unlock_fact": "first_iron_bloom",
+      "reward_text_key": "C3_CH8_REWARD",
+      "next_preview_key": "C3_CH8_NEXT"
+    },
+    {
+      "id": "iron_village",
+      "number": 9,
+      "title_key": "C3_CH9_TITLE",
+      "year_hint_key": "C3_CH9_YEAR",
+      "conditions": [
+        {
+          "id": "used",
+          "fact": "first_iron_tool_used",
+          "text_key": "C3_CH9_COND"
+        }
+      ],
+      "locked": false,
+      "unlock_fact": "first_iron_tool_used",
+      "reward_text_key": "C3_CH9_REWARD",
+      "next_preview_key": "C3_CH9_NEXT"
     }
   ]
 }

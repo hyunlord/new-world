@@ -21,7 +21,6 @@ fn c2_outcrop_origins() {
     let tin = catalog
         .outcrop_by_name("tin_outcrop")
         .expect("authored tin");
-    let iron = catalog.outcrop_by_name("iron_outcrop").expect("inert iron");
     let mut copper_seeds = Vec::new();
     let mut tin_seeds = Vec::new();
     let mut rows = Vec::new();
@@ -44,7 +43,6 @@ fn c2_outcrop_origins() {
                 engine.resources.tile_grid.terrain_type[at],
                 engine.resources.tile_grid.elevation[at]
             ));
-            assert_ne!(deposit.kind, iron);
             clusters.insert((deposit.kind, deposit.cluster));
         }
         let count = |kind| clusters.iter().filter(|(k, _)| *k == kind).count();

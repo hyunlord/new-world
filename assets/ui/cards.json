@@ -346,6 +346,35 @@
         "metal",
         "trade"
       ]
+    },
+    {
+      "id": "no_iron_nearby",
+      "enabled": true,
+      "trigger": {
+        "kind": "bridge",
+        "read": "no_iron_nearby"
+      },
+      "title_key": "C3_CARD_IRON",
+      "body_key": "C3_CARD_IRON_BODY",
+      "options": [
+        {
+          "text_key": "C3_CARD_IRON_WAIT",
+          "command": "none",
+          "recommended": true
+        },
+        {
+          "text_key": "C3_CARD_IRON_TRADE",
+          "command": "open_trade",
+          "recommended": false
+        }
+      ],
+      "default": "none",
+      "expires_hours": 24,
+      "priority": 6,
+      "tags": [
+        "metal",
+        "trade"
+      ]
     }
   ]
 }

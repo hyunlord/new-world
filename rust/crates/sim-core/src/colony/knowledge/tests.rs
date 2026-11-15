@@ -4,9 +4,9 @@ use crate::colony::{BlueprintKind, Designation, ItemKind, RecipeKind};
 const KNOWLEDGE_RON: &str = include_str!("../../../data/colony/knowledge.ron");
 
 #[test]
-fn the_map_parses_to_129_nodes_with_an_acyclic_prereq_graph() {
+fn the_map_parses_to_166_nodes_with_an_acyclic_prereq_graph() {
     let d = defs();
-    assert_eq!(d.nodes.len(), 129);
+    assert_eq!(d.nodes.len(), 166);
     assert_eq!(
         d.nodes[42].name, "weather_lore",
         "historical prefix remains stable"
@@ -51,10 +51,10 @@ fn the_map_parses_to_129_nodes_with_an_acyclic_prereq_graph() {
             vec![Cond::Stockpile(ItemKind::RawPot, 2)]
         ))
     );
-    // Neolithic markers total16; C2 adds eleven bronze marker weights.
-    assert_eq!(d.marker_total(), 27);
+    // Neolithic markers total16; C2 adds eleven bronze and C3 nine iron marker weights.
+    assert_eq!(d.marker_total(), 36);
     let present: u32 = d.nodes.iter().map(|n| u32::from(n.marker_weight)).sum();
-    assert_eq!(present, 27);
+    assert_eq!(present, 36);
     assert!(parse_defs("(schema_version: 2, absent_markers: [], knowledge: [])").is_none());
     let bad = KNOWLEDGE_RON.replace("Recipe(\"haft_axe\")", "Recipe(\"bronze\")");
     assert!(parse_defs(&bad).is_none());
@@ -282,7 +282,7 @@ fn cultivation_is_discovered_not_seeded_and_replaces_the_farming_marker() {
             id("grain_parching").expect("grain")
         ]
     );
-    assert_eq!(d.marker_total(), 27);
+    assert_eq!(d.marker_total(), 36);
     assert_eq!(
         d.nodes
             .iter()

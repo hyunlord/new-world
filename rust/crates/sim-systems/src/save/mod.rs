@@ -36,6 +36,7 @@ mod food_catalog;
 #[cfg(test)]
 mod food_tests;
 mod knowledge_upper;
+mod legacy_bronze_v23;
 mod legacy_buildings_v18;
 mod legacy_food_v13;
 mod legacy_food_v16;
@@ -526,6 +527,8 @@ pub fn load_with(
                         && legacy_spine_v17::accepts_catalog(&envelope.revision, catalog)?)
                     || (legacy_v18
                         && legacy_buildings_v18::accepts_catalog(&envelope.revision, catalog)?)
+                    || (source_version == 23
+                        && legacy_bronze_v23::accepts_catalog(&envelope.revision, catalog)?)
             };
             if !catalog_accepted {
                 return Err(SaveError::Decode(format!(

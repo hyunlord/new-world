@@ -7,7 +7,7 @@ fn bundled_catalogue_is_local_and_code_ordered() {
         Catalog::from_sources(RawSources::bundled(), None).expect("valid bundled catalog");
     assert_eq!(
         catalog.items().map(|d| d.identity.code).collect::<Vec<_>>(),
-        (0..101).collect::<Vec<_>>()
+        (0..119).collect::<Vec<_>>()
     );
     assert_eq!(
         catalog.item_by_name("flax_seed").map(|kind| kind.code()),
@@ -19,8 +19,8 @@ fn bundled_catalogue_is_local_and_code_ordered() {
             .map(|kind| kind.code()),
         Some(18)
     );
-    assert_eq!(catalog.blueprints().count(), 25);
-    assert_eq!(catalog.recipes().count(), 70);
+    assert_eq!(catalog.blueprints().count(), 32);
+    assert_eq!(catalog.recipes().count(), 85);
     assert_eq!(
         catalog
             .items()
@@ -86,6 +86,24 @@ fn bundled_catalogue_is_local_and_code_ordered() {
             "glass_bead",
             "composite_bow",
             "limestone",
+            "bog_iron",
+            "iron_bloom",
+            "wrought_iron",
+            "iron_axe",
+            "iron_hoe",
+            "iron_sickle",
+            "iron_saw",
+            "iron_knife",
+            "iron_adze",
+            "iron_spear",
+            "iron_sword",
+            "iron_helmet",
+            "iron_shield_boss",
+            "nails",
+            "cut_stone",
+            "coin",
+            "book",
+            "steel_edge",
         ]
     );
     assert_eq!(catalog.item_by_name("firewood").map(|k| k.code()), Some(1));
@@ -234,9 +252,9 @@ fn high_sparse_codes_and_revision_inputs_are_deterministic() {
         }],
     };
     let extended = Catalog::from_sources(base, Some(extension)).expect("sparse extension");
-    assert_eq!(extended.items().count(), 102);
+    assert_eq!(extended.items().count(), 120);
     assert_eq!(
-        extended.items().take(101).collect::<Vec<_>>(),
+        extended.items().take(119).collect::<Vec<_>>(),
         first.items().collect::<Vec<_>>()
     );
     assert_eq!(

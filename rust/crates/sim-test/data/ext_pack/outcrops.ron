@@ -5,4 +5,10 @@ category:"ore",tags:["surface_ore"],status:Connected,debt:None,
 origin:(climate:[Mild,Neutral,Harsh],terrain:[plain,forest,hill,mountain],elevation:None,per_world:(1,1),cluster:(1,1)),
 presence_permille:1000,camp_radius:60,units:13,material:"test_ore",yield_item:"test_ore",
 knowledge:"prospecting",quarry_knowledge:"stone_quarrying",reveal_radius:3,quarry_radius:1,
-art:None,glyph:"X")])
+art:None,glyph:"X"),(
+identity:(code:65552,id:"test_bog_outcrop",name_key:"EXT_BOG_OUTCROP",serde_name:"TestBogOutcrop",serde_aliases:[],resolver_aliases:[]),
+category:"ore",tags:["surface_ore"],status:Connected,debt:None,
+origin:(climate:[Mild,Neutral,Harsh],terrain:[plain,forest],elevation:Some((0,140)),per_world:(1,1),cluster:(1,1)),
+presence_permille:1000,camp_radius:60,units:7,material:"test_ore",yield_item:"test_bog",
+knowledge:"prospecting",quarry_knowledge:"stone_quarrying",reveal_radius:3,quarry_radius:1,
+art:None,glyph:"B")])

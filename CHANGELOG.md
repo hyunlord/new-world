@@ -1,5 +1,26 @@
 # Changelog
 
+## C3-a — iron content, not yet published (2026-11-15)
+
+Content pass for bible §4.4 on the C2 metal machinery (ADR 0066, `docs/v8/c3/C3_DECISIONS.md`). Gated together with the merged M-SIMCHECK fixes. Evidence stays outside git in `/Users/rexxa/work/c3-data`.
+
+### Added
+- Iron outcrops: iron ore on hills/mountains (now Connected) and bog iron (code 4) on plain/forest at or below river level; both within 80 tiles of the camp; seeds 0–63 all have iron in range (`c3_iron_origins`).
+- The iron column of the tech map (ids 129–165): iron smelting, forging, iron tools, iron weapons, stone house, town wall and gate Connected; steel, plough, horse, paved road, bridge, aqueduct, reservoir, tower, warehouse, market, coinage, law, taxation, bureaucracy, writing, school, maps, militia, temples, geometry, quern, watermill, silk, purple dye, falconry and veterinary Inert with their pass named. Iron-era markers: iron smelting 3, forging 3, iron tools 2, stone house 1.
+- 18 items (bog iron, bloom, wrought bar, iron axe/hoe/sickle/saw/knife/adze/spear/sword/helmet/shield boss, nails, cut stone; coin, book and steel edge Inert), 15 recipes (bloomery smelting, forge refining, anvil forging, stone dressing), stations bloomery/forge/anvil/mason bench, cut-stone wall, town wall and town gate pieces, and the cut-stone house (house step 5, upgraded from the mud-brick house). Bloomery and smithy templates are Connected.
+- Chapters 8 "쇠를 녹이다" and 9 "쇠의 마을", the `no_iron_nearby` card and a `wrought_iron` goods row for worlds without iron.
+- Published C2-b format-23 saves load through an exact-revision adapter (`legacy_bronze_v23`).
+- Tests `c3_knowledge`, `c3_content` (`c3_recipes_resolve`), `c3_iron_origins`; ext_pack adds a bog-style outcrop, ore and bloomery recipe by data only.
+
+### Changed
+- Template tier range 1..=5. The neolithic `stone_house` row is unchanged so saves holding one still load.
+- Bronze-era debts that named C3 now name the pass that will connect them (M-BAL, M-GROW).
+- `c2_buildings` re-stocks a need-cancelled brick craft's inputs (the merged hearth-pile fix changed its trajectory).
+- Chain captures use V3's subject framing (cherry-picked from the unpublished v8/visual-v3).
+
+### Removed
+- None.
+
 ## M-SIMCHECK — fixes complete, not yet published (2026-11-15)
 
 Diagnosis pass (owner priority "simulation logic first"): seeds 0–15 × 48 days (2 in-game years), steward ON and OFF, no orders, scored against expectations written before the runs. Clear bugs fixed with a red-before test each; balance goes to M-BAL (`docs/v8/BALANCE_DEBT.md`), unfixed logic defects to `docs/ISSUES.md` (SIMCHECK-1…10). Raw runs and the Korean report stay outside git in `/Users/rexxa/work/simcheck-data`.

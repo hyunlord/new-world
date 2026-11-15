@@ -50,7 +50,7 @@ fn c1_knowledge_validator() {
     let catalog = Catalog::from_sources(RawSources::bundled(), None).expect("C1 catalogue");
     let defs = catalog.knowledge_defs();
     // The historical 43-node prefix is retained; every requested new node is distinct.
-    assert_eq!(defs.nodes.len(), 43 + ADDED.len() + 47);
+    assert_eq!(defs.nodes.len(), 43 + ADDED.len() + 47 + 37);
     assert_eq!(defs.id_of("weather_lore"), Some(42));
     for (offset, name) in ADDED.into_iter().enumerate() {
         let id = defs.id_of(name).expect(name);

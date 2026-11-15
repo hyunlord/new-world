@@ -459,7 +459,8 @@ mod tests {
             .collect();
         assert_eq!(&codes[..13], &[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
         assert_eq!(&codes[13..15], &[13, 14]);
-        assert_eq!(&codes[15..], &[15, 16, 17, 18, 19, 20, 21, 22, 23, 24]);
+        assert_eq!(&codes[15..25], &[15, 16, 17, 18, 19, 20, 21, 22, 23, 24]);
+        assert_eq!(&codes[25..], &[25, 26, 27, 28, 29, 30, 31]);
         let space: Vec<bool> = super::super::content::installed_or_bundled()
             .blueprints()
             .map(|d| {
@@ -477,8 +478,13 @@ mod tests {
         );
         assert_eq!(&space[13..15], &[false, false]);
         assert_eq!(
-            &space[15..],
+            &space[15..25],
             &[true, false, false, false, false, false, true, true, false, true]
+        );
+        // C3 stations, then the cut-stone and town walls and the town gate.
+        assert_eq!(
+            &space[25..],
+            &[false, false, false, false, true, true, true]
         );
         assert!(MaterialNeeds::none().complete());
         assert_eq!(MaterialNeeds::none().needed_total(), 0);

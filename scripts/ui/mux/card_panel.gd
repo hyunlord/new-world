@@ -238,6 +238,8 @@ func _check_bridge_trigger(read_name: String) -> bool:
 			return int(stock.get("first_kid_id", -1)) >= 0 and stock.get("ids", PackedInt64Array()).has(int(stock.get("first_kid_id", -1)))
 		"tin_shortage":
 			return bool(SimReads.read(_world, "get_ui_facts").get("tin_shortage", false))
+		"no_iron_nearby":
+			return bool(SimReads.read(_world, "get_ui_facts").get("no_iron_nearby", false))
 		"cloth_short":
 			return bool(SimReads.read(_world, "get_settlement_diagnosis").get("cloth_short", false))
 		"tools_below_need":
@@ -312,6 +314,9 @@ func _collect_trigger_data(card_def: Dictionary) -> Dictionary:
 	var card_id: String = str(card_def.get("id", ""))
 	if card_id == "tin_shortage":
 		data["caravan_id"] = int(SimReads.read(_world, "get_ui_facts").get("tin_caravan", -1))
+		return data
+	if card_id == "no_iron_nearby":
+		data["caravan_id"] = int(SimReads.read(_world, "get_ui_facts").get("iron_caravan", -1))
 		return data
 	if card_id == "first_kid":
 		data["livestock_id"] = int(SimReads.read(_world, "get_livestock").get("first_kid_id", -1))
