@@ -6,10 +6,10 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import asset_building_concepts as K
+import asset_stations as A
 import common as C
 import stations as S
-import asset_stations as A
-import asset_building_concepts as K
 
 DATA = Path(__file__).with_suffix('.json')
 STAGES = {'foundation': 0.18, 'half': 1.1, 'complete': 2.2}

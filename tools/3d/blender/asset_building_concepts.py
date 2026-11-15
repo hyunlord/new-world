@@ -1,7 +1,6 @@
 """Visual concepts for inert templates whose sparse pieces cannot expand into a game site."""
 import math
 
-
 KINDS = {'shrine', 'chief_hall', 'trading_post', 'market', 'warehouse'}
 
 

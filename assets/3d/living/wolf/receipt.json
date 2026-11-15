@@ -1,0 +1,38 @@
+{
+  "species": "wolf",
+  "ground_fragment_vertices_removed": 20,
+  "raw_sha256": "bb4cb869561e8dac90cf1302560e34b579f9d4a45ec6dcdaa2cd1790d2c88900",
+  "seed": 0,
+  "trellis_revision": "75fbf0183001ed9876c8dbb35de6b68552ee08bd",
+  "source": "/Users/rexxa/work/3d-data/m3d-assets/living/raw/wolf-attempt1.glb",
+  "triangles": 1944,
+  "shoulder_height_m": 0.8,
+  "height_landmark_xyz": [
+    0.0036021771375089884,
+    -0.1100538820028305,
+    0.800000011920929
+  ],
+  "bones": [
+    "Root",
+    "Neck",
+    "Head",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "BackUpper.L",
+    "BackLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "BackUpper.R",
+    "BackLower.R",
+    "Tail"
+  ],
+  "animations": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down"
+  ],
+  "texture": "512x512 embedded atlas",
+  "pipeline": "TRELLIS.2 -> set-B remesh/atlas -> fitted shared quadruped -> shared clips",
+  "front": "Godot +Z / Blender -Y"
+}

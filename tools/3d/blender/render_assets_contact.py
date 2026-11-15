@@ -19,8 +19,8 @@ from pathlib import Path
 
 import bpy
 import numpy as np
-from mathutils import Vector
 from bpy_extras.object_utils import world_to_camera_view
+from mathutils import Vector
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import common as C
@@ -145,21 +145,30 @@ def main() -> None:
         CELL = max(512, math.ceil(max(sizes) * 1.7) * 128)
         available = [key for key, entry in baseline["models"].items() if entry["family"] == family]
         ref_id = REFERENCES.get(family, available[0] if available else "hearth")
-        ref = baseline["models"][ref_id]
-        ref_path = out / f"reference_{ref_id}.glb"
-        ref_path.write_bytes(subprocess.check_output(["git", "show", f"{BASE_REF}:assets/3d/{ref['file']}"], cwd=C.REPO))
-        CELL = max(CELL, math.ceil(max(ref["height"], *ref["footprint"]) * 1.7) * 128)
+        row_references = {}
+        for model_id, _filename in models:
+            species = manifest["models"][model_id].get("species", ref_id)
+            row_references[model_id] = species if species in baseline["models"] else ref_id
+        reference_ids = sorted(set(row_references.values()))
+        for key in reference_ids:
+            ref = baseline["models"][key]
+            CELL = max(CELL, math.ceil(max(ref["height"], *ref["footprint"]) * 1.7) * 128)
         scene()
         bpy.context.scene.render.filepath = str(out / "_cell.png")
-        references = [render_cell(ref_path, f"M3D-1 {ref_id}", zoom) for zoom in (1, 2)]
+        references = {}
+        for key in reference_ids:
+            ref = baseline["models"][key]
+            ref_path = out / f"reference_{key}.glb"
+            ref_path.write_bytes(subprocess.check_output(["git", "show", f"{BASE_REF}:assets/3d/{ref['file']}"], cwd=C.REPO))
+            references[key] = [render_cell(ref_path, f"M3D-1 {key}", zoom) for zoom in (1, 2)]
         for start in range(0, len(models), ROWS):
             cells = []
             for model_id, filename in models[start:start + ROWS]:
-                cells.extend(references)
+                cells.extend(references[row_references[model_id]])
                 cells.extend(render_cell(Path(C.REPO) / "assets/3d" / filename, model_id, zoom) for zoom in (1, 2))
             path = out / f"{family}_{start // ROWS + 1:03}.png"
             save_page(cells, path)
-            records.append({"family": family, "sheet": path.name, "models": [m[0] for m in models[start:start + ROWS]], "reference": ref_id})
+            records.append({"family": family, "sheet": path.name, "models": [m[0] for m in models[start:start + ROWS]], "reference": ref_id, "row_references": {m[0]: row_references[m[0]] for m in models[start:start + ROWS]}})
     (out / "index.json").write_text(json.dumps({"baseline": BASE_REF, "fov": 30, "pitch": 50, "pixels_per_metre": [64, 128], "sheets": records}, indent=2) + "\n")
     print(f"CONTACT PASS: {sum(len(v) for v in families.values())} models, {len(records)} sheets")
 

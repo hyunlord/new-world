@@ -38,9 +38,9 @@ def item(m, row):
     if tint in COLORS:
         m.colors.update({k: COLORS[tint] for k in ("metal", "stone", "clay", "vein")})
     if name == "log":
-        I.log_pile(m, dict(rows=(1,), length=0.7, r=0.09))
+        I.log_pile(m, {"rows": (1,), "length": 0.7, "r": 0.09})
     elif name == "firewood":
-        I.firewood(m, dict(n=3))
+        I.firewood(m, {"n": 3})
     elif "hide" in name or "cloak" in name:
         I.hide(m, {})
     elif "cloth" in name or "tunic" in name or "wrap" in name or name in ("poultice", "leather_armor"):

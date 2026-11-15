@@ -4,6 +4,7 @@
 
 ### Added
 - Frozen content inventory and 572 deterministic static GLBs: 119 item codes × 3 stack sizes, 76 plant/crop/outcrop models, 63 station/wall/fence variants, one packed floor and 25 template concepts × 3 construction previews (`assets/3d/INVENTORY.md`, ADR 0067).
+- Seven TRELLIS-derived animal species and 21 human models (three set-B originals plus 18 age/sex/era attachment variants), shared skeletons/clips and fixed-raw Blender reproducibility (`tools/3d/chars/`). Skinned GLBs are explicit and do not claim VAT integration.
 - Separate manifests and game-camera family review sheets; raw evidence and Korean report are external under `/Users/rexxa/work/3d-data/m3d-assets/`. Requested remote C3 ref availability and living-model provenance are reported explicitly.
 
 ## M3D-1 — 3D view (branch v8/3d, not published; 2D stays the default)

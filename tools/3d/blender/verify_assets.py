@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Check delivered model fragments: python3 tools/3d/blender/verify_assets.py <manifest...>.
 
 Uses the shipped GLB reader; no Blender or additional dependencies required.

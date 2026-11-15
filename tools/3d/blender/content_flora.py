@@ -14,8 +14,8 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import common as C  # noqa: E402
-import rocks  # noqa: E402
+import common as C
+import rocks
 
 SOURCE_SHA = "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
 # kind, height, seed/flower colour; visual authoring only, never simulation content.

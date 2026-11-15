@@ -8,8 +8,8 @@ Reads binary POSITION vertices independently of the generator's connection table
 # dependencies = []
 # ///
 import json
-from pathlib import Path
 import struct
+from pathlib import Path
 
 MODELS = Path(__file__).resolve().parents[3] / "assets/3d/models"
 

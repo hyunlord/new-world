@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Merge explicit asset fragments without changing M3D-1's manifest.
 
 python3 tools/3d/blender/merge_assets.py <fragment...>

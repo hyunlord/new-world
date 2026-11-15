@@ -7,14 +7,14 @@ Run: python3 tools/3d/blender/test_asset_static.py
 # dependencies = []
 # ///
 import json
-from pathlib import Path
 import struct
+from pathlib import Path
 
 from test_fence_directions import positions
 
 ROOT = Path(__file__).resolve().parents[3]
 MODELS = ROOT / "assets/3d/models"
-PALETTE = set("trunk canopy fruit stone vein earth wood wood_dark clay metal glow thatch hide cloth skin hair leather horn fur fur_light snow".split())
+PALETTE = {"trunk", "canopy", "fruit", "stone", "vein", "earth", "wood", "wood_dark", "clay", "metal", "glow", "thatch", "hide", "cloth", "skin", "hair", "leather", "horn", "fur", "fur_light", "snow"}
 
 
 def check():

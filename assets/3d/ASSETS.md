@@ -1,6 +1,6 @@
 # M3D-ASSETS delivery
 
-Static delivery: 572 additional GLBs (634 including the original 62).
+Delivery: 600 additional GLBs (572 static + 28 living), 662 including the original 62.
 
 This pack extends M3D-1; it does not change the simulation or the renderer. The
 before-work inventory is [INVENTORY.md](INVENTORY.md). Its requested remote C3
@@ -21,7 +21,8 @@ python3 tools/3d/blender/merge_assets.py \
   assets/3d/models/asset_stations_manifest.json \
   assets/3d/models/asset_items_manifest.json \
   assets/3d/models/asset_blueprints_manifest.json \
-  assets/3d/flora_manifest.json assets/3d/buildings_manifest.json
+  assets/3d/flora_manifest.json assets/3d/buildings_manifest.json \
+  assets/3d/living/manifest.json
 python3 tools/3d/blender/test_asset_static.py
 python3 tools/3d/blender/verify_assets.py assets/3d/assets_manifest.json
 ```
@@ -29,7 +30,11 @@ python3 tools/3d/blender/verify_assets.py assets/3d/assets_manifest.json
 `assets_manifest.json` is the combined lookup including original M3D-1 entries;
 `models/manifest.json` remains untouched. `merge_assets.py` rejects duplicate
 model IDs and unresolved blueprint references. Pass the living fragment too when
-assembling the complete pack; the living pipeline has a separate reproduction
+assembling the complete pack; living IDs are prefixed `living_` and never replace
+original IDs. These are skinned GLBs with shared clips, not M3D-1 VAT outputs.
+Quadruped clips are `idle`, `walk`, `graze`, `lie_down`; runtime `rest`/`dead`
+poses and M3D-1-only `run`/`attack` need an explicit integration mapping.
+The living pipeline has a separate reproduction
 procedure under `tools/3d/chars/README.md`.
 
 The fragments expose:
