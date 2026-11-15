@@ -544,6 +544,42 @@ mod tests {
     use super::*;
 
     #[test]
+    fn bloomery_bill_without_charcoal_names_charcoal_and_its_clamp() {
+        use sim_core::colony::{content, BlueprintKind, Workshop};
+        content::bootstrap(content::BootSelection::Bundled).expect("bundled content");
+        // C3-b: "괴철로에 숯이 없습니다" is the generic C2-b fuel path; charcoal is fuel-tagged.
+        let shop = Workshop {
+            id: 1,
+            kind: BlueprintKind::from_name("bloomery").expect("bloomery"),
+            top_left: (0, 0),
+            size: (3, 3),
+            bills: vec![sim_core::colony::Bill {
+                id: 1,
+                recipe: RecipeKind::from_name("smelt_bloom").expect("smelt_bloom"),
+                mode: BillMode::Maintain(1),
+                done: 0,
+                suspended: false,
+                auto: false,
+            }],
+            shelf: Vec::new(),
+            active: None,
+        };
+        assert_eq!(
+            fuel_short(&shop),
+            Some((
+                sim_core::colony::ItemKind::from_name("charcoal")
+                    .expect("charcoal")
+                    .code(),
+                i64::from(
+                    BlueprintKind::from_name("charcoal_clamp")
+                        .expect("clamp")
+                        .code()
+                )
+            ))
+        );
+    }
+
+    #[test]
     fn names_parse_and_bad_values_are_refused() {
         let add = EconomyCommand::AddBill {
             workshop: 2,

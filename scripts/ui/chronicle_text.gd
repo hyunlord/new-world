@@ -190,21 +190,37 @@ static func sentence(row: Dictionary, viewed: int, locale: Node, info: Dictionar
 
 
 ## C2-b kinds 67–69 read only their own columns; a trade or first-ingot cause follows the "→" link.
+## C3-b: first-ingot/first-tool lines add the bridge's metal evidence (knowledge, place, plain inputs);
+## an item may author its own first-ingot verb as "CHRON_FIRST_" + its name key.
 static func metal_sentence(row: Dictionary, locale: Node) -> String:
 	var who: String = person(int(row.get("subject", -1)), locale)
 	var cause: int = int(row.get("cause", -1))
+	var evidence: Dictionary = row.get("ore_evidence", {})
+	var causes: Array[String] = []
+	for key: String in evidence.get("knowledge_keys", PackedStringArray()):
+		causes.append(loc(locale, key))
+	if evidence.has("place_key"):
+		causes.append(loc(locale, str(evidence["place_key"])))
 	match int(row.get("kind", -1)):
 		67:
-			var text: String = loc(locale, "C2_CHRON_FIRST_INGOT").format({"person": who,
-				"item": EconomyText.item(locale, int(row.get("value", -1))), "recipe": EconomyText.recipe(locale, cause)})
+			var item: int = int(row.get("value", -1))
+			var verb: String = "CHRON_FIRST_" + str(Content.row("items", item).get("name_key", ""))
+			var head: String = verb if locale != null and str(locale.call("ltr", verb)) != verb else "C2_CHRON_FIRST_INGOT"
+			if causes.is_empty():
+				causes.append(EconomyText.recipe(locale, cause))
+			var text: String = loc(locale, head).format({"person": who, "item": EconomyText.item(locale, item)})
+			text += loc(locale, "C3_CHRON_CAUSED_BY").format({"causes": " · ".join(causes)})
 			var miner: int = int(row.get("other", -1))
 			if miner >= 0:
 				text += loc(locale, "C2_CHRON_MINED_BY").format({"miner": person(miner, locale)})
+			for input: int in evidence.get("inputs", PackedInt64Array()):
+				text += " · " + EconomyText.item(locale, input)
 			return text
 		68:
 			return loc(locale, "C2_CHRON_TOOL_UPGRADED").format({"person": who,
 				"old": EconomyText.item(locale, int(row.get("value", -1))), "new": EconomyText.item(locale, cause)})
-	return loc(locale, "C2_CHRON_FIRST_TOOL_USED").format({"person": who, "item": EconomyText.item(locale, cause)})
+	var used: String = loc(locale, "C2_CHRON_FIRST_TOOL_USED").format({"person": who, "item": EconomyText.item(locale, cause)})
+	return used + (loc(locale, "C3_CHRON_CAUSED_BY").format({"causes": " · ".join(causes)}) if not causes.is_empty() else "")
 
 
 ## Kind 60 pins the completed template ordinal and cause, even after upgrade or demolition.
