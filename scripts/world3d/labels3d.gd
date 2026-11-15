@@ -103,7 +103,8 @@ func _process(_delta: float) -> void:
 		_version = version
 		_index_overlay(SimReads.read(_world_sim, "get_colony_overlay"))
 	var tick: int = int(SimReads.read(_world_sim, "get_time_snapshot").get("tick", -1))
-	if tick != _tick:
+	# The per-tick reads wait for World3D's heavy-work slot (never on a simulation step).
+	if tick != _tick and (_world3d == null or bool(_world3d.call("claim_heavy"))):
 		_tick = tick
 		_animals = SimReads.read(_world_sim, "get_animals")
 		_livestock = SimReads.read(_world_sim, "get_livestock")
