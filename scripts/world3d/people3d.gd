@@ -55,6 +55,9 @@ var _blob_mesh: QuadMesh = null
 var _aid_of: Dictionary = {}
 var _far_param: Array = []
 var _lod_at: float = -1.0
+## AgentIds to visit next frame (moving, dirty, or whose state flags changed); `_was_running` re-visits all on pause.
+var _active: Dictionary = {}
+var _was_running: bool = true
 ## Current era id (bindings3d `people.by_era` picks the age/sex/era variant).
 var _era: String = ""
 var _era_tick: int = -1000000
@@ -67,6 +70,7 @@ func setup(world_sim: Node, terrain: Node) -> void:
 		_motion.clear()
 		_state.clear()
 		_aid_of.clear()
+		_active.clear()
 		for crowd: Dictionary in _crowds.values():
 			for n: Variant in [crowd["mmi"], crowd["lod"], crowd["blob"]]:
 				if n != null:
@@ -150,8 +154,15 @@ func _process(delta: float) -> void:
 	var height: float = float(Data3D.param("people.adult_height", 1.7))
 	var selected: int = _selected_bits()
 	_ring.visible = false
-	# Only people who move, or whose clip or look changed, are written: a still crowd costs nothing per frame.
-	for aid: int in _state:
+	# Only people who move, or whose clip or look changed, are visited: a still crowd costs nothing per frame.
+	if running != _was_running:
+		_was_running = running
+		for aid: int in _state:
+			_active[aid] = true
+	for aid: int in _active.keys():
+		if not _state.has(aid):
+			_active.erase(aid)
+			continue
 		var st: Dictionary = _state[aid]
 		var m: Dictionary = _motion[aid]
 		var moving: bool = float(m["t"]) < 1.0
@@ -190,9 +201,12 @@ func _process(delta: float) -> void:
 					lm.set_instance_color(cap * c + slot, look["skin"])
 					lm.set_instance_custom_data(cap * c + slot, custom)
 		st["dirty"] = false
-		if int(st["bits"]) == selected and selected != -1:
-			_ring.visible = true
-			_ring.position = (st["feet"] as Vector3) + Vector3(0, 0.04, 0)
+		if float(m["t"]) >= 1.0:
+			_active.erase(aid)
+	var chosen: Dictionary = _state.get(_aid_of.get(selected, -1), {}) if selected != -1 else {}
+	if not chosen.is_empty():
+		_ring.visible = true
+		_ring.position = (chosen["feet"] as Vector3) + Vector3(0, 0.04, 0)
 	_update_highlights()
 
 
@@ -454,7 +468,10 @@ func _refresh(snap: Dictionary) -> void:
 		st["scale"] = scale
 		st["bits"] = ids[i] if i < ids.size() else -1
 		_aid_of[st["bits"]] = aid
-		st["flags"] = _flags(snap, i)
+		var flags: Array = _flags(snap, i)
+		if bool(st["dirty"]) or flags != st.get("flags") or m["tile"] != tile or float(m["t"]) < 1.0:
+			_active[aid] = true
+		st["flags"] = flags
 		_state[aid] = st
 	for aid: int in _state.keys():
 		if not seen.has(aid):
