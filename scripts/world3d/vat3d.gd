@@ -6,13 +6,14 @@
 #   instance colour then carries the first tint). A `textured` character (set B: json `textured`, `atlas`) keeps its atlas
 #   UVs in UV; loaded with `tint_atlas` its regions come from the atlas colour under each vertex (dark → hair 2,
 #   yellow/olive → clothing 3, else skin 1) and the shader rescales the painted colours toward the person's tints
-#   (the tint shaded by texel luminance over the region mean), so painted detail stays and appearance still varies. `material()` is a ShaderMaterial on shaders/world3d/vat.gdshader;
+#   (painted colours kept: skin value only, small clothing hue/value shift, hair blend; params3d `people.tint`), so painted detail stays and appearance still varies. `material()` is a ShaderMaterial on shaders/world3d/vat.gdshader;
 #   per instance: COLOR.rgb = region-1 tint, INSTANCE_CUSTOM = (clip start × 256 + clip count, phase seconds,
 #   region-2 colour, region-3 colour) with colours packed as r·65536 + g·256 + b (exact in a float).
 # Bridge methods called: none.
 extends RefCounted
 
 const VAT_SHADER = preload("res://shaders/world3d/vat.gdshader")
+const Data3D = preload("res://scripts/world3d/data3d.gd")
 const DIR: String = "res://assets/3d/vat"
 
 var id: String = ""
@@ -159,6 +160,12 @@ func material(other: Color) -> ShaderMaterial:
 		mat.set_shader_parameter("mean_skin", region_means[0])
 		mat.set_shader_parameter("mean_hair", region_means[1])
 		mat.set_shader_parameter("mean_cloth", region_means[2])
+		var sv: Array = Data3D.param("people.tint.skin_value", [0.8, 1.2])
+		var cv: Array = Data3D.param("people.tint.cloth_value", [0.8, 1.2])
+		mat.set_shader_parameter("skin_value", Vector2(float(sv[0]), float(sv[1])))
+		mat.set_shader_parameter("cloth_value", Vector2(float(cv[0]), float(cv[1])))
+		mat.set_shader_parameter("hair_mix", float(Data3D.param("people.tint.hair_mix", 0.6)))
+		mat.set_shader_parameter("cloth_hue_mix", float(Data3D.param("people.tint.cloth_hue_mix", 0.3)))
 	mat.set_shader_parameter("vat", texture)
 	mat.set_shader_parameter("width", float(meta.get("width", 1)))
 	mat.set_shader_parameter("fps", float(meta.get("fps", 15)))

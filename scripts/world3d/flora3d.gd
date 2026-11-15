@@ -11,8 +11,10 @@
 #   binding structure → bindings3d `nodes.by_structure`), ore outcrops from get_outcrops with the vein surface
 #   tinted by the outcrop's catalogue tint material and a floating marker above each known deposit; a worked-out
 #   outcrop (`remaining` 0) is smaller, vein in bindings3d `outcrops.depleted_tint`, no marker.
+#   Trees within a few tiles of walls or floors are smaller (params3d `flora.near_built_scale` by distance) so the
+#   village reads from the overview.
 #   shaders/world3d/flora.gdshader adds a slow sway and winter snow on top surfaces.
-# Bridge methods called: via SimReads get_trees, get_time_snapshot, get_world_info, get_resource_snapshot,
+# Bridge methods called: via SimReads get_trees, get_space, get_time_snapshot, get_world_info, get_resource_snapshot,
 #   get_colony_overlay, get_outcrops, get_content_catalog; signal world_reset.
 extends Node3D
 
@@ -24,6 +26,8 @@ const FLORA_SHADER = preload("res://shaders/world3d/flora.gdshader")
 var _world_sim: Node = null
 var _terrain: Node = null
 var _seed: int = 0
+## Tile → Chebyshev distance (1…n) to the nearest wall or floor (see _built_distance).
+var _near_built: Dictionary = {}
 var _keys: Dictionary = {}
 var _stamp_key: String = ""
 var _slow_tick: int = -1000000
@@ -66,7 +70,15 @@ func _process(_delta: float) -> void:
 	var width: int = int(_terrain.get("width"))
 	# Each family reads its snapshot only when its own counter moved (an FFI read of every tree each tick cost
 	# milliseconds), and rebuilds only when its content changed.
-	var tkey: String = "%d|%d|%d|%d" % [int(stamp.get("trees", -1)), season, _stump_epoch(time), width]
+	# Walls and floors only change with the overlay counter: read get_space then.
+	if str(_keys.get("built_v", "")) != str(stamp.get("overlay", -1)):
+		_keys["built_v"] = str(stamp.get("overlay", -1))
+		var space: Dictionary = SimReads.read(_world_sim, "get_space")
+		var built_key: int = hash([space.get("wall_xs"), space.get("wall_ys"), space.get("floor_xs"), space.get("floor_ys")])
+		if built_key != int(_keys.get("built", 0)):
+			_keys["built"] = built_key
+			_near_built = _built_distance(space)
+	var tkey: String = "%d|%d|%d|%d|%d" % [int(stamp.get("trees", -1)), season, _stump_epoch(time), width, int(_keys.get("built", 0))]
 	if str(_keys.get("trees", "")) != tkey:
 		_keys["trees"] = tkey
 		var batches: Dictionary = {}
@@ -107,6 +119,35 @@ func _process(_delta: float) -> void:
 			_apply("nodes", nb)
 
 
+## Tiles within `flora.near_built_scale`.size() steps (Chebyshev) of a wall or floor → their distance (1…n), so trees
+## beside the village are drawn smaller and the overview shows the houses instead of canopy.
+func _built_distance(space: Dictionary) -> Dictionary:
+	var reach: int = (Data3D.param("flora.near_built_scale", [0.55, 0.7, 0.85]) as Array).size()
+	var out: Dictionary = {}
+	var frontier: Array[Vector2i] = []
+	for pair: Array in [[space.get("wall_xs", PackedInt32Array()), space.get("wall_ys", PackedInt32Array())],
+			[space.get("floor_xs", PackedInt32Array()), space.get("floor_ys", PackedInt32Array())]]:
+		for i: int in mini((pair[0] as PackedInt32Array).size(), (pair[1] as PackedInt32Array).size()):
+			var t: Vector2i = Vector2i(pair[0][i], pair[1][i])
+			if not out.has(t):
+				out[t] = 0
+				frontier.append(t)
+	for step: int in range(1, reach + 1):
+		var next: Array[Vector2i] = []
+		for t: Vector2i in frontier:
+			for dy: int in [-1, 0, 1]:
+				for dx: int in [-1, 0, 1]:
+					var n: Vector2i = t + Vector2i(dx, dy)
+					if not out.has(n):
+						out[n] = step
+						next.append(n)
+		frontier = next
+	for t: Vector2i in out.keys():
+		if int(out[t]) == 0:
+			out[t] = 1
+	return out
+
+
 ## Stumps expire by tick; re-key once an hour of game time so expiry is seen without a per-frame rebuild.
 func _stump_epoch(time: Dictionary) -> int:
 	return int(float(time.get("tick", 0)) / 60.0) if not _stumps.is_empty() else 0
@@ -118,6 +159,7 @@ func _build_trees(batches: Dictionary, trees: Dictionary, tick: int) -> void:
 	var smax: float = float(Data3D.param("flora.scale_max", 1.2))
 	var large_permille: int = int((ArtData.bindings().get("trees", {}) as Dictionary).get("large_permille", 600))
 	var large_scale: float = float(Data3D.param("flora.large_scale", 1.18))
+	var near_scale: Array = Data3D.param("flora.near_built_scale", [0.55, 0.7, 0.85])
 	# Trees.
 	var xs: PackedInt32Array = trees.get("xs", PackedInt32Array())
 	var ys: PackedInt32Array = trees.get("ys", PackedInt32Array())
@@ -133,6 +175,8 @@ func _build_trees(batches: Dictionary, trees: Dictionary, tick: int) -> void:
 		var size: float = lerpf(smin, smax, float(View.key_hash(_seed, t.x, t.y, 23) % 1000) / 1000.0)
 		if View.key_hash(_seed, t.x, t.y, 29) % 1000 >= large_permille:
 			size *= large_scale
+		if _near_built.has(t):
+			size *= float(near_scale[int(_near_built[t]) - 1])
 		_add(batches, model + "|" + _variant_key(sp), t, h, jitter, size)
 	_update_stumps(now, tick)
 	var stump_model: String = str(Data3D.binding("flora.stump", ""))

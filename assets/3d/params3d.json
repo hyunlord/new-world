@@ -51,7 +51,8 @@
     "jitter_tiles": 0.22,
     "scale_min": 0.85,
     "scale_max": 1.2,
-    "large_scale": 1.18
+    "large_scale": 1.18,
+    "near_built_scale": [0.55, 0.7, 0.85]
   },
   "structures": {
     "wall_height": 2.2,
@@ -76,7 +77,8 @@
     "pick_radius_px": 18,
     "contact_shadow": {"radius": 0.42, "alpha": 0.45},
     "chunk_tiles": 16,
-    "lod_distance": 55.0
+    "lod_distance": 55.0,
+    "tint": {"skin_value": [0.8, 1.2], "hair_mix": 0.6, "cloth_hue_mix": 0.3, "cloth_value": [0.8, 1.2]}
   },
   "stations": {
     "work_puffs": {"amount": 10, "colour": [0.78, 0.7, 0.55]}
