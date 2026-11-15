@@ -54,6 +54,7 @@ var _blob_mesh: QuadMesh = null
 ## labels call per person per frame).
 var _aid_of: Dictionary = {}
 var _far_param: Array = []
+var _lod_at: float = -1.0
 ## Current era id (bindings3d `people.by_era` picks the age/sex/era variant).
 var _era: String = ""
 var _era_tick: int = -1000000
@@ -251,6 +252,15 @@ func _model(model: String) -> Dictionary:
 ## Very large crowds: far (LOD) figures drop their outline and x-ray passes (they cost most of the frame at 10 000
 ## people); near figures keep them.
 func _simplify_far(on: bool) -> void:
+	# Large crowds also switch to LOD closer (`people.simple_lod_distance`).
+	var lod_at: float = float(Data3D.param("people.simple_lod_distance" if on else "people.lod_distance", 55.0))
+	if lod_at != _lod_at:
+		_lod_at = lod_at
+		for crowd: Dictionary in _crowds.values():
+			if crowd["lod"] != null:
+				crowd["mmi"].visibility_range_end = lod_at
+				crowd["lod"].visibility_range_begin = lod_at
+			crowd["blob"].visibility_range_end = lod_at
 	for row: Dictionary in _models.values():
 		var mat: ShaderMaterial = row.get("lod_mat")
 		if mat == null:
@@ -270,7 +280,7 @@ func _bin(model: String, tile: Vector2i) -> String:
 	if _crowds.has(key):
 		return key
 	var row: Dictionary = _models[model]
-	var lod_at: float = float(Data3D.param("people.lod_distance", 55.0))
+	var lod_at: float = _lod_at if _lod_at > 0.0 else float(Data3D.param("people.lod_distance", 55.0))
 	var mmi: MultiMeshInstance3D = _bin_node("Crowd_" + key, row["mat"])
 	var lod: MultiMeshInstance3D = null
 	if row["lod_vat"] != null:

@@ -79,6 +79,7 @@
     "chunk_tiles": 16,
     "lod_distance": 55.0,
     "simple_above": 2000,
+    "simple_lod_distance": 15.0,
     "tint": {"skin_value": [0.8, 1.2], "hair_mix": 0.6, "cloth_hue_mix": 0.3, "cloth_value": [0.8, 1.2]},
     "far_scale": [55.0, 2.2],
     "far_fill": [0.16, 0.13, 0.11],
