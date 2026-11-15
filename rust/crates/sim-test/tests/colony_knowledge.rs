@@ -753,7 +753,7 @@ fn the_aggregate_of_a_fresh_colony_matches_its_seeding() {
         let t = &engine.resources.colony.tech;
         assert_eq!(t.at_risk(), 2, "seed {seed}");
         assert_eq!(t.adults, 10);
-        assert_eq!(knowledge::defs().marker_total(), 36);
+        assert_eq!(knowledge::defs().marker_total(), 37);
         assert_eq!(t.progress_permille, 25);
         assert_eq!(t.states.len(), 166);
         assert_eq!(knowledge::defs().nodes[42].name, "weather_lore");
