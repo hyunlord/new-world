@@ -1900,6 +1900,8 @@
   "MIND_MINING_WORK": "Mine ore",
   "MIND_SMELTING_WORK": "Smelt metal",
   "MIND_CASTING_WORK": "Cast metal",
+  "MIND_BLOOMERY_WORK": "Smelt iron in a bloomery",
+  "MIND_FORGING_WORK": "Forge iron",
   "C2_CHRON_FIRST_INGOT": "{person} made the first {item} ← {recipe}",
   "C2_CHRON_MINED_BY": " · ore (mined by {miner})",
   "C2_CHRON_TOOL_UPGRADED": "{person} swapped a {old} for a {new}",

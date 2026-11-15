@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 2039,
+    "active_key_count": 2041,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 2039,
+    "key_count": 2041,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -1229,6 +1229,7 @@
     "MIND_BEHAVIOUR_SOCIALISE": "이야기하기",
     "MIND_BEHAVIOUR_URGENT_DRINK": "급히 물 찾기",
     "MIND_BEHAVIOUR_WANDER": "산책하기",
+    "MIND_BLOOMERY_WORK": "괴철로에서 쇠 녹이기",
     "MIND_CANDIDATES": "고려한 행동",
     "MIND_CANDIDATE_FMT": "{rank}. {choice} · 우선도 {score}",
     "MIND_CASTING_WORK": "금속 주조",
@@ -1331,6 +1332,7 @@
     "MIND_FACT_WATER_TARGET_AVAILABLE": "갈 수 있는 곳에 마실 물이 있음",
     "MIND_FACT_WINTER_STOCK_DUTY": "겨울 비축 우선",
     "MIND_FACT_WORKER": "일할 수 있음",
+    "MIND_FORGING_WORK": "쇠 벼리기",
     "MIND_LIVESTOCK_WORK": "가축 돌보기",
     "MIND_MINING_WORK": "광석 캐기",
     "MIND_NOW_WHY_FMT": "지금: {choice} · 이유: {reason}",

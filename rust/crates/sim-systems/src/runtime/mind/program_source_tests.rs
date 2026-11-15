@@ -97,3 +97,21 @@ fn saved_format13_registry_excludes_all_later_registrations() {
         );
     }
 }
+
+#[test]
+fn saved_pre_iron_registry_keeps_metal_facts_and_excludes_iron_facts() {
+    use sim_core::colony::mind_records::MindHistory;
+    use std::borrow::Cow;
+    const SOURCE: &str = r#"(schema_version:1,bands:["critical","duty","need","work","leisure","idle"],nodes:[
+      (id:"idle",band:"idle",behaviour:"wander",when:[],score:(constant:0,terms:[(fact:"job_casting",weight_permille:1)]),
+       hysteresis:0,life_stages:["adult","child","elder"],tags:[],name_key:"IDLE")])"#;
+    let old = MindProgram::compile_schema(Cow::Borrowed(SOURCE), super::PRE_IRON_EXCLUDED_FACTS)
+        .expect("published C2-b registration set");
+    let history = MindHistory::new(&old.policy).expect("exact C2-b dictionary");
+    let restored = MindProgram::load_saved(SOURCE, &history).expect("C2-b schema restored");
+    assert_eq!(restored.policy.revision(), old.policy.revision());
+    assert!(restored.policy.fact_id("job_casting").is_some());
+    for fact in ["job_bloomery", "job_forging"] {
+        assert!(restored.policy.fact_id(fact).is_none(), "iron fact excluded: {fact}");
+    }
+}

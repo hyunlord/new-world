@@ -220,6 +220,8 @@ pub fn automatic_origins(
                     | "job_mining"
                     | "job_smelting"
                     | "job_casting"
+                    | "job_bloomery"
+                    | "job_forging"
             ) {
                 CausePriority::Job
             } else if name.starts_with("hunger")
@@ -272,6 +274,8 @@ pub fn assigned_job_origins(
                     | "job_mining"
                     | "job_smelting"
                     | "job_casting"
+                    | "job_bloomery"
+                    | "job_forging"
             )
             .then_some(FactOrigin {
                 fact: witness.fact,

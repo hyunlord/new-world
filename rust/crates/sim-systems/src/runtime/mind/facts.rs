@@ -370,6 +370,13 @@ pub const BUILTIN_PROVIDERS: &[FactProvider] = &[
     fact!("job_casting", Bool, |p, _c, r, _n| Ok(i64::from(
         craft_workshop_tag(p.job, r, "casting")
     ))),
+    // C3-b: bloomery smelting, and smithing (refining a bloom or forging a bar).
+    fact!("job_bloomery", Bool, |p, _c, r, _n| Ok(i64::from(
+        craft_workshop_tag(p.job, r, "bloomery")
+    ))),
+    fact!("job_forging", Bool, |p, _c, r, _n| Ok(i64::from(
+        craft_workshop_tag(p.job, r, "forging") || craft_workshop_tag(p.job, r, "refining")
+    ))),
     fact!("craft_working", Bool, |p, _c, r, _n| Ok(i64::from(
         r.rules.colony.is_some_and(|rule| rule.economy.is_some())
             && p.job

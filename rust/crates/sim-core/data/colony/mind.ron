@@ -3383,7 +3383,7 @@
             tags: ["livestock", "job_continue"], name_key: "MIND_LIVESTOCK_WORK",
             every_ticks: 1, target: Some("job"),
         ),
-        // C2-b: the existing job owner executes mining, smelting and casting; these nodes only name the work.
+        // C2-b/C3-b: the existing job owner executes mining, smelting, casting, bloomery smelting and forging; these nodes only name the work.
         (
             id: "job_mining", band: "work", behaviour: "do_job",
             when: [
@@ -3421,6 +3421,32 @@
             score: (constant: 0, terms: []),
             hysteresis: 0, life_stages: ["adult", "elder"],
             tags: ["metal", "job_continue"], name_key: "MIND_CASTING_WORK",
+            every_ticks: 1, target: Some("job"),
+        ),
+        (
+            id: "job_bloomery", band: "work", behaviour: "do_job",
+            when: [
+                (fact: "fleeing", op: "not", value: None),
+                (fact: "drafted", op: "not", value: None),
+                (fact: "job_owned_state", op: "has", value: None),
+                (fact: "job_bloomery", op: "has", value: None),
+            ],
+            score: (constant: 0, terms: []),
+            hysteresis: 0, life_stages: ["adult", "elder"],
+            tags: ["metal", "job_continue"], name_key: "MIND_BLOOMERY_WORK",
+            every_ticks: 1, target: Some("job"),
+        ),
+        (
+            id: "job_forging", band: "work", behaviour: "do_job",
+            when: [
+                (fact: "fleeing", op: "not", value: None),
+                (fact: "drafted", op: "not", value: None),
+                (fact: "job_owned_state", op: "has", value: None),
+                (fact: "job_forging", op: "has", value: None),
+            ],
+            score: (constant: 0, terms: []),
+            hysteresis: 0, life_stages: ["adult", "elder"],
+            tags: ["metal", "job_continue"], name_key: "MIND_FORGING_WORK",
             every_ticks: 1, target: Some("job"),
         ),
         (

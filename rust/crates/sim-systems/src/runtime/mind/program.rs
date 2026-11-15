@@ -14,12 +14,22 @@ use super::behaviours::{self, BehaviourEntry};
 use super::facts::{ProviderPlan, ProviderRegistry, BUILTIN_PROVIDERS};
 
 const METAL_FACTS: [&str; 3] = ["job_mining", "job_smelting", "job_casting"];
-const PRE_METAL_EXCLUDED_FACTS: &[&str] = &METAL_FACTS;
+const IRON_FACTS: [&str; 2] = ["job_bloomery", "job_forging"];
+const PRE_IRON_EXCLUDED_FACTS: &[&str] = &IRON_FACTS;
+const PRE_METAL_EXCLUDED_FACTS: &[&str] = &[
+    METAL_FACTS[0],
+    METAL_FACTS[1],
+    METAL_FACTS[2],
+    IRON_FACTS[0],
+    IRON_FACTS[1],
+];
 const PRE_LIVESTOCK_EXCLUDED_FACTS: &[&str] = &[
     "job_livestock",
     METAL_FACTS[0],
     METAL_FACTS[1],
     METAL_FACTS[2],
+    IRON_FACTS[0],
+    IRON_FACTS[1],
 ];
 const FORMAT13_EXCLUDED_FACTS: &[&str] = &[
     "harvest_window",
@@ -31,6 +41,8 @@ const FORMAT13_EXCLUDED_FACTS: &[&str] = &[
     METAL_FACTS[0],
     METAL_FACTS[1],
     METAL_FACTS[2],
+    IRON_FACTS[0],
+    IRON_FACTS[1],
 ];
 
 /// Policy preparation fails explicitly before an executor can choose or mutate.
@@ -76,6 +88,12 @@ impl MindProgram {
         let current = Self::load(source)?;
         if history.check_policy(&current.policy).is_ok() {
             return Ok(current);
+        }
+        // Published C2-b used the metal job facts but predates the iron ones.
+        let before_iron =
+            Self::compile_schema(Cow::Owned(source.to_owned()), PRE_IRON_EXCLUDED_FACTS)?;
+        if history.check_policy(&before_iron.policy).is_ok() {
+            return Ok(before_iron);
         }
         // Published C1-b/C2-a used the livestock registry but predate the metal job facts.
         let before_metal =
