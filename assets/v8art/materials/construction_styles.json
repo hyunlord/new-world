@@ -89,8 +89,7 @@
       },
       "prompt_template": "floor",
       "sim_blueprints": [
-        "PackedFloor",
-        "PavedRoad"
+        "PackedFloor"
       ],
       "default_tint": {
         "dL": 0,
