@@ -152,17 +152,33 @@ fn c2_buildings_physically_complete_and_bricks_are_crafted() {
         .find(|shop| shop.kind == pottery)
         .expect("built pottery bench")
         .id;
+    let recipe = RecipeKind::from_name("make_mud_brick").expect("brick recipe");
     command(
         &mut engine,
         Command::AddBill {
             workshop: shop,
-            recipe: RecipeKind::from_name("make_mud_brick").expect("brick recipe"),
+            recipe,
             mode: BillMode::Make(17),
         },
     );
-    until(&mut engine, "34 bricks from clay and flax stalks", |e| {
-        e.resources.colony.workshops[&shop].bills[0].done == 17
-    });
+    // M2: a craft that a need cancels mid-work has already consumed its inputs (`crafts_lost`).
+    // The fixture stocks exactly 17 crafts, so it replaces the raw inputs of each lost craft.
+    let mut lost = engine.resources.colony.tallies.crafts_lost;
+    loop {
+        until(&mut engine, "34 bricks from clay and flax stalks", |e| {
+            e.resources.colony.workshops[&shop].bills[0].done == 17
+                || e.resources.colony.tallies.crafts_lost > lost
+        });
+        let now = engine.resources.colony.tallies.crafts_lost;
+        if now == lost {
+            break;
+        }
+        for (kind, n) in &recipe.recipe().expect("brick inputs").inputs {
+            let count = u16::try_from((now - lost) * u64::from(*n)).expect("lost input count");
+            raw_stock(&mut engine, kind.name(), count);
+        }
+        lost = now;
+    }
     let brick = ItemKind::from_name("mud_brick").expect("brick");
     assert_eq!(engine.resources.colony.item_ledger.crafted_of(brick), 34);
     let dwelling = build(&mut engine, "mud_brick_house");
