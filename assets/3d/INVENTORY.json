@@ -1,0 +1,1467 @@
+{
+  "schema_version": 1,
+  "authoritative_ref_requested": "origin/v8/c3",
+  "authoritative_ref_available": false,
+  "baseline_ref": "origin/v8/3d",
+  "baseline_sha": "a0260ce9a91e8328ae855619a1d0a89d23fdc535",
+  "supplement_ref": "v8/c3",
+  "supplement_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+  "families": {
+    "buildings": [
+      {
+        "code": null,
+        "id": "hut",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": null,
+        "id": "log_house",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": null,
+        "id": "stone_house",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": null,
+        "id": "workshop_shed",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": null,
+        "id": "storehouse",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": null,
+        "id": "drying_shed",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": null,
+        "id": "granary",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": null,
+        "id": "pen",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": null,
+        "id": "well",
+        "source": "baseline",
+        "existing_representation": "well_body",
+        "gap": "shared anchor only; template assembled at runtime"
+      },
+      {
+        "code": null,
+        "id": "smokehouse",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": null,
+        "id": "kiln",
+        "source": "baseline",
+        "existing_representation": "kiln",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": null,
+        "id": "mud_brick_house",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": null,
+        "id": "charcoal_clamp",
+        "source": "baseline",
+        "existing_representation": "charcoal_clamp",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": null,
+        "id": "smelter",
+        "source": "baseline",
+        "existing_representation": "smelter",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": null,
+        "id": "casting_bench",
+        "source": "baseline",
+        "existing_representation": "casting_bench",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": null,
+        "id": "bloomery",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": null,
+        "id": "forge",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": null,
+        "id": "shrine",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": null,
+        "id": "chief_hall",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": null,
+        "id": "trading_post",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": null,
+        "id": "market",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": null,
+        "id": "warehouse",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": null,
+        "id": "oven_house",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": null,
+        "id": "bee_skep",
+        "source": "baseline",
+        "existing_representation": "bee_skep",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": null,
+        "id": "cut_stone_house",
+        "source": "local_c3_supplement",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      }
+    ],
+    "blueprints": [
+      {
+        "code": 0,
+        "id": "hut",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 1,
+        "id": "knapping_spot",
+        "source": "baseline",
+        "existing_representation": "knapping_spot",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": 2,
+        "id": "wood_bench",
+        "source": "baseline",
+        "existing_representation": "wood_bench",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": 3,
+        "id": "drying_rack",
+        "source": "baseline",
+        "existing_representation": "drying_rack",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": 4,
+        "id": "log_wall",
+        "source": "baseline",
+        "existing_representation": "runtime procedural profile",
+        "gap": "standalone GLB / construction variants missing"
+      },
+      {
+        "code": 5,
+        "id": "stone_wall",
+        "source": "baseline",
+        "existing_representation": "runtime procedural profile",
+        "gap": "standalone GLB / construction variants missing"
+      },
+      {
+        "code": 6,
+        "id": "door",
+        "source": "baseline",
+        "existing_representation": "door",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": 7,
+        "id": "packed_floor",
+        "source": "baseline",
+        "existing_representation": "runtime procedural profile",
+        "gap": "standalone GLB / construction variants missing"
+      },
+      {
+        "code": 8,
+        "id": "bedroll",
+        "source": "baseline",
+        "existing_representation": "bedroll",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": 9,
+        "id": "grinding_stone",
+        "source": "baseline",
+        "existing_representation": "grinding_stone",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": 10,
+        "id": "pottery_bench",
+        "source": "baseline",
+        "existing_representation": "pottery_bench",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": 11,
+        "id": "hearth_fire",
+        "source": "baseline",
+        "existing_representation": "hearth",
+        "gap": "shared existing station model"
+      },
+      {
+        "code": 12,
+        "id": "food_drying_rack",
+        "source": "baseline",
+        "existing_representation": "drying_rack",
+        "gap": "shared existing station model"
+      },
+      {
+        "code": 13,
+        "id": "retting_pit",
+        "source": "baseline",
+        "existing_representation": "retting_pit",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": 14,
+        "id": "loom",
+        "source": "baseline",
+        "existing_representation": "loom",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": 15,
+        "id": "fence",
+        "source": "baseline",
+        "existing_representation": "runtime procedural profile",
+        "gap": "standalone GLB / construction variants missing"
+      },
+      {
+        "code": 16,
+        "id": "clay_oven",
+        "source": "baseline",
+        "existing_representation": "clay_oven",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": 17,
+        "id": "smoking_rack",
+        "source": "baseline",
+        "existing_representation": "drying_rack",
+        "gap": "shared existing station model"
+      },
+      {
+        "code": 18,
+        "id": "charcoal_clamp",
+        "source": "baseline",
+        "existing_representation": "charcoal_clamp",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": 19,
+        "id": "smelter",
+        "source": "baseline",
+        "existing_representation": "smelter",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": 20,
+        "id": "casting_bench",
+        "source": "baseline",
+        "existing_representation": "casting_bench",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": 21,
+        "id": "mud_brick_wall",
+        "source": "baseline",
+        "existing_representation": "runtime procedural profile",
+        "gap": "standalone GLB / construction variants missing"
+      },
+      {
+        "code": 22,
+        "id": "palisade",
+        "source": "baseline",
+        "existing_representation": "runtime procedural profile",
+        "gap": "standalone GLB / construction variants missing"
+      },
+      {
+        "code": 23,
+        "id": "kiln",
+        "source": "baseline",
+        "existing_representation": "kiln",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": 24,
+        "id": "stone_masonry_wall",
+        "source": "baseline",
+        "existing_representation": "runtime procedural profile",
+        "gap": "standalone GLB / construction variants missing"
+      },
+      {
+        "code": 25,
+        "id": "bloomery",
+        "source": "local_c3_supplement",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 26,
+        "id": "forge",
+        "source": "local_c3_supplement",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 27,
+        "id": "anvil",
+        "source": "local_c3_supplement",
+        "existing_representation": "anvil",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": 28,
+        "id": "mason_bench",
+        "source": "local_c3_supplement",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 29,
+        "id": "cut_stone_wall",
+        "source": "local_c3_supplement",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 30,
+        "id": "town_wall",
+        "source": "local_c3_supplement",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 31,
+        "id": "town_gate",
+        "source": "local_c3_supplement",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 32,
+        "id": "paved_road",
+        "source": "local_c3_supplement",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      }
+    ],
+    "items": [
+      {
+        "code": 0,
+        "id": "log",
+        "source": "baseline",
+        "existing_representation": "log_pile_s, log_pile_m, log_pile_l",
+        "gap": "shared silhouette; per-code/stack variants incomplete"
+      },
+      {
+        "code": 1,
+        "id": "firewood",
+        "source": "baseline",
+        "existing_representation": "firewood",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": 2,
+        "id": "stone",
+        "source": "baseline",
+        "existing_representation": "stone_pile",
+        "gap": "shared silhouette; per-code/stack variants incomplete"
+      },
+      {
+        "code": 3,
+        "id": "flint",
+        "source": "baseline",
+        "existing_representation": "flint_pile",
+        "gap": "shared silhouette; per-code/stack variants incomplete"
+      },
+      {
+        "code": 4,
+        "id": "flint_blade",
+        "source": "baseline",
+        "existing_representation": "tool",
+        "gap": "shared silhouette; per-code/stack variants incomplete"
+      },
+      {
+        "code": 5,
+        "id": "stone_axe",
+        "source": "baseline",
+        "existing_representation": "tool",
+        "gap": "shared silhouette; per-code/stack variants incomplete"
+      },
+      {
+        "code": 6,
+        "id": "hide",
+        "source": "baseline",
+        "existing_representation": "hide",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": 7,
+        "id": "clay",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 8,
+        "id": "raw_pot",
+        "source": "baseline",
+        "existing_representation": "pot",
+        "gap": "shared silhouette; per-code/stack variants incomplete"
+      },
+      {
+        "code": 9,
+        "id": "clay_pot",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 10,
+        "id": "ground_axe",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 11,
+        "id": "meat",
+        "source": "baseline",
+        "existing_representation": "meat",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": 12,
+        "id": "cured_hide",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 13,
+        "id": "hide_wrap",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 14,
+        "id": "fur_cloak",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 15,
+        "id": "spear",
+        "source": "baseline",
+        "existing_representation": "tool",
+        "gap": "shared silhouette; per-code/stack variants incomplete"
+      },
+      {
+        "code": 16,
+        "id": "wolf_hide",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 17,
+        "id": "berries",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 18,
+        "id": "hazelnuts",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 19,
+        "id": "wild_grain",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 20,
+        "id": "roots",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 21,
+        "id": "flax_stalks",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 22,
+        "id": "roast_meat",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 23,
+        "id": "porridge",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 24,
+        "id": "stew",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 25,
+        "id": "dried_meat",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 26,
+        "id": "dried_berries",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 27,
+        "id": "roasted_roots",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 28,
+        "id": "fruit_porridge",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 29,
+        "id": "legacy_food",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 30,
+        "id": "flax_seed",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 31,
+        "id": "emmer_seed",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 32,
+        "id": "flax_fibre",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 33,
+        "id": "linen_thread",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 34,
+        "id": "linen_cloth",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 35,
+        "id": "hand_spindle",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 36,
+        "id": "linen_tunic",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 37,
+        "id": "linen_wrap",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 38,
+        "id": "cord",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 39,
+        "id": "basket",
+        "source": "baseline",
+        "existing_representation": "basket",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": 40,
+        "id": "sling",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 41,
+        "id": "bone_needle",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 42,
+        "id": "fish",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 43,
+        "id": "flour",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 44,
+        "id": "bread",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 45,
+        "id": "beer",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 46,
+        "id": "milk",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 47,
+        "id": "cheese",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 48,
+        "id": "smoked_meat",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 49,
+        "id": "hay",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 50,
+        "id": "hoe",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 51,
+        "id": "sickle",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 52,
+        "id": "adze",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 53,
+        "id": "bow",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 54,
+        "id": "arrow",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 55,
+        "id": "dyed_tunic",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 56,
+        "id": "leather_armor",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 57,
+        "id": "herbs",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 58,
+        "id": "poultice",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 59,
+        "id": "barley",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 60,
+        "id": "barley_seed",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 61,
+        "id": "rye",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 62,
+        "id": "rye_seed",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 63,
+        "id": "lentil",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 64,
+        "id": "lentil_seed",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 65,
+        "id": "pea",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 66,
+        "id": "pea_seed",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 67,
+        "id": "millet",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 68,
+        "id": "millet_seed",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 69,
+        "id": "apple",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 70,
+        "id": "goat_hide",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 71,
+        "id": "wool",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 72,
+        "id": "charcoal",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 73,
+        "id": "copper_ore",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 74,
+        "id": "tin_ore",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 75,
+        "id": "iron_ore",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 76,
+        "id": "copper_ingot",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 77,
+        "id": "tin_ingot",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 78,
+        "id": "bronze_ingot",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 79,
+        "id": "clay_mould",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 80,
+        "id": "copper_awl",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 81,
+        "id": "copper_needle",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 82,
+        "id": "copper_axe",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 83,
+        "id": "bronze_axe",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 84,
+        "id": "bronze_sickle",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 85,
+        "id": "bronze_hoe",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 86,
+        "id": "bronze_spear",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 87,
+        "id": "bronze_dagger",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 88,
+        "id": "honey",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 89,
+        "id": "beeswax",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 90,
+        "id": "wool_yarn",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 91,
+        "id": "wool_cloth",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 92,
+        "id": "wool_tunic",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 93,
+        "id": "wheel",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 94,
+        "id": "mud_brick",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 95,
+        "id": "lime",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 96,
+        "id": "seal",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 97,
+        "id": "tablet",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 98,
+        "id": "glass_bead",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 99,
+        "id": "composite_bow",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 100,
+        "id": "limestone",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 101,
+        "id": "bog_iron",
+        "source": "local_c3_supplement",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 102,
+        "id": "iron_bloom",
+        "source": "local_c3_supplement",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 103,
+        "id": "wrought_iron",
+        "source": "local_c3_supplement",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 104,
+        "id": "iron_axe",
+        "source": "local_c3_supplement",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 105,
+        "id": "iron_hoe",
+        "source": "local_c3_supplement",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 106,
+        "id": "iron_sickle",
+        "source": "local_c3_supplement",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 107,
+        "id": "iron_saw",
+        "source": "local_c3_supplement",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 108,
+        "id": "iron_knife",
+        "source": "local_c3_supplement",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 109,
+        "id": "iron_adze",
+        "source": "local_c3_supplement",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 110,
+        "id": "iron_spear",
+        "source": "local_c3_supplement",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 111,
+        "id": "iron_sword",
+        "source": "local_c3_supplement",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 112,
+        "id": "iron_helmet",
+        "source": "local_c3_supplement",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 113,
+        "id": "iron_shield_boss",
+        "source": "local_c3_supplement",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 114,
+        "id": "nails",
+        "source": "local_c3_supplement",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 115,
+        "id": "cut_stone",
+        "source": "local_c3_supplement",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 116,
+        "id": "coin",
+        "source": "local_c3_supplement",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 117,
+        "id": "book",
+        "source": "local_c3_supplement",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 118,
+        "id": "steel_edge",
+        "source": "local_c3_supplement",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      }
+    ],
+    "outcrops": [
+      {
+        "code": 1,
+        "id": "copper_outcrop",
+        "source": "baseline",
+        "existing_representation": "ore_outcrop (shared/tinted)",
+        "gap": "dedicated material variant missing"
+      },
+      {
+        "code": 2,
+        "id": "tin_outcrop",
+        "source": "baseline",
+        "existing_representation": "ore_outcrop (shared/tinted)",
+        "gap": "dedicated material variant missing"
+      },
+      {
+        "code": 3,
+        "id": "iron_outcrop",
+        "source": "baseline",
+        "existing_representation": "ore_outcrop (shared/tinted)",
+        "gap": "dedicated material variant missing"
+      },
+      {
+        "code": 4,
+        "id": "bog_iron_outcrop",
+        "source": "local_c3_supplement",
+        "existing_representation": "ore_outcrop (shared/tinted)",
+        "gap": "dedicated material variant missing"
+      }
+    ],
+    "plants": [
+      {
+        "code": 0,
+        "id": "berry_bush",
+        "source": "baseline",
+        "existing_representation": "berry_bush",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": 1,
+        "id": "hazel",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 2,
+        "id": "wild_flax",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 3,
+        "id": "wild_grain",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 4,
+        "id": "wild_root",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 5,
+        "id": "wild_barley",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 6,
+        "id": "wild_rye",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 7,
+        "id": "wild_lentil",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 8,
+        "id": "wild_pea",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 9,
+        "id": "wild_millet",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 10,
+        "id": "wild_apple",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      }
+    ],
+    "crops": [
+      {
+        "code": 0,
+        "id": "emmer",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 1,
+        "id": "flax",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 2,
+        "id": "barley",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 3,
+        "id": "rye",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 4,
+        "id": "lentil",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 5,
+        "id": "pea",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      },
+      {
+        "code": 6,
+        "id": "millet",
+        "source": "baseline",
+        "existing_representation": null,
+        "gap": "dedicated model missing"
+      }
+    ],
+    "animals": [
+      {
+        "code": 0,
+        "id": "wolf",
+        "source": "baseline",
+        "existing_representation": "wolf",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": 1,
+        "id": "deer",
+        "source": "baseline",
+        "existing_representation": "deer",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": 2,
+        "id": "wild_goat",
+        "source": "baseline",
+        "existing_representation": "wild_goat",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": 3,
+        "id": "wild_sheep",
+        "source": "baseline",
+        "existing_representation": "wild_sheep",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": 4,
+        "id": "wild_boar",
+        "source": "baseline",
+        "existing_representation": "wild_boar",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": 5,
+        "id": "reindeer",
+        "source": "baseline",
+        "existing_representation": "reindeer",
+        "gap": "none (existing dedicated GLB)"
+      },
+      {
+        "code": 6,
+        "id": "aurochs",
+        "source": "baseline",
+        "existing_representation": "aurochs",
+        "gap": "none (existing dedicated GLB)"
+      }
+    ]
+  }
+}

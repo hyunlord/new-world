@@ -1,0 +1,6658 @@
+{
+ "models": {
+  "item_000_log_s": {
+   "file": "models/item_000_log_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.18,
+   "triangles": 20,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 0,
+   "content_id": "log",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_000_log_m": {
+   "file": "models/item_000_log_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.28,
+   "triangles": 60,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 0,
+   "content_id": "log",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_000_log_l": {
+   "file": "models/item_000_log_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.43,
+   "triangles": 120,
+   "materials": [
+    "trunk",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 0,
+   "content_id": "log",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_001_firewood_s": {
+   "file": "models/item_001_firewood_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.08,
+   "triangles": 36,
+   "materials": [
+    "wood",
+    "trunk",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 1,
+   "content_id": "firewood",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_001_firewood_m": {
+   "file": "models/item_001_firewood_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.18,
+   "triangles": 108,
+   "materials": [
+    "wood",
+    "trunk",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 1,
+   "content_id": "firewood",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_001_firewood_l": {
+   "file": "models/item_001_firewood_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.33,
+   "triangles": 216,
+   "materials": [
+    "wood",
+    "trunk",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 1,
+   "content_id": "firewood",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_002_stone_s": {
+   "file": "models/item_002_stone_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.189,
+   "triangles": 20,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 2,
+   "content_id": "stone",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_002_stone_m": {
+   "file": "models/item_002_stone_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.3,
+   "triangles": 60,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 2,
+   "content_id": "stone",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_002_stone_l": {
+   "file": "models/item_002_stone_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.446,
+   "triangles": 120,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 2,
+   "content_id": "stone",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_003_flint_s": {
+   "file": "models/item_003_flint_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.189,
+   "triangles": 20,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 3,
+   "content_id": "flint",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_003_flint_m": {
+   "file": "models/item_003_flint_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.306,
+   "triangles": 60,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 3,
+   "content_id": "flint",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_003_flint_l": {
+   "file": "models/item_003_flint_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.455,
+   "triangles": 120,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 3,
+   "content_id": "flint",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_004_flint_blade_s": {
+   "file": "models/item_004_flint_blade_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.04,
+   "triangles": 24,
+   "materials": [
+    "wood",
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 4,
+   "content_id": "flint_blade",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_004_flint_blade_m": {
+   "file": "models/item_004_flint_blade_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.14,
+   "triangles": 72,
+   "materials": [
+    "wood",
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 4,
+   "content_id": "flint_blade",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_004_flint_blade_l": {
+   "file": "models/item_004_flint_blade_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.29,
+   "triangles": 144,
+   "materials": [
+    "wood",
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 4,
+   "content_id": "flint_blade",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_005_stone_axe_s": {
+   "file": "models/item_005_stone_axe_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.055,
+   "triangles": 48,
+   "materials": [
+    "wood",
+    "stone",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 5,
+   "content_id": "stone_axe",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_005_stone_axe_m": {
+   "file": "models/item_005_stone_axe_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.155,
+   "triangles": 144,
+   "materials": [
+    "wood",
+    "stone",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 5,
+   "content_id": "stone_axe",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_005_stone_axe_l": {
+   "file": "models/item_005_stone_axe_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.305,
+   "triangles": 288,
+   "materials": [
+    "wood",
+    "stone",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 5,
+   "content_id": "stone_axe",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_006_hide_s": {
+   "file": "models/item_006_hide_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.027,
+   "triangles": 72,
+   "materials": [
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 6,
+   "content_id": "hide",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_006_hide_m": {
+   "file": "models/item_006_hide_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.131,
+   "triangles": 216,
+   "materials": [
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 6,
+   "content_id": "hide",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "overhang": true
+  },
+  "item_006_hide_l": {
+   "file": "models/item_006_hide_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.284,
+   "triangles": 432,
+   "materials": [
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 6,
+   "content_id": "hide",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "overhang": true
+  },
+  "item_007_clay_s": {
+   "file": "models/item_007_clay_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.187,
+   "triangles": 20,
+   "materials": [
+    "clay"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 7,
+   "content_id": "clay",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_007_clay_m": {
+   "file": "models/item_007_clay_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.306,
+   "triangles": 60,
+   "materials": [
+    "clay"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 7,
+   "content_id": "clay",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_007_clay_l": {
+   "file": "models/item_007_clay_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.447,
+   "triangles": 120,
+   "materials": [
+    "clay"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 7,
+   "content_id": "clay",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_008_raw_pot_s": {
+   "file": "models/item_008_raw_pot_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.3,
+   "triangles": 76,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 8,
+   "content_id": "raw_pot",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_008_raw_pot_m": {
+   "file": "models/item_008_raw_pot_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.4,
+   "triangles": 228,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 8,
+   "content_id": "raw_pot",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_008_raw_pot_l": {
+   "file": "models/item_008_raw_pot_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.55,
+   "triangles": 456,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 8,
+   "content_id": "raw_pot",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_009_clay_pot_s": {
+   "file": "models/item_009_clay_pot_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.3,
+   "triangles": 76,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 9,
+   "content_id": "clay_pot",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_009_clay_pot_m": {
+   "file": "models/item_009_clay_pot_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.4,
+   "triangles": 228,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 9,
+   "content_id": "clay_pot",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_009_clay_pot_l": {
+   "file": "models/item_009_clay_pot_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.55,
+   "triangles": 456,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 9,
+   "content_id": "clay_pot",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_010_ground_axe_s": {
+   "file": "models/item_010_ground_axe_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.055,
+   "triangles": 48,
+   "materials": [
+    "wood",
+    "stone",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 10,
+   "content_id": "ground_axe",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_010_ground_axe_m": {
+   "file": "models/item_010_ground_axe_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.155,
+   "triangles": 144,
+   "materials": [
+    "wood",
+    "stone",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 10,
+   "content_id": "ground_axe",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_010_ground_axe_l": {
+   "file": "models/item_010_ground_axe_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.305,
+   "triangles": 288,
+   "materials": [
+    "wood",
+    "stone",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 10,
+   "content_id": "ground_axe",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_011_meat_s": {
+   "file": "models/item_011_meat_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.189,
+   "triangles": 116,
+   "materials": [
+    "fruit",
+    "horn"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 11,
+   "content_id": "meat",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_011_meat_m": {
+   "file": "models/item_011_meat_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.291,
+   "triangles": 348,
+   "materials": [
+    "fruit",
+    "horn"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 11,
+   "content_id": "meat",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_011_meat_l": {
+   "file": "models/item_011_meat_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.441,
+   "triangles": 696,
+   "materials": [
+    "fruit",
+    "horn"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 11,
+   "content_id": "meat",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_012_cured_hide_s": {
+   "file": "models/item_012_cured_hide_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.034,
+   "triangles": 72,
+   "materials": [
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 12,
+   "content_id": "cured_hide",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_012_cured_hide_m": {
+   "file": "models/item_012_cured_hide_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.133,
+   "triangles": 216,
+   "materials": [
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 12,
+   "content_id": "cured_hide",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "overhang": true
+  },
+  "item_012_cured_hide_l": {
+   "file": "models/item_012_cured_hide_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.284,
+   "triangles": 432,
+   "materials": [
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 12,
+   "content_id": "cured_hide",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "overhang": true
+  },
+  "item_013_hide_wrap_s": {
+   "file": "models/item_013_hide_wrap_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.031,
+   "triangles": 72,
+   "materials": [
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 13,
+   "content_id": "hide_wrap",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_013_hide_wrap_m": {
+   "file": "models/item_013_hide_wrap_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.134,
+   "triangles": 216,
+   "materials": [
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 13,
+   "content_id": "hide_wrap",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "overhang": true
+  },
+  "item_013_hide_wrap_l": {
+   "file": "models/item_013_hide_wrap_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.281,
+   "triangles": 432,
+   "materials": [
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 13,
+   "content_id": "hide_wrap",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "overhang": true
+  },
+  "item_014_fur_cloak_s": {
+   "file": "models/item_014_fur_cloak_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.027,
+   "triangles": 72,
+   "materials": [
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 14,
+   "content_id": "fur_cloak",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_014_fur_cloak_m": {
+   "file": "models/item_014_fur_cloak_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.133,
+   "triangles": 216,
+   "materials": [
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 14,
+   "content_id": "fur_cloak",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "overhang": true
+  },
+  "item_014_fur_cloak_l": {
+   "file": "models/item_014_fur_cloak_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.284,
+   "triangles": 432,
+   "materials": [
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 14,
+   "content_id": "fur_cloak",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "overhang": true
+  },
+  "item_015_spear_s": {
+   "file": "models/item_015_spear_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.069,
+   "triangles": 30,
+   "materials": [
+    "wood",
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 15,
+   "content_id": "spear",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_015_spear_m": {
+   "file": "models/item_015_spear_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.169,
+   "triangles": 90,
+   "materials": [
+    "wood",
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 15,
+   "content_id": "spear",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_015_spear_l": {
+   "file": "models/item_015_spear_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.319,
+   "triangles": 180,
+   "materials": [
+    "wood",
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 15,
+   "content_id": "spear",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_016_wolf_hide_s": {
+   "file": "models/item_016_wolf_hide_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.032,
+   "triangles": 72,
+   "materials": [
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 16,
+   "content_id": "wolf_hide",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_016_wolf_hide_m": {
+   "file": "models/item_016_wolf_hide_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.132,
+   "triangles": 216,
+   "materials": [
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 16,
+   "content_id": "wolf_hide",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "overhang": true
+  },
+  "item_016_wolf_hide_l": {
+   "file": "models/item_016_wolf_hide_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.284,
+   "triangles": 432,
+   "materials": [
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 16,
+   "content_id": "wolf_hide",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "overhang": true
+  },
+  "item_017_berries_s": {
+   "file": "models/item_017_berries_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.205,
+   "triangles": 20,
+   "materials": [
+    "fruit"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 17,
+   "content_id": "berries",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_017_berries_m": {
+   "file": "models/item_017_berries_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.304,
+   "triangles": 60,
+   "materials": [
+    "fruit"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 17,
+   "content_id": "berries",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_017_berries_l": {
+   "file": "models/item_017_berries_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.454,
+   "triangles": 120,
+   "materials": [
+    "fruit"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 17,
+   "content_id": "berries",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_018_hazelnuts_s": {
+   "file": "models/item_018_hazelnuts_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.185,
+   "triangles": 20,
+   "materials": [
+    "wood"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 18,
+   "content_id": "hazelnuts",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_018_hazelnuts_m": {
+   "file": "models/item_018_hazelnuts_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.297,
+   "triangles": 60,
+   "materials": [
+    "wood"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 18,
+   "content_id": "hazelnuts",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_018_hazelnuts_l": {
+   "file": "models/item_018_hazelnuts_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.457,
+   "triangles": 120,
+   "materials": [
+    "wood"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 18,
+   "content_id": "hazelnuts",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_019_wild_grain_s": {
+   "file": "models/item_019_wild_grain_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.204,
+   "triangles": 20,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 19,
+   "content_id": "wild_grain",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_019_wild_grain_m": {
+   "file": "models/item_019_wild_grain_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.285,
+   "triangles": 60,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 19,
+   "content_id": "wild_grain",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_019_wild_grain_l": {
+   "file": "models/item_019_wild_grain_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.441,
+   "triangles": 120,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 19,
+   "content_id": "wild_grain",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_020_roots_s": {
+   "file": "models/item_020_roots_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.189,
+   "triangles": 20,
+   "materials": [
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 20,
+   "content_id": "roots",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_020_roots_m": {
+   "file": "models/item_020_roots_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.288,
+   "triangles": 60,
+   "materials": [
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 20,
+   "content_id": "roots",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_020_roots_l": {
+   "file": "models/item_020_roots_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.441,
+   "triangles": 120,
+   "materials": [
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 20,
+   "content_id": "roots",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_021_flax_stalks_s": {
+   "file": "models/item_021_flax_stalks_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.07,
+   "triangles": 96,
+   "materials": [
+    "thatch",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 21,
+   "content_id": "flax_stalks",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_021_flax_stalks_m": {
+   "file": "models/item_021_flax_stalks_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.17,
+   "triangles": 288,
+   "materials": [
+    "thatch",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 21,
+   "content_id": "flax_stalks",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_021_flax_stalks_l": {
+   "file": "models/item_021_flax_stalks_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.32,
+   "triangles": 576,
+   "materials": [
+    "thatch",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 21,
+   "content_id": "flax_stalks",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_022_roast_meat_s": {
+   "file": "models/item_022_roast_meat_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.185,
+   "triangles": 116,
+   "materials": [
+    "fruit",
+    "horn"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 22,
+   "content_id": "roast_meat",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_022_roast_meat_m": {
+   "file": "models/item_022_roast_meat_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.284,
+   "triangles": 348,
+   "materials": [
+    "fruit",
+    "horn"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 22,
+   "content_id": "roast_meat",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_022_roast_meat_l": {
+   "file": "models/item_022_roast_meat_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.434,
+   "triangles": 696,
+   "materials": [
+    "fruit",
+    "horn"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 22,
+   "content_id": "roast_meat",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_023_porridge_s": {
+   "file": "models/item_023_porridge_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.3,
+   "triangles": 76,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 23,
+   "content_id": "porridge",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_023_porridge_m": {
+   "file": "models/item_023_porridge_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.4,
+   "triangles": 228,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 23,
+   "content_id": "porridge",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_023_porridge_l": {
+   "file": "models/item_023_porridge_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.55,
+   "triangles": 456,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 23,
+   "content_id": "porridge",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_024_stew_s": {
+   "file": "models/item_024_stew_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.3,
+   "triangles": 76,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 24,
+   "content_id": "stew",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_024_stew_m": {
+   "file": "models/item_024_stew_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.4,
+   "triangles": 228,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 24,
+   "content_id": "stew",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_024_stew_l": {
+   "file": "models/item_024_stew_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.55,
+   "triangles": 456,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 24,
+   "content_id": "stew",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_025_dried_meat_s": {
+   "file": "models/item_025_dried_meat_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.188,
+   "triangles": 116,
+   "materials": [
+    "fruit",
+    "horn"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 25,
+   "content_id": "dried_meat",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_025_dried_meat_m": {
+   "file": "models/item_025_dried_meat_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.291,
+   "triangles": 348,
+   "materials": [
+    "fruit",
+    "horn"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 25,
+   "content_id": "dried_meat",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_025_dried_meat_l": {
+   "file": "models/item_025_dried_meat_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.433,
+   "triangles": 696,
+   "materials": [
+    "fruit",
+    "horn"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 25,
+   "content_id": "dried_meat",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_026_dried_berries_s": {
+   "file": "models/item_026_dried_berries_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.186,
+   "triangles": 20,
+   "materials": [
+    "fruit"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 26,
+   "content_id": "dried_berries",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_026_dried_berries_m": {
+   "file": "models/item_026_dried_berries_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.292,
+   "triangles": 60,
+   "materials": [
+    "fruit"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 26,
+   "content_id": "dried_berries",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_026_dried_berries_l": {
+   "file": "models/item_026_dried_berries_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.435,
+   "triangles": 120,
+   "materials": [
+    "fruit"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 26,
+   "content_id": "dried_berries",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_027_roasted_roots_s": {
+   "file": "models/item_027_roasted_roots_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.19,
+   "triangles": 20,
+   "materials": [
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 27,
+   "content_id": "roasted_roots",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_027_roasted_roots_m": {
+   "file": "models/item_027_roasted_roots_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.293,
+   "triangles": 60,
+   "materials": [
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 27,
+   "content_id": "roasted_roots",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_027_roasted_roots_l": {
+   "file": "models/item_027_roasted_roots_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.45,
+   "triangles": 120,
+   "materials": [
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 27,
+   "content_id": "roasted_roots",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_028_fruit_porridge_s": {
+   "file": "models/item_028_fruit_porridge_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.3,
+   "triangles": 76,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 28,
+   "content_id": "fruit_porridge",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_028_fruit_porridge_m": {
+   "file": "models/item_028_fruit_porridge_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.4,
+   "triangles": 228,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 28,
+   "content_id": "fruit_porridge",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_028_fruit_porridge_l": {
+   "file": "models/item_028_fruit_porridge_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.55,
+   "triangles": 456,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 28,
+   "content_id": "fruit_porridge",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_029_legacy_food_s": {
+   "file": "models/item_029_legacy_food_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.201,
+   "triangles": 20,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 29,
+   "content_id": "legacy_food",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_029_legacy_food_m": {
+   "file": "models/item_029_legacy_food_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.302,
+   "triangles": 60,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 29,
+   "content_id": "legacy_food",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_029_legacy_food_l": {
+   "file": "models/item_029_legacy_food_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.448,
+   "triangles": 120,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 29,
+   "content_id": "legacy_food",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_030_flax_seed_s": {
+   "file": "models/item_030_flax_seed_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.206,
+   "triangles": 20,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 30,
+   "content_id": "flax_seed",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_030_flax_seed_m": {
+   "file": "models/item_030_flax_seed_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.299,
+   "triangles": 60,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 30,
+   "content_id": "flax_seed",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_030_flax_seed_l": {
+   "file": "models/item_030_flax_seed_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.435,
+   "triangles": 120,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 30,
+   "content_id": "flax_seed",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_031_emmer_seed_s": {
+   "file": "models/item_031_emmer_seed_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.198,
+   "triangles": 20,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 31,
+   "content_id": "emmer_seed",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_031_emmer_seed_m": {
+   "file": "models/item_031_emmer_seed_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.296,
+   "triangles": 60,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 31,
+   "content_id": "emmer_seed",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_031_emmer_seed_l": {
+   "file": "models/item_031_emmer_seed_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.455,
+   "triangles": 120,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 31,
+   "content_id": "emmer_seed",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_032_flax_fibre_s": {
+   "file": "models/item_032_flax_fibre_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.07,
+   "triangles": 96,
+   "materials": [
+    "thatch",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 32,
+   "content_id": "flax_fibre",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_032_flax_fibre_m": {
+   "file": "models/item_032_flax_fibre_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.17,
+   "triangles": 288,
+   "materials": [
+    "thatch",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 32,
+   "content_id": "flax_fibre",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_032_flax_fibre_l": {
+   "file": "models/item_032_flax_fibre_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.32,
+   "triangles": 576,
+   "materials": [
+    "thatch",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 32,
+   "content_id": "flax_fibre",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_033_linen_thread_s": {
+   "file": "models/item_033_linen_thread_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.12,
+   "triangles": 48,
+   "materials": [
+    "cloth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 33,
+   "content_id": "linen_thread",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_033_linen_thread_m": {
+   "file": "models/item_033_linen_thread_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.22,
+   "triangles": 144,
+   "materials": [
+    "cloth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 33,
+   "content_id": "linen_thread",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_033_linen_thread_l": {
+   "file": "models/item_033_linen_thread_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.37,
+   "triangles": 288,
+   "materials": [
+    "cloth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 33,
+   "content_id": "linen_thread",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_034_linen_cloth_s": {
+   "file": "models/item_034_linen_cloth_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.205,
+   "triangles": 96,
+   "materials": [
+    "cloth",
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 34,
+   "content_id": "linen_cloth",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_034_linen_cloth_m": {
+   "file": "models/item_034_linen_cloth_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.305,
+   "triangles": 288,
+   "materials": [
+    "cloth",
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 34,
+   "content_id": "linen_cloth",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_034_linen_cloth_l": {
+   "file": "models/item_034_linen_cloth_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.455,
+   "triangles": 576,
+   "materials": [
+    "cloth",
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 34,
+   "content_id": "linen_cloth",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_035_hand_spindle_s": {
+   "file": "models/item_035_hand_spindle_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.15,
+   "triangles": 48,
+   "materials": [
+    "wood",
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 35,
+   "content_id": "hand_spindle",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_035_hand_spindle_m": {
+   "file": "models/item_035_hand_spindle_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.25,
+   "triangles": 144,
+   "materials": [
+    "wood",
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 35,
+   "content_id": "hand_spindle",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_035_hand_spindle_l": {
+   "file": "models/item_035_hand_spindle_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.4,
+   "triangles": 288,
+   "materials": [
+    "wood",
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 35,
+   "content_id": "hand_spindle",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_036_linen_tunic_s": {
+   "file": "models/item_036_linen_tunic_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.205,
+   "triangles": 96,
+   "materials": [
+    "cloth",
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 36,
+   "content_id": "linen_tunic",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_036_linen_tunic_m": {
+   "file": "models/item_036_linen_tunic_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.305,
+   "triangles": 288,
+   "materials": [
+    "cloth",
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 36,
+   "content_id": "linen_tunic",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_036_linen_tunic_l": {
+   "file": "models/item_036_linen_tunic_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.455,
+   "triangles": 576,
+   "materials": [
+    "cloth",
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 36,
+   "content_id": "linen_tunic",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_037_linen_wrap_s": {
+   "file": "models/item_037_linen_wrap_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.205,
+   "triangles": 96,
+   "materials": [
+    "cloth",
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 37,
+   "content_id": "linen_wrap",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_037_linen_wrap_m": {
+   "file": "models/item_037_linen_wrap_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.305,
+   "triangles": 288,
+   "materials": [
+    "cloth",
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 37,
+   "content_id": "linen_wrap",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_037_linen_wrap_l": {
+   "file": "models/item_037_linen_wrap_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.455,
+   "triangles": 576,
+   "materials": [
+    "cloth",
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 37,
+   "content_id": "linen_wrap",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_038_cord_s": {
+   "file": "models/item_038_cord_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.12,
+   "triangles": 48,
+   "materials": [
+    "cloth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 38,
+   "content_id": "cord",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_038_cord_m": {
+   "file": "models/item_038_cord_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.22,
+   "triangles": 144,
+   "materials": [
+    "cloth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 38,
+   "content_id": "cord",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_038_cord_l": {
+   "file": "models/item_038_cord_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.37,
+   "triangles": 288,
+   "materials": [
+    "cloth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 38,
+   "content_id": "cord",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_039_basket_s": {
+   "file": "models/item_039_basket_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.431,
+   "triangles": 74,
+   "materials": [
+    "thatch",
+    "earth",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 39,
+   "content_id": "basket",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_039_basket_m": {
+   "file": "models/item_039_basket_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.531,
+   "triangles": 222,
+   "materials": [
+    "thatch",
+    "earth",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 39,
+   "content_id": "basket",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_039_basket_l": {
+   "file": "models/item_039_basket_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.681,
+   "triangles": 444,
+   "materials": [
+    "thatch",
+    "earth",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 39,
+   "content_id": "basket",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_040_sling_s": {
+   "file": "models/item_040_sling_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.12,
+   "triangles": 48,
+   "materials": [
+    "cloth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 40,
+   "content_id": "sling",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_040_sling_m": {
+   "file": "models/item_040_sling_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.22,
+   "triangles": 144,
+   "materials": [
+    "cloth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 40,
+   "content_id": "sling",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_040_sling_l": {
+   "file": "models/item_040_sling_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.37,
+   "triangles": 288,
+   "materials": [
+    "cloth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 40,
+   "content_id": "sling",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_041_bone_needle_s": {
+   "file": "models/item_041_bone_needle_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.035,
+   "triangles": 8,
+   "materials": [
+    "horn"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 41,
+   "content_id": "bone_needle",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_041_bone_needle_m": {
+   "file": "models/item_041_bone_needle_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.135,
+   "triangles": 24,
+   "materials": [
+    "horn"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 41,
+   "content_id": "bone_needle",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_041_bone_needle_l": {
+   "file": "models/item_041_bone_needle_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.285,
+   "triangles": 48,
+   "materials": [
+    "horn"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 41,
+   "content_id": "bone_needle",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_042_fish_s": {
+   "file": "models/item_042_fish_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.125,
+   "triangles": 52,
+   "materials": [
+    "metal",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 42,
+   "content_id": "fish",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_042_fish_m": {
+   "file": "models/item_042_fish_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.225,
+   "triangles": 156,
+   "materials": [
+    "metal",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 42,
+   "content_id": "fish",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_042_fish_l": {
+   "file": "models/item_042_fish_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.375,
+   "triangles": 312,
+   "materials": [
+    "metal",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 42,
+   "content_id": "fish",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_043_flour_s": {
+   "file": "models/item_043_flour_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.19,
+   "triangles": 20,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 43,
+   "content_id": "flour",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_043_flour_m": {
+   "file": "models/item_043_flour_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.301,
+   "triangles": 60,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 43,
+   "content_id": "flour",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_043_flour_l": {
+   "file": "models/item_043_flour_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.454,
+   "triangles": 120,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 43,
+   "content_id": "flour",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_044_bread_s": {
+   "file": "models/item_044_bread_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.186,
+   "triangles": 20,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 44,
+   "content_id": "bread",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_044_bread_m": {
+   "file": "models/item_044_bread_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.294,
+   "triangles": 60,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 44,
+   "content_id": "bread",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_044_bread_l": {
+   "file": "models/item_044_bread_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.454,
+   "triangles": 120,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 44,
+   "content_id": "bread",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_045_beer_s": {
+   "file": "models/item_045_beer_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.3,
+   "triangles": 76,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 45,
+   "content_id": "beer",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_045_beer_m": {
+   "file": "models/item_045_beer_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.4,
+   "triangles": 228,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 45,
+   "content_id": "beer",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_045_beer_l": {
+   "file": "models/item_045_beer_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.55,
+   "triangles": 456,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 45,
+   "content_id": "beer",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_046_milk_s": {
+   "file": "models/item_046_milk_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.3,
+   "triangles": 76,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 46,
+   "content_id": "milk",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_046_milk_m": {
+   "file": "models/item_046_milk_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.4,
+   "triangles": 228,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 46,
+   "content_id": "milk",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_046_milk_l": {
+   "file": "models/item_046_milk_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.55,
+   "triangles": 456,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 46,
+   "content_id": "milk",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_047_cheese_s": {
+   "file": "models/item_047_cheese_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.203,
+   "triangles": 20,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 47,
+   "content_id": "cheese",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_047_cheese_m": {
+   "file": "models/item_047_cheese_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.298,
+   "triangles": 60,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 47,
+   "content_id": "cheese",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_047_cheese_l": {
+   "file": "models/item_047_cheese_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.437,
+   "triangles": 120,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 47,
+   "content_id": "cheese",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_048_smoked_meat_s": {
+   "file": "models/item_048_smoked_meat_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.185,
+   "triangles": 116,
+   "materials": [
+    "fruit",
+    "horn"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 48,
+   "content_id": "smoked_meat",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_048_smoked_meat_m": {
+   "file": "models/item_048_smoked_meat_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.283,
+   "triangles": 348,
+   "materials": [
+    "fruit",
+    "horn"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 48,
+   "content_id": "smoked_meat",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_048_smoked_meat_l": {
+   "file": "models/item_048_smoked_meat_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.436,
+   "triangles": 696,
+   "materials": [
+    "fruit",
+    "horn"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 48,
+   "content_id": "smoked_meat",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_049_hay_s": {
+   "file": "models/item_049_hay_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.07,
+   "triangles": 96,
+   "materials": [
+    "thatch",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 49,
+   "content_id": "hay",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_049_hay_m": {
+   "file": "models/item_049_hay_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.17,
+   "triangles": 288,
+   "materials": [
+    "thatch",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 49,
+   "content_id": "hay",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_049_hay_l": {
+   "file": "models/item_049_hay_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.32,
+   "triangles": 576,
+   "materials": [
+    "thatch",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 49,
+   "content_id": "hay",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_050_hoe_s": {
+   "file": "models/item_050_hoe_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.062,
+   "triangles": 32,
+   "materials": [
+    "wood",
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 50,
+   "content_id": "hoe",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_050_hoe_m": {
+   "file": "models/item_050_hoe_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.162,
+   "triangles": 96,
+   "materials": [
+    "wood",
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 50,
+   "content_id": "hoe",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_050_hoe_l": {
+   "file": "models/item_050_hoe_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.312,
+   "triangles": 192,
+   "materials": [
+    "wood",
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 50,
+   "content_id": "hoe",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_051_sickle_s": {
+   "file": "models/item_051_sickle_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.07,
+   "triangles": 54,
+   "materials": [
+    "wood",
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 51,
+   "content_id": "sickle",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_051_sickle_m": {
+   "file": "models/item_051_sickle_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.17,
+   "triangles": 162,
+   "materials": [
+    "wood",
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 51,
+   "content_id": "sickle",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_051_sickle_l": {
+   "file": "models/item_051_sickle_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.32,
+   "triangles": 324,
+   "materials": [
+    "wood",
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 51,
+   "content_id": "sickle",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_052_adze_s": {
+   "file": "models/item_052_adze_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.062,
+   "triangles": 32,
+   "materials": [
+    "wood",
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 52,
+   "content_id": "adze",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_052_adze_m": {
+   "file": "models/item_052_adze_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.162,
+   "triangles": 96,
+   "materials": [
+    "wood",
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 52,
+   "content_id": "adze",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_052_adze_l": {
+   "file": "models/item_052_adze_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.312,
+   "triangles": 192,
+   "materials": [
+    "wood",
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 52,
+   "content_id": "adze",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_053_bow_s": {
+   "file": "models/item_053_bow_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.06,
+   "triangles": 68,
+   "materials": [
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 53,
+   "content_id": "bow",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_053_bow_m": {
+   "file": "models/item_053_bow_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.16,
+   "triangles": 204,
+   "materials": [
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 53,
+   "content_id": "bow",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_053_bow_l": {
+   "file": "models/item_053_bow_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.31,
+   "triangles": 408,
+   "materials": [
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 53,
+   "content_id": "bow",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_054_arrow_s": {
+   "file": "models/item_054_arrow_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.049,
+   "triangles": 42,
+   "materials": [
+    "wood",
+    "stone",
+    "cloth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 54,
+   "content_id": "arrow",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_054_arrow_m": {
+   "file": "models/item_054_arrow_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.149,
+   "triangles": 126,
+   "materials": [
+    "wood",
+    "stone",
+    "cloth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 54,
+   "content_id": "arrow",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_054_arrow_l": {
+   "file": "models/item_054_arrow_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.299,
+   "triangles": 252,
+   "materials": [
+    "wood",
+    "stone",
+    "cloth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 54,
+   "content_id": "arrow",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_055_dyed_tunic_s": {
+   "file": "models/item_055_dyed_tunic_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.205,
+   "triangles": 96,
+   "materials": [
+    "cloth",
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 55,
+   "content_id": "dyed_tunic",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_055_dyed_tunic_m": {
+   "file": "models/item_055_dyed_tunic_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.305,
+   "triangles": 288,
+   "materials": [
+    "cloth",
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 55,
+   "content_id": "dyed_tunic",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_055_dyed_tunic_l": {
+   "file": "models/item_055_dyed_tunic_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.455,
+   "triangles": 576,
+   "materials": [
+    "cloth",
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 55,
+   "content_id": "dyed_tunic",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_056_leather_armor_s": {
+   "file": "models/item_056_leather_armor_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.205,
+   "triangles": 96,
+   "materials": [
+    "cloth",
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 56,
+   "content_id": "leather_armor",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_056_leather_armor_m": {
+   "file": "models/item_056_leather_armor_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.305,
+   "triangles": 288,
+   "materials": [
+    "cloth",
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 56,
+   "content_id": "leather_armor",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_056_leather_armor_l": {
+   "file": "models/item_056_leather_armor_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.455,
+   "triangles": 576,
+   "materials": [
+    "cloth",
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 56,
+   "content_id": "leather_armor",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_057_herbs_s": {
+   "file": "models/item_057_herbs_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.07,
+   "triangles": 96,
+   "materials": [
+    "thatch",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 57,
+   "content_id": "herbs",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_057_herbs_m": {
+   "file": "models/item_057_herbs_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.17,
+   "triangles": 288,
+   "materials": [
+    "thatch",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 57,
+   "content_id": "herbs",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_057_herbs_l": {
+   "file": "models/item_057_herbs_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.32,
+   "triangles": 576,
+   "materials": [
+    "thatch",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 57,
+   "content_id": "herbs",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_058_poultice_s": {
+   "file": "models/item_058_poultice_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.205,
+   "triangles": 96,
+   "materials": [
+    "cloth",
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 58,
+   "content_id": "poultice",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_058_poultice_m": {
+   "file": "models/item_058_poultice_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.305,
+   "triangles": 288,
+   "materials": [
+    "cloth",
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 58,
+   "content_id": "poultice",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_058_poultice_l": {
+   "file": "models/item_058_poultice_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.455,
+   "triangles": 576,
+   "materials": [
+    "cloth",
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 58,
+   "content_id": "poultice",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_059_barley_s": {
+   "file": "models/item_059_barley_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.198,
+   "triangles": 20,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 59,
+   "content_id": "barley",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_059_barley_m": {
+   "file": "models/item_059_barley_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.295,
+   "triangles": 60,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 59,
+   "content_id": "barley",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_059_barley_l": {
+   "file": "models/item_059_barley_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.455,
+   "triangles": 120,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 59,
+   "content_id": "barley",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_060_barley_seed_s": {
+   "file": "models/item_060_barley_seed_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.204,
+   "triangles": 20,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 60,
+   "content_id": "barley_seed",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_060_barley_seed_m": {
+   "file": "models/item_060_barley_seed_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.287,
+   "triangles": 60,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 60,
+   "content_id": "barley_seed",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_060_barley_seed_l": {
+   "file": "models/item_060_barley_seed_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.434,
+   "triangles": 120,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 60,
+   "content_id": "barley_seed",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_061_rye_s": {
+   "file": "models/item_061_rye_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.203,
+   "triangles": 20,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 61,
+   "content_id": "rye",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_061_rye_m": {
+   "file": "models/item_061_rye_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.296,
+   "triangles": 60,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 61,
+   "content_id": "rye",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_061_rye_l": {
+   "file": "models/item_061_rye_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.454,
+   "triangles": 120,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 61,
+   "content_id": "rye",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_062_rye_seed_s": {
+   "file": "models/item_062_rye_seed_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.201,
+   "triangles": 20,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 62,
+   "content_id": "rye_seed",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_062_rye_seed_m": {
+   "file": "models/item_062_rye_seed_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.297,
+   "triangles": 60,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 62,
+   "content_id": "rye_seed",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_062_rye_seed_l": {
+   "file": "models/item_062_rye_seed_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.442,
+   "triangles": 120,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 62,
+   "content_id": "rye_seed",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_063_lentil_s": {
+   "file": "models/item_063_lentil_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.197,
+   "triangles": 20,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 63,
+   "content_id": "lentil",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_063_lentil_m": {
+   "file": "models/item_063_lentil_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.306,
+   "triangles": 60,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 63,
+   "content_id": "lentil",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_063_lentil_l": {
+   "file": "models/item_063_lentil_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.442,
+   "triangles": 120,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 63,
+   "content_id": "lentil",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_064_lentil_seed_s": {
+   "file": "models/item_064_lentil_seed_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.202,
+   "triangles": 20,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 64,
+   "content_id": "lentil_seed",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_064_lentil_seed_m": {
+   "file": "models/item_064_lentil_seed_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.292,
+   "triangles": 60,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 64,
+   "content_id": "lentil_seed",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_064_lentil_seed_l": {
+   "file": "models/item_064_lentil_seed_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.449,
+   "triangles": 120,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 64,
+   "content_id": "lentil_seed",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_065_pea_s": {
+   "file": "models/item_065_pea_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.199,
+   "triangles": 20,
+   "materials": [
+    "canopy"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 65,
+   "content_id": "pea",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_065_pea_m": {
+   "file": "models/item_065_pea_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.307,
+   "triangles": 60,
+   "materials": [
+    "canopy"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 65,
+   "content_id": "pea",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_065_pea_l": {
+   "file": "models/item_065_pea_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.446,
+   "triangles": 120,
+   "materials": [
+    "canopy"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 65,
+   "content_id": "pea",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_066_pea_seed_s": {
+   "file": "models/item_066_pea_seed_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.187,
+   "triangles": 20,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 66,
+   "content_id": "pea_seed",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_066_pea_seed_m": {
+   "file": "models/item_066_pea_seed_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.296,
+   "triangles": 60,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 66,
+   "content_id": "pea_seed",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_066_pea_seed_l": {
+   "file": "models/item_066_pea_seed_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.455,
+   "triangles": 120,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 66,
+   "content_id": "pea_seed",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_067_millet_s": {
+   "file": "models/item_067_millet_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.198,
+   "triangles": 20,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 67,
+   "content_id": "millet",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_067_millet_m": {
+   "file": "models/item_067_millet_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.305,
+   "triangles": 60,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 67,
+   "content_id": "millet",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_067_millet_l": {
+   "file": "models/item_067_millet_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.441,
+   "triangles": 120,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 67,
+   "content_id": "millet",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_068_millet_seed_s": {
+   "file": "models/item_068_millet_seed_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.196,
+   "triangles": 20,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 68,
+   "content_id": "millet_seed",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_068_millet_seed_m": {
+   "file": "models/item_068_millet_seed_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.297,
+   "triangles": 60,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 68,
+   "content_id": "millet_seed",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_068_millet_seed_l": {
+   "file": "models/item_068_millet_seed_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.442,
+   "triangles": 120,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 68,
+   "content_id": "millet_seed",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_069_apple_s": {
+   "file": "models/item_069_apple_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.183,
+   "triangles": 20,
+   "materials": [
+    "fruit"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 69,
+   "content_id": "apple",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_069_apple_m": {
+   "file": "models/item_069_apple_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.301,
+   "triangles": 60,
+   "materials": [
+    "fruit"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 69,
+   "content_id": "apple",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_069_apple_l": {
+   "file": "models/item_069_apple_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.448,
+   "triangles": 120,
+   "materials": [
+    "fruit"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 69,
+   "content_id": "apple",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_070_goat_hide_s": {
+   "file": "models/item_070_goat_hide_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.032,
+   "triangles": 72,
+   "materials": [
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 70,
+   "content_id": "goat_hide",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_070_goat_hide_m": {
+   "file": "models/item_070_goat_hide_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.132,
+   "triangles": 216,
+   "materials": [
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 70,
+   "content_id": "goat_hide",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "overhang": true
+  },
+  "item_070_goat_hide_l": {
+   "file": "models/item_070_goat_hide_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.275,
+   "triangles": 432,
+   "materials": [
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 70,
+   "content_id": "goat_hide",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "overhang": true
+  },
+  "item_071_wool_s": {
+   "file": "models/item_071_wool_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.197,
+   "triangles": 20,
+   "materials": [
+    "cloth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 71,
+   "content_id": "wool",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_071_wool_m": {
+   "file": "models/item_071_wool_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.298,
+   "triangles": 60,
+   "materials": [
+    "cloth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 71,
+   "content_id": "wool",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_071_wool_l": {
+   "file": "models/item_071_wool_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.452,
+   "triangles": 120,
+   "materials": [
+    "cloth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 71,
+   "content_id": "wool",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_072_charcoal_s": {
+   "file": "models/item_072_charcoal_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.192,
+   "triangles": 20,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 72,
+   "content_id": "charcoal",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_072_charcoal_m": {
+   "file": "models/item_072_charcoal_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.29,
+   "triangles": 60,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 72,
+   "content_id": "charcoal",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_072_charcoal_l": {
+   "file": "models/item_072_charcoal_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.447,
+   "triangles": 120,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 72,
+   "content_id": "charcoal",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_073_copper_ore_s": {
+   "file": "models/item_073_copper_ore_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.183,
+   "triangles": 20,
+   "materials": [
+    "vein"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 73,
+   "content_id": "copper_ore",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_073_copper_ore_m": {
+   "file": "models/item_073_copper_ore_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.296,
+   "triangles": 60,
+   "materials": [
+    "vein"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 73,
+   "content_id": "copper_ore",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_073_copper_ore_l": {
+   "file": "models/item_073_copper_ore_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.443,
+   "triangles": 120,
+   "materials": [
+    "vein"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 73,
+   "content_id": "copper_ore",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_074_tin_ore_s": {
+   "file": "models/item_074_tin_ore_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.194,
+   "triangles": 20,
+   "materials": [
+    "vein"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 74,
+   "content_id": "tin_ore",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_074_tin_ore_m": {
+   "file": "models/item_074_tin_ore_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.302,
+   "triangles": 60,
+   "materials": [
+    "vein"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 74,
+   "content_id": "tin_ore",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_074_tin_ore_l": {
+   "file": "models/item_074_tin_ore_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.446,
+   "triangles": 120,
+   "materials": [
+    "vein"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 74,
+   "content_id": "tin_ore",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_075_iron_ore_s": {
+   "file": "models/item_075_iron_ore_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.2,
+   "triangles": 20,
+   "materials": [
+    "vein"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 75,
+   "content_id": "iron_ore",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_075_iron_ore_m": {
+   "file": "models/item_075_iron_ore_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.302,
+   "triangles": 60,
+   "materials": [
+    "vein"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 75,
+   "content_id": "iron_ore",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_075_iron_ore_l": {
+   "file": "models/item_075_iron_ore_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.452,
+   "triangles": 120,
+   "materials": [
+    "vein"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 75,
+   "content_id": "iron_ore",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_076_copper_ingot_s": {
+   "file": "models/item_076_copper_ingot_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.1,
+   "triangles": 12,
+   "materials": [
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 76,
+   "content_id": "copper_ingot",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_076_copper_ingot_m": {
+   "file": "models/item_076_copper_ingot_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.2,
+   "triangles": 36,
+   "materials": [
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 76,
+   "content_id": "copper_ingot",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_076_copper_ingot_l": {
+   "file": "models/item_076_copper_ingot_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.35,
+   "triangles": 72,
+   "materials": [
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 76,
+   "content_id": "copper_ingot",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_077_tin_ingot_s": {
+   "file": "models/item_077_tin_ingot_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.1,
+   "triangles": 12,
+   "materials": [
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 77,
+   "content_id": "tin_ingot",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_077_tin_ingot_m": {
+   "file": "models/item_077_tin_ingot_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.2,
+   "triangles": 36,
+   "materials": [
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 77,
+   "content_id": "tin_ingot",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_077_tin_ingot_l": {
+   "file": "models/item_077_tin_ingot_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.35,
+   "triangles": 72,
+   "materials": [
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 77,
+   "content_id": "tin_ingot",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_078_bronze_ingot_s": {
+   "file": "models/item_078_bronze_ingot_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.1,
+   "triangles": 12,
+   "materials": [
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 78,
+   "content_id": "bronze_ingot",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_078_bronze_ingot_m": {
+   "file": "models/item_078_bronze_ingot_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.2,
+   "triangles": 36,
+   "materials": [
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 78,
+   "content_id": "bronze_ingot",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_078_bronze_ingot_l": {
+   "file": "models/item_078_bronze_ingot_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.35,
+   "triangles": 72,
+   "materials": [
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 78,
+   "content_id": "bronze_ingot",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_079_clay_mould_s": {
+   "file": "models/item_079_clay_mould_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.1,
+   "triangles": 12,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 79,
+   "content_id": "clay_mould",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_079_clay_mould_m": {
+   "file": "models/item_079_clay_mould_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.2,
+   "triangles": 36,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 79,
+   "content_id": "clay_mould",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_079_clay_mould_l": {
+   "file": "models/item_079_clay_mould_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.35,
+   "triangles": 72,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 79,
+   "content_id": "clay_mould",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_080_copper_awl_s": {
+   "file": "models/item_080_copper_awl_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.047,
+   "triangles": 20,
+   "materials": [
+    "metal",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 80,
+   "content_id": "copper_awl",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_080_copper_awl_m": {
+   "file": "models/item_080_copper_awl_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.148,
+   "triangles": 60,
+   "materials": [
+    "metal",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 80,
+   "content_id": "copper_awl",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_080_copper_awl_l": {
+   "file": "models/item_080_copper_awl_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.298,
+   "triangles": 120,
+   "materials": [
+    "metal",
+    "wood"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 80,
+   "content_id": "copper_awl",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_081_copper_needle_s": {
+   "file": "models/item_081_copper_needle_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.035,
+   "triangles": 8,
+   "materials": [
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 81,
+   "content_id": "copper_needle",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_081_copper_needle_m": {
+   "file": "models/item_081_copper_needle_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.135,
+   "triangles": 24,
+   "materials": [
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 81,
+   "content_id": "copper_needle",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_081_copper_needle_l": {
+   "file": "models/item_081_copper_needle_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.285,
+   "triangles": 48,
+   "materials": [
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 81,
+   "content_id": "copper_needle",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_082_copper_axe_s": {
+   "file": "models/item_082_copper_axe_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.055,
+   "triangles": 48,
+   "materials": [
+    "wood",
+    "stone",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 82,
+   "content_id": "copper_axe",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_082_copper_axe_m": {
+   "file": "models/item_082_copper_axe_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.155,
+   "triangles": 144,
+   "materials": [
+    "wood",
+    "stone",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 82,
+   "content_id": "copper_axe",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_082_copper_axe_l": {
+   "file": "models/item_082_copper_axe_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.305,
+   "triangles": 288,
+   "materials": [
+    "wood",
+    "stone",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 82,
+   "content_id": "copper_axe",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_083_bronze_axe_s": {
+   "file": "models/item_083_bronze_axe_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.055,
+   "triangles": 48,
+   "materials": [
+    "wood",
+    "stone",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 83,
+   "content_id": "bronze_axe",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_083_bronze_axe_m": {
+   "file": "models/item_083_bronze_axe_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.155,
+   "triangles": 144,
+   "materials": [
+    "wood",
+    "stone",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 83,
+   "content_id": "bronze_axe",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_083_bronze_axe_l": {
+   "file": "models/item_083_bronze_axe_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.305,
+   "triangles": 288,
+   "materials": [
+    "wood",
+    "stone",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 83,
+   "content_id": "bronze_axe",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_084_bronze_sickle_s": {
+   "file": "models/item_084_bronze_sickle_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.07,
+   "triangles": 54,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 84,
+   "content_id": "bronze_sickle",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_084_bronze_sickle_m": {
+   "file": "models/item_084_bronze_sickle_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.17,
+   "triangles": 162,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 84,
+   "content_id": "bronze_sickle",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_084_bronze_sickle_l": {
+   "file": "models/item_084_bronze_sickle_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.32,
+   "triangles": 324,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 84,
+   "content_id": "bronze_sickle",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_085_bronze_hoe_s": {
+   "file": "models/item_085_bronze_hoe_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.062,
+   "triangles": 32,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 85,
+   "content_id": "bronze_hoe",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_085_bronze_hoe_m": {
+   "file": "models/item_085_bronze_hoe_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.162,
+   "triangles": 96,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 85,
+   "content_id": "bronze_hoe",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_085_bronze_hoe_l": {
+   "file": "models/item_085_bronze_hoe_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.312,
+   "triangles": 192,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 85,
+   "content_id": "bronze_hoe",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_086_bronze_spear_s": {
+   "file": "models/item_086_bronze_spear_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.069,
+   "triangles": 30,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 86,
+   "content_id": "bronze_spear",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_086_bronze_spear_m": {
+   "file": "models/item_086_bronze_spear_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.169,
+   "triangles": 90,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 86,
+   "content_id": "bronze_spear",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_086_bronze_spear_l": {
+   "file": "models/item_086_bronze_spear_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.319,
+   "triangles": 180,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 86,
+   "content_id": "bronze_spear",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_087_bronze_dagger_s": {
+   "file": "models/item_087_bronze_dagger_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.185,
+   "triangles": 20,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 87,
+   "content_id": "bronze_dagger",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_087_bronze_dagger_m": {
+   "file": "models/item_087_bronze_dagger_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.283,
+   "triangles": 60,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 87,
+   "content_id": "bronze_dagger",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_087_bronze_dagger_l": {
+   "file": "models/item_087_bronze_dagger_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.448,
+   "triangles": 120,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 87,
+   "content_id": "bronze_dagger",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_088_honey_s": {
+   "file": "models/item_088_honey_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.3,
+   "triangles": 76,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 88,
+   "content_id": "honey",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_088_honey_m": {
+   "file": "models/item_088_honey_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.4,
+   "triangles": 228,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 88,
+   "content_id": "honey",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_088_honey_l": {
+   "file": "models/item_088_honey_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.55,
+   "triangles": 456,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 88,
+   "content_id": "honey",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_089_beeswax_s": {
+   "file": "models/item_089_beeswax_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.184,
+   "triangles": 20,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 89,
+   "content_id": "beeswax",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_089_beeswax_m": {
+   "file": "models/item_089_beeswax_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.297,
+   "triangles": 60,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 89,
+   "content_id": "beeswax",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_089_beeswax_l": {
+   "file": "models/item_089_beeswax_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.454,
+   "triangles": 120,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 89,
+   "content_id": "beeswax",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_090_wool_yarn_s": {
+   "file": "models/item_090_wool_yarn_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.12,
+   "triangles": 48,
+   "materials": [
+    "cloth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 90,
+   "content_id": "wool_yarn",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_090_wool_yarn_m": {
+   "file": "models/item_090_wool_yarn_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.22,
+   "triangles": 144,
+   "materials": [
+    "cloth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 90,
+   "content_id": "wool_yarn",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_090_wool_yarn_l": {
+   "file": "models/item_090_wool_yarn_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.37,
+   "triangles": 288,
+   "materials": [
+    "cloth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 90,
+   "content_id": "wool_yarn",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_091_wool_cloth_s": {
+   "file": "models/item_091_wool_cloth_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.205,
+   "triangles": 96,
+   "materials": [
+    "cloth",
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 91,
+   "content_id": "wool_cloth",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_091_wool_cloth_m": {
+   "file": "models/item_091_wool_cloth_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.305,
+   "triangles": 288,
+   "materials": [
+    "cloth",
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 91,
+   "content_id": "wool_cloth",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_091_wool_cloth_l": {
+   "file": "models/item_091_wool_cloth_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.455,
+   "triangles": 576,
+   "materials": [
+    "cloth",
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 91,
+   "content_id": "wool_cloth",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_092_wool_tunic_s": {
+   "file": "models/item_092_wool_tunic_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.205,
+   "triangles": 96,
+   "materials": [
+    "cloth",
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 92,
+   "content_id": "wool_tunic",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_092_wool_tunic_m": {
+   "file": "models/item_092_wool_tunic_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.305,
+   "triangles": 288,
+   "materials": [
+    "cloth",
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 92,
+   "content_id": "wool_tunic",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_092_wool_tunic_l": {
+   "file": "models/item_092_wool_tunic_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.455,
+   "triangles": 576,
+   "materials": [
+    "cloth",
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 92,
+   "content_id": "wool_tunic",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_093_wheel_s": {
+   "file": "models/item_093_wheel_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.08,
+   "triangles": 56,
+   "materials": [
+    "wood",
+    "wood_dark"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 93,
+   "content_id": "wheel",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_093_wheel_m": {
+   "file": "models/item_093_wheel_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.18,
+   "triangles": 168,
+   "materials": [
+    "wood",
+    "wood_dark"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 93,
+   "content_id": "wheel",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_093_wheel_l": {
+   "file": "models/item_093_wheel_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.33,
+   "triangles": 336,
+   "materials": [
+    "wood",
+    "wood_dark"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 93,
+   "content_id": "wheel",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_094_mud_brick_s": {
+   "file": "models/item_094_mud_brick_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.1,
+   "triangles": 12,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 94,
+   "content_id": "mud_brick",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_094_mud_brick_m": {
+   "file": "models/item_094_mud_brick_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.2,
+   "triangles": 36,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 94,
+   "content_id": "mud_brick",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_094_mud_brick_l": {
+   "file": "models/item_094_mud_brick_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.35,
+   "triangles": 72,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 94,
+   "content_id": "mud_brick",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_095_lime_s": {
+   "file": "models/item_095_lime_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.196,
+   "triangles": 20,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 95,
+   "content_id": "lime",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_095_lime_m": {
+   "file": "models/item_095_lime_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.296,
+   "triangles": 60,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 95,
+   "content_id": "lime",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_095_lime_l": {
+   "file": "models/item_095_lime_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.455,
+   "triangles": 120,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 95,
+   "content_id": "lime",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_096_seal_s": {
+   "file": "models/item_096_seal_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.201,
+   "triangles": 20,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 96,
+   "content_id": "seal",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_096_seal_m": {
+   "file": "models/item_096_seal_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.301,
+   "triangles": 60,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 96,
+   "content_id": "seal",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_096_seal_l": {
+   "file": "models/item_096_seal_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.456,
+   "triangles": 120,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 96,
+   "content_id": "seal",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_097_tablet_s": {
+   "file": "models/item_097_tablet_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.1,
+   "triangles": 12,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 97,
+   "content_id": "tablet",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_097_tablet_m": {
+   "file": "models/item_097_tablet_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.2,
+   "triangles": 36,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 97,
+   "content_id": "tablet",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_097_tablet_l": {
+   "file": "models/item_097_tablet_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.35,
+   "triangles": 72,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 97,
+   "content_id": "tablet",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_098_glass_bead_s": {
+   "file": "models/item_098_glass_bead_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.183,
+   "triangles": 20,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 98,
+   "content_id": "glass_bead",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_098_glass_bead_m": {
+   "file": "models/item_098_glass_bead_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.294,
+   "triangles": 60,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 98,
+   "content_id": "glass_bead",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_098_glass_bead_l": {
+   "file": "models/item_098_glass_bead_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.45,
+   "triangles": 120,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 98,
+   "content_id": "glass_bead",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_099_composite_bow_s": {
+   "file": "models/item_099_composite_bow_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.06,
+   "triangles": 68,
+   "materials": [
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 99,
+   "content_id": "composite_bow",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_099_composite_bow_m": {
+   "file": "models/item_099_composite_bow_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.16,
+   "triangles": 204,
+   "materials": [
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 99,
+   "content_id": "composite_bow",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_099_composite_bow_l": {
+   "file": "models/item_099_composite_bow_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.31,
+   "triangles": 408,
+   "materials": [
+    "wood",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 99,
+   "content_id": "composite_bow",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_100_limestone_s": {
+   "file": "models/item_100_limestone_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.2,
+   "triangles": 20,
+   "materials": [
+    "vein"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 100,
+   "content_id": "limestone",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_100_limestone_m": {
+   "file": "models/item_100_limestone_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.289,
+   "triangles": 60,
+   "materials": [
+    "vein"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 100,
+   "content_id": "limestone",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_100_limestone_l": {
+   "file": "models/item_100_limestone_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.436,
+   "triangles": 120,
+   "materials": [
+    "vein"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 100,
+   "content_id": "limestone",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_101_bog_iron_s": {
+   "file": "models/item_101_bog_iron_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.197,
+   "triangles": 20,
+   "materials": [
+    "vein"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 101,
+   "content_id": "bog_iron",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_101_bog_iron_m": {
+   "file": "models/item_101_bog_iron_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.306,
+   "triangles": 60,
+   "materials": [
+    "vein"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 101,
+   "content_id": "bog_iron",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_101_bog_iron_l": {
+   "file": "models/item_101_bog_iron_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.452,
+   "triangles": 120,
+   "materials": [
+    "vein"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 101,
+   "content_id": "bog_iron",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_102_iron_bloom_s": {
+   "file": "models/item_102_iron_bloom_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.207,
+   "triangles": 20,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 102,
+   "content_id": "iron_bloom",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_102_iron_bloom_m": {
+   "file": "models/item_102_iron_bloom_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.301,
+   "triangles": 60,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 102,
+   "content_id": "iron_bloom",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_102_iron_bloom_l": {
+   "file": "models/item_102_iron_bloom_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.439,
+   "triangles": 120,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 102,
+   "content_id": "iron_bloom",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_103_wrought_iron_s": {
+   "file": "models/item_103_wrought_iron_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.1,
+   "triangles": 12,
+   "materials": [
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 103,
+   "content_id": "wrought_iron",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_103_wrought_iron_m": {
+   "file": "models/item_103_wrought_iron_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.2,
+   "triangles": 36,
+   "materials": [
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 103,
+   "content_id": "wrought_iron",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_103_wrought_iron_l": {
+   "file": "models/item_103_wrought_iron_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.35,
+   "triangles": 72,
+   "materials": [
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 103,
+   "content_id": "wrought_iron",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_104_iron_axe_s": {
+   "file": "models/item_104_iron_axe_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.055,
+   "triangles": 48,
+   "materials": [
+    "wood",
+    "stone",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 104,
+   "content_id": "iron_axe",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_104_iron_axe_m": {
+   "file": "models/item_104_iron_axe_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.155,
+   "triangles": 144,
+   "materials": [
+    "wood",
+    "stone",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 104,
+   "content_id": "iron_axe",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_104_iron_axe_l": {
+   "file": "models/item_104_iron_axe_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.305,
+   "triangles": 288,
+   "materials": [
+    "wood",
+    "stone",
+    "leather"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 104,
+   "content_id": "iron_axe",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_105_iron_hoe_s": {
+   "file": "models/item_105_iron_hoe_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.062,
+   "triangles": 32,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 105,
+   "content_id": "iron_hoe",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_105_iron_hoe_m": {
+   "file": "models/item_105_iron_hoe_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.162,
+   "triangles": 96,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 105,
+   "content_id": "iron_hoe",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_105_iron_hoe_l": {
+   "file": "models/item_105_iron_hoe_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.312,
+   "triangles": 192,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 105,
+   "content_id": "iron_hoe",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_106_iron_sickle_s": {
+   "file": "models/item_106_iron_sickle_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.07,
+   "triangles": 54,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 106,
+   "content_id": "iron_sickle",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_106_iron_sickle_m": {
+   "file": "models/item_106_iron_sickle_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.17,
+   "triangles": 162,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 106,
+   "content_id": "iron_sickle",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_106_iron_sickle_l": {
+   "file": "models/item_106_iron_sickle_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.32,
+   "triangles": 324,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 106,
+   "content_id": "iron_sickle",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_107_iron_saw_s": {
+   "file": "models/item_107_iron_saw_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.04,
+   "triangles": 24,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 107,
+   "content_id": "iron_saw",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_107_iron_saw_m": {
+   "file": "models/item_107_iron_saw_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.14,
+   "triangles": 72,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 107,
+   "content_id": "iron_saw",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_107_iron_saw_l": {
+   "file": "models/item_107_iron_saw_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.29,
+   "triangles": 144,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 107,
+   "content_id": "iron_saw",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_108_iron_knife_s": {
+   "file": "models/item_108_iron_knife_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.04,
+   "triangles": 24,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 108,
+   "content_id": "iron_knife",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_108_iron_knife_m": {
+   "file": "models/item_108_iron_knife_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.14,
+   "triangles": 72,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 108,
+   "content_id": "iron_knife",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_108_iron_knife_l": {
+   "file": "models/item_108_iron_knife_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.29,
+   "triangles": 144,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 108,
+   "content_id": "iron_knife",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_109_iron_adze_s": {
+   "file": "models/item_109_iron_adze_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.062,
+   "triangles": 32,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 109,
+   "content_id": "iron_adze",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_109_iron_adze_m": {
+   "file": "models/item_109_iron_adze_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.162,
+   "triangles": 96,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 109,
+   "content_id": "iron_adze",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_109_iron_adze_l": {
+   "file": "models/item_109_iron_adze_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.312,
+   "triangles": 192,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 109,
+   "content_id": "iron_adze",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_110_iron_spear_s": {
+   "file": "models/item_110_iron_spear_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.069,
+   "triangles": 30,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 110,
+   "content_id": "iron_spear",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_110_iron_spear_m": {
+   "file": "models/item_110_iron_spear_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.169,
+   "triangles": 90,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 110,
+   "content_id": "iron_spear",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_110_iron_spear_l": {
+   "file": "models/item_110_iron_spear_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.319,
+   "triangles": 180,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 110,
+   "content_id": "iron_spear",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_111_iron_sword_s": {
+   "file": "models/item_111_iron_sword_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.04,
+   "triangles": 24,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 111,
+   "content_id": "iron_sword",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_111_iron_sword_m": {
+   "file": "models/item_111_iron_sword_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.14,
+   "triangles": 72,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 111,
+   "content_id": "iron_sword",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_111_iron_sword_l": {
+   "file": "models/item_111_iron_sword_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.29,
+   "triangles": 144,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 111,
+   "content_id": "iron_sword",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_112_iron_helmet_s": {
+   "file": "models/item_112_iron_helmet_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.152,
+   "triangles": 80,
+   "materials": [
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 112,
+   "content_id": "iron_helmet",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_112_iron_helmet_m": {
+   "file": "models/item_112_iron_helmet_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.252,
+   "triangles": 240,
+   "materials": [
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 112,
+   "content_id": "iron_helmet",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_112_iron_helmet_l": {
+   "file": "models/item_112_iron_helmet_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.402,
+   "triangles": 480,
+   "materials": [
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 112,
+   "content_id": "iron_helmet",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_113_iron_shield_boss_s": {
+   "file": "models/item_113_iron_shield_boss_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.152,
+   "triangles": 80,
+   "materials": [
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 113,
+   "content_id": "iron_shield_boss",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_113_iron_shield_boss_m": {
+   "file": "models/item_113_iron_shield_boss_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.252,
+   "triangles": 240,
+   "materials": [
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 113,
+   "content_id": "iron_shield_boss",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_113_iron_shield_boss_l": {
+   "file": "models/item_113_iron_shield_boss_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.402,
+   "triangles": 480,
+   "materials": [
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 113,
+   "content_id": "iron_shield_boss",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_114_nails_s": {
+   "file": "models/item_114_nails_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.05,
+   "triangles": 54,
+   "materials": [
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 114,
+   "content_id": "nails",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_114_nails_m": {
+   "file": "models/item_114_nails_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.15,
+   "triangles": 162,
+   "materials": [
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 114,
+   "content_id": "nails",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_114_nails_l": {
+   "file": "models/item_114_nails_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.3,
+   "triangles": 324,
+   "materials": [
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 114,
+   "content_id": "nails",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_115_cut_stone_s": {
+   "file": "models/item_115_cut_stone_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.1,
+   "triangles": 12,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 115,
+   "content_id": "cut_stone",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_115_cut_stone_m": {
+   "file": "models/item_115_cut_stone_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.2,
+   "triangles": 36,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 115,
+   "content_id": "cut_stone",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_115_cut_stone_l": {
+   "file": "models/item_115_cut_stone_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.35,
+   "triangles": 72,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 115,
+   "content_id": "cut_stone",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_116_coin_s": {
+   "file": "models/item_116_coin_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.035,
+   "triangles": 72,
+   "materials": [
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 116,
+   "content_id": "coin",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_116_coin_m": {
+   "file": "models/item_116_coin_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.135,
+   "triangles": 216,
+   "materials": [
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 116,
+   "content_id": "coin",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_116_coin_l": {
+   "file": "models/item_116_coin_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.285,
+   "triangles": 432,
+   "materials": [
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 116,
+   "content_id": "coin",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_117_book_s": {
+   "file": "models/item_117_book_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.07,
+   "triangles": 24,
+   "materials": [
+    "leather",
+    "cloth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 117,
+   "content_id": "book",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_117_book_m": {
+   "file": "models/item_117_book_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.17,
+   "triangles": 72,
+   "materials": [
+    "leather",
+    "cloth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 117,
+   "content_id": "book",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_117_book_l": {
+   "file": "models/item_117_book_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.32,
+   "triangles": 144,
+   "materials": [
+    "leather",
+    "cloth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 117,
+   "content_id": "book",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_118_steel_edge_s": {
+   "file": "models/item_118_steel_edge_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.04,
+   "triangles": 24,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 118,
+   "content_id": "steel_edge",
+   "stack_display_count": 1,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_118_steel_edge_m": {
+   "file": "models/item_118_steel_edge_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.14,
+   "triangles": 72,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 118,
+   "content_id": "steel_edge",
+   "stack_display_count": 3,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  },
+  "item_118_steel_edge_l": {
+   "file": "models/item_118_steel_edge_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.29,
+   "triangles": 144,
+   "materials": [
+    "wood",
+    "metal"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 118,
+   "content_id": "steel_edge",
+   "stack_display_count": 6,
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+  }
+ }
+}
