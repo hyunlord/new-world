@@ -48,3 +48,10 @@ planner notes; planner answers arrive as `c3-data/D-C3-<n>.md`. Evidence lives i
     unpublished.
 15. The first C3-a pre-gate found one stale authored list (`engine_economy_ffi` recipe table) and the planner ruled on
     QUESTION-1/2 (D-C3-1); both land in a new commit on top of the first freeze, then a fresh pre-gate.
+16. Pre-gate a1 (2ad516f14) failures, each fixed forward with its cause: stale authored lists
+    (`engine_economy_ffi` recipe table; `spine_eras_from_data`, whose all-marker world is now in the iron era);
+    the authored `bog_iron` material look lacked a category, which failed resolver parity, the data-only-extension
+    resolver check and a mux2 oracle; and `spine_chain_log_house`, where the merged simcheck trajectory lets wolves kill
+    four harvesters in this steward-OFF scene and the fixture restored a dead agent's priority. The fixture now skips only
+    harvesters with a recorded death and prints it; an unexplained disappearance still fails. Same file, same latent
+    pattern in `cord_world` left unchanged.
