@@ -29,6 +29,8 @@ var _terrain: Node = null
 var _seed: int = 0
 ## Tile → Chebyshev distance (1…n) to the nearest wall or floor (see _built_distance).
 var _near_built: Dictionary = {}
+## Tree chunk → content hash of its last build (see _build_trees).
+var _tree_chunk_hash: Dictionary = {}
 var _keys: Dictionary = {}
 var _stamp_key: String = ""
 var _slow_tick: int = -1000000
@@ -50,6 +52,7 @@ func setup(world_sim: Node, terrain: Node) -> void:
 
 func _on_world_reset() -> void:
 	_keys.clear()
+	_tree_chunk_hash.clear()
 	_previous_trees.clear()
 	_stumps.clear()
 
@@ -83,8 +86,13 @@ func _process(_delta: float) -> void:
 	if str(_keys.get("trees", "")) != tkey:
 		_keys["trees"] = tkey
 		var batches: Dictionary = {}
-		_build_trees(batches, SimReads.read(_world_sim, "get_trees"), tick)
-		_apply("trees", batches)
+		var first: bool = _tree_chunk_hash.is_empty()
+		var changed: Dictionary = _build_trees(batches, SimReads.read(_world_sim, "get_trees"), tick, "%d|%d" % [season, int(_keys.get("built", 0))])
+		# The first build (load, world reset) replaces every tree batch; later builds only the changed chunks.
+		if first:
+			_apply("trees", batches)
+		elif not changed.is_empty():
+			_apply("trees", batches, changed)
 	var cadence: int = int(Data3D.param("flora.slow_read_ticks", 24))
 	if tick - _slow_tick >= cadence or tick < _slow_tick or str(_keys.get("season", "")) != "%d|%d" % [season, width]:
 		_slow_tick = tick
@@ -154,7 +162,9 @@ func _stump_epoch(time: Dictionary) -> int:
 	return int(float(time.get("tick", 0)) / 60.0) if not _stumps.is_empty() else 0
 
 
-func _build_trees(batches: Dictionary, trees: Dictionary, tick: int) -> void:
+## Batches only the chunks whose trees, stumps or shared inputs (`shared`: season, built space) changed since the
+## last build, and returns those chunks (a felled tree costs one chunk, not the whole forest).
+func _build_trees(batches: Dictionary, trees: Dictionary, tick: int, shared: String) -> Dictionary:
 	var jitter: float = float(Data3D.param("flora.jitter_tiles", 0.22))
 	var smin: float = float(Data3D.param("flora.scale_min", 0.85))
 	var smax: float = float(Data3D.param("flora.scale_max", 1.2))
@@ -166,23 +176,54 @@ func _build_trees(batches: Dictionary, trees: Dictionary, tick: int) -> void:
 	var ys: PackedInt32Array = trees.get("ys", PackedInt32Array())
 	var species: PackedStringArray = trees.get("species", PackedStringArray())
 	var now: Dictionary = {}
+	var by_chunk: Dictionary = {}
 	for i: int in mini(xs.size(), ys.size()):
 		var t: Vector2i = Vector2i(xs[i], ys[i])
-		var sp: String = species[i] if i < species.size() else ""
-		now[t] = sp
-		var models: Array = _species_models(sp)
-		var h: int = View.key_hash(_seed, t.x, t.y, 17)
-		var model: String = str(models[h % models.size()])
-		var size: float = lerpf(smin, smax, float(View.key_hash(_seed, t.x, t.y, 23) % 1000) / 1000.0)
-		if View.key_hash(_seed, t.x, t.y, 29) % 1000 >= large_permille:
-			size *= large_scale
-		if _near_built.has(t):
-			size *= float(near_scale[int(_near_built[t]) - 1])
-		_add(batches, model + "|" + _variant_key(sp), t, h, jitter, size)
+		now[t] = species[i] if i < species.size() else ""
+		var c: Vector2i = Vector2i(floori(float(t.x) / _chunk), floori(float(t.y) / _chunk))
+		if not by_chunk.has(c):
+			by_chunk[c] = []
+		(by_chunk[c] as Array).append(t)
 	_update_stumps(now, tick)
-	var stump_model: String = str(Data3D.binding("flora.stump", ""))
+	var stumps_by_chunk: Dictionary = {}
 	for t: Vector2i in _stumps:
-		_add(batches, stump_model + "|", t, View.key_hash(_seed, t.x, t.y, 31), jitter, 1.0)
+		var c: Vector2i = Vector2i(floori(float(t.x) / _chunk), floori(float(t.y) / _chunk))
+		if not stumps_by_chunk.has(c):
+			stumps_by_chunk[c] = []
+		(stumps_by_chunk[c] as Array).append(t)
+	var changed: Dictionary = {}
+	var hashes: Dictionary = {}
+	for c: Vector2i in by_chunk.keys() + stumps_by_chunk.keys() + _tree_chunk_hash.keys():
+		if hashes.has(c):
+			continue
+		var tiles: Array = by_chunk.get(c, [])
+		var sps: Array = []
+		for t: Vector2i in tiles:
+			sps.append(now[t])
+		hashes[c] = hash([shared, tiles, sps, stumps_by_chunk.get(c, [])])
+		if int(_tree_chunk_hash.get(c, 0)) != int(hashes[c]):
+			changed[c] = true
+	_tree_chunk_hash = hashes
+	for c: Vector2i in changed:
+		for t: Vector2i in by_chunk.get(c, []):
+			_add_tree(batches, t, str(now[t]), jitter, smin, smax, large_permille, large_scale, near_scale)
+	var stump_model: String = str(Data3D.binding("flora.stump", ""))
+	for c: Vector2i in changed:
+		for t: Vector2i in stumps_by_chunk.get(c, []):
+			_add(batches, stump_model + "|", t, View.key_hash(_seed, t.x, t.y, 31), jitter, 1.0)
+	return changed
+
+
+func _add_tree(batches: Dictionary, t: Vector2i, sp: String, jitter: float, smin: float, smax: float, large_permille: int, large_scale: float, near_scale: Array) -> void:
+	var models: Array = _species_models(sp)
+	var h: int = View.key_hash(_seed, t.x, t.y, 17)
+	var model: String = str(models[h % models.size()])
+	var size: float = lerpf(smin, smax, float(View.key_hash(_seed, t.x, t.y, 23) % 1000) / 1000.0)
+	if View.key_hash(_seed, t.x, t.y, 29) % 1000 >= large_permille:
+		size *= large_scale
+	if _near_built.has(t):
+		size *= float(near_scale[int(_near_built[t]) - 1])
+	_add(batches, model + "|" + _variant_key(sp), t, h, jitter, size)
 
 
 func _build_resources(batches: Dictionary, resources: Dictionary) -> void:
@@ -324,9 +365,14 @@ func _add(batches: Dictionary, key: String, t: Vector2i, h: int, jitter: float, 
 	(batches[bkey][1] as Array).append(Color(v, v, v))
 
 
-func _apply(family: String, batches: Dictionary) -> void:
+## Replaces the family's batches; with `only` (chunk → true) just those chunks are replaced and the rest kept.
+func _apply(family: String, batches: Dictionary, only: Dictionary = {}) -> void:
 	for k: String in _instances.keys():
 		if k.begins_with(family + ":") and not batches.has(k.trim_prefix(family + ":")):
+			if not only.is_empty():
+				var parts: PackedStringArray = k.trim_prefix(family + ":").split("|")
+				if not only.has(Vector2i(int(parts[parts.size() - 2]), int(parts[parts.size() - 1]))):
+					continue
 			(_instances[k] as Node).queue_free()
 			_instances.erase(k)
 	for bk: String in batches:
