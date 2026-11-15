@@ -1,7 +1,7 @@
 # Strict M-UX2 GPU visibility: eight actual saved scenes, every on-screen person, no occlusion censoring.
 # M3D-SWITCH E2: measured on the 3D view. The ground control hides every World3D layer but the terrain, the built
 #   walls/roofs, the sky and the camera (and the HUD and map labels); a person's bounds are an independent projection of
-#   a box around their figure (feet ± BODY_HALF_WIDTH tiles, feet to head; World3D/People `bodies`); a person is removed
+#   a box around their figure (feet ± BODY_HALF_WIDTH tiles × the far-figure enlargement, feet to head; World3D/People `body_of`); a person is removed
 #   by scaling every instance of their figure to zero (People.figure_instances: full and LOD crowd of their bin,
 #   contact shadow kept), so unchanged shadows and labels cannot count. Beyond `people.lod_distance` the figure is the
 #   LOD bake (still a figure, not a marker).
@@ -183,7 +183,7 @@ func _measure_scene(input: Dictionary, clock: Dictionary, zoom: float) -> void:
 		if body.is_empty() or instances.is_empty():
 			_failures.append("missing render ID %d in %s" % [bits, id])
 			continue
-		var bounds: Rect2i = Metrics.box_bounds(cam, body["feet"], float(body["h"]), BODY_HALF_WIDTH, 1.0)
+		var bounds: Rect2i = Metrics.box_bounds(cam, body["feet"], float(body["h"]), BODY_HALF_WIDTH * float(body.get("far", 1.0)), 1.0)
 		if not bounds.intersects(Rect2i(0, 0, 1920, 1080)):
 			offscreen.append(bits)
 			continue

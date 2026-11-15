@@ -496,15 +496,28 @@ func bodies(mode: int) -> Array[Dictionary]:
 	if mode != 0:
 		return out
 	for d: Dictionary in _state.values():
-		out.append({"kind": "person", "id": int(d["bits"]), "feet": d["feet"], "h": float(d["h"]), "r": 0.22})
+		var k: float = _far_scale(d["feet"])
+		out.append({"kind": "person", "id": int(d["bits"]), "feet": d["feet"], "h": float(d["h"]) * k, "r": 0.22 * k})
 	return out
 
 
-## The body ({feet, h}) of the person with entity bits `bits`, or {} when not drawn.
+## The shader's far-figure enlargement at `feet` (vat_anim.gdshaderinc far_scale_at), so picking and screen boxes
+## match what is drawn.
+func _far_scale(feet: Vector3) -> float:
+	var cam: Camera3D = get_viewport().get_camera_3d() if is_inside_tree() else null
+	if cam == null:
+		return 1.0
+	var far: Array = Data3D.param("people.far_scale", [55.0, 2.2])
+	return clampf(cam.global_position.distance_to(feet) / float(far[0]), 1.0, float(far[1]))
+
+
+## The body ({feet, h, far: the far-figure enlargement included in h}) of the person with entity bits `bits`, or {}
+## when not drawn.
 func body_of(bits: int) -> Dictionary:
 	for d: Dictionary in _state.values():
 		if int(d["bits"]) == bits:
-			return {"feet": d["feet"], "h": float(d["h"])}
+			var k: float = _far_scale(d["feet"])
+			return {"feet": d["feet"], "h": float(d["h"]) * k, "far": k}
 	return {}
 
 
