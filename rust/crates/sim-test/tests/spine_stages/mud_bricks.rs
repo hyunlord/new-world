@@ -68,6 +68,17 @@ pub(super) fn craft(engine: &mut SimEngine) {
         });
     }
     for agent in harvesters {
+        // The multi-day harvest can outlive a harvester (e.g. a wolf raid); only a recorded death excuses it.
+        let died = engine.resources.chronicle.entries().iter().find(|entry| {
+            entry.kind == sim_core::chronicle::ChronicleKind::Died && entry.subject == Some(agent)
+        });
+        if let Some(death) = died {
+            println!(
+                "SPINE_HAUL_RESTORE skip agent={agent} reason=died tick={} cause={}",
+                death.tick, death.cause
+            );
+            continue;
+        }
         command(
             engine,
             Command::SetWorkPriority {
