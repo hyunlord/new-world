@@ -93,7 +93,8 @@ impl Run {
         reissue: Option<&dyn Fn(&mut Run)>,
     ) {
         let mut reissued = 0;
-        while self.e.current_tick() / 1_440 + 1 <= deadline_day && !ready(&self.e) {
+        // Display day = day index + 1; run while the display day is within the deadline.
+        while self.e.current_tick() / 1_440 < deadline_day && !ready(&self.e) {
             self.e.tick();
             if self.e.current_tick().is_multiple_of(1_440) {
                 invariants::check(&self.e.world, &self.e.resources).expect("ledger and jobs");
