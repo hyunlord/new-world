@@ -596,6 +596,35 @@ static func footprint_cells(tiles: Array) -> Dictionary:
 
 ## The roof cells of a room: its footprint plus a one-cell (0.5 m) overhang ring, except where the ring would enter
 ## another roofed room's footprint (`claimed`: cell → room id). Two rooms' roofs therefore never share a cell.
+## Greedy row-major split of `tiles` into rectangles (each grows right, then down while every row is complete).
+static func rectangles(tiles: Array) -> Array[Rect2i]:
+	var left: Dictionary = {}
+	for t: Vector2i in tiles:
+		left[t] = true
+	var keys: Array = left.keys()
+	keys.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return a.y < b.y or (a.y == b.y and a.x < b.x))
+	var out: Array[Rect2i] = []
+	for t: Vector2i in keys:
+		if not left.has(t):
+			continue
+		var w: int = 1
+		while left.has(t + Vector2i(w, 0)):
+			w += 1
+		var h: int = 1
+		while true:
+			var full: bool = true
+			for x: int in w:
+				full = full and left.has(t + Vector2i(x, h))
+			if not full:
+				break
+			h += 1
+		for y: int in h:
+			for x: int in w:
+				left.erase(t + Vector2i(x, y))
+		out.append(Rect2i(t, Vector2i(w, h)))
+	return out
+
+
 static func roof_cells(tiles: Array, room_id: int, claimed: Dictionary) -> Dictionary:
 	var foot: Dictionary = footprint_cells(tiles)
 	var out: Dictionary = foot.duplicate()
@@ -638,10 +667,25 @@ func _roof_mesh(tiles: Array, room_id: int, claimed: Dictionary, mat: Material) 
 	b.base = ground
 	var cells: Dictionary = roof_cells(tiles, room_id, claimed)
 	var height: Dictionary = roof_heights(cells)
+	# Planar hips: over the footprint, the height is the highest of the room's rectangles' own hip roofs (clean
+	# planes with valleys where rectangles meet), not a distance field that follows a stepped outline.
+	for v: Vector2i in height.keys():
+		if float(height[v]) <= 0.0:
+			continue
+		var best: float = 0.0
+		for r: Rect2i in rectangles(tiles):
+			# The rectangle's footprint in half-metre lattice vertices (tiles grown by half a tile).
+			var x0: int = 2 * r.position.x - 1
+			var y0: int = 2 * r.position.y - 1
+			var x1: int = 2 * r.end.x + 1
+			var y1: int = 2 * r.end.y + 1
+			if v.x >= x0 and v.x <= x1 and v.y >= y0 and v.y <= y1:
+				best = maxf(best, float(mini(mini(v.x - x0, x1 - v.x), mini(v.y - y0, y1 - v.y))))
+		height[v] = best
 	var white: Color = Color(1, 1, 1)
-	# Heights count lattice steps of 0.5 m.
+	# One height step per 0.5 m lattice cell at the full pitch: the roof reaches roof_max_rise quickly and tops out flat.
 	var p: Callable = func(v: Vector2i) -> Vector3:
-		return Vector3(v.x * 0.5, top + minf(rise_max, float(height[v]) * 0.5 * pitch), v.y * 0.5)
+		return Vector3(v.x * 0.5, top + minf(rise_max, float(height[v]) * pitch), v.y * 0.5)
 	var down: Vector3 = Vector3(0, thick, 0)
 	for c: Vector2i in cells:
 		var v00: Vector3 = p.call(c)
