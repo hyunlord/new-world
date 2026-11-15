@@ -209,4 +209,5 @@ def main():
         save_grid(cells, 6, os.path.join(out_dir, f"blender_poses_{stamp}.png"))
 
 
-main()
+if __name__ == "__main__":
+    main()

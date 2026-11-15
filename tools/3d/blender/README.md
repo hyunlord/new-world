@@ -10,9 +10,10 @@ vertex-animation texture in `assets/3d/vat/`. Never hand-edit the outputs; chang
 blender -b --factory-startup -P tools/3d/blender/build_all.py          # everything, ~3 s
 blender -b --factory-startup -P tools/3d/blender/stations.py           # one family (merges into manifest)
 blender -b --factory-startup -P tools/3d/blender/animals.py -- wolf    # one species
-blender -b --factory-startup -P tools/3d/blender/chars_b.py -- b_man   # set B (textured) characters
+blender -b --factory-startup -P tools/3d/blender/chars_b.py -- b_man   # set B (textured) chars + their _lod bake
 python3 tools/3d/blender/verify_vat.py                                 # VAT + glb checks, exit 1 on failure
 blender -b --factory-startup -P tools/3d/blender/render_contact.py -- [out_dir] [id filters...]
+blender -b --factory-startup -P tools/3d/blender/render_b_lod_contact.py -- [out_dir]  # set B full vs LOD
 ```
 
 `render_contact.py` writes `blender_models_<stamp>.png` (every glb, front-3/4, labelled with id and
@@ -34,10 +35,11 @@ place and rewrites `manifest.json`.
 | `items.py` | `ITEMS` table + builders |
 | `people.py` | `BODY` proportions, bone list, `CLIPS`, procedural actions for `villager` |
 | `animals.py` | `SPECIES` table driving one quadruped generator, `CLIPS`, shared actions |
-| `chars_b.py` | bakes the accepted, atlas-textured set B glbs (`assets/3d/source/chars/B/`) into `vat/b_*` |
+| `chars_b.py` | bakes the accepted, atlas-textured set B glbs (`assets/3d/source/chars/B/`) into `vat/b_*`, plus a decimated `vat/b_*_lod` crowd bake per subject |
 | `build_all.py` | runs all families, writes `assets/3d/models/manifest.json` |
 | `verify_vat.py` | plain python3 checker (no Blender) |
 | `render_contact.py` | review images |
+| `render_b_lod_contact.py` | full-vs-LOD review image for set B characters |
 
 ## Conventions
 
@@ -116,6 +118,37 @@ glbs from `v8/art-3d-chars` commit `f0b91f999`, copied once into `assets/3d/sour
 * No `.bin` is above 2.3 MB (about 2800 columns x 100 rows x 8 bytes).
 
 To refresh: re-copy the five folders from the art worktree, update `SOURCE_COMMIT` and `SOURCE.md`, rerun.
+
+### Crowd LOD (`<id>_lod`)
+
+Each subject also gets a low-detail `b_<subject>_lod` bake, for drawing thousands of far-away animated
+people: `vat/b_<subject>_lod_{static.glb, vat.bin, vat.json}`, same clips/fps/conventions as the full
+bake, and the json's `atlas` points at the **same** `b_<subject>_atlas.png` (no second atlas is written).
+It is built by `_decimate_body` in `chars_b.py`:
+
+* a Decimate (Collapse) modifier is inserted **before** the Armature modifier on the body mesh and its
+  ratio is binary-searched so the decimated rest mesh keeps at most 400 vertices used by a face, then
+  the modifier is applied (baked into the mesh) so the fixed, already-decimated topology is what the
+  Armature deforms per frame; this keeps clip sampling and skin weights correct (Decimate carries the
+  vertex-group layer over when it merges vertices). The body is many disconnected low-poly islands, so
+  Decimate can collapse a small island's faces away while leaving its vertices in the mesh; any vertex
+  left with no face after applying is deleted.
+* the humans' 24-vertex `CarryLoad` bundle is kept at full resolution (already tiny; decimating it
+  further would risk breaking its shape for no real savings) and still becomes extra VAT columns, as
+  in the full bake.
+* budgets are asserted at bake time: width (VAT columns) <= 400, `split_vertex_count` (static mesh,
+  one vertex per loop) <= 900; actual sizes are man 399/744, woman 400/759, child 400/765, goat
+  400/792, aurochs 400/816 (width/split).
+* the manifest gets a `b_<subject>_lod` entry alongside `b_<subject>`, same shape (family, animations,
+  bones, `vat`), so the game loads it exactly like the full character.
+
+`verify_vat.py` needs no changes: it drives its checks off every `family == "character"` manifest
+entry, so `b_<subject>_lod` is checked the same way as `b_<subject>` automatically. Likewise
+`build_all.py` needs no changes: `chars_b.build()` now bakes the full and the LOD for every subject.
+
+`render_b_lod_contact.py` renders a full-vs-LOD contact sheet (each character re-posed from its VAT at
+the middle of `walk`, both columns textured from the shared atlas) for visual review; it is not part of
+the asset build.
 
 ## Adding a model by data
 

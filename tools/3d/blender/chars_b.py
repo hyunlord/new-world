@@ -12,12 +12,18 @@ and this script bakes them like common.export_character, with three differences:
   * the json adds textured/atlas/source_commit, and clip names the game asks for that the source lacks
     are aliases (same rows, "alias_of"). The atlas is byte-copied to vat/<id>_atlas.png.
 The source scale is kept (man 1.7 m, woman 1.7 m, child 1.2 m as in the receipts).
+
+For every subject a second, low-detail `<id>_lod` bake is also produced (same clips/fps/conventions,
+same atlas file) for crowd rendering: the body mesh is Decimate-collapsed, inserted BEFORE the Armature
+modifier so the fixed decimated topology is what gets skinned and posed per frame (skin weights carry
+over: Decimate remaps the mesh's vertex-group layer when it merges vertices). See `_decimate_body`.
 """
 import json
 import os
 import shutil
 import sys
 
+import bmesh
 import bpy
 import numpy as np
 
@@ -32,6 +38,8 @@ ALIASES = {"run": "walk", "rest": "lie_down", "attack": "idle"}  # game name -> 
 SUBJECTS = {"b_man": ("man", HUMAN), "b_woman": ("woman", HUMAN), "b_child": ("child", HUMAN),
             "b_goat": ("goat", ANIMAL), "b_aurochs": ("aurochs", ANIMAL)}
 LOOP_TOL = 0.01  # m: a clip loops when its last pose matches its first
+LOD_WIDTH_BUDGET = 400   # VAT columns (unsplit vertices) ceiling for the whole character
+LOD_SPLIT_BUDGET = 900   # static mesh (one vertex per loop) ceiling for the whole character
 
 
 def _clip_bindings(objs):
@@ -110,8 +118,48 @@ def _static_mesh(cid, meshes, pos):
     return obj, n
 
 
-def build_one(cid, entries):
+def _decimate_body(body, width_budget):
+    """Collapse-decimate body's rest mesh (BEFORE the Armature modifier, so posing happens on the
+    fixed decimated topology) to at most `width_budget` referenced vertices. The body is built from
+    many disconnected low-poly islands (fingers, straps, ...): Decimate can fully collapse a small
+    island's faces away while leaving its vertices in the mesh, so after applying the modifier any
+    vertex no longer used by a face is deleted. Deterministic: no RNG, same input -> same output."""
+    arm_mod = next(m for m in body.modifiers if m.type == "ARMATURE")
+    idx = list(body.modifiers).index(arm_mod)
+    bpy.context.view_layer.objects.active = body
+    dec = body.modifiers.new("lod_decimate", "DECIMATE")
+    dec.decimate_type = "COLLAPSE"
+    bpy.ops.object.modifier_move_to_index(modifier=dec.name, index=idx)  # before the armature modifier
+
+    def referenced_at(ratio):
+        dec.ratio = ratio
+        dg = bpy.context.evaluated_depsgraph_get()
+        ev = body.evaluated_get(dg)
+        me = ev.to_mesh()
+        ref = {vi for p in me.polygons for vi in p.vertices}
+        ev.to_mesh_clear()
+        return len(ref)
+
+    lo, hi = 1e-4, 1.0
+    for _ in range(20):
+        mid = (lo + hi) / 2
+        if referenced_at(mid) <= width_budget:
+            lo = mid
+        else:
+            hi = mid
+    dec.ratio = lo
+    bpy.ops.object.modifier_apply(modifier=dec.name)
+    bm = bmesh.new()
+    bm.from_mesh(body.data)
+    bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context="VERTS")
+    bm.to_mesh(body.data)
+    bm.free()
+    body.data.update()
+
+
+def build_one(cid, entries, lod=False):
     subject, game_clips = SUBJECTS[cid]
+    out_id = f"{cid}_lod" if lod else cid
     src = os.path.join(SRC_DIR, subject)
     glb = os.path.join(src, f"{subject}.glb")
     C.reset_scene()  # 30 fps: glTF time t lands on frame 30 t
@@ -120,6 +168,11 @@ def build_one(cid, entries):
     body = next(o for o in bpy.data.objects if o.type == "MESH" and any(m.type == "ARMATURE" for m in o.modifiers))
     extras = sorted((o for o in bpy.data.objects if o.type == "MESH" and o is not body and o.animation_data),
                     key=lambda o: o.name)
+    if lod:
+        # extras (e.g. the humans' CarryLoad) are kept at full resolution: they're already tiny (24
+        # verts) and decimating them further risks breaking their silhouette for no real VAT savings.
+        extras_verts = sum(len(o.data.vertices) for o in extras)
+        _decimate_body(body, LOD_WIDTH_BUDGET - extras_verts)
     meshes = [body] + extras
     clips = _clip_bindings([arm] + extras)
     width = sum(len(o.data.vertices) for o in meshes)
@@ -143,17 +196,21 @@ def build_one(cid, entries):
 
     # static mesh = idle frame 0 (frame 0 of the VAT's idle row), so the rest mesh and the bake agree
     _play(clips["idle"])
-    split, n_split = _static_mesh(cid, meshes, _positions(meshes, ranges["idle"]))
-    C.export_glb(os.path.join(C.VAT_DIR, f"{cid}_static.glb"), [split], vertex_colors=True)
+    split, n_split = _static_mesh(out_id, meshes, _positions(meshes, ranges["idle"]))
+    C.export_glb(os.path.join(C.VAT_DIR, f"{out_id}_static.glb"), [split], vertex_colors=True)
 
     pos = np.stack(rows)
-    assert np.isfinite(pos).all(), f"{cid}: non-finite VAT positions"
-    pos.astype("<f2").tofile(os.path.join(C.VAT_DIR, f"{cid}_vat.bin"))
-    atlas = f"{cid}_atlas.png"
-    shutil.copyfile(os.path.join(src, "atlas.png"), os.path.join(C.VAT_DIR, atlas))
+    assert np.isfinite(pos).all(), f"{out_id}: non-finite VAT positions"
+    pos.astype("<f2").tofile(os.path.join(C.VAT_DIR, f"{out_id}_vat.bin"))
+    atlas = f"{cid}_atlas.png"  # shared with the full bake; the LOD json points at it, never its own copy
+    if not lod:
+        shutil.copyfile(os.path.join(src, "atlas.png"), os.path.join(C.VAT_DIR, atlas))
     height = C.height_of(body)  # bind pose, source scale
-    if subject == "man":
+    if subject == "man" and not lod:
         assert abs(height - 1.7) < 0.01, f"b_man must be 1.7 m tall, is {height:.3f}"
+    if lod:
+        assert width <= LOD_WIDTH_BUDGET, f"{out_id}: width {width} > {LOD_WIDTH_BUDGET}"
+        assert n_split <= LOD_SPLIT_BUDGET, f"{out_id}: split {n_split} > {LOD_SPLIT_BUDGET}"
     meta = {
         "width": width, "vertex_count": width, "split_vertex_count": n_split, "frames": len(rows),
         "fps": C.VAT_FPS, "normals_offset": -1, "clips": meta_clips,
@@ -165,18 +222,18 @@ def build_one(cid, entries):
         "textured": True, "atlas": atlas, "source_commit": SOURCE_COMMIT,
         "source": f"source/chars/B/{subject}/{subject}.glb",
     }
-    with open(os.path.join(C.VAT_DIR, f"{cid}_vat.json"), "w") as f:
+    with open(os.path.join(C.VAT_DIR, f"{out_id}_vat.json"), "w") as f:
         json.dump(meta, f, indent=1)
         f.write("\n")
-    entries[cid] = {
+    entries[out_id] = {
         "file": meta["source"], "footprint": [1, 1], "height": round(height, 3),
         "triangles": sum(C.tri_count(o) for o in meshes), "materials": [], "sockets": {},
         "family": "character", "animations": list(meta_clips), "bones": [b.name for b in arm.data.bones],
-        "vat": {"static": f"vat/{cid}_static.glb", "bin": f"vat/{cid}_vat.bin", "json": f"vat/{cid}_vat.json",
-                "atlas": f"vat/{atlas}", "vertex_count": n_split},
+        "vat": {"static": f"vat/{out_id}_static.glb", "bin": f"vat/{out_id}_vat.bin",
+                "json": f"vat/{out_id}_vat.json", "atlas": f"vat/{atlas}", "vertex_count": n_split},
         "textured": True, "source_commit": SOURCE_COMMIT, "subject": subject,
     }
-    print(f"[chars_b] {cid}: width={width} split={n_split} frames={len(rows)} "
+    print(f"[chars_b] {out_id}: width={width} split={n_split} frames={len(rows)} "
           f"clips={ {k: (v['count'], v['loop']) for k, v in meta_clips.items()} } height={height:.3f}")
 
 
@@ -184,6 +241,7 @@ def build(entries, only=None):
     for cid in SUBJECTS:
         if not only or cid in only:
             build_one(cid, entries)
+            build_one(cid, entries, lod=True)
 
 
 if __name__ == "__main__":
