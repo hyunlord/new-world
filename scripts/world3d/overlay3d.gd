@@ -11,7 +11,8 @@
 #   (get_influence_overlay: warmth, light, noise, food smell, danger, social, spiritual, beauty) as a heat tint, read
 #   once per sim tick while shown; a small label names the channel (Locale keys W3D_OVERLAY_*).
 # Bridge methods called: get_influence_overlay (direct, once per tick while a channel is shown); via SimReads
-#   get_colony_overlay, get_animals, get_rooms, get_field_tiles, get_time_snapshot, get_current_task.
+#   get_colony_overlay, get_animals, get_rooms, get_field_tiles, get_time_snapshot, get_current_task (looked at again
+#   after any command, SimReads snapshots_invalidated).
 extends Node3D
 
 const ArtData = preload("res://scripts/world/art/art_data.gd")
@@ -43,11 +44,16 @@ var _stamp_key: String = ""
 var _marker: MeshInstance3D = null
 var _marker_tick: int = -1
 var _phase: float = 0.0
+var _hunt_zones: int = 0
 
 
 func setup(world_sim: Node, terrain: Node) -> void:
 	_world_sim = world_sim
 	_terrain = terrain
+	# A command while paused (a hunt zone, a deer mark) moves no World3D stamp: look at the reads again.
+	var reader: Node = SimReads.resolve(world_sim)
+	if reader != null:
+		reader.connect("snapshots_invalidated", func() -> void: _stamp_key = "")
 
 
 func _ready() -> void:
@@ -83,6 +89,11 @@ func _unhandled_input(event: InputEvent) -> void:
 			and not (event as InputEventKey).ctrl_pressed and not (event as InputEventKey).meta_pressed:
 		cycle_channel()
 		get_viewport().set_input_as_handled()
+
+
+## How many hunt zones the last overlay build drew (for tests and tools).
+func hunt_zone_count() -> int:
+	return _hunt_zones
 
 
 ## Show the next influence channel (after the last one: none).
@@ -185,7 +196,9 @@ func _build_base(overlay: Dictionary, rooms: Dictionary, animals: Dictionary, fi
 		_put(_base, _frame_base, Vector2i(hx[i], hy[i]), housing, false)
 	var hunt: Color = _rgb("zones.hunt_rgb", Color(0.95, 0.72, 0.3), alpha)
 	var hz: PackedInt32Array = animals.get("zones", PackedInt32Array())
+	_hunt_zones = 0
 	for q: int in range(0, hz.size() - 3, 4):
+		_hunt_zones += 1
 		for y: int in range(mini(hz[q + 1], hz[q + 3]), maxi(hz[q + 1], hz[q + 3]) + 1):
 			for x: int in range(mini(hz[q], hz[q + 2]), maxi(hz[q], hz[q + 2]) + 1):
 				_put(_base, _frame_base, Vector2i(x, y), hunt, false)

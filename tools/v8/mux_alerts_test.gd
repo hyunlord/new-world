@@ -6,7 +6,7 @@ extends SceneTree
 const Evaluator = preload("res://scripts/ui/mux/alert_evaluator.gd")
 const Adapter = preload("res://scripts/ui/mux/ui_facts_adapter.gd")
 const AlertPanel = preload("res://scripts/ui/mux/alerts_panel.gd")
-const COLLECTIONS: Array[String] = ["settlements", "people", "storehouses", "unreachable_orders", "knowledge_waits", "techniques", "animals", "migrants", "traders", "stacks", "households"]
+const COLLECTIONS: Array[String] = ["settlements", "people", "storehouses", "unreachable_orders", "knowledge_waits", "techniques", "animals", "migrants", "traders", "stacks", "households", "food_supply"]
 
 var _checks: int = 0
 var _failures: int = 0

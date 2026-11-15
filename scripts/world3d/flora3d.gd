@@ -370,6 +370,15 @@ func _variant_key(sp: String) -> String:
 	return "species=" + sp
 
 
+## How many resource nodes (boulders, flint, clay banks) the node batches draw (for tests and tools).
+func node_count() -> int:
+	var n: int = 0
+	for k: String in _instances:
+		if k.begins_with("nodes:"):
+			n += (_instances[k] as MultiMeshInstance3D).multimesh.instance_count
+	return n
+
+
 ## The own model of catalogue outcrop `id` (bindings3d `outcrops.by_id`), else "".
 static func outcrop_model(id: String) -> String:
 	return Data3D.first_model((Data3D.binding("outcrops.by_id", {}) as Dictionary).get(id, ""))

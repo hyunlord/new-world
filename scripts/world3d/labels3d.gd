@@ -11,7 +11,7 @@
 #   - Under the mouse (the hovered tile, ViewProjection.screen_to_world): an item stack's "부싯돌 날 ×3 · 품질 62"
 #     (+ `room_suffix` " · 방: 창고 2", " · 지붕 아래"), else a resource node's "바위 · 돌 12개 남음" (UI_NODE_LEFT_FMT), each
 #     plus " · 주거 구역" on a housing designation (ZONE_HOUSING), else that word alone; a pen animal's
-#     C1_LIVESTOCK_HOVER; a wild animal's "사슴 · 돌아다님 · 30" (M5_ANIMAL_HOVER_FMT + C1_WILD_AGE; the animal picked
+#     C1_LIVESTOCK_HOVER (the pen animal whose body is under the mouse, else on the hovered tile); a wild animal's "사슴 · 돌아다님 · 30" (M5_ANIMAL_HOVER_FMT + C1_WILD_AGE; the animal picked
 #     under the mouse); a visitor group's "이주민 4명 · 붉은바위" / "교역 무리 · 붉은바위" (M55_HOVER_*_FMT).
 #   - The room overlay shown (R, Main/RoomIndex): each room's label at its centre tile (RoomIndex.label_text), framed in
 #     its role colour.
@@ -22,13 +22,16 @@
 #     below 1× zoom, where people share a spot, their count on a label above them.
 #   - Wild animals that may be hunted (get_animals `huntable`): a yellow ring over the head, full for its own mark,
 #     dimmer when only a hunt zone covers it.
-#   `drawn()` lists the labels of the last frame ({kind, text, at}) for tests; `follow_mouse = false` lets a tool set
+#   `drawn()` lists the labels and marks of the last frame ({kind, text, at}; people's and hunt marks also name whom)
+#   for tests; `follow_mouse = false` lets a tool set
 #   `hover_tile` and `hover_screen` itself.
 # Bridge methods called: via SimReads get_colony_versions, get_colony_overlay, get_agent_snapshot, get_animals,
-#   get_livestock, get_outcrops, get_neighbours; signal world_reset.
+#   get_livestock, get_outcrops, get_neighbours (the per-tick reads again after any command, SimReads
+#   snapshots_invalidated); signal world_reset.
 extends Control
 
 const ArtData = preload("res://scripts/world/art/art_data.gd")
+const Data3D = preload("res://scripts/world3d/data3d.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
 const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
@@ -86,6 +89,10 @@ func _ready() -> void:
 		_world_sim.connect("world_reset", func() -> void:
 			_version = -1
 			_tick = -1)
+		# A command while paused (draft, hunt mark) changes the per-tick reads without a tick: read them again.
+		var reader: Node = SimReads.resolve(_world_sim)
+		if reader != null:
+			reader.connect("snapshots_invalidated", func() -> void: _tick = -1)
 
 
 func _process(_delta: float) -> void:
@@ -109,7 +116,7 @@ func _process(_delta: float) -> void:
 
 
 ## The labels and marks drawn in the last frame: {kind, text, at (screen point of the anchor)[, bits (marks over a
-## person: drafted, sick, flee)]}.
+## person: drafted, sick, flee, mood with its `tint`)][, id and `marked` (hunt rings over animals)]}.
 func drawn() -> Array[Dictionary]:
 	return _drawn
 
@@ -389,8 +396,11 @@ func _draw_people(view: Rect2) -> void:
 			draw_rect(Rect2(p + Vector2(-1, -2), Vector2(3, 2)), FLEE_MARK)
 			_drawn.append({"kind": "flee", "text": "", "at": p, "bits": ids[i]})
 		if mood:
+			var tint: Color = StoryText.band_tint(int(bands[i]) if i < bands.size() else 0)
 			draw_circle(p + Vector2(-10, 0), 5.0, INK)
-			draw_circle(p + Vector2(-10, 0), 4.0, StoryText.band_tint(int(bands[i]) if i < bands.size() else 0))
+			draw_circle(p + Vector2(-10, 0), 4.0, tint)
+			if view.has_point(p):
+				_drawn.append({"kind": "mood", "text": "", "at": p, "bits": ids[i], "tint": tint})
 		if counting:
 			var spot: Vector2i = Vector2i((Vector2(feet.x, feet.z) * 100.0).round())
 			var row: Array = spots.get(spot, [p, 0])
@@ -423,6 +433,8 @@ func _draw_hunt_marks(view: Rect2) -> void:
 		var col: Color = Color(HUNT_MARK, 1.0 if i < marked.size() and marked[i] != 0 else ZONE_MARK_ALPHA)
 		draw_arc(p, 7.0, 0.0, TAU, 20, Color(0.137, 0.114, 0.09, col.a), 4.0)
 		draw_arc(p, 7.0, 0.0, TAU, 20, col, 2.0)
+		if view.has_point(p):
+			_drawn.append({"kind": "hunt", "text": "", "at": p, "id": int(body["id"]), "marked": i < marked.size() and marked[i] != 0})
 
 
 func _draw_hover(rooms: Node, locale: Node, view: Rect2) -> void:
@@ -432,15 +444,19 @@ func _draw_hover(rooms: Node, locale: Node, view: Rect2) -> void:
 	var text: String = tile_text(hover_tile, _stacks, _nodes, _housing, rooms, locale)
 	if not text.is_empty() and bool(at[1]):
 		_label(text, (at[0] as Vector2) - Vector2(0, 2), view, "tile")
+	var cam: Camera3D = _world3d.call("camera") as Camera3D
 	var lxs: PackedInt64Array = _livestock.get("xs", PackedInt64Array())
 	var lys: PackedInt64Array = _livestock.get("ys", PackedInt64Array())
+	# The pen animal drawn under the mouse (its body, as the 2D sprite hit-test; the lowest id where bodies overlap),
+	# else the first one standing on the hovered tile.
+	var pen: int = (_livestock.get("ids", PackedInt64Array()) as PackedInt64Array).find(_pen_animal_at(cam, hover_screen))
 	for i: int in mini(lxs.size(), lys.size()):
-		if Vector2i(lxs[i], lys[i]) == hover_tile:
-			var lat: Array = _project(Vector2(hover_tile) + Vector2(0.5, 0.5), 1.0)
-			if bool(lat[1]):
-				_label(livestock_text(_livestock, i, locale), lat[0], view, "livestock")
-			break
-	var cam: Camera3D = _world3d.call("camera") as Camera3D
+		if pen < 0 and Vector2i(lxs[i], lys[i]) == hover_tile:
+			pen = i
+	if pen >= 0 and pen < mini(lxs.size(), lys.size()):
+		var lat: Array = _project(Vector2(lxs[pen], lys[pen]) + Vector2(0.5, 0.5), 1.0)
+		if bool(lat[1]):
+			_label(livestock_text(_livestock, pen, locale), lat[0], view, "livestock")
 	if cam == null or hover_screen.x < 0:
 		return
 	var animal: Dictionary = ViewProjection.pick(hover_screen, OrderTool.Mode.HUNT)
@@ -456,6 +472,27 @@ func _draw_hover(rooms: Node, locale: Node, view: Rect2) -> void:
 			if int(row["id"]) == int(visitor["id"]):
 				_label(visitor_text(kind, row, locale), hover_screen - Vector2(0, 24), view, kind)
 				break
+
+
+## The LivestockId of the pen animal whose drawn body (feet to head) passes within `people.pick_radius_px` of screen
+## point `screen` (the lowest id when several do), or -1.
+func _pen_animal_at(cam: Camera3D, screen: Vector2) -> int:
+	var animals: Node = _world3d.get("animals")
+	if cam == null or animals == null or screen.x < 0:
+		return -1
+	var radius: float = float(Data3D.param("people.pick_radius_px", 18))
+	var best: int = -1
+	for body: Dictionary in animals.call("pen_bodies"):
+		var feet: Vector3 = body["feet"]
+		var head: Vector3 = feet + Vector3(0, float(body["h"]), 0)
+		if cam.is_position_behind(feet) or cam.is_position_behind(head):
+			continue
+		var a: Vector2 = cam.unproject_position(feet)
+		var b: Vector2 = cam.unproject_position(head)
+		if Geometry2D.get_closest_point_to_segment(screen, a, b).distance_to(screen) <= maxf(radius, (a - b).length() * 0.5):
+			if best < 0 or int(body["id"]) < best:
+				best = int(body["id"])
+	return best
 
 
 ## A label whose box's bottom centre is at screen point `anchor`, skipped when that point is off screen.

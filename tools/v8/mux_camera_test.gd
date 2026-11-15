@@ -6,6 +6,7 @@ extends SceneTree
 
 const Tool = preload("res://scripts/world/colony/order_tool.gd")
 const Store = preload("res://scripts/ui/mux/settings_store.gd")
+const ViewProjection = preload("res://scripts/world/view_projection.gd")
 var _camera: Camera2D
 var _tool: Node
 var _main: Node
@@ -111,9 +112,14 @@ func _run() -> void:
 	_camera.call("set_paused", true)
 	_camera.call("center_on_tile", Vector2i(96, 96))
 	await _frames()
+	# The HUD's decision cards (M-LOOP) sit right of the centre at boot: the map point is the first spot clear of GUI.
 	var point: Vector2 = root.get_visible_rect().size * Vector2(0.55, 0.52)
-	_motion(point)
-	await _frames()
+	for spot: Vector2 in [Vector2(0.55, 0.52), Vector2(0.4, 0.55), Vector2(0.3, 0.5), Vector2(0.4, 0.7)]:
+		point = root.get_visible_rect().size * spot
+		_motion(point)
+		await _frames()
+		if root.gui_get_hovered_control() == null:
+			break
 	_check("test pointer clear of GUI", root.gui_get_hovered_control() == null)
 	var causal: Control = _main.get_node("UI/CausalPanel") as Control
 	causal.hide()
@@ -163,14 +169,16 @@ func _run() -> void:
 	_check("same pan object on later frame applies again", ((before - _camera.position) * _camera.zoom).distance_to(Vector2(64, 32)) <= 1.0)
 	_camera.call("center_on_tile", Vector2i(96, 96))
 	await _frames()
-	var anchor: Vector2 = root.get_canvas_transform().affine_inverse() * point
+	# The colony point drawn under the cursor (the 3D view's ground, M3D-SWITCH; the canvas no longer draws the map).
+	var anchor: Vector2 = ViewProjection.screen_to_world(point)
 	var zoom_before: float = _camera.zoom.x
 	_button(MOUSE_BUTTON_WHEEL_UP, true, point)
 	_check("wheel starts animation instead of jumping", is_equal_approx(_camera.zoom.x, zoom_before))
 	await create_timer(0.2).timeout
-	var after: Vector2 = root.get_canvas_transform().affine_inverse() * point
+	var after: Vector2 = ViewProjection.screen_to_world(point)
 	_check("wheel advances ladder", _camera.zoom.x > zoom_before)
 	_check("wheel preserves cursor world anchor", anchor.distance_to(after) <= 2.0)
+	print("MUX_CAMERA_INFO wheel anchor %s -> %s (%.2f world px)" % [anchor, after, anchor.distance_to(after)])
 	var pinch: InputEventMagnifyGesture = InputEventMagnifyGesture.new()
 	pinch.position = point
 	pinch.factor = 0.5

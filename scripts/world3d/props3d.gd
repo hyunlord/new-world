@@ -17,7 +17,8 @@
 #   (bindings3d `stations.lit`, keyed by the station model) carry an OmniLight3D at the drawn model's `light` socket
 #   and glow while lit: the hearth while its settlement's fire burns, a workshop while it works an active bill. Light
 #   energy follows the night (Sky.night_factor) but never reaches zero, so a working smelter reads by day too. A
-#   working station without a fire throws up chips and dust instead (`stations.work_puffs`).
+#   working station without a fire throws up chips and dust instead (`stations.work_puffs`). `drawn_counts()` counts
+#   the workshops and hearths the last rebuild drew (tests).
 # Bridge methods called: via SimReads get_workshops, get_building_snapshot, get_settlement_snapshot, get_space,
 #   get_colony_overlay, get_content_catalog; signal world_reset.
 extends Node3D
@@ -37,6 +38,8 @@ var _glow_on: StandardMaterial3D
 var _glow_off: StandardMaterial3D
 var _tinted: Dictionary = {}
 var _stamp_key: String = ""
+## What the last station rebuild drew: workshops and lit camp buildings (the hearth), for tests and tools.
+var _counts: Dictionary = {"workshops": 0, "hearths": 0}
 
 
 func setup(world_sim: Node, terrain: Node, sky: Node) -> void:
@@ -124,6 +127,7 @@ func _rebuild_stations(shops: Dictionary, buildings: Dictionary, settlements: Di
 		n.queue_free()
 	_stations.clear()
 	_lights.clear()
+	_counts = {"workshops": 0, "hearths": 0}
 	var styles: Dictionary = _catalog_styles()
 	var ids: PackedInt32Array = shops.get("ids", PackedInt32Array())
 	var kinds: PackedInt64Array = shops.get("kinds", PackedInt64Array())
@@ -149,6 +153,7 @@ func _rebuild_stations(shops: Dictionary, buildings: Dictionary, settlements: Di
 			continue
 		footprints.append(rect)
 		_place(_station_model(int(kinds[i]), styles), rect, active.has(i), "shop%d" % (ids[i] if i < ids.size() else i))
+		_counts["workshops"] = int(_counts["workshops"]) + 1
 	# Legacy camp buildings.
 	var bx: PackedInt32Array = buildings.get("xs", PackedInt32Array())
 	var by: PackedInt32Array = buildings.get("ys", PackedInt32Array())
@@ -174,6 +179,8 @@ func _rebuild_stations(shops: Dictionary, buildings: Dictionary, settlements: Di
 			structure = str(row["firing"])
 		var model: String = str(by_structure.get(structure, Data3D.binding("buildings.fallback", "")))
 		_place(model, Rect2i(t, Vector2i.ONE), lit and bool(row.get("light", false)), "b%d" % i)
+		if bool(row.get("light", false)):
+			_counts["hearths"] = int(_counts["hearths"]) + 1
 	# Bedrolls (2 × 1 from the bed tile).
 	var bed_model: String = str(Data3D.binding("stations.bed", ""))
 	var bedx: PackedInt32Array = space.get("bed_xs", PackedInt32Array())
@@ -195,6 +202,11 @@ func _fire_lit(settlements: Dictionary, t: Vector2i) -> bool:
 			best_d = d
 			best = i
 	return best < 0 or lit[best] == 1
+
+
+## What the last station rebuild drew: {workshops, hearths} (camp buildings whose 2D binding gives light).
+func drawn_counts() -> Dictionary:
+	return _counts
 
 
 ## The model drawn for station model `id` in its state (bindings3d `stations.states`), else `id`.

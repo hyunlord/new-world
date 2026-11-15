@@ -161,9 +161,14 @@ func _panel_event_checks() -> void:
 
 func _camera_checks() -> void:
 	_camera.call("center_on_tile", Vector2i(96, 96))
+	# The HUD's decision cards (M-LOOP) may sit right of the centre: the map point is the first spot clear of GUI.
 	var point: Vector2 = root.get_visible_rect().size * Vector2(0.52, 0.45)
-	_motion(point)
-	await _frames()
+	for spot: Vector2 in [Vector2(0.52, 0.45), Vector2(0.4, 0.55), Vector2(0.3, 0.5), Vector2(0.4, 0.7)]:
+		point = root.get_visible_rect().size * spot
+		_motion(point)
+		await _frames()
+		if root.gui_get_hovered_control() == null:
+			break
 	_check("map pointer outside GUI", root.gui_get_hovered_control() == null)
 	var before: Vector2 = _camera.position
 	var pan: InputEventPanGesture = InputEventPanGesture.new()
@@ -629,8 +634,11 @@ func _live_alert_route(alert_id: String, identity: int, tile: Vector2i) -> void:
 		if kind == "animal":
 			var causal: Control = _main.get_node("UI/CausalPanel") as Control
 			_check("live animal navigates without opening why", not causal.visible)
-			var half_view: Vector2 = root.get_visible_rect().size / (2.0 * _camera.zoom.x)
-			_check("live animal alert brings tile into camera view", Rect2(_camera.position - half_view, half_view * 2.0).has_point(View.tile_centre(tile)))
+			# The 3D view draws the map (M3D-SWITCH): the tile's ground point must project inside the screen.
+			_main.get_node("World3D").get("rig").call("update_camera")
+			var seen_at: Vector2 = preload("res://scripts/world/view_projection.gd").world_to_screen(View.tile_centre(tile))
+			print("MUX_UI_INFO live animal tile %s camera %s screen %s" % [tile, _camera.position, seen_at])
+			_check("live animal alert brings tile into camera view", root.get_visible_rect().has_point(seen_at))
 			_live_routes[kind] = identity
 			causal.hide()
 			_restore_live_alert_facts("after live " + kind + " route")
@@ -743,9 +751,13 @@ func _orderbar_locale_assertions(language: String, selected_kind: String) -> voi
 	for i: int in main_buttons.size():
 		var entry: Dictionary = OrderBar.MODES[i]
 		main_ok = main_ok and (main_buttons[i] as Button).text == "%s %s" % [OS.get_keycode_string(int(entry["hotkey"])), locale.call("ltr", str(entry["key"]))]
+	var menu_rows: Array[Dictionary] = Economy.Content.menu()
 	for i: int in build_buttons.size():
 		var kind: Dictionary = Economy.build_kind(Economy.menu_order()[i])
-		build_ok = build_ok and (build_buttons[i] as Button).text == "%s %s" % [OrderBar.MENU_LABELS[i], locale.call("ltr", str(kind["key"]))]
+		# The shortcut is the catalogue row's `shortcut_slot` (entries past the eleven keys have none).
+		var slot: int = int(menu_rows[i].get("shortcut_slot", -1)) if i < menu_rows.size() else -1
+		var shortcut: String = OrderBar.MENU_LABELS[slot] if slot >= 0 and slot < OrderBar.MENU_LABELS.size() else ""
+		build_ok = build_ok and (build_buttons[i] as Button).text == "%s %s" % [shortcut, locale.call("ltr", str(kind["key"]))]
 	for i: int in gather_buttons.size():
 		gather_ok = gather_ok and (gather_buttons[i] as Button).text == "%d %s" % [i + 1, locale.call("ltr", str(OrderBar.DIG_MENU[i]["key"]))]
 	_check(language + " all order buttons refresh", main_ok)

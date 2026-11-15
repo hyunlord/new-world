@@ -6,7 +6,7 @@
 #   (`poses`) through bindings3d `animals.clip_for_pose`, walk/run while moving between tiles; fur colours per species
 #   from bindings3d `animals.colours`. Motion glides over the 2D step time like people3d.gd. Picking: `bodies(mode)` lists
 #   the wild animals (id, species kind code, feet) in no mode or the hunt mode for world3d.gd's pick (OrderTool's hunt
-#   and draft orders).
+#   and draft orders); `pen_bodies()` the pen animals (LivestockId, feet) for the map labels' hover.
 # Bridge methods called: via SimReads get_animals, get_livestock, get_world_info, get_content_catalog; signal world_reset.
 extends Node3D
 
@@ -88,7 +88,7 @@ func _process(delta: float) -> void:
 			catalog[int((row as Dictionary).get("code", -1))] = row
 	for i: int in mini(lids.size(), mini(lxs.size(), lys.size())):
 		var crow: Dictionary = catalog.get(int(lkinds[i]) if i < lkinds.size() else -1, {})
-		rows.append({"key": "l%d" % lids[i], "id": -1, "kind": int(lkinds[i]) if i < lkinds.size() else -1,
+		rows.append({"key": "l%d" % lids[i], "id": int(lids[i]), "kind": int(lkinds[i]) if i < lkinds.size() else -1,
 			"model": _species_model(str(crow.get("id", "")), str(crow.get("mechanic", crow.get("category", "")))),
 			"tile": Vector2i(int(lxs[i]), int(lys[i])), "state": 2, "wild": false})
 	_rows = rows
@@ -198,6 +198,15 @@ func bodies(mode: int) -> Array[Dictionary]:
 	for d: Dictionary in _drawn:
 		if bool(d["wild"]):
 			out.append({"kind": "animal", "id": int(d["id"]), "species": int(d["kind"]), "feet": d["pos"], "h": float(d["h"]), "r": 0.5})
+	return out
+
+
+## Every pen animal's body ({id = LivestockId, feet, h}), for the map labels' hover (pen animals are not clicked).
+func pen_bodies() -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	for d: Dictionary in _drawn:
+		if not bool(d["wild"]):
+			out.append({"id": int(d["id"]), "feet": d["pos"], "h": float(d["h"])})
 	return out
 
 

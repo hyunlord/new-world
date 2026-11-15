@@ -2,7 +2,8 @@
 # M-ART2: zoom steps from assets/v8art/render_params.json `camera.zooms` (¼×, ½×, 1×, 2×; default `camera.default_zoom`
 #   1×) with the wheel, `-` and `=` (the 3D camera rig follows this camera; M3D-1); pan with
 #   WASD / arrows (`camera.pan_px_per_second` screen pixels a second, so the same screen speed at every zoom) and a
-#   middle-button drag; M-UX adds trackpad pan/pinch, cursor-anchored 120 ms zoom, left map drag and right drag.
+#   middle-button drag; M-UX adds trackpad pan/pinch, cursor-anchored 120 ms zoom (anchored on the 3D view's ground,
+#   ViewProjection), left map drag and right drag.
 #   Click actions are deferred until release so panning never selects, cancels or submits a draft order.
 #   In debug builds F12 re-reads render_params.json (ArtData.reload_params) and shows the toast
 #   "렌더 설정 다시 읽음" (UI_RENDER_PARAMS_RELOADED) for two seconds; starts centred on the camp hearth, and Home or H centres on it again (C is the chronicle,
@@ -335,6 +336,14 @@ func _animate_zoom(delta: float) -> void:
 	zoom = Vector2.ONE * lerpf(_zoom_from, _zoom_target, _zoom_elapsed / ZOOM_SECONDS)
 	position = _zoom_anchor_world - ((_zoom_anchor_screen - get_viewport_rect().size * 0.5) / zoom.x).rotated(screen_rotation)
 	_clamp_position()
+	# The 3D view is a tilted perspective, not the top-down map this formula assumes: place its camera for the new
+	# zoom and shift by what still drifts, so the ground point under the cursor stays put.
+	var rig: Object = ViewProjection.provider.get("rig") if ViewProjection.active() else null
+	if rig != null:
+		rig.call("update_camera")
+		position += _zoom_anchor_world - ViewProjection.screen_to_world(_zoom_anchor_screen)
+		_clamp_position()
+		rig.call("update_camera")
 
 
 ## Pause (`on`) or resume the simulation (as Space does).

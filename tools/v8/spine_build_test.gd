@@ -96,6 +96,8 @@ func _click(button: Button) -> void:
 	await _point(button.get_global_rect().get_center())
 
 func _tile(tile: Vector2i, click: bool = true) -> void:
+	# The 3D camera follows the 2D camera on its next frame: place it now, the caller may just have moved the camera.
+	_main.get_node("World3D").get("rig").call("update_camera")
 	await _point(preload("res://scripts/world/view_projection.gd").world_to_screen(View.tile_centre(tile)), click)
 
 func _capture(label: String) -> void:
@@ -608,15 +610,34 @@ func _cord_world(language: String) -> void:
 	_check("actual cord count and quality match save", counts[found] == int(ui["cord_count"]) and qualities[found] == int(ui["cord_quality"]))
 	var row: Dictionary = Content.row("items", code)
 	_check("actual selected cord placeholder rod birch", row.get("art_shape") == "rod" and row.get("art_tint_material") == "birch" and ItemIcons.uses_placeholder(code) and ItemIcons.texture_of(code) != null)
-	# M3D-SWITCH E2: the 2D pile sprite is gone; the 3D map labels name the hovered stack (World3D/Props draws it).
+	# M3D-SWITCH: the 2D pile sprite is gone. World3D/Props draws the stack through its item pipeline (the count
+	# bucket's own model, else the 2D asset's / art shape's model in the art tint) at this tile, and the 3D map labels
+	# name the hovered stack.
+	var props: Node = _main.get_node("World3D/Props")
+	var limits: Array = (preload("res://scripts/world/art/art_data.gd").bindings().get("items", {}) as Dictionary).get("bucket_limits", [1, 8])
+	var bucket: int = 0 if counts[found] <= int(limits[0]) else (1 if counts[found] <= int(limits[1]) else 2)
+	var own: String = preload("res://scripts/world3d/props3d.gd").own_item_model(str(row.get("id", "")), bucket)
+	var batch: String = (own + "|") if own != "" else (str(props.call("_item_model", code, bucket, row)) + "|" + str(row.get("art_tint_material", "")))
+	# After a load World3D rebuilds the terrain first, one heavy layer per frame: the props follow within seconds.
+	var pile: MultiMeshInstance3D = null
+	var piled: bool = false
+	for _frame: int in 300:
+		pile = (props.get("_item_nodes") as Dictionary).get(batch) as MultiMeshInstance3D
+		for i: int in (pile.multimesh.instance_count if pile != null and pile.multimesh != null else 0):
+			var at: Vector3 = pile.multimesh.get_instance_transform(i).origin
+			piled = piled or Rect2(Vector2(tile), Vector2.ONE).has_point(Vector2(at.x, at.z))
+		if piled:
+			break
+		await process_frame
 	var labels: Node = _main.get_node("World3D/LabelLayer/Labels")
 	labels.set("follow_mouse", false)
 	labels.set("hover_tile", tile)
 	await _frames()
 	var named: bool = (labels.call("drawn") as Array).any(func(r: Dictionary) -> bool: return r.get("kind", "") == "tile" and str(r.get("text", "")).contains(str(counts[found])))
 	labels.set("follow_mouse", true)
-	_check("real cord world sprite uses pile texture pipeline", named)
-	_rows[-1]["observed"] = {"fixture": ui, "actual_count": counts[found], "actual_quality": qualities[found]}
+	_check("real cord world sprite uses pile texture pipeline", piled and named)
+	_rows[-1]["observed"] = {"fixture": ui, "actual_count": counts[found], "actual_quality": qualities[found], "batch": batch, "batch_drawn": pile != null, "on_tile": piled, "hover_named": named,
+		"batches": (props.get("_item_nodes") as Dictionary).keys(), "labels": labels.call("drawn")}
 	await _capture(language + "_05cord-world_actual_pile")
 	_check("cord observation preserves tick and command log", int(_world.call("get_time_snapshot")["tick"]) == int(_manifests["05cord-world"]["tick"]) and _world.call("get_command_log", 0) == before)
 
@@ -687,13 +708,34 @@ func _livestock() -> void:
 			_panel.hide()
 			goals.hide()
 			if ids.size() > 0:
-				var livestock_body: Sprite2D = (renderer.get("_bodies") as Dictionary).get(ids[0])
-				var texture_size: Vector2 = livestock_body.texture.get_size() if livestock_body != null and livestock_body.texture != null else Vector2.ZERO
-				_check(stage + " actual age-sized sprite rect", texture_size.x > 0 and texture_size.x <= View.TILE and livestock_body.get_rect() == Rect2(Vector2(-texture_size.x * 0.5, -texture_size.y), texture_size))
-				_check(stage + " actual sprite centre picks identity", livestock_body != null and int(renderer.call("livestock_at", livestock_body.to_global(livestock_body.get_rect().get_center()))) == ids[0])
 				var xs: PackedInt64Array = read["xs"]
 				var ys: PackedInt64Array = read["ys"]
-				await _tile(Vector2i(xs[0], ys[0]), false)
+				# M3D-SWITCH: World3D/Animals draws the pen animal (a one-tile model standing on its tile); pointing at the
+				# drawn body's centre names that animal's identity in the map's hover label (the 2D sprite hit-test).
+				var tile0 := Vector2i(int(xs[0]), int(ys[0]))
+				var drawn_body: Dictionary = {}
+				for row: Dictionary in renderer.get("_drawn"):
+					var feet: Vector3 = row["pos"]
+					if not bool(row["wild"]) and drawn_body.is_empty() and Rect2(Vector2(tile0), Vector2.ONE).has_point(Vector2(feet.x, feet.z)):
+						drawn_body = row
+				_check(stage + " actual age-sized sprite rect", not drawn_body.is_empty() and float(drawn_body["h"]) <= 1.0, {"tile": str(tile0), "body": str(drawn_body)})
+				var labels: Node = _main.get_node("World3D/LabelLayer/Labels")
+				var named: bool = false
+				if not drawn_body.is_empty():
+					_main.get_node("World3D").get("rig").call("update_camera")
+					var cam: Camera3D = _main.get_node("World3D").call("camera") as Camera3D
+					var centre: Vector2 = cam.unproject_position((drawn_body["pos"] as Vector3) + Vector3(0, float(drawn_body["h"]) * 0.5, 0))
+					await _point(centre, false)
+					# Synthetic events do not move the OS cursor the labels follow: hand them the pointed spot (as tools may).
+					labels.set("follow_mouse", false)
+					labels.set("hover_screen", centre)
+					labels.set("hover_tile", View.world_to_tile(preload("res://scripts/world/view_projection.gd").screen_to_world(centre)))
+					await _frames(2)
+					var want: String = labels.call("livestock_text", read, 0, _locale)
+					named = (labels.call("drawn") as Array).any(func(r: Dictionary) -> bool: return r.get("kind", "") == "livestock" and str(r.get("text", "")) == want)
+					labels.set("follow_mouse", true)
+				_check(stage + " actual sprite centre picks identity", named, {"labels": str(labels.call("drawn"))})
+				await _tile(tile0, false)
 			var cards_color: Color = cards.modulate
 			cards.modulate = Color(cards_color, 0.0)
 			await _capture(language + "_" + stage)
