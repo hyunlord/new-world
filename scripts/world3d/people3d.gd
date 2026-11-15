@@ -201,7 +201,8 @@ func _process(delta: float) -> void:
 					lm.set_instance_color(cap * c + slot, look["skin"])
 					lm.set_instance_custom_data(cap * c + slot, custom)
 		st["dirty"] = false
-		if float(m["t"]) >= 1.0:
+		# Done once it stands still, or the clock is stopped (a paused mid-step figure is drawn as it is).
+		if float(m["t"]) >= 1.0 or not running:
 			_active.erase(aid)
 	var chosen: Dictionary = _state.get(_aid_of.get(selected, -1), {}) if selected != -1 else {}
 	if not chosen.is_empty():
