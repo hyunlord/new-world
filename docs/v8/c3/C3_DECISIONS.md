@@ -60,3 +60,26 @@ planner notes; planner answers arrive as `c3-data/D-C3-<n>.md`. Evidence lives i
     unknown floor style already falls back to the default packed-earth style with the `cut_stone` material tint, so the
     imported file is restored unchanged. The `cut_stone` look is lighter and cooler (dL+30, da−6, db−22): with the first
     tint a built road averaged RGB 97,85,73 against 100,89,73 for the camp ground and could not be seen.
+
+## C3-b
+
+18. Steward rules are data on the C2-b `Bills` action: 14 (one bloom, iron ore stocked), 15 (one bloom, bog iron stocked;
+    `stocked` is AND, so each ore has its own rule), 16 (one refined bar, bloom stocked), 17 (one iron axe per colonist
+    chopping with a stone, copper or bronze axe). A shared `pre_iron_axe` tag on those four axes lets a single
+    `replace_tag` rule cover them without two rules fighting over one bill; rule 13 orders a different bill.
+19. Mind: two pure observation facts, `job_bloomery` (recipe tag `bloomery`) and `job_forging` (`forging` or `refining`),
+    and two work nodes. Older policy histories restore through a `PRE_IRON` fallback, so published C2-b mind records load.
+20. First-metal chronicle lines carry their causes through the existing ore-evidence column: the knowledge that gates the
+    station and the recipe, the place (the template holding the station, else the station) and untracked inputs (fuel).
+    Generic per metal; no iron branch in Rust. An optional per-item verb key gives "처음으로 쇠를 녹였다". Copper and bronze
+    lines now read with the same cause list instead of the recipe name. FirstToolUsed names the recipe's station because
+    no workshop instance is recorded.
+21. `c3_chain_iron` (seed 0, the C2 chain world) follows the D-C2-1 contract: ordinary commands, nearest-target
+    retargeting with recorded reasons, reissue on natural cancellation (≤6) with printed causes, a day deadline. Founder
+    grants (Source::Seeded, as C2): prospecting, mining, charcoal, iron_smelting (its copper-smelting prerequisite has no
+    chain in this world), mud_brick, mud_brick_house, stone_house. Forging and iron tools are discovered by practice.
+    Mid-chain save reloads byte-equal; mid and full replays end byte-equal. It is disclosed apart from the tooling cap.
+22. Chain captures frame each stage's subject at 2× through the camera's centring API (the camp framing queued by a load
+    otherwise pulled stages back to the hearth), hide the helper and card overlays and capture each item event's Why.
+    The bloomery and smelter have no art binding, light or fire, so "bloomery with fire" shows the station without fire
+    (art debt).

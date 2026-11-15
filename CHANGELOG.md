@@ -1,5 +1,20 @@
 # Changelog
 
+## C3-b — iron chain, not yet published (2026-11-15)
+
+### Added
+- Steward rules 14–17: bloomery smelt when iron ore or bog iron is stocked (the missing bloomery is requested), bloom refining, and an iron axe for every colonist still chopping with a stone, copper or bronze axe (`pre_iron_axe` tag).
+- Mind work nodes for bloomery smelting and forging.
+- First-metal chronicle lines name their causes: "처음으로 쇠를 녹였다 ← 철 제련 · 괴철로 · 광석(채굴: ○○) · 숯", "처음으로 철 도끼를 썼다 ← 단조 · 철 도구 · 대장간"; the bloomery's missing charcoal shows as "괴철로에 숯이 없습니다 — 숯가마 확인".
+- `c3_chain_iron` (seed 0: reveal → mine → charcoal → bloomery → bloom → smithy → bar → iron axe forged, held and used → mason bench, cut stone → mud-brick house upgraded to the cut-stone house, with mid-chain and full replays) and native captures 00–07.
+- The C3 building scene lays a paved road and captures it.
+
+### Changed
+- Copper and bronze first-ingot lines list the same causes instead of the recipe name.
+
+### Removed
+- None.
+
 ## C3-a — iron content, not yet published (2026-11-15)
 
 Content pass for bible §4.4 on the C2 metal machinery (ADR 0066, `docs/v8/c3/C3_DECISIONS.md`). Gated together with the merged M-SIMCHECK fixes. Evidence stays outside git in `/Users/rexxa/work/c3-data`.

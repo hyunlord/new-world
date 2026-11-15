@@ -14,6 +14,7 @@ The bible's iron era needs ore, a bloomery, a forge, iron tools, a stone house a
 - Items, recipes, stations and templates are appended rows. A bloom and a wrought bar are `ingot`-tagged `metal_iron` items, so the first bloom and the first iron axe reuse FirstIngot, ToolUpgraded and FirstToolUsed. Station tags keep metals apart (`bloomery` ≠ `smelting`); forge recipes are tagged `forging` and run at a forge or an anvil.
 - The iron-era stone house is a new template (`cut_stone_house`, tier 5, upgrade from `mud_brick_house`). The neolithic `stone_house` row is unchanged, because saved sites are re-expanded from the current template and upgrade history checks `upgrade_from`. The template tier range becomes 1..=5.
 - Content that has no runtime hook stays Inert with its pass named: paved-road speed, warehouse capacity, steel, plough, horses, writing, markets, law, temples and the rest.
+- The chain (C3-b) adds no new mechanism: steward rules 14–17 are `Bills` data (a shared `pre_iron_axe` tag lets one `replace_tag` rule replace stone, copper and bronze axes), two mind observation facts name bloomery and forge work, and first-metal chronicle lines read their causes (gating knowledge, place, fuel) from the recorded metal witness through the existing evidence column.
 - Chapters 8/9 and the `no_iron_nearby` card are bridge facts beside the C2 ones (tag-parameterised helpers). Published C2-b format-23 saves load through an exact-revision adapter (`legacy_bronze_v23`).
 
 ## Alternatives considered
