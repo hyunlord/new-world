@@ -2,18 +2,22 @@
 #   onto the 3D terrain as one texel per tile (M3D-1 scope 8).
 # Purpose: an RGBA image of the map (terrain.gdshader `overlay_tex`, nearest) plus an outline image (`frame_tex`):
 #   stockpile zones (render_params `zones.tint_rgb`), housing zones, hunt zones (`zones.hunt_rgb`), designations
-#   (chop/quarry/dig/deconstruct/clay marks, framed), field tiles; with the room overlay shown (R, room_layer.gd) every
-#   room tile in its role colour (RoomLayer.ROLE_COLORS); and the order tool's live state read from OrderTool — the
-#   hovered tile framed in an area or build mode, the drag rectangle, and the placement preview (`preview()`: fitting
-#   tiles green, refused tiles in `sites.refused_rgba`). O cycles the bridge's influence channels
+#   (chop/quarry/dig/deconstruct/clay marks, framed), field tiles; with the room overlay shown (R, Main/RoomIndex) every
+#   room tile in its role colour (RoomIndex.ROLE_COLORS); and the order tool's live state from OrderTool's public
+#   getters — the hovered tile framed in an area or build mode (`hover_tile`), the drag rectangle (`drag_tiles`), the
+#   placement preview (`preview()`: fitting tiles green, refused tiles in `sites.refused_rgba`), else the build or
+#   template footprint (`build_size`, `build_origin`). The current task's marker tile (get_current_task, what
+#   WorldMarker rings in 2D) gets a pulsing ring in WorldMarker.RING_COLOR. O cycles the bridge's influence channels
 #   (get_influence_overlay: warmth, light, noise, food smell, danger, social, spiritual, beauty) as a heat tint, read
 #   once per sim tick while shown; a small label names the channel (Locale keys W3D_OVERLAY_*).
 # Bridge methods called: get_influence_overlay (direct, once per tick while a channel is shown); via SimReads
-#   get_colony_overlay, get_animals, get_rooms, get_field_tiles, get_time_snapshot.
+#   get_colony_overlay, get_animals, get_rooms, get_field_tiles, get_time_snapshot, get_current_task.
 extends Node3D
 
 const ArtData = preload("res://scripts/world/art/art_data.gd")
-const RoomLayer = preload("res://scripts/world/colony/room_layer.gd")
+const RoomIndex = preload("res://scripts/world/room_index.gd")
+const WorldMarker = preload("res://scripts/ui/panels/world_marker.gd")
+const OrderTool = preload("res://scripts/world/colony/order_tool.gd")
 const Data3D = preload("res://scripts/world3d/data3d.gd")
 const CHANNEL_KEYS: Array[String] = ["W3D_OVERLAY_WARMTH", "W3D_OVERLAY_LIGHT", "W3D_OVERLAY_NOISE", "W3D_OVERLAY_FOOD",
 	"W3D_OVERLAY_DANGER", "W3D_OVERLAY_SOCIAL", "W3D_OVERLAY_SPIRITUAL", "W3D_OVERLAY_BEAUTY"]
@@ -34,6 +38,9 @@ var _influence: PackedByteArray = PackedByteArray()
 var _influence_tick: int = -1
 var _label: Label = null
 var _stamp_key: String = ""
+var _marker: MeshInstance3D = null
+var _marker_tick: int = -1
+var _phase: float = 0.0
 
 
 func setup(world_sim: Node, terrain: Node) -> void:
@@ -52,6 +59,21 @@ func _ready() -> void:
 	_label.add_theme_color_override("font_outline_color", Color(0.09, 0.08, 0.07))
 	_label.add_theme_constant_override("outline_size", 6)
 	layer.add_child(_label)
+	var ring: TorusMesh = TorusMesh.new()
+	ring.inner_radius = 0.34
+	ring.outer_radius = 0.42
+	ring.rings = 24
+	var mat: StandardMaterial3D = StandardMaterial3D.new()
+	mat.albedo_color = WorldMarker.RING_COLOR
+	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	ring.material = mat
+	_marker = MeshInstance3D.new()
+	_marker.name = "TaskMarker"
+	_marker.mesh = ring
+	_marker.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	_marker.visible = false
+	add_child(_marker)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -72,13 +94,14 @@ func cycle_channel() -> void:
 		_label.text = str(locale.call("ltr", CHANNEL_KEYS[channel])) if locale != null else CHANNEL_KEYS[channel]
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if _world_sim == null or _terrain == null:
 		return
 	var w: int = int(_terrain.get("width"))
 	var h: int = int(_terrain.get("height"))
 	if w <= 0 or h <= 0:
 		return
+	_update_marker(delta)
 	if _img == null or _img.get_width() != w or _img.get_height() != h:
 		_base = Image.create_empty(w, h, false, Image.FORMAT_RGBA8)
 		_frame_base = Image.create_empty(w, h, false, Image.FORMAT_R8)
@@ -101,9 +124,10 @@ func _process(_delta: float) -> void:
 		_influence = _world_sim.call("get_influence_overlay", channel)
 		_base_key = ""
 	var stamp: Dictionary = get_parent().get("stamp") if get_parent() != null else {}
-	var room_layer0: Node = get_node_or_null("/root/Main/ColonyView/OverlayLayer/Rooms")
+	var room_index: Node = get_node_or_null("/root/Main/RoomIndex")
+	var rooms_shown: bool = room_index != null and bool(room_index.call("is_shown"))
 	var skey: String = "%s|%s|%s|%s|%d|%d" % [stamp.get("overlay", -1), stamp.get("rooms", -1), stamp.get("tick", -1),
-		room_layer0 != null and bool(room_layer0.call("is_shown")), channel, _influence_tick]
+		rooms_shown, channel, _influence_tick]
 	if skey == _stamp_key and not stamp.is_empty():
 		_apply_live()
 		return
@@ -112,8 +136,6 @@ func _process(_delta: float) -> void:
 	var rooms: Dictionary = SimReads.read(_world_sim, "get_rooms")
 	var animals: Dictionary = SimReads.read(_world_sim, "get_animals")
 	var fields: Dictionary = SimReads.read(_world_sim, "get_field_tiles")
-	var room_layer: Node = get_node_or_null("/root/Main/ColonyView/OverlayLayer/Rooms")
-	var rooms_shown: bool = room_layer != null and bool(room_layer.call("is_shown"))
 	var key: String = "%d|%d|%d|%d|%s|%d|%d" % [int(overlay.get("version", 0)), int(rooms.get("version", 0)), int(animals.get("version", 0)),
 		hash(fields.get("phases", PackedInt64Array())), rooms_shown, channel, _influence_tick]
 	if key != _base_key:
@@ -189,7 +211,7 @@ func _build_base(overlay: Dictionary, rooms: Dictionary, animals: Dictionary, fi
 		for i: int in mini(ids.size(), roles.size()):
 			role_of[ids[i]] = roles[i]
 		for i: int in mini(tr.size(), mini(tx.size(), ty.size())):
-			var c: Color = RoomLayer.ROLE_COLORS[clampi(int(role_of.get(tr[i], 0)), 0, RoomLayer.ROLE_COLORS.size() - 1)]
+			var c: Color = RoomIndex.ROLE_COLORS[clampi(int(role_of.get(tr[i], 0)), 0, RoomIndex.ROLE_COLORS.size() - 1)]
 			c.a = minf(0.6, c.a * 1.8)
 			_put(_base, _frame_base, Vector2i(tx[i], ty[i]), c, false)
 
@@ -198,12 +220,16 @@ func _build_base(overlay: Dictionary, rooms: Dictionary, animals: Dictionary, fi
 func _apply_live() -> void:
 	var tool: Node = get_node_or_null("/root/Main/ColonyView/OrderTool")
 	var mode: int = int(tool.get("mode")) if tool != null else 0
-	var hover: Vector2i = tool.get("_hover") if tool != null else Vector2i(-1, -1)
-	var dragging: bool = bool(tool.get("_dragging")) if tool != null else false
-	var a: Vector2i = tool.get("_drag_from") if tool != null else Vector2i.ZERO
-	var b: Vector2i = tool.get("_drag_to") if tool != null else Vector2i.ZERO
+	var hover: Vector2i = tool.call("hover_tile") if tool != null else Vector2i(-1, -1)
+	var drag: Array[Vector2i] = []
+	if tool != null:
+		drag = tool.call("drag_tiles")
+	var dragging: bool = not drag.is_empty()
+	var a: Vector2i = drag[0] if dragging else Vector2i.ZERO
+	var b: Vector2i = drag[1] if dragging else Vector2i.ZERO
 	var preview: Dictionary = tool.call("preview") if tool != null and mode != 0 else {}
-	var key: String = "%d|%s|%s|%s|%s|%d" % [mode, hover, dragging, a, b, hash(preview)]
+	var size0: Vector2i = tool.call("build_size") if tool != null and mode == OrderTool.Mode.BUILD else Vector2i.ONE
+	var key: String = "%d|%s|%s|%s|%s|%d|%s" % [mode, hover, dragging, a, b, hash(preview), size0]
 	if key == _live_key:
 		return
 	_live_key = key
@@ -224,8 +250,7 @@ func _apply_live() -> void:
 			for i: int in mini((xs as PackedInt32Array).size(), (ys as PackedInt32Array).size()):
 				var fits: bool = ok is PackedByteArray and i < (ok as PackedByteArray).size() and (ok as PackedByteArray)[i] == 1
 				_put(_img, _frame, Vector2i(xs[i], ys[i]), Color(0.45, 0.9, 0.45, 0.45) if fits else bad, true)
-		if (xs is not PackedInt32Array or (xs as PackedInt32Array).is_empty()) and tool.has_method("build_size") and tool.has_method("build_origin") \
-				and bool(tool.call("template_active")) == false and mode == preload("res://scripts/world/colony/order_tool.gd").Mode.BUILD:
+		if (xs is not PackedInt32Array or (xs as PackedInt32Array).is_empty()) and mode == OrderTool.Mode.BUILD:
 			var size: Vector2i = tool.call("build_size")
 			var origin: Vector2i = tool.call("build_origin", hover)
 			for y: int in size.y:
@@ -234,3 +259,19 @@ func _apply_live() -> void:
 		_put(_img, _frame, hover, Color(1, 1, 1, 0.12), true)
 	_tex.update(_img)
 	_frame_tex.update(_frame)
+
+
+## The current task's marker (get_current_task, read once per tick): a ring on the tile, pulsing like WorldMarker's.
+func _update_marker(delta: float) -> void:
+	var tick: int = int(SimReads.read(_world_sim, "get_time_snapshot").get("tick", -1))
+	if tick != _marker_tick:
+		_marker_tick = tick
+		var task: Dictionary = SimReads.read(_world_sim, "get_current_task")
+		var t: Vector2i = Vector2i(int(task.get("marker_x", -1)), int(task.get("marker_y", -1)))
+		_marker.visible = bool(task.get("has_marker", false)) and t.x >= 0 and t.y >= 0
+		if _marker.visible:
+			_marker.position = Vector3(t.x + 0.5, float(_terrain.call("height_at", t.x + 0.5, t.y + 0.5)) + 0.06, t.y + 0.5)
+	if _marker.visible:
+		_phase += delta * WorldMarker.PULSE_SPEED
+		var mat: StandardMaterial3D = (_marker.mesh as TorusMesh).material as StandardMaterial3D
+		mat.albedo_color.a = 0.65 + WorldMarker.PULSE_RANGE * sin(_phase)

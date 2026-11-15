@@ -21,7 +21,7 @@
 # M-READ: get_why_not (direct, per person per tick: blocked mind candidates), get_person_diagnosis
 #   (direct, per person per tick: the person's diagnosis headline and chain).
 # M3: the bed line "잠자리: 침실 3 (지붕 있음)" from get_agent_economy's bed_x/bed_y/bed_room/bed_room_role/bed_roofed
-#   (the roof word "판 굴" for a dug room from the room overlay's index, ColonyView/OverlayLayer/Rooms; a hut bed from
+#   (the roof word "판 굴" for a dug room from the room index, Main/RoomIndex; a hut bed from
 #   get_building_snapshot via SimReads: "잠자리: 오두막"; no bed: "잠자리: 없음"); job codes 9 dig, 10 deconstruct,
 #   11 clear (haul-away); the skill list follows the bridge's skill_names (M3 adds mining).
 # M4 (goal 9.4): two tabs under the name, 정보 (everything above) and 지식, read from get_agent_knowledge (direct, once
@@ -175,7 +175,8 @@ var _job_label: Label
 # M4 adds 12 dig clay, 13 teach, 14 learn.
 const JOB_KEYS: Array[String] = ["UI_JOB_NONE", "UI_JOB_CHOP", "UI_JOB_HAUL", "UI_JOB_DELIVER", "UI_JOB_BUILD", "UI_JOB_QUARRY", "UI_JOB_SUPPLY", "UI_JOB_CRAFT", "UI_JOB_GATHER", "UI_JOB_DIG", "UI_JOB_DECONSTRUCT", "UI_JOB_CLEAR",
 	"UI_JOB_DIG_CLAY", "UI_JOB_TEACH", "UI_JOB_LEARN", "M5_JOB_HUNT", "M5_JOB_EQUIP", "M55_JOB_TRADE", "M6A_JOB_HARVEST", "C2_JOB_TILL_FIELD", "C2_JOB_SOW_FIELD", "C2_JOB_TEND_FIELD", "C2_JOB_HARVEST_FIELD", "C2_JOB_CAPTURE", "C2_JOB_LIVESTOCK_PRODUCT", "C2_JOB_SLAUGHTER"]
-const RoomLayer = preload("res://scripts/world/colony/room_layer.gd")
+const RoomIndex = preload("res://scripts/world/room_index.gd")
+const PeopleView = preload("res://scripts/world/people_view.gd")
 ## BuildingKind code of a hut in get_building_snapshot.
 const HUT_KIND: int = 3
 # M2: the tool line, the skills heading and lines; the economy read is refreshed once per tick.
@@ -815,14 +816,14 @@ func _refresh_economy(agent_id: int) -> void:
 	_bed_label.visible = _economy.has("bed_x")
 	if _bed_label.visible:
 		var bed: Vector2i = Vector2i(int(_economy.get("bed_x", -1)), int(_economy.get("bed_y", -1)))
-		_bed_label.text = bed_line(_economy, get_node_or_null("/root/Main/ColonyView/OverlayLayer/Rooms"), _is_hut_bed(bed), _locale)
+		_bed_label.text = bed_line(_economy, get_node_or_null("/root/Main/RoomIndex"), _is_hut_bed(bed), _locale)
 	_skills_heading.text = _loc("UI_INSPECT_SKILLS")
 	_skills_heading.show()
 	_skills_label.text = "\n".join(skill_lines(_economy, _locale))
 	_skills_label.show()
 
 
-## M3: "잠자리: 침실 3 (지붕 있음)" from get_agent_economy's bed fields (`rooms` = the room overlay node for the
+## M3: "잠자리: 침실 3 (지붕 있음)" from get_agent_economy's bed fields (`rooms` = Main/RoomIndex for the
 ## dug-pocket roof word, may be null); "잠자리: 오두막" for a hut bed (`hut`), "잠자리: (x, y)" for a bed outside any
 ## room, "잠자리: 없음" without a bed.
 static func bed_line(economy: Dictionary, rooms: Node, hut: bool, locale: Node) -> String:
@@ -837,7 +838,7 @@ static func bed_line(economy: Dictionary, rooms: Node, hut: bool, locale: Node) 
 			info = {"roofed": bool(economy.get("bed_roofed", false))}
 		var role_code: int = int(economy.get("bed_room_role", int(info.get("role", 0))))
 		return EconomyText.trf(locale, "UI_INSPECT_BED_FMT", {"room": EconomyText.role(locale, role_code), "id": room,
-			"roof": RoomLayer.roof_text(info, locale)})
+			"roof": RoomIndex.roof_text(info, locale)})
 	if hut:
 		return EconomyText.ltr(locale, "UI_INSPECT_BED_HUT")
 	return EconomyText.trf(locale, "UI_INSPECT_BED_TILE_FMT", {"x": x, "y": y})
@@ -934,11 +935,10 @@ func _process(_delta: float) -> void:
 
 
 ## M-ART2 (goal §3.6): the person's portrait (the POLISH2 portrait of their look and face variant, 128 px) and the
-## look in words ("가죽 랩 · 묶은 머리 · 얼굴 3") from the people layer's drawn look (ColonyView/AgentLayer
-## person_look) and manifest.json; hidden when the person is not drawn.
+## look in words ("가죽 랩 · 묶은 머리 · 얼굴 3") from the person's snapshot row (PeopleView.person_look) and
+## manifest.json; hidden when the person is not in the snapshot.
 func _update_portrait(_agent_id: int) -> void:
-	var layer: Node = get_node_or_null("/root/Main/ColonyView/AgentLayer")
-	var look: Dictionary = layer.call("person_look", _selected_entity_bits) if layer != null and layer.has_method("person_look") else {}
+	var look: Dictionary = PeopleView.person_look(SimReads.read(_world_sim, "get_agent_snapshot"), _selected_entity_bits) if _world_sim != null else {}
 	if look.is_empty():
 		_portrait.texture = null
 		_look_label.text = ""

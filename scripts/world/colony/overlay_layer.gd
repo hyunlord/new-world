@@ -64,9 +64,9 @@ var _nodes: Dictionary = {}
 ## Tile -> the most items seen in that node (its "full" for the depleted look).
 var _node_max: Dictionary = {}
 var _hover: Vector2i = Vector2i(-1, -1)
-## Real housing designation tiles, separate from stockpile zone membership.
+## Real housing designation tiles, separate from stockpile zone membership (the selection is OrderTool's).
 var _housing_zones: Dictionary = {}
-var _selected_housing_zone: int = -1
+var _tool: Node = null
 var _zoom: float = 1.0
 ## Tiles of M3 space sites (their label shows under the mouse).
 var _space_sites: Dictionary = {}
@@ -105,11 +105,15 @@ func _ready() -> void:
 	_world_sim = get_node_or_null("/root/Main/WorldSim")
 	if _world_sim != null:
 		_world_sim.connect("world_reset", _on_world_reset)
+	_tool = get_node_or_null("../OrderTool")
+	if _tool != null:
+		_tool.connect("mode_changed", func(_mode: int) -> void:
+			_ground.queue_redraw()
+			queue_redraw())
 
 
 func _on_world_reset() -> void:
 	_housing_zones.clear()
-	_selected_housing_zone = -1
 	_version = -1
 	_node_max.clear()
 	for s: Node in _sprites.values():
@@ -173,23 +177,15 @@ func _index_housing_zones() -> void:
 	var ys: PackedInt32Array = _overlay.get("housing_zone_ys", PackedInt32Array())
 	for i: int in mini(ids.size(), mini(xs.size(), ys.size())):
 		if ids[i] >= 0: _housing_zones[Vector2i(xs[i], ys[i])] = ids[i]
-	if not _housing_zones.values().has(_selected_housing_zone):
-		_selected_housing_zone = -1
 
 
-## Input can select an authoritative housing designation after higher-priority object hits.
 func housing_zone_at(tile: Vector2i) -> int:
 	return int(_housing_zones.get(tile, -1))
 
 
-func set_selected_housing_zone(id: int) -> void:
-	_selected_housing_zone = id if _housing_zones.values().has(id) else -1
-	if _ground != null: _ground.queue_redraw()
-	queue_redraw()
-
-
+## The order tool's selected housing designation (drawn with a heavier boundary), or -1.
 func selected_housing_zone() -> int:
-	return _selected_housing_zone
+	return int(_tool.call("selected_housing_zone")) if _tool != null else -1
 
 
 func _index_stacks() -> void:
@@ -494,13 +490,14 @@ func _draw_ground() -> void:
 ## Housing uses the existing zone palette with continuous outer boundaries (stockpiles use corners).
 ## Filled rect strips avoid the native backend's invisible one-pixel line primitive.
 func _draw_housing_zones(tint: Color, tick: Color) -> void:
+	var selected: int = selected_housing_zone()
 	for cell: Vector2i in _housing_zones.keys():
 		var id: int = int(_housing_zones[cell])
 		var origin: Vector2 = View.tile_to_world(cell)
 		_ground.draw_rect(Rect2(origin, Vector2(TILE, TILE)), tint)
 		var boundary: Color = tick
 		var width: float = 2.0
-		if id == _selected_housing_zone:
+		if id == selected:
 			boundary.a = 1.0
 			width = 4.0
 		if housing_zone_at(cell + Vector2i.UP) != id:

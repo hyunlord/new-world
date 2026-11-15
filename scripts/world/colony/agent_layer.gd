@@ -23,8 +23,8 @@
 #   key is the lower AgentId of themselves and a living partner, a child's is their living mother's household, else
 #   their living father's, else their own (`household_keys`, from the snapshot's `mothers` / `fathers` /
 #   `partners`); the key's hash picks one of `lod.household_ring_rgb`. Recomputed only when those columns change.
-# Marks: a sick person shows a small green badge, a fleeing one a "!" above the head (code-drawn); M toggles the mood
-#   overlay (each person tinted by `mood_bands`, StoryText.band_tint).
+# Marks: a sick person shows a small green badge, a fleeing one a "!" above the head (code-drawn); the mood overlay
+#   (M, Main/PeopleView) tints each person by `mood_bands` (StoryText.band_tint); PeopleView's highlighted people get rings.
 # The drawn rect is what clicks hit (`entity_at`); positions tween between tiles over one move step.
 # Also feeds SettlementSelection.observe every frame (the inspector's village row; V8-0 DECISIONS D31).
 # Bridge methods: via SimReads get_agent_snapshot (since M-ART2.1 also `mothers`, `fathers`, `partners`), get_world_info, get_society_snapshot, get_settlement_snapshot;
@@ -44,9 +44,7 @@ const STATE_CONSUMING: int = 3
 const TARGET_SLEEP: int = 3
 const TARGET_JOB: int = 9
 ## Snapshot `life_stages` code of a child (bridge contract); the salt of the household colour hash.
-const LIFE_CHILD: int = 1
-const HOUSEHOLD_SALT: int = 11
-const MOOD_KEY: Key = KEY_M
+const PeopleView = preload("res://scripts/world/people_view.gd")
 const INK: Color = Color8(35, 29, 23)
 const BADGE: Color = Color(0.45, 0.78, 0.36)
 ## The contact shadow's colour (the compositor's (16, 15, 12)).
@@ -57,8 +55,6 @@ const LodMarkers = preload("res://scripts/world/colony/lod_markers.gd")
 const GLYPH_OF: Dictionary = {"work": 0, "carry": 1, "sleep": 2, "flee": 3}
 ## Sleepers sharing a tile fan out by these offsets (world px).
 const FAN: Array[Vector2] = [Vector2(0, 0), Vector2(0, -24), Vector2(0, 24), Vector2(-8, -48), Vector2(8, 48)]
-
-signal mood_toggled(on: bool)
 
 ## Microseconds of the last frame's update and of the last LOD marker draw (performance reports).
 var last_process_usec: int = 0
@@ -108,7 +104,9 @@ var _household_key: int = 0
 var _household_of: Dictionary = {}
 ## M-READ: AgentIds highlighted by chronicle group click; drawn as cyan rings.
 var _highlight_ids: PackedInt64Array = PackedInt64Array()
-const HIGHLIGHT_RGBA: Color = Color(0.4, 0.85, 0.95, 0.8)
+const HIGHLIGHT_RGBA: Color = PeopleView.HIGHLIGHT_RGBA
+## Main/PeopleView: the mood flag and the highlighted people this layer mirrors.
+var _people_view: Node = null
 
 
 class BadgeLeaders:
@@ -190,18 +188,26 @@ func _ready() -> void:
 	_daylight = get_node_or_null("/root/Main/DaylightController")
 	if _world_sim != null:
 		_world_sim.connect("world_reset", _on_world_reset)
+	_people_view = get_node_or_null("/root/Main/PeopleView")
+	if _people_view != null:
+		_people_view.connect("mood_toggled", func(on: bool) -> void: _mood_shown = on)
+		_people_view.connect("highlights_changed", func() -> void:
+			_highlight_ids = _people_view.call("highlight_ids")
+			queue_redraw())
 
 
-## M-READ: highlight people by AgentId (chronicle group click); drawn as cyan rings.
+## M-READ: highlight people by AgentId (chronicle group click; Main/PeopleView); drawn as cyan rings.
 func set_highlights(ids: PackedInt64Array) -> void:
+	if _people_view != null:
+		_people_view.call("set_highlights", ids)
+		return
 	_highlight_ids = ids
 	queue_redraw()
 
 
 ## M-READ: clear all highlights.
 func clear_highlights() -> void:
-	_highlight_ids = PackedInt64Array()
-	queue_redraw()
+	set_highlights(PackedInt64Array())
 
 
 func _on_world_reset() -> void:
@@ -866,34 +872,14 @@ func _refresh_markers() -> void:
 	last_draw_usec = Time.get_ticks_usec() - t0
 
 
-## The ring colour of household key `key` from `palette` (RGB 0–255 rows); alpha 0 (the ink ring) without either.
+## The ring colour of household key `key` from `palette` (PeopleView.ring_colour; kept for tests).
 static func _ring_colour(key: int, palette: Array) -> Color:
-	if key < 0 or palette.is_empty():
-		return Color(0, 0, 0, 0)
-	var row: Variant = palette[View.key_hash(key, 0, 0, HOUSEHOLD_SALT) % palette.size()]
-	if not (row is Array and (row as Array).size() == 3):
-		return Color(0, 0, 0, 0)
-	return Color8(int(row[0]), int(row[1]), int(row[2]))
+	return PeopleView.ring_colour(key, palette)
 
 
-## The household key of every person in a snapshot (AgentId → key; see the header). Pure (tests).
+## The household key of every person in a snapshot (PeopleView.household_keys; kept for tests).
 static func household_keys(ids: PackedInt64Array, stages: PackedByteArray, mothers: PackedInt64Array, fathers: PackedInt64Array, partners: PackedInt64Array) -> Dictionary:
-	var alive: Dictionary = {}
-	for id: int in ids:
-		alive[id] = true
-	var adult: Dictionary = {}
-	for i: int in ids.size():
-		var p: int = partners[i] if i < partners.size() else -1
-		adult[ids[i]] = mini(ids[i], p) if p >= 0 and alive.has(p) else ids[i]
-	var out: Dictionary = {}
-	for i: int in ids.size():
-		var key: int = adult[ids[i]]
-		if i < stages.size() and stages[i] == LIFE_CHILD:
-			var m: int = mothers[i] if i < mothers.size() else -1
-			var f: int = fathers[i] if i < fathers.size() else -1
-			key = adult[m] if alive.has(m) else (adult[f] if alive.has(f) else ids[i])
-		out[ids[i]] = key
-	return out
+	return PeopleView.household_keys(ids, stages, mothers, fathers, partners)
 
 
 func _update_households(snap: Dictionary) -> void:
@@ -1078,22 +1064,16 @@ func person_look(bits: int) -> Dictionary:
 		"flip": person.body.flip_h, "lod": _lod}
 
 
-## M5: show or hide the mood overlay (M).
+## M5: show or hide the mood overlay (Main/PeopleView owns the flag and the M key).
 func set_mood_shown(on: bool) -> void:
-	if on == _mood_shown:
-		return
-	_mood_shown = on
-	mood_toggled.emit(on)
+	if _people_view != null:
+		_people_view.call("set_mood_shown", on)
+	else:
+		_mood_shown = on
 
 
 func mood_shown() -> bool:
 	return _mood_shown
-
-
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and not event.echo and (event as InputEventKey).keycode == MOOD_KEY:
-		set_mood_shown(not _mood_shown)
-		get_viewport().set_input_as_handled()
 
 
 ## M5: the drafted outline, sick badge, M5.5 fleeing "!" and tint of the person with entity bits `bits` (for tools), or {}.

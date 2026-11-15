@@ -460,13 +460,13 @@ func _cancel_camp_framing() -> void:
 	_camp_report = {"status": "cancelled"}
 
 
-## Wait for populated figures and consecutive settled HUD layouts, then frame once.
+## Wait for populated figures and consecutive settled HUD layouts, then frame once. Bodies are the view's screen
+## rects of the people (ViewProjection.person_rect: the 3D bodies, or the 2D framing envelopes).
 func _frame_camp() -> void:
-	var layer: Node2D = get_node_or_null("/root/Main/ColonyView/AgentLayer") as Node2D
 	var ui: Node = get_node_or_null("/root/Main/UI")
-	if layer == null or ui == null or not layer.is_node_ready():
+	if ui == null:
 		return
-	if bool(layer.call("lod_active")):
+	if ViewProjection.people_lod(self):
 		_frame_camp_pending = false
 		_camp_report = {"status": "lod"}
 		return
@@ -492,7 +492,7 @@ func _frame_camp() -> void:
 	var outside: Array[int] = []
 	var viewport: Rect2 = get_viewport_rect()
 	for bits: int in ids:
-		var rectangle: Rect2 = layer.call("framing_body_rect", bits)
+		var rectangle: Rect2 = ViewProjection.person_rect(self, bits, true)
 		if not rectangle.has_area():
 			return
 		if viewport.encloses(rectangle):
@@ -512,9 +512,9 @@ func _frame_camp() -> void:
 		return
 	var shift: Vector2 = result["translation"]
 	var original: Vector2 = position
-	position -= shift / zoom.x
+	position -= (shift / zoom.x).rotated(screen_rotation)
 	_clamp_position()
-	var achieved: Vector2 = (original - position) * zoom.x
+	var achieved: Vector2 = ((original - position) * zoom.x).rotated(-screen_rotation)
 	if not MarkerLayout.frame_translation_clear(bodies, obstacles, viewport, achieved):
 		position = original
 		_camp_report["status"] = "clamped"

@@ -521,9 +521,9 @@ func _loc_trf(key: String, params: Dictionary) -> String:
 func _highlight_subjects(subjects: PackedInt64Array) -> void:
 	_clear_highlights()
 	_highlighted_subjects = subjects
-	var agent_layer: Node = get_node_or_null("/root/Main/ColonyView/AgentLayer")
-	if agent_layer != null and agent_layer.has_method("set_highlights"):
-		agent_layer.call("set_highlights", subjects)
+	var people: Node = get_node_or_null("/root/Main/PeopleView")
+	if people != null:
+		people.call("set_highlights", subjects)
 
 
 ## M-READ: clear subject highlights.
@@ -531,9 +531,9 @@ func _clear_highlights() -> void:
 	_highlighted_group_id = ""
 	if _highlighted_subjects.is_empty():
 		return
-	var agent_layer: Node = get_node_or_null("/root/Main/ColonyView/AgentLayer")
-	if agent_layer != null and agent_layer.has_method("clear_highlights"):
-		agent_layer.call("clear_highlights")
+	var people: Node = get_node_or_null("/root/Main/PeopleView")
+	if people != null:
+		people.call("clear_highlights")
 	_highlighted_subjects = PackedInt64Array()
 
 

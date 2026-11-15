@@ -1,7 +1,8 @@
 # tools/v8/smoke.gd — headless label scan for the V8 smoke (tools/v8/smoke.sh).
 # Purpose: boot res://scenes/main.tscn, run --frames N frames (default 900),
 #   open the panels a player opens (a click on the first agent through
-#   OrderTool.click_world -> inspector; a click on an empty tile ->
+#   OrderTool.click_world -> inspector, at the feet the view draws: the 3D
+#   People layer's body, or the 2D tile centre with `--renderer=2d`; a click on an empty tile ->
 #   causal "why?" panel; the chronicle toggled as the C key does; M2: the F3
 #   build menu and the P priority table; M4: the T tech map with a node's
 #   detail, the K teach dialog, the F7 submenu and the inspector's 지식 tab), then walk
@@ -70,7 +71,14 @@ func _open_panels(main: Node) -> void:
 		var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
 		if not xs.is_empty():
 			var tile: Vector2i = Vector2i(xs[0], ys[0])
-			tool.call("click_world", Vector2(tile) * View.TILE + Vector2(View.TILE, View.TILE) * 0.5, tile)
+			var at: Vector2 = Vector2(tile) * View.TILE + Vector2(View.TILE, View.TILE) * 0.5
+			var people: Node = main.get_node_or_null("World3D/People")
+			var ids: PackedInt64Array = snap.get("ids", PackedInt64Array())
+			var body: Dictionary = people.call("body_of", ids[0]) if people != null and not ids.is_empty() else {}
+			if not body.is_empty():
+				var feet: Vector3 = body["feet"]
+				at = Vector2(feet.x, feet.z) * View.TILE
+			tool.call("click_world", at, tile)
 			for _i: int in 10:
 				await process_frame
 		tool.call("click_world", Vector2(2, 2) * View.TILE + Vector2(View.TILE, View.TILE) * 0.5, Vector2i(2, 2))

@@ -73,20 +73,22 @@ def validate_p7_admission(report: Node) -> None:
         require(admitted <= started < deadline, 'P7 admission/start ordering')
 
 
+# M3D-SWITCH E1: the world draws in 3D by default; these receipts measure the 2D renderer, so they ask for it
+#   (an engine-side argument: mux2_stall_test.gd takes exactly one user argument).
 def commands(root: Path, output: Path, kind: Kind, godot: Path) -> list[list[str]]:
     base = ['bash', str(root / 'tools/v8/run_bounded.sh')]
     engine = [str(godot), '--path', str(root), '--resolution', '1920x1080']
     match kind:
         case 'stall':
-            return [base + [str(stall_timeout())] + engine + ['--always-on-top', '--windowed', '--script', 'res://tools/v8/mux2_stall_test.gd',
-                                              '--', str(output / 'run')]]
+            return [base + [str(stall_timeout())] + engine + ['--renderer=2d', '--always-on-top', '--windowed', '--script',
+                                              'res://tools/v8/mux2_stall_test.gd', '--', str(output / 'run')]]
         case 'visibility':
             return [base + ['1800'] + engine + ['--headless', '--script',
                     'res://tools/v8/mux2_visibility_saves.gd', '--', str(output / 'saves')],
-                    base + ['1200'] + engine + ['--script', 'res://tools/v8/mux2_visibility_test.gd',
+                    base + ['1200'] + engine + ['--renderer=2d', '--script', 'res://tools/v8/mux2_visibility_test.gd',
                     '--', '--manifest', str(output / 'saves/manifest.json'), '--out', str(output / 'run')]]
         case 'why':
-            return [base + ['180'] + engine + ['--script', 'res://tools/v8/mux2_why_input_test.gd']]
+            return [base + ['180'] + engine + ['--renderer=2d', '--script', 'res://tools/v8/mux2_why_input_test.gd']]
         case unreachable:
             assert_never(unreachable)
 

@@ -1,7 +1,8 @@
 # world3d_gui_test.gd — M3D-1 interaction test of the 3D view with synthetic input (windowed; procedure 9 of
 #   worldsim-godot). Loads `--save`, stops the clock and checks, through bridge reads and panel state, never through
 #   the 3D layers' own bookkeeping alone:
-#   1 a click on a person's body opens the inspector on that person (AgentInspectorPanel.get_selected_entity_bits);
+#   1 a click on a person's body opens the inspector on that person (AgentInspectorPanel.get_selected_entity_bits; the
+#     click goes through World3D's pick, no 2D layer: the AgentLayer is freed first);
 #   2 a click on a workshop's roof opens the workshop panel (the ray stops at the roof, not the ground behind);
 #   3 R (room overlay) dissolves every roof, and a click on a room tile then opens the room panel;
 #   4 E turns the view 90°, and W then pans "up on screen" (the 2D camera moves along the rotated forward);
@@ -141,16 +142,14 @@ func _run() -> void:
 	var people: Node = _w3d.get_node("People")
 	var feet: Vector3 = people.call("feet_of", target_bits)
 	await _bring(feet + Vector3(0, 0.9, 0), spot)
-	var layer: Node = _main.get_node("ColonyView/AgentLayer")
-	print("W3D_GUI debug feet=%s screen=%s pick=%s rect=%s world=%s" % [feet, (_w3d.call("camera") as Camera3D).unproject_position(feet + Vector3(0, 0.9, 0)),
-		people.call("pick", spot, _w3d.call("camera"), 0), layer.call("drawn_rect", target_bits), _w3d.call("screen_to_world", spot)])
-	var wpos: Vector2 = _w3d.call("screen_to_world", spot)
-	print("W3D_GUI debug entity_at=%s hover_cam=%s" % [layer.call("entity_at", wpos, true), root.gui_get_hovered_control()])
+	_main.get_node("ColonyView/AgentLayer").free()
+	print("W3D_GUI debug feet=%s screen=%s pick=%s rect=%s world=%s hover_ctl=%s" % [feet,
+		(_w3d.call("camera") as Camera3D).unproject_position(feet + Vector3(0, 0.9, 0)), _w3d.call("pick", spot, 0),
+		_w3d.call("person_rect", target_bits), _w3d.call("screen_to_world", spot), root.gui_get_hovered_control()])
 	await _motion(spot)
-	print("W3D_GUI debug after_motion hover_world=%s cam=%s pick=%s" % [_main.get_node("ColonyView/OrderTool").get("_hover_world"), _camera.position, people.call("pick", spot, _w3d.call("camera"), 0)])
 	await _click(spot)
 	var tool0: Node = _main.get_node("ColonyView/OrderTool")
-	print("W3D_GUI debug after hover_world=%s hover=%s mode=%s why=%s" % [tool0.get("_hover_world"), tool0.get("_hover"), tool0.get("mode"), tool0.get("why_selecting")])
+	print("W3D_GUI debug after hover_world=%s hover=%s mode=%s why=%s" % [tool0.call("hover_world"), tool0.call("hover_tile"), tool0.get("mode"), tool0.get("why_selecting")])
 	var inspector: Node = _main.get_node("UI/AgentInspectorPanel")
 	var got: int = int(inspector.call("get_selected_entity_bits"))
 	_check("person_click", got == target_bits, "want %d got %d" % [target_bits, got])
@@ -250,12 +249,13 @@ func _run() -> void:
 		await _button(sa, MOUSE_BUTTON_LEFT, true)
 		await _motion((sa + sb) * 0.5)
 		await _motion(sb)
+		var drag: Array[Vector2i] = tool.call("drag_tiles")
 		await _save("chop_drag")
 		await _button(sb, MOUSE_BUTTON_LEFT, false)
 		await _frames(5)
 		var after_marks: int = (SimReads.read(_world, "get_colony_overlay").get("designation_xs", PackedInt32Array()) as PackedInt32Array).size()
 		_check("chop_drag", after_marks > before_marks, "marks %d -> %d around %s result %s drag %s→%s" % [before_marks, after_marks, centre,
-			tool.call("last_result"), tool.get("_drag_from"), tool.get("_drag_to")])
+			tool.call("last_result"), drag[0] if drag.size() == 2 else Vector2i(-1, -1), drag[1] if drag.size() == 2 else Vector2i(-1, -1)])
 		tool.call("set_mode", 0)
 	print("W3D_GUI_DONE failures=%d" % _failures)
 	quit(1 if _failures > 0 else 0)

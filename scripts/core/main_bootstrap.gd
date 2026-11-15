@@ -1,6 +1,8 @@
 # main_bootstrap.gd — selected content preflight before gameplay children enter the tree.
-# M3D-1: when renderer_switch.gd wants 3D (`--renderer=3d` or the `renderer_3d` setting) it adds
-#   scenes/world3d/World3D.tscn under Main and hides ColonyView (its layers keep running for hit-tests and orders).
+# M3D-1: when renderer_switch.gd wants 3D (the default since M3D-SWITCH E1; `--renderer=2d` keeps the 2D view) it adds
+#   scenes/world3d/World3D.tscn under Main and hides ColonyView. No runtime reader uses the 2D layers in 3D any more
+#   (clicks, framing and panels go through ViewProjection, Main/RoomIndex and Main/PeopleView); people, animals and
+#   the overlay keep updating only for the 2D-state tools until M3D-SWITCH E2 deletes them.
 # Bridge methods: WorldSimNode.bootstrap_catalog, WorldSimNode.create.
 extends Node2D
 
@@ -45,7 +47,7 @@ func _enable_3d() -> void:
 	add_child(world3d)
 	move_child(world3d, get_node("ColonyView").get_index())
 	(get_node("ColonyView") as CanvasItem).visible = false
-	# Purely visual 2D layers have no reader in 3D; people, animals, rooms and OrderTool keep running for hit-tests.
+	# Purely visual 2D layers stop; OrderTool (and the 2D state tools read) keep running.
 	for layer_name: String in ["GroundLayer", "PlantLayer", "TreeLayer", "BuildingLayer", "OutcropLayer", "LivestockLayer"]:
 		var layer: Node = get_node_or_null("ColonyView/" + layer_name)
 		if layer != null:

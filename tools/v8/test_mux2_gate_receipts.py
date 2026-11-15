@@ -57,7 +57,7 @@ class CaptureCommandTests(unittest.TestCase):
         self.assertEqual(command, [[
             'bash', str(root / 'tools/v8/run_bounded.sh'), '960', str(godot),
             '--path', str(root), '--resolution', '1920x1080',
-            '--always-on-top', '--windowed', '--script',
+            '--renderer=2d', '--always-on-top', '--windowed', '--script',
             'res://tools/v8/mux2_stall_test.gd', '--', str(output / 'run'),
         ]])
         self.assertNotIn('--headless', command[0])
@@ -72,12 +72,12 @@ class CaptureCommandTests(unittest.TestCase):
         self.assertEqual(receipts.commands(root, output, 'visibility', godot), [
             base + ['1800'] + engine + ['--headless', '--script',
                 'res://tools/v8/mux2_visibility_saves.gd', '--', str(output / 'saves')],
-            base + ['1200'] + engine + ['--script', 'res://tools/v8/mux2_visibility_test.gd',
+            base + ['1200'] + engine + ['--renderer=2d', '--script', 'res://tools/v8/mux2_visibility_test.gd',
                 '--', '--manifest', str(output / 'saves/manifest.json'),
                 '--out', str(output / 'run')],
         ])
         self.assertEqual(receipts.commands(root, output, 'why', godot), [
-            base + ['180'] + engine + ['--script', 'res://tools/v8/mux2_why_input_test.gd'],
+            base + ['180'] + engine + ['--renderer=2d', '--script', 'res://tools/v8/mux2_why_input_test.gd'],
         ])
 
 

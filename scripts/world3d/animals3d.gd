@@ -4,16 +4,15 @@
 #   the catalogue animal id of `kinds`) → bindings3d `animals.by_id`, else `animals.by_category` by the row's
 #   category / mechanic, else `animals.fallback`. Clips follow the 2D animal binding's pose for the state code
 #   (`poses`) through bindings3d `animals.clip_for_pose`, walk/run while moving between tiles; fur colours per species
-#   from bindings3d `animals.colours`. Motion glides over the 2D step time like people3d.gd. Picking: in no mode or the
-#   hunt mode, the animal whose body is nearest the cursor yields its 2D tile cell centre (AnimalLayer.drawn_position),
-#   so OrderTool's hunt and draft orders and clicks work unchanged.
+#   from bindings3d `animals.colours`. Motion glides over the 2D step time like people3d.gd. Picking: `bodies(mode)` lists
+#   the wild animals (id, species kind code, feet) in no mode or the hunt mode for world3d.gd's pick (OrderTool's hunt
+#   and draft orders).
 # Bridge methods called: via SimReads get_animals, get_livestock, get_world_info, get_content_catalog; signal world_reset.
 extends Node3D
 
 const Data3D = preload("res://scripts/world3d/data3d.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 const Vat = preload("res://scripts/world3d/vat3d.gd")
-const View = preload("res://scripts/world/colony/view.gd")
 const OrderTool = preload("res://scripts/world/colony/order_tool.gd")
 
 var _world_sim: Node = null
@@ -130,7 +129,7 @@ func _update(rows: Array[Dictionary], delta: float) -> void:
 		var y: float = float(_terrain.call("height_at", p.x, p.y))
 		(by_model[model] as Array).append({"xf": Transform3D(Basis(Vector3.UP, float(m["yaw"])), Vector3(p.x, y, p.y)),
 			"clip": _clip(r, float(m["t"]) < 1.0), "phase": float(hash(key) % 89) * 0.211})
-		_drawn.append({"id": r["id"], "wild": r["wild"], "pos": Vector3(p.x, y, p.y), "h": 1.0})
+		_drawn.append({"id": r["id"], "kind": r["kind"], "wild": r["wild"], "pos": Vector3(p.x, y, p.y), "h": 1.0})
 	for key: String in _motion.keys():
 		if not seen.has(key):
 			_motion.erase(key)
@@ -190,44 +189,17 @@ static func _pos(m: Dictionary) -> Vector2:
 	return (m["from"] as Vector2).lerp(m["to"], t * t * (3.0 - 2.0 * t))
 
 
-## World3D picker: the 2D cell centre of the wild animal under `screen` (no mode or hunt), or (-1, -1).
-func pick(screen: Vector2, camera: Camera3D, mode: int) -> Vector2:
+## World3D picker: every wild animal's body ({kind "animal", id, species = kind code, feet, h, r}) in no mode or the
+## hunt mode.
+func bodies(mode: int) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
 	if mode != 0 and mode != OrderTool.Mode.HUNT:
-		return Vector2(-1, -1)
-	var radius: float = float(Data3D.param("people.pick_radius_px", 18))
-	var best: int = -1
-	var best_depth: float = INF
+		return out
 	for d: Dictionary in _drawn:
-		if not bool(d["wild"]):
-			continue
-		var feet: Vector3 = d["pos"]
-		var top: Vector3 = feet + Vector3(0, float(d["h"]), 0)
-		if camera.is_position_behind(feet) or camera.is_position_behind(top):
-			continue
-		var a: Vector2 = camera.unproject_position(feet)
-		var b: Vector2 = camera.unproject_position(top)
-		if not _on_screen(a, b):
-			continue
-		if Geometry2D.get_closest_point_to_segment(screen, a, b).distance_to(screen) <= maxf(radius, (a - b).length() * 0.5):
-			var depth: float = camera.global_position.distance_to(feet)
-			if depth < best_depth:
-				best_depth = depth
-				best = int(d["id"])
-	if best < 0:
-		return Vector2(-1, -1)
-	var layer: Node = get_node_or_null("/root/Main/ColonyView/AnimalLayer")
-	if layer != null and layer.has_method("drawn_position"):
-		var p: Vector2 = layer.call("drawn_position", best)
-		if p.x >= 0.0:
-			return p + Vector2(View.TILE, View.TILE) * 0.5
-	return Vector2(-1, -1)
+		if bool(d["wild"]):
+			out.append({"kind": "animal", "id": int(d["id"]), "species": int(d["kind"]), "feet": d["pos"], "h": float(d["h"]), "r": 0.5})
+	return out
 
 
 func count() -> int:
 	return _drawn.size()
-
-
-## A body is pickable only when both ends project inside the viewport and it spans a sane height on screen.
-func _on_screen(a: Vector2, b: Vector2) -> bool:
-	var view: Rect2 = get_viewport().get_visible_rect().grow(8.0)
-	return view.has_point(a) and view.has_point(b) and a.distance_to(b) < view.size.y * 0.5

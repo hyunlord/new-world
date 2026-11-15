@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://v7init"]
+[gd_scene load_steps=27 format=3 uid="uid://v7init"]
 
 [ext_resource type="Script" path="res://scripts/core/sim_reads.gd" id="1_sim_reads"]
 [ext_resource type="Script" path="res://scripts/world/colony/ground_layer.gd" id="2_ground"]
@@ -28,6 +28,8 @@
 
 [ext_resource type="Script" path="res://scripts/world/colony/livestock_layer.gd" id="25_livestock"]
 [ext_resource type="Script" path="res://scripts/world/colony/outcrop_layer.gd" id="26_outcrop"]
+[ext_resource type="Script" path="res://scripts/world/room_index.gd" id="27_room_index"]
+[ext_resource type="Script" path="res://scripts/world/people_view.gd" id="28_people_view"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("19_boot")
@@ -35,6 +37,12 @@ script = ExtResource("19_boot")
 
 [node name="SimReads" type="Node" parent="."]
 script = ExtResource("1_sim_reads")
+
+[node name="RoomIndex" type="Node" parent="."]
+script = ExtResource("27_room_index")
+
+[node name="PeopleView" type="Node" parent="."]
+script = ExtResource("28_people_view")
 
 [node name="ColonyView" type="Node2D" parent="."]
 

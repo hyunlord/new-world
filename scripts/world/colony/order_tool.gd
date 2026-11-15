@@ -15,22 +15,26 @@
 #   the room overlay (R) shown, a click on a room tile opens the room panel (UI/RoomPanel).
 # M4 (goal 9.5): CLAY (9) is an area mode like quarry (`cmd_designate_clay` on the clay banks in the rectangle),
 #   entered from the order bar's F7 submenu (F7 then 2).
-# M5 (goal 3.5): HUNT (10, F7 then 3) marks the deer under a click (`cmd_designate_hunt`; ColonyView/AnimalLayer
-#   `animal_at`), HUNT_ZONE (11, F7 then 4) is an area mode adding a hunt zone (`cmd_add_hunt_zone`); the cancel mode
+# M5 (goal 3.5): HUNT (10, F7 then 3) marks the deer under a click (`cmd_designate_hunt`), HUNT_ZONE (11, F7 then 4)
+#   is an area mode adding a hunt zone (`cmd_add_hunt_zone`); the cancel mode
 #   also sends `cmd_cancel_hunt` over its rectangle (one toast with both counts). D with a living person in the
 #   inspector toggles their draft (`cmd_draft`; the toast "카토 소집" / "카토 소집 해제"); with no mode, a right click
 #   gives the draft order — to the inspector's person when drafted, else to every drafted person: on an animal
 #   `cmd_draft_attack`, on another person `cmd_draft_attack_person`, elsewhere `cmd_draft_move` to the tile (the toast
 #   "3명 이동" / "3명 공격: 늑대"). A right click with nobody drafted does nothing.
-# M5.5 (goal §9): with no mode, a click on a caravan drawn by ColonyView/VisitorLayer opens the trade dialog
-#   (UI/TradePanel), on a migrant wave the migrant dialog (UI/MigrantPanel), before the person/workshop/tile clicks.
+# M5.5 (goal §9): with no mode, a click on a caravan opens the trade dialog (UI/TradePanel), on a migrant wave the
+#   migrant dialog (UI/MigrantPanel), before the person/workshop/tile clicks.
+# M3D-SWITCH E1: what lies under a click (person, animal, caravan, wave) is the view's answer through
+#   ViewProjection.pick (screen point) / pick_world (tools' world point), so no click needs a 2D layer; rooms come from
+#   Main/RoomIndex, housing designations from get_colony_overlay (the selected one is kept here). The hover tile, the
+#   drag and the preview are public (`hover_tile`, `drag_tiles`, `preview`) for the 3D overlay.
 # M-ART2 (§3.6): every tile ↔ world conversion goes through View (64-px tiles). A placement ghost is the finished
 #   thing through site_ghost.gd (a pale outline and a `sites.wash_alpha` wash): a workshop's or the bedroll's
 #   structure, a hut's ring of walls, and for walls / doors / floors the material system's resolved textures (a
 #   dragged run of walls is assembled as it will stand, so its tops join); a refused footprint or tile is tinted
 #   `sites.refused_rgba`. Frames are 2 screen pixels wide at every zoom. Drawn above everything (z 7).
 # Bridge methods: can_place_blueprint, get_place_preview, get_agent_detail, get_tile_causal_history (direct); via
-#   SimReads get_workshops, get_agent_snapshot, get_animals, get_drafted; via SimReads.mutate cmd_designate_chop,
+#   SimReads get_workshops, get_agent_snapshot, get_drafted, get_colony_overlay; via SimReads.mutate cmd_designate_chop,
 #   cmd_cancel_area, cmd_add_stockpile, cmd_remove_zone_area, cmd_place_blueprint, cmd_designate_quarry,
 #   cmd_place_line, cmd_place_rect, cmd_designate_dig, cmd_designate_deconstruct, cmd_designate_clay, cmd_draft,
 #   cmd_draft_move, cmd_draft_attack, cmd_draft_attack_person, cmd_designate_hunt, cmd_add_hunt_zone, cmd_cancel_hunt.
@@ -140,6 +144,8 @@ var _preview: Dictionary = {}
 var _preview_key: Array = []
 ## M-ART2: the preview's ghost pieces, rebuilt when the preview is re-read ([top-left, texture, fits, tile]).
 var _preview_draw: Array[Array] = []
+## The selected housing designation (a click on its tile), or -1.
+var _housing_zone: int = -1
 
 
 func _ready() -> void:
@@ -195,16 +201,52 @@ func _process(_delta: float) -> void:
 			_track(_hover_screen)
 
 
+## The selected housing designation, or -1 (also when it no longer exists).
 func selected_housing_zone() -> int:
-	var overlay: Node = get_node_or_null("../OverlayLayer")
-	return int(overlay.call("selected_housing_zone")) if overlay != null else -1
+	if _housing_zone < 0 or _world_sim == null:
+		return -1
+	var ids: PackedInt64Array = SimReads.read(_world_sim, "get_colony_overlay").get("housing_zone_ids", PackedInt64Array())
+	return _housing_zone if ids.has(_housing_zone) else -1
+
+
+## The housing designation on `tile` (get_colony_overlay `housing_zone_*`), or -1.
+func housing_zone_at(tile: Vector2i) -> int:
+	if _world_sim == null:
+		return -1
+	var overlay: Dictionary = SimReads.read(_world_sim, "get_colony_overlay")
+	var ids: PackedInt64Array = overlay.get("housing_zone_ids", PackedInt64Array())
+	var xs: PackedInt32Array = overlay.get("housing_zone_xs", PackedInt32Array())
+	var ys: PackedInt32Array = overlay.get("housing_zone_ys", PackedInt32Array())
+	for i: int in mini(ids.size(), mini(xs.size(), ys.size())):
+		if xs[i] == tile.x and ys[i] == tile.y and ids[i] >= 0:
+			return ids[i]
+	return -1
 
 
 func _clear_housing_selection() -> void:
-	var overlay: Node = get_node_or_null("../OverlayLayer")
-	if overlay != null and int(overlay.call("selected_housing_zone")) >= 0:
-		overlay.call("set_selected_housing_zone", -1)
+	var had: bool = selected_housing_zone() >= 0
+	_housing_zone = -1
+	if had:
 		mode_changed.emit(mode)
+
+
+## The hovered tile (for the 3D overlay and tools).
+func hover_tile() -> Vector2i:
+	return _hover
+
+
+## The world pixel under the cursor (for tools).
+func hover_world() -> Vector2:
+	return _hover_world
+
+
+## [from, to] of the area or wall drag in progress, or [] (for the 3D overlay and tools).
+func drag_tiles() -> Array[Vector2i]:
+	var out: Array[Vector2i] = []
+	if _dragging:
+		out.append(_drag_from)
+		out.append(_drag_to)
+	return out
 
 
 ## Enter `new_mode` (Mode.NONE leaves any mode).
@@ -355,11 +397,15 @@ static func merge_results(first: Dictionary, second: Dictionary) -> Dictionary:
 	return {"accepted": accepted, "count": count, "reason": "" if accepted else str(first.get("reason", "nothing"))}
 
 
-## M5: mark the deer drawn at world position `world_pos` for hunting (the HUNT mode's click; also used by tools).
+## M5: mark the deer drawn at world position `world_pos` for hunting (also used by tools).
 func hunt_at(world_pos: Vector2) -> Dictionary:
-	var animals: Node = get_node_or_null("../AnimalLayer")
-	var id: int = int(animals.call("animal_at", world_pos)) if animals != null else -1
-	if id < 0 or not StoryText.animal_huntable(int(animals.call("kind_of", id))):
+	return _hunt(ViewProjection.pick_world(self, world_pos, Mode.HUNT))
+
+
+## The HUNT mode's click on `hit` (a ViewProjection pick).
+func _hunt(hit: Dictionary) -> Dictionary:
+	var id: int = int(hit.get("id", -1)) if hit.get("kind", "") == "animal" else -1
+	if id < 0 or not StoryText.animal_huntable(int(hit.get("species", -1))):
 		_last_result = {"accepted": false, "count": 0, "reason": "nothing"}
 		_toast(StoryText.ltr(get_node_or_null("/root/Locale"), "M5_TOAST_NO_DEER"))
 		return _last_result
@@ -384,17 +430,19 @@ func draft_targets() -> Array[int]:
 ## M5: the right click's draft order at world position `world_pos` on `tile` (also used by tools): attack the animal
 ## or the other person drawn there, else walk to the tile. Returns the merged result ({} when nobody is drafted).
 func draft_order_at(world_pos: Vector2, tile: Vector2i) -> Dictionary:
+	return _draft_order(ViewProjection.pick_world(self, world_pos), tile)
+
+
+## The draft order on `hit` (a ViewProjection pick) at `tile`.
+func _draft_order(hit: Dictionary, tile: Vector2i) -> Dictionary:
 	var targets: Array[int] = draft_targets()
 	if targets.is_empty():
 		return {}
 	var locale: Node = get_node_or_null("/root/Locale")
-	var animals: Node = get_node_or_null("../AnimalLayer")
-	var animal: int = int(animals.call("animal_at", world_pos)) if animals != null else -1
+	var animal: int = int(hit.get("id", -1)) if hit.get("kind", "") == "animal" else -1
 	var victim: int = -1
-	if animal < 0:
-		var agents: Node = get_node_or_null("../AgentLayer")
-		var bits: int = int(agents.call("entity_at", world_pos)) if agents != null else -1
-		victim = _agent_of_bits(bits)
+	if animal < 0 and hit.get("kind", "") == "person":
+		victim = _agent_of_bits(int(hit.get("id", -1)))
 		if targets.has(victim):
 			victim = -1
 	var accepted: int = 0
@@ -420,7 +468,7 @@ func draft_order_at(world_pos: Vector2, tile: Vector2i) -> Dictionary:
 	if bool(merged.get("accepted", false)):
 		var count: int = int(merged.get("count", 0))
 		if animal >= 0:
-			text = StoryText.trf(locale, "M5_TOAST_ATTACK_FMT", {"count": count, "target": StoryText.animal(locale, int(animals.call("kind_of", animal)))})
+			text = StoryText.trf(locale, "M5_TOAST_ATTACK_FMT", {"count": count, "target": StoryText.animal(locale, int(hit.get("species", -1)))})
 		elif victim >= 0:
 			text = StoryText.trf(locale, "M5_TOAST_ATTACK_FMT", {"count": count, "target": Names.present(victim, StoryText.language(locale))})
 		else:
@@ -535,13 +583,13 @@ func map_click(button: MouseButton, screen: Vector2, alt: bool = false) -> void:
 		if mode != Mode.NONE:
 			set_mode(Mode.NONE)
 		elif _world_sim != null:
-			draft_order_at(_hover_world, _hover)
+			_draft_order(ViewProjection.pick(self, screen, mode), _hover)
 	elif button == MOUSE_BUTTON_LEFT and (mode == Mode.NONE or alt):
 		if alt or why_selecting:
 			why_selecting = false
 			show_why(_hover)
 		else:
-			_click(_hover)
+			_click()
 
 
 ## M3: follow Shift; a space drag re-reads its preview when the shape changes.
@@ -575,13 +623,13 @@ func _left(pressed: bool) -> void:
 		return
 	if mode == Mode.NONE:
 		if pressed:
-			_click(_hover)
+			_click()
 			get_viewport().set_input_as_handled()
 		return
 	get_viewport().set_input_as_handled()
 	if mode == Mode.HUNT:
 		if pressed:
-			hunt_at(_hover_world)
+			_hunt(ViewProjection.pick(self, _hover_screen, mode))
 		return
 	if mode == Mode.BUILD and build_drag() == "":
 		if pressed:
@@ -687,34 +735,35 @@ func workshop_at(tile: Vector2i) -> int:
 
 
 ## No mode: a person opens the inspector, a workshop the workshop panel, any other tile the causal panel.
-func _click(tile: Vector2i) -> void:
-	click_world(_hover_world, tile)
+func _click() -> void:
+	_click_hit(ViewProjection.pick(self, _hover_screen, mode, true), _hover)
 
 
 ## The no-mode click at world position `world_pos` on `tile` (also used by tools).
 func click_world(world_pos: Vector2, tile: Vector2i) -> void:
+	_click_hit(ViewProjection.pick_world(self, world_pos, mode, true), tile)
+
+
+## The no-mode click on `hit` (a ViewProjection pick: a caravan, a wave, a person) at `tile`.
+func _click_hit(hit: Dictionary, tile: Vector2i) -> void:
 	_clear_housing_selection()
-	var visitors: Node = get_node_or_null("../VisitorLayer")
-	if visitors != null:
-		var caravan: int = int(visitors.call("caravan_at", world_pos))
-		var trade: Node = get_node_or_null("/root/Main/UI/TradePanel")
-		if caravan >= 0 and trade != null and trade.has_method("open_caravan"):
-			trade.call("open_caravan", caravan)
-			return
-		var wave: int = int(visitors.call("wave_at", world_pos))
-		var migrants: Node = get_node_or_null("/root/Main/UI/MigrantPanel")
-		if wave >= 0 and migrants != null and migrants.has_method("open_wave"):
-			migrants.call("open_wave", wave)
-			return
-	var agents: Node = get_node_or_null("../AgentLayer")
-	var bits: int = int(agents.call("entity_at", world_pos, true)) if agents != null else -1
+	var kind: String = str(hit.get("kind", ""))
+	var trade: Node = get_node_or_null("/root/Main/UI/TradePanel")
+	if kind == "caravan" and trade != null and trade.has_method("open_caravan"):
+		trade.call("open_caravan", int(hit["id"]))
+		return
+	var migrants: Node = get_node_or_null("/root/Main/UI/MigrantPanel")
+	if kind == "wave" and migrants != null and migrants.has_method("open_wave"):
+		migrants.call("open_wave", int(hit["id"]))
+		return
+	var bits: int = int(hit["id"]) if kind == "person" else -1
 	if bits >= 0:
 		var detail: Dictionary = _world_sim.call("get_agent_detail", bits)
 		var inspector: Node = get_node_or_null("/root/Main/UI/AgentInspectorPanel")
 		if bool(detail.get("found", false)) and inspector != null and inspector.has_method("display_agent"):
 			inspector.call("display_agent", detail)
 			return
-	var rooms: Node = get_node_or_null("../OverlayLayer/Rooms")
+	var rooms: Node = get_node_or_null("/root/Main/RoomIndex")
 	var room_panel: Node = get_node_or_null("/root/Main/UI/RoomPanel")
 	if rooms != null and room_panel != null and bool(rooms.call("is_shown")):
 		var room: int = int(rooms.call("room_at", tile))
@@ -744,10 +793,9 @@ func click_world(world_pos: Vector2, tile: Vector2i) -> void:
 		if build_panel != null and Rect2i(int(site["x"]), int(site["y"]), int(site["width"]), int(site["height"])).has_point(tile):
 			build_panel.call("open_site", int(site["id"]))
 			return
-	var housing: Node = get_node_or_null("../OverlayLayer")
-	var zone: int = int(housing.call("housing_zone_at", tile)) if housing != null else -1
+	var zone: int = housing_zone_at(tile)
 	if zone >= 0:
-		housing.call("set_selected_housing_zone", zone)
+		_housing_zone = zone
 		mode_changed.emit(mode)
 		return
 	# M-READ: clicking a stockpile zone tile or hearth tile opens the causal panel with diagnosis.

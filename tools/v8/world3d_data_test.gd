@@ -4,14 +4,20 @@
 #   (data-only: a new content name without a model still draws); (3) roofs of two rooms across one wall share no cell
 #   and an L room's hipped height field is finite and rises from the wall line; (4) VAT characters load with sizes matching their JSON; (5) the 3D scene
 #   boots headless with a real WorldSimNode and builds its terrain, walls and roofs for the default world without a
-#   script error. Prints `W3D_DATA <name> PASS|FAIL <detail>` and `W3D_DATA_DONE failures=<n>`; quits 1 on failure.
+#   script error; (6) M3D-SWITCH E1: with every 2D world layer under ColonyView freed, the runtime callers still work
+#   through ViewProjection, Main/RoomIndex and Main/PeopleView: a click at a person's feet opens the inspector on that
+#   person (pick_world → entity bits) with a portrait, the body has a screen rect, a wild animal is picked with its
+#   species in the hunt mode, rooms index and toggle, chronicle highlights ring people in 3D, the mood flag toggles.
+#   Prints `W3D_DATA <name> PASS|FAIL <detail>` and `W3D_DATA_DONE failures=<n>`; quits 1 on failure.
 #   `Godot --headless --path . --script res://tools/v8/world3d_data_test.gd -- --renderer=3d`
-# Bridge methods called: none directly (the booted main scene reads its own snapshots).
+# Bridge methods called: via SimReads get_agent_snapshot, get_rooms, get_animals (the booted main scene reads its own).
 extends SceneTree
 
 const Data3D = preload("res://scripts/world3d/data3d.gd")
 const Structures = preload("res://scripts/world3d/structures3d.gd")
 const Vat = preload("res://scripts/world3d/vat3d.gd")
+const ViewProjection = preload("res://scripts/world/view_projection.gd")
+const OrderTool = preload("res://scripts/world/colony/order_tool.gd")
 
 var _failures: int = 0
 
@@ -106,5 +112,84 @@ func _run() -> void:
 		_check("colony_hidden_2d", not (main.get_node("ColonyView") as CanvasItem).visible)
 		var px: Vector2 = w3d.call("screen_to_world", Vector2(960, 540))
 		_check("projection_provider", px.x > 0.0 and px.y > 0.0, str(px))
+		await _without_2d(main, w3d)
 	print("W3D_DATA_DONE failures=%d" % _failures)
 	quit(1 if _failures > 0 else 0)
+
+
+## (6) The 2D world layers freed; every runtime path goes through the renderer-neutral helpers.
+func _without_2d(main: Node, w3d: Node) -> void:
+	var view: Node = main.get_node("ColonyView")
+	for layer_name: String in ["AgentLayer", "AnimalLayer", "VisitorLayer", "OverlayLayer", "GroundLayer", "PlantLayer",
+			"TreeLayer", "BuildingLayer", "OutcropLayer", "LivestockLayer", "World"]:
+		var layer: Node = view.get_node_or_null(layer_name)
+		if layer != null:
+			layer.queue_free()
+	for _i: int in 10:
+		await process_frame
+	var left: Array[String] = []
+	for child: Node in view.get_children():
+		left.append(str(child.name))
+	_check("e1_2d_layers_freed", left == ["WorldMarker", "OrderTool"], str(left))
+	var world: Node = main.get_node("WorldSim")
+	var tool: Node = view.get_node("OrderTool")
+	var px: float = float(Data3D.param("camera.px_per_tile_at_1x", 64.0))
+	# A click at a person's feet opens the inspector on that person.
+	var snap: Dictionary = SimReads.read(world, "get_agent_snapshot")
+	var ids: PackedInt64Array = snap.get("ids", PackedInt64Array())
+	var aids: PackedInt64Array = snap.get("agent_ids", PackedInt64Array())
+	var bits: int = ids[0] if ids.size() > 0 else -1
+	var body: Dictionary = w3d.get_node("People").call("body_of", bits)
+	var feet: Vector3 = body.get("feet", Vector3.ZERO)
+	var at: Vector2 = Vector2(feet.x, feet.z) * px
+	var hit: Dictionary = ViewProjection.pick_world(tool, at)
+	_check("e1_pick_person", hit.get("kind", "") == "person" and int(hit.get("id", -1)) == bits, "%s want %d" % [hit, bits])
+	tool.call("click_world", at, Vector2i(int(feet.x), int(feet.z)))
+	await process_frame
+	var inspector: Node = main.get_node("UI/AgentInspectorPanel")
+	var got: int = int(inspector.call("get_selected_entity_bits"))
+	_check("e1_click_inspector", bits >= 0 and got == bits, "want %d got %d" % [bits, got])
+	for _i: int in 5:
+		await process_frame
+	var portrait: Dictionary = inspector.call("portrait_state")
+	_check("e1_inspector_portrait", not str(portrait.get("look", "")).is_empty(), str(portrait))
+	var rect: Rect2 = ViewProjection.person_rect(tool, bits)
+	_check("e1_person_rect", rect.has_area() and not ViewProjection.people_lod(tool), str(rect))
+	# A wild animal in the hunt mode.
+	var animals: Dictionary = SimReads.read(world, "get_animals")
+	var bodies: Array = w3d.get_node("Animals").call("bodies", OrderTool.Mode.HUNT)
+	if bodies.is_empty():
+		_check("e1_pick_animal", (animals.get("ids", PackedInt64Array()) as PackedInt64Array).is_empty(), "no animal bodies")
+	else:
+		var a: Dictionary = bodies[0]
+		var afeet: Vector3 = a["feet"]
+		var ahit: Dictionary = ViewProjection.pick_world(tool, Vector2(afeet.x, afeet.z) * px, OrderTool.Mode.HUNT)
+		var kinds: PackedInt64Array = animals.get("kinds", PackedInt64Array())
+		var row: int = (animals.get("ids", PackedInt64Array()) as PackedInt64Array).find(int(ahit.get("id", -1)))
+		_check("e1_pick_animal", ahit.get("kind", "") == "animal" and row >= 0 and row < kinds.size() and int(ahit.get("species", -2)) == kinds[row],
+			str(ahit))
+		_check("e1_people_not_hunted", ViewProjection.pick_world(tool, at, OrderTool.Mode.HUNT).get("kind", "") != "person")
+	# Rooms: the index matches get_rooms and R's flag toggles with its signal.
+	var rooms: Node = main.get_node("RoomIndex")
+	var room_ids: PackedInt32Array = SimReads.read(world, "get_rooms").get("ids", PackedInt32Array())
+	var heard: Array[bool] = []
+	rooms.connect("toggled", func(on: bool) -> void: heard.append(on))
+	rooms.call("toggle")
+	_check("e1_rooms", int(rooms.call("room_count")) == room_ids.size() and bool(rooms.call("is_shown")) and heard == [true],
+		"%d rooms of %d, heard %s" % [int(rooms.call("room_count")), room_ids.size(), heard])
+	rooms.call("set_shown", false)
+	# Chronicle highlights ring that person in 3D; the mood flag.
+	var people_view: Node = main.get_node("PeopleView")
+	people_view.call("set_highlights", PackedInt64Array([aids[0]]) if aids.size() > 0 else PackedInt64Array())
+	await process_frame
+	await process_frame
+	var rings: MultiMeshInstance3D = w3d.get_node("People").get("_highlight")
+	_check("e1_highlight_rings", aids.size() > 0 and rings.multimesh.instance_count == 1, "%d rings" % rings.multimesh.instance_count)
+	people_view.call("clear_highlights")
+	await process_frame
+	_check("e1_highlight_clear", rings.multimesh.instance_count == 0, "%d rings" % rings.multimesh.instance_count)
+	people_view.call("set_mood_shown", true)
+	_check("e1_mood_flag", bool(people_view.call("mood_shown")))
+	people_view.call("set_mood_shown", false)
+	print("W3D_DATA INFO camp_framing %s visitors %s" % [main.get_node("Camera2D").call("camp_framing_report").get("status", ""),
+		w3d.get_node("Visitors").call("counts")])

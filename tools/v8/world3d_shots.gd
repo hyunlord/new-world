@@ -67,7 +67,7 @@ func _run() -> void:
 		_world.call("advance_ticks", int(_arg("--advance")))
 		await _frames(10)
 	if _arg("--rooms") == "1":
-		_main.get_node("ColonyView/OverlayLayer/Rooms").call("toggle")
+		_main.get_node("RoomIndex").call("toggle")
 	if w3d != null and _arg("--channel") != "":
 		for _k: int in int(_arg("--channel")) + 1:
 			w3d.get_node("Overlay").call("cycle_channel")

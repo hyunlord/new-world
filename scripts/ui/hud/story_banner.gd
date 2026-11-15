@@ -232,8 +232,8 @@ func _fill_banners(story: Dictionary) -> void:
 
 
 func _refresh_legend(language: String) -> void:
-	var agents: Node = get_node_or_null("/root/Main/ColonyView/AgentLayer")
-	var shown: bool = agents != null and bool(agents.call("mood_shown"))
+	var people: Node = get_node_or_null("/root/Main/PeopleView")
+	var shown: bool = people != null and bool(people.call("mood_shown"))
 	var panel: Control = _legend.get_parent() as Control
 	panel.visible = shown
 	if shown and str(_legend.get_meta("language", "")) != language:

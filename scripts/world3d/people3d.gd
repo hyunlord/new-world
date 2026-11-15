@@ -8,10 +8,10 @@
 #   `people.child_scale`, infants smaller. Tints come from the 2D appearance data: skin and hair from the look's face
 #   variant (assets/v8art/people/variant_transforms.json `target_*_rgb`, elders the 2D grey hair), clothing from
 #   render_params `people.clothing_by_top` by top code, else the look's top colour; a top listed in bindings3d
-#   `people.bare_torso_tops` shows skin on the torso. The person the inspector shows gets a ring at their feet.
-#   Picking: `pick(screen, camera, mode)` finds the person whose body (feet to head) passes nearest the cursor within
-#   `people.pick_radius_px` and returns the centre of that person's 2D drawn rect (AgentLayer.drawn_rect), so the
-#   unchanged OrderTool click opens the same inspector as in 2D.
+#   `people.bare_torso_tops` shows skin on the torso. The person the inspector shows gets a ring at their feet; the
+#   chronicle's highlighted people (Main/PeopleView) get a ring in PeopleView.HIGHLIGHT_RGBA.
+#   Picking: `bodies(mode)` lists every person's feet and height (entity bits as id) for world3d.gd's pick (no mode
+#   only); `body_of(bits)` is one person's (camp framing, lesson highlight).
 # Bridge methods called: via SimReads get_agent_snapshot, get_world_info; signal world_reset.
 extends Node3D
 
@@ -19,12 +19,16 @@ const Data3D = preload("res://scripts/world3d/data3d.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 const Vat = preload("res://scripts/world3d/vat3d.gd")
 const BLOB_SHADER = preload("res://shaders/world3d/contact_blob.gdshader")
+const PeopleView = preload("res://scripts/world/people_view.gd")
 
 var _world_sim: Node = null
 var _terrain: Node = null
 ## model id → {vat, mmi, blob: MultiMeshInstance3D, slot: {AgentId: slot}, free: Array[int]}
 var _crowds: Dictionary = {}
 var _ring: MeshInstance3D = null
+## The chronicle highlight rings (one instance per highlighted person present).
+var _highlight: MultiMeshInstance3D = null
+var _people_view: Node = null
 ## AgentId → {from: Vector2, to: Vector2, t: float, dur: float, yaw: float, tile: Vector2i}
 var _motion: Dictionary = {}
 var _transforms: Dictionary = {}
@@ -79,6 +83,19 @@ func _ready() -> void:
 	_ring.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	_ring.visible = false
 	add_child(_ring)
+	var hl_mat: StandardMaterial3D = StandardMaterial3D.new()
+	hl_mat.albedo_color = PeopleView.HIGHLIGHT_RGBA
+	hl_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	hl_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	var hl_torus: TorusMesh = torus.duplicate() as TorusMesh
+	hl_torus.material = hl_mat
+	_highlight = MultiMeshInstance3D.new()
+	_highlight.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	_highlight.multimesh = MultiMesh.new()
+	_highlight.multimesh.transform_format = MultiMesh.TRANSFORM_3D
+	_highlight.multimesh.mesh = hl_torus
+	add_child(_highlight)
+	_people_view = get_node_or_null("/root/Main/PeopleView")
 	_load_appearance()
 
 
@@ -148,6 +165,21 @@ func _process(delta: float) -> void:
 		if int(st["bits"]) == selected and selected != -1:
 			_ring.visible = true
 			_ring.position = (st["feet"] as Vector3) + Vector3(0, 0.04, 0)
+	_update_highlights()
+
+
+## One ring per highlighted person present, slightly wider than the selection ring.
+func _update_highlights() -> void:
+	var ids: PackedInt64Array = _people_view.call("highlight_ids") if _people_view != null else PackedInt64Array()
+	var at: Array[Vector3] = []
+	for aid: int in ids:
+		if _state.has(aid):
+			at.append(_state[aid]["feet"])
+	var mm: MultiMesh = _highlight.multimesh
+	if mm.instance_count != at.size():
+		mm.instance_count = at.size()
+	for i: int in at.size():
+		mm.set_instance_transform(i, Transform3D(Basis().scaled(Vector3(1.25, 1.0, 1.25)), at[i] + Vector3(0, 0.05, 0)))
 
 
 ## Instances per copy of a crowd MultiMesh.
@@ -402,36 +434,22 @@ func _selected_bits() -> int:
 	return -1
 
 
-## World3D picker: the 2D drawn-rect centre of the person under `screen`, or (-1, -1).
-func pick(screen: Vector2, camera: Camera3D, mode: int) -> Vector2:
+## World3D picker: every person's body ({kind "person", id = entity bits, feet, h, r}); people answer with no mode only.
+func bodies(mode: int) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
 	if mode != 0:
-		return Vector2(-1, -1)
-	var radius: float = float(Data3D.param("people.pick_radius_px", 18))
-	var best: int = -1
-	var best_depth: float = INF
+		return out
 	for d: Dictionary in _state.values():
-		var feet: Vector3 = d["feet"]
-		var head: Vector3 = feet + Vector3(0, float(d["h"]), 0)
-		if camera.is_position_behind(feet) or camera.is_position_behind(head):
-			continue
-		var a: Vector2 = camera.unproject_position(feet)
-		var b: Vector2 = camera.unproject_position(head)
-		if not _on_screen(a, b):
-			continue
-		var px_radius: float = maxf(radius, (a - b).length() * 0.22)
-		if Geometry2D.get_closest_point_to_segment(screen, a, b).distance_to(screen) <= px_radius:
-			var depth: float = camera.global_position.distance_to(feet)
-			if depth < best_depth:
-				best_depth = depth
-				best = int(d["bits"])
-	if best == -1:
-		return Vector2(-1, -1)
-	var layer: Node = get_node_or_null("/root/Main/ColonyView/AgentLayer")
-	if layer != null and layer.has_method("drawn_rect"):
-		var r: Rect2 = layer.call("drawn_rect", best)
-		if r.size != Vector2.ZERO:
-			return r.get_center()
-	return Vector2(-1, -1)
+		out.append({"kind": "person", "id": int(d["bits"]), "feet": d["feet"], "h": float(d["h"]), "r": 0.22})
+	return out
+
+
+## The body ({feet, h}) of the person with entity bits `bits`, or {} when not drawn.
+func body_of(bits: int) -> Dictionary:
+	for d: Dictionary in _state.values():
+		if int(d["bits"]) == bits:
+			return {"feet": d["feet"], "h": float(d["h"])}
+	return {}
 
 
 ## Tools: the 3D feet position of entity `bits`, or Vector3.INF.
@@ -444,9 +462,3 @@ func feet_of(bits: int) -> Vector3:
 
 func count() -> int:
 	return _state.size()
-
-
-## A body is pickable only when both ends project inside the viewport and it spans a sane height on screen.
-func _on_screen(a: Vector2, b: Vector2) -> bool:
-	var view: Rect2 = get_viewport().get_visible_rect().grow(8.0)
-	return view.has_point(a) and view.has_point(b) and a.distance_to(b) < view.size.y * 0.5

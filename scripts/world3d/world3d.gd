@@ -1,12 +1,13 @@
 # world3d.gd (root of scenes/world3d/World3D.tscn, added under Main by main_bootstrap.gd when renderer_switch.gd
-#   wants 3D): the 3D view of the colony (M3D-1). The 2D ColonyView stays in the tree, hidden, so its hit-tests and
-#   OrderTool keep working; the HUD and panels (UI CanvasLayer) draw over this view unchanged.
-# Purpose: builds the 3D layers in code (Terrain, Flora, Structures, Props, People, Animals, Overlay, Sky — each its
-#   own script under scripts/world3d/) and the CameraRig that follows the 2D camera, and installs itself as the
-#   ViewProjection provider: `screen_to_world` turns a screen point into the colony world pixel under it (a ray
-#   marched against the terrain heights; a person or animal under the cursor yields the centre of that thing's 2D
-#   drawn rect, so AgentLayer.entity_at / AnimalLayer.animal_at pick exactly what the 3D view shows) and
-#   `world_to_screen` projects a world pixel's ground point to the screen.
+#   wants 3D, the default): the 3D view of the colony (M3D-1). The 2D ColonyView stays in the tree, hidden (removed in
+#   M3D-SWITCH E2); nothing here reads it. The HUD and panels (UI CanvasLayer) draw over this view unchanged.
+# Purpose: builds the 3D layers in code (Terrain, Flora, Structures, Props, People, Animals, Visitors, Overlay, Sky —
+#   each its own script under scripts/world3d/) and the CameraRig that follows the 2D camera, and installs itself as
+#   the ViewProjection provider: `screen_to_world` turns a screen point into the colony world pixel under it (a ray
+#   marched against the terrain heights, stopped by a roof), `world_to_screen` projects a world pixel's ground point to
+#   the screen, `pick` / `pick_world` name the visitor group, person or animal whose body is under a screen point / at a
+#   world point (pickers in that priority, the nearest body within each; the ids OrderTool's clicks, hunt and draft
+#   orders use), and `person_rect` is a person's body on screen (camp framing, lesson highlight).
 # Bridge methods called: none directly (the layers read SimReads; see their headers).
 extends Node3D
 
@@ -22,6 +23,7 @@ const PlantsScript = preload("res://scripts/world3d/plants3d.gd")
 const PeopleScript = preload("res://scripts/world3d/people3d.gd")
 const AnimalsScript = preload("res://scripts/world3d/animals3d.gd")
 const OverlayScript = preload("res://scripts/world3d/overlay3d.gd")
+const VisitorsScript = preload("res://scripts/world3d/visitors3d.gd")
 
 var world_sim: Node = null
 var camera2d: Camera2D = null
@@ -34,7 +36,9 @@ var props: Node3D = null
 var people: Node3D = null
 var animals: Node3D = null
 var overlay: Node3D = null
-## Pickers: nodes with `pick(screen: Vector2, camera: Camera3D, order_mode: int) -> Vector2` (world px, or (-1, -1)).
+var visitors: Node3D = null
+## Pickers, in click priority: nodes with `bodies(order_mode: int) -> Array` of {kind, id, feet: Vector3, h: float,
+## r: float (body half-width on screen per unit of screen height)[, species]}.
 var pickers: Array[Node] = []
 static var _globals_added: bool = false
 ## Once per frame (World3D processes before its layers): the colony change counters and the tick. Layers read heavy
@@ -73,8 +77,11 @@ func _ready() -> void:
 	people.call("setup", world_sim, terrain)
 	animals = _layer("Animals", AnimalsScript)
 	animals.call("setup", world_sim, terrain)
+	visitors = _layer("Visitors", VisitorsScript)
+	visitors.call("setup", world_sim, terrain)
 	overlay = _layer("Overlay", OverlayScript)
 	overlay.call("setup", world_sim, terrain)
+	add_picker(visitors)
 	add_picker(people)
 	add_picker(animals)
 	rig = _layer("CameraRig", RigScript)
@@ -126,7 +133,7 @@ func _layer(layer_name: String, script: GDScript) -> Node3D:
 	return node
 
 
-## Register a layer that can claim clicks before the ground (people, animals).
+## Register a layer that can claim clicks before the ground (visitors, people, animals).
 func add_picker(node: Node) -> void:
 	if not pickers.has(node):
 		pickers.append(node)
@@ -136,25 +143,100 @@ func camera() -> Camera3D:
 	return rig.get("camera") as Camera3D if rig != null else null
 
 
-## ViewProjection provider: the colony world pixel under screen point `screen`.
+## ViewProjection provider: the colony world pixel under screen point `screen` (the ground, or a roof in front of it).
 func screen_to_world(screen: Vector2) -> Vector2:
 	var cam: Camera3D = camera()
 	if cam == null:
 		return Vector2(-1, -1)
-	var tool: Node = get_parent().get_node_or_null("ColonyView/OrderTool")
-	var mode: int = int(tool.get("mode")) if tool != null else 0
-	for picker: Node in pickers:
-		if is_instance_valid(picker):
-			var hit: Vector2 = picker.call("pick", screen, cam, mode)
-			if hit.x >= 0.0:
-				return hit
 	var p: Vector3 = ground_hit(screen)
 	var origin: Vector3 = cam.project_ray_origin(screen)
 	var dir: Vector3 = cam.project_ray_normal(screen)
 	var t_roof: float = float(structures.call("roof_hit", origin, dir)) if structures != null else INF
 	if t_roof < origin.distance_to(p):
 		p = origin + dir * t_roof
-	return Vector2(p.x, p.z) * float(Data3D.param("camera.px_per_tile_at_1x", 64.0))
+	return Vector2(p.x, p.z) * _px()
+
+
+## ViewProjection provider: the body under screen point `screen` in order mode `mode`: the first picker with a body
+## whose feet-to-head segment passes within `people.pick_radius_px` (or its own half-width) of the point, the nearest
+## such body to the camera; {kind, id, world[, species]} or {}. A body counts only when both ends are on screen.
+func pick(screen: Vector2, mode: int) -> Dictionary:
+	var cam: Camera3D = camera()
+	if cam == null:
+		return {}
+	var radius: float = float(Data3D.param("people.pick_radius_px", 18))
+	var view: Rect2 = get_viewport().get_visible_rect().grow(8.0)
+	for picker: Node in pickers:
+		if not is_instance_valid(picker):
+			continue
+		var best: Dictionary = {}
+		var best_depth: float = INF
+		for body: Dictionary in picker.call("bodies", mode):
+			var feet: Vector3 = body["feet"]
+			var head: Vector3 = feet + Vector3(0, float(body["h"]), 0)
+			if cam.is_position_behind(feet) or cam.is_position_behind(head):
+				continue
+			var a: Vector2 = cam.unproject_position(feet)
+			var b: Vector2 = cam.unproject_position(head)
+			if not (view.has_point(a) and view.has_point(b) and a.distance_to(b) < view.size.y * 0.5):
+				continue
+			if Geometry2D.get_closest_point_to_segment(screen, a, b).distance_to(screen) <= maxf(radius, (a - b).length() * float(body["r"])):
+				var depth: float = cam.global_position.distance_to(feet)
+				if depth < best_depth:
+					best_depth = depth
+					best = body
+		if not best.is_empty():
+			return _hit(best)
+	return {}
+
+
+## ViewProjection provider: the body standing at world pixel `world` (feet within half a tile; the nearest in the
+## first picker that has one), as `pick`.
+func pick_world(world: Vector2, mode: int) -> Dictionary:
+	var at: Vector2 = world / _px()
+	for picker: Node in pickers:
+		if not is_instance_valid(picker):
+			continue
+		var best: Dictionary = {}
+		var best_d: float = 0.5
+		for body: Dictionary in picker.call("bodies", mode):
+			var feet: Vector3 = body["feet"]
+			var d: float = Vector2(feet.x, feet.z).distance_to(at)
+			if d <= best_d:
+				best_d = d
+				best = body
+		if not best.is_empty():
+			return _hit(best)
+	return {}
+
+
+## ViewProjection provider: the viewport rect of person `bits`' body (feet to head, a quarter of its screen height to
+## each side); far off screen when behind the camera; Rect2() while the person is not drawn.
+func person_rect(bits: int) -> Rect2:
+	var cam: Camera3D = camera()
+	var body: Dictionary = people.call("body_of", bits) if people != null else {}
+	if cam == null or body.is_empty():
+		return Rect2()
+	var feet: Vector3 = body["feet"]
+	var head: Vector3 = feet + Vector3(0, float(body["h"]), 0)
+	if cam.is_position_behind(feet) or cam.is_position_behind(head):
+		return Rect2(Vector2(-100000, -100000), Vector2.ONE)
+	var a: Vector2 = cam.unproject_position(feet)
+	var b: Vector2 = cam.unproject_position(head)
+	var half: float = maxf(1.0, a.distance_to(b) * 0.25)
+	return Rect2(a, Vector2.ZERO).expand(b).grow_individual(half, 0.0, half, 0.0)
+
+
+func _hit(body: Dictionary) -> Dictionary:
+	var feet: Vector3 = body["feet"]
+	var hit: Dictionary = {"kind": body["kind"], "id": body["id"], "world": Vector2(feet.x, feet.z) * _px()}
+	if body.has("species"):
+		hit["species"] = body["species"]
+	return hit
+
+
+func _px() -> float:
+	return float(Data3D.param("camera.px_per_tile_at_1x", 64.0))
 
 
 ## ViewProjection provider: the screen point of world pixel `world` on the ground.
@@ -162,9 +244,8 @@ func world_to_screen(world: Vector2) -> Vector2:
 	var cam: Camera3D = camera()
 	if cam == null:
 		return Vector2(-10000, -10000)
-	var px: float = float(Data3D.param("camera.px_per_tile_at_1x", 64.0))
-	var x: float = world.x / px
-	var z: float = world.y / px
+	var x: float = world.x / _px()
+	var z: float = world.y / _px()
 	var p: Vector3 = Vector3(x, float(terrain.call("height_at", x, z)), z)
 	if cam.is_position_behind(p):
 		return Vector2(-10000, -10000)

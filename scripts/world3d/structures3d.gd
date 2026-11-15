@@ -763,7 +763,7 @@ func global_cut() -> bool:
 	var camera: Node = get_node_or_null("/root/Main/Camera2D")
 	if camera != null and float(camera.call("get_zoom_level")) >= float(Data3D.param("structures.cutaway_zoom", 4.0)) - 0.01:
 		return true
-	var rooms: Node = get_node_or_null("/root/Main/ColonyView/OverlayLayer/Rooms")
+	var rooms: Node = get_node_or_null("/root/Main/RoomIndex")
 	return rooms != null and rooms.has_method("is_shown") and bool(rooms.call("is_shown"))
 
 

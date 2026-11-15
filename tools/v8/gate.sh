@@ -245,10 +245,12 @@ grep -E '^STORY' "$LOG/story.log" | sed 's/^/   /' >> "$SUMMARY"
 step 30 neighbours bash -c 'args=(); [[ "$1" == feature_first ]] && args+=(--feature-first); rust/target/release/worldsim_probe --scene colony --seeds 0..2 --days 48 --workers 2 --commands tools/v8/m55_u_script.json --out "$0/neighbours" > /dev/null && python3 docs/v8/m5_5/m55_score.py --neighbours "$0/neighbours/summary.json" "${args[@]}"' "$LOG" "$READ_EVALUATION_MODE"
 grep -E '^NEIGHBOURS' "$LOG/neighbours.log" | sed 's/^/   /' >> "$SUMMARY"
 # M-ART2 (goal §11): the imported art, the material resolver, the extensibility grep and the renderer tests.
+# M3D-SWITCH E1: the world draws in 3D by default; the tests of the 2D renderer (steps 34, 39-41, 46 why) pass
+#   --renderer=2d until E2 deletes or rewrites them.
 step 31 art_manifest python3 tools/v8/art_import.py --verify
 step 32 resolver_parity bash -c 'bash tools/v8/run_bounded.sh 300 "$GODOT_BIN" --headless --path . --script res://tools/v8/resolver_parity.gd -- "$0/resolver_godot.json" && python3 tools/v8/resolver_parity.py --check "$0/resolver_godot.json"' "$LOG"
 step 33 extensibility_grep python3 -m unittest tools/v8/test_mart2_extensibility.py tools/v8/test_art_masks.py tools/v8/test_art_import.py
-step 34 mart2_render bash -c 'for t in mart2_ground_test mart2_people_test mart21_trees_test; do bash tools/v8/run_bounded.sh 600 "$GODOT_BIN" --headless --path . --script res://tools/v8/$t.gd > "$0/$t.out" 2>&1; grep -E "^MART21?_(GROUND|PEOPLE|TREES) (PASS|FAIL)|_DONE" "$0/$t.out"; grep -q "_DONE failures=0" "$0/$t.out" || exit 1; ! grep -q "SCRIPT ERROR" "$0/$t.out" || { grep "SCRIPT ERROR" "$0/$t.out" | head -5; exit 1; }; done' "$LOG"
+step 34 mart2_render bash -c 'for t in mart2_ground_test mart2_people_test mart21_trees_test; do bash tools/v8/run_bounded.sh 600 "$GODOT_BIN" --headless --path . --script res://tools/v8/$t.gd -- --renderer=2d > "$0/$t.out" 2>&1; grep -E "^MART21?_(GROUND|PEOPLE|TREES) (PASS|FAIL)|_DONE" "$0/$t.out"; grep -q "_DONE failures=0" "$0/$t.out" || exit 1; ! grep -q "SCRIPT ERROR" "$0/$t.out" || { grep "SCRIPT ERROR" "$0/$t.out" | head -5; exit 1; }; done' "$LOG"
 grep -E 'PASS|FAIL' "$LOG/resolver_parity.log" | tail -1 | sed 's/^/   /' >> "$SUMMARY"
 grep -cE '^MART21?_(GROUND|PEOPLE|TREES) PASS' "$LOG/mart2_render.log" | awk '{print "   mart2_render checks passed", $1}' >> "$SUMMARY"
 step 35 steward bash tools/v8/mux_steward.sh "$LOG/steward"
@@ -295,7 +297,7 @@ step 46 mux21_regressions bash -c '
     grep -q "^MUX21_LAYOUT_DONE " "$0/mux21-layout.log"
     ! grep -q "SCRIPT ERROR" "$0/mux21-layout.log"
     for language in en ko; do
-        bash tools/v8/run_bounded.sh 180 "$GODOT_BIN" --path . --resolution 1920x1080 --script res://tools/v8/mux21_why_locale_test.gd -- --locale="$language" > "$0/mux21-why-$language.log" 2>&1
+        bash tools/v8/run_bounded.sh 180 "$GODOT_BIN" --path . --resolution 1920x1080 --script res://tools/v8/mux21_why_locale_test.gd -- --locale="$language" --renderer=2d > "$0/mux21-why-$language.log" 2>&1
         ! grep -E "SCRIPT ERROR|Parse Error|ERROR:" "$0/mux21-why-$language.log"
     done
     python3 -c '\''import json,sys; from pathlib import Path

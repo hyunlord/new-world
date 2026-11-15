@@ -1,9 +1,11 @@
 # lesson_highlight.gd: a non-interactive outline for actual lesson controls or a visible person/workshop.
-# Bridge methods: via SimReads get_ui_facts; person bounds come from AgentLayer.drawn_rect.
+# Bridge methods: via SimReads get_ui_facts; a person's bounds are the view's body rect and a workshop's its footprint
+#   projected to the screen (ViewProjection, either view).
 extends Control
 
 const Catalog = preload("res://scripts/ui/mux/controls_catalog.gd")
 const View = preload("res://scripts/world/colony/view.gd")
+const ViewProjection = preload("res://scripts/world/view_projection.gd")
 const CONTROL_NAMES: Dictionary = {
 	"minimap": "Minimap", "speed_controls": "MapControls", "alerts": "Alerts",
 	"priorities": "PrioritiesButton", "neighbours": "NeighboursButton", "tech": "TechButton",
@@ -89,25 +91,20 @@ func _order_button(action: String) -> Control:
 	return null
 
 func _person_rect() -> Rect2:
-	var main: Node = _ui.get_parent()
-	var layer: Node2D = main.get_node_or_null("ColonyView/AgentLayer") as Node2D
-	var world: Node = main.get_node_or_null("WorldSim")
-	if layer == null or world == null or not layer.has_method("drawn_rect"):
+	var world: Node = _ui.get_parent().get_node_or_null("WorldSim")
+	if world == null:
 		return Rect2()
 	var people: Dictionary = SimReads.read(world, "get_ui_facts").get("people", {})
 	for bits: Variant in people.get("entity_ids", []):
-		var raw: Rect2 = layer.call("drawn_rect", int(bits))
-		var candidate: Rect2 = _local_rect(layer, raw)
+		var raw: Rect2 = ViewProjection.person_rect(self, int(bits))
+		var candidate: Rect2 = _screen_rect(raw)
 		if raw.has_area() and _map_visible(candidate):
-			resolved_path = layer.get_path()
 			return candidate
 	return Rect2()
 
 func _workshop_rect() -> Rect2:
-	var main: Node = _ui.get_parent()
-	var world: Node = main.get_node_or_null("WorldSim")
-	var view: Node2D = main.get_node_or_null("ColonyView") as Node2D
-	if world == null or view == null:
+	var world: Node = _ui.get_parent().get_node_or_null("WorldSim")
+	if world == null:
 		return Rect2()
 	var shops: Dictionary = SimReads.read(world, "get_ui_facts").get("workshops", {})
 	var xs: Variant = shops.get("xs", [])
@@ -115,10 +112,13 @@ func _workshop_rect() -> Rect2:
 	var widths: Variant = shops.get("ws", [])
 	var heights: Variant = shops.get("hs", [])
 	for i: int in mini(xs.size(), mini(ys.size(), mini(widths.size(), heights.size()))):
-		var raw: Rect2 = Rect2(View.tile_to_world(Vector2i(int(xs[i]), int(ys[i]))), Vector2(int(widths[i]), int(heights[i])) * View.TILE)
-		var candidate: Rect2 = _local_rect(view, raw)
-		if raw.has_area() and _map_visible(candidate):
-			resolved_path = view.get_path()
+		var corner: Vector2 = View.tile_to_world(Vector2i(int(xs[i]), int(ys[i])))
+		var extent: Vector2 = Vector2(int(widths[i]), int(heights[i])) * View.TILE
+		var raw: Rect2 = Rect2(ViewProjection.world_to_screen(self, corner), Vector2.ZERO)
+		for c: Vector2 in [corner + Vector2(extent.x, 0), corner + Vector2(0, extent.y), corner + extent]:
+			raw = raw.expand(ViewProjection.world_to_screen(self, c))
+		var candidate: Rect2 = _screen_rect(raw)
+		if extent.x > 0.0 and extent.y > 0.0 and raw.has_area() and _map_visible(candidate):
 			return candidate
 	return Rect2()
 
@@ -144,6 +144,10 @@ func _ui_occludes(node: Node, rect: Rect2) -> bool:
 
 func _local_rect(item: CanvasItem, rect: Rect2) -> Rect2:
 	return get_global_transform_with_canvas().affine_inverse() * item.get_global_transform_with_canvas() * rect
+
+## A viewport rect in this control's coordinates.
+func _screen_rect(rect: Rect2) -> Rect2:
+	return get_global_transform_with_canvas().affine_inverse() * rect
 
 func _process(delta: float) -> void:
 	if _target.is_empty():
