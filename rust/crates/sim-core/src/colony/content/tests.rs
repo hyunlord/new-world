@@ -19,7 +19,7 @@ fn bundled_catalogue_is_local_and_code_ordered() {
             .map(|kind| kind.code()),
         Some(18)
     );
-    assert_eq!(catalog.blueprints().count(), 32);
+    assert_eq!(catalog.blueprints().count(), 33);
     assert_eq!(catalog.recipes().count(), 85);
     assert_eq!(
         catalog

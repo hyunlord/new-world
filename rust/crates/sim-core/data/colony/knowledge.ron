@@ -551,8 +551,9 @@
         // C3 iron column: append-only IDs after tattoo; initial design values, same conventions as the bronze column.
         // Iron smelting is discovered from copper-smelting practice and charcoal stock, not from ore, so it is
         // discoverable on ore-only, bog-only and iron-less worlds (the last is what no_iron_nearby reports).
-        // Iron weights follow the bible: iron_smelting 3, forging 3, iron_tools 2, stone_house 1. paved_road has
-        // no move-speed hook (movement is one tile per interval; path cost only steers), so it is Inert with no marker.
+        // Iron weights follow the bible: iron_smelting 3, forging 3, iron_tools 2, stone_house 1, paved_road 1.
+        // Planner D-C3-1: paved_road is a placeable floor piece; it has no move-speed hook yet (movement is one tile
+        // per interval; path cost only steers), which stays M-GROW debt.
         (id: "iron_smelting", lane: "heat", era: "iron", tier: 1, status: Connected,
          debt: None, threshold: 300, prereqs: ["copper_smelting", "charcoal"], difficulty: 1,
          discover: [Practice(job_kind: "craft", count: 3), Stockpile("charcoal", 4), Knows("copper_smelting", 300)], gates: [Workshop("bloomery"), Recipe("smelt_bloom"), Recipe("smelt_bog_bloom")], marker_weight: 3,
@@ -581,9 +582,9 @@
          debt: Some("M-NATION: horses, carts and riders are absent."), threshold: 300, prereqs: ["cattle"], difficulty: 2,
          discover: [Practice(job_kind: "capture", count: 2), Knows("cattle", 300)], gates: [], marker_weight: 0,
          seed: None, name_key: "KNOWLEDGE_HORSE"),
-        (id: "paved_road", lane: "building", era: "iron", tier: 2, status: Inert,
-         debt: Some("M-GROW: movement has no per-tile speed; a paved floor could only steer paths."), threshold: 300, prereqs: ["stone_masonry"], difficulty: 2,
-         discover: [Practice(job_kind: "build", count: 4), Knows("stone_masonry", 300)], gates: [], marker_weight: 0,
+        (id: "paved_road", lane: "building", era: "iron", tier: 2, status: Connected,
+         debt: Some("M-GROW: movement has no per-tile speed; the paved floor marks a road but does not speed walking."), threshold: 300, prereqs: ["stone_masonry"], difficulty: 2,
+         discover: [Practice(job_kind: "build", count: 4), Knows("stone_masonry", 300)], gates: [Blueprint("paved_road")], marker_weight: 1,
          seed: None, name_key: "KNOWLEDGE_PAVED_ROAD"),
         (id: "bridge", lane: "building", era: "iron", tier: 3, status: Inert,
          debt: Some("M-GROW: river crossings beyond fords are absent."), threshold: 300, prereqs: ["paved_road", "adze"], difficulty: 3,

@@ -11,7 +11,8 @@
     "mud_brick": {"category": "Mineral", "sim_id": 2075554421, "tint": {"dL": -15, "da": 10, "db": 17}},
     "packed_earth": {"category": "Mineral", "sim_id": 3087221664, "tint": {"dL": -22, "da": 5, "db": 12}},
     "bog_iron": {"tint": {"dL": -16, "da": 12, "db": 14}},
-    "iron": {"category": "Mineral", "sim_id": 2090374909, "tint": {"dL": -14, "da": 0, "db": -4}}
+    "iron": {"category": "Mineral", "sim_id": 2090374909, "tint": {"dL": -14, "da": 0, "db": -4}},
+    "cut_stone": {"category": "Mineral", "sim_id": 3216156857, "tint": {"dL": 12, "da": 0, "db": -6}}
   },
   "tile_px": 64,
   "camera": {"zooms": [0.25, 0.5, 1.0, 2.0], "default_zoom": 1.0, "pan_px_per_second": 900},

@@ -51,10 +51,10 @@ fn the_map_parses_to_166_nodes_with_an_acyclic_prereq_graph() {
             vec![Cond::Stockpile(ItemKind::RawPot, 2)]
         ))
     );
-    // Neolithic markers total16; C2 adds eleven bronze and C3 nine iron marker weights.
-    assert_eq!(d.marker_total(), 36);
+    // Neolithic markers total16; C2 adds eleven bronze and C3 ten iron marker weights.
+    assert_eq!(d.marker_total(), 37);
     let present: u32 = d.nodes.iter().map(|n| u32::from(n.marker_weight)).sum();
-    assert_eq!(present, 36);
+    assert_eq!(present, 37);
     assert!(parse_defs("(schema_version: 2, absent_markers: [], knowledge: [])").is_none());
     let bad = KNOWLEDGE_RON.replace("Recipe(\"haft_axe\")", "Recipe(\"bronze\")");
     assert!(parse_defs(&bad).is_none());
@@ -282,7 +282,7 @@ fn cultivation_is_discovered_not_seeded_and_replaces_the_farming_marker() {
             id("grain_parching").expect("grain")
         ]
     );
-    assert_eq!(d.marker_total(), 36);
+    assert_eq!(d.marker_total(), 37);
     assert_eq!(
         d.nodes
             .iter()

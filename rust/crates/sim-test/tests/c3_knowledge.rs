@@ -42,11 +42,12 @@ const ADDED: [&str; 37] = [
     "falconry",
     "veterinary",
 ];
-const CONNECTED: [&str; 7] = [
+const CONNECTED: [&str; 8] = [
     "iron_smelting",
     "forging",
     "iron_tools",
     "iron_weapons",
+    "paved_road",
     "stone_house",
     "town_wall",
     "gate",
@@ -110,6 +111,7 @@ fn c3_knowledge_validator() {
             ("iron_smelting", 3),
             ("forging", 3),
             ("iron_tools", 2),
+            ("paved_road", 1),
             ("stone_house", 1)
         ]
     );

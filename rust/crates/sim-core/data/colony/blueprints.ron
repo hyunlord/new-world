@@ -2,7 +2,7 @@
 (
     schema_version: 1,
     roles: {"default": "hut", "legacy_wall": "log_wall", "legacy_stone_wall": "stone_wall", "legacy_door": "door", "legacy_floor": "packed_floor", "legacy_bed": "bedroll", "worldgen_hearth": "hearth_fire"},
-    materials: ["granite", "limestone", "flint", "chert", "oak", "pine", "birch", "clay", "packed_earth", "copper_ore", "tin_ore", "iron_ore", "copper", "tin", "bronze", "mud_brick", "bog_iron", "iron"],
+    materials: ["granite", "limestone", "flint", "chert", "oak", "pine", "birch", "clay", "packed_earth", "copper_ore", "tin_ore", "iron_ore", "copper", "tin", "bronze", "mud_brick", "bog_iron", "iron", "cut_stone"],
     material_roles: {"legacy_floor": "packed_earth", "excavated_rock": "granite", "default_wood": "oak", "default_stone": "granite"},
     historical_stone_wall_materials: ["granite", "limestone"],
     blueprints: [
@@ -504,6 +504,18 @@
             planned_nav: Door, blocks_livestock: true, supports_roof: false,
             material: FirstDelivered(fallback: "oak"), style_id: "slab_door",
             render_wall_code: Some(2), completion_policy: Authoritative, initial_bill: None,
+        ),
+        // C3 (planner D-C3-1): a cut-stone road floor; placeable and drawn, but movement has no per-tile speed yet.
+        (
+            identity: (code: 32, id: "paved_road", name_key: "BUILDING_PAVED_ROAD", serde_name: "PavedRoad", serde_aliases: [], resolver_aliases: []),
+            placeable: true, menu_order: 32, shortcut_slot: -1,
+            footprint: (1, 1), footprint_rule: None,
+            needs: [(item: "cut_stone", count: 1, count_rule: None)], work: 20, work_rule: None,
+            placement: Floor, completion: Floor, workshop_tags: [],
+            requires_economy: true, requires_knowledge: true, requires_space: true,
+            planned_nav: Unchanged, blocks_livestock: false, supports_roof: false,
+            material: Fixed(material: "cut_stone"), style_id: "packed_earth",
+            render_wall_code: None, completion_policy: Authoritative, initial_bill: None,
         ),
     ],
 )

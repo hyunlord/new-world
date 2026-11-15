@@ -12,10 +12,11 @@ planner notes; planner answers arrive as `c3-data/D-C3-<n>.md`. Evidence lives i
    makes swamp and origins have no river predicate, so bog iron is a new row (code 4) on plain/forest at or below river
    level (elevation 0–100; river tiles are written at 100). Values were frozen before the 0–63 census: iron within 80 tiles
    on 64/64 seeds (bog iron on 38). No tuning after observation.
-4. The iron column is appended (ids 129–165). Connected: iron_smelting, forging, iron_tools, iron_weapons, stone_house,
-   town_wall, gate. Everything without a runtime hook is Inert with its pass named. Markers: iron_smelting 3, forging 3,
-   iron_tools 2, stone_house 1. paved_road is Inert (movement is one tile per interval; floor cost only steers A*), so the
-   goal's paved_road marker is dropped — markers only on Connected nodes (planner QUESTION-1 item 2).
+4. The iron column is appended (ids 129–165). Connected: iron_smelting, forging, iron_tools, iron_weapons, paved_road,
+   stone_house, town_wall, gate. Everything without a runtime hook is Inert with its pass named. Markers: iron_smelting 3,
+   forging 3, iron_tools 2, paved_road 1, stone_house 1. Planner D-C3-1: paved_road is Connected with a placeable cut-stone
+   floor piece (`paved_road`, drawn through the packed-earth floor style with an authored, prewarmed `cut_stone` look);
+   movement is one tile per interval and floor cost only steers A*, so the speed effect is M-GROW debt.
 5. Discovery conditions are AND-only. Iron smelting is discovered by practice with charcoal and known copper smelting, not
    by stocked ore, so both ore and bog worlds — and worlds with no revealed iron, where the `no_iron_nearby` card applies —
    can learn it. No new condition type.
@@ -38,10 +39,12 @@ planner notes; planner answers arrive as `c3-data/D-C3-<n>.md`. Evidence lives i
     `catalog-v1-fnv1a64:54c3f1d8ee2c07b9:231728`, identity prefix checked, body unchanged), tested with the genuine save
     via `C3_C2B_SAVE_PATH`.
 12. Chapters 8/9 and the `no_iron_nearby` card read bridge facts next to the C2 ones; the copper/bronze checks become
-    tag-parameterised helpers. The card offers wait or trade; there is no prospect designation (planner QUESTION-1 item 3).
+    tag-parameterised helpers. The card offers wait or trade; there is no prospect designation (planner D-C3-1; recorded in CONTENT_DEBT).
     A `wrought_iron` goods row (iron smelting known, no iron deposit in the world) is appended last, so it cannot shift
     existing draws while closed.
-13. Art: per-row `from` pinning is not on v8/c3, so new iron items use placeholder shape × tint (QUESTION-1 item 1).
+13. Art: per-row `from` pinning is not on v8/c3, so new iron items use placeholder shape × tint (planner D-C3-1).
     New walls reuse the granite/drystone look, so no new wall material look needs a step-41 prewarm.
 14. The V3 capture fix (926010cbc) and V3's C2_DECISIONS corrections (e8f220341) are cherry-picked; V3 was closed
     unpublished.
+15. The first C3-a pre-gate found one stale authored list (`engine_economy_ffi` recipe table) and the planner ruled on
+    QUESTION-1/2 (D-C3-1); both land in a new commit on top of the first freeze, then a fresh pre-gate.

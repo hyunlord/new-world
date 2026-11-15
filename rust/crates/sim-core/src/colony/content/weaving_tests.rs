@@ -234,6 +234,6 @@ fn legacy_metadata_stays_inert_and_historical_marker_weight_is_preserved() {
             .iter()
             .map(|node| u32::from(node.marker_weight))
             .sum::<u32>(),
-        36
+        37
     );
 }

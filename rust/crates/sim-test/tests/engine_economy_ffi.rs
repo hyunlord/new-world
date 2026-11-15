@@ -137,6 +137,22 @@ fn workshops_list_bills_in_order_and_commands_parse_names() {
             (67, "burn_lime", 23),
             (68, "make_wheel", 2),
             (69, "make_composite_bow", 2),
+            // C3-a: bloomery, forge, anvil and mason bench.
+            (70, "smelt_bloom", 25),
+            (71, "smelt_bog_bloom", 25),
+            (72, "refine_bloom", 26),
+            (73, "forge_iron_axe", 27),
+            (74, "forge_iron_hoe", 27),
+            (75, "forge_iron_sickle", 27),
+            (76, "forge_iron_saw", 27),
+            (77, "forge_iron_knife", 27),
+            (78, "forge_iron_adze", 27),
+            (79, "forge_iron_spear", 27),
+            (80, "forge_iron_sword", 27),
+            (81, "forge_iron_helmet", 27),
+            (82, "forge_iron_shield_boss", 27),
+            (83, "forge_nails", 27),
+            (84, "dress_stone", 28),
         ]
     );
     // A workshop and its site appear in the overlay as nothing else.
