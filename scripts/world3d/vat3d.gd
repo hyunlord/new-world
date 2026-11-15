@@ -6,7 +6,7 @@
 #   instance colour then carries the first tint). A `textured` character (set B: json `textured`, `atlas`) keeps its atlas
 #   UVs in UV; loaded with `tint_atlas` its regions come from the atlas colour under each vertex (dark → hair 2,
 #   yellow/olive → clothing 3, else skin 1) and the shader rescales the painted colours toward the person's tints
-#   (atlas × tint / the region's mean atlas colour), so painted detail stays and appearance still varies. `material()` is a ShaderMaterial on shaders/world3d/vat.gdshader;
+#   (the tint shaded by texel luminance over the region mean), so painted detail stays and appearance still varies. `material()` is a ShaderMaterial on shaders/world3d/vat.gdshader;
 #   per instance: COLOR.rgb = region-1 tint, INSTANCE_CUSTOM = (clip start × 256 + clip count, phase seconds,
 #   region-2 colour, region-3 colour) with colours packed as r·65536 + g·256 + b (exact in a float).
 # Bridge methods called: none.
@@ -80,13 +80,27 @@ static func _regions(root: Node, atlas_image: Image, tint_atlas: bool, means: Ar
 			if atlas_image != null:
 				var sums: Array[Color] = [Color(0, 0, 0, 0), Color(0, 0, 0, 0), Color(0, 0, 0, 0)]
 				var atlas_uv: PackedVector2Array = arrays[Mesh.ARRAY_TEX_UV]
+				var votes: PackedInt32Array = PackedInt32Array()
+				votes.resize(verts.size() * 3)
+				if tint_atlas:
+					# Sample each triangle at its UV centroid: vertices sit on island borders next to the atlas padding.
+					var index: PackedInt32Array = arrays[Mesh.ARRAY_INDEX] if arrays[Mesh.ARRAY_INDEX] is PackedInt32Array else PackedInt32Array(range(verts.size()))
+					var size: Vector2 = Vector2(atlas_image.get_size())
+					for t: int in range(0, index.size() - 2, 3):
+						var uv: Vector2 = (atlas_uv[index[t]] + atlas_uv[index[t + 1]] + atlas_uv[index[t + 2]]) / 3.0
+						var c: Color = atlas_image.get_pixelv(Vector2i((uv * size).floor()).clamp(Vector2i.ZERO, atlas_image.get_size() - Vector2i.ONE))
+						var region: int = atlas_region(c)
+						sums[region - 1] += Color(c.r, c.g, c.b, 1.0)
+						for k: int in 3:
+							votes[index[t + k] * 3 + region - 1] += 1
 				for i: int in verts.size():
 					var region: int = 0
 					if tint_atlas:
-						var at: Vector2i = Vector2i((atlas_uv[i] * Vector2(atlas_image.get_size())).floor()).clamp(Vector2i.ZERO, atlas_image.get_size() - Vector2i.ONE)
-						var c: Color = atlas_image.get_pixelv(at)
-						region = atlas_region(c)
-						sums[region - 1] += Color(c.r, c.g, c.b, 1.0)
+						var best: int = 0
+						for r: int in 3:
+							if votes[i * 3 + r] > votes[i * 3 + best]:
+								best = r
+						region = best + 1
 					uv2[i] = Vector2(uv2[i].x, float(region))
 				for k: int in 3:
 					if sums[k].a > 0.0:

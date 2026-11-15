@@ -2,7 +2,8 @@
 // Each vertex reads its position for the current frame from `vat` (column = UV2.x · width, the unsplit vertex; rows:
 // the clip's frames), blending two frames; the fragment derives the flat face normal from screen derivatives. Tint by region (UV2.y): 1 → instance COLOR,
 // 2 → INSTANCE_CUSTOM.b, 3 → INSTANCE_CUSTOM.a (packed r·65536 + g·256 + b), 0 → `other_colour`. `textured`
-// characters sample `atlas` at UV instead and scale it by tint / the region's mean atlas colour (region 0: as painted).
+// characters sample `atlas` at UV instead: regions 1–3 take the person's tint shaded by the texel's luminance over the
+// region's mean luminance (painted detail stays, the hue is the person's); region 0 is drawn as painted.
 // INSTANCE_CUSTOM.r = clip start × 256 + clip frame count, .g = phase in seconds (per instance, so a crowd is not in step).
 shader_type spatial;
 render_mode diffuse_lambert, specular_disabled;
@@ -18,10 +19,15 @@ uniform vec3 mean_hair = vec3(1.0);
 uniform vec3 mean_cloth = vec3(1.0);
 
 varying vec3 tint;
+varying float mean_luma;
 
 vec3 unpack_rgb(float v) {
 	float x = floor(v + 0.5);
 	return vec3(floor(x / 65536.0), mod(floor(x / 256.0), 256.0), mod(x, 256.0)) / 255.0;
+}
+
+float luma(vec3 c) {
+	return dot(c, vec3(0.2126, 0.7152, 0.0722));
 }
 
 vec3 srgb_to_linear(vec3 c) {
@@ -51,15 +57,16 @@ void vertex() {
 		tint = other_colour;
 	}
 	if (textured) {
-		// The per-vertex scale that maps the region's painted mean onto this person's tint (linear space).
 		vec3 mean = region == 1 ? mean_skin : (region == 2 ? mean_hair : mean_cloth);
-		tint = region == 0 ? vec3(1.0) : srgb_to_linear(tint) / max(srgb_to_linear(mean), vec3(0.02));
+		mean_luma = region == 0 ? 0.0 : max(luma(srgb_to_linear(mean)), 0.005);
+		tint = srgb_to_linear(tint);
 	}
 }
 
 void fragment() {
 	vec3 n = normalize(cross(dFdx(VERTEX), dFdy(VERTEX)));
 	NORMAL = dot(n, -VERTEX) < 0.0 ? -n : n;
-	ALBEDO = textured ? clamp(texture(atlas, UV).rgb * tint, 0.0, 1.0) : srgb_to_linear(tint);
+	vec3 texel = textured ? texture(atlas, UV).rgb : vec3(0.0);
+	ALBEDO = !textured ? srgb_to_linear(tint) : (mean_luma <= 0.0 ? texel : clamp(tint * (luma(texel) / mean_luma), 0.0, 1.0));
 	ROUGHNESS = 0.85;
 }

@@ -587,8 +587,9 @@ func _roof_mesh(tiles: Array, room_id: int, claimed: Dictionary, mat: Material) 
 	var cells: Dictionary = roof_cells(tiles, room_id, claimed)
 	var height: Dictionary = roof_heights(cells)
 	var white: Color = Color(1, 1, 1)
+	# Heights count lattice steps of 0.5 m.
 	var p: Callable = func(v: Vector2i) -> Vector3:
-		return Vector3(v.x * 0.5, top + minf(rise_max, float(height[v]) * pitch), v.y * 0.5)
+		return Vector3(v.x * 0.5, top + minf(rise_max, float(height[v]) * 0.5 * pitch), v.y * 0.5)
 	var down: Vector3 = Vector3(0, thick, 0)
 	for c: Vector2i in cells:
 		var v00: Vector3 = p.call(c)
