@@ -371,6 +371,10 @@ func _draw_people(view: Rect2) -> void:
 	var counting: bool = camera2d != null and camera2d.zoom.x < 1.0
 	var spots: Dictionary = {}
 	for i: int in ids.size():
+		# Most people carry no mark: skip the body lookup and projection for them.
+		if not (mood or counting or (i < drafted.size() and drafted[i] != 0) or (i < sick.size() and sick[i] != 0)
+				or (i < fleeing.size() and fleeing[i] != 0)):
+			continue
 		var body: Dictionary = people.call("body_of", ids[i])
 		if body.is_empty():
 			continue
