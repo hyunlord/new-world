@@ -318,6 +318,10 @@ fn steward_scope_boundary_rejects_without_mutation_and_valid_changes_are_logged(
             (11, "C1_STEWARD_LIVESTOCK".to_string()),
             (12, "C2_STEWARD_SMELTER".to_string()),
             (13, "C2_STEWARD_AXES".to_string()),
+            (14, "C3_STEWARD_BLOOMERY".to_string()),
+            (15, "C3_STEWARD_BOG_BLOOMERY".to_string()),
+            (16, "C3_STEWARD_REFINE".to_string()),
+            (17, "C3_STEWARD_IRON_AXES".to_string()),
         ]
     );
 }

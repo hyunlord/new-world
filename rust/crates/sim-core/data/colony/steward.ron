@@ -14,4 +14,11 @@
  (id: 12, label: "C2_STEWARD_SMELTER", scope: All, cooldown: 360, condition: Production, action: Bills(recipes: [(SmeltCopper, 1)], winter_recipe: SplitFirewood, days: 0, stocked: [CopperOre])),
  // C2-b: one cast axe per colonist still chopping with a stone-tagged axe; bronze first, copper as the fallback.
  (id: 13, label: "C2_STEWARD_AXES", scope: All, cooldown: 360, condition: Production, action: Bills(recipes: [(CastBronzeAxe, 1), (CastCopperAxe, 1)], winter_recipe: SplitFirewood, days: 0, replace_tag: Some("stone_tool"))),
+ // C3-b: one bloom once iron smelting is practised and iron ore (or, by the second rule, bog iron) is stockpiled; `stocked` is AND, so each ore has its own rule. The missing bloomery is requested through the ordinary placement path.
+ (id: 14, label: "C3_STEWARD_BLOOMERY", scope: All, cooldown: 360, condition: Production, action: Bills(recipes: [(SmeltBloom, 1)], winter_recipe: SplitFirewood, days: 0, stocked: [IronOre])),
+ (id: 15, label: "C3_STEWARD_BOG_BLOOMERY", scope: All, cooldown: 360, condition: Production, action: Bills(recipes: [(SmeltBogBloom, 1)], winter_recipe: SplitFirewood, days: 0, stocked: [BogIron])),
+ // C3-b: one refined bar once forging is practised and a bloom is stockpiled.
+ (id: 16, label: "C3_STEWARD_REFINE", scope: All, cooldown: 360, condition: Production, action: Bills(recipes: [(RefineBloom, 1)], winter_recipe: SplitFirewood, days: 0, stocked: [IronBloom])),
+ // C3-b: one forged iron axe per colonist chopping with a stone, copper or bronze axe (shared `pre_iron_axe` tag, one rule).
+ (id: 17, label: "C3_STEWARD_IRON_AXES", scope: All, cooldown: 360, condition: Production, action: Bills(recipes: [(ForgeIronAxe, 1)], winter_recipe: SplitFirewood, days: 0, replace_tag: Some("pre_iron_axe"))),
 ])

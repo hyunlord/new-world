@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 2035,
+    "active_key_count": 2039,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 2035,
+    "key_count": 2039,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -205,6 +205,10 @@
     "C3_CH9_REWARD": "쇠 도구가 마을의 일상에 쓰입니다.",
     "C3_CH9_TITLE": "9장: 쇠의 마을",
     "C3_CH9_YEAR": "쇠의 시대",
+    "C3_STEWARD_BLOOMERY": "철 광석이 쌓여 괴철로와 제련 주문을 마련",
+    "C3_STEWARD_BOG_BLOOMERY": "습지 철이 쌓여 괴철로와 제련 주문을 마련",
+    "C3_STEWARD_IRON_AXES": "돌·구리·청동 도끼를 쓰는 사람을 위해 철 도끼 단조 주문",
+    "C3_STEWARD_REFINE": "괴철이 쌓여 단련 주문",
     "CHRONICLE_BUILDING_COMPLETE": "{building}을(를) 지었다 ← {cause}",
     "CHRONICLE_DAY_FMT": "%d일째",
     "CHRONICLE_ERA_CHANGED_FMT": "시대가 바뀌었다: {era}",
