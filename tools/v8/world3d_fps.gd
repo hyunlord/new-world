@@ -33,7 +33,9 @@ func _run() -> void:
 	root.add_child(main)
 	var world: Node = main.get_node("WorldSim")
 	var camera: Camera2D = main.get_node("Camera2D")
-	for _i: int in 10:
+	# The game starts its own world a few frames in; replacing it any earlier races that start (the stress world
+	# was sometimes overwritten by the default 10-person world).
+	for _i: int in 60:
 		await process_frame
 	var save: String = _arg("--load", "")
 	var stress: int = int(_arg("--stress", "0"))
@@ -47,6 +49,11 @@ func _run() -> void:
 		w3d.get_node("People").set("replicate", replicate)
 	for _i: int in 30:
 		await process_frame
+	var want: int = stress if save == "" and stress > 0 else -1
+	if want > 0 and (SimReads.read(world, "get_agent_snapshot").get("agent_ids", PackedInt64Array()) as PackedInt64Array).size() < mini(want, 5000) / 2:
+		push_error("world3d_fps: stress world not in place")
+		quit(1)
+		return
 	if _arg("--paused", "") == "1":
 		world.process_mode = Node.PROCESS_MODE_DISABLED
 	# Profiling: hide 3D layers by name (`--hide Flora,Props`), or `Env:ssao,glow,fog,shadows`.
