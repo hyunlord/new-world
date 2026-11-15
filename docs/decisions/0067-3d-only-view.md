@@ -34,6 +34,14 @@ leaves the gate checking a view the player no longer sees.
   (per-person removal from the 3D crowd), 41 stall (World3D per-layer timings), 46 why (through ViewProjection),
   48 (plants3d). Checks of deleted 2D-only code (badge packing, wall-bake caches, ground tone caps) are dropped.
 
+## Alternatives considered
+- Keep both renderers with 2D as a fallback: every visual change and gate check twice, and the gate would keep
+  measuring a view the player does not use. Rejected by the owner decision.
+- Move to Unity now: evaluated in parallel (UNITY-SPIKE) against the criteria in `GODOT_BLOCKERS.md`; none of them
+  had fired when this switch landed, so the 3D view stays in Godot.
+- Reparent OrderTool and WorldMarker under `Main`: cleaner tree, but every tool and panel path changes; the hidden
+  `ColonyView` container keeps them stable at no cost.
+
 ## Consequences
 - One renderer to change and to gate. The 3D view needs a GPU for pixel checks; headless runs cover data, meshes and
   label texts.
