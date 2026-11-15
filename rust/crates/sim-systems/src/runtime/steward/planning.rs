@@ -1629,11 +1629,22 @@ fn fuel_target(
     let Some(policy) = policy else {
         return u32::from(days).saturating_mul(winter_daily_fuel(res));
     };
-    let preparing = crate::runtime::resource_regen::season_at(res)
-        .is_some_and(|(season, _)| season >= policy.prepare_season as usize);
+    let season = crate::runtime::resource_regen::season_at(res);
+    let preparing = season.is_some_and(|(season, _)| season >= policy.prepare_season as usize);
+    // In winter the reserve covers only the winter days left (today included); spring
+    // falls back to the warm reserve, so a full reserve ordered late is surplus.
+    let days = match season {
+        Some((crate::runtime::settlement::food_economy::WINTER, day)) => u32::from(days).min(
+            res.rules
+                .season_days()
+                .saturating_sub(day)
+                .saturating_add(1),
+        ),
+        _ => u32::from(days),
+    };
     let units = if preparing {
         winter_daily_fuel(res)
-            .saturating_mul(u32::from(days))
+            .saturating_mul(days)
             .saturating_mul(policy.buffer_permille)
             .div_ceil(1000)
     } else {
@@ -1851,6 +1862,57 @@ mod tests {
         assert_eq!(
             fuel_target(&res, *winter_recipe, 12, None),
             winter_daily_fuel(&res) * 12
+        );
+    }
+
+    #[test]
+    fn winter_fuel_reserve_covers_only_the_winter_days_left() {
+        sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
+            .expect("content");
+        let mut res = SimResources::new(16, 16, sim_core::MaterialRegistry::new());
+        res.rules = sim_core::rules::WorldRules::colony(0);
+        res.ticks_per_day = res.rules.calendar.ticks_per_day;
+        res.rules.clock_offset_ticks = 0;
+        let data = sim_core::colony::steward::rules().expect("rules");
+        let Action::Bills {
+            winter_recipe,
+            days,
+            fuel: Some(policy),
+            ..
+        } = &data
+            .rules
+            .iter()
+            .find(|rule| rule.id == 9)
+            .expect("fuel")
+            .action
+        else {
+            panic!("fuel bills");
+        };
+        let season = u64::from(res.rules.season_days());
+        let winter_start = 3 * season;
+        // Given each winter day, the reserve is today plus the winter days after it.
+        for day_of_winter in 1..=season {
+            res.current_tick =
+                (winter_start + day_of_winter - 1) * res.ticks_per_day + res.ticks_per_day / 2;
+            assert_eq!(
+                crate::runtime::resource_regen::season_at(&res),
+                Some((3, u32::try_from(day_of_winter).expect("day")))
+            );
+            let left = u32::try_from(season - day_of_winter + 1)
+                .expect("days")
+                .min(u32::from(*days));
+            let units = (winter_daily_fuel(&res) * left * policy.buffer_permille).div_ceil(1000);
+            assert_eq!(
+                fuel_target(&res, *winter_recipe, *days, Some(policy)),
+                units.div_ceil(4) * 4,
+                "winter day {day_of_winter}"
+            );
+        }
+        // The last winter day asks for one day, not a fresh six-day reserve.
+        assert!(
+            fuel_target(&res, *winter_recipe, *days, Some(policy))
+                < (winter_daily_fuel(&res) * u32::from(*days) * policy.buffer_permille)
+                    .div_ceil(1000)
         );
     }
 

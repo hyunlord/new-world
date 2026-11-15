@@ -107,3 +107,22 @@ This amendment supersedes the earlier **no drafting/no wildlife change** and **n
 **Evaluation freeze is not an outcome.** Calibration stays seeds0–7, at most4logged rounds, with all original thresholds and fixed exposure denominators. Policy/source/binary/scorer must be frozen before paired ON/OFF seeds1200–1231,48days, no player orders; preserve that provenance through evaluation. OFF is descriptive, ON governs acceptance. A frozen policy or successful migration does not establish held-out success. This amendment asserts no held-out outcome, final visibility/FPS/stall acceptance, full-gate result or publication. Raw failed and successful evidence remains external; M-UX2 remains IN PROGRESS.
 
 Implementation references: `runtime/steward/{defence,arming,lifecycle,planning}.rs`, `runtime/jobs/assign.rs`, `runtime/wildlife/{flee,fight}.rs`, `save/legacy_steward.rs`, and `sim-core/data/colony/steward.ron` under the Rust crates; current scoped tests and [ADR0045](0045-defend-through-player-respecting-steward-orders.md) retain the detailed verification boundaries.
+
+## Amendment M-SIMCHECK — template-house storehouse walls and the winter fuel reserve (2026-11-15)
+
+Two steward bugs found by the M-SIMCHECK diagnosis runs (steward ON, seeds 0–15, 48 days) are fixed
+within the intent above.
+
+- **Storehouse boundary.** Since [ADR 0061](0061-physical-building-templates.md) rule-3 houses are
+  template sites, but completion counted only steward blueprint walls as compatible storehouse
+  boundary, so a rule-10 storehouse reusing a template-house wall was never adopted and was re-planned
+  after every cooldown (6/16 seeds placed 2–5 waves; seed 15 never got one). Completed wall and door
+  pieces of steward House-rule template sites now count as compatible boundary unless a later
+  placement replaced the tile. Commit 08e7139fc; test `store_completes_with_steward_template_house_wall`.
+- **Winter fuel reserve.** The fuel target asked for the full reserve (rule 9: 6 days × 1.25) from the
+  prepare season to the end of winter, so on the last winter days the steward re-ordered a six-day
+  reserve that was all surplus at spring (seed 1: firewood bill 58 → 357 on day 46.25). In winter the
+  reserve now covers only the winter days left, today included; preparation before winter is
+  unchanged, and the rule-2 log target follows the same function. Colonies now end winter with about
+  1.25 days of fuel (balance watch in `docs/v8/BALANCE_DEBT.md`). Commit ec3d93182; test
+  `winter_fuel_reserve_covers_only_the_winter_days_left`.

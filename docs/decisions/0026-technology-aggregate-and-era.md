@@ -30,3 +30,16 @@ coverage of marker technologies, and it can go down.
 
 ## Source
 docs/v8/m4/M4_GOAL.md §3.4; docs/VISION.md §4; docs/v8/m4/M4_DECISIONS.md D7, D12
+
+## Amendment M-SIMCHECK — the era steps down only after a full practice window (2026-11-15)
+
+Progress still falls as above, but the era was a memoryless threshold on it, and seasonal work-mix
+noise moved progress across a transition line again and again: in the M-SIMCHECK r1 runs (steward
+ON, 48 days) 13/16 seeds logged era regressions, 47 down steps among 103 `era_changed` rows, some
+within 240 ticks, with no death or knowledge loss behind them. VISION §4 and CONTENT_BIBLE §0.5
+regress the era when a marker skill is lost, not when it pauses. The era now steps up on live
+progress but steps down only as far as the same progress counted over two `practice_days` windows
+allows, so a lapse must last a whole window before the era falls; a death or forgotten knowledge
+(no holder) lowers both measures at once. No saved field or data tunable; nothing in the simulation
+reads the era (chronicle, HUD and bridge only). Seed 0: 13 → 3 era rows. Commit e7c80ccf5; test
+`spine_era_steps_down_only_after_a_full_practice_window_below`.

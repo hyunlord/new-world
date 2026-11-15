@@ -459,3 +459,20 @@ Stage −1 게시 뒤 중복·다음 빈 ISS를 재확인하고 위 제목의 #6
 | ID | 문제 | 근거 | 분류 | 상태 | 다음 작업 | 출처 |
 |---|---|---|---|---|---|---|
 | ISS-364 | 상주 멧돼지 반복 피신·노동 방해와 후보 시드5 전멸 | BASE 생존13 대 후보0·KnowledgeLost25; 별도 시드2 포식자 분리 진단에서 공사92/240→완공282틱 | balance | open | [#694](https://github.com/hyunlord/new-world/issues/694): GOAL §5의 한 번 Inert 전환 후 smoke PASS; C1-1을 게시 동결 시 ISS-364로 배정, 재활성화는 후속 균형 패스 | C1_REPORT; crash-head-a2; hut-trace-a2/hut-isolation-a3 |
+
+## M-SIMCHECK 이월 (2026-11-15, 임시 ID)
+
+시뮬레이션 점검 패스(시드0–15×48일, 집사 ON/OFF, 명령 없음)에서 찾았으나 이번에 고치지 않은 논리 결함이다. 패스 규칙대로 임시 ID SIMCHECK-n을 쓰고, 게시 때 원장을 다시 확인해 다음 빈 ISS 번호(현재 마지막 ISS-364)를 배정한다. 균형 항목은 [BALANCE_DEBT](v8/BALANCE_DEBT.md) "M-SIMCHECK" 절에 있다. 원시 증거는 git 밖 `/Users/rexxa/work/simcheck-data`(아래 `scratch/`·`fixes/`)에 있다.
+
+| ID | 문제 | 근거 | 분류 | 상태 | 다음 작업 | 출처 |
+|---|---|---|---|---|---|---|
+| SIMCHECK-1 | 새 음식 목표에 거리 제한이 없어 배고픈 사람이 밤새 먼 길을 걷고 잠을 못 잔다 | r1 시드13 사람4: 2554틱 동안 잠 없음(E09 FAIL). `candidate`가 `u32::MAX` 반경·Chebyshev 거리로 가장 가까운 새 음식 더미를 고르고 `*_novel` 노드가 이긴다; 길로는 약5시간인 사냥터 고기로 저녁에 출발하면 밤 창을 놓친다 | sim | open | 길 거리 상한 또는 경로 비용으로 후보 제한, 피로가 높으면 잠이 이기는 노드 검토(행동 변경이라 M-BAL과 함께) | `rust/crates/sim-systems/src/runtime/mind/food_targets.rs`; `scratch/DIAG-SLEEP-MEALS-FOLLOW.md` §A |
+| SIMCHECK-2 | 집사 규칙5가 이미 있는 사냥 구역을 360틱마다 다시 제안한다 | 16시드 합계 거절922건(`nothing`) 대 수락69건. Hunt 분기가 사슴의 현재 위치가 아닌 서식지 기준으로 구역을 고른다 | sim | open | 같은 구역이면 제안하지 않기(작음) | `rust/crates/sim-systems/src/runtime/steward/planning.rs` `Action::Hunt`; `scratch/DIAG-BUILD-STEWARD.md` |
+| SIMCHECK-3 | 가축 포획이 commit 때 작업자의 포획 지식이 문턱 아래로 떨어지면 취소되며 `TargetGone`으로 기록되고, 약360틱 걷기·작업 뒤에야 드러난다 | 수정2(aacb52d1e) 뒤 `c1_chain_goat`의 1단계 작업자가 지식이 줄어드는 사람으로 바뀌며 발견 | sim | open | 배정 때 지식을 확인하고 취소 원인을 별도 값으로 기록 | `rust/crates/sim-systems/src/runtime/jobs/livestock/commit.rs`, `execute.rs`; `fixes/FIX2-REPORT.md` |
+| SIMCHECK-4 | 집사 경작 `zone_field`가 tick0에 `Unknown`으로 거절된다 | 시드마다4건, 모두 tick0. SettlementSystem(우선순위138)이 집사(125)보다 늦어 정착지가 아직 없다; tick360에 같은 칸이 수락된다(무해) | sim | open | 정착지가 없으면 경작 계획을 건너뛰기 | `rust/crates/sim-systems/src/runtime/cultivation/commands.rs`; `scratch/DIAG-BUILD-STEWARD.md` |
+| SIMCHECK-5 | `c1_chain_goat` 수용 시험이 취약하다 | 수정2 뒤 1단계가 포획 재발행6회를 모두 썼다(통과는 했으나 여유 0) | testing | open | 재발행 한도 근거 재검토 또는 작업자 선택 고정 | `rust/crates/sim-test/tests/c1_chain_goat.rs`; aacb52d1e |
+| SIMCHECK-6 | 한 번이라도 SetRoomRole이 수락되면 이후 모든 House 규칙의 완성이 꺼질 수 있다(미검증 의심) | 코드 읽기에서만 발견, 실행에서 확인 안 함 | sim | open | 의심을 재현하는 시험부터 작성 | `rust/crates/sim-systems/src/runtime/steward/completion.rs`; `scratch/DIAG-BUILD-STEWARD.md` |
+| SIMCHECK-7 | `routine_no_place` 재시도가 3틱 주기로 약15틱 반복된다 | 따라가기80건 중112행(시드0 사람5, 시드9·12·15) | sim | open | 자리 없는 일과에 짧은 대기 추가(작음) | `scratch/DIAG-SLEEP-MEALS-FOLLOW.md` |
+| SIMCHECK-8 | 해 질 녘에도 밤을 고려하지 않고 일을 배정한다 | 시드5 사람0: 17:47 사냥 배정, 23:17에야 잠자리 | sim | open | 밤 창이 가까우면 먼 일 배정 보류 검토 | `rust/crates/sim-systems/src/runtime/jobs/assign.rs` `needy`; `scratch/DIAG-SLEEP-MEALS-FOLLOW.md` |
+| SIMCHECK-9 | 연대기 피드가 `hut_built`를 매번 보인다(LOOP 목표는 첫 번째만) | r1 E30 실패 시드9개가 정확히 `hut_built`>1인 시드; 패널이 첫 번째 규칙을 적용하지 않음 | feature | open | 연대기 패널에 첫 번째만 규칙 적용 | `scripts/ui/panels/chronicle_panel.gd`; `scratch/DIAG-ERA-DRAFT-LOGS.md` |
+| SIMCHECK-10 | 집사의 방어 해제가 원인1("플레이어")로 기록된다 | 연대기에서 집사 해제와 플레이어 해제를 구별할 수 없다 | sim | open | 집사 해제에 별도 원인 값 | `rust/crates/sim-systems/src/runtime/wildlife/draft.rs`; `scratch/DIAG-ERA-DRAFT-LOGS.md` |

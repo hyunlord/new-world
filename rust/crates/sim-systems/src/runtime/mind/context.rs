@@ -449,7 +449,7 @@ pub struct RunningMetadata {
 
 /// Whether the steward's food plan runs (on, scope All or Food). It already plans the colony's
 /// winter stores, so R2-1's fallback for unplanned colonies stays off (R2-1C).
-pub(super) fn steward_plans_food(resources: &SimResources) -> bool {
+pub(crate) fn steward_plans_food(resources: &SimResources) -> bool {
     resources.steward.enabled
         && matches!(
             resources.steward.scope,

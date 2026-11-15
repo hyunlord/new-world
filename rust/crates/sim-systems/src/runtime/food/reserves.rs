@@ -45,7 +45,10 @@ pub fn lasting_units(
             if !reachable {
                 return None;
             }
+            let hearth_store = matches!(owner, FoodOwner::Ground(tile)
+                if crate::runtime::jobs::food_storage::hearth_store(res, tile));
             if !matches!(owner, FoodOwner::Carried(_))
+                && !hearth_store
                 && super::storage::class(res, owner) == FoodStorageClass::Ground
             {
                 return None;

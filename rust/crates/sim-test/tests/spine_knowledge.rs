@@ -97,6 +97,97 @@ fn spine_eras_from_data() {
 }
 
 #[test]
+fn spine_era_steps_down_only_after_a_full_practice_window_below() {
+    // Given a colony whose steady practitioners keep the neolithic just under its
+    // transition, and one seasonal worker whose practice lifts it over.
+    let mut engine = sim_test::colony_engine(0);
+    let window = sim_systems::runtime::knowledge::rule(&engine.resources)
+        .expect("colony knowledge rule")
+        .practice_days;
+    let transition = u64::from(knowledge::defs().eras.eras[1].transition_permille);
+    let adults: Vec<_> = engine
+        .world
+        .query::<&Agent>()
+        .without::<&Child>()
+        .iter()
+        .map(|(e, _)| e)
+        .collect();
+    let count = adults.len() as u64;
+    // Smallest practitioner count at or over the threshold; one fewer is under it.
+    let over = (transition * count).div_ceil(1000);
+    assert!(over >= 1 && over < count, "{over} of {count}");
+    let neolithic: Vec<_> = knowledge::defs()
+        .nodes
+        .iter()
+        .filter(|n| n.marker_weight > 0 && n.era.code() == 1)
+        .map(|n| n.id)
+        .collect();
+    // The founders' own measurement establishes the founder era.
+    let (mut tech, _) = compute(&engine.world, &engine.resources, &TechAggregate::default());
+    assert_eq!(tech.current_era, (0, 2));
+    for (i, entity) in adults.iter().enumerate() {
+        let mut k = Knowledge::default();
+        if (i as u64) < over {
+            for id in &neolithic {
+                k.set(*id, 1000, Source::Discovered, 0);
+            }
+        }
+        engine
+            .world
+            .insert_one(*entity, k)
+            .expect("adult knowledge");
+    }
+    let seasonal = adults[usize::try_from(over - 1).expect("index")];
+    // The seasonal worker returns every 2 × window days (below for window − 1 days each
+    // cycle, as winter work-mix noise does), then stops on `last_day`.
+    let period = 2 * window;
+    let last_day = 4 * period;
+    let mut changes = Vec::new();
+    let mut below_since = None;
+    for day in 0..last_day + 3 * window {
+        for (i, entity) in adults.iter().enumerate() {
+            let works = if *entity == seasonal {
+                day % period == 0 && day <= last_day
+            } else {
+                (i as u64) < over - 1
+            };
+            if works {
+                let mut k = engine.world.get::<&mut Knowledge>(*entity).expect("k");
+                for id in &neolithic {
+                    k.touch(*id, day * 1440);
+                }
+            }
+        }
+        for slot in 0..6 {
+            engine.resources.current_tick = day * 1440 + slot * 240;
+            let (next, events) = compute(&engine.world, &engine.resources, &tech);
+            let progress = u64::from(next.era_progress[1]);
+            if progress < transition {
+                below_since.get_or_insert(engine.resources.current_tick);
+            } else {
+                below_since = None;
+            }
+            for e in events
+                .iter()
+                .filter(|e| e.kind == ChronicleKind::EraChanged)
+            {
+                changes.push((e.tick, e.value, e.cause, below_since));
+            }
+            tech = next;
+        }
+    }
+    // Then the noise announces one transition up and no regression while it lasts,
+    // and the era falls back once, only after a full practice window below.
+    assert_eq!(changes.len(), 2, "{changes:?}");
+    assert_eq!((changes[0].1, changes[0].2), (1, 1), "{changes:?}");
+    let (tick, value, cause, since) = changes[1];
+    assert_eq!((value, cause), (0, 2), "{changes:?}");
+    let since = since.expect("below when it falls");
+    assert_eq!(since, (last_day + window + 1) * 1440, "{changes:?}");
+    assert_eq!(tick, since + window * 1440, "{changes:?}");
+}
+
+#[test]
 fn spine_practice_counts_finished_jobs_once_and_never_cancellation() {
     // Given one colonist with no completed builds and a real job completion seam.
     let mut engine = sim_test::colony_engine(1);
