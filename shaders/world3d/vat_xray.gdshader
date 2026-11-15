@@ -3,7 +3,7 @@
 // flat translucent silhouette (light at night, dark by day), so people indoors or under canopy stay findable (the 2D
 // view drew everyone on top). The person's own parts never count as an occluder (they are within `min_gap`).
 shader_type spatial;
-render_mode unshaded, depth_test_disabled, depth_draw_never, blend_mix, cull_back, shadows_disabled, specular_disabled;
+render_mode unshaded, depth_test_disabled, depth_draw_never, blend_mix, cull_back, shadows_disabled, specular_disabled, fog_disabled;
 
 #include "res://shaders/world3d/vat_anim.gdshaderinc"
 global uniform float w3d_night;

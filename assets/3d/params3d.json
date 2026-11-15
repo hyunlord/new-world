@@ -80,6 +80,8 @@
     "lod_distance": 55.0,
     "tint": {"skin_value": [0.8, 1.2], "hair_mix": 0.6, "cloth_hue_mix": 0.3, "cloth_value": [0.8, 1.2]},
     "far_scale": [55.0, 2.2],
+    "far_fill": [0.85, 0.82, 0.74],
+    "far_fill_strength": 0.8,
     "outline": {"px": 2.0, "far_px": 5.0, "day": [0.14, 0.11, 0.09], "night": [0.91, 0.89, 0.81]},
     "xray": {"day": [0.14, 0.11, 0.09], "day_alpha": 0.55, "night": [0.91, 0.89, 0.81], "night_alpha": 0.7}
   },

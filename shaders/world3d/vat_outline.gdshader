@@ -3,7 +3,7 @@
 // day and a light halo at night (global `w3d_night` from sky3d.gd), so a person stays findable on any ground and in the
 // dark (the 2D view's ring and night halo).
 shader_type spatial;
-render_mode unshaded, cull_front, shadows_disabled, specular_disabled;
+render_mode unshaded, cull_front, shadows_disabled, specular_disabled, fog_disabled;
 
 #include "res://shaders/world3d/vat_anim.gdshaderinc"
 global uniform float w3d_night;

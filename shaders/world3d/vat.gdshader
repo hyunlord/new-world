@@ -19,10 +19,14 @@ uniform vec2 skin_value = vec2(0.8, 1.2);
 uniform float hair_mix = 0.6;
 uniform float cloth_hue_mix = 0.3;
 uniform vec2 cloth_value = vec2(0.8, 1.2);
+// Far figures turn toward a light, unlit fill (rgb, strength) between far_scale.x and twice that distance: at ¼× a
+// person reads as a bright figure with a dark rim, like the 2D view's high-key markers.
+uniform vec4 far_fill = vec4(0.85, 0.82, 0.74, 0.0);
 
 varying vec3 tint;
 varying float mean_luma;
 varying flat int tint_region;
+varying float far_k;
 
 vec3 unpack_rgb(float v) {
 	float x = floor(v + 0.5);
@@ -40,6 +44,7 @@ vec3 srgb_to_linear(vec3 c) {
 void vertex() {
 	float dist = length((MODEL_MATRIX * vec4(0.0, 0.0, 0.0, 1.0)).xyz - CAMERA_POSITION_WORLD);
 	VERTEX = vat_position(UV2, INSTANCE_CUSTOM) * far_scale_at(dist);
+	far_k = smoothstep(far_scale.x, far_scale.x * 2.0, dist) * far_fill.a;
 	int region = int(UV2.y + 0.5);
 	if (region == 1) {
 		tint = COLOR.rgb;
@@ -79,6 +84,11 @@ void fragment() {
 			}
 		}
 		ALBEDO = clamp(c, 0.0, 1.0);
+	}
+	if (far_k > 0.0) {
+		vec3 fill = srgb_to_linear(far_fill.rgb);
+		ALBEDO = mix(ALBEDO, fill * 0.35, far_k);
+		EMISSION = fill * 0.65 * far_k;
 	}
 	ROUGHNESS = 0.85;
 }
