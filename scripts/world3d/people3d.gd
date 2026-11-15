@@ -4,7 +4,8 @@
 #   `people.model`). Crowds are binned by model and map chunk (`people.chunk_tiles`), so off-screen chunks are culled;
 #   each bin draws the full character near the camera and its `<model>_lod` bake (same clips) beyond
 #   `people.lod_distance` through Godot visibility ranges. A person who moves to another chunk or grows up changes
-#   bin. A soft dark disc under every near person (`people.contact_shadow` radius/alpha) keeps them findable.
+#   bin. A soft dark disc under every near person (`people.contact_shadow` radius/alpha), an outline pass (dark by day,
+#   a light halo at night: `people.outline`) and enlarged far figures (`people.far_scale`) keep them findable.
 #   A person glides from tile to tile over the step time (move_interval_ticks at the current speed, the 2D
 #   AgentLayer rule), faces where they walk, and plays a clip by state: sleep (states 3 with target_kinds 3),
 #   carry (carries an item, wood or food while moving), walk, work (a job while standing), idle. Children are
@@ -225,11 +226,11 @@ func _model(model: String) -> Dictionary:
 	if not bool(vat.get("ok")):
 		return {}
 	var other: Color = Data3D.colour(Data3D.binding("people.other_colour", []), Color(0.3, 0.22, 0.15))
-	var row: Dictionary = {"vat": vat, "mat": vat.call("material", other), "lod_vat": null, "lod_mat": null}
+	var row: Dictionary = {"vat": vat, "mat": vat.call("with_findability", vat.call("material", other)), "lod_vat": null, "lod_mat": null}
 	var lod: RefCounted = Vat.load_character(model + "_lod", true)
 	if bool(lod.get("ok")):
 		row["lod_vat"] = lod
-		row["lod_mat"] = lod.call("material", other)
+		row["lod_mat"] = lod.call("with_findability", lod.call("material", other))
 	_models[model] = row
 	return row
 

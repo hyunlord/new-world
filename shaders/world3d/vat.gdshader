@@ -1,6 +1,5 @@
 // vat.gdshader — vertex-animation-texture crowds (scripts/world3d/vat3d.gd; people3d.gd, animals3d.gd).
-// Each vertex reads its position for the current frame from `vat` (column = UV2.x · width, the unsplit vertex; rows:
-// the clip's frames), blending two frames; the fragment derives the flat face normal from screen derivatives. Tint by region (UV2.y): 1 → instance COLOR,
+// Each vertex reads its position for the current frame (vat_anim.gdshaderinc; far figures enlarged); the fragment derives the flat face normal from screen derivatives. Tint by region (UV2.y): 1 → instance COLOR,
 // 2 → INSTANCE_CUSTOM.b, 3 → INSTANCE_CUSTOM.a (packed r·65536 + g·256 + b), 0 → `other_colour`. `textured`
 // characters sample `atlas` at UV instead and keep its painted colours as the base: skin (1) only changes value toward
 // the person's skin tone (clamped to `skin_value`), hair (2) blends `hair_mix` toward the person's hair colour, and
@@ -9,10 +8,7 @@
 shader_type spatial;
 render_mode diffuse_lambert, specular_disabled;
 
-global uniform float w3d_time;
-uniform sampler2D vat : filter_nearest, repeat_disable;
-uniform float width = 1.0;
-uniform float fps = 15.0;
+#include "res://shaders/world3d/vat_anim.gdshaderinc"
 uniform vec3 other_colour : source_color = vec3(0.28, 0.2, 0.14);
 uniform bool textured = false;
 uniform sampler2D atlas : source_color, filter_linear_mipmap, repeat_disable;
@@ -42,17 +38,8 @@ vec3 srgb_to_linear(vec3 c) {
 }
 
 void vertex() {
-	int column = int(UV2.x * width);
-	float pack = floor(INSTANCE_CUSTOM.r + 0.5);
-	float start = floor(pack / 256.0);
-	float count = max(1.0, mod(pack, 256.0));
-	float f = mod((w3d_time + INSTANCE_CUSTOM.g) * fps, count);
-	int f0 = int(floor(f));
-	int f1 = int(mod(float(f0 + 1), count));
-	float a = fract(f);
-	vec3 p0 = texelFetch(vat, ivec2(column, int(start) + f0), 0).xyz;
-	vec3 p1 = texelFetch(vat, ivec2(column, int(start) + f1), 0).xyz;
-	VERTEX = mix(p0, p1, a);
+	float dist = length((MODEL_MATRIX * vec4(0.0, 0.0, 0.0, 1.0)).xyz - CAMERA_POSITION_WORLD);
+	VERTEX = vat_position(UV2, INSTANCE_CUSTOM) * far_scale_at(dist);
 	int region = int(UV2.y + 0.5);
 	if (region == 1) {
 		tint = COLOR.rgb;

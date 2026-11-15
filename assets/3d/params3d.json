@@ -78,7 +78,9 @@
     "contact_shadow": {"radius": 0.42, "alpha": 0.45},
     "chunk_tiles": 16,
     "lod_distance": 55.0,
-    "tint": {"skin_value": [0.8, 1.2], "hair_mix": 0.6, "cloth_hue_mix": 0.3, "cloth_value": [0.8, 1.2]}
+    "tint": {"skin_value": [0.8, 1.2], "hair_mix": 0.6, "cloth_hue_mix": 0.3, "cloth_value": [0.8, 1.2]},
+    "far_scale": [60.0, 1.6],
+    "outline": {"px": 2.0, "day": [0.14, 0.11, 0.09], "night": [0.91, 0.89, 0.81]}
   },
   "stations": {
     "work_puffs": {"amount": 10, "colour": [0.78, 0.7, 0.55]}

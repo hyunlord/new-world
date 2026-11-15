@@ -13,6 +13,7 @@
 extends RefCounted
 
 const VAT_SHADER = preload("res://shaders/world3d/vat.gdshader")
+const OUTLINE_SHADER = preload("res://shaders/world3d/vat_outline.gdshader")
 const Data3D = preload("res://scripts/world3d/data3d.gd")
 const DIR: String = "res://assets/3d/vat"
 
@@ -166,11 +167,32 @@ func material(other: Color) -> ShaderMaterial:
 		mat.set_shader_parameter("cloth_value", Vector2(float(cv[0]), float(cv[1])))
 		mat.set_shader_parameter("hair_mix", float(Data3D.param("people.tint.hair_mix", 0.6)))
 		mat.set_shader_parameter("cloth_hue_mix", float(Data3D.param("people.tint.cloth_hue_mix", 0.3)))
+	_set_anim(mat)
+	mat.set_shader_parameter("other_colour", other)
+	return mat
+
+
+## People only: far figures enlarged (params3d `people.far_scale` [from metres, max]) and a screen-constant outline
+## pass (`people.outline` px, day and night colours) as the material's next pass.
+func with_findability(mat: ShaderMaterial) -> ShaderMaterial:
+	var far: Array = Data3D.param("people.far_scale", [60.0, 1.6])
+	mat.set_shader_parameter("far_scale", Vector2(float(far[0]), float(far[1])))
+	var line: ShaderMaterial = ShaderMaterial.new()
+	line.shader = OUTLINE_SHADER
+	_set_anim(line)
+	line.set_shader_parameter("far_scale", Vector2(float(far[0]), float(far[1])))
+	line.set_shader_parameter("body_height", float(meta.get("height", 1.7)))
+	line.set_shader_parameter("outline_px", float(Data3D.param("people.outline.px", 1.5)))
+	line.set_shader_parameter("day_colour", Data3D.colour(Data3D.param("people.outline.day", []), Color(0.14, 0.11, 0.09)))
+	line.set_shader_parameter("night_colour", Data3D.colour(Data3D.param("people.outline.night", []), Color(0.91, 0.89, 0.81)))
+	mat.next_pass = line
+	return mat
+
+
+func _set_anim(mat: ShaderMaterial) -> void:
 	mat.set_shader_parameter("vat", texture)
 	mat.set_shader_parameter("width", float(meta.get("width", 1)))
 	mat.set_shader_parameter("fps", float(meta.get("fps", 15)))
-	mat.set_shader_parameter("other_colour", other)
-	return mat
 
 
 ## The packed instance custom value for clip `clip` (falls back to the first clip).

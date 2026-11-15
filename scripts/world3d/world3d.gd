@@ -65,6 +65,7 @@ func _ready() -> void:
 		# Animation clock of the 3D shaders (VAT crowds, sway, water): scaled frame time, so Engine.time_scale = 0
 		# freezes every animated pixel (pixel oracles compare frames).
 		RenderingServer.global_shader_parameter_add("w3d_time", RenderingServer.GLOBAL_VAR_TYPE_FLOAT, 0.0)
+		RenderingServer.global_shader_parameter_add("w3d_night", RenderingServer.GLOBAL_VAR_TYPE_FLOAT, 0.0)
 	var main: Node = get_parent()
 	world_sim = main.get_node_or_null("WorldSim")
 	camera2d = main.get_node_or_null("Camera2D") as Camera2D

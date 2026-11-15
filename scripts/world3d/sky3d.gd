@@ -4,7 +4,8 @@
 #   params3d `light.dawn_hours` / `light.dusk_hours` (the same hours as the 2D CanvasModulate night); soft PCF shadows
 #   up to `light.shadow_distance`. The season (`season`) sets the terrain's season tint and snow cover
 #   (params3d `terrain.season_tint`, `terrain.snow_cover`). A procedural sky, filmic tonemapping, a warm slightly desaturated grade (`light.saturation`), SSAO and a light
-#   distance fog give depth. `night_factor()` is 0 by day and 1 at full night (lights of lit stations follow it).
+#   distance fog give depth. `night_factor()` is 0 by day and 1 at full night (lights of lit stations follow it; also the global shader
+#   param `w3d_night`, which turns people's outline into a halo).
 # Bridge methods called: via SimReads get_time_snapshot.
 extends Node3D
 
@@ -115,6 +116,7 @@ func _apply_hour(hour: float) -> void:
 	elif hour >= float(dusk[0]):
 		day = 1.0 - (hour - float(dusk[0])) / maxf(0.01, float(dusk[1]) - float(dusk[0]))
 	_night = 1.0 - day
+	RenderingServer.global_shader_parameter_set("w3d_night", _night)
 	# Sun path: azimuth east (6h) → south (12h) → west (18h); elevation peaks at noon. At night a low moon.
 	var frac: float = clampf((hour - 6.0) / 12.0, -0.2, 1.2)
 	var elevation: float = deg_to_rad(lerpf(8.0, 58.0, sin(clampf(frac, 0.0, 1.0) * PI)))
