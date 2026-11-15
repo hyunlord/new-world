@@ -82,7 +82,8 @@
   },
   "outcrops": {
     "model": "ore_outcrop",
-    "marker_height": 1.9
+    "marker_height": 1.9,
+    "depleted_tint": "granite"
   },
   "stations": {
     "about": "blueprint construction_style (or the 2D workshop structure id) -> model; unknown styles use `fallback`.",

@@ -9,7 +9,8 @@
 #   leaves a stump for the 2D binding `trees.stump_ticks` (the same rule as tree_layer.gd). Bushes and deadwood from
 #   get_resource_snapshot (bindings3d `resources.codes`), boulders/flint/clay from get_colony_overlay nodes (2D node
 #   binding structure → bindings3d `nodes.by_structure`), ore outcrops from get_outcrops with the vein surface
-#   tinted by the outcrop's catalogue tint material and a floating marker above each known deposit.
+#   tinted by the outcrop's catalogue tint material and a floating marker above each known deposit; a worked-out
+#   outcrop (`remaining` 0) is smaller, vein in bindings3d `outcrops.depleted_tint`, no marker.
 #   shaders/world3d/flora.gdshader adds a slow sway and winter snow on top surfaces.
 # Bridge methods called: via SimReads get_trees, get_time_snapshot, get_world_info, get_resource_snapshot,
 #   get_colony_overlay, get_outcrops, get_content_catalog; signal world_reset.
@@ -183,11 +184,17 @@ func _build_ore(batches: Dictionary, outcrops: Dictionary) -> void:
 	var ox: PackedInt64Array = outcrops.get("xs", PackedInt64Array())
 	var oy: PackedInt64Array = outcrops.get("ys", PackedInt64Array())
 	var ok: PackedInt64Array = outcrops.get("kinds", PackedInt64Array())
+	var left: PackedInt64Array = outcrops.get("remaining", PackedInt64Array())
+	var depleted_tint: String = str(Data3D.binding("outcrops.depleted_tint", ""))
 	var marker_points: Array[Transform3D] = []
 	var marker_colours: Array[Color] = []
 	for i: int in mini(ok.size(), mini(ox.size(), oy.size())):
 		var tint: String = _outcrop_tint(int(ok[i]))
 		var t4: Vector2i = Vector2i(int(ox[i]), int(oy[i]))
+		# A worked-out outcrop keeps its shape but loses the vein colour and the marker.
+		if i < left.size() and left[i] <= 0:
+			_add(batches, ore_model + "|vein=" + depleted_tint, t4, View.key_hash(_seed, t4.x, t4.y, 43), 0.0, 0.85)
+			continue
 		_add(batches, ore_model + "|vein=" + tint, t4, View.key_hash(_seed, t4.x, t4.y, 43), 0.0, 1.0)
 		var top: float = float(_terrain.call("stand_height", t4)) + float(Data3D.binding("outcrops.marker_height", 1.9))
 		marker_points.append(Transform3D(Basis.IDENTITY.scaled(Vector3(0.22, 0.32, 0.22)), Vector3(t4.x + 0.5, top, t4.y + 0.5)))

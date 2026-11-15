@@ -36,7 +36,7 @@ func _models_named(node: Variant, out: Dictionary, key: String = "") -> void:
 	elif node is Array:
 		for v: Variant in (node as Array):
 			_models_named(v, out, key)
-	elif node is String and key not in ["models_dir", "fallback_habit", "habit"]:
+	elif node is String and key not in ["models_dir", "fallback_habit", "habit", "depleted_tint"]:
 		out[str(node)] = key
 
 
