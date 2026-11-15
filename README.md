@@ -137,20 +137,19 @@ F5는 `user://saves/<시드>-<틱>.wsave`에 저장한다. `user://`는 Godot의
 
 | 설정 | 조정 대상 |
 |---|---|
-| `walls.top_value` (0.80) | 벽 윗면 밝기 |
-| `ground.tone.mean_max`, `std_ratio`, `saturation_max`, `margin` | 지면의 밝기·대비·채도 제한 |
-| `water.drift_hz`, `drift_px`, `bank_px`, `shore_radius_px` | 물결 속도·이동 폭, 강둑과 물가 형태 |
-| `water.minimum_land_luminance_difference`, `minimum_land_hue_distance` | 물과 지면의 명도·색상 차이 하한 |
-| `people.night_halo_alpha` (0.8) | 야간 인물 테두리의 최대 알파 |
-| `season.snow_alpha` (0.6) | 눈 합성 알파 |
-| `lod.people_below_zoom` (1.0) | 인물·동물을 마커로 바꾸는 줌 임계값 |
-| `lod.glyph_zoom` (0.5), `marker_px`, `animal_marker_px` | 활동 기호를 보이는 줌과 마커 화면 크기 |
+| `camera.zooms`, `camera.default_zoom` | 줌 단계와 시작 줌 |
+| `labels.font_px` | 지도 위 글자(공사 진행, 마우스 아래 이름, 방 이름) 크기 |
+| `people.clothing_by_top`, `people.drafted_rgba` | 사람 옷 색, 소집된 사람 표시 고리 색 |
+| `sites.refused_rgba` | 놓을 수 없는 자리 표시 색 |
+| `plants.phase_colors`, `plants.ripe_accent` | 야생 식물 단계별 색과 익은 이삭 색 |
+
+3D 화면의 지형·나무·벽·빛 설정은 `assets/3d/params3d.json`에 있고 F12로 다시 읽히지 않는다(다시 시작해야 적용).
 
 수정 전 파일을 플레이 작업 트리 **밖에** 복사해 두고, 실험 뒤 원본을 복원하고 F12를 다시 누른다. 로컬 수정이 남아 있으면 실행기는 업데이트·실행을 거절한다. `camera.default_zoom`은 시작할 때만 적용되며 F12는 현재 줌을 새 확대 단계 중 가까운 값으로 맞춘다.
 
-### 3D 보기 (시험, M3D-1)
+### 3D 화면 (M3D-SWITCH)
 
-2D 화면이 기본이다. 3D로 보려면 `tools/play.sh v8/3d -- --renderer=3d`로 실행하거나, 게임 안 **설정**에서 **“3D 보기 (다시 시작하면 적용)”**를 켜고 다시 시작한다(`--renderer=2d`는 설정보다 우선한다). 조작은 2D와 같고 다음이 더해진다: **Q/E** 시점 90° 회전, 마우스 휠·`-`/`=` 5단계 줌(가장 가까운 단계에서 지붕이 사라지고 벽이 낮아져 집 안이 보임), **R** 방 보기에서도 지붕이 사라짐, 사람이나 방을 고르면 그 집의 지붕이 사라짐, **O** 온기·빛·소음·음식 냄새·위험·어울림·영성·아름다움 지도를 차례로 표시. 사람과 동물은 임시 모형이다(M3D-2에서 교체). 3D 모형은 `tools/3d/blender/`의 스크립트가 만든다(`blender -b --factory-startup -P tools/3d/blender/build_all.py`).
+세계는 3D로만 그린다(M3D-SWITCH E2에서 2D 화면과 `--renderer=2d`, “3D 보기” 설정을 지웠다). 조작은 전과 같고 다음이 더해진다: **Q/E** 시점 90° 회전, 마우스 휠·`-`/`=` 5단계 줌(가장 가까운 단계에서 지붕이 사라지고 벽이 낮아져 집 안이 보임), **R** 방 보기에서도 지붕이 사라짐, 사람이나 방을 고르면 그 집의 지붕이 사라짐, **O** 온기·빛·소음·음식 냄새·위험·어울림·영성·아름다움 지도를 차례로 표시. 공사 진행 막대와 글자, 마우스 아래 물건·자원·동물·방문자 이름, 방 이름(R), 광맥 표시, 소집·아픔·도망·기분(M) 표시는 3D 화면 위에 글자로 그린다. 3D 모형은 `tools/3d/blender/`의 스크립트가 만든다(`blender -b --factory-startup -P tools/3d/blender/build_all.py`).
 
 ### 실행기 옵션과 문제 확인
 

@@ -6,7 +6,7 @@
 #   room tile in its role colour (RoomIndex.ROLE_COLORS); and the order tool's live state from OrderTool's public
 #   getters — the hovered tile framed in an area or build mode (`hover_tile`), the drag rectangle (`drag_tiles`), the
 #   placement preview (`preview()`: fitting tiles green, refused tiles in `sites.refused_rgba`), else the build or
-#   template footprint (`build_size`, `build_origin`). The current task's marker tile (get_current_task, what
+#   template footprint (`build_size`, `build_origin`), green or refused by `ghost_ok`. The current task's marker tile (get_current_task, what
 #   WorldMarker rings in 2D) gets a pulsing ring in WorldMarker.RING_COLOR. O cycles the bridge's influence channels
 #   (get_influence_overlay: warmth, light, noise, food smell, danger, social, spiritual, beauty) as a heat tint, read
 #   once per sim tick while shown; a small label names the channel (Locale keys W3D_OVERLAY_*).
@@ -22,6 +22,8 @@ const Data3D = preload("res://scripts/world3d/data3d.gd")
 const CHANNEL_KEYS: Array[String] = ["W3D_OVERLAY_WARMTH", "W3D_OVERLAY_LIGHT", "W3D_OVERLAY_NOISE", "W3D_OVERLAY_FOOD",
 	"W3D_OVERLAY_DANGER", "W3D_OVERLAY_SOCIAL", "W3D_OVERLAY_SPIRITUAL", "W3D_OVERLAY_BEAUTY"]
 const TOGGLE_KEY: Key = KEY_O
+## A placement tile or footprint that fits.
+const GOOD: Color = Color(0.45, 0.9, 0.45, 0.45)
 
 var channel: int = -1
 var _world_sim: Node = null
@@ -229,7 +231,8 @@ func _apply_live() -> void:
 	var b: Vector2i = drag[1] if dragging else Vector2i.ZERO
 	var preview: Dictionary = tool.call("preview") if tool != null and mode != 0 else {}
 	var size0: Vector2i = tool.call("build_size") if tool != null and mode == OrderTool.Mode.BUILD else Vector2i.ONE
-	var key: String = "%d|%s|%s|%s|%s|%d|%s" % [mode, hover, dragging, a, b, hash(preview), size0]
+	var fits: bool = tool != null and mode == OrderTool.Mode.BUILD and bool(tool.call("ghost_ok"))
+	var key: String = "%d|%s|%s|%s|%s|%d|%s|%s" % [mode, hover, dragging, a, b, hash(preview), size0, fits]
 	if key == _live_key:
 		return
 	_live_key = key
@@ -244,18 +247,19 @@ func _apply_live() -> void:
 		var xs: Variant = preview.get("xs")
 		var ys: Variant = preview.get("ys")
 		var ok: Variant = preview.get("ok")
+		var refused: Variant = ArtData.param("sites.refused_rgba", [235, 80, 64, 90])
+		var bad: Color = Color8(int(refused[0]), int(refused[1]), int(refused[2]), 150) if refused is Array else Color(0.9, 0.3, 0.25, 0.6)
 		if xs is PackedInt32Array and ys is PackedInt32Array:
-			var refused: Variant = ArtData.param("sites.refused_rgba", [235, 80, 64, 90])
-			var bad: Color = Color8(int(refused[0]), int(refused[1]), int(refused[2]), 150) if refused is Array else Color(0.9, 0.3, 0.25, 0.6)
 			for i: int in mini((xs as PackedInt32Array).size(), (ys as PackedInt32Array).size()):
-				var fits: bool = ok is PackedByteArray and i < (ok as PackedByteArray).size() and (ok as PackedByteArray)[i] == 1
-				_put(_img, _frame, Vector2i(xs[i], ys[i]), Color(0.45, 0.9, 0.45, 0.45) if fits else bad, true)
+				var tile_fits: bool = ok is PackedByteArray and i < (ok as PackedByteArray).size() and (ok as PackedByteArray)[i] == 1
+				_put(_img, _frame, Vector2i(xs[i], ys[i]), GOOD if tile_fits else bad, true)
 		if (xs is not PackedInt32Array or (xs as PackedInt32Array).is_empty()) and mode == OrderTool.Mode.BUILD:
+			# A blueprint or template footprint: green where it fits (OrderTool.ghost_ok), refused red where not.
 			var size: Vector2i = tool.call("build_size")
 			var origin: Vector2i = tool.call("build_origin", hover)
 			for y: int in size.y:
 				for x: int in size.x:
-					_put(_img, _frame, origin + Vector2i(x, y), Color(0.85, 0.9, 0.8, 0.3), true)
+					_put(_img, _frame, origin + Vector2i(x, y), GOOD if fits else bad, true)
 		_put(_img, _frame, hover, Color(1, 1, 1, 0.12), true)
 	_tex.update(_img)
 	_frame_tex.update(_frame)

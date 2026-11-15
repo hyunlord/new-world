@@ -8,7 +8,7 @@
 import math
 from dataclasses import dataclass
 from mux2_gate_inputs import Json, Node, require
-from mux2_gate_telemetry import REQUIRED, Frame, validate_frame, validate_warmup
+from mux2_gate_telemetry import REQUIRED, Frame, validate_frame, validate_rebuild
 
 
 @dataclass(frozen=True, slots=True)
@@ -90,7 +90,7 @@ def validate_arm(arm: Node, *, strict: bool = True) -> ArmTiming:
     over50: list[SlowFrame] = []
     slow: list[Json] = []
     prior_frame: Frame | None = None
-    warmup_observed = 0.0
+    rebuild_observed = 0.0
     for row in samples:
         elapsed = row.field('elapsed_seconds').number()
         interval = row.field('interval_ms').number()
@@ -99,7 +99,7 @@ def validate_arm(arm: Node, *, strict: bool = True) -> ArmTiming:
                 'interval does not match recorded elapsed time')
         previous = elapsed
         prior_frame = validate_frame(row, prior_frame, 0)
-        warmup_observed += prior_frame.wall_warmup
+        rebuild_observed += prior_frame.rebuild
         if interval > 33:
             slow.append(row.value)
         if elapsed <= 10:
@@ -111,7 +111,7 @@ def validate_arm(arm: Node, *, strict: bool = True) -> ArmTiming:
             counts[min(4, max(0, math.ceil((elapsed - 10) / 60) - 1))] += 1
     require(prior_frame is not None and prior_frame.tick == arm.field('end_tick').number(),
             'end tick differs from final sample')
-    validate_warmup(arm, warmup_observed)
+    validate_rebuild(arm, rebuild_observed)
     require(previous >= 310 and score.field('actual_play_seconds').number() == previous,
             'incomplete duration or mismatched elapsed time')
     require(score.field('actual_post_warmup_seconds').number() == previous - 10,

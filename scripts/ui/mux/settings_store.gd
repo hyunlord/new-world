@@ -5,7 +5,7 @@ extends RefCounted
 signal changed(key: String, value: Variant)
 signal persistence_failed(code: int)
 
-const DEFAULTS: Dictionary = {"edge_pan": false, "invert_pan": false, "ui_scale": 1.0, "helper_on": true, "steward_default": true, "renderer_3d": false}
+const DEFAULTS: Dictionary = {"edge_pan": false, "invert_pan": false, "ui_scale": 1.0, "helper_on": true, "steward_default": true}
 var path: String
 var last_error: Error = OK
 var _config: ConfigFile = ConfigFile.new()

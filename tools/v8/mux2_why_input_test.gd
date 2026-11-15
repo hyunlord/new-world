@@ -1,7 +1,9 @@
 # MUX2 dispatched input regression, real scene and bridge facts; no simulated UI outcomes.
+# M3D-SWITCH E2: map points and tiles convert through ViewProjection (the 3D view's terrain ray), not the 2D canvas.
 # Bridge: get_tile_causal_history; normal scene reads. Runtime owned by root.
 extends SceneTree
 const View = preload("res://scripts/world/colony/view.gd")
+const ViewProjection = preload("res://scripts/world/view_projection.gd")
 const Store = preload("res://scripts/ui/mux/settings_store.gd")
 const Obstacles = preload("res://scripts/world/colony/marker_layout.gd")
 var main: Node
@@ -58,7 +60,7 @@ func run() -> void:
 	await pointer(point, true, true)
 	await pointer(point, false, true)
 	await frames()
-	var tile: Vector2i = View.world_to_tile(root.get_canvas_transform().affine_inverse() * point)
+	var tile: Vector2i = View.world_to_tile(ViewProjection.screen_to_world(point))
 	var history: Array = main.get_node("WorldSim").get_tile_causal_history(tile.x,tile.y)
 	var has_content: bool = not history.is_empty() or str(panel.call("wait_text",tile)) != ""
 	check("alt click matches actual tile content", panel.visible == has_content)
@@ -216,7 +218,7 @@ func _placement_regression(panel: Control, camera: Camera2D, tile: Vector2i) -> 
 		var obstacle: Rect2 = minimap.get_global_transform_with_canvas() * Rect2(Vector2.ZERO, minimap.size)
 		# A room/item Why caller can anchor under the minimap: the old flipped popup overlaps its lower half.
 		var desired: Vector2 = Vector2(obstacle.end.x - 8.0, obstacle.end.y - 24.0)
-		var current: Vector2 = root.get_canvas_transform() * View.tile_centre(tile)
+		var current: Vector2 = ViewProjection.world_to_screen(View.tile_centre(tile))
 		camera.position += (current - desired) / camera.zoom
 		camera.call("_clamp_position")
 		await frames(8)
@@ -254,11 +256,11 @@ func _placement_regression(panel: Control, camera: Camera2D, tile: Vector2i) -> 
 # This is fixture camera setup; the click still traverses normal Godot input dispatch.
 func _expose_tile(camera: Camera2D, tile: Vector2i) -> Vector2:
 	var target: Vector2 = _map_fixture_point(main.get_node("UI/CausalPanel"), false)
-	var current: Vector2 = root.get_canvas_transform() * View.tile_centre(tile)
+	var current: Vector2 = ViewProjection.world_to_screen(View.tile_centre(tile))
 	camera.position += (current - target) / camera.zoom
 	camera.call("_clamp_position")
 	await frames(8)
-	var point: Vector2 = root.get_canvas_transform() * View.tile_centre(tile)
+	var point: Vector2 = ViewProjection.world_to_screen(View.tile_centre(tile))
 	var motion := InputEventMouseMotion.new()
 	motion.position = point
 	Input.parse_input_event(motion)
@@ -281,7 +283,7 @@ func _map_fixture_point(panel: Control, require_empty: bool) -> Vector2:
 			if not clear:
 				continue
 			if require_empty:
-				var tile: Vector2i = View.world_to_tile(root.get_canvas_transform().affine_inverse() * candidate)
+				var tile: Vector2i = View.world_to_tile(ViewProjection.screen_to_world(candidate))
 				var history: Array = main.get_node("WorldSim").get_tile_causal_history(tile.x, tile.y)
 				if not history.is_empty() or str(panel.call("wait_text", tile)) != "":
 					continue

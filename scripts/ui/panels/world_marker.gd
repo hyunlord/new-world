@@ -1,4 +1,5 @@
-# world_marker.gd (ColonyView/WorldMarker in scenes/main.tscn): at most 1 marker (2 for a two-place
+# world_marker.gd (ColonyView/WorldMarker in scenes/main.tscn; hidden since M3D-SWITCH E2 — World3D/Overlay draws the
+#   3D ring from the same get_current_task and these constants): at most 1 marker (2 for a two-place
 #   task) on the tile from get_current_task. Never more than 2 markers on screen. Pulsing ring drawn
 #   with _draw(). Updates per tick, clears on world_reset.
 # Bridge methods: via SimReads get_current_task; signal world_reset.

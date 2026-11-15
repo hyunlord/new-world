@@ -1,6 +1,12 @@
 # Strict M-UX2 GPU visibility: eight actual saved scenes, every on-screen person, no occlusion censoring.
+# M3D-SWITCH E2: measured on the 3D view. The ground control hides every World3D layer but the terrain, the built
+#   walls/roofs, the sky and the camera (and the HUD and map labels); a person's bounds are an independent projection of
+#   a box around their figure (feet ± BODY_HALF_WIDTH tiles, feet to head; World3D/People `bodies`); a person is removed
+#   by scaling their own instance of their character crowd to zero (People's crowd MultiMesh, contact shadow kept), so
+#   unchanged shadows and labels cannot count. The 3D view has no LOD: both zooms draw the full figures.
 # Bridge methods: load_world/get_time_snapshot/get_world_info/get_agent_snapshot; others via normal scene.
-# Run windowed: --manifest /absolute/manifest.json --out /absolute/new-directory. No product hooks.
+# Run windowed: --manifest /absolute/manifest.json --out /absolute/new-directory. No product hooks; reads People's
+#   private `_state` / `_crowds` to hide one instance (no public toggle exists).
 extends SceneTree
 
 const Provenance = preload("res://tools/v8/mux2_visibility_provenance.gd")
@@ -12,7 +18,11 @@ var _scenes: Array[Dictionary] = []
 var _main: Node
 var _world: Node
 var _camera: Camera2D
-var _agents: Node2D
+var _w3d: Node
+var _people: Node
+const BODY_HALF_WIDTH: float = 0.35
+## World3D children kept in the ground control (the 2D control kept the ground chunks with their baked walls).
+const GROUND_LAYERS: Array[String] = ["Terrain", "Structures", "Sky", "CameraRig"]
 
 
 func _init() -> void:
@@ -70,7 +80,7 @@ func _run() -> void:
 	var changed_inputs: Array[String] = Provenance.changes(start_hashes, provenance_end["hashes"])
 	for changed: String in changed_inputs:
 		_failures.append("input mutated/unreadable during capture " + changed)
-	var report: Dictionary = {"schema": 2, "manifest_sha256": start_hashes.get(manifest_path, ""), "bridge_sha256": start_hashes.get(Provenance.BRIDGE, ""), "render_params_sha256": start_hashes.get("res://assets/v8art/render_params.json", ""), "provenance_start": provenance_start, "provenance_end": provenance_end, "changed_inputs": changed_inputs, "inputs_unchanged": changed_inputs.is_empty(), "scenes": _scenes, "failures": _failures, "pass": _failures.is_empty(), "ground_control": "same camera/daylight; only GroundLayer visible; includes actual baked walls; no fabricated pixels", "attribution": "leave-one-person-out framebuffer difference; unchanged shadows and activity glyphs cannot count"}
+	var report: Dictionary = {"schema": 2, "renderer": "3d", "manifest_sha256": start_hashes.get(manifest_path, ""), "bridge_sha256": start_hashes.get(Provenance.BRIDGE, ""), "render_params_sha256": start_hashes.get("res://assets/v8art/render_params.json", ""), "provenance_start": provenance_start, "provenance_end": provenance_end, "changed_inputs": changed_inputs, "inputs_unchanged": changed_inputs.is_empty(), "scenes": _scenes, "failures": _failures, "pass": _failures.is_empty(), "ground_control": "same camera and sky; only World3D Terrain, Structures, Sky and CameraRig visible (walls and roofs included); no fabricated pixels", "attribution": "leave-one-person-out framebuffer difference (the person's crowd instance scaled to zero); unchanged contact shadows and labels cannot count"}
 	_write(_out.path_join("visibility.json"), report)
 	print("MUX2_VISIBILITY_DONE " + JSON.stringify({"scenes": _scenes.size(), "failures": _failures.size(), "pass": _failures.is_empty()}))
 	quit(0 if _failures.is_empty() else 1)
@@ -92,7 +102,13 @@ func _save_scenes(row: Dictionary) -> void:
 	_world = _main.get_node("WorldSim")
 	_world.process_mode = Node.PROCESS_MODE_DISABLED
 	_camera = _main.get_node("Camera2D") as Camera2D
-	_agents = _main.get_node("ColonyView/AgentLayer") as Node2D
+	_w3d = _main.get_node_or_null("World3D")
+	_people = _w3d.get_node_or_null("People") if _w3d != null else null
+	if _people == null:
+		_failures.append("main scene has no World3D/People")
+		_main.queue_free()
+		await process_frame
+		return
 	if not bool(SimReads.mutate(_world, "load_world", [path])):
 		_failures.append("load failed " + path)
 		_main.queue_free()
@@ -112,7 +128,8 @@ func _save_scenes(row: Dictionary) -> void:
 		_main.process_mode = Node.PROCESS_MODE_INHERIT
 		_camera.zoom = Vector2.ONE * zoom
 		_camera.call("center_on_camp")
-		for _i: int in 45:
+		# The 3D rig eases its height onto the ground: wait for it as well as the camera.
+		for _i: int in 90:
 			await process_frame
 		_main.process_mode = Node.PROCESS_MODE_DISABLED
 		await _measure_scene(row, clock, zoom)
@@ -134,40 +151,39 @@ func _measure_scene(input: Dictionary, clock: Dictionary, zoom: float) -> void:
 	var directory: String = _out.path_join(id)
 	DirAccess.make_dir_recursive_absolute(directory)
 	var _full: Image = await _capture(directory.path_join("full.png"))
-	var hidden: Array[CanvasItem] = []
-	for child: Node in _main.get_node("ColonyView").get_children():
-		if child is CanvasItem and child.name != "GroundLayer":
-			var item: CanvasItem = child as CanvasItem
-			if item.visible:
-				hidden.append(item)
-				item.hide()
+	var hidden: Array[Node] = []
+	for child: Node in _w3d.get_children():
+		if str(child.name) in GROUND_LAYERS:
+			continue
+		if child is Node3D and (child as Node3D).visible:
+			(child as Node3D).hide()
+			hidden.append(child)
+		elif child is CanvasLayer and (child as CanvasLayer).visible:
+			(child as CanvasLayer).hide()
+			hidden.append(child)
 	var ui: CanvasLayer = _main.get_node("UI") as CanvasLayer
 	ui.hide()
 	var ground: Image = await _capture(directory.path_join("ground.png"))
-	for child: CanvasItem in hidden:
-		child.show()
+	for child: Node in hidden:
+		child.set("visible", true)
 	ui.show()
-	var persons: Dictionary = _agents.get("_persons")
 	var snapshot: Dictionary = _world.get_agent_snapshot()
 	var all_bits: PackedInt64Array = snapshot.get("ids", PackedInt64Array())
+	var agent_ids: PackedInt64Array = snapshot.get("agent_ids", PackedInt64Array())
 	var expected: Array[int] = []
 	var rows: Array[Dictionary] = []
 	var offscreen: Array[int] = []
 	var partial: Array[Dictionary] = []
-	var lod: bool = bool(_agents.call("lod_active"))
-	var markers: Node = _agents.get_node("LodMarkers")
-	var discs: MultiMeshInstance2D = markers.get("_discs") as MultiMeshInstance2D
-	var keys: Array = persons.keys()
-	for bits: int in all_bits:
-		if not persons.has(bits):
+	var lod: bool = false
+	var cam: Camera3D = _w3d.call("camera") as Camera3D
+	for row_index: int in all_bits.size():
+		var bits: int = all_bits[row_index]
+		var body: Dictionary = _people.call("body_of", bits)
+		var instance: Array = _instance_of(row_index < agent_ids.size() and not body.is_empty(), agent_ids[row_index] if row_index < agent_ids.size() else -1)
+		if body.is_empty() or instance.is_empty():
 			_failures.append("missing render ID %d in %s" % [bits, id])
 			continue
-		var person: Node2D = persons[bits] as Node2D
-		var index: int = keys.find(bits)
-		if lod and (index < 0 or index >= discs.multimesh.instance_count):
-			_failures.append("missing marker ID %d in %s" % [bits, id])
-			continue
-		var bounds: Rect2i = _bounds(person, discs, index, lod)
+		var bounds: Rect2i = Metrics.box_bounds(cam, body["feet"], float(body["h"]), BODY_HALF_WIDTH, 1.0)
 		if not bounds.intersects(Rect2i(0, 0, 1920, 1080)):
 			offscreen.append(bits)
 			continue
@@ -176,19 +192,12 @@ func _measure_scene(input: Dictionary, clock: Dictionary, zoom: float) -> void:
 			continue
 		expected.append(bits)
 		var before: Image = await _capture(directory.path_join("person-%d.png" % bits))
-		var body: Sprite2D = person.get("body") as Sprite2D
-		var previous: bool = body.visible
-		var transform: Transform2D = Transform2D.IDENTITY
-		if lod:
-			transform = discs.multimesh.get_instance_transform_2d(index)
-			discs.multimesh.set_instance_transform_2d(index, Transform2D(Vector2.ZERO, Vector2.ZERO, transform.origin))
-		else:
-			body.hide()
+		var multimesh: MultiMesh = instance[0]
+		var slot: int = instance[1]
+		var transform: Transform3D = multimesh.get_instance_transform(slot)
+		multimesh.set_instance_transform(slot, Transform3D(Basis().scaled(Vector3.ZERO), transform.origin))
 		var removed: Image = await _capture(directory.path_join("without-%d.png" % bits))
-		if lod:
-			discs.multimesh.set_instance_transform_2d(index, transform)
-		else:
-			body.visible = previous
+		multimesh.set_instance_transform(slot, transform)
 		var restored: Image = await _capture(directory.path_join("restored-%d.png" % bits))
 		var result: Dictionary = Metrics.measure(before, removed, ground, bounds, 60 if zoom == 0.5 else 140, restored)
 		var mask: Image = result.get("mask") as Image
@@ -196,13 +205,13 @@ func _measure_scene(input: Dictionary, clock: Dictionary, zoom: float) -> void:
 		if mask != null:
 			mask.save_png(directory.path_join("mask-%d.png" % bits))
 		result["entity_bits"] = bits
-		result["agent_id"] = int(person.get("agent_id"))
-		result["activity"] = str(person.get("activity"))
+		result["agent_id"] = agent_ids[row_index]
+		result["activity"] = str((_people.call("state_of", bits) as Dictionary).get("clip", ""))
 		result["full_sha256"] = FileAccess.get_sha256(directory.path_join("person-%d.png" % bits))
 		result["removed_sha256"] = FileAccess.get_sha256(directory.path_join("without-%d.png" % bits))
 		result["restored_sha256"] = FileAccess.get_sha256(directory.path_join("restored-%d.png" % bits))
 		rows.append(result)
-	var passed: bool = Metrics.coverage(expected, rows) and ((zoom == 0.25) == lod)
+	var passed: bool = Metrics.coverage(expected, rows) and not lod
 	if not passed:
 		_failures.append("visibility/LOD failed " + id)
 	var result: Dictionary = {"id": id, "clock": clock, "zoom": zoom, "lod": lod, "camera": [_camera.position.x, _camera.position.y], "viewport": [1920, 1080], "all_ids": Array(all_bits), "on_screen_ids": expected, "off_screen_ids": offscreen, "partial": partial, "rows": rows, "pass": passed, "full_sha256": FileAccess.get_sha256(directory.path_join("full.png")), "ground_sha256": FileAccess.get_sha256(directory.path_join("ground.png"))}
@@ -211,26 +220,15 @@ func _measure_scene(input: Dictionary, clock: Dictionary, zoom: float) -> void:
 	print("MUX2_VISIBILITY_SCENE " + JSON.stringify(result))
 
 
-func _bounds(person: Node2D, discs: MultiMeshInstance2D, index: int, lod: bool) -> Rect2i:
-	var body: Sprite2D = person.get("body") as Sprite2D
-	var rectangle: Rect2 = body.get_rect()
-	var transform: Transform2D = body.get_global_transform_with_canvas()
-	var margin: float = 1.0
-	if lod:
-		rectangle = Rect2(-0.5, -0.5, 1, 1)
-		transform = discs.get_global_transform_with_canvas() * discs.multimesh.get_instance_transform_2d(index)
-		margin = 3.0
-	elif body.texture != null:
-		var texture: Image = body.texture.get_image()
-		if texture.is_compressed():
-			texture.decompress()
-		var used: Rect2i = texture.get_used_rect()
-		if body.flip_h:
-			used.position.x = texture.get_width() - used.end.x
-		rectangle = Rect2(rectangle.position + Vector2(used.position), Vector2(used.size))
-	var projected: Rect2 = transform * rectangle
-	projected = projected.grow(margin)
-	return Rect2i(Vector2i(floori(projected.position.x), floori(projected.position.y)), Vector2i(ceili(projected.size.x), ceili(projected.size.y)))
+## [crowd MultiMesh, instance index] of the person with AgentId `aid` in People (one copy: index = their slot), or [].
+func _instance_of(drawn: bool, aid: int) -> Array:
+	var state: Dictionary = (_people.get("_state") as Dictionary).get(aid, {}) if drawn else {}
+	var crowd: Dictionary = (_people.get("_crowds") as Dictionary).get(state.get("model", ""), {})
+	if crowd.is_empty() or not (crowd["slot"] as Dictionary).has(aid) or int(_people.get("replicate")) != 1:
+		return []
+	var multimesh: MultiMesh = (crowd["mmi"] as MultiMeshInstance3D).multimesh
+	var slot: int = int(crowd["slot"][aid])
+	return [multimesh, slot] if multimesh != null and slot < multimesh.instance_count else []
 
 
 func _write(path: String, value: Dictionary) -> void:

@@ -153,7 +153,9 @@ func _poll_space() -> void:
 	var fields: Dictionary = SimReads.read(_world_sim, "get_field_tiles")
 	var fxs: PackedInt64Array = fields.get("xs", PackedInt64Array())
 	var fphases: PackedInt64Array = fields.get("phases", PackedInt64Array())
-	var field_key: String = "%d:%d:%d" % [fxs.size(), hash(fphases), hash(fxs)]
+	# Camp clearings follow the lit hearths of get_building_snapshot (a hearth can appear after the first read).
+	var buildings: Dictionary = SimReads.read(_world_sim, "get_building_snapshot")
+	var field_key: String = "%d:%d:%d:%d" % [fxs.size(), hash(fphases), hash(fxs), hash([buildings.get("kinds"), buildings.get("xs"), buildings.get("ys")])]
 	if version == _space_version and field_key == _field_key and not _raise.is_empty():
 		return
 	var old_raise: PackedFloat32Array = _raise.duplicate()

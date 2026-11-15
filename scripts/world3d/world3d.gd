@@ -1,8 +1,8 @@
-# world3d.gd (root of scenes/world3d/World3D.tscn, added under Main by main_bootstrap.gd when renderer_switch.gd
-#   wants 3D, the default): the 3D view of the colony (M3D-1). The 2D ColonyView stays in the tree, hidden (removed in
-#   M3D-SWITCH E2); nothing here reads it. The HUD and panels (UI CanvasLayer) draw over this view unchanged.
+# world3d.gd (root of scenes/world3d/World3D.tscn, added under Main by main_bootstrap.gd): the colony's only world
+#   view (M3D-1; M3D-SWITCH E2 deleted the 2D one). The HUD and panels (UI CanvasLayer) draw over this view unchanged.
 # Purpose: builds the 3D layers in code (Terrain, Flora, Structures, Props, People, Animals, Visitors, Overlay, Sky —
-#   each its own script under scripts/world3d/) and the CameraRig that follows the 2D camera, and installs itself as
+#   each its own script under scripts/world3d/), the screen-space map labels (Labels, labels3d.gd, in a CanvasLayer
+#   under the HUD) and the CameraRig that follows the 2D camera, and installs itself as
 #   the ViewProjection provider: `screen_to_world` turns a screen point into the colony world pixel under it (a ray
 #   marched against the terrain heights, stopped by a roof), `world_to_screen` projects a world pixel's ground point to
 #   the screen, `pick` / `pick_world` name the visitor group, person or animal whose body is under a screen point / at a
@@ -24,6 +24,7 @@ const PeopleScript = preload("res://scripts/world3d/people3d.gd")
 const AnimalsScript = preload("res://scripts/world3d/animals3d.gd")
 const OverlayScript = preload("res://scripts/world3d/overlay3d.gd")
 const VisitorsScript = preload("res://scripts/world3d/visitors3d.gd")
+const LabelsScript = preload("res://scripts/world3d/labels3d.gd")
 
 var world_sim: Node = null
 var camera2d: Camera2D = null
@@ -81,6 +82,13 @@ func _ready() -> void:
 	visitors.call("setup", world_sim, terrain)
 	overlay = _layer("Overlay", OverlayScript)
 	overlay.call("setup", world_sim, terrain)
+	var label_layer: CanvasLayer = CanvasLayer.new()
+	label_layer.name = "LabelLayer"
+	label_layer.layer = 0  # under the HUD (UI is layer 1)
+	add_child(label_layer)
+	var labels: Control = LabelsScript.new()
+	labels.name = "Labels"
+	label_layer.add_child(labels)
 	add_picker(visitors)
 	add_picker(people)
 	add_picker(animals)

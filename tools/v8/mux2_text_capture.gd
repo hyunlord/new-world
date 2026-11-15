@@ -4,6 +4,7 @@
 # Mutations only through actual UI defence toggle; optional load_world through SimReads.
 extends SceneTree
 const View = preload("res://scripts/world/colony/view.gd")
+const ViewProjection = preload("res://scripts/world/view_projection.gd")
 const Store = preload("res://scripts/ui/mux/settings_store.gd")
 var main: Node
 var out: String = "/Users/rexxa/work/mux2-data/ui-text/run-%d" % OS.get_process_id()
@@ -195,16 +196,16 @@ func capture_field(world: Node, scale: float, requested_phase: int = -1) -> void
 	await frames(10)
 	# Keep visible helper/story panels intact; use the first unobstructed map point.
 	var corner: Vector2 = View.tile_to_world(tile) + Vector2(8, 8)
-	var point: Vector2 = root.get_canvas_transform() * corner
+	var point: Vector2 = ViewProjection.world_to_screen(corner)
 	var hovered: Control = null
 	for fraction: Vector2 in [Vector2(0.25, 0.70), Vector2(0.35, 0.45)]:
 		var target: Vector2 = root.get_visible_rect().size * fraction
-		camera.position += root.get_canvas_transform().affine_inverse().basis_xform(point - target)
+		camera.position += (point - target) / camera.zoom
 		camera.reset_smoothing()
 		camera.force_update_scroll()
 		await frames(10)
 		# A tile corner avoids the farmer sprite; selection still traverses real map input.
-		point = root.get_canvas_transform() * corner
+		point = ViewProjection.world_to_screen(corner)
 		root.warp_mouse(point)
 		var motion := InputEventMouseMotion.new()
 		motion.position = point
@@ -340,14 +341,12 @@ func run() -> void:
 		var item_tile: Vector2i = Vector2i(-1,-1)
 		for item_index: int in mini(item_xs.size(),item_ys.size()):
 			var candidate: Vector2i = Vector2i(item_xs[item_index],item_ys[item_index])
-			if int(main.get_node("ColonyView/AgentLayer").call("entity_at",View.tile_centre(candidate),true)) >= 0 or int(main.get_node("ColonyView/OrderTool").call("workshop_at",candidate)) >= 0:
+			var standing: String = str(ViewProjection.pick_world(View.tile_centre(candidate)).get("kind", ""))
+			if standing != "" or int(main.get_node("ColonyView/OrderTool").call("workshop_at",candidate)) >= 0:
 				continue
 			if not preload("res://scripts/ui/field_facts.gd").at(world,candidate).is_empty() or not (main.get_node("UI/CausalPanel").call("_tile_subject",world,candidate) as Dictionary).is_empty():
 				continue
-			var visitors: Node = main.get_node_or_null("ColonyView/VisitorLayer")
-			if visitors != null and (int(visitors.call("caravan_at",View.tile_centre(candidate))) >= 0 or int(visitors.call("wave_at",View.tile_centre(candidate))) >= 0):
-				continue
-			var room_overlay: Node = main.get_node("ColonyView/OverlayLayer/Rooms")
+			var room_overlay: Node = main.get_node("RoomIndex")
 			if bool(room_overlay.call("is_shown")) and int(room_overlay.call("room_at",candidate)) >= 0:
 				continue
 			item_tile = candidate
@@ -363,7 +362,7 @@ func run() -> void:
 			item_camera.reset_smoothing()
 			item_camera.force_update_scroll()
 			await frames(10)
-			var item_point: Vector2 = root.get_canvas_transform()*View.tile_centre(tile)
+			var item_point: Vector2 = ViewProjection.world_to_screen(View.tile_centre(tile))
 			root.warp_mouse(item_point)
 			var item_motion := InputEventMouseMotion.new()
 			item_motion.position = item_point
@@ -376,7 +375,7 @@ func run() -> void:
 			check("item click point is unobscured by UI",root.gui_get_hovered_control() == null)
 			await click_point(item_point)
 			await frames(10)
-			click_evidence["actual_hover_tile"] = str(main.get_node("ColonyView/OrderTool").get("_hover"))
+			click_evidence["actual_hover_tile"] = str(main.get_node("ColonyView/OrderTool").call("hover_tile"))
 			click_evidence["pointer_button_after"] = item_camera.get("_pointer_button")
 			item_camera.set_process(camera_processing)
 			var item_panel: Control = main.get_node_or_null("UI/ItemPanel")

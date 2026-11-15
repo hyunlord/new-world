@@ -1,4 +1,5 @@
-# M-UX2 normal debug gameplay stall measurement: seed 0, steward ON, zoom 1 and 0.5.
+# M-UX2 normal debug gameplay stall measurement: seed 0, steward ON, zoom 1 and 0.5 (M3D-SWITCH E2: the 3D view, with
+#   per-layer World3D process time from mux2_perf_monitor.gd in place of the 2D ground/building timings).
 # Bridge methods: reset_world, cmd_set_steward, get_time_snapshot, get_steward, get_agent_snapshot. Monitor optionally calls mux2_native_timings.
 # Automatic accumulator stays active. Windowed only; each arm has 10 startup + 300 measured seconds.
 extends SceneTree
@@ -10,7 +11,9 @@ const P7_WAIT_SECONDS: float = 900.0
 const P7_MAX_WAITS: int = 8
 const SOURCE_PATHS: Array[String] = [
 	"tools/v8/mux2_stall_test.gd", "tools/v8/mux2_perf_monitor.gd", "project.godot", "sim_bridge.gdextension", "rust/Cargo.toml", "rust/Cargo.lock",
-	"scripts/core/sim_reads.gd", "scripts/world/camera_controller.gd", "scripts/world/colony/ground_layer.gd", "scripts/world/art/ground_baker.gd", "scripts/world/art/wall_baker.gd", "scripts/world/colony/building_layer.gd",
+	"scripts/core/sim_reads.gd", "scripts/world/camera_controller.gd", "scripts/world3d/world3d.gd", "scripts/world3d/terrain3d.gd", "scripts/world3d/flora3d.gd", "scripts/world3d/structures3d.gd",
+	"scripts/world3d/people3d.gd", "scripts/world3d/animals3d.gd", "scripts/world3d/props3d.gd", "scripts/world3d/plants3d.gd", "scripts/world3d/visitors3d.gd", "scripts/world3d/overlay3d.gd", "scripts/world3d/labels3d.gd",
+	"scripts/world3d/sky3d.gd", "scripts/world3d/camera_rig.gd", "scripts/world3d/vat3d.gd", "scripts/world3d/data3d.gd", "scripts/world3d/mesh_builder3d.gd", "assets/3d/params3d.json", "assets/3d/bindings3d.json",
 	"scripts/ui/mux/minimap.gd", "scripts/ui/mux/alerts_panel.gd", "scripts/ui/mux/alert_evaluator.gd", "scripts/ui/mux/mux_hud.gd", "scripts/ui/mux/learning_facts.gd",
 	"rust/crates/sim-bridge/src/ffi/node.rs", "rust/crates/sim-systems/src/runtime/steward/mod.rs", "rust/crates/sim-core/data/colony/steward.ron",
 ]
@@ -172,7 +175,7 @@ func _phase(zoom_level: float) -> void:
 	arm["score"] = Monitor.score(samples, elapsed)
 	arm["instrumentation"] = monitor.coverage()
 	monitor.finish()
-	arm["wall_warmup"] = _main.get_node("ColonyView/GroundLayer").call("mux2_wall_warmup_report")
+	arm["rebuild"] = monitor.rebuild_report()
 	arm["end_tick"] = _tick()
 	arm["population_end"] = _population()
 	arm["observed_ticks_per_second"] = float(int(arm["end_tick"]) - int(arm["start_tick"])) / maxf(elapsed, 0.001)

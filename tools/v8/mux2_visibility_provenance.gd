@@ -3,8 +3,9 @@
 extends RefCounted
 
 const BRIDGE: String = "res://rust/target/debug/libsim_bridge.dylib"
-const ROOTS: Array[String] = ["res://scripts", "res://scenes", "res://shaders", "res://assets/v8art", "res://assets/ui", "res://localization/compiled"]
-const EXTENSIONS: Array[String] = ["gd", "gdshader", "gdshaderinc", "tscn", "tres", "json"]
+## M3D-SWITCH E2: the 3D models, VAT data and atlases (assets/3d) are inputs of the 3D captures too.
+const ROOTS: Array[String] = ["res://scripts", "res://scenes", "res://shaders", "res://assets/v8art", "res://assets/ui", "res://assets/3d", "res://localization/compiled"]
+const EXTENSIONS: Array[String] = ["gd", "gdshader", "gdshaderinc", "tscn", "tres", "json", "glb", "bin", "png"]
 
 
 static func capture(manifest: String) -> Dictionary:

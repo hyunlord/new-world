@@ -189,9 +189,14 @@ func _run() -> void:
 	_check("knapping_spot_built", shop >= 0, "after %d ticks" % waited)
 	if shop >= 0:
 		await _frames(2)
-		var layer: Node = _main.get_node("ColonyView/BuildingLayer")
-		_check("building_layer_draws_it", int(layer.call("workshop_count")) >= 1)
-		_check("no_hearth_on_workshop", int(layer.call("hearth_count")) == 1, "hearths drawn=%d" % int(layer.call("hearth_count")))
+		# M3D-SWITCH E2: the 2D BuildingLayer counts are gone (World3D/Props has no public count); the same data rules
+		# on the snapshots: a workshop exists, and exactly one lit building (the bindings `light` rule = the hearth).
+		var lit: int = 0
+		for kind: int in (SimReads.read(_world, "get_building_snapshot").get("kinds", PackedByteArray()) as PackedByteArray):
+			if bool(preload("res://scripts/world/art/art_data.gd").binding("buildings", kind).get("light", false)):
+				lit += 1
+		_check("building_layer_draws_it", (SimReads.read(_world, "get_workshops").get("ids", PackedInt32Array()) as PackedInt32Array).size() >= 1)
+		_check("no_hearth_on_workshop", lit == 1, "lit buildings=%d" % lit)
 		tool.call("click_world", Vector2(shop_tile) * View.TILE + Vector2(View.TILE, View.TILE) * 0.5, shop_tile)
 		await _frames(2)
 		_check("click_opens_workshop_panel", int(shop_panel.call("workshop_id")) == shop and (shop_panel as Control).visible)

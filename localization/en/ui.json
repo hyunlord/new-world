@@ -1910,6 +1910,5 @@
   "W3D_OVERLAY_DANGER": "Danger map (O)",
   "W3D_OVERLAY_SOCIAL": "Social map (O)",
   "W3D_OVERLAY_SPIRITUAL": "Spiritual map (O)",
-  "W3D_OVERLAY_BEAUTY": "Beauty map (O)",
-  "MUX_SETTING_RENDERER_3D": "3D view (applies after restart)"
+  "W3D_OVERLAY_BEAUTY": "Beauty map (O)"
 }

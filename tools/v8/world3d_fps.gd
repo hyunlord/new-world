@@ -4,7 +4,7 @@
 #   seconds discarded, then frames counted for `--seconds S` (RenderingServer.frame_post_draw). `--replicate K` asks the
 #   3D people layer to draw every person K times (a render-only crowd beyond the bridge cap; recorded as such).
 #   `--paused 1` stops the clock (a renderer-only measurement); `--hide Layer,…` or `Env:ssao+glow+fog+shadows` switches
-#   parts off for profiling. Works with `--renderer=2d` too (the 2D reference). Prints one `W3D_FPS <json>` line; the caller records the load.
+#   parts off for profiling. Prints one `W3D_FPS <json>` line; the caller records the load.
 # Bridge methods called: load_world, reset_world_stress (direct); via SimReads get_agent_snapshot, get_world_info,
 #   get_building_snapshot.
 extends SceneTree

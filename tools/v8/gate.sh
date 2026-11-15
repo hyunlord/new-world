@@ -32,8 +32,8 @@
 #                        bad argument 4) and --headless-check main, m1, v7 (worktrees under PLAY_ROOT)
 #   22 schema_docs       tools/v8/check_docs_helpers.py schema: docs/v8/snapshot_schema.md names every bridge
 #                        getter and key (M1.5, ADR 0016 C2)
-#   23 renderer_agreement tools/v8/renderer_agreement.sh: the text renderer's people = the Godot agent layer's,
-#                        seed 100, U-script, tick 900 (C2)
+#   23 renderer_agreement tools/v8/renderer_agreement.sh: the text renderer's people = the 3D People layer's drawn
+#                        figures (tile under each settled figure's feet, look, variant), seed 100, U-script, tick 900 (C2)
 #   24 save_roundtrip    tools/v8/save_roundtrip.sh: save -> load -> tick equals tick, colony seeds 0-7 (C1)
 #   25 bench             tools/v8/bench.sh: the standing colony benchmark against docs/perf/PERF_LEDGER.md
 #                        (> +10 % on tick mean, p99 or RSS/agent fails; since M2 a C3 ceiling miss fails; since M5 a
@@ -54,28 +54,31 @@
 #                        neighbours, waves 1 and 2 in their windows and accepted, a trade, ledger and reservations exact)
 #   31 art_manifest      tools/v8/art_import.py --verify: assets/v8art/ = its manifest (hashes, sizes, budget,
 #                        no unlisted file, every binding and material texture resolves; M-ART2 §3.3)
-#   32 resolver_parity   material_resolver.gd = the art line's resolve.py on tools/v8/resolver_parity_fixture.json;
-#                        since M-ART2.1 flora_resolver.gd = resolve_flora.py on tools/v8/flora_parity_fixture.json
+#   32 resolver_parity   material_resolver.gd = the art line's resolve.py on tools/v8/resolver_parity_fixture.json
+#                        (the 2D flora_resolver.gd half went with the 2D trees in M3D-SWITCH E2)
 #   33 extensibility_grep no content id literal and no 16-px tile size in scripts/world/** (ADR 0033), the mask and
 #                        import tests (tools/v8/test_mart2_extensibility.py, test_art_masks.py, test_art_import.py)
-#   34 mart2_render      tools/v8/mart2_ground_test.gd and mart2_people_test.gd headless (chunk bake hash, edges,
-#                        banks, tone, one-chunk dig rebake, data-only wall; appearance, anchors, LOD, params reload);
-#                        since M-ART2.1 also rounded shores, water lift and texture, hill edges (ground test) and
-#                        tools/v8/mart21_trees_test.gd (four seasons per species, bare winter, data-only species, ¼× canopy)
+#   34 w3d_render        tools/v8/w3d_render_test.gd headless (M3D-SWITCH E2; was mart2_render on the 2D layers):
+#                        terrain chunk determinism and pinned hash, the live chunk current, a dig rebuilds one chunk,
+#                        the data-only wall drawn by the 3D walls; people model by sex/stage, appearance, scale, clip;
+#                        tree seasons per species, bare winter, data-only species, every tree drawn; and
+#                        tools/v8/w3d_labels_test.gd (the 3D map labels' texts = the deleted 2D layers' for a seeded state)
 #   35 steward           two seeds × 24 days ON: deterministic, ledger/reservations exact, no panics
 #   36 data_only_ext     seven-family selected-pack simulation and headless real-scene UI (M-UX B3)
 #   37 mux2_defence      defence/replay/flight/fuel plus genuine format10 migration
-#   38 mux2_oracles      visibility negative controls, marker/overlap/wall-cache and stall scorer
-#   39 mux2_visibility   fresh current-policy saves and actual eight-scene GPU acceptance
+#   38 mux2_oracles      camp framing geometry, visibility negative controls (incl. 3D bounds) and stall scorer
+#   39 mux2_visibility   fresh current-policy saves and actual eight-scene GPU acceptance of the 3D view
 #   40 mux2_why          actual windowed 53-check input and screenshot acceptance
-#   41 mux2_stall_receipt fresh two-arm windowed timing after builds, or strict explicit receipt verification
+#   41 mux2_stall_receipt fresh two-arm windowed timing of the 3D view (per-layer World3D time), or strict explicit
+#                        receipt verification
 #   42 baseline_isolation source boundary/dead seam checks and real registration tests
 #   43 mind_data_only     shipped policy warm-at-hearth real target/record regression
 #   44 core_shadow        fresh frozen seed0 x20d fixtures, steward OFF and ON
 #   45 core_evaluation    source/binary-bound held-out outcome/why and raw performance checks
-#   46 mux21_regressions  strict tools, headless HUD cursor tests and real-renderer marker cache tests
+#   46 mux21_regressions  strict tools, headless HUD cursor tests and the Why input test in en/ko on the 3D view (the
+#                        2D marker layout cache test went with the 2D renderer in M3D-SWITCH E2)
 #   47 m6a_food_fixture   two ordinary worlds x72 days, food ledger and nonvacuous chain
-#   48 m6a_food_data_only fresh selected plants/items pack end-to-end
+#   48 m6a_food_data_only fresh selected plants/items pack end-to-end (plant art: the 3D plants, plants3d.gd)
 #   M6a explicit mode executes all 48 steps; other passes retain their 46 steps.
 #   Since M-ART2 step 23 (renderer_agreement) also checks appearance: every person's look and face variant.
 set -uo pipefail
@@ -245,14 +248,14 @@ grep -E '^STORY' "$LOG/story.log" | sed 's/^/   /' >> "$SUMMARY"
 step 30 neighbours bash -c 'args=(); [[ "$1" == feature_first ]] && args+=(--feature-first); rust/target/release/worldsim_probe --scene colony --seeds 0..2 --days 48 --workers 2 --commands tools/v8/m55_u_script.json --out "$0/neighbours" > /dev/null && python3 docs/v8/m5_5/m55_score.py --neighbours "$0/neighbours/summary.json" "${args[@]}"' "$LOG" "$READ_EVALUATION_MODE"
 grep -E '^NEIGHBOURS' "$LOG/neighbours.log" | sed 's/^/   /' >> "$SUMMARY"
 # M-ART2 (goal §11): the imported art, the material resolver, the extensibility grep and the renderer tests.
-# M3D-SWITCH E1: the world draws in 3D by default; the tests of the 2D renderer (steps 34, 39-41, 46 why) pass
-#   --renderer=2d until E2 deletes or rewrites them.
+# M3D-SWITCH E2: the world draws only in 3D; step 34 tests the 3D layers (w3d_render) and steps 39-41, 46 measure the
+#   3D view.
 step 31 art_manifest python3 tools/v8/art_import.py --verify
 step 32 resolver_parity bash -c 'bash tools/v8/run_bounded.sh 300 "$GODOT_BIN" --headless --path . --script res://tools/v8/resolver_parity.gd -- "$0/resolver_godot.json" && python3 tools/v8/resolver_parity.py --check "$0/resolver_godot.json"' "$LOG"
 step 33 extensibility_grep python3 -m unittest tools/v8/test_mart2_extensibility.py tools/v8/test_art_masks.py tools/v8/test_art_import.py
-step 34 mart2_render bash -c 'for t in mart2_ground_test mart2_people_test mart21_trees_test; do bash tools/v8/run_bounded.sh 600 "$GODOT_BIN" --headless --path . --script res://tools/v8/$t.gd -- --renderer=2d > "$0/$t.out" 2>&1; grep -E "^MART21?_(GROUND|PEOPLE|TREES) (PASS|FAIL)|_DONE" "$0/$t.out"; grep -q "_DONE failures=0" "$0/$t.out" || exit 1; ! grep -q "SCRIPT ERROR" "$0/$t.out" || { grep "SCRIPT ERROR" "$0/$t.out" | head -5; exit 1; }; done' "$LOG"
+step 34 w3d_render bash -c 'for t in w3d_render w3d_labels; do bash tools/v8/run_bounded.sh 600 "$GODOT_BIN" --headless --path . --script res://tools/v8/${t}_test.gd > "$0/$t.out" 2>&1; grep -E "^W3D_(RENDER|LABELS) .*(PASS|FAIL)|^W3D_(RENDER|LABELS)_DONE" "$0/$t.out"; grep -qE "^W3D_(RENDER|LABELS)_DONE failures=0 " "$0/$t.out" || exit 1; ! grep -q "SCRIPT ERROR" "$0/$t.out" || { grep "SCRIPT ERROR" "$0/$t.out" | head -5; exit 1; }; done' "$LOG"
 grep -E 'PASS|FAIL' "$LOG/resolver_parity.log" | tail -1 | sed 's/^/   /' >> "$SUMMARY"
-grep -cE '^MART21?_(GROUND|PEOPLE|TREES) PASS' "$LOG/mart2_render.log" | awk '{print "   mart2_render checks passed", $1}' >> "$SUMMARY"
+grep -cE '^W3D_(RENDER (GROUND|PEOPLE|TREES)|LABELS) PASS' "$LOG/w3d_render.log" | awk '{print "   w3d_render checks passed", $1}' >> "$SUMMARY"
 step 35 steward bash tools/v8/mux_steward.sh "$LOG/steward"
 step 36 data_only_ext bash tools/v8/data_only_ext.sh "$LOG/data_only_ext"
 # M-CORE compile checks precede the serialized GPU lane.
@@ -289,15 +292,12 @@ fi
 grep -E '^CORE_PERF ' "$LOG/core_evaluation.log" 2>/dev/null | sed 's/^/   /' >> "$SUMMARY"
 step 46 mux21_regressions bash -c '
     set -euo pipefail
-    bash tools/v8/gdscript_strict_check.sh tools/v8/mux21_layout_test.gd tools/v8/mux21_toast_test.gd tools/v8/mux21_play_capture.gd tools/v8/mux21_why_locale_test.gd
+    bash tools/v8/gdscript_strict_check.sh tools/v8/mux21_toast_test.gd tools/v8/mux21_play_capture.gd tools/v8/mux21_why_locale_test.gd tools/v8/w3d_render_test.gd tools/v8/w3d_labels_test.gd tools/v8/renderer_agreement.gd tools/v8/mux2_visibility_test.gd tools/v8/mux2_stall_test.gd
     bash tools/v8/run_bounded.sh 180 "$GODOT_BIN" --headless --path . --script res://tools/v8/mux21_toast_test.gd > "$0/mux21-toast.log" 2>&1
     grep -q "^MUX21_TOAST_DONE " "$0/mux21-toast.log"
     ! grep -q "SCRIPT ERROR" "$0/mux21-toast.log"
-    bash tools/v8/run_bounded.sh 300 "$GODOT_BIN" --path . --rendering-method gl_compatibility --script res://tools/v8/mux21_layout_test.gd -- --cache > "$0/mux21-layout.log" 2>&1
-    grep -q "^MUX21_LAYOUT_DONE " "$0/mux21-layout.log"
-    ! grep -q "SCRIPT ERROR" "$0/mux21-layout.log"
     for language in en ko; do
-        bash tools/v8/run_bounded.sh 180 "$GODOT_BIN" --path . --resolution 1920x1080 --script res://tools/v8/mux21_why_locale_test.gd -- --locale="$language" --renderer=2d > "$0/mux21-why-$language.log" 2>&1
+        bash tools/v8/run_bounded.sh 180 "$GODOT_BIN" --path . --resolution 1920x1080 --script res://tools/v8/mux21_why_locale_test.gd -- --locale="$language" > "$0/mux21-why-$language.log" 2>&1
         ! grep -E "SCRIPT ERROR|Parse Error|ERROR:" "$0/mux21-why-$language.log"
     done
     python3 -c '\''import json,sys; from pathlib import Path
@@ -305,10 +305,9 @@ sys.path.insert(0,"tools/v8")
 from mux2_gate_visual import validate_why_checks
 for language in ("en","ko"):
  validate_why_checks((Path(sys.argv[1])/f"mux21-why-{language}.log").read_text(),64)
-for filename,prefix in [("mux21-toast.log","MUX21_TOAST_DONE "),("mux21-layout.log","MUX21_LAYOUT_DONE ")]:
+for filename,prefix in [("mux21-toast.log","MUX21_TOAST_DONE ")]:
  rows=[json.loads(line[len(prefix):]) for line in (Path(sys.argv[1])/filename).read_text().splitlines() if line.startswith(prefix)]
  assert len(rows)==1 and rows[0]["failures"]==0 and rows[0]["checks"]>0,filename
- if filename=="mux21-layout.log": assert rows[0]["display"]!="headless",filename
 '\'' "$0"
 ' "$LOG"
 if [[ -n "${M6A_GATE_CONFIG:-}" ]]; then

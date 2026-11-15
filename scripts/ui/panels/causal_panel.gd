@@ -284,7 +284,7 @@ func _fit() -> void:
 	_scroll.custom_minimum_size.y = minf(body_height, maxf(40.0, area.y * 0.5 / factor - maxf(80.0, chrome_height)))
 	_panel.size = Vector2(width, 0)
 	size = _panel.size
-	var point: Vector2 = ViewProjection.world_to_screen(self, View.tile_centre(_anchor_tile))
+	var point: Vector2 = ViewProjection.world_to_screen(View.tile_centre(_anchor_tile))
 	position = Vector2(point.x + 16.0, point.y - size.y * factor * 0.5)
 	if position.x + size.x * factor > area.x - 12.0:
 		position.x = point.x - size.x * factor - 16.0

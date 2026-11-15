@@ -1,6 +1,6 @@
 # camera_controller.gd (Camera2D in scenes/main.tscn): the colony camera and the simulation speed keys.
 # M-ART2: zoom steps from assets/v8art/render_params.json `camera.zooms` (¼×, ½×, 1×, 2×; default `camera.default_zoom`
-#   1×) with the wheel, `-` and `=`; below 1× the people and animals become LOD markers (agent_layer.gd); pan with
+#   1×) with the wheel, `-` and `=` (the 3D camera rig follows this camera; M3D-1); pan with
 #   WASD / arrows (`camera.pan_px_per_second` screen pixels a second, so the same screen speed at every zoom) and a
 #   middle-button drag; M-UX adds trackpad pan/pinch, cursor-anchored 120 ms zoom, left map drag and right drag.
 #   Click actions are deferred until release so panning never selects, cancels or submits a draft order.
@@ -319,7 +319,7 @@ func step_zoom(direction: int, screen_anchor: Vector2 = Vector2(-1, -1)) -> void
 	_zoom_target = steps[index]
 	_zoom_elapsed = 0.0
 	_zoom_anchor_screen = get_viewport().get_mouse_position() if screen_anchor.x < 0 else screen_anchor
-	_zoom_anchor_world = ViewProjection.screen_to_world(self, _zoom_anchor_screen)
+	_zoom_anchor_world = ViewProjection.screen_to_world(_zoom_anchor_screen)
 	camera_activity.emit("zoom")
 
 
@@ -461,14 +461,10 @@ func _cancel_camp_framing() -> void:
 
 
 ## Wait for populated figures and consecutive settled HUD layouts, then frame once. Bodies are the view's screen
-## rects of the people (ViewProjection.person_rect: the 3D bodies, or the 2D framing envelopes).
+## rects of the people (ViewProjection.person_rect: the 3D bodies).
 func _frame_camp() -> void:
 	var ui: Node = get_node_or_null("/root/Main/UI")
 	if ui == null:
-		return
-	if ViewProjection.people_lod(self):
-		_frame_camp_pending = false
-		_camp_report = {"status": "lod"}
 		return
 	var obstacles: Array[Rect2] = []
 	MarkerLayout.ui_rects(ui, obstacles)
@@ -492,7 +488,7 @@ func _frame_camp() -> void:
 	var outside: Array[int] = []
 	var viewport: Rect2 = get_viewport_rect()
 	for bits: int in ids:
-		var rectangle: Rect2 = ViewProjection.person_rect(self, bits, true)
+		var rectangle: Rect2 = ViewProjection.person_rect(bits)
 		if not rectangle.has_area():
 			return
 		if viewport.encloses(rectangle):

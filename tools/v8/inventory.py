@@ -34,10 +34,24 @@ E_REACH = "tools/v8/gd_reach.py (keep-set closure, Part 1)"
 E_GIT = "git ls-files at b1ca032f"
 
 # (pattern, verdict, reason, evidence). First match wins.
+E_E2 = "M3D-SWITCH E2 (the 3D view is the only world view; ADR pending)"
 RULES = [
+    # ---- M3D-SWITCH E2: the 2D world renderer and its tests are deleted ----------------------
+    ("re:^scripts/world/colony/(agent_layer|animal_layer|building_layer|field_layer|ground_layer|lit_warm_representatives|livestock_layer|lod_markers|outcrop_layer|overlay_layer|plant_layer|room_layer|template_preview|tree_layer|visitor_layer)\\.gd(\\.uid)?$",
+     "DELETE", "the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels", E_E2),
+    ("re:^scripts/world/(daylight_controller|wood_visuals|art/ground_baker|art/flora_resolver)\\.gd(\\.uid)?$", "DELETE",
+     "2D daylight tint, ground baking and the 2D flora resolver (the 3D sky and flora replace them)", E_E2),
+    ("re:^scripts/world3d/renderer_switch\\.gd(\\.uid)?$", "DELETE", "the `--renderer=2d` escape hatch", E_E2),
+    ("re:^shaders/(ground_chunk|person_variant|tree_season|palette_swap|villager_ramp)\\.gdshader(\\.uid)?$", "DELETE",
+     "2D-only shaders (ground chunks, person variants, tree seasons) and the unused palette shaders", E_E2),
+    ("re:^tools/v8/(mux2_(marker_layout|coincident|badge_index|badge_packing|overlap|badge_grid|badge_aggregate|badge_extent|extent_owner|badge_local|person_cache|wall_cache|bake_receipt|building_warm|building_render_warm|people_state)_test|mux21_layout_test|mart2_(ground|people|ui)_test|mart21_trees_test|b5_tree_(renderer_test|visual)|mart2_fps|mux21_fps|mux21_profile|mux2_render_profile|mux2_rebake_supplement|mux_renderer_test|mart21_shots|m6a_actions_visibility_test)\\.gd(\\.uid)?$",
+     "DELETE", "tests and probes of the deleted 2D renderer (gate steps moved to 3D checks)", E_E2),
+    ("re:^tools/v8/(fixtures/mux2_(badge_local|extent_owner|person_cache)_reference\\.gd(\\.uid)?|mart2_fps\\.sh|flora_parity_fixture\\.json)$",
+     "DELETE", "fixtures and runners of the deleted 2D tests", E_E2),
+    ("scripts/world3d/", "KEEP", "the 3D world view (M3D-1; the only world view since M3D-SWITCH E2)", E_E2),
     # ---- M1 additions (docs/v8/m1/M1_GOAL.md) -------------------------------------------
     ("sim_bridge.gdextension.uid", "KEEP", "the extension's committed Godot UID (M1 5.3)", "M1 DECISIONS D3"),
-    ("scripts/world/colony/", "KEEP", "M1 colony view: terrain, trees, buildings, order overlay, people, order tool", "M1 goal 9.4; DECISIONS D25"),
+    ("scripts/world/colony/", "KEEP", "colony view helpers kept after the 2D layers went (M3D-SWITCH E2): world scale, order tool, camera framing", "M1 goal 9.4; DECISIONS D25; " + E_E2),
     ("scripts/ui/hud/order_bar.gd", "KEEP", "M1 order bar", "M1 goal 9.6"),
     ("scripts/ui/hud/order_bar.gd.uid", "KEEP", "M1 order bar UID", "M1 5.3"),
     ("assets/v8/", "KEEP", "M1 colony tile and sprite sheet drawn by tools/v8/gen_tiles.py (M1-ART)", "M1 goal 9.2; M1-ART goal 5"),
@@ -77,9 +91,7 @@ RULES = [
     ("stats/", "DELETE", "pre-V7 stat definition JSON; nothing in rust/ or reachable GDScript reads it", "grep -rn 'stats/' rust scripts → none; " + E_REACH),
     ("vlm_interactive_test_results.zip", "DELETE", "V7 VLM test artefact", "goal 6.3"),
     # ---- shaders, scenes, assets -----------------------------------------------------
-    ("shaders/villager_ramp.gdshader", "KEEP", "preserved palette-ramp shader (formerly used by art_sprite_library.gd; VISION §5 keeps palette swap; MUX C removes only the unused script)", E_REACH),
     ("shaders/settlement_outline.gdshader", "KEEP", "used by agent_renderer.gd (selection outline)", E_REACH),
-    ("shaders/palette_swap.gdshader", "ASK", "unreferenced V7 MultiMesh palette-swap shader; VISION §5 keeps a palette-swap shader for clothing colours", "VISION §5; " + E_REACH),
     ("shaders/", "DELETE", "not referenced by the kept scripts/scenes", E_REACH),
     ("scenes/main.tscn", "KEEP", "main scene; deleted UI nodes removed (7.3)", E_REACH),
     ("scenes/ui/god_hand_panel.tscn", "DELETE", "god-hand panel scene (7.2)", "goal 7.2"),

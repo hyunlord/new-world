@@ -1,4 +1,8 @@
-"""Real-renderer PlantLayer structural evidence, separate from visual acceptance."""
+"""Real-renderer 3D plant batch (plants3d.gd) structural evidence, separate from visual acceptance.
+
+M3D-SWITCH E2: the 2D PlantLayer texture/anchor/UV checks became the 3D tuft count, phase colour, tile anchor and seed
+heads per phase, winter desaturation, and crop heads in their category's (or the fallback) ripe colour.
+"""
 from __future__ import annotations
 
 import os
@@ -18,12 +22,13 @@ def validate(text: str) -> int:
     need('M6A_PLANT_ART_FAIL' not in text and 'ERROR:' not in text,
          'plant art structural process reported an error')
     required = {'data-only plant maps admitted', 'fixture content installs',
-                'duplicate selected maps rejected', 'species ripe phase wins',
-                'unbound category retains placeholder'}
+                'duplicate selected maps rejected', 'category ripe colour wins',
+                'unbound category uses the ripe fallback', 'winter desaturates the phase colour'}
     for phase in range(4):
         required.update(f'{label} {phase}' for label in
-                        ('one actual batch phase', 'native texture phase', 'native anchor phase', 'upright UV phase',
-                         'unknown species uses category phase'))
+                        ('one actual batch phase', 'phase colour phase', 'tile anchor phase', 'seed heads phase'))
+    for phase in (3, 4, 5):
+        required.update({f'crop tufts and heads phase {phase}', f'crop tufts and heads phase {phase} (category bound)'})
     need(required <= set(checks), 'plant art structural contract checks absent')
     need(any(check.startswith('malformed plant art rejected:') for check in checks),
          'plant art malformed-data coverage absent')
@@ -31,8 +36,8 @@ def validate(text: str) -> int:
 
 
 def structural_command(executable: str) -> list[str | Path]:
-    # Godot's headless dummy backend does not retain MultiMesh transforms.
-    # A real renderer is required to check the unchanged native-anchor assertions.
+    # Godot's headless dummy backend does not retain MultiMesh transforms or colours.
+    # A real renderer is required to check the anchor and colour assertions.
     return ['bash', 'tools/v8/run_bounded.sh', '180', executable,
         '--rendering-driver', 'opengl3', '--path', '.',
         '--script', 'res://tools/v8/m6a_plant_art_test.gd']
@@ -55,6 +60,6 @@ def structural(gate: Gate, output: Path) -> None:
         'log': reference_json(log),
         'source_files': [reference_json(gate.root / name) for name in (
             'tools/v8/m6a_plant_art_test.gd', 'tools/v8/fixtures/m6a_plant_art.json',
-            'scripts/world/art/art_data.gd', 'scripts/world/colony/plant_layer.gd',
+            'scripts/world/art/art_data.gd', 'scripts/world3d/plants3d.gd',
             'scripts/ui/content_context.gd', 'assets/v8art/manifest.json')],
     })

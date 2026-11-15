@@ -20,9 +20,10 @@
 #   quits 0 / 1.
 extends SceneTree
 
-const RoomLayer = preload("res://scripts/world/colony/room_layer.gd")
+const RoomLayer = preload("res://scripts/world/room_index.gd")
+const ViewProjection = preload("res://scripts/world/view_projection.gd")
 const View = preload("res://scripts/world/colony/view.gd")
-const OverlayLayer = preload("res://scripts/world/colony/overlay_layer.gd")
+const OverlayLayer = preload("res://scripts/world3d/labels3d.gd")
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
 const Inspector = preload("res://scripts/ui/panels/agent_inspector_panel.gd")
 const MAX_TICKS: int = 20 * 1440
@@ -59,7 +60,7 @@ func _key(code: Key) -> void:
 
 
 func _screen(tile: Vector2i) -> Vector2:
-	return _main.get_viewport().get_canvas_transform() * (Vector2(tile) * View.TILE + Vector2(View.TILE, View.TILE) * 0.5)
+	return ViewProjection.world_to_screen(Vector2(tile) * View.TILE + Vector2(View.TILE, View.TILE) * 0.5)
 
 
 func _mouse(tile: Vector2i, button: bool, pressed: bool, shift: bool) -> void:
@@ -141,11 +142,12 @@ func _run() -> void:
 	_world = _main.get_node_or_null("WorldSim")
 	var tool: Node = _main.get_node_or_null("ColonyView/OrderTool")
 	var bar: Node = _main.get_node_or_null("UI/OrderBar")
-	var overlay: Node = _main.get_node_or_null("ColonyView/OverlayLayer")
-	var buildings: Node = _main.get_node_or_null("ColonyView/BuildingLayer")
+	# M3D-SWITCH E2: the 2D overlay and building layers are gone; World3D/Structures draws walls and floors.
+	var overlay: Node = _main.get_node_or_null("World3D/Overlay")
+	var buildings: Node = _main.get_node_or_null("World3D/Structures")
 	var inspector: Node = _main.get_node_or_null("UI/AgentInspectorPanel")
 	var room_panel: Node = _main.get_node_or_null("UI/RoomPanel")
-	var rooms: Node = _main.get_node_or_null("ColonyView/OverlayLayer/Rooms")
+	var rooms: Node = _main.get_node_or_null("RoomIndex")
 	if _world == null or tool == null or bar == null or overlay == null or buildings == null or inspector == null or room_panel == null or rooms == null:
 		_check("scene", false, "missing nodes (room panel %s, rooms %s)" % [room_panel != null, rooms != null])
 		_finish()
@@ -262,7 +264,7 @@ func _run() -> void:
 		tick += STEP_TICKS
 		await _frames(3)
 		room = int(rooms.call("room_at", a + Vector2i(3, 2)))
-		if room >= 0 and int(buildings.call("wall_count")) >= 20:
+		if room >= 0 and int(buildings.call("wall_tile_count")) >= 20:
 			break
 	var ov: Dictionary = SimReads.read(_world, "get_colony_overlay")
 	var by_kind: Dictionary = {}
@@ -271,12 +273,12 @@ func _run() -> void:
 	for i: int in mini(ik.size(), ic.size()):
 		by_kind[ik[i]] = int(by_kind.get(ik[i], 0)) + ic[i]
 	print("M3_UI INFO after %d ticks: ground items by kind %s, trees marked %d, site delivered %s needed %s" % [tick, by_kind, _designations(0), str(ov.get("site_delivered", PackedInt32Array())), str(ov.get("site_needed", PackedInt32Array()))])
-	_check("house_room", room >= 0, "after %d ticks: room %d, walls drawn %d, floor pieces %d, sites left %s" % [tick, room, int(buildings.call("wall_count")), int(buildings.call("floor_piece_count")), str(_site_kinds())])
+	_check("house_room", room >= 0, "after %d ticks: room %d, walls drawn %d, sites left %s" % [tick, room, int(buildings.call("wall_tile_count")), str(_site_kinds())])
 	if room < 0:
 		_finish()
 		return
 	var space: Dictionary = SimReads.read(_world, "get_space")
-	_check("space_drawn", int(buildings.call("wall_count")) == (space.get("wall_xs", PackedInt32Array()) as PackedInt32Array).size(), "walls %d" % int(buildings.call("wall_count")))
+	_check("space_drawn", int(buildings.call("wall_tile_count")) == (space.get("wall_xs", PackedInt32Array()) as PackedInt32Array).size(), "walls %d" % int(buildings.call("wall_tile_count")))
 	# R: the overlay and the bar's toggle.
 	await _key(KEY_R)
 	var toggle: Button = bar.find_child("RoomsToggle", true, false) as Button
@@ -286,11 +288,11 @@ func _run() -> void:
 	print("M3_UI INFO get_room_detail(%d) = %s" % [room, str(_world.call("get_room_detail", room))])
 	# Click a room tile: the room panel.
 	var inside: Vector2i = a + Vector2i(4, 2)
-	var agent_layer: Node = _main.get_node("ColonyView/AgentLayer")
+
 	var people_inside: int = 0
 	for y: int in range(a.y + 1, b.y):
 		for x: int in range(a.x + 1, b.x):
-			if int(agent_layer.call("entity_at", Vector2(x, y) * View.TILE + Vector2(View.TILE, View.TILE) * 0.5)) >= 0:
+			if str(ViewProjection.pick_world(Vector2(x, y) * View.TILE + Vector2(View.TILE, View.TILE) * 0.5).get("kind", "")) == "person":
 				people_inside += 1
 			else:
 				inside = Vector2i(x, y)

@@ -581,7 +581,18 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `DESIGN.md` | KEEP | M-UX interface design system: theme, layout and interaction guidance | DESIGN.md; docs/v8/mux/MUX_GOAL.md |
 | `README.md` | KEEP | rewritten in Korean + English (9.1) | goal 9.1 |
 | `addons/` | DELETE | harness MCP addon; project.godot has no [editor_plugins] section, nothing loads it | grep editor_plugins project.godot → none; tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `assets/` | MIXED | files inside: 174 ASK, 690 DELETE, 1090 KEEP; see the file/exception rows. Directory rule: asset root | git ls-files at b1ca032f |
+| `assets/` | MIXED | files inside: 174 ASK, 690 DELETE, 1235 KEEP; see the file/exception rows. Directory rule: asset root | git ls-files at b1ca032f |
+| `assets/3d/` | KEEP | asset root | git ls-files at b1ca032f |
+| `assets/3d/models/` | KEEP | asset root | git ls-files at b1ca032f |
+| `assets/3d/source/` | KEEP | asset root | git ls-files at b1ca032f |
+| `assets/3d/source/chars/` | KEEP | asset root | git ls-files at b1ca032f |
+| `assets/3d/source/chars/B/` | KEEP | asset root | git ls-files at b1ca032f |
+| `assets/3d/source/chars/B/aurochs/` | KEEP | asset root | git ls-files at b1ca032f |
+| `assets/3d/source/chars/B/child/` | KEEP | asset root | git ls-files at b1ca032f |
+| `assets/3d/source/chars/B/goat/` | KEEP | asset root | git ls-files at b1ca032f |
+| `assets/3d/source/chars/B/man/` | KEEP | asset root | git ls-files at b1ca032f |
+| `assets/3d/source/chars/B/woman/` | KEEP | asset root | git ls-files at b1ca032f |
+| `assets/3d/vat/` | KEEP | asset root | git ls-files at b1ca032f |
 | `assets/art/` | MIXED | files inside: 646 DELETE, 19 KEEP; see the file/exception rows. Directory rule: runtime art root | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `assets/art/atlas/` | MIXED | files inside: 1 DELETE, 9 KEEP; see the file/exception rows. Directory rule: world_0.png remains live through bindings.ui_icons; other atlas metadata/pages/region maps retain V8-0 provenance protection (former art_sprite_library.gd / carry_load_layer.gd readers) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `assets/art/atlas/region_atlas.json` | DELETE | atlas pipeline metadata; nothing at runtime reads it | tools/v8/gd_reach.py (keep-set closure, Part 1) |
@@ -930,7 +941,7 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `assets/v8art/people/portraits/child_M_loincloth_long_tied/` | KEEP | asset root | git ls-files at b1ca032f |
 | `assets/v8art/people/portraits/child_M_loincloth_short/` | KEEP | asset root | git ls-files at b1ca032f |
 | `assets/v8art/structures/` | KEEP | asset root | git ls-files at b1ca032f |
-| `docs/` | MIXED | files inside: 17281 DELETE, 259 KEEP; see the file/exception rows. Directory rule: docs root | git ls-files at b1ca032f |
+| `docs/` | MIXED | files inside: 17281 DELETE, 270 KEEP; see the file/exception rows. Directory rule: docs root | git ls-files at b1ca032f |
 | `docs/.gitkeep` | DELETE | pre-decided (6.3); CHANGELOG harvested into HISTORY (pre-V7 paragraph) | goal 6.3 |
 | `docs/ARCHITECTURE.md` | KEEP | new (9.5) | goal 9.5 |
 | `docs/CHANGELOG.md` | DELETE | pre-decided (6.3); CHANGELOG harvested into HISTORY (pre-V7 paragraph) | goal 6.3 |
@@ -978,6 +989,8 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `docs/sprite_session_handoff_wildlife_a4.md` | DELETE | pre-decided (6.3); CHANGELOG harvested into HISTORY (pre-V7 paragraph) | goal 6.3 |
 | `docs/traits/` | DELETE | pre-decided (6.3); harvested into docs/v8/harvest → HISTORY/skills; index in docs/archive/INDEX.md | goal 6.3, 6.4 |
 | `docs/v8/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
+| `docs/v8/c1/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
+| `docs/v8/c2/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
 | `docs/v8/core/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
 | `docs/v8/loop/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
 | `docs/v8/m1/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
@@ -1014,7 +1027,7 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `localization/key_owners.json` | DELETE | duplicate-key owner policy; the generator treats a missing file as no policy, and the pruned category JSONs carry no duplicates | tools/localization_compile.py _load_key_owners; scratch dry run (Part 1) |
 | `localization/ko/` | KEEP | runtime pipeline: manifest.json, compiled/*.json, category JSONs (keys pruned to the kept UI, 7.4) | scripts/core/locale.gd; tools/v8/locale_keys.py |
 | `project.godot` | KEEP | Godot project root | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `rust/` | MIXED | files inside: 2 ASK, 62 DELETE, 922 KEEP, 38 KEEP-ADAPT, 19 KEEP-TRIM, 1 MOVE→rust/crates/sim-core/src/rules/mod.rs, 143 TRIAGE; see the file/exception rows. Directory rule: Rust workspace | git ls-files at b1ca032f |
+| `rust/` | MIXED | files inside: 2 ASK, 62 DELETE, 957 KEEP, 38 KEEP-ADAPT, 19 KEEP-TRIM, 1 MOVE→rust/crates/sim-core/src/rules/mod.rs, 155 TRIAGE; see the file/exception rows. Directory rule: Rust workspace | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/activity.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/appearance.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/art_kernels.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
@@ -1043,11 +1056,13 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-bridge/src/ffi/food/summary.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/home_housing.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/knowledge.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
+| `rust/crates/sim-bridge/src/ffi/livestock.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/material_category.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/mind.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/mod.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/neighbours.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/node.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
+| `rust/crates/sim-bridge/src/ffi/ore.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/reads_agent.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/reads_settlement.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/relations.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
@@ -1097,6 +1112,8 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-core/src/colony/content/defs/food.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/content/defs/item.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/content/defs/mod.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/content/defs/origin.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/content/defs/outcrop.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/content/defs/plant.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/content/defs/pressure.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/content/defs/recipe.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
@@ -1112,6 +1129,7 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-core/src/colony/content/load_crops.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/content/load_ecology.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/content/load_flora.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/content/load_outcrops.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/content/load_plants.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/content/mod.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/content/raw_blueprint.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
@@ -1139,6 +1157,8 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-core/src/colony/knowledge/aggregate.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/knowledge/component.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/knowledge/gate_masks.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/knowledge/mask.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/knowledge/mask_serde.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/knowledge/parse.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/knowledge/registry_tests.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/knowledge/spine_tests.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
@@ -1146,6 +1166,8 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-core/src/colony/knowledge/types.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/legacy_items_v16.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/legacy_v7.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/livestock.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/livestock_demographics.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/materials.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/mind/compile.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/mind/continuation.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
@@ -1186,6 +1208,7 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-core/src/colony/mod.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/neighbours.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/orders.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/ore.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/people.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/processing.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/requests.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
@@ -1387,6 +1410,10 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-systems/src/runtime/jobs/hunt_food_loss_tests.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
 | `rust/crates/sim-systems/src/runtime/jobs/invariants.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
 | `rust/crates/sim-systems/src/runtime/jobs/items.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/runtime/jobs/livestock.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/runtime/jobs/livestock/commit.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/runtime/jobs/livestock/execute.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/runtime/jobs/livestock/tests.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
 | `rust/crates/sim-systems/src/runtime/jobs/loose_haul_tests.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
 | `rust/crates/sim-systems/src/runtime/jobs/mod.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
 | `rust/crates/sim-systems/src/runtime/jobs/pot_ingredient_tests.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
@@ -1403,6 +1430,10 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-systems/src/runtime/knowledge/observe.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/knowledge/oral.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/knowledge/seed.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/livestock/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/livestock/pens.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/livestock/tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/livestock/validation.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/memory/memory_system.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/memory/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/mind/behaviours/context.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
@@ -1493,6 +1524,7 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-systems/src/runtime/neighbours/trade.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/neighbours/trade/goods.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/neighbours/visitors.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/ore.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/resource_regen/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/rooms.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/settlement/fire.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
@@ -1535,6 +1567,7 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-systems/src/runtime/steward/housing.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/steward/housing_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/steward/lifecycle.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/steward/livestock.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/steward/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/steward/planning.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/steward/production.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
@@ -1549,6 +1582,7 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-systems/src/runtime/wildlife/fight.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/wildlife/flee.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/wildlife/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/wildlife/origins.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/save/building_save_tests.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/save/building_validation.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/save/content_validation.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
@@ -1560,12 +1594,17 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-systems/src/save/food_catalog.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/save/food_catalog_ids.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/save/food_tests.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/save/knowledge_upper.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/save/legacy_buildings_v18.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/save/legacy_codec_tests.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/save/legacy_cultivation_v15.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/save/legacy_food_v13.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/save/legacy_food_v16.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/save/legacy_id_codec_tests.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/save/legacy_knowledge_v19.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/save/legacy_livestock_v20.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/save/legacy_metal_v22.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/save/legacy_ore_v21.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/save/legacy_pressure_codec_tests.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/save/legacy_spine_tests.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/save/legacy_spine_v17.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
@@ -1573,9 +1612,11 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-systems/src/save/legacy_steward_v14.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/save/legacy_v9.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/save/legacy_weaving_v16.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/save/livestock_tests.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/save/mind_tests.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/save/mind_validation.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/save/mod.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/save/ore_save_tests.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/save/weaving_tests.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/save/weaving_validation.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/save/world.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
@@ -1584,6 +1625,7 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-systems/src/worldgen/colony.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
 | `rust/crates/sim-systems/src/worldgen/mod.rs` | KEEP | live world generation (build_world_with); old game_vNN configs removed in 8.1 | goal 8.1 |
 | `rust/crates/sim-systems/src/worldgen/noise.rs` | KEEP | live world generation (build_world_with); old game_vNN configs removed in 8.1 | goal 8.1 |
+| `rust/crates/sim-systems/src/worldgen/ore.rs` | KEEP | live world generation (build_world_with); old game_vNN configs removed in 8.1 | goal 8.1 |
 | `rust/crates/sim-systems/src/worldgen/plants.rs` | KEEP | live world generation (build_world_with); old game_vNN configs removed in 8.1 | goal 8.1 |
 | `rust/crates/sim-systems/src/worldgen/terrain.rs` | KEEP | live world generation (build_world_with); old game_vNN configs removed in 8.1 | goal 8.1 |
 | `rust/crates/sim-test/benches/phase2_benchmarks.rs` | DELETE | V7 Criterion harness for the Phase 2 influence hard gate; nothing runs it, and VISION §5 keeps one perf check (tools/v8/perf.sh) | diff review round 1 F3; DECISIONS D31 |
@@ -1743,6 +1785,17 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-test/tests/b4_trade/validation.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/b5_flora.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/blueprint_completion_identity.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/c1_buildings.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/c1_chain_goat.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/c1_knowledge.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/c1_origins.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/c1_recipes.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/c2_buildings.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/c2_chain_bronze.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/c2_content.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/c2_knowledge.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/c2_mining.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/c2_outcrop_origins.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/chronicle_combat.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/chronicle_construction.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/chronicle_memory.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
@@ -2013,6 +2066,7 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-test/tests/spine_provenance.rs` | KEEP | player and steward zone/request command origins remain distinct | V8_0_INVENTORY.md section 3.1 (test triage) |
 | `rust/crates/sim-test/tests/spine_stages/history.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/spine_stages/mod.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/spine_stages/mud_bricks.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/spine_storage.rs` | KEEP | storehouse interior and existing stockpile identity persist | V8_0_INVENTORY.md section 3.1 (test triage) |
 | `rust/crates/sim-test/tests/spine_support/mod.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/spine_support/ui_fixture.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
@@ -2026,11 +2080,12 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-test/tests/tree_snapshot.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/weaving_apparel.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/weaving_chain.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
-| `scenes/` | MIXED | files inside: 2 DELETE, 1 KEEP; see the file/exception rows. Directory rule: scene root | git ls-files at b1ca032f |
+| `scenes/` | MIXED | files inside: 2 DELETE, 2 KEEP; see the file/exception rows. Directory rule: scene root | git ls-files at b1ca032f |
 | `scenes/main.tscn` | KEEP | main scene; deleted UI nodes removed (7.3) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scenes/test/art_calibration.tscn` | DELETE | art calibration scene / Godot test code (6.3) | goal 6.3 |
 | `scenes/ui/god_hand_panel.tscn` | DELETE | god-hand panel scene (7.2) | goal 7.2 |
-| `scripts/` | MIXED | files inside: 282 DELETE, 159 KEEP; see the file/exception rows. Directory rule: GDScript root | git ls-files at b1ca032f |
+| `scenes/world3d/World3D.tscn` | KEEP | scene root | git ls-files at b1ca032f |
+| `scripts/` | MIXED | files inside: 322 DELETE, 161 KEEP; see the file/exception rows. Directory rule: GDScript root | git ls-files at b1ca032f |
 | `scripts/core/locale.gd` | KEEP | Locale autoload (7.3 keep set) | goal 7.3; project.godot [autoload] |
 | `scripts/core/locale.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/core/main_bootstrap.gd` | KEEP | GDScript root | git ls-files at b1ca032f |
@@ -2418,10 +2473,10 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `scripts/ui/zoom_lod_controller.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/world/art/art_data.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/world/art/art_data.gd.uid` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `scripts/world/art/flora_resolver.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `scripts/world/art/flora_resolver.gd.uid` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `scripts/world/art/ground_baker.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `scripts/world/art/ground_baker.gd.uid` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/art/flora_resolver.gd` | DELETE | 2D daylight tint, ground baking and the 2D flora resolver (the 3D sky and flora replace them) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/art/flora_resolver.gd.uid` | DELETE | 2D daylight tint, ground baking and the 2D flora resolver (the 3D sky and flora replace them) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/art/ground_baker.gd` | DELETE | 2D daylight tint, ground baking and the 2D flora resolver (the 3D sky and flora replace them) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/art/ground_baker.gd.uid` | DELETE | 2D daylight tint, ground baking and the 2D flora resolver (the 3D sky and flora replace them) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
 | `scripts/world/art/material_resolver.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/world/art/material_resolver.gd.uid` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/world/art/site_ghost.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
@@ -2434,69 +2489,138 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `scripts/world/art_hash.gd.uid` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/world/camera_controller.gd` | KEEP | 7.3 keep set (moved from scripts/ui/ in 8.7) | goal 7.3, 8.7 |
 | `scripts/world/camera_controller.gd.uid` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `scripts/world/colony/agent_layer.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/agent_layer.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/animal_layer.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/animal_layer.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/building_layer.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/building_layer.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/field_layer.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/field_layer.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/ground_layer.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/ground_layer.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/lit_warm_representatives.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/lit_warm_representatives.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/lod_markers.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/lod_markers.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/marker_layout.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/marker_layout.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/order_tool.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/order_tool.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/overlay_layer.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/overlay_layer.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/plant_layer.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/plant_layer.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/room_layer.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/room_layer.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/template_preview.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/template_preview.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/tree_layer.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/tree_layer.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/view.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/view.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/visitor_layer.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/colony/visitor_layer.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
-| `scripts/world/daylight_controller.gd` | KEEP | 7.3 keep set (moved from scripts/ui/ in 8.7) | goal 7.3, 8.7 |
-| `scripts/world/daylight_controller.gd.uid` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/colony/agent_layer.gd` | DELETE | the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/agent_layer.gd.uid` | DELETE | the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/animal_layer.gd` | DELETE | the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/animal_layer.gd.uid` | DELETE | the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/building_layer.gd` | DELETE | the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/building_layer.gd.uid` | DELETE | the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/field_layer.gd` | DELETE | the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/field_layer.gd.uid` | DELETE | the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/ground_layer.gd` | DELETE | the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/ground_layer.gd.uid` | DELETE | the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/lit_warm_representatives.gd` | DELETE | the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/lit_warm_representatives.gd.uid` | DELETE | the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/livestock_layer.gd` | DELETE | the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/livestock_layer.gd.uid` | DELETE | the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/lod_markers.gd` | DELETE | the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/lod_markers.gd.uid` | DELETE | the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/marker_layout.gd` | KEEP | colony view helpers kept after the 2D layers went (M3D-SWITCH E2): world scale, order tool, camera framing | M1 goal 9.4; DECISIONS D25; M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/marker_layout.gd.uid` | KEEP | colony view helpers kept after the 2D layers went (M3D-SWITCH E2): world scale, order tool, camera framing | M1 goal 9.4; DECISIONS D25; M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/order_tool.gd` | KEEP | colony view helpers kept after the 2D layers went (M3D-SWITCH E2): world scale, order tool, camera framing | M1 goal 9.4; DECISIONS D25; M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/order_tool.gd.uid` | KEEP | colony view helpers kept after the 2D layers went (M3D-SWITCH E2): world scale, order tool, camera framing | M1 goal 9.4; DECISIONS D25; M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/outcrop_layer.gd` | DELETE | the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/outcrop_layer.gd.uid` | DELETE | the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/overlay_layer.gd` | DELETE | the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/overlay_layer.gd.uid` | DELETE | the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/plant_layer.gd` | DELETE | the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/plant_layer.gd.uid` | DELETE | the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/room_layer.gd` | DELETE | the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/room_layer.gd.uid` | DELETE | the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/template_preview.gd` | DELETE | the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/template_preview.gd.uid` | DELETE | the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/tree_layer.gd` | DELETE | the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/tree_layer.gd.uid` | DELETE | the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/view.gd` | KEEP | colony view helpers kept after the 2D layers went (M3D-SWITCH E2): world scale, order tool, camera framing | M1 goal 9.4; DECISIONS D25; M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/view.gd.uid` | KEEP | colony view helpers kept after the 2D layers went (M3D-SWITCH E2): world scale, order tool, camera framing | M1 goal 9.4; DECISIONS D25; M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/visitor_layer.gd` | DELETE | the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/colony/visitor_layer.gd.uid` | DELETE | the 2D world renderer's layers; the 3D view (scripts/world3d/) draws the world and labels3d.gd its labels | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/daylight_controller.gd` | DELETE | 2D daylight tint, ground baking and the 2D flora resolver (the 3D sky and flora replace them) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/daylight_controller.gd.uid` | DELETE | 2D daylight tint, ground baking and the 2D flora resolver (the 3D sky and flora replace them) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/people_view.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/people_view.gd.uid` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/world/porter_presentation.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/world/porter_presentation.gd.uid` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `scripts/world/wood_visuals.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `scripts/world/wood_visuals.gd.uid` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `shaders/` | MIXED | files inside: 1 ASK, 16 DELETE, 2 KEEP; see the file/exception rows. Directory rule: not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/room_index.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/room_index.gd.uid` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/view_projection.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/view_projection.gd.uid` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/wood_visuals.gd` | DELETE | 2D daylight tint, ground baking and the 2D flora resolver (the 3D sky and flora replace them) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world/wood_visuals.gd.uid` | DELETE | 2D daylight tint, ground baking and the 2D flora resolver (the 3D sky and flora replace them) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/animals3d.gd` | KEEP | the 3D world view (M3D-1; the only world view since M3D-SWITCH E2) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/animals3d.gd.uid` | KEEP | the 3D world view (M3D-1; the only world view since M3D-SWITCH E2) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/camera_rig.gd` | KEEP | the 3D world view (M3D-1; the only world view since M3D-SWITCH E2) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/camera_rig.gd.uid` | KEEP | the 3D world view (M3D-1; the only world view since M3D-SWITCH E2) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/data3d.gd` | KEEP | the 3D world view (M3D-1; the only world view since M3D-SWITCH E2) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/data3d.gd.uid` | KEEP | the 3D world view (M3D-1; the only world view since M3D-SWITCH E2) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/flora3d.gd` | KEEP | the 3D world view (M3D-1; the only world view since M3D-SWITCH E2) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/flora3d.gd.uid` | KEEP | the 3D world view (M3D-1; the only world view since M3D-SWITCH E2) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/mesh_builder3d.gd` | KEEP | the 3D world view (M3D-1; the only world view since M3D-SWITCH E2) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/mesh_builder3d.gd.uid` | KEEP | the 3D world view (M3D-1; the only world view since M3D-SWITCH E2) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/overlay3d.gd` | KEEP | the 3D world view (M3D-1; the only world view since M3D-SWITCH E2) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/overlay3d.gd.uid` | KEEP | the 3D world view (M3D-1; the only world view since M3D-SWITCH E2) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/people3d.gd` | KEEP | the 3D world view (M3D-1; the only world view since M3D-SWITCH E2) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/people3d.gd.uid` | KEEP | the 3D world view (M3D-1; the only world view since M3D-SWITCH E2) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/plants3d.gd` | KEEP | the 3D world view (M3D-1; the only world view since M3D-SWITCH E2) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/plants3d.gd.uid` | KEEP | the 3D world view (M3D-1; the only world view since M3D-SWITCH E2) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/props3d.gd` | KEEP | the 3D world view (M3D-1; the only world view since M3D-SWITCH E2) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/props3d.gd.uid` | KEEP | the 3D world view (M3D-1; the only world view since M3D-SWITCH E2) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/renderer_switch.gd` | DELETE | the `--renderer=2d` escape hatch | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/renderer_switch.gd.uid` | DELETE | the `--renderer=2d` escape hatch | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/sky3d.gd` | KEEP | the 3D world view (M3D-1; the only world view since M3D-SWITCH E2) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/sky3d.gd.uid` | KEEP | the 3D world view (M3D-1; the only world view since M3D-SWITCH E2) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/structures3d.gd` | KEEP | the 3D world view (M3D-1; the only world view since M3D-SWITCH E2) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/structures3d.gd.uid` | KEEP | the 3D world view (M3D-1; the only world view since M3D-SWITCH E2) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/terrain3d.gd` | KEEP | the 3D world view (M3D-1; the only world view since M3D-SWITCH E2) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/terrain3d.gd.uid` | KEEP | the 3D world view (M3D-1; the only world view since M3D-SWITCH E2) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/vat3d.gd` | KEEP | the 3D world view (M3D-1; the only world view since M3D-SWITCH E2) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/vat3d.gd.uid` | KEEP | the 3D world view (M3D-1; the only world view since M3D-SWITCH E2) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/visitors3d.gd` | KEEP | the 3D world view (M3D-1; the only world view since M3D-SWITCH E2) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/visitors3d.gd.uid` | KEEP | the 3D world view (M3D-1; the only world view since M3D-SWITCH E2) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/world3d.gd` | KEEP | the 3D world view (M3D-1; the only world view since M3D-SWITCH E2) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `scripts/world3d/world3d.gd.uid` | KEEP | the 3D world view (M3D-1; the only world view since M3D-SWITCH E2) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `shaders/` | MIXED | files inside: 32 DELETE, 1 KEEP; see the file/exception rows. Directory rule: not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `shaders/abandoned_building.gdshader` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `shaders/agent_alive.gdshader` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `shaders/band_territory.gdshader` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `shaders/edge_awareness.gdshader` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `shaders/ground_chunk.gdshader` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `shaders/ground_chunk.gdshader.uid` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `shaders/ground_chunk.gdshader` | DELETE | 2D-only shaders (ground chunks, person variants, tree seasons) and the unused palette shaders | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `shaders/ground_chunk.gdshader.uid` | DELETE | 2D-only shaders (ground chunks, person variants, tree seasons) and the unused palette shaders | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
 | `shaders/heatmap_overlay.gdshader` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `shaders/palette_swap.gdshader` | ASK | unreferenced V7 MultiMesh palette-swap shader; VISION §5 keeps a palette-swap shader for clothing colours | VISION §5; tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `shaders/palette_swap.gdshader.uid` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `shaders/person_variant.gdshader` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `shaders/person_variant.gdshader.uid` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `shaders/palette_swap.gdshader` | DELETE | 2D-only shaders (ground chunks, person variants, tree seasons) and the unused palette shaders | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `shaders/palette_swap.gdshader.uid` | DELETE | 2D-only shaders (ground chunks, person variants, tree seasons) and the unused palette shaders | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `shaders/person_variant.gdshader` | DELETE | 2D-only shaders (ground chunks, person variants, tree seasons) and the unused palette shaders | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `shaders/person_variant.gdshader.uid` | DELETE | 2D-only shaders (ground chunks, person variants, tree seasons) and the unused palette shaders | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
 | `shaders/settlement_outline.gdshader` | KEEP | used by agent_renderer.gd (selection outline) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `shaders/shimmer.gdshader` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `shaders/stress_phase.gdshader` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `shaders/terrain_desaturate.gdshader` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `shaders/tree_season.gdshader` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `shaders/tree_season.gdshader.uid` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `shaders/villager_ramp.gdshader` | KEEP | preserved palette-ramp shader (formerly used by art_sprite_library.gd; VISION §5 keeps palette swap; MUX C removes only the unused script) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `shaders/villager_ramp.gdshader.uid` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `shaders/tree_season.gdshader` | DELETE | 2D-only shaders (ground chunks, person variants, tree seasons) and the unused palette shaders | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `shaders/tree_season.gdshader.uid` | DELETE | 2D-only shaders (ground chunks, person variants, tree seasons) and the unused palette shaders | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `shaders/villager_ramp.gdshader` | DELETE | 2D-only shaders (ground chunks, person variants, tree seasons) and the unused palette shaders | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `shaders/villager_ramp.gdshader.uid` | DELETE | 2D-only shaders (ground chunks, person variants, tree seasons) and the unused palette shaders | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `shaders/world3d/contact_blob.gdshader` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `shaders/world3d/contact_blob.gdshader.uid` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `shaders/world3d/flora.gdshader` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `shaders/world3d/flora.gdshader.uid` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `shaders/world3d/roof.gdshader` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `shaders/world3d/roof.gdshader.uid` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `shaders/world3d/terrain.gdshader` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `shaders/world3d/terrain.gdshader.uid` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `shaders/world3d/vat.gdshader` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `shaders/world3d/vat.gdshader.uid` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `shaders/world3d/wall.gdshader` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `shaders/world3d/wall.gdshader.uid` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `shaders/world3d/water.gdshader` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `shaders/world3d/water.gdshader.uid` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `sim_bridge.gdextension` | KEEP | GDExtension manifest loading libsim_bridge | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `sim_bridge.gdextension.uid` | KEEP | the extension's committed Godot UID (M1 5.3) | M1 DECISIONS D3 |
 | `stats/` | DELETE | pre-V7 stat definition JSON; nothing in rust/ or reachable GDScript reads it | grep -rn 'stats/' rust scripts → none; tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `tools/` | MIXED | files inside: 891 DELETE, 299 KEEP, 1 MOVE→tools/v8/gdscript_strict_check.sh, 1 MOVE→tools/v8/run_bounded.sh; see the file/exception rows. Directory rule: tools root | git ls-files at b1ca032f |
+| `tools/` | MIXED | files inside: 928 DELETE, 280 KEEP, 1 MOVE→tools/v8/gdscript_strict_check.sh, 1 MOVE→tools/v8/run_bounded.sh; see the file/exception rows. Directory rule: tools root | git ls-files at b1ca032f |
 | `tools/.gdignore` | KEEP | keeps Godot from importing tools/ | git ls-files at b1ca032f |
+| `tools/3d/blender/README.md` | KEEP | tools root | git ls-files at b1ca032f |
+| `tools/3d/blender/animals.py` | KEEP | tools root | git ls-files at b1ca032f |
+| `tools/3d/blender/build_all.py` | KEEP | tools root | git ls-files at b1ca032f |
+| `tools/3d/blender/chars_b.py` | KEEP | tools root | git ls-files at b1ca032f |
+| `tools/3d/blender/common.py` | KEEP | tools root | git ls-files at b1ca032f |
+| `tools/3d/blender/flora.py` | KEEP | tools root | git ls-files at b1ca032f |
+| `tools/3d/blender/items.py` | KEEP | tools root | git ls-files at b1ca032f |
+| `tools/3d/blender/people.py` | KEEP | tools root | git ls-files at b1ca032f |
+| `tools/3d/blender/render_b_lod_contact.py` | KEEP | tools root | git ls-files at b1ca032f |
+| `tools/3d/blender/render_contact.py` | KEEP | tools root | git ls-files at b1ca032f |
+| `tools/3d/blender/rocks.py` | KEEP | tools root | git ls-files at b1ca032f |
+| `tools/3d/blender/stations.py` | KEEP | tools root | git ls-files at b1ca032f |
+| `tools/3d/blender/verify_vat.py` | KEEP | tools root | git ls-files at b1ca032f |
 | `tools/art/gen_terrain_atlas.py` | DELETE | one-off art script (6.3) | goal 6.3 |
 | `tools/art_pipeline/README.md` | DELETE | art production pipeline (generation ledgers, boards, packers) | goal 6.3 |
 | `tools/art_pipeline/agent_sections_p10.md` | DELETE | art production pipeline (generation ledgers, boards, packers) | goal 6.3 |
@@ -3388,8 +3512,8 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `tools/v8/art_import.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/art_masks.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/b4_score.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/b5_tree_renderer_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/b5_tree_visual.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/b5_tree_renderer_test.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `tools/v8/b5_tree_visual.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
 | `tools/v8/bench.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/bench_ledger.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/bench_script.json` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
@@ -3432,10 +3556,10 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `tools/v8/fixtures/data_only_wall.json` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/fixtures/m6a_plant_art.json` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/fixtures/mux2_badge_grid_reference.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/fixtures/mux2_badge_local_reference.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/fixtures/mux2_extent_owner_reference.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/fixtures/mux2_person_cache_reference.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/flora_parity_fixture.json` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/fixtures/mux2_badge_local_reference.gd` | DELETE | fixtures and runners of the deleted 2D tests | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `tools/v8/fixtures/mux2_extent_owner_reference.gd` | DELETE | fixtures and runners of the deleted 2D tests | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `tools/v8/fixtures/mux2_person_cache_reference.gd` | DELETE | fixtures and runners of the deleted 2D tests | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `tools/v8/flora_parity_fixture.json` | DELETE | fixtures and runners of the deleted 2D tests | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
 | `tools/v8/gate.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/gd_reach.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/gdscript_strict_check.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
@@ -3465,8 +3589,8 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `tools/v8/m5_u_nodraft_script.json` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/m5_u_script.json` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/m5_ui_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/m6a_actions_visibility_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/m6a_actions_visibility_test.gd.uid` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6a_actions_visibility_test.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `tools/v8/m6a_actions_visibility_test.gd.uid` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
 | `tools/v8/m6a_base72.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/m6a_base72_entry.rs` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/m6a_causal.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
@@ -3514,35 +3638,35 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `tools/v8/m6b_toast_layout_test.gd.uid` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/m6b_trade_availability_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/m6b_trade_card_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/mart21_shots.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/mart21_trees_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mart21_shots.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `tools/v8/mart21_trees_test.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
 | `tools/v8/mart2_chunk_hashes.json` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/mart2_fps.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/mart2_fps.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/mart2_ground_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mart2_fps.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `tools/v8/mart2_fps.sh` | DELETE | fixtures and runners of the deleted 2D tests | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `tools/v8/mart2_ground_test.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
 | `tools/v8/mart2_old_shots.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/mart2_people_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mart2_people_test.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
 | `tools/v8/mart2_shots.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/mart2_ui_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/mux21_fps.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/mux21_layout_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mart2_ui_test.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `tools/v8/mux21_fps.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `tools/v8/mux21_layout_test.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
 | `tools/v8/mux21_play_capture.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/mux21_profile.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux21_profile.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
 | `tools/v8/mux21_toast_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/mux21_why_locale_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/mux2_badge_aggregate_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/mux2_badge_extent_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/mux2_badge_grid_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/mux2_badge_index_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/mux2_badge_local_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/mux2_badge_packing_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/mux2_bake_receipt_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/mux2_building_render_warm_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/mux2_building_warm_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_badge_aggregate_test.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `tools/v8/mux2_badge_extent_test.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `tools/v8/mux2_badge_grid_test.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `tools/v8/mux2_badge_index_test.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `tools/v8/mux2_badge_local_test.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `tools/v8/mux2_badge_packing_test.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `tools/v8/mux2_bake_receipt_test.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `tools/v8/mux2_building_render_warm_test.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `tools/v8/mux2_building_warm_test.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
 | `tools/v8/mux2_camp_framing_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/mux2_camp_framing_test.gd.uid` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/mux2_coincident_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/mux2_extent_owner_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_coincident_test.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `tools/v8/mux2_extent_owner_test.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
 | `tools/v8/mux2_gate_checks.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/mux2_gate_fixtures.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/mux2_gate_inputs.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
@@ -3553,14 +3677,14 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `tools/v8/mux2_gate_telemetry.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/mux2_gate_testdata.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/mux2_gate_visual.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/mux2_marker_layout_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_marker_layout_test.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
 | `tools/v8/mux2_newborn_capture.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/mux2_overlap_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/mux2_people_state_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_overlap_test.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `tools/v8/mux2_people_state_test.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
 | `tools/v8/mux2_perf_monitor.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/mux2_person_cache_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/mux2_rebake_supplement.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/mux2_render_profile.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_person_cache_test.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `tools/v8/mux2_rebake_supplement.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
+| `tools/v8/mux2_render_profile.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
 | `tools/v8/mux2_score.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/mux2_stall_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/mux2_text_capture.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
@@ -3569,7 +3693,7 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `tools/v8/mux2_visibility_saves.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/mux2_visibility_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/mux2_visibility_validator_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/mux2_wall_cache_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_wall_cache_test.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
 | `tools/v8/mux2_why_input_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/mux_active_perf.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/mux_alerts_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
@@ -3579,7 +3703,7 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `tools/v8/mux_learning_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/mux_legacy_layout_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/mux_minimap_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/mux_renderer_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux_renderer_test.gd` | DELETE | tests and probes of the deleted 2D renderer (gate steps moved to 3D checks) | M3D-SWITCH E2 (the 3D view is the only world view; ADR pending) |
 | `tools/v8/mux_safety.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/mux_safety_validate.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/mux_scale_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
@@ -3676,6 +3800,11 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `tools/v8/u_script.json` | KEEP | M1 tooling (screen check, chronicle comparison, tile sheet, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
 | `tools/v8/v7_ui_deleted.txt` | KEEP | M1 tooling (screen check, chronicle comparison, tile sheet, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
 | `tools/v8/verify_v8_0.gd` | KEEP | M1 tooling (screen check, chronicle comparison, tile sheet, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
+| `tools/v8/world3d_data_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/world3d_flythrough.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/world3d_fps.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/world3d_gui_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/world3d_shots.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/worldmodel/bench_v0.py` | DELETE | world-model research tooling (lives on codex/worldmodel-2026-10) | goal 3.2, 6.3 |
 | `tools/worldmodel/bench_v1.py` | DELETE | world-model research tooling (lives on codex/worldmodel-2026-10) | goal 3.2, 6.3 |
 | `tools/worldmodel/check_z6.py` | DELETE | world-model research tooling (lives on codex/worldmodel-2026-10) | goal 3.2, 6.3 |

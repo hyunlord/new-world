@@ -2,7 +2,7 @@
 #   worldsim-godot). Loads `--save`, stops the clock and checks, through bridge reads and panel state, never through
 #   the 3D layers' own bookkeeping alone:
 #   1 a click on a person's body opens the inspector on that person (AgentInspectorPanel.get_selected_entity_bits; the
-#     click goes through World3D's pick, no 2D layer: the AgentLayer is freed first);
+#     click goes through World3D's pick; the 2D layers are gone since M3D-SWITCH E2);
 #   2 a click on a workshop's roof opens the workshop panel (the ray stops at the roof, not the ground behind);
 #   3 R (room overlay) dissolves every roof, and a click on a room tile then opens the room panel;
 #   4 E turns the view 90°, and W then pans "up on screen" (the 2D camera moves along the rotated forward);
@@ -10,7 +10,7 @@
 #   6 an F1 chop drag over trees in 3D marks trees (get_colony_overlay designations grow).
 #   Saves a frame after each step to `--out`. Prints `W3D_GUI <name> PASS|FAIL <detail>` and `W3D_GUI_DONE failures=<n>`;
 #   quits 1 on any failure. `Godot --path . --resolution 1920x1080 --script res://tools/v8/world3d_gui_test.gd --
-#   --renderer=3d --save <wsave> --out <dir>`
+#   --save <wsave> --out <dir>`
 # Bridge methods called: load_world (direct); via SimReads get_agent_snapshot, get_workshops, get_rooms,
 #   get_colony_overlay, get_trees.
 extends SceneTree
@@ -124,7 +124,7 @@ func _run() -> void:
 	await _frames(10)
 	_w3d = _main.get_node_or_null("World3D")
 	if _w3d == null or not bool(_world.call("load_world", _arg("--save"))):
-		push_error("world3d_gui_test: needs --renderer=3d and a loadable --save")
+		push_error("world3d_gui_test: needs a loadable --save")
 		quit(1)
 		return
 	_world.process_mode = Node.PROCESS_MODE_DISABLED
@@ -142,7 +142,6 @@ func _run() -> void:
 	var people: Node = _w3d.get_node("People")
 	var feet: Vector3 = people.call("feet_of", target_bits)
 	await _bring(feet + Vector3(0, 0.9, 0), spot)
-	_main.get_node("ColonyView/AgentLayer").free()
 	print("W3D_GUI debug feet=%s screen=%s pick=%s rect=%s world=%s hover_ctl=%s" % [feet,
 		(_w3d.call("camera") as Camera3D).unproject_position(feet + Vector3(0, 0.9, 0)), _w3d.call("pick", spot, 0),
 		_w3d.call("person_rect", target_bits), _w3d.call("screen_to_world", spot), root.gui_get_hovered_control()])

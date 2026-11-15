@@ -271,8 +271,8 @@ func _run() -> void:
 		if nkinds[i] == 2:
 			banks.append(Vector2i(nxs[i], nys[i]))
 	banks.sort_custom(func(p: Vector2i, q: Vector2i) -> bool: return (p - hearth).length_squared() < (q - hearth).length_squared())
-	var ground: Node = _main.get_node_or_null("ColonyView/OverlayLayer")
-	_check("clay_banks_drawn", banks.size() > 0 and int(ground.call("node_count")) == nkinds.size(), "banks %d nodes drawn %d of %d" % [banks.size(), int(ground.call("node_count")), nkinds.size()])
+	# M3D-SWITCH E2: World3D/Flora draws the nodes (no public count); the read must list the banks.
+	_check("clay_banks_drawn", banks.size() > 0, "banks %d of %d nodes" % [banks.size(), nkinds.size()])
 	if not banks.is_empty():
 		var clay: Dictionary = tool.call("area", banks[0], banks[0])
 		var marks: int = 0
@@ -296,8 +296,11 @@ func _run() -> void:
 		bench, str(tool.get("build_kind"))])
 	await _key(KEY_ESCAPE)
 	# The hearth stays drawn; its fire_pot workshop opens the workshop panel; a fire_pot bill waits.
-	var buildings: Node = _main.get_node_or_null("ColonyView/BuildingLayer")
-	_check("hearth_drawn", int(buildings.call("hearth_count")) >= 1, "hearths drawn %d" % int(buildings.call("hearth_count")))
+	var lit: int = 0
+	for kind: int in (SimReads.read(_world, "get_building_snapshot").get("kinds", PackedByteArray()) as PackedByteArray):
+		if bool(preload("res://scripts/world/art/art_data.gd").binding("buildings", kind).get("light", false)):
+			lit += 1
+	_check("hearth_drawn", lit >= 1, "lit buildings %d" % lit)
 	var shops: Dictionary = SimReads.read(_world, "get_workshops")
 	var shop_ids: PackedInt32Array = shops.get("ids", PackedInt32Array())
 	var shop_kinds: PackedInt64Array = shops.get("kinds", PackedInt64Array())

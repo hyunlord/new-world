@@ -14,6 +14,7 @@ const StoryText = preload("res://scripts/ui/story_text.gd")
 const Icons = preload("res://scripts/ui/item_icons.gd")
 const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
 const PresentationBootstrap = preload("res://scripts/core/presentation_bootstrap.gd")
+const Data3D = preload("res://scripts/world3d/data3d.gd")
 var _rows: Array[Dictionary] = []
 var _failures: int = 0
 var _out: String = ""
@@ -61,7 +62,10 @@ func _run() -> void:
 	var ore_texture: Texture2D = Icons.item_texture(selected_ore)
 	_check("data-only ore has real visible placeholder", ore_texture != null and ore_texture.get_image().get_used_rect().has_area())
 	_check("selected ore recipe output", Content.row("recipes", 65542).get("id") == "test_smelt" and Content.row("items", 65541).get("art_shape") == "ingot")
-	_check("real world has ore renderer", main.get_node_or_null("ColonyView/OutcropLayer") != null)
+	# M3D-SWITCH E2: ore outcrops are drawn by World3D/Flora with the bindings3d `outcrops.model` (and labelled by
+	# World3D/LabelLayer/Labels); the check needs both and the model built.
+	_check("real world has ore renderer", main.get_node_or_null("World3D/Flora") != null and main.get_node_or_null("World3D/LabelLayer/Labels") != null
+		and Data3D.has_model(str(Data3D.binding("outcrops.model", ""))))
 
 	for entry: Array in [["items", 65537, "test_hide"], ["recipes", 65538, "test_hide_recipe"], ["blueprints", 65539, "test_mudbrick_wall"], ["pressures", 4294967294, "test_cold"], ["animals", 4294967293, "test_grazer"]]:
 		var row: Dictionary = Content.row(str(entry[0]), int(entry[1]))

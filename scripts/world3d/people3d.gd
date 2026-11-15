@@ -162,7 +162,8 @@ func _process(delta: float) -> void:
 				if lm != null:
 					lm.set_instance_transform(cap * c + slot, Transform3D(basis, feet + off))
 				bm.set_instance_transform(cap * c + slot, Transform3D(Basis().scaled(Vector3(scale, 1.0, scale)), feet + off + Vector3(0, 0.03, 0)))
-		var clip: float = _clip_pack(st["model"], _clip_of(st, float(m["t"]) < 1.0))
+		# Paused mid-step: stand (not walk on the spot).
+		var clip: float = _clip_pack(st["model"], _clip_of(st, running and float(m["t"]) < 1.0))
 		if clip != float(st["clip"]) or bool(st["dirty"]):
 			st["clip"] = clip
 			var look: Dictionary = st["look"]
@@ -516,7 +517,7 @@ func state_of(bits: int) -> Dictionary:
 		var m: Dictionary = _motion.get(aid, {})
 		return {"tile": m.get("tile", Vector2i(-1, -1)), "settled": float(m.get("t", 1.0)) >= 1.0, "feet": d["feet"],
 			"model": d["model"], "look_id": int(d.get("look_id", 0)), "variant": int(d.get("variant", 0)),
-			"clip": _clip_of(d, float(m.get("t", 1.0)) < 1.0), "scale": float(d["scale"])}
+			"clip": _clip_of(d, _world_sim.process_mode != Node.PROCESS_MODE_DISABLED and float(m.get("t", 1.0)) < 1.0), "scale": float(d["scale"])}
 	return {}
 
 

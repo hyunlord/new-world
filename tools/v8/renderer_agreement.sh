@@ -8,10 +8,11 @@
 #   2. the probe writes the concrete commands the U-script resolves to (--commands-out) and the text
 #      renderer's person tiles (--ascii --tick 900 --people-json; one entry per person);
 #   3. tools/v8/renderer_agreement.gd boots res://scenes/main.tscn headless, replays those concrete commands
-#      through the bridge's cmd_* methods, advances to tick 900 and dumps the tiles of the people the agent
-#      layer draws;
-#   4. the two multisets of tiles are compared, and (M-ART2) every person's look and face variant by AgentId
-#      (appearance agreement: the text renderer's `appearance` rows = what the agent layer draws).
+#      through the bridge's cmd_* methods, advances to tick 900 and dumps the tiles of the people the 3D People
+#      layer draws (M3D-SWITCH E2; the tile under each figure's drawn feet, once every figure finished its step);
+#   4. the two multisets of tiles are compared, every drawn figure must stand on its own tile and be settled, and
+#      (M-ART2) every person's look and face variant by AgentId (appearance agreement: the text renderer's
+#      `appearance` rows = what People draws).
 # Prints `RENDERER_AGREEMENT PASS n=<people>` (exit 0) or `RENDERER_AGREEMENT FAIL <reason>` with the
 # differences (exit 1). Logs and intermediate files go to <log_dir> (keep it outside the repository).
 # RENDERER_AGREEMENT_TICK=T checks tick T instead of 900 (T > 360, after the U-script orders; at most 1440).
@@ -72,7 +73,13 @@ problems = []
 if text.get("tick") != tick or godot.get("tick") != tick:
     problems.append(f"ticks: text {text.get('tick')}, godot {godot.get('tick')}, wanted {tick}")
 if not godot.get("settled", False):
-    problems.append("the agent layer never settled (a person was still between two tiles)")
+    problems.append("the People layer never settled (a figure was still between two tiles)")
+detail = godot.get("detail", [])
+if len(detail) != len(godot.get("people", [])):
+    problems.append(f"{len(detail)} detail rows for {len(godot.get('people', []))} drawn people")
+astray = [r for r in detail if r.get("tile") != r.get("layer_tile") or not r.get("settled") or int(r.get("agent_id", -1)) < 0]
+if astray:
+    problems.append(f"{len(astray)} figures off their own tile, unsettled or without an AgentId: {astray[:3]}")
 a = collections.Counter(tuple(t) for t in text.get("people", []))
 b = collections.Counter(tuple(t) for t in godot.get("people", []))
 n = sum(a.values())
@@ -82,7 +89,7 @@ only_text = sorted((a - b).elements())
 only_godot = sorted((b - a).elements())
 if only_text or only_godot:
     problems.append(f"text {n} people, godot {sum(b.values())}; only in text {only_text}; only in godot {only_godot}")
-# M-ART2 (goal 3.2): appearance agreement — every person's look and face variant drawn by the Godot agent layer equal
+# M-ART2 (goal 3.2): appearance agreement — every person's look and face variant drawn by the Godot People layer equal
 # the text renderer's (both from sim_bridge::ffi::collect_appearance), by AgentId.
 looks_text = {int(r["agent_id"]): (int(r["look"]), int(r["variant"])) for r in text.get("appearance", [])}
 looks_godot = {int(r["agent_id"]): (int(r["look"]), int(r["variant"])) for r in godot.get("detail", []) if "look" in r}

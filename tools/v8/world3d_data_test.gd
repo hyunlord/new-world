@@ -9,7 +9,7 @@
 #   person (pick_world → entity bits) with a portrait, the body has a screen rect, a wild animal is picked with its
 #   species in the hunt mode, rooms index and toggle, chronicle highlights ring people in 3D, the mood flag toggles.
 #   Prints `W3D_DATA <name> PASS|FAIL <detail>` and `W3D_DATA_DONE failures=<n>`; quits 1 on failure.
-#   `Godot --headless --path . --script res://tools/v8/world3d_data_test.gd -- --renderer=3d`
+#   `Godot --headless --path . --script res://tools/v8/world3d_data_test.gd`
 # Bridge methods called: via SimReads get_agent_snapshot, get_rooms, get_animals (the booted main scene reads its own).
 extends SceneTree
 
@@ -103,7 +103,7 @@ func _run() -> void:
 	for _i: int in 30:
 		await process_frame
 	var w3d: Node = main.get_node_or_null("World3D")
-	_check("world3d_present", w3d != null, "pass --renderer=3d")
+	_check("world3d_present", w3d != null)
 	if w3d != null:
 		w3d.get_node("Terrain").call("build_all")
 		for _i: int in 30:
@@ -117,16 +117,12 @@ func _run() -> void:
 	quit(1 if _failures > 0 else 0)
 
 
-## (6) The 2D world layers freed; every runtime path goes through the renderer-neutral helpers.
+## (6) No 2D world layer exists; every runtime path goes through the renderer-neutral helpers.
 func _without_2d(main: Node, w3d: Node) -> void:
 	var view: Node = main.get_node("ColonyView")
-	for layer_name: String in ["AgentLayer", "AnimalLayer", "VisitorLayer", "OverlayLayer", "GroundLayer", "PlantLayer",
-			"TreeLayer", "BuildingLayer", "OutcropLayer", "LivestockLayer", "World"]:
-		var layer: Node = view.get_node_or_null(layer_name)
-		if layer != null:
-			layer.queue_free()
 	for _i: int in 10:
 		await process_frame
+	# M3D-SWITCH E2: the 2D layers are deleted; ColonyView only holds the order tool and the (hidden) task marker.
 	var left: Array[String] = []
 	for child: Node in view.get_children():
 		left.append(str(child.name))
@@ -142,7 +138,7 @@ func _without_2d(main: Node, w3d: Node) -> void:
 	var body: Dictionary = w3d.get_node("People").call("body_of", bits)
 	var feet: Vector3 = body.get("feet", Vector3.ZERO)
 	var at: Vector2 = Vector2(feet.x, feet.z) * px
-	var hit: Dictionary = ViewProjection.pick_world(tool, at)
+	var hit: Dictionary = ViewProjection.pick_world(at)
 	_check("e1_pick_person", hit.get("kind", "") == "person" and int(hit.get("id", -1)) == bits, "%s want %d" % [hit, bits])
 	tool.call("click_world", at, Vector2i(int(feet.x), int(feet.z)))
 	await process_frame
@@ -153,8 +149,8 @@ func _without_2d(main: Node, w3d: Node) -> void:
 		await process_frame
 	var portrait: Dictionary = inspector.call("portrait_state")
 	_check("e1_inspector_portrait", not str(portrait.get("look", "")).is_empty(), str(portrait))
-	var rect: Rect2 = ViewProjection.person_rect(tool, bits)
-	_check("e1_person_rect", rect.has_area() and not ViewProjection.people_lod(tool), str(rect))
+	var rect: Rect2 = ViewProjection.person_rect(bits)
+	_check("e1_person_rect", rect.has_area(), str(rect))
 	# A wild animal in the hunt mode.
 	var animals: Dictionary = SimReads.read(world, "get_animals")
 	var bodies: Array = w3d.get_node("Animals").call("bodies", OrderTool.Mode.HUNT)
@@ -163,12 +159,12 @@ func _without_2d(main: Node, w3d: Node) -> void:
 	else:
 		var a: Dictionary = bodies[0]
 		var afeet: Vector3 = a["feet"]
-		var ahit: Dictionary = ViewProjection.pick_world(tool, Vector2(afeet.x, afeet.z) * px, OrderTool.Mode.HUNT)
+		var ahit: Dictionary = ViewProjection.pick_world(Vector2(afeet.x, afeet.z) * px, OrderTool.Mode.HUNT)
 		var kinds: PackedInt64Array = animals.get("kinds", PackedInt64Array())
 		var row: int = (animals.get("ids", PackedInt64Array()) as PackedInt64Array).find(int(ahit.get("id", -1)))
 		_check("e1_pick_animal", ahit.get("kind", "") == "animal" and row >= 0 and row < kinds.size() and int(ahit.get("species", -2)) == kinds[row],
 			str(ahit))
-		_check("e1_people_not_hunted", ViewProjection.pick_world(tool, at, OrderTool.Mode.HUNT).get("kind", "") != "person")
+		_check("e1_people_not_hunted", ViewProjection.pick_world(at, OrderTool.Mode.HUNT).get("kind", "") != "person")
 	# Rooms: the index matches get_rooms and R's flag toggles with its signal.
 	var rooms: Node = main.get_node("RoomIndex")
 	var room_ids: PackedInt32Array = SimReads.read(world, "get_rooms").get("ids", PackedInt32Array())

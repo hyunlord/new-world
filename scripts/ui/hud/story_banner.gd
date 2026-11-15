@@ -302,7 +302,7 @@ func pulse() -> Dictionary:
 
 
 func _screen_of(tile: Vector2i) -> Vector2:
-	return ViewProjection.world_to_screen(self, View.tile_to_world(tile) + Vector2(View.TILE * 0.5, View.TILE * 0.5))
+	return ViewProjection.world_to_screen(View.tile_to_world(tile) + Vector2(View.TILE * 0.5, View.TILE * 0.5))
 
 
 ## The point on the screen's edge (inset by EDGE) toward `at` from the screen's centre.

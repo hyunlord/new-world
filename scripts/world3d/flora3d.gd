@@ -335,7 +335,10 @@ func _mesh_variant(id: String, variant: String) -> Mesh:
 	var src: ArrayMesh = base
 	var sp: String = variant.trim_prefix("species=") if variant.begins_with("species=") else ""
 	var habit: String = _habit(sp)
-	var bare: bool = sp != "" and ((Data3D.binding("flora.bare_in_season", {}) as Dictionary).get(habit, []) as Array).has(_season)
+	var bare: bool = false
+	# JSON numbers load as floats: compare as ints.
+	for v: Variant in (Data3D.binding("flora.bare_in_season", {}) as Dictionary).get(habit, []):
+		bare = bare or (sp != "" and int(v) == _season)
 	var verts: PackedVector3Array = PackedVector3Array()
 	var normals: PackedVector3Array = PackedVector3Array()
 	var cols: PackedColorArray = PackedColorArray()

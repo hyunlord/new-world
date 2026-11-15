@@ -1,5 +1,40 @@
 # Changelog
 
+## M3D-SWITCH E2 — the 3D view is the only world view (branch v8/3d, not published)
+
+### Added
+- `scripts/world3d/labels3d.gd` (World3D/LabelLayer/Labels): the 2D layers' map text in screen space over the 3D view —
+  blueprint site bars and progress labels, hover labels of item stacks, resource nodes, housing designations, pen and
+  wild animals and visitor groups, room labels with R, ore-outcrop glyphs, drafted/sick/flee/mood marks over people,
+  shared-spot counts below 1×, and rings over huntable deer; same keys, `labels.font_px` and hover rules.
+- OrderTool `ghost_ok` and `template_preview`; the 3D overlay colours a blueprint or template footprint green or refused.
+- `tools/v8/w3d_render_test.gd` and `w3d_labels_test.gd` (gate step 34 `w3d_render`), a 3D bounds check in the
+  visibility validator, World3D per-layer probes in `mux2_perf_monitor.gd`.
+
+### Changed
+- `main.tscn` keeps `ColonyView` as a hidden container for OrderTool and WorldMarker; World3D is always added.
+- `ViewProjection` answers only through the 3D view (no 2D fallback; the item, cycle and framing parameters are gone).
+- OrderTool keeps the build-template state itself and draws nothing.
+- Gate steps moved to the 3D view: 23 renderer agreement against World3D/People's drawn figures; 32 resolver parity
+  materials only; 34 `w3d_render`; 36 ore renderer = World3D/Flora + labels; 38 camp framing and the visibility
+  validator only; 39 the visibility receipt on the 3D view (`renderer: 3d`, no LOD); 40 and 46 the Why input test
+  through ViewProjection; 41 stall telemetry with World3D per-layer time and a rebuild summary; 48 plant art on
+  plants3d. `mart2_chunk_hashes.json` pins the 3D terrain chunk.
+- `marker_layout.gd`, `site_ghost.gd`, `wall_baker.gd`, `tone.gd`, `view.gd` and `art_data.gd` trimmed to what the UI and
+  3D still use.
+
+### Removed
+- The 2D world renderer: GroundLayer, TreeLayer, BuildingLayer, PlantLayer, FieldLayer, LivestockLayer, OutcropLayer,
+  AgentLayer, AnimalLayer, VisitorLayer, OverlayLayer, RoomLayer, LodMarkers, the template preview, DaylightController
+  and its CanvasModulate, `lit_warm_representatives.gd`, `wood_visuals.gd`, `ground_baker.gd`, `flora_resolver.gd`,
+  and the shaders `ground_chunk`, `person_variant`, `tree_season`, `palette_swap`, `villager_ramp`.
+- The `--renderer=2d` escape hatch (`renderer_switch.gd`) and the `renderer_3d` setting with `MUX_SETTING_RENDERER_3D`.
+- 2D-only tools: the mux2 badge/marker/overlap/person-cache/wall-cache/bake oracles and their fixtures,
+  `mux21_layout_test`, `mart2_ground_test`, `mart2_people_test`, `mart21_trees_test`, `mart2_ui_test`, `b5_tree_*`,
+  `mart2_fps` (+ `.sh`), `mux21_fps`, `mux21_profile`, `mux2_render_profile`, `mux2_rebake_supplement`,
+  `mux2_building_*warm_test`, `mux2_people_state_test`, `mux_renderer_test`, `mart21_shots`,
+  `m6a_actions_visibility_test`, `flora_parity_fixture.json`.
+
 ## M3D-1 — 3D view (branch v8/3d, not published; 2D stays the default)
 
 ### Added

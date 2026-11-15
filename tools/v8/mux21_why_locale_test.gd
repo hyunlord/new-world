@@ -68,8 +68,7 @@ func check(label: String, good: bool) -> void:
 			"heading_parent_minimum": str(heading.get_parent().get_combined_minimum_size()),
 			"panel_minimum": str((popup.get("_panel") as Control).get_combined_minimum_size()),
 			"camera_position": str(camera.position),
-			"canvas_transform": str(root.get_canvas_transform()),
-			"original_point_tile": str(View.world_to_tile(root.get_canvas_transform().affine_inverse() * (root.get_visible_rect().size * Vector2(0.55, 0.55))))}))
+			"original_point_tile": str(View.world_to_tile(ViewProjection.screen_to_world(root.get_visible_rect().size * Vector2(0.55, 0.55))))}))
 	super.check(label, good)
 	if label.contains("original size limits"):
 		var popup: Control = main.get_node("UI/CausalPanel")

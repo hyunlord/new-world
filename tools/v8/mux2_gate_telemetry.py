@@ -4,14 +4,17 @@
 # dependencies = []
 # ///
 # How to run: imported by mux2_gate_stall.py.
-"""Independently check every current producer timing field and warmup attribution."""
+"""Independently check every current producer timing field and the 3D rebuild attribution.
+
+M3D-SWITCH E2: the 2D ground and building timings (and the wall warm-up) are replaced by World3D's per-layer process
+time (`world3d`: World3D itself and each layer, from process-order probes in mux2_perf_monitor.gd).
+"""
 from dataclasses import dataclass
 from typing import Final
 from mux2_gate_inputs import Node, require
 
-REQUIRED: Final = {'buildings': ('process', 'draw', 'rebuild', 'huts', 'floor_prepare', 'door_prepare'),
-    'ground': ('process', 'chunk_bakes', 'compose', 'upload', 'strips', 'space_read', 'apply_space',
-               'wall_prepare', 'prepare_grounds', 'trees', 'visible', 'doors', 'wall_warmup'),
+REQUIRED: Final = {'world3d': ('world3d', 'terrain', 'flora', 'sky', 'structures', 'props', 'plants', 'people',
+                              'animals', 'visitors', 'overlay', 'labels', 'camera_rig'),
     'alerts': ('process', 'poll', 'rebuild'),
     'steward_hud': ('process', 'steward', 'facts', 'learning', 'layout')}
 
@@ -41,7 +44,7 @@ class Frame:
     tick: float
     epoch: float
     executed_ticks: float
-    wall_warmup: float
+    rebuild: float
 
 
 def validate_frame(row: Node, previous: Frame | None, start_tick: float) -> Frame:
@@ -66,10 +69,6 @@ def validate_frame(row: Node, previous: Frame | None, start_tick: float) -> Fram
         node = telemetry.field(label)
         measured(node, frame)
         counters(node.field('usec'), keys, integer=True)
-    buildings = telemetry.field('buildings')
-    counters(buildings.field('counts'), ('sprite_creates', 'sprite_frees', 'texture_requests'), integer=True)
-    for value in buildings.field('texture_ids').array():
-        value.text()
     freeze = telemetry.field('freeze')
     measured(freeze, frame)
     counters(freeze.field('usec'), integer=True)
@@ -92,18 +91,15 @@ def validate_frame(row: Node, previous: Frame | None, start_tick: float) -> Fram
     counters(native.field('totals_usec'), ('process', 'tick', 'prune', 'process_residual', 'tick_residual'))
     require(bool(native.field('systems_usec').mapping()), 'missing native system attribution')
     counters(native.field('systems_usec'))
-    warm = nonnegative(telemetry.field('ground').field('usec').field('wall_warmup'), integer=True)
-    return Frame(frame, post, tick, epoch, executed, warm)
+    layers = telemetry.field('world3d').field('usec')
+    rebuild = sum(nonnegative(layers.field(key), integer=True) for key in layers.mapping())
+    return Frame(frame, post, tick, epoch, executed, rebuild)
 
 
-def validate_warmup(arm: Node, observed: float) -> None:
-    warmup = arm.field('wall_warmup')
-    # Warmup completeness is reported, not a new performance acceptance bar.
-    require(type(warmup.field('complete').value) is bool, 'missing warmup completion status')
-    require(bool(warmup.field('reason').text()), 'missing warmup reason')
-    counters(Node({key: warmup.field(key).value for key in
-        ('candidates', 'unique_appearances', 'elapsed_usec', 'max_candidates', 'max_appearances',
-         'budget_usec', 'current_unique_appearances', 'cache_misses')}, 'wall_warmup'), integer=True)
-    require(arm.field('instrumentation').field('wall_warmup_observed_usec').number() == observed,
-            'warmup attribution summary mismatch')
-    require(warmup.field('elapsed_usec').number() <= observed, 'warmup ran outside measured frames')
+def validate_rebuild(arm: Node, observed: float) -> None:
+    rebuild = arm.field('rebuild')
+    # The world drawn by the end of the arm: every terrain chunk built (the 3D counterpart of a finished warm-up).
+    rebuild.field('terrain_complete').equals(True)
+    require(rebuild.field('observed_usec').number() == observed
+            and arm.field('instrumentation').field('rebuild_observed_usec').number() == observed,
+            '3D layer time attribution summary mismatch')

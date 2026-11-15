@@ -46,7 +46,7 @@ func _run() -> void:
 	# --- Test 7: MuxHud active_alert_texts method exists ---
 	_test_alert_texts_method(main)
 
-	# --- Test 8: AgentLayer set_highlights / clear_highlights ---
+	# --- Test 8: PeopleView set_highlights / clear_highlights ---
 	_test_agent_highlights(main)
 
 	# --- Test 9: Room panel shows diagnosis label ---
@@ -210,25 +210,25 @@ func _test_alert_texts_method(main: Node) -> void:
 	_assert(texts is PackedStringArray, "active_alert_texts returns PackedStringArray")
 
 
-## Test 8: AgentLayer set_highlights / clear_highlights exist and work.
+## Test 8: Main/PeopleView set_highlights / clear_highlights exist and work (M3D-SWITCH E2: the 2D AgentLayer is gone;
+## World3D/People rings the highlighted people).
 func _test_agent_highlights(main: Node) -> void:
-	print("Test 8: AgentLayer highlights")
-	var layer: Node = main.get_node_or_null("ColonyView/AgentLayer")
-	_assert(layer != null, "AgentLayer exists")
+	print("Test 8: PeopleView highlights")
+	var layer: Node = main.get_node_or_null("PeopleView")
+	_assert(layer != null, "PeopleView exists")
 	if layer == null:
 		return
-	_assert(layer.has_method("set_highlights"), "AgentLayer has set_highlights")
-	_assert(layer.has_method("clear_highlights"), "AgentLayer has clear_highlights")
+	_assert(layer.has_method("set_highlights"), "PeopleView has set_highlights")
+	_assert(layer.has_method("clear_highlights"), "PeopleView has clear_highlights")
 	if not layer.has_method("set_highlights") or not layer.has_method("clear_highlights"):
 		return
 	# Set highlights, verify no crash; then clear.
 	var ids: PackedInt64Array = PackedInt64Array([1, 2, 3])
 	layer.call("set_highlights", ids)
-	# The highlight_ids should be stored (read internal state).
-	var stored: PackedInt64Array = layer.get("_highlight_ids") if layer.get("_highlight_ids") is PackedInt64Array else PackedInt64Array()
+	var stored: PackedInt64Array = layer.call("highlight_ids")
 	_assert(stored.size() == 3, "set_highlights stores 3 ids")
 	layer.call("clear_highlights")
-	stored = layer.get("_highlight_ids") if layer.get("_highlight_ids") is PackedInt64Array else PackedInt64Array()
+	stored = layer.call("highlight_ids")
 	_assert(stored.is_empty(), "clear_highlights empties the list")
 
 

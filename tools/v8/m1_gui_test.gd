@@ -111,7 +111,7 @@ func _hearth() -> Vector2i:
 
 
 func _screen(tile: Vector2i) -> Vector2:
-	return root.get_canvas_transform() * (Vector2(tile) * TILE + Vector2(View.TILE, View.TILE) * 0.5)
+	return preload("res://scripts/world/view_projection.gd").world_to_screen(Vector2(tile) * TILE + Vector2(View.TILE, View.TILE) * 0.5)
 
 
 func _mouse(button: MouseButton, pressed: bool, at: Vector2) -> void:
@@ -294,7 +294,7 @@ func _step_run(hearth: Vector2i) -> void:
 		if not day1_done and _tick() - start >= DAY:
 			day1_done = true
 			await _shot("day1")
-		if hut_tick < 0 and int(_main.get_node("ColonyView/BuildingLayer").call("hut_count")) > 0:
+		if hut_tick < 0 and _ring_huts() > 0:
 			hut_tick = _tick()
 			_camera.call("center_on_tile", hearth + Vector2i(0, 4))
 			for _i: int in 5:
@@ -353,3 +353,13 @@ func _shot(name: String) -> void:
 		push_error("m1_gui_test: could not save " + path)
 	else:
 		print("m1_gui_test: saved ", path)
+
+
+## Finished huts (buildings whose bindings row has a `ring`, as the deleted 2D BuildingLayer.hut_count counted them; the
+## 3D Structures layer draws their ring of walls).
+func _ring_huts() -> int:
+	var n: int = 0
+	for kind: int in (SimReads.read(_world, "get_building_snapshot").get("kinds", PackedByteArray()) as PackedByteArray):
+		if preload("res://scripts/world/art/art_data.gd").binding("buildings", kind).has("ring"):
+			n += 1
+	return n

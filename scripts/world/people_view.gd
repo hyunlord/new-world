@@ -1,10 +1,9 @@
 # people_view.gd (Main/PeopleView in scenes/main.tscn): what the views show about people beyond their bodies, shared by
 #   every view (M3D-SWITCH E1).
-# Purpose: the mood overlay flag (M toggles it; `mood_toggled` for the story banner's legend, the 2D AgentLayer tints
-#   by it) and the chronicle's highlighted people (AgentIds; `highlights_changed` — the 2D AgentLayer rings them, the 3D
-#   People layer rings them in HIGHLIGHT_RGBA). Static data helpers read straight from get_agent_snapshot rows: a
-#   person's look ({look, variant, frames}, the inspector's portrait) and the household keys and their ring colour (the
-#   minimap's dots, the 2D LOD rings).
+# Purpose: the mood overlay flag (M toggles it; `mood_toggled` for the story banner's legend) and the chronicle's
+#   highlighted people (AgentIds; `highlights_changed` — the 3D People layer rings them in HIGHLIGHT_RGBA). Static data
+#   helpers read straight from get_agent_snapshot rows: a person's look ({look, variant, frames}, the inspector's
+#   portrait) and the household keys and their ring colour (the minimap's dots).
 # Bridge methods: none directly (static helpers take a get_agent_snapshot dictionary).
 extends Node
 
@@ -65,7 +64,7 @@ func highlight_ids() -> PackedInt64Array:
 
 
 ## The look of the person with entity bits `bits` in agent snapshot `snap`: {look, variant, frames}, or {} when absent.
-## Rows without appearance columns fall back like the 2D layer (look and variant keyed by AgentId).
+## Rows without appearance columns fall back to a look and variant keyed by AgentId.
 static func person_look(snap: Dictionary, bits: int) -> Dictionary:
 	var i: int = (snap.get("ids", PackedInt64Array()) as PackedInt64Array).find(bits)
 	var aids: PackedInt64Array = snap.get("agent_ids", PackedInt64Array())

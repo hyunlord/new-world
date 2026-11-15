@@ -106,7 +106,7 @@ func _click(at: Vector2) -> void:
 
 ## The window point of world position `p` (the stretch transform maps canvas pixels to window pixels).
 func _screen(p: Vector2) -> Vector2:
-	return root.get_final_transform() * (root.get_canvas_transform() * p)
+	return root.get_final_transform() * preload("res://scripts/world/view_projection.gd").world_to_screen(p)
 
 
 ## The window point of a UI control's centre.
@@ -226,8 +226,9 @@ func _run() -> void:
 	_neighbours = _main.get_node_or_null("UI/NeighboursPanel")
 	_banner = _main.get_node_or_null("UI/StoryBanner")
 	_tech = _main.get_node_or_null("UI/TechPanel")
-	_visitors = _main.get_node_or_null("ColonyView/VisitorLayer")
-	_agents = _main.get_node_or_null("ColonyView/AgentLayer")
+	# M3D-SWITCH E2: World3D/Visitors draws the groups; the people's marks come from the 3D map labels.
+	_visitors = _main.get_node_or_null("World3D/Visitors")
+	_agents = _main.get_node_or_null("World3D/LabelLayer/Labels")
 	_inspector = _main.get_node_or_null("UI/AgentInspectorPanel")
 	var ok_nodes: bool = _world != null and _locale != null and _camera != null and _migrants != null and _trade != null and _neighbours != null \
 		and _banner != null and _tech != null and _visitors != null and _agents != null and _inspector != null
@@ -354,11 +355,16 @@ func _trade_checks(caravan: Dictionary) -> void:
 	var id: int = int(caravan["id"])
 	await _look_at(caravan["tile"])
 	await _frames(3)
-	var rect: Rect2 = _visitors.call("drawn_rect", "caravan", id)
-	_check("caravan_drawn", rect.size.x > 0.0 and int((_visitors.call("counts") as Dictionary)["caravans"]) >= 1, "rect %s" % rect)
+	var at: Vector2 = Vector2(-1, -1)
+	var cam: Camera3D = _main.get_node("World3D").call("camera") as Camera3D
+	for body: Dictionary in _visitors.call("bodies", 0):
+		if str(body["kind"]) == "caravan" and int(body["id"]) == id:
+			at = cam.unproject_position((body["feet"] as Vector3) + Vector3(0, float(body["h"]) * 0.5, 0))
+			break
+	_check("caravan_drawn", at.x >= 0.0 and int((_visitors.call("counts") as Dictionary)["caravans"]) >= 1, "at %s" % at)
 	var banner: Array = _banner.call("visitor_texts")
 	_check("caravan_banner", _all_readable(banner), str(banner))
-	await _click(_screen(rect.get_center()))
+	await _click(root.get_final_transform() * at)
 	await _frames(3)
 	_check("caravan_click_opens_trade", (_trade as Control).visible and int(_trade.call("shown_caravan")) == id, "shown %d want %d" % [int(_trade.call("shown_caravan")), id])
 	if not (_trade as Control).visible:
@@ -595,7 +601,11 @@ func _flee() -> void:
 		samples += 1
 		for i: int in mini(bits.size(), fleeing.size()):
 			var asleep: bool = i < states.size() and i < targets.size() and states[i] == 3 and targets[i] == 3
-			var marks: Dictionary = _agents.call("person_marks", bits[i])
+			# Only figures on screen carry marks in 3D (the labels skip anchors off screen).
+			if not root.get_visible_rect().encloses(preload("res://scripts/world/view_projection.gd").person_rect(bits[i])):
+				continue
+			var shown: bool = (_agents.call("drawn") as Array).any(func(row: Dictionary) -> bool: return row.get("kind", "") == "flee" and int(row.get("bits", -1)) == bits[i])
+			var marks: Dictionary = {"fleeing": shown}
 			if bool(marks.get("fleeing", false)) != (fleeing[i] != 0 and not asleep):
 				mismatches += 1
 			if fleeing[i] != 0 and not asleep and seen.is_empty():

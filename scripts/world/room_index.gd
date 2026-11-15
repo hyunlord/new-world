@@ -1,8 +1,8 @@
 # room_index.gd (Main/RoomIndex in scenes/main.tscn): the M3 rooms as data, shared by every view (M3D-SWITCH E1).
 # Purpose: the index tile -> room and room -> row of get_rooms (re-read only when `rooms_version` moves) and the room
-#   overlay's shown flag: R (and the order bar's "방 보기 R" button) toggles it, `toggled` tells the order bar, the 2D
-#   RoomLayer and the 3D view. The order tool asks `room_at` for a click (the room panel), the inspector `room` for
-#   the bed line; the role tints (ROLE_COLORS) and the label / roof words are static so panels use them without a node.
+#   overlay's shown flag: R (and the order bar's "방 보기 R" button) toggles it, `toggled` tells the order bar; the
+#   3D view reads it (overlay3d tints, labels3d labels). The order tool asks `room_at` for a click (the room panel),
+#   the inspector `room` for the bed line; the role tints (ROLE_COLORS) and the label / roof words are static so panels use them without a node.
 # Bridge methods: via SimReads get_colony_versions, get_rooms; signal world_reset.
 extends Node
 
@@ -93,7 +93,7 @@ func room_count() -> int:
 	return _rooms.size()
 
 
-## Every room id -> row and tile -> room id (the 2D RoomLayer draws from these).
+## Every room id -> row and tile -> room id (overlay3d and labels3d draw from these).
 func rooms() -> Dictionary:
 	return _rooms
 

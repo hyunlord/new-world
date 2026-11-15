@@ -1,12 +1,12 @@
 # mux_minimap_test.gd — behavioral controls/minimap checks with a deterministic snapshot fixture.
-# Bridge methods: none; parent also runs the widgets against the real scene in mux_ui_test.gd.
+# Bridge methods: none; parent also runs the widgets against the real scene in mux_ui_test.gd. M3D-SWITCH E2 dropped the
+#   check that the minimap's terrain colours equal the 2D ground layer's palette (that layer is gone).
 extends SceneTree
 
 const Controls = preload("res://scripts/ui/mux/map_controls.gd")
 const Minimap = preload("res://scripts/ui/mux/minimap.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
-const Ground = preload("res://scripts/world/colony/ground_layer.gd")
-const People = preload("res://scripts/world/colony/agent_layer.gd")
+const PeopleView = preload("res://scripts/world/people_view.gd")
 
 class TestCamera extends Camera2D:
 	var speed: float = 1.0
@@ -77,7 +77,6 @@ func _run() -> void:
 	root.add_child(minimap)
 	minimap.setup(null, camera)
 	minimap.set_process(false)
-	_check_ground_palette(minimap)
 	await process_frame
 	minimap.refresh_snapshots(_fixture())
 	for frame: int in range(120):
@@ -90,7 +89,7 @@ func _run() -> void:
 	check(minimap.map_image().get_pixel(2, 2) != terrain_pixel, "room shown")
 	check(minimap.map_image().get_pixel(3, 3) != terrain_pixel, "wall shown")
 	var colours: Array = ArtData.param("lod.household_ring_rgb", [])
-	check(minimap.map_image().get_pixel(4, 4).is_equal_approx(People._ring_colour(10, colours)), "household colour")
+	check(minimap.map_image().get_pixel(4, 4).is_equal_approx(PeopleView.ring_colour(10, colours)), "household colour")
 	var rgb: Array = ArtData.binding("animals", 0).get("lod_colour", [])
 	check(minimap.map_image().get_pixel(6, 6).is_equal_approx(Color8(int(rgb[0]), int(rgb[1]), int(rgb[2]))), "animal registry colour")
 	minimap.jump_to_fraction(Vector2(0.5, 0.25))
@@ -160,14 +159,3 @@ func _rgba8(colour: Color) -> Color:
 	var reference: Image = Image.create(1, 1, false, Image.FORMAT_RGBA8)
 	reference.set_pixel(0, 0, colour)
 	return reference.get_pixel(0, 0)
-
-func _check_ground_palette(minimap: Minimap) -> void:
-	var ground: Ground = Ground.new()
-	var rows: Array = ArtData.bindings().get("terrain", {}).get("codes", [])
-	for row: Dictionary in rows:
-		if bool(row.get("water", false)): continue
-		ground.ground_ids.assign([str(row["ground"])])
-		var expected: Color = ground._palette()[0]
-		var actual: Color = minimap.terrain_colour(int(row["code"]))
-		check(actual.is_equal_approx(expected), "terrain %d matches renderer D9 palette" % int(row["code"]))
-	ground.free()

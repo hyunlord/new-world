@@ -25,18 +25,20 @@ class GateContractTests(unittest.TestCase):
 
     def test_plant_art_structural_checks_fail_closed(self) -> None:
         labels = ['data-only plant maps admitted', 'fixture content installs',
-                  'duplicate selected maps rejected', 'species ripe phase wins',
-                  'unbound category retains placeholder', 'malformed plant art rejected: []']
+                  'duplicate selected maps rejected', 'category ripe colour wins',
+                  'unbound category uses the ripe fallback', 'winter desaturates the phase colour',
+                  'malformed plant art rejected: []']
         for phase in range(4):
             labels.extend(f'{label} {phase}' for label in
-                          ('one actual batch phase', 'native texture phase', 'native anchor phase', 'upright UV phase',
-                           'unknown species uses category phase'))
+                          ('one actual batch phase', 'phase colour phase', 'tile anchor phase', 'seed heads phase'))
+        for phase in (3, 4, 5):
+            labels.extend([f'crop tufts and heads phase {phase}', f'crop tufts and heads phase {phase} (category bound)'])
         text = ''.join('M6A_PLANT_ART_PASS ' + label + '\n' for label in labels)
         text += f'M6A_PLANT_ART_DONE checks={len(labels)} failures=0\n'
         self.assertEqual(validate_plant_art(text), len(labels))
         for broken in (text.replace('failures=0', 'failures=1'),
-                       text.replace('native anchor phase 3', 'missing phase'),
-                       text.replace('upright UV phase 3', 'missing UV phase'),
+                       text.replace('tile anchor phase 3', 'missing phase'),
+                       text.replace('crop tufts and heads phase 4 (category bound)', 'missing crop phase'),
                        text + 'SCRIPT ERROR: invalid property\n',
                        text + 'M6A_PLANT_ART_FAIL hidden failure\n',
                        text.replace(f'checks={len(labels)}', 'checks=0'),
@@ -47,7 +49,7 @@ class GateContractTests(unittest.TestCase):
     def test_plant_inputs_and_food_metadata_are_source_bound(self) -> None:
         for path in ('rust/crates/sim-core/data/colony/items.ron',
                      'tools/v8/m6a_plant_art_test.gd', 'tools/v8/fixtures/m6a_plant_art.json',
-                     'scripts/world/colony/plant_layer.gd', 'assets/v8art/manifest.json'):
+                     'scripts/world3d/plants3d.gd', 'assets/v8art/manifest.json'):
             self.assertTrue(any(path == scope or path.startswith(scope + '/') for scope in SCOPES), path)
 
     def test_mode_requires_independent_pin(self) -> None:

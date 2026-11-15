@@ -96,7 +96,7 @@ func _person_rect() -> Rect2:
 		return Rect2()
 	var people: Dictionary = SimReads.read(world, "get_ui_facts").get("people", {})
 	for bits: Variant in people.get("entity_ids", []):
-		var raw: Rect2 = ViewProjection.person_rect(self, int(bits))
+		var raw: Rect2 = ViewProjection.person_rect(int(bits))
 		var candidate: Rect2 = _screen_rect(raw)
 		if raw.has_area() and _map_visible(candidate):
 			return candidate
@@ -114,9 +114,9 @@ func _workshop_rect() -> Rect2:
 	for i: int in mini(xs.size(), mini(ys.size(), mini(widths.size(), heights.size()))):
 		var corner: Vector2 = View.tile_to_world(Vector2i(int(xs[i]), int(ys[i])))
 		var extent: Vector2 = Vector2(int(widths[i]), int(heights[i])) * View.TILE
-		var raw: Rect2 = Rect2(ViewProjection.world_to_screen(self, corner), Vector2.ZERO)
+		var raw: Rect2 = Rect2(ViewProjection.world_to_screen(corner), Vector2.ZERO)
 		for c: Vector2 in [corner + Vector2(extent.x, 0), corner + Vector2(0, extent.y), corner + extent]:
-			raw = raw.expand(ViewProjection.world_to_screen(self, c))
+			raw = raw.expand(ViewProjection.world_to_screen(c))
 		var candidate: Rect2 = _screen_rect(raw)
 		if extent.x > 0.0 and extent.y > 0.0 and raw.has_area() and _map_visible(candidate):
 			return candidate

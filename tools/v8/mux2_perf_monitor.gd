@@ -1,12 +1,29 @@
 # M-UX2 frame evidence helpers: strict stall scoring and read-only script/engine telemetry.
 # Bridge methods: mux2_native_timings (optional diagnostic only). SimReads counters are sampled after the rendered frame, without a new getter.
+# M3D-SWITCH E2: the 2D GroundLayer/BuildingLayer timings (and the wall warm-up) are replaced by the 3D view's per-layer
+#   process time: `setup` puts a Probe node before World3D, before each of its children and after the last; every probe
+#   stamps Time.get_ticks_usec() in its _process, and the tree's process order (World3D, then each layer and its
+#   subtree) makes the differences World3D's own and each layer's process time this frame (their rebuilds included).
+#   `rebuild` is the arm's summary: the terrain built at the end and the summed layer time the samples observed.
 extends RefCounted
+
+
+## A process-order stamp (tools only; added beside the 3D layers by `setup`).
+class Probe extends Node:
+	var usec: int = -1
+	var frame: int = -1
+
+	func _process(_delta: float) -> void:
+		usec = Time.get_ticks_usec()
+		frame = Engine.get_process_frames()
 
 const WARMUP_SECONDS: float = 10.0
 const MEASURE_SECONDS: float = 300.0
 const TOTAL_SECONDS: float = WARMUP_SECONDS + MEASURE_SECONDS
 const MINUTES: int = 5
-const REQUIRED_TIMINGS: Dictionary = {"buildings": ["process", "draw", "rebuild", "huts", "floor_prepare", "door_prepare"], "ground": ["process", "chunk_bakes", "compose", "upload", "strips", "space_read", "apply_space", "wall_prepare", "prepare_grounds", "trees", "visible", "doors", "wall_warmup"], "alerts": ["process", "poll", "rebuild"], "steward_hud": ["process", "steward", "facts", "learning", "layout"]}
+const REQUIRED_TIMINGS: Dictionary = {"world3d": ["world3d", "terrain", "flora", "sky", "structures", "props", "plants", "people", "animals", "visitors", "overlay", "labels", "camera_rig"], "alerts": ["process", "poll", "rebuild"], "steward_hud": ["process", "steward", "facts", "learning", "layout"]}
+## World3D child name → its timing key (the order is the tree's, so probes bracket each child).
+const LAYER_KEYS: Dictionary = {"Terrain": "terrain", "Flora": "flora", "Sky": "sky", "Structures": "structures", "Props": "props", "Plants": "plants", "People": "people", "Animals": "animals", "Visitors": "visitors", "Overlay": "overlay", "LabelLayer": "labels", "CameraRig": "camera_rig"}
 var _minimap: Node
 var _reads: Node
 var _world: Node
@@ -18,7 +35,11 @@ var _tree: SceneTree
 var _process_usec: int = -1
 var _pre_draw_usec: int = -1
 var _last_post_usec: int = -1
-var _wall_warmup_observed_usec: int = 0
+var _world3d: Node
+## [[timing key, probe before it]] in process order, then the closing probe.
+var _brackets: Array = []
+var _end_probe: Probe
+var _rebuild_observed_usec: int = 0
 
 
 func setup(main: Node) -> void:
@@ -31,7 +52,24 @@ func setup(main: Node) -> void:
 	if _world.has_method("mux2_native_timings"):
 		_native_previous = _world.call("mux2_native_timings")
 	_previous_minimap_usec = int(_minimap.get("_total_usec"))
-	_timed_nodes = {"buildings": main.get_node("ColonyView/BuildingLayer"), "ground": main.get_node("ColonyView/GroundLayer"), "alerts": main.get_node("UI/MuxHud/Alerts"), "steward_hud": main.get_node("UI/MuxHud")}
+	_timed_nodes = {"alerts": main.get_node("UI/MuxHud/Alerts"), "steward_hud": main.get_node("UI/MuxHud")}
+	_world3d = main.get_node("World3D")
+	var start: Probe = Probe.new()
+	start.name = "Mux2ProbeWorld3D"
+	main.add_child(start)
+	main.move_child(start, _world3d.get_index())
+	_brackets = [["world3d", start]]
+	for child: Node in _world3d.get_children():
+		if child is Probe or not LAYER_KEYS.has(str(child.name)):
+			continue
+		var probe: Probe = Probe.new()
+		probe.name = "Mux2Probe" + str(child.name)
+		_world3d.add_child(probe)
+		_world3d.move_child(probe, child.get_index())
+		_brackets.append([LAYER_KEYS[str(child.name)], probe])
+	_end_probe = Probe.new()
+	_end_probe.name = "Mux2ProbeEnd"
+	_world3d.add_child(_end_probe)
 
 func begin_sampling(post_draw_usec: int) -> void:
 	_last_post_usec = post_draw_usec
@@ -39,6 +77,32 @@ func begin_sampling(post_draw_usec: int) -> void:
 func finish() -> void:
 	if _tree.process_frame.is_connected(_on_process_frame): _tree.process_frame.disconnect(_on_process_frame)
 	if RenderingServer.frame_pre_draw.is_connected(_on_pre_draw): RenderingServer.frame_pre_draw.disconnect(_on_pre_draw)
+
+
+## World3D's own and each layer's process time this frame from the probe stamps; INVALID unless every probe ran
+## this frame in order and every key of REQUIRED_TIMINGS.world3d is bracketed.
+func world3d_timings(frame: int) -> Dictionary:
+	var values: Dictionary = {}
+	var probes: Array = []
+	for bracket: Array in _brackets:
+		probes.append(bracket[1])
+	probes.append(_end_probe)
+	for k: int in _brackets.size():
+		var a: Probe = probes[k]
+		var b: Probe = probes[k + 1]
+		if not is_instance_valid(a) or not is_instance_valid(b) or a.frame != frame or b.frame != frame or b.usec < a.usec:
+			return {"status": "INVALID", "frame": frame}
+		values[_brackets[k][0]] = b.usec - a.usec
+	for key: String in REQUIRED_TIMINGS["world3d"]:
+		if not values.has(key):
+			return {"status": "INVALID", "frame": frame, "missing": key}
+	return {"status": "MEASURED", "frame": frame, "usec": values}
+
+
+## The arm's 3D rebuild summary: the terrain complete at the end, and the summed layer time the samples observed.
+func rebuild_report() -> Dictionary:
+	var terrain: Node = _world3d.get_node_or_null("Terrain") if is_instance_valid(_world3d) else null
+	return {"terrain_complete": terrain != null and bool(terrain.call("is_complete")), "observed_usec": _rebuild_observed_usec}
 
 func _on_process_frame() -> void:
 	_process_usec = Time.get_ticks_usec()
@@ -74,6 +138,11 @@ func sample(post_draw_usec: int) -> Dictionary:
 		},
 	}
 	_previous_minimap_usec = minimap_total
+	var layers: Dictionary = world3d_timings(frame)
+	result["world3d"] = layers
+	if not _valid_timing("world3d", layers, frame): _invalid["world3d"] = "Missing, stale-frame or unordered layer probes"
+	for key: String in (layers.get("usec", {}) as Dictionary):
+		_rebuild_observed_usec += int(layers["usec"][key])
 	for label: String in _timed_nodes:
 		var node: Node = _timed_nodes[label]
 		if node.has_method("mux2_frame_timings"):
@@ -83,8 +152,6 @@ func sample(post_draw_usec: int) -> Dictionary:
 		else:
 			result[label] = {"status": "NOT_MEASURED", "reason": "mux2_frame_timings instrumentation absent"}
 			_invalid[label] = "Instrumentation absent"
-	var ground_values: Dictionary = (result["ground"] as Dictionary).get("usec", {})
-	_wall_warmup_observed_usec += int(ground_values.get("wall_warmup", 0))
 	result["frame_phases"] = _phase_sample(post_draw_usec)
 	result["freeze"] = _freeze_sample(frame)
 	result["native"] = _native_sample(frame)
@@ -95,11 +162,6 @@ func _valid_timing(label: String, timing: Dictionary, frame: int) -> bool:
 	var values: Dictionary = timing.get("usec", {})
 	for metric: String in REQUIRED_TIMINGS[label]:
 		if typeof(values.get(metric)) != TYPE_INT or int(values[metric]) < 0: return false
-	if label == "buildings":
-		var counts: Dictionary = timing.get("counts", {})
-		for metric: String in ["sprite_creates", "sprite_frees", "texture_requests"]:
-			if typeof(counts.get(metric)) != TYPE_INT or int(counts[metric]) < 0: return false
-		if not timing.get("texture_ids") is Array: return false
 	return true
 
 func _freeze_sample(frame: int) -> Dictionary:
@@ -155,19 +217,19 @@ func _native_sample(frame: int) -> Dictionary:
 	return result
 
 func coverage() -> Dictionary:
-	var warmup: Dictionary = _timed_nodes["ground"].call("mux2_wall_warmup_report")
-	if int(warmup.get("elapsed_usec", 0)) > _wall_warmup_observed_usec:
-		_invalid["wall_warmup"] = "Warmup ran outside sampled frames"
 	var native: Dictionary = _world.call("mux2_native_timings") if _world.has_method("mux2_native_timings") else {}
 	if not _native_valid(native, Engine.get_process_frames()): _invalid["native"] = "Native coverage unavailable"
 	_freeze_sample(Engine.get_process_frames())
-	var result: Dictionary = {"wall_warmup_observed_usec": _wall_warmup_observed_usec, "frame_phases": "MEASURED" if not _invalid.has("frame_phases") else "NOT_MEASURED", "native": "MEASURED" if not _invalid.has("native") else "NOT_MEASURED", "freeze": "MEASURED" if not _invalid.has("freeze") else "NOT_MEASURED", "minimap_process": "MEASURED", "sim_reads_raw_getters": "MEASURED", "complete": _invalid.is_empty(), "invalid": _invalid.duplicate()}
+	var result: Dictionary = {"rebuild_observed_usec": _rebuild_observed_usec, "frame_phases": "MEASURED" if not _invalid.has("frame_phases") else "NOT_MEASURED", "native": "MEASURED" if not _invalid.has("native") else "NOT_MEASURED", "freeze": "MEASURED" if not _invalid.has("freeze") else "NOT_MEASURED", "minimap_process": "MEASURED", "sim_reads_raw_getters": "MEASURED", "complete": _invalid.is_empty(), "invalid": _invalid.duplicate()}
 	for label: String in _timed_nodes:
 		var node: Node = _timed_nodes[label]
 		var available: bool = node.has_method("mux2_frame_timings")
 		if available: available = _valid_timing(label, node.call("mux2_frame_timings"), Engine.get_process_frames())
 		result[label] = "INSTRUMENTED" if available else "NOT_MEASURED"
 		result["complete"] = bool(result["complete"]) and available
+	# Every sample validated the probes; any stale or unordered frame recorded `world3d` in _invalid.
+	result["world3d"] = "INSTRUMENTED" if not _brackets.is_empty() and not _invalid.has("world3d") else "NOT_MEASURED"
+	result["complete"] = bool(result["complete"]) and result["world3d"] == "INSTRUMENTED"
 	return result
 
 static func score(samples: Array[Dictionary], elapsed: float) -> Dictionary:
@@ -232,4 +294,39 @@ static func self_test() -> Array[String]:
 		burst.append({"elapsed_seconds": second, "interval_ms": 34.0})
 	if bool(score(burst, 310.0)["pass"]): failures.append("four slow frames in one minute accepted")
 	if bool(score([], 310.0)["pass"]): failures.append("empty samples accepted")
+	failures.append_array(_probe_self_test())
+	return failures
+
+
+## The probe bracket arithmetic on hand-set stamps: exact differences, and INVALID for a stale or unordered probe or a
+## missing layer key.
+static func _probe_self_test() -> Array[String]:
+	var failures: Array[String] = []
+	var monitor: RefCounted = load("res://tools/v8/mux2_perf_monitor.gd").new()
+	var probes: Array[Probe] = []
+	var keys: Array = REQUIRED_TIMINGS["world3d"]
+	for k: int in keys.size() + 1:
+		var probe: Probe = Probe.new()
+		probe.frame = 7
+		probe.usec = 1000 + k * 10 + k * k
+		probes.append(probe)
+	var brackets: Array = []
+	for k: int in keys.size():
+		brackets.append([keys[k], probes[k]])
+	monitor.set("_brackets", brackets)
+	monitor.set("_end_probe", probes[keys.size()])
+	var good: Dictionary = monitor.call("world3d_timings", 7)
+	var exact: bool = str(good.get("status", "")) == "MEASURED"
+	for k: int in keys.size():
+		exact = exact and int((good.get("usec", {}) as Dictionary).get(keys[k], -1)) == probes[k + 1].usec - probes[k].usec
+	if not exact: failures.append("probe differences")
+	if str((monitor.call("world3d_timings", 8) as Dictionary).get("status", "")) != "INVALID": failures.append("stale probes accepted")
+	probes[3].usec = probes[4].usec + 1
+	if str((monitor.call("world3d_timings", 7) as Dictionary).get("status", "")) != "INVALID": failures.append("unordered probes accepted")
+	probes[3].usec = 1000 + 3 * 10 + 9
+	monitor.set("_brackets", brackets.slice(0, brackets.size() - 1))
+	monitor.set("_end_probe", probes[keys.size() - 1])
+	if str((monitor.call("world3d_timings", 7) as Dictionary).get("status", "")) != "INVALID": failures.append("missing layer accepted")
+	for probe: Probe in probes:
+		probe.free()
 	return failures

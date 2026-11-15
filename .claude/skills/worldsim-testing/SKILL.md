@@ -98,7 +98,7 @@ Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration 
 | 20 | `uid_check` | `tools/v8/check_docs_helpers.py uid` (every Godot source has its committed `.uid`) |
 | 21 | `play_check` | `tools/v8/test_play.sh`: `tools/play.sh` exit codes (unknown version 3, no Godot 2, bad argument 4) and `--headless-check` of `main`, `m1`, `v7` (0 `SCRIPT ERROR` in 300 headless frames) |
 | 22 | `schema_docs` | `tools/v8/check_docs_helpers.py schema .`: every bridge getter and key is in `docs/v8/snapshot_schema.md` (C2) |
-| 23 | `renderer_agreement` | `tools/v8/renderer_agreement.sh`: the text renderer's people = the Godot agent layer's (seed 100, U-script, tick 900; C2); since M-ART2 also each person's look and face variant by AgentId |
+| 23 | `renderer_agreement` | `tools/v8/renderer_agreement.sh`: the text renderer's people = the figures World3D/People draws (tile under each settled figure's feet = its own tile; seed 100, U-script, tick 900; C2); since M-ART2 also each person's look and face variant by AgentId (M3D-SWITCH E2: 3D) |
 | 24 | `save_roundtrip` | `tools/v8/save_roundtrip.sh`: `save_load.rs` (colony seeds 0–7 save → load → tick = tick; C1) |
 | 25 | `bench` | `tools/v8/bench.sh`: the standing benchmark against `docs/perf/PERF_LEDGER.md` (> +10 % fails; ceilings report only; C3) |
 | 26 | `soak` | `tools/v8/soak.sh`: the economy soak fixture, colony seeds 0..4 × 20 days with `tools/v8/soak_script.json` (stone, flint, workshops, bills, axes, a house, a storehouse, a dug pocket; since M4 also 0 `KnowledgeLost`; since M5 with `--story no-beasts`): ledger and reservations exact every tick, 0 deaths, determinism (M3 goal 3.4) |
@@ -109,7 +109,7 @@ Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration 
 | 31 | `art_manifest` | `tools/v8/art_import.py --verify`: every file under `assets/v8art/` that the import manages matches the manifest's SHA-256 and size, and no managed file is missing or extra (M-ART2) |
 | 32 | `resolver_parity` | `tools/v8/resolver_parity.py --check` + `resolver_parity.gd`: the Godot material resolver returns the art line's `resolve.py` answers on the 30-case fixture |
 | 33 | `extensibility_grep` | `test_mart2_extensibility.py` (no content id and no 16-px tile size in `scripts/world/**` and the shaders; planted failures), `test_art_masks.py`, `test_art_import.py` (ADR 0033) |
-| 34 | `mart2_render` | `mart2_ground_test.gd` and `mart2_people_test.gd` headless: chunk bake determinism and the recorded hash, dithered edges, tone caps, banks, one-chunk rebake, data-only wall; appearance = bridge, anchors, LOD switch, params reload, tint |
+| 34 | `w3d_render` | `w3d_render_test.gd` headless (M3D-SWITCH E2, was `mart2_render`): terrain chunk determinism + pinned hash (`mart2_chunk_hashes.json`), the live chunk current, a dig rebuilds one chunk, the data-only wall in 3D; people model by sex/stage, look/variant, scale, clip; tree seasons, bare winter, data-only species, every tree drawn; and `w3d_labels_test.gd` (the 3D map labels = the 2D texts) |
 | 35 | `steward` | `mux_steward.sh`: two seeds ×24 days ON, deterministic, ledger/reservations exact and no panics; separate from48-day held-out survival bars |
 
 1. Commit first; run the gate on that head; do not touch the tree until it finishes (it records `head` and `dirty` in `gate.txt`).

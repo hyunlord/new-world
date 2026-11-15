@@ -1,16 +1,15 @@
 # order_tool.gd (ColonyView/OrderTool in scenes/main.tscn): turns mouse input into M1/M2 orders and clicks.
-# In an area mode (chop, stockpile, remove zone, cancel, M2 quarry) a left drag shows the rectangle and its release
+# In an area mode (chop, stockpile, remove zone, cancel, M2 quarry) a left drag marks the rectangle and its release
 #   sends the command; in the build mode (M2: the kind chosen in the order bar's F3 menu — hut 3×3, knapping spot
-#   1×1, wood bench and drying rack 2×1) a ghost of that footprint follows the cursor, green or red by
-#   `can_place_blueprint`, and a click places it. Right click or Esc leaves the mode. A short toast shows the result
+#   1×1, wood bench and drying rack 2×1) the footprint follows the cursor, fitting or not by `can_place_blueprint`
+#   (`ghost_ok`), and a click places it. Right click or Esc leaves the mode. A short toast shows the result
 #   count with the order's noun ("나무 16그루 베기 표시") or the reject reason. With no mode, a click keeps V8-0's
 #   behaviour — a person opens the inspector, an empty tile the causal "why?" panel — and M2 adds: a finished
 #   workshop's footprint opens the workshop panel. In an area mode the tile under the mouse gets a white hover frame.
 # M3 (goal 9.1–9.3): the space kinds. Walls (log, stone) and packed floors are placed by drag — a plain drag is a
 #   line (`cmd_place_line`), Shift+drag a rectangle (`cmd_place_rect`; walls hollow, floors filled); doors and
-#   bedrolls are one click (`cmd_place_blueprint`). The ghost shows every tile `get_place_preview` returns (read only
-#   when the hovered tile, the drag or Shift changes): the kind's ghost where it fits, tinted red with a red frame
-#   where not; on release the toast says how many were placed and, when some or all were refused, how many and
+#   bedrolls are one click (`cmd_place_blueprint`). The preview is every tile `get_place_preview` returns (read only
+#   when the hovered tile, the drag or Shift changes; `preview()`), fitting or refused; on release the toast says how many were placed and, when some or all were refused, how many and
 #   why. F8 파기 and F10 철거 are area modes (`cmd_designate_dig`, `cmd_designate_deconstruct`). With no mode and
 #   the room overlay (R) shown, a click on a room tile opens the room panel (UI/RoomPanel).
 # M4 (goal 9.5): CLAY (9) is an area mode like quarry (`cmd_designate_clay` on the clay banks in the rectangle),
@@ -27,24 +26,22 @@
 # M3D-SWITCH E1: what lies under a click (person, animal, caravan, wave) is the view's answer through
 #   ViewProjection.pick (screen point) / pick_world (tools' world point), so no click needs a 2D layer; rooms come from
 #   Main/RoomIndex, housing designations from get_colony_overlay (the selected one is kept here). The hover tile, the
-#   drag and the preview are public (`hover_tile`, `drag_tiles`, `preview`) for the 3D overlay.
-# M-ART2 (§3.6): every tile ↔ world conversion goes through View (64-px tiles). A placement ghost is the finished
-#   thing through site_ghost.gd (a pale outline and a `sites.wash_alpha` wash): a workshop's or the bedroll's
-#   structure, a hut's ring of walls, and for walls / doors / floors the material system's resolved textures (a
-#   dragged run of walls is assembled as it will stand, so its tops join); a refused footprint or tile is tinted
-#   `sites.refused_rgba`. Frames are 2 screen pixels wide at every zoom. Drawn above everything (z 7).
-# Bridge methods: can_place_blueprint, get_place_preview, get_agent_detail, get_tile_causal_history (direct); via
+#   drag, the preview and whether the footprint fits are public (`hover_tile`, `drag_tiles`, `preview`, `ghost_ok`).
+# M3D-SWITCH E2: this node draws nothing; World3D/Overlay (overlay3d.gd) draws the hover frame, the drag, the preview
+#   and the footprint from those getters. A build template (build_panel.gd `template_chosen`) is placed here too:
+#   `get_build_template_preview` at the cursor's anchor (re-read when the anchor, rotation, tick or command log moves),
+#   then `cmd_build_template` while it is accepted and affordable.
+# M-ART2 (§3.6): every tile ↔ world conversion goes through View (64-px tiles).
+# Bridge methods: can_place_blueprint, get_place_preview, get_build_template_preview, get_agent_detail,
+#   get_tile_causal_history (direct); via SimReads get_time_snapshot, get_colony_versions,
 #   SimReads get_workshops, get_agent_snapshot, get_drafted, get_colony_overlay; via SimReads.mutate cmd_designate_chop,
 #   cmd_cancel_area, cmd_add_stockpile, cmd_remove_zone_area, cmd_place_blueprint, cmd_designate_quarry,
 #   cmd_place_line, cmd_place_rect, cmd_designate_dig, cmd_designate_deconstruct, cmd_designate_clay, cmd_draft,
-#   cmd_draft_move, cmd_draft_attack, cmd_draft_attack_person, cmd_designate_hunt, cmd_add_hunt_zone, cmd_cancel_hunt.
+#   cmd_draft_move, cmd_draft_attack, cmd_draft_attack_person, cmd_designate_hunt, cmd_add_hunt_zone, cmd_cancel_hunt, cmd_build_template.
 extends Node2D
 
 const View = preload("res://scripts/world/colony/view.gd")
 const ViewProjection = preload("res://scripts/world/view_projection.gd")
-const TemplatePreview = preload("res://scripts/world/colony/template_preview.gd")
-const ArtData = preload("res://scripts/world/art/art_data.gd")
-const SiteGhost = preload("res://scripts/world/art/site_ghost.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
@@ -76,22 +73,6 @@ const AREA_COMMANDS: Dictionary = {
 	Mode.MINE: "cmd_designate_mine",
 	Mode.HUNT_ZONE: "cmd_add_hunt_zone",
 }
-const RECT_COLORS: Dictionary = {
-	Mode.HOUSING: Color(0.85, 0.72, 0.38, 0.9),
-	Mode.FIELD: Color(0.65, 0.82, 0.40, 0.9),
-	Mode.ERASE_FIELD: Color(0.9, 0.5, 0.35, 0.9),
-	Mode.HARVEST: Color(0.65, 0.82, 0.40, 0.9),
-	Mode.CHOP: Color(0.98, 0.81, 0.24, 0.9),
-	Mode.STOCKPILE: Color(0.85, 0.72, 0.38, 0.9),
-	Mode.REMOVE_ZONE: Color(0.9, 0.5, 0.35, 0.9),
-	Mode.CANCEL: Color(0.95, 0.35, 0.3, 0.9),
-	Mode.QUARRY: Color(0.75, 0.78, 0.85, 0.9),
-	Mode.DIG: Color(0.80, 0.62, 0.40, 0.9),
-	Mode.DECONSTRUCT: Color(0.95, 0.55, 0.25, 0.9),
-	Mode.CLAY: Color(0.78, 0.52, 0.36, 0.9),
-	Mode.MINE: Color(0.72, 0.50, 0.30, 0.9),
-	Mode.HUNT_ZONE: Color(0.95, 0.72, 0.3, 0.9),
-}
 # The accepted-order toast per command ({count} = trees, tiles, blueprints or cancelled orders).
 const TOAST_KEYS: Dictionary = {
 	"cmd_add_housing_zone": "BUILD_HOUSING_ORDERED",
@@ -111,10 +92,6 @@ const TOAST_KEYS: Dictionary = {
 	"cmd_add_hunt_zone": "M5_TOAST_HUNT_ZONE",
 	"cmd_designate_hunt": "M5_TOAST_HUNT_MARK",
 }
-const GHOST_OK: Color = Color(0.45, 0.95, 0.45, 0.85)
-const GHOST_BAD: Color = Color(0.95, 0.35, 0.3, 0.85)
-## The hovered tile's frame in an area mode.
-const HOVER: Color = Color(0.96, 0.94, 0.86, 0.85)
 
 signal field_selected(tile: Vector2i)
 var field_crop: String = ""
@@ -126,7 +103,11 @@ var mode: int = Mode.NONE
 ## The blueprint kind the build mode places ("hut", "knapping_spot", "wood_bench", "drying_rack").
 var build_kind: String = "hut"
 var _world_sim: Node = null
-var _template_preview: Node2D
+## The active build template ({} when none): {id, station, rotation, footprint}; its last preview and query.
+var _template: Dictionary = {}
+var _template_anchor: Vector2i = Vector2i.ZERO
+var _template_preview: Dictionary = {}
+var _template_query: Array = []
 var _hover_screen: Vector2 = Vector2.ZERO
 var _has_template_cursor: bool = false
 var _dragging: bool = false
@@ -142,23 +123,12 @@ var _shift: bool = false
 ## M3: the last `get_place_preview` of the space kind being placed ({xs, ys, ok, reasons}) and what it was read for.
 var _preview: Dictionary = {}
 var _preview_key: Array = []
-## M-ART2: the preview's ghost pieces, rebuilt when the preview is re-read ([top-left, texture, fits, tile]).
-var _preview_draw: Array[Array] = []
 ## The selected housing designation (a click on its tile), or -1.
 var _housing_zone: int = -1
 
 
 func _ready() -> void:
-	z_as_relative = false
-	z_index = 7
-	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_world_sim = get_node_or_null("/root/Main/WorldSim")
-	_template_preview = TemplatePreview.new()
-	_template_preview.name = "TemplatePreview"
-	_template_preview.scale = Vector2.ONE * View.TILE
-	add_child(_template_preview)
-	_template_preview.call("configure", _world_sim)
-	_template_preview.hide()
 	if _world_sim != null:
 		_world_sim.connect("world_reset", _reset_template_input)
 
@@ -169,36 +139,56 @@ func _reset_template_input() -> void:
 
 
 func template_active() -> bool:
-	return _template_preview != null and bool(_template_preview.call("active"))
+	return not _template.is_empty()
 
 
+## Enter the build mode with build template `row` ({id, width, height}) at workstation `station`.
 func set_template(row: Dictionary, station: String) -> void:
 	set_mode(Mode.BUILD)
-	_template_preview.call("begin", row, station)
+	_template = {"id": str(row["id"]), "station": station, "rotation": 0, "footprint": Vector2i(int(row["width"]), int(row["height"]))}
+	_template_preview = {}
+	_template_query = []
 	_refresh_template()
 	mode_changed.emit(mode)
 
 
 func rotate_template() -> void:
 	if template_active():
-		_template_preview.call("rotate_clockwise")
+		_template["rotation"] = (int(_template["rotation"]) + 1) % 4
+		_template_query = []
 		_refresh_template()
 
 
+## The last get_build_template_preview of the active template ({} before the cursor reached the map).
+func template_preview() -> Dictionary:
+	return _template_preview
+
+
+## The active template {id, station, rotation, footprint, anchor} ({} without one; tools).
+func template_state() -> Dictionary:
+	return {} if _template.is_empty() else _template.merged({"anchor": _template_anchor})
+
+
+## Re-read the template's preview at the cursor when its anchor, rotation, the tick or the command log moved.
 func _refresh_template() -> void:
-	if not template_active() or not _has_template_cursor:
+	if not template_active() or not _has_template_cursor or _world_sim == null:
 		return
 	var time: Dictionary = SimReads.read(_world_sim, "get_time_snapshot")
 	var versions: Dictionary = SimReads.read(_world_sim, "get_colony_versions")
-	# Required additive bridge field: append-only production command_log.len(), never overlay_version.
-	_template_preview.call("track", _hover, int(time["tick"]), int(versions["command_revision"]))
+	_template_anchor = build_origin(_hover)
+	# Position changes invalidate on tick; paused command/material changes on the append-only command log length
+	# (`command_revision`, never overlay_version). Kept separate: a max or hash could alias distinct inputs.
+	var query: Array = [_template["id"], _template_anchor, _template["rotation"], _template["station"], int(time["tick"]), int(versions["command_revision"])]
+	if query == _template_query:
+		return
+	_template_query = query
+	var raw: Variant = _world_sim.call("get_build_template_preview", _template["id"], _template_anchor.x, _template_anchor.y, _template["rotation"], _template["station"])
+	_template_preview = raw if raw is Dictionary else {}
 
 
 func _process(_delta: float) -> void:
-	if template_active():
-		_template_preview.visible = _has_template_cursor and get_viewport().gui_get_hovered_control() == null
-		if _template_preview.visible:
-			_track(_hover_screen)
+	if template_active() and _has_template_cursor and get_viewport().gui_get_hovered_control() == null:
+		_track(_hover_screen)
 
 
 ## The selected housing designation, or -1 (also when it no longer exists).
@@ -251,16 +241,15 @@ func drag_tiles() -> Array[Vector2i]:
 
 ## Enter `new_mode` (Mode.NONE leaves any mode).
 func set_mode(new_mode: int) -> void:
-	if template_active():
-		_template_preview.call("cancel")
+	_template = {}
+	_template_preview = {}
+	_template_query = []
 	_clear_housing_selection()
 	why_selecting = false
 	mode = new_mode
 	_dragging = false
 	_preview = {}
 	_preview_key = []
-	_preview_draw.clear()
-	queue_redraw()
 	mode_changed.emit(mode)
 
 
@@ -275,17 +264,18 @@ func set_build(kind_name: String) -> void:
 ## The footprint of the current build kind.
 func build_size() -> Vector2i:
 	if template_active():
-		return _template_preview.call("rotated_size")
+		var footprint: Vector2i = _template["footprint"]
+		return footprint if int(_template["rotation"]) % 2 == 0 else Vector2i(footprint.y, footprint.x)
 	var code: int = EconomyText.build_code(build_kind)
 	return EconomyText.build_kind(code)["size"] if code >= 0 else Vector2i.ONE
 
 
 ## The footprint's top-left when the cursor is on `tile` (the cursor sits on the footprint's centre, left of it
-## for an even width).
+## for an even width; a template's anchor is the cursor minus half its rotated footprint, rounded down).
 func build_origin(tile: Vector2i) -> Vector2i:
-	if template_active():
-		return _template_preview.call("cursor_origin", tile)
 	var size: Vector2i = build_size()
+	if template_active():
+		return tile - Vector2i(floori(size.x * 0.5), floori(size.y * 0.5))
 	@warning_ignore("integer_division")
 	return tile - Vector2i((size.x - 1) / 2, (size.y - 1) / 2)
 
@@ -294,13 +284,31 @@ func build_origin(tile: Vector2i) -> Vector2i:
 func place_at(tile: Vector2i) -> Dictionary:
 	if template_active():
 		_hover = tile
+		_has_template_cursor = true
 		_refresh_template()
-		var result: Dictionary = _template_preview.call("place")
-		_finish("cmd_build_template", result)
+		_finish("cmd_build_template", _place_template())
 		return _last_result
 	var origin: Vector2i = build_origin(tile)
 	_send("cmd_place_blueprint", [build_kind, origin.x, origin.y])
 	return _last_result
+
+
+## The active template at its anchor, only while the preview accepts it and it is affordable (the UI requires current
+## affordability; the simulation rechecks connection, knowledge and the physical placement).
+func _place_template() -> Dictionary:
+	if not bool(_template_preview.get("accepted", false)) or not bool(_template_preview.get("affordable", false)):
+		return {"accepted": false, "reason": str(_template_preview.get("reason", "unavailable"))}
+	var raw: Variant = SimReads.mutate(_world_sim, "cmd_build_template", [_template["id"], _template_anchor.x, _template_anchor.y, _template["rotation"], _template["station"]])
+	_template_query = []
+	return raw if raw is Dictionary else {"accepted": false, "reason": "unavailable"}
+
+
+## Whether the current footprint fits where the cursor is (space kinds: every previewed tile; templates: accepted and
+## affordable; other blueprints: can_place_blueprint).
+func ghost_ok() -> bool:
+	if template_active():
+		return bool(_template_preview.get("accepted", false)) and bool(_template_preview.get("affordable", false))
+	return _ghost_ok
 
 
 ## M3: how the current build kind is placed: "wall" / "floor" (drag) or "" (one click, or not a space kind).
@@ -399,7 +407,7 @@ static func merge_results(first: Dictionary, second: Dictionary) -> Dictionary:
 
 ## M5: mark the deer drawn at world position `world_pos` for hunting (also used by tools).
 func hunt_at(world_pos: Vector2) -> Dictionary:
-	return _hunt(ViewProjection.pick_world(self, world_pos, Mode.HUNT))
+	return _hunt(ViewProjection.pick_world(world_pos, Mode.HUNT))
 
 
 ## The HUNT mode's click on `hit` (a ViewProjection pick).
@@ -430,7 +438,7 @@ func draft_targets() -> Array[int]:
 ## M5: the right click's draft order at world position `world_pos` on `tile` (also used by tools): attack the animal
 ## or the other person drawn there, else walk to the tile. Returns the merged result ({} when nobody is drafted).
 func draft_order_at(world_pos: Vector2, tile: Vector2i) -> Dictionary:
-	return _draft_order(ViewProjection.pick_world(self, world_pos), tile)
+	return _draft_order(ViewProjection.pick_world(world_pos), tile)
 
 
 ## The draft order on `hit` (a ViewProjection pick) at `tile`.
@@ -583,7 +591,7 @@ func map_click(button: MouseButton, screen: Vector2, alt: bool = false) -> void:
 		if mode != Mode.NONE:
 			set_mode(Mode.NONE)
 		elif _world_sim != null:
-			_draft_order(ViewProjection.pick(self, screen, mode), _hover)
+			_draft_order(ViewProjection.pick(screen, mode), _hover)
 	elif button == MOUSE_BUTTON_LEFT and (mode == Mode.NONE or alt):
 		if alt or why_selecting:
 			why_selecting = false
@@ -604,7 +612,7 @@ func _set_shift(on: bool) -> void:
 func _track(screen: Vector2) -> void:
 	_hover_screen = screen
 	_has_template_cursor = true
-	_hover_world = ViewProjection.screen_to_world(self, screen)
+	_hover_world = ViewProjection.screen_to_world(screen)
 	var tile: Vector2i = View.world_to_tile(_hover_world)
 	if tile == _hover:
 		_refresh_template()
@@ -614,8 +622,6 @@ func _track(screen: Vector2) -> void:
 		_drag_to = tile
 	if mode == Mode.BUILD:
 		_refresh_ghost()
-	if mode != Mode.NONE:
-		queue_redraw()
 
 
 func _left(pressed: bool) -> void:
@@ -629,7 +635,7 @@ func _left(pressed: bool) -> void:
 	get_viewport().set_input_as_handled()
 	if mode == Mode.HUNT:
 		if pressed:
-			_hunt(ViewProjection.pick(self, _hover_screen, mode))
+			_hunt(ViewProjection.pick(_hover_screen, mode))
 		return
 	if mode == Mode.BUILD and build_drag() == "":
 		if pressed:
@@ -650,11 +656,9 @@ func _left(pressed: bool) -> void:
 		_dragging = true
 		_drag_from = _hover
 		_drag_to = _hover
-		queue_redraw()
 	elif _dragging:
 		_dragging = false
 		area(_drag_from, _drag_to)
-		queue_redraw()
 
 
 ## Send `command`; the toast is `toast_text` of the result, or (M3 line/rectangle, `preview_read` given) `drag_toast`.
@@ -682,7 +686,6 @@ func _finish(command: String, result: Dictionary, preview_read: Dictionary = {},
 func _refresh_ghost() -> void:
 	if template_active():
 		_refresh_template()
-		queue_redraw()
 		return
 	if _world_sim == null:
 		return
@@ -695,13 +698,10 @@ func _refresh_ghost() -> void:
 		if key != _preview_key:
 			_preview_key = key
 			_preview = _world_sim.call("get_place_preview", build_kind, a.x, a.y, b.x, b.y, shape)
-			_build_preview_draw()
 		_ghost_ok = refused_count(_preview) == 0 and not (_preview.get("ok", PackedByteArray()) as PackedByteArray).is_empty()
-		queue_redraw()
 		return
 	var origin: Vector2i = build_origin(_hover)
 	_ghost_ok = bool(_world_sim.call("can_place_blueprint", build_kind, origin.x, origin.y))
-	queue_redraw()
 
 
 ## The toast for a result of `command`: the count with the order's noun (e.g. "나무 16그루 베기 표시"), or the
@@ -736,12 +736,12 @@ func workshop_at(tile: Vector2i) -> int:
 
 ## No mode: a person opens the inspector, a workshop the workshop panel, any other tile the causal panel.
 func _click() -> void:
-	_click_hit(ViewProjection.pick(self, _hover_screen, mode, true), _hover)
+	_click_hit(ViewProjection.pick(_hover_screen, mode), _hover)
 
 
 ## The no-mode click at world position `world_pos` on `tile` (also used by tools).
 func click_world(world_pos: Vector2, tile: Vector2i) -> void:
-	_click_hit(ViewProjection.pick_world(self, world_pos, mode, true), tile)
+	_click_hit(ViewProjection.pick_world(world_pos, mode), tile)
 
 
 ## The no-mode click on `hit` (a ViewProjection pick: a caravan, a wave, a person) at `tile`.
@@ -834,97 +834,6 @@ func _click_hit(hit: Dictionary, tile: Vector2i) -> void:
 			_show_item_tile(tile)
 			return
 
-
-
-func _draw() -> void:
-	var line: float = 2.0 / maxf(0.25, get_viewport().get_canvas_transform().x.x)
-	if template_active():
-		return # Tile-scaled child draws the authoritative template envelope and pieces.
-	if mode == Mode.BUILD and EconomyText.is_space(EconomyText.build_code(build_kind)):
-		_draw_preview(line)
-	elif mode == Mode.BUILD:
-		# The finished blueprint as a pale ghost on its footprint; red-tinted with a red footprint where it cannot go.
-		var origin: Vector2i = build_origin(_hover)
-		var size: Vector2i = build_size()
-		var rect: Rect2 = Rect2(View.tile_to_world(origin), Vector2(size * View.TILE))
-		var tint: Color = GHOST_OK if _ghost_ok else GHOST_BAD
-		draw_rect(rect, Color(tint, 0.10))
-		var code: int = EconomyText.build_code(build_kind)
-		var look: Dictionary = SiteGhost.finished(code)
-		if not look.is_empty():
-			var tex: Texture2D = SiteGhost.ghost("site:%d" % code, look["image"])
-			var base: Vector2 = SiteGhost.footprint_base(origin, size)
-			draw_texture(tex, (base - Vector2(look["base"] as Vector2i)).round(), Color.WHITE if _ghost_ok else _refused_tint())
-		draw_rect(rect, tint, false, line)
-	elif _dragging:
-		var a: Vector2i = Vector2i(mini(_drag_from.x, _drag_to.x), mini(_drag_from.y, _drag_to.y))
-		var b: Vector2i = Vector2i(maxi(_drag_from.x, _drag_to.x), maxi(_drag_from.y, _drag_to.y))
-		var rect: Rect2 = Rect2(View.tile_to_world(a), Vector2(b - a + Vector2i.ONE) * View.TILE)
-		var color: Color = RECT_COLORS.get(mode, Color.WHITE)
-		draw_rect(rect, Color(color, 0.18))
-		draw_rect(rect, color, false, line)
-	elif mode != Mode.NONE:
-		draw_rect(Rect2(View.tile_to_world(_hover), Vector2(View.TILE, View.TILE)), HOVER, false, line)
-
-
-## The red that marks a refused tile (render_params `sites.refused_rgba`).
-func _refused_tint() -> Color:
-	var v: Variant = ArtData.param("sites.refused_rgba", [235, 80, 64, 90])
-	return Color8(int(v[0]), int(v[1]), int(v[2]), int(v[3])) if v is Array and (v as Array).size() == 4 else Color(0.92, 0.31, 0.25, 0.35)
-
-
-## M3: the preview of a space kind: every tile as the finished piece's ghost (a run of walls joined as it will be
-## built, doors, floors, bedrolls); refused tiles tinted red with a red frame.
-func _draw_preview(line: float) -> void:
-	var refused: Color = _refused_tint()
-	for piece: Array in _preview_draw:
-		var tex: Texture2D = piece[1]
-		if tex != null:
-			draw_texture(tex, piece[0], Color.WHITE if bool(piece[2]) else Color(refused, 1.0))
-	for piece: Array in _preview_draw:
-		if not bool(piece[2]):
-			var t: Vector2i = piece[3]
-			var r: Rect2 = Rect2(View.tile_to_world(t), Vector2(View.TILE, View.TILE))
-			draw_rect(r, refused)
-			draw_rect(r, Color(refused, 1.0), false, line)
-
-
-## M3: the ghost pieces of the current preview: [top-left, texture, fits, tile].
-func _build_preview_draw() -> void:
-	_preview_draw.clear()
-	var code: int = EconomyText.build_code(build_kind)
-	var row: Dictionary = SiteGhost.blueprint(code)
-	var xs: PackedInt32Array = _preview.get("xs", PackedInt32Array())
-	var ys: PackedInt32Array = _preview.get("ys", PackedInt32Array())
-	var ok: PackedByteArray = _preview.get("ok", PackedByteArray())
-	var n: int = mini(xs.size(), mini(ys.size(), ok.size()))
-	var kind: String = str(row.get("kind", ""))
-	var style: String = str(row.get("style", ""))
-	if kind == "wall":
-		var cells: Dictionary = {}
-		for i: int in n:
-			cells[Vector2i(xs[i], ys[i])] = style
-		var rows: Dictionary = SiteGhost.wall_rows(cells, {})
-		for i: int in n:
-			var t: Vector2i = Vector2i(xs[i], ys[i])
-			var img: Image = SiteGhost.wall_tile(rows, t)
-			var top_left: Vector2 = Vector2(t.x * View.TILE, t.y * View.TILE - SiteGhost.CAP)
-			_preview_draw.append([top_left, SiteGhost.ghost("", img) if img != null else null, ok[i] != 0, t])
-		return
-	for i: int in n:
-		var t: Vector2i = Vector2i(xs[i], ys[i])
-		var tex: Texture2D = null
-		var top_left: Vector2 = View.tile_to_world(t)
-		if kind == "floor":
-			var fl: Image = SiteGhost.floor_tile(style, t)
-			tex = SiteGhost.ghost("", fl) if fl != null else null
-		else:
-			var look: Dictionary = SiteGhost.finished(code)
-			if not look.is_empty():
-				tex = SiteGhost.ghost("site:%d" % code, look["image"])
-				var fp: Vector2i = look.get("footprint", Vector2i.ONE) if bool(row.get("bed", false)) else Vector2i.ONE
-				top_left = SiteGhost.footprint_base(t, fp) - Vector2(look["base"] as Vector2i)
-		_preview_draw.append([top_left, tex, ok[i] != 0, t])
 
 
 func _show_item_tile(tile: Vector2i) -> void:

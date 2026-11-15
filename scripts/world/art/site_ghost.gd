@@ -1,13 +1,9 @@
-# site_ghost.gd — what a blueprint looks like when finished, and its pale "ghost" (M-ART2 §3.4 zones/sites, §3.6).
+# site_ghost.gd — what a blueprint looks like when finished (M-ART2 §3.4, §3.6): the build menu's icons.
 # Purpose: one place that turns a BlueprintKind code (bindings.json `blueprints`) into the finished sprite — a
 #   workshop's structure, the bedroll, a wall / door / floor resolved through the material system (material_resolver.gd
-#   and wall_baker.gd, the same assembly the ground layer bakes), a hut's ring of walls (bindings `buildings` row
-#   `ring`) — as an Image with its base point (the world point of the footprint's bottom centre: x = left·64 + w·32,
-#   y = (top + h − 1)·64 + 43), and the ghost of any image: a copy with alpha × `sites.wash_alpha` plus a 1-px
-#   outline in `sites.outline_rgb` on the transparent pixels next to the silhouette (render_params.json). Ghosts are
-#   cached per key (a 64-px tile crop is keyed by its pixel data, so a run of wall sites reuses a handful of
-#   textures). Used by the overlay (blueprint sites), the order tool (placement previews) and the order bar (build
-#   menu icons). No content is named here; every id comes from bindings.json and the material documents.
+#   and wall_baker.gd), a hut's ring of walls (bindings `buildings` row `ring`) — as an Image with its base point.
+#   Used by the order bar's build menu (M3D-SWITCH E2: the map's sites and placement previews are drawn by the 3D
+#   view). No content is named here; every id comes from bindings.json and the material documents.
 # Bridge methods called: none.
 extends RefCounted
 
@@ -20,12 +16,9 @@ const TILE: int = 64
 const BASE_Y: int = 43
 ## Wall strips and doors stand with their image top CAP px above the tile (wall_baker.gd).
 const CAP: int = WallBaker.CAP
-## Alpha at or above which a pixel belongs to the silhouette.
-const SOLID: int = 96
 
 static var _resolver: MaterialResolver = null
 static var _params_version: int = -1
-static var _ghosts: Dictionary = {}
 static var _finished: Dictionary = {}
 static var _sets: Dictionary = {}
 static var _doors: Dictionary = {}
@@ -36,7 +29,6 @@ static func _fresh() -> void:
 	if _params_version != ArtData.params_version():
 		_params_version = ArtData.params_version()
 		_resolver = null
-		_ghosts.clear()
 		_finished.clear()
 		_sets.clear()
 		_doors.clear()
@@ -50,53 +42,6 @@ static func resolver() -> MaterialResolver:
 		_resolver = MaterialResolver.new()
 		_resolver.load_imported()
 	return _resolver
-
-
-## The pale ghost of `src`: alpha × wash, a 1-px outline where the silhouette ends (transparent side).
-static func ghost_image(src: Image) -> Image:
-	var img: Image = src.duplicate()
-	if img.is_compressed():
-		img.decompress()
-	img.convert(Image.FORMAT_RGBA8)
-	var w: int = img.get_width()
-	var h: int = img.get_height()
-	var wash: float = clampf(float(ArtData.param("sites.wash_alpha", 0.25)), 0.0, 1.0)
-	var rgb: Variant = ArtData.param("sites.outline_rgb", [218, 222, 205])
-	var outline_a: int = clampi(roundi(float(ArtData.param("sites.outline_alpha", 0.9)) * 255.0), 0, 255)
-	var orr: int = int(rgb[0]) if rgb is Array and (rgb as Array).size() == 3 else 218
-	var og: int = int(rgb[1]) if rgb is Array and (rgb as Array).size() == 3 else 222
-	var ob: int = int(rgb[2]) if rgb is Array and (rgb as Array).size() == 3 else 205
-	var data: PackedByteArray = img.get_data()
-	var out: PackedByteArray = data.duplicate()
-	for y: int in h:
-		var row: int = y * w
-		for x: int in w:
-			var i: int = (row + x) * 4
-			var a: int = data[i + 3]
-			if a >= SOLID:
-				out[i + 3] = roundi(a * wash)
-				continue
-			var edge: bool = (x > 0 and data[i - 1] >= SOLID) or (x + 1 < w and data[i + 7] >= SOLID) \
-				or (y > 0 and data[i - w * 4 + 3] >= SOLID) or (y + 1 < h and data[i + w * 4 + 3] >= SOLID)
-			if edge:
-				out[i] = orr
-				out[i + 1] = og
-				out[i + 2] = ob
-				out[i + 3] = outline_a
-			else:
-				out[i + 3] = roundi(a * wash)
-	return Image.create_from_data(w, h, false, Image.FORMAT_RGBA8, out)
-
-
-## The ghost texture of `src`, cached under `key` (an id, or "" to key it by the image's pixels).
-static func ghost(key: String, src: Image) -> Texture2D:
-	_fresh()
-	if src == null:
-		return null
-	var k: String = key if key != "" else "px:%d:%d:%d" % [src.get_width(), src.get_height(), hash(src.get_data())]
-	if not _ghosts.has(k):
-		_ghosts[k] = ImageTexture.create_from_image(ghost_image(src))
-	return _ghosts[k]
 
 
 ## The bindings row of blueprint `code` (empty when unknown).
@@ -315,7 +260,3 @@ static func ring_image(ring: Dictionary) -> Dictionary:
 			img.blend_rect(d, Rect2i(Vector2i.ZERO, d.get_size()), Vector2i(t.x * TILE, t.y * TILE))
 	return {"image": img, "base": Vector2i(size.x * (TILE >> 1), (size.y - 1) * TILE + BASE_Y + CAP), "footprint": size, "flat": false}
 
-
-## The world base point of a footprint (top-left `left_top`, size `size` tiles): its bottom centre on the base line.
-static func footprint_base(left_top: Vector2i, size: Vector2i) -> Vector2:
-	return Vector2(left_top.x * TILE + size.x * (TILE >> 1), (left_top.y + size.y - 1) * TILE + BASE_Y)

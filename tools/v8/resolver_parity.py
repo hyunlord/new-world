@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Resolver parity (M-ART2 §3.4, M-ART2.1 §2.2; gate step `resolver_parity`).
+"""Resolver parity (M-ART2 §3.4; gate step `resolver_parity`).
 
 usage: resolver_parity.py --generate            # expected results from the art line's own resolve.py
        resolver_parity.py --check <godot.json>  # compare the GDScript resolver's output with them
@@ -8,12 +8,10 @@ usage: resolver_parity.py --generate            # expected results from the art 
 `git archive` into a temporary folder, runs that commit's `art/materials/resolve.py` (pydantic) on every case of
 `tools/v8/resolver_parity_fixture.json`, and writes `tools/v8/resolver_parity_expected.json`. It also asserts that
 the three JSON documents it resolved against are byte-identical to the imported `assets/v8art/materials/` copies,
-so the expectation belongs to the data the game loads. Since M-ART2.1 it does the same for the flora catalogue:
-`art/flora/` at that commit, its `resolve_flora.py` on every case of `tools/v8/flora_parity_fixture.json` (cases with
-`"fixture"` resolve against the catalogue with that data-only species merged in, as `boards.py` does), the species,
-defaults and fixture documents byte-identical to `assets/v8art/flora/`. `--check` compares
-`scripts/world/art/material_resolver.gd`'s and `flora_resolver.gd`'s results (written by `tools/v8/resolver_parity.gd`)
-field by field and exits 1 on any difference.
+so the expectation belongs to the data the game loads. `--check` compares `scripts/world/art/material_resolver.gd`'s
+results (written by `tools/v8/resolver_parity.gd`) field by field and exits 1 on any difference. M-ART2.1 also checked
+the 2D tree renderer's `flora_resolver.gd` against `resolve_flora.py`; M3D-SWITCH E2 deleted that resolver with the 2D
+view (the 3D trees resolve species by bindings3d, tested in tools/v8/w3d_render_test.gd).
 """
 from __future__ import annotations
 
@@ -32,11 +30,6 @@ EXPECTED = ROOT / "tools/v8/resolver_parity_expected.json"
 FIELDS = ("style_id", "material_key", "category", "kind", "textures", "tint", "tint_source", "style_source", "top",
           "face")
 DOCS = ("construction_styles.json", "material_looks.json", "category_defaults.json")
-FLORA_FIXTURE = ROOT / "tools/v8/flora_parity_fixture.json"
-FLORA_FIELDS = ("requested_id", "species_id", "habit", "fallback_used", "path", "canopy_mask", "tint", "anchor", "canvas",
-                "map_canopy", "map_canopy_path", "log_material")
-FLORA_DOCS = {"species.json": "flora/species.json", "habit_defaults.json": "flora/habit_defaults.json",
-              "tests/test_alder.json": "flora/tests/test_alder.json"}
 
 
 def normalise(value: object) -> object:
@@ -54,7 +47,7 @@ def normalise(value: object) -> object:
 
 def generate() -> int:
     commit = json.loads((ROOT / "tools/v8/art_import.json").read_text())["source_commit"]
-    archive = subprocess.run(["git", "-C", str(ROOT), "archive", commit, "art/materials", "art/flora"],
+    archive = subprocess.run(["git", "-C", str(ROOT), "archive", commit, "art/materials"],
                              capture_output=True, check=True).stdout
     cases = json.loads(FIXTURE.read_text())["cases"]
     with tempfile.TemporaryDirectory() as tmp:
@@ -76,39 +69,10 @@ def generate() -> int:
                         kind=case.get("kind", "wall"))
             dumped = r.model_dump(mode="json")
             results.append({"case": case, "result": {k: dumped[k] for k in FIELDS}})
-        flora = generate_flora(commit, Path(tmp))
-        if flora is None:
-            return 1
     EXPECTED.write_text(json.dumps({"source_commit": commit, "generated_by": "tools/v8/resolver_parity.py",
-                                    "results": results, "flora_results": flora}, indent=1, sort_keys=True) + "\n")
-    print(f"resolver_parity: {len(results)} material and {len(flora)} flora expected results from {commit[:8]}")
+                                    "results": results}, indent=1, sort_keys=True) + "\n")
+    print(f"resolver_parity: {len(results)} material expected results from {commit[:8]}")
     return 0
-
-
-def generate_flora(commit: str, tmp: Path) -> list | None:
-    """The art line's resolve_flora.py answers for the flora fixture (art/flora at `commit`, extracted into `tmp`)."""
-    for name, imported in FLORA_DOCS.items():
-        if (tmp / "art/flora" / name).read_bytes() != (ROOT / "assets/v8art" / imported).read_bytes():
-            print(f"resolver_parity: art/flora/{name} at {commit[:8]} differs from the imported copy", file=sys.stderr)
-            return None
-    from art.flora.resolve_flora import read_catalog as read_flora, resolve_flora  # type: ignore[import-not-found]
-    from art.flora.schema import FloraCatalog, Species, SpeciesDocument  # type: ignore[import-not-found]
-
-    base = read_flora(tmp)
-    catalogs = {None: base}
-    out = []
-    for case in json.loads(FLORA_FIXTURE.read_text())["cases"]:
-        key = case.get("fixture")
-        if key not in catalogs:
-            species = Species.model_validate_json((tmp / "art/flora/tests" / f"{key}.json").read_bytes())
-            document = SpeciesDocument(schema_version=1, species={**base.species.species, species.id: species},
-                                       map_canopies=base.species.map_canopies)
-            catalogs[key] = FloraCatalog(species=document, defaults=base.defaults)
-        r = resolve_flora(case["species"], case["size"], case["season"], case["variant_hash"], catalog=catalogs[key],
-                          habit=case.get("habit"))
-        dumped = r.model_dump(mode="json")
-        out.append({"case": case, "result": {k: dumped[k] for k in FLORA_FIELDS}})
-    return out
 
 
 def check(godot_path: Path) -> int:
@@ -128,22 +92,7 @@ def check(godot_path: Path) -> int:
             if a != b:
                 bad += 1
                 print(f"resolver_parity: case {exp['case']} field {field}: expected {a}, got {b}")
-    flora_expected = json.loads(EXPECTED.read_text()).get("flora_results", [])
-    flora_rows = got.get("flora_results", [])
-    if not flora_expected or len(flora_rows) != len(flora_expected):
-        print(f"resolver_parity: FAIL {len(flora_rows)} flora results for {len(flora_expected)} cases")
-        return 1
-    if got.get("flora_problems"):
-        print(f"resolver_parity: FAIL flora loader problems {got['flora_problems']}")
-        return 1
-    for exp, row in zip(flora_expected, flora_rows):
-        for field in FLORA_FIELDS:
-            a, b = normalise(exp["result"][field]), normalise(row["result"].get(field))
-            if a != b:
-                bad += 1
-                print(f"resolver_parity: flora case {exp['case']} field {field}: expected {a}, got {b}")
-    print(f"resolver_parity: {'PASS' if bad == 0 else 'FAIL'} ({len(expected)} material and {len(flora_expected)} flora "
-          f"cases, {bad} differences)")
+    print(f"resolver_parity: {'PASS' if bad == 0 else 'FAIL'} ({len(expected)} material cases, {bad} differences)")
     return 1 if bad else 0
 
 

@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 1951,
+    "active_key_count": 1950,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 1951,
+    "key_count": 1950,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -1481,7 +1481,6 @@
     "MUX_SETTING_EDGE_PAN": "Pan at screen edges",
     "MUX_SETTING_HELPER": "Enable learning helper",
     "MUX_SETTING_INVERT_PAN": "Invert trackpad pan",
-    "MUX_SETTING_RENDERER_3D": "3D view (applies after restart)",
     "MUX_SETTING_STEWARD": "Enable steward for new villages",
     "MUX_SETTING_STEWARD_NOTE": "Use the top-bar steward button to change the current village.",
     "MUX_SETTING_UI_SCALE": "Interface scale",
