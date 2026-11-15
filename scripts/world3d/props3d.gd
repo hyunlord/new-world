@@ -32,6 +32,8 @@ var _sky: Node = null
 var _key: String = ""
 var _items_key: String = ""
 var _stations: Array[MeshInstance3D] = []
+## Tiles under a drawn station (people3d draws a worker standing there in front of it).
+var station_tiles: Dictionary = {}
 var _lights: Array[Dictionary] = []
 var _item_nodes: Dictionary = {}
 var _glow_on: StandardMaterial3D
@@ -128,6 +130,7 @@ func _rebuild_stations(shops: Dictionary, buildings: Dictionary, settlements: Di
 	_stations.clear()
 	_lights.clear()
 	_counts = {"workshops": 0, "hearths": 0}
+	station_tiles.clear()
 	var styles: Dictionary = _catalog_styles()
 	var ids: PackedInt32Array = shops.get("ids", PackedInt32Array())
 	var kinds: PackedInt64Array = shops.get("kinds", PackedInt64Array())
@@ -152,6 +155,9 @@ func _rebuild_stations(shops: Dictionary, buildings: Dictionary, settlements: Di
 				firing[rect.position] = true
 			continue
 		footprints.append(rect)
+		for sy: int in rect.size.y:
+			for sx: int in rect.size.x:
+				station_tiles[rect.position + Vector2i(sx, sy)] = true
 		_place(_station_model(int(kinds[i]), styles), rect, active.has(i), "shop%d" % (ids[i] if i < ids.size() else i))
 		_counts["workshops"] = int(_counts["workshops"]) + 1
 	# Legacy camp buildings.
@@ -232,7 +238,7 @@ func _place(id: String, rect: Rect2i, lit: bool, node_name: String) -> void:
 	var fp: Array = row.get("footprint", [rect.size.x, rect.size.y])
 	var fw: float = maxf(0.5, float(fp[0]))
 	var fh: float = maxf(0.5, float(fp[1]))
-	var s: float = clampf(minf(float(rect.size.x) / fw, float(rect.size.y) / fh), 0.6, 1.0)
+	var s: float = clampf(minf(float(rect.size.x) / fw, float(rect.size.y) / fh), 0.85, 1.0)
 	var centre: Vector2 = Vector2(rect.position) + Vector2(rect.size) * 0.5
 	var g: float = float(_terrain.call("height_at", centre.x, centre.y))
 	mi.transform = Transform3D(Basis.IDENTITY.scaled(Vector3(s, s, s)), Vector3(centre.x, g, centre.y))

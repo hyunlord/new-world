@@ -176,9 +176,16 @@ func _process(delta: float) -> void:
 		var slot: int = int(crowd["slot"][aid])
 		if moving or bool(st["dirty"]):
 			var p: Vector2 = _pos(m)
+			var yaw: float = float(m["yaw"])
+			# Someone standing on a station's tile is drawn just in front of it, facing it, so the station stays
+			# visible (presentation only; the tile is unchanged).
+			var props: Node = get_parent().get("props") if get_parent() != null else null
+			if not moving and props != null and (props.get("station_tiles") as Dictionary).has(m["tile"]):
+				p += Vector2(0.0, 0.6)
+				yaw = PI
 			var y: float = float(_terrain.call("height_at", p.x, p.y))
 			var scale: float = float(st["scale"])
-			var basis: Basis = Basis(Vector3.UP, float(m["yaw"])).scaled(Vector3(scale, scale, scale))
+			var basis: Basis = Basis(Vector3.UP, yaw).scaled(Vector3(scale, scale, scale))
 			var feet: Vector3 = Vector3(p.x, y, p.y)
 			st["feet"] = feet
 			st["h"] = height * scale
