@@ -76,7 +76,8 @@ const CONNECTED: [&str; 16] = [
 fn c2_knowledge_validator() {
     let catalog = Catalog::from_sources(RawSources::bundled(), None).expect("C2 catalogue");
     let defs = catalog.knowledge_defs();
-    assert_eq!(defs.nodes.len(), 129);
+    // C3 appends the iron column after these ordinals.
+    assert_eq!(defs.nodes.len(), 166);
     assert_eq!(defs.id_of("bone_setting"), Some(81));
     for (offset, name) in ADDED.into_iter().enumerate() {
         let node = defs.get(defs.id_of(name).expect(name)).expect(name);

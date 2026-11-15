@@ -73,7 +73,6 @@ fn c2_recipes_resolve() {
         "seal",
         "tablet",
         "glass_bead",
-        "iron_ore",
     ] {
         let item = catalog
             .item(catalog.item_by_name(name).expect("inert item"))

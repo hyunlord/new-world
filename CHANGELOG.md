@@ -62,6 +62,44 @@
   `scripts/world/view_projection.gd` (identical in 2D).
 - The camera controller takes a 3D zoom ladder and a screen rotation (both inert in 2D); the hidden AgentLayer skips
   its drawing-only badge work.
+## C3-a — iron content, not yet published (2026-11-15)
+
+Content pass for bible §4.4 on the C2 metal machinery (ADR 0066, `docs/v8/c3/C3_DECISIONS.md`). Gated together with the merged M-SIMCHECK fixes. Evidence stays outside git in `/Users/rexxa/work/c3-data`.
+
+### Added
+- Iron outcrops: iron ore on hills/mountains (now Connected) and bog iron (code 4) on plain/forest at or below river level; both within 80 tiles of the camp; seeds 0–63 all have iron in range (`c3_iron_origins`).
+- The iron column of the tech map (ids 129–165): iron smelting, forging, iron tools, iron weapons, paved road (cosmetic floor piece, no speed yet), stone house, town wall and gate Connected; steel, plough, horse, bridge, aqueduct, reservoir, tower, warehouse, market, coinage, law, taxation, bureaucracy, writing, school, maps, militia, temples, geometry, quern, watermill, silk, purple dye, falconry and veterinary Inert with their pass named. Iron-era markers: iron smelting 3, forging 3, iron tools 2, paved road 1, stone house 1.
+- 18 items (bog iron, bloom, wrought bar, iron axe/hoe/sickle/saw/knife/adze/spear/sword/helmet/shield boss, nails, cut stone; coin, book and steel edge Inert), 15 recipes (bloomery smelting, forge refining, anvil forging, stone dressing), stations bloomery/forge/anvil/mason bench, cut-stone wall, town wall and town gate pieces, and the cut-stone house (house step 5, upgraded from the mud-brick house). Bloomery and smithy templates are Connected.
+- Chapters 8 "쇠를 녹이다" and 9 "쇠의 마을", the `no_iron_nearby` card and a `wrought_iron` goods row for worlds without iron.
+- Published C2-b format-23 saves load through an exact-revision adapter (`legacy_bronze_v23`).
+- Tests `c3_knowledge`, `c3_content` (`c3_recipes_resolve`), `c3_iron_origins`; ext_pack adds a bog-style outcrop, ore and bloomery recipe by data only.
+
+### Changed
+- Template tier range 1..=5. The neolithic `stone_house` row is unchanged so saves holding one still load.
+- Bronze-era debts that named C3 now name the pass that will connect them (M-BAL, M-GROW).
+- `c2_buildings` re-stocks a need-cancelled brick craft's inputs (the merged hearth-pile fix changed its trajectory).
+- Chain captures use V3's subject framing (cherry-picked from the unpublished v8/visual-v3).
+
+### Removed
+- None.
+
+## M-SIMCHECK — fixes complete, not yet published (2026-11-15)
+
+Diagnosis pass (owner priority "simulation logic first"): seeds 0–15 × 48 days (2 in-game years), steward ON and OFF, no orders, scored against expectations written before the runs. Clear bugs fixed with a red-before test each; balance goes to M-BAL (`docs/v8/BALANCE_DEBT.md`), unfixed logic defects to `docs/ISSUES.md` (SIMCHECK-1…10). Raw runs and the Korean report stay outside git in `/Users/rexxa/work/simcheck-data`.
+
+### Added
+- Regression tests: `store_completes_with_steward_template_house_wall`, `m6a_off_winter_fallback`, `distant_hunting_pack_keeps_first_response_until_it_approaches_without_redraft`, `spine_era_steps_down_only_after_a_full_practice_window_below`, `winter_fuel_reserve_covers_only_the_winter_days_left`.
+- ADR amendments: 0052 (D-SIMCHECK-1, hearth-pile food store), 0045 (approach response), 0026 (era step-down), 0036 (storehouse boundary, winter fuel reserve).
+
+### Changed
+- A rule-10 storehouse that reuses walls of a steward template house is adopted (`steward/completion.rs`); r1 had 6/16 seeds re-placing 2–5 storehouse waves, seed 15 none adopted (08e7139fc).
+- A steward-OFF colony with no zone, no food plan and a standing hearth stores food on the hearth pile, so the R2-1C winter fallback can run; OFF seeds 0–4 starvation deaths 43 → 0, steward-ON fingerprints unchanged (6d3de1064). OFF fixtures re-baselined: rest regression premise, `c1_chain_goat` zoneless window.
+- An early defence response is kept until the pack has come within release range once; r1 drafted, released and re-drafted on all 50 raids, now one batch of four per raid (aacb52d1e). `c1_chain_goat` accepts a knowledge-lapsed capture cancel as a capture-loss witness.
+- The era steps up on live progress but steps down only after a full practice window below its threshold; no saved field (e7c80ccf5). Seed 0: 13 → 3 era rows.
+- In winter the steward's fuel reserve covers only the winter days left; no late six-day reorder (seed 1 firewood bill was 58 → 357 on day 46.25) (ec3d93182).
+
+### Removed
+- None.
 
 ## C2-b — published 8e4170c42, 2026-11-12
 

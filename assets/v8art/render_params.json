@@ -9,7 +9,10 @@
     "tin": {"category": "Mineral", "sim_id": 193506896, "tint": {"dL": 8, "da": -2, "db": -8}},
     "bronze": {"category": "Mineral", "sim_id": 4106632693, "tint": {"dL": -8, "da": 10, "db": 29}},
     "mud_brick": {"category": "Mineral", "sim_id": 2075554421, "tint": {"dL": -15, "da": 10, "db": 17}},
-    "packed_earth": {"category": "Mineral", "sim_id": 3087221664, "tint": {"dL": -22, "da": 5, "db": 12}}
+    "packed_earth": {"category": "Mineral", "sim_id": 3087221664, "tint": {"dL": -22, "da": 5, "db": 12}},
+    "bog_iron": {"category": "Mineral", "tint": {"dL": -16, "da": 12, "db": 14}},
+    "iron": {"category": "Mineral", "sim_id": 2090374909, "tint": {"dL": -14, "da": 0, "db": -4}},
+    "cut_stone": {"category": "Mineral", "sim_id": 3216156857, "tint": {"dL": 30, "da": -6, "db": -22}}
   },
   "tile_px": 64,
   "camera": {"zooms": [0.25, 0.5, 1.0, 2.0], "default_zoom": 1.0, "pan_px_per_second": 900},

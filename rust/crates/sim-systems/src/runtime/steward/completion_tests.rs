@@ -261,6 +261,14 @@ fn inferred_matching_role_still_commits_owned_house_completion_once() {
 }
 
 fn shared_wall_store() -> (sim_engine::SimEngine, Rule) {
+    shared_store(false)
+}
+
+/// `template_house`: the shared sleeping-house wall is a completed steward template piece (ADR 0061).
+fn shared_store(template_house: bool) -> (sim_engine::SimEngine, Rule) {
+    use sim_core::colony::building_site::{
+        BuildCause, BuildingPiece, BuildingSite, BuildingStatus, PiecePhase,
+    };
     let (mut e, sleeping) = fixture();
     let store = rules()
         .expect("rules")
@@ -296,6 +304,53 @@ fn shared_wall_store() -> (sim_engine::SimEngine, Rule) {
         e.resources.tile_grid.terrain_type[index] = sim_core::TerrainType::Plain;
         e.resources.colony.trees.remove(&tile);
         e.resources.colony.nodes.remove(&tile);
+        if template_house && source == sleeping.id {
+            e.resources.tile_grid.wall_material[index] = Some(sim_core::colony::materials::OAK);
+            let template = Command::BuildTemplate {
+                id: "log_house".into(),
+                anchor: (6, 9),
+                rotation: 0,
+                station: None,
+            };
+            let source_record = u32::try_from(e.resources.colony.command_log.len()).expect("log");
+            e.resources.colony.command_log.push(CommandRecord {
+                tick: 1,
+                command: Command::Steward {
+                    rule: source,
+                    command: Box::new(template.clone()),
+                },
+                result: CommandResult::ok(1),
+            });
+            e.resources.steward.owned.push(OwnedOrder {
+                rule: source,
+                command: template,
+                targets: Vec::new(),
+            });
+            e.resources.colony.buildings.sites.insert(
+                0,
+                BuildingSite {
+                    id: 0,
+                    template: "log_house".into(),
+                    station: None,
+                    anchor: (6, 9),
+                    rotation: 0,
+                    footprint: (4, 4),
+                    pieces: vec![BuildingPiece {
+                        id: 0,
+                        kind,
+                        tile,
+                        size: (1, 1),
+                        phase: PiecePhase::Complete,
+                    }],
+                    cause: BuildCause::Steward(u32::from(source)),
+                    source_record,
+                    placed_tick: 1,
+                    status: BuildingStatus::Complete,
+                    completion_entry: None,
+                },
+            );
+            continue;
+        }
         let command = Command::Steward {
             rule: source,
             command: Box::new(Command::PlaceBlueprint {
@@ -352,6 +407,36 @@ fn store_completes_with_previously_built_steward_house_wall() {
             role: Some(RoomRole::Storehouse),
         }),
         "a completed store may share a still-steward-owned sleeping-house wall"
+    );
+}
+
+#[test]
+fn store_completes_with_steward_template_house_wall() {
+    let (e, store) = shared_store(true);
+    assert_eq!(
+        plan(&e.resources, &store),
+        Some(Command::SetRoomRole {
+            room: 1,
+            role: Some(RoomRole::Storehouse),
+        }),
+        "a store may share a completed steward template-house wall"
+    );
+    let (mut e, store) = shared_store(true);
+    let Action::House { wall, .. } = store.action else {
+        panic!("house")
+    };
+    e.resources.colony.command_log.push(CommandRecord {
+        tick: 2,
+        command: Command::PlaceBlueprint {
+            kind: wall,
+            x: 9,
+            y: 10,
+        },
+        result: CommandResult::ok(1),
+    });
+    assert!(
+        plan(&e.resources, &store).is_none(),
+        "a later manual placement revokes template provenance"
     );
 }
 

@@ -27,7 +27,7 @@
   "BUILDING_SMELTER": "Smelter",
   "BUILDING_CASTING_BENCH": "Casting bench",
   "BUILDING_BLOOMERY": "Bloomery",
-  "BUILDING_FORGE": "Forge",
+  "BUILDING_FORGE": "Smithy",
   "BUILDING_SHRINE": "Shrine",
   "BUILDING_CHIEF_HALL": "Chief hall",
   "BUILDING_TRADING_POST": "Trading post",
@@ -36,5 +36,13 @@
   "BUILDING_FENCE": "Fence",
   "BUILDING_CLAY_OVEN": "Clay oven",
   "BUILDING_SMOKING_RACK": "Smoking rack",
-  "BUILDING_OVEN_HOUSE": "Oven house"
+  "BUILDING_OVEN_HOUSE": "Oven house",
+  "BUILDING_FORGE_HEARTH": "Forge hearth",
+  "BUILDING_ANVIL": "Anvil",
+  "BUILDING_MASON_BENCH": "Mason's bench",
+  "BUILDING_CUT_STONE_WALL": "Cut stone wall",
+  "BUILDING_TOWN_WALL": "Town wall",
+  "BUILDING_TOWN_GATE": "Town gate",
+  "BUILDING_PAVED_ROAD": "Paved road",
+  "BUILDING_CUT_STONE_HOUSE": "Cut-stone house"
 }

@@ -52,6 +52,14 @@ pub struct UiFacts {
     pub tin_shortage: bool,
     /// C2-b: the lowest-id waiting caravan offering tin-tagged goods, or -1.
     pub tin_caravan: i64,
+    /// C3: an iron-tagged ingot (bloom or bar) has actually been crafted in this settlement.
+    pub first_iron_bloom: bool,
+    /// C3: an iron-tagged tool has been used successfully (its durable first-use witness).
+    pub first_iron_tool_used: bool,
+    /// C3: someone knows iron smelting and no revealed iron outcrop lies within 80 tiles of camp.
+    pub no_iron_nearby: bool,
+    /// C3: the lowest-id waiting caravan offering iron-tagged goods, or -1.
+    pub iron_caravan: i64,
     /// Actual food-chain storage and winter demand.
     pub food: Option<super::food::FoodSummaryView>,
     /// People sorted by AgentId.
@@ -107,18 +115,29 @@ pub fn collect_ui_facts(world: &hecs::World, res: &SimResources) -> UiFacts {
                 && sim_systems::runtime::resource_regen::day_index_at(res, entry.tick) < year_days
         });
     out.food = super::food::collect_food_summary(world, res);
-    out.first_copper_ingot = res.colony.item_ledger.crafted.iter().any(|(kind, count)| {
-        let tags = &kind.definition().tags;
-        *count > 0
-            && tags.iter().any(|tag| tag == "metal_copper")
-            && tags.iter().any(|tag| tag == "ingot")
-    });
-    out.first_bronze_tool_used = res.metal.witnesses.values().any(|w| {
-        matches!(w, sim_core::colony::ore::MetalWitness::FirstToolUsed { item, .. }
-            if item.definition().tags.iter().any(|tag| tag == "metal_bronze"))
-    });
+    let crafted_ingot = |metal: &str| {
+        res.colony.item_ledger.crafted.iter().any(|(kind, count)| {
+            let tags = &kind.definition().tags;
+            *count > 0
+                && tags.iter().any(|tag| tag == metal)
+                && tags.iter().any(|tag| tag == "ingot")
+        })
+    };
+    let tool_used = |metal: &str| {
+        res.metal.witnesses.values().any(|w| {
+            matches!(w, sim_core::colony::ore::MetalWitness::FirstToolUsed { item, .. }
+                if item.definition().tags.iter().any(|tag| tag == metal))
+        })
+    };
+    out.first_copper_ingot = crafted_ingot("metal_copper");
+    out.first_bronze_tool_used = tool_used("metal_bronze");
+    out.first_iron_bloom = crafted_ingot("metal_iron");
+    out.first_iron_tool_used = tool_used("metal_iron");
     out.tin_shortage = sim_systems::runtime::ore::tin_shortage(world, res);
     out.tin_caravan = sim_systems::runtime::ore::tin_caravan(res).map_or(-1, i64::from);
+    out.no_iron_nearby = sim_systems::runtime::ore::no_iron_nearby(world, res);
+    out.iron_caravan =
+        sim_systems::runtime::ore::caravan_offering(res, "metal_iron").map_or(-1, i64::from);
     out.people = people::collect(world, res);
     out.settlements = economy::collect(world, res);
     out.stockpile_tiles = places::storage(res);

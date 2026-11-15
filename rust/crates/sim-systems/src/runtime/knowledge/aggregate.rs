@@ -17,6 +17,10 @@
 //!
 //! Each era's progress divides living adult coverage by its authored marker weights.
 //! Empty eras stay at zero; unavailable markers do not add a hidden denominator.
+//! The era steps up on that progress but steps down only as far as the same
+//! progress counted over two `practice_days` windows allows: a seasonal lapse
+//! must last one full window below the threshold before the era falls, while a
+//! death or forgotten knowledge (no holder) lowers both measures at once.
 use hecs::World;
 use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
 use sim_core::colony::knowledge::{defs, Knowledge, TechAggregate, TechState, TechStatus};
@@ -59,20 +63,25 @@ pub fn compute(
     out.states.clear();
     let mut events = Vec::new();
     let mut weighted = vec![0u64; d.eras.eras.len()];
+    let mut weighted_held = vec![0u64; d.eras.eras.len()];
     let mut totals = vec![0u64; d.eras.eras.len()];
     for node in &d.nodes {
         let mut holders = Vec::new();
         let mut practitioners = Vec::new();
+        let mut held = 0u64;
         for (id, adult, k) in &rows {
             if !k.practises(node.id) {
                 continue;
             }
             holders.push(*id);
-            let recent = k
+            let idle = k
                 .get(node.id)
-                .is_some_and(|e| u64::from(today.saturating_sub(e.last_used)) <= window);
-            if *adult && recent {
+                .map(|e| u64::from(today.saturating_sub(e.last_used)));
+            if *adult && idle.is_some_and(|days| days <= window) {
                 practitioners.push(*id);
+            }
+            if *adult && idle.is_some_and(|days| days <= window.saturating_mul(2)) {
+                held += 1;
             }
         }
         let before = prev
@@ -126,6 +135,7 @@ pub fn compute(
                     let coverage =
                         (1000 * practitioners.len() as u64 / u64::from(adults)).min(1000);
                     weighted[order] += weight * coverage;
+                    weighted_held[order] += weight * (1000 * held / u64::from(adults)).min(1000);
                 }
             }
         }
@@ -146,7 +156,16 @@ pub fn compute(
         .zip(&totals)
         .map(|(weight, total)| u16::try_from(weight / total.max(&1)).unwrap_or(1000))
         .collect();
-    out.current_era = d.eras.current(&out.era_progress);
+    let held_progress: Vec<u16> = weighted_held
+        .iter()
+        .zip(&totals)
+        .map(|(weight, total)| u16::try_from(weight / total.max(&1)).unwrap_or(1000))
+        .collect();
+    // Up on the live progress; down only as far as the two-window progress allows.
+    out.current_era = d
+        .eras
+        .current(&out.era_progress)
+        .max(d.eras.current(&held_progress).min(prev.current_era));
     // The historical scalar remains the first post-founder era's progress.
     out.progress_permille = out.era_progress.get(1).copied().unwrap_or(0);
     // The first measurement establishes an era; only later measurements can change it.

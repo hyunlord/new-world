@@ -131,6 +131,7 @@ fn target_exists(
         (JobKind::Haul { from, to }, JobStage::ToSource) => {
             stack(from)
                 && (colony.zone_of_tile.contains_key(&to)
+                    || super::food_storage::hearth_store(res, to)
                     || colony
                         .ground_items
                         .get(&from)
@@ -138,6 +139,7 @@ fn target_exists(
         }
         (JobKind::Haul { from, to }, _) => {
             colony.zone_of_tile.contains_key(&to)
+                || super::food_storage::hearth_store(res, to)
                 || world.get::<&Carry>(entity).ok().is_some_and(|carry| {
                     carry.count > 0
                         && carry.kind == job.item

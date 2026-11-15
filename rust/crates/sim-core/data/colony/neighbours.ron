@@ -90,5 +90,9 @@
         // no tin-yielding outcrop. Staple weight and 2–6 stacks reuse the raw-goods values (M-BAL).
         (item: "tin_ingot", tag: "staple", count: (2, 6), requires_knowledge: ["tin_sourcing"], absent_outcrop_tag: Some("metal_tin")),
         (item: "tin_ore", tag: "staple", count: (2, 6), requires_knowledge: ["tin_sourcing"], absent_outcrop_tag: Some("metal_tin")),
+        // C3-a: wrought iron by trade only to a colony that knows iron smelting and whose world has no iron- or
+        // bog-iron-yielding outcrop (pre-C3 saves, which never gain deposits). Appended last; while ineligible it is
+        // skipped before weighting, so existing draws are unchanged. Raw-goods weight and stacks (M-BAL).
+        (item: "wrought_iron", tag: "staple", count: (2, 6), requires_knowledge: ["iron_smelting"], absent_outcrop_tag: Some("metal_iron")),
     ],
 )

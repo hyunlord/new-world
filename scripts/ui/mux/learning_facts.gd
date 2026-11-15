@@ -20,6 +20,8 @@ static func from_snapshots(bulk: Dictionary, overlay: Dictionary, steward: Dicti
 		"first_livestock_captured": int(bulk.get("livestock", {}).get("first_capture", -1)) >= 0,
 		"first_copper_ingot": bool(bulk.get("first_copper_ingot", false)),
 		"first_bronze_tool_used": bool(bulk.get("first_bronze_tool_used", false)),
+		"first_iron_bloom": bool(bulk.get("first_iron_bloom", false)),
+		"first_iron_tool_used": bool(bulk.get("first_iron_tool_used", false)),
 		"deaths": deaths,
 		"tech_at_risk": int(tech.get("at_risk", 0)),
 		"stockpile_exists": not storage.get("zones", []).is_empty(),

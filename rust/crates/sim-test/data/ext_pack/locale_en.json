@@ -23,6 +23,9 @@
     "EXT_ORE_INGOT": "Test ingot",
     "EXT_ORE_RECIPE": "Test smelting",
     "EXT_ORE_OUTCROP": "Test outcrop",
-    "EXT_DOMESTIC_ANIMAL": "test livestock"
+    "EXT_DOMESTIC_ANIMAL": "test livestock",
+    "EXT_BOG": "Test bog ore",
+    "EXT_BOG_OUTCROP": "Test bog deposit",
+    "EXT_BOG_RECIPE": "Test bloom smelting"
   }
 }

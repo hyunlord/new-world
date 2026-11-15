@@ -274,11 +274,11 @@ mod tests {
     #[test]
     fn the_recipe_file_parses_to_the_goal_table() {
         let table = recipes();
-        // Historical 50 recipes remain a prefix; C2 appends 20 recipes.
-        assert_eq!(table.len(), 70);
+        // Historical 50 recipes remain a prefix; C2 appends 20 recipes and C3 15.
+        assert_eq!(table.len(), 85);
         assert_eq!(
             table.iter().map(|r| r.identity.code).collect::<Vec<_>>(),
-            (0..70).collect::<Vec<_>>()
+            (0..85).collect::<Vec<_>>()
         );
         let knap = RecipeKind::KnapBlade.recipe().cloned();
         let knap = knap.expect("registered blade");

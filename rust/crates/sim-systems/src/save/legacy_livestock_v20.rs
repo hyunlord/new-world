@@ -87,14 +87,14 @@ pub(super) fn accepts_catalog(revision: &str, catalog: &Catalog) -> Result<bool,
     Ok(true)
 }
 
-type IdentityRow = (
+pub(super) type IdentityRow = (
     u32,
     &'static str,
     &'static str,
     &'static [&'static str],
     &'static [&'static str],
 );
-fn identity(def: Option<&IdentityDef>, row: IdentityRow) -> bool {
+pub(super) fn identity(def: Option<&IdentityDef>, row: IdentityRow) -> bool {
     def.is_some_and(|def| {
         def.code == row.0
             && def.id == row.1

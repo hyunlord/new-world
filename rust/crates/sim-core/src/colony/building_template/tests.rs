@@ -12,7 +12,7 @@ fn family() -> (Catalog, TemplateCatalog) {
 }
 
 #[test]
-fn c2_templates_resolve_fifteen_connected_and_keep_nine_future_buildings_visible() {
+fn c3_templates_resolve_eighteen_connected_and_keep_seven_future_buildings_visible() {
     // Given the bundled template family, including future missing blueprint identities.
     let (_, templates) = family();
     // When its explicit connection states are counted.
@@ -26,8 +26,8 @@ fn c2_templates_resolve_fifteen_connected_and_keep_nine_future_buildings_visible
         .iter()
         .filter(|t| t.status == ContentStatus::Inert)
         .count();
-    // C2 connects five reserved plans and retains the unsupported hive as explicit future data.
-    assert_eq!((connected, inert), (15, 9));
+    // C2 connects five reserved plans and retains the unsupported hive; C3 connects the bloomery and smithy and appends the cut-stone house.
+    assert_eq!((connected, inert), (18, 7));
     assert!(templates
         .buildings
         .iter()
@@ -132,8 +132,8 @@ fn spine_inert_templates_invalid_rotations_and_station_choices_never_expand() {
     let (catalog, templates) = family();
     // When a caller requests inert content or an invalid command choice.
     let inert = templates
-        .get("forge")
-        .expect("forge")
+        .get("market")
+        .expect("market")
         .expand(&catalog, None, 0);
     let rotated = templates
         .get("log_house")

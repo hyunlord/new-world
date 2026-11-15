@@ -922,10 +922,17 @@ mod item_capability_tests {
         let bronze_axe = ItemKind::from_name("bronze_axe").expect("bronze axe");
         let bronze_dagger = ItemKind::from_name("bronze_dagger").expect("bronze dagger");
         let copper_axe = ItemKind::from_name("copper_axe").expect("copper axe");
+        let iron_spear = ItemKind::from_name("iron_spear").expect("iron spear");
+        let iron_sword = ItemKind::from_name("iron_sword").expect("iron sword");
+        let iron_axe = ItemKind::from_name("iron_axe").expect("iron axe");
+        let iron_knife = ItemKind::from_name("iron_knife").expect("iron knife");
         assert_eq!(
             draft_weapons(),
             vec![
+                iron_spear,
+                iron_sword,
                 bronze_spear,
+                iron_axe,
                 bronze_axe,
                 bronze_dagger,
                 copper_axe,
@@ -934,14 +941,19 @@ mod item_capability_tests {
                 ItemKind::StoneAxe,
             ]
         );
-        assert_eq!(hunting_tools(false), vec![bronze_spear, ItemKind::Spear]);
+        assert_eq!(
+            hunting_tools(false),
+            vec![iron_spear, bronze_spear, ItemKind::Spear]
+        );
         assert_eq!(
             hunting_tools(true),
             vec![
+                iron_spear,
                 bronze_spear,
                 ItemKind::Spear,
                 ItemKind::FlintBlade,
                 bronze_dagger,
+                iron_knife,
             ]
         );
         let mut world = World::new();
@@ -959,6 +971,9 @@ mod item_capability_tests {
             (bronze_axe, 13),
             (bronze_dagger, 13),
             (copper_axe, 11),
+            (iron_spear, 19),
+            (iron_sword, 18),
+            (iron_axe, 15),
         ] {
             let entity = world.spawn((Tool {
                 item: ItemSpec::raw(kind, None),

@@ -48,3 +48,16 @@ Defence, flight and fuel scheduling intentionally change colony behavior. Scoped
 - [M-UX2 goal](../v8/mux2/MUX2_GOAL.md), [decisions D5–D7](../v8/mux2/MUX2_DECISIONS.md), [ADR 0036](0036-steward.md).
 - `rust/crates/sim-systems/src/runtime/steward/{defence,arming,lifecycle}.rs`, `runtime/wildlife/{flee,fight}.rs`, `runtime/jobs/assign.rs`, `save/legacy_steward.rs`.
 - `rust/crates/sim-test/tests/{steward_defence,steward_defence_fingerprint,steward_defence_migration,colony_flee_mux2,mux2_firewood}.rs`; `rust/crates/sim-test/src/probe/mux2.rs`.
+
+## Amendment M-SIMCHECK — the quiet window opens only after the pack approaches (2026-11-15)
+
+Rule 7 drafts as soon as a pack hunts anywhere on the map, but the 60-tick quiet window above
+started at once, because no wolf was yet within 24 camp tiles. Every early response was released
+exactly 60 ticks later, before the wolves arrived, and a second batch was drafted when they did:
+in the M-SIMCHECK r1 runs (steward ON, 48 days) all 50 raids drafted, released and re-drafted,
+pulling 5–8 people off work per raid. That contradicted the approach response described here and
+is fixed as a bug. An early response now marks its quiet window as awaiting the approach
+(`quiet_since = u64::MAX`, the existing saved field; no format change); the window opens only after
+a threatening wolf has been within the release range once. Retreat, empty threats and steward or
+defence OFF still release immediately. Seeds 1 and 14: one batch of four per raid, 0 combat deaths.
+Commit aacb52d1e; test `distant_hunting_pack_keeps_first_response_until_it_approaches_without_redraft`.

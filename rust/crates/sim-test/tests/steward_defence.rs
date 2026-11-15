@@ -228,6 +228,8 @@ fn quiet_sixty_ticks_releases_distant_pack_then_rearms_when_it_enters_radius() {
     let mut engine = armed_colony();
     incoming(&mut engine);
     let hearth = sim_systems::worldgen::colony::hearth(&engine.resources).expect("hearth");
+    // The pack approaches first; only then can its quiet window open.
+    defence_tick(&mut engine, 9);
     for animal in engine
         .resources
         .colony
@@ -272,6 +274,57 @@ fn quiet_sixty_ticks_releases_distant_pack_then_rearms_when_it_enters_radius() {
         animal.state = sim_core::colony::wildlife::AnimalState::Retreat;
     }
     defence_tick(&mut engine, 73);
+    assert!(engine.resources.steward.defence.owned_ids.is_empty());
+}
+
+#[test]
+fn distant_hunting_pack_keeps_first_response_until_it_approaches_without_redraft() {
+    // Given a hunting pack drafted against while still beyond the 24-tile camp radius.
+    let mut engine = armed_colony();
+    incoming(&mut engine);
+    let hearth = sim_systems::worldgen::colony::hearth(&engine.resources).expect("hearth");
+    let place = |engine: &mut sim_engine::SimEngine, x: u32| {
+        for animal in engine
+            .resources
+            .colony
+            .wildlife
+            .animals
+            .values_mut()
+            .filter(|a| a.pack.is_some())
+        {
+            animal.pos = (x, hearth.1);
+        }
+    };
+    place(&mut engine, hearth.0 + 25);
+    defence_tick(&mut engine, 10);
+    let first = engine.resources.steward.defence.owned_ids.clone();
+    assert_eq!(first.len(), 4);
+    // When it hunts far away for well over 60 ticks and only then enters the radius.
+    for tick in 11..=200 {
+        defence_tick(&mut engine, tick);
+        assert_eq!(
+            engine.resources.steward.defence.owned_ids, first,
+            "first response released before the pack approached (tick {tick})"
+        );
+    }
+    place(&mut engine, hearth.0 + 24);
+    defence_tick(&mut engine, 201);
+    // Then the same defenders remain and no second batch was drafted.
+    assert_eq!(engine.resources.steward.defence.owned_ids, first);
+    let batches = engine
+        .resources
+        .chronicle
+        .entries()
+        .iter()
+        .filter(|e| e.kind == sim_core::chronicle::ChronicleKind::StewardDefence)
+        .count();
+    assert_eq!(batches, 1, "draft -> release -> re-draft");
+    // And once it has approached, 60 quiet ticks beyond the radius still release.
+    place(&mut engine, hearth.0 + 25);
+    defence_tick(&mut engine, 202);
+    defence_tick(&mut engine, 261);
+    assert_eq!(engine.resources.steward.defence.owned_ids, first);
+    defence_tick(&mut engine, 262);
     assert!(engine.resources.steward.defence.owned_ids.is_empty());
 }
 
@@ -979,6 +1032,8 @@ fn selected_retired_pack_near_outdoor_resident_rearms_without_replacing_defender
         p.x = hearth.0;
         p.y = hearth.1;
     }
+    // The pack approaches first; only then can its quiet window open.
+    defence_tick(&mut engine, 9);
     for a in engine
         .resources
         .colony
@@ -1101,6 +1156,8 @@ fn resident_alarm_ignores_dead_drafted_roofed_and_unselected_pack_targets() {
         p.x = hearth.0;
         p.y = hearth.1;
     }
+    // The pack approaches first; only then can its quiet window open.
+    defence_tick(&mut engine, 9);
     for a in engine
         .resources
         .colony

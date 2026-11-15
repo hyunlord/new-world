@@ -254,7 +254,7 @@ mod tests {
         assert_eq!(d.one_neighbour_knows, ["pot_firing"]);
         assert_eq!(d.migrant_top.as_deref(), Some("hide_wrap"));
         assert_eq!(d.goods.iter().filter(|g| g.tag == "lacked").count(), 6);
-        assert_eq!(d.goods.iter().filter(|g| g.tag == "staple").count(), 12);
+        assert_eq!(d.goods.iter().filter(|g| g.tag == "staple").count(), 13);
         let conditional: Vec<_> = d
             .goods
             .iter()
@@ -267,6 +267,17 @@ mod tests {
                 ("tin_ingot", vec!["tin_sourcing".to_owned()]),
                 ("tin_ore", vec!["tin_sourcing".to_owned()])
             ]
+        );
+        let iron: Vec<_> = d
+            .goods
+            .iter()
+            .filter(|g| g.absent_outcrop_tag.as_deref() == Some("metal_iron"))
+            .map(|g| (g.item.as_str(), g.requires_knowledge.clone()))
+            .collect();
+        assert_eq!(iron, [("wrought_iron", vec!["iron_smelting".to_owned()])]);
+        assert_eq!(
+            d.goods.last().map(|g| g.item.as_str()),
+            Some("wrought_iron")
         );
         assert!(
             parse_data("(schema_version: 1)").is_none(),
