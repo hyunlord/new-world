@@ -772,6 +772,7 @@ func _metal() -> void:
 	var goals: Control = _main.get_node("UI/MuxHud/Goals") as Control
 	var trade: Control = _main.get_node("UI/TradePanel") as Control
 	var why: Control = _main.get_node("UI/WhyPanel") as Control
+	var why_shown: Dictionary = {}  # C3: each item event's Why is captured once, at the stage it first appears.
 	for language: String in ["ko", "en"]:
 		_locale.call("set_language", language)
 		for stage: String in stages:
@@ -784,23 +785,33 @@ func _metal() -> void:
 			var subject: Vector2i = Vector2i(int(smelter[0]), int(smelter[1])) if smelter != null else copper
 			var framed: Variant = ui.get("subject")
 			if framed != null: subject = Vector2i(int(framed[0]), int(framed[1]))
-			_camera.position = View.tile_centre(subject)
+			# A building subject is its anchor; frame the footprint centre unless a station stands on the anchor (an
+			# open yard such as the bloomery). center_on_tile also cancels the camp framing load_world queues.
+			var shops: Dictionary = SimReads.read(_world, "get_workshops")
+			var station: bool = false
+			for i: int in (shops.get("xs", PackedInt32Array()) as PackedInt32Array).size():
+				station = station or Vector2i(int(shops["xs"][i]), int(shops["ys"][i])) == subject
+			for site: Dictionary in SimReads.read(_world, "get_building_snapshot").get("template_sites", []):
+				if not station and Vector2i(int(site["x"]), int(site["y"])) == subject: subject += Vector2i(floori(float(site["width"]) * 0.5), floori(float(site["height"]) * 0.5))
 			_camera.zoom = Vector2(2, 2)
-			_camera.force_update_scroll()
+			_camera.call("center_on_tile", subject)
 			_panel.hide()
 			goals.hide()
-			await _frames()
+			await _frames(8)
 			var cards_color: Color = cards.modulate
 			cards.modulate = Color(cards_color, 0.0)
 			await _capture(language + "_" + stage)
-			cards.modulate = cards_color
 			for event: String in ["ore", "ingot", "tool_upgraded", "tool_used"]:
 				var entry: int = int(ui.get(event + "_entry", -1) if ui.get(event + "_entry") != null else -1)
 				if entry < 0: continue
 				_check(stage + " real Why " + event, bool(why.call("open", entry)))
+				if c3 and not why_shown.has(language + event):
+					why_shown[language + event] = true
+					await _capture(language + "_" + stage + "_why_" + event)
 				var plain: String = str(why.call("plain_text"))
 				_check(stage + " localized Why " + event, not plain.contains("C1_") and not plain.contains(str(_locale.call("ltr", "UI_UNKNOWN"))), {"text": plain})
 				why.call("close")
+			cards.modulate = cards_color
 			var facts: Dictionary = SimReads.read(_world, "get_ui_facts")
 			if c3:
 				var expected: Dictionary = manifest.get("facts", {})
