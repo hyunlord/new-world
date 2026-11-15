@@ -45,11 +45,12 @@ fn spine_eras_from_data() {
     }
     // When the aggregate reads practitioners, the authored neolithic denominator has no absent cap.
     let (full, events) = compute(&engine.world, &engine.resources, &initial);
-    assert_eq!(full.era_progress, [0, 1000, 1000, 0]);
-    assert_eq!(full.current_era, (2, 2));
+    // C3 iron markers make the iron era the full-marker era.
+    assert_eq!(full.era_progress, [0, 1000, 1000, 1000]);
+    assert_eq!(full.current_era, (3, 2));
     assert!(events
         .iter()
-        .any(|e| e.kind == ChronicleKind::EraChanged && e.value == 2 && e.cause == 2));
+        .any(|e| e.kind == ChronicleKind::EraChanged && e.value == 3 && e.cause == 2));
     assert_eq!(
         events
             .iter()
@@ -73,7 +74,7 @@ fn spine_eras_from_data() {
         engine.world.despawn(*entity).expect("other adults leave");
     }
     let (last, _) = compute(&engine.world, &engine.resources, &full);
-    assert_eq!(last.current_era, (2, 2));
+    assert_eq!(last.current_era, (3, 2));
     engine
         .world
         .despawn(adults[0])
