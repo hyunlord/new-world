@@ -197,7 +197,7 @@ func with_findability(mat: ShaderMaterial) -> ShaderMaterial:
 	xray.set_shader_parameter("far_scale", Vector2(float(far[0]), float(far[1])))
 	var dc: Color = Data3D.colour(Data3D.param("people.xray.day", []), Color(0.14, 0.11, 0.09))
 	var nc: Color = Data3D.colour(Data3D.param("people.xray.night", []), Color(0.91, 0.89, 0.81))
-	xray.set_shader_parameter("day_colour", Color(dc, float(Data3D.param("people.xray.day_alpha", 0.55))))
+	xray.set_shader_parameter("day_colour", Color(dc, float(Data3D.param("people.xray.day_alpha", 0.8))))
 	xray.set_shader_parameter("night_colour", Color(nc, float(Data3D.param("people.xray.night_alpha", 0.7))))
 	line.next_pass = xray
 	mat.next_pass = line

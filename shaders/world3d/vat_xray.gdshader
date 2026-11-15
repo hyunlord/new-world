@@ -9,7 +9,7 @@ render_mode unshaded, depth_test_disabled, depth_draw_never, blend_mix, cull_bac
 global uniform float w3d_night;
 uniform sampler2D depth_tex : hint_depth_texture, filter_nearest;
 uniform float min_gap = 0.3;
-uniform vec4 day_colour : source_color = vec4(0.14, 0.11, 0.09, 0.55);
+uniform vec4 day_colour : source_color = vec4(0.14, 0.11, 0.09, 0.8);
 uniform vec4 night_colour : source_color = vec4(0.91, 0.89, 0.81, 0.7);
 
 void vertex() {
