@@ -68,7 +68,9 @@ func _process(_delta: float) -> void:
 	var stamp: Dictionary = get_parent().get("stamp") if get_parent() != null else {}
 	@warning_ignore("integer_division")
 	var skey: String = "%s|%s" % [stamp.get("overlay", -1), int(stamp.get("tick", -1)) / 12]
-	if skey == _stamp_key and not stamp.is_empty():
+	# A refresh takes World3D's heavy-work slot (one per frame, none on a simulation step); else try next frame.
+	if (skey == _stamp_key and not stamp.is_empty()) or (get_parent() != null and get_parent().has_method("claim_heavy")
+			and not bool(get_parent().call("claim_heavy"))):
 		_flicker()
 		return
 	_stamp_key = skey

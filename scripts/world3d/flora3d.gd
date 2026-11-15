@@ -68,7 +68,8 @@ func _process(_delta: float) -> void:
 		return
 	var stamp: Dictionary = get_parent().get("stamp") if get_parent() != null else {}
 	var skey: String = "%s|%s|%s|%d" % [stamp.get("trees", -1), stamp.get("overlay", -1), stamp.get("tick", -1), int(_terrain.get("width"))]
-	if skey == _stamp_key and not stamp.is_empty():
+	# A refresh (tree diff, built space, slow reads) takes World3D's heavy-work slot; else try next frame.
+	if (skey == _stamp_key and not stamp.is_empty()) or not _claim():
 		return
 	_stamp_key = skey
 	var time: Dictionary = SimReads.read(_world_sim, "get_time_snapshot")
@@ -97,10 +98,7 @@ func _process(_delta: float) -> void:
 					_near_changed[_chunk_of(t)] = true
 			_near_built = near
 	var tkey: String = "%d|%d|%d|%d|%d" % [int(stamp.get("trees", -1)), season, _stump_epoch(time), width, int(_keys.get("built", 0))]
-	if str(_keys.get("trees", "")) != tkey and not _claim():
-		# Not this frame (World3D's heavy-work slot is taken): look again next frame.
-		_stamp_key = ""
-	elif str(_keys.get("trees", "")) != tkey:
+	if str(_keys.get("trees", "")) != tkey:
 		_keys["trees"] = tkey
 		var batches: Dictionary = {}
 		var first: bool = _tree_keys.is_empty()
