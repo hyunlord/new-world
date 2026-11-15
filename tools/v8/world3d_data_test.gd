@@ -1,16 +1,23 @@
 # world3d_data_test.gd — M3D-1 headless checks of the 3D view's data contract (no window needed; nothing drawn).
 # Purpose: (1) every model a binding in assets/3d/bindings3d.json names exists in assets/3d/models (or is a VAT
-#   character), and every family has a fallback; (2) a missing model id yields the placeholder mesh, never null
+#   character), every station state list resolves (its last candidate exists; earlier w3d_ candidates may still be
+#   pending), and every family has a fallback; the merged manifests give every bound model a row and the explicit
+#   models/manifest.json row wins a duplicate id; a plant model drawn in winter has its colours desaturated;
+#   (2) a missing model id yields the placeholder mesh, never null
 #   (data-only: a new content name without a model still draws); (3) roofs of two rooms across one wall share no cell
 #   and an L room's hipped height field is finite and rises from the wall line; (4) VAT characters load with sizes matching their JSON; (5) the 3D scene
 #   boots headless with a real WorldSimNode and builds its terrain, walls and roofs for the default world without a
 #   script error; (6) M3D-SWITCH E1: with every 2D world layer under ColonyView freed, the runtime callers still work
 #   through ViewProjection, Main/RoomIndex and Main/PeopleView: a click at a person's feet opens the inspector on that
 #   person (pick_world → entity bits) with a portrait, the body has a screen rect, a wild animal is picked with its
-#   species in the hunt mode, rooms index and toggle, chronicle highlights ring people in 3D, the mood flag toggles.
+#   species in the hunt mode, rooms index and toggle, chronicle highlights ring people in 3D, the mood flag toggles;
+#   (7) M3D-ASSETS coverage on the booted world's catalogue: every item code has its own model for each count bucket
+#   (props3d own_item_model), every wild plant id each plant phase and every crop id each shown field phase a model
+#   (plants3d wild_model / crop_model), every outcrop kind its own model (flora3d outcrop_model).
 #   Prints `W3D_DATA <name> PASS|FAIL <detail>` and `W3D_DATA_DONE failures=<n>`; quits 1 on failure.
 #   `Godot --headless --path . --script res://tools/v8/world3d_data_test.gd`
-# Bridge methods called: via SimReads get_agent_snapshot, get_rooms, get_animals (the booted main scene reads its own).
+# Bridge methods called: via SimReads get_agent_snapshot, get_rooms, get_animals, get_content_catalog, get_crop_defs
+#   (the booted main scene reads its own).
 extends SceneTree
 
 const Data3D = preload("res://scripts/world3d/data3d.gd")
@@ -18,6 +25,9 @@ const Structures = preload("res://scripts/world3d/structures3d.gd")
 const Vat = preload("res://scripts/world3d/vat3d.gd")
 const ViewProjection = preload("res://scripts/world/view_projection.gd")
 const OrderTool = preload("res://scripts/world/colony/order_tool.gd")
+const Props = preload("res://scripts/world3d/props3d.gd")
+const Plants = preload("res://scripts/world3d/plants3d.gd")
+const Flora = preload("res://scripts/world3d/flora3d.gd")
 
 var _failures: int = 0
 
@@ -36,7 +46,7 @@ func _models_named(node: Variant, out: Dictionary, key: String = "") -> void:
 	if node is Dictionary:
 		for k: Variant in (node as Dictionary):
 			if str(k) in ["about", "colours", "materials", "patterns", "canopy_by_season", "species_canopy_by_season", "trunk",
-					"bare_in_season", "habit", "clip_for_pose", "lit", "by_era", "by_wall_category", "by_style_walls"]:
+					"bare_in_season", "habit", "clip_for_pose", "lit", "by_era", "by_wall_category", "by_style_walls", "states"]:
 				continue
 			_models_named((node as Dictionary)[k], out, str(k))
 	elif node is Array:
@@ -50,13 +60,59 @@ func _run() -> void:
 	# 1 bindings → models.
 	var bindings: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/3d/bindings3d.json"))
 	var names: Dictionary = {}
-	for family: String in ["flora", "resources", "nodes", "outcrops", "stations", "buildings", "items", "animals"]:
+	for family: String in ["flora", "resources", "nodes", "outcrops", "stations", "buildings", "items", "animals", "plants", "sites", "fences"]:
 		_models_named(bindings.get(family, {}), names)
 	var missing: Array[String] = []
+	var rowless: Array[String] = []
 	for id: String in names:
 		if not Data3D.has_model(id) and not FileAccess.file_exists("res://assets/3d/vat/%s_vat.json" % id):
 			missing.append(id)
+		elif Data3D.has_model(id) and Data3D.model_row(id).is_empty():
+			rowless.append(id)
 	_check("bindings_models_exist", missing.is_empty(), "%d named, missing %s" % [names.size(), missing])
+	_check("bound_models_have_rows", rowless.is_empty(), "%d without a manifest row %s" % [rowless.size(), rowless.slice(0, 8)])
+	# Station states: a state list may name pending w3d_ models first; its last candidate must exist.
+	var bad_states: Array[String] = []
+	var states: Dictionary = (bindings.get("stations", {}) as Dictionary).get("states", {})
+	var w3d_drawn: int = 0
+	for base: String in states:
+		if states[base] is not Dictionary:
+			continue
+		for state: String in ["idle", "working"]:
+			var list: Array = (states[base] as Dictionary).get(state, [])
+			if list.is_empty() or not Data3D.has_model(str(list[-1])):
+				bad_states.append("%s.%s" % [base, state])
+			elif Props.state_model(base, state == "working") == base:
+				bad_states.append("%s.%s unresolved" % [base, state])
+			elif Props.state_model(base, state == "working").begins_with("w3d_"):
+				w3d_drawn += 1
+	_check("station_states_resolve", bad_states.is_empty() and not states.is_empty(), "%s; %d of %d state models are w3d_" % [bad_states, w3d_drawn, 2 * (states.size() - 1)])
+	# Manifest merge: the explicit models/manifest.json row wins a duplicate id over assets_manifest.json.
+	var explicit: Dictionary = (JSON.parse_string(FileAccess.get_file_as_string("res://assets/3d/models/manifest.json")) as Dictionary).get("models", {})
+	var combined: Dictionary = (JSON.parse_string(FileAccess.get_file_as_string("res://assets/3d/assets_manifest.json")) as Dictionary).get("models", {})
+	var wrong_row: Array[String] = []
+	var only_combined: int = 0
+	for id: String in combined:
+		if explicit.has(id) and Data3D.model_row(id) != explicit[id]:
+			wrong_row.append(id)
+		elif not explicit.has(id) and not str(id).begins_with("w3d_") and Data3D.model_row(id) != combined[id]:
+			wrong_row.append(id)
+		only_combined += 0 if explicit.has(id) else 1
+	_check("manifest_merge_order", wrong_row.is_empty() and only_combined > 0, "%d assets-only rows, wrong %s" % [only_combined, wrong_row.slice(0, 8)])
+	# Winter: a plant model's materials are desaturated (saturation × the 2D winter factor).
+	var plants_node: Node3D = Plants.new()
+	var wild_rows: Dictionary = (bindings.get("plants", {}) as Dictionary).get("wild", {})
+	var sample: String = str((wild_rows[wild_rows.keys()[0]] as Array)[1]) if not wild_rows.is_empty() else ""
+	var summer: Mesh = plants_node.call("_desaturated", sample, 1.0)
+	var winter: Mesh = plants_node.call("_desaturated", sample, 0.35)
+	var greyer: bool = summer != null and winter != null and summer.get_surface_count() == winter.get_surface_count() and summer.get_surface_count() > 0
+	for si: int in summer.get_surface_count() if greyer else 0:
+		var a: Material = summer.surface_get_material(si)
+		var b: Material = winter.surface_get_material(si)
+		if a is BaseMaterial3D and (a as BaseMaterial3D).albedo_color.s > 0.05:
+			greyer = greyer and (b as BaseMaterial3D).albedo_color.s < (a as BaseMaterial3D).albedo_color.s * 0.5
+	plants_node.free()
+	_check("plants_winter_desaturated", greyer, sample)
 	var no_fallback: Array[String] = []
 	for family: String in ["nodes", "stations", "buildings", "items", "animals", "walls", "roofs", "materials"]:
 		if not (bindings.get(family, {}) as Dictionary).has("fallback"):
@@ -113,8 +169,41 @@ func _run() -> void:
 		var px: Vector2 = w3d.call("screen_to_world", Vector2(960, 540))
 		_check("projection_provider", px.x > 0.0 and px.y > 0.0, str(px))
 		await _without_2d(main, w3d)
+		_assets_coverage(main.get_node("WorldSim"))
 	print("W3D_DATA_DONE failures=%d" % _failures)
 	quit(1 if _failures > 0 else 0)
+
+
+## (7) Every item code, plant/crop stage and outcrop kind of the live catalogue resolves to an M3D-ASSETS model.
+func _assets_coverage(world: Node) -> void:
+	var catalog: Dictionary = SimReads.read(world, "get_content_catalog")
+	var items: Array = catalog.get("items", [])
+	var missing_items: Array[String] = []
+	for row: Variant in items:
+		for bucket: int in 3:
+			if Props.own_item_model(str((row as Dictionary).get("id", "")), bucket) == "":
+				missing_items.append("%s/%d" % [(row as Dictionary).get("id", ""), bucket])
+	_check("items_own_models", not items.is_empty() and missing_items.is_empty(), "%d codes × 3 buckets, fallback %s" % [items.size(), missing_items.slice(0, 8)])
+	var plants: Array = catalog.get("plants", [])
+	var missing_plants: Array[String] = []
+	for row: Variant in plants:
+		for phase: int in 4:
+			if Plants.wild_model(str((row as Dictionary).get("id", "")), phase) == "":
+				missing_plants.append("%s/%d" % [(row as Dictionary).get("id", ""), phase])
+	_check("wild_plant_stages_models", not plants.is_empty() and missing_plants.is_empty(), "%d plants × 4 phases, fallback %s" % [plants.size(), missing_plants])
+	var crops: Array = SimReads.read(world, "get_crop_defs").get("rows", [])
+	var missing_crops: Array[String] = []
+	for row: Variant in crops:
+		for phase: int in [3, 4, 5]:
+			if Plants.crop_model(str((row as Dictionary).get("id", "")), phase) == "":
+				missing_crops.append("%s/%d" % [(row as Dictionary).get("id", ""), phase])
+	_check("crop_stages_models", not crops.is_empty() and missing_crops.is_empty(), "%d crops × 3 field phases, fallback %s" % [crops.size(), missing_crops])
+	var outcrops: Array = catalog.get("outcrops", [])
+	var missing_ore: Array[String] = []
+	for row: Variant in outcrops:
+		if Flora.outcrop_model(str((row as Dictionary).get("id", ""))) == "":
+			missing_ore.append(str((row as Dictionary).get("id", "")))
+	_check("outcrop_kinds_models", not outcrops.is_empty() and missing_ore.is_empty(), "%d kinds, fallback %s" % [outcrops.size(), missing_ore])
 
 
 ## (6) No 2D world layer exists; every runtime path goes through the renderer-neutral helpers.

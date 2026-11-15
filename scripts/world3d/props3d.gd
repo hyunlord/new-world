@@ -3,15 +3,19 @@
 # Purpose: a finished workshop (get_workshops) is the Blender model its blueprint's construction style names
 #   (get_content_catalog `construction_style` → bindings3d `stations.by_style`, else the 2D workshop binding's structure
 #   id, else `stations.fallback`), standing at the footprint centre facing south, scaled down to fit a smaller
-#   footprint (models declare theirs in assets/3d/models/manifest.json). A 2D workshop binding marked
+#   footprint (models declare theirs in the manifests data3d.gd merges). Its state picks the drawn model: working
+#   (an active bill) or idle → the first existing candidate of bindings3d `stations.states.<model>.<state>` (the
+#   w3d_ station models, then the M3D-ASSETS asset_ ones), else the station model itself. A 2D workshop binding marked
 #   `marks_hearth_firing` is not drawn (as in 2D). Legacy camp buildings (get_building_snapshot) use the 2D building
 #   binding's structure (`unlit` while the nearest settlement's fire is out) → bindings3d `buildings.by_structure`;
 #   ring buildings belong to structures3d.gd and rows inside a workshop footprint are skipped (the 2D rule). Bedrolls
-#   lie over their 2 × 1 footprint. Ground stacks (get_colony_overlay items) take the 2D item binding's asset for the
-#   count bucket → bindings3d `items.by_asset`, else the catalogue `art_shape` → `items.by_shape`, else
-#   `items.fallback`; `vein` and `metal` surfaces take the item's `art_tint_material` colour; 2–8 items show two
-#   copies and 9+ three. Lit models (bindings3d `stations.lit`) carry an OmniLight3D at the manifest `light` socket and
-#   glow while lit: the hearth while its settlement's fire burns, a workshop while it works an active bill. Light
+#   lie over their 2 × 1 footprint. Ground stacks (get_colony_overlay items): the catalogue item id → bindings3d
+#   `items.by_id`, the M3D-ASSETS model of the 2D count bucket (1, 2–8, 9+ items → the models depicting 1, 3, 6),
+#   drawn once in its own colours; an id or bucket without a model falls back to the 2D item binding's asset for the
+#   bucket → `items.by_asset`, else the catalogue `art_shape` → `items.by_shape`, else `items.fallback`, with `vein`
+#   and `metal` surfaces in the item's `art_tint_material` colour and 2–8 items as two copies, 9+ three. Lit models
+#   (bindings3d `stations.lit`, keyed by the station model) carry an OmniLight3D at the drawn model's `light` socket
+#   and glow while lit: the hearth while its settlement's fire burns, a workshop while it works an active bill. Light
 #   energy follows the night (Sky.night_factor) but never reaches zero, so a working smelter reads by day too. A
 #   working station without a fire throws up chips and dust instead (`stations.work_puffs`).
 # Bridge methods called: via SimReads get_workshops, get_building_snapshot, get_settlement_snapshot, get_space,
@@ -191,13 +195,26 @@ func _fire_lit(settlements: Dictionary, t: Vector2i) -> bool:
 	return best < 0 or lit[best] == 1
 
 
-## Place model `id` centred on footprint `rect`, facing south; `lit` turns its glow and light on.
+## The model drawn for station model `id` in its state (bindings3d `stations.states`), else `id`.
+static func state_model(id: String, working: bool) -> String:
+	var states: Variant = (Data3D.binding("stations.states", {}) as Dictionary).get(id)
+	if states is not Dictionary:
+		return id
+	var shown: String = Data3D.first_model((states as Dictionary).get("working" if working else "idle", []))
+	return shown if shown != "" else id
+
+
+## Place model `id` centred on footprint `rect`, facing south; `lit` (working) picks its state model and turns its
+## glow and light on.
 func _place(id: String, rect: Rect2i, lit: bool, node_name: String) -> void:
 	var mi: MeshInstance3D = MeshInstance3D.new()
 	mi.name = node_name
-	var mesh: Mesh = Data3D.mesh(id)
+	var shown: String = state_model(id, lit)
+	var mesh: Mesh = Data3D.mesh(shown)
 	mi.mesh = mesh
-	var row: Dictionary = Data3D.model_row(id)
+	var row: Dictionary = Data3D.model_row(shown)
+	if row.is_empty():
+		row = Data3D.model_row(id)
 	var fp: Array = row.get("footprint", [rect.size.x, rect.size.y])
 	var fw: float = maxf(0.5, float(fp[0]))
 	var fh: float = maxf(0.5, float(fp[1]))
@@ -275,13 +292,17 @@ func _rebuild_items(overlay: Dictionary) -> void:
 		var n: int = counts[i] if i < counts.size() else 1
 		var bucket: int = 0 if n <= int(limits[0]) else (1 if n <= int(limits[1]) else 2)
 		var row: Dictionary = catalog.get(code, {})
-		var model: String = _item_model(code, bucket, row)
-		var tint: String = str(row.get("art_tint_material", ""))
+		var model: String = own_item_model(str(row.get("id", "")), bucket)
+		# An own model already depicts the stack: one copy in its own colours.
+		var copies: int = 1 if model != "" else bucket + 1
+		var tint: String = "" if model != "" else str(row.get("art_tint_material", ""))
+		if model == "":
+			model = _item_model(code, bucket, row)
 		var bkey: String = model + "|" + tint
 		if not batches.has(bkey):
 			batches[bkey] = []
 		var t: Vector2i = Vector2i(xs[i], ys[i])
-		for copy: int in bucket + 1:
+		for copy: int in copies:
 			var off: Vector2 = [Vector2(0, 0), Vector2(0.22, -0.18), Vector2(-0.2, 0.2)][copy]
 			var x: float = t.x + 0.5 + off.x
 			var z: float = t.y + 0.5 + off.y
@@ -306,6 +327,14 @@ func _rebuild_items(overlay: Dictionary) -> void:
 			add_child(mmi)
 			_item_nodes[k] = mmi
 		mmi.multimesh = mm
+
+
+## The M3D-ASSETS model of catalogue item `id` for count bucket `bucket` (bindings3d `items.by_id`), else "".
+static func own_item_model(id: String, bucket: int) -> String:
+	var models: Variant = (Data3D.binding("items.by_id", {}) as Dictionary).get(id)
+	if models is Array and bucket < (models as Array).size():
+		return Data3D.first_model([(models as Array)[bucket]])
+	return ""
 
 
 func _item_model(code: int, bucket: int, row: Dictionary) -> String:

@@ -1,14 +1,19 @@
 # plants3d.gd (World3D/Plants, made by world3d.gd): crops on fields and wild tile plants in 3D (M3D-SWITCH parity
 #   for the 2D PlantLayer and FieldLayer).
-# Purpose: two MultiMeshes of one procedural grass tuft (blades) and one of seed heads. Field tiles (FieldFacts rows of
-#   get_field_tiles) carry a 3 × 3 grid of tufts by phase: growing (3) short and green, ripe (4) tall with heads in the
-#   crop category's colour (params3d `plants.crop_ripe_by_category`, else `plants.ripe`), harvested (5) as straw
-#   stubble; untilled, tilled, sown and fallow show only the terrain's tilled soil. Wild plants (get_plants over the
-#   map) are one jittered tuft per tile in the 2D plant phase colours (render_params `plants.phase_colors`, ripe heads
-#   in `ripe_accent`), desaturated in winter like the 2D view. Read when the tick passes a `flora.slow_read_ticks`
-#   boundary and rebuilt only when the rows change.
-# Bridge methods called: get_plants; via SimReads/FieldFacts get_field_tiles, get_crop_defs, get_time_snapshot;
-#   signal world_reset.
+# Purpose: the M3D-ASSETS plant and crop models, one MultiMesh per (model, params3d `flora.chunk_tiles` chunk) so the
+#   frustum culls by chunk. A wild plant (get_plants over the map; kind →
+#   get_content_catalog plant id) is its bindings3d `plants.wild.<id>` model for the plant phase (dormant, growing,
+#   ripe, spent), one per tile with a hashed jitter and yaw. A field tile (FieldFacts rows of get_field_tiles; crop →
+#   get_crop_defs id) is its `plants.crops.<id>` model for the stage the field phase maps to (`plants.stage_of_phase`:
+#   growing 3, ripe 4, harvested 5 → growing, ripe, spent), a 2 × 2 grid of clumps per tile; untilled, tilled, sown
+#   and fallow show only the terrain's tilled soil. In winter every model's colours are desaturated like the 2D view
+#   (render_params `season.winter_saturation`). An id or phase without a model falls back to the procedural tufts: a
+#   MultiMesh of one grass tuft (blades) and one of seed heads, wild tufts in the 2D plant phase colours (render_params
+#   `plants.phase_colors`, ripe heads in `ripe_accent`), field tufts as a 3 × 3 grid (growing short and green, ripe tall
+#   with heads in the crop category's colour, params3d `plants.crop_ripe_by_category`, else `plants.ripe`; harvested
+#   straw stubble). Read when the tick passes a `flora.slow_read_ticks` boundary and rebuilt only when the rows change.
+# Bridge methods called: get_plants; via SimReads/FieldFacts get_field_tiles, get_crop_defs, get_time_snapshot,
+#   get_world_info, get_content_catalog (World3D.catalog); signal world_reset.
 extends Node3D
 
 const Data3D = preload("res://scripts/world3d/data3d.gd")
@@ -21,6 +26,10 @@ var _world_sim: Node = null
 var _terrain: Node = null
 var _tufts: MultiMeshInstance3D = null
 var _heads: MultiMeshInstance3D = null
+## "model|chunk x|chunk y" → its MultiMeshInstance3D.
+var _models: Dictionary = {}
+## "model|saturation" → the model with desaturated materials.
+var _variants: Dictionary = {}
 var _key: String = ""
 var _rows_hash: int = 0
 
@@ -129,16 +138,27 @@ func _rebuild(plants: Dictionary, fields: Array[Dictionary], season: int) -> voi
 	var winter: float = float((ArtData.params().get("season", {}) as Dictionary).get("winter_saturation", 0.35)) if season == 3 else 1.0
 	var tufts: Array = []
 	var heads: Array = []
+	# "model|chunk x|chunk y" → [[position, yaw, scale], …].
+	var placed: Dictionary = {}
 	var seed: int = int(SimReads.read(_world_sim, "get_world_info").get("seed", 0))
-	# Wild plants: one tuft per tile.
+	var plant_ids: Dictionary = {}
+	for row: Variant in (get_parent().call("catalog") as Dictionary).get("plants", []):
+		if row is Dictionary:
+			plant_ids[int((row as Dictionary).get("code", -1))] = str((row as Dictionary).get("id", ""))
+	# Wild plants: one model (else tuft) per tile.
 	var xs: PackedInt64Array = plants.get("xs", PackedInt64Array())
 	var ys: PackedInt64Array = plants.get("ys", PackedInt64Array())
+	var kinds: PackedInt64Array = plants.get("kinds", PackedInt64Array())
 	var phases: PackedInt64Array = plants.get("phases", PackedInt64Array())
 	for i: int in mini(mini(xs.size(), ys.size()), phases.size()):
 		var phase: int = clampi(phases[i], 0, 3)
 		var t: Vector2i = Vector2i(xs[i], ys[i])
 		var j: Vector2 = Vector2(float(hash([seed, t, 11]) % 1000), float(hash([seed, t, 23]) % 1000)) / 1000.0 - Vector2(0.5, 0.5)
 		var p: Vector2 = Vector2(t) + Vector2(0.5, 0.5) + j * 0.4
+		var model: String = wild_model(plant_ids.get(int(kinds[i]) if i < kinds.size() else -1, ""), phase)
+		if model != "":
+			_put(placed, model, [p, float(hash([seed, t, 31]) % 360) * PI / 180.0, 0.9 + 0.2 * (j.x + 0.5)])
+			continue
 		var size: float = [0.32, 0.5, 0.55, 0.3][phase]
 		var col: Color = _winter(Color(str(phase_cols[clampi(phase, 0, phase_cols.size() - 1)])), winter)
 		tufts.append([p, size, col])
@@ -147,14 +167,23 @@ func _rebuild(plants: Dictionary, fields: Array[Dictionary], season: int) -> voi
 	# Crops: a 3 × 3 grid per field tile by phase.
 	var ripe_by_cat: Dictionary = Data3D.param("plants.crop_ripe_by_category", {})
 	var categories: Dictionary = {}
+	var crop_ids: Dictionary = {}
 	for d: Variant in Facts.definitions(_world_sim):
 		if d is Dictionary:
 			categories[int((d as Dictionary).get("code", -1))] = str((d as Dictionary).get("category", ""))
+			crop_ids[int((d as Dictionary).get("code", -1))] = str((d as Dictionary).get("id", ""))
 	var green: Color = _winter(Data3D.colour(Data3D.param("plants.growing", []), Color(0.36, 0.5, 0.2)), winter)
 	var straw: Color = Data3D.colour(Data3D.param("plants.straw", []), Color(0.72, 0.62, 0.38))
 	for row: Dictionary in fields:
 		var phase: int = int(row["phase"])
 		if phase < 3 or phase > 5:
+			continue
+		var crop_model: String = crop_model(crop_ids.get(int(row["crop"]), ""), phase)
+		if crop_model != "":
+			# A crop model is one clump (~0.5 m): a 2 × 2 grid fills the tile.
+			for c: int in 4:
+				_put(placed, crop_model, [Vector2(float(row["x"]) + 0.25 + 0.5 * float(c % 2), float(row["y"]) + (0.75 if c >= 2 else 0.25)),
+					PI * 0.5 * float(c % 2), 0.9 + 0.1 * float(c % 3)])
 			continue
 		var ripe: Color = _winter(Data3D.colour(ripe_by_cat.get(categories.get(int(row["crop"]), ""), Data3D.param("plants.ripe", [])), Color(0.78, 0.64, 0.3)), winter)
 		var size: float = [0.38, 0.75, 0.13][phase - 3]
@@ -167,6 +196,75 @@ func _rebuild(plants: Dictionary, fields: Array[Dictionary], season: int) -> voi
 					heads.append([p, size, ripe])
 	_fill(_tufts.multimesh, tufts)
 	_fill(_heads.multimesh, heads)
+	_fill_models(placed, winter)
+
+
+## The model of wild plant `id` in plant phase `phase` (bindings3d `plants.wild`), else "".
+static func wild_model(id: String, phase: int) -> String:
+	var models: Variant = (Data3D.binding("plants.wild", {}) as Dictionary).get(id)
+	return Data3D.first_model([(models as Array)[phase]]) if models is Array and phase >= 0 and phase < (models as Array).size() else ""
+
+
+## The model of crop `id` in field phase `phase` (bindings3d `plants.crops`, stage by `plants.stage_of_phase`), else "".
+static func crop_model(id: String, phase: int) -> String:
+	var stage: int = int((Data3D.binding("plants.stage_of_phase", {}) as Dictionary).get(str(phase), -1))
+	var models: Variant = (Data3D.binding("plants.crops", {}) as Dictionary).get(id)
+	return Data3D.first_model([(models as Array)[stage]]) if models is Array and stage >= 0 and stage < (models as Array).size() else ""
+
+
+static func _put(placed: Dictionary, model: String, row: Array) -> void:
+	var chunk: int = maxi(4, int(Data3D.param("flora.chunk_tiles", 16)))
+	var p: Vector2 = row[0]
+	var key: String = "%s|%d|%d" % [model, floori(p.x / chunk), floori(p.y / chunk)]
+	if not placed.has(key):
+		placed[key] = []
+	(placed[key] as Array).append(row)
+
+
+## One MultiMesh per (model, chunk) key of `placed` (rows [position, yaw, scale]); keys no longer placed are freed.
+func _fill_models(placed: Dictionary, saturation: float) -> void:
+	for id: String in _models.keys():
+		if not placed.has(id):
+			(_models[id] as Node).queue_free()
+			_models.erase(id)
+	for id: String in placed:
+		var rows: Array = placed[id]
+		var mm: MultiMesh = MultiMesh.new()
+		mm.transform_format = MultiMesh.TRANSFORM_3D
+		mm.mesh = _desaturated(id.get_slice("|", 0), saturation)
+		mm.instance_count = rows.size()
+		for i: int in rows.size():
+			var p: Vector2 = rows[i][0]
+			var s: float = rows[i][2]
+			mm.set_instance_transform(i, Transform3D(Basis(Vector3.UP, float(rows[i][1])).scaled(Vector3(s, s, s)),
+				Vector3(p.x, float(_terrain.call("height_at", p.x, p.y)), p.y)))
+		var mmi: MultiMeshInstance3D = _models.get(id)
+		if mmi == null:
+			mmi = MultiMeshInstance3D.new()
+			mmi.name = "Model_" + id.replace("|", "_")
+			add_child(mmi)
+			_models[id] = mmi
+		mmi.multimesh = mm
+
+
+## Model `id` with every material's albedo saturation × `saturation` (cached; 1 = the model as authored).
+func _desaturated(id: String, saturation: float) -> Mesh:
+	var key: String = "%s|%.3f" % [id, saturation]
+	if _variants.has(key):
+		return _variants[key]
+	var base: Mesh = Data3D.mesh(id)
+	if saturation >= 1.0 or base is not ArrayMesh:
+		_variants[key] = base
+		return base
+	var out: ArrayMesh = (base as ArrayMesh).duplicate() as ArrayMesh
+	for s: int in out.get_surface_count():
+		var mat: Material = out.surface_get_material(s)
+		if mat is BaseMaterial3D:
+			var m: BaseMaterial3D = (mat as BaseMaterial3D).duplicate() as BaseMaterial3D
+			m.albedo_color = _winter(m.albedo_color, saturation)
+			out.surface_set_material(s, m)
+	_variants[key] = out
+	return out
 
 
 func _fill(mm: MultiMesh, rows: Array) -> void:

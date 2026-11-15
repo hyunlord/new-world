@@ -1,6 +1,9 @@
 # data3d.gd — the 3D view's data: tunables (assets/3d/params3d.json), identity → model bindings
 #   (assets/3d/bindings3d.json) and the model cache (assets/3d/models/<id>.glb, built by tools/3d/blender/*.py).
-# Purpose: every number and content name the 3D renderer uses comes from here (ADR 0033). `mesh(id)` merges a glb's
+# Purpose: every number and content name the 3D renderer uses comes from here (ADR 0033). Model rows (footprint,
+#   sockets, …) come from the manifests bindings3d `manifests` lists, first file wins on a duplicate id: the explicit
+#   models/manifest.json, then every fragment matching models/w3d_*_manifest.json (sorted; absent ones are skipped),
+#   then the M3D-ASSETS combined assets_manifest.json. `mesh(id)` merges a glb's
 #   mesh instances into one ArrayMesh (surface materials keep their glb names: `canopy`, `trunk`, `glow`, … are the
 #   recolouring API) and caches it; a missing or broken model returns a small placeholder box, never null.
 # Bridge methods called: none.
@@ -31,9 +34,26 @@ static func _load() -> void:
 	_loaded = true
 	_params = _read(PARAMS_PATH)
 	_bindings = _read(BINDINGS_PATH)
-	var manifest_path: String = str(_bindings.get("models_dir", "res://assets/3d/models")).path_join("manifest.json")
-	if FileAccess.file_exists(manifest_path):
-		_manifest = _read(manifest_path)
+	_manifest = {}
+	for pattern: Variant in _bindings.get("manifests", []):
+		for path: String in _expand(str(pattern)):
+			var models: Variant = _read(path).get("models")
+			if models is Dictionary:
+				for id: Variant in models:
+					if not _manifest.has(id):
+						_manifest[id] = models[id]
+
+
+## The files matching `pattern` (a `*` in the file name only), sorted; [] when none exist.
+static func _expand(pattern: String) -> PackedStringArray:
+	if not pattern.get_file().contains("*"):
+		return PackedStringArray([pattern]) if FileAccess.file_exists(pattern) else PackedStringArray()
+	var out: PackedStringArray = PackedStringArray()
+	for file: String in DirAccess.get_files_at(pattern.get_base_dir()):
+		if file.match(pattern.get_file()):
+			out.append(pattern.get_base_dir().path_join(file))
+	out.sort()
+	return out
 
 
 ## The value at dotted `path` in params3d.json, or `fallback`.
@@ -76,13 +96,10 @@ static func material_colour(material_id: String, category: String = "") -> Color
 	return colour(binding("materials.fallback", []))
 
 
-## Manifest row of a model id ({} when the manifest or row is missing).
+## Manifest row of a model id ({} when no manifest has it).
 static func model_row(id: String) -> Dictionary:
 	_load()
-	var models: Variant = _manifest.get("models", _manifest)
-	if models is Dictionary and (models as Dictionary).get(id) is Dictionary:
-		return (models as Dictionary)[id]
-	return {}
+	return _manifest[id] if _manifest.get(id) is Dictionary else {}
 
 
 static func model_path(id: String) -> String:
@@ -91,6 +108,17 @@ static func model_path(id: String) -> String:
 
 static func has_model(id: String) -> bool:
 	return id != "" and ResourceLoader.exists(model_path(id))
+
+
+## The first id of `candidates` with a model, else "" (pending models later in a list stay optional).
+static func first_model(candidates: Variant) -> String:
+	if candidates is String:
+		return str(candidates) if has_model(str(candidates)) else ""
+	if candidates is Array:
+		for id: Variant in candidates:
+			if has_model(str(id)):
+				return str(id)
+	return ""
 
 
 ## The glb scene of model `id` (null when missing).

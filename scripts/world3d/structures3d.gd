@@ -6,7 +6,9 @@
 #   material_resolver.gd) and bindings3d `walls.by_style`: `log` stacks octagonal logs that cross and overhang
 #   (`structures.log_overhang`) only at free corners (a T or X join stops flush), `block` is a masonry slab with mortar lines in the shader, `palisade` a row of pointed stakes. Colour is
 #   the wall material (bindings3d `materials`) with the resolver's lightness tint. Wall tiles flagged as openings
-#   (`wall_is_door`) with an opening neighbour are fence runs (posts and two rails); other openings are doors: two
+#   (`wall_is_door`) with an opening neighbour are fence runs: the M3D-ASSETS fence model of the tile's join mask
+#   (bindings3d `fences.by_mask`, bit 1 north, 2 east, 4 south, 8 west toward any wall/door/fence neighbour), one
+#   MultiMesh per model, else procedural posts and two rails; other openings are doors: two
 #   posts and a lintel in the wall, and a door leaf (model `door`) that swings open while a person stands on it and is cut down with the walls. A
 #   finished hut (2D building binding with a `ring`) gets its ring of walls and its door from that binding. Floors are
 #   thin slabs in the floor material. Roofs: each roofed room (get_rooms, not dug) gets one hipped roof, a height field
@@ -17,8 +19,11 @@
 #   Cutaway: at the closest zoom (`structures.cutaway_zoom`) or with the room overlay (R, "방 보기") every roof
 #   dissolves and walls drop to `structures.cutaway_wall_height`; with a room selected (RoomPanel) or a person in the
 #   inspector standing in a roofed room, that room's roof dissolves and the walls around it drop. Construction: a
-#   blueprint site of get_colony_overlay shows its footprint outline (stakes and sills); a wall or door site rises with
-#   its work progress; a template site still building shows its whole footprint outline. Snapshots are read when the
+#   blueprint site of get_colony_overlay shows its footprint outline (stakes and sills); a wall or door site is its
+#   blueprint id's M3D-ASSETS stage model (bindings3d `sites.walls`: foundation, half; stage = floor(progress × count))
+#   along its wall run, else a block rising with its work progress; a template site still building is its template's
+#   stage model (`sites.templates`, by completed / total pieces) scaled to its footprint and turned by its rotation,
+#   else its footprint outline. Snapshots are read when the
 #   overlay or rooms counter moves (or every `flora.slow_read_ticks`); walls rebuild per 32×32 chunk only when the
 #   wall/floor content changes, roofs when the rooms version or the template sites change.
 # Bridge methods called: via SimReads get_space, get_rooms, get_building_snapshot, get_colony_overlay,
@@ -55,6 +60,8 @@ var _tile_room: Dictionary = {}
 var _doors: Array[Dictionary] = []
 var _door_nodes: Array[MeshInstance3D] = []
 var _site_node: MeshInstance3D = null
+var _site_models: Node3D = null
+var _fence_models: Node3D = null
 var _cut_all: float = 99.0
 var _cut_rect_h: float = 99.0
 var _cut_rect: Rect2 = Rect2()
@@ -158,7 +165,48 @@ func _rebuild_walls(space: Dictionary, buildings: Dictionary) -> void:
 		dirty[k] = true
 	for k: Vector2i in dirty:
 		_build_wall_chunk(k, floors)
+	_place_fence_models()
 	_collect_doors()
+
+
+## The fence model of tile `t`'s join mask (bindings3d `fences.by_mask`), else "".
+func _fence_model(t: Vector2i) -> String:
+	var by_mask: Variant = Data3D.binding("fences.by_mask", [])
+	var mask: int = 0
+	for i: int in DIRS.size():
+		if _connects(t, DIRS[i]):
+			mask |= 1 << i
+	return Data3D.first_model([(by_mask as Array)[mask]]) if by_mask is Array and mask < (by_mask as Array).size() else ""
+
+
+## Fence runs drawn with models: one MultiMesh per fence model.
+func _place_fence_models() -> void:
+	if _fence_models == null:
+		_fence_models = Node3D.new()
+		_fence_models.name = "FenceModels"
+		add_child(_fence_models)
+	for n: Node in _fence_models.get_children():
+		n.queue_free()
+	var batches: Dictionary = {}
+	for t: Variant in _walls.keys():
+		if t is not Vector2i or not bool(_walls[t]["fence"]):
+			continue
+		var id: String = _fence_model(t)
+		if id == "":
+			continue
+		if not batches.has(id):
+			batches[id] = []
+		(batches[id] as Array).append(Vector3(t.x + 0.5, float(_terrain.call("stand_height", t)), t.y + 0.5))
+	for id: String in batches:
+		var mm: MultiMesh = MultiMesh.new()
+		mm.transform_format = MultiMesh.TRANSFORM_3D
+		mm.mesh = Data3D.mesh(id)
+		mm.instance_count = (batches[id] as Array).size()
+		for i: int in mm.instance_count:
+			mm.set_instance_transform(i, Transform3D(Basis.IDENTITY, batches[id][i]))
+		var mmi: MultiMeshInstance3D = MultiMeshInstance3D.new()
+		mmi.multimesh = mm
+		_fence_models.add_child(mmi)
 
 
 func _chunk_of(t: Vector2i) -> Vector2i:
@@ -244,7 +292,8 @@ func _build_wall_chunk(k: Vector2i, floors: Dictionary) -> void:
 		var g: float = float(_terrain.call("stand_height", t))
 		b.base = g
 		if bool(w["fence"]):
-			_fence(b, t, g)
+			if _fence_model(t) == "":
+				_fence(b, t, g)
 		elif bool(w["door"]):
 			_door_frame(b, t, g, hgt, thick, w)
 		else:
@@ -679,16 +728,37 @@ func _rebuild_sites(overlay: Dictionary, sites: Array) -> void:
 	var kinds: PackedInt64Array = overlay.get("site_kinds", PackedInt64Array())
 	var prog: PackedInt32Array = overlay.get("site_progress", PackedInt32Array())
 	var req: PackedInt32Array = overlay.get("site_required", PackedInt32Array())
-	var categories: Dictionary = _blueprint_categories()
+	var blueprints: Dictionary = _blueprint_rows()
 	var hgt: float = float(Data3D.param("structures.wall_height", 2.2))
 	var thick: float = float(Data3D.param("structures.wall_thickness", 0.35))
+	if _site_models == null:
+		_site_models = Node3D.new()
+		_site_models.name = "SiteModels"
+		add_child(_site_models)
+	for n: Node in _site_models.get_children():
+		n.queue_free()
+	var site_tiles: Dictionary = {}
+	for i: int in mini(xs.size(), ys.size()):
+		site_tiles[Vector2i(xs[i], ys[i])] = true
 	for i: int in mini(xs.size(), mini(ys.size(), mini(ws.size(), hs.size()))):
 		var rect: Rect2i = Rect2i(xs[i], ys[i], ws[i], hs[i])
 		var g: float = float(_terrain.call("stand_height", rect.position))
 		b.base = g
 		var p: float = clampf(float(prog[i]) / float(maxi(1, req[i])), 0.0, 1.0) if i < prog.size() and i < req.size() else 0.0
-		var cat: String = str(categories.get(int(kinds[i]) if i < kinds.size() else -1, ""))
-		if (cat == "wall" or cat == "door") and rect.size == Vector2i.ONE:
+		var bp: Dictionary = blueprints.get(int(kinds[i]) if i < kinds.size() else -1, {})
+		var cat: String = str(bp.get("completion_category", ""))
+		var stage: String = stage_model((Data3D.binding("sites.walls", {}) as Dictionary).get(str(bp.get("id", ""))), p)
+		if (cat == "wall" or cat == "door") and rect.size == Vector2i.ONE and stage != "":
+			# The stage models run along x: turn a piece whose run goes north–south.
+			var t: Vector2i = rect.position
+			var ns: bool = false
+			var ew: bool = false
+			for d: Vector2i in DIRS:
+				if _walls.has(t + d) or site_tiles.has(t + d):
+					ns = ns or d.x == 0
+					ew = ew or d.y == 0
+			_site_model(stage, Rect2(Vector2(t), Vector2.ONE), g, PI * 0.5 if ns and not ew else 0.0, false)
+		elif (cat == "wall" or cat == "door") and rect.size == Vector2i.ONE:
 			# A wall piece rises with its work; the first course shows as soon as work starts.
 			var risen: float = hgt * maxf(0.08, p)
 			var c: Color = Color(0.55, 0.42, 0.28)
@@ -704,6 +774,11 @@ func _rebuild_sites(overlay: Dictionary, sites: Array) -> void:
 		var d: Dictionary = s
 		var r2: Rect2i = Rect2i(int(d.get("x", 0)), int(d.get("y", 0)), int(d.get("width", 1)), int(d.get("height", 1)))
 		var g2: float = float(_terrain.call("stand_height", r2.position))
+		var built: float = float(d.get("completed_pieces", 0)) / float(maxi(1, int(d.get("total_pieces", 1))))
+		var model: String = stage_model((Data3D.binding("sites.templates", {}) as Dictionary).get(str(d.get("template_id", ""))), built)
+		if model != "":
+			_site_model(model, Rect2(r2), g2, float(int(d.get("rotation", 0))) * PI * 0.5, true)
+			continue
 		b.base = g2
 		_outline(b, r2, g2, sill.darkened(0.15), 0.35)
 	if _site_node == null:
@@ -711,6 +786,28 @@ func _rebuild_sites(overlay: Dictionary, sites: Array) -> void:
 		_site_node.name = "Sites"
 		add_child(_site_node)
 	_site_node.mesh = b.commit(wall_material)
+
+
+## The stage model of `stages` (a list foundation, half, … in bindings3d `sites`) at work progress `p` (0–1), else "".
+static func stage_model(stages: Variant, p: float) -> String:
+	if stages is not Array or (stages as Array).is_empty():
+		return ""
+	var n: int = (stages as Array).size()
+	return Data3D.first_model([(stages as Array)[clampi(int(p * n), 0, n - 1)]])
+
+
+## Model `id` centred on `rect` at ground `g`, turned by `yaw`; `fit` scales its manifest footprint into the rect.
+func _site_model(id: String, rect: Rect2, g: float, yaw: float, fit: bool) -> void:
+	var mi: MeshInstance3D = MeshInstance3D.new()
+	mi.mesh = Data3D.mesh(id)
+	var s: float = 1.0
+	var fp: Array = Data3D.model_row(id).get("footprint", [])
+	if fit and fp.size() >= 2:
+		var turned: bool = absf(sin(yaw)) > 0.5
+		s = minf(rect.size.x / maxf(0.5, float(fp[1] if turned else fp[0])), rect.size.y / maxf(0.5, float(fp[0] if turned else fp[1])))
+	var c: Vector2 = rect.get_center()
+	mi.transform = Transform3D(Basis(Vector3.UP, yaw).scaled(Vector3(s, s, s)), Vector3(c.x, g, c.y))
+	_site_models.add_child(mi)
 
 
 ## A footprint outline: low sills along the edges and taller stakes at the corners.
@@ -728,11 +825,11 @@ func _outline(b: Builder, r: Rect2i, g: float, c: Color, stake_h: float) -> void
 		b.stake(p.x, p.y, g - 0.05, g + stake_h + 0.15, 0.05, c.darkened(0.1))
 
 
-func _blueprint_categories() -> Dictionary:
+func _blueprint_rows() -> Dictionary:
 	var out: Dictionary = {}
 	for row: Variant in (get_parent().call("catalog") as Dictionary).get("blueprints", []):
 		if row is Dictionary:
-			out[int((row as Dictionary).get("code", -1))] = str((row as Dictionary).get("completion_category", ""))
+			out[int((row as Dictionary).get("code", -1))] = row
 	return out
 
 

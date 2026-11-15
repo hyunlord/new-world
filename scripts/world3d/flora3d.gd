@@ -8,9 +8,10 @@
 #   in `flora.bare_in_season` drops its canopy surfaces that season. Stumps: a tree that disappears from get_trees
 #   leaves a stump for the 2D binding `trees.stump_ticks` (the same rule as tree_layer.gd). Bushes and deadwood from
 #   get_resource_snapshot (bindings3d `resources.codes`), boulders/flint/clay from get_colony_overlay nodes (2D node
-#   binding structure → bindings3d `nodes.by_structure`), ore outcrops from get_outcrops with the vein surface
-#   tinted by the outcrop's catalogue tint material and a floating marker above each known deposit; a worked-out
-#   outcrop (`remaining` 0) is smaller, vein in bindings3d `outcrops.depleted_tint`, no marker.
+#   binding structure → bindings3d `nodes.by_structure`), ore outcrops from get_outcrops: the catalogue outcrop id →
+#   its own model (bindings3d `outcrops.by_id`, authored vein colour), else `outcrops.model` with the vein tinted by
+#   the outcrop's catalogue tint material, and a floating marker above each known deposit; a worked-out outcrop
+#   (`remaining` 0) keeps its model at `outcrops.depleted_scale`, vein in `outcrops.depleted_tint`, no marker.
 #   Trees within a few tiles of walls or floors are smaller (params3d `flora.near_built_scale` by distance) so the
 #   village reads from the overview.
 #   shaders/world3d/flora.gdshader adds a slow sway and winter snow on top surfaces.
@@ -232,14 +233,17 @@ func _build_ore(batches: Dictionary, outcrops: Dictionary) -> void:
 	var depleted_tint: String = str(Data3D.binding("outcrops.depleted_tint", ""))
 	var marker_points: Array[Transform3D] = []
 	var marker_colours: Array[Color] = []
+	var depleted_scale: float = float(Data3D.binding("outcrops.depleted_scale", 0.85))
 	for i: int in mini(ok.size(), mini(ox.size(), oy.size())):
-		var tint: String = _outcrop_tint(int(ok[i]))
+		var row: Dictionary = _outcrop_row(int(ok[i]))
+		var tint: String = _outcrop_tint(row)
+		var own: String = outcrop_model(str(row.get("id", "")))
 		var t4: Vector2i = Vector2i(int(ox[i]), int(oy[i]))
 		# A worked-out outcrop keeps its shape but loses the vein colour and the marker.
 		if i < left.size() and left[i] <= 0:
-			_add(batches, ore_model + "|vein=" + depleted_tint, t4, View.key_hash(_seed, t4.x, t4.y, 43), 0.0, 0.85)
+			_add(batches, (own if own != "" else ore_model) + "|vein=" + depleted_tint, t4, View.key_hash(_seed, t4.x, t4.y, 43), 0.0, depleted_scale)
 			continue
-		_add(batches, ore_model + "|vein=" + tint, t4, View.key_hash(_seed, t4.x, t4.y, 43), 0.0, 1.0)
+		_add(batches, (own + "|") if own != "" else (ore_model + "|vein=" + tint), t4, View.key_hash(_seed, t4.x, t4.y, 43), 0.0, 1.0)
 		var top: float = float(_terrain.call("stand_height", t4)) + float(Data3D.binding("outcrops.marker_height", 1.9))
 		marker_points.append(Transform3D(Basis.IDENTITY.scaled(Vector3(0.22, 0.32, 0.22)), Vector3(t4.x + 0.5, top, t4.y + 0.5)))
 		marker_colours.append(Data3D.material_colour(tint, "Mineral"))
@@ -269,15 +273,23 @@ func _variant_key(sp: String) -> String:
 	return "species=" + sp
 
 
-func _outcrop_tint(code: int) -> String:
-	var catalog: Dictionary = get_parent().call("catalog")
-	for row: Variant in catalog.get("outcrops", []):
+## The own model of catalogue outcrop `id` (bindings3d `outcrops.by_id`), else "".
+static func outcrop_model(id: String) -> String:
+	return Data3D.first_model((Data3D.binding("outcrops.by_id", {}) as Dictionary).get(id, ""))
+
+
+func _outcrop_row(code: int) -> Dictionary:
+	for row: Variant in (get_parent().call("catalog") as Dictionary).get("outcrops", []):
 		if row is Dictionary and int((row as Dictionary).get("code", -1)) == code:
-			var art: Variant = (row as Dictionary).get("art", {})
-			if art is Dictionary and (art as Dictionary).has("tint_material"):
-				return str(art["tint_material"])
-			return str((row as Dictionary).get("art_tint_material", (row as Dictionary).get("material", "")))
-	return ""
+			return row
+	return {}
+
+
+func _outcrop_tint(row: Dictionary) -> String:
+	var art: Variant = row.get("art", {})
+	if art is Dictionary and (art as Dictionary).has("tint_material"):
+		return str(art["tint_material"])
+	return str(row.get("art_tint_material", row.get("material", "")))
 
 
 func _update_stumps(now: Dictionary, tick: int) -> void:
