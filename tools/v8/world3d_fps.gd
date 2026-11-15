@@ -50,7 +50,7 @@ func _run() -> void:
 	for _i: int in 30:
 		await process_frame
 	var want: int = stress if save == "" and stress > 0 else -1
-	if want > 0 and (SimReads.read(world, "get_agent_snapshot").get("agent_ids", PackedInt64Array()) as PackedInt64Array).size() < mini(want, 5000) / 2:
+	if want > 0 and (SimReads.read(world, "get_agent_snapshot").get("agent_ids", PackedInt64Array()) as PackedInt64Array).size() < mini(want, 5000) >> 1:
 		push_error("world3d_fps: stress world not in place")
 		quit(1)
 		return
