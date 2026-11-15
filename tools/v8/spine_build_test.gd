@@ -762,20 +762,28 @@ func _livestock_button(cards: Control, key: String) -> Button:
 	return null
 
 # C2-b: the real bronze-chain checkpoints through the ordinary loader and native input only.
+# C3-b: the iron chain's manifests (00-iron-outcrop-found…) carry each stage's subject tile,
+# expected chapter facts and chapter id; the same loader, framing and native checks apply.
 func _metal() -> void:
+	var c3: bool = FileAccess.file_exists(_saves.path_join("00-iron-outcrop-found.json"))
+	var stages: Array[String] = ["00-outcrop-found", "01-mining", "02-smelter-working", "03-first-copper-ingot", "04-copper-axe-used", "05-tin-trade-card", "06-first-bronze-axe", "07-chapter-seven"]
+	if c3: stages = ["00-iron-outcrop-found", "01-iron-mining", "02-bloomery-working", "03-first-iron-bloom", "04-smithy-working", "05-iron-axe-in-hand", "06-cut-stone-house", "07-chapter-nine"]
 	var cards: Control = _main.get_node("UI/MuxHud/CardPanel") as Control
 	var goals: Control = _main.get_node("UI/MuxHud/Goals") as Control
 	var trade: Control = _main.get_node("UI/TradePanel") as Control
 	var why: Control = _main.get_node("UI/WhyPanel") as Control
 	for language: String in ["ko", "en"]:
 		_locale.call("set_language", language)
-		for stage: String in ["00-outcrop-found", "01-mining", "02-smelter-working", "03-first-copper-ingot", "04-copper-axe-used", "05-tin-trade-card", "06-first-bronze-axe", "07-chapter-seven"]:
+		for stage: String in stages:
 			if not (await _load(stage)): continue
 			var manifest: Dictionary = _manifests[stage]
 			var ui: Dictionary = manifest.get("ui", {})
-			var copper := Vector2i(int(manifest["copper"][0]), int(manifest["copper"][1]))
+			var outcrop: Array = manifest.get("outcrop", manifest.get("copper", [0, 0]))
+			var copper := Vector2i(int(outcrop[0]), int(outcrop[1]))
 			var smelter: Variant = ui.get("smelter_anchor")
 			var subject: Vector2i = Vector2i(int(smelter[0]), int(smelter[1])) if smelter != null else copper
+			var framed: Variant = ui.get("subject")
+			if framed != null: subject = Vector2i(int(framed[0]), int(framed[1]))
 			_camera.position = View.tile_centre(subject)
 			_camera.zoom = Vector2(2, 2)
 			_camera.force_update_scroll()
@@ -794,10 +802,15 @@ func _metal() -> void:
 				_check(stage + " localized Why " + event, not plain.contains("C1_") and not plain.contains(str(_locale.call("ltr", "UI_UNKNOWN"))), {"text": plain})
 				why.call("close")
 			var facts: Dictionary = SimReads.read(_world, "get_ui_facts")
-			_check(stage + " copper fact", bool(facts.get("first_copper_ingot", false)) == (stage >= "03"))
-			_check(stage + " bronze-use fact", bool(facts.get("first_bronze_tool_used", false)) == (stage == "07-chapter-seven"))
+			if c3:
+				var expected: Dictionary = manifest.get("facts", {})
+				for fact: String in expected:
+					_check(stage + " " + fact, bool(facts.get(fact, false)) == bool(expected[fact]), {"expected": expected[fact]})
+			else:
+				_check(stage + " copper fact", bool(facts.get("first_copper_ingot", false)) == (stage >= "03"))
+				_check(stage + " bronze-use fact", bool(facts.get("first_bronze_tool_used", false)) == (stage == "07-chapter-seven"))
 			var start: int = int(_world.call("get_command_log", 9223372036854775807).get("total", -1))
-			if stage == "00-outcrop-found":
+			if stage.begins_with("00-"):
 				await _key(KEY_F7)
 				await _key(KEY_9)
 				await _tile(copper)
@@ -822,13 +835,14 @@ func _metal() -> void:
 				_check("native Trade sends one accepted card trade", delta.get("kinds") == PackedStringArray(["TradeFromCard"]) and delta.get("accepted") == PackedByteArray([1]), delta)
 				var native: String = _out.path_join(language + "-native-trade.wsave")
 				_check("native card trade bytes equal the chain's", bool(SimReads.mutate(_world, "save_world", [native])) and FileAccess.get_file_as_bytes(native) == FileAccess.get_file_as_bytes(_saves.path_join("trade-committed.wsave")))
-			elif stage == "07-chapter-seven":
+			elif stage.begins_with("07-"):
 				await _key(KEY_G)
+				var chapter: String = str(ui.get("chapter", "bronze_village"))
 				var shown: bool = false
 				for index: int in goals.call("available_chapters"):
-					if bool(goals.call("select_chapter", index)) and str(goals.call("displayed_chapter").get("id", "")) == "bronze_village": shown = true; break
-				_check("chapter seven opens from the actual first bronze use", goals.visible and shown)
-				await _capture(language + "_chapter_seven")
+					if bool(goals.call("select_chapter", index)) and str(goals.call("displayed_chapter").get("id", "")) == chapter: shown = true; break
+				_check(chapter + " chapter opens from the actual first metal tool use", goals.visible and shown)
+				await _capture(language + ("_chapter_nine" if c3 else "_chapter_seven"))
 				goals.hide()
-			if stage != "00-outcrop-found" and stage != "05-tin-trade-card":
+			if not stage.begins_with("00-") and stage != "05-tin-trade-card":
 				_check(stage + " read-only inspection no commands", int(_world.call("get_command_log", 9223372036854775807).get("total", -1)) == start)
