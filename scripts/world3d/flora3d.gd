@@ -29,8 +29,12 @@ var _terrain: Node = null
 var _seed: int = 0
 ## Tile → Chebyshev distance (1…n) to the nearest wall or floor (see _built_distance).
 var _near_built: Dictionary = {}
-## Tree chunk → content hash of its last build (see _build_trees).
-var _tree_chunk_hash: Dictionary = {}
+## Tree diff state (see _build_trees): sorted `tile << 16 | row` keys and species of the last read, chunk → {tile:
+## species}, and the shared inputs of the last build.
+var _tree_keys: PackedInt64Array = PackedInt64Array()
+var _tree_species: PackedStringArray = PackedStringArray()
+var _chunk_trees: Dictionary = {}
+var _tree_shared: String = ""
 var _keys: Dictionary = {}
 var _stamp_key: String = ""
 var _slow_tick: int = -1000000
@@ -38,7 +42,6 @@ var _season: int = -1
 var _instances: Dictionary = {}
 var _materials: Dictionary = {}
 var _variants: Dictionary = {}
-var _previous_trees: Dictionary = {}
 var _stumps: Dictionary = {}
 var _chunk: int = 32
 var _markers: MultiMeshInstance3D = null
@@ -52,8 +55,9 @@ func setup(world_sim: Node, terrain: Node) -> void:
 
 func _on_world_reset() -> void:
 	_keys.clear()
-	_tree_chunk_hash.clear()
-	_previous_trees.clear()
+	_tree_keys = PackedInt64Array()
+	_chunk_trees.clear()
+	_tree_shared = ""
 	_stumps.clear()
 
 
@@ -86,7 +90,7 @@ func _process(_delta: float) -> void:
 	if str(_keys.get("trees", "")) != tkey:
 		_keys["trees"] = tkey
 		var batches: Dictionary = {}
-		var first: bool = _tree_chunk_hash.is_empty()
+		var first: bool = _tree_keys.is_empty()
 		var changed: Dictionary = _build_trees(batches, SimReads.read(_world_sim, "get_trees"), tick, "%d|%d" % [season, int(_keys.get("built", 0))])
 		# The first build (load, world reset) replaces every tree batch; later builds only the changed chunks.
 		if first:
@@ -163,7 +167,8 @@ func _stump_epoch(time: Dictionary) -> int:
 
 
 ## Batches only the chunks whose trees, stumps or shared inputs (`shared`: season, built space) changed since the
-## last build, and returns those chunks (a felled tree costs one chunk, not the whole forest).
+## last build and returns them (a felled tree costs one chunk, not the forest). Trees are diffed by a native sort of
+## `tile << 16 | row` keys against the previous read, so a change costs a few milliseconds even with 10 000 trees.
 func _build_trees(batches: Dictionary, trees: Dictionary, tick: int, shared: String) -> Dictionary:
 	var jitter: float = float(Data3D.param("flora.jitter_tiles", 0.22))
 	var smin: float = float(Data3D.param("flora.scale_min", 0.85))
@@ -171,47 +176,82 @@ func _build_trees(batches: Dictionary, trees: Dictionary, tick: int, shared: Str
 	var large_permille: int = int((ArtData.bindings().get("trees", {}) as Dictionary).get("large_permille", 600))
 	var large_scale: float = float(Data3D.param("flora.large_scale", 1.18))
 	var near_scale: Array = Data3D.param("flora.near_built_scale", [0.55, 0.7, 0.85])
-	# Trees.
 	var xs: PackedInt32Array = trees.get("xs", PackedInt32Array())
 	var ys: PackedInt32Array = trees.get("ys", PackedInt32Array())
 	var species: PackedStringArray = trees.get("species", PackedStringArray())
-	var now: Dictionary = {}
-	var by_chunk: Dictionary = {}
-	for i: int in mini(xs.size(), ys.size()):
-		var t: Vector2i = Vector2i(xs[i], ys[i])
-		now[t] = species[i] if i < species.size() else ""
-		var c: Vector2i = Vector2i(floori(float(t.x) / _chunk), floori(float(t.y) / _chunk))
-		if not by_chunk.has(c):
-			by_chunk[c] = []
-		(by_chunk[c] as Array).append(t)
-	_update_stumps(now, tick)
-	var stumps_by_chunk: Dictionary = {}
-	for t: Vector2i in _stumps:
-		var c: Vector2i = Vector2i(floori(float(t.x) / _chunk), floori(float(t.y) / _chunk))
-		if not stumps_by_chunk.has(c):
-			stumps_by_chunk[c] = []
-		(stumps_by_chunk[c] as Array).append(t)
+	var n: int = mini(xs.size(), mini(ys.size(), species.size()))
+	var keys: PackedInt64Array = PackedInt64Array()
+	keys.resize(n)
+	for i: int in n:
+		keys[i] = (((xs[i] << 10) | ys[i]) << 16) | i
+	keys.sort()
 	var changed: Dictionary = {}
-	var hashes: Dictionary = {}
-	for c: Vector2i in by_chunk.keys() + stumps_by_chunk.keys() + _tree_chunk_hash.keys():
-		if hashes.has(c):
-			continue
-		var tiles: Array = by_chunk.get(c, [])
-		var sps: Array = []
-		for t: Vector2i in tiles:
-			sps.append(now[t])
-		hashes[c] = hash([shared, tiles, sps, stumps_by_chunk.get(c, [])])
-		if int(_tree_chunk_hash.get(c, 0)) != int(hashes[c]):
+	if shared != _tree_shared or _tree_keys.is_empty():
+		# Everything: first build, world reset, season or built space changed.
+		for c: Vector2i in _chunk_trees:
 			changed[c] = true
-	_tree_chunk_hash = hashes
+		_chunk_trees.clear()
+		for k: int in keys:
+			_set_tree(_tile_of(k), species[k & 0xFFFF], changed)
+	else:
+		var i: int = 0
+		var j: int = 0
+		while i < _tree_keys.size() or j < keys.size():
+			var old_tile: int = (_tree_keys[i] >> 16) if i < _tree_keys.size() else 1 << 40
+			var new_tile: int = (keys[j] >> 16) if j < keys.size() else 1 << 40
+			if old_tile == new_tile:
+				if _tree_species[_tree_keys[i] & 0xFFFF] != species[keys[j] & 0xFFFF]:
+					_set_tree(_tile_of(keys[j]), species[keys[j] & 0xFFFF], changed)
+				i += 1
+				j += 1
+			elif new_tile < old_tile:
+				_set_tree(_tile_of(keys[j]), species[keys[j] & 0xFFFF], changed)
+				j += 1
+			else:
+				var t: Vector2i = _tile_of(_tree_keys[i])
+				_set_tree(t, "", changed)
+				_stumps[t] = tick
+				i += 1
+	_tree_keys = keys
+	_tree_species = species
+	_tree_shared = shared
+	var stump_ticks: int = int((ArtData.bindings().get("trees", {}) as Dictionary).get("stump_ticks", 1440))
+	for t: Vector2i in _stumps.keys():
+		var c: Vector2i = _chunk_of(t)
+		if tick - int(_stumps[t]) > stump_ticks or (_chunk_trees.has(c) and (_chunk_trees[c] as Dictionary).has(t)):
+			_stumps.erase(t)
+			changed[c] = true
 	for c: Vector2i in changed:
-		for t: Vector2i in by_chunk.get(c, []):
-			_add_tree(batches, t, str(now[t]), jitter, smin, smax, large_permille, large_scale, near_scale)
+		var row: Dictionary = _chunk_trees.get(c, {})
+		for t: Vector2i in row:
+			_add_tree(batches, t, str(row[t]), jitter, smin, smax, large_permille, large_scale, near_scale)
 	var stump_model: String = str(Data3D.binding("flora.stump", ""))
-	for c: Vector2i in changed:
-		for t: Vector2i in stumps_by_chunk.get(c, []):
+	for t: Vector2i in _stumps:
+		if changed.has(_chunk_of(t)):
 			_add(batches, stump_model + "|", t, View.key_hash(_seed, t.x, t.y, 31), jitter, 1.0)
 	return changed
+
+
+## Sets (species) or clears ("") the tree on tile `t` in its chunk map and marks the chunk changed.
+func _set_tree(t: Vector2i, sp: String, changed: Dictionary) -> void:
+	var c: Vector2i = _chunk_of(t)
+	changed[c] = true
+	if sp.is_empty():
+		if _chunk_trees.has(c):
+			(_chunk_trees[c] as Dictionary).erase(t)
+		return
+	if not _chunk_trees.has(c):
+		_chunk_trees[c] = {}
+	_chunk_trees[c][t] = sp
+
+
+func _chunk_of(t: Vector2i) -> Vector2i:
+	return Vector2i(floori(float(t.x) / _chunk), floori(float(t.y) / _chunk))
+
+
+static func _tile_of(key: int) -> Vector2i:
+	var tile: int = key >> 16
+	return Vector2i(tile >> 10, tile & 0x3FF)
 
 
 func _add_tree(batches: Dictionary, t: Vector2i, sp: String, jitter: float, smin: float, smax: float, large_permille: int, large_scale: float, near_scale: Array) -> void:
@@ -331,18 +371,6 @@ func _outcrop_tint(row: Dictionary) -> String:
 	if art is Dictionary and (art as Dictionary).has("tint_material"):
 		return str(art["tint_material"])
 	return str(row.get("art_tint_material", row.get("material", "")))
-
-
-func _update_stumps(now: Dictionary, tick: int) -> void:
-	var stump_ticks: int = int((ArtData.bindings().get("trees", {}) as Dictionary).get("stump_ticks", 1440))
-	if not _previous_trees.is_empty():
-		for t: Vector2i in _previous_trees:
-			if not now.has(t):
-				_stumps[t] = tick
-	for t: Vector2i in _stumps.keys():
-		if now.has(t) or tick - int(_stumps[t]) > stump_ticks:
-			_stumps.erase(t)
-	_previous_trees = now
 
 
 func _add(batches: Dictionary, key: String, t: Vector2i, h: int, jitter: float, size: float) -> void:

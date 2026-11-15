@@ -153,9 +153,9 @@ func _poll_space() -> void:
 	var fields: Dictionary = SimReads.read(_world_sim, "get_field_tiles")
 	var fxs: PackedInt64Array = fields.get("xs", PackedInt64Array())
 	var fphases: PackedInt64Array = fields.get("phases", PackedInt64Array())
-	# Camp clearings follow the lit hearths of get_building_snapshot (a hearth can appear after the first read).
-	var buildings: Dictionary = SimReads.read(_world_sim, "get_building_snapshot")
-	var field_key: String = "%d:%d:%d:%d" % [fxs.size(), hash(fphases), hash(fxs), hash([buildings.get("kinds"), buildings.get("xs"), buildings.get("ys")])]
+	# Only which tiles are fields colours the ground (not their phase), and only lit hearths clear a camp: key on
+	# those, so growing crops and new bedrolls do not recompute the whole map.
+	var field_key: String = "%d:%d:%d" % [fxs.size(), hash(fxs), hash(fields.get("ys"))] + ":" + str(hash(_lit_hearths()))
 	if version == _space_version and field_key == _field_key and not _raise.is_empty():
 		return
 	var old_raise: PackedFloat32Array = _raise.duplicate()
@@ -219,6 +219,19 @@ func _compute_clearing() -> void:
 				var edge: float = float(core) + float(reach - core) * View.value_noise(seed, x, y, 3, 11)
 				if d <= edge:
 					_clearing[Vector2i(x, y)] = maxf(float(_clearing.get(Vector2i(x, y), 0.0)), clampf((edge - d) / 2.0, 0.0, 1.0))
+
+
+## Tiles of the camp-marking (lit) hearths of get_building_snapshot.
+func _lit_hearths() -> Array[Vector2i]:
+	var buildings: Dictionary = SimReads.read(_world_sim, "get_building_snapshot")
+	var bx: PackedInt32Array = buildings.get("xs", PackedInt32Array())
+	var by: PackedInt32Array = buildings.get("ys", PackedInt32Array())
+	var bk: PackedByteArray = buildings.get("kinds", PackedByteArray())
+	var out: Array[Vector2i] = []
+	for i: int in mini(bk.size(), mini(bx.size(), by.size())):
+		if bool(_building_binding(int(bk[i])).get("light", false)):
+			out.append(Vector2i(bx[i], by[i]))
+	return out
 
 
 static func _clearing_param(key: String, fallback: Variant) -> Variant:
