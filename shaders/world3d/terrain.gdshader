@@ -1,6 +1,6 @@
 // terrain.gdshader — the 3D view's ground (scripts/world3d/terrain3d.gd, M3D-1 scope 3/8/9).
 // Albedo is the per-corner vertex colour (terrain code colour, clearing, floors, fields) times the season tint,
-// broken up by a fine value noise; snow covers upward faces by `snow` (winter). `overlay_tex` is one texel per map
+// broken up by a fine value noise; slopes steeper than ~40° turn to `cliff_colour` rock; snow covers upward faces by `snow` (winter). `overlay_tex` is one texel per map
 // tile (RGBA fill; alpha 0 = nothing) for the overlays and order feedback; `frame_tex` marks tiles whose outline is
 // drawn (R = outline strength) so hover, drag rectangles and refused tiles read as framed tiles.
 shader_type spatial;
@@ -13,6 +13,7 @@ uniform sampler2D overlay_tex : filter_nearest, repeat_disable, source_color;
 uniform sampler2D frame_tex : filter_nearest, repeat_disable;
 uniform float overlay_on = 0.0;
 uniform float grid_on = 0.0;
+uniform vec3 cliff_colour : source_color = vec3(0.43, 0.39, 0.34);
 
 varying vec3 world_pos;
 varying vec3 world_normal;
@@ -48,6 +49,8 @@ void fragment() {
 	float n = vnoise(world_pos.xz * 3.0) * 0.6 + vnoise(world_pos.xz * 11.0) * 0.4;
 	c *= 0.90 + 0.20 * n;
 	float up = clamp(world_normal.y, 0.0, 1.0);
+	// Steep slopes show bare rock instead of grass.
+	c = mix(c, cliff_colour * (0.85 + 0.3 * n), 1.0 - smoothstep(0.62, 0.8, up));
 	float cover = snow * smoothstep(0.55, 0.9, up) * smoothstep(0.25, 0.55, n + snow * 0.4);
 	c = mix(c, vec3(0.80, 0.85, 0.92), cover);
 	vec2 uv = world_pos.xz / map_size;

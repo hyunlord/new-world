@@ -8,7 +8,9 @@ For every character in assets/3d/models/manifest.json (family == "character") ch
   * <id>_static.glb: one mesh primitive, not skinned, has POSITION/NORMAL/TEXCOORD_1/COLOR_0,
     vertex count == width, TEXCOORD_1 maps each vertex to a unique texel, V == 0.5
   * frame 0 of `idle` matches the static mesh positions within 5 cm (per vertex, via TEXCOORD_1)
-  * <id>.glb (skinned) has a skin and exactly the expected animation names
+  * the manifest `file` glb (skinned) has a skin and exactly the non-alias clip names
+  * textured characters (set B, chars_b.py): TEXCOORD_0 present, atlas png exists, source_commit set,
+    alias clips ("alias_of") share their target's rows and are skipped by the contiguity check
 Exit code 1 on any failure.
 """
 import json
@@ -57,7 +59,8 @@ def accessor(gltf, binc, idx):
     return out
 
 
-def check(cid, expected_anims):
+def check(cid, entry):
+    expected_anims = entry["animations"]
     errs = []
     meta = json.load(open(os.path.join(ASSETS, "vat", f"{cid}_vat.json")))
     for k in ("width", "vertex_count", "frames", "fps", "normals_offset", "clips", "bounds_min",
@@ -90,7 +93,12 @@ def check(cid, expected_anims):
                 errs.append(f"row {r} texel {i} w != 1")
                 break
     nxt = 0
+    clips = {k: c for k, c in meta["clips"].items() if "alias_of" not in c}
     for name, c in meta["clips"].items():
+        t = clips.get(c.get("alias_of"))
+        if "alias_of" in c and (t is None or (t["start"], t["count"]) != (c["start"], c["count"])):
+            errs.append(f"alias {name} does not match its target {c['alias_of']}")
+    for name, c in clips.items():
         if c["start"] != nxt or c["count"] <= 0:
             errs.append(f"clip {name} not contiguous")
         nxt = c["start"] + c["count"]
@@ -106,6 +114,14 @@ def check(cid, expected_anims):
     if gltf.get("skins"):
         errs.append("static glb is skinned")
     attrs = prims[0]["attributes"]
+    if meta.get("textured"):
+        if "TEXCOORD_0" not in attrs:
+            errs.append("textured static glb missing TEXCOORD_0 (atlas UVs)")
+        atlas = os.path.join(ASSETS, "vat", meta.get("atlas", ""))
+        if not os.path.isfile(atlas) or open(atlas, "rb").read(8) != b"\x89PNG\r\n\x1a\n":
+            errs.append(f"atlas {meta.get('atlas')} missing or not a png")
+        if not meta.get("source_commit"):
+            errs.append("textured json missing source_commit")
     for a in ("POSITION", "NORMAL", "TEXCOORD_1", "COLOR_0"):
         if a not in attrs:
             errs.append(f"static glb missing {a}")
@@ -136,12 +152,12 @@ def check(cid, expected_anims):
     if worst > 0.05:
         errs.append(f"idle frame 0 differs from static mesh by {worst:.3f} m (> 0.05)")
 
-    sk, _ = read_glb(os.path.join(ASSETS, "models", f"{cid}.glb"))
+    sk, _ = read_glb(os.path.join(ASSETS, entry["file"]))
     if not sk.get("skins"):
         errs.append("skinned glb has no skin")
     names = sorted(a.get("name") for a in sk.get("animations", []))
-    if names != sorted(expected_anims):
-        errs.append(f"skinned glb animations {names} != {sorted(expected_anims)}")
+    if names != sorted(clips):
+        errs.append(f"skinned glb animations {names} != {sorted(clips)}")
     print(f"{cid}: width={w} frames={frames} clips={ {k: v['count'] for k, v in meta['clips'].items()} } "
           f"idle0-vs-static max err={worst * 100:.2f} cm bounds_min={meta['bounds_min']} "
           f"-> {'OK' if not errs else 'FAIL'}")
@@ -157,7 +173,7 @@ def main():
         print("no characters in manifest")
         return 1
     for cid in want:
-        errs = check(cid, chars[cid]["animations"])
+        errs = check(cid, chars[cid])
         for e in errs:
             print(f"  FAIL {cid}: {e}")
         failed |= bool(errs)

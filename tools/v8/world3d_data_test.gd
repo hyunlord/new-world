@@ -1,8 +1,8 @@
 # world3d_data_test.gd — M3D-1 headless checks of the 3D view's data contract (no window needed; nothing drawn).
 # Purpose: (1) every model a binding in assets/3d/bindings3d.json names exists in assets/3d/models (or is a VAT
 #   character), and every family has a fallback; (2) a missing model id yields the placeholder mesh, never null
-#   (data-only: a new content name without a model still draws); (3) roof rectangle decomposition covers an L-shaped
-#   and a ring-with-hole room exactly once; (4) VAT characters load with sizes matching their JSON; (5) the 3D scene
+#   (data-only: a new content name without a model still draws); (3) roofs of two rooms across one wall share no cell
+#   and an L room's hipped height field is finite and rises from the wall line; (4) VAT characters load with sizes matching their JSON; (5) the 3D scene
 #   boots headless with a real WorldSimNode and builds its terrain, walls and roofs for the default world without a
 #   script error. Prints `W3D_DATA <name> PASS|FAIL <detail>` and `W3D_DATA_DONE failures=<n>`; quits 1 on failure.
 #   `Godot --headless --path . --script res://tools/v8/world3d_data_test.gd -- --renderer=3d`
@@ -59,17 +59,30 @@ func _run() -> void:
 	# 2 data only: an unknown model id draws the placeholder.
 	var m: Mesh = Data3D.mesh("no_such_model_m3d1")
 	_check("unknown_model_placeholder", m != null and m.get_surface_count() > 0)
-	# 3 roof rectangles.
-	var l_shape: Array = []
-	for t: Vector2i in [Vector2i(0, 0), Vector2i(1, 0), Vector2i(2, 0), Vector2i(0, 1), Vector2i(0, 2)]:
-		l_shape.append(t)
-	_check("roof_rects_l_shape", _covers_once(Structures.rectangles(l_shape), l_shape), str(Structures.rectangles(l_shape)))
-	var ring: Array = []
-	for y: int in 4:
-		for x: int in 4:
-			if not (x in [1, 2] and y in [1, 2]):
-				ring.append(Vector2i(x, y))
-	_check("roof_rects_ring", _covers_once(Structures.rectangles(ring), ring), "%d rects" % Structures.rectangles(ring).size())
+	# 3 roofs: two rooms either side of one wall get disjoint roof cells (no roof through another); an L room's
+	# heights are 0 on the wall line and rise inward.
+	var room_a: Array = [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1)]
+	var room_b: Array = [Vector2i(3, 0), Vector2i(4, 0), Vector2i(3, 1), Vector2i(4, 1)]
+	var claimed: Dictionary = {}
+	for c: Vector2i in Structures.footprint_cells(room_a):
+		claimed[c] = 1
+	for c: Vector2i in Structures.footprint_cells(room_b):
+		claimed[c] = 2
+	var cells_a: Dictionary = Structures.roof_cells(room_a, 1, claimed)
+	var cells_b: Dictionary = Structures.roof_cells(room_b, 2, claimed)
+	var shared: int = 0
+	for c: Vector2i in cells_a:
+		if cells_b.has(c):
+			shared += 1
+	_check("roofs_disjoint", shared == 0 and not cells_a.is_empty(), "%d shared cells" % shared)
+	var l_shape: Array = [Vector2i(0, 0), Vector2i(1, 0), Vector2i(2, 0), Vector2i(0, 1), Vector2i(0, 2)]
+	var h: Dictionary = Structures.roof_heights(Structures.roof_cells(l_shape, 1, {}))
+	var finite: bool = true
+	var top: float = -INF
+	for v: Vector2i in h:
+		finite = finite and is_finite(float(h[v]))
+		top = maxf(top, float(h[v]))
+	_check("roof_heightfield", finite and top >= 1.0 and float(h[Vector2i(-1, -1)]) == 0.0, "max %.1f" % top)
 	# 4 VAT characters.
 	var bad: Array[String] = []
 	for file: String in DirAccess.get_files_at("res://assets/3d/vat"):
@@ -95,15 +108,3 @@ func _run() -> void:
 		_check("projection_provider", px.x > 0.0 and px.y > 0.0, str(px))
 	print("W3D_DATA_DONE failures=%d" % _failures)
 	quit(1 if _failures > 0 else 0)
-
-
-static func _covers_once(rects: Array[Rect2i], tiles: Array) -> bool:
-	var seen: Dictionary = {}
-	for r: Rect2i in rects:
-		for y: int in range(r.position.y, r.end.y):
-			for x: int in range(r.position.x, r.end.x):
-				var t: Vector2i = Vector2i(x, y)
-				if seen.has(t) or not tiles.has(t):
-					return false
-				seen[t] = true
-	return seen.size() == tiles.size()

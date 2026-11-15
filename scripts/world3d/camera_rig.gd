@@ -3,7 +3,7 @@
 #   ladder, Home/H, map clamping and every panel that centres the camera keep working. This rig follows it: the look
 #   target is Camera2D.position / 64 (1 tile = 1 unit, x → X, y → Z) on the terrain, the distance makes one tile about
 #   64·zoom screen pixels at the target (so 2D pan speeds and drags feel the same), narrow FOV (params3d
-#   `camera.fov_deg`, 30°) and pitch `camera.pitch_deg` (50°) for a near-isometric look. Q/E turn the view in 90° steps,
+#   `camera.fov_deg`, 30°) and pitch `camera.pitch_deg` (45°) for a near-isometric look. Q/E turn the view in 90° steps,
 #   eased over `camera.rotate_seconds`; the 2D camera's `screen_rotation` follows, so W stays "up on screen". The 3D
 #   zoom ladder is params3d `camera.zooms` (Z1–Z5, Z5 = close-up cutaway). Each frame it also sets the global
 #   shader parameters of the flora x-ray (trees between the camera and the target dissolve; `camera.xray_radius`).

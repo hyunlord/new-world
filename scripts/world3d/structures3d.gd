@@ -3,15 +3,16 @@
 # Purpose: every wall tile of get_space is extruded from the tile centre toward each wall/door/fence neighbour
 #   (params3d `structures.wall_height`, `wall_thickness`), so corners, T and X joins come out of the geometry; the
 #   profile comes from the tile's construction style through the 2D material resolver (scripts/world/art/
-#   material_resolver.gd) and bindings3d `walls.by_style`: `log` stacks octagonal logs that cross and overhang at
-#   corners, `block` is a masonry slab with mortar lines in the shader, `palisade` a row of pointed stakes. Colour is
+#   material_resolver.gd) and bindings3d `walls.by_style`: `log` stacks octagonal logs that cross and overhang
+#   (`structures.log_overhang`) only at free corners (a T or X join stops flush), `block` is a masonry slab with mortar lines in the shader, `palisade` a row of pointed stakes. Colour is
 #   the wall material (bindings3d `materials`) with the resolver's lightness tint. Wall tiles flagged as openings
 #   (`wall_is_door`) with an opening neighbour are fence runs (posts and two rails); other openings are doors: two
-#   posts and a lintel in the wall, and a door leaf (model `door`) that swings open while a person stands on it. A
+#   posts and a lintel in the wall, and a door leaf (model `door`) that swings open while a person stands on it and is cut down with the walls. A
 #   finished hut (2D building binding with a `ring`) gets its ring of walls and its door from that binding. Floors are
-#   thin slabs in the floor material. Roofs: each roofed room (get_rooms, not dug) is split into rectangles (greedy,
-#   row-major) and each rectangle gets a gable along its long side from the wall centre lines, eaves
-#   `structures.roof_overhang` beyond the walls at `structures.roof_pitch_deg`; the cover (thatch, bark, plank:
+#   thin slabs in the floor material. Roofs: each roofed room (get_rooms, not dug) gets one hipped roof, a height field
+#   over half-metre cells that rises from the wall line at `structures.roof_pitch_deg` (capped at
+#   `structures.roof_max_rise`) with a one-cell overhang that stops short of any other room, so no roof passes
+#   through another; the cover (thatch, bark, plank:
 #   bindings3d `roofs`) follows the era of the template site that holds the room, else the room's wall category.
 #   Cutaway: at the closest zoom (`structures.cutaway_zoom`) or with the room overlay (R, "방 보기") every roof
 #   dissolves and walls drop to `structures.cutaway_wall_height`; with a room selected (RoomPanel) or a person in the
@@ -285,8 +286,9 @@ func _wall(b: Builder, t: Vector2i, g: float, hgt: float, thick: float, w: Dicti
 			var r: float = half
 			var count: int = maxi(3, roundi(hgt / (2.0 * r)))
 			var step: float = hgt / float(count)
-			var corner: bool = arms.size() != 2 or arms[0] + arms[1] != Vector2i.ZERO
-			var over: float = r * 1.7 if corner else 0.0
+			# Log ends: an L corner lets both runs cross and stick out `structures.log_overhang` past the outer face; at a
+			# T or X join only the through run is continuous and the side runs butt into its face (no plus sign).
+			var over: float = half + float(Data3D.param("structures.log_overhang", 0.15))
 			var axes: Array[Vector2i] = []
 			for d: Vector2i in arms:
 				var ax: Vector2i = Vector2i(absi(d.x), absi(d.y))
@@ -299,8 +301,11 @@ func _wall(b: Builder, t: Vector2i, g: float, hgt: float, thick: float, w: Dicti
 				var lift: float = 0.0 if ax.x == 1 else step * 0.5
 				var neg: bool = arms.has(-ax) or arms.size() == 0
 				var pos: bool = arms.has(ax) or arms.size() == 0
-				var from: float = -0.5 if neg else -over
-				var to: float = 0.5 if pos else over
+				var other: Vector2i = Vector2i(ax.y, ax.x)
+				var through_other: bool = arms.has(other) and arms.has(-other)
+				var stub: float = half if through_other else over
+				var from: float = -0.5 if neg else -stub
+				var to: float = 0.5 if pos else stub
 				if arms.size() == 0:
 					from = -0.3
 					to = 0.3
@@ -452,7 +457,9 @@ func _update_doors() -> void:
 		var cut: float = _cut_all
 		if _cut_rect.has_point(Vector2(t.x + 0.5, t.y + 0.5)):
 			cut = minf(cut, _cut_rect_h)
-		_door_nodes[i].visible = cut > door_h
+		# The cutaway lowers the leaf with the walls instead of leaving an empty gap.
+		var keep: float = clampf(cut / door_h, 0.05, 1.0)
+		_door_nodes[i].transform = _door_nodes[i].transform.scaled_local(Vector3(1.0, keep, 1.0))
 
 
 # --- roofs -------------------------------------------------------------------------------------------------
@@ -477,10 +484,16 @@ func _rebuild_roofs(rooms: Dictionary, sites: Array) -> void:
 		if not tiles_of.has(trs[i]):
 			tiles_of[trs[i]] = []
 		(tiles_of[trs[i]] as Array).append(t)
+	var roofed_ids: Array[int] = []
+	var claimed: Dictionary = {}
 	for i: int in ids.size():
-		var id: int = ids[i]
-		if i >= roofed.size() or roofed[i] != 1 or (i < dug.size() and dug[i] == 1) or not tiles_of.has(id):
+		var rid: int = ids[i]
+		if i >= roofed.size() or roofed[i] != 1 or (i < dug.size() and dug[i] == 1) or not tiles_of.has(rid):
 			continue
+		roofed_ids.append(rid)
+		for c: Vector2i in footprint_cells(tiles_of[rid]):
+			claimed[c] = rid
+	for id: int in roofed_ids:
 		var tiles: Array = tiles_of[id]
 		var bounds: Rect2i = Rect2i(tiles[0], Vector2i.ONE)
 		for t: Vector2i in tiles:
@@ -494,7 +507,7 @@ func _rebuild_roofs(rooms: Dictionary, sites: Array) -> void:
 		mat.set_shader_parameter("cover", Data3D.colour((Data3D.binding("roofs.colours", {}) as Dictionary).get(cover, []), Color(0.7, 0.6, 0.35)))
 		mat.set_shader_parameter("pattern", int((Data3D.binding("roofs.patterns", {}) as Dictionary).get(cover, 0)))
 		mat.set_shader_parameter("fade", float(_roof_fade.get(id, 1.0)))
-		mi.mesh = _roof_mesh(tiles, _gable_colour(tiles), mat)
+		mi.mesh = _roof_mesh(tiles, id, claimed, mat)
 		add_child(mi)
 		_roofs[id] = mi
 
@@ -519,116 +532,137 @@ func _roof_cover(tiles: Array, sites: Array) -> String:
 	return str(Data3D.binding("roofs.fallback", ""))
 
 
-func _gable_colour(tiles: Array) -> Color:
+## The half-metre cells a room's roof covers out to the wall centre lines (room tiles grown by half a tile).
+static func footprint_cells(tiles: Array) -> Dictionary:
+	var out: Dictionary = {}
 	for t: Vector2i in tiles:
-		for dd: Vector2i in DIRS:
-			var w: Variant = _walls.get(t + dd)
-			if w is Dictionary and not bool((w as Dictionary)["door"]):
-				return w["colour"]
-	return Color(0.5, 0.4, 0.3)
-
-
-## Greedy row-major split of a tile set into rectangles.
-static func rectangles(tiles: Array) -> Array[Rect2i]:
-	var left: Dictionary = {}
-	for t: Vector2i in tiles:
-		left[t] = true
-	var ordered: Array = tiles.duplicate()
-	ordered.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return a.y < b.y or (a.y == b.y and a.x < b.x))
-	var out: Array[Rect2i] = []
-	for t: Vector2i in ordered:
-		if not left.has(t):
-			continue
-		var w: int = 1
-		while left.has(t + Vector2i(w, 0)):
-			w += 1
-		var h: int = 1
-		var grow: bool = true
-		while grow:
-			for x: int in w:
-				if not left.has(t + Vector2i(x, h)):
-					grow = false
-					break
-			if grow:
-				h += 1
-		for y: int in h:
-			for x: int in w:
-				left.erase(t + Vector2i(x, y))
-		out.append(Rect2i(t, Vector2i(w, h)))
+		for y: int in range(2 * t.y - 1, 2 * t.y + 3):
+			for x: int in range(2 * t.x - 1, 2 * t.x + 3):
+				out[Vector2i(x, y)] = true
 	return out
 
 
-func _roof_mesh(tiles: Array, gable_colour: Color, mat: Material) -> ArrayMesh:
+## The roof cells of a room: its footprint plus a one-cell (0.5 m) overhang ring, except where the ring would enter
+## another roofed room's footprint (`claimed`: cell → room id). Two rooms' roofs therefore never share a cell.
+static func roof_cells(tiles: Array, room_id: int, claimed: Dictionary) -> Dictionary:
+	var foot: Dictionary = footprint_cells(tiles)
+	var out: Dictionary = foot.duplicate()
+	for c: Vector2i in foot:
+		for dy: int in [-1, 0, 1]:
+			for dx: int in [-1, 0, 1]:
+				var n: Vector2i = c + Vector2i(dx, dy)
+				if not foot.has(n) and not _near_other(n, room_id, claimed):
+					out[n] = false
+	return out
+
+
+## Whether cell `n` is, or touches, another room's footprint (an overhang there would cross that room's roof).
+static func _near_other(n: Vector2i, room_id: int, claimed: Dictionary) -> bool:
+	for dy: int in [-1, 0, 1]:
+		for dx: int in [-1, 0, 1]:
+			if int(claimed.get(n + Vector2i(dx, dy), room_id)) != room_id:
+				return true
+	return false
+
+
+## A hipped roof as one height field over the roof cells (lattice every 0.5 m): height rises with the Chebyshev
+## distance from the wall line, so L shapes get hips and valleys and the surface is single-valued (it cannot pass
+## through itself); the overhang ring slopes on down past the walls. Lifted so the wall tops stay under it.
+func _roof_mesh(tiles: Array, room_id: int, claimed: Dictionary, mat: Material) -> ArrayMesh:
 	var b: Builder = Builder.new()
 	var hgt: float = float(Data3D.param("structures.wall_height", 2.2))
-	var over: float = float(Data3D.param("structures.roof_overhang", 0.3)) + float(Data3D.param("structures.wall_thickness", 0.35)) * 0.5
+	var half_wall: float = float(Data3D.param("structures.wall_thickness", 0.35)) * 0.5
 	var pitch: float = tan(deg_to_rad(float(Data3D.param("structures.roof_pitch_deg", 38.0))))
 	var thick: float = float(Data3D.param("structures.roof_thickness", 0.12))
+	var rise_max: float = float(Data3D.param("structures.roof_max_rise", 2.4))
 	var ground: float = -INF
 	for t: Vector2i in tiles:
 		ground = maxf(ground, float(_terrain.call("stand_height", t)))
 		for dd: Vector2i in DIRS:
 			if _walls.has(t + dd):
 				ground = maxf(ground, float(_terrain.call("stand_height", t + dd)))
-	var top: float = ground + hgt
-	_roof_top[_tile_room.get(tiles[0], -1)] = top
+	var top: float = ground + hgt + half_wall * pitch + 0.03
+	_roof_top[room_id] = top
 	b.base = ground
-	# One ridge direction per room (its bounding box's long side), so the parts of an L meet in valleys.
-	var bounds: Rect2i = Rect2i(tiles[0], Vector2i.ONE)
-	for t: Vector2i in tiles:
-		bounds = bounds.expand(t).expand(t + Vector2i.ONE)
-	var along_x: bool = bounds.size.x >= bounds.size.y
-	for r: Rect2i in rectangles(tiles):
-		# Wall centre lines lie half a tile outside the room tiles.
-		var x0: float = r.position.x - 0.5
-		var x1: float = r.end.x + 0.5
-		var z0: float = r.position.y - 0.5
-		var z1: float = r.end.y + 0.5
-		b.profile = 0.0 if along_x else 1.0
-		_gable(b, x0, x1, z0, z1, along_x, top, over, pitch, thick, gable_colour)
+	var cells: Dictionary = roof_cells(tiles, room_id, claimed)
+	var height: Dictionary = roof_heights(cells)
+	var white: Color = Color(1, 1, 1)
+	var p: Callable = func(v: Vector2i) -> Vector3:
+		return Vector3(v.x * 0.5, top + minf(rise_max, float(height[v]) * pitch), v.y * 0.5)
+	var down: Vector3 = Vector3(0, thick, 0)
+	for c: Vector2i in cells:
+		var v00: Vector3 = p.call(c)
+		var v10: Vector3 = p.call(c + Vector2i(1, 0))
+		var v01: Vector3 = p.call(c + Vector2i(0, 1))
+		var v11: Vector3 = p.call(c + Vector2i(1, 1))
+		var tris: Array = [[v00, v10, v11], [v00, v11, v01]] if absf(v00.y - v11.y) <= absf(v10.y - v01.y) else [[v00, v10, v01], [v10, v11, v01]]
+		for tr: Array in tris:
+			var n: Vector3 = ((tr[2] as Vector3) - (tr[0] as Vector3)).cross((tr[1] as Vector3) - (tr[0] as Vector3))
+			# Planks and shingles run down the slope: along x for a north/south slope, along z otherwise.
+			b.profile = 0.0 if absf(n.z) >= absf(n.x) else 1.0
+			b.tri_out(tr[0], tr[1], tr[2], white, Vector3.UP)
+			b.tri_out((tr[0] as Vector3) - down, (tr[1] as Vector3) - down, (tr[2] as Vector3) - down, white.darkened(0.45), Vector3.DOWN)
+		b.profile = 0.0
+		# Fascia on the outer edge of the roof.
+		for side: int in 4:
+			var d: Vector2i = DIRS[side]
+			if cells.has(c + d):
+				continue
+			var a: Vector3
+			var e: Vector3
+			match side:
+				0:
+					a = v00
+					e = v10
+				1:
+					a = v10
+					e = v11
+				2:
+					a = v11
+					e = v01
+				_:
+					a = v01
+					e = v00
+			b.quad_out(a, e, e - down, a - down, white.darkened(0.25), Vector3(d.x, 0, d.y))
 	return b.commit(mat)
 
 
-## One gable roof over the wall-line rectangle [x0, x1] × [z0, z1], ridge along x when `along_x`.
-func _gable(b: Builder, x0: float, x1: float, z0: float, z1: float, along_x: bool, top: float, over: float, pitch: float, thick: float, gable: Color) -> void:
-	# Local frame: a runs along the ridge, c across it; p(a, c, y) maps back to the world.
-	var a0: float = x0 if along_x else z0
-	var a1: float = x1 if along_x else z1
-	var c0: float = z0 if along_x else x0
-	var c1: float = z1 if along_x else x1
-	var a_dir: Vector3 = Vector3(1, 0, 0) if along_x else Vector3(0, 0, 1)
-	var c_dir: Vector3 = Vector3(0, 0, 1) if along_x else Vector3(1, 0, 0)
-	var p: Callable = func(a: float, c: float, y: float) -> Vector3:
-		return Vector3(a, y, c) if along_x else Vector3(c, y, a)
-	var cm: float = (c0 + c1) * 0.5
-	var ridge: float = top + (cm - c0) * pitch
-	var eave: float = top - over * pitch
-	var ea0: float = a0 - over
-	var ea1: float = a1 + over
-	var down: Vector3 = Vector3(0, thick, 0)
-	var cover: Color = Color(1, 1, 1)
-	var under: Color = cover.darkened(0.45)
-	var edge: Color = cover.darkened(0.25)
-	for side: float in [-1.0, 1.0]:
-		var ec: float = (c0 - over) if side < 0.0 else (c1 + over)
-		var out_top: Vector3 = Vector3.UP + c_dir * side
-		var r0: Vector3 = p.call(ea0, cm, ridge)
-		var r1: Vector3 = p.call(ea1, cm, ridge)
-		var e1: Vector3 = p.call(ea1, ec, eave)
-		var e0: Vector3 = p.call(ea0, ec, eave)
-		b.quad_out(r0, r1, e1, e0, cover, out_top)
-		b.quad_out(r0 - down, r1 - down, e1 - down, e0 - down, under, -out_top)
-		b.quad_out(e0, e1, e1 - down, e0 - down, edge, c_dir * side)
-		for end: float in [-1.0, 1.0]:
-			var ea: float = ea0 if end < 0.0 else ea1
-			var rr: Vector3 = p.call(ea, cm, ridge)
-			var ee: Vector3 = p.call(ea, ec, eave)
-			b.quad_out(rr, ee, ee - down, rr - down, edge, a_dir * end)
-	# Gable triangles on the wall lines, in the wall colour (alpha 0: the roof shader leaves it untinted).
-	var gc: Color = Color(gable.r, gable.g, gable.b, 0.0)
-	for end2: float in [-1.0, 1.0]:
-		var aw: float = a0 if end2 < 0.0 else a1
-		b.tri_out(p.call(aw, c0, top), p.call(aw, cm, ridge - thick), p.call(aw, c1, top), gc, a_dir * end2)
+## Lattice-vertex roof heights (in cells): 0 on the footprint's wall line, Chebyshev steps inward, -1 on the outer
+## edge of the overhang. `cells` maps footprint cells to true and overhang cells to false.
+static func roof_heights(cells: Dictionary) -> Dictionary:
+	var out: Dictionary = {}
+	var frontier: Array[Vector2i] = []
+	for c: Vector2i in cells:
+		for k: Vector2i in [c, c + Vector2i(1, 0), c + Vector2i(0, 1), c + Vector2i(1, 1)]:
+			if out.has(k):
+				continue
+			var foot: int = 0
+			var any: int = 0
+			for q: Vector2i in [k, k - Vector2i(1, 0), k - Vector2i(0, 1), k - Vector2i(1, 1)]:
+				if cells.has(q):
+					any += 1
+					if bool(cells[q]):
+						foot += 1
+			if foot == 4:
+				out[k] = INF
+			elif foot > 0:
+				out[k] = 0.0
+				frontier.append(k)
+			elif any > 0:
+				out[k] = -1.0
+	# Multi-source BFS with 8-neighbour steps from the wall line inward.
+	var head: int = 0
+	while head < frontier.size():
+		var v: Vector2i = frontier[head]
+		head += 1
+		var dv: float = float(out[v])
+		for dy: int in [-1, 0, 1]:
+			for dx: int in [-1, 0, 1]:
+				var n: Vector2i = v + Vector2i(dx, dy)
+				if out.has(n) and float(out[n]) > dv + 1.0:
+					out[n] = dv + 1.0
+					frontier.append(n)
+	return out
 
 
 # --- construction sites ------------------------------------------------------------------------------------

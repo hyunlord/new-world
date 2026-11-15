@@ -70,6 +70,240 @@
    "shoulder_height": 1.7,
    "species": "aurochs"
   },
+  "b_aurochs": {
+   "file": "source/chars/B/aurochs/aurochs.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.992,
+   "triangles": 1990,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down",
+    "run",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "Root",
+    "BackUpper.L",
+    "BackLower.L",
+    "BackUpper.R",
+    "BackLower.R",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "Neck",
+    "Head",
+    "Tail"
+   ],
+   "vat": {
+    "static": "vat/b_aurochs_static.glb",
+    "bin": "vat/b_aurochs_vat.bin",
+    "json": "vat/b_aurochs_vat.json",
+    "atlas": "vat/b_aurochs_atlas.png",
+    "vertex_count": 5970
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "aurochs"
+  },
+  "b_child": {
+   "file": "source/chars/B/child/child.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.2,
+   "triangles": 2410,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/b_child_static.glb",
+    "bin": "vat/b_child_vat.bin",
+    "json": "vat/b_child_vat.json",
+    "atlas": "vat/b_child_atlas.png",
+    "vertex_count": 7230
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "child"
+  },
+  "b_goat": {
+   "file": "source/chars/B/goat/goat.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.075,
+   "triangles": 2000,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down",
+    "run",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "Root",
+    "BackUpper.L",
+    "BackLower.L",
+    "BackUpper.R",
+    "BackLower.R",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "Neck",
+    "Head",
+    "Tail"
+   ],
+   "vat": {
+    "static": "vat/b_goat_static.glb",
+    "bin": "vat/b_goat_vat.bin",
+    "json": "vat/b_goat_vat.json",
+    "atlas": "vat/b_goat_atlas.png",
+    "vertex_count": 6000
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "goat"
+  },
+  "b_man": {
+   "file": "source/chars/B/man/man.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.7,
+   "triangles": 2404,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/b_man_static.glb",
+    "bin": "vat/b_man_vat.bin",
+    "json": "vat/b_man_vat.json",
+    "atlas": "vat/b_man_atlas.png",
+    "vertex_count": 7212
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "man"
+  },
+  "b_woman": {
+   "file": "source/chars/B/woman/woman.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.7,
+   "triangles": 2412,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/b_woman_static.glb",
+    "bin": "vat/b_woman_vat.bin",
+    "json": "vat/b_woman_vat.json",
+    "atlas": "vat/b_woman_atlas.png",
+    "vertex_count": 7236
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "woman"
+  },
   "basket": {
    "file": "models/basket.glb",
    "footprint": [

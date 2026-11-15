@@ -1,7 +1,8 @@
-# people3d.gd (World3D/People, made by world3d.gd): the colony's people in 3D (M3D-1 scope 6 and 7). PLACEHOLDER
-#   figures: one Blender-script villager (tools/3d/blender/people.py) for everyone until M3D-2's character models.
+# people3d.gd (World3D/People, made by world3d.gd): the colony's people in 3D (M3D-1 scope 6 and 7; M3D-SWITCH set B).
 # Purpose: every row of get_agent_snapshot is one instance of a vertex-animated MultiMesh (vat3d.gd): no per-person
-#   node. A person glides from tile to tile over the 2D view's step time (move_interval_ticks at the current speed,
+#   node. One crowd (MultiMesh) per character model: bindings3d `people.models` picks it by life stage and sex
+#   (`child`, `female`, `male`; else `people.model`), so a child who grows up moves to the adult crowd. A soft dark
+#   disc under every person (`people.contact_shadow` radius/alpha) keeps them findable on any ground. A person glides from tile to tile over the 2D view's step time (move_interval_ticks at the current speed,
 #   the AgentLayer rule), faces where they walk, and plays a clip by state: sleep (states 3 with target_kinds 3),
 #   carry (carries an item, wood or food while moving), walk, work (a job while standing), idle. Children are
 #   `people.child_scale`, infants smaller. Tints come from the 2D appearance data: skin and hair from the look's face
@@ -17,11 +18,12 @@ extends Node3D
 const Data3D = preload("res://scripts/world3d/data3d.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 const Vat = preload("res://scripts/world3d/vat3d.gd")
+const BLOB_SHADER = preload("res://shaders/world3d/contact_blob.gdshader")
 
 var _world_sim: Node = null
 var _terrain: Node = null
-var _vat: RefCounted = null
-var _mmi: MultiMeshInstance3D = null
+## model id → {vat, mmi, blob: MultiMeshInstance3D, slot: {AgentId: slot}, free: Array[int]}
+var _crowds: Dictionary = {}
 var _ring: MeshInstance3D = null
 ## AgentId → {from: Vector2, to: Vector2, t: float, dur: float, yaw: float, tile: Vector2i}
 var _motion: Dictionary = {}
@@ -32,11 +34,10 @@ var _top_colours: Dictionary = {}
 var replicate: int = 1
 var _looks: Dictionary = {}
 var _snap_tick: int = -1
-## AgentId → {look, scale, bits, flags, clip, dirty, feet, h}; AgentId → MultiMesh slot (stable while they live).
+## AgentId → {model, look, scale, bits, flags, clip, dirty, feet, h}; the slot in its crowd is stable while they live.
 var _state: Dictionary = {}
-var _slot: Dictionary = {}
-var _free: Array[int] = []
 var _clip_packs: Dictionary = {}
+var _blob_mesh: QuadMesh = null
 
 
 func setup(world_sim: Node, terrain: Node) -> void:
@@ -45,19 +46,25 @@ func setup(world_sim: Node, terrain: Node) -> void:
 	_world_sim.connect("world_reset", func() -> void:
 		_motion.clear()
 		_state.clear()
-		_slot.clear()
-		_free.clear()
-		_mmi.multimesh = null
+		for crowd: Dictionary in _crowds.values():
+			crowd["mmi"].multimesh = null
+			crowd["blob"].multimesh = null
+			crowd["slot"] = {}
+			crowd["free"] = []
 		_looks.clear())
 
 
 func _ready() -> void:
-	_vat = Vat.load_character(str(Data3D.binding("people.model", "")))
-	_mmi = MultiMeshInstance3D.new()
-	_mmi.name = "Crowd"
-	add_child(_mmi)
-	if bool(_vat.get("ok")):
-		_mmi.material_override = _vat.call("material", Data3D.colour(Data3D.binding("people.other_colour", []), Color(0.3, 0.22, 0.15)))
+	_blob_mesh = QuadMesh.new()
+	_blob_mesh.orientation = PlaneMesh.FACE_Y
+	var radius: float = float(Data3D.param("people.contact_shadow.radius", 0.42))
+	_blob_mesh.size = Vector2(radius, radius) * 2.0
+	var blob_mat: ShaderMaterial = ShaderMaterial.new()
+	blob_mat.shader = BLOB_SHADER
+	blob_mat.set_shader_parameter("alpha", float(Data3D.param("people.contact_shadow.alpha", 0.45)))
+	_blob_mesh.material = blob_mat
+	for model: String in _model_ids():
+		_crowd(model)
 	var torus: TorusMesh = TorusMesh.new()
 	torus.inner_radius = 0.36
 	torus.outer_radius = 0.46
@@ -94,16 +101,14 @@ func _step_seconds() -> float:
 
 
 func _process(delta: float) -> void:
-	if _world_sim == null or _terrain == null or int(_terrain.get("width")) <= 0 or not bool(_vat.get("ok")):
+	if _world_sim == null or _terrain == null or int(_terrain.get("width")) <= 0 or _crowds.is_empty():
 		return
 	var stamp: Dictionary = get_parent().get("stamp") if get_parent() != null else {}
 	if _state.is_empty() or stamp.is_empty() or int(stamp.get("tick", -1)) != _snap_tick:
 		_snap_tick = int(stamp.get("tick", -1))
 		_refresh(SimReads.read(_world_sim, "get_agent_snapshot"))
 	var running: bool = _world_sim.process_mode != Node.PROCESS_MODE_DISABLED
-	var mm: MultiMesh = _mmi.multimesh
 	var copies: int = maxi(1, replicate)
-	var cap: int = _cap(mm, copies)
 	var height: float = float(Data3D.param("people.adult_height", 1.7))
 	var selected: int = _selected_bits()
 	_ring.visible = false
@@ -114,7 +119,11 @@ func _process(delta: float) -> void:
 		var moving: bool = float(m["t"]) < 1.0
 		if running and moving:
 			m["t"] = minf(1.0, float(m["t"]) + delta / maxf(0.01, float(m["dur"])))
-		var slot: int = int(_slot[aid])
+		var crowd: Dictionary = _crowds[st["model"]]
+		var mm: MultiMesh = crowd["mmi"].multimesh
+		var bm: MultiMesh = crowd["blob"].multimesh
+		var cap: int = _cap(mm, copies)
+		var slot: int = int(crowd["slot"][aid])
 		if moving or bool(st["dirty"]):
 			var p: Vector2 = _pos(m)
 			var y: float = float(_terrain.call("height_at", p.x, p.y))
@@ -126,7 +135,8 @@ func _process(delta: float) -> void:
 			for c: int in copies:
 				var off: Vector3 = Vector3(float((c * 7) % 5) - 2.0, 0.0, float((c * 3) % 5) - 2.0) * 0.6 if c > 0 else Vector3.ZERO
 				mm.set_instance_transform(cap * c + slot, Transform3D(basis, feet + off))
-		var clip: float = _clip_pack(_clip_of(st, float(m["t"]) < 1.0))
+				bm.set_instance_transform(cap * c + slot, Transform3D(Basis().scaled(Vector3(scale, 1.0, scale)), feet + off + Vector3(0, 0.03, 0)))
+		var clip: float = _clip_pack(st["model"], _clip_of(st, float(m["t"]) < 1.0))
 		if clip != float(st["clip"]) or bool(st["dirty"]):
 			st["clip"] = clip
 			var look: Dictionary = st["look"]
@@ -140,12 +150,101 @@ func _process(delta: float) -> void:
 			_ring.position = (st["feet"] as Vector3) + Vector3(0, 0.04, 0)
 
 
-## Instances per copy of the crowd MultiMesh.
+## Instances per copy of a crowd MultiMesh.
 static func _cap(mm: MultiMesh, copies: int) -> int:
 	if mm == null:
 		return 0
 	@warning_ignore("integer_division")
 	return mm.instance_count / maxi(1, copies)
+
+
+## Every model id bindings3d `people.models` / `people.model` names, in a stable order.
+func _model_ids() -> Array[String]:
+	var out: Array[String] = []
+	var models: Dictionary = Data3D.binding("people.models", {})
+	for key: String in ["male", "female", "child"]:
+		var id: String = str(models.get(key, ""))
+		if not id.is_empty() and not out.has(id):
+			out.append(id)
+	var fallback: String = str(Data3D.binding("people.model", ""))
+	if not fallback.is_empty() and not out.has(fallback):
+		out.append(fallback)
+	return out
+
+
+func _crowd(model: String) -> Dictionary:
+	if _crowds.has(model):
+		return _crowds[model]
+	var vat: RefCounted = Vat.load_character(model, true)
+	if not bool(vat.get("ok")):
+		return {}
+	var mmi: MultiMeshInstance3D = MultiMeshInstance3D.new()
+	mmi.name = "Crowd_" + model
+	add_child(mmi)
+	mmi.material_override = vat.call("material", Data3D.colour(Data3D.binding("people.other_colour", []), Color(0.3, 0.22, 0.15)))
+	var blob: MultiMeshInstance3D = MultiMeshInstance3D.new()
+	blob.name = "Contact_" + model
+	blob.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(blob)
+	_crowds[model] = {"vat": vat, "mmi": mmi, "blob": blob, "slot": {}, "free": []}
+	return _crowds[model]
+
+
+## The model of row `i`: by life stage (1 child) and sex (1 female), falling back to `people.model`.
+func _model_of(snap: Dictionary, i: int) -> String:
+	var models: Dictionary = Data3D.binding("people.models", {})
+	var key: String = "child" if _byte(snap, "life_stages", i) == 1 else ("female" if _byte(snap, "sexes", i) == 1 else "male")
+	var id: String = str(models.get(key, ""))
+	if id.is_empty() or _crowd(id).is_empty():
+		id = str(Data3D.binding("people.model", ""))
+	return id
+
+
+## Grows crowd `crowd` to fit `need` people (keeping no slots: everyone in it is rewritten).
+func _grow(crowd: Dictionary, need: int, copies: int) -> void:
+	var mm: MultiMesh = crowd["mmi"].multimesh
+	if mm != null and mm.instance_count >= need * copies and mm.instance_count % copies == 0:
+		return
+	mm = MultiMesh.new()
+	mm.transform_format = MultiMesh.TRANSFORM_3D
+	mm.use_colors = true
+	mm.use_custom_data = true
+	mm.mesh = crowd["vat"].get("mesh")
+	mm.instance_count = maxi(16, need + (need >> 2)) * copies
+	var bm: MultiMesh = MultiMesh.new()
+	bm.transform_format = MultiMesh.TRANSFORM_3D
+	bm.mesh = _blob_mesh
+	bm.instance_count = mm.instance_count
+	crowd["mmi"].multimesh = mm
+	crowd["blob"].multimesh = bm
+	var hidden: Transform3D = Transform3D(Basis().scaled(Vector3.ZERO), Vector3.ZERO)
+	var cap: int = _cap(mm, copies)
+	var free: Array[int] = []
+	for k: int in cap:
+		free.append(cap - 1 - k)
+	for k: int in mm.instance_count:
+		mm.set_instance_transform(k, hidden)
+		bm.set_instance_transform(k, hidden)
+	crowd["free"] = free
+	crowd["slot"] = {}
+	for aid: int in _state:
+		if _state[aid]["model"] == crowd["vat"].get("id"):
+			_state[aid]["dirty"] = true
+
+
+func _release(aid: int, copies: int) -> void:
+	var crowd: Dictionary = _crowds.get(_state[aid]["model"], {})
+	if crowd.is_empty() or not (crowd["slot"] as Dictionary).has(aid):
+		return
+	var slot: int = int(crowd["slot"][aid])
+	var mm: MultiMesh = crowd["mmi"].multimesh
+	var cap: int = _cap(mm, copies)
+	var hidden: Transform3D = Transform3D(Basis().scaled(Vector3.ZERO), Vector3.ZERO)
+	for c: int in copies:
+		mm.set_instance_transform(cap * c + slot, hidden)
+		crowd["blob"].multimesh.set_instance_transform(cap * c + slot, hidden)
+	(crowd["free"] as Array).append(slot)
+	(crowd["slot"] as Dictionary).erase(aid)
 
 
 ## A new snapshot (once per tick): motion targets, appearance and state flags per AgentId, stable instance slots.
@@ -158,30 +257,27 @@ func _refresh(snap: Dictionary) -> void:
 	var dur: float = _step_seconds()
 	var child_scale: float = float(Data3D.param("people.child_scale", 0.62))
 	var copies: int = maxi(1, replicate)
-	var mm: MultiMesh = _mmi.multimesh
+	var models: PackedStringArray = PackedStringArray()
+	models.resize(n)
+	var need: Dictionary = {}
+	for i: int in n:
+		models[i] = _model_of(snap, i)
+		need[models[i]] = int(need.get(models[i], 0)) + 1
+	for model: String in need:
+		_grow(_crowds[model], int(need[model]), copies)
 	var seen: Dictionary = {}
-	var grow: bool = mm == null or mm.instance_count < n * copies or mm.instance_count % copies != 0
-	if grow:
-		mm = MultiMesh.new()
-		mm.transform_format = MultiMesh.TRANSFORM_3D
-		mm.use_colors = true
-		mm.use_custom_data = true
-		mm.mesh = _vat.get("mesh")
-		mm.instance_count = maxi(16, n + (n >> 2)) * copies
-		_mmi.multimesh = mm
-		_slot.clear()
-		_free.clear()
-		for k: int in _cap(mm, copies):
-			_free.append(_cap(mm, copies) - 1 - k)
-			for c: int in copies:
-				mm.set_instance_transform(_cap(mm, copies) * c + k, Transform3D(Basis().scaled(Vector3.ZERO), Vector3.ZERO))
-		for st0: Dictionary in _state.values():
-			st0["dirty"] = true
 	for i: int in n:
 		var aid: int = aids[i]
 		seen[aid] = true
-		if not _slot.has(aid):
-			_slot[aid] = _free.pop_back()
+		var model: String = models[i]
+		if _state.has(aid) and _state[aid]["model"] != model:
+			_release(aid, copies)
+			_state[aid]["dirty"] = true
+		var crowd: Dictionary = _crowds[model]
+		if not (crowd["slot"] as Dictionary).has(aid):
+			crowd["slot"][aid] = (crowd["free"] as Array).pop_back()
+			if _state.has(aid):
+				_state[aid]["dirty"] = true
 		var tile: Vector2i = Vector2i(xs[i], ys[i])
 		var target: Vector2 = Vector2(tile) + Vector2(0.5, 0.5)
 		var m: Dictionary = _motion.get(aid, {})
@@ -207,9 +303,12 @@ func _refresh(snap: Dictionary) -> void:
 			look["cloth_p"] = Vat.pack(look["cloth"])
 			_looks[akey] = look
 		var st: Dictionary = _state.get(aid, {"clip": -1.0, "dirty": true, "feet": Vector3(target.x, 0.0, target.y), "h": 1.7})
-		var scale: float = (child_scale * (0.75 if _byte(snap, "infants", i) == 1 else 1.0)) if stage == 1 else 1.0
+		# A model made for children already has a child's height; the scale only shrinks the adult fallback.
+		var own_child: bool = model == str((Data3D.binding("people.models", {}) as Dictionary).get("child", ""))
+		var scale: float = (1.0 if own_child else child_scale) * (0.75 if _byte(snap, "infants", i) == 1 else 1.0) if stage == 1 else 1.0
 		if st.get("look") != look or float(st.get("scale", -1.0)) != scale:
 			st["dirty"] = true
+		st["model"] = model
 		st["look"] = look
 		st["scale"] = scale
 		st["bits"] = ids[i] if i < ids.size() else -1
@@ -217,11 +316,7 @@ func _refresh(snap: Dictionary) -> void:
 		_state[aid] = st
 	for aid: int in _state.keys():
 		if not seen.has(aid):
-			var slot: int = int(_slot[aid])
-			for c: int in copies:
-				mm.set_instance_transform(_cap(mm, copies) * c + slot, Transform3D(Basis().scaled(Vector3.ZERO), Vector3.ZERO))
-			_free.append(slot)
-			_slot.erase(aid)
+			_release(aid, copies)
 			_state.erase(aid)
 			_motion.erase(aid)
 
@@ -231,10 +326,11 @@ static func _pos(m: Dictionary) -> Vector2:
 	return (m["from"] as Vector2).lerp(m["to"], t * t * (3.0 - 2.0 * t))
 
 
-func _clip_pack(clip: String) -> float:
-	if not _clip_packs.has(clip):
-		_clip_packs[clip] = float(_vat.call("clip_pack", clip))
-	return _clip_packs[clip]
+func _clip_pack(model: String, clip: String) -> float:
+	var key: String = model + "/" + clip
+	if not _clip_packs.has(key):
+		_clip_packs[key] = float(_crowds[model]["vat"].call("clip_pack", clip))
+	return _clip_packs[key]
 
 
 static func _int(snap: Dictionary, key: String, i: int) -> int:

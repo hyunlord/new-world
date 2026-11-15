@@ -1,7 +1,8 @@
 // vat.gdshader — vertex-animation-texture crowds (scripts/world3d/vat3d.gd; people3d.gd, animals3d.gd).
 // Each vertex reads its position for the current frame from `vat` (column = UV2.x · width, the unsplit vertex; rows:
-// the clip's frames), blending two frames; the fragment derives the flat face normal from screen derivatives. Tint by region (UV.x): 1 → instance COLOR,
-// 2 → INSTANCE_CUSTOM.b, 3 → INSTANCE_CUSTOM.a (packed r·65536 + g·256 + b), 0 → `other_colour`.
+// the clip's frames), blending two frames; the fragment derives the flat face normal from screen derivatives. Tint by region (UV2.y): 1 → instance COLOR,
+// 2 → INSTANCE_CUSTOM.b, 3 → INSTANCE_CUSTOM.a (packed r·65536 + g·256 + b), 0 → `other_colour`. `textured`
+// characters sample `atlas` at UV instead and scale it by tint / the region's mean atlas colour (region 0: as painted).
 // INSTANCE_CUSTOM.r = clip start × 256 + clip frame count, .g = phase in seconds (per instance, so a crowd is not in step).
 shader_type spatial;
 render_mode diffuse_lambert, specular_disabled;
@@ -10,6 +11,11 @@ uniform sampler2D vat : filter_nearest, repeat_disable;
 uniform float width = 1.0;
 uniform float fps = 15.0;
 uniform vec3 other_colour : source_color = vec3(0.28, 0.2, 0.14);
+uniform bool textured = false;
+uniform sampler2D atlas : source_color, filter_linear_mipmap, repeat_disable;
+uniform vec3 mean_skin = vec3(1.0);
+uniform vec3 mean_hair = vec3(1.0);
+uniform vec3 mean_cloth = vec3(1.0);
 
 varying vec3 tint;
 
@@ -34,7 +40,7 @@ void vertex() {
 	vec3 p0 = texelFetch(vat, ivec2(column, int(start) + f0), 0).xyz;
 	vec3 p1 = texelFetch(vat, ivec2(column, int(start) + f1), 0).xyz;
 	VERTEX = mix(p0, p1, a);
-	int region = int(UV.x + 0.5);
+	int region = int(UV2.y + 0.5);
 	if (region == 1) {
 		tint = COLOR.rgb;
 	} else if (region == 2) {
@@ -44,11 +50,16 @@ void vertex() {
 	} else {
 		tint = other_colour;
 	}
+	if (textured) {
+		// The per-vertex scale that maps the region's painted mean onto this person's tint (linear space).
+		vec3 mean = region == 1 ? mean_skin : (region == 2 ? mean_hair : mean_cloth);
+		tint = region == 0 ? vec3(1.0) : srgb_to_linear(tint) / max(srgb_to_linear(mean), vec3(0.02));
+	}
 }
 
 void fragment() {
 	vec3 n = normalize(cross(dFdx(VERTEX), dFdy(VERTEX)));
 	NORMAL = dot(n, -VERTEX) < 0.0 ? -n : n;
-	ALBEDO = srgb_to_linear(tint);
+	ALBEDO = textured ? clamp(texture(atlas, UV).rgb * tint, 0.0, 1.0) : srgb_to_linear(tint);
 	ROUGHNESS = 0.85;
 }

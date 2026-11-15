@@ -3,7 +3,7 @@
 #   crosses the south and sets in the west; its energy and the ambient light fade to a dim blue night through
 #   params3d `light.dawn_hours` / `light.dusk_hours` (the same hours as the 2D CanvasModulate night); soft PCF shadows
 #   up to `light.shadow_distance`. The season (`season`) sets the terrain's season tint and snow cover
-#   (params3d `terrain.season_tint`, `terrain.snow_cover`). A procedural sky, filmic tonemapping, SSAO and a light
+#   (params3d `terrain.season_tint`, `terrain.snow_cover`). A procedural sky, filmic tonemapping, a warm slightly desaturated grade (`light.saturation`), SSAO and a light
 #   distance fog give depth. `night_factor()` is 0 by day and 1 at full night (lights of lit stations follow it).
 # Bridge methods called: via SimReads get_time_snapshot.
 extends Node3D
@@ -41,14 +41,15 @@ func _ready() -> void:
 	environment.tonemap_mode = Environment.TONE_MAPPER_FILMIC
 	environment.tonemap_white = 8.0
 	environment.adjustment_enabled = true
-	environment.adjustment_saturation = 1.15
-	environment.adjustment_contrast = 1.06
+	environment.adjustment_saturation = float(Data3D.param("light.saturation", 0.9))
+	environment.adjustment_contrast = 1.03
 	environment.ssao_enabled = true
-	environment.ssao_radius = 1.2
-	environment.ssao_intensity = 1.6
+	environment.ssao_radius = 1.4
+	environment.ssao_intensity = 1.8
+	environment.ssao_light_affect = 0.15
 	environment.fog_enabled = true
-	environment.fog_light_color = Color(0.7, 0.76, 0.82)
-	environment.fog_density = 0.0012
+	environment.fog_light_color = Color(0.82, 0.78, 0.70)
+	environment.fog_density = float(Data3D.param("light.fog_density", 0.0022))
 	environment.fog_sky_affect = 0.0
 	environment.glow_enabled = true
 	environment.glow_intensity = 0.6
@@ -59,7 +60,13 @@ func _ready() -> void:
 	sun = DirectionalLight3D.new()
 	sun.name = "Sun"
 	sun.shadow_enabled = true
-	sun.shadow_blur = 1.5
+	sun.shadow_blur = 2.0
+	sun.shadow_bias = 0.04
+	sun.shadow_normal_bias = 1.2
+	sun.directional_shadow_blend_splits = true
+	# Bigger atlas and soft PCF: clean shadow edges without acne or stair-stepping.
+	RenderingServer.directional_shadow_atlas_set_size(int(Data3D.param("light.shadow_atlas", 8192)), true)
+	RenderingServer.directional_soft_shadow_filter_set_quality(RenderingServer.SHADOW_QUALITY_SOFT_HIGH)
 	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
 	sun.directional_shadow_max_distance = float(Data3D.param("light.shadow_distance", 90.0))
 	sun.light_color = Color(1.0, 0.96, 0.88)
@@ -128,4 +135,4 @@ func _apply_hour(hour: float) -> void:
 	environment.ambient_light_color = amb_night.lerp(amb_day, day)
 	environment.ambient_light_energy = lerpf(float(Data3D.param("light.night_ambient_energy", 0.5)), float(Data3D.param("light.ambient_energy", 0.32)), day)
 	environment.background_energy_multiplier = lerpf(0.12, 1.0, day)
-	environment.fog_light_color = Color(0.12, 0.14, 0.22).lerp(Color(0.7, 0.76, 0.82), day)
+	environment.fog_light_color = Color(0.12, 0.14, 0.22).lerp(Color(0.82, 0.78, 0.70), day)

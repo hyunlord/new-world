@@ -4,7 +4,8 @@ blender -b --factory-startup -P tools/3d/blender/render_contact.py -- [out_dir] 
 
 Writes <out_dir>/blender_models_<YYYYmmdd_HHMM>.png (every exported .glb, front-3/4 view, labelled)
 and <out_dir>/blender_poses_<YYYYmmdd_HHMM>.png (each character re-posed FROM THE VAT .bin at the
-middle frame of every clip, coloured by the COLOR_0 tint mask) so the baked data is checked too.
+middle frame of every clip, coloured by the COLOR_0 tint mask, or by the atlas through UV0 for textured
+characters) so the baked data is checked too.
 """
 import datetime
 import json
@@ -184,6 +185,13 @@ def main():
         objs = import_glb(os.path.join(C.VAT_DIR, f"{cid}_static.glb"))
         ob = next(o for o in objs if o.type == "MESH")
         me = ob.data
+        # textured (set B): show the atlas through UV0 instead of the tint mask
+        bpy.context.scene.display.shading.color_type = "TEXTURE" if meta.get("textured") else "VERTEX"
+        if meta.get("textured"):
+            tex = ob.active_material.node_tree.nodes.new("ShaderNodeTexImage")
+            tex.image = bpy.data.images.load(os.path.join(C.VAT_DIR, meta["atlas"]))
+            ob.active_material.node_tree.nodes.active = tex
+            me.uv_layers[0].active = me.uv_layers[0].active_render = True
         uv2 = me.uv_layers[1].data
         idx = np.zeros(len(me.vertices), dtype=np.int64)
         for li, loop in enumerate(me.loops):

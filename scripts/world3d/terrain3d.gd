@@ -1,11 +1,11 @@
 # terrain3d.gd (World3D/Terrain, made by world3d.gd): the ground of the 3D view (M3D-1 scope 3).
 # Purpose: chunked ArrayMeshes (params3d `terrain.chunk_tiles`, 32×32 tiles) built from get_terrain_snapshot: a smooth
 #   base from the elevation byte (corner heights average the four tiles around a corner, `terrain.elevation_metres`
-#   over 0–255), hill and mountain tiles raised as plateaus (`terrain.raise` by terrain code; a dug tile of get_space
-#   is not raised, so a dug room is cut into the hill), water tiles (`terrain.water_codes`) lowered to a bed
+#   over 0–255), hill and mountain tiles raised (`terrain.raise` by terrain code, averaged at each corner so hills rise on
+#   slopes; a dug tile of get_space is not raised and keeps sharp walls, so a dug room is cut into the hill), water tiles (`terrain.water_codes`) lowered to a bed
 #   (`terrain.water_bed`, a ford half as deep) with one flat water surface per chunk at `terrain.water_level`
-#   (shaders/world3d/water.gdshader). Where a tile stands higher than its neighbour a vertical skirt closes the step
-#   (cliff colour). Ground colour is a vertex colour per corner from `terrain.colours` by terrain code, blended over
+#   (shaders/world3d/water.gdshader). Where a tile edge stands higher than its neighbour's (dug rooms, the map edge) a
+#   vertical skirt closes the step (cliff colour); steep slopes are shaded as rock in the shader. Ground colour is a vertex colour per corner from `terrain.colours` by terrain code, blended over
 #   the four tiles of a corner, varied by the world-seeded value noise (View.value_noise), packed earth around the
 #   camp hearths and on floors, dug floor colour and tilled soil on field tiles (get_field_tiles). The shared
 #   ShaderMaterial (shaders/world3d/terrain.gdshader) takes the season tint, snow cover and the per-tile overlay image.
@@ -34,6 +34,8 @@ var _elev: PackedByteArray = PackedByteArray()
 var _corner: PackedFloat32Array = PackedFloat32Array()
 ## Water dip of each tile corner (0 on dry land; see _compute_water_dip).
 var _dip: PackedFloat32Array = PackedFloat32Array()
+## Plateau raise averaged at each tile corner (see tile_corners).
+var _craise: PackedFloat32Array = PackedFloat32Array()
 ## Raise of each tile above the base (plateaus +, water beds -).
 var _raise: PackedFloat32Array = PackedFloat32Array()
 var _colour: PackedColorArray = PackedColorArray()
@@ -59,6 +61,7 @@ func setup(world_sim: Node) -> void:
 func _ready() -> void:
 	material = ShaderMaterial.new()
 	material.shader = TERRAIN_SHADER
+	material.set_shader_parameter("cliff_colour", Data3D.colour(Data3D.param("terrain.cliff_colour", []), Color(0.43, 0.39, 0.34)))
 	water_material = ShaderMaterial.new()
 	water_material.shader = WATER_SHADER
 	water_material.set_shader_parameter("water_colour", Data3D.colour(Data3D.param("terrain.water_colour", []), Color(0.16, 0.36, 0.45, 0.82)))
@@ -263,6 +266,7 @@ func _compute_tiles() -> void:
 			c = c.lerp(clearing_c, float(_clearing[t]))
 		var v: float = 1.0 + (View.value_noise(seed, t.x, t.y, noise_scale, 5) - 0.5) * 2.0 * noise_tint
 		_colour[i] = Color(c.r * v, c.g * v, c.b * v)
+	_compute_corner_raise()
 
 
 ## Per-corner water dip: a corner sinks by the bed depth times the share of its four tiles that are water (a ford
@@ -284,19 +288,58 @@ func _compute_water_dip(water_codes: Array, bed: float) -> void:
 
 ## The ground height under world point (x, z) in units (tile plateau or bed included).
 func height_at(x: float, z: float) -> float:
-	if _corner.is_empty() or width <= 0:
+	if _corner.is_empty() or width <= 0 or _raise.size() != width * height:
 		return 0.0
 	var tx: int = clampi(floori(x), 0, width - 1)
 	var ty: int = clampi(floori(z), 0, height - 1)
 	var fx: float = clampf(x - tx, 0.0, 1.0)
 	var fz: float = clampf(z - ty, 0.0, 1.0)
+	var h: PackedFloat32Array = tile_corners(tx, ty)
+	return lerpf(lerpf(h[0], h[1], fx), lerpf(h[2], h[3], fx), fz)
+
+
+## Heights of tile (tx, ty)'s corners [00, 10, 01, 11]: the smooth base plus the plateau raise averaged over the four
+## tiles at each corner, so hills meet the plain on slopes; a dug tile and the corners it touches keep their own
+## tile's raise, so dug rooms keep sharp walls.
+func tile_corners(tx: int, ty: int) -> PackedFloat32Array:
 	var w1: int = width + 1
-	var a: float = _ch(ty * w1 + tx)
-	var b: float = _ch(ty * w1 + tx + 1)
-	var c: float = _ch((ty + 1) * w1 + tx)
-	var d: float = _ch((ty + 1) * w1 + tx + 1)
-	var base: float = lerpf(lerpf(a, b, fx), lerpf(c, d, fx), fz)
-	return base + (_raise[ty * width + tx] if _raise.size() == width * height else 0.0)
+	var i: int = ty * width + tx
+	var out: PackedFloat32Array = PackedFloat32Array([0.0, 0.0, 0.0, 0.0])
+	var k: int = 0
+	for cy: int in [ty, ty + 1]:
+		for cx: int in [tx, tx + 1]:
+			var r: float = _raise[i] if _dug.has(Vector2i(tx, ty)) or _corner_touches_dug(cx, cy) else _craise[cy * w1 + cx]
+			out[k] = _ch(cy * w1 + cx) + r
+			k += 1
+	return out
+
+
+## Tile `n`'s own surface height at the lattice corner under point `p` (a shared edge corner).
+func _edge_height(n: Vector2i, p: Vector3) -> float:
+	var h: PackedFloat32Array = tile_corners(n.x, n.y)
+	var k: int = (1 if roundi(p.x) > n.x else 0) + (2 if roundi(p.z) > n.y else 0)
+	return h[k]
+
+
+func _corner_touches_dug(cx: int, cy: int) -> bool:
+	if _dug.is_empty():
+		return false
+	for t: Vector2i in [Vector2i(cx - 1, cy - 1), Vector2i(cx, cy - 1), Vector2i(cx - 1, cy), Vector2i(cx, cy)]:
+		if _dug.has(t):
+			return true
+	return false
+
+
+## Average plateau raise at each corner (skipping water beds, which dip through `_dip`).
+func _compute_corner_raise() -> void:
+	_craise.resize((width + 1) * (height + 1))
+	for cy: int in height + 1:
+		for cx: int in width + 1:
+			var total: float = 0.0
+			for dy: int in [-1, 0]:
+				for dx: int in [-1, 0]:
+					total += _raise[clampi(cy + dy, 0, height - 1) * width + clampi(cx + dx, 0, width - 1)]
+			_craise[cy * (width + 1) + cx] = total * 0.25
 
 
 ## The ground height of tile `t` at its centre, ignoring water beds (where things stand).
@@ -384,22 +427,22 @@ func _build_chunk(key: Vector2i) -> void:
 	for ty: int in range(y0, y1):
 		for tx: int in range(x0, x1):
 			var i: int = ty * width + tx
-			var r: float = _raise[i]
-			var h00: float = _ch(ty * w1 + tx) + r
-			var h10: float = _ch(ty * w1 + tx + 1) + r
-			var h01: float = _ch((ty + 1) * w1 + tx) + r
-			var h11: float = _ch((ty + 1) * w1 + tx + 1) + r
-			var p00: Vector3 = Vector3(tx, h00, ty)
-			var p10: Vector3 = Vector3(tx + 1, h10, ty)
-			var p01: Vector3 = Vector3(tx, h01, ty + 1)
-			var p11: Vector3 = Vector3(tx + 1, h11, ty + 1)
-			var c00: Color = _corner_colour(tx, ty) if r == 0.0 else _colour[i]
-			var c10: Color = _corner_colour(tx + 1, ty) if r == 0.0 else _colour[i]
-			var c01: Color = _corner_colour(tx, ty + 1) if r == 0.0 else _colour[i]
-			var c11: Color = _corner_colour(tx + 1, ty + 1) if r == 0.0 else _colour[i]
-			# Clockwise seen from above (Godot front faces are clockwise).
-			verts.append_array([p00, p10, p11, p00, p11, p01])
-			cols.append_array([c00, c10, c11, c00, c11, c01])
+			var hc: PackedFloat32Array = tile_corners(tx, ty)
+			var p00: Vector3 = Vector3(tx, hc[0], ty)
+			var p10: Vector3 = Vector3(tx + 1, hc[1], ty)
+			var p01: Vector3 = Vector3(tx, hc[2], ty + 1)
+			var p11: Vector3 = Vector3(tx + 1, hc[3], ty + 1)
+			var c00: Color = _corner_colour(tx, ty)
+			var c10: Color = _corner_colour(tx + 1, ty)
+			var c01: Color = _corner_colour(tx, ty + 1)
+			var c11: Color = _corner_colour(tx + 1, ty + 1)
+			# Clockwise seen from above (Godot front faces are clockwise); split along the flatter diagonal.
+			if absf(hc[0] - hc[3]) <= absf(hc[1] - hc[2]):
+				verts.append_array([p00, p10, p11, p00, p11, p01])
+				cols.append_array([c00, c10, c11, c00, c11, c01])
+			else:
+				verts.append_array([p00, p10, p01, p10, p11, p01])
+				cols.append_array([c00, c10, c01, c10, c11, c01])
 			var wet_tile: bool = water_codes.has(_terrain[i]) or water_codes.has(float(_terrain[i]))
 			if wet_tile or minf(minf(_ch_dip(ty * w1 + tx), _ch_dip(ty * w1 + tx + 1)), minf(_ch_dip((ty + 1) * w1 + tx), _ch_dip((ty + 1) * w1 + tx + 1))) < level:
 				var l00: float = _corner[ty * w1 + tx] + level
@@ -408,14 +451,9 @@ func _build_chunk(key: Vector2i) -> void:
 				var l11: float = _corner[(ty + 1) * w1 + tx + 1] + level
 				water_verts.append_array([Vector3(tx, l00, ty), Vector3(tx + 1, l10, ty), Vector3(tx + 1, l11, ty + 1),
 					Vector3(tx, l00, ty), Vector3(tx + 1, l11, ty + 1), Vector3(tx, l01, ty + 1)])
-			# Skirts: this tile closes every step down to a lower neighbour (or the map edge).
+			# Skirts only where this tile's edge stands above its neighbour's same edge (dug-room walls, the map edge).
 			for side: int in 4:
 				var n: Vector2i = Vector2i(tx, ty) + SIDES[side]
-				var nr: float = -1.5
-				if n.x >= 0 and n.y >= 0 and n.x < width and n.y < height:
-					nr = _raise[n.y * width + n.x]
-				if nr >= r:
-					continue
 				var a: Vector3
 				var b: Vector3
 				match side:
@@ -431,9 +469,18 @@ func _build_chunk(key: Vector2i) -> void:
 					_:
 						a = p00
 						b = p01
-				var drop: float = r - nr
-				var a2: Vector3 = a - Vector3(0, drop, 0)
-				var b2: Vector3 = b - Vector3(0, drop, 0)
+				var na: float = a.y - 1.5
+				var nb: float = b.y - 1.5
+				if n.x >= 0 and n.y >= 0 and n.x < width and n.y < height:
+					# Corners away from dug tiles share one height on both sides: no step there.
+					if not _corner_touches_dug(roundi(a.x), roundi(a.z)) and not _corner_touches_dug(roundi(b.x), roundi(b.z)):
+						continue
+					na = _edge_height(n, a)
+					nb = _edge_height(n, b)
+				if a.y <= na + 0.01 and b.y <= nb + 0.01:
+					continue
+				var a2: Vector3 = Vector3(a.x, minf(a.y, na), a.z)
+				var b2: Vector3 = Vector3(b.x, minf(b.y, nb), b.z)
 				verts.append_array([a, b, b2, a, b2, a2])
 				var shade: Color = cliff * (0.82 + 0.06 * side)
 				cols.append_array([shade, shade, shade.darkened(0.15), shade, shade.darkened(0.15), shade.darkened(0.15)])

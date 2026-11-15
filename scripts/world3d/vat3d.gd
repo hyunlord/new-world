@@ -2,8 +2,11 @@
 # Purpose: loads a character's VAT built by tools/3d/blender/{people,animals}.py — assets/3d/vat/<id>_static.glb (rest
 #   mesh, faces split, UV2.x = the unsplit vertex's column, COLOR_0 = tint region) and <id>_vat.bin/.json (float16
 #   RGBA rows, one row of positions per frame; flat normals are derived in the shader) — into an RGBAH ImageTexture
-#   read raw with FileAccess (no import), and rebuilds the mesh so the region code sits in UV.x and the vertex colour is gone (the MultiMesh
-#   instance colour then carries the first tint). `material()` is a ShaderMaterial on shaders/world3d/vat.gdshader;
+#   read raw with FileAccess (no import), and rebuilds the mesh so the region code sits in UV2.y and the vertex colour is gone (the MultiMesh
+#   instance colour then carries the first tint). A `textured` character (set B: json `textured`, `atlas`) keeps its atlas
+#   UVs in UV; loaded with `tint_atlas` its regions come from the atlas colour under each vertex (dark → hair 2,
+#   yellow/olive → clothing 3, else skin 1) and the shader rescales the painted colours toward the person's tints
+#   (atlas × tint / the region's mean atlas colour), so painted detail stays and appearance still varies. `material()` is a ShaderMaterial on shaders/world3d/vat.gdshader;
 #   per instance: COLOR.rgb = region-1 tint, INSTANCE_CUSTOM = (clip start × 256 + clip count, phase seconds,
 #   region-2 colour, region-3 colour) with colours packed as r·65536 + g·256 + b (exact in a float).
 # Bridge methods called: none.
@@ -16,16 +19,19 @@ var id: String = ""
 var meta: Dictionary = {}
 var mesh: ArrayMesh = null
 var texture: ImageTexture = null
+var atlas: ImageTexture = null
+## Mean sRGB atlas colour of regions 1–3 (textured, tinted characters).
+var region_means: Array[Color] = [Color.WHITE, Color.WHITE, Color.WHITE]
 var ok: bool = false
 
 
-static func load_character(character: String) -> RefCounted:
+static func load_character(character: String, tint_atlas: bool = false) -> RefCounted:
 	var v: RefCounted = (load("res://scripts/world3d/vat3d.gd") as GDScript).new()
-	v.call("_load", character)
+	v.call("_load", character, tint_atlas)
 	return v
 
 
-func _load(character: String) -> void:
+func _load(character: String, tint_atlas: bool = false) -> void:
 	id = character
 	var json_path: String = DIR.path_join(character + "_vat.json")
 	var bin_path: String = DIR.path_join(character + "_vat.bin")
@@ -44,14 +50,25 @@ func _load(character: String) -> void:
 		return
 	var image: Image = Image.create_from_data(width, rows, false, Image.FORMAT_RGBAH, bytes)
 	texture = ImageTexture.create_from_image(image)
+	var atlas_image: Image = null
+	if bool(meta.get("textured", false)):
+		atlas_image = Image.load_from_file(ProjectSettings.globalize_path(DIR.path_join(str(meta.get("atlas", "")))))
+		if atlas_image == null or atlas_image.is_empty():
+			push_error("vat3d: %s atlas missing" % character)
+			return
+		atlas_image.convert(Image.FORMAT_RGBA8)
+		var gpu: Image = atlas_image.duplicate()
+		gpu.generate_mipmaps()
+		atlas = ImageTexture.create_from_image(gpu)
 	var root: Node = (load(glb_path) as PackedScene).instantiate()
-	mesh = _regions(root)
+	mesh = _regions(root, atlas_image, tint_atlas, region_means)
 	root.free()
 	ok = mesh != null
 
 
-## The first surface of the glb with its COLOR_0 region turned into UV.x (0 other, 1 r, 2 g, 3 b).
-static func _regions(root: Node) -> ArrayMesh:
+## The first surface of the glb with its tint region in UV2.y (0 other, 1 r, 2 g, 3 b of COLOR_0; textured: atlas
+## classes when `tint_atlas`, else 0) and, untextured, UV cleared.
+static func _regions(root: Node, atlas_image: Image, tint_atlas: bool, means: Array[Color]) -> ArrayMesh:
 	var stack: Array[Node] = [root]
 	while not stack.is_empty():
 		var node: Node = stack.pop_back()
@@ -59,6 +76,29 @@ static func _regions(root: Node) -> ArrayMesh:
 			var arrays: Array = (node as MeshInstance3D).mesh.surface_get_arrays(0)
 			var cols: Variant = arrays[Mesh.ARRAY_COLOR]
 			var verts: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+			var uv2: PackedVector2Array = arrays[Mesh.ARRAY_TEX_UV2]
+			if atlas_image != null:
+				var sums: Array[Color] = [Color(0, 0, 0, 0), Color(0, 0, 0, 0), Color(0, 0, 0, 0)]
+				var atlas_uv: PackedVector2Array = arrays[Mesh.ARRAY_TEX_UV]
+				for i: int in verts.size():
+					var region: int = 0
+					if tint_atlas:
+						var at: Vector2i = Vector2i((atlas_uv[i] * Vector2(atlas_image.get_size())).floor()).clamp(Vector2i.ZERO, atlas_image.get_size() - Vector2i.ONE)
+						var c: Color = atlas_image.get_pixelv(at)
+						region = atlas_region(c)
+						sums[region - 1] += Color(c.r, c.g, c.b, 1.0)
+					uv2[i] = Vector2(uv2[i].x, float(region))
+				for k: int in 3:
+					if sums[k].a > 0.0:
+						means[k] = Color(sums[k].r / sums[k].a, sums[k].g / sums[k].a, sums[k].b / sums[k].a)
+				arrays[Mesh.ARRAY_TEX_UV2] = uv2
+				arrays[Mesh.ARRAY_COLOR] = null
+				arrays[Mesh.ARRAY_BONES] = null
+				arrays[Mesh.ARRAY_WEIGHTS] = null
+				var tex_out: ArrayMesh = ArrayMesh.new()
+				tex_out.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+				tex_out.custom_aabb = AABB(Vector3(-1.5, -0.2, -1.5), Vector3(3.0, 3.0, 3.0))
+				return tex_out
 			var uv: PackedVector2Array = PackedVector2Array()
 			uv.resize(verts.size())
 			if cols is PackedColorArray:
@@ -71,9 +111,10 @@ static func _regions(root: Node) -> ArrayMesh:
 						region = 2.0
 					elif c.b > 0.5:
 						region = 3.0
-					uv[i] = Vector2(region, 0.0)
+					uv2[i] = Vector2(uv2[i].x, region)
 			arrays[Mesh.ARRAY_COLOR] = null
 			arrays[Mesh.ARRAY_TEX_UV] = uv
+			arrays[Mesh.ARRAY_TEX_UV2] = uv2
 			arrays[Mesh.ARRAY_BONES] = null
 			arrays[Mesh.ARRAY_WEIGHTS] = null
 			var out: ArrayMesh = ArrayMesh.new()
@@ -86,9 +127,24 @@ static func _regions(root: Node) -> ArrayMesh:
 	return null
 
 
+## Tint class of an atlas texel (sRGB): 2 hair (dark), 3 clothing (yellow or olive), 1 skin.
+static func atlas_region(c: Color) -> int:
+	if 0.3 * c.r + 0.59 * c.g + 0.11 * c.b < 0.3:
+		return 2
+	if c.b < 0.3 * c.r or c.g >= c.r:
+		return 3
+	return 1
+
+
 func material(other: Color) -> ShaderMaterial:
 	var mat: ShaderMaterial = ShaderMaterial.new()
 	mat.shader = VAT_SHADER
+	if atlas != null:
+		mat.set_shader_parameter("atlas", atlas)
+		mat.set_shader_parameter("textured", true)
+		mat.set_shader_parameter("mean_skin", region_means[0])
+		mat.set_shader_parameter("mean_hair", region_means[1])
+		mat.set_shader_parameter("mean_cloth", region_means[2])
 	mat.set_shader_parameter("vat", texture)
 	mat.set_shader_parameter("width", float(meta.get("width", 1)))
 	mat.set_shader_parameter("fps", float(meta.get("fps", 15)))

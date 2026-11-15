@@ -10,13 +10,14 @@ vertex-animation texture in `assets/3d/vat/`. Never hand-edit the outputs; chang
 blender -b --factory-startup -P tools/3d/blender/build_all.py          # everything, ~3 s
 blender -b --factory-startup -P tools/3d/blender/stations.py           # one family (merges into manifest)
 blender -b --factory-startup -P tools/3d/blender/animals.py -- wolf    # one species
+blender -b --factory-startup -P tools/3d/blender/chars_b.py -- b_man   # set B (textured) characters
 python3 tools/3d/blender/verify_vat.py                                 # VAT + glb checks, exit 1 on failure
 blender -b --factory-startup -P tools/3d/blender/render_contact.py -- [out_dir] [id filters...]
 ```
 
 `render_contact.py` writes `blender_models_<stamp>.png` (every glb, front-3/4, labelled with id and
 triangle count) and `blender_poses_<stamp>.png` (every character re-posed from its VAT `.bin` at the
-middle of each clip, coloured by the COLOR_0 tint mask). Default out dir: `/Users/rexxa/work/3d-data/screens`.
+middle of each clip, coloured by the COLOR_0 tint mask, or by the atlas for textured characters). Default out dir: `/Users/rexxa/work/3d-data/screens`.
 
 Output is deterministic: two full builds produce byte-identical files (seeded RNG per model, fixed
 data order, no timestamps in the glTF). The build never deletes files; it overwrites each output in
@@ -33,6 +34,7 @@ place and rewrites `manifest.json`.
 | `items.py` | `ITEMS` table + builders |
 | `people.py` | `BODY` proportions, bone list, `CLIPS`, procedural actions for `villager` |
 | `animals.py` | `SPECIES` table driving one quadruped generator, `CLIPS`, shared actions |
+| `chars_b.py` | bakes the accepted, atlas-textured set B glbs (`assets/3d/source/chars/B/`) into `vat/b_*` |
 | `build_all.py` | runs all families, writes `assets/3d/models/manifest.json` |
 | `verify_vat.py` | plain python3 checker (no Blender) |
 | `render_contact.py` | review images |
@@ -93,6 +95,27 @@ For every character `export_character` also writes:
 
 Looping clips store `duration * 15` rows (the end frame equals the first and is dropped); non-looping
 clips store one extra row so the last pose is included.
+
+## Set B characters (textured, `chars_b.py`)
+
+`b_man b_woman b_child b_goat b_aurochs` are not modelled here: they are the accepted skinned, atlas-textured
+glbs from `v8/art-3d-chars` commit `f0b91f999`, copied once into `assets/3d/source/chars/B/<subject>/`
+(`SOURCE.md` names the source). `chars_b.py` imports each glb and bakes it like `export_character`, except:
+
+* the static glb keeps the source **UV0 (`TEXCOORD_0`) = atlas UVs**, copied per loop by the split; `UV2`,
+  `COLOR_0` (all black: no tint region) and the single material are as above. It is posed at **idle frame 0**
+  (the bind pose is an A-pose; the shader replaces positions anyway).
+* VAT columns are the body's vertices followed by any object-animated mesh (the humans' 24-vertex `CarryLoad`,
+  scaled to ~0 outside `carry`), so the bundle appears only in `carry`.
+* Clips are sampled at 15 fps from the source actions (1.333 s each); `loop` is true when the last pose matches
+  the first within 1 cm (all do). Game names the source lacks are **aliases** with `"alias_of"` and the same
+  rows: animals `run -> walk`, `rest -> lie_down`, `attack -> idle`. Source names (`lie_down`) are kept too.
+* json adds `"textured": true, "atlas": "b_<subject>_atlas.png", "source_commit", "source"`;
+  `vat/b_<subject>_atlas.png` is a byte copy of the source atlas. Source scale is kept (man/woman 1.7 m,
+  child 1.2 m). The manifest `file` is the source glb (no `models/b_*.glb` is written), `materials` is empty.
+* No `.bin` is above 2.3 MB (about 2800 columns x 100 rows x 8 bytes).
+
+To refresh: re-copy the five folders from the art worktree, update `SOURCE_COMMIT` and `SOURCE.md`, rerun.
 
 ## Adding a model by data
 

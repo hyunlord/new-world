@@ -164,11 +164,11 @@
     "by_id": {
       "wolf": "wolf",
       "deer": "deer",
-      "wild_goat": "wild_goat",
+      "wild_goat": "b_goat",
       "wild_sheep": "wild_sheep",
       "wild_boar": "wild_boar",
       "reindeer": "reindeer",
-      "aurochs": "aurochs"
+      "aurochs": "b_aurochs"
     },
     "by_category": {
       "predator": "wolf",
@@ -296,8 +296,9 @@
     "fallback": [0.6, 0.55, 0.5]
   },
   "people": {
-    "about": "The placeholder villager (tools/3d/blender/people.py) and its tint rules; skin/hair/clothing come from the 2D appearance data (people3d.gd).",
+    "about": "Set B characters (models by sex/child; villager is the fallback) and their tint rules; skin/hair/clothing come from the 2D appearance data (people3d.gd).",
     "model": "villager",
+    "models": {"male": "b_man", "female": "b_woman", "child": "b_child"},
     "other_colour": [0.3, 0.22, 0.15],
     "bare_torso_tops": ["loincloth"]
   }

@@ -13,13 +13,14 @@ import traceback
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import common as C  # noqa: E402
 import animals  # noqa: E402
+import chars_b  # noqa: E402
 import flora  # noqa: E402
 import items  # noqa: E402
 import people  # noqa: E402
 import rocks  # noqa: E402
 import stations  # noqa: E402
 
-FAMILIES = [flora, rocks, stations, items, people, animals]
+FAMILIES = [flora, rocks, stations, items, people, animals, chars_b]
 
 
 def main():
