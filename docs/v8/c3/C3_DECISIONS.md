@@ -55,3 +55,8 @@ planner notes; planner answers arrive as `c3-data/D-C3-<n>.md`. Evidence lives i
     four harvesters in this steward-OFF scene and the fixture restored a dead agent's priority. The fixture now skips only
     harvesters with a recorded death and prints it; an unexplained disappearance still fails. Same file, same latent
     pattern in `cord_world` left unchanged.
+17. Pre-gate a2 (cfeb57c9e) failures: two knowledge tests still asserted the marker total 36 after the paved-road marker
+    (now 37); and the paved road's entry in the imported `construction_styles.json` broke the art manifest hash. An
+    unknown floor style already falls back to the default packed-earth style with the `cut_stone` material tint, so the
+    imported file is restored unchanged. The `cut_stone` look is lighter and cooler (dL+30, da−6, db−22): with the first
+    tint a built road averaged RGB 97,85,73 against 100,89,73 for the camp ground and could not be seen.
