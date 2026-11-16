@@ -108,3 +108,83 @@ impl RuntimeSystem for PathDaySystem {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use sim_core::colony::paths::{STAGE_DIRT, STAGE_GRASS, STAGE_PAVED, STAGE_TRODDEN};
+    use sim_core::material::MaterialRegistry;
+    use sim_core::rules::WorldRules;
+
+    fn colony_engine(w: u32, h: u32) -> sim_engine::SimEngine {
+        let mut engine = sim_engine::SimEngine::new(w, h, MaterialRegistry::new());
+        engine.resources.rules = WorldRules::colony(0);
+        engine.resources.ticks_per_day = 1440;
+        let grid_len = (w as usize) * (h as usize);
+        engine.resources.colony.footfall.resize(grid_len, 0);
+        engine.resources.colony.path_stage.resize(grid_len, 0);
+        engine
+    }
+
+    #[test]
+    fn paths_footfall_decay_and_thresholds() {
+        let mut engine = colony_engine(4, 4);
+        let idx = engine.resources.tile_grid.idx(1, 1);
+        // Set tile (1,1) footfall to 130 → dirt stage.
+        engine.resources.colony.footfall[idx] = 130;
+        engine.resources.colony.footfall_touched.insert((1, 1));
+        // Run the day boundary at tick = ticks_per_day.
+        let tpd = engine.resources.ticks_per_day;
+        engine.resources.current_tick = tpd;
+        let mut sys = PathDaySystem::new();
+        sys.tick(&mut engine.world, &mut engine.resources);
+        // Footfall decayed: 130 * 20/1000 = 2.6, ceil = 3 → 127.
+        assert_eq!(engine.resources.colony.footfall[idx], 127);
+        // 127 >= 120 → still dirt.
+        assert_eq!(engine.resources.colony.path_stage[idx], STAGE_DIRT);
+        // Decay over many days until it drops below dirt threshold (120).
+        let tpd = engine.resources.ticks_per_day;
+        for day in 2..=50 {
+            engine.resources.current_tick = tpd * day;
+            sys.tick(&mut engine.world, &mut engine.resources);
+        }
+        // After enough days footfall should drop below 120 → trodden or grass.
+        assert!(engine.resources.colony.footfall[idx] < 120);
+        assert_ne!(engine.resources.colony.path_stage[idx], STAGE_DIRT);
+        // Eventually reaches 0.
+        for day in 51..=500 {
+            engine.resources.current_tick = tpd * day;
+            sys.tick(&mut engine.world, &mut engine.resources);
+        }
+        assert_eq!(engine.resources.colony.footfall[idx], 0);
+        assert_eq!(engine.resources.colony.path_stage[idx], STAGE_GRASS);
+    }
+
+    #[test]
+    fn paved_road_not_demoted_by_decay() {
+        let mut engine = colony_engine(4, 4);
+        let idx = engine.resources.tile_grid.idx(2, 2);
+        engine.resources.colony.path_stage[idx] = STAGE_PAVED;
+        engine.resources.colony.footfall[idx] = 10;
+        let tpd = engine.resources.ticks_per_day;
+        engine.resources.current_tick = tpd;
+        let mut sys = PathDaySystem::new();
+        sys.tick(&mut engine.world, &mut engine.resources);
+        // Paved stays paved regardless of footfall.
+        assert_eq!(engine.resources.colony.path_stage[idx], STAGE_PAVED);
+    }
+
+    #[test]
+    fn stage_promotion_on_touched_tile() {
+        let mut engine = colony_engine(4, 4);
+        let idx = engine.resources.tile_grid.idx(1, 0);
+        engine.resources.colony.footfall[idx] = 35;
+        engine.resources.colony.footfall_touched.insert((1, 0));
+        let tpd = engine.resources.ticks_per_day;
+        engine.resources.current_tick = tpd;
+        let mut sys = PathDaySystem::new();
+        sys.tick(&mut engine.world, &mut engine.resources);
+        // 35 decays by ceil(35*20/1000) = 1 → 34, still >= 30 → trodden.
+        assert_eq!(engine.resources.colony.path_stage[idx], STAGE_TRODDEN);
+    }
+}
