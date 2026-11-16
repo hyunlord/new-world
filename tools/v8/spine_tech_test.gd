@@ -397,8 +397,11 @@ func _capture_c1(world: Node) -> void:
 				_check("c2_physical_site_" + str(site["template_id"]), bool(site.get("is_intact", false)))
 				var centre := Vector2i(int(site["x"]) + floori(float(site["width"]) * 0.5), int(site["y"]) + floori(float(site["height"]) * 0.5))
 				var camera: Camera2D = _main.get_node("Camera2D") as Camera2D
-				camera.zoom = Vector2(2, 2)
+				# 3D: C3 stations at Z5 (zoom 4), the close-up cutaway, so the bloomery and the smithy's hearth show unroofed.
+				var close: bool = _c3 and str(site["template_id"]) in ["bloomery", "forge"]
+				camera.zoom = Vector2(4, 4) if close else Vector2(2, 2)
 				camera.call("center_on_tile", centre)
+				_main.get_node("World3D/Terrain").call("build_all")
 				await _frames(8)
 				await _capture(prefix + "_physical_" + str(site["template_id"]) + "_" + language + "_rerender")
 				if _c3 and str(site["template_id"]) == "mud_brick_house":

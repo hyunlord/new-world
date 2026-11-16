@@ -844,8 +844,11 @@ func _metal() -> void:
 				station = station or Vector2i(int(shops["xs"][i]), int(shops["ys"][i])) == subject
 			for site: Dictionary in SimReads.read(_world, "get_building_snapshot").get("template_sites", []):
 				if not station and Vector2i(int(site["x"]), int(site["y"])) == subject: subject += Vector2i(floori(float(site["width"]) * 0.5), floori(float(site["height"]) * 0.5))
-			_camera.zoom = Vector2(2, 2)
+			# 3D: Z5 (zoom 4) is the close-up cutaway, so the smithy's roof dissolves and each worker at a station shows.
+			var close: bool = c3 and stage.substr(0, 2) in ["02", "03", "04"]
+			_camera.zoom = Vector2(4, 4) if close else Vector2(2, 2)
 			_camera.call("center_on_tile", subject)
+			_main.get_node("World3D/Terrain").call("build_all")
 			_panel.hide()
 			goals.hide()
 			await _frames(8)
