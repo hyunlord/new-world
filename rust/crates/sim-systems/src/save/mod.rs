@@ -100,7 +100,8 @@ pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 /// 21 = livestock sidecar, immutable event witnesses and 26 completed-job counters.
 /// 22 = 256-node knowledge upper words and explicit ore deposits/witnesses.
 /// 23 = 27 completed-job counters (mining) and the metal-chain provenance tail.
-pub const FORMAT_VERSION: u32 = 23;
+/// 24 = per-tile footfall and path stage (M-GROW 3.2 worn paths).
+pub const FORMAT_VERSION: u32 = 24;
 mod cultivation_catalog;
 mod cultivation_validation;
 mod legacy_cultivation_v15;
@@ -328,6 +329,21 @@ pub fn save(engine: &mut SimEngine) -> Result<Vec<u8>, SaveError> {
     .map_err(SaveError::Encode)?;
     crate::runtime::ore::validate_state_at_boundary(&engine.resources)
         .map_err(SaveError::Encode)?;
+    // M-GROW 3.2: footfall/path_stage must be empty or match the grid size.
+    {
+        let grid_len =
+            (engine.resources.tile_grid.width as usize) * (engine.resources.tile_grid.height as usize);
+        let fl = engine.resources.colony.footfall.len();
+        let sl = engine.resources.colony.path_stage.len();
+        if (fl != 0 && fl != grid_len) || (sl != 0 && sl != grid_len) {
+            return Err(SaveError::Encode(format!(
+                "footfall/path_stage length mismatch: footfall {fl}, path_stage {sl}, grid {grid_len}"
+            )));
+        }
+        if engine.resources.colony.path_stage.iter().any(|&s| s > 3) {
+            return Err(SaveError::Encode("path_stage code > 3".into()));
+        }
+    }
     let neighbour_upper = knowledge_upper::capture(&engine.resources).map_err(SaveError::Encode)?;
     let world = world::capture(&engine.world).map_err(SaveError::World)?;
     let systems = engine.system_states().map_err(SaveError::Systems)?;
@@ -858,6 +874,7 @@ fn read_header(bytes: &[u8]) -> Result<&[u8], SaveError> {
         && found != 20
         && found != 21
         && found != 22
+        && found != 23
     {
         return Err(SaveError::Version {
             found,
