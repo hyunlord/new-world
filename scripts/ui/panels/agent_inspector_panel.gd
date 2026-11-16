@@ -1,3 +1,4 @@
+# Part U: get_tech supplies era metadata for optional painted portraits (cached through SimReads).
 # agent_inspector_panel.gd (UI/AgentInspectorPanel in scenes/main.tscn): selected-person panel with live needs,
 #   activity, porter trip, temperament, family links and life chronicle; shows dead people as records.
 # V7 Phase 14-γ — Agent click inspector panel.

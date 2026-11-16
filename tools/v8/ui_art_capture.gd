@@ -1,6 +1,7 @@
 # Real-main-scene Part U screenshots, using existing people, catalogues, workshops and natural cards.
 # Bridge methods: load_world (optional), advance_ticks (tooling), get_agent_snapshot/get_agent_detail,
 # get_tech, get_workshops, get_content_catalog, get_time_snapshot, get_colony_overlay. No invented simulation objects.
+# --verify-only validates controls/resources headlessly; never captures pixels.
 # Run windowed under the prescribed GPU lock wrapper, with -- --out DIR [--save FILE] --renderer=3d.
 extends SceneTree
 
@@ -11,6 +12,7 @@ var _world: Node
 var _out: String
 var _records: Array[Dictionary] = []
 var _failures: int = 0
+var _verify_only: bool = false
 
 
 func _init() -> void:
@@ -62,20 +64,32 @@ func _paths(node: Node) -> PackedStringArray:
 
 func _shot(name: String, panel: Control) -> void:
 	await _frames()
-	await RenderingServer.frame_post_draw
+	if not _verify_only:
+		await RenderingServer.frame_post_draw
 	var paths: PackedStringArray = _paths(panel)
 	_check(name + " has visible generated art", not paths.is_empty())
-	var path: String = _out.path_join(name + ".png")
-	_check(name + " saved", root.get_texture().get_image().save_png(path) == OK)
-	var record: Dictionary = {"file": path, "surface": str(panel.get_path()), "images": paths,
+	if name in ["recipes", "items"]:
+		var item_images: int = 0
+		for image_path: String in paths:
+			if image_path.begins_with(Art.ROOT + "items/"):
+				item_images += 1
+		_check(name + " has generated item icons", item_images > 0)
+	var path: String = ""
+	if not _verify_only:
+		path = _out.path_join(name + ".png")
+		_check(name + " saved", root.get_texture().get_image().save_png(path) == OK)
+	var record: Dictionary = {"surface": str(panel.get_path()), "images": paths,
 		"tick": SimReads.read(_world, "get_time_snapshot").get("tick", -1)}
+	if not _verify_only:
+		record["file"] = path
 	_records.append(record)
-	print("UI_ART_SHOT " + JSON.stringify(record))
+	print(("UI_ART_VERIFY " if _verify_only else "UI_ART_SHOT ") + JSON.stringify(record))
 
 
 func _run() -> void:
 	_out = _arg("--out")
-	if _out.is_empty() or DisplayServer.get_name() == "headless":
+	_verify_only = "--verify-only" in OS.get_cmdline_user_args()
+	if _out.is_empty() or (DisplayServer.get_name() == "headless" and not _verify_only):
 		push_error("ui_art_capture requires --out and a real window")
 		quit(1)
 		return
@@ -154,10 +168,10 @@ func _run() -> void:
 	_check("natural decision card exists", bool(cards.call("has_active_cards")))
 	cards.show()
 	await _shot("cards", cards)
-	var file: FileAccess = FileAccess.open(_out.path_join("screenshots.json"), FileAccess.WRITE)
+	var file: FileAccess = FileAccess.open(_out.path_join("verification.json" if _verify_only else "screenshots.json"), FileAccess.WRITE)
 	if file != null:
-		file.store_string(JSON.stringify({"shots": _records, "failures": _failures}, "\t"))
+		file.store_string(JSON.stringify({"surfaces" if _verify_only else "shots": _records, "failures": _failures, "verify_only": _verify_only}, "\t"))
 	else:
 		_check("screenshot manifest opened", false)
-	print("UI_ART_CAPTURE_DONE shots=%d failures=%d" % [_records.size(), _failures])
+	print(("UI_ART_VERIFY_DONE surfaces=%d failures=%d" if _verify_only else "UI_ART_CAPTURE_DONE shots=%d failures=%d") % [_records.size(), _failures])
 	quit(0 if _failures == 0 else 1)
