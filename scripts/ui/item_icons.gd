@@ -3,6 +3,7 @@
 # Bridge methods: none; immutable ContentContext metadata supplies presentation data.
 extends RefCounted
 
+const GeneratedArt = preload("res://scripts/ui/generated_art.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 const Content = preload("res://scripts/ui/content_context.gd")
 const MaterialResolver = preload("res://scripts/world/art/material_resolver.gd")
@@ -47,14 +48,20 @@ static func icon(code: int, size: int = 32) -> TextureRect:
 	rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	rect.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
-	rect.texture = texture_of(code)
-	if uses_placeholder(code): rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	rect.texture = ui_texture_of(code)
+	if GeneratedArt.texture("items", str(Content.row("items", code).get("id", ""))) == null and uses_placeholder(code): rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	rect.set_meta("item_kind", code)
 	return rect
 
 
 static func uses_placeholder(code: int) -> bool:
 	return _authored_asset(code).is_empty() and Content.row("items", code).has("art_shape")
+
+
+## UI-only model renders never replace the loose-world texture seam.
+static func ui_texture_of(code: int) -> Texture2D:
+	var generated: Texture2D = GeneratedArt.texture("items", str(Content.row("items", code).get("id", "")))
+	return generated if generated != null else texture_of(code)
 
 
 ## Texture consumer seam shared by buttons, panel icons and loose-world piles.
