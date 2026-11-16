@@ -1,5 +1,17 @@
 # Changelog
 
+## M-POLISH+GATE — 2026-11-17
+
+### Added
+- Merged `v8/3d-roof2` (shared hip roofs, occluded people keep colours), `v8/art-tex` (generated material textures), `v8/art-ui` (portraits, chapter/card/tech/building art, item icons) and `v8/gate-reuse` (D-GATE-2 receipt reuse) onto C3-b.
+
+### Changed
+- D-GATE-1: `[profile.test]` compiles at `opt-level = 2` with `debug-assertions` and `overflow-checks` kept; `sim-systems` test override also `opt-level = 2` (`rust/Cargo.toml`, `docs/v8/c1/C1_DECISIONS.md`).
+- The learning helper only yields to the story banner when the banner shows a row; the taller art cards had pushed an empty banner over it (`mux_hud.gd`).
+
+### Removed
+- `docs/images/mart21_seasons.png` (2D-era strip; kept at `fd3f59801`) to stay within the 12-image limit.
+
 ## C3-b — iron chain, not yet published (2026-11-15)
 
 ### Added

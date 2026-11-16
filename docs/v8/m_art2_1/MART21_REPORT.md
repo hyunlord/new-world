@@ -100,7 +100,7 @@ M-ART2(`d796fcac`)가 채택된 아트를 게임에 넣었지만 두 가지가 �
   - M-ART2.1 칸에서 강은 물결 무늬이고 물가가 둥글며, 밤에도 땅과 구분된다.
   - ¼×에서 숲은 둥근 초록 덩어리이고, 사람 표지 테두리가 가구마다 다르다.
   - 겨울 1일째 정오 저장은 가을→겨울 절반 섞인 모습이다(첫날 섞기).
-- 계절 띠: [docs/images/mart21_seasons.png](../../images/mart21_seasons.png)
+- 계절 띠: [docs/images/mart21_seasons.png](https://github.com/hyunlord/new-world/blob/fd3f59801/docs/images/mart21_seasons.png) (2D 시절 화면, 이력에 보존)
   - 같은 숲(타일 (112, 103))을 여름·가을·겨울·봄 3일째 정오에 1×(윗줄)와 ¼×(아랫줄)로 보였다.
 - 현재 화면 모음: [docs/images/mart21_contact_sheet.png](https://github.com/hyunlord/new-world/blob/67a6232ab41a4bf5051b11303bcac97543b111f0/docs/images/mart21_contact_sheet.png) (12장, `mart2_contact_sheet.png` 대체).
 

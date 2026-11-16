@@ -498,7 +498,9 @@ func _sync_foreground() -> void:
 		elif panel_closed:
 			plaque.call("refresh_cards")
 	var story: Control = get_parent().get_node_or_null("StoryBanner/Column") as Control
-	var story_over_helper: bool = story != null and story.is_visible_in_tree() and story.get_global_rect().intersects(helper.get_global_rect())
+	# An empty banner (only the separation between its empty rows) covers nothing; decision-card art can push it down here.
+	var story_shows: bool = story != null and story.get_node("Content").get_children().any(func(row: Node) -> bool: return row is Control and row.visible and row.get_combined_minimum_size().y > 0.0)
+	var story_over_helper: bool = story_shows and story.is_visible_in_tree() and story.get_global_rect().intersects(helper.get_global_rect())
 	helper.set_overlay_obscured(menu_open or panel_open or story_over_helper)
 	_highlight.visible = not menu_open and not panel_open and not help.visible and not goals.visible and not settings.visible
 
