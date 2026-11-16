@@ -223,25 +223,27 @@ fn c3_buildings_scene_when_requested() {
         complete(e, house)
             && e.resources.colony.buildings.sites[&house].template == "cut_stone_house"
     });
-    // D-C3-1: a 4-tile paved road on the first row next to the house (below, above, two below) that the UI's
-    // floor-line preview shows fully placeable, dragged as that line.
+    // D-C3-1: a 4-tile paved road on the first row south of the house (two to four below, then below, then above; shifted up to four tiles east, clear of the river) that
+    // the UI's floor-line preview shows fully placeable, dragged as that line; south keeps it in front of the house in 3D.
     let site = &engine.resources.colony.buildings.sites[&house];
-    let x = site.anchor.0;
-    let rows = [
-        site.anchor.1 + site.footprint.1,
-        site.anchor.1 - 1,
-        site.anchor.1 + site.footprint.1 + 1,
-    ];
-    let previews = rows.map(|y| {
-        sim_bridge::ffi::space::collect_place_preview(
-            &engine.world,
-            &engine.resources,
-            "paved_road",
-            (x as i32, y as i32, x as i32 + 3, y as i32),
-            1,
-        )
-    });
-    let y = rows[previews
+    let south = site.anchor.1 + site.footprint.1;
+    let starts: Vec<(u32, u32)> = [south + 1, south + 2, south + 3, south, site.anchor.1 - 1]
+        .into_iter()
+        .flat_map(|y| (0..5).map(move |dx| (site.anchor.0 + dx, y)))
+        .collect();
+    let previews: Vec<_> = starts
+        .iter()
+        .map(|&(x, y)| {
+            sim_bridge::ffi::space::collect_place_preview(
+                &engine.world,
+                &engine.resources,
+                "paved_road",
+                (x as i32, y as i32, x as i32 + 3, y as i32),
+                1,
+            )
+        })
+        .collect();
+    let (x, y) = starts[previews
         .iter()
         .position(|p| p.tiles.len() == 4 && p.reasons.iter().all(|r| r.is_empty()))
         .unwrap_or_else(|| {

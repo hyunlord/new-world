@@ -411,13 +411,14 @@ func _capture_c1(world: Node) -> void:
 					await _capture("c3_upgrade_mud_brick_house_" + language + "_rerender")
 					build.hide()
 				if _c3 and str(site["template_id"]) == "cut_stone_house":
-					# D-C3-1: c2_buildings lays a 4-tile paved road in the first placeable row above/below this house.
+					# D-C3-1: c2_buildings lays a 4-tile paved road south of (else above) this house.
 					var space: Dictionary = SimReads.read(world, "get_space")
 					var road: Array[Vector2i] = []
+					# The road is the only cut_stone floor: its material column is the djb2 MaterialId as i32.
+					var cut_stone: int = 3216156857 - 4294967296
 					for i: int in (space.get("floor_xs", PackedInt32Array()) as PackedInt32Array).size():
-						var t := Vector2i(int(space["floor_xs"][i]), int(space["floor_ys"][i]))
-						if t.x >= int(site["x"]) and t.x < int(site["x"]) + 4 and t.y in [int(site["y"]) - 1, int(site["y"]) + int(site["height"]), int(site["y"]) + int(site["height"]) + 1]:
-							road.append(t)
+						if int(space["floor_materials"][i]) == cut_stone:
+							road.append(Vector2i(int(space["floor_xs"][i]), int(space["floor_ys"][i])))
 					_check("c3_paved_road_built_" + language, road.size() == 4)
 					if not road.is_empty():
 						camera.call("center_on_tile", road[floori(road.size() * 0.5)])
