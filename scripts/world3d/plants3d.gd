@@ -290,6 +290,10 @@ func _desaturated(id: String, saturation: float) -> Mesh:
 			var m: BaseMaterial3D = (mat as BaseMaterial3D).duplicate() as BaseMaterial3D
 			m.albedo_color = _winter(m.albedo_color, saturation)
 			out.surface_set_material(s, m)
+		elif mat is ShaderMaterial and (mat as ShaderMaterial).get_shader_parameter("base_colour") is Color:
+			var m: ShaderMaterial = mat.duplicate() as ShaderMaterial
+			m.set_shader_parameter("base_colour", _winter(m.get_shader_parameter("base_colour"), saturation))
+			out.surface_set_material(s, m)
 	_variants[key] = out
 	return out
 
