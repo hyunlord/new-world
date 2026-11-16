@@ -8,8 +8,10 @@ luminance to preserve the authored material tint. The 1024-square PNGs remain
 available as individual assets; gameplay loads the shared atlases.
 
 Generated with the built-in `image_gen__imagegen` tool for this project, following
-the owner's 2026-11-16 Part T brief. All forty assets were adopted on their first
-generation attempt. No third-party asset, logo or in-image text is included.
+the owner's 2026-11-16 Part T brief. Thirty-eight assets retain their first
+generation; thatch A/B use their second generation after planner review, with
+pale grey-straw colours and irregular bundles. No third-party asset, logo or
+in-image text is included.
 
 Exact prompts, original generation files, processing script, 2×2 repeat checks,
 seam metrics and verification logs are retained at
