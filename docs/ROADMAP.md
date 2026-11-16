@@ -1,5 +1,7 @@
 # 로드맵 (V8)
 
+> **M3D-IMG Part T — 텍스처 작업 브랜치 (2026-11-16):** `v8/art-tex`에서 생성 알베도·노멀과 기존 재질 연결을 제공한다. [결정](decisions/0068-generated-material-texture-atlas.md). 전후 화면·500명 FPS는 공유 GPU 게이트 허용 후 검증하며, 이 브랜치는 게임 게시가 아니다.
+
 > **M3D-ASSETS — 자산 제공 완료 (2026-11-15):** `v8/3d-assets`에서 정적572·생물28개 모델을 제공한다. [인벤토리](../assets/3d/INVENTORY.md), [결정](decisions/0067-content-complete-3d-asset-pack.md). 렌더러 통합·플레이 수용과 구분하며 원격 C3 기준 부재를 기록한다.
 
 > **C2 #15 — 완료 (2026-11-12):** C2-a `ad790ddd1`과 C2-b `8e4170c42`를 각각 전체 게이트36/36 PASS 뒤 v8/wip→v8/main fast-forward로 게시했다. 청동 데이터·광맥 발견(a)에 이어 실제 채굴·주석 교역·금속 사슬(b, `c2_chain_bronze`)을 연결했다. 동물 실루엣은 D-C2-1로 별도 art-import에 맡겼다. [보고](v8/c2/C2_REPORT.md), [결정](v8/c2/C2_DECISIONS.md). 아래 C1/M-SPINE 게시 전 문구는 당시 기록이다.
