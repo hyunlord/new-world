@@ -140,7 +140,7 @@ static func mesh(id: String) -> Mesh:
 	var packed: PackedScene = scene(id)
 	if packed != null:
 		var root: Node = packed.instantiate()
-		out = merge_meshes(root)
+		out = merge_meshes(root, id)
 		root.free()
 	if out == null:
 		out = placeholder()
@@ -149,7 +149,7 @@ static func mesh(id: String) -> Mesh:
 
 
 ## Merge every MeshInstance3D under `root` (with its transform relative to root) into one ArrayMesh.
-static func merge_meshes(root: Node) -> ArrayMesh:
+static func merge_meshes(root: Node, model_id: String = "") -> ArrayMesh:
 	var out: ArrayMesh = ArrayMesh.new()
 	var stack: Array = [[root, Transform3D.IDENTITY]]
 	while not stack.is_empty():
@@ -177,7 +177,7 @@ static func merge_meshes(root: Node) -> ArrayMesh:
 				var material: Material = (node as MeshInstance3D).get_active_material(s)
 				out.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
 				var idx: int = out.get_surface_count() - 1
-				out.surface_set_material(idx, material)
+				out.surface_set_material(idx, preload("res://scripts/world3d/textures3d.gd").imported(material, model_id))
 				out.surface_set_name(idx, material.resource_name if material != null else "")
 		for child: Node in node.get_children():
 			stack.append([child, xf])

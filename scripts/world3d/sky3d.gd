@@ -101,6 +101,7 @@ func _process(_delta: float) -> void:
 			var tint: Color = Data3D.colour((Data3D.param("terrain.season_tint", {}) as Dictionary).get(str(season), []), Color.WHITE)
 			mat.set_shader_parameter("season_tint", Vector3(tint.r, tint.g, tint.b))
 			mat.set_shader_parameter("snow", float((Data3D.param("terrain.snow_cover", {}) as Dictionary).get(str(season), 0.0)))
+			mat.set_shader_parameter("autumn", 1.0 if season == 2 else 0.0)
 		# Roofs and plants read the same cover (global `w3d_snow`).
 		RenderingServer.global_shader_parameter_set("w3d_snow", float((Data3D.param("terrain.snow_cover", {}) as Dictionary).get(str(season), 0.0)))
 

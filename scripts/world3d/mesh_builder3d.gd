@@ -13,6 +13,8 @@ var uv2s: PackedVector2Array = PackedVector2Array()
 ## Current profile code (UV.x) and ground base (UV2.y) for the next triangles.
 var profile: float = 0.0
 var base: float = 0.0
+## Texture atlas tile; UV2.x leaves profile and cutaway channels intact.
+var texture_tile: float = -1.0
 
 
 func is_empty() -> bool:
@@ -28,7 +30,7 @@ func tri(a: Vector3, b: Vector3, c: Vector3, col: Color, ua: float = 0.0, ub: fl
 	normals.append_array([n, n, n])
 	colours.append_array([col, col, col])
 	uvs.append_array([Vector2(profile, ua), Vector2(profile, ub), Vector2(profile, uc)])
-	uv2s.append_array([Vector2(0, base), Vector2(0, base), Vector2(0, base)])
+	uv2s.append_array([Vector2(texture_tile, base), Vector2(texture_tile, base), Vector2(texture_tile, base)])
 
 
 ## Quad a-b-c-d, clockwise seen from its front.
@@ -92,9 +94,12 @@ func log_prism(a: Vector3, b: Vector3, r: float, col: Color, sides: int = 6) -> 
 		var shade: float = 0.82 + 0.18 * clampf(((ring_a[k] - a) + (ring_a[k2] - a)).normalized().y * 0.5 + 0.5, 0.0, 1.0)
 		quad(ring_a[k2], ring_b[k2], ring_b[k], ring_a[k], Color(col.r * shade, col.g * shade, col.b * shade))
 	var end_col: Color = col.lightened(0.18)
+	var side_tile: float = texture_tile
+	texture_tile = float(preload("res://scripts/world3d/textures3d.gd").index("parts", "log_end", int(side_tile))) if side_tile >= 0.0 else side_tile
 	for k: int in range(1, sides - 1):
 		tri(ring_a[0], ring_a[k + 1], ring_a[k], end_col)
 		tri(ring_b[0], ring_b[k], ring_b[k + 1], end_col)
+	texture_tile = side_tile
 
 
 ## A vertical pointed stake at (x, z) from ground `y0` to `y1` (a square post with a pyramid tip).

@@ -26,6 +26,18 @@
 - Current eight-shot ROOF2 contact sheet replaces the previous C2 sheet; its historical README link points to the base commit.
 - Headless wardrobe atlas and findability material coverage (`people_material_test.gd`).
 - Headless actual-mesh roof regression coverage for long and compound footprints, building ownership and season-invariant geometry (`roof_geometry_test.gd`).
+## M3D-IMG Part T — material texture branch (2026-11-16)
+
+### Added
+- Generated 1024-square seamless terrain and material albedos, rough-surface normals,
+  and padded shared atlases under `assets/3d/textures/`. Exact prompts and raw
+  verification evidence live in `/Users/rexxa/work/art-img-data/tex/`.
+
+### Changed
+- Existing terrain/material shaders and static mesh materials sample painted detail
+  with the existing palette tint. Simulation and the crowd/VAT path are outside this pass.
+- Part T is delivered on `v8/art-tex` for planner integration; windowed capture and
+  FPS acceptance remain conditional on the shared GPU gate.
 
 ## M3D-SWITCH E2 — the 3D view is the only world view (branch v8/3d, not published)
 

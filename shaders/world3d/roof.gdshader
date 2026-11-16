@@ -5,6 +5,8 @@
 // and 1 for a ridge along z (shingle and plank lines run down the slope).
 shader_type spatial;
 render_mode diffuse_lambert, specular_disabled, cull_back;
+#include "res://shaders/world3d/material_texture.gdshaderinc"
+uniform float texture_tile = -1.0;
 
 uniform vec3 cover : source_color = vec3(0.72, 0.6, 0.34);
 uniform int pattern = 0;
@@ -14,6 +16,7 @@ global uniform float w3d_snow;
 varying vec3 world_pos;
 varying float ridge_z;
 varying float up;
+varying vec3 texture_normal;
 
 float bayer4(vec2 p) {
 	ivec2 q = ivec2(mod(p, 4.0));
@@ -30,6 +33,7 @@ void vertex() {
 	world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	ridge_z = UV.x;
 	up = (MODEL_MATRIX * vec4(NORMAL, 0.0)).y;
+	texture_normal = normalize((MODEL_MATRIX * vec4(NORMAL, 0.0)).xyz);
 }
 
 void fragment() {
@@ -39,6 +43,8 @@ void fragment() {
 	vec3 c = srgb_to_linear(COLOR.rgb);
 	if (COLOR.a > 0.5) {
 		c *= cover;
+		float variant = texture_tile == 24.0 ? step(0.5, fract(sin(dot(floor(world_pos.xz / 4.0), vec2(12.9898, 78.233))) * 43758.5453)) : 0.0;
+		c *= material_detail(vec2(ridge_z < 0.5 ? world_pos.x : world_pos.z, world_pos.y) * 0.65, texture_tile + variant);
 		float h = world_pos.y;
 		// Along the eaves: x for a ridge along x, z for a ridge along z.
 		float along = ridge_z < 0.5 ? world_pos.x : world_pos.z;
@@ -56,8 +62,9 @@ void fragment() {
 		}
 	}
 	if (COLOR.a > 0.5) {
-		c = mix(c, vec3(0.80, 0.85, 0.92), w3d_snow * 0.9 * smoothstep(0.3, 0.7, up));
+		c = mix(c, vec3(0.80, 0.85, 0.92) * material_detail(world_pos.xz * 0.3, 8.0), w3d_snow * 0.9 * smoothstep(0.3, 0.7, up));
 	}
 	ALBEDO = c;
+	NORMAL = normalize((VIEW_MATRIX * vec4(material_bump(world_pos * 0.65, texture_normal, texture_tile), 0.0)).xyz);
 	ROUGHNESS = 0.95;
 }
