@@ -1,14 +1,12 @@
 # WorldSim 역사
 
+- 2026-11-16 — M3D-IMG Part U: 생성322안 중318장·GLB아이콘119종을 기존 UI에 연결하고 두 해상도16화면을 확인했다(`9ea8e0ec6`, [ADR0068](decisions/0068-optional-generated-ui-art.md)); 동물/타이틀 새 패널 없이 planner 통합 대기다. 이전 C2 시트는 `1647f7e81:docs/images/c2_contact_sheet.png`에 보존한다.
 - 2026-11-15 — M3D-ASSETS: 정적572·생물28개 3D 자산과 원본62개 보존, 콘텐츠 인벤토리·건설 미리보기·게임 카메라 비교를 별도 제공한다. 원격 C3 부재와 미연결 건물 콘셉트를 명시하며 렌더러 통합·전체 게임 게시와 구분한다 (`assets/3d/ASSETS.md`, `docs/decisions/0067-content-complete-3d-asset-pack.md`).
 - 2026-11-11 — C2 검토본의 동물 실루엣 스크립트·uid 2파일을 제거하고 별도 아트 라인으로 이월했다. 원본은 `ebb04ee3d:scripts/world/colony/animal_silhouette.gd`에 보존한다. C1 사슬은 일반 명령 준비·현재 적격 대상 재선택·실제 취소 증거 계약으로 재검증하며 미게시다([ADR0064](decisions/0064-scripted-chain-preparation.md)).
 - 2026-11-08 — C1-a 원산지·신석기 지식82개·물리 조리법·곡식 창고/우리/훈제집/화덕집을 통합했다. 실제 format19→20 저장 재개, 신규 focused 검사와 한·영 화면 검증을 수행했다. 가축 사슬은 C1-b 대기이며 고정 SHA 전체 게이트·게시는 아직 대기다([보고](v8/c1/C1_REPORT.md), [ADR0062](decisions/0062-neolithic-origins-and-livestock.md)). 이전 M-SPINE 화면은 d30dbfc5b Git 이력에 보존하고 현재 시트를 교체했다.
 - 2026-11-08 — M-SPINE-b (물리적 건물 템플릿·주거 구역/집사·건물 패널)은 전체 게이트 세 차례(`437f9b6` 48/49 step41 바닥준비 FAIL, `d575f90` renderer 16px 고정 검사 FAIL, 최초 시도 DEBUG FAIL)에서 매번 실제 원인을 고쳤으나 게시에 이르지 못한 채 C1로 작업이 넘어가 별도로는 게시되지 않았다; 세 시도의 전체 기록은 [b 보고서](v8/spine/M_SPINE_B_REPORT.md)에 보존한다.
-
 - 2026-11-08 01:01:16KST — M-SPINE-a `c467c0a36466ec86419ae66bfb702e37c2566b30`을 v8/wip→v8/main 순서로 fast-forward 게시했다. 시대·기술 카탈로그, 회색 콘텐츠와 format18 마이그레이션을 제공한다. 5차 전체49/49 PASS·exit0(기존 step41 면제만 사용), DEBUG3119PASS/RELEASE 원본카운터3118PASS·각0FAIL/14ignored. RELEASE 차이는 증명된 stdout interleave이며 원본을 보정하지 않았다. 앞선 중단·실패와 시도3 보호 경로 접근/HEAD 변경 사고를 [a 보고서](v8/spine/M_SPINE_A_REPORT.md)에 보존한다. [ADR0060](decisions/0060-content-spine.md); 이전 Stage2 시트는 Git 이력 `68beae3a:docs/images/m6b_stage2_contact_sheet.png`, a 원본 시트는 Git 이력 `c467c0a3:docs/images/m_spine_a_contact_sheet.png`에 보존하고 [a+b 화면 모음](https://github.com/hyunlord/new-world/blob/d30dbfc5b8c6d68973e1c13fdd291741db892998/docs/images/m_spine_contact_sheet.png)에 실제 네이티브 b 캡처를 함께 실었다. 화면 모음은 b 게이트나 게시 완료를 뜻하지 않는다.
-
 - 2026-11-06 — M6b Stage2 직조 후보: 실제 아마 수확부터 두 의복 착용·저장 재개까지 완료하고12장 캡처·실제 주민 클릭을 확인했다. baseline identity·8세계 smoke PASS, 전체 gate와 게시 대기. 전용 아트는 #689([보고서](v8/m6b/M6B_REPORT.md), [ADR0059](decisions/0059-authored-weaving-and-physical-apparel.md)).
-
 - 2026-11-06 — M6b Stage1 `16dc9120d`를 v8/wip→v8/main에 게시하고 원격 SHA를 확인했다. 농경·생산 제한·명시적 가르침, 전체 gate49/49·exit0(step41 엄격50ms FAIL/기존 예외 PASS), debug/release 각3076PASS·13ignored, baseline 동일성·C3 PASS. 집사 미달은 #688 OPEN에 보존, #674/#675 CLOSED. Stage2 직조를20:59:12KST에 시작했다([보고서](v8/m6b/M6B_REPORT.md)).
 
 - 2026-11-04 — 오너 승인 #686: M-GROW 자라는 마을을 M6b 뒤·M7 앞의 3.5 패스로 확정했다. 구역 성장·닳은 길·집과 마당·상태별 건물·재료 물결·삶의 흔적을 다루고 평판과 이주(#653)는 M8에서 옮겼다. 구역 성장 건설·평판 이주 외 표현은 시뮬레이션 읽기 전용이다. 구현 완료를 뜻하지 않는다.

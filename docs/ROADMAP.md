@@ -1,6 +1,6 @@
 # 로드맵 (V8)
 
-> **M3D-IMG Part U — 진행 중·미게시 (2026-11-16):** 전용 `v8/art-ui`에서 기존 UI에 선택형 아트를 연결한다. 생성 목표는 **322장**(인물72·동물7·챕터10·연간목표5·카드18·기술166·건물/작업장38·키아트6), GPU 게이트가 허용하면 GLB 기반 아이콘 **119종**이다. 이는 목표 수량이며 완성 수량이 아니다. 누락 아트는 기존 표시로 대체하고 시뮬레이션·세이브는 변경하지 않는다. [결정](decisions/0068-optional-generated-ui-art.md); 진행·프롬프트·검증 자료는 `/Users/rexxa/work/art-img-data/ui/`. planner가 차기 gated publish에 통합하며 전체 게이트 통과·게시를 주장하지 않는다.
+> **M3D-IMG Part U — 구현 완료·통합 대기 (2026-11-16):** `v8/art-ui`에서 생성 아트 **322안 중318장**과 GLB 아이콘 **119종**을 준비하고 기존 UI에 연결했다. 키아트 미선택4안과 거절18회 원본·프롬프트는 외부 데이터에 보존한다. 1920×1080/1280×720 실제8표면씩 캡처와 headless 검증을 수행했다. 동물7·연간목표5·선택 타이틀1은 기존 화면이 없어 data에 보관했고 기존 시작 splash만 연결했다. [화면](images/art_ui_contact_sheet.png), [결정](decisions/0068-optional-generated-ui-art.md); 원본·검증·한국어 보고는 `/Users/rexxa/work/art-img-data/ui/`. planner의 차기 gated publish 통합 대기이며 main 게시·전체 게이트를 주장하지 않는다.
 
 > **M3D-ASSETS — 자산 제공 완료 (2026-11-15):** `v8/3d-assets`에서 정적572·생물28개 모델을 제공한다. [인벤토리](../assets/3d/INVENTORY.md), [결정](decisions/0067-content-complete-3d-asset-pack.md). 렌더러 통합·플레이 수용과 구분하며 원격 C3 기준 부재를 기록한다.
 

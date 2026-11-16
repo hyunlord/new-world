@@ -1,14 +1,16 @@
 # Changelog
 
-## M3D-IMG Part U — 2026-11-16 (v8/art-ui; implementation in progress)
+## M3D-IMG Part U — 2026-11-16 (v8/art-ui; planner integration pending)
 
 ### Added
-- Optional generated UI art and a cached presentation-only loader (`scripts/ui/generated_art.gd`; ADR 0068). The inventory target is 322 generated images: 72 person portraits, seven animals, ten chapters, five yearly goals, 18 decision cards, 166 knowledge nodes, 38 unique building/station portraits and six key-art options. These are target counts, not a completed-generation claim.
-- Conditional target of 119 transparent item icons rendered from the existing item GLBs when the local GPU gate permits rendering. Prompt/adoption manifests, progress, captures and the Korean completion report live outside the repository under `/Users/rexxa/work/art-img-data/ui/`.
+- 318 adopted generated UI images: 72 person portraits, seven animals, ten chapters, five yearly goals, 18 decision cards, 166 knowledge nodes, 38 unique building/station portraits and two selected key-art images. Six key-art options were produced; four alternate options remain in the external data folder. Animal portraits(seven), yearly-goal art(five), and the selected title art(one) have no existing panel and remain in external data too;305 adopted generated images are available to the existing UI/startup surfaces.
+- 119 transparent 128-square item icons rendered from the existing single-item GLBs. Runtime art uses compact WebP; the selected loading image also has the PNG required by Godot's existing boot splash.
+- A cached presentation-only image loader (`scripts/ui/generated_art.gd`; ADR0068), deterministic portrait contract tests, and a real-scene eight-surface capture/optional headless verification tool. Prompts, all 340 generation attempts (18 rejected for subject/architecture), progress, screenshots, 22 family sheets and the Korean report live under `/Users/rexxa/work/art-img-data/ui/`.
 
 ### Changed
-- Existing inspector, card, chapter, technology, building and workshop surfaces are being connected through optional images with established presentation fallbacks. Portrait selection is deterministic from the selected entity, life stage, sex and wardrobe; it consumes no simulation RNG or save state.
-- UI item consumers use `ItemIcons.ui_texture_of`, keeping the loose-world `texture_of` seam separate. Planner integration into the next gated publish is pending; this branch does not claim a full gate or publication.
+- Existing inspector, card, chapter, technology, building, workshop, recipe and item-list surfaces use optional art with established fallbacks. Portrait selection derives from entity, life stage, sex and wardrobe without simulation RNG or save changes. Images retain aspect, ignore mouse input and use linear filtering; pixel fallback portraits retain nearest filtering.
+- `ItemIcons.ui_texture_of` keeps UI model icons separate from the loose-world `texture_of` path. The existing startup splash uses the selected loading art; no title, animal or yearly-goal panel is added.
+- Real UI screenshots at 1920×1080 and 1280×720 cover eight surfaces each; the current README sheet shows the desktop captures. The planner still owns the next full publication gate and merge; this branch does not claim either.
 
 ## M3D-SWITCH E2 — the 3D view is the only world view (branch v8/3d, not published)
 
