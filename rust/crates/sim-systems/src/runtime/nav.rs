@@ -12,11 +12,13 @@
 //! Every function returns at once without `rules.colony`, so the baseline
 //! world never has a map.
 use sim_core::colony::content::PlannedNav;
+use sim_core::colony::paths;
 use sim_core::nav::{CostMap, Tile, COST_BANK, COST_DOOR, COST_PLAIN, IMPASSABLE};
 use sim_core::TerrainType;
 use sim_engine::SimResources;
 
 /// The cost byte of `tile` (0 = impassable; 0 off the map).
+/// M-GROW 3.2: on plain ground the path stage's nav cost overrides `COST_PLAIN`.
 pub fn tile_cost(res: &SimResources, tile: Tile) -> u8 {
     let grid = &res.tile_grid;
     if tile.0 >= grid.width || tile.1 >= grid.height {
@@ -44,8 +46,16 @@ pub fn tile_cost(res: &SimResources, tile: Tile) -> u8 {
     {
         Some(PlannedNav::Blocked) => IMPASSABLE,
         Some(PlannedNav::Door) => COST_DOOR,
-        Some(PlannedNav::Unchanged) | None => COST_PLAIN,
+        Some(PlannedNav::Unchanged) | None => path_stage_cost(res, i),
     }
+}
+
+/// Plain-ground cost adjusted by the tile's path stage (M-GROW 3.2).
+fn path_stage_cost(res: &SimResources, idx: usize) -> u8 {
+    let stage_code = res.colony.path_stage.get(idx).copied().unwrap_or(0);
+    paths::installed()
+        .stage_by_code(stage_code)
+        .map_or(COST_PLAIN, |s| s.nav_cost)
 }
 
 /// A fresh cost map of the whole grid.

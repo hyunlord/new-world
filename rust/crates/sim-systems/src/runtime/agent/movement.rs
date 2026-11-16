@@ -290,12 +290,28 @@ impl RuntimeSystem for AgentMovementSystem {
             crate::runtime::nav::ensure(resources);
             resources.nav.blocked.clear();
         }
-        if !resources
-            .current_tick
-            .is_multiple_of(rules.move_interval_ticks.max(1))
-        {
+        let base_interval = rules.move_interval_ticks.max(1);
+        // M-GROW 3.2: the minimum step interval across all path stages (dirt/paved
+        // move faster). The system runs on ticks that are multiples of this minimum;
+        // each agent then checks its own tile's interval inside the loop.
+        let min_interval = if colony {
+            sim_core::colony::paths::installed()
+                .stages
+                .iter()
+                .map(|s| s.step_interval)
+                .filter(|&i| i > 0)
+                .min()
+                .unwrap_or(base_interval)
+                .min(base_interval)
+        } else {
+            base_interval
+        };
+        if !resources.current_tick.is_multiple_of(min_interval) {
             return;
         }
+        // Whether this tick is a base-interval tick (every agent moves) or only
+        // a fast-path tick (only agents on fast tiles move).
+        let is_base_tick = resources.current_tick.is_multiple_of(base_interval);
         let child_rule = resources.rules.society.life_stage;
         let evening_radius = rules
             .evening_gather
@@ -345,6 +361,8 @@ impl RuntimeSystem for AgentMovementSystem {
         let max_y = (h - 1) as i64;
         let mut haul_steps: Vec<AgentId> = Vec::new();
         let mut not_hauling: Vec<AgentId> = Vec::new();
+        // M-GROW 3.2: tiles an agent stepped onto this tick (footfall).
+        let mut footfall_steps: Vec<(u32, u32)> = Vec::new();
         // Pass 9: under keyed draws an idle step is a pure function of (seed,
         // lineage key, tick, replicate); the sequential stream is not advanced.
         let keyed = rules.keyed_draws;
@@ -369,6 +387,7 @@ impl RuntimeSystem for AgentMovementSystem {
             sleep_tiles,
             bed_of,
             colony: colony_state,
+            tile_grid: grid_ref,
             ..
         } = resources;
         // M3 (ADR 0023): inside the evening window the hall (the hearth's room)
@@ -420,6 +439,20 @@ impl RuntimeSystem for AgentMovementSystem {
             // Pass 20: a porter on its trip is treated as a founder on its
             // way — no haul home, no tether (no `PorterTrip` outside `game_v25`).
             let walker = founding.is_some() || porter.is_some();
+            // M-GROW 3.2: on a non-base tick only agents standing on a fast-path
+            // tile (step_interval < base_interval) may move.
+            if !is_base_tick && colony {
+                let tile_idx = grid_ref.idx(pos.x, pos.y);
+                let stage_code = colony_state.path_stage.get(tile_idx).copied().unwrap_or(0);
+                let tile_interval = sim_core::colony::paths::installed()
+                    .stage_by_code(stage_code)
+                    .map_or(base_interval, |s| s.step_interval);
+                if !tick.is_multiple_of(tile_interval.max(1)) {
+                    continue;
+                }
+            }
+            // M-GROW 3.2: capture position before this agent's movement.
+            let before_pos = (pos.x, pos.y);
             let lean = temperament_rule.zip(temperament);
             // V7 Section 16-β: three movement branches keyed directly on the
             // FSM state (NOT via `suppresses_movement()` — that predicate
@@ -485,6 +518,9 @@ impl RuntimeSystem for AgentMovementSystem {
                             pos.x = to.0;
                             pos.y = to.1;
                         }
+                    }
+                    if colony && (pos.x, pos.y) != before_pos {
+                        footfall_steps.push((pos.x, pos.y));
                     }
                     continue;
                 }
@@ -554,6 +590,9 @@ impl RuntimeSystem for AgentMovementSystem {
                     // No Brownian for Seeking either way (target → directed
                     // above; no target → freeze).
                     if !abandoned {
+                        if colony && (pos.x, pos.y) != before_pos {
+                            footfall_steps.push((pos.x, pos.y));
+                        }
                         continue;
                     }
                 }
@@ -612,6 +651,9 @@ impl RuntimeSystem for AgentMovementSystem {
                                 .clamp(0, max_y) as u32;
                         }
                         haul_steps.push(agent.id);
+                        if colony && (pos.x, pos.y) != before_pos {
+                            footfall_steps.push((pos.x, pos.y));
+                        }
                         continue;
                     }
                     // Display-only: a member that stopped hauling before reaching
@@ -726,9 +768,29 @@ impl RuntimeSystem for AgentMovementSystem {
             }
             pos.x = to.0;
             pos.y = to.1;
+            // M-GROW 3.2: record footfall for every tile an agent stepped onto.
+            if colony && (pos.x, pos.y) != before_pos {
+                footfall_steps.push((pos.x, pos.y));
+            }
         }
         if colony {
             nav.paths.retain(|id, _| walking.contains(id));
+        }
+        // M-GROW 3.2: increment per-tile footfall counters.
+        if colony && !footfall_steps.is_empty() {
+            let grid_len = (grid_ref.width as usize) * (grid_ref.height as usize);
+            if colony_state.footfall.len() != grid_len {
+                colony_state.footfall.resize(grid_len, 0);
+            }
+            if colony_state.path_stage.len() != grid_len {
+                colony_state.path_stage.resize(grid_len, 0);
+            }
+            for tile in &footfall_steps {
+                let idx = grid_ref.idx(tile.0, tile.1);
+                colony_state.footfall[idx] =
+                    colony_state.footfall[idx].saturating_add(1);
+                colony_state.footfall_touched.insert(*tile);
+            }
         }
         for id in not_hauling {
             resources.haulers.remove(&id);
