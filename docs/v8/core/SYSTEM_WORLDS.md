@@ -48,6 +48,7 @@ Validation status: **NOT_RUN** for the production switch; parent-owned focused v
 | MaturationSystem | 144 | 60 | yes | yes |
 | PairingSystem | 144 | 1 | yes | yes |
 | BedAssignmentSystem | 145 | 1 | yes | yes |
+| PathDaySystem | 145 | 1 | no | yes |
 | AgingSystem | 146 | 60 | yes | yes |
 | HearthFeedSystem | 146 | 60 | yes | yes |
 | FireSystem | 147 | 60 | yes | yes |

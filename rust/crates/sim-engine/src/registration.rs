@@ -177,6 +177,10 @@ pub const SYSTEM_REGISTRATIONS: &[SystemRegistration] = &[
         worlds: SystemWorlds::Both,
     },
     SystemRegistration {
+        name: "PathDaySystem",
+        worlds: SystemWorlds::Colony,
+    },
+    SystemRegistration {
         name: "AgingSystem",
         worlds: SystemWorlds::Both,
     },

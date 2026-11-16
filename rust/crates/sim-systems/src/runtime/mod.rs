@@ -28,6 +28,7 @@ pub mod mind;
 pub mod mood;
 pub mod nav;
 pub mod needs;
+pub mod paths;
 pub mod neighbours;
 pub mod ore;
 pub mod resource_regen;
