@@ -1,5 +1,7 @@
 # 로드맵 (V8)
 
+> **M3D-IMG Part U — 진행 중·미게시 (2026-11-16):** 전용 `v8/art-ui`에서 기존 UI에 선택형 아트를 연결한다. 생성 목표는 **322장**(인물72·동물7·챕터10·연간목표5·카드18·기술166·건물/작업장38·키아트6), GPU 게이트가 허용하면 GLB 기반 아이콘 **119종**이다. 이는 목표 수량이며 완성 수량이 아니다. 누락 아트는 기존 표시로 대체하고 시뮬레이션·세이브는 변경하지 않는다. [결정](decisions/0068-optional-generated-ui-art.md); 진행·프롬프트·검증 자료는 `/Users/rexxa/work/art-img-data/ui/`. planner가 차기 gated publish에 통합하며 전체 게이트 통과·게시를 주장하지 않는다.
+
 > **M3D-ASSETS — 자산 제공 완료 (2026-11-15):** `v8/3d-assets`에서 정적572·생물28개 모델을 제공한다. [인벤토리](../assets/3d/INVENTORY.md), [결정](decisions/0067-content-complete-3d-asset-pack.md). 렌더러 통합·플레이 수용과 구분하며 원격 C3 기준 부재를 기록한다.
 
 > **C2 #15 — 완료 (2026-11-12):** C2-a `ad790ddd1`과 C2-b `8e4170c42`를 각각 전체 게이트36/36 PASS 뒤 v8/wip→v8/main fast-forward로 게시했다. 청동 데이터·광맥 발견(a)에 이어 실제 채굴·주석 교역·금속 사슬(b, `c2_chain_bronze`)을 연결했다. 동물 실루엣은 D-C2-1로 별도 art-import에 맡겼다. [보고](v8/c2/C2_REPORT.md), [결정](v8/c2/C2_DECISIONS.md). 아래 C1/M-SPINE 게시 전 문구는 당시 기록이다.

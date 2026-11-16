@@ -951,6 +951,7 @@ func _update_portrait(_agent_id: int) -> void:
 	var generated: Texture2D = GeneratedArt.texture("portraits", GeneratedArt.portrait_id(
 		SimReads.read(_world_sim, "get_agent_snapshot"), _selected_entity_bits, SimReads.read(_world_sim, "get_tech")))
 	_portrait.texture = generated if generated != null else ArtData.texture_at(path)
+	_portrait.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR if generated != null else CanvasItem.TEXTURE_FILTER_NEAREST
 	var row: Dictionary = ArtData.look(int(look.get("look", -1)))
 	var top: String = _loc("LOOK_TOP_" + str(row.get("top", "")).to_upper())
 	var hair: String = _loc("LOOK_HAIR_" + str(row.get("hair", "")).to_upper())

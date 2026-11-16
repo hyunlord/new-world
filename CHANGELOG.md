@@ -1,5 +1,15 @@
 # Changelog
 
+## M3D-IMG Part U — 2026-11-16 (v8/art-ui; implementation in progress)
+
+### Added
+- Optional generated UI art and a cached presentation-only loader (`scripts/ui/generated_art.gd`; ADR 0068). The inventory target is 322 generated images: 72 person portraits, seven animals, ten chapters, five yearly goals, 18 decision cards, 166 knowledge nodes, 38 unique building/station portraits and six key-art options. These are target counts, not a completed-generation claim.
+- Conditional target of 119 transparent item icons rendered from the existing item GLBs when the local GPU gate permits rendering. Prompt/adoption manifests, progress, captures and the Korean completion report live outside the repository under `/Users/rexxa/work/art-img-data/ui/`.
+
+### Changed
+- Existing inspector, card, chapter, technology, building and workshop surfaces are being connected through optional images with established presentation fallbacks. Portrait selection is deterministic from the selected entity, life stage, sex and wardrobe; it consumes no simulation RNG or save state.
+- UI item consumers use `ItemIcons.ui_texture_of`, keeping the loose-world `texture_of` seam separate. Planner integration into the next gated publish is pending; this branch does not claim a full gate or publication.
+
 ## M3D-SWITCH E2 — the 3D view is the only world view (branch v8/3d, not published)
 
 ### Added
