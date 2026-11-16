@@ -1,5 +1,17 @@
 # Changelog
 
+## M-GATE-REUSE — 2026-11-16 (implementation branch, not full-gated)
+
+### Added
+- Content-bound complete debug-suite receipts, independent target inventory, and
+  Python rejection tests using historical nested-output log excerpts.
+
+### Changed
+- Full gate step4 may verify a pre-gate receipt from the same frozen inputs;
+  rejected or absent receipts retain the complete debug invocation (D-GATE-2).
+- Debug summaries count final outer target results instead of nested subprocess
+  result lines. Other full-gate requirements remain in force.
+
 ## M3D-SWITCH E2 — the 3D view is the only world view (branch v8/3d, not published)
 
 ### Added
