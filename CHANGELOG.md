@@ -5,7 +5,9 @@
 ### Added
 - 318 adopted generated UI images: 72 person portraits, seven animals, ten chapters, five yearly goals, 18 decision cards, 166 knowledge nodes, 38 unique building/station portraits and two selected key-art images. Six key-art options were produced; four alternate options remain in the external data folder. Animal portraits(seven), yearly-goal art(five), and the selected title art(one) have no existing panel and remain in external data too;305 adopted generated images are available to the existing UI/startup surfaces.
 - 119 transparent 128-square item icons rendered from the existing single-item GLBs. Runtime art uses compact WebP; the selected loading image also has the PNG required by Godot's existing boot splash.
-- A cached presentation-only image loader (`scripts/ui/generated_art.gd`; ADR0068), deterministic portrait contract tests, and a real-scene eight-surface capture/optional headless verification tool. Prompts, all 340 generation attempts (18 rejected for subject/architecture), progress, screenshots, 22 family sheets and the Korean report live under `/Users/rexxa/work/art-img-data/ui/`.
+- A cached presentation-only image loader (`scripts/ui/generated_art.gd`; ADR0068), deterministic portrait contract tests, and a real-scene eight-surface capture/optional headless verification tool. Prompts, all 340 generation attempts (18 rejected for subject/architecture), progress, screenshots, 22 pre-correction family sheets and the Korean report live under `/Users/rexxa/work/art-img-data/ui/`.
+
+- Final startup-splash capture and refresh of seven affected family sheets are blocked by the shared GPU lane (878 denied attempts over 90 minutes); they are not claimed complete.
 
 ### Changed
 - Existing inspector, card, chapter, technology, building, workshop, recipe and item-list surfaces use optional art with established fallbacks. Portrait selection derives from entity, life stage, sex and wardrobe without simulation RNG or save changes. Images retain aspect, ignore mouse input and use linear filtering; pixel fallback portraits retain nearest filtering.

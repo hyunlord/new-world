@@ -13,7 +13,7 @@ The inventory target is 322 generated images (72 people, seven animals, ten chap
 - Connect existing panels only. Keep generated image nodes non-interactive, preserve localized text and command behavior, and scale art to the existing containers. A missing animal inspector or title/loading surface requires a planner question rather than a new unsolicited panel. Reuse the existing startup boot splash for selected loading art, with the PNG format required by Godot4.6 and aspect-preserving fit; keep its normal startup duration.
 - Add `ItemIcons.ui_texture_of` for optional icons rendered from existing GLBs. It falls back to the established item texture path. Leave the loose-world `texture_of` seam intact so a UI asset cannot change world piles or their established tests.
 - Use cloud image generation for authored art. Item icons come from the models, not image generation. Any local render or capture requires the shared GPU gate check to pass. Keep prompt/adoption manifests, alternate key art, contact sheets and raw evidence outside the repository in `/Users/rexxa/work/art-img-data/ui/`.
-- Work and push only `v8/art-ui`. The planner merges this branch into a later gated publish. Implementation and focused verification are complete; this decision records no full-gate or publication result.
+- Work and push only `v8/art-ui`. The planner merges this branch into a later gated publish. Implementation and eight-surface UI verification are complete. Final startup capture and refresh of the affected family sheets remain blocked by the shared GPU lock after 878 denied attempts over 90 minutes; this decision records no full-gate or publication result.
 
 ## Alternatives considered
 
