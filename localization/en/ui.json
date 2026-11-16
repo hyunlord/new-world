@@ -1897,6 +1897,8 @@
   "MIND_FACT_JOB_MINING": "Assigned to mine an ore outcrop",
   "MIND_FACT_JOB_SMELTING": "Assigned to smelt metal",
   "MIND_FACT_JOB_CASTING": "Assigned to cast metal",
+  "MIND_FACT_JOB_BLOOMERY": "Assigned to smelt iron in a bloomery",
+  "MIND_FACT_JOB_FORGING": "Assigned to forge iron",
   "MIND_MINING_WORK": "Mine ore",
   "MIND_SMELTING_WORK": "Smelt metal",
   "MIND_CASTING_WORK": "Cast metal",

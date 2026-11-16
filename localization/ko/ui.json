@@ -1897,6 +1897,8 @@
   "MIND_FACT_JOB_MINING": "광맥 채굴 작업을 맡고 있음",
   "MIND_FACT_JOB_SMELTING": "제련 작업을 맡고 있음",
   "MIND_FACT_JOB_CASTING": "주조 작업을 맡고 있음",
+  "MIND_FACT_JOB_BLOOMERY": "괴철로에서 쇠 녹이기를 맡고 있음",
+  "MIND_FACT_JOB_FORGING": "단조 작업을 맡고 있음",
   "MIND_MINING_WORK": "광석 캐기",
   "MIND_SMELTING_WORK": "금속 제련",
   "MIND_CASTING_WORK": "금속 주조",

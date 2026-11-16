@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 2051,
+    "active_key_count": 2053,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 2051,
+    "key_count": 2053,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -1268,9 +1268,11 @@
     "MIND_FACT_HUNGRY": "Needs food",
     "MIND_FACT_IDLE": "Free to act",
     "MIND_FACT_INVENTORY_ROOM": "Room to carry supplies",
+    "MIND_FACT_JOB_BLOOMERY": "Assigned to smelt iron in a bloomery",
     "MIND_FACT_JOB_CASTING": "Assigned to cast metal",
     "MIND_FACT_JOB_DESTINATION_DISTANCE": "Distance to work destination",
     "MIND_FACT_JOB_FOOD_TRANSPORT": "Transporting food",
+    "MIND_FACT_JOB_FORGING": "Assigned to forge iron",
     "MIND_FACT_JOB_HARVESTING": "Harvest job active",
     "MIND_FACT_JOB_LIVESTOCK": "Assigned to capture or collect livestock products",
     "MIND_FACT_JOB_MINING": "Assigned to mine an ore outcrop",
