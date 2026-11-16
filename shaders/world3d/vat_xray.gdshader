@@ -1,6 +1,6 @@
 // vat_xray.gdshader — the see-through pass of the VAT people (after the outline pass; scripts/world3d/vat3d.gd).
 // Where a roof, wall or tree stands more than `min_gap` metres in front of the animated body, the body is drawn as a
-// flat translucent silhouette (light at night, dark by day), so people indoors or under canopy stay findable (the 2D
+// translucent painted character (or a light-at-night, dark-by-day silhouette for untextured models), so people stay findable (the 2D
 // view drew everyone on top). The person's own parts never count as an occluder (they are within `min_gap`).
 shader_type spatial;
 render_mode unshaded, depth_test_disabled, depth_draw_never, blend_mix, cull_back, shadows_disabled, specular_disabled, fog_disabled;
@@ -8,6 +8,8 @@ render_mode unshaded, depth_test_disabled, depth_draw_never, blend_mix, cull_bac
 #include "res://shaders/world3d/vat_anim.gdshaderinc"
 global uniform float w3d_night;
 uniform sampler2D depth_tex : hint_depth_texture, filter_nearest;
+uniform bool textured = false;
+uniform sampler2D atlas : source_color, filter_linear_mipmap, repeat_disable;
 uniform float min_gap = 0.3;
 uniform vec4 day_colour : source_color = vec4(0.14, 0.11, 0.09, 0.8);
 uniform vec4 night_colour : source_color = vec4(0.91, 0.89, 0.81, 0.7);
@@ -25,6 +27,6 @@ void fragment() {
 		discard;
 	}
 	vec4 c = mix(day_colour, night_colour, clamp(w3d_night, 0.0, 1.0));
-	ALBEDO = c.rgb;
+	ALBEDO = textured ? texture(atlas, UV).rgb : c.rgb;
 	ALPHA = c.a;
 }
