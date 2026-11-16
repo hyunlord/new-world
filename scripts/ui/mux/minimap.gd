@@ -6,7 +6,7 @@ extends PanelContainer
 signal map_used
 
 const ArtData = preload("res://scripts/world/art/art_data.gd")
-const People = preload("res://scripts/world/colony/agent_layer.gd")
+const People = preload("res://scripts/world/people_view.gd")
 const View = preload("res://scripts/world/colony/view.gd")
 const Tone = preload("res://scripts/world/art/tone.gd")
 const THEME = preload("res://assets/ui/worldsim_theme.tres")
@@ -21,7 +21,6 @@ class MapCanvas extends Control:
 
 var _world: Node = null
 var _camera: Camera2D = null
-var _people_layer: Node = null
 var _canvas: MapCanvas = null
 var _toggle: Button = null
 var _texture: ImageTexture = null
@@ -53,7 +52,6 @@ var _max_draw_usec: int = 0
 func setup(world: Node, camera: Camera2D) -> void:
 	_world = world
 	_camera = camera
-	_people_layer = get_node_or_null("/root/Main/ColonyView/AgentLayer")
 	if _canvas == null:
 		theme = THEME
 		var column: VBoxContainer = VBoxContainer.new()
@@ -115,8 +113,7 @@ func _begin_overlay() -> void:
 	_static_key = key
 	_image = _terrain_image.duplicate() if rebuild else _static_image.duplicate()
 	var agents: Dictionary = _layers[2]
-	if _people_layer == null:
-		_households = People.household_keys(agents.get("agent_ids", PackedInt64Array()), agents.get("life_stages", PackedByteArray()), agents.get("mothers", PackedInt64Array()), agents.get("fathers", PackedInt64Array()), agents.get("partners", PackedInt64Array()))
+	_households = People.household_keys(agents.get("agent_ids", PackedInt64Array()), agents.get("life_stages", PackedByteArray()), agents.get("mothers", PackedInt64Array()), agents.get("fathers", PackedInt64Array()), agents.get("partners", PackedInt64Array()))
 	_phase = 1 if rebuild else 3
 	_index = 0
 
@@ -155,9 +152,9 @@ func _paint_layer() -> void:
 	if _phase == 3:
 		var ids: PackedInt64Array = row.get("agent_ids", PackedInt64Array())
 		if _index < ids.size():
-			var key: int = int(_people_layer.call("household_of", ids[_index])) if _people_layer != null else int(_households.get(ids[_index], ids[_index]))
+			var key: int = int(_households.get(ids[_index], ids[_index]))
 			if key < 0: key = ids[_index]
-			colour = People._ring_colour(key, ArtData.param("lod.household_ring_rgb", []))
+			colour = People.ring_colour(key, ArtData.param("lod.household_ring_rgb", []))
 	elif _phase == 4:
 		var kinds: PackedInt64Array = row.get("kinds", PackedInt64Array())
 		if _index < kinds.size():

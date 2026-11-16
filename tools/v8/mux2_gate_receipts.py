@@ -73,13 +73,14 @@ def validate_p7_admission(report: Node) -> None:
         require(admitted <= started < deadline, 'P7 admission/start ordering')
 
 
+# M3D-SWITCH E2: the world draws only in 3D; these receipts measure the 3D view.
 def commands(root: Path, output: Path, kind: Kind, godot: Path) -> list[list[str]]:
     base = ['bash', str(root / 'tools/v8/run_bounded.sh')]
     engine = [str(godot), '--path', str(root), '--resolution', '1920x1080']
     match kind:
         case 'stall':
-            return [base + [str(stall_timeout())] + engine + ['--always-on-top', '--windowed', '--script', 'res://tools/v8/mux2_stall_test.gd',
-                                              '--', str(output / 'run')]]
+            return [base + [str(stall_timeout())] + engine + ['--always-on-top', '--windowed', '--script',
+                                              'res://tools/v8/mux2_stall_test.gd', '--', str(output / 'run')]]
         case 'visibility':
             return [base + ['1800'] + engine + ['--headless', '--script',
                     'res://tools/v8/mux2_visibility_saves.gd', '--', str(output / 'saves')],

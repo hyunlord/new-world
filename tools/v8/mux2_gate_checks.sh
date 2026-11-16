@@ -36,24 +36,14 @@ case "$mode" in
       actual_h_format9_fixture_loads_as_oak_then_resaves_as_current_format -- --ignored --exact)
     ;;
   oracles)
-    for test in mux2_camp_framing_test mux2_visibility_validator_test mux2_marker_layout_test mux2_coincident_test mux2_badge_index_test mux2_badge_packing_test mux2_overlap_test mux2_badge_grid_test mux2_badge_aggregate_test mux2_bake_receipt_test mux2_badge_extent_test mux2_wall_cache_test; do
+    # M3D-SWITCH E2: the 2D badge, marker, person-cache, wall-cache and bake oracles went with the 2D renderer; the
+    # camp framing geometry and the visibility validator stay (the visibility validator now also covers the 3D receipt).
+    for test in mux2_camp_framing_test mux2_visibility_validator_test; do
       log="$LOG/$test.log"
       bash tools/v8/run_bounded.sh 300 "$GODOT_BIN" --headless --path . \
         --script "res://tools/v8/$test.gd" > "$log" 2>&1
       python3 tools/v8/mux2_gate_oracle_log.py "$test" "$log"
     done
-    log="$LOG/mux2_badge_local_test.log"
-    bash tools/v8/run_bounded.sh 300 "$GODOT_BIN" --headless --path . \
-      --script res://tools/v8/mux2_badge_local_test.gd -- --expect-lazy > "$log" 2>&1
-    python3 tools/v8/mux2_gate_oracle_log.py mux2_badge_local_test "$log"
-    log="$LOG/mux2_person_cache_test.log"
-    bash tools/v8/run_bounded.sh 300 "$GODOT_BIN" --headless --path . \
-      --script res://tools/v8/mux2_person_cache_test.gd -- --expect-cache > "$log" 2>&1
-    python3 tools/v8/mux2_gate_oracle_log.py mux2_person_cache_test "$log"
-    log="$LOG/mux2_extent_owner_test.log"
-    bash tools/v8/run_bounded.sh 300 "$GODOT_BIN" --headless --path . \
-      --script res://tools/v8/mux2_extent_owner_test.gd -- --expect-cache > "$log" 2>&1
-    python3 tools/v8/mux2_gate_oracle_log.py mux2_extent_owner_test "$log"
     log="$LOG/stall-self-test.log"
     bash tools/v8/run_bounded.sh 120 "$GODOT_BIN" --headless --path . \
       --script res://tools/v8/mux2_stall_test.gd -- --self-test > "$log" 2>&1

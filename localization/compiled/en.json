@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 2043,
+    "active_key_count": 2051,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 2043,
+    "key_count": 2051,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -2060,6 +2060,14 @@
     "VILLAGE_RESTLESS_CALM": "Calm",
     "VILLAGE_RESTLESS_READY": "Ready to split",
     "VILLAGE_RESTLESS_UNEASY": "Uneasy",
+    "W3D_OVERLAY_BEAUTY": "Beauty map (O)",
+    "W3D_OVERLAY_DANGER": "Danger map (O)",
+    "W3D_OVERLAY_FOOD": "Food smell map (O)",
+    "W3D_OVERLAY_LIGHT": "Light map (O)",
+    "W3D_OVERLAY_NOISE": "Noise map (O)",
+    "W3D_OVERLAY_SOCIAL": "Social map (O)",
+    "W3D_OVERLAY_SPIRITUAL": "Spiritual map (O)",
+    "W3D_OVERLAY_WARMTH": "Warmth map (O)",
     "WORK_BUILD": "Build",
     "WORK_CHOP": "Chop",
     "WORK_CRAFT": "Craft",

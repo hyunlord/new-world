@@ -1,8 +1,9 @@
 # camera_controller.gd (Camera2D in scenes/main.tscn): the colony camera and the simulation speed keys.
 # M-ART2: zoom steps from assets/v8art/render_params.json `camera.zooms` (¼×, ½×, 1×, 2×; default `camera.default_zoom`
-#   1×) with the wheel, `-` and `=`; below 1× the people and animals become LOD markers (agent_layer.gd); pan with
+#   1×) with the wheel, `-` and `=` (the 3D camera rig follows this camera; M3D-1); pan with
 #   WASD / arrows (`camera.pan_px_per_second` screen pixels a second, so the same screen speed at every zoom) and a
-#   middle-button drag; M-UX adds trackpad pan/pinch, cursor-anchored 120 ms zoom, left map drag and right drag.
+#   middle-button drag; M-UX adds trackpad pan/pinch, cursor-anchored 120 ms zoom (anchored on the 3D view's ground,
+#   ViewProjection), left map drag and right drag.
 #   Click actions are deferred until release so panning never selects, cancels or submits a draft order.
 #   In debug builds F12 re-reads render_params.json (ArtData.reload_params) and shows the toast
 #   "렌더 설정 다시 읽음" (UI_RENDER_PARAMS_RELOADED) for two seconds; starts centred on the camp hearth, and Home or H centres on it again (C is the chronicle,
@@ -15,6 +16,7 @@
 extends Camera2D
 
 const View = preload("res://scripts/world/colony/view.gd")
+const ViewProjection = preload("res://scripts/world/view_projection.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 const MarkerLayout = preload("res://scripts/world/colony/marker_layout.gd")
 const TOAST_SECONDS: float = 2.0
@@ -61,10 +63,16 @@ var _frame_stable: int = 0
 var _camp_report: Dictionary = {"status": "idle"}
 var _toast: Label = null
 var _toast_left: float = 0.0
+## M3D-1: the 3D view's screen rotation (radians; 0 in 2D) — screen-space pans turn by it so W stays "up on screen".
+var screen_rotation: float = 0.0
+## M3D-1: the 3D view's zoom ladder (empty in 2D: render_params.json `camera.zooms`).
+var zoom_steps_override: Array[float] = []
 
 
 ## The zoom ladder (camera zoom factors, ascending) from render_params.json.
 func zoom_steps() -> Array[float]:
+	if not zoom_steps_override.is_empty():
+		return zoom_steps_override.duplicate()
 	var out: Array[float] = []
 	var raw: Variant = ArtData.param("camera.zooms", [0.25, 0.5, 1.0, 2.0])
 	if raw is Array:
@@ -226,8 +234,9 @@ func _release_pointer() -> void:
 ## A screen-space drag; settings affect gestures, not keyboard direction.
 func pan_screen(distance: Vector2) -> void:
 	_cancel_camp_framing()
-	position -= distance * (-1.0 if _invert_pan else 1.0) / zoom.x
-	_zoom_anchor_world -= distance * (-1.0 if _invert_pan else 1.0) / zoom.x
+	var world_distance: Vector2 = (distance * (-1.0 if _invert_pan else 1.0) / zoom.x).rotated(screen_rotation)
+	position -= world_distance
+	_zoom_anchor_world -= world_distance
 	_clamp_position()
 	camera_activity.emit("pan")
 
@@ -311,7 +320,7 @@ func step_zoom(direction: int, screen_anchor: Vector2 = Vector2(-1, -1)) -> void
 	_zoom_target = steps[index]
 	_zoom_elapsed = 0.0
 	_zoom_anchor_screen = get_viewport().get_mouse_position() if screen_anchor.x < 0 else screen_anchor
-	_zoom_anchor_world = get_canvas_transform().affine_inverse() * _zoom_anchor_screen
+	_zoom_anchor_world = ViewProjection.screen_to_world(_zoom_anchor_screen)
 	camera_activity.emit("zoom")
 
 
@@ -325,8 +334,16 @@ func _animate_zoom(delta: float) -> void:
 		return
 	_zoom_elapsed = minf(ZOOM_SECONDS, _zoom_elapsed + delta)
 	zoom = Vector2.ONE * lerpf(_zoom_from, _zoom_target, _zoom_elapsed / ZOOM_SECONDS)
-	position = _zoom_anchor_world - (_zoom_anchor_screen - get_viewport_rect().size * 0.5) / zoom.x
+	position = _zoom_anchor_world - ((_zoom_anchor_screen - get_viewport_rect().size * 0.5) / zoom.x).rotated(screen_rotation)
 	_clamp_position()
+	# The 3D view is a tilted perspective, not the top-down map this formula assumes: place its camera for the new
+	# zoom and shift by what still drifts, so the ground point under the cursor stays put.
+	var rig: Object = ViewProjection.provider.get("rig") if ViewProjection.active() else null
+	if rig != null:
+		rig.call("update_camera")
+		position += _zoom_anchor_world - ViewProjection.screen_to_world(_zoom_anchor_screen)
+		_clamp_position()
+		rig.call("update_camera")
 
 
 ## Pause (`on`) or resume the simulation (as Space does).
@@ -365,7 +382,7 @@ func _process(delta: float) -> void:
 			direction += Vector2(float(cursor.x > viewport_size.x - EDGE_PAN_MARGIN) - float(cursor.x < EDGE_PAN_MARGIN), float(cursor.y > viewport_size.y - EDGE_PAN_MARGIN) - float(cursor.y < EDGE_PAN_MARGIN))
 	if direction != Vector2.ZERO:
 		_cancel_camp_framing()
-		var movement: Vector2 = direction * float(ArtData.param("camera.pan_px_per_second", 900.0)) * delta / zoom.x
+		var movement: Vector2 = (direction * float(ArtData.param("camera.pan_px_per_second", 900.0)) * delta / zoom.x).rotated(screen_rotation)
 		position += movement
 		_zoom_anchor_world += movement
 		_clamp_position()
@@ -452,15 +469,11 @@ func _cancel_camp_framing() -> void:
 	_camp_report = {"status": "cancelled"}
 
 
-## Wait for populated figures and consecutive settled HUD layouts, then frame once.
+## Wait for populated figures and consecutive settled HUD layouts, then frame once. Bodies are the view's screen
+## rects of the people (ViewProjection.person_rect: the 3D bodies).
 func _frame_camp() -> void:
-	var layer: Node2D = get_node_or_null("/root/Main/ColonyView/AgentLayer") as Node2D
 	var ui: Node = get_node_or_null("/root/Main/UI")
-	if layer == null or ui == null or not layer.is_node_ready():
-		return
-	if bool(layer.call("lod_active")):
-		_frame_camp_pending = false
-		_camp_report = {"status": "lod"}
+	if ui == null:
 		return
 	var obstacles: Array[Rect2] = []
 	MarkerLayout.ui_rects(ui, obstacles)
@@ -484,7 +497,7 @@ func _frame_camp() -> void:
 	var outside: Array[int] = []
 	var viewport: Rect2 = get_viewport_rect()
 	for bits: int in ids:
-		var rectangle: Rect2 = layer.call("framing_body_rect", bits)
+		var rectangle: Rect2 = ViewProjection.person_rect(bits)
 		if not rectangle.has_area():
 			return
 		if viewport.encloses(rectangle):
@@ -504,9 +517,9 @@ func _frame_camp() -> void:
 		return
 	var shift: Vector2 = result["translation"]
 	var original: Vector2 = position
-	position -= shift / zoom.x
+	position -= (shift / zoom.x).rotated(screen_rotation)
 	_clamp_position()
-	var achieved: Vector2 = (original - position) * zoom.x
+	var achieved: Vector2 = ((original - position) * zoom.x).rotated(-screen_rotation)
 	if not MarkerLayout.frame_translation_clear(bodies, obstacles, viewport, achieved):
 		position = original
 		_camp_report["status"] = "clamped"

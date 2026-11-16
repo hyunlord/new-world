@@ -101,6 +101,20 @@ func _shop_bills(shop: int) -> Array[Dictionary]:
 	return WorkshopPanel.bills_of(shops, row)
 
 
+## The row of `after` whose bill id is not in `before` (-1 when none or several are new).
+func _new_bill_row(before: Array[Dictionary], after: Array[Dictionary]) -> int:
+	var old: Array[int] = []
+	for bill: Dictionary in before:
+		old.append(int(bill["id"]))
+	var row: int = -1
+	for i: int in after.size():
+		if not old.has(int(after[i]["id"])):
+			if row >= 0:
+				return -1
+			row = i
+	return row
+
+
 func _run() -> void:
 	_main = (load("res://scenes/main.tscn") as PackedScene).instantiate()
 	root.add_child(_main)
@@ -133,9 +147,15 @@ func _run() -> void:
 	var nxs: PackedInt32Array = overlay.get("node_xs", PackedInt32Array())
 	var nys: PackedInt32Array = overlay.get("node_ys", PackedInt32Array())
 	var nkinds: PackedInt32Array = overlay.get("node_kinds", PackedInt32Array())
+	# The starting colony already marks a few boulders (quarry designations at tick 0); only unmarked ones can be marked.
+	var already: Dictionary = {}
+	var pre_x: PackedInt32Array = overlay.get("designation_xs", PackedInt32Array())
+	var pre_y: PackedInt32Array = overlay.get("designation_ys", PackedInt32Array())
+	for i: int in mini(pre_x.size(), pre_y.size()):
+		already[Vector2i(pre_x[i], pre_y[i])] = true
 	var boulders: Array[Vector2i] = []
 	for i: int in mini(nxs.size(), mini(nys.size(), nkinds.size())):
-		if nkinds[i] == 0:
+		if nkinds[i] == 0 and not already.has(Vector2i(nxs[i], nys[i])):
 			boulders.append(Vector2i(nxs[i], nys[i]))
 	boulders.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return (a - hearth).length_squared() < (b - hearth).length_squared())
 	_check("boulders_exist", boulders.size() >= 2, "boulders=%d" % boulders.size())
@@ -169,7 +189,7 @@ func _run() -> void:
 	var placed: Dictionary = tool.call("place_at", spot)
 	await _frames(2)
 	overlay = SimReads.read(_world, "get_colony_overlay")
-	_check("knapping_spot_blueprint", bool(placed.get("accepted", false)) and (overlay.get("site_kinds", PackedInt32Array()) as PackedInt32Array).has(1), "at=%s %s" % [spot, placed])
+	_check("knapping_spot_blueprint", bool(placed.get("accepted", false)) and (overlay.get("site_kinds", PackedInt64Array()) as PackedInt64Array).has(1), "at=%s %s" % [spot, placed])
 	tool.call("set_mode", 0)
 	# Advance until a workshop exists.
 	var shop: int = -1
@@ -182,36 +202,48 @@ func _run() -> void:
 		var shops: Dictionary = SimReads.read(_world, "get_workshops")
 		var ids: PackedInt32Array = shops.get("ids", PackedInt32Array())
 		# M4: the camp hearth is a workshop too (kind 11, fire_pot only) from the start; find the knapping spot (kind 1).
-		var row: int = (shops.get("kinds", PackedInt32Array()) as PackedInt32Array).find(1)
+		var row: int = (shops.get("kinds", PackedInt64Array()) as PackedInt64Array).find(1)
 		if row >= 0 and row < ids.size():
 			shop = ids[row]
 			shop_tile = Vector2i((shops["xs"] as PackedInt32Array)[row], (shops["ys"] as PackedInt32Array)[row])
 	_check("knapping_spot_built", shop >= 0, "after %d ticks" % waited)
 	if shop >= 0:
 		await _frames(2)
-		var layer: Node = _main.get_node("ColonyView/BuildingLayer")
-		_check("building_layer_draws_it", int(layer.call("workshop_count")) >= 1)
-		_check("no_hearth_on_workshop", int(layer.call("hearth_count")) == 1, "hearths drawn=%d" % int(layer.call("hearth_count")))
+		# M3D-SWITCH: World3D/Props draws the workshops and the hearth (the 2D BuildingLayer's counts). Its rebuild waits
+		# for World3D's heavy-work slot (one layer per frame, none on a simulation step): up to a second.
+		var props: Node = _main.get_node("World3D/Props")
+		for _i: int in 60:
+			if int((props.call("drawn_counts") as Dictionary)["workshops"]) >= 1:
+				break
+			await process_frame
+		var drawn: Dictionary = props.call("drawn_counts")
+		_check("building_layer_draws_it", int(drawn["workshops"]) >= 1, str(drawn))
+		_check("no_hearth_on_workshop", int(drawn["hearths"]) == 1, "hearths drawn=%d" % int(drawn["hearths"]))
 		tool.call("click_world", Vector2(shop_tile) * View.TILE + Vector2(View.TILE, View.TILE) * 0.5, shop_tile)
 		await _frames(2)
 		_check("click_opens_workshop_panel", int(shop_panel.call("workshop_id")) == shop and (shop_panel as Control).visible)
+		# A new workshop may already carry the colony's own standing bill (a knap keep order); the bill this test adds
+		# is the one row that was not there before, and its row's buttons are the ones pressed.
+		var before_bills: Array[Dictionary] = _shop_bills(shop)
 		var added: bool = _press(shop_panel, "Add") and _press(shop_panel, "Recipe_knap_blade")
 		await _frames(2)
 		var bills: Array[Dictionary] = _shop_bills(shop)
-		_check("add_bill_make_5", added and bills.size() == 1 and int(bills[0]["mode"]) == 0 and int(bills[0]["count"]) == 5, str(bills))
-		_press(shop_panel, "Plus_0")
+		var row: int = _new_bill_row(before_bills, bills)
+		_check("add_bill_make_5", added and bills.size() == before_bills.size() + 1 and row >= 0 and int(bills[row]["mode"]) == 0 and int(bills[row]["count"]) == 5, str(bills))
+		_press(shop_panel, "Plus_%d" % row)
 		await _frames(2)
 		bills = _shop_bills(shop)
-		_check("plus_raises_to_6", bills.size() == 1 and int(bills[0]["count"]) == 6, str(bills))
-		_press(shop_panel, "Mode_0")
+		_check("plus_raises_to_6", bills.size() == before_bills.size() + 1 and int(bills[row]["count"]) == 6, str(bills))
+		_press(shop_panel, "Mode_%d" % row)
 		await _frames(2)
 		bills = _shop_bills(shop)
-		_check("switch_to_keep", bills.size() == 1 and int(bills[0]["mode"]) == 1 and int(bills[0]["count"]) == 6, str(bills))
-		_press(shop_panel, "Suspend_0")
+		_check("switch_to_keep", bills.size() == before_bills.size() + 1 and int(bills[row]["mode"]) == 1 and int(bills[row]["count"]) == 6, str(bills))
+		_press(shop_panel, "Suspend_%d" % row)
 		await _frames(2)
 		bills = _shop_bills(shop)
-		_check("suspend", bills.size() == 1 and int(bills[0]["suspended"]) == 1, str(bills))
-		var status: Label = shop_panel.find_child("Bill_0", true, false).get_child(1) as Label
+		_check("suspend", bills.size() == before_bills.size() + 1 and int(bills[row]["suspended"]) == 1, str(bills))
+		var bill_node: Node = shop_panel.find_child("Bill_%d" % row, true, false)
+		var status: Label = bill_node.get_child(1) as Label if bill_node != null else null
 		_check("bill_status_text", status != null and status.text.length() > 0, status.text if status != null else "")
 		_press(shop_panel, "Add")
 		await _shot("m2_workshop.png")
@@ -306,7 +338,7 @@ func _shops() -> Dictionary:
 func _shop_of(code: int) -> int:
 	var shops: Dictionary = _shops()
 	var ids: PackedInt32Array = shops.get("ids", PackedInt32Array())
-	var kinds: PackedInt32Array = shops.get("kinds", PackedInt32Array())
+	var kinds: PackedInt64Array = shops.get("kinds", PackedInt64Array())
 	for i: int in mini(ids.size(), kinds.size()):
 		if kinds[i] == code:
 			return ids[i]
@@ -350,7 +382,6 @@ func _run_late() -> void:
 	var tool: Node = _main.get_node_or_null("ColonyView/OrderTool")
 	var bar: Node = _main.get_node_or_null("UI/OrderBar")
 	var shop_panel: Node = _main.get_node_or_null("UI/WorkshopPanel")
-	var priorities: Node = _main.get_node_or_null("UI/PriorityPanel")
 	var inspector: Node = _main.get_node_or_null("UI/AgentInspectorPanel")
 	var camera: Camera2D = _main.get_node_or_null("Camera2D") as Camera2D
 	await _key(KEY_SPACE)

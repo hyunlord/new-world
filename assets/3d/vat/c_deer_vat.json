@@ -1,0 +1,71 @@
+{
+ "width": 2717,
+ "vertex_count": 2717,
+ "split_vertex_count": 5994,
+ "frames": 80,
+ "fps": 15,
+ "normals_offset": -1,
+ "clips": {
+  "idle": {
+   "start": 0,
+   "count": 20,
+   "loop": true,
+   "duration": 1.3333
+  },
+  "walk": {
+   "start": 20,
+   "count": 20,
+   "loop": true,
+   "duration": 1.3333
+  },
+  "graze": {
+   "start": 40,
+   "count": 20,
+   "loop": true,
+   "duration": 1.3333
+  },
+  "lie_down": {
+   "start": 60,
+   "count": 20,
+   "loop": true,
+   "duration": 1.3333
+  },
+  "run": {
+   "start": 20,
+   "count": 20,
+   "loop": true,
+   "duration": 1.3333,
+   "alias_of": "walk"
+  },
+  "rest": {
+   "start": 60,
+   "count": 20,
+   "loop": true,
+   "duration": 1.3333,
+   "alias_of": "lie_down"
+  },
+  "attack": {
+   "start": 0,
+   "count": 20,
+   "loop": true,
+   "duration": 1.3333,
+   "alias_of": "idle"
+  }
+ },
+ "bounds_min": [
+  -0.5797,
+  -0.0004,
+  -0.856
+ ],
+ "bounds_max": [
+  0.5797,
+  1.8429,
+  1.1844
+ ],
+ "height": 1.8188,
+ "format": "float16 LE RGBA, row-major; one row of positions (Godot xyz, w=1) per frame; texel x = UV2.x * width (the unsplit vertex); no normal rows: the shader derives flat face normals; UV0 = atlas UVs",
+ "textured": true,
+ "atlas": "c_deer_atlas.png",
+ "source_commit": "f0b91f999",
+ "source": "living/deer/deer.glb"
+}

@@ -14,6 +14,9 @@
 #   `firewood_day_need`; a sick person's badge; a chronicle entry with a cause shows "→ 왜?" and a click opens the
 #   chain (UI/WhyPanel, one line per get_chronicle_why link); the 이야기 tab lists that person's lines; the year
 #   summary heads the chronicle once a year is over.
+#   3D view (M3D-SWITCH): rings, outlines, badges and mood discs are read from the map labels (World3D/LabelLayer/Labels
+#   `drawn()`) with the person or deer on screen, hunt zones from World3D/Overlay, animals and their clips from
+#   World3D/Animals, the M5 item models from World3D/Props; clicks go to the projected bodies.
 # Bridge methods called: via SimReads get_story, get_animals, get_drafted, get_agent_snapshot, get_world_info,
 #   get_time_snapshot, get_colony_overlay, advance_ticks; get_agent_m5, get_agent_detail, get_chronicle_since,
 #   get_chronicle_why, get_teach_suggestion, get_tech_node, get_year_summary (direct); and the UI's own calls.
@@ -27,8 +30,10 @@ const StoryText = preload("res://scripts/ui/story_text.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const View = preload("res://scripts/world/colony/view.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
-const AnimalLayer = preload("res://scripts/world/colony/animal_layer.gd")
-const OverlayLayer = preload("res://scripts/world/colony/overlay_layer.gd")
+const ViewProjection = preload("res://scripts/world/view_projection.gd")
+const Data3D = preload("res://scripts/world3d/data3d.gd")
+const Props3D = preload("res://scripts/world3d/props3d.gd")
+const HUNT_MODE: int = 10
 const KEY_RE: String = "[A-Z][A-Z0-9]*(_[A-Z0-9]+)+"
 const DOORWAY: int = 10
 ## How far the clock may be advanced looking for the first pack and cold snap (display days).
@@ -43,8 +48,14 @@ var _raw: RegEx
 var _tool: Node
 var _bar: Node
 var _inspector: Node
+## M3D-SWITCH: the people's and deer marks are World3D/LabelLayer/Labels (`drawn()`), the animals World3D/Animals,
+## the hunt zones World3D/Overlay, the mood flag Main/PeopleView.
 var _agents: Node
 var _animals: Node
+var _people: Node
+var _overlay: Node
+var _people_view: Node
+var _world3d: Node
 var _banner: Node
 var _camera: Node
 
@@ -116,7 +127,47 @@ func _drag(a: Vector2, b: Vector2) -> void:
 ## The window point of world position `p` under the current camera (the window may be smaller than the 1920×1080
 ## canvas headless: the stretch transform maps canvas pixels to window pixels, as input events arrive).
 func _screen(p: Vector2) -> Vector2:
-	return root.get_final_transform() * (root.get_canvas_transform() * p)
+	return root.get_final_transform() * ViewProjection.world_to_screen(p)
+
+
+## The window point of the middle of a World3D body ({feet, h}), or (-1, -1) when there is none.
+func _body_screen(body: Dictionary) -> Vector2:
+	if body.is_empty():
+		return Vector2(-1, -1)
+	var cam: Camera3D = _world3d.call("camera") as Camera3D
+	return root.get_final_transform() * cam.unproject_position((body["feet"] as Vector3) + Vector3(0, float(body["h"]) * 0.5, 0))
+
+
+## The drawn body of wild animal `id` (World3D/Animals), or {}.
+func _animal_body(id: int) -> Dictionary:
+	for body: Dictionary in _animals.call("bodies", HUNT_MODE):
+		if int(body["id"]) == id:
+			return body
+	return {}
+
+
+## The marks drawn over person `bits` this frame (World3D/LabelLayer/Labels): {drafted, sick, fleeing, tint (mood),
+## shown (their body is on screen, so an absent mark is really not drawn)}.
+func _marks(bits: int) -> Dictionary:
+	var out: Dictionary = {"shown": root.get_visible_rect().encloses(ViewProjection.person_rect(bits))}
+	for row: Dictionary in _agents.call("drawn"):
+		if int(row.get("bits", -1)) != bits:
+			continue
+		match str(row.get("kind", "")):
+			"drafted":
+				out["drafted"] = true
+			"sick":
+				out["sick"] = true
+			"flee":
+				out["fleeing"] = true
+			"mood":
+				out["tint"] = row["tint"]
+	return out
+
+
+## Whether the full (own mark) hunt ring is drawn over animal `id` this frame.
+func _hunt_ring(id: int) -> bool:
+	return (_agents.call("drawn") as Array).any(func(row: Dictionary) -> bool: return row.get("kind", "") == "hunt" and int(row.get("id", -1)) == id and bool(row.get("marked", false)))
 
 
 ## The window point of a UI control's centre.
@@ -134,6 +185,27 @@ func _look_at(tile: Vector2i) -> void:
 	(_camera as Camera2D).reset_smoothing()
 	(_camera as Camera2D).force_update_scroll()
 	await _frames(3)
+	# The HUD's decision cards and alerts may cover the screen centre: pan so that `tile` sits on map clear of GUI.
+	var clear: Vector2 = await _clear_point()
+	var at: Vector2 = preload("res://scripts/world/view_projection.gd").world_to_screen(View.tile_centre(tile))
+	_camera.call("pan_screen", clear - at)
+	(_camera as Camera2D).force_update_scroll()
+	await _frames(3)
+
+
+## A canvas point with no GUI control under it or 64 px around it (the first of a few spots left of the HUD's cards).
+func _clear_point() -> Vector2:
+	var size: Vector2 = root.get_visible_rect().size
+	for spot: Vector2 in [Vector2(0.4, 0.55), Vector2(0.3, 0.5), Vector2(0.4, 0.7), Vector2(0.25, 0.65), Vector2(0.5, 0.75)]:
+		var clear: bool = true
+		for step: Vector2 in [Vector2.ZERO, Vector2(64, 0), Vector2(-64, 0), Vector2(0, 64), Vector2(0, -64)]:
+			await _motion(root.get_final_transform() * (size * spot + step))
+			if root.gui_get_hovered_control() != null:
+				clear = false
+				break
+		if clear:
+			return size * spot
+	return size * 0.5
 
 
 ## Whether `text` is non-empty and holds no key-shaped token.
@@ -200,6 +272,15 @@ func _deer_near(from: Vector2i) -> Dictionary:
 	return best
 
 
+## The tile where the person with AgentId `agent` stands now (the snapshot), or (-1, -1).
+func _adult_tile(agent: int) -> Vector2i:
+	var snap: Dictionary = SimReads.read(_world, "get_agent_snapshot")
+	var i: int = (snap.get("agent_ids", PackedInt64Array()) as PackedInt64Array).find(agent)
+	if i < 0:
+		return Vector2i(-1, -1)
+	return Vector2i((snap["xs"] as PackedInt32Array)[i], (snap["ys"] as PackedInt32Array)[i])
+
+
 func _m5(agent: int) -> Dictionary:
 	var read: Variant = _world.call("get_agent_m5", agent)
 	return read if read is Dictionary else {}
@@ -215,14 +296,17 @@ func _inspect(person: Dictionary) -> void:
 	await _frames(2)
 
 
-## A tile near `from` with nobody and no animal drawn on it.
+## A tile near `from` with nobody and no animal drawn under its centre on screen (a click there picks nothing) and no
+## GUI over it.
 func _empty_tile(from: Vector2i) -> Vector2i:
 	for r: int in range(2, 9):
 		for off: Vector2i in [Vector2i(r, 0), Vector2i(0, r), Vector2i(-r, 0), Vector2i(0, -r), Vector2i(r, r)]:
 			var t: Vector2i = from + off
-			var p: Vector2 = Vector2(t) * View.TILE + Vector2(View.TILE, View.TILE) * 0.5
-			if int(_agents.call("entity_at", p)) < 0 and int(_animals.call("animal_at", p)) < 0:
-				return t
+			var screen: Vector2 = ViewProjection.world_to_screen(View.tile_centre(t))
+			if ViewProjection.pick(screen, 0).is_empty() and ViewProjection.pick(screen, HUNT_MODE).is_empty():
+				await _motion(root.get_final_transform() * screen)
+				if root.gui_get_hovered_control() == null:
+					return t
 	return from + Vector2i(3, 3)
 
 
@@ -244,8 +328,12 @@ func _run() -> void:
 	_tool = _main.get_node_or_null("ColonyView/OrderTool")
 	_bar = _main.get_node_or_null("UI/OrderBar")
 	_inspector = _main.get_node_or_null("UI/AgentInspectorPanel")
-	_agents = _main.get_node_or_null("ColonyView/AgentLayer")
-	_animals = _main.get_node_or_null("ColonyView/AnimalLayer")
+	_agents = _main.get_node_or_null("World3D/LabelLayer/Labels")
+	_animals = _main.get_node_or_null("World3D/Animals")
+	_people = _main.get_node_or_null("World3D/People")
+	_overlay = _main.get_node_or_null("World3D/Overlay")
+	_people_view = _main.get_node_or_null("PeopleView")
+	_world3d = _main.get_node_or_null("World3D")
 	_banner = _main.get_node_or_null("UI/StoryBanner")
 	_camera = _main.get_node_or_null("Camera2D")
 	var why: Node = _main.get_node_or_null("UI/WhyPanel")
@@ -253,7 +341,7 @@ func _run() -> void:
 	var priority: Node = _main.get_node_or_null("UI/PriorityPanel")
 	var teach: Node = _main.get_node_or_null("UI/TeachPanel")
 	var ok_nodes: bool = _world != null and _locale != null and _tool != null and _bar != null and _inspector != null and _agents != null \
-		and _animals != null and _banner != null and _camera != null and why != null and chronicle != null and priority != null and teach != null
+		and _animals != null and _people != null and _overlay != null and _people_view != null and _banner != null and _camera != null and why != null and chronicle != null and priority != null and teach != null
 	_check("scene", ok_nodes, "animal layer %s banner %s why %s" % [_animals != null, _banner != null, why != null])
 	if not ok_nodes:
 		_finish()
@@ -268,28 +356,44 @@ func _run() -> void:
 	_check("story_on", bool(story.get("on", false)), str(story.keys().size()))
 	var animals: Dictionary = SimReads.read(_world, "get_animals")
 	var count: int = (animals.get("ids", PackedInt64Array()) as PackedInt64Array).size()
-	_check("animals_drawn", count > 0 and int((_animals.call("counts") as Dictionary)["animals"]) == count, "read %d drawn %s" % [count, _animals.call("counts")])
-	# M-ART2: every animal pose (all states, both facings, still and moving) and the dead frame resolve to manifest
-	# frames through bindings.json; the M5 item kinds resolve to manifest sprites in every count bucket and have names.
+	_check("animals_drawn", count > 0 and (_animals.call("bodies", 0) as Array).size() == count, "read %d drawn %d" % [count, (_animals.call("bodies", 0) as Array).size()])
+	# M-ART2 → M3D-SWITCH: every pose of the deer and the wolf (all states, still and moving) resolves through the
+	# bindings to a clip of its 3D model (World3D/Animals' own rules), and the M5 item kinds (the carcass among them) to a
+	# 3D model in every count bucket (World3D/Props' own rules: an own model, else the 2D asset's / shape's model), and
+	# have names.
 	var sprites_ok: bool = true
 	var missing: Array[String] = []
-	for kind: int in [0, 1]:
+	var catalog: Dictionary = _world3d.call("catalog")
+	for kind: int in [StoryText.DEER, StoryText.WOLF]:
+		var crow: Dictionary = {}
+		for row: Variant in catalog.get("animals", []):
+			if row is Dictionary and int((row as Dictionary).get("code", -1)) == kind:
+				crow = row
+		var model: String = str(_animals.call("_species_model", str(crow.get("id", "")), str(crow.get("mechanic", crow.get("category", "")))))
+		var vat: RefCounted = _animals.call("_vat", model) if model != "" else null
+		if vat == null or not bool(vat.get("ok")):
+			missing.append("animal %d model '%s'" % [kind, model])
+			continue
 		for state: int in 6:
-			for facing: int in 2:
-				for moving: bool in [false, true]:
-					var fid: String = AnimalLayer.frame_id(kind, state, facing, moving)
-					if not ArtData.has(fid):
-						missing.append(fid)
+			for moving: bool in [false, true]:
+				var clip: String = str(_animals.call("_clip", {"kind": kind, "state": state, "wild": true}, moving))
+				if not bool(vat.call("has_clip", clip)):
+					missing.append("%s/%d/%s clip %s" % [model, state, moving, clip])
+	var props: Node = _main.get_node("World3D/Props")
+	var item_rows: Dictionary = {}
+	for row: Variant in catalog.get("items", []):
+		if row is Dictionary:
+			item_rows[int((row as Dictionary).get("code", -1))] = row
 	for kind: int in range(11, 17):
-		for n_items: int in [1, 5, 20]:
-			var look: Array = OverlayLayer.stack_look(kind, n_items)
-			if not ArtData.has(str(look[0])):
-				missing.append(str(look[0]))
-		var dead: String = OverlayLayer.carcass_id(kind)
-		if dead != "" and not ArtData.has(dead):
-			missing.append(dead)
+		var irow: Dictionary = item_rows.get(kind, {})
+		for bucket: int in 3:
+			var model: String = Props3D.own_item_model(str(irow.get("id", "")), bucket)
+			if model == "":
+				model = str(props.call("_item_model", kind, bucket, irow))
+			if not Data3D.has_model(model):
+				missing.append("item %d bucket %d model '%s'" % [kind, bucket, model])
 		sprites_ok = sprites_ok and _readable(EconomyText.item(_locale, kind))
-	_check("m5_sprites_and_items", sprites_ok and missing.is_empty() and OverlayLayer.carcass_id(11) != "", "missing %s" % [missing])
+	_check("m5_sprites_and_items", sprites_ok and missing.is_empty() and ArtData.binding("items", 11).get("carcass_of", null) is String, "missing %s" % [missing])
 	var hearth: Vector2i = _hearth()
 	await _hunt_orders(hearth)
 	await _draft_orders(hearth)
@@ -316,14 +420,13 @@ func _hunt_orders(hearth: Vector2i) -> void:
 	await _key(KEY_3)
 	var hint: String = (_bar.get("_hint") as Label).text
 	_check("f7_3_hunt_mode", menu_ok and int(_tool.get("mode")) == 10 and not bool(_bar.call("dig_menu_open")) and _readable(hint), "mode %d hint '%s'" % [int(_tool.get("mode")), hint])
-	var drawn: Vector2 = _animals.call("drawn_position", int(deer["id"]))
-	await _click(_screen(drawn + Vector2(View.TILE, View.TILE) * 0.5))
+	await _click(_body_screen(_animal_body(int(deer["id"]))))
 	await _frames(2)
 	var read: Dictionary = SimReads.read(_world, "get_animals")
 	var i: int = (read.get("ids", PackedInt64Array()) as PackedInt64Array).find(int(deer["id"]))
 	var marked: bool = i >= 0 and (read.get("marked", PackedByteArray()) as PackedByteArray)[i] == 1
 	var toast: Label = _bar.get("_toast") as Label
-	_check("hunt_click_marks_deer", marked and bool(_animals.call("marked_shown", int(deer["id"]))) and _readable(toast.text), "deer %d at %s marked %s toast '%s'" % [int(deer["id"]), tile, marked, toast.text])
+	_check("hunt_click_marks_deer", marked and _hunt_ring(int(deer["id"])) and _readable(toast.text), "deer %d at %s marked %s toast '%s'" % [int(deer["id"]), tile, marked, toast.text])
 	await _key(KEY_ESCAPE)
 	# F7-4: a hunt zone around the deer.
 	await _key(KEY_F7)
@@ -335,7 +438,7 @@ func _hunt_orders(hearth: Vector2i) -> void:
 	await _frames(2)
 	var zones: PackedInt32Array = SimReads.read(_world, "get_animals").get("zones", PackedInt32Array())
 	_check("f7_4_drag_adds_zone", zones.size() == 4 and zones[0] == a.x and zones[1] == a.y and zones[2] == b.x and zones[3] == b.y \
-		and int((_animals.call("counts") as Dictionary)["zones"]) == 1, "zones %s toast '%s'" % [zones, toast.text])
+		and int(_overlay.call("hunt_zone_count")) == 1, "zones %s toast '%s'" % [zones, toast.text])
 	await _key(KEY_ESCAPE)
 	# F6 cancel over the same rectangle lifts the zone and the mark.
 	await _key(KEY_F6)
@@ -351,8 +454,7 @@ func _hunt_orders(hearth: Vector2i) -> void:
 	# Leave one deer marked for the rest of the run (hunters may take it while the clock runs later).
 	await _key(KEY_F7)
 	await _key(KEY_3)
-	drawn = _animals.call("drawn_position", int(deer["id"]))
-	await _click(_screen(drawn + Vector2(View.TILE, View.TILE) * 0.5))
+	await _click(_body_screen(_animal_body(int(deer["id"]))))
 	await _key(KEY_ESCAPE)
 
 
@@ -370,7 +472,7 @@ func _draft_orders(hearth: Vector2i) -> void:
 	await _key(KEY_D)
 	await _frames(2)
 	var drafted: PackedInt64Array = _drafted_ids()
-	var marks: Dictionary = _agents.call("person_marks", int(first["bits"]))
+	var marks: Dictionary = _marks(int(first["bits"]))
 	_check("d_drafts_selected", drafted.size() == 1 and drafted[0] == int(first["id"]) and bool(marks.get("drafted", false)),
 		"drafted %s marks %s" % [drafted, marks])
 	var lines: Dictionary = _inspector.call("m5_lines")
@@ -379,7 +481,7 @@ func _draft_orders(hearth: Vector2i) -> void:
 	var rows: Array = _banner.call("drafted_texts")
 	_check("hud_drafted_list", rows.size() == 1 and _readable(str(rows[0])), str(rows))
 	# Right click on an empty tile: the inspector's drafted person moves there.
-	var spot: Vector2i = _empty_tile(first["tile"])
+	var spot: Vector2i = await _empty_tile(first["tile"])
 	await _click(_tile_screen(spot), MOUSE_BUTTON_RIGHT)
 	await _frames(2)
 	var m5: Dictionary = _m5(int(first["id"]))
@@ -387,8 +489,7 @@ func _draft_orders(hearth: Vector2i) -> void:
 		"order %d (%d, %d) want %s toast '%s'" % [int(m5.get("draft_order", -1)), int(m5.get("draft_x", -1)), int(m5.get("draft_y", -1)), spot, (_bar.get("_toast") as Label).text])
 	# Right click on another person: attack them.
 	await _look_at(other["tile"])
-	var other_drawn: Vector2 = _agents.call("drawn_position", int(other["bits"]))
-	await _click(_screen(other_drawn + Vector2(View.TILE, View.TILE) * 0.5), MOUSE_BUTTON_RIGHT)
+	await _click(_body_screen(_people.call("body_of", int(other["bits"]))), MOUSE_BUTTON_RIGHT)
 	await _frames(2)
 	m5 = _m5(int(first["id"]))
 	_check("right_click_attack_person", int(m5.get("draft_order", -1)) == 3 and int(m5.get("draft_x", -1)) == int(other["id"]),
@@ -401,8 +502,7 @@ func _draft_orders(hearth: Vector2i) -> void:
 	var deer: Dictionary = _deer_near(hearth)
 	if not deer.is_empty():
 		await _look_at(deer["tile"])
-		var drawn: Vector2 = _animals.call("drawn_position", int(deer["id"]))
-		await _click(_screen(drawn + Vector2(View.TILE, View.TILE) * 0.5), MOUSE_BUTTON_RIGHT)
+		await _click(_body_screen(_animal_body(int(deer["id"]))), MOUSE_BUTTON_RIGHT)
 		await _frames(2)
 		var a: Dictionary = _m5(int(first["id"]))
 		var b: Dictionary = _m5(int(second["id"]))
@@ -419,9 +519,11 @@ func _draft_orders(hearth: Vector2i) -> void:
 	# D on the first again: released.
 	await _inspect(first)
 	await _key(KEY_D)
+	await _look_at(_adult_tile(int(first["id"])))
 	await _frames(2)
-	_check("d_releases", _drafted_ids().size() == 1 and _drafted_ids()[0] == int(second["id"]) and not bool((_agents.call("person_marks", int(first["bits"])) as Dictionary).get("drafted", true)),
-		"drafted %s" % _drafted_ids())
+	var released: Dictionary = _marks(int(first["bits"]))
+	_check("d_releases", _drafted_ids().size() == 1 and _drafted_ids()[0] == int(second["id"]) and bool(released["shown"]) and not bool(released.get("drafted", false)),
+		"drafted %s marks %s" % [_drafted_ids(), released])
 	_inspector.call("close")
 	# 모두 해제 (a click on the drafted list's button).
 	await _frames(2)
@@ -443,16 +545,22 @@ func _mood_and_inspector() -> void:
 	var snap: Dictionary = SimReads.read(_world, "get_agent_snapshot")
 	var bits: PackedInt64Array = snap.get("ids", PackedInt64Array())
 	var bands: PackedByteArray = snap.get("mood_bands", PackedByteArray())
+	# The 3D marks are drawn over figures on screen: each person is looked at in turn and must carry their band's tint.
 	var tinted: int = 0
-	for i: int in mini(bits.size(), bands.size()):
-		var marks: Dictionary = _agents.call("person_marks", bits[i])
-		if marks.get("tint", Color.BLACK) == StoryText.band_tint(bands[i]):
+	var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
+	var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
+	for i: int in mini(mini(bits.size(), bands.size()), mini(xs.size(), ys.size())):
+		await _look_at(Vector2i(xs[i], ys[i]))
+		var marks: Dictionary = _marks(bits[i])
+		if bool(marks["shown"]) and marks.get("tint", Color.BLACK) == StoryText.band_tint(bands[i]):
 			tinted += 1
 	var legend: Label = (_banner as Control).find_child("MoodLegend", true, false) as Label
-	_check("m_mood_overlay", bool(_agents.call("mood_shown")) and tinted == bits.size() and legend != null and legend.is_visible_in_tree() and _readable(legend.text),
+	_check("m_mood_overlay", bool(_people_view.call("mood_shown")) and tinted == bits.size() and legend != null and legend.is_visible_in_tree() and _readable(legend.text),
 		"tinted %d of %d bands %s legend '%s'" % [tinted, bits.size(), Array(bands), legend.text if legend != null else ""])
 	await _key(KEY_M)
-	_check("m_toggles_off", not bool(_agents.call("mood_shown")), "")
+	await _frames(2)
+	var untinted: bool = not (_agents.call("drawn") as Array).any(func(row: Dictionary) -> bool: return row.get("kind", "") == "mood")
+	_check("m_toggles_off", not bool(_people_view.call("mood_shown")) and untinted, "")
 	var adults: Array[Dictionary] = _adults()
 	await _inspect(adults[0])
 	var lines: Dictionary = _inspector.call("m5_lines")
@@ -561,7 +669,7 @@ func _advance_and_story(chronicle: Node, why: Node) -> void:
 			seen_cold = true
 			_check_cold(story)
 		if not seen_sick and int(story.get("sick", 0)) > 0:
-			seen_sick = _check_sick()
+			seen_sick = await _check_sick()
 		if not why_done:
 			why_done = await _check_why(chronicle, why)
 		if not seen_year:
@@ -591,8 +699,8 @@ func _check_wolves(story: Dictionary) -> void:
 	for k: int in animals.get("kinds", PackedInt64Array()):
 		if k == StoryText.WOLF:
 			wolves += 1
-	_check("wolves_drawn", wolves == int(story.get("wolves", -1)) and int((_animals.call("counts") as Dictionary)["animals"]) == (animals.get("ids", PackedInt64Array()) as PackedInt64Array).size(),
-		"wolves %d drawn %s" % [wolves, _animals.call("counts")])
+	_check("wolves_drawn", wolves == int(story.get("wolves", -1)) and (_animals.call("bodies", 0) as Array).size() == (animals.get("ids", PackedInt64Array()) as PackedInt64Array).size(),
+		"wolves %d drawn %d" % [wolves, (_animals.call("bodies", 0) as Array).size()])
 
 
 func _check_cold(story: Dictionary) -> void:
@@ -613,9 +721,12 @@ func _check_sick() -> bool:
 	var bits: PackedInt64Array = snap.get("ids", PackedInt64Array())
 	var sick: PackedByteArray = snap.get("sick", PackedByteArray())
 	var ids: PackedInt64Array = snap.get("agent_ids", PackedInt64Array())
+	var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
+	var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
 	for i: int in mini(bits.size(), sick.size()):
 		if sick[i] != 0:
-			var marks: Dictionary = _agents.call("person_marks", bits[i])
+			await _look_at(Vector2i(xs[i], ys[i]))
+			var marks: Dictionary = _marks(bits[i])
 			var line: String = StoryText.sick_line(_locale, _m5(ids[i]), 60)
 			_check("sick_badge_and_line", bool(marks.get("sick", false)) and _readable(line), "agent %d marks %s line '%s'" % [ids[i], marks, line])
 			return true

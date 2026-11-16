@@ -14,6 +14,7 @@ const KoreanText = preload("res://scripts/ui/mux/korean_text.gd")
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const View = preload("res://scripts/world/colony/view.gd")
+const ViewProjection = preload("res://scripts/world/view_projection.gd")
 const Content = preload("res://scripts/ui/content_context.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
 
@@ -283,7 +284,7 @@ func _fit() -> void:
 	_scroll.custom_minimum_size.y = minf(body_height, maxf(40.0, area.y * 0.5 / factor - maxf(80.0, chrome_height)))
 	_panel.size = Vector2(width, 0)
 	size = _panel.size
-	var point: Vector2 = get_viewport().get_canvas_transform() * View.tile_centre(_anchor_tile)
+	var point: Vector2 = ViewProjection.world_to_screen(View.tile_centre(_anchor_tile))
 	position = Vector2(point.x + 16.0, point.y - size.y * factor * 0.5)
 	if position.x + size.x * factor > area.x - 12.0:
 		position.x = point.x - size.x * factor - 16.0

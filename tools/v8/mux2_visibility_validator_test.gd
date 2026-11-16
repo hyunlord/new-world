@@ -1,4 +1,6 @@
-# Negative controls for M-UX2 visibility: exact pixel bars, attribution, missing IDs, and clipping.
+# Negative controls for M-UX2 visibility: exact pixel bars, attribution, missing IDs, and clipping; M3D-SWITCH E2 adds
+#   the 3D bounds (`box_bounds`: a figure's box projected through a camera; behind the camera it is empty, which the
+#   capture counts as off screen).
 # Bridge methods: none. Synthetic images validate the oracle, never game visibility.
 extends SceneTree
 
@@ -60,5 +62,16 @@ func _run() -> void:
 	_check("empty screen fails", not Metrics.coverage([], []))
 	rows[1]["pass"] = false
 	_check("one invisible person fails entire scene", not Metrics.coverage(expected, rows))
+	var camera: Camera3D = Camera3D.new()
+	root.add_child(camera)
+	camera.look_at_from_position(Vector3(0, 6, 8), Vector3.ZERO)
+	var box: Rect2i = Metrics.box_bounds(camera, Vector3.ZERO, 1.7, 0.35, 1.0)
+	var feet: Vector2 = camera.unproject_position(Vector3.ZERO)
+	var head: Vector2 = camera.unproject_position(Vector3(0, 1.7, 0))
+	_check("3D box encloses the projected feet and head", box.has_area() and Rect2(box).grow(-0.5).has_point(feet) and Rect2(box).grow(-0.5).has_point(head))
+	_check("3D box widens with the figure's half width", Metrics.box_bounds(camera, Vector3.ZERO, 1.7, 0.7, 1.0).size.x > box.size.x)
+	var behind: Rect2i = Metrics.box_bounds(camera, Vector3(0, 6, 20), 1.7, 0.35, 1.0)
+	_check("3D box behind the camera is empty and counted off screen", not behind.has_area() and not behind.intersects(Rect2i(0, 0, 1920, 1080)))
+	camera.queue_free()
 	print("MUX2_VISIBILITY_ORACLE_DONE checks=%d failures=%d" % [_checks, _failures])
 	quit(0 if _failures == 0 else 1)

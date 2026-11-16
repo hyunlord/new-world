@@ -1,0 +1,84 @@
+{
+  "subject": "man",
+  "triangles": 2404,
+  "carry_load": "12-triangle atlas-textured package, visible only in carry",
+  "texture": "512x512 atlas.png",
+  "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+  ],
+  "clips": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+  ],
+  "applied_object_transforms": true,
+  "height_reference_m": 1.7,
+  "cleanup": "seam weld + voxel remesh + decimate",
+  "debris_vertices_removed": 12,
+  "rest_bounds_xyz": [
+    [
+      -0.5924174785614014,
+      -0.22575804591178894,
+      0.0
+    ],
+    [
+      0.5924174785614014,
+      0.22575804591178894,
+      1.6999999284744263
+    ]
+  ],
+  "height_landmark_xyz": [
+    0.07826411724090576,
+    0.01033113058656454,
+    1.6999999284744263
+  ],
+  "height_landmark_method": "crown",
+  "weight_method": "UV-seam weld then fitted-family automatic heat, normalized side-local max3",
+  "heat_uncovered_vertices": 0,
+  "shared_motion_transfer": "shared B family rest template; shared procedural policy with target-surface hand, elbow, head and ground clearance",
+  "front": "Godot +Z / Blender -Y",
+  "rig": "Blender automatic weights",
+  "source": "/Users/rexxa/work/3d-data/m3d2-art/resume/raw/B/man-attempt1.glb",
+  "reconstruction_source": "/Users/rexxa/work/3d-data/m3d2-art/resume/raw/B/man-attempt1.glb",
+  "motion_correction": {
+    "subject": "man",
+    "source": "/Users/rexxa/work/3d-data/m3d2-art/m3d2b/before/man/man.glb",
+    "clips": [
+      "idle",
+      "walk",
+      "work",
+      "carry",
+      "sleep"
+    ],
+    "max_influences": 3,
+    "weights": "fitted-rig heat, max3 normalized same-side",
+    "seam_weld": true,
+    "source_vertices": 2788,
+    "working_vertices": 1198,
+    "motion": "world-directed analytic two-link arms, side sleep, folded-under-body quadruped rest",
+    "welded_geometry_uv_sha256": "5058baa090e9c93e49b1376e48221e65ebbf348b7cb035043c7add3119b74469",
+    "source_geometry_uv_sha256": "f47a1db93d7f2d9a19e8c52cbf8eb9e12e2d6078bbea4a934b6adcc72250d369"
+  },
+  "motion_review": "8 phases per clip, native game2x at128px/m plus close, side and4x human work shoulder/elbow review",
+  "contact_sheet_provenance": "Four static rest views and surface thumbnails retained from unchanged source surface; clip cells replaced with reviewed final frames, diagnostic scaling explicitly labelled",
+  "glb_sha256": "fe9c6c0051742c21a961288dcfeba15095938c60ce66e2a25b48e059ed1db622",
+  "visual_review_score": 90
+}

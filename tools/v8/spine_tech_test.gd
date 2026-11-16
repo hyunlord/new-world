@@ -322,8 +322,10 @@ func _capture_outcrop(world: Node) -> void:
 	camera.call("center_on_tile", tile)
 	await _frames(12)
 	var rows: Dictionary = SimReads.read(world, "get_outcrops")
-	_check("revealed_outcrop_rendered", int(_main.get_node("ColonyView/OutcropLayer").call("counts").get("outcrops", 0)) > 0 and rows.get("xs", PackedInt64Array()).size() > 0)
-	_check("revealed_outcrop_in_viewport", root.get_visible_rect().has_point(camera.get_canvas_transform() * preload("res://scripts/world/colony/view.gd").tile_centre(tile)))
+	# M3D-SWITCH E2: World3D/Flora draws the outcrop; its glyph label (World3D/LabelLayer/Labels) proves it is on screen.
+	var labelled: bool = (_main.get_node("World3D/LabelLayer/Labels").call("drawn") as Array).any(func(row: Dictionary) -> bool: return row.get("kind", "") == "outcrop")
+	_check("revealed_outcrop_rendered", labelled and rows.get("xs", PackedInt64Array()).size() > 0)
+	_check("revealed_outcrop_in_viewport", root.get_visible_rect().has_point(preload("res://scripts/world/view_projection.gd").world_to_screen(preload("res://scripts/world/colony/view.gd").tile_centre(tile))))
 	var prefix: String = "c3_seed%d" % int(receipt["seed"]) if _c3 else "c2"
 	await _capture(prefix + "_outcrop_found_ko_rerender")
 	var why: Control = _main.get_node("UI/WhyPanel") as Control

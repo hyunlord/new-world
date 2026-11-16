@@ -7,9 +7,8 @@
 """Faithful synthetic shape of current M-UX2 frame attribution, never GPU evidence."""
 import copy
 
-METRICS = {'buildings': ['process', 'draw', 'rebuild', 'huts', 'floor_prepare', 'door_prepare'],
-           'ground': ['process', 'chunk_bakes', 'compose', 'upload', 'strips', 'space_read',
-                      'apply_space', 'wall_prepare', 'prepare_grounds', 'trees', 'visible', 'doors', 'wall_warmup'],
+METRICS = {'world3d': ['world3d', 'terrain', 'flora', 'sky', 'structures', 'props', 'plants', 'people',
+                       'animals', 'visitors', 'overlay', 'labels', 'camera_rig'],
            'alerts': ['process', 'poll', 'rebuild'],
            'steward_hud': ['process', 'steward', 'facts', 'learning', 'layout']}
 
@@ -33,10 +32,8 @@ def stall_fixture():
         for label, metrics in METRICS.items():
             telemetry[label] = {'status': 'MEASURED', 'frame': i,
                                 'usec': {metric: 0 for metric in metrics}}
-        telemetry['buildings'].update(counts={'sprite_creates': 0, 'sprite_frees': 0,
-                                              'texture_requests': 0}, texture_ids=[])
         if i == 1:
-            telemetry['ground']['usec']['wall_warmup'] = 100
+            telemetry['world3d']['usec']['terrain'] = 100
         samples.append({'elapsed_seconds': i / 40, 'interval_ms': 25.0,
                         'post_draw_usec': 1000000 + i * 25000, 'tick': i // 10,
                         'ticks_advanced': ticks, 'sampling_overhead_usec': 5, 'telemetry': telemetry})
@@ -44,15 +41,13 @@ def stall_fixture():
              'required_measured_seconds': 300, 'actual_play_seconds': 310,
              'actual_post_warmup_seconds': 300, 'post_warmup_over50': 0,
              'post_warmup_over33': 0, 'over33_per_minute': [0] * 5, 'all_over33_frames': []}
-    instrumentation = {'complete': True, 'invalid': {}, 'wall_warmup_observed_usec': 100,
+    instrumentation = {'complete': True, 'invalid': {}, 'rebuild_observed_usec': 100,
                        **{key: 'MEASURED' for key in ('native', 'freeze', 'frame_phases',
                                                      'minimap_process', 'sim_reads_raw_getters')},
                        **{key: 'INSTRUMENTED' for key in METRICS}}
-    warmup = {'complete': True, 'reason': 'complete', 'candidates': 1, 'unique_appearances': 1,
-              'elapsed_usec': 100, 'max_candidates': 4096, 'max_appearances': 128,
-              'budget_usec': 5000000, 'current_unique_appearances': 1, 'cache_misses': 1}
+    rebuild = {'terrain_complete': True, 'observed_usec': 100}
     arm = {'zoom': 1.0, 'samples': samples, 'complete': True, 'capture_complete': True,
-           'start_tick': 0, 'end_tick': 1240, 'score': score, 'wall_warmup': warmup,
+           'start_tick': 0, 'end_tick': 1240, 'score': score, 'rebuild': rebuild,
            'instrumentation': instrumentation, 'final_steward': {'enabled': True}}
     other = copy.deepcopy(arm)
     other['zoom'] = 0.5

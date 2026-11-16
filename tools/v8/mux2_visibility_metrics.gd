@@ -1,5 +1,6 @@
 # Strict M-UX2 per-person framebuffer contrast and coverage oracle.
-# Bridge methods: none. Inputs are actual GPU images and an independently enumerated ID set.
+# Bridge methods: none. Inputs are actual GPU images and an independently enumerated ID set. M3D-SWITCH E2: a 3D
+#   person's bounds are `box_bounds`, the screen rect of a box around their figure.
 extends RefCounted
 
 const CONTRAST: float = 0.20
@@ -43,6 +44,26 @@ static func measure(full: Image, removed: Image, ground: Image, bounds: Rect2i, 
 
 # R2 (M6A R2 brief 2026-10-30): only a person whose whole body bounds lie on screen is judged;
 # a partly clipped person cannot show its full figure and is recorded as partial instead.
+## The screen bounds (whole pixels, grown by `margin`) of the box `feet` ± `half_width` (x, z), from the feet up to
+## `height`, through `camera`; an empty Rect2i when any corner is behind the camera (never judged as on screen).
+static func box_bounds(camera: Camera3D, feet: Vector3, height: float, half_width: float, margin: float) -> Rect2i:
+	if camera == null:
+		return Rect2i()
+	var out: Rect2 = Rect2()
+	var first: bool = true
+	for dy: float in [0.0, height]:
+		for dx: float in [-half_width, half_width]:
+			for dz: float in [-half_width, half_width]:
+				var p: Vector3 = feet + Vector3(dx, dy, dz)
+				if camera.is_position_behind(p):
+					return Rect2i()
+				var s: Vector2 = camera.unproject_position(p)
+				out = Rect2(s, Vector2.ZERO) if first else out.expand(s)
+				first = false
+	out = out.grow(margin)
+	return Rect2i(Vector2i(floori(out.position.x), floori(out.position.y)), Vector2i(ceili(out.end.x) - floori(out.position.x), ceili(out.end.y) - floori(out.position.y)))
+
+
 static func judged(bounds: Rect2i, viewport: Rect2i) -> bool:
 	return viewport.encloses(bounds)
 

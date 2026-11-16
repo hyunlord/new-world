@@ -1,5 +1,5 @@
 # hud_topbar.gd (UI/HudTopbar in scenes/main.tscn): top bar with the date (M1.5 calendar: "3년 차 · 봄 2일째"),
-#   clock (dawn/day/evening/night, aligned with the daylight tint), population, villages, shelters (V7 shelters +
+#   clock (dawn/day/evening/night), population, villages, shelters (V7 shelters +
 #   M1 huts), sites (V7 construction sites + M1 hut blueprints), stored food and firewood stocks, logs lying in
 #   stacks (M1 items), wild berries on the whole map, births, deaths, cold count, pause and display speed;
 #   L toggles ko/en.
@@ -451,8 +451,7 @@ func warning_text() -> String:
 	return _warn_label.text if _warn_label != null and _warn_label.visible else ""
 
 
-## The clock word for `hour`, aligned with daylight_controller.gd's tint: dawn 5–7, day 7–17, evening 17–21
-## (the tint turns towards dusk from 17 and reaches night at 21), night 21–5.
+## The clock word for `hour`: dawn 5–7, day 7–17, evening 17–21, night 21–5 (the former 2D daylight tint's phases).
 static func phase_key(hour: int) -> String:
 	if hour >= 21 or hour < 5:
 		return "HUD_PHASE_NIGHT"

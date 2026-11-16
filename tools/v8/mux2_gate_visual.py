@@ -31,6 +31,8 @@ def validate_visibility(root: Path, out: Path) -> None:
         check_hash(Path(row.field('save').text()), row.field('sha256').text())
     report = read_json(out / 'run/visibility.json')
     report.field('schema').equals(2)
+    # M3D-SWITCH E2: the receipt measures the 3D view (the only world view).
+    report.field('renderer').equals('3d')
     report.field('pass').equals(True)
     report.field('failures').equals([])
     report.field('inputs_unchanged').equals(True)
@@ -49,7 +51,8 @@ def validate_scene(scene: Node, output: Path) -> None:
     name = scene.field('id').text()
     half = name.endswith('_half')
     require(scene.field('zoom').number() == (0.5 if half else 0.25), 'wrong scene zoom')
-    scene.field('lod').equals(not half)
+    # The 3D view draws full figures at every zoom (no LOD markers): the quarter zoom is judged on figures too.
+    scene.field('lod').equals(False)
     scene.field('viewport').equals([1920, 1080])
     scene.field('pass').equals(True)
     on = [n.number() for n in scene.field('on_screen_ids').array()]

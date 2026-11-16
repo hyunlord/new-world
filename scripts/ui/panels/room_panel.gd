@@ -15,7 +15,7 @@ const PanelTooltips = preload("res://scripts/ui/panels/panel_tooltips.gd")
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
-const RoomLayer = preload("res://scripts/world/colony/room_layer.gd")
+const RoomIndex = preload("res://scripts/world/room_index.gd")
 const DiagnosisText = preload("res://scripts/ui/panels/diagnosis_text.gd")
 const PANEL_WIDTH: float = 520.0
 ## Dropdown entries: the bridge role names `cmd_set_room_role` takes, and their text.
@@ -168,7 +168,7 @@ func refresh() -> void:
 	var doors: int = int(_detail.get("doors", 0))
 	var lines: Array[String] = [
 		"%s · %s · %s" % [EconomyText.trf(_locale, "UI_ROOM_TILES_FMT", {"tiles": int(_detail.get("tiles", 0))}),
-			EconomyText.trf(_locale, "UI_ROOM_BEDS_FMT", {"beds": beds}), RoomLayer.roof_text(info, _locale)],
+			EconomyText.trf(_locale, "UI_ROOM_BEDS_FMT", {"beds": beds}), RoomIndex.roof_text(info, _locale)],
 		EconomyText.trf(_locale, "UI_ROOM_DOORS_FMT", {"doors": doors}) if doors > 0 else _loc("UI_ROOM_NO_DOOR"),
 		EconomyText.trf(_locale, "UI_ROOM_COVERED_FMT", {"count": int(_detail.get("covered", 0))}),
 		EconomyText.trf(_locale, "UI_ROOM_SLEEPERS_FMT", {"count": int(_detail.get("sleepers", 0))}),
@@ -192,7 +192,7 @@ static func why_line(role_code: int, info: Dictionary, beds: int, locale: Node) 
 	for key: String in effect_keys(role_code, bool(info.get("roofed", false)) or bool(info.get("dug", false))):
 		parts.append(EconomyText.ltr(locale, key))
 	return EconomyText.trf(locale, "UI_ROOM_WHY_FMT", {"role": EconomyText.role(locale, role_code),
-		"roof": RoomLayer.roof_text(info, locale), "beds": beds, "effect": " · ".join(parts)})
+		"roof": RoomIndex.roof_text(info, locale), "beds": beds, "effect": " · ".join(parts)})
 
 
 ## The effect keys of a room of role `role_code` (ADR 0023): a roofed bedroom keeps the cold off and speeds sleep,

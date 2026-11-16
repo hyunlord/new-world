@@ -1,0 +1,71 @@
+{
+ "width": 2059,
+ "vertex_count": 2059,
+ "split_vertex_count": 6000,
+ "frames": 80,
+ "fps": 15,
+ "normals_offset": -1,
+ "clips": {
+  "idle": {
+   "start": 0,
+   "count": 20,
+   "loop": true,
+   "duration": 1.3333
+  },
+  "walk": {
+   "start": 20,
+   "count": 20,
+   "loop": true,
+   "duration": 1.3333
+  },
+  "graze": {
+   "start": 40,
+   "count": 20,
+   "loop": true,
+   "duration": 1.3333
+  },
+  "lie_down": {
+   "start": 60,
+   "count": 20,
+   "loop": true,
+   "duration": 1.3333
+  },
+  "run": {
+   "start": 20,
+   "count": 20,
+   "loop": true,
+   "duration": 1.3333,
+   "alias_of": "walk"
+  },
+  "rest": {
+   "start": 60,
+   "count": 20,
+   "loop": true,
+   "duration": 1.3333,
+   "alias_of": "lie_down"
+  },
+  "attack": {
+   "start": 0,
+   "count": 20,
+   "loop": true,
+   "duration": 1.3333,
+   "alias_of": "idle"
+  }
+ },
+ "bounds_min": [
+  -0.3274,
+  -0.0003,
+  -0.5597
+ ],
+ "bounds_max": [
+  0.3274,
+  1.085,
+  0.6654
+ ],
+ "height": 1.0751,
+ "format": "float16 LE RGBA, row-major; one row of positions (Godot xyz, w=1) per frame; texel x = UV2.x * width (the unsplit vertex); no normal rows: the shader derives flat face normals; UV0 = atlas UVs",
+ "textured": true,
+ "atlas": "c_wild_goat_atlas.png",
+ "source_commit": "f0b91f999",
+ "source": "living/goat/goat.glb"
+}

@@ -234,11 +234,6 @@ static func look_count() -> int:
 	return (looks as Array).size() if looks is Array else 0
 
 
-## The res:// path of a person frame (look folder, facing "S"/"E", pose) — "" when not imported.
-static func frame_path(frames: String, facing: String, pose: String) -> String:
-	return path("%s/%s/%s" % [frames, facing, pose])
-
-
 ## The res:// path of a portrait (look folder, variant id "v1".."v6").
 static func portrait_path(frames: String, variant: String) -> String:
 	return path("%s/%s" % [frames, variant])
@@ -391,14 +386,6 @@ static func material_looks(document: Dictionary, additions: Variant = null) -> D
 		row.merge(authored[key], true)
 	result["materials"] = rows
 	return result
-
-
-## Species phase overrides category phase; an absent binding retains the phase placeholder.
-static func plant_asset(definition: Dictionary, phase: int) -> String:
-	var plants: Dictionary = bindings().get("plants", {})
-	var species: Dictionary = plants.get("by_id", {}).get(str(definition.get("id", "")), {})
-	var category: Dictionary = plants.get("by_category", {}).get(str(definition.get("category", "")), {})
-	return str(species.get(str(phase), category.get(str(phase), "")))
 
 
 static func _validate_plants(value: Variant, dto: Dictionary) -> String:

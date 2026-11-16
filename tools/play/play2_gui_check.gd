@@ -7,12 +7,14 @@ extends SceneTree
 
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 const View = preload("res://scripts/world/colony/view.gd")
+const ViewProjection = preload("res://scripts/world/view_projection.gd")
 const PARAMS: String = "res://assets/v8art/render_params.json"
 var _out: String = ""
 var _main: Node
 var _world: Node
 var _camera: Camera2D
-var _agents: Node
+## M3D-SWITCH E2: the 2D AgentLayer is gone; drafted marks come from the 3D map labels.
+var _labels: Node
 var _checks: Array[Dictionary] = []
 var _started: int = 0
 var _finished: bool = false
@@ -115,7 +117,7 @@ func _click(at: Vector2) -> void:
 	await _frames()
 
 func _screen(tile: Vector2i) -> Vector2:
-	return root.get_canvas_transform() * View.tile_centre(tile)
+	return ViewProjection.world_to_screen(View.tile_centre(tile))
 
 func _tick() -> int:
 	var time: Dictionary = _world.call("get_time_snapshot")
@@ -150,7 +152,7 @@ func _run() -> void:
 	await _frames(20)
 	_world = _main.get_node("WorldSim")
 	_camera = _main.get_node("Camera2D") as Camera2D
-	_agents = _main.get_node("ColonyView/AgentLayer")
+	_labels = _main.get_node("World3D/LabelLayer/Labels")
 	_check("default zoom 1x", is_equal_approx(_camera.zoom.x, 1.0), _camera.zoom)
 	await _until(10.0)
 	await _shot("launch-10s")
@@ -173,7 +175,14 @@ func _run() -> void:
 		await _frames()
 		await _zoom_check(float(row[1]), str(row[2]), "wheel")
 	await _key(KEY_MINUS)
-	for row: Array in [[KEY_C, "UI/ChroniclePanel"], [KEY_T, "UI/TechPanel"], [KEY_N, "UI/NeighboursPanel"], [KEY_P, "UI/PriorityPanel"], [KEY_R, "ColonyView/OverlayLayer/Rooms"]]:
+	var rooms: Node = _main.get_node("RoomIndex")
+	var rooms_before: bool = bool(rooms.call("is_shown"))
+	await _key(KEY_R)
+	_check("toggle RoomIndex", bool(rooms.call("is_shown")) != rooms_before)
+	await _shot("Rooms")
+	await _key(KEY_R)
+	_check("close RoomIndex", bool(rooms.call("is_shown")) == rooms_before)
+	for row: Array in [[KEY_C, "UI/ChroniclePanel"], [KEY_T, "UI/TechPanel"], [KEY_N, "UI/NeighboursPanel"], [KEY_P, "UI/PriorityPanel"]]:
 		var panel: CanvasItem = _main.get_node(str(row[1])) as CanvasItem
 		var before: bool = panel.visible
 		await _key(int(row[0]) as Key)
@@ -191,7 +200,6 @@ func _zoom_check(expected: float, word: String, input_kind: String) -> void:
 	var hud: Node = _main.get_node("UI/HudTopbar")
 	var text: String = str(hud.call("zoom_text"))
 	_check(input_kind + " zoom " + word, is_equal_approx(_camera.zoom.x, expected) and text.contains(word), text)
-	_check(input_kind + " LOD " + word, bool(_agents.call("lod_active")) == (expected < 1.0))
 	await _shot(input_kind + "-zoom-" + str(expected))
 
 func _person() -> void:
@@ -200,8 +208,7 @@ func _person() -> void:
 	var inspector: Control = _main.get_node("UI/AgentInspectorPanel") as Control
 	var picked: int = -1
 	for id: int in bits:
-		var rect: Rect2 = _agents.call("drawn_rect", id)
-		var at: Vector2 = root.get_canvas_transform() * rect.get_center()
+		var at: Vector2 = ViewProjection.person_rect(id).get_center()
 		if Rect2(120, 170, 1400, 570).has_point(at):
 			await _click(at)
 			if inspector.visible and int(inspector.call("get_selected_entity_bits")) >= 0:
@@ -212,11 +219,13 @@ func _person() -> void:
 	await _shot("person-portrait")
 	if picked >= 0:
 		await _key(KEY_D)
-		var marks: Dictionary = _agents.call("person_marks", picked)
+		await _frames()
+		var marks: Dictionary = {"drafted": _drafted_mark(picked)}
 		_check("D drafts selected person", bool(marks.get("drafted", false)), marks)
 		await _shot("person-drafted")
 		await _key(KEY_D)
-		marks = _agents.call("person_marks", picked)
+		await _frames()
+		marks = {"drafted": _drafted_mark(picked)}
 		_check("D releases selected person", not bool(marks.get("drafted", true)), marks)
 	await _key(KEY_ESCAPE)
 
@@ -337,3 +346,8 @@ func _reload() -> void:
 	await _key(KEY_F12)
 	_check("F12 restores value", is_equal_approx(float(ArtData.param("walls.top_value", -1.0)), original_value))
 	await _shot("wall-restored")
+
+
+## Whether the 3D map labels drew a drafted ring over entity `bits` last frame.
+func _drafted_mark(bits: int) -> bool:
+	return (_labels.call("drawn") as Array).any(func(row: Dictionary) -> bool: return row.get("kind", "") == "drafted" and int(row.get("bits", -1)) == bits)

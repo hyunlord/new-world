@@ -178,97 +178,37 @@ class FreezeReceiptTests(unittest.TestCase):
 
 
 class VisualReceiptTests(unittest.TestCase):
-    def test_extent_requires_its_exact_result_marker(self) -> None:
-        # Given all75 producer checks; when parsed with RESULT; then accept.
+    def test_retired_2d_oracles_are_unknown(self) -> None:
+        # M3D-SWITCH E2: the 2D badge, marker, cache and bake oracles went with the 2D renderer; their logs
+        # cannot stand in for a current oracle.
         with tempfile.TemporaryDirectory() as tmp:
-            path = Path(tmp) / 'extent.log'
-            path.write_text(''.join(f'MUX2_BADGE_EXTENT_PASS case_{i}\n' for i in range(75))
-                            + 'MUX2_BADGE_EXTENT_RESULT checks=75 failures=0\n')
-            self.assertIsNone(validate_log('mux2_badge_extent_test', path))
+            path = Path(tmp) / 'retired.log'
+            for name, prefix in [('mux2_badge_extent_test', 'MUX2_BADGE_EXTENT'),
+                                 ('mux2_person_cache_test', 'MUX2_PERSON_CACHE'),
+                                 ('mux2_wall_cache_test', 'MUX2_WALL_CACHE'),
+                                 ('mux2_bake_receipt_test', 'MUX2_BAKE_RECEIPT')]:
+                path.write_text(f'{prefix}_PASS case\n{prefix}_DONE checks=1 failures=0\n')
+                with self.subTest(name=name), self.assertRaisesRegex(ValueError, 'unknown oracle'):
+                    validate_log(name, path)
 
-    def test_extent_rejects_wrong_missing_duplicate_or_failed_completion(self) -> None:
-        # Given mutated extent coverage/completions; when parsed; then reject.
-        prefix = 'MUX2_BADGE_EXTENT'
-        good = f'{prefix}_RESULT checks=75 failures=0\n'
+    def test_visibility_validator_oracle_exact_coverage(self) -> None:
+        prefix = 'MUX2_VISIBILITY_ORACLE'
+        count = 27
         with tempfile.TemporaryDirectory() as tmp:
-            path = Path(tmp) / 'extent.log'
-            rows = ''.join(f'{prefix}_PASS case_{i}\n' for i in range(75))
-            endings = ['', good.replace('RESULT', 'DONE'), good + good,
-                       good + good.replace('RESULT', 'DONE'),
-                       good.replace('failures=0', 'failures=1'),
-                       good + 'SCRIPT ERROR: deliberate\n', good + f'{prefix}_FAIL case\n',
-                       good + f'{prefix}_RESULT checks=75 failures=1\n']
-            for index, ending in enumerate(endings):
-                with self.subTest(mutation=index):
-                    path.write_text(rows + ending)
+            path = Path(tmp) / 'validator.log'
+            rows = ''.join(f'{prefix}_PASS case_{i}\n' for i in range(count))
+            done = f'{prefix}_DONE checks={count} failures=0\n'
+            path.write_text(rows + done)
+            self.assertIsNone(validate_log('mux2_visibility_validator_test', path))
+            malformed = [rows, rows + done + done, rows + done + f'{prefix}_FAIL deliberate\n',
+                         rows + done + 'SCRIPT ERROR: deliberate\n']
+            for wrong in (count - 1, count + 1):
+                malformed.append(f'{prefix}_PASS case\n' * wrong + f'{prefix}_DONE checks={wrong} failures=0\n')
+            for body in malformed:
+                with self.subTest(body=body[-80:]):
+                    path.write_text(body)
                     with self.assertRaises(ValueError):
-                        validate_log('mux2_badge_extent_test', path)
-            for count in (74, 76):
-                with self.subTest(count=count):
-                    path.write_text(''.join(f'{prefix}_PASS case_{i}\n' for i in range(count))
-                                    + f'{prefix}_RESULT checks={count} failures=0\n')
-                    with self.assertRaises(ValueError):
-                        validate_log('mux2_badge_extent_test', path)
-
-    def test_done_oracle_rejects_result_alias(self) -> None:
-        # Given a non-extent fixture; when RESULT replaces DONE; then reject.
-        with tempfile.TemporaryDirectory() as tmp:
-            path = Path(tmp) / 'person.log'
-            path.write_text(''.join(f'MUX2_PERSON_CACHE_PASS case_{i}\n' for i in range(182))
-                            + 'MUX2_PERSON_CACHE_RESULT checks=182 failures=0\n')
-            with self.assertRaises(ValueError):
-                validate_log('mux2_person_cache_test', path)
-
-    def test_geometry_oracles_require_current_exact_coverage(self) -> None:
-        # Given current producer counts; when parsed; then all geometry oracles pass.
-        cases = [('mux2_coincident_test', 'MUX2_COINCIDENT', 30),
-                 ('mux2_badge_index_test', 'MUX2_BADGE_INDEX', 116),
-                 ('mux2_badge_packing_test', 'MUX2_BADGE_PACKING', 114),
-                 ('mux2_overlap_test', 'MUX2_OVERLAP', 81),
-                 ('mux2_badge_grid_test', 'MUX2_BADGE_GRID', 514),
-                 ('mux2_badge_aggregate_test', 'MUX2_BADGE_AGGREGATE', 97),
-                 ('mux2_badge_local_test', 'MUX2_BADGE_LOCAL', 205),
-                 ('mux2_bake_receipt_test', 'MUX2_BAKE_RECEIPT', 20),
-                 ('mux2_person_cache_test', 'MUX2_PERSON_CACHE', 182),
-                 ('mux2_extent_owner_test', 'MUX2_EXTENT_OWNER', 99)]
-        with tempfile.TemporaryDirectory() as tmp:
-            path = Path(tmp) / 'geometry.log'
-            for name, prefix, count in cases:
-                with self.subTest(name=name):
-                    path.write_text(''.join(f'{prefix}_PASS case_{index}\n'
-                                            for index in range(count))
-                                    + f'{prefix}_DONE checks={count} failures=0\n')
-                    self.assertIsNone(validate_log(name, path))
-
-    def test_geometry_oracles_reject_missing_extra_and_failed_checks(self) -> None:
-        # Given truncated, stale, extra or failed logs; when parsed; then reject.
-        cases = [('mux2_coincident_test', 'MUX2_COINCIDENT', 30),
-                 ('mux2_badge_index_test', 'MUX2_BADGE_INDEX', 116),
-                 ('mux2_badge_packing_test', 'MUX2_BADGE_PACKING', 114),
-                 ('mux2_overlap_test', 'MUX2_OVERLAP', 81),
-                 ('mux2_badge_grid_test', 'MUX2_BADGE_GRID', 514),
-                 ('mux2_badge_aggregate_test', 'MUX2_BADGE_AGGREGATE', 97),
-                 ('mux2_badge_local_test', 'MUX2_BADGE_LOCAL', 205),
-                 ('mux2_bake_receipt_test', 'MUX2_BAKE_RECEIPT', 20),
-                 ('mux2_person_cache_test', 'MUX2_PERSON_CACHE', 182),
-                 ('mux2_extent_owner_test', 'MUX2_EXTENT_OWNER', 99)]
-        with tempfile.TemporaryDirectory() as tmp:
-            path = Path(tmp) / 'geometry.log'
-            for name, prefix, count in cases:
-                valid = ''.join(f'{prefix}_PASS case_{index}\n' for index in range(count))
-                done = f'{prefix}_DONE checks={count} failures=0\n'
-                malformed = [valid, valid + done + done,
-                             valid + done + f'{prefix}_FAIL deliberate\n',
-                             valid + done + 'SCRIPT ERROR: deliberate\n']
-                for wrong_count in (17, 177, count - 1, count + 1):
-                    malformed.append(''.join(f'{prefix}_PASS case_{index}\n'
-                                              for index in range(wrong_count))
-                                     + f'{prefix}_DONE checks={wrong_count} failures=0\n')
-                for index, body in enumerate(malformed):
-                    with self.subTest(name=name, mutation=index):
-                        path.write_text(body)
-                        with self.assertRaises(ValueError):
-                            validate_log(name, path)
+                        validate_log('mux2_visibility_validator_test', path)
 
     def test_camp_framing_exact_pure_coverage(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -289,16 +229,6 @@ class VisualReceiptTests(unittest.TestCase):
                     path.write_text(body)
                     with self.assertRaises(ValueError):
                         validate_log('mux2_camp_framing_test', path)
-
-    def test_wall_oracle_uses_real_hash_marker_contract(self):
-        # Given canonical wall logs without per-check PASS lines; when parsed; then accept.
-        with tempfile.TemporaryDirectory() as tmp:
-            path = Path(tmp) / 'wall.log'
-            names = ['base', 'cache_hit', 'material_alias', 'changed_tint', 'changed_top',
-                     'reloaded_images', 'after_invalidation']
-            path.write_text(''.join('MUX2_WALL_CACHE_HASHES ' + name + ' {}\n' for name in names)
-                            + 'MUX2_WALL_CACHE_DONE failures=[]\n')
-            self.assertIsNone(validate_log('mux2_wall_cache_test', path))
 
     def test_locale_why_requires_exact_64_checks(self) -> None:
         rows = 'MUX2_WHY_PASS case\n' * 64
@@ -379,6 +309,55 @@ class VisualReceiptTests(unittest.TestCase):
             (out / 'saves/manifest.json').write_text(json.dumps(
                 {'schema': 1, 'seed': 0, 'steward': 'on', 'bridge_sha256': '0' * 64}))
             with self.assertRaisesRegex(ValueError, 'bridge_sha256'):
+                validate_visibility(root, out)
+
+    def test_visibility_scene_requires_3d_full_figures(self) -> None:
+        # Given a complete synthetic 3D scene; when it claims LOD markers (the retired 2D quarter zoom); then reject.
+        with tempfile.TemporaryDirectory() as tmp:
+            output = Path(tmp)
+            for name, half in (('day1_noon_half', True), ('day1_noon_quarter', False)):
+                directory = output / name
+                directory.mkdir()
+                files = {}
+                for filename in ('full.png', 'ground.png', 'person-7.png', 'without-7.png', 'restored-7.png'):
+                    (directory / filename).write_bytes(filename.encode())
+                    files[filename] = receipts.digest(directory / filename)
+                minimum = 60 if half else 140
+                scene = {'id': name, 'zoom': 0.5 if half else 0.25, 'lod': False, 'viewport': [1920, 1080],
+                         'pass': True, 'on_screen_ids': [7], 'off_screen_ids': [8], 'partial': [], 'all_ids': [7, 8],
+                         'rows': [{'entity_bits': 7, 'pass': True, 'valid': True, 'required_pixels': minimum,
+                                   'qualifying_pixels': minimum, 'full_sha256': files['person-7.png'],
+                                   'removed_sha256': files['without-7.png'], 'restored_sha256': files['restored-7.png']}],
+                         'full_sha256': files['full.png'], 'ground_sha256': files['ground.png']}
+                self.assertIsNone(visual.validate_scene(visual.Node(scene), output))
+                broken = copy.deepcopy(scene)
+                broken['lod'] = True
+                with self.subTest(name=name), self.assertRaises(ValueError):
+                    visual.validate_scene(visual.Node(broken), output)
+
+    def test_visibility_rejects_a_2d_receipt(self) -> None:
+        # Given every input current; when the report was measured on another renderer; then reject.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / 'root'
+            (root / BRIDGE).parent.mkdir(parents=True)
+            (root / BRIDGE).write_bytes(b'current bridge')
+            (root / 'tools/v8').mkdir(parents=True)
+            (root / 'tools/v8/mux2_visibility_saves.gd').write_text('saves')
+            out = Path(tmp) / 'out'
+            (out / 'saves').mkdir(parents=True)
+            (out / 'run').mkdir()
+            scenes = []
+            for day in (1, 20):
+                for hour, phase in ((12, 'noon'), (22, 'night')):
+                    save = out / 'saves' / f'day{day}_{phase}.wsave'
+                    save.write_bytes(f'{day}{phase}'.encode())
+                    scenes.append({'id': f'day{day}_{phase}', 'day': day, 'hour': hour, 'save': str(save),
+                                   'sha256': receipts.digest(save)})
+            (out / 'saves/manifest.json').write_text(json.dumps(
+                {'schema': 1, 'seed': 0, 'steward': 'on', 'bridge_sha256': receipts.digest(root / BRIDGE),
+                 'script_sha256': receipts.digest(root / 'tools/v8/mux2_visibility_saves.gd'), 'scenes': scenes}))
+            (out / 'run/visibility.json').write_text(json.dumps({'schema': 2, 'renderer': '2d'}))
+            with self.assertRaisesRegex(ValueError, 'renderer'):
                 validate_visibility(root, out)
 
     def test_freeze_detects_new_source_and_changed_import(self):

@@ -13,8 +13,9 @@
 #   again; the tech map's detail of a rumoured node shows "이웃 ○○가 앎 (소문)", a clue node its ★ and clue line.
 #   Chronicle kinds 38–44 (synthetic rows and the live ones) and the year line's M5.5 tallies render without raw keys
 #   in ko and en; LAST_KIND covers at least 44 and the feed keeps 38–44. Then the clock is advanced to the first wolves and, 30
-#   ticks at a time, to someone fleeing: the agent layer's "!" marks equal the snapshot's `fleeing` column at every
-#   step, and the inspector shows "도망 중: 늑대" for a fleeing person.
+#   ticks at a time, to someone fleeing: the map labels' "!" marks (World3D/LabelLayer; each person is looked at on
+#   screen) equal the snapshot's `fleeing` column at every step, and the inspector shows "도망 중: 늑대" for a fleeing
+#   person. The camera pans each looked-at tile clear of the HUD's decision cards before a click there.
 # Bridge methods called: via SimReads get_neighbours, get_agent_snapshot, get_building_snapshot, get_terrain_snapshot,
 #   get_world_info, get_time_snapshot, get_story, get_tech, advance_ticks, cmd_add_stockpile, cmd_designate_chop_tiles;
 #   get_wave, get_caravan, get_trees, get_chronicle_since, get_agent_detail, get_agent_m5, get_command_log (direct); and the UI's own
@@ -106,7 +107,7 @@ func _click(at: Vector2) -> void:
 
 ## The window point of world position `p` (the stretch transform maps canvas pixels to window pixels).
 func _screen(p: Vector2) -> Vector2:
-	return root.get_final_transform() * (root.get_canvas_transform() * p)
+	return root.get_final_transform() * preload("res://scripts/world/view_projection.gd").world_to_screen(p)
 
 
 ## The window point of a UI control's centre.
@@ -119,6 +120,27 @@ func _look_at(tile: Vector2i) -> void:
 	(_camera as Camera2D).reset_smoothing()
 	(_camera as Camera2D).force_update_scroll()
 	await _frames(3)
+	# The HUD's decision cards and alerts may cover the screen centre: pan so that `tile` sits on map clear of GUI.
+	var clear: Vector2 = await _clear_point()
+	var at: Vector2 = preload("res://scripts/world/view_projection.gd").world_to_screen(preload("res://scripts/world/colony/view.gd").tile_centre(tile))
+	_camera.call("pan_screen", clear - at)
+	(_camera as Camera2D).force_update_scroll()
+	await _frames(3)
+
+
+## A canvas point with no GUI control under it or 64 px around it (the first of a few spots left of the HUD's cards).
+func _clear_point() -> Vector2:
+	var size: Vector2 = root.get_visible_rect().size
+	for spot: Vector2 in [Vector2(0.4, 0.55), Vector2(0.3, 0.5), Vector2(0.4, 0.7), Vector2(0.25, 0.65), Vector2(0.5, 0.75)]:
+		var clear: bool = true
+		for step: Vector2 in [Vector2.ZERO, Vector2(64, 0), Vector2(-64, 0), Vector2(0, 64), Vector2(0, -64)]:
+			await _motion(root.get_final_transform() * (size * spot + step))
+			if root.gui_get_hovered_control() != null:
+				clear = false
+				break
+		if clear:
+			return size * spot
+	return size * 0.5
 
 
 ## Whether `text` is non-empty and holds no key-shaped token.
@@ -226,8 +248,9 @@ func _run() -> void:
 	_neighbours = _main.get_node_or_null("UI/NeighboursPanel")
 	_banner = _main.get_node_or_null("UI/StoryBanner")
 	_tech = _main.get_node_or_null("UI/TechPanel")
-	_visitors = _main.get_node_or_null("ColonyView/VisitorLayer")
-	_agents = _main.get_node_or_null("ColonyView/AgentLayer")
+	# M3D-SWITCH E2: World3D/Visitors draws the groups; the people's marks come from the 3D map labels.
+	_visitors = _main.get_node_or_null("World3D/Visitors")
+	_agents = _main.get_node_or_null("World3D/LabelLayer/Labels")
 	_inspector = _main.get_node_or_null("UI/AgentInspectorPanel")
 	var ok_nodes: bool = _world != null and _locale != null and _camera != null and _migrants != null and _trade != null and _neighbours != null \
 		and _banner != null and _tech != null and _visitors != null and _agents != null and _inspector != null
@@ -354,11 +377,16 @@ func _trade_checks(caravan: Dictionary) -> void:
 	var id: int = int(caravan["id"])
 	await _look_at(caravan["tile"])
 	await _frames(3)
-	var rect: Rect2 = _visitors.call("drawn_rect", "caravan", id)
-	_check("caravan_drawn", rect.size.x > 0.0 and int((_visitors.call("counts") as Dictionary)["caravans"]) >= 1, "rect %s" % rect)
+	var at: Vector2 = Vector2(-1, -1)
+	var cam: Camera3D = _main.get_node("World3D").call("camera") as Camera3D
+	for body: Dictionary in _visitors.call("bodies", 0):
+		if str(body["kind"]) == "caravan" and int(body["id"]) == id:
+			at = cam.unproject_position((body["feet"] as Vector3) + Vector3(0, float(body["h"]) * 0.5, 0))
+			break
+	_check("caravan_drawn", at.x >= 0.0 and int((_visitors.call("counts") as Dictionary)["caravans"]) >= 1, "at %s" % at)
 	var banner: Array = _banner.call("visitor_texts")
 	_check("caravan_banner", _all_readable(banner), str(banner))
-	await _click(_screen(rect.get_center()))
+	await _click(root.get_final_transform() * at)
 	await _frames(3)
 	_check("caravan_click_opens_trade", (_trade as Control).visible and int(_trade.call("shown_caravan")) == id, "shown %d want %d" % [int(_trade.call("shown_caravan")), id])
 	if not (_trade as Control).visible:
@@ -582,6 +610,10 @@ func _flee() -> void:
 	var mismatches: int = 0
 	var samples: int = 0
 	var seen: Dictionary = {}
+	# Zoomed out, most of the colony is on screen at once (fewer camera moves per sample).
+	for _step: int in 4:
+		_camera.call("step_zoom", -1)
+	await create_timer(0.2).timeout
 	while _tick() < FLEE_DAYS * per_day and seen.is_empty():
 		var wolves: bool = int(SimReads.read(_world, "get_story").get("wolves", 0)) > 0
 		SimReads.mutate(_world, "advance_ticks", [30 if wolves else STEP])
@@ -592,10 +624,21 @@ func _flee() -> void:
 		var fleeing: PackedByteArray = snap.get("fleeing", PackedByteArray())
 		var states: PackedByteArray = snap.get("states", PackedByteArray())
 		var targets: PackedByteArray = snap.get("target_kinds", PackedByteArray())
+		var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
+		var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
 		samples += 1
 		for i: int in mini(bits.size(), fleeing.size()):
 			var asleep: bool = i < states.size() and i < targets.size() and states[i] == 3 and targets[i] == 3
-			var marks: Dictionary = _agents.call("person_marks", bits[i])
+			# The 3D labels mark only figures on screen: a person off screen is looked at before their marks are read.
+			if not root.get_visible_rect().encloses(preload("res://scripts/world/view_projection.gd").person_rect(bits[i])):
+				_camera.call("center_on_tile", Vector2i(xs[i], ys[i]))
+				(_camera as Camera2D).force_update_scroll()
+				await _frames(3)
+				if not root.get_visible_rect().encloses(preload("res://scripts/world/view_projection.gd").person_rect(bits[i])):
+					mismatches += 1
+					continue
+			var shown: bool = (_agents.call("drawn") as Array).any(func(row: Dictionary) -> bool: return row.get("kind", "") == "flee" and int(row.get("bits", -1)) == bits[i])
+			var marks: Dictionary = {"fleeing": shown}
 			if bool(marks.get("fleeing", false)) != (fleeing[i] != 0 and not asleep):
 				mismatches += 1
 			if fleeing[i] != 0 and not asleep and seen.is_empty():

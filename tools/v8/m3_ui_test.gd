@@ -12,6 +12,8 @@
 #   the role to storehouse and back to auto (checked in get_rooms); the inspector's bed line, the hover's room
 #   suffix, F10 deconstruct on one wall, F8 dig on the nearest diggable hill tile, the chronicle's RoomFormed text,
 #   the priority table's seven columns (plus M4's Pottery column) and the order bar's fit on the 1920×1080 screen.
+#   3D view: the camera pans the house clear of the HUD's decision cards before the drag, and after each fast-forward
+#   the walls are read from World3D/Structures once its rebuild (one heavy layer per frame) caught up.
 # Bridge methods called: via SimReads get_building_snapshot, get_colony_overlay, get_rooms, get_space,
 #   get_agent_snapshot, get_terrain_snapshot, get_work_priorities, advance_ticks; get_place_preview, get_room_detail,
 #   get_agent_economy, get_agent_detail (direct); and the UI's own calls.
@@ -20,9 +22,10 @@
 #   quits 0 / 1.
 extends SceneTree
 
-const RoomLayer = preload("res://scripts/world/colony/room_layer.gd")
+const RoomLayer = preload("res://scripts/world/room_index.gd")
+const ViewProjection = preload("res://scripts/world/view_projection.gd")
 const View = preload("res://scripts/world/colony/view.gd")
-const OverlayLayer = preload("res://scripts/world/colony/overlay_layer.gd")
+const OverlayLayer = preload("res://scripts/world3d/labels3d.gd")
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
 const Inspector = preload("res://scripts/ui/panels/agent_inspector_panel.gd")
 const MAX_TICKS: int = 20 * 1440
@@ -59,7 +62,7 @@ func _key(code: Key) -> void:
 
 
 func _screen(tile: Vector2i) -> Vector2:
-	return _main.get_viewport().get_canvas_transform() * (Vector2(tile) * View.TILE + Vector2(View.TILE, View.TILE) * 0.5)
+	return ViewProjection.world_to_screen(Vector2(tile) * View.TILE + Vector2(View.TILE, View.TILE) * 0.5)
 
 
 func _mouse(tile: Vector2i, button: bool, pressed: bool, shift: bool) -> void:
@@ -81,10 +84,34 @@ func _mouse(tile: Vector2i, button: bool, pressed: bool, shift: bool) -> void:
 	await process_frame
 
 
+## Pan the camera so the rectangle `a`–`b` (its corners and centre) lies on map with no GUI over it (the HUD's
+## decision cards may cover part of the screen): the first of a few screen spots for its centre that works.
+func _frame_clear(a: Vector2i, b: Vector2i) -> void:
+	var camera: Camera2D = _main.get_node("Camera2D") as Camera2D
+	@warning_ignore("integer_division")
+	var centre: Vector2i = (a + b) / 2
+	var size: Vector2 = root.get_visible_rect().size
+	for spot: Vector2 in [Vector2(0.4, 0.55), Vector2(0.3, 0.5), Vector2(0.4, 0.7), Vector2(0.25, 0.65), Vector2(0.5, 0.75)]:
+		camera.call("center_on_tile", centre)
+		camera.force_update_scroll()
+		await _frames(3)
+		camera.call("pan_screen", size * spot - _screen(centre))
+		camera.force_update_scroll()
+		await _frames(3)
+		var clear: bool = true
+		for t: Vector2i in [a, b, Vector2i(a.x, b.y), Vector2i(b.x, a.y), centre]:
+			await _mouse(t, false, false, false)
+			clear = clear and root.get_visible_rect().has_point(_screen(t)) and root.gui_get_hovered_control() == null
+		if clear:
+			return
+	print("M3_UI INFO no GUI-free framing for %s-%s" % [a, b])
+
+
 ## A left drag from `a` to `b` with Shift held or not.
 func _drag(a: Vector2i, b: Vector2i, shift: bool) -> void:
 	await _mouse(a, false, false, shift)
 	await _mouse(a, true, true, shift)
+	@warning_ignore("integer_division")
 	await _mouse((a + b) / 2, false, false, shift)
 	await _mouse(b, false, false, shift)
 	await _mouse(b, true, false, shift)
@@ -141,11 +168,12 @@ func _run() -> void:
 	_world = _main.get_node_or_null("WorldSim")
 	var tool: Node = _main.get_node_or_null("ColonyView/OrderTool")
 	var bar: Node = _main.get_node_or_null("UI/OrderBar")
-	var overlay: Node = _main.get_node_or_null("ColonyView/OverlayLayer")
-	var buildings: Node = _main.get_node_or_null("ColonyView/BuildingLayer")
+	# M3D-SWITCH E2: the 2D overlay and building layers are gone; World3D/Structures draws walls and floors.
+	var overlay: Node = _main.get_node_or_null("World3D/Overlay")
+	var buildings: Node = _main.get_node_or_null("World3D/Structures")
 	var inspector: Node = _main.get_node_or_null("UI/AgentInspectorPanel")
 	var room_panel: Node = _main.get_node_or_null("UI/RoomPanel")
-	var rooms: Node = _main.get_node_or_null("ColonyView/OverlayLayer/Rooms")
+	var rooms: Node = _main.get_node_or_null("RoomIndex")
 	if _world == null or tool == null or bar == null or overlay == null or buildings == null or inspector == null or room_panel == null or rooms == null:
 		_check("scene", false, "missing nodes (room panel %s, rooms %s)" % [room_panel != null, rooms != null])
 		_finish()
@@ -220,6 +248,7 @@ func _run() -> void:
 	_check("menu_9_stone_wall", str(tool.get("build_kind")) == "stone_wall", "%s (log wall hint '%s')" % [str(tool.get("build_kind")), log_hint])
 	var line_word: String = str(locale.call("ltr", "UI_HINT_DRAG_LINE")) if locale != null else "UI_HINT_DRAG_LINE"
 	_check("drag_hint", hint != null and line_word in hint.text, hint.text if hint != null else "")
+	await _frame_clear(a, b)
 	await _drag(a, b, true)
 	var walls: Dictionary = tool.call("last_result")
 	var toast: Label = bar.get("_toast")
@@ -262,21 +291,27 @@ func _run() -> void:
 		tick += STEP_TICKS
 		await _frames(3)
 		room = int(rooms.call("room_at", a + Vector2i(3, 2)))
-		if room >= 0 and int(buildings.call("wall_count")) >= 20:
+		# World3D rebuilds one layer per frame and none on a simulation step, so after a fast-forward the walls follow
+		# within a few frames (up to two seconds here).
+		for _i: int in (120 if room >= 0 else 0):
+			if int(buildings.call("wall_tile_count")) >= 20:
+				break
+			await process_frame
+		if room >= 0 and int(buildings.call("wall_tile_count")) >= 20:
 			break
 	var ov: Dictionary = SimReads.read(_world, "get_colony_overlay")
 	var by_kind: Dictionary = {}
-	var ik: PackedInt32Array = ov.get("item_kinds", PackedInt32Array())
+	var ik: PackedInt64Array = ov.get("item_kinds", PackedInt64Array())
 	var ic: PackedInt32Array = ov.get("item_counts", PackedInt32Array())
 	for i: int in mini(ik.size(), ic.size()):
 		by_kind[ik[i]] = int(by_kind.get(ik[i], 0)) + ic[i]
 	print("M3_UI INFO after %d ticks: ground items by kind %s, trees marked %d, site delivered %s needed %s" % [tick, by_kind, _designations(0), str(ov.get("site_delivered", PackedInt32Array())), str(ov.get("site_needed", PackedInt32Array()))])
-	_check("house_room", room >= 0, "after %d ticks: room %d, walls drawn %d, floor pieces %d, sites left %s" % [tick, room, int(buildings.call("wall_count")), int(buildings.call("floor_piece_count")), str(_site_kinds())])
+	_check("house_room", room >= 0, "after %d ticks: room %d, walls drawn %d, sites left %s" % [tick, room, int(buildings.call("wall_tile_count")), str(_site_kinds())])
 	if room < 0:
 		_finish()
 		return
 	var space: Dictionary = SimReads.read(_world, "get_space")
-	_check("space_drawn", int(buildings.call("wall_count")) == (space.get("wall_xs", PackedInt32Array()) as PackedInt32Array).size(), "walls %d" % int(buildings.call("wall_count")))
+	_check("space_drawn", int(buildings.call("wall_tile_count")) == (space.get("wall_xs", PackedInt32Array()) as PackedInt32Array).size(), "walls %d" % int(buildings.call("wall_tile_count")))
 	# R: the overlay and the bar's toggle.
 	await _key(KEY_R)
 	var toggle: Button = bar.find_child("RoomsToggle", true, false) as Button
@@ -286,11 +321,11 @@ func _run() -> void:
 	print("M3_UI INFO get_room_detail(%d) = %s" % [room, str(_world.call("get_room_detail", room))])
 	# Click a room tile: the room panel.
 	var inside: Vector2i = a + Vector2i(4, 2)
-	var agent_layer: Node = _main.get_node("ColonyView/AgentLayer")
+
 	var people_inside: int = 0
 	for y: int in range(a.y + 1, b.y):
 		for x: int in range(a.x + 1, b.x):
-			if int(agent_layer.call("entity_at", Vector2(x, y) * View.TILE + Vector2(View.TILE, View.TILE) * 0.5)) >= 0:
+			if str(ViewProjection.pick_world(Vector2(x, y) * View.TILE + Vector2(View.TILE, View.TILE) * 0.5).get("kind", "")) == "person":
 				people_inside += 1
 			else:
 				inside = Vector2i(x, y)

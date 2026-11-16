@@ -1,7 +1,9 @@
 # Home framing: pure group translation, explicit exhaustion and paused native identity.
 # Bridge methods: advance_ticks (setup only), get_agent_snapshot, get_time_snapshot,
 # get_command_log, save_world; ordinary scene bootstrap calls set_sim_speed.
-# No simulation commands. Run with --live for the scene block and external settings.
+# No simulation commands. Run with --live for the scene block and external settings. M3D-SWITCH E2: the live block
+# frames the 3D people (World3D/People bodies); each body is checked by an independent projection of a box around the
+# figure (feet ± its radius, up to its height) through the World3D camera, not by the view's person_rect.
 extends SceneTree
 const Layout = preload("res://scripts/world/colony/marker_layout.gd")
 var failures: int = 0
@@ -99,17 +101,18 @@ func live() -> void:
 			check("original body retained on screen", camera.get_viewport_rect().encloses(moved))
 			for obstacle: Rect2 in report["obstacles"]:
 				check("original body clears actual HUD", not moved.intersects(obstacle))
-		var layer: Node2D = main.get_node("ColonyView/AgentLayer")
+		var w3d: Node = main.get_node("World3D")
+		var people: Node = w3d.get_node("People")
 		var current_obstacles: Array[Rect2] = []
 		Layout.ui_rects(main.get_node("UI"), current_obstacles)
 		var snapshot: Dictionary = world.call("get_agent_snapshot")
 		var original_ids: Array[int] = []
-		var people: Dictionary = layer.get("_persons")
 		for bits: int in snapshot.get("ids", PackedInt64Array()):
-			check("native resident has rendered person", people.has(bits))
-			if not people.has(bits):
+			var body: Dictionary = people.call("body_of", bits)
+			check("native resident has rendered person", not body.is_empty())
+			if body.is_empty():
 				continue
-			var current: Rect2 = independent_body_bounds(people[bits])
+			var current: Rect2 = independent_body_bounds(w3d, body)
 			check("native resident has nonempty body", current.has_area())
 			var original: Rect2 = Rect2(current.position - shift, current.size)
 			if camera.get_viewport_rect().encloses(original):
@@ -157,59 +160,53 @@ func live() -> void:
 	await process_frame
 
 
-# Independent texture read deliberately bypasses production's extent accessor and cache.
-func independent_body_bounds(person: Node2D) -> Rect2:
-	var body: Sprite2D = person.get("body") as Sprite2D
-	if body == null or body.texture == null:
-		return Rect2()
-	var pixels: Image = body.texture.get_image()
-	if pixels.is_compressed():
-		pixels.decompress()
-	var used: Rect2i = pixels.get_used_rect()
-	if not used.has_area():
-		return Rect2()
-	if body.flip_h:
-		used.position.x = pixels.get_width() - used.end.x
-	var extent: Rect2 = Rect2(body.get_rect().position + Vector2(used.position), Vector2(used.size))
-	var material: ShaderMaterial = body.material as ShaderMaterial
-	var outline: Color = material.get_shader_parameter("outline_color")
-	if outline.a > 0.0:
-		extent = extent.grow(maxf(0.0, float(material.get_shader_parameter("outline_px"))))
-	var screen: Rect2 = (body.get_global_transform_with_canvas() * extent).grow(1.0)
-	return Rect2(screen.position.floor(), screen.end.ceil() - screen.position.floor())
+# Independent projection deliberately bypasses production's person_rect: the screen bounds of a box around the
+# figure (feet ± HALF_WIDTH tiles, feet to head) through the World3D camera; Rect2() when behind the camera.
+const HALF_WIDTH: float = 0.3
 
 
+func independent_body_bounds(w3d: Node, body: Dictionary) -> Rect2:
+	var cam: Camera3D = w3d.call("camera") as Camera3D
+	if cam == null or body.is_empty():
+		return Rect2()
+	var feet: Vector3 = body["feet"]
+	var out: Rect2 = Rect2()
+	var first: bool = true
+	for dy: float in [0.0, float(body["h"])]:
+		for dx: float in [-HALF_WIDTH, HALF_WIDTH]:
+			for dz: float in [-HALF_WIDTH, HALF_WIDTH]:
+				var p: Vector3 = feet + Vector3(dx, dy, dz)
+				if cam.is_position_behind(p):
+					return Rect2()
+				var s: Vector2 = cam.unproject_position(p)
+				out = Rect2(s, Vector2.ZERO) if first else out.expand(s)
+				first = false
+	return Rect2(out.position.floor(), out.end.ceil() - out.position.floor())
+
+
+## The paused Home view over a second of real rendering: every figure keeps its body (feet and height, what its
+## screen rect is projected from) and its clip while the 3D clips play in the vertex shader. (The 2D test also checked
+## a stable envelope around each sprite animation phase; a 3D figure's framing box does not depend on its pose.)
 func animation_envelopes(main: Node) -> void:
-	var layer: Node2D = main.get_node("ColonyView/AgentLayer")
-	var people: Dictionary = layer.get("_persons")
-	var envelopes: Dictionary = {}
-	var work_poses: Dictionary = {}
-	for bits: int in people:
-		envelopes[bits] = layer.call("framing_body_rect", bits)
-		if str(people[bits].get("activity")) == "work":
-			work_poses[bits] = {}
-	check("native fixture contains animated worker", not work_poses.is_empty())
+	var w3d: Node = main.get_node("World3D")
+	var people: Node = w3d.get_node("People")
+	var bodies: Dictionary = {}
+	var clips: Dictionary = {}
+	for body: Dictionary in people.call("bodies", 0):
+		var bits: int = int(body["id"])
+		bodies[bits] = people.call("body_of", bits)
+		clips[bits] = str((people.call("state_of", bits) as Dictionary).get("clip", ""))
+	check("native fixture has drawn figures with clips", not bodies.is_empty() and not clips.values().has(""))
 	# Real elapsed rendering time, not a frame-count assumption or a forced pose.
 	var deadline: int = Time.get_ticks_msec() + 1100
-	var all_contained: bool = true
-	var envelope_stable: bool = true
+	var body_stable: bool = true
+	var clips_kept: bool = true
 	while Time.get_ticks_msec() < deadline:
 		await process_frame
-		for bits: int in people:
-			var actual: Rect2 = independent_body_bounds(people[bits])
-			all_contained = all_contained and (envelopes[bits] as Rect2).encloses(actual)
-			envelope_stable = envelope_stable and envelopes[bits] == layer.call("framing_body_rect", bits)
-			if work_poses.has(bits):
-				work_poses[bits][str(people[bits].get("pose"))] = true
-	check("stable envelope contains every real rendered phase", all_contained)
-	check("envelope unchanged across real animation cycle", envelope_stable)
-	for bits: int in work_poses:
-		var poses: Dictionary = work_poses[bits]
-		var saw_idle: bool = false
-		var saw_work: bool = false
-		for pose: String in poses:
-			saw_idle = saw_idle or pose.ends_with("/idle")
-			saw_work = saw_work or pose.ends_with("/work_a")
-		check("both actual work phases observed", saw_idle and saw_work)
-	print("CAMP_FRAMING_ANIMATION " + JSON.stringify(work_poses))
+		for bits: int in bodies:
+			body_stable = body_stable and bodies[bits] == people.call("body_of", bits)
+			clips_kept = clips_kept and clips[bits] == str((people.call("state_of", bits) as Dictionary).get("clip", ""))
+	check("body unchanged across real animation cycle", body_stable)
+	check("every figure keeps its clip", clips_kept)
+	print("CAMP_FRAMING_ANIMATION " + JSON.stringify(clips.values()))
 	animation_completed = true

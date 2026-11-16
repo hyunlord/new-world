@@ -1,0 +1,1404 @@
+{
+  "models": {
+    "plant_berry_bush_growing": {
+      "file": "models/plant_berry_bush_growing.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.386,
+      "triangles": 124,
+      "materials": [
+        "trunk",
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "berry_bush",
+      "phase": "growing",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_berry_bush_ripe": {
+      "file": "models/plant_berry_bush_ripe.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.665,
+      "triangles": 184,
+      "materials": [
+        "trunk",
+        "canopy",
+        "fruit"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "berry_bush",
+      "phase": "ripe",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_berry_bush_spent": {
+      "file": "models/plant_berry_bush_spent.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.665,
+      "triangles": 124,
+      "materials": [
+        "trunk",
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "berry_bush",
+      "phase": "spent",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_berry_bush_dormant": {
+      "file": "models/plant_berry_bush_dormant.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.573,
+      "triangles": 64,
+      "materials": [
+        "trunk"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "berry_bush",
+      "phase": "dormant",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_hazel_growing": {
+      "file": "models/plant_hazel_growing.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.695,
+      "triangles": 124,
+      "materials": [
+        "trunk",
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "hazel",
+      "phase": "growing",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_hazel_ripe": {
+      "file": "models/plant_hazel_ripe.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 1.197,
+      "triangles": 184,
+      "materials": [
+        "trunk",
+        "canopy",
+        "fruit"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "hazel",
+      "phase": "ripe",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_hazel_spent": {
+      "file": "models/plant_hazel_spent.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 1.197,
+      "triangles": 124,
+      "materials": [
+        "trunk",
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "hazel",
+      "phase": "spent",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_hazel_dormant": {
+      "file": "models/plant_hazel_dormant.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 1.019,
+      "triangles": 64,
+      "materials": [
+        "trunk"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "hazel",
+      "phase": "dormant",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_flax_growing": {
+      "file": "models/plant_wild_flax_growing.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.407,
+      "triangles": 160,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_flax",
+      "phase": "growing",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_flax_ripe": {
+      "file": "models/plant_wild_flax_ripe.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.713,
+      "triangles": 260,
+      "materials": [
+        "canopy",
+        "fruit"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_flax",
+      "phase": "ripe",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_flax_spent": {
+      "file": "models/plant_wild_flax_spent.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.142,
+      "triangles": 60,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_flax",
+      "phase": "spent",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_flax_dormant": {
+      "file": "models/plant_wild_flax_dormant.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.067,
+      "triangles": 60,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_flax",
+      "phase": "dormant",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_grain_growing": {
+      "file": "models/plant_wild_grain_growing.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.476,
+      "triangles": 224,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_grain",
+      "phase": "growing",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_grain_ripe": {
+      "file": "models/plant_wild_grain_ripe.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.935,
+      "triangles": 364,
+      "materials": [
+        "canopy",
+        "fruit"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_grain",
+      "phase": "ripe",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_grain_spent": {
+      "file": "models/plant_wild_grain_spent.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.166,
+      "triangles": 84,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_grain",
+      "phase": "spent",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_grain_dormant": {
+      "file": "models/plant_wild_grain_dormant.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.078,
+      "triangles": 84,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_grain",
+      "phase": "dormant",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_root_growing": {
+      "file": "models/plant_wild_root_growing.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.237,
+      "triangles": 260,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_root",
+      "phase": "growing",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_root_ripe": {
+      "file": "models/plant_wild_root_ripe.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.301,
+      "triangles": 360,
+      "materials": [
+        "canopy",
+        "fruit"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_root",
+      "phase": "ripe",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_root_spent": {
+      "file": "models/plant_wild_root_spent.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.065,
+      "triangles": 60,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_root",
+      "phase": "spent",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_root_dormant": {
+      "file": "models/plant_wild_root_dormant.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.035,
+      "triangles": 60,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_root",
+      "phase": "dormant",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_barley_growing": {
+      "file": "models/plant_wild_barley_growing.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.418,
+      "triangles": 224,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_barley",
+      "phase": "growing",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_barley_ripe": {
+      "file": "models/plant_wild_barley_ripe.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.872,
+      "triangles": 476,
+      "materials": [
+        "canopy",
+        "fruit"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_barley",
+      "phase": "ripe",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_barley_spent": {
+      "file": "models/plant_wild_barley_spent.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.146,
+      "triangles": 84,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_barley",
+      "phase": "spent",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_barley_dormant": {
+      "file": "models/plant_wild_barley_dormant.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.069,
+      "triangles": 84,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_barley",
+      "phase": "dormant",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_rye_growing": {
+      "file": "models/plant_wild_rye_growing.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.627,
+      "triangles": 224,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_rye",
+      "phase": "growing",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_rye_ripe": {
+      "file": "models/plant_wild_rye_ripe.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 1.196,
+      "triangles": 364,
+      "materials": [
+        "canopy",
+        "fruit"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_rye",
+      "phase": "ripe",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_rye_spent": {
+      "file": "models/plant_wild_rye_spent.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.217,
+      "triangles": 84,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_rye",
+      "phase": "spent",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_rye_dormant": {
+      "file": "models/plant_wild_rye_dormant.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.1,
+      "triangles": 84,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_rye",
+      "phase": "dormant",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_lentil_growing": {
+      "file": "models/plant_wild_lentil_growing.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.199,
+      "triangles": 260,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_lentil",
+      "phase": "growing",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_lentil_ripe": {
+      "file": "models/plant_wild_lentil_ripe.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.341,
+      "triangles": 360,
+      "materials": [
+        "canopy",
+        "fruit"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_lentil",
+      "phase": "ripe",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_lentil_spent": {
+      "file": "models/plant_wild_lentil_spent.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.072,
+      "triangles": 60,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_lentil",
+      "phase": "spent",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_lentil_dormant": {
+      "file": "models/plant_wild_lentil_dormant.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.038,
+      "triangles": 60,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_lentil",
+      "phase": "dormant",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_pea_growing": {
+      "file": "models/plant_wild_pea_growing.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.337,
+      "triangles": 260,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_pea",
+      "phase": "growing",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_pea_ripe": {
+      "file": "models/plant_wild_pea_ripe.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.581,
+      "triangles": 360,
+      "materials": [
+        "canopy",
+        "fruit"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_pea",
+      "phase": "ripe",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_pea_spent": {
+      "file": "models/plant_wild_pea_spent.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.119,
+      "triangles": 60,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_pea",
+      "phase": "spent",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_pea_dormant": {
+      "file": "models/plant_wild_pea_dormant.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.057,
+      "triangles": 60,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_pea",
+      "phase": "dormant",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_millet_growing": {
+      "file": "models/plant_wild_millet_growing.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.441,
+      "triangles": 224,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_millet",
+      "phase": "growing",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_millet_ripe": {
+      "file": "models/plant_wild_millet_ripe.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.918,
+      "triangles": 364,
+      "materials": [
+        "canopy",
+        "fruit"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_millet",
+      "phase": "ripe",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_millet_spent": {
+      "file": "models/plant_wild_millet_spent.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.154,
+      "triangles": 84,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_millet",
+      "phase": "spent",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_millet_dormant": {
+      "file": "models/plant_wild_millet_dormant.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.073,
+      "triangles": 84,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_millet",
+      "phase": "dormant",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_apple_growing": {
+      "file": "models/plant_wild_apple_growing.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.772,
+      "triangles": 124,
+      "materials": [
+        "trunk",
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_apple",
+      "phase": "growing",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_apple_ripe": {
+      "file": "models/plant_wild_apple_ripe.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 1.331,
+      "triangles": 184,
+      "materials": [
+        "trunk",
+        "canopy",
+        "fruit"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_apple",
+      "phase": "ripe",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+      "overhang": true
+    },
+    "plant_wild_apple_spent": {
+      "file": "models/plant_wild_apple_spent.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 1.331,
+      "triangles": 124,
+      "materials": [
+        "trunk",
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_apple",
+      "phase": "spent",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "plant_wild_apple_dormant": {
+      "file": "models/plant_wild_apple_dormant.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 1.131,
+      "triangles": 64,
+      "materials": [
+        "trunk"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "plant",
+      "content_id": "wild_apple",
+      "phase": "dormant",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "crop_emmer_growing": {
+      "file": "models/crop_emmer_growing.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.476,
+      "triangles": 224,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "crop",
+      "content_id": "emmer",
+      "phase": "growing",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "crop_emmer_ripe": {
+      "file": "models/crop_emmer_ripe.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.935,
+      "triangles": 364,
+      "materials": [
+        "canopy",
+        "fruit"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "crop",
+      "content_id": "emmer",
+      "phase": "ripe",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "crop_emmer_spent": {
+      "file": "models/crop_emmer_spent.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.166,
+      "triangles": 84,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "crop",
+      "content_id": "emmer",
+      "phase": "spent",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "crop_emmer_dormant": {
+      "file": "models/crop_emmer_dormant.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.078,
+      "triangles": 84,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "crop",
+      "content_id": "emmer",
+      "phase": "dormant",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "crop_flax_growing": {
+      "file": "models/crop_flax_growing.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.407,
+      "triangles": 160,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "crop",
+      "content_id": "flax",
+      "phase": "growing",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "crop_flax_ripe": {
+      "file": "models/crop_flax_ripe.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.713,
+      "triangles": 260,
+      "materials": [
+        "canopy",
+        "fruit"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "crop",
+      "content_id": "flax",
+      "phase": "ripe",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "crop_flax_spent": {
+      "file": "models/crop_flax_spent.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.142,
+      "triangles": 60,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "crop",
+      "content_id": "flax",
+      "phase": "spent",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "crop_flax_dormant": {
+      "file": "models/crop_flax_dormant.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.067,
+      "triangles": 60,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "crop",
+      "content_id": "flax",
+      "phase": "dormant",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "crop_barley_growing": {
+      "file": "models/crop_barley_growing.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.418,
+      "triangles": 224,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "crop",
+      "content_id": "barley",
+      "phase": "growing",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "crop_barley_ripe": {
+      "file": "models/crop_barley_ripe.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.872,
+      "triangles": 476,
+      "materials": [
+        "canopy",
+        "fruit"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "crop",
+      "content_id": "barley",
+      "phase": "ripe",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "crop_barley_spent": {
+      "file": "models/crop_barley_spent.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.146,
+      "triangles": 84,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "crop",
+      "content_id": "barley",
+      "phase": "spent",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "crop_barley_dormant": {
+      "file": "models/crop_barley_dormant.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.069,
+      "triangles": 84,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "crop",
+      "content_id": "barley",
+      "phase": "dormant",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "crop_rye_growing": {
+      "file": "models/crop_rye_growing.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.627,
+      "triangles": 224,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "crop",
+      "content_id": "rye",
+      "phase": "growing",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "crop_rye_ripe": {
+      "file": "models/crop_rye_ripe.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 1.196,
+      "triangles": 364,
+      "materials": [
+        "canopy",
+        "fruit"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "crop",
+      "content_id": "rye",
+      "phase": "ripe",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "crop_rye_spent": {
+      "file": "models/crop_rye_spent.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.217,
+      "triangles": 84,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "crop",
+      "content_id": "rye",
+      "phase": "spent",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "crop_rye_dormant": {
+      "file": "models/crop_rye_dormant.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.1,
+      "triangles": 84,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "crop",
+      "content_id": "rye",
+      "phase": "dormant",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "crop_lentil_growing": {
+      "file": "models/crop_lentil_growing.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.199,
+      "triangles": 260,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "crop",
+      "content_id": "lentil",
+      "phase": "growing",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "crop_lentil_ripe": {
+      "file": "models/crop_lentil_ripe.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.341,
+      "triangles": 360,
+      "materials": [
+        "canopy",
+        "fruit"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "crop",
+      "content_id": "lentil",
+      "phase": "ripe",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "crop_lentil_spent": {
+      "file": "models/crop_lentil_spent.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.072,
+      "triangles": 60,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "crop",
+      "content_id": "lentil",
+      "phase": "spent",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "crop_lentil_dormant": {
+      "file": "models/crop_lentil_dormant.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.038,
+      "triangles": 60,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "crop",
+      "content_id": "lentil",
+      "phase": "dormant",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "crop_pea_growing": {
+      "file": "models/crop_pea_growing.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.337,
+      "triangles": 260,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "crop",
+      "content_id": "pea",
+      "phase": "growing",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "crop_pea_ripe": {
+      "file": "models/crop_pea_ripe.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.581,
+      "triangles": 360,
+      "materials": [
+        "canopy",
+        "fruit"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "crop",
+      "content_id": "pea",
+      "phase": "ripe",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "crop_pea_spent": {
+      "file": "models/crop_pea_spent.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.119,
+      "triangles": 60,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "crop",
+      "content_id": "pea",
+      "phase": "spent",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "crop_pea_dormant": {
+      "file": "models/crop_pea_dormant.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.057,
+      "triangles": 60,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "crop",
+      "content_id": "pea",
+      "phase": "dormant",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "crop_millet_growing": {
+      "file": "models/crop_millet_growing.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.441,
+      "triangles": 224,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "crop",
+      "content_id": "millet",
+      "phase": "growing",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "crop_millet_ripe": {
+      "file": "models/crop_millet_ripe.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.918,
+      "triangles": 364,
+      "materials": [
+        "canopy",
+        "fruit"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "crop",
+      "content_id": "millet",
+      "phase": "ripe",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "crop_millet_spent": {
+      "file": "models/crop_millet_spent.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.154,
+      "triangles": 84,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "crop",
+      "content_id": "millet",
+      "phase": "spent",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "crop_millet_dormant": {
+      "file": "models/crop_millet_dormant.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.073,
+      "triangles": 84,
+      "materials": [
+        "canopy"
+      ],
+      "sockets": {},
+      "family": "flora",
+      "content_family": "crop",
+      "content_id": "millet",
+      "phase": "dormant",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047"
+    },
+    "copper_outcrop": {
+      "file": "models/copper_outcrop.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.834,
+      "triangles": 112,
+      "materials": [
+        "stone",
+        "vein"
+      ],
+      "sockets": {},
+      "family": "rocks",
+      "content_family": "outcrop",
+      "content_id": "copper_outcrop",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+      "overhang": true
+    },
+    "tin_outcrop": {
+      "file": "models/tin_outcrop.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.834,
+      "triangles": 112,
+      "materials": [
+        "stone",
+        "vein"
+      ],
+      "sockets": {},
+      "family": "rocks",
+      "content_family": "outcrop",
+      "content_id": "tin_outcrop",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+      "overhang": true
+    },
+    "iron_outcrop": {
+      "file": "models/iron_outcrop.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.834,
+      "triangles": 112,
+      "materials": [
+        "stone",
+        "vein"
+      ],
+      "sockets": {},
+      "family": "rocks",
+      "content_family": "outcrop",
+      "content_id": "iron_outcrop",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+      "overhang": true
+    },
+    "bog_iron_outcrop": {
+      "file": "models/bog_iron_outcrop.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.834,
+      "triangles": 112,
+      "materials": [
+        "stone",
+        "vein"
+      ],
+      "sockets": {},
+      "family": "rocks",
+      "content_family": "outcrop",
+      "content_id": "bog_iron_outcrop",
+      "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+      "overhang": true
+    }
+  }
+}

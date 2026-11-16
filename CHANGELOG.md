@@ -15,6 +15,68 @@
 ### Removed
 - None.
 
+## M3D-SWITCH E2 — the 3D view is the only world view (branch v8/3d, not published)
+
+### Added
+- `scripts/world3d/labels3d.gd` (World3D/LabelLayer/Labels): the 2D layers' map text in screen space over the 3D view —
+  blueprint site bars and progress labels, hover labels of item stacks, resource nodes, housing designations, pen and
+  wild animals and visitor groups, room labels with R, ore-outcrop glyphs, drafted/sick/flee/mood marks over people,
+  shared-spot counts below 1×, and rings over huntable deer; same keys, `labels.font_px` and hover rules.
+- OrderTool `ghost_ok` and `template_preview`; the 3D overlay colours a blueprint or template footprint green or refused.
+- `tools/v8/w3d_render_test.gd` and `w3d_labels_test.gd` (gate step 34 `w3d_render`), a 3D bounds check in the
+  visibility validator, World3D per-layer probes in `mux2_perf_monitor.gd`.
+
+### Changed
+- `main.tscn` keeps `ColonyView` as a hidden container for OrderTool and WorldMarker; World3D is always added.
+- `ViewProjection` answers only through the 3D view (no 2D fallback; the item, cycle and framing parameters are gone).
+- OrderTool keeps the build-template state itself and draws nothing.
+- Gate steps moved to the 3D view: 23 renderer agreement against World3D/People's drawn figures; 32 resolver parity
+  materials only; 34 `w3d_render`; 36 ore renderer = World3D/Flora + labels; 38 camp framing and the visibility
+  validator only; 39 the visibility receipt on the 3D view (`renderer: 3d`, no LOD); 40 and 46 the Why input test
+  through ViewProjection; 41 stall telemetry with World3D per-layer time and a rebuild summary; 48 plant art on
+  plants3d. `mart2_chunk_hashes.json` pins the 3D terrain chunk.
+- `marker_layout.gd`, `site_ghost.gd`, `wall_baker.gd`, `tone.gd`, `view.gd` and `art_data.gd` trimmed to what the UI and
+  3D still use.
+
+### Removed
+- The 2D world renderer: GroundLayer, TreeLayer, BuildingLayer, PlantLayer, FieldLayer, LivestockLayer, OutcropLayer,
+  AgentLayer, AnimalLayer, VisitorLayer, OverlayLayer, RoomLayer, LodMarkers, the template preview, DaylightController
+  and its CanvasModulate, `lit_warm_representatives.gd`, `wood_visuals.gd`, `ground_baker.gd`, `flora_resolver.gd`,
+  and the shaders `ground_chunk`, `person_variant`, `tree_season`, `palette_swap`, `villager_ramp`.
+- The `--renderer=2d` escape hatch (`renderer_switch.gd`) and the `renderer_3d` setting with `MUX_SETTING_RENDERER_3D`.
+- 2D-only tools: the mux2 badge/marker/overlap/person-cache/wall-cache/bake oracles and their fixtures,
+  `mux21_layout_test`, `mart2_ground_test`, `mart2_people_test`, `mart21_trees_test`, `mart2_ui_test`, `b5_tree_*`,
+  `mart2_fps` (+ `.sh`), `mux21_fps`, `mux21_profile`, `mux2_render_profile`, `mux2_rebake_supplement`,
+  `mux2_building_*warm_test`, `mux2_people_state_test`, `mux_renderer_test`, `mart21_shots`,
+  `m6a_actions_visibility_test`, `flora_parity_fixture.json`.
+
+## M3D-ASSETS — 2026-11-15 (asset branch; integration pending)
+
+### Added
+- Frozen content inventory and 572 deterministic static GLBs: 119 item codes × 3 stack sizes, 76 plant/crop/outcrop models, 63 station/wall/fence variants, one packed floor and 25 template concepts × 3 construction previews (`assets/3d/INVENTORY.md`, ADR 0067).
+- Seven TRELLIS-derived animal species and 21 human models (three set-B originals plus 18 age/sex/era attachment variants), shared skeletons/clips and fixed-raw Blender reproducibility (`tools/3d/chars/`). Skinned GLBs are explicit and do not claim VAT integration.
+- Separate manifests and game-camera family review sheets; raw evidence and Korean report are external under `/Users/rexxa/work/3d-data/m3d-assets/`. Requested remote C3 ref availability and living-model provenance are reported explicitly.
+
+## M3D-1 — 3D view (branch v8/3d, not published; 2D stays the default)
+
+### Added
+- A 3D view of the colony (`--renderer=3d` or the "3D 보기" setting; ADR 0066): chunked terrain from elevation with
+  hill plateaus, sloped river banks and animated water; seasonal low-poly trees, bushes, boulders and tinted ore
+  outcrops with markers; walls extruded from the wall grid (log, block and palisade profiles joined by geometry), doors
+  with frames and swinging leaves, fences, floor slabs; per-room gable roofs (thatch, bark, plank by era) with a
+  cutaway at Z5, with the room overlay (R) and for the selected room or inspected person; construction outlines and
+  rising wall sites; Blender-script stations (smelter and kiln lit with emissive and an OmniLight), camp buildings,
+  bedrolls and item stacks; vertex-animated placeholder villagers tinted from the appearance data and placeholder
+  animals; picking that opens the same inspector and panels as 2D; overlays and order feedback on terrain and plants;
+  influence-channel maps on O; a sun and moon on the sim clock with seasonal tint and winter snow.
+- `tools/3d/blender/` (deterministic model, rig, animation and VAT scripts), `assets/3d/` (models, VAT, bindings,
+  params), `tools/v8/world3d_shots.gd`, `world3d_gui_test.gd` and `world3d_fps.gd`.
+
+### Changed
+- Screen ↔ world conversion in OrderTool, the camera zoom anchor, the causal panel and the story banner goes through
+  `scripts/world/view_projection.gd` (identical in 2D).
+- The camera controller takes a 3D zoom ladder and a screen rotation (both inert in 2D); the hidden AgentLayer skips
+  its drawing-only badge work.
 ## C3-a — iron content, not yet published (2026-11-15)
 
 Content pass for bible §4.4 on the C2 metal machinery (ADR 0066, `docs/v8/c3/C3_DECISIONS.md`). Gated together with the merged M-SIMCHECK fixes. Evidence stays outside git in `/Users/rexxa/work/c3-data`.

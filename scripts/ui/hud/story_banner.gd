@@ -20,6 +20,7 @@ const StoryText = preload("res://scripts/ui/story_text.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
 const View = preload("res://scripts/world/colony/view.gd")
+const ViewProjection = preload("res://scripts/world/view_projection.gd")
 const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
 const VISITOR: Color = Color("f0c040")
 const COLUMN: Rect2 = Rect2(648, 124, 880, 0)
@@ -231,8 +232,8 @@ func _fill_banners(story: Dictionary) -> void:
 
 
 func _refresh_legend(language: String) -> void:
-	var agents: Node = get_node_or_null("/root/Main/ColonyView/AgentLayer")
-	var shown: bool = agents != null and bool(agents.call("mood_shown"))
+	var people: Node = get_node_or_null("/root/Main/PeopleView")
+	var shown: bool = people != null and bool(people.call("mood_shown"))
 	var panel: Control = _legend.get_parent() as Control
 	panel.visible = shown
 	if shown and str(_legend.get_meta("language", "")) != language:
@@ -301,7 +302,7 @@ func pulse() -> Dictionary:
 
 
 func _screen_of(tile: Vector2i) -> Vector2:
-	return get_viewport().get_canvas_transform() * (View.tile_to_world(tile) + Vector2(View.TILE * 0.5, View.TILE * 0.5))
+	return ViewProjection.world_to_screen(View.tile_to_world(tile) + Vector2(View.TILE * 0.5, View.TILE * 0.5))
 
 
 ## The point on the screen's edge (inset by EDGE) toward `at` from the screen's centre.

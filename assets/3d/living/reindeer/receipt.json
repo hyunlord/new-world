@@ -1,0 +1,38 @@
+{
+  "species": "reindeer",
+  "ground_fragment_vertices_removed": 0,
+  "raw_sha256": "ff3a76e521e0224a5cd11fa73501912d00b86ae51d5b0c5dc4800480259f6b1c",
+  "seed": 0,
+  "trellis_revision": "75fbf0183001ed9876c8dbb35de6b68552ee08bd",
+  "source": "/Users/rexxa/work/3d-data/m3d-assets/living/raw/reindeer-attempt1.glb",
+  "triangles": 2000,
+  "shoulder_height_m": 1.1,
+  "height_landmark_xyz": [
+    0.0210499819368124,
+    -0.1556777060031891,
+    1.0999999046325684
+  ],
+  "bones": [
+    "Root",
+    "Neck",
+    "Head",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "BackUpper.L",
+    "BackLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "BackUpper.R",
+    "BackLower.R",
+    "Tail"
+  ],
+  "animations": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down"
+  ],
+  "texture": "512x512 embedded atlas",
+  "pipeline": "TRELLIS.2 -> set-B remesh/atlas -> fitted shared quadruped -> shared clips",
+  "front": "Godot +Z / Blender -Y"
+}

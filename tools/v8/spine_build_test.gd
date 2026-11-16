@@ -96,7 +96,9 @@ func _click(button: Button) -> void:
 	await _point(button.get_global_rect().get_center())
 
 func _tile(tile: Vector2i, click: bool = true) -> void:
-	await _point(_camera.get_canvas_transform() * View.tile_centre(tile), click)
+	# The 3D camera follows the 2D camera on its next frame: place it now, the caller may just have moved the camera.
+	_main.get_node("World3D").get("rig").call("update_camera")
+	await _point(preload("res://scripts/world/view_projection.gd").world_to_screen(View.tile_centre(tile)), click)
 
 func _capture(label: String) -> void:
 	await _wait_for_minimap()
@@ -415,7 +417,8 @@ func _completed(language: String, stage: String) -> void:
 		_check("native upgrade starts same saved site", str(after.get("status", "")) == "building" and after.get("width") == site.get("width") and after.get("height") == site.get("height"))
 
 func _housing(language: String) -> void:
-	var overlay: Node = _main.get_node("ColonyView/OverlayLayer")
+	# M3D-SWITCH E2: housing designations are indexed by OrderTool (the 2D OverlayLayer is gone).
+	var overlay: Node = _tool
 	var ui: Dictionary = (_manifests["03zonegrown"] as Dictionary).get("ui", {})
 	if not ui.has("housing_tile"): _gap("manifest ui.housing_tile required for unoccluded native zone selection"); return
 	var tile := Vector2i(int(ui["housing_tile"][0]), int(ui["housing_tile"][1]))
@@ -489,11 +492,11 @@ func _choose_available_native(id: String) -> void:
 	_check("card selection alone sends no build command", _world.call("get_command_log", 0) == before)
 
 # No motion/track invocation here: only ordinary frames may drive the production caller.
-func _caller_refresh(preview: Node, tile: Vector2i, tick: int, revision: int, before: int, label: String) -> void:
+func _caller_refresh(preview: TemplateProbe, tile: Vector2i, tick: int, revision: int, before: int, label: String) -> void:
 	await _frames()
 	var expected: Array = [preview.get("template_id"), preview.call("cursor_origin", tile), preview.get("template_rotation"), preview.get("station_id"), tick, revision]
 	var actual: Array = preview.get("_query")
-	_check("stationary native caller refresh " + label, (preview as CanvasItem).visible and _tool.get("_hover") == tile and actual == expected and _preview_changes > before)
+	_check("stationary native caller refresh " + label, bool(preview.call("active")) and _tool.call("hover_tile") == tile and actual == expected and _preview_changes > before)
 	_rows[-1]["observed"] = {"frame": Engine.get_process_frames(), "expected_query": expected, "actual_query": actual.duplicate(), "changed_before": before, "changed_after": _preview_changes}
 
 func _placement(language: String) -> void:
@@ -501,20 +504,24 @@ func _placement(language: String) -> void:
 	if not ui.has("placement_template") or not ui.has("placement_cursor_tile"): _gap("manifest placement template/cursor required"); return
 	await _open_templates_native()
 	await _choose_available_native(str(ui["placement_template"]))
-	var preview: Node = _tool.get_node_or_null("TemplatePreview")
-	_check("real placement preview active", preview != null and bool(preview.call("active")))
-	if preview == null or not bool(preview.call("active")): return
+	# M3D-SWITCH E2: OrderTool keeps the template state (the 2D TemplatePreview child is gone); TemplateProbe reads it.
+	var preview: TemplateProbe = TemplateProbe.new()
+	preview.tool = _tool
+	_main.add_child(preview)
+	_check("real placement preview active", bool(_tool.call("template_active")))
+	if not bool(_tool.call("template_active")): return
 	var tile := Vector2i(int(ui["placement_cursor_tile"][0]), int(ui["placement_cursor_tile"][1]))
 	_camera.position = View.tile_centre(tile)
 	_camera.force_update_scroll()
 	await _tile(tile, false)
-	var rooms: Node = _main.get_node("ColonyView/OverlayLayer/Rooms")
+	var rooms: Node = _main.get_node("RoomIndex")
 	var rooms_before: bool = bool(rooms.call("is_shown"))
 	await _key(KEY_R)
-	_check("native R rotates once and preserves room view", int(preview.get("template_rotation")) == 1 and bool(rooms.call("is_shown")) == rooms_before)
-	_check("actual cursor anchor", preview.get("anchor") == preview.call("cursor_origin", tile))
-	var origin: Vector2i = preview.get("anchor")
-	var station: String = str(preview.get("station_id"))
+	var state: Dictionary = _tool.call("template_state")
+	_check("native R rotates once and preserves room view", int(state.get("rotation", -1)) == 1 and bool(rooms.call("is_shown")) == rooms_before)
+	_check("actual cursor anchor", state.get("anchor") == _tool.call("build_origin", tile))
+	var origin: Vector2i = state.get("anchor", Vector2i(-1, -1))
+	var station: String = str(state.get("station", ""))
 	var old_sites: Array = _world.call("get_building_snapshot").get("template_sites", [])
 	var total: int = int(_world.call("get_command_log", 9223372036854775807).get("total", -1))
 	await _tile(tile)
@@ -605,12 +612,34 @@ func _cord_world(language: String) -> void:
 	_check("actual cord count and quality match save", counts[found] == int(ui["cord_count"]) and qualities[found] == int(ui["cord_quality"]))
 	var row: Dictionary = Content.row("items", code)
 	_check("actual selected cord placeholder rod birch", row.get("art_shape") == "rod" and row.get("art_tint_material") == "birch" and ItemIcons.uses_placeholder(code) and ItemIcons.texture_of(code) != null)
-	var overlay: Node = _main.get_node("ColonyView/OverlayLayer")
-	var look: Array = overlay.call("stack_look", code, counts[found])
-	var texture: Array = overlay.call("_stack_texture", str(look[0]), int(look[1]), code)
-	var sprite: Sprite2D = (overlay.get("_sprites") as Dictionary).get("i%d_%d" % [tile.x, tile.y]) as Sprite2D
-	_check("real cord world sprite uses pile texture pipeline", sprite != null and sprite.is_visible_in_tree() and sprite.texture != null and sprite.texture == texture[0])
-	_rows[-1]["observed"] = {"fixture": ui, "actual_count": counts[found], "actual_quality": qualities[found]}
+	# M3D-SWITCH: the 2D pile sprite is gone. World3D/Props draws the stack through its item pipeline (the count
+	# bucket's own model, else the 2D asset's / art shape's model in the art tint) at this tile, and the 3D map labels
+	# name the hovered stack.
+	var props: Node = _main.get_node("World3D/Props")
+	var limits: Array = (preload("res://scripts/world/art/art_data.gd").bindings().get("items", {}) as Dictionary).get("bucket_limits", [1, 8])
+	var bucket: int = 0 if counts[found] <= int(limits[0]) else (1 if counts[found] <= int(limits[1]) else 2)
+	var own: String = preload("res://scripts/world3d/props3d.gd").own_item_model(str(row.get("id", "")), bucket)
+	var batch: String = (own + "|") if own != "" else (str(props.call("_item_model", code, bucket, row)) + "|" + str(row.get("art_tint_material", "")))
+	# After a load World3D rebuilds the terrain first, one heavy layer per frame: the props follow within seconds.
+	var pile: MultiMeshInstance3D = null
+	var piled: bool = false
+	for _frame: int in 300:
+		pile = (props.get("_item_nodes") as Dictionary).get(batch) as MultiMeshInstance3D
+		for i: int in (pile.multimesh.instance_count if pile != null and pile.multimesh != null else 0):
+			var at: Vector3 = pile.multimesh.get_instance_transform(i).origin
+			piled = piled or Rect2(Vector2(tile), Vector2.ONE).has_point(Vector2(at.x, at.z))
+		if piled:
+			break
+		await process_frame
+	var labels: Node = _main.get_node("World3D/LabelLayer/Labels")
+	labels.set("follow_mouse", false)
+	labels.set("hover_tile", tile)
+	await _frames()
+	var named: bool = (labels.call("drawn") as Array).any(func(r: Dictionary) -> bool: return r.get("kind", "") == "tile" and str(r.get("text", "")).contains(str(counts[found])))
+	labels.set("follow_mouse", true)
+	_check("real cord world sprite uses pile texture pipeline", piled and named)
+	_rows[-1]["observed"] = {"fixture": ui, "actual_count": counts[found], "actual_quality": qualities[found], "batch": batch, "batch_drawn": pile != null, "on_tile": piled, "hover_named": named,
+		"batches": (props.get("_item_nodes") as Dictionary).keys(), "labels": labels.call("drawn")}
 	await _capture(language + "_05cord-world_actual_pile")
 	_check("cord observation preserves tick and command log", int(_world.call("get_time_snapshot")["tick"]) == int(_manifests["05cord-world"]["tick"]) and _world.call("get_command_log", 0) == before)
 
@@ -646,7 +675,7 @@ func _finish() -> void:
 # C1-b: inspect actual chain checkpoints through the ordinary loader and native controls.
 func _livestock() -> void:
 	var stages: Array[String] = ["00-pen-placed", "01-capture", "02-two-adults", "03-kid", "04-milk", "05-slaughter"]
-	var renderer: Node = _main.get_node("ColonyView/LivestockLayer")
+	var renderer: Node = _main.get_node("World3D/Animals")
 	var goals: Control = _main.get_node("UI/MuxHud/Goals") as Control
 	var cards: Control = _main.get_node("UI/MuxHud/CardPanel") as Control
 	for language: String in ["ko", "en"]:
@@ -669,7 +698,8 @@ func _livestock() -> void:
 					found = true
 					_check(stage + " real pen area and occupancy", bool(actual["intact"]) == (stage != stages[0]) and int(actual["count"]) == ids.size() and int(actual["available_grass"]) <= int(actual["grass_tiles"]), actual)
 			_check(stage + " actual pen retained", found)
-			_check(stage + " renderer draws all actual animals", int(renderer.call("counts").get("livestock", -1)) == ids.size())
+			# World3D/Animals draws wild and pen animals; its pickable bodies are the wild ones.
+			_check(stage + " renderer draws all actual animals", int(renderer.call("count")) - (renderer.call("bodies", 0) as Array).size() == ids.size())
 			var anchor: Array = ui.get("pen_anchor", [])
 			_check(stage + " actual pen framing supplied", anchor.size() == 2)
 			if anchor.size() != 2: continue
@@ -680,13 +710,34 @@ func _livestock() -> void:
 			_panel.hide()
 			goals.hide()
 			if ids.size() > 0:
-				var livestock_body: Sprite2D = (renderer.get("_bodies") as Dictionary).get(ids[0])
-				var texture_size: Vector2 = livestock_body.texture.get_size() if livestock_body != null and livestock_body.texture != null else Vector2.ZERO
-				_check(stage + " actual age-sized sprite rect", texture_size.x > 0 and texture_size.x <= View.TILE and livestock_body.get_rect() == Rect2(Vector2(-texture_size.x * 0.5, -texture_size.y), texture_size))
-				_check(stage + " actual sprite centre picks identity", livestock_body != null and int(renderer.call("livestock_at", livestock_body.to_global(livestock_body.get_rect().get_center()))) == ids[0])
 				var xs: PackedInt64Array = read["xs"]
 				var ys: PackedInt64Array = read["ys"]
-				await _tile(Vector2i(xs[0], ys[0]), false)
+				# M3D-SWITCH: World3D/Animals draws the pen animal (a one-tile model standing on its tile); pointing at the
+				# drawn body's centre names that animal's identity in the map's hover label (the 2D sprite hit-test).
+				var tile0 := Vector2i(int(xs[0]), int(ys[0]))
+				var drawn_body: Dictionary = {}
+				for row: Dictionary in renderer.get("_drawn"):
+					var feet: Vector3 = row["pos"]
+					if not bool(row["wild"]) and drawn_body.is_empty() and Rect2(Vector2(tile0), Vector2.ONE).has_point(Vector2(feet.x, feet.z)):
+						drawn_body = row
+				_check(stage + " actual age-sized sprite rect", not drawn_body.is_empty() and float(drawn_body["h"]) <= 1.0, {"tile": str(tile0), "body": str(drawn_body)})
+				var labels: Node = _main.get_node("World3D/LabelLayer/Labels")
+				var named: bool = false
+				if not drawn_body.is_empty():
+					_main.get_node("World3D").get("rig").call("update_camera")
+					var cam: Camera3D = _main.get_node("World3D").call("camera") as Camera3D
+					var centre: Vector2 = cam.unproject_position((drawn_body["pos"] as Vector3) + Vector3(0, float(drawn_body["h"]) * 0.5, 0))
+					await _point(centre, false)
+					# Synthetic events do not move the OS cursor the labels follow: hand them the pointed spot (as tools may).
+					labels.set("follow_mouse", false)
+					labels.set("hover_screen", centre)
+					labels.set("hover_tile", View.world_to_tile(preload("res://scripts/world/view_projection.gd").screen_to_world(centre)))
+					await _frames(2)
+					var want: String = labels.call("livestock_text", read, 0, _locale)
+					named = (labels.call("drawn") as Array).any(func(r: Dictionary) -> bool: return r.get("kind", "") == "livestock" and str(r.get("text", "")) == want)
+					labels.set("follow_mouse", true)
+				_check(stage + " actual sprite centre picks identity", named, {"labels": str(labels.call("drawn"))})
+				await _tile(tile0, false)
 			var cards_color: Color = cards.modulate
 			cards.modulate = Color(cards_color, 0.0)
 			await _capture(language + "_" + stage)
@@ -857,3 +908,46 @@ func _metal() -> void:
 				goals.hide()
 			if not stage.begins_with("00-") and stage != "05-tin-trade-card":
 				_check(stage + " read-only inspection no commands", int(_world.call("get_command_log", 9223372036854775807).get("total", -1)) == start)
+
+
+## The deleted 2D TemplatePreview's tool-facing surface, read from OrderTool's template state (M3D-SWITCH E2): `changed`
+## fires when OrderTool's preview query (the refresh key) moved, checked every frame.
+class TemplateProbe extends Node:
+	signal changed
+	var tool: Node = null
+	var _last: Array = []
+
+	func _process(_delta: float) -> void:
+		var query: Array = tool.get("_template_query")
+		if query != _last:
+			_last = query.duplicate()
+			changed.emit()
+
+	func _get(property: StringName) -> Variant:
+		var state: Dictionary = tool.call("template_state")
+		match str(property):
+			"template_id":
+				return state.get("id", "")
+			"template_rotation":
+				return state.get("rotation", 0)
+			"station_id":
+				return state.get("station", "")
+			"anchor":
+				return state.get("anchor", Vector2i.ZERO)
+			"_query":
+				return tool.get("_template_query")
+		return null
+
+	func active() -> bool:
+		return bool(tool.call("template_active"))
+
+	func cursor_origin(tile: Vector2i) -> Vector2i:
+		return tool.call("build_origin", tile)
+
+	func rotated_size() -> Vector2i:
+		return tool.call("build_size")
+
+	## The direct helper: re-read at `tile` (OrderTool's own refresh; the tick and revision come from the bridge).
+	func track(tile: Vector2i, _tick: int, _revision: int) -> void:
+		tool.set("_hover", tile)
+		tool.call("_refresh_template")

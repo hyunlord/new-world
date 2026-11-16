@@ -15,7 +15,7 @@
 #   UI_LOAD_FAILED). The cancel order moved from F5 to F6 for this.
 # M3 (goal 9.1–9.3): the build menu grows to nine — 5 통나무 벽, 6 문, 7 바닥, 8 침상, 9 돌담 (EconomyText.menu_order();
 #   1–9 pick while it is open); walls and floors show the drag hint "통나무 벽 · 드래그: 줄 · Shift+드래그: 네모(속 빔)";
-#   F8 파기 and F10 철거 are area modes; a "방 보기 R" button toggles the room overlay (ColonyView/OverlayLayer/Rooms;
+#   F8 파기 and F10 철거 are area modes; a "방 보기 R" button toggles the room overlay (Main/RoomIndex;
 #   R does the same) and stays pressed while it is shown. The bar holds the buttons on one line and the hint on a
 #   second while learning or using a tool; idle help collapses after the first order or 180 seconds, and ? reopens it.
 #   It sits 12 px above the screen's bottom once laid out, the toast and the build menu above it. This node
@@ -179,7 +179,7 @@ func _ready() -> void:
 		_tool.connect("mode_changed", _on_mode_changed)
 		_tool.connect("order_sent", _on_order_sent)
 		_tool.connect("field_selected", Callable(_field_panel, "open_tile"))
-	_rooms = get_node_or_null("/root/Main/ColonyView/OverlayLayer/Rooms")
+	_rooms = get_node_or_null("/root/Main/RoomIndex")
 	if _rooms != null:
 		_rooms.connect("toggled", _on_rooms_toggled)
 	_refresh_tooltips()

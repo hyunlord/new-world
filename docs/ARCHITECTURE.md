@@ -143,7 +143,7 @@ order tool (scripts/world/colony/order_tool.gd) ──► WorldSimNode.cmd_*(…
          walk, chop (logs drop as an ItemStack), pick up into Carry, put down (merge, spill),
          deliver into the site's MaterialNeeds; ConstructionSystem 133 finishes the hut
    ──► reads: get_trees, get_colony_overlay, get_colony_versions, the agent snapshot's
-         jobs / carry_kinds / carry_counts columns ──► scripts/world/colony/*.gd
+         jobs / carry_kinds / carry_counts columns ──► scripts/world3d/*.gd
 ```
 
 - A felled tree creates logs; from then on every log is in exactly one
@@ -316,8 +316,9 @@ The full procedure with code skeletons is `.claude/skills/worldsim-architecture/
 | folder | contents |
 |---|---|
 | `scripts/core/` | `locale.gd` (autoload `Locale`), `sim_reads.gd` (`SimReads`: every bridge read), `settlement_selection.gd` (selected village), `main_bootstrap.gd` and `presentation_bootstrap.gd` (catalog/presentation validation before main children) |
-| `scripts/world/colony/` | the colony view (node `ColonyView` in `scenes/main.tscn`; M-ART2, section 14): `view.gd` (TILE 64, the base point (tile_left + 32, tile_top + 43), tile/keyed hashes, value noise), `ground_layer.gd` (ground chunks, wall/door/hill-face strips, ford stones, water shader; the LRU chunk cache and incremental space rebake), `tree_layer.gd` (trees through the flora catalogue with the season shader, stumps, bushes, deadwood by 16×16-tile chunk near the view; hidden where the ¼× chunk carries the canopy), `building_layer.gd` (structures, huts by the bindings ring, workshops, hearth states, bedrolls), `overlay_layer.gd` (zones, item stacks by count bucket, carcasses, designation marks, site ghosts, labels), `room_layer.gd` (R: room tints and labels), `animal_layer.gd`, `visitor_layer.gd`, `agent_layer.gd` (route I people as feet-anchored nodes with the variant shader, selection/drafted outline and night halo, hit test) + `lod_markers.gd` (MultiMesh discs and activity glyphs at ¼×; route I bodies remain at ½×), `order_tool.gd` (F1–F10 modes, drag lines and rectangles with the `get_place_preview` ghost at 64 px, the `cmd_*` calls). Everything that stands sorts by base y in the y-sorted child `ColonyView/World`; the ground chunks sit below it; marks and labels above |
-| `scripts/world/` | `art/` (M-ART2: `art_data.gd` manifest/bindings/params lookups and F12 reload, `material_resolver.gd`, `flora_resolver.gd` (M-ART2.1), `ground_baker.gd`, `wall_baker.gd`, `tone.gd`, `site_ghost.gd`), `camera_controller.gd` (zoom ladder ¼×–2× from the params, pan, speed keys 1–4, pause, F12), `daylight_controller.gd` (night CanvasModulate, hearth lights, `dark_at`; + `wood_visuals.gd`), shared helpers (`art_hash.gd`, `porter_presentation.gd`); `wood_visuals.gd` retains only the settlement snapshot lookup used by daylight. The unused frame helper cluster and its `art_sprite_library.gd` dependency were removed in MUX Stage C. HUD icons use `ArtUI` → `ArtData` → `bindings.ui_icons`, whose existing atlas texture remains live |
+| `scripts/world/colony/` | what survives the deleted 2D colony view (M3D-SWITCH E2): `view.gd` (TILE 64 world px per tile = one 3D unit, tile ↔ world conversions, keyed hash and value noise), `order_tool.gd` (F1–F10 modes, drags, placement previews and build templates through the bridge's `cmd_*`; draws nothing — the 3D overlay draws its hover, drag and footprint from its getters), `marker_layout.gd` (HUD rects and the camera's camp-framing translation). Node `ColonyView` in `scenes/main.tscn` is a hidden container for `OrderTool` and `WorldMarker` |
+| `scripts/world/` | `art/` (M-ART2 data: `art_data.gd` manifest/bindings/params lookups and F12 reload, `material_resolver.gd` (wall materials; 3D walls and item icons), `tone.gd` (Lab shift, wall-top tone), `wall_baker.gd` + `site_ghost.gd` (the build menu's finished-look icons)), `camera_controller.gd` (the Camera2D the 3D rig follows: zoom ladder ¼×–2× from the params, pan, speed keys 1–4, pause, F12), `view_projection.gd` (screen ↔ world and picking through the 3D view), `room_index.gd` (Main/RoomIndex: rooms, R), `people_view.gd` (Main/PeopleView: mood flag, highlights, look and household helpers), shared helpers (`art_hash.gd`, `porter_presentation.gd`). HUD icons use `ArtUI` → `ArtData` → `bindings.ui_icons`, whose existing atlas texture remains live |
+| `scripts/world3d/` | the world view (section 3D view): `world3d.gd` and its layers, `labels3d.gd` (screen-space map labels, bars and marks) |
 | `scripts/ui/hud/` | `hud_topbar.gd`, `order_bar.gd` (F1–F5 buttons and the order toast) |
 | `scripts/ui/panels/` | `task_plaque.gd` (annual goal and current task), `current_activity_text.gd` (pure snapshot classification), `chronicle_panel.gd`, `agent_inspector_panel.gd`, `causal_panel.gd` (explicit why actions only; compact anchored scroll panel), `item_panel.gd` (item inspector with why action), `priority_panel.gd` (work priorities and explicit player-selected role presets), `workshop_panel.gd` (M2 bills of the selected workshop), `room_panel.gd` (M3: a room's role dropdown → `cmd_set_room_role`, tiles, beds, doors, covered items; made by `order_bar.gd`), `art_ui.gd` (shared panel style) |
 | `scripts/ui/mux/` | HUD, settings, alerts, goals, help and learning panels; `controls_catalog.gd` shares the README registry; `korean_text.gd` adds display-only word joiners without changing raw Locale strings |
@@ -336,7 +337,7 @@ The simulation contract binds every pass; each clause has its gate step.
 | clause | what it says | how it is checked |
 |---|---|---|
 | C1 reproducible | the state at a tick is a pure function of `(rules, seed, command log)`; a save is that state with a format version, and `save → load → tick` = `tick` | `identity`, `determinism`, `colony_determinism`, `replay`, `save_roundtrip` (`tools/v8/save_roundtrip.sh`; `sim_systems::save`) |
-| C2 view-independent | the sim crates know no pixels or Godot; renderers read documented snapshots only; a second renderer agrees with the Godot view | `schema_docs`, `renderer_agreement` (`tools/v8/renderer_agreement.sh`: `worldsim_probe --ascii`, `sim_test::probe::ascii`, against `scripts/world/colony/agent_layer.gd`), `bridge_api` |
+| C2 view-independent | the sim crates know no pixels or Godot; renderers read documented snapshots only; a second renderer agrees with the Godot view | `schema_docs`, `renderer_agreement` (`tools/v8/renderer_agreement.sh`: `worldsim_probe --ascii`, `sim_test::probe::ascii`, against the drawn figures of `scripts/world3d/people3d.gd`), `bridge_api` |
 | C3 measured budget | colony 192², N = 200/1,000/2,000: tick mean, p99, per-system share, bytes per agent and per tile; ceilings 5 ms (N = 1,000), 10 ms (N = 2,000), 4 KiB per agent, 96 B per tile; > +10 % against the previous pass fails; no O(agents × candidates) search without the spatial index | `bench` (`tools/v8/bench.sh` → `worldsim_perf bench`, `sim_test::bench`; ledger `docs/perf/PERF_LEDGER.md`) |
 | C4 method | closed-form state, event-driven work, integer tables, no new float state, keyed draws, key-ordered maps, `(y, x)` then id ties | `forbidden_math`, identity, review |
 | C5 structure | logic in the owning system, generated system table, files over 1,200 lines reported | `docs`, the pass report |
@@ -581,57 +582,42 @@ bridge ffi/neighbours.rs (get_neighbours, get_wave, get_caravan, cmd_accept_migr
   `m55_u_nodraft_script.json`; tests `colony_neighbours.rs`, `engine_neighbours_ffi.rs` and the M5.5 cases in
   `colony_story.rs`, `colony_wildlife.rs`, `colony_hides.rs`, `colony_mood.rs`.
 
-## 14. The renderer (M-ART2, ADR 0033–0034)
+## 14. Art data and the former 2D renderer (M-ART2, ADR 0033–0034; 2D deleted in M3D-SWITCH E2)
 
-The colony is drawn at 64-px tiles in one projection: a tile's base point is (tile_left + 32, tile_top + 43); a wall is
-a 16-px top over a 44-px face, so a wall row's strip covers [row_top − 16, row_top + 48). Data flow (ADR 0034):
+M-ART2 drew the colony in 2D at 64-px tiles; M3D-SWITCH E2 deleted that renderer (ground chunks, wall strips, sprite
+layers, LOD markers, daylight CanvasModulate and their shaders). The world is drawn by the 3D view (section "3D view").
+What remains of M-ART2 is data and its resolvers, shared by the 3D view and the UI:
 
 ```
-bridge snapshots (get_terrain, get_space + materials/styles/categories, get_agent_snapshot + sexes/look_ids/variants,
-   get_trees, get_building_snapshot, get_colony_overlay, get_animals, get_neighbours, get_time_snapshot …)
+bridge snapshots (get_space + materials/styles/categories, get_agent_snapshot + sexes/look_ids/variants, …)
    ▼  resolution — data only, no content names in code (ADR 0033)
 assets/v8art/bindings.json   sim codes → art ids (terrain, space, buildings, workshops, items, animals, trees, nodes,
                              blueprints, order icons, visitors, people, tones)
 assets/v8art/manifest.json   art id → file, role, SHA-256, size, anchor, footprint; the 36 logical looks
 scripts/world/art/material_resolver.gd   (style, material, category, kind) → top/face textures and tint (the art
-                             line's resolve.py order; schema $defs supply defaults; parity test vs resolve.py)
-assets/v8art/flora/ + flora_resolver.gd  (species, size, season, variant) → frame, canopy mask, season tint, anchor
-                             (resolve_flora.py port, parity test; species from authoritative saved get_trees column)
-   ▼  drawing
-GroundBaker   16×16-tile chunks (1,024² RGBA8) on the CPU with native Image ops; dithered blends; rounded shores and
-              hill edges from a closed-form field per tile quadrant (cached masks), banks and ink on the contour; water
-              transparent → ground_chunk.gdshader draws the 05 water below with a per-chunk lift; at ¼× the trees'
-              canopy mass baked in; LRU (ground.chunk_cache_max), ½/¼ textures below 1×
-WallBaker     per-row strips (tops along the run, faces where the south is open, hill faces) in ColonyView/World
-layers        trees (tree_season.gdshader: season Lab shift, bare winter, snow; hidden at ¼×), structures, items,
-              animals, visitors, people: nodes at their base point in the y-sorted World
-people        route I frame by activity, person_variant.gdshader (Lab shift through the fixed skin/hair mask),
-              outline for selection/drafted/night halo; LOD below 1× = lod_markers.gd (MultiMesh; ring = household)
-   ▼  tone
-tone.gd (ENV1 ground cap at load, winter desaturation + snow, drought) · daylight_controller.gd (CanvasModulate
-value × 0.55 with the blue shift, additive hearth PointLight2D within 5 tiles)
+                             line's resolve.py order; schema $defs supply defaults; parity test vs resolve.py); the 3D
+                             walls take their profile and colour from it
+   ▼  used by
+scripts/world3d/*            people tints from the look's face variant, wall colours, item/structure bindings
+scripts/ui/*                 item icons, portraits, the build menu's finished looks (site_ghost.gd + wall_baker.gd)
 ```
 
-- **Params**: every tunable is in `assets/v8art/render_params.json` (camera, ground, water, walls, people, lod, light,
-  season, zones, sites, labels, debug); `ArtData.reload_params()` on F12 in debug builds re-reads it and bumps
-  `params_version()`, which every layer watches.
-- **D19 terrain separation (ADR 0035)**: the ground-only ENV1 cap is mean luminance 0.38/saturation 0.30;
-  water has a separate blue contrast floor. `ground.map_mode` supplies terrain colours and weights after ½/¼
-  texture reduction. Standing trees retain their source textures. `mart2_ground_test.gd -- --rendered` verifies
-  actual GPU pixels; its headless mode explicitly skips these claims.
+- **Params**: `assets/v8art/render_params.json` (camera zoom ladder, people colours, labels, sites, plants, season);
+  `ArtData.reload_params()` on F12 in debug builds re-reads it and bumps `params_version()`.
 - **Adding content** (`assets/v8art/ADDING_ART.md`): a new wall material or style is a material JSON + texture; a new
-  item, animal or structure is a manifest row (via `tools/v8/art_import.json`) plus a bindings row. The renderer code
-  does not change; `tools/v8/test_mart2_extensibility.py` (gate step 33) fails on a content literal in the renderer.
+  item, animal or structure is a manifest row (via `tools/v8/art_import.json`) plus a bindings row (and a bindings3d
+  row for its 3D model). `tools/v8/test_mart2_extensibility.py` (gate step 33) fails on a content literal in
+  `scripts/world/**` or `scripts/ui/**`.
 - **Import**: `tools/v8/art_import.py` copies from the art line's commit by git object reads, bytes unchanged;
-  `--verify` (gate step 31) checks every file's hash and size against the manifest.
+  `--verify` (gate step 31) checks every file's hash and size against the manifest. The 2D-only art files stay
+  imported (the manifest is unchanged).
 - **Snapshot schema v7** (`docs/v8/snapshot_schema.md`): `get_agent_snapshot` gains `sexes`, `look_ids`, `variants`;
   `get_space` gains `wall_/floor_materials`, `_styles`, `_categories`.
 - **Appearance**: `look = ((age × 2 + sex) × 3 + top) × 3 + hair`, `variant` 0–5 (elders 3 or 4) from
   `sim-bridge/data/appearance.ron` and the AgentId; the probe's `--people-json` carries the same (renderer agreement,
-  gate step 23).
-- **Tests**: `mart2_ground_test.gd` and `mart2_people_test.gd` (headless, gate step 34), `resolver_parity`
-  (gate step 32), `mart2_ui_test.gd` (windowed, run by hand: 42 checks), `capture.gd --mart2-set` (the owner set),
-  `mart2_fps.sh` (FPS budgets).
+  gate step 23, against the 3D People layer).
+- **Tests**: `resolver_parity` (gate step 32), the 3D view's `w3d_render_test.gd` and `w3d_labels_test.gd` (gate
+  step 34).
 
 
 ## 15. Immutable content catalog (M-EXT core, ADR 0038)
@@ -688,8 +674,9 @@ observation queue, cleared at tick start and excluded from serde. The opt-in
 probe observer (`sim-test/src/probe/mux2.rs`) consumes it without changing policy.
 Native timing counters likewise stay outside simulation state.
 
-Renderer candidates use `scripts/world/colony/marker_layout.gd` for screen-space
-marker placement; source implementation does not establish visibility or FPS
+The camera's camp framing uses `scripts/world/colony/marker_layout.gd` for its
+screen-space translation (the 2D badge placement it also held went with the 2D
+view in M3D-SWITCH E2); source implementation does not establish visibility or FPS
 acceptance. Final frozen-source captures, frame-time checks, paired held-out
 evaluation and the full gate remain pending. Raw M-UX2 evidence stays outside
 the repository in `/Users/rexxa/work/mux2-data`.
@@ -738,13 +725,13 @@ zero-argument `SimReads` cache; harvest uses the existing mutation/replay path. 
 is `docs/v8/bridge_api_m6a.txt`; the frozen M-CORE inventory remains historical evidence. Full field
 contracts are in `docs/v8/snapshot_schema.md`.
 
-Presentation follows catalog metadata. `scripts/world/colony/plant_layer.gd` batches plants by
-resolved asset or lifecycle phase with MultiMeshInstance2D. `assets/v8art/bindings.json` accepts
-`plants.by_id[canonical_id][phase]`, then `plants.by_category[category][phase]`, with phase keys
-`"0"`–`"3"`. Values are manifest art IDs; `assets/v8art/manifest.json` resolves each ID to its native
-texture and anchor. An absent binding uses the pixel placeholder palette in
-`assets/v8art/render_params.json` → `plants`; no generated plant artwork is claimed. The layer
-polls viewport/tick at the authored cadence and rebuilds batches only when projected rows change.
+Presentation follows catalog metadata. `scripts/world3d/plants3d.gd` draws wild plants as one
+grass tuft per tile in the lifecycle phase's colour (`assets/v8art/render_params.json` → `plants`)
+and crops as 3 × 3 tufts per field tile, ripe heads in the crop category's colour
+(`assets/3d/params3d.json` → `plants.crop_ripe_by_category`). `assets/v8art/bindings.json` still
+validates `plants.by_id[canonical_id][phase]` / `plants.by_category[category][phase]` maps (phase
+keys `"0"`–`"3"`, manifest art IDs) for selected packs; the 3D view does not draw per-species plant
+art. The layer re-reads at the `flora.slow_read_ticks` cadence and rebuilds only when rows change.
 
 `scripts/ui/food_text.gd` formats observations for the person and tile inspectors. Food shortage
 and >20% expiry warnings use `assets/ui/alerts.json` predicates against the same summary, while
@@ -812,7 +799,7 @@ Stage −1 presentation reads native snapshots through SimReads. Current state q
 
 Food-origin fractions travel through `runtime/food/origin.rs` and the existing atomic ownership/recipe operations. Only `food/meals.rs` books eaten units; sowing has its own conservation sink. `save/legacy_cultivation_v15.rs` freezes the prior body while Stage1 format16 appends cultivation state. This avoids adding positional fields to historical FoodState or ColonyState payloads.
 
-`rust/crates/sim-bridge/src/ffi/cultivation.rs` exposes field/crop columns and explicit zone/erase/work commands. `scripts/world/colony/field_layer.gd` draws read-only phase state; `scripts/ui/panels/field_panel.gd` and `scripts/ui/field_facts.gd` provide ordinary command controls and card facts. The existing diagnosis/request providers use the same native physical field facts. No presentation timer advances crops or sends an expiry command. See [ADR 0058](decisions/0058-physical-cultivation-and-bounded-stewardship.md) and the [Stage 1 design](v8/m6b/S1_DESIGN.md); publication remains gated.
+`rust/crates/sim-bridge/src/ffi/cultivation.rs` exposes field/crop columns and explicit zone/erase/work commands. `scripts/world3d/plants3d.gd` and `terrain3d.gd` draw read-only phase state; `scripts/ui/panels/field_panel.gd` and `scripts/ui/field_facts.gd` provide ordinary command controls and card facts. The existing diagnosis/request providers use the same native physical field facts. No presentation timer advances crops or sends an expiry command. See [ADR 0058](decisions/0058-physical-cultivation-and-bounded-stewardship.md) and the [Stage 1 design](v8/m6b/S1_DESIGN.md); publication remains gated.
 
 Stage 1 admission shares an edible reserve budget between accepted durable wild harvest and presently executable grain cooking. The autonomous foraging path uses that same physical commitment accounting. Seasonal durable reserves and immediate meals retain distinct eligibility; a cancelled reservation is not food supply. Steward planning uses annual adult/child consumption and an initial replacement share to size fields, then applies seed availability and the 1.25× area ceiling. Food production, construction logs and fuel conversion have separate physical bounds.
 
@@ -830,7 +817,7 @@ The content definitions in `sim-core/src/colony/content/defs/{item,recipe}.rs` c
 
 Physical item specs, stacks, carries, tools and apparel retain optional remaining wear hours; only worn finite clothing consumes lifetime, and worn-out items use the existing conservation sink. Authored clothing comfort enters the real mood target as appended modifier16. Format17 in `sim-systems/src/save/mod.rs` appends processing and uses frozen `legacy_weaving_v16.rs`, `legacy_food_v16.rs` and `sim-core/src/colony/legacy_items_v16.rs` to migrate predecessor bodies/components with empty pending processing and historical unlimited wear. Catalog admission is limited to the exact published predecessor revision and preserved identities; arbitrary mismatches are rejected.
 
-`ffi/story.rs` exposes physical `top_item` and `wear_remaining_hours`; `ffi/diagnosis.rs` exposes `first_woven_clothing` and `cloth_short` and walks authored input dependencies without issuing orders. Existing cards/chapters and ko/en text consume those reads. The cloth-short card only sends an explicit selected dress order, with no-command expiry. Chronicle57/58 originate on actual textile output. `agent_layer.gd` and `person_variant.gdshader` consume authored appearance. All paths here are implementation facts; end-to-end gameplay, captures, native tests, baseline identity and smoke remain unverified at this checkpoint. See [ADR0059](decisions/0059-authored-weaving-and-physical-apparel.md).
+`ffi/story.rs` exposes physical `top_item` and `wear_remaining_hours`; `ffi/diagnosis.rs` exposes `first_woven_clothing` and `cloth_short` and walks authored input dependencies without issuing orders. Existing cards/chapters and ko/en text consume those reads. The cloth-short card only sends an explicit selected dress order, with no-command expiry. Chronicle57/58 originate on actual textile output. `people3d.gd` consumes authored appearance (clothing colour by top; the 2D `agent_layer.gd`/`person_variant.gdshader` were deleted in M3D-SWITCH E2). All paths here are implementation facts; end-to-end gameplay, captures, native tests, baseline identity and smoke remain unverified at this checkpoint. See [ADR0059](decisions/0059-authored-weaving-and-physical-apparel.md).
 
 ## M-SPINE content spine (2026-11-07)
 
@@ -932,3 +919,21 @@ pen marker. Recurring wool production uses the existing livestock work path,
 physical placement and ledger. Material-look overlays in handwritten render
 parameters extend the pinned import through the same resolver used by walls
 and item icons. See [ADR0063](decisions/0063-surface-ore-and-metal-chain.md).
+
+## 3D view (M3D-1, ADR 0066)
+
+`scenes/world3d/World3D.tscn` (`scripts/world3d/world3d.gd`) is added under `Main` by `scripts/core/main_bootstrap.gd`;
+since M3D-SWITCH E2 it is the only world view (the 2D renderer and the `--renderer=2d` escape hatch are deleted;
+`ColonyView` is a hidden container for `OrderTool` and `WorldMarker`). Layers, each a
+`Node3D` made in code: `terrain3d.gd` (chunked ground, water), `flora3d.gd` (trees, bushes, nodes, outcrops as
+MultiMeshes), `structures3d.gd` (walls, doors, fences, floors, roofs, cutaway, sites), `props3d.gd` (stations, camp
+buildings, bedrolls, items, fire lights), `people3d.gd` and `animals3d.gd` (VAT crowds through `vat3d.gd`),
+`visitors3d.gd` (migrant waves, caravans), `plants3d.gd` (crops, wild plants), `overlay3d.gd` (per-tile overlay
+texture and order feedback), `sky3d.gd` (sun, sky, seasons), `camera_rig.gd` (follows the Camera2D), and
+`labels3d.gd` (a Control in a CanvasLayer under the HUD: site bars and progress labels, hover labels of stacks, nodes,
+housing, animals, pen animals and visitors, room labels, outcrop glyphs, people's drafted/sick/flee/mood marks and
+shared-spot counts, hunt rings — every anchor projected through the World3D camera).
+`world3d.gd` publishes a per-frame change stamp (colony versions, tick) that gates every heavy snapshot read, and is
+the `scripts/world/view_projection.gd` provider for screen ↔ world conversion. Data: `assets/3d/params3d.json`,
+`assets/3d/bindings3d.json`, models and VAT from `tools/3d/blender/build_all.py`.
+

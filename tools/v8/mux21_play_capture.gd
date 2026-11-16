@@ -427,11 +427,12 @@ func _defence(row: Dictionary, factor: float) -> void:
 	camera.position = View.tile_centre(Vector2i(int(detail["x"]), int(detail["y"])))
 	camera.call("_clamp_position")
 	await frames(8)
-	var layer: Node = main.get_node("ColonyView/AgentLayer")
-	var marks: Dictionary = layer.call("person_marks", selected)
+	# M3D-SWITCH E2: the drafted ring is drawn by World3D/LabelLayer/Labels; the body is the 3D figure's screen rect.
+	var labels: Node = main.get_node("World3D/LabelLayer/Labels")
+	var marks: Dictionary = {"drafted": (labels.call("drawn") as Array).any(func(row: Dictionary) -> bool: return row.get("kind", "") == "drafted" and int(row.get("bits", -1)) == selected)}
 	check("actual renderer drafted mark", bool(marks.get("drafted", false)))
-	var drawn: Rect2 = layer.call("drawn_rect", selected)
-	var screen_rect: Rect2 = (layer as Node2D).get_global_transform_with_canvas() * drawn
+	var drawn: Rect2 = ViewProjection.person_rect(selected)
+	var screen_rect: Rect2 = drawn
 	check("drafted person projects inside screenshot", drawn.has_area() and root.get_visible_rect().encloses(screen_rect))
 	var bar: Node = main.get_node("UI/OrderBar")
 	var label: Label = bar.get("_toast") as Label
@@ -441,7 +442,7 @@ func _defence(row: Dictionary, factor: float) -> void:
 	while Time.get_ticks_msec() < deadline and not (toast.visible and label.text.replace("\u2060", "") == text): await frames(1)
 	check("production defence toast displayed", toast.visible and label.text.replace("\u2060", "") == text)
 	_fit_control(label, "defence toast")
-	await _shot("defence-%s" % factor, {"scale": factor, "event": actual, "drafted": drafted, "selected_bits": selected, "marks": marks, "drawn_rect": str(layer.call("drawn_rect", selected)), "steward": SimReads.read(world, "get_steward"), "toast": label.text, "ring_pixel_verdict": "PENDING_REVIEW"})
+	await _shot("defence-%s" % factor, {"scale": factor, "event": actual, "drafted": drafted, "selected_bits": selected, "marks": marks, "drawn_rect": str(ViewProjection.person_rect(selected)), "steward": SimReads.read(world, "get_steward"), "toast": label.text, "ring_pixel_verdict": "PENDING_REVIEW"})
 	check("toast survived capture settling", toast.visible and label.text.replace("\u2060", "") == text)
 	inspector.call("display_agent", detail)
 	await frames(5)

@@ -1,0 +1,813 @@
+{
+  "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+  "source_path": "rust/crates/sim-core/data/colony/buildings.ron",
+  "blueprint_footprints": {
+    "hut": [
+      3,
+      3
+    ],
+    "knapping_spot": [
+      1,
+      1
+    ],
+    "wood_bench": [
+      2,
+      1
+    ],
+    "drying_rack": [
+      2,
+      1
+    ],
+    "log_wall": [
+      1,
+      1
+    ],
+    "stone_wall": [
+      1,
+      1
+    ],
+    "door": [
+      1,
+      1
+    ],
+    "packed_floor": [
+      1,
+      1
+    ],
+    "bedroll": [
+      1,
+      1
+    ],
+    "grinding_stone": [
+      1,
+      1
+    ],
+    "pottery_bench": [
+      1,
+      1
+    ],
+    "hearth_fire": [
+      1,
+      1
+    ],
+    "food_drying_rack": [
+      1,
+      1
+    ],
+    "retting_pit": [
+      1,
+      1
+    ],
+    "loom": [
+      1,
+      1
+    ],
+    "fence": [
+      1,
+      1
+    ],
+    "clay_oven": [
+      1,
+      1
+    ],
+    "smoking_rack": [
+      1,
+      1
+    ],
+    "charcoal_clamp": [
+      2,
+      2
+    ],
+    "smelter": [
+      1,
+      1
+    ],
+    "casting_bench": [
+      2,
+      1
+    ],
+    "mud_brick_wall": [
+      1,
+      1
+    ],
+    "palisade": [
+      1,
+      1
+    ],
+    "kiln": [
+      1,
+      1
+    ],
+    "stone_masonry_wall": [
+      1,
+      1
+    ],
+    "bloomery": [
+      1,
+      1
+    ],
+    "forge": [
+      1,
+      1
+    ],
+    "anvil": [
+      1,
+      1
+    ],
+    "mason_bench": [
+      2,
+      1
+    ],
+    "cut_stone_wall": [
+      1,
+      1
+    ],
+    "town_wall": [
+      1,
+      1
+    ],
+    "town_gate": [
+      1,
+      1
+    ],
+    "paved_road": [
+      1,
+      1
+    ]
+  },
+  "templates": [
+    {
+      "id": "hut",
+      "footprint": [
+        3,
+        3
+      ],
+      "era": "paleolithic",
+      "pieces": [
+        {
+          "kind": "hut",
+          "at": "Anchor",
+          "count": null
+        }
+      ],
+      "stations": [],
+      "roof": "Round",
+      "warmth": "Roofed",
+      "tint": "oak",
+      "connected": true
+    },
+    {
+      "id": "log_house",
+      "footprint": [
+        4,
+        4
+      ],
+      "era": "neolithic",
+      "pieces": [
+        {
+          "kind": "log_wall",
+          "at": "Ring",
+          "count": null
+        },
+        {
+          "kind": "door",
+          "at": "Edge(South)",
+          "count": null
+        },
+        {
+          "kind": "packed_floor",
+          "at": "Interior",
+          "count": null
+        },
+        {
+          "kind": "bedroll",
+          "at": "Interior",
+          "count": 2
+        }
+      ],
+      "stations": [],
+      "roof": "Round",
+      "warmth": "Roofed",
+      "tint": "oak",
+      "connected": true
+    },
+    {
+      "id": "stone_house",
+      "footprint": [
+        4,
+        4
+      ],
+      "era": "neolithic",
+      "pieces": [
+        {
+          "kind": "stone_wall",
+          "at": "Ring",
+          "count": null
+        },
+        {
+          "kind": "door",
+          "at": "Edge(South)",
+          "count": null
+        },
+        {
+          "kind": "packed_floor",
+          "at": "Interior",
+          "count": null
+        },
+        {
+          "kind": "bedroll",
+          "at": "Interior",
+          "count": 2
+        }
+      ],
+      "stations": [],
+      "roof": "Round",
+      "warmth": "Roofed",
+      "tint": "granite",
+      "connected": true
+    },
+    {
+      "id": "workshop_shed",
+      "footprint": [
+        4,
+        4
+      ],
+      "era": "neolithic",
+      "pieces": [
+        {
+          "kind": "log_wall",
+          "at": "Ring",
+          "count": null
+        },
+        {
+          "kind": "door",
+          "at": "Edge(South)",
+          "count": null
+        },
+        {
+          "kind": "packed_floor",
+          "at": "Interior",
+          "count": null
+        }
+      ],
+      "stations": [
+        "wood_bench",
+        "knapping_spot",
+        "grinding_stone",
+        "pottery_bench"
+      ],
+      "roof": "Round",
+      "warmth": "Roofed",
+      "tint": "oak",
+      "connected": true
+    },
+    {
+      "id": "storehouse",
+      "footprint": [
+        4,
+        4
+      ],
+      "era": "neolithic",
+      "pieces": [
+        {
+          "kind": "log_wall",
+          "at": "Ring",
+          "count": null
+        },
+        {
+          "kind": "door",
+          "at": "Edge(South)",
+          "count": null
+        },
+        {
+          "kind": "packed_floor",
+          "at": "Interior",
+          "count": null
+        }
+      ],
+      "stations": [],
+      "roof": "Round",
+      "warmth": "Roofed",
+      "tint": "pine",
+      "connected": true
+    },
+    {
+      "id": "drying_shed",
+      "footprint": [
+        4,
+        4
+      ],
+      "era": "neolithic",
+      "pieces": [
+        {
+          "kind": "log_wall",
+          "at": "Ring",
+          "count": null
+        },
+        {
+          "kind": "door",
+          "at": "Edge(South)",
+          "count": null
+        },
+        {
+          "kind": "packed_floor",
+          "at": "Interior",
+          "count": null
+        }
+      ],
+      "stations": [
+        "drying_rack"
+      ],
+      "roof": "Round",
+      "warmth": "Roofed",
+      "tint": "oak",
+      "connected": true
+    },
+    {
+      "id": "granary",
+      "footprint": [
+        4,
+        4
+      ],
+      "era": "neolithic",
+      "pieces": [
+        {
+          "kind": "log_wall",
+          "at": "Ring",
+          "count": null
+        },
+        {
+          "kind": "door",
+          "at": "Edge(South)",
+          "count": null
+        },
+        {
+          "kind": "packed_floor",
+          "at": "Interior",
+          "count": null
+        }
+      ],
+      "stations": [],
+      "roof": "Round",
+      "warmth": "Roofed",
+      "tint": "oak",
+      "connected": true
+    },
+    {
+      "id": "pen",
+      "footprint": [
+        5,
+        5
+      ],
+      "era": "neolithic",
+      "pieces": [
+        {
+          "kind": "fence",
+          "at": "Ring",
+          "count": null
+        },
+        {
+          "kind": "door",
+          "at": "Edge(South)",
+          "count": null
+        }
+      ],
+      "stations": [],
+      "roof": "Round",
+      "warmth": "Open",
+      "tint": "oak",
+      "connected": true
+    },
+    {
+      "id": "well",
+      "footprint": [
+        3,
+        3
+      ],
+      "era": "neolithic",
+      "pieces": [
+        {
+          "kind": "well_body",
+          "at": "Anchor",
+          "count": null
+        }
+      ],
+      "stations": [],
+      "roof": "Round",
+      "warmth": "Roofed",
+      "tint": "granite",
+      "connected": false
+    },
+    {
+      "id": "smokehouse",
+      "footprint": [
+        4,
+        4
+      ],
+      "era": "neolithic",
+      "pieces": [
+        {
+          "kind": "log_wall",
+          "at": "Ring",
+          "count": null
+        },
+        {
+          "kind": "door",
+          "at": "Edge(South)",
+          "count": null
+        },
+        {
+          "kind": "packed_floor",
+          "at": "Interior",
+          "count": null
+        }
+      ],
+      "stations": [
+        "smoking_rack"
+      ],
+      "roof": "Round",
+      "warmth": "Roofed",
+      "tint": "oak",
+      "connected": true
+    },
+    {
+      "id": "kiln",
+      "footprint": [
+        3,
+        3
+      ],
+      "era": "neolithic",
+      "pieces": [
+        {
+          "kind": "kiln",
+          "at": "Anchor",
+          "count": null
+        }
+      ],
+      "stations": [],
+      "roof": "Round",
+      "warmth": "Open",
+      "tint": "clay",
+      "connected": true
+    },
+    {
+      "id": "mud_brick_house",
+      "footprint": [
+        4,
+        4
+      ],
+      "era": "bronze",
+      "pieces": [
+        {
+          "kind": "mud_brick_wall",
+          "at": "Ring",
+          "count": null
+        },
+        {
+          "kind": "door",
+          "at": "Edge(South)",
+          "count": null
+        },
+        {
+          "kind": "packed_floor",
+          "at": "Interior",
+          "count": null
+        },
+        {
+          "kind": "bedroll",
+          "at": "Interior",
+          "count": 2
+        }
+      ],
+      "stations": [],
+      "roof": "Angular",
+      "warmth": "Roofed",
+      "tint": "mud_brick",
+      "connected": true
+    },
+    {
+      "id": "charcoal_clamp",
+      "footprint": [
+        3,
+        3
+      ],
+      "era": "bronze",
+      "pieces": [
+        {
+          "kind": "charcoal_clamp",
+          "at": "Anchor",
+          "count": null
+        }
+      ],
+      "stations": [],
+      "roof": "Angular",
+      "warmth": "Open",
+      "tint": "packed_earth",
+      "connected": true
+    },
+    {
+      "id": "smelter",
+      "footprint": [
+        4,
+        4
+      ],
+      "era": "bronze",
+      "pieces": [
+        {
+          "kind": "log_wall",
+          "at": "Ring",
+          "count": null
+        },
+        {
+          "kind": "door",
+          "at": "Edge(South)",
+          "count": null
+        },
+        {
+          "kind": "packed_floor",
+          "at": "Interior",
+          "count": null
+        }
+      ],
+      "stations": [
+        "smelter"
+      ],
+      "roof": "Angular",
+      "warmth": "Roofed",
+      "tint": "clay",
+      "connected": true
+    },
+    {
+      "id": "casting_bench",
+      "footprint": [
+        4,
+        4
+      ],
+      "era": "bronze",
+      "pieces": [
+        {
+          "kind": "log_wall",
+          "at": "Ring",
+          "count": null
+        },
+        {
+          "kind": "door",
+          "at": "Edge(South)",
+          "count": null
+        },
+        {
+          "kind": "packed_floor",
+          "at": "Interior",
+          "count": null
+        }
+      ],
+      "stations": [
+        "casting_bench"
+      ],
+      "roof": "Angular",
+      "warmth": "Roofed",
+      "tint": "oak",
+      "connected": true
+    },
+    {
+      "id": "bloomery",
+      "footprint": [
+        3,
+        3
+      ],
+      "era": "iron",
+      "pieces": [
+        {
+          "kind": "bloomery",
+          "at": "Anchor",
+          "count": null
+        }
+      ],
+      "stations": [],
+      "roof": "Angular",
+      "warmth": "Open",
+      "tint": "clay",
+      "connected": true
+    },
+    {
+      "id": "forge",
+      "footprint": [
+        4,
+        4
+      ],
+      "era": "iron",
+      "pieces": [
+        {
+          "kind": "log_wall",
+          "at": "Ring",
+          "count": null
+        },
+        {
+          "kind": "door",
+          "at": "Edge(South)",
+          "count": null
+        },
+        {
+          "kind": "packed_floor",
+          "at": "Interior",
+          "count": null
+        }
+      ],
+      "stations": [
+        "forge",
+        "anvil"
+      ],
+      "roof": "Angular",
+      "warmth": "Roofed",
+      "tint": "granite",
+      "connected": true
+    },
+    {
+      "id": "shrine",
+      "footprint": [
+        4,
+        4
+      ],
+      "era": "bronze",
+      "pieces": [
+        {
+          "kind": "shrine_body",
+          "at": "Anchor",
+          "count": null
+        }
+      ],
+      "stations": [],
+      "roof": "Angular",
+      "warmth": "Roofed",
+      "tint": "clay",
+      "connected": false
+    },
+    {
+      "id": "chief_hall",
+      "footprint": [
+        5,
+        5
+      ],
+      "era": "bronze",
+      "pieces": [
+        {
+          "kind": "mud_brick_wall",
+          "at": "Anchor",
+          "count": null
+        }
+      ],
+      "stations": [],
+      "roof": "Angular",
+      "warmth": "Roofed",
+      "tint": "clay",
+      "connected": false
+    },
+    {
+      "id": "trading_post",
+      "footprint": [
+        4,
+        4
+      ],
+      "era": "bronze",
+      "pieces": [
+        {
+          "kind": "trading_post_body",
+          "at": "Anchor",
+          "count": null
+        }
+      ],
+      "stations": [],
+      "roof": "Angular",
+      "warmth": "Roofed",
+      "tint": "oak",
+      "connected": false
+    },
+    {
+      "id": "market",
+      "footprint": [
+        5,
+        5
+      ],
+      "era": "iron",
+      "pieces": [
+        {
+          "kind": "market_stall",
+          "at": "Anchor",
+          "count": null
+        }
+      ],
+      "stations": [],
+      "roof": "Angular",
+      "warmth": "Roofed",
+      "tint": "oak",
+      "connected": false
+    },
+    {
+      "id": "warehouse",
+      "footprint": [
+        6,
+        6
+      ],
+      "era": "iron",
+      "pieces": [
+        {
+          "kind": "stone_masonry_wall",
+          "at": "Anchor",
+          "count": null
+        }
+      ],
+      "stations": [],
+      "roof": "Angular",
+      "warmth": "Roofed",
+      "tint": "granite",
+      "connected": false
+    },
+    {
+      "id": "oven_house",
+      "footprint": [
+        4,
+        4
+      ],
+      "era": "neolithic",
+      "pieces": [
+        {
+          "kind": "log_wall",
+          "at": "Ring",
+          "count": null
+        },
+        {
+          "kind": "door",
+          "at": "Edge(South)",
+          "count": null
+        },
+        {
+          "kind": "packed_floor",
+          "at": "Interior",
+          "count": null
+        }
+      ],
+      "stations": [
+        "clay_oven"
+      ],
+      "roof": "Round",
+      "warmth": "Roofed",
+      "tint": "clay",
+      "connected": true
+    },
+    {
+      "id": "bee_skep",
+      "footprint": [
+        1,
+        1
+      ],
+      "era": "bronze",
+      "pieces": [
+        {
+          "kind": "bee_skep_body",
+          "at": "Anchor",
+          "count": null
+        }
+      ],
+      "stations": [],
+      "roof": "Round",
+      "warmth": "Open",
+      "tint": "pine",
+      "connected": false
+    },
+    {
+      "id": "cut_stone_house",
+      "footprint": [
+        4,
+        4
+      ],
+      "era": "iron",
+      "pieces": [
+        {
+          "kind": "cut_stone_wall",
+          "at": "Ring",
+          "count": null
+        },
+        {
+          "kind": "door",
+          "at": "Edge(South)",
+          "count": null
+        },
+        {
+          "kind": "packed_floor",
+          "at": "Interior",
+          "count": null
+        },
+        {
+          "kind": "bedroll",
+          "at": "Interior",
+          "count": 2
+        }
+      ],
+      "stations": [],
+      "roof": "Angular",
+      "warmth": "Roofed",
+      "tint": "granite",
+      "connected": true
+    }
+  ]
+}

@@ -5,6 +5,9 @@
 #   3. 오두막: the F3 button opens the build menu (M2), key 1 picks the hut, then click a spot where
 #      can_place_blueprint is true (the ghost is green there);
 #   4. run 3 game days at 4× speed (live loop, key 4).
+#   The starting colony already marks trees and keeps a stockpile and a blueprint of its own, so each check counts what
+#   this test's order adds (and "trees felled" means the trees it marked); the 3D view is panned so each order lands on
+#   map clear of the HUD's decision cards.
 #   After each step it asserts the command's effect through the colony reads, and it saves the shots
 #   before, after_orders, day1, hut_done and far. With --fps-seconds N it then measures the mean FPS at 4× for
 #   N seconds at 2× zoom and at 1× zoom (U7); --no-vsync turns vsync and the frame cap off for that phase, so the
@@ -27,6 +30,8 @@ var _fps_seconds: float = 0.0
 var _no_vsync: bool = false
 var _failures: Array[String] = []
 var _summary: Dictionary = {}
+## The unmarked trees the chop drag covers (the tiles it marks).
+var _chopped: Array[Vector2i] = []
 var _main: Node
 var _world: Node
 var _camera: Camera2D
@@ -111,7 +116,7 @@ func _hearth() -> Vector2i:
 
 
 func _screen(tile: Vector2i) -> Vector2:
-	return root.get_canvas_transform() * (Vector2(tile) * TILE + Vector2(View.TILE, View.TILE) * 0.5)
+	return preload("res://scripts/world/view_projection.gd").world_to_screen(Vector2(tile) * TILE + Vector2(View.TILE, View.TILE) * 0.5)
 
 
 func _mouse(button: MouseButton, pressed: bool, at: Vector2) -> void:
@@ -155,9 +160,34 @@ func _click_bar(index: int) -> void:
 		await process_frame
 
 
+## Pan the camera so the rectangle `a`–`b` (its corners and centre) lies on map with no GUI over it (the HUD's
+## decision cards may cover part of the screen): the first of a few screen spots for its centre that works.
+func _frame_clear(a: Vector2i, b: Vector2i) -> void:
+	@warning_ignore("integer_division")
+	var centre: Vector2i = (a + b) / 2
+	var size: Vector2 = root.get_visible_rect().size
+	for spot: Vector2 in [Vector2(0.4, 0.55), Vector2(0.3, 0.5), Vector2(0.4, 0.7), Vector2(0.25, 0.65), Vector2(0.5, 0.75)]:
+		_camera.call("center_on_tile", centre)
+		_camera.force_update_scroll()
+		for _i: int in 3:
+			await process_frame
+		_camera.call("pan_screen", size * spot - _screen(centre))
+		_camera.force_update_scroll()
+		for _i: int in 3:
+			await process_frame
+		var clear: bool = true
+		for t: Vector2i in [a, b, Vector2i(a.x, b.y), Vector2i(b.x, a.y), centre]:
+			await _move(_screen(t))
+			clear = clear and root.get_visible_rect().has_point(_screen(t)) and root.gui_get_hovered_control() == null
+		if clear:
+			return
+	print("M1_GUI_INFO no GUI-free framing for %s-%s" % [a, b])
+
+
 func _drag(a: Vector2i, b: Vector2i) -> void:
 	await _move(_screen(a))
 	await _mouse(MOUSE_BUTTON_LEFT, true, _screen(a))
+	@warning_ignore("integer_division")
 	await _move(_screen((a + b) / 2))
 	await _move(_screen(b))
 	await _mouse(MOUSE_BUTTON_LEFT, false, _screen(b))
@@ -175,16 +205,21 @@ func _last_result() -> Dictionary:
 
 
 func _step_chop(hearth: Vector2i) -> void:
-	# The smallest square around the hearth whose ring holds ≥ 15 trees (Chebyshev, like the U-script).
+	# The smallest square around the hearth whose ring holds ≥ 15 trees (Chebyshev, like the U-script) not marked yet
+	# (the starting colony already marks some trees itself, so only the unmarked ones count).
 	var trees: Dictionary = _world.call("get_trees")
 	var txs: PackedInt32Array = trees.get("xs", PackedInt32Array())
 	var tys: PackedInt32Array = trees.get("ys", PackedInt32Array())
+	var pre: Dictionary = _overlay()
+	var marked_before: Dictionary = {}
+	for i: int in mini((pre.get("designation_xs", PackedInt32Array()) as PackedInt32Array).size(), (pre.get("designation_ys", PackedInt32Array()) as PackedInt32Array).size()):
+		marked_before[Vector2i(pre["designation_xs"][i], pre["designation_ys"][i])] = true
 	var r: int = 1
 	var inside: int = 0
 	while r < 60:
 		inside = 0
 		for i: int in txs.size():
-			if absi(txs[i] - hearth.x) <= r and absi(tys[i] - hearth.y) <= r:
+			if absi(txs[i] - hearth.x) <= r and absi(tys[i] - hearth.y) <= r and not marked_before.has(Vector2i(txs[i], tys[i])):
 				inside += 1
 		if inside >= 15:
 			break
@@ -196,9 +231,14 @@ func _step_chop(hearth: Vector2i) -> void:
 		await process_frame
 	await _click_bar(0)
 	_check("chop mode", int(_main.get_node("ColonyView/OrderTool").get("mode")) == 1)
+	await _frame_clear(hearth - Vector2i(r, r), hearth + Vector2i(r, r))
 	await _drag(hearth - Vector2i(r, r), hearth + Vector2i(r, r))
 	var result: Dictionary = _last_result()
-	var marks: int = (_overlay().get("designation_xs", PackedInt32Array()) as PackedInt32Array).size()
+	var marks: int = (_overlay().get("designation_xs", PackedInt32Array()) as PackedInt32Array).size() - marked_before.size()
+	_chopped.clear()
+	for i: int in txs.size():
+		if absi(txs[i] - hearth.x) <= r and absi(tys[i] - hearth.y) <= r and not marked_before.has(Vector2i(txs[i], tys[i])):
+			_chopped.append(Vector2i(txs[i], tys[i]))
 	_summary["chop"] = {"radius": r, "trees_in_rect": inside, "result": result, "marked": marks}
 	_check("chop accepted", bool(result.get("accepted", false)) and int(result.get("count", 0)) == inside, str(result))
 	_check("chop marks", marks == inside and marks >= 15, "marked %d of %d" % [marks, inside])
@@ -211,7 +251,8 @@ func _zoneable(t: Vector2i, terrain: Dictionary, buildings: Dictionary) -> bool:
 	if t.x < 0 or t.y < 0 or t.x >= w or t.y * w + t.x >= codes.size():
 		return false
 	var code: int = codes[t.y * w + t.x]
-	return code != 2 and code != 4 and not buildings.has(t)
+	# Water (2, 4) and, since the stockpile rule refuses them, undug hills (3) are not zoneable.
+	return code != 2 and code != 3 and code != 4 and not buildings.has(t)
 
 
 func _step_stockpile(hearth: Vector2i) -> void:
@@ -222,6 +263,11 @@ func _step_stockpile(hearth: Vector2i) -> void:
 	var bys: PackedInt32Array = b.get("ys", PackedInt32Array())
 	for i: int in mini(bxs.size(), bys.size()):
 		buildings[Vector2i(bxs[i], bys[i])] = true
+	# The starting colony may already hold a stockpile by the hearth: its tiles are not zoneable again.
+	var pre: Dictionary = _overlay()
+	var zoned_before: int = (pre.get("zone_xs", PackedInt32Array()) as PackedInt32Array).size()
+	for i: int in mini(zoned_before, (pre.get("zone_ys", PackedInt32Array()) as PackedInt32Array).size()):
+		buildings[Vector2i(pre["zone_xs"][i], pre["zone_ys"][i])] = true
 	var corner: Vector2i = hearth + Vector2i(3, 0)
 	var found: bool = false
 	for ring: int in 12:
@@ -238,9 +284,10 @@ func _step_stockpile(hearth: Vector2i) -> void:
 					corner = c
 					found = true
 	await _click_bar(1)
+	await _frame_clear(corner, corner + Vector2i(3, 3))
 	await _drag(corner, corner + Vector2i(3, 3))
 	var result: Dictionary = _last_result()
-	var zoned: int = (_overlay().get("zone_xs", PackedInt32Array()) as PackedInt32Array).size()
+	var zoned: int = (_overlay().get("zone_xs", PackedInt32Array()) as PackedInt32Array).size() - zoned_before
 	_summary["stockpile"] = {"corner": [corner.x, corner.y], "result": result, "zone_tiles": zoned}
 	_check("stockpile accepted", bool(result.get("accepted", false)) and int(result.get("count", 0)) == 16, str(result))
 	_check("stockpile tiles", zoned == 16, "zone tiles %d" % zoned)
@@ -259,6 +306,9 @@ func _step_hut(hearth: Vector2i) -> void:
 				spot = top_left
 	_check("hut spot", spot.x >= 0)
 	var centre: Vector2i = spot + Vector2i(1, 1)
+	# The starting colony may already have a blueprint of its own: the hut is the one new site.
+	var sites_before: int = (_overlay().get("site_xs", PackedInt32Array()) as PackedInt32Array).size()
+	await _frame_clear(spot - Vector2i(1, 1), spot + Vector2i(3, 3))
 	await _move(_screen(centre))
 	for _i: int in 3:
 		await process_frame
@@ -269,9 +319,9 @@ func _step_hut(hearth: Vector2i) -> void:
 	await _mouse(MOUSE_BUTTON_LEFT, false, _screen(centre))
 	var result: Dictionary = _last_result()
 	var sites: PackedInt32Array = _overlay().get("site_xs", PackedInt32Array())
-	_summary["hut"] = {"top_left": [spot.x, spot.y], "result": result, "sites": sites.size()}
+	_summary["hut"] = {"top_left": [spot.x, spot.y], "result": result, "sites": sites.size(), "sites_before": sites_before}
 	_check("hut accepted", bool(result.get("accepted", false)), str(result))
-	_check("hut site", sites.size() == 1)
+	_check("hut site", sites.size() == sites_before + 1, "sites %d before %d" % [sites.size(), sites_before])
 	# A second click on the same spot is refused (the site blocks itself): the ghost turns red.
 	await _move(_screen(centre + Vector2i(1, 0)))
 	await _move(_screen(centre))
@@ -294,7 +344,7 @@ func _step_run(hearth: Vector2i) -> void:
 		if not day1_done and _tick() - start >= DAY:
 			day1_done = true
 			await _shot("day1")
-		if hut_tick < 0 and int(_main.get_node("ColonyView/BuildingLayer").call("hut_count")) > 0:
+		if hut_tick < 0 and _ring_huts() > 0:
 			hut_tick = _tick()
 			_camera.call("center_on_tile", hearth + Vector2i(0, 4))
 			for _i: int in 5:
@@ -313,7 +363,16 @@ func _step_run(hearth: Vector2i) -> void:
 	}
 	_check("ran %d days" % _days, ran >= _days * DAY, "ticks %d" % ran)
 	_check("hut built", hut_tick >= 0, "hut tick %d" % hut_tick)
-	_check("trees felled", int(_summary["run"]["marks_left"]) == 0, "marks left %d" % int(_summary["run"]["marks_left"]))
+	# The trees this test marked are felled (the colony's own later marks are not this test's).
+	var left: int = 0
+	var dxs: PackedInt32Array = overlay.get("designation_xs", PackedInt32Array())
+	var dys: PackedInt32Array = overlay.get("designation_ys", PackedInt32Array())
+	var dks: PackedInt32Array = overlay.get("designation_kinds", PackedInt32Array())
+	for i: int in mini(dks.size(), mini(dxs.size(), dys.size())):
+		if dks[i] == 0 and _chopped.has(Vector2i(dxs[i], dys[i])):
+			left += 1
+	_summary["run"]["chop_marks_left"] = left
+	_check("trees felled", not _chopped.is_empty() and left == 0, "of the %d marked, marks left %d (all marks %d)" % [_chopped.size(), left, int(_summary["run"]["marks_left"])])
 	_camera.zoom = Vector2(1, 1)
 	_camera.call("center_on_tile", Vector2i(96, 96))
 	for _i: int in 10:
@@ -353,3 +412,13 @@ func _shot(name: String) -> void:
 		push_error("m1_gui_test: could not save " + path)
 	else:
 		print("m1_gui_test: saved ", path)
+
+
+## Finished huts (buildings whose bindings row has a `ring`, as the deleted 2D BuildingLayer.hut_count counted them; the
+## 3D Structures layer draws their ring of walls).
+func _ring_huts() -> int:
+	var n: int = 0
+	for kind: int in (SimReads.read(_world, "get_building_snapshot").get("kinds", PackedByteArray()) as PackedByteArray):
+		if preload("res://scripts/world/art/art_data.gd").binding("buildings", kind).has("ring"):
+			n += 1
+	return n

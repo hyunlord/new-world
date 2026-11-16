@@ -1,0 +1,2362 @@
+{
+ "models": {
+  "c_aurochs": {
+   "file": "living/aurochs/aurochs.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.992,
+   "triangles": 1990,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down",
+    "run",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "Root",
+    "BackUpper.L",
+    "BackLower.L",
+    "BackUpper.R",
+    "BackLower.R",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "Neck",
+    "Head",
+    "Tail"
+   ],
+   "vat": {
+    "static": "vat/c_aurochs_static.glb",
+    "bin": "vat/c_aurochs_vat.bin",
+    "json": "vat/c_aurochs_vat.json",
+    "atlas": "vat/c_aurochs_atlas.png",
+    "vertex_count": 5970
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "aurochs"
+  },
+  "c_aurochs_lod": {
+   "file": "living/aurochs/aurochs.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.879,
+   "triangles": 272,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down",
+    "run",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "Root",
+    "BackUpper.L",
+    "BackLower.L",
+    "BackUpper.R",
+    "BackLower.R",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "Neck",
+    "Head",
+    "Tail"
+   ],
+   "vat": {
+    "static": "vat/c_aurochs_lod_static.glb",
+    "bin": "vat/c_aurochs_lod_vat.bin",
+    "json": "vat/c_aurochs_lod_vat.json",
+    "atlas": "vat/c_aurochs_atlas.png",
+    "vertex_count": 816
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "aurochs"
+  },
+  "c_deer": {
+   "file": "living/deer/deer.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.819,
+   "triangles": 1998,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down",
+    "run",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "Root",
+    "BackUpper.L",
+    "BackLower.L",
+    "BackUpper.R",
+    "BackLower.R",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "Neck",
+    "Head",
+    "Tail"
+   ],
+   "vat": {
+    "static": "vat/c_deer_static.glb",
+    "bin": "vat/c_deer_vat.bin",
+    "json": "vat/c_deer_vat.json",
+    "atlas": "vat/c_deer_atlas.png",
+    "vertex_count": 5994
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "deer"
+  },
+  "c_deer_lod": {
+   "file": "living/deer/deer.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.796,
+   "triangles": 249,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down",
+    "run",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "Root",
+    "BackUpper.L",
+    "BackLower.L",
+    "BackUpper.R",
+    "BackLower.R",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "Neck",
+    "Head",
+    "Tail"
+   ],
+   "vat": {
+    "static": "vat/c_deer_lod_static.glb",
+    "bin": "vat/c_deer_lod_vat.bin",
+    "json": "vat/c_deer_lod_vat.json",
+    "atlas": "vat/c_deer_atlas.png",
+    "vertex_count": 747
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "deer"
+  },
+  "c_reindeer": {
+   "file": "living/reindeer/reindeer.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.906,
+   "triangles": 2000,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down",
+    "run",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "Root",
+    "BackUpper.L",
+    "BackLower.L",
+    "BackUpper.R",
+    "BackLower.R",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "Neck",
+    "Head",
+    "Tail"
+   ],
+   "vat": {
+    "static": "vat/c_reindeer_static.glb",
+    "bin": "vat/c_reindeer_vat.bin",
+    "json": "vat/c_reindeer_vat.json",
+    "atlas": "vat/c_reindeer_atlas.png",
+    "vertex_count": 6000
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "reindeer"
+  },
+  "c_reindeer_lod": {
+   "file": "living/reindeer/reindeer.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.892,
+   "triangles": 264,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down",
+    "run",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "Root",
+    "BackUpper.L",
+    "BackLower.L",
+    "BackUpper.R",
+    "BackLower.R",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "Neck",
+    "Head",
+    "Tail"
+   ],
+   "vat": {
+    "static": "vat/c_reindeer_lod_static.glb",
+    "bin": "vat/c_reindeer_lod_vat.bin",
+    "json": "vat/c_reindeer_lod_vat.json",
+    "atlas": "vat/c_reindeer_atlas.png",
+    "vertex_count": 792
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "reindeer"
+  },
+  "c_wild_boar": {
+   "file": "living/wild_boar/wild_boar.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.9,
+   "triangles": 1988,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down",
+    "run",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "Root",
+    "BackUpper.L",
+    "BackLower.L",
+    "BackUpper.R",
+    "BackLower.R",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "Neck",
+    "Head",
+    "Tail"
+   ],
+   "vat": {
+    "static": "vat/c_wild_boar_static.glb",
+    "bin": "vat/c_wild_boar_vat.bin",
+    "json": "vat/c_wild_boar_vat.json",
+    "atlas": "vat/c_wild_boar_atlas.png",
+    "vertex_count": 5964
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "wild_boar"
+  },
+  "c_wild_boar_lod": {
+   "file": "living/wild_boar/wild_boar.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.904,
+   "triangles": 286,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down",
+    "run",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "Root",
+    "BackUpper.L",
+    "BackLower.L",
+    "BackUpper.R",
+    "BackLower.R",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "Neck",
+    "Head",
+    "Tail"
+   ],
+   "vat": {
+    "static": "vat/c_wild_boar_lod_static.glb",
+    "bin": "vat/c_wild_boar_lod_vat.bin",
+    "json": "vat/c_wild_boar_lod_vat.json",
+    "atlas": "vat/c_wild_boar_atlas.png",
+    "vertex_count": 858
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "wild_boar"
+  },
+  "c_wild_goat": {
+   "file": "living/goat/goat.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.075,
+   "triangles": 2000,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down",
+    "run",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "Root",
+    "BackUpper.L",
+    "BackLower.L",
+    "BackUpper.R",
+    "BackLower.R",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "Neck",
+    "Head",
+    "Tail"
+   ],
+   "vat": {
+    "static": "vat/c_wild_goat_static.glb",
+    "bin": "vat/c_wild_goat_vat.bin",
+    "json": "vat/c_wild_goat_vat.json",
+    "atlas": "vat/c_wild_goat_atlas.png",
+    "vertex_count": 6000
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "goat"
+  },
+  "c_wild_goat_lod": {
+   "file": "living/goat/goat.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.067,
+   "triangles": 264,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down",
+    "run",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "Root",
+    "BackUpper.L",
+    "BackLower.L",
+    "BackUpper.R",
+    "BackLower.R",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "Neck",
+    "Head",
+    "Tail"
+   ],
+   "vat": {
+    "static": "vat/c_wild_goat_lod_static.glb",
+    "bin": "vat/c_wild_goat_lod_vat.bin",
+    "json": "vat/c_wild_goat_lod_vat.json",
+    "atlas": "vat/c_wild_goat_atlas.png",
+    "vertex_count": 792
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "goat"
+  },
+  "c_wild_sheep": {
+   "file": "living/wild_sheep/wild_sheep.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.967,
+   "triangles": 2000,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down",
+    "run",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "Root",
+    "BackUpper.L",
+    "BackLower.L",
+    "BackUpper.R",
+    "BackLower.R",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "Neck",
+    "Head",
+    "Tail"
+   ],
+   "vat": {
+    "static": "vat/c_wild_sheep_static.glb",
+    "bin": "vat/c_wild_sheep_vat.bin",
+    "json": "vat/c_wild_sheep_vat.json",
+    "atlas": "vat/c_wild_sheep_atlas.png",
+    "vertex_count": 6000
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "wild_sheep"
+  },
+  "c_wild_sheep_lod": {
+   "file": "living/wild_sheep/wild_sheep.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.986,
+   "triangles": 252,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down",
+    "run",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "Root",
+    "BackUpper.L",
+    "BackLower.L",
+    "BackUpper.R",
+    "BackLower.R",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "Neck",
+    "Head",
+    "Tail"
+   ],
+   "vat": {
+    "static": "vat/c_wild_sheep_lod_static.glb",
+    "bin": "vat/c_wild_sheep_lod_vat.bin",
+    "json": "vat/c_wild_sheep_lod_vat.json",
+    "atlas": "vat/c_wild_sheep_atlas.png",
+    "vertex_count": 756
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "wild_sheep"
+  },
+  "c_wolf": {
+   "file": "living/wolf/wolf.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.966,
+   "triangles": 1944,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down",
+    "run",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "Root",
+    "BackUpper.L",
+    "BackLower.L",
+    "BackUpper.R",
+    "BackLower.R",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "Neck",
+    "Head",
+    "Tail"
+   ],
+   "vat": {
+    "static": "vat/c_wolf_static.glb",
+    "bin": "vat/c_wolf_vat.bin",
+    "json": "vat/c_wolf_vat.json",
+    "atlas": "vat/c_wolf_atlas.png",
+    "vertex_count": 5832
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "wolf"
+  },
+  "c_wolf_lod": {
+   "file": "living/wolf/wolf.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.976,
+   "triangles": 210,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down",
+    "run",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "Root",
+    "BackUpper.L",
+    "BackLower.L",
+    "BackUpper.R",
+    "BackLower.R",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "Neck",
+    "Head",
+    "Tail"
+   ],
+   "vat": {
+    "static": "vat/c_wolf_lod_static.glb",
+    "bin": "vat/c_wolf_lod_vat.bin",
+    "json": "vat/c_wolf_lod_vat.json",
+    "atlas": "vat/c_wolf_atlas.png",
+    "vertex_count": 630
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "wolf"
+  },
+  "p_adult_F_bronze": {
+   "file": "living/people/person_adult_F_bronze.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.7,
+   "triangles": 2484,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_adult_F_bronze_static.glb",
+    "bin": "vat/p_adult_F_bronze_vat.bin",
+    "json": "vat/p_adult_F_bronze_vat.json",
+    "atlas": "vat/p_adult_F_bronze_atlas.png",
+    "vertex_count": 7416
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "woman"
+  },
+  "p_adult_F_bronze_lod": {
+   "file": "living/people/person_adult_F_bronze.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.657,
+   "triangles": 260,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_adult_F_bronze_lod_static.glb",
+    "bin": "vat/p_adult_F_bronze_lod_vat.bin",
+    "json": "vat/p_adult_F_bronze_lod_vat.json",
+    "atlas": "vat/p_adult_F_bronze_atlas.png",
+    "vertex_count": 744
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "woman"
+  },
+  "p_adult_F_iron": {
+   "file": "living/people/person_adult_F_iron.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.7,
+   "triangles": 2484,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_adult_F_iron_static.glb",
+    "bin": "vat/p_adult_F_iron_vat.bin",
+    "json": "vat/p_adult_F_iron_vat.json",
+    "atlas": "vat/p_adult_F_iron_atlas.png",
+    "vertex_count": 7416
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "woman"
+  },
+  "p_adult_F_iron_lod": {
+   "file": "living/people/person_adult_F_iron.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.657,
+   "triangles": 260,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_adult_F_iron_lod_static.glb",
+    "bin": "vat/p_adult_F_iron_lod_vat.bin",
+    "json": "vat/p_adult_F_iron_lod_vat.json",
+    "atlas": "vat/p_adult_F_iron_atlas.png",
+    "vertex_count": 744
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "woman"
+  },
+  "p_adult_F_neolithic": {
+   "file": "living/people/person_adult_F_neolithic.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.7,
+   "triangles": 2456,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_adult_F_neolithic_static.glb",
+    "bin": "vat/p_adult_F_neolithic_vat.bin",
+    "json": "vat/p_adult_F_neolithic_vat.json",
+    "atlas": "vat/p_adult_F_neolithic_atlas.png",
+    "vertex_count": 7332
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "woman"
+  },
+  "p_adult_F_neolithic_lod": {
+   "file": "living/people/person_adult_F_neolithic.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.697,
+   "triangles": 271,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_adult_F_neolithic_lod_static.glb",
+    "bin": "vat/p_adult_F_neolithic_lod_vat.bin",
+    "json": "vat/p_adult_F_neolithic_lod_vat.json",
+    "atlas": "vat/p_adult_F_neolithic_atlas.png",
+    "vertex_count": 777
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "woman"
+  },
+  "p_adult_M_bronze": {
+   "file": "living/people/person_adult_M_bronze.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.7,
+   "triangles": 2476,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_adult_M_bronze_static.glb",
+    "bin": "vat/p_adult_M_bronze_vat.bin",
+    "json": "vat/p_adult_M_bronze_vat.json",
+    "atlas": "vat/p_adult_M_bronze_atlas.png",
+    "vertex_count": 7392
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "man"
+  },
+  "p_adult_M_bronze_lod": {
+   "file": "living/people/person_adult_M_bronze.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.693,
+   "triangles": 250,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_adult_M_bronze_lod_static.glb",
+    "bin": "vat/p_adult_M_bronze_lod_vat.bin",
+    "json": "vat/p_adult_M_bronze_lod_vat.json",
+    "atlas": "vat/p_adult_M_bronze_atlas.png",
+    "vertex_count": 714
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "man"
+  },
+  "p_adult_M_iron": {
+   "file": "living/people/person_adult_M_iron.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.7,
+   "triangles": 2476,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_adult_M_iron_static.glb",
+    "bin": "vat/p_adult_M_iron_vat.bin",
+    "json": "vat/p_adult_M_iron_vat.json",
+    "atlas": "vat/p_adult_M_iron_atlas.png",
+    "vertex_count": 7392
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "man"
+  },
+  "p_adult_M_iron_lod": {
+   "file": "living/people/person_adult_M_iron.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.693,
+   "triangles": 250,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_adult_M_iron_lod_static.glb",
+    "bin": "vat/p_adult_M_iron_lod_vat.bin",
+    "json": "vat/p_adult_M_iron_lod_vat.json",
+    "atlas": "vat/p_adult_M_iron_atlas.png",
+    "vertex_count": 714
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "man"
+  },
+  "p_adult_M_neolithic": {
+   "file": "living/people/person_adult_M_neolithic.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.7,
+   "triangles": 2448,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_adult_M_neolithic_static.glb",
+    "bin": "vat/p_adult_M_neolithic_vat.bin",
+    "json": "vat/p_adult_M_neolithic_vat.json",
+    "atlas": "vat/p_adult_M_neolithic_atlas.png",
+    "vertex_count": 7308
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "man"
+  },
+  "p_adult_M_neolithic_lod": {
+   "file": "living/people/person_adult_M_neolithic.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.7,
+   "triangles": 256,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_adult_M_neolithic_lod_static.glb",
+    "bin": "vat/p_adult_M_neolithic_lod_vat.bin",
+    "json": "vat/p_adult_M_neolithic_lod_vat.json",
+    "atlas": "vat/p_adult_M_neolithic_atlas.png",
+    "vertex_count": 732
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "man"
+  },
+  "p_child_F_bronze": {
+   "file": "living/people/person_child_F_bronze.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.2,
+   "triangles": 2482,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_child_F_bronze_static.glb",
+    "bin": "vat/p_child_F_bronze_vat.bin",
+    "json": "vat/p_child_F_bronze_vat.json",
+    "atlas": "vat/p_child_F_bronze_atlas.png",
+    "vertex_count": 7410
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "child"
+  },
+  "p_child_F_bronze_lod": {
+   "file": "living/people/person_child_F_bronze.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.198,
+   "triangles": 262,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_child_F_bronze_lod_static.glb",
+    "bin": "vat/p_child_F_bronze_lod_vat.bin",
+    "json": "vat/p_child_F_bronze_lod_vat.json",
+    "atlas": "vat/p_child_F_bronze_atlas.png",
+    "vertex_count": 750
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "child"
+  },
+  "p_child_F_iron": {
+   "file": "living/people/person_child_F_iron.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.2,
+   "triangles": 2482,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_child_F_iron_static.glb",
+    "bin": "vat/p_child_F_iron_vat.bin",
+    "json": "vat/p_child_F_iron_vat.json",
+    "atlas": "vat/p_child_F_iron_atlas.png",
+    "vertex_count": 7410
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "child"
+  },
+  "p_child_F_iron_lod": {
+   "file": "living/people/person_child_F_iron.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.198,
+   "triangles": 262,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_child_F_iron_lod_static.glb",
+    "bin": "vat/p_child_F_iron_lod_vat.bin",
+    "json": "vat/p_child_F_iron_lod_vat.json",
+    "atlas": "vat/p_child_F_iron_atlas.png",
+    "vertex_count": 750
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "child"
+  },
+  "p_child_F_neolithic": {
+   "file": "living/people/person_child_F_neolithic.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.2,
+   "triangles": 2454,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_child_F_neolithic_static.glb",
+    "bin": "vat/p_child_F_neolithic_vat.bin",
+    "json": "vat/p_child_F_neolithic_vat.json",
+    "atlas": "vat/p_child_F_neolithic_atlas.png",
+    "vertex_count": 7326
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "child"
+  },
+  "p_child_F_neolithic_lod": {
+   "file": "living/people/person_child_F_neolithic.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.198,
+   "triangles": 270,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_child_F_neolithic_lod_static.glb",
+    "bin": "vat/p_child_F_neolithic_lod_vat.bin",
+    "json": "vat/p_child_F_neolithic_lod_vat.json",
+    "atlas": "vat/p_child_F_neolithic_atlas.png",
+    "vertex_count": 774
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "child"
+  },
+  "p_child_M_bronze": {
+   "file": "living/people/person_child_M_bronze.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.2,
+   "triangles": 2482,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_child_M_bronze_static.glb",
+    "bin": "vat/p_child_M_bronze_vat.bin",
+    "json": "vat/p_child_M_bronze_vat.json",
+    "atlas": "vat/p_child_M_bronze_atlas.png",
+    "vertex_count": 7410
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "child"
+  },
+  "p_child_M_bronze_lod": {
+   "file": "living/people/person_child_M_bronze.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.198,
+   "triangles": 262,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_child_M_bronze_lod_static.glb",
+    "bin": "vat/p_child_M_bronze_lod_vat.bin",
+    "json": "vat/p_child_M_bronze_lod_vat.json",
+    "atlas": "vat/p_child_M_bronze_atlas.png",
+    "vertex_count": 750
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "child"
+  },
+  "p_child_M_iron": {
+   "file": "living/people/person_child_M_iron.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.2,
+   "triangles": 2482,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_child_M_iron_static.glb",
+    "bin": "vat/p_child_M_iron_vat.bin",
+    "json": "vat/p_child_M_iron_vat.json",
+    "atlas": "vat/p_child_M_iron_atlas.png",
+    "vertex_count": 7410
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "child"
+  },
+  "p_child_M_iron_lod": {
+   "file": "living/people/person_child_M_iron.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.198,
+   "triangles": 262,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_child_M_iron_lod_static.glb",
+    "bin": "vat/p_child_M_iron_lod_vat.bin",
+    "json": "vat/p_child_M_iron_lod_vat.json",
+    "atlas": "vat/p_child_M_iron_atlas.png",
+    "vertex_count": 750
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "child"
+  },
+  "p_child_M_neolithic": {
+   "file": "living/people/person_child_M_neolithic.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.2,
+   "triangles": 2454,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_child_M_neolithic_static.glb",
+    "bin": "vat/p_child_M_neolithic_vat.bin",
+    "json": "vat/p_child_M_neolithic_vat.json",
+    "atlas": "vat/p_child_M_neolithic_atlas.png",
+    "vertex_count": 7326
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "child"
+  },
+  "p_child_M_neolithic_lod": {
+   "file": "living/people/person_child_M_neolithic.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.198,
+   "triangles": 270,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_child_M_neolithic_lod_static.glb",
+    "bin": "vat/p_child_M_neolithic_lod_vat.bin",
+    "json": "vat/p_child_M_neolithic_lod_vat.json",
+    "atlas": "vat/p_child_M_neolithic_atlas.png",
+    "vertex_count": 774
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "child"
+  },
+  "p_elder_F_bronze": {
+   "file": "living/people/person_elder_F_bronze.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.7,
+   "triangles": 2496,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_elder_F_bronze_static.glb",
+    "bin": "vat/p_elder_F_bronze_vat.bin",
+    "json": "vat/p_elder_F_bronze_vat.json",
+    "atlas": "vat/p_elder_F_bronze_atlas.png",
+    "vertex_count": 7452
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "woman"
+  },
+  "p_elder_F_bronze_lod": {
+   "file": "living/people/person_elder_F_bronze.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.653,
+   "triangles": 258,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_elder_F_bronze_lod_static.glb",
+    "bin": "vat/p_elder_F_bronze_lod_vat.bin",
+    "json": "vat/p_elder_F_bronze_lod_vat.json",
+    "atlas": "vat/p_elder_F_bronze_atlas.png",
+    "vertex_count": 738
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "woman"
+  },
+  "p_elder_F_iron": {
+   "file": "living/people/person_elder_F_iron.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.7,
+   "triangles": 2496,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_elder_F_iron_static.glb",
+    "bin": "vat/p_elder_F_iron_vat.bin",
+    "json": "vat/p_elder_F_iron_vat.json",
+    "atlas": "vat/p_elder_F_iron_atlas.png",
+    "vertex_count": 7452
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "woman"
+  },
+  "p_elder_F_iron_lod": {
+   "file": "living/people/person_elder_F_iron.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.653,
+   "triangles": 258,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_elder_F_iron_lod_static.glb",
+    "bin": "vat/p_elder_F_iron_lod_vat.bin",
+    "json": "vat/p_elder_F_iron_lod_vat.json",
+    "atlas": "vat/p_elder_F_iron_atlas.png",
+    "vertex_count": 738
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "woman"
+  },
+  "p_elder_F_neolithic": {
+   "file": "living/people/person_elder_F_neolithic.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.7,
+   "triangles": 2468,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_elder_F_neolithic_static.glb",
+    "bin": "vat/p_elder_F_neolithic_vat.bin",
+    "json": "vat/p_elder_F_neolithic_vat.json",
+    "atlas": "vat/p_elder_F_neolithic_atlas.png",
+    "vertex_count": 7368
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "woman"
+  },
+  "p_elder_F_neolithic_lod": {
+   "file": "living/people/person_elder_F_neolithic.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.697,
+   "triangles": 261,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_elder_F_neolithic_lod_static.glb",
+    "bin": "vat/p_elder_F_neolithic_lod_vat.bin",
+    "json": "vat/p_elder_F_neolithic_lod_vat.json",
+    "atlas": "vat/p_elder_F_neolithic_atlas.png",
+    "vertex_count": 747
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "woman"
+  },
+  "p_elder_M_bronze": {
+   "file": "living/people/person_elder_M_bronze.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.7,
+   "triangles": 2488,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_elder_M_bronze_static.glb",
+    "bin": "vat/p_elder_M_bronze_vat.bin",
+    "json": "vat/p_elder_M_bronze_vat.json",
+    "atlas": "vat/p_elder_M_bronze_atlas.png",
+    "vertex_count": 7428
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "man"
+  },
+  "p_elder_M_bronze_lod": {
+   "file": "living/people/person_elder_M_bronze.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.693,
+   "triangles": 242,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_elder_M_bronze_lod_static.glb",
+    "bin": "vat/p_elder_M_bronze_lod_vat.bin",
+    "json": "vat/p_elder_M_bronze_lod_vat.json",
+    "atlas": "vat/p_elder_M_bronze_atlas.png",
+    "vertex_count": 690
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "man"
+  },
+  "p_elder_M_iron": {
+   "file": "living/people/person_elder_M_iron.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.7,
+   "triangles": 2488,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_elder_M_iron_static.glb",
+    "bin": "vat/p_elder_M_iron_vat.bin",
+    "json": "vat/p_elder_M_iron_vat.json",
+    "atlas": "vat/p_elder_M_iron_atlas.png",
+    "vertex_count": 7428
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "man"
+  },
+  "p_elder_M_iron_lod": {
+   "file": "living/people/person_elder_M_iron.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.693,
+   "triangles": 242,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_elder_M_iron_lod_static.glb",
+    "bin": "vat/p_elder_M_iron_lod_vat.bin",
+    "json": "vat/p_elder_M_iron_lod_vat.json",
+    "atlas": "vat/p_elder_M_iron_atlas.png",
+    "vertex_count": 690
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "man"
+  },
+  "p_elder_M_neolithic": {
+   "file": "living/people/person_elder_M_neolithic.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.7,
+   "triangles": 2460,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_elder_M_neolithic_static.glb",
+    "bin": "vat/p_elder_M_neolithic_vat.bin",
+    "json": "vat/p_elder_M_neolithic_vat.json",
+    "atlas": "vat/p_elder_M_neolithic_atlas.png",
+    "vertex_count": 7344
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "man"
+  },
+  "p_elder_M_neolithic_lod": {
+   "file": "living/people/person_elder_M_neolithic.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.7,
+   "triangles": 250,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/p_elder_M_neolithic_lod_static.glb",
+    "bin": "vat/p_elder_M_neolithic_lod_vat.bin",
+    "json": "vat/p_elder_M_neolithic_lod_vat.json",
+    "atlas": "vat/p_elder_M_neolithic_atlas.png",
+    "vertex_count": 714
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "man"
+  }
+ }
+}
