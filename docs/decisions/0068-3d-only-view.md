@@ -1,4 +1,4 @@
-# ADR 0067 — M3D-SWITCH: the 3D view is the only world view
+# ADR 0068 — M3D-SWITCH: the 3D view is the only world view
 
 ## Date
 2026-11-15
