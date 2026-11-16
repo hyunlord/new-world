@@ -8,9 +8,11 @@ use hecs::World;
 use sim_core::colony::paths;
 use sim_engine::{RuntimeSystem, SimResources};
 
+/// Day-boundary decay and stage transitions for worn paths (M-GROW 3.2).
 pub struct PathDaySystem;
 
 impl PathDaySystem {
+    /// Create the day-boundary path system.
     pub fn new() -> Self {
         Self
     }
@@ -71,7 +73,8 @@ impl RuntimeSystem for PathDaySystem {
             let old_footfall = resources.colony.footfall[idx];
             // Decay: subtract decay_permille/1000 of the current value, minimum 1
             // when footfall > 0 so paths eventually fade.
-            let loss = ((u32::from(old_footfall) * decay_permille + 999) / 1000).max(1) as u16;
+            let loss =
+                (u32::from(old_footfall) * decay_permille).div_ceil(1000).max(1) as u16;
             let new_footfall = old_footfall.saturating_sub(loss);
             resources.colony.footfall[idx] = new_footfall;
             let old_stage = resources.colony.path_stage[idx];

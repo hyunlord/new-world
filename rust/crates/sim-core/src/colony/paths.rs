@@ -22,6 +22,7 @@ struct PathsFile {
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
+#[allow(dead_code)]
 struct RawStage {
     id: String,
     code: u8,
@@ -35,15 +36,20 @@ struct RawStage {
 /// One path stage (grass, trodden, dirt, paved_road).
 #[derive(Debug, Clone, Copy)]
 pub struct PathStage {
+    /// Byte code stored in `ColonyState::path_stage` (0–3).
     pub code: u8,
+    /// Minimum footfall to reach this stage.
     pub footfall_threshold: u16,
+    /// A* cost byte for tiles at this stage.
     pub nav_cost: u8,
+    /// Ticks between movement steps on this stage.
     pub step_interval: u64,
 }
 
 /// Parsed paths data, immutable after load.
 #[derive(Debug)]
 pub struct PathsData {
+    /// All stages in code order.
     pub stages: Vec<PathStage>,
     /// Daily decay in permille of the current footfall value.
     pub daily_decay_permille: u16,
@@ -103,10 +109,13 @@ pub fn installed() -> &'static PathsData {
     DATA.get_or_init(|| parse_paths(PATHS_RON).expect("paths.ron must parse"))
 }
 
-/// Path stage codes.
+/// Grass (default, no path).
 pub const STAGE_GRASS: u8 = 0;
+/// Trodden grass (visible wear, no speed bonus).
 pub const STAGE_TRODDEN: u8 = 1;
+/// Dirt path (speed bonus).
 pub const STAGE_DIRT: u8 = 2;
+/// Paved road (placed only, speed bonus).
 pub const STAGE_PAVED: u8 = 3;
 
 #[cfg(test)]
