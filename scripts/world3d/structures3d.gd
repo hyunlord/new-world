@@ -594,37 +594,48 @@ static func footprint_cells(tiles: Array) -> Dictionary:
 	return out
 
 
-## The roof cells of a room: its footprint plus a one-cell (0.5 m) overhang ring, except where the ring would enter
-## another roofed room's footprint (`claimed`: cell → room id). Two rooms' roofs therefore never share a cell.
-## Greedy row-major split of `tiles` into rectangles (each grows right, then down while every row is complete).
-static func rectangles(tiles: Array) -> Array[Rect2i]:
+## The hip rectangles of a roof (planner NOTE 6): the largest rectangle inside the footprint, plus the largest
+## rectangle of the rest when it covers at least 25% of the footprint. Tiles outside both get a flat cap at wall top.
+static func roof_rects(tiles: Array) -> Array[Rect2i]:
 	var left: Dictionary = {}
 	for t: Vector2i in tiles:
 		left[t] = true
-	var keys: Array = left.keys()
-	keys.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return a.y < b.y or (a.y == b.y and a.x < b.x))
 	var out: Array[Rect2i] = []
-	for t: Vector2i in keys:
-		if not left.has(t):
-			continue
-		var w: int = 1
-		while left.has(t + Vector2i(w, 0)):
-			w += 1
-		var h: int = 1
-		while true:
-			var full: bool = true
-			for x: int in w:
-				full = full and left.has(t + Vector2i(x, h))
-			if not full:
-				break
-			h += 1
-		for y: int in h:
-			for x: int in w:
-				left.erase(t + Vector2i(x, y))
-		out.append(Rect2i(t, Vector2i(w, h)))
+	var first: Rect2i = largest_rect(left)
+	if first.get_area() == 0:
+		return out
+	out.append(first)
+	for y: int in range(first.position.y, first.end.y):
+		for x: int in range(first.position.x, first.end.x):
+			left.erase(Vector2i(x, y))
+	var second: Rect2i = largest_rect(left)
+	if second.get_area() * 4 >= tiles.size():
+		out.append(second)
 	return out
 
 
+## The largest axis-aligned rectangle of whole tiles inside `cells` (tile → any); ties keep the first found in
+## row-major order, so the result is deterministic.
+static func largest_rect(cells: Dictionary) -> Rect2i:
+	var keys: Array = cells.keys()
+	keys.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return a.y < b.y or (a.y == b.y and a.x < b.x))
+	var best: Rect2i = Rect2i()
+	for t: Vector2i in keys:
+		var w_max: int = 1 << 30
+		var h: int = 0
+		while cells.has(t + Vector2i(0, h)):
+			var w: int = 0
+			while w < w_max and cells.has(t + Vector2i(w, h)):
+				w += 1
+			w_max = w
+			h += 1
+			if w_max * h > best.get_area():
+				best = Rect2i(t, Vector2i(w_max, h))
+	return best
+
+
+## The roof cells of a room: its footprint plus a one-cell (0.5 m) overhang ring, except where the ring would enter
+## another roofed room's footprint (`claimed`: cell → room id). Two rooms' roofs therefore never share a cell.
 static func roof_cells(tiles: Array, room_id: int, claimed: Dictionary) -> Dictionary:
 	var foot: Dictionary = footprint_cells(tiles)
 	var out: Dictionary = foot.duplicate()
@@ -667,13 +678,14 @@ func _roof_mesh(tiles: Array, room_id: int, claimed: Dictionary, mat: Material) 
 	b.base = ground
 	var cells: Dictionary = roof_cells(tiles, room_id, claimed)
 	var height: Dictionary = roof_heights(cells)
+	var rects: Array[Rect2i] = roof_rects(tiles)
 	# Planar hips: over the footprint, the height is the highest of the room's rectangles' own hip roofs (clean
 	# planes with valleys where rectangles meet), not a distance field that follows a stepped outline.
 	for v: Vector2i in height.keys():
 		if float(height[v]) <= 0.0:
 			continue
 		var best: float = 0.0
-		for r: Rect2i in rectangles(tiles):
+		for r: Rect2i in rects:
 			# The rectangle's footprint in half-metre lattice vertices (tiles grown by half a tile).
 			var x0: int = 2 * r.position.x - 1
 			var y0: int = 2 * r.position.y - 1
