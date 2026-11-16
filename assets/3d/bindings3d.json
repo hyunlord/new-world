@@ -112,6 +112,9 @@
       "smelter": "smelter",
       "casting_bench": "casting_bench",
       "anvil": "anvil",
+      "bloomery": "w3d_bloomery_idle",
+      "forge": "w3d_forge_idle",
+      "mason_bench": "mason_bench_idle",
       "kiln": "kiln",
       "Bedroll": "bedroll",
       "bedroll": "bedroll",
@@ -123,6 +126,8 @@
     "lit": {
       "hearth": true,
       "smelter": true,
+      "w3d_bloomery_idle": true,
+      "w3d_forge_idle": true,
       "kiln": true,
       "charcoal_clamp": true,
       "clay_oven": true
@@ -133,7 +138,10 @@
       "charcoal_clamp": {"idle": ["w3d_charcoal_clamp_idle", "asset_charcoal_clamp_idle"], "working": ["w3d_charcoal_clamp_working", "asset_charcoal_clamp_burning"]},
       "kiln": {"idle": ["w3d_kiln_idle", "asset_kiln_unlit"], "working": ["w3d_kiln_working", "asset_kiln_lit"]},
       "casting_bench": {"idle": ["w3d_casting_bench_idle", "asset_casting_bench_empty"], "working": ["w3d_casting_bench_working", "asset_casting_bench_working"]},
-      "anvil": {"idle": ["asset_anvil_idle"], "working": ["asset_anvil_working"]}
+      "anvil": {"idle": ["asset_anvil_idle"], "working": ["asset_anvil_working"]},
+      "w3d_bloomery_idle": {"idle": ["w3d_bloomery_idle", "asset_bloomery_unlit"], "working": ["w3d_bloomery_working", "asset_bloomery_lit"]},
+      "w3d_forge_idle": {"idle": ["w3d_forge_idle", "asset_forge_idle"], "working": ["w3d_forge_working", "asset_forge_working"]},
+      "mason_bench_idle": {"idle": ["mason_bench_idle"], "working": ["mason_bench_working"]}
     },
     "fallback": "wood_bench",
     "bed": "bedroll"
@@ -431,6 +439,10 @@
         "other": [0.12, 0.1, 0.08]
       }
     }
+  },
+  "floors": {
+    "about": "Floor tiles whose resolved material key is listed draw that model (one MultiMesh per model) instead of the plain slab.",
+    "by_material": {"cut_stone": "floor_paved_road"}
   },
   "walls": {
     "about": "2D wall style ids (material resolver) -> 3D wall profile. log: stacked logs; block: masonry/brick slab; palisade: pointed stakes.",

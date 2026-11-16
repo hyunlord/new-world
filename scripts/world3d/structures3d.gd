@@ -11,7 +11,7 @@
 #   MultiMesh per model, else procedural posts and two rails; other openings are doors: two
 #   posts and a lintel in the wall, and a door leaf (model `door`) that swings open while a person stands on it and is cut down with the walls. A
 #   finished hut (2D building binding with a `ring`) gets its ring of walls and its door from that binding. Floors are
-#   thin slabs in the floor material. Roofs: each roofed room (get_rooms, not dug) gets one hipped roof, a height field
+#   thin slabs in the floor material, or the model of bindings3d `floors.by_material` (the C3 paved road's flagstones). Roofs: each roofed room (get_rooms, not dug) gets one hipped roof, a height field
 #   over half-metre cells that rises from the wall line at `structures.roof_pitch_deg` (capped at
 #   `structures.roof_max_rise`) with a one-cell overhang that stops short of any other room, so no roof passes
 #   through another; the cover (thatch, bark, plank:
@@ -62,6 +62,8 @@ var _door_nodes: Array[MeshInstance3D] = []
 var _site_node: MeshInstance3D = null
 var _site_models: Node3D = null
 var _fence_models: Node3D = null
+## Floor tiles drawn with a model (bindings3d `floors.by_material`): tile -> model id.
+var _floor_models: Dictionary = {}
 var _cut_all: float = 99.0
 var _cut_rect_h: float = 99.0
 var _cut_rect: Rect2 = Rect2()
@@ -159,6 +161,8 @@ func _rebuild_walls(space: Dictionary, buildings: Dictionary) -> void:
 				break
 	var floors: Dictionary = _floor_tiles(space)
 	var dirty: Dictionary = {}
+	for t: Vector2i in _floor_models.keys():
+		dirty[_chunk_of(t)] = true
 	for t: Variant in _walls.keys():
 		if t is Vector2i:
 			dirty[_chunk_of(t)] = true
@@ -200,6 +204,11 @@ func _place_fence_models() -> void:
 		if not batches.has(id):
 			batches[id] = []
 		(batches[id] as Array).append(Vector3(t.x + 0.5, float(_terrain.call("stand_height", t)), t.y + 0.5))
+	for t: Vector2i in _floor_models.keys():
+		var fid: String = str(_floor_models[t])
+		if not batches.has(fid):
+			batches[fid] = []
+		(batches[fid] as Array).append(Vector3(t.x + 0.5, float(_terrain.call("stand_height", t)), t.y + 0.5))
 	for id: String in batches:
 		var mm: MultiMesh = MultiMesh.new()
 		mm.transform_format = MultiMesh.TRANSFORM_3D
@@ -266,6 +275,8 @@ func _floor_tiles(space: Dictionary) -> Dictionary:
 	var kinds: PackedInt32Array = space.get("floor_kinds", PackedInt32Array())
 	var mats: PackedInt32Array = space.get("floor_materials", PackedInt32Array())
 	var styles: PackedStringArray = space.get("floor_styles", PackedStringArray())
+	var by_material: Dictionary = Data3D.binding("floors.by_material", {})
+	_floor_models.clear()
 	for i: int in mini(xs.size(), ys.size()):
 		if i < kinds.size() and kinds[i] == 1:
 			continue
@@ -275,6 +286,10 @@ func _floor_tiles(space: Dictionary) -> Dictionary:
 			floor_id = ""
 		var r: Dictionary = _resolver.resolve(styles[i] if i < styles.size() else "", floor_id, "", "floor")
 		var key: String = str(r.get("material_key", "")) if r.get("material_key") != null else ""
+		var model: String = Data3D.first_model([by_material.get(key, "")]) if by_material.has(key) else ""
+		if model != "":
+			_floor_models[Vector2i(xs[i], ys[i])] = model
+			continue
 		out[Vector2i(xs[i], ys[i])] = Data3D.material_colour(key, str(r.get("category", "")) if r.get("category") != null else "")
 	return out
 

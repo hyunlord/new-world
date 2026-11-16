@@ -82,7 +82,7 @@ func _run() -> void:
 			var list: Array = (states[base] as Dictionary).get(state, [])
 			if list.is_empty() or not Data3D.has_model(str(list[-1])):
 				bad_states.append("%s.%s" % [base, state])
-			elif Props.state_model(base, state == "working") == base:
+			elif Props.state_model(base, state == "working") == base and not list.has(base):
 				bad_states.append("%s.%s unresolved" % [base, state])
 			elif Props.state_model(base, state == "working").begins_with("w3d_"):
 				w3d_drawn += 1
@@ -204,6 +204,16 @@ func _assets_coverage(world: Node) -> void:
 		if Flora.outcrop_model(str((row as Dictionary).get("id", ""))) == "":
 			missing_ore.append(str((row as Dictionary).get("id", "")))
 	_check("outcrop_kinds_models", not outcrops.is_empty() and missing_ore.is_empty(), "%d kinds, fallback %s" % [outcrops.size(), missing_ore])
+	# C3-b: the iron-age stations draw their own models (not the wood-bench fallback) and the paved road its flagstones.
+	var by_style: Dictionary = Data3D.binding("stations.by_style", {})
+	var c3_unbound: Array[String] = []
+	for style: String in ["bloomery", "forge", "anvil", "mason_bench"]:
+		var model: String = str(by_style.get(style, ""))
+		if Data3D.first_model([Props.state_model(model, false)]) == "" or Data3D.first_model([Props.state_model(model, true)]) == "":
+			c3_unbound.append(style)
+	if Data3D.first_model([Data3D.binding("floors.by_material", {}).get("cut_stone", "")]) == "":
+		c3_unbound.append("paved_road")
+	_check("c3_iron_age_models", c3_unbound.is_empty(), str(c3_unbound))
 
 
 ## (6) No 2D world layer exists; every runtime path goes through the renderer-neutral helpers.
