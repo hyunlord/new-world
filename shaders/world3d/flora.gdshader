@@ -21,12 +21,14 @@ varying vec4 mark;
 
 varying vec3 world_normal;
 varying vec3 world_pos;
+varying float local_height;
 
 void vertex() {
 	vec3 origin = (MODEL_MATRIX * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
 	float phase = origin.x * 0.37 + origin.z * 0.61;
 	float bend = max(VERTEX.y - 1.0, 0.0) * UV.y;
 	kind = UV.x;
+	local_height = VERTEX.y;
 	VERTEX.x += sin(w3d_time * 1.3 + phase) * bend * 0.025;
 	VERTEX.z += cos(w3d_time * 1.1 + phase * 1.3) * bend * 0.018;
 	world_normal = normalize((MODEL_MATRIX * vec4(NORMAL, 0.0)).xyz);
@@ -59,6 +61,14 @@ void fragment() {
 			if (bayer4(FRAGCOORD.xy) > keep) {
 				discard;
 			}
+		}
+	}
+	// Planner NOTE 8: canopies (above 1.5 m) well in front of the look target dissolve too, so foreground trees at the
+	// screen edge do not cover the village; trunks and low plants stay.
+	if (local_height > 1.5 && len > 0.01) {
+		float ahead = dot(world_pos - w3d_camera, axis / len) / len;
+		if (bayer4(FRAGCOORD.xy) > smoothstep(0.55, 0.8, ahead)) {
+			discard;
 		}
 	}
 	vec3 c = srgb_to_linear(COLOR.rgb);

@@ -145,6 +145,14 @@ func _run() -> void:
 		finite = finite and is_finite(float(h[v]))
 		top = maxf(top, float(h[v]))
 	_check("roof_heightfield", finite and top >= 1.0 and float(h[Vector2i(-1, -1)]) == 0.0, "max %.1f" % top)
+	# NOTE 6: at most 2 hip rectangles; a small spur (< 25% of the footprint) gets a flat cap instead.
+	var l_rects: Array[Rect2i] = Structures.roof_rects(l_shape)
+	var spur: Array = [Vector2i(3, 1)]
+	for y: int in 3:
+		for x: int in 4:
+			spur.append(Vector2i(x, y + 2))
+	var spur_rects: Array[Rect2i] = Structures.roof_rects(spur)
+	_check("roof_rects", l_rects == [Rect2i(0, 0, 3, 1), Rect2i(0, 1, 1, 2)] and spur_rects == [Rect2i(0, 2, 4, 3)], "%s / %s" % [l_rects, spur_rects])
 	# 4 VAT characters.
 	var bad: Array[String] = []
 	for file: String in DirAccess.get_files_at("res://assets/3d/vat"):
