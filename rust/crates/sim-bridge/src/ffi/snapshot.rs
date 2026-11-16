@@ -859,10 +859,14 @@ pub struct TerrainSnapshot {
     pub terrain: Vec<u8>,
     /// Elevation bytes, aligned with terrain.
     pub elevation: Vec<u8>,
+    /// M-GROW 3.2: per-tile path stage code (0 grass..3 paved), row-major.
+    pub path_stage: Vec<u8>,
 }
 
 /// Copy simulation grid data in its canonical row-major order.
 pub fn collect_terrain_snapshot(resources: &SimResources) -> TerrainSnapshot {
+    let grid_len =
+        (resources.tile_grid.width as usize) * (resources.tile_grid.height as usize);
     TerrainSnapshot {
         width: resources.tile_grid.width,
         height: resources.tile_grid.height,
@@ -873,6 +877,11 @@ pub fn collect_terrain_snapshot(resources: &SimResources) -> TerrainSnapshot {
             .map(|terrain| *terrain as u8)
             .collect(),
         elevation: resources.tile_grid.elevation.clone(),
+        path_stage: if resources.colony.path_stage.len() == grid_len {
+            resources.colony.path_stage.clone()
+        } else {
+            vec![0u8; grid_len]
+        },
     }
 }
 
@@ -887,6 +896,10 @@ pub(super) fn terrain_snapshot_to_dict(snapshot: &TerrainSnapshot) -> VarDiction
     dict.set(
         "elevation",
         PackedByteArray::from(snapshot.elevation.as_slice()),
+    );
+    dict.set(
+        "path_stage",
+        PackedByteArray::from(snapshot.path_stage.as_slice()),
     );
     dict
 }

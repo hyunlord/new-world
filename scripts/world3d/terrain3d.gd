@@ -53,6 +53,9 @@ var _meshes: Dictionary = {}
 var _water: Dictionary = {}
 var _ready_world: bool = false
 var _stamp_key: String = ""
+## M-GROW 3.2: per-tile path stage (0 grass, 1 trodden, 2 dirt, 3 paved).
+var _path_stage: PackedByteArray = PackedByteArray()
+var _path_tex: ImageTexture = null
 
 
 func setup(world_sim: Node) -> void:
@@ -120,10 +123,12 @@ func _load_world() -> void:
 		return
 	_terrain = snap.get("terrain", PackedByteArray())
 	_elev = snap.get("elevation", PackedByteArray())
+	_path_stage = snap.get("path_stage", PackedByteArray())
 	if _terrain.size() < width * height:
 		return
 	_chunk = maxi(4, int(Data3D.param("terrain.chunk_tiles", 32)))
 	material.set_shader_parameter("map_size", Vector2(width, height))
+	_update_path_texture()
 	for child: Node in get_children():
 		child.queue_free()
 	_meshes.clear()
@@ -134,6 +139,22 @@ func _load_world() -> void:
 	_space_version = -1
 	_poll_space()
 	_mark_all()
+
+
+## M-GROW 3.2: build an R8 texture from path_stage bytes for the terrain shader.
+func _update_path_texture() -> void:
+	if width <= 0 or height <= 0:
+		return
+	var n: int = width * height
+	var data: PackedByteArray = _path_stage if _path_stage.size() == n else PackedByteArray()
+	if data.size() != n:
+		data.resize(n)
+	var img: Image = Image.create_from_data(width, height, false, Image.FORMAT_R8, data)
+	if _path_tex == null:
+		_path_tex = ImageTexture.create_from_image(img)
+	else:
+		_path_tex.update(img)
+	material.set_shader_parameter("path_tex", _path_tex)
 
 
 func _mark_all() -> void:
@@ -224,6 +245,12 @@ func _poll_space() -> void:
 			if t.x >= 0 and t.y >= 0 and t.x < width and t.y < height:
 				@warning_ignore("integer_division")
 				_dirty[Vector2i(t.x / _chunk, t.y / _chunk)] = true
+	# M-GROW 3.2: refresh path stage texture from the latest terrain snapshot.
+	var tsnap: Dictionary = SimReads.read(_world_sim, "get_terrain_snapshot")
+	var ps: PackedByteArray = tsnap.get("path_stage", PackedByteArray())
+	if ps.size() == width * height and ps != _path_stage:
+		_path_stage = ps
+		_update_path_texture()
 
 
 static func _tileset(xs: Variant, ys: Variant) -> Dictionary:

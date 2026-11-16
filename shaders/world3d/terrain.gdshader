@@ -14,6 +14,12 @@ uniform sampler2D frame_tex : filter_nearest, repeat_disable;
 uniform float overlay_on = 0.0;
 uniform float grid_on = 0.0;
 uniform vec3 cliff_colour : source_color = vec3(0.43, 0.39, 0.34);
+// M-GROW 3.2: worn path stages (0 grass, 1 trodden, 2 dirt, 3 paved).
+// art-tex earth/path textures will plug in here after the polish merge.
+uniform sampler2D path_tex : filter_nearest, repeat_disable;
+uniform vec3 trodden_colour : source_color = vec3(0.42, 0.38, 0.28);
+uniform vec3 dirt_colour : source_color = vec3(0.50, 0.40, 0.25);
+uniform vec3 paved_colour : source_color = vec3(0.55, 0.50, 0.42);
 
 varying vec3 world_pos;
 varying vec3 world_normal;
@@ -48,6 +54,18 @@ void fragment() {
 	vec3 c = srgb_to_linear(COLOR.rgb) * season_tint;
 	float n = vnoise(world_pos.xz * 3.0) * 0.6 + vnoise(world_pos.xz * 11.0) * 0.4;
 	c *= 0.90 + 0.20 * n;
+	// M-GROW 3.2: blend path stage colour onto the ground.
+	vec2 puv = world_pos.xz / map_size;
+	if (puv.x >= 0.0 && puv.y >= 0.0 && puv.x <= 1.0 && puv.y <= 1.0) {
+		float stage = texture(path_tex, puv).r * 255.0;
+		if (stage > 0.5 && stage < 1.5) {
+			c = mix(c, srgb_to_linear(trodden_colour), 0.35 + 0.1 * n);
+		} else if (stage > 1.5 && stage < 2.5) {
+			c = mix(c, srgb_to_linear(dirt_colour), 0.6 + 0.1 * n);
+		} else if (stage > 2.5) {
+			c = mix(c, srgb_to_linear(paved_colour), 0.75);
+		}
+	}
 	float up = clamp(world_normal.y, 0.0, 1.0);
 	// Steep slopes show bare rock instead of grass.
 	c = mix(c, cliff_colour * (0.85 + 0.3 * n), 1.0 - smoothstep(0.62, 0.8, up));
