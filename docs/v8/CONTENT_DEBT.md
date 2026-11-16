@@ -10,7 +10,7 @@ Tracking: [thermal model #691](https://github.com/hyunlord/new-world/issues/691)
 ## C3 — 2026-11-15
 
 - prospect designation: the `no_iron_nearby` card offers wait or trade for iron only. There is no prospecting designation or command, so "send prospectors" is not offered (planner D-C3-1). Planned pass: M-GROW.
-- paved road speed: the `paved_road` floor piece is placeable and drawn, but movement has no per-tile speed hook (see the generated `paved_road` row). Planned pass: M-GROW.
+- ~~paved road speed~~: resolved by M-GROW 3.2 (per-tile path stage cost + step interval).
 <!-- generated-content-debt -->
 
 ## Authored content debt
