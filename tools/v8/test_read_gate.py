@@ -208,16 +208,16 @@ class StallWaiverTest(unittest.TestCase):
         report = {
             "complete": True,
             "arms": [
-                {"zoom": 1.0, "capture_complete": True, "samples": [
-                    {"interval_ms": 3000.0, "telemetry": {"buildings": {"render_warmup": {"complete": False}}}},
-                    {"interval_ms": 12.0, "telemetry": {"buildings": {"render_warmup": {"complete": True}}}},
-                    {"interval_ms": 52.8, "telemetry": {"buildings": {"render_warmup": {"complete": True}}}},
-                    {"interval_ms": 30.0, "telemetry": {"buildings": {"render_warmup": {"complete": True}}}},
+                {"zoom": 1.0, "capture_complete": True, "score": {"warmup_seconds": 10}, "samples": [
+                    {"interval_ms": 3000.0, "elapsed_seconds": 3.0},
+                    {"interval_ms": 12.0, "elapsed_seconds": 20.0},
+                    {"interval_ms": 52.8, "elapsed_seconds": 20.0},
+                    {"interval_ms": 30.0, "elapsed_seconds": 20.0},
                 ]},
-                {"zoom": 0.5, "capture_complete": True, "samples": [
-                    {"interval_ms": 4000.0, "telemetry": {"buildings": {"render_warmup": {"complete": False}}}},
-                    {"interval_ms": 11.0, "telemetry": {"buildings": {"render_warmup": {"complete": True}}}},
-                    {"interval_ms": 48.9, "telemetry": {"buildings": {"render_warmup": {"complete": True}}}},
+                {"zoom": 0.5, "capture_complete": True, "score": {"warmup_seconds": 10}, "samples": [
+                    {"interval_ms": 4000.0, "elapsed_seconds": 4.0},
+                    {"interval_ms": 11.0, "elapsed_seconds": 20.0},
+                    {"interval_ms": 48.9, "elapsed_seconds": 20.0},
                 ]},
             ],
         }
@@ -232,13 +232,13 @@ class StallWaiverTest(unittest.TestCase):
         import tempfile
         report = {
             "complete": True,
-            "arms": [{"zoom": 1.0, "capture_complete": True, "samples": [
-                {"interval_ms": 10.0, "telemetry": {"buildings": {"render_warmup": {"complete": True}}}},
-                {"interval_ms": 61.0, "telemetry": {"buildings": {"render_warmup": {"complete": True}}}},
+            "arms": [{"zoom": 1.0, "capture_complete": True, "score": {"warmup_seconds": 10}, "samples": [
+                {"interval_ms": 10.0, "elapsed_seconds": 20.0},
+                {"interval_ms": 61.0, "elapsed_seconds": 20.0},
             ]}],
         }
-        report["arms"].append({"zoom": 0.5, "capture_complete": True, "samples": [
-            {"interval_ms": 10.0, "telemetry": {"buildings": {"render_warmup": {"complete": True}}}}]})
+        report["arms"].append({"zoom": 0.5, "capture_complete": True, "score": {"warmup_seconds": 10}, "samples": [
+            {"interval_ms": 10.0, "elapsed_seconds": 20.0}]})
         with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             json.dump(report, f)
             path = f.name

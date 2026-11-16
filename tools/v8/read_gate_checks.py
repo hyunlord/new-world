@@ -365,16 +365,12 @@ def stall_waiver(stall_report_path):
         zoom = arm.get("zoom", "?")
         if arm.get("capture_complete") is not True:
             raise SystemExit(f"zoom {zoom}: capture not complete")
-        # Post-warmup frames: those after render_warmup.complete is true.
-        samples = arm.get("samples", [])
-        post_warmup = False
-        pw_frames = []
-        for s in samples:
-            warmup = s.get("telemetry", {}).get("buildings", {}).get("render_warmup", {})
-            if warmup.get("complete") is True:
-                post_warmup = True
-            if post_warmup:
-                pw_frames.append(s.get("interval_ms"))
+        # Post-warmup frames: those after the arm's score.warmup_seconds, as the strict verify counts them (M3D-SWITCH:
+        # the 2D buildings render_warmup flag is gone with the 2D layers).
+        warmup_s = arm.get("score", {}).get("warmup_seconds")
+        if type(warmup_s) not in (int, float):
+            raise SystemExit(f"zoom {zoom}: missing score.warmup_seconds")
+        pw_frames = [s.get("interval_ms") for s in arm.get("samples", []) if s.get("elapsed_seconds", 0) > warmup_s]
         if not pw_frames or any(type(frame) not in (int, float) or not math.isfinite(frame) or frame <= 0 for frame in pw_frames):
             raise SystemExit(f"zoom {zoom}: missing or invalid post-warmup frames")
         over_50 = [round(f, 3) for f in pw_frames if f > 50.0]
