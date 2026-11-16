@@ -15,7 +15,7 @@ fn stage1_policy_changes_are_explicit_against_published_base() {
     );
     assert_eq!(
         current.rules.iter().map(|r| r.id).collect::<Vec<_>>(),
-        vec![1, 2, 3, 4, 5, 7, 9, 10, 8, 11, 12, 13]
+        vec![1, 2, 3, 4, 5, 7, 9, 10, 8, 11, 12, 13, 14, 15, 16, 17]
     );
     let livestock = current
         .rules
