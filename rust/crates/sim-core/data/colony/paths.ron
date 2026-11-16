@@ -1,0 +1,9 @@
+// Worn paths: footfall-driven path stages (M-GROW 3.2).
+// Stages: 0 grass (default), 1 trodden, 2 dirt path; 3 paved_road is placed-only.
+// All numbers are first design values -> BALANCE_DEBT rows naming M-BAL.
+(schema_version: 1, stages: [
+    (id: "grass",       code: 0, footfall_threshold: 0,   nav_cost: 10, step_interval: 3),
+    (id: "trodden",     code: 1, footfall_threshold: 30,  nav_cost: 10, step_interval: 3),
+    (id: "dirt",        code: 2, footfall_threshold: 120, nav_cost: 7,  step_interval: 2),
+    (id: "paved_road",  code: 3, footfall_threshold: 0,   nav_cost: 6,  step_interval: 2),
+], daily_decay_permille: 20)

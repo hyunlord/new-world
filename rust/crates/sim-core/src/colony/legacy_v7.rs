@@ -188,6 +188,9 @@ where
             fights: old.fights,
             neighbours: old.neighbours,
             release_counts: old.release_counts,
+            footfall: Vec::new(),
+            path_stage: Vec::new(),
+            footfall_touched: Default::default(),
         }
     }
 }

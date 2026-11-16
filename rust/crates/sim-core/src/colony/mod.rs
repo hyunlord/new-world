@@ -34,6 +34,7 @@ pub mod mind_state;
 pub mod neighbours;
 mod orders;
 pub mod ore;
+pub mod paths;
 pub mod people;
 pub mod processing;
 pub mod requests;
@@ -299,6 +300,18 @@ pub struct ColonyState {
     /// a need, counted by [`JobReleaseKey`]. No system reads it, and no
     /// fingerprint or summary includes it.
     pub release_counts: BTreeMap<JobReleaseKey, u64>,
+    /// M-GROW 3.2: per-tile footfall counter (indexed by `tile_grid.idx`).
+    /// Incremented on each completed step; decayed at the day boundary.
+    #[serde(default)]
+    pub footfall: Vec<u16>,
+    /// M-GROW 3.2: per-tile path stage code (0 grass, 1 trodden, 2 dirt,
+    /// 3 paved_road). Indexed by `tile_grid.idx`. Paved is placed only.
+    #[serde(default)]
+    pub path_stage: Vec<u8>,
+    /// M-GROW 3.2: tiles touched by footfall this day (sparse set for the
+    /// day-boundary update; not saved — rebuilt from movement each day).
+    #[serde(skip)]
+    pub footfall_touched: std::collections::BTreeSet<(u32, u32)>,
 }
 
 /// Measurement-only key of a job released to a need (`ColonyState::release_counts`):
