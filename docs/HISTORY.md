@@ -1,5 +1,7 @@
 # WorldSim 역사
 
+- 2026-11-16 — M-GATE-REUSE 도구 구현: 고정 입력에 묶인 전체 debug 사전 실행 영수증을 full gate step4에서 재사용하며 불일치는 재실행한다. Python 도구 검증과 전체 게임 게이트 검증을 구분하고 C3-b 이후 통합을 기다린다([D-GATE-2](v8/c1/C1_DECISIONS.md), [ADR0069](decisions/0069-frozen-debug-suite-reuse.md)).
+
 - 2026-11-16 — M3D-SWITCH: 3D 화면이 유일한 월드 화면이 되었다. 2D 월드 레이어15개·셰이더5개를 지우고 UI는 유지했으며, 2D를 재던 게이트 단계(23·34·36·38·39·41·46·48)를 같은 기준의 3D 검사로 옮겼다. 시뮬레이션 무변경, 고디 유지 판정. 지워진 2D 렌더러는 `373ff81b2:scripts/world/` 이력에 있다([ADR0068](decisions/0068-3d-only-view.md)).
 - 2026-11-16 — M3D-ROOF2: 계절 공통 지붕의 삼각형 홈과 방별 중복 지붕, 가려진 주민의 검정 몸 표현을 보완했다. 실제 8장과 전후 비교, 헤드리스 회귀를 확인했다. 시뮬레이션 변경·v8/main 게시와 구분한다 (`docs/decisions/0068-roof-hip-triangulation.md`).
 - 2026-11-16 — M3D-IMG Part T: 지형·건축·도구 재질용 생성 텍스처 브랜치를 분리했다. 게임 게시와 화면/성능 수용은 별도 검증한다(`assets/3d/textures/`, [ADR0068](decisions/0068-generated-material-texture-atlas.md)).

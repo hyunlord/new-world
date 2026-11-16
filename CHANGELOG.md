@@ -51,6 +51,17 @@
 - Existing inspector, card, chapter, technology, building, workshop, recipe and item-list surfaces use optional art with established fallbacks. Portrait selection derives from entity, life stage, sex and wardrobe without simulation RNG or save changes. Images retain aspect, ignore mouse input and use linear filtering; pixel fallback portraits retain nearest filtering.
 - `ItemIcons.ui_texture_of` keeps UI model icons separate from the loose-world `texture_of` path. The existing startup splash uses the selected loading art; no title, animal or yearly-goal panel is added.
 - Real UI screenshots at 1920×1080 and 1280×720 cover eight surfaces each; the current README sheet shows the desktop captures. The planner still owns the next full publication gate and merge; this branch does not claim either.
+## M-GATE-REUSE — 2026-11-16 (implementation branch, not full-gated)
+
+### Added
+- Content-bound complete debug-suite receipts, independent target inventory, and
+  Python rejection tests using historical nested-output log excerpts.
+
+### Changed
+- Full gate step4 may verify a pre-gate receipt from the same frozen inputs;
+  rejected or absent receipts retain the complete debug invocation (D-GATE-2).
+- Debug summaries count final outer target results instead of nested subprocess
+  result lines. Other full-gate requirements remain in force.
 
 ## M3D-SWITCH E2 — the 3D view is the only world view (branch v8/3d, not published)
 

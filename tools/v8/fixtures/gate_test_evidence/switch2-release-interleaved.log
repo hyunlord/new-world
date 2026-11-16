@@ -1,0 +1,19 @@
+    Finished `release` profile [optimized] target(s) in 42m 56s
+     Running unittests src/lib.rs (target/release/deps/sim_core-0382b51bedc88fd9)
+
+running 546 tests
+test causal::event::tests::agent_decision_accessors_and_reasons ... ok
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 545 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 545 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 545 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 545 filtered out; finished in 0.00s
+test colony::content::tests::bootstrap_child ... ok
+
+test result: oktest colony::items::tests::supported_saved_apparel_maps_both_directions_and_rejects_tools ... ok
+. 1 passed; 0 failed; 0 ignored; 0 measured; 545 filtered out; finished in 0.00s
+
+test colony::items::tests::ledger_counts_per_kind_and_codes_are_stable ... ok
+test colony::content::flora_tests::flora_rejects_invalid_schema_members_defaults_and_bands ... ok
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 545 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 545 filtered out; finished in 0.00s
+test result: ok. 546 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
