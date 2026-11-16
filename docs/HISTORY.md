@@ -4,6 +4,7 @@
 - 2026-11-16 — M3D-ROOF2: 계절 공통 지붕의 삼각형 홈과 방별 중복 지붕, 가려진 주민의 검정 몸 표현을 보완했다. 실제 8장과 전후 비교, 헤드리스 회귀를 확인했다. 시뮬레이션 변경·v8/main 게시와 구분한다 (`docs/decisions/0068-roof-hip-triangulation.md`).
 - 2026-11-16 — M3D-IMG Part T: 지형·건축·도구 재질용 생성 텍스처 브랜치를 분리했다. 게임 게시와 화면/성능 수용은 별도 검증한다(`assets/3d/textures/`, [ADR0068](decisions/0068-generated-material-texture-atlas.md)).
 
+- 2026-11-16 — M3D-IMG Part U: 생성322안 중318장·GLB아이콘119종을 기존 UI에 연결하고 두 해상도16화면을 확인했다(`9ea8e0ec6`, [ADR0068](decisions/0068-optional-generated-ui-art.md)); 동물/타이틀 새 패널 없이 planner 통합 대기다. 이전 C2 시트는 `1647f7e81:docs/images/c2_contact_sheet.png`에 보존한다.
 - 2026-11-15 — M3D-ASSETS: 정적572·생물28개 3D 자산과 원본62개 보존, 콘텐츠 인벤토리·건설 미리보기·게임 카메라 비교를 별도 제공한다. 원격 C3 부재와 미연결 건물 콘셉트를 명시하며 렌더러 통합·전체 게임 게시와 구분한다 (`assets/3d/ASSETS.md`, `docs/decisions/0067-content-complete-3d-asset-pack.md`).
 - 2026-11-11 — C2 검토본의 동물 실루엣 스크립트·uid 2파일을 제거하고 별도 아트 라인으로 이월했다. 원본은 `ebb04ee3d:scripts/world/colony/animal_silhouette.gd`에 보존한다. C1 사슬은 일반 명령 준비·현재 적격 대상 재선택·실제 취소 증거 계약으로 재검증하며 미게시다([ADR0064](decisions/0064-scripted-chain-preparation.md)).
 - 2026-11-08 — C1-a 원산지·신석기 지식82개·물리 조리법·곡식 창고/우리/훈제집/화덕집을 통합했다. 실제 format19→20 저장 재개, 신규 focused 검사와 한·영 화면 검증을 수행했다. 가축 사슬은 C1-b 대기이며 고정 SHA 전체 게이트·게시는 아직 대기다([보고](v8/c1/C1_REPORT.md), [ADR0062](decisions/0062-neolithic-origins-and-livestock.md)). 이전 M-SPINE 화면은 d30dbfc5b Git 이력에 보존하고 현재 시트를 교체했다.

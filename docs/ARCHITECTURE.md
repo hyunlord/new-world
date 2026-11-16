@@ -322,7 +322,7 @@ The full procedure with code skeletons is `.claude/skills/worldsim-architecture/
 | `scripts/ui/hud/` | `hud_topbar.gd`, `order_bar.gd` (F1–F5 buttons and the order toast) |
 | `scripts/ui/panels/` | `task_plaque.gd` (annual goal and current task), `current_activity_text.gd` (pure snapshot classification), `chronicle_panel.gd`, `agent_inspector_panel.gd`, `causal_panel.gd` (explicit why actions only; compact anchored scroll panel), `item_panel.gd` (item inspector with why action), `priority_panel.gd` (work priorities and explicit player-selected role presets), `workshop_panel.gd` (M2 bills of the selected workshop), `room_panel.gd` (M3: a room's role dropdown → `cmd_set_room_role`, tiles, beds, doors, covered items; made by `order_bar.gd`), `art_ui.gd` (shared panel style) |
 | `scripts/ui/mux/` | HUD, settings, alerts, goals, help and learning panels; `controls_catalog.gd` shares the README registry; `korean_text.gd` adds display-only word joiners without changing raw Locale strings |
-| `scripts/ui/` | text helpers shared by panels (`chronicle_text.gd`, `person_names.gd`, `person_read_cache.gd`) |
+| `scripts/ui/` | text helpers shared by panels (`chronicle_text.gd`, `person_names.gd`, `person_read_cache.gd`); optional UI art cache and portrait selection (`generated_art.gd`), UI-only item render seam (`item_icons.gd::ui_texture_of`) |
 
 Every `.gd` starts with a comment block: purpose and the bridge methods it
 calls. UI text goes through `Locale.ltr("KEY")`; keys live in
@@ -583,6 +583,8 @@ bridge ffi/neighbours.rs (get_neighbours, get_wave, get_caravan, cmd_accept_migr
   `colony_story.rs`, `colony_wildlife.rs`, `colony_hides.rs`, `colony_mood.rs`.
 
 ## 14. Art data and the former 2D renderer (M-ART2, ADR 0033–0034; 2D deleted in M3D-SWITCH E2)
+
+Part U (`v8/art-ui`, implemented; planner integration pending; [ADR 0068](decisions/0068-optional-generated-ui-art.md)) adds optional images under `assets/ui/generated/`. `scripts/ui/generated_art.gd` resolves family/canonical-id WebP assets, caches texture lookups and returns null for missing assets. Its pure portrait selector checks immutable snapshot column types and lengths, then derives a stable variant from entity bits, life stage, sex and era wardrobe. Existing panels retain their established text/icons when an image is absent. `scripts/ui/item_icons.gd::ui_texture_of` supplies model-rendered icons only to UI consumers; the shared loose-world `texture_of` path is unchanged. No bridge method, simulation rule, numeric content value or save field is added. The adopted set contains 318 generated images plus 119 model-rendered icons; 13 generated images without an existing surface remain in external data, leaving 305 generated runtime images. The existing Godot startup splash uses the selected loading PNG, while UI textures use WebP. Alternate options, rejected attempts and raw evidence remain external in `/Users/rexxa/work/art-img-data/ui/`; the planner's publication gate remains separate.
 
 M-ART2 drew the colony in 2D at 64-px tiles; M3D-SWITCH E2 deleted that renderer (ground chunks, wall strips, sprite
 layers, LOD markers, daylight CanvasModulate and their shaders). The world is drawn by the 3D view (section "3D view").

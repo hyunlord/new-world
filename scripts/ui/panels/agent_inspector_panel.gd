@@ -1,3 +1,4 @@
+# Part U: get_tech supplies era metadata for optional painted portraits (cached through SimReads).
 # agent_inspector_panel.gd (UI/AgentInspectorPanel in scenes/main.tscn): selected-person panel with live needs,
 #   activity, porter trip, temperament, family links and life chronicle; shows dead people as records.
 # V7 Phase 14-γ — Agent click inspector panel.
@@ -37,6 +38,8 @@
 #   with "→ 왜?" when it has a cause; a click opens the chain (UI/ChroniclePanel open_why → UI/WhyPanel).
 # M5.5 (goal §9): under the draft line, "도망 중: 늑대" while the person flees (get_agent_m5 `fleeing`).
 extends Control
+
+const GeneratedArt = preload("res://scripts/ui/generated_art.gd")
 
 const KoreanText = preload("res://scripts/ui/mux/korean_text.gd")
 
@@ -247,8 +250,9 @@ func _ready() -> void:
 	_portrait = TextureRect.new()
 	_portrait.name = "Portrait"
 	_portrait.custom_minimum_size = Vector2(128, 128)
-	_portrait.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
-	_portrait.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_portrait.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	portrait_box.add_child(_portrait)
 	_portrait_box = portrait_box
 	_look_label = _make_label("")
@@ -945,7 +949,10 @@ func _update_portrait(_agent_id: int) -> void:
 		return
 	var variant: int = int(look.get("variant", 0))
 	var path: String = ArtData.portrait_path(str(look.get("frames", "")), "v%d" % (variant + 1))
-	_portrait.texture = ArtData.texture_at(path)
+	var generated: Texture2D = GeneratedArt.texture("portraits", GeneratedArt.portrait_id(
+		SimReads.read(_world_sim, "get_agent_snapshot"), _selected_entity_bits, SimReads.read(_world_sim, "get_tech")))
+	_portrait.texture = generated if generated != null else ArtData.texture_at(path)
+	_portrait.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR if generated != null else CanvasItem.TEXTURE_FILTER_NEAREST
 	var row: Dictionary = ArtData.look(int(look.get("look", -1)))
 	var top: String = _loc("LOOK_TOP_" + str(row.get("top", "")).to_upper())
 	var hair: String = _loc("LOOK_HAIR_" + str(row.get("hair", "")).to_upper())
