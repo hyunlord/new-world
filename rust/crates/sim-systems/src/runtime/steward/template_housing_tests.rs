@@ -479,3 +479,39 @@ fn call_local_template_geometry_matches_original_expansion_and_door_order() {
         }
     }
 }
+
+#[test]
+fn template_door_must_open_onto_reachable_ground() {
+    let (mut engine, _, _, anchor) = fixture();
+    supply(&mut engine, ItemKind::Log, 200);
+    let preview = |engine: &sim_engine::SimEngine| {
+        crate::runtime::building_templates::commands::preview(
+            &engine.world,
+            &engine.resources,
+            "log_house",
+            anchor,
+            0,
+            None,
+        )
+    };
+    let plan = preview(&engine).expect("clear log house");
+    let pieces: BTreeSet<_> = plan
+        .iter()
+        .map(|p| (anchor.0 + p.offset.0, anchor.1 + p.offset.1))
+        .collect();
+    let door = plan
+        .iter()
+        .find(|p| p.kind.definition().planned_nav == sim_core::colony::content::PlannedNav::Door)
+        .expect("door");
+    let (x, y) = (anchor.0 + door.offset.0, anchor.1 + door.offset.1);
+    for tile in [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)] {
+        if !pieces.contains(&tile) {
+            let i = engine.resources.tile_grid.idx(tile.0, tile.1);
+            engine.resources.tile_grid.terrain_type[i] = sim_core::TerrainType::Mountain;
+        }
+    }
+    assert_eq!(
+        preview(&engine).err(),
+        Some(sim_core::colony::RejectReason::Blocked)
+    );
+}

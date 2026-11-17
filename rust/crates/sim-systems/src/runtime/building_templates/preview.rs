@@ -96,6 +96,28 @@ pub(super) fn prepare(
             crate::commands::check_blueprint(res, piece.kind, tile.0, tile.1)?;
         }
     }
+    // A door must open onto ground people can reach, or its builders and users are walled out.
+    let inside =
+        |tile: Tile| tile.0 >= anchor.0 && tile.0 < right && tile.1 >= anchor.1 && tile.1 < bottom;
+    for piece in &plan {
+        if piece.kind.definition().planned_nav != sim_core::colony::content::PlannedNav::Door {
+            continue;
+        }
+        let (x, y) = (anchor.0 + piece.offset.0, anchor.1 + piece.offset.1);
+        let outside = [
+            x.checked_sub(1).map(|x| (x, y)),
+            Some((x + 1, y)),
+            y.checked_sub(1).map(|y| (x, y)),
+            Some((x, y + 1)),
+        ];
+        if !outside.into_iter().flatten().any(|tile| {
+            !inside(tile)
+                && crate::runtime::nav::passable(res, tile)
+                && crate::commands::camp_reaches(res, tile)
+        }) {
+            return Err(RejectReason::Blocked);
+        }
+    }
     Ok(BuildPlan {
         plan,
         footprint,
