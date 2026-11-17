@@ -11,7 +11,8 @@
 #   MultiMesh per model, else procedural posts and two rails; other openings are doors: two
 #   posts and a lintel in the wall, and a door leaf (model `door`) that swings open while a person stands on it and is cut down with the walls. A
 #   finished hut (2D building binding with a `ring`) gets its ring of walls and its door from that binding. Floors are
-#   thin slabs in the floor material, or the model of bindings3d `floors.by_material` (the C3 paved road's flagstones). Roofs: each roofed room (get_rooms, not dug) gets one gabled (rectangular) or hipped (irregular) roof, a height field
+#   thin slabs or bindings3d floor models (including paved flagstones). Roofed rooms in one template building share
+#   a gabled (rectangular) or hipped (irregular) roof, a height field
 #   over half-metre cells that rises from the wall line at `structures.roof_pitch_deg` (capped at
 #   `structures.roof_max_rise`) with a one-cell overhang that stops short of any other room, so no roof passes
 #   through another; the cover (thatch, bark, plank:
@@ -55,6 +56,8 @@ var _walls: Dictionary = {}
 var _chunks: Dictionary = {}
 var _roofs: Dictionary = {}
 var _roof_fade: Dictionary = {}
+## Room id → shared building roof id, preserving room inspection/cutaway.
+var _room_roof: Dictionary = {}
 var _room_rects: Dictionary = {}
 ## Room id → wall-top height (the plane a click on that roof resolves at).
 var _roof_top: Dictionary = {}
@@ -563,6 +566,7 @@ func _rebuild_roofs(rooms: Dictionary, sites: Array) -> void:
 	for k: Variant in _roofs.keys():
 		(_roofs[k] as Node).queue_free()
 	_roofs.clear()
+	_room_roof.clear()
 	_room_rects.clear()
 	_roof_top.clear()
 	_tile_room.clear()
@@ -586,6 +590,34 @@ func _rebuild_roofs(rooms: Dictionary, sites: Array) -> void:
 		if i >= roofed.size() or roofed[i] != 1 or (i < dug.size() and dug[i] == 1) or not tiles_of.has(rid):
 			continue
 		roofed_ids.append(rid)
+	# Rooms enclosed by the same template belong to one building, including their partition walls.
+	for site: Dictionary in sites:
+		if str(site.get("status", "")) == "cancelled":
+			continue
+		var area: Rect2i = Rect2i(int(site.get("x", 0)), int(site.get("y", 0)), int(site.get("width", 0)), int(site.get("height", 0)))
+		var members: Array[int] = []
+		for rid: int in roofed_ids:
+			var inside: bool = true
+			for tile: Vector2i in tiles_of[rid]:
+				inside = inside and area.has_point(tile)
+			if inside:
+				members.append(rid)
+		if members.size() < 2:
+			continue
+		var owner: int = members[0]
+		var joined: Dictionary = {}
+		for rid: int in members:
+			_room_roof[rid] = owner
+			for tile: Vector2i in tiles_of[rid]:
+				joined[tile] = true
+			if rid != owner:
+				roofed_ids.erase(rid)
+		# Fill only internal partitions; exterior notches remain outside the footprint.
+		for tile: Variant in _walls:
+			if tile is Vector2i and area.has_point(tile) and ((joined.has(tile + Vector2i.LEFT) and joined.has(tile + Vector2i.RIGHT)) or (joined.has(tile + Vector2i.UP) and joined.has(tile + Vector2i.DOWN))):
+				joined[tile] = true
+		tiles_of[owner] = joined.keys()
+	for rid: int in roofed_ids:
 		for c: Vector2i in footprint_cells(tiles_of[rid]):
 			claimed[c] = rid
 	for id: int in roofed_ids:
@@ -752,7 +784,8 @@ func _roof_mesh(tiles: Array, room_id: int, claimed: Dictionary, mat: Material) 
 		var v10: Vector3 = p.call(c + Vector2i(1, 0))
 		var v01: Vector3 = p.call(c + Vector2i(0, 1))
 		var v11: Vector3 = p.call(c + Vector2i(1, 1))
-		var tris: Array = [[v00, v10, v11], [v00, v11, v01]] if absf(v00.y - v11.y) <= absf(v10.y - v01.y) else [[v00, v10, v01], [v10, v11, v01]]
+		# Split along the raised hip edge; the opposite diagonal cuts a notch into every lattice square.
+		var tris: Array = [[v00, v10, v11], [v00, v11, v01]] if v00.y + v11.y >= v10.y + v01.y else [[v00, v10, v01], [v10, v11, v01]]
 		for tr: Array in tris:
 			var n: Vector3 = ((tr[2] as Vector3) - (tr[0] as Vector3)).cross((tr[1] as Vector3) - (tr[0] as Vector3))
 			# Planks and shingles run down the slope: along x for a north/south slope, along z otherwise.
@@ -984,6 +1017,8 @@ func _update_cutaway(delta: float) -> void:
 	var speed: float = delta / maxf(0.01, float(Data3D.param("structures.cutaway_seconds", 0.25)))
 	var all_cut: bool = global_cut()
 	var selected: Dictionary = _selected_rooms()
+	for room: int in selected.keys():
+		selected[int(_room_roof.get(room, room))] = true
 	var low: float = float(Data3D.param("structures.cutaway_wall_height", 0.9))
 	for id: int in _roofs:
 		var target: float = 0.0 if all_cut or selected.has(id) else 1.0
@@ -1035,7 +1070,7 @@ func roof_count() -> int:
 
 
 func roof_fade(id: int) -> float:
-	return float(_roof_fade.get(id, 1.0))
+	return float(_roof_fade.get(int(_room_roof.get(id, id)), 1.0))
 
 
 func wall_tile_count() -> int:

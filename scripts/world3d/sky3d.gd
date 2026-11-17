@@ -93,11 +93,12 @@ func _ready() -> void:
 ## Small RGB LUT: blue-grey pigment shadows and warm paper highlights, matching look1/TARGET.png.
 static func make_grade_slices() -> Array[Image]:
 	var slices: Array[Image] = []
-	for b: int in 16:
-		var slice: Image = Image.create(16, 16, false, Image.FORMAT_RGB8)
-		for g: int in 16:
-			for r: int in 16:
-				var c: Vector3 = Vector3(r, g, b) / 15.0
+	for b: int in 32:
+		var slice: Image = Image.create(32, 32, false, Image.FORMAT_RGB8)
+		for g: int in 32:
+			for r: int in 32:
+				# Godot samples normalized coordinates directly; bake each texel's centre.
+				var c: Vector3 = (Vector3(r, g, b) + Vector3.ONE * 0.5) / 32.0
 				var value: float = c.dot(Vector3(0.2126, 0.7152, 0.0722))
 				var shadow: float = (1.0 - value) * (1.0 - value)
 				var highlight: float = value * value
@@ -109,7 +110,7 @@ static func make_grade_slices() -> Array[Image]:
 
 static func make_grade_lut() -> ImageTexture3D:
 	var lut: ImageTexture3D = ImageTexture3D.new()
-	var error: Error = lut.create(Image.FORMAT_RGB8, 16, 16, 16, false, make_grade_slices())
+	var error: Error = lut.create(Image.FORMAT_RGB8, 32, 32, 32, false, make_grade_slices())
 	if error != OK:
 		push_error("sky3d: cannot create painterly colour grade: %s" % error_string(error))
 	return lut

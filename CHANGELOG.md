@@ -15,7 +15,7 @@
 ## M3D-LOOK L1 — 2026-11-17 (review branch; validation in progress)
 
 ### Added
-- Shared painterly lighting, AgX/sky ambient with a 16³ grade LUT, rooted plant wind,
+- Shared painterly lighting, AgX/sky ambient with a 32³ texel-centred grade LUT, rooted plant wind,
   snapshot-local grass/flowers and zoom fade. Focused terrain/material/vegetation checks.
 - Four generated art-direction targets; prompts and comparison evidence are external in
   `/Users/rexxa/work/art-img-data/look1/`.
@@ -92,6 +92,17 @@
   with the existing palette tint. Simulation and the crowd/VAT path are outside this pass.
 - Part T is delivered on `v8/art-tex` for planner integration; windowed capture and
   FPS acceptance remain conditional on the shared GPU gate.
+## M3D-ROOF2 — 2026-11-16
+
+### Changed
+- Roof lattice triangles follow the raised hip diagonal, eliminating repeated triangular notches in the shared summer/winter mesh.
+- Occluded textured people retain their painted atlas instead of a black body silhouette beside a visible grey head (`vat_xray.gdshader`, `vat3d.gd`).
+- Roofed rooms within one template building share a roof and cutaway ownership instead of drawing separate intersecting roofs (`structures3d.gd`).
+
+### Added
+- Current eight-shot ROOF2 contact sheet replaces the previous C2 sheet; its historical README link points to the base commit.
+- Headless wardrobe atlas and findability material coverage (`people_material_test.gd`).
+- Headless actual-mesh roof regression coverage for long and compound footprints, building ownership and season-invariant geometry (`roof_geometry_test.gd`).
 
 ## M3D-SWITCH E2 — the 3D view is the only world view (branch v8/3d, not published)
 

@@ -27,7 +27,7 @@ func _run() -> void:
 	_check("ambient_source_preserved", environment.ambient_light_source == Environment.AMBIENT_SOURCE_SKY and is_equal_approx(environment.ambient_light_sky_contribution, 0.65))
 	_check("painterly_agx_preserved", environment.tonemap_mode == Environment.TONE_MAPPER_AGX)
 	var grade: Texture = environment.adjustment_color_correction
-	_check("painterly_lut_preserved", environment.adjustment_enabled and grade is ImageTexture3D and (grade as ImageTexture3D).get_width() == 16 and (grade as ImageTexture3D).get_height() == 16 and (grade as ImageTexture3D).get_depth() == 16)
+	_check("painterly_lut_preserved", environment.adjustment_enabled and grade is ImageTexture3D and (grade as ImageTexture3D).get_width() == 32 and (grade as ImageTexture3D).get_height() == 32 and (grade as ImageTexture3D).get_depth() == 32)
 	_check("missing_sky_fallback", sky.call("_create_painted_sky", {}) == null)
 	if material != null:
 		_check("sky_longitude_wrap_continuous", material.shader.code.contains("abs(SKY_COORDS.x * 2.0 - 1.0)"))

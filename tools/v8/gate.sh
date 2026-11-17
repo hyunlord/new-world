@@ -62,7 +62,8 @@
 #                        terrain chunk determinism and pinned hash, the live chunk current, a dig rebuilds one chunk,
 #                        the data-only wall drawn by the 3D walls; people model by sex/stage, appearance, scale, clip;
 #                        tree seasons per species, bare winter, data-only species, every tree drawn; and
-#                        tools/v8/w3d_labels_test.gd (the 3D map labels' texts = the deleted 2D layers' for a seeded state)
+#                        tools/v8/w3d_labels_test.gd (seeded map labels), roof_geometry_test.gd (hip triangles,
+#                        season parity, shared building roofs), people_material_test.gd (wardrobe VAT/atlas passes)
 #   35 steward           two seeds × 24 days ON: deterministic, ledger/reservations exact, no panics
 #   36 data_only_ext     seven-family selected-pack simulation and headless real-scene UI (M-UX B3)
 #   37 mux2_defence      defence/replay/flight/fuel plus genuine format10 migration
@@ -253,9 +254,9 @@ grep -E '^NEIGHBOURS' "$LOG/neighbours.log" | sed 's/^/   /' >> "$SUMMARY"
 step 31 art_manifest python3 tools/v8/art_import.py --verify
 step 32 resolver_parity bash -c 'bash tools/v8/run_bounded.sh 300 "$GODOT_BIN" --headless --path . --script res://tools/v8/resolver_parity.gd -- "$0/resolver_godot.json" && python3 tools/v8/resolver_parity.py --check "$0/resolver_godot.json"' "$LOG"
 step 33 extensibility_grep python3 -m unittest tools/v8/test_mart2_extensibility.py tools/v8/test_art_masks.py tools/v8/test_art_import.py
-step 34 w3d_render bash -c 'for t in w3d_render w3d_labels; do bash tools/v8/run_bounded.sh 600 "$GODOT_BIN" --headless --path . --script res://tools/v8/${t}_test.gd > "$0/$t.out" 2>&1; grep -E "^W3D_(RENDER|LABELS) .*(PASS|FAIL)|^W3D_(RENDER|LABELS)_DONE" "$0/$t.out"; grep -qE "^W3D_(RENDER|LABELS)_DONE failures=0 " "$0/$t.out" || exit 1; ! grep -q "SCRIPT ERROR" "$0/$t.out" || { grep "SCRIPT ERROR" "$0/$t.out" | head -5; exit 1; }; done' "$LOG"
+step 34 w3d_render bash -c 'for t in w3d_render w3d_labels roof_geometry people_material; do bash tools/v8/run_bounded.sh 600 "$GODOT_BIN" --headless --path . --script res://tools/v8/${t}_test.gd > "$0/$t.out" 2>&1; grep -E "^W3D_(RENDER|LABELS|ROOF|PEOPLE_MATERIAL) .*(PASS|FAIL)|^W3D_(RENDER|LABELS|ROOF|PEOPLE_MATERIAL)_DONE" "$0/$t.out"; grep -qE "^W3D_(RENDER|LABELS|ROOF|PEOPLE_MATERIAL)_DONE failures=0 " "$0/$t.out" || exit 1; ! grep -q "SCRIPT ERROR" "$0/$t.out" || { grep "SCRIPT ERROR" "$0/$t.out" | head -5; exit 1; }; done' "$LOG"
 grep -E 'PASS|FAIL' "$LOG/resolver_parity.log" | tail -1 | sed 's/^/   /' >> "$SUMMARY"
-grep -cE '^W3D_(RENDER (GROUND|PEOPLE|TREES)|LABELS) PASS' "$LOG/w3d_render.log" | awk '{print "   w3d_render checks passed", $1}' >> "$SUMMARY"
+grep -cE '^W3D_(RENDER (GROUND|PEOPLE|TREES)|LABELS|ROOF|PEOPLE_MATERIAL) .*PASS' "$LOG/w3d_render.log" | awk '{print "   w3d_render checks passed", $1}' >> "$SUMMARY"
 step 35 steward bash tools/v8/mux_steward.sh "$LOG/steward"
 step 36 data_only_ext bash tools/v8/data_only_ext.sh "$LOG/data_only_ext"
 # M-CORE compile checks precede the serialized GPU lane.

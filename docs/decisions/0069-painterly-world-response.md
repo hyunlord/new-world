@@ -45,3 +45,7 @@ claims require gated captures. The planner owns main integration and the full pu
 `/Users/rexxa/work/art-img-data/look1/TARGET.png`, `manifest.json`, `PLAN.md`, `REPORT.md`.
 https://docs.godotengine.org/en/4.6/classes/class_environment.html and
 https://docs.godotengine.org/en/4.6/tutorials/shaders/shader_reference/spatial_shader.html.
+
+### Sampling correction — 2026-11-17
+
+The initial16³ endpoint bake introduced extra contrast because Godot4.6 samples LUT coordinates directly. Use32³ texel-centre samples instead. Production-slice trilinear tests fail on the initial bake and preserve the intended midtone ramp and night signal after correction. Source: `tools/v8/look1_material_test.gd`; Godot4.6 `servers/rendering/renderer_rd/shaders/effects/tonemap.glsl`.

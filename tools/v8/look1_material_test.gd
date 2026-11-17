@@ -1,6 +1,6 @@
 # look1_material_test.gd — CPU checks for the L1 consumer material adapter and colour-grade cube.
 # Purpose: preserve authored material paths and source meshes while sharing painterly shading; check a bounded,
-# monotone 16-cube LUT. Run headless; LOOK1_MATERIAL_TEST_DONE reports all failures and exit status is nonzero on failure.
+# monotone 32-cube LUT. Run headless; LOOK1_MATERIAL_TEST_DONE reports all failures and exit status is nonzero on failure.
 # Bridge methods called: none.
 extends SceneTree
 
@@ -127,18 +127,19 @@ func _meshes() -> void:
 func _grade() -> void:
 	# Given the production LUT; when sampled on every authored lattice point, its range and ordering stay valid.
 	var lut: Texture3D = Sky3D.make_grade_lut()
-	_check("grade_dimensions", lut.get_width() == 16 and lut.get_height() == 16 and lut.get_depth() == 16)
+	_check("grade_dimensions", lut.get_width() == 32 and lut.get_height() == 32 and lut.get_depth() == 32)
 	# The dummy renderer cannot read GPU storage; use the exact production upload slices headlessly.
 	var slices: Array[Image] = Sky3D.make_grade_slices() if DisplayServer.get_name() == "headless" else lut.get_data()
-	_check("grade_slices", slices.size() == 16)
-	if slices.size() != 16:
+	_check("grade_slices", slices.size() == 32)
+	if slices.size() != 32:
 		return
+	_sampled_grade(slices)
 	var finite: bool = true
 	var monotone: bool = true
 	var coloured: bool = false
-	for b: int in 16:
-		for g: int in 16:
-			for r: int in 16:
+	for b: int in 32:
+		for g: int in 32:
+			for r: int in 32:
 				var value: Color = slices[b].get_pixel(r, g)
 				for channel: int in 3:
 					finite = finite and is_finite(value[channel]) and value[channel] >= 0.0 and value[channel] <= 1.0
@@ -148,12 +149,51 @@ func _grade() -> void:
 					monotone = monotone and value.g + 0.00001 >= slices[b].get_pixel(r, g - 1).g
 				if b > 0:
 					monotone = monotone and value.b + 0.00001 >= slices[b - 1].get_pixel(r, g).b
-				if r >= 4 and r <= 11 and g >= 4 and g <= 11 and b >= 4 and b <= 11 and r != g:
-					coloured = coloured or absf(value.r - float(r) / 15.0) + absf(value.g - float(g) / 15.0) + absf(value.b - float(b) / 15.0) > 0.01
+				if r >= 8 and r <= 23 and g >= 8 and g <= 23 and b >= 8 and b <= 23 and r != g:
+					coloured = coloured or absf(value.r - (float(r) + 0.5) / 32.0) + absf(value.g - (float(g) + 0.5) / 32.0) + absf(value.b - (float(b) + 0.5) / 32.0) > 0.01
 	var black: Color = slices[0].get_pixel(0, 0)
-	var white: Color = slices[15].get_pixel(15, 15)
+	var white: Color = slices[31].get_pixel(31, 31)
 	_check("grade_finite_range", finite)
 	_check("grade_monotone_channels", monotone)
 	_check("grade_restrained_endpoints", maxf(black.r, maxf(black.g, black.b)) <= 0.08
 		and minf(white.r, minf(white.g, white.b)) >= 0.85)
 	_check("grade_coloured_midtones", coloured)
+
+
+## GPU normalized linear sampling: texel centres are (i + 0.5) / size, with edge clamping.
+func _sample_grade(slices: Array[Image], input: Color) -> Color:
+	var size: int = slices.size()
+	var position: Vector3 = Vector3(input.r, input.g, input.b) * size - Vector3.ONE * 0.5
+	var lower: Vector3i = Vector3i(position.floor())
+	var blend: Vector3 = position - position.floor()
+	var result: Color = Color(0.0, 0.0, 0.0, 0.0)
+	for b: int in 2:
+		for g: int in 2:
+			for r: int in 2:
+				var weight: float = (blend.x if r == 1 else 1.0 - blend.x) * (blend.y if g == 1 else 1.0 - blend.y) * (blend.z if b == 1 else 1.0 - blend.z)
+				result += slices[clampi(lower.z + b, 0, size - 1)].get_pixel(clampi(lower.x + r, 0, size - 1), clampi(lower.y + g, 0, size - 1)) * weight
+	return result
+
+
+func _sampled_grade(slices: Array[Image]) -> void:
+	# Given the restrained grade's neutral-ramp target colours, including visible night values.
+	var inputs: Array[float] = [0.1, 0.2, 0.8, 0.9]
+	var expected: Array[Color] = [Color(0.10144, 0.10298, 0.10767), Color(0.19936, 0.20032, 0.20348),
+		Color(0.79696, 0.79192, 0.78128), Color(0.89824, 0.89178, 0.87807)]
+	var ramp_ok: bool = true
+	var tolerance: float = 2.0 / 255.0
+	# When the renderer samples normalized input directly, then the LUT must not expand the contrast range.
+	for i: int in inputs.size():
+		var sampled: Color = _sample_grade(slices, Color(inputs[i], inputs[i], inputs[i]))
+		for channel: int in 3:
+			ramp_ok = ramp_ok and absf(sampled[channel] - expected[i][channel]) <= tolerance
+		print("LOOK1_LUT_SAMPLE input=%.2f sampled=%s expected=%s" % [inputs[i], sampled, expected[i]])
+	_check("grade_normalized_midtone_ramp", ramp_ok)
+	var night_dark: Color = _sample_grade(slices, Color(0.02, 0.02, 0.02))
+	var night_light: Color = _sample_grade(slices, Color(0.04, 0.04, 0.04))
+	var signal_delta: Color = night_light - night_dark
+	var night_ok: bool = true
+	for channel: int in 3:
+		night_ok = night_ok and absf(signal_delta[channel] - 0.02) <= tolerance
+	print("LOOK1_LUT_NIGHT dark=%s light=%s signal=%s" % [night_dark, night_light, signal_delta])
+	_check("grade_normalized_night_signal", night_ok)
