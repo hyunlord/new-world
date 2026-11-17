@@ -41,6 +41,9 @@ var _craise: PackedFloat32Array = PackedFloat32Array()
 ## Raise of each tile above the base (plateaus +, water beds -).
 var _raise: PackedFloat32Array = PackedFloat32Array()
 var _colour: PackedColorArray = PackedColorArray()
+var _texture_tiles: PackedByteArray = PackedByteArray()
+var _texture_weights: PackedByteArray = PackedByteArray()
+var _texture_map: ImageTexture
 var _dug: Dictionary = {}
 var _floor: Dictionary = {}
 var _ford: Dictionary = {}
@@ -67,6 +70,7 @@ func setup(world_sim: Node) -> void:
 func _ready() -> void:
 	material = ShaderMaterial.new()
 	material.shader = TERRAIN_SHADER
+	preload("res://scripts/world3d/textures3d.gd").setup(material)
 	material.set_shader_parameter("cliff_colour", Data3D.colour(Data3D.param("terrain.cliff_colour", []), Color(0.43, 0.39, 0.34)))
 	water_material = ShaderMaterial.new()
 	water_material.shader = WATER_SHADER
@@ -248,10 +252,12 @@ func _poll_space() -> void:
 		_compute_clearing()
 		_compute_tiles()
 		if old_raise.size() != _raise.size():
+			_update_texture_map()
 			return
 		for i: int in _raise.size():
 			if old_raise[i] != _raise[i] or old_colour[i] != _colour[i]:
 				changed[i] = true
+	_update_texture_map()
 	for i: int in changed:
 		var tile: Vector2i = Vector2i(i % width, int(float(i) / float(width)))
 		# A step changes the skirts of the neighbouring chunk too.
@@ -327,6 +333,8 @@ func _compute_tiles() -> void:
 	var n: int = width * height
 	_raise.resize(n)
 	_colour.resize(n)
+	_texture_tiles.resize(n)
+	_texture_weights.resize(n)
 	var raises: Dictionary = Data3D.param("terrain.raise", {})
 	var water_codes: Array = Data3D.param("terrain.water_codes", [4])
 	var bed: float = float(Data3D.param("terrain.water_bed", -0.55))
@@ -395,6 +403,33 @@ func _compute_tile(i: int, raises: Dictionary, water_codes: Array, colours: Dict
 		c = c.lerp(clearing_c, float(_clearing[t]))
 	var v: float = 1.0 + (View.value_noise(seed, t.x, t.y, noise_scale, 5) - 0.5) * 2.0 * noise_tint
 	_colour[i] = Color(c.r * v, c.g * v, c.b * v)
+	var textures = preload("res://scripts/world3d/textures3d.gd")
+	var tile: int = textures.index("terrain", str(code), 0)
+	var blend: float = 0.0
+	var special: String = "ford" if _ford.has(t) else ("dug" if _dug.has(t) else ("field" if _field.has(t) else ("clearing" if _floor.has(t) else "")))
+	if special != "":
+		tile = textures.index("terrain_special", special, tile)
+		blend = 1.0 if special == "clearing" else 0.0
+	if special == "" and _clearing.has(t) and r == 0.0:
+		blend = float(_clearing[t])
+	_texture_tiles[i] = tile
+	# The second channel keeps the existing clearing's continuous weight.
+	_texture_weights[i] = roundi(blend * 255.0)
+
+
+func _update_texture_map() -> void:
+	var pixels: PackedByteArray = PackedByteArray()
+	pixels.resize(width * height * 3)
+	for i: int in _texture_tiles.size():
+		pixels[i * 3] = _texture_tiles[i]
+		pixels[i * 3 + 1] = _texture_weights[i]
+		pixels[i * 3 + 2] = 0
+	var image: Image = Image.create_from_data(width, height, false, Image.FORMAT_RGB8, pixels)
+	if _texture_map == null or _texture_map.get_width() != width or _texture_map.get_height() != height:
+		_texture_map = ImageTexture.create_from_image(image)
+		material.set_shader_parameter("biome_tex", _texture_map)
+	else:
+		_texture_map.update(image)
 
 
 ## Per-corner water dip: a corner sinks by the bed depth times the share of its four tiles that are water (a ford

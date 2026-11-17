@@ -84,6 +84,16 @@
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT"
+# Step 21 (tools/play.sh) creates and moves worktrees under PLAY_ROOT; never let it default to the owner's play checkouts.
+if [[ -z "${PLAY_ROOT:-}" ]]; then
+    echo "gate: PLAY_ROOT is not set; export a gate-owned PLAY_ROOT (and PLAY_DATA) before running the gate" >&2
+    exit 2
+fi
+play_root_resolved="$(cd "$PLAY_ROOT" 2> /dev/null && pwd -P || echo "$PLAY_ROOT")"
+if [[ "$play_root_resolved" == /Users/rexxa/work/new-world-pla[y]* ]]; then
+    echo "gate: PLAY_ROOT $PLAY_ROOT resolves to the owner's play checkouts ($play_root_resolved); use a gate-owned directory" >&2
+    exit 2
+fi
 # Hold the lane before any build, import, test, profiler or Godot process starts.
 # The launcher passes its locked descriptor through bash; nested captures reuse it.
 if [[ -z "${WORLDSIM_MUX2_LANE_FD:-}" ]]; then
@@ -130,11 +140,41 @@ step() {
     fi
     return "$code"
 }
+debug_step() {
+    local receipt="${GATE_DEBUG_RECEIPT:-}" reused before_ready=0 start code
+    # D-GATE-2: only a full gate consumes a complete frozen-input debug receipt.
+    if [[ "${C1_PREGATE_ONLY:-0}" != 1 && -n "$receipt" ]]; then
+        start=$(date +%s)
+        if reused=$(python3 tools/v8/gate_test_evidence.py verify --root "$ROOT" --receipt "$receipt" 2> "$LOG/test_debug.reuse.log"); then
+            printf '%s\n' "$reused" > "$LOG/test_debug.log"
+            printf '%2s %-18s exit %3s  %5ss  started %s\n' 4 test_debug 0 "$(( $(date +%s) - start ))" "$(date -r "$start" '+%H:%M:%S')" >> "$SUMMARY"
+            printf '%s\n' "$reused" >> "$SUMMARY"
+            return 0
+        fi
+        echo "   test_debug receipt rejected; running complete step 4 (test_debug.reuse.log)" >> "$SUMMARY"
+    fi
+    if [[ "${C1_PREGATE_ONLY:-0}" == 1 ]]; then
+        if python3 tools/v8/gate_test_evidence.py snapshot --root "$ROOT" --out "$LOG/test_debug.inputs.json" > "$LOG/test_debug.receipt.log" 2>&1; then
+            before_ready=1
+        else
+            echo "   test_debug receipt unavailable; full gate must rerun step 4" >> "$SUMMARY"
+        fi
+    fi
+    start=$(date +%s)
+    step 4 test_debug bash -c 'cd rust && cargo test --workspace --no-fail-fast -- --test-threads=8'
+    code=$?
+    if [[ "${C1_PREGATE_ONLY:-0}" == 1 && "$before_ready" == 1 && "$code" == 0 ]]; then
+        if ! python3 tools/v8/gate_test_evidence.py create --root "$ROOT" --before "$LOG/test_debug.inputs.json" --log "$LOG/test_debug.log" --receipt "$LOG/test_debug.receipt.json" --exit-code "$code" --wall-seconds "$(( $(date +%s) - start ))" >> "$LOG/test_debug.receipt.log" 2>&1; then
+            echo "   test_debug receipt unavailable; full gate must rerun step 4" >> "$SUMMARY"
+        fi
+    fi
+    python3 tools/v8/gate_test_evidence.py summary --log "$LOG/test_debug.log" >> "$SUMMARY" 2>> "$LOG/test_debug.receipt.log" || echo "   test_debug structured summary unavailable" >> "$SUMMARY"
+    return "$code"
+}
 step 1 fmt bash -c 'cd rust && cargo fmt --all -- --check'
 step 2 bridge_build bash -c 'cd rust && cargo build -p sim-bridge'
 step 3 godot_import bash -c 'bash tools/v8/run_bounded.sh 600 "$GODOT_BIN" --headless --path . --import --editor --quit; bash tools/v8/run_bounded.sh 600 "$GODOT_BIN" --headless --path . --import --editor --quit'
-step 4 test_debug bash -c 'cd rust && cargo test --workspace --no-fail-fast -- --test-threads=8'
-grep -E '^test result' "$LOG/test_debug.log" | awk '{p+=$4; f+=$6; i+=$8} END {print "   test_debug passed", p, "failed", f, "ignored", i}' >> "$SUMMARY"
+debug_step
 step 5 test_release bash -c 'cd rust && cargo test --workspace --release --no-fail-fast -- --test-threads=8'
 grep -E '^test result' "$LOG/test_release.log" | awk '{p+=$4; f+=$6; i+=$8} END {print "   test_release passed", p, "failed", f, "ignored", i}' >> "$SUMMARY"
 step 6 clippy bash -c 'cd rust && cargo clippy --workspace --all-targets -- -D warnings'

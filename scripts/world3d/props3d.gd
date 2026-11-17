@@ -401,7 +401,10 @@ func _tinted_mesh(id: String, tint: String) -> Mesh:
 			m.albedo_color = Data3D.material_colour(tint, "Mineral")
 			m.metallic = 0.5 if name == "metal" else 0.1
 			m.roughness = 0.4
-			mat = m
+			m.resource_name = name
+			mat = preload("res://scripts/world3d/textures3d.gd").imported(m)
+			if mat is ShaderMaterial:
+				(mat as ShaderMaterial).set_shader_parameter("texture_tile", float(preload("res://scripts/world3d/textures3d.gd").index("materials", tint, preload("res://scripts/world3d/textures3d.gd").index("surfaces", name))))
 		out.surface_set_material(out.get_surface_count() - 1, mat)
 	_tinted[key] = out
 	return out

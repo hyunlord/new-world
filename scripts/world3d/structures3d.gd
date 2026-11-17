@@ -83,6 +83,7 @@ func _ready() -> void:
 	_resolver.load_imported()
 	wall_material = ShaderMaterial.new()
 	wall_material.shader = WALL_SHADER
+	preload("res://scripts/world3d/textures3d.gd").setup(wall_material)
 
 
 func _on_world_reset() -> void:
@@ -239,7 +240,7 @@ func _wall_entry(style: String, raw_material: int, category: String, is_door: bo
 	var by_style: Dictionary = Data3D.binding("walls.by_style", {})
 	var wall_style: String = str(r.get("style_id", style))
 	var profile: String = str(by_style.get(wall_style, by_style.get(style, Data3D.binding("walls.fallback", ""))))
-	return {"door": is_door, "fence": false, "profile": profile, "colour": c, "category": cat, "material": key}
+	return {"door": is_door, "fence": false, "profile": profile, "colour": c, "category": cat, "material": key, "style": wall_style}
 
 
 ## Finished huts are not in get_space: their ring, door and floor come from the 2D building binding.
@@ -290,7 +291,10 @@ func _floor_tiles(space: Dictionary) -> Dictionary:
 		if model != "":
 			_floor_models[Vector2i(xs[i], ys[i])] = model
 			continue
-		out[Vector2i(xs[i], ys[i])] = Data3D.material_colour(key, str(r.get("category", "")) if r.get("category") != null else "")
+		var category: String = str(r.get("category", "")) if r.get("category") != null else ""
+		var c: Color = Data3D.material_colour(key, category)
+		var textures = preload("res://scripts/world3d/textures3d.gd")
+		out[Vector2i(xs[i], ys[i])] = {"colour": c, "texture": textures.index("materials", key, textures.index("categories", category))}
 	return out
 
 
@@ -309,6 +313,10 @@ func _build_wall_chunk(k: Vector2i, floors: Dictionary) -> void:
 		var w: Dictionary = _walls[t]
 		var g: float = float(_terrain.call("stand_height", t))
 		b.base = g
+		var textures = preload("res://scripts/world3d/textures3d.gd")
+		b.texture_tile = textures.index("styles", str(w.get("style", "")), textures.index("materials", str(w.get("material", "")), textures.index("categories", str(w.get("category", "")))))
+		if posmod(t.x * 17 + t.y * 31, 3) == 0:
+			b.texture_tile = textures.index("alternates", str(int(b.texture_tile)), int(b.texture_tile))
 		if bool(w["fence"]):
 			if _fence_model(t) == "":
 				_fence(b, t, g)
@@ -322,7 +330,8 @@ func _build_wall_chunk(k: Vector2i, floors: Dictionary) -> void:
 		var g2: float = float(_terrain.call("stand_height", t))
 		b.base = g2
 		b.profile = PROFILE_TRIM
-		var fc: Color = floors[t]
+		var fc: Color = (floors[t] as Dictionary)["colour"]
+		b.texture_tile = float((floors[t] as Dictionary)["texture"])
 		b.box(Vector3(t.x + 0.02, g2 - 0.05, t.y + 0.02), Vector3(t.x + 0.98, g2 + floor_h, t.y + 0.98), fc.darkened(0.05), fc)
 	var mi: MeshInstance3D = _chunks.get(k)
 	if b.is_empty():
@@ -571,6 +580,8 @@ func _rebuild_roofs(rooms: Dictionary, sites: Array) -> void:
 		mi.name = "Roof_%d" % id
 		var mat: ShaderMaterial = ShaderMaterial.new()
 		mat.shader = ROOF_SHADER
+		preload("res://scripts/world3d/textures3d.gd").setup(mat)
+		mat.set_shader_parameter("texture_tile", float(preload("res://scripts/world3d/textures3d.gd").index("roofs", cover)))
 		mat.set_shader_parameter("cover", Data3D.colour((Data3D.binding("roofs.colours", {}) as Dictionary).get(cover, []), Color(0.7, 0.6, 0.35)))
 		mat.set_shader_parameter("pattern", int((Data3D.binding("roofs.patterns", {}) as Dictionary).get(cover, 0)))
 		mat.set_shader_parameter("fade", float(_roof_fade.get(id, 1.0)))

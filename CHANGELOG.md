@@ -17,6 +17,21 @@ Implementation is under verification. Publication requires the frozen HEAD's ful
 ### Removed
 - None.
 
+## M-POLISH+GATE — 2026-11-17
+
+### Added
+- Merged `v8/art-tex` (generated material textures) and `v8/gate-reuse` (D-GATE-2 receipt reuse) onto C3-b.
+
+### Changed
+- D-GATE-1: `[profile.test]` compiles at `opt-level = 2` with `debug-assertions` and `overflow-checks` kept; `sim-systems` test override also `opt-level = 2` (`rust/Cargo.toml`, `docs/v8/c1/C1_DECISIONS.md`).
+- `tools/v8/gate.sh` refuses to start (exit 2) when `PLAY_ROOT` is unset or resolves to the owner's `/Users/rexxa/work/new-world-play*` checkouts, before taking the lock (`tools/v8/test_gate_play_root.py`).
+- The learning helper only yields to the story banner when the banner shows a row; a taller decision-card stack pushes an empty banner over it (`mux_hud.gd`).
+
+### Removed
+- The `v8/art-ui` merge (734cefca7) is reverted: with it, camp framing put a resident under the task plaque at night (step 39 day1_night_half, 0 qualifying px; reverting it alone passes). The branch stays on `origin/v8/art-ui`.
+- The `v8/3d-roof2` merge (4e1437eee) is reverted: its painted occluded people fell below the step-39 person-visibility threshold (e.g. 403 → 3 qualifying pixels); the branch stays on `origin/v8/3d-roof2` for a fix.
+- `docs/images/mart21_seasons.png` (2D-era strip; kept at `fd3f59801`). The C2 contact sheet stays the current sheet.
+
 ## C3-b — iron chain, not yet published (2026-11-15)
 
 ### Added
@@ -31,6 +46,32 @@ Implementation is under verification. Publication requires the frozen HEAD's ful
 
 ### Removed
 - None.
+
+
+## M3D-IMG Part T — material texture branch (2026-11-16)
+
+### Added
+- Generated 1024-square seamless terrain and material albedos, rough-surface normals,
+  and padded shared atlases under `assets/3d/textures/`. Exact prompts and raw
+  verification evidence live in `/Users/rexxa/work/art-img-data/tex/`.
+
+### Changed
+- Existing terrain/material shaders and static mesh materials sample painted detail
+  with the existing palette tint. Simulation and the crowd/VAT path are outside this pass.
+- Part T is delivered on `v8/art-tex` for planner integration; windowed capture and
+  FPS acceptance remain conditional on the shared GPU gate.
+
+## M-GATE-REUSE — 2026-11-16 (implementation branch, not full-gated)
+
+### Added
+- Content-bound complete debug-suite receipts, independent target inventory, and
+  Python rejection tests using historical nested-output log excerpts.
+
+### Changed
+- Full gate step4 may verify a pre-gate receipt from the same frozen inputs;
+  rejected or absent receipts retain the complete debug invocation (D-GATE-2).
+- Debug summaries count final outer target results instead of nested subprocess
+  result lines. Other full-gate requirements remain in force.
 
 ## M3D-SWITCH E2 — the 3D view is the only world view (branch v8/3d, not published)
 

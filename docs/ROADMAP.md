@@ -1,5 +1,10 @@
 # 로드맵 (V8)
 
+> **M3D-ROOF2 — 보류 (2026-11-17):** `v8/3d-roof2`는 M-POLISH에서 병합했다가 되돌렸다. 가려진 주민을 칠한 색으로 그리자 전체 게이트 단계39(주민 가시성)가 기준 아래로 떨어졌다. 수정 후 다시 통합한다.
+> **M3D-IMG Part T — 텍스처 작업 브랜치 (2026-11-16):** `v8/art-tex`에서 생성 알베도·노멀과 기존 재질 연결을 제공한다. [결정](decisions/0068-generated-material-texture-atlas.md). 전후 화면·500명 FPS는 공유 GPU 게이트 허용 후 검증하며, 이 브랜치는 게임 게시가 아니다.
+> **M3D-IMG Part U — 보류 (2026-11-17):** `v8/art-ui`는 M-POLISH에서 병합했다가 되돌렸다. 병합 상태에서 전체 게이트 단계39 밤 장면의 캠프 화면 맞춤이 주민 한 명을 할 일 판 아래에 두었다. 원인 수정 후 다시 통합한다.
+> **M-GATE-REUSE — 구현·Python 검증, 통합 대기 (2026-11-16):** `v8/gate-reuse`는 동일 동결 입력의 완전한 사전 debug 결과를 전체 게이트 step4에서 검증해 재사용한다([D-GATE-2](v8/c1/C1_DECISIONS.md)). C3-b 게시 후 planner가 통합하며 실제 전체 게이트 검증은 별도다.
+
 > **M3D-ASSETS — 자산 제공 완료 (2026-11-15):** `v8/3d-assets`에서 정적572·생물28개 모델을 제공한다. [인벤토리](../assets/3d/INVENTORY.md), [결정](decisions/0067-content-complete-3d-asset-pack.md). 렌더러 통합·플레이 수용과 구분하며 원격 C3 기준 부재를 기록한다.
 
 > **C2 #15 — 완료 (2026-11-12):** C2-a `ad790ddd1`과 C2-b `8e4170c42`를 각각 전체 게이트36/36 PASS 뒤 v8/wip→v8/main fast-forward로 게시했다. 청동 데이터·광맥 발견(a)에 이어 실제 채굴·주석 교역·금속 사슬(b, `c2_chain_bronze`)을 연결했다. 동물 실루엣은 D-C2-1로 별도 art-import에 맡겼다. [보고](v8/c2/C2_REPORT.md), [결정](v8/c2/C2_DECISIONS.md). 아래 C1/M-SPINE 게시 전 문구는 당시 기록이다.

@@ -338,6 +338,23 @@ class GenericGateContracts(unittest.TestCase):
         raw["stall"] = None
         self.rejected(finalize_publication, raw)
 
+    def test_debug_reuse_marker_alone_cannot_authorize_publication(self) -> None:
+        # Given: D-GATE-2's shell marker is not an authenticated generic receipt.
+        raw = final_input()
+        raw["required_steps"] = [4, 10, 25, 41, 50]
+        raw["steps"] = [{"step": 4, "source": A, "status": "PASS_REUSED"},
+                        *array(raw["steps"])]
+        # When/Then: the generic boundary still rejects a bare reuse claim.
+        self.rejected(finalize_publication, raw)
+
+    def test_complete_debug_pregate_cannot_replace_missing_full_steps(self) -> None:
+        # Given: a complete debug pass but no required publication evidence.
+        raw = final_input()
+        raw["required_steps"] = [4, 10, 25, 41, 50]
+        raw["steps"] = [{"step": 4, "source": A, "status": "PASS"}]
+        # When/Then: partial pre-gate coverage cannot become publication.
+        self.rejected(finalize_publication, raw)
+
     def test_waiver_rejects_failed_missing_duplicate_stale_or_not_run_step(self) -> None:
         valid: list[Json] = [{"step": n, "source": A, "status": "PASS"} for n in (10, 25, 50)]
         for key, value in json_cases((("status", "FAIL"), ("status", "NOT_RUN"), ("source", B))):

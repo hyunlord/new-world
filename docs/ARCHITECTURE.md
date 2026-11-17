@@ -938,6 +938,7 @@ shared-spot counts, hunt rings — every anchor projected through the World3D ca
 `world3d.gd` publishes a per-frame change stamp (colony versions, tick) that gates every heavy snapshot read, and is
 the `scripts/world/view_projection.gd` provider for screen ↔ world conversion. Data: `assets/3d/params3d.json`,
 `assets/3d/bindings3d.json`, models and VAT from `tools/3d/blender/build_all.py`.
+Material detail uses `assets/3d/textures3d.json` and `scripts/world3d/textures3d.gd`: shared padded albedo/normal atlases in `assets/3d/textures/`, sampled by existing terrain, wall, roof and static-model materials. Original tints and surface counts remain; the crowd/VAT material path is unchanged. See [ADR0068](decisions/0068-generated-material-texture-atlas.md).
 
 
 ## Village growth (M-GROW-a, ADR 0069)

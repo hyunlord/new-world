@@ -5,6 +5,9 @@
 // drawn (R = outline strength) so hover, drag rectangles and refused tiles read as framed tiles.
 shader_type spatial;
 render_mode diffuse_lambert, specular_disabled;
+#include "res://shaders/world3d/material_texture.gdshaderinc"
+uniform sampler2D biome_tex : filter_nearest, repeat_disable;
+uniform float autumn = 0.0;
 
 uniform vec3 season_tint = vec3(1.0);
 uniform float snow = 0.0;
@@ -15,7 +18,7 @@ uniform float overlay_on = 0.0;
 uniform float grid_on = 0.0;
 uniform vec3 cliff_colour : source_color = vec3(0.43, 0.39, 0.34);
 // M-GROW 3.2: worn path stages (0 grass, 1 trodden, 2 dirt, 3 paved).
-// art-tex earth/path textures will plug in here after the polish merge.
+// Stage colours are multiplied by the art-tex atlas detail: packed_earth (tiles 4/5) for trodden/dirt, paved_road (23).
 uniform sampler2D path_tex : filter_nearest, repeat_disable;
 uniform vec3 trodden_colour : source_color = vec3(0.42, 0.38, 0.28);
 uniform vec3 dirt_colour : source_color = vec3(0.50, 0.40, 0.25);
@@ -50,27 +53,51 @@ void vertex() {
 	world_normal = normalize((MODEL_MATRIX * vec4(NORMAL, 0.0)).xyz);
 }
 
+vec3 ground_detail(vec2 tile_pos, vec2 p) {
+	vec2 biome = texture(biome_tex, (tile_pos + 0.5) / map_size).rg;
+	float tile = floor(biome.r * 255.0 + 0.5);
+	float variant = step(0.5, hash12(tile_pos));
+	if (tile < 0.5) {
+		tile = autumn > 0.5 ? 2.0 : variant;
+	} else if (abs(tile - 4.0) < 0.5) {
+		tile += variant;
+	}
+	vec3 detail = material_detail(p * 0.32, tile);
+	return biome.g > 0.001 ? mix(detail, material_detail(p * 0.32, 4.0 + variant), biome.g) : detail;
+}
+
+vec3 blended_ground(vec2 p) {
+	// The same four neighbouring tiles that supply each vertex's existing colour.
+	vec2 base = floor(p - 0.5);
+	vec2 f = fract(p - 0.5);
+	return mix(mix(ground_detail(base, p), ground_detail(base + vec2(1.0, 0.0), p), f.x),
+		mix(ground_detail(base + vec2(0.0, 1.0), p), ground_detail(base + vec2(1.0), p), f.x), f.y);
+}
+
 void fragment() {
 	vec3 c = srgb_to_linear(COLOR.rgb) * season_tint;
+	c *= blended_ground(world_pos.xz);
 	float n = vnoise(world_pos.xz * 3.0) * 0.6 + vnoise(world_pos.xz * 11.0) * 0.4;
 	c *= 0.90 + 0.20 * n;
 	// M-GROW 3.2: blend path stage colour onto the ground.
 	vec2 puv = world_pos.xz / map_size;
 	if (puv.x >= 0.0 && puv.y >= 0.0 && puv.x <= 1.0 && puv.y <= 1.0) {
 		float stage = texture(path_tex, puv).r * 255.0;
+		vec3 earth = material_detail(world_pos.xz * 0.32, 4.0 + step(0.5, hash12(floor(world_pos.xz))));
 		if (stage > 0.5 && stage < 1.5) {
-			c = mix(c, srgb_to_linear(trodden_colour), 0.35 + 0.1 * n);
+			c = mix(c, srgb_to_linear(trodden_colour) * earth, 0.35 + 0.1 * n);
 		} else if (stage > 1.5 && stage < 2.5) {
-			c = mix(c, srgb_to_linear(dirt_colour), 0.6 + 0.1 * n);
+			c = mix(c, srgb_to_linear(dirt_colour) * earth, 0.6 + 0.1 * n);
 		} else if (stage > 2.5) {
-			c = mix(c, srgb_to_linear(paved_colour), 0.75);
+			c = mix(c, srgb_to_linear(paved_colour) * material_detail(world_pos.xz * 0.32, 23.0), 0.75);
 		}
 	}
 	float up = clamp(world_normal.y, 0.0, 1.0);
 	// Steep slopes show bare rock instead of grass.
-	c = mix(c, cliff_colour * (0.85 + 0.3 * n), 1.0 - smoothstep(0.62, 0.8, up));
+	c = mix(c, cliff_colour * (0.85 + 0.3 * n) * material_triplanar(world_pos * 0.4, world_normal, 11.0), 1.0 - smoothstep(0.62, 0.8, up));
 	float cover = snow * smoothstep(0.55, 0.9, up) * smoothstep(0.25, 0.55, n + snow * 0.4);
-	c = mix(c, vec3(0.80, 0.85, 0.92), cover);
+	vec3 snow_detail = mix(material_detail(world_pos.xz * 0.25, 8.0), material_detail(world_pos.xz * 0.25, 9.0), vnoise(world_pos.xz * 0.17));
+	c = mix(c, vec3(0.80, 0.85, 0.92) * snow_detail, cover);
 	vec2 uv = world_pos.xz / map_size;
 	if (overlay_on > 0.5 && uv.x >= 0.0 && uv.y >= 0.0 && uv.x <= 1.0 && uv.y <= 1.0) {
 		vec4 o = texture(overlay_tex, uv);

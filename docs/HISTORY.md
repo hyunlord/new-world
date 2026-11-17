@@ -1,7 +1,10 @@
 # WorldSim 역사
 
 - 2026-11-17 — M-GROW-a 구현 후보: 길의 마모·이동 간격, 원인을 남기는 집사 구역 배치, 거주 단계·마당과 안전한 시대별 개축, format24 저장 확장을 연결했다. 4개 시드의120일 기능·저장·재생 수용 시험은 통과했으나, 최종 캡처·고정 SHA 전체 게이트·크래시 감지·게시는 대기이며 완료 선언이 아니다([보고서](v8/mgrow/MGROW_REPORT.md), [ADR0069](decisions/0069-bounded-village-growth.md)).
+- 2026-11-17 — M-POLISH+GATE: art-tex·gate-reuse를 C3-b 위에 병합하고(3d-roof2·art-ui 병합은 주민 가시성 단계39 실패로 되돌림, 각 브랜치에 보존) D-GATE-1(test 프로필 opt-level 2, 디버그 단언·오버플로 검사 유지)을 더했다. 길어진 카드 묶음이 빈 이야기 띠를 학습 도우미 위로 밀어 도우미가 숨던 문제를 고쳤고, 2D 시절 `mart21_seasons.png`는 `fd3f59801` 이력에 보존한다. 시뮬레이션 무변경([결정](v8/c1/C1_DECISIONS.md)).
+- 2026-11-16 — M-GATE-REUSE 도구 구현: 고정 입력에 묶인 전체 debug 사전 실행 영수증을 full gate step4에서 재사용하며 불일치는 재실행한다. Python 도구 검증과 전체 게임 게이트 검증을 구분하고 C3-b 이후 통합을 기다린다([D-GATE-2](v8/c1/C1_DECISIONS.md), [ADR0069](decisions/0069-frozen-debug-suite-reuse.md)).
 - 2026-11-16 — M3D-SWITCH: 3D 화면이 유일한 월드 화면이 되었다. 2D 월드 레이어15개·셰이더5개를 지우고 UI는 유지했으며, 2D를 재던 게이트 단계(23·34·36·38·39·41·46·48)를 같은 기준의 3D 검사로 옮겼다. 시뮬레이션 무변경, 고디 유지 판정. 지워진 2D 렌더러는 `373ff81b2:scripts/world/` 이력에 있다([ADR0068](decisions/0068-3d-only-view.md)).
+- 2026-11-16 — M3D-IMG Part T: 지형·건축·도구 재질용 생성 텍스처 브랜치를 분리했다. 게임 게시와 화면/성능 수용은 별도 검증한다(`assets/3d/textures/`, [ADR0068](decisions/0068-generated-material-texture-atlas.md)).
 - 2026-11-15 — M3D-ASSETS: 정적572·생물28개 3D 자산과 원본62개 보존, 콘텐츠 인벤토리·건설 미리보기·게임 카메라 비교를 별도 제공한다. 원격 C3 부재와 미연결 건물 콘셉트를 명시하며 렌더러 통합·전체 게임 게시와 구분한다 (`assets/3d/ASSETS.md`, `docs/decisions/0067-content-complete-3d-asset-pack.md`).
 - 2026-11-11 — C2 검토본의 동물 실루엣 스크립트·uid 2파일을 제거하고 별도 아트 라인으로 이월했다. 원본은 `ebb04ee3d:scripts/world/colony/animal_silhouette.gd`에 보존한다. C1 사슬은 일반 명령 준비·현재 적격 대상 재선택·실제 취소 증거 계약으로 재검증하며 미게시다([ADR0064](decisions/0064-scripted-chain-preparation.md)).
 - 2026-11-08 — C1-a 원산지·신석기 지식82개·물리 조리법·곡식 창고/우리/훈제집/화덕집을 통합했다. 실제 format19→20 저장 재개, 신규 focused 검사와 한·영 화면 검증을 수행했다. 가축 사슬은 C1-b 대기이며 고정 SHA 전체 게이트·게시는 아직 대기다([보고](v8/c1/C1_REPORT.md), [ADR0062](decisions/0062-neolithic-origins-and-livestock.md)). 이전 M-SPINE 화면은 d30dbfc5b Git 이력에 보존하고 현재 시트를 교체했다.

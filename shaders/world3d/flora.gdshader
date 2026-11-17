@@ -5,6 +5,8 @@
 // zoom); the global `w3d_snow` whitens upward faces (winter).
 shader_type spatial;
 render_mode diffuse_lambert, specular_disabled;
+#include "res://shaders/world3d/material_texture.gdshaderinc"
+varying float texture_tile;
 
 global uniform float w3d_snow;
 global uniform float w3d_time;
@@ -29,6 +31,7 @@ void vertex() {
 	float bend = max(VERTEX.y - 1.0, 0.0) * UV.y;
 	kind = UV.x;
 	local_height = VERTEX.y;
+	texture_tile = UV2.x;
 	VERTEX.x += sin(w3d_time * 1.3 + phase) * bend * 0.025;
 	VERTEX.z += cos(w3d_time * 1.1 + phase * 1.3) * bend * 0.018;
 	world_normal = normalize((MODEL_MATRIX * vec4(NORMAL, 0.0)).xyz);
@@ -72,6 +75,7 @@ void fragment() {
 		}
 	}
 	vec3 c = srgb_to_linear(COLOR.rgb);
+	c *= material_triplanar(world_pos * 0.7, world_normal, texture_tile);
 	if (mark.a > 0.01) {
 		c = mix(c, mark.rgb * mark.rgb, clamp(mark.a * 1.6, 0.0, 0.75));
 	}

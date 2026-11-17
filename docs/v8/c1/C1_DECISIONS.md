@@ -489,6 +489,43 @@ with external PLAY paths and whitespace fixture assertion. Publish only a
 complete green B4 under D-C1-1's unchanged conditional step41 procedure.
 Actual results and fast-forwards belong in immutable external receipts.
 
+## D-GATE-1 — optimise the test profile, keep its checks (2026-11-17)
+
+`rust/Cargo.toml` sets `[profile.test]` to `opt-level = 2` with
+`debug-assertions = true` and `overflow-checks = true`, and
+`[profile.test.package.sim-systems]` to `opt-level = 2` (it would otherwise
+inherit the dev override `opt-level = 1`). Step4 runs the same tests, seeds,
+deadlines and asserts, only compiled faster code; `[profile.release]` is
+unchanged. Before the gate a throwaway `debug_assert!(false)` test was run under
+the test profile to prove debug assertions still fire. Motivation: step4 debug
+took ~12,300 s at opt-level 0/1. Source: `rust/Cargo.toml`.
+
+## D-GATE-2 — one complete debug pass per frozen HEAD (2026-11-16)
+
+The full gate may consume the pre-gate's complete step4 debug result only
+after `tools/v8/gate_test_evidence.py` verifies the frozen commit/tree,
+clean worktree, Cargo.lock, toolchain, exact command/profile/features,
+configuration, data/fixtures and hashed relevant environment. Inputs must
+match before/after the original run and at reuse. Target inventory is checked
+independently of the observed log; malformed, truncated, partial, failed,
+zero-test or changed evidence cannot authorize reuse. Per-target final
+results exclude nested subprocess summaries; compile and run times remain
+separate.
+
+`C1_PREGATE_ONLY=1` always runs debug and writes an atomic external receipt
+after complete successful step4. A full gate opts in with
+`GATE_DEBUG_RECEIPT=/absolute/pregate/test_debug.receipt.json` and records
+`PASS_REUSED <receipt path> <sha256> <original wall seconds>` instead of
+claiming a fresh pass. Missing or mismatched evidence runs step4 normally.
+This changes only repeated debug execution: partial pre-gates never authorize
+publication, release and all other required full-gate checks remain mandatory.
+Do not retrofit receipts onto historical or still-running gate outputs.
+
+Implementation and Python tool checks are on `v8/gate-reuse`; planner merges
+after C3-b publishes. No cargo/Godot/benchmark validation is claimed while
+the machine lane lock is held. Source: `tools/v8/gate.sh`,
+`tools/v8/test_gate_test_evidence.py`, `tools/v8/test_gate_reuse_shell.py`.
+
 ## D29 — isolate gate-function tests from the outer preflight mode
 
 The first D-C1-3 preflight was interrupted by the model switch. The complete
