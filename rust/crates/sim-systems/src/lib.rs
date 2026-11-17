@@ -392,6 +392,7 @@ fn register_runtime_systems_with_decision(engine: &mut SimEngine, decision: fn(&
         engine.register_system(Box::new(runtime::livestock::LivestockSystem::new()));
         engine.register_system(Box::new(runtime::ore::OreDiscoverySystem));
         engine.register_system(Box::new(runtime::paths::PathDaySystem::new()));
+        engine.register_system(Box::new(runtime::house_growth::HouseGrowthSystem));
     }
     register_diagnosis_systems(engine);
 }

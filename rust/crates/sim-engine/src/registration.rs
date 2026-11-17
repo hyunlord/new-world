@@ -189,6 +189,10 @@ pub const SYSTEM_REGISTRATIONS: &[SystemRegistration] = &[
         worlds: SystemWorlds::Both,
     },
     SystemRegistration {
+        name: "HouseGrowthSystem",
+        worlds: SystemWorlds::Colony,
+    },
+    SystemRegistration {
         name: "FireSystem",
         worlds: SystemWorlds::Both,
     },
