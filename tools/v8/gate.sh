@@ -84,6 +84,16 @@
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT"
+# Step 21 (tools/play.sh) creates and moves worktrees under PLAY_ROOT; never let it default to the owner's play checkouts.
+if [[ -z "${PLAY_ROOT:-}" ]]; then
+    echo "gate: PLAY_ROOT is not set; export a gate-owned PLAY_ROOT (and PLAY_DATA) before running the gate" >&2
+    exit 2
+fi
+play_root_resolved="$(cd "$PLAY_ROOT" 2> /dev/null && pwd -P || echo "$PLAY_ROOT")"
+if [[ "$play_root_resolved" == /Users/rexxa/work/new-world-pla[y]* ]]; then
+    echo "gate: PLAY_ROOT $PLAY_ROOT resolves to the owner's play checkouts ($play_root_resolved); use a gate-owned directory" >&2
+    exit 2
+fi
 # Hold the lane before any build, import, test, profiler or Godot process starts.
 # The launcher passes its locked descriptor through bash; nested captures reuse it.
 if [[ -z "${WORLDSIM_MUX2_LANE_FD:-}" ]]; then

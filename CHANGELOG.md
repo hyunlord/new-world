@@ -7,6 +7,7 @@
 
 ### Changed
 - D-GATE-1: `[profile.test]` compiles at `opt-level = 2` with `debug-assertions` and `overflow-checks` kept; `sim-systems` test override also `opt-level = 2` (`rust/Cargo.toml`, `docs/v8/c1/C1_DECISIONS.md`).
+- `tools/v8/gate.sh` refuses to start (exit 2) when `PLAY_ROOT` is unset or resolves to the owner's `/Users/rexxa/work/new-world-play*` checkouts, before taking the lock (`tools/v8/test_gate_play_root.py`).
 - The learning helper only yields to the story banner when the banner shows a row; a taller decision-card stack pushes an empty banner over it (`mux_hud.gd`).
 
 ### Removed
