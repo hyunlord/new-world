@@ -80,7 +80,7 @@ pub fn release_job(
     }
     if let Ok(job) = world.remove_one::<Job>(entity) {
         // A site finished this tick before its builder was pulled away: the build still counts.
-        if super::execute::build_finished(world, &job) {
+        if super::execute::build_finished(world, res, &job) {
             record_completion(world, entity, job.kind);
             res.colony.tallies.jobs_done += 1;
         } else {
@@ -230,19 +230,38 @@ mod tests {
             best_distance: 0,
             progress_tick: 0,
         };
+        res.causal_log.push(
+            3 * res.tile_grid.width + 3,
+            sim_core::causal::CausalEvent::ConstructionCompleted {
+                id: 1,
+                parent: None,
+                blueprint: sim_core::components::BuildingBlueprint::new(1, 1, 1, 1),
+                position: (3, 3),
+                tick: 0,
+            },
+        );
         let done = world.spawn((job(JobStage::Working { ticks_left: 0 }),));
         let walking = world.spawn((job(JobStage::ToSource),));
         release_job(&mut world, &mut res, done, CancelReason::Needs);
         release_job(&mut world, &mut res, walking, CancelReason::Needs);
+        // A site gone without a completion record was cancelled: no build.
+        let mut cancelled_job = job(JobStage::Working { ticks_left: 0 });
+        cancelled_job.kind = JobKind::Build { site: (5, 5) };
+        let cancelled = world.spawn((cancelled_job,));
+        release_job(&mut world, &mut res, cancelled, CancelReason::Needs);
+
         let builds = |e| {
             world.get::<&sim_core::colony::Skills>(e).map_or(0, |s| {
                 s.completed[usize::from(JobKind::Build { site: (0, 0) }.code())]
             })
         };
-        assert_eq!((builds(done), builds(walking)), (1, 0));
+        assert_eq!(
+            (builds(done), builds(walking), builds(cancelled)),
+            (1, 0, 0)
+        );
         assert_eq!(
             res.colony.tallies.cancels.get(&CancelReason::Needs),
-            Some(&1)
+            Some(&2)
         );
     }
 }

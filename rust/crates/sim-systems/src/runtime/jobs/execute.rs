@@ -96,10 +96,24 @@ fn site_needs(world: &World, site: (u32, u32)) -> Option<(Entity, MaterialNeeds)
         .map(|view| (view.entity, view.needs))
 }
 
-/// A working builder whose site is gone: ConstructionSystem finished it.
-pub(crate) fn build_finished(world: &World, job: &Job) -> bool {
-    matches!(job.kind, JobKind::Build { site } if site_needs(world, site).is_none())
-        && matches!(job.stage, JobStage::Working { .. })
+/// A working builder whose site is gone because ConstructionSystem finished it
+/// (its completion record on the site tile is newer than the job); a cancelled
+/// site is gone too but has no such record.
+pub(crate) fn build_finished(world: &World, res: &SimResources, job: &Job) -> bool {
+    let JobKind::Build { site } = job.kind else {
+        return false;
+    };
+    matches!(job.stage, JobStage::Working { .. })
+        && site_needs(world, site).is_none()
+        && res
+            .causal_log
+            .get(site.1 * res.tile_grid.width + site.0)
+            .is_some_and(|log| {
+                log.as_slice().iter().any(|event| {
+                    matches!(event, sim_core::causal::CausalEvent::ConstructionCompleted { position, tick, .. }
+                        if *position == site && *tick >= job.taken_at)
+                })
+            })
 }
 
 /// Whether the job's target still exists.
@@ -240,7 +254,7 @@ fn step(
     let space =
         matches!(job.kind, JobKind::Build { site } if res.colony.space_sites.contains_key(&site));
     if state != expected_state(job.kind, job.stage, space) {
-        if build_finished(world, &job) {
+        if build_finished(world, res, &job) {
             finish_in_place(world, res, entity);
         } else {
             release_job(world, res, entity, CancelReason::Interrupted);
