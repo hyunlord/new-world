@@ -29,7 +29,7 @@ func _run() -> void:
 	if material != null:
 		var sky_code: String = material.shader.code
 		_check("sky_overlap_boundary_contract", sky_code.contains("uv.x *= 0.85;") and sky_code.contains("uv.x + 0.85") and sky_code.contains("smoothstep(0.0, 0.15, uv.x)") and not sky_code.contains("abs(SKY_COORDS.x"))
-		_check("sky_overlap_premultiplied", sky_code.contains("primary = premultiply(texture(tex, uv))") and sky_code.contains("wrapped = premultiply(texture(tex, vec2(uv.x + 0.85, uv.y)))"))
+		_check("sky_overlap_premultiplied_explicit_lod", sky_code.contains("primary = premultiply(textureLod(tex, uv, 0.0))") and sky_code.contains("wrapped = premultiply(textureLod(tex, vec2(uv.x + 0.85, uv.y), 0.0))"))
 		for key: String in (config["sky"]["textures"] as Dictionary):
 			_check("sky_sampler_" + key, material.get_shader_parameter(key) is Texture2D)
 		sky.call("_apply_hour", 12.0)

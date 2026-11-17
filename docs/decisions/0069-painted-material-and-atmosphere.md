@@ -19,7 +19,9 @@ Expose decals and unavailable surface variants in a data catalog for consumers.
   symmetric cloud shapes. Horizontal overlap preserves the accepted artwork.
 
 ## Consequences
-A narrow horizontal overlap softens detail near the panorama join. Imported
+A narrow horizontal overlap softens detail near the panorama join. Explicit mip0
+avoids derivative-driven dark lines at the longitude wrap; these low-frequency
+sky layers trade automatic mip selection for a continuous join. Imported
 textures remain VRAM-compressed with mipmaps. Existing state supplies sky blends;
 lighting, ambient and fog retain their existing policy. The orthographic game
 camera rarely exposes the horizon, so separate sky-facing QA is required.

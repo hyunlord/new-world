@@ -22,9 +22,9 @@ vec4 premultiply(vec4 c) {
 vec4 panorama(sampler2D tex, vec2 uv) {
 	// Overlap the ends instead of mirroring the whole cloud silhouette.
 	uv.x *= 0.85;
-	vec4 primary = premultiply(texture(tex, uv));
+	vec4 primary = premultiply(textureLod(tex, uv, 0.0));
 	if (uv.x < 0.15) {
-		vec4 wrapped = premultiply(texture(tex, vec2(uv.x + 0.85, uv.y)));
+		vec4 wrapped = premultiply(textureLod(tex, vec2(uv.x + 0.85, uv.y), 0.0));
 		return mix(wrapped, primary, smoothstep(0.0, 0.15, uv.x));
 	}
 	return primary;
