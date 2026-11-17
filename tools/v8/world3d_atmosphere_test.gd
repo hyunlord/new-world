@@ -27,7 +27,9 @@ func _run() -> void:
 	_check("ambient_source_preserved", environment.ambient_light_source == Environment.AMBIENT_SOURCE_COLOR)
 	_check("missing_sky_fallback", sky.call("_create_painted_sky", {}) == null)
 	if material != null:
-		_check("sky_longitude_wrap_continuous", material.shader.code.contains("abs(SKY_COORDS.x * 2.0 - 1.0)"))
+		var sky_code: String = material.shader.code
+		_check("sky_overlap_boundary_contract", sky_code.contains("uv.x *= 0.85;") and sky_code.contains("uv.x + 0.85") and sky_code.contains("smoothstep(0.0, 0.15, uv.x)") and not sky_code.contains("abs(SKY_COORDS.x"))
+		_check("sky_overlap_premultiplied", sky_code.contains("primary = premultiply(texture(tex, uv))") and sky_code.contains("wrapped = premultiply(texture(tex, vec2(uv.x + 0.85, uv.y)))"))
 		for key: String in (config["sky"]["textures"] as Dictionary):
 			_check("sky_sampler_" + key, material.get_shader_parameter(key) is Texture2D)
 		sky.call("_apply_hour", 12.0)
