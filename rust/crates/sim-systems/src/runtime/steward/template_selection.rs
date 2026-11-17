@@ -64,10 +64,10 @@ pub(super) fn ranked<'a>(
     // Era-ready templates whose era is later than the first era rank first (material
     // wave preference per D-MGROW-4), then existing tier desc / id.
     candidates.sort_by(|a, b| {
-        let a_era = crate::runtime::house_growth::era_ready(res, catalog, &a.era)
-            && a.era != first_era;
-        let b_era = crate::runtime::house_growth::era_ready(res, catalog, &b.era)
-            && b.era != first_era;
+        let a_era =
+            crate::runtime::house_growth::era_ready(res, catalog, &a.era) && a.era != first_era;
+        let b_era =
+            crate::runtime::house_growth::era_ready(res, catalog, &b.era) && b.era != first_era;
         b_era
             .cmp(&a_era)
             .then_with(|| b.tier.cmp(&a.tier))

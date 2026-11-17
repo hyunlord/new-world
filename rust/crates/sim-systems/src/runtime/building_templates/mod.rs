@@ -133,8 +133,7 @@ pub fn advance(world: &mut World, res: &mut SimResources) {
                 lost = true;
             } else if piece.phase == PiecePhase::Active
                 && !piece.kind.is_space()
-                && res.colony.occupied.get(&piece.centre())
-                    != Some(&Occupant::Site(piece.centre()))
+                && res.colony.occupied.get(&piece.centre()) != Some(&Occupant::Site(piece.centre()))
             {
                 // Non-space pieces (e.g. Hut) use ConstructionSite, not ColonySite.
                 // If the centre tile is no longer Site(centre) the job was externally
