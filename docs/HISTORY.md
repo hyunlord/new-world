@@ -1,6 +1,7 @@
 # WorldSim 역사
 
 - 2026-11-16 — M3D-SWITCH: 3D 화면이 유일한 월드 화면이 되었다. 2D 월드 레이어15개·셰이더5개를 지우고 UI는 유지했으며, 2D를 재던 게이트 단계(23·34·36·38·39·41·46·48)를 같은 기준의 3D 검사로 옮겼다. 시뮬레이션 무변경, 고디 유지 판정. 지워진 2D 렌더러는 `373ff81b2:scripts/world/` 이력에 있다([ADR0068](decisions/0068-3d-only-view.md)).
+- 2026-11-17 — M3D-IMG2 Part U2 범위 확장: 아이템119·초상72·방문자24·사건20·성장4·시대3·포장도로1의243장과 기존 표면 연결을 준비한다([ADR0069](decisions/0069-expanded-ui-art-from-existing-witnesses.md)); 생성·최종 검증·planner 통합은 진행 중이며 완료·게시 기록이 아니다.
 - 2026-11-16 — M3D-IMG Part U: 생성322안 중318장·GLB아이콘119종을 기존 UI에 연결하고 두 해상도16화면을 확인했다(`9ea8e0ec6`, [ADR0068](decisions/0068-optional-generated-ui-art.md)); 동물/타이틀 새 패널 없이 planner 통합 대기다. 이전 C2 시트는 `1647f7e81:docs/images/c2_contact_sheet.png`에 보존한다.
 - 2026-11-15 — M3D-ASSETS: 정적572·생물28개 3D 자산과 원본62개 보존, 콘텐츠 인벤토리·건설 미리보기·게임 카메라 비교를 별도 제공한다. 원격 C3 부재와 미연결 건물 콘셉트를 명시하며 렌더러 통합·전체 게임 게시와 구분한다 (`assets/3d/ASSETS.md`, `docs/decisions/0067-content-complete-3d-asset-pack.md`).
 - 2026-11-11 — C2 검토본의 동물 실루엣 스크립트·uid 2파일을 제거하고 별도 아트 라인으로 이월했다. 원본은 `ebb04ee3d:scripts/world/colony/animal_silhouette.gd`에 보존한다. C1 사슬은 일반 명령 준비·현재 적격 대상 재선택·실제 취소 증거 계약으로 재검증하며 미게시다([ADR0064](decisions/0064-scripted-chain-preparation.md)).
