@@ -1,5 +1,6 @@
 # Generated art identity, missing-resource and layout contract checks.
-# Bridge methods: none.
+# Bridge methods: optional saved-scene regression uses load_world, get_agent_snapshot; ordinary scene bootstrap reads.
+# --visibility-save /absolute/save runs the isolated real-scene projection regression.
 extends SceneTree
 
 const Content = preload("res://scripts/ui/content_context.gd")
@@ -11,6 +12,16 @@ func _initialize() -> void:
 
 
 func _run() -> void:
+	var args: PackedStringArray = OS.get_cmdline_user_args()
+	var save_arg: int = args.find("--visibility-save")
+	if save_arg >= 0:
+		if save_arg + 1 >= args.size() or not await _camp_projection(args[save_arg + 1]):
+			push_error("Actual saved-scene camp projection failed")
+			quit(1)
+			return
+		print("GENERATED_ART_PROJECTION_DONE")
+		quit()
+		return
 	var snapshot: Dictionary = {"ids": PackedInt64Array([15]), "life_stages": PackedByteArray([1]), "sexes": PackedByteArray([1])}
 	var tech: Dictionary = {"current_era_order": 2, "eras": [{"id": "bronze", "order": 2}]}
 	var id: String = Art.portrait_id(snapshot, 15, tech)
@@ -106,4 +117,42 @@ func _chronicle_layout() -> bool:
 	Art._textures[Art.ROOT + "events/first_cloth.webp"] = original
 	body.free()
 	panel.free()
+	return passed
+
+
+## Use the actual failed visibility save; verify fresh projections, not predicted translations.
+func _camp_projection(save_path: String) -> bool:
+	if not save_path.is_absolute_path() or not FileAccess.file_exists(save_path):
+		return false
+	root.get_node("Locale").call("set_language", "ko")
+	var main: Node = (load("res://scenes/main.tscn") as PackedScene).instantiate()
+	main.get_node("UI/MuxHud").set("store", preload("res://scripts/ui/mux/settings_store.gd").new(save_path + ".art-test-settings.cfg"))
+	root.add_child(main)
+	var world: Node = main.get_node("WorldSim")
+	world.process_mode = Node.PROCESS_MODE_DISABLED
+	if not SimReads.mutate(world, "load_world", [save_path]):
+		main.free()
+		return false
+	var original_ids: PackedInt64Array = world.call("get_agent_snapshot").get("ids", PackedInt64Array())
+	var camera: Camera2D = main.get_node("Camera2D")
+	camera.call("set_paused", true)
+	camera.zoom = Vector2.ONE * 0.5
+	camera.call("center_on_camp")
+	for _frame: int in 90:
+		await process_frame
+	var report: Dictionary = camera.call("camp_framing_report")
+	var included: Array = report.get("ids", [])
+	var passed: bool = report.get("status") == "placed" and not included.is_empty() and included.size() == original_ids.size()
+	var obstacles: Array[Rect2] = []
+	preload("res://scripts/world/colony/marker_layout.gd").ui_rects(main.get_node("UI"), obstacles)
+	for bits: int in original_ids:
+		var body: Rect2 = preload("res://scripts/world/view_projection.gd").person_rect(bits)
+		var clear: bool = bits in included and body.has_area() and camera.get_viewport_rect().encloses(body)
+		for obstacle: Rect2 in obstacles:
+			clear = clear and not body.intersects(obstacle)
+		passed = passed and clear
+		print("CAMP_PROJECTION id=%d body=%s clear=%s" % [bits, body, clear])
+	print("CAMP_PROJECTION_RESULT position=%s status=%s pass=%s" % [camera.position, report.get("status"), passed])
+	main.queue_free()
+	await process_frame
 	return passed

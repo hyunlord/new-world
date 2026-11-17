@@ -90,36 +90,39 @@ func live() -> void:
 	var last: String = directory.path_join("after.save")
 	check("before save", bool(world.call("save_world", first)))
 	camera.call("center_on_camp")
+	var w3d: Node = main.get_node("World3D")
+	(w3d.get("rig") as Node).call("update_camera")
+	var people: Node = w3d.get_node("People")
+	var snapshot: Dictionary = world.call("get_agent_snapshot")
+	var original_ids: Array[int] = []
+	for bits: int in snapshot.get("ids", PackedInt64Array()):
+		var body: Dictionary = people.call("body_of", bits)
+		check("native resident has rendered person", not body.is_empty())
+		if body.is_empty():
+			continue
+		var original: Rect2 = independent_body_bounds(w3d, body)
+		if original.has_area() and camera.get_viewport_rect().encloses(original):
+			original_ids.append(bits)
 	await settle()
 	var report: Dictionary = camera.call("camp_framing_report")
 	print("CAMP_FRAMING_REPORT " + JSON.stringify(report))
 	check("half zoom Home finds a clear view", report.get("status", "") == "placed")
 	if report.get("status", "") == "placed":
-		var shift: Vector2 = report["translation"]
-		for body: Rect2 in report["bodies"]:
-			var moved: Rect2 = Rect2(body.position + shift, body.size)
-			check("original body retained on screen", camera.get_viewport_rect().encloses(moved))
+		var projected: Array = report.get("projected_bodies", [])
+		check("every original body reprojected", projected.size() == original_ids.size())
+		for body: Rect2 in projected:
+			check("projected body retained on screen", camera.get_viewport_rect().encloses(body))
 			for obstacle: Rect2 in report["obstacles"]:
-				check("original body clears actual HUD", not moved.intersects(obstacle))
-		var w3d: Node = main.get_node("World3D")
-		var people: Node = w3d.get_node("People")
+				check("projected body clears actual HUD", not body.intersects(obstacle))
 		var current_obstacles: Array[Rect2] = []
 		Layout.ui_rects(main.get_node("UI"), current_obstacles)
-		var snapshot: Dictionary = world.call("get_agent_snapshot")
-		var original_ids: Array[int] = []
-		for bits: int in snapshot.get("ids", PackedInt64Array()):
+		for bits: int in original_ids:
 			var body: Dictionary = people.call("body_of", bits)
-			check("native resident has rendered person", not body.is_empty())
-			if body.is_empty():
-				continue
 			var current: Rect2 = independent_body_bounds(w3d, body)
 			check("native resident has nonempty body", current.has_area())
-			var original: Rect2 = Rect2(current.position - shift, current.size)
-			if camera.get_viewport_rect().encloses(original):
-				original_ids.append(bits)
-				check("fresh body projection retained", camera.get_viewport_rect().encloses(current))
-				for obstacle: Rect2 in current_obstacles:
-					check("fresh body projection clear", not current.intersects(obstacle))
+			check("fresh body projection retained", camera.get_viewport_rect().encloses(current))
+			for obstacle: Rect2 in current_obstacles:
+				check("fresh body projection clear", not current.intersects(obstacle))
 		var reported_ids: Array = report["ids"].duplicate()
 		reported_ids.sort()
 		original_ids.sort()
