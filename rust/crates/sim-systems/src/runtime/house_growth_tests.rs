@@ -539,7 +539,7 @@ fn steward_upgrade_dispatch_respects_scope_cooldown_and_interior_veto_and_replay
             if scope == StewardScope::Housing {
                 accepted = Some((
                     engine.resources.colony.command_log[before..].to_vec(),
-                    waves[0].clone(),
+                    *waves[0],
                     engine.resources.colony.buildings.sites[&site].clone(),
                 ));
             }
