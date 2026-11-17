@@ -12,7 +12,7 @@ Implementation is under verification. Publication requires the frozen HEAD's ful
 ### Changed
 - Colony movement uses authored tile costs and step intervals; footfall decays over active tiles at day boundaries. Paved paths remain placed construction.
 - Era-qualified dwelling upgrades require stocked materials and replacement beds, with at most one active dwelling construction per settlement. Initial values are recorded in `docs/v8/BALANCE_DEBT.md` for M-BAL.
-- Save format 24 appends growth state outside historical nested wire layouts; known historical saves migrate through explicit admission and growth validation. See ADR 0069 and `docs/v8/mgrow/DECISIONS.md`.
+- Save format 24 appends growth state outside historical nested wire layouts; known historical saves migrate through explicit admission and growth validation. See ADR 0070 and `docs/v8/mgrow/DECISIONS.md`.
 
 ### Removed
 - None.

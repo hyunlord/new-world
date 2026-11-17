@@ -1,4 +1,4 @@
-# ADR 0069 — Bounded village growth from selected content
+# ADR 0070 — Bounded village growth from selected content
 
 ## Context
 

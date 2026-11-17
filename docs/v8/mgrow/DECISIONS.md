@@ -2,7 +2,7 @@
 
 Authority: owner #686, the external `goal_worldsim_mgrow.md`, and
 `/Users/rexxa/work/mgrow-data/D-MGROW-1.md`. Original specifications and failed
-verification evidence remain unchanged. [ADR0069](../../decisions/0069-bounded-village-growth.md)
+verification evidence remain unchanged. [ADR0070](../../decisions/0070-bounded-village-growth.md)
 records the M-GROW-a architecture.
 
 | Decision | Rationale and constraint |

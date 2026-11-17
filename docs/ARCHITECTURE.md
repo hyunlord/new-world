@@ -941,7 +941,7 @@ the `scripts/world/view_projection.gd` provider for screen ↔ world conversion.
 Material detail uses `assets/3d/textures3d.json` and `scripts/world3d/textures3d.gd`: shared padded albedo/normal atlases in `assets/3d/textures/`, sampled by existing terrain, wall, roof and static-model materials. Original tints and surface counts remain; the crowd/VAT material path is unchanged. See [ADR0068](decisions/0068-generated-material-texture-atlas.md).
 
 
-## Village growth (M-GROW-a, ADR 0069)
+## Village growth (M-GROW-a, ADR 0070)
 
 The selected content catalogue resolves `colony/paths.ron`, `zones.ron` and
 `yards.ron`. Layout ids remain registered in `buildings.ron`; behavior branches
