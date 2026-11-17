@@ -291,27 +291,9 @@ impl RuntimeSystem for AgentMovementSystem {
             resources.nav.blocked.clear();
         }
         let base_interval = rules.move_interval_ticks.max(1);
-        // M-GROW 3.2: the minimum step interval across all path stages (dirt/paved
-        // move faster). The system runs on ticks that are multiples of this minimum;
-        // each agent then checks its own tile's interval inside the loop.
-        let min_interval = if colony {
-            sim_core::colony::paths::installed()
-                .stages
-                .iter()
-                .map(|s| s.step_interval)
-                .filter(|&i| i > 0)
-                .min()
-                .unwrap_or(base_interval)
-                .min(base_interval)
-        } else {
-            base_interval
-        };
-        if !resources.current_tick.is_multiple_of(min_interval) {
+        if !colony && !resources.current_tick.is_multiple_of(base_interval) {
             return;
         }
-        // Whether this tick is a base-interval tick (every agent moves) or only
-        // a fast-path tick (only agents on fast tiles move).
-        let is_base_tick = resources.current_tick.is_multiple_of(base_interval);
         let child_rule = resources.rules.society.life_stage;
         let evening_radius = rules
             .evening_gather
@@ -439,20 +421,22 @@ impl RuntimeSystem for AgentMovementSystem {
             // Pass 20: a porter on its trip is treated as a founder on its
             // way — no haul home, no tether (no `PorterTrip` outside `game_v25`).
             let walker = founding.is_some() || porter.is_some();
-            // M-GROW 3.2: on a non-base tick only agents standing on a fast-path
-            // tile (step_interval < base_interval) may move.
-            if !is_base_tick && colony {
+            // Each tile uses its own cadence; a shared minimum would skip grass ticks.
+            if colony {
                 let tile_idx = grid_ref.idx(pos.x, pos.y);
                 let stage_code = colony_state.path_stage.get(tile_idx).copied().unwrap_or(0);
-                let tile_interval = sim_core::colony::paths::installed()
-                    .stage_by_code(stage_code)
-                    .map_or(base_interval, |s| s.step_interval);
+                let tile_interval =
+                    sim_core::colony::paths::installed().step_interval(stage_code, base_interval);
                 if !tick.is_multiple_of(tile_interval.max(1)) {
+                    if let Some(agent) = agent {
+                        walking.insert(agent.id);
+                    }
                     continue;
                 }
             }
             // M-GROW 3.2: capture position before this agent's movement.
             let before_pos = (pos.x, pos.y);
+            let is_person = agent.is_some();
             let lean = temperament_rule.zip(temperament);
             // V7 Section 16-β: three movement branches keyed directly on the
             // FSM state (NOT via `suppresses_movement()` — that predicate
@@ -519,7 +503,7 @@ impl RuntimeSystem for AgentMovementSystem {
                             pos.y = to.1;
                         }
                     }
-                    if colony && (pos.x, pos.y) != before_pos {
+                    if colony && is_person && (pos.x, pos.y) != before_pos {
                         footfall_steps.push((pos.x, pos.y));
                     }
                     continue;
@@ -590,7 +574,7 @@ impl RuntimeSystem for AgentMovementSystem {
                     // No Brownian for Seeking either way (target → directed
                     // above; no target → freeze).
                     if !abandoned {
-                        if colony && (pos.x, pos.y) != before_pos {
+                        if colony && is_person && (pos.x, pos.y) != before_pos {
                             footfall_steps.push((pos.x, pos.y));
                         }
                         continue;
@@ -651,7 +635,7 @@ impl RuntimeSystem for AgentMovementSystem {
                                 .clamp(0, max_y) as u32;
                         }
                         haul_steps.push(agent.id);
-                        if colony && (pos.x, pos.y) != before_pos {
+                        if colony && is_person && (pos.x, pos.y) != before_pos {
                             footfall_steps.push((pos.x, pos.y));
                         }
                         continue;
@@ -769,7 +753,7 @@ impl RuntimeSystem for AgentMovementSystem {
             pos.x = to.0;
             pos.y = to.1;
             // M-GROW 3.2: record footfall for every tile an agent stepped onto.
-            if colony && (pos.x, pos.y) != before_pos {
+            if colony && is_person && (pos.x, pos.y) != before_pos {
                 footfall_steps.push((pos.x, pos.y));
             }
         }
@@ -787,8 +771,7 @@ impl RuntimeSystem for AgentMovementSystem {
             }
             for tile in &footfall_steps {
                 let idx = grid_ref.idx(tile.0, tile.1);
-                colony_state.footfall[idx] =
-                    colony_state.footfall[idx].saturating_add(1);
+                colony_state.footfall[idx] = colony_state.footfall[idx].saturating_add(1);
                 colony_state.footfall_touched.insert(*tile);
             }
         }

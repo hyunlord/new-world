@@ -173,6 +173,7 @@ pub fn complete_site(world: &mut World, res: &mut SimResources, entity: Entity) 
 
 /// Mark `tile` changed: the nav map, the rooms, the overlay.
 pub fn changed(res: &mut SimResources, tile: (u32, u32)) {
+    crate::runtime::paths::refresh_built_surface(res, tile);
     crate::runtime::nav::refresh(res, tile);
     res.colony.rooms_dirty = true;
     res.colony.touch(false);

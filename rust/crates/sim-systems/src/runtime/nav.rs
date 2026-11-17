@@ -5,7 +5,7 @@
 //! [`tile_cost`] is the one definition of passability: river, mountain, undug
 //! hill, a wall without a door and a wall's construction site are impassable;
 //! a door (built or a site) costs 12; a ford (M4: a shallow river tile placed
-//! by the colony worldgen) 30; anything else 10. [`ensure`] builds the
+//! by the colony worldgen) 30; other ground uses its authored path-stage cost. [`ensure`] builds the
 //! map when it is missing (a new colony world, or after a load: the map is not
 //! saved) and [`refresh`] re-reads one tile after the code that changed it —
 //! the only writers are the commands and the job layer, never a renderer.
@@ -78,6 +78,16 @@ pub fn ensure(res: &mut SimResources) {
     let map = res.nav.map();
     if map.is_empty() || map.width() != res.tile_grid.width || map.height() != res.tile_grid.height
     {
+        let floors: Vec<_> = res
+            .content_state
+            .completed
+            .keys()
+            .filter(|(_, layer)| *layer == sim_core::colony::content_state::CompletedLayer::Floor)
+            .map(|(tile, _)| *tile)
+            .collect();
+        for tile in floors {
+            crate::runtime::paths::refresh_built_surface(res, tile);
+        }
         let fresh = build(res);
         res.nav.install(fresh);
     }
