@@ -122,6 +122,8 @@ pub struct ColonyVersions {
     pub trees: u64,
     /// `colony.overlay_version`.
     pub overlay: u64,
+    /// Derived walking-surface cache epoch, reset by world replacement.
+    pub paths: u64,
     /// `colony.rooms_version` (M3).
     pub rooms: u64,
 }
@@ -132,6 +134,7 @@ pub fn collect_colony_versions(resources: &SimResources) -> ColonyVersions {
         command_revision: resources.colony.command_log.len() as u64,
         trees: resources.colony.trees_version,
         overlay: resources.colony.overlay_version,
+        paths: resources.colony.path_version,
         rooms: resources.colony.rooms_version,
     }
 }
@@ -141,6 +144,7 @@ pub(super) fn versions_to_dict(v: ColonyVersions) -> VarDictionary {
     dict.set("command_revision", v.command_revision as i64);
     dict.set("trees_version", v.trees as i64);
     dict.set("overlay_version", v.overlay as i64);
+    dict.set("path_version", v.paths as i64);
     dict.set("rooms_version", v.rooms as i64);
     dict
 }

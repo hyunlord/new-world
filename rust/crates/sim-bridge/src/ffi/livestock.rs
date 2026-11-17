@@ -293,7 +293,13 @@ pub(super) fn livestock_chronicle_rows_to_dict(
         .iter()
         .map(|i| super::ore::evidence_to_dict(res, u32::try_from(*i).ok()))
         .collect();
+    let growth: Array<VarDictionary> = rows
+        .index
+        .iter()
+        .map(|i| super::home_housing::growth_evidence(res, u32::try_from(*i).ok()))
+        .collect();
     let mut out = super::food::food_chronicle_rows_to_dict(rows, page, res);
+    out.set("growth_evidence", growth);
     out.set("ore_evidence", ore);
     out.set("livestock_evidence", evidence);
     out
@@ -332,7 +338,23 @@ pub(super) fn livestock_why_to_dict(
             )
         })
         .collect();
+    let growth: Array<VarDictionary> = rows
+        .link
+        .iter()
+        .zip(&rows.code)
+        .map(|(link, code)| {
+            super::home_housing::growth_evidence(
+                res,
+                if *link == 0 {
+                    u32::try_from(*code).ok()
+                } else {
+                    None
+                },
+            )
+        })
+        .collect();
     let mut out = super::food::food_why_to_dict(rows, res);
+    out.set("growth_evidence", growth);
     out.set("ore_evidence", ore);
     out.set("livestock_evidence", evidence);
     out

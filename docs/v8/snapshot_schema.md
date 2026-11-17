@@ -1,6 +1,6 @@
 # Snapshot schema — the bridge's read surface
 
-Schema version: 16 — M-SPINE-b adds template catalogue/zone definitions, physical site/options and placement/cause reads, housing overlay, assigned-bed template home and command revision. Implementation integrated; b runtime validation pending. Version 15 — M-SPINE-a adds data-authored era/lane catalogues, tech status/debt and per-era progress. Version 14 — M6b Stage2 appends physical apparel/wear and weaving diagnosis facts (implementation in progress). Version 13 — M6a adds plant, meal and physical-food storage reads plus harvest designation. Version 12 — M-CORE adds the read-only `get_agent_mind` choice and reason view. Version 11 — M-UX2 adds independent defence state/command and the optional native timing diagnostic. Version 10 — M-UX Stage B adds pressure/animal catalogue metadata, actual pressure banner identity and species presentation columns. Schema 9 introduced the immutable core catalogue, factory preflight, full-width content columns and mechanical door flags. Catalogue DTO version remains 1; it is independent of this document version.
+Schema version: 17 — M-GROW-a appends zone layout evidence, house stages and decorative yard projections to existing getters. Version 16 — M-SPINE-b adds template catalogue/zone definitions, physical site/options and placement/cause reads, housing overlay, assigned-bed template home and command revision. Implementation integrated; b runtime validation pending. Version 15 — M-SPINE-a adds data-authored era/lane catalogues, tech status/debt and per-era progress. Version 14 — M6b Stage2 appends physical apparel/wear and weaving diagnosis facts (implementation in progress). Version 13 — M6a adds plant, meal and physical-food storage reads plus harvest designation. Version 12 — M-CORE adds the read-only `get_agent_mind` choice and reason view. Version 11 — M-UX2 adds independent defence state/command and the optional native timing diagnostic. Version 10 — M-UX Stage B adds pressure/animal catalogue metadata, actual pressure banner identity and species presentation columns. Schema 9 introduced the immutable core catalogue, factory preflight, full-width content columns and mechanical door flags. Catalogue DTO version remains 1; it is independent of this document version.
 
 History: 8 (M-UX adds `get_ui_facts`, `get_steward`, and the logged `cmd_set_steward` mode command. 7 — M-ART2: the snapshot's appearance columns `sexes`, `look_ids`, `variants` from `collect_appearance` (`ffi/appearance.rs`, rule file `rust/crates/sim-bridge/data/appearance.ron`) and `get_space`'s `wall_materials`, `wall_styles`, `wall_categories`, `floor_materials`, `floor_styles`, `floor_categories`; no getter added or removed. 6 — M5.5: the neighbour reads `get_neighbours`, `get_wave`, `get_caravan`, the snapshot's `fleeing`, `get_agent_m5`'s `fleeing`, `get_year_summary`'s `migrants_joined`, `trades`, `eurekas` and chronicle kinds 38–44; M5: the story, animal and mood reads `get_story`, `get_animals`, `get_agent_m5`, `get_drafted`, `get_chronicle_why`, `get_year_summary`, `get_teach_suggestion`, the snapshot's `tops`, `mood_bands`, `drafted`, `sick` and the chronicle rows' `index` and links; M4 the knowledge reads `get_tech`, `get_tech_node`, `get_agent_knowledge`, `get_teach_orders`, `get_knowledge_waits`, `get_space`'s fords and the new item, recipe, blueprint, job and chronicle codes; M3 added built space, rooms, the place preview and the overlay's `item_covered`; M2 the economy reads and the overlay's node, mark and quality columns).
 
@@ -238,7 +238,7 @@ never the rolling event buffers.
 
 ### `get_terrain_snapshot`
 `collect_terrain_snapshot(&SimResources) -> TerrainSnapshot` → `terrain_snapshot_to_dict` (`ffi/snapshot.rs`).
-Row-major (`index = y * width + x`), fixed per world.
+Row-major (`index = y * width + x`); terrain/elevation are fixed per world, while path stages refresh with colony path version.
 
 | key | type | meaning |
 |---|---|---|
@@ -246,6 +246,7 @@ Row-major (`index = y * width + x`), fixed per world.
 | `height` | int | map height |
 | `terrain` | PackedByteArray | `TerrainType` in declaration order: 0 Plain, 1 Forest, 2 Mountain, 3 Hill, 4 River, 5 Coast, 6 Desert, 7 Tundra, 8 Swamp, 9 Cave |
 | `elevation` | PackedByteArray | elevation byte per tile |
+| `path_stage` | PackedByteArray | authored path stage per tile, updated at day boundaries; empty outside colony mode |
 
 ### `get_tile_detail`
 `get_tile_detail(x, y)`: built in the `#[func]` body from `resources.influence_grid` (`InfluenceGrid::sample`; key names
@@ -479,6 +480,7 @@ C1-b additive nested fields:
 | key | type | meaning |
 |---|---|---|
 | `ore_evidence` | Array[Dictionary] | aligned immutable geological witness metadata; empty dictionary when absent |
+| `growth_evidence` | Array[Dictionary] | aligned zone/house/era growth evidence; empty dictionary for other entries; see Growth evidence below |
 | `attempt` | int | Committed keyed capture attempt. |
 | `count` | int | Nested pen population or committed milk yield quantity. |
 | `counts` | PackedInt64Array | Slaughter quantities aligned with products. |
@@ -536,6 +538,7 @@ C1-b additive nested fields:
 | key | type | meaning |
 |---|---|---|
 | `ore_evidence` | Array[Dictionary] | aligned immutable geological witness metadata; empty dictionary when absent |
+| `growth_evidence` | Array[Dictionary] | aligned zone/house/era growth evidence; empty dictionary for other entries; see Growth evidence below |
 | `attempt` | int | Committed keyed capture attempt. |
 | `count` | int | Nested pen population or committed milk yield quantity. |
 | `counts` | PackedInt64Array | Slaughter quantities aligned with products. |
@@ -593,6 +596,7 @@ C1-b additive nested fields:
 | key | type | meaning |
 |---|---|---|
 | `ore_evidence` | Array[Dictionary] | aligned immutable geological witness metadata; empty dictionary when absent |
+| `growth_evidence` | Array[Dictionary] | aligned zone/house/era growth evidence; empty dictionary for other entries; see Growth evidence below |
 | `attempt` | int | Committed keyed capture attempt. |
 | `count` | int | Nested pen population or committed milk yield quantity. |
 | `counts` | PackedInt64Array | Slaughter quantities aligned with products. |
@@ -737,6 +741,11 @@ order then authored station order. These ids do not join the legacy `ids` column
 |---|---|---|
 | `template_options` | Array[Dictionary] | outer: one option per template/station alternative |
 | `template_sites` | Array[Dictionary] | outer: retained persistent aggregate building sites |
+| `yard_models` | PackedStringArray | outer: selected authored prop model list, preloaded before later house stages appear |
+| `house_stage` | int | site: monotone authored stage code; 0 before growth is recorded |
+| `house_stage_name_key` | String | site: authored stage localization key |
+| `occupied_days` | int | site: accumulated days with assigned occupants |
+| `yard_props` | Array[Dictionary] | site: safe decorative placements; rows carry id/model:String, x/y:int tile coordinates and rotation:int clockwise quarter turns; pure collect_yard_props; empty on non-intact sites |
 | `id` | String or int | option: authored template id; site: numeric persistent BuildingSite id |
 | `station` | String | option choice or persisted site selection, empty no station |
 | `known` | bool | option: Connected and every required knowledge present |
@@ -884,6 +893,7 @@ frame.
 
 | key | type | meaning |
 |---|---|---|
+| `path_version` | int | derived path-stage revision; increments only on stage changes, reset on load/world reset; invalidates cached terrain path reads |
 | `trees_version` | int | `colony.trees_version`, bumped when a tree is felled or added |
 | `overlay_version` | int | `colony.overlay_version`, bumped when marks, zones, stacks or sites change |
 | `rooms_version` | int | M3: `colony.rooms_version`, bumped when the rooms or their roles change |
@@ -941,6 +951,14 @@ tile; M2 adds resource nodes by tile.
 | `housing_zone_ys` | PackedInt32Array | housing tile y; conversion failure warns and returns all three housing arrays empty |
 
 ## Built space and rooms (M3)
+
+#### Layout zone helper fields
+
+`home_housing::append_layout_tiles` appends `layout_zones: Array[Dictionary]` in persistent zone-id order.
+Each row has the zone evidence keys below plus `category: String` (housing/storage/workshop/field/pen/default)
+and parallel `xs`, `ys: PackedInt64Array` tiles in ordered-set order. This is separate from stockpile columns and
+player housing designations. The 3D Z overlay is off by default; automatic zone tint/borders appear only while it is on.
+The existing overlay version changes when zones are laid out.
 
 ### `get_space`
 `collect_space(&SimResources) -> SpaceView` → `space_to_dict` (`ffi/space.rs`). Every wall, door, floor and dug
@@ -1358,6 +1376,7 @@ C1-b additive nested fields:
 | key | type | meaning |
 |---|---|---|
 | `ore_evidence` | Array[Dictionary] | aligned immutable geological witness metadata; empty dictionary when absent |
+| `growth_evidence` | Array[Dictionary] | aligned zone/house/era growth evidence; empty dictionary for other entries; see Growth evidence below |
 | `attempt` | int | Committed keyed capture attempt. |
 | `count` | int | Nested pen population or committed milk yield quantity. |
 | `counts` | PackedInt64Array | Slaughter quantities aligned with products. |
@@ -2351,6 +2370,30 @@ own matching source record. Invalid identity/witness returns only `valid: false`
 | `cause` | String | immutable command/zone/steward origin |
 | `cause_kind` | String | same origin label for Why presentation |
 | `cause_id` | int | zone/steward id, -1 direct command |
+
+#### Growth evidence
+
+`get_building_cause` appends zone evidence when the retained site's `site_zones` link resolves; its
+`cause` and `cause_id` remain the original steward provenance. Chronicle kinds 70/71/72 use the aligned
+`growth_evidence` dictionaries in feeds and Why reads (empty for unrelated entries).
+
+| key | type | scope and meaning |
+|---|---|---|
+| `zone_id` | int | zone evidence: persistent shared zone allocator id |
+| `zone_kind` | String | zone evidence: selected buildings.ron registry identity |
+| `zone_name_key` | String | zone evidence: authored localized zone name |
+| `zone_trigger` | String | zone evidence: saved trigger fact, not re-evaluated current demand |
+| `zone_people` | int | zone evidence: recorded people count at layout |
+| `zone_slots` | int | zone evidence: recorded available capacity at layout |
+| `zone_direction_key` | String | zone evidence: cardinal direction of zone centroid from the current hearth; UI_UNKNOWN if absent |
+| `site_id` | int | HouseStage71/MaterialWave72 evidence: persistent site identity from the entry |
+| `house_stage_name_key` | String | HouseStage71 evidence: stage named by the entry's immutable value, not the site's later stage |
+| `era_name_key` | String | MaterialWave72 evidence: era named by the entry's immutable value |
+
+Yard placement projects selected data onto a free footprint-adjacent tile, rotating with the site's actual
+footprint. It skips out-of-bounds/impassable cells, paths, door approaches, fields, deposits, stockpiles,
+resources and construction footprints; it never reserves or modifies simulation space. The renderer fits
+model bounds within that tile. `collect_yard_props` is pure Rust and is the data-only extension test surface.
 
 ### `cmd_build_template`
 `cmd_build_template(id: String, x: int, y: int, rotation: int, station: String) -> Dictionary`

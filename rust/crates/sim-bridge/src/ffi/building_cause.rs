@@ -143,6 +143,14 @@ pub fn collect(res: &SimResources, command_boundary: u64, site: i64, record: i64
     row.set("y", i64::from(anchor.1));
     row.set("rotation", i64::from(rotation));
     row.set("completion_entry", completion.map(i64::from).unwrap_or(-1));
+    if let Some(&zone) = res.colony.buildings.site_zones.get(&site) {
+        let detail = super::super::home_housing::zone_cause(res, zone);
+        for key in detail.keys_array().iter_shared() {
+            if let Some(value) = detail.get(key.clone()) {
+                row.set(key, value);
+            }
+        }
+    }
     origin(&mut row, cause);
     row.set(
         "cause_kind",

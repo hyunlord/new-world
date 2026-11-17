@@ -865,8 +865,7 @@ pub struct TerrainSnapshot {
 
 /// Copy simulation grid data in its canonical row-major order.
 pub fn collect_terrain_snapshot(resources: &SimResources) -> TerrainSnapshot {
-    let grid_len =
-        (resources.tile_grid.width as usize) * (resources.tile_grid.height as usize);
+    let grid_len = (resources.tile_grid.width as usize) * (resources.tile_grid.height as usize);
     TerrainSnapshot {
         width: resources.tile_grid.width,
         height: resources.tile_grid.height,

@@ -1,4 +1,4 @@
-//! Additive site/options snapshot. NOT_COMPILED/NOT_RUN.
+//! Additive physical site/options and decorative growth snapshot.
 use super::*;
 /// Append only; preserve every existing get_building_snapshot packed-array column.
 pub fn append_snapshot(engine: &SimEngine, out: &mut VarDictionary) {
@@ -55,6 +55,7 @@ pub fn append_snapshot(engine: &SimEngine, out: &mut VarDictionary) {
     let mut sites: Array<VarDictionary> = Array::new();
     for site in engine.resources.colony.buildings.sites.values() {
         let mut row = site_row(site);
+        super::super::home_housing::append_house_stage(&mut row, &engine.resources, site);
         row.set(
             "is_intact",
             sim_systems::runtime::building_templates::is_intact(&engine.resources, site),
@@ -97,6 +98,13 @@ pub fn append_snapshot(engine: &SimEngine, out: &mut VarDictionary) {
         }
         sites.push(&row);
     }
+    let yard_models: PackedStringArray = catalog
+        .yards()
+        .props
+        .iter()
+        .map(|prop| GString::from(prop.model.as_str()))
+        .collect();
+    out.set("yard_models", yard_models);
     out.set("template_options", options);
     out.set("template_sites", sites);
 }

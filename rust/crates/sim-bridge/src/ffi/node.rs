@@ -1511,6 +1511,7 @@ impl WorldSimNode {
             out.set("housing_zone_xs", PackedInt32Array::new());
             out.set("housing_zone_ys", PackedInt32Array::new());
         }
+        super::home_housing::append_layout_tiles(&mut out, &self.engine.resources);
         out
     }
 
