@@ -178,6 +178,21 @@ class FreezeReceiptTests(unittest.TestCase):
 
 
 class VisualReceiptTests(unittest.TestCase):
+    def test_rejects_runtime_errors_before_downstream_validation(self) -> None:
+        # Given a zero-exit capture log containing a Godot diagnostic, even with a completion marker.
+        diagnostics = ('ERROR: Error compiling Fragment shader.',
+                       'SHADER ERROR: Invalid arguments for operator +.',
+                       'ERROR: Condition "variant_stages.is_empty()" is true.')
+        with tempfile.TemporaryDirectory() as tmp:
+            output = Path(tmp)
+            for diagnostic in diagnostics:
+                (output / 'command.log').write_text(f'W3D_SHOTS_DONE n=4\n{diagnostic}\n')
+                with self.subTest(diagnostic=diagnostic), patch.object(receipts, 'validate_why', return_value=[]) as downstream:
+                    # When a receipt is validated, then runtime errors reject it before its success oracle runs.
+                    with self.assertRaisesRegex(receipts.EvidenceError, 'capture runtime error'):
+                        receipts.validate_output(output, output, 'why')
+                    downstream.assert_not_called()
+
     def test_retired_2d_oracles_are_unknown(self) -> None:
         # M3D-SWITCH E2: the 2D badge, marker, cache and bake oracles went with the 2D renderer; their logs
         # cannot stand in for a current oracle.

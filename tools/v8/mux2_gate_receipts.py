@@ -94,7 +94,10 @@ def commands(root: Path, output: Path, kind: Kind, godot: Path) -> list[list[str
 
 def validate_output(root: Path, out: Path, kind: Kind) -> list[Path]:
     log = out / 'command.log'
-    require('SCRIPT ERROR' not in log.read_text(), 'capture script error')
+    text = log.read_text()
+    require('SCRIPT ERROR' not in text, 'capture script error')
+    require(not any(line.lstrip().startswith(('ERROR:', 'SHADER ERROR:')) for line in text.splitlines()),
+            'capture runtime error')
     extra: list[Path] = []
     match kind:
         case 'stall':
