@@ -34,6 +34,9 @@ static func _load() -> void:
 	_loaded = true
 	_params = _read(PARAMS_PATH)
 	_bindings = _read(BINDINGS_PATH)
+	var overlay_path: String = OS.get_environment("WORLDSIM_3D_BINDINGS")
+	if not overlay_path.is_empty():
+		_merge_bindings(_bindings, _read(overlay_path))
 	_manifest = {}
 	for pattern: Variant in _bindings.get("manifests", []):
 		for path: String in _expand(str(pattern)):
@@ -42,6 +45,15 @@ static func _load() -> void:
 				for id: Variant in models:
 					if not _manifest.has(id):
 						_manifest[id] = models[id]
+
+
+## Optional binding overlays replace leaves, preserving unrelated catalogue fallbacks.
+static func _merge_bindings(base: Dictionary, overlay: Dictionary) -> void:
+	for key: Variant in overlay:
+		if overlay[key] is Dictionary and base.get(key) is Dictionary:
+			_merge_bindings(base[key], overlay[key])
+		else:
+			base[key] = overlay[key]
 
 
 ## The files matching `pattern` (a `*` in the file name only), sorted; [] when none exist.

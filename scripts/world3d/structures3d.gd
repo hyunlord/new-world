@@ -111,7 +111,7 @@ func _process(delta: float) -> void:
 	var buildings: Dictionary = SimReads.read(_world_sim, "get_building_snapshot")
 	# Rebuild walls on wall/floor content, not on the shared overlay counter (hauling moves it every few ticks).
 	var version: int = hash([space.get("wall_xs"), space.get("wall_ys"), space.get("wall_materials"), space.get("wall_styles"),
-		space.get("wall_is_door"), space.get("floor_xs"), space.get("floor_ys"), space.get("floor_materials")])
+		space.get("wall_is_door"), space.get("floor_xs"), space.get("floor_ys"), space.get("floor_materials"), buildings.get("template_sites", [])])
 	var bkey: int = hash([buildings.get("kinds"), buildings.get("xs"), buildings.get("ys")])
 	if version != _space_version or bkey != int(_walls.get("_bkey", -1)):
 		_space_version = version
@@ -144,6 +144,8 @@ func _rebuild_walls(space: Dictionary, buildings: Dictionary) -> void:
 	var styles: PackedStringArray = space.get("wall_styles", PackedStringArray())
 	var cats: PackedStringArray = space.get("wall_categories", PackedStringArray())
 	for i: int in mini(xs.size(), ys.size()):
+		if replaced_template_tile(Vector2i(xs[i], ys[i]), buildings.get("template_sites", [])):
+			continue
 		var is_door: bool = (doors[i] == 1) if i < doors.size() else (i < kinds.size() and kinds[i] == 2)
 		var raw: int = (mats[i] & 0xFFFFFFFF) if i < mats.size() and mats[i] != -1 else -1
 		_walls[Vector2i(xs[i], ys[i])] = _wall_entry(styles[i] if i < styles.size() else "", raw, cats[i] if i < cats.size() else "", is_door)
@@ -566,6 +568,9 @@ func _rebuild_roofs(rooms: Dictionary, sites: Array) -> void:
 		var rid: int = ids[i]
 		if i >= roofed.size() or roofed[i] != 1 or (i < dug.size() and dug[i] == 1) or not tiles_of.has(rid):
 			continue
+		tiles_of[rid] = procedural_roof_tiles(tiles_of[rid], sites)
+		if (tiles_of[rid] as Array).is_empty():
+			continue
 		roofed_ids.append(rid)
 		for c: Vector2i in footprint_cells(tiles_of[rid]):
 			claimed[c] = rid
@@ -854,13 +859,18 @@ func _rebuild_sites(overlay: Dictionary, sites: Array) -> void:
 		else:
 			_outline(b, rect, g, sill, 0.1 + 0.5 * p)
 	for s: Variant in sites:
-		if s is not Dictionary or str((s as Dictionary).get("status", "")) != "building":
+		if s is not Dictionary or str((s as Dictionary).get("status", "")) not in ["building", "complete"]:
 			continue
 		var d: Dictionary = s
 		var r2: Rect2i = Rect2i(int(d.get("x", 0)), int(d.get("y", 0)), int(d.get("width", 1)), int(d.get("height", 1)))
 		var g2: float = float(_terrain.call("stand_height", r2.position))
 		var built: float = float(d.get("completed_pieces", 0)) / float(maxi(1, int(d.get("total_pieces", 1))))
-		var model: String = stage_model((Data3D.binding("sites.templates", {}) as Dictionary).get(str(d.get("template_id", ""))), built)
+		var model: String = completed_template_model(d)
+		if str(d.get("status", "")) == "complete":
+			if model != "":
+				_site_model(model, Rect2(r2), g2, float(int(d.get("rotation", 0))) * PI * 0.5, true)
+			continue
+		model = stage_model((Data3D.binding("sites.templates", {}) as Dictionary).get(str(d.get("template_id", ""))), built)
 		if model != "":
 			_site_model(model, Rect2(r2), g2, float(int(d.get("rotation", 0))) * PI * 0.5, true)
 			continue
@@ -871,6 +881,31 @@ func _rebuild_sites(overlay: Dictionary, sites: Array) -> void:
 		_site_node.name = "Sites"
 		add_child(_site_node)
 	_site_node.mesh = b.commit(wall_material)
+
+
+## Joined room extensions keep their roof even when some tiles use a complete-template model.
+static func procedural_roof_tiles(tiles: Array, sites: Array) -> Array:
+	var remaining: Array = []
+	for tile: Vector2i in tiles:
+		if not replaced_template_tile(tile, sites):
+			remaining.append(tile)
+	return remaining
+
+
+## Only an available, explicitly bound complete model suppresses procedural geometry.
+static func completed_template_model(site: Dictionary) -> String:
+	if str(site.get("status", "")) != "complete":
+		return ""
+	return Data3D.first_model((Data3D.binding("sites.completed_templates", {}) as Dictionary).get(str(site.get("template_id", "")), ""))
+
+
+static func replaced_template_tile(tile: Vector2i, sites: Array) -> bool:
+	for entry: Variant in sites:
+		if entry is Dictionary and completed_template_model(entry) != "":
+			var site: Dictionary = entry
+			if Rect2i(int(site.get("x", 0)), int(site.get("y", 0)), int(site.get("width", 1)), int(site.get("height", 1))).has_point(tile):
+				return true
+	return false
 
 
 ## The stage model of `stages` (a list foundation, half, … in bindings3d `sites`) at work progress `p` (0–1), else "".

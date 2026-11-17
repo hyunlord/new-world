@@ -227,3 +227,74 @@ Rows go to the fragment `assets/3d/models/w3d_stations_manifest.json` (same row 
   `goat_horns`, `curl_horns`, `long_horns`, `tusks`, `bristles`, `beard`, `wool`); the generator,
   actions (graze angle is solved from the neck/head geometry) and VAT come for free.
 * Rerun `build_all.py`, then `verify_vat.py` and `render_contact.py`, and look at the images.
+
+## Tripo proof pipeline (M3D-TRIPO1)
+
+This opt-in experiment reuses four already generated, licensed sources. Do not call
+Tripo or spend credits. Keep the raw GLBs in `/Users/rexxa/work/art-img-data/tripo-test/`
+and run evidence in `/Users/rexxa/work/art-img-data/tripo1/`, outside Git. Commit
+processed game assets only. Run from the repository root, replacing `blender` with
+the installed Blender executable when necessary:
+
+```sh
+blender -b --factory-startup -t 4 --python-exit-code 1 -P tools/3d/blender/tripo_build.py -- /Users/rexxa/work/art-img-data/tripo-test /Users/rexxa/work/art-img-data/tripo1
+blender -b --factory-startup --python-exit-code 1 -P tools/3d/blender/tripo_rig.py -- woman
+blender -b --factory-startup --python-exit-code 1 -P tools/3d/blender/tripo_rig.py -- goat
+blender -b --factory-startup --python-exit-code 1 -P tools/3d/blender/tripo_vat.py -- woman
+blender -b --factory-startup --python-exit-code 1 -P tools/3d/blender/tripo_vat.py -- goat
+```
+
+`tripo_build.py` accepts optional subject names after the two directories. It
+normalizes scale/ground pivot and builds `models/tripo_<subject>_lod{0,1,2}.glb`
+with baked `_albedo.png` / `_normal.png` alongside them; per-subject processing
+JSON records raw counts, scale, final rows and elapsed time. Budgets are
+8000/3000/1000 triangles for house and 4000/1500/500 for the other three subjects.
+The house uses a 2048 texture, other LOD0/1 subjects 1024, and every LOD2 512.
+These are requested budgets; processing receipts establish actual counts.
+
+`tripo_rig.py` overwrites each woman/goat processed GLB with its shared animated
+rig; optional final `0`, `1` or `2` limits work to one LOD. It welds UV seam
+vertices for heat auto weights, uses the inherited limited residual-weight repair,
+and transfers the existing procedural clips onto the shared rest skeleton (with
+arm lowering for the woman). There are no manually authored Tripo weights.
+
+`tripo_vat.py` has the same subject/optional-LOD arguments and reuses `chars_c` /
+`chars_b`. Base ids `tripo_woman` and `tripo_goat` are LOD0; `_lod1` / `_lod2` are
+explicit LOD ids and `_lod` aliases the LOD2 crowd bake. Each has
+`vat/<id>_static.glb`, `<id>_vat.bin`, `<id>_vat.json`, and an albedo atlas.
+The existing JSON schema records width, split vertex count, frames, clip aliases,
+textured atlas and bounds; binary data is float16 RGBA position rows. Model rows
+retain the existing `vat` path metadata in
+`models/tripo_vat_manifest.json` (`{"models": {"<id>": <row>}}`), preserving
+unrelated entries when one subject/LOD is rebuilt. Static fragment
+`models/tripo_manifest.json` uses the same keyed `models` map, with each model's
+footprint, bounds, triangle count, materials and sockets; processing receipts
+supply those rows.
+
+Select the replacement overlay **before** starting the existing game/capture
+command:
+
+```sh
+export WORLDSIM_3D_BINDINGS=res://assets/3d/bindings3d_tripo.json
+# Run the existing game/capture command only after machine-gate admission.
+unset WORLDSIM_3D_BINDINGS
+```
+
+Unset is baseline. Absolute external overlay paths also work. Nested dictionaries
+merge while leaves/arrays replace, so the shipped overlay explicitly includes all
+baseline manifest patterns plus the two Tripo fragments. It binds a complete
+`log_house`, bloomery station, neolithic adult-female variant and goat. Completed
+house replacement suppresses procedural footprint walls/room roof only when the
+bound GLB is available; floors and authoritative simulation geometry remain.
+
+Limits: the imported house is one opaque mesh with no roof cutaway/interior
+visibility; bloomery idle/working share one mesh and retain the odd generated tube.
+Baked normal maps survive static/rigged GLB export, but the existing crowd shader
+uses position VAT, flat normals and albedo, so VAT crowds do not display those
+normal maps. Heat weighting and shared procedural motion still require visual
+review; schema checks cannot establish rig quality. These commands and bindings
+do not prove actual same-spot captures, strict Godot checks or 500-agent FPS.
+Focused offline asset checks: `python3 tools/3d/blender/test_tripo.py`. This validates processed schemas/budgets, not runtime rendering.
+
+Godot windows/renders require the existing nonblocking machine gate lock; never
+launch them merely to test these commands while another pass owns the gate.

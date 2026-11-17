@@ -57,6 +57,26 @@ func _models_named(node: Variant, out: Dictionary, key: String = "") -> void:
 
 
 func _run() -> void:
+	# Binding overlays preserve siblings and replace leaves, including manifest lists.
+	var merged: Dictionary = {"family": {"keep": "old", "replace": "old"}, "manifests": ["old"]}
+	Data3D._merge_bindings(merged, {"family": {"replace": "new"}, "manifests": ["new"]})
+	_check("binding_overlay_merge", merged == {"family": {"keep": "old", "replace": "new"}, "manifests": ["new"]})
+	var saved_bindings: Dictionary = Data3D._bindings
+	Data3D.binding("sites", {}) # Load before replacing only this test's binding dictionary.
+	saved_bindings = Data3D._bindings
+	Data3D._bindings = {"sites": {"completed_templates": {"test_house": "tree_oak_a", "missing_house": "missing_tripo_test_model"}}}
+	var complete_site: Dictionary = {"template_id": "test_house", "status": "complete", "x": 3, "y": 5, "width": 4, "height": 2}
+	_check("complete_template_replaces_footprint", Structures.replaced_template_tile(Vector2i(3, 5), [complete_site]) and Structures.replaced_template_tile(Vector2i(6, 6), [complete_site]))
+	_check("complete_template_preserves_outside", not Structures.replaced_template_tile(Vector2i(7, 6), [complete_site]))
+	var joined_tiles: Array = [Vector2i(3, 5), Vector2i(6, 6), Vector2i(7, 6), Vector2i(8, 6)]
+	_check("joined_room_keeps_outside_roof_tiles", Structures.procedural_roof_tiles(joined_tiles, [complete_site]) == [Vector2i(7, 6), Vector2i(8, 6)])
+	_check("entirely_replaced_room_has_no_procedural_roof", Structures.procedural_roof_tiles([Vector2i(3, 5), Vector2i(6, 6)], [complete_site]).is_empty())
+	complete_site["status"] = "building"
+	_check("building_keeps_procedural_geometry", not Structures.replaced_template_tile(Vector2i(3, 5), [complete_site]) and Structures.procedural_roof_tiles(joined_tiles, [complete_site]) == joined_tiles)
+	complete_site["status"] = "complete"
+	complete_site["template_id"] = "missing_house"
+	_check("missing_complete_model_keeps_geometry", not Structures.replaced_template_tile(Vector2i(3, 5), [complete_site]))
+	Data3D._bindings = saved_bindings
 	# 1 bindings → models.
 	var bindings: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/3d/bindings3d.json"))
 	var names: Dictionary = {}

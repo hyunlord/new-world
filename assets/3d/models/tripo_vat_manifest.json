@@ -1,0 +1,372 @@
+{
+ "models": {
+  "tripo_goat": {
+   "file": "models/tripo_goat_lod0.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.01,
+   "triangles": 4000,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down",
+    "run",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "Root",
+    "BackUpper.L",
+    "BackLower.L",
+    "BackUpper.R",
+    "BackLower.R",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "Neck",
+    "Head"
+   ],
+   "vat": {
+    "static": "vat/tripo_goat_static.glb",
+    "bin": "vat/tripo_goat_vat.bin",
+    "json": "vat/tripo_goat_vat.json",
+    "atlas": "vat/tripo_goat_atlas.png",
+    "vertex_count": 12000
+   },
+   "textured": true,
+   "source_commit": "a403d174d7270038757b6d820d25971ddbddf558",
+   "subject": "goat"
+  },
+  "tripo_goat_lod": {
+   "file": "models/tripo_goat_lod2.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.017,
+   "triangles": 500,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down",
+    "run",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "Root",
+    "BackUpper.L",
+    "BackLower.L",
+    "BackUpper.R",
+    "BackLower.R",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "Neck",
+    "Head"
+   ],
+   "vat": {
+    "static": "vat/tripo_goat_lod_static.glb",
+    "bin": "vat/tripo_goat_lod_vat.bin",
+    "json": "vat/tripo_goat_lod_vat.json",
+    "atlas": "vat/tripo_goat_lod2_atlas.png",
+    "vertex_count": 1500
+   },
+   "textured": true,
+   "source_commit": "a403d174d7270038757b6d820d25971ddbddf558",
+   "subject": "goat"
+  },
+  "tripo_goat_lod1": {
+   "file": "models/tripo_goat_lod1.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.012,
+   "triangles": 1500,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down",
+    "run",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "Root",
+    "BackUpper.L",
+    "BackLower.L",
+    "BackUpper.R",
+    "BackLower.R",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "Neck",
+    "Head"
+   ],
+   "vat": {
+    "static": "vat/tripo_goat_lod1_static.glb",
+    "bin": "vat/tripo_goat_lod1_vat.bin",
+    "json": "vat/tripo_goat_lod1_vat.json",
+    "atlas": "vat/tripo_goat_lod1_atlas.png",
+    "vertex_count": 4500
+   },
+   "textured": true,
+   "source_commit": "a403d174d7270038757b6d820d25971ddbddf558",
+   "subject": "goat"
+  },
+  "tripo_goat_lod2": {
+   "file": "models/tripo_goat_lod2.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.017,
+   "triangles": 500,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down",
+    "run",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "Root",
+    "BackUpper.L",
+    "BackLower.L",
+    "BackUpper.R",
+    "BackLower.R",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "Neck",
+    "Head"
+   ],
+   "vat": {
+    "static": "vat/tripo_goat_lod2_static.glb",
+    "bin": "vat/tripo_goat_lod2_vat.bin",
+    "json": "vat/tripo_goat_lod2_vat.json",
+    "atlas": "vat/tripo_goat_lod2_atlas.png",
+    "vertex_count": 1500
+   },
+   "textured": true,
+   "source_commit": "a403d174d7270038757b6d820d25971ddbddf558",
+   "subject": "goat"
+  },
+  "tripo_woman": {
+   "file": "models/tripo_woman_lod0.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.6,
+   "triangles": 3998,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/tripo_woman_static.glb",
+    "bin": "vat/tripo_woman_vat.bin",
+    "json": "vat/tripo_woman_vat.json",
+    "atlas": "vat/tripo_woman_atlas.png",
+    "vertex_count": 11994
+   },
+   "textured": true,
+   "source_commit": "a403d174d7270038757b6d820d25971ddbddf558",
+   "subject": "woman"
+  },
+  "tripo_woman_lod": {
+   "file": "models/tripo_woman_lod2.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.601,
+   "triangles": 498,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/tripo_woman_lod_static.glb",
+    "bin": "vat/tripo_woman_lod_vat.bin",
+    "json": "vat/tripo_woman_lod_vat.json",
+    "atlas": "vat/tripo_woman_lod2_atlas.png",
+    "vertex_count": 1494
+   },
+   "textured": true,
+   "source_commit": "a403d174d7270038757b6d820d25971ddbddf558",
+   "subject": "woman"
+  },
+  "tripo_woman_lod1": {
+   "file": "models/tripo_woman_lod1.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.601,
+   "triangles": 1500,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/tripo_woman_lod1_static.glb",
+    "bin": "vat/tripo_woman_lod1_vat.bin",
+    "json": "vat/tripo_woman_lod1_vat.json",
+    "atlas": "vat/tripo_woman_lod1_atlas.png",
+    "vertex_count": 4500
+   },
+   "textured": true,
+   "source_commit": "a403d174d7270038757b6d820d25971ddbddf558",
+   "subject": "woman"
+  },
+  "tripo_woman_lod2": {
+   "file": "models/tripo_woman_lod2.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.601,
+   "triangles": 498,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/tripo_woman_lod2_static.glb",
+    "bin": "vat/tripo_woman_lod2_vat.bin",
+    "json": "vat/tripo_woman_lod2_vat.json",
+    "atlas": "vat/tripo_woman_lod2_atlas.png",
+    "vertex_count": 1494
+   },
+   "textured": true,
+   "source_commit": "a403d174d7270038757b6d820d25971ddbddf558",
+   "subject": "woman"
+  }
+ }
+}

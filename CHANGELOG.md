@@ -1,5 +1,15 @@
 # Changelog
 
+## M3D-TRIPO1 — experimental opt-in pipeline, 2026-11-18
+
+### Added
+- Offline normalization, decimation, texture baking, shared-skeleton rigging and VAT helpers for four existing licensed Tripo sources (`tools/3d/blender/tripo_build.py`, `tripo_rig.py`, `tripo_vat.py`). Raw inputs and processing evidence stay outside Git; no Tripo API calls or new credits.
+- Optional recursive binding overlay (`WORLDSIM_3D_BINDINGS`, `assets/3d/bindings3d_tripo.json`) for a log house, bloomery, neolithic adult female and goat. Existing bindings remain the default; focused data tests cover overlay preservation and completed-template fallback.
+
+### Changed
+- Complete template sites may draw an available data-bound model instead of procedural footprint walls and room roof. Missing models preserve procedural geometry. The imported house has no cutaway; bloomery idle/working share one mesh, and the existing crowd shader uses position VAT and flat normals rather than the baked normal map.
+- This is an experimental asset branch: same-spot captures, Godot runtime checks and the 500-agent FPS acceptance remain separate and are not claimed by this entry ([ADR0070](docs/decisions/0070-opt-in-tripo-assets.md)).
+
 ## M-POLISH+GATE — 2026-11-17
 
 ### Added

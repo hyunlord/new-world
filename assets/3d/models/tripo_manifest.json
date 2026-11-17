@@ -1,0 +1,154 @@
+{
+ "models": {
+  "tripo_bloomery_lod0": {
+   "file": "models/tripo_bloomery_lod0.glb",
+   "triangles": 3999,
+   "height": 1.3996,
+   "bounds": [
+    [
+     -0.7204297780990601,
+     -0.5176336169242859,
+     0.00036484692827798426
+    ],
+    [
+     0.7185167670249939,
+     0.5180226564407349,
+     1.3999322652816772
+    ]
+   ],
+   "footprint": [
+    2,
+    2
+   ],
+   "materials": [],
+   "sockets": {},
+   "family": "station",
+   "texture_size": 1024
+  },
+  "tripo_bloomery_lod1": {
+   "file": "models/tripo_bloomery_lod1.glb",
+   "triangles": 1499,
+   "height": 1.3995,
+   "bounds": [
+    [
+     -0.7208507061004639,
+     -0.516386091709137,
+     -0.00016461778432130814
+    ],
+    [
+     0.7172122597694397,
+     0.5217576622962952,
+     1.3993550539016724
+    ]
+   ],
+   "footprint": [
+    2,
+    2
+   ],
+   "materials": [],
+   "sockets": {},
+   "family": "station",
+   "texture_size": 1024
+  },
+  "tripo_bloomery_lod2": {
+   "file": "models/tripo_bloomery_lod2.glb",
+   "triangles": 499,
+   "height": 1.3974,
+   "bounds": [
+    [
+     -0.706705629825592,
+     -0.4980875849723816,
+     0.0005934663349762559
+    ],
+    [
+     0.7272787094116211,
+     0.5192748308181763,
+     1.3979527950286865
+    ]
+   ],
+   "footprint": [
+    2,
+    2
+   ],
+   "materials": [],
+   "sockets": {},
+   "family": "station",
+   "texture_size": 512
+  },
+  "tripo_house_lod0": {
+   "file": "models/tripo_house_lod0.glb",
+   "triangles": 8000,
+   "height": 3.0201,
+   "bounds": [
+    [
+     -1.9969309568405151,
+     -1.6965967416763306,
+     0.0022626412101089954
+    ],
+    [
+     1.9962646961212158,
+     1.6837080717086792,
+     3.0223331451416016
+    ]
+   ],
+   "footprint": [
+    4,
+    4
+   ],
+   "materials": [],
+   "sockets": {},
+   "family": "building",
+   "texture_size": 2048
+  },
+  "tripo_house_lod1": {
+   "file": "models/tripo_house_lod1.glb",
+   "triangles": 3000,
+   "height": 3.0088,
+   "bounds": [
+    [
+     -2.0020859241485596,
+     -1.6845022439956665,
+     0.0038534682244062424
+    ],
+    [
+     2.001868486404419,
+     1.673055648803711,
+     3.0127005577087402
+    ]
+   ],
+   "footprint": [
+    4,
+    4
+   ],
+   "materials": [],
+   "sockets": {},
+   "family": "building",
+   "texture_size": 2048
+  },
+  "tripo_house_lod2": {
+   "file": "models/tripo_house_lod2.glb",
+   "triangles": 1000,
+   "height": 3.0184,
+   "bounds": [
+    [
+     -1.9673354625701904,
+     -1.6287821531295776,
+     0.00021261624351609498
+    ],
+    [
+     1.981778621673584,
+     1.5681076049804688,
+     3.018620252609253
+    ]
+   ],
+   "footprint": [
+    4,
+    4
+   ],
+   "materials": [],
+   "sockets": {},
+   "family": "building",
+   "texture_size": 512
+  }
+ }
+}

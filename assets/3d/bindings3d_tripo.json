@@ -1,0 +1,36 @@
+{
+  "about": "Opt-in Tripo replacements: WORLDSIM_3D_BINDINGS=res://assets/3d/bindings3d_tripo.json; unset for baseline.",
+  "manifests": [
+    "res://assets/3d/models/manifest.json",
+    "res://assets/3d/models/w3d_*_manifest.json",
+    "res://assets/3d/assets_manifest.json",
+    "res://assets/3d/models/tripo_manifest.json",
+    "res://assets/3d/models/tripo_vat_manifest.json"
+  ],
+  "stations": {
+    "by_style": {
+      "bloomery": "tripo_bloomery_lod0"
+    },
+    "lit": {
+      "tripo_bloomery_lod0": true
+    }
+  },
+  "sites": {
+    "completed_templates": {
+      "log_house": "tripo_house_lod0"
+    }
+  },
+  "people": {
+    "by_era": {
+      "neolithic": {
+        "female": "tripo_woman"
+      }
+    }
+  },
+  "animals": {
+    "by_id": {
+      "wild_goat": "tripo_goat",
+      "goat": "tripo_goat"
+    }
+  }
+}

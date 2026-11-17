@@ -1,5 +1,7 @@
 # WorldSim 역사
 
+- 2026-11-18 — M3D-TRIPO1 선택형 실험: 기존 Tripo 원본4개에 대한 오프라인 처리와 별도 바인딩을 추가하며 기본 자산은 유지한다. 마일스톤 완료·게임 게시·화면/성능 수용을 뜻하지 않는다([ADR0070](decisions/0070-opt-in-tripo-assets.md), `tools/3d/blender/README.md`).
+
 - 2026-11-17 — M-POLISH+GATE: art-tex·gate-reuse를 C3-b 위에 병합하고(3d-roof2·art-ui 병합은 주민 가시성 단계39 실패로 되돌림, 각 브랜치에 보존) D-GATE-1(test 프로필 opt-level 2, 디버그 단언·오버플로 검사 유지)을 더했다. 길어진 카드 묶음이 빈 이야기 띠를 학습 도우미 위로 밀어 도우미가 숨던 문제를 고쳤고, 2D 시절 `mart21_seasons.png`는 `fd3f59801` 이력에 보존한다. 시뮬레이션 무변경([결정](v8/c1/C1_DECISIONS.md)).
 - 2026-11-16 — M-GATE-REUSE 도구 구현: 고정 입력에 묶인 전체 debug 사전 실행 영수증을 full gate step4에서 재사용하며 불일치는 재실행한다. Python 도구 검증과 전체 게임 게이트 검증을 구분하고 C3-b 이후 통합을 기다린다([D-GATE-2](v8/c1/C1_DECISIONS.md), [ADR0069](decisions/0069-frozen-debug-suite-reuse.md)).
 - 2026-11-16 — M3D-SWITCH: 3D 화면이 유일한 월드 화면이 되었다. 2D 월드 레이어15개·셰이더5개를 지우고 UI는 유지했으며, 2D를 재던 게이트 단계(23·34·36·38·39·41·46·48)를 같은 기준의 3D 검사로 옮겼다. 시뮬레이션 무변경, 고디 유지 판정. 지워진 2D 렌더러는 `373ff81b2:scripts/world/` 이력에 있다([ADR0068](decisions/0068-3d-only-view.md)).

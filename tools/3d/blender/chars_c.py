@@ -89,7 +89,7 @@ def _material_rgb(obj):
     return tuple(bsdf.inputs["Base Color"].default_value)[:3]
 
 
-def build_one(cid, glb, subject, atlas_src, game_clips, source, entries, lod=False):
+def build_one(cid, glb, subject, atlas_src, game_clips, source, entries, lod=False, add_tool=True):
     out_id = f"{cid}_lod" if lod else cid
     C.reset_scene()
     bpy.ops.import_scene.gltf(filepath=glb)
@@ -105,7 +105,7 @@ def build_one(cid, glb, subject, atlas_src, game_clips, source, entries, lod=Fal
     px = _atlas_pixels(atlas_src) if (attachments or is_human) else None
     for att in attachments:
         _force_uv(att.data, _solid_texel(px, _material_rgb(att)))
-    if is_human:
+    if is_human and add_tool:
         wood, head = _solid_texel(px, TARGET_WOOD), _solid_texel(px, None)
         extras.append(B._hand_tool(out_id, subject, arm, wood, head))
 

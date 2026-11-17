@@ -936,5 +936,6 @@ shared-spot counts, hunt rings — every anchor projected through the World3D ca
 `world3d.gd` publishes a per-frame change stamp (colony versions, tick) that gates every heavy snapshot read, and is
 the `scripts/world/view_projection.gd` provider for screen ↔ world conversion. Data: `assets/3d/params3d.json`,
 `assets/3d/bindings3d.json`, models and VAT from `tools/3d/blender/build_all.py`.
+Optional startup environment `WORLDSIM_3D_BINDINGS` selects a recursive JSON overlay in `data3d.gd`; `assets/3d/bindings3d_tripo.json` adds experimental Tripo mappings without editing baseline bindings. `structures3d.gd` draws available complete-template model bindings and suppresses their procedural footprint walls/room roof; simulation state is unchanged. Offline helpers and limitations are documented in `tools/3d/blender/README.md` and [ADR0070](decisions/0070-opt-in-tripo-assets.md).
 Material detail uses `assets/3d/textures3d.json` and `scripts/world3d/textures3d.gd`: shared padded albedo/normal atlases in `assets/3d/textures/`, sampled by existing terrain, wall, roof and static-model materials. Original tints and surface counts remain; the crowd/VAT material path is unchanged. See [ADR0068](decisions/0068-generated-material-texture-atlas.md).
 
