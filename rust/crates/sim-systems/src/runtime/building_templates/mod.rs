@@ -52,19 +52,18 @@ fn physically_complete(res: &SimResources, piece: &BuildingPiece) -> bool {
                 && workshop.top_left == piece.tile
                 && workshop.size == piece.size
         }),
-        // Historical huts have no authoritative identity. The exact callback marks
-        // Complete first; then the existing hut occupancy confirms it still exists.
-        CompletionCategory::Dwelling => {
-            piece.phase == PiecePhase::Complete
-                && (0..piece.size.1).all(|dy| {
-                    (0..piece.size.0).all(|dx| {
-                        res.colony
-                            .occupied
-                            .get(&(piece.tile.0 + dx, piece.tile.1 + dy))
-                            == Some(&Occupant::Hut(piece.centre()))
-                    })
-                })
-        }
+        // Hut occupancy is authoritative: occupied == Hut(centre) on every tile means
+        // workers finished. The phase == Complete guard was needed only for historical
+        // huts placed before template tracking; template-placed huts never go through
+        // observe_completion (non-space, no ColonySite entity), so we rely on occupied.
+        CompletionCategory::Dwelling => (0..piece.size.1).all(|dy| {
+            (0..piece.size.0).all(|dx| {
+                res.colony
+                    .occupied
+                    .get(&(piece.tile.0 + dx, piece.tile.1 + dy))
+                    == Some(&Occupant::Hut(piece.centre()))
+            })
+        }),
         _ => false,
     }
 }
@@ -121,12 +120,25 @@ pub fn advance(world: &mut World, res: &mut SimResources) {
             {
                 lost = true;
             } else if piece.phase == PiecePhase::Active
+                && piece.kind.is_space()
                 && !physical.get(&piece.centre()).is_some_and(|active| {
                     active.site.kind == piece.kind
                         && active.site.top_left == piece.tile
                         && active.site.size == piece.size
                 })
             {
+                // Space pieces create ColonySite entities; absence means the job
+                // was cancelled or displaced by another system.
+                piece.phase = PiecePhase::Cancelled;
+                lost = true;
+            } else if piece.phase == PiecePhase::Active
+                && !piece.kind.is_space()
+                && res.colony.occupied.get(&piece.centre())
+                    != Some(&Occupant::Site(piece.centre()))
+            {
+                // Non-space pieces (e.g. Hut) use ConstructionSite, not ColonySite.
+                // If the centre tile is no longer Site(centre) the job was externally
+                // cancelled; physically_complete() already handles the success path.
                 piece.phase = PiecePhase::Cancelled;
                 lost = true;
             }

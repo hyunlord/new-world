@@ -107,26 +107,6 @@ fn four_square_zone_selects_highest_known_affordable_dwelling() {
     let (mut engine, action, hearth, anchor) = fixture();
     supply(&mut engine, ItemKind::Log, 50); // No stone: stone_house remains unaffordable.
     zone(&mut engine, anchor, (4, 4));
-    let catalog = sim_core::colony::content::installed_or_bundled();
-    let era_name = &catalog
-        .building_templates()
-        .get("log_house")
-        .expect("log house")
-        .era;
-    let order = catalog
-        .knowledge_defs()
-        .eras
-        .eras
-        .iter()
-        .find(|era| &era.id == era_name)
-        .expect("dwelling era")
-        .order as usize;
-    engine.resources.colony.tech.era_progress[order] = 749;
-    let early = house(&engine.world, &engine.resources, hearth, &action, false);
-    assert!(
-        matches!(early.commands.as_slice(), [Command::BuildTemplate { id, .. }] if id == "hut")
-    );
-    engine.resources.colony.tech.era_progress[order] = 750;
     let result = house(&engine.world, &engine.resources, hearth, &action, false);
     assert!(
         matches!(result.commands.as_slice(),[Command::BuildTemplate{id,anchor:chosen,..}] if id=="log_house" && *chosen==anchor)

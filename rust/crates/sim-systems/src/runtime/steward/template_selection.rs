@@ -29,6 +29,15 @@ pub(super) fn ranked<'a>(
     catalog: &'a Catalog,
 ) -> Vec<&'a BuildingTemplate> {
     let available = crate::runtime::building_templates::materials::available_materials(world, res);
+    // Era gate removed from filter per D-MGROW-4 option B: the material wave only
+    // changes preference among buildable templates, it does not block new builds.
+    let first_era = catalog
+        .knowledge_defs()
+        .eras
+        .eras
+        .first()
+        .map(|e| e.id.clone())
+        .unwrap_or_default();
     let mut candidates: Vec<_> = catalog
         .building_templates()
         .buildings
@@ -36,7 +45,6 @@ pub(super) fn ranked<'a>(
         .filter(|template| {
             template.status == ContentStatus::Connected
                 && template.category == BuildingCategory::Dwelling
-                && crate::runtime::house_growth::era_ready(res, catalog, &template.era)
                 && crate::runtime::building_templates::commands::known(
                     world,
                     &template.requires_knowledge,
@@ -53,7 +61,18 @@ pub(super) fn ranked<'a>(
             })
         })
         .collect();
-    candidates.sort_by(|a, b| b.tier.cmp(&a.tier).then_with(|| a.id.cmp(&b.id)));
+    // Era-ready templates whose era is later than the first era rank first (material
+    // wave preference per D-MGROW-4), then existing tier desc / id.
+    candidates.sort_by(|a, b| {
+        let a_era = crate::runtime::house_growth::era_ready(res, catalog, &a.era)
+            && a.era != first_era;
+        let b_era = crate::runtime::house_growth::era_ready(res, catalog, &b.era)
+            && b.era != first_era;
+        b_era
+            .cmp(&a_era)
+            .then_with(|| b.tier.cmp(&a.tier))
+            .then_with(|| a.id.cmp(&b.id))
+    });
     candidates
 }
 
