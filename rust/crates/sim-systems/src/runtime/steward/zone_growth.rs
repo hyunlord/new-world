@@ -34,8 +34,7 @@ pub(super) fn maybe_grow_zones(world: &mut World, res: &mut SimResources) {
         use sim_core::colony::steward::StewardScope;
         let bootstrap = (rule.category == ZoneUse::Storage
             && res.steward.scope != StewardScope::Housing)
-            || (rule.category == ZoneUse::Housing
-                && res.colony.buildings.housing_zones.is_empty());
+            || (rule.category == ZoneUse::Housing && res.colony.buildings.housing_zones.is_empty());
         if (requested <= 0 && !bootstrap) || has_free_slot(res, rule) {
             continue;
         }
@@ -324,8 +323,33 @@ fn find_zone_site_for_preparation(
                 return None;
             }
         }
+        if rule.category == ZoneUse::Storage && !keeps_access(res, anchor, rule.size, hearth) {
+            return None;
+        }
         Some(tiles)
     })
+}
+
+/// The storehouse shell is the storage layout's boundary, so walling the layout in must
+/// leave every tile around it that the hearth reaches still reachable.
+fn keeps_access(res: &SimResources, anchor: Tile, size: Tile, hearth: Tile) -> bool {
+    if !res.nav.is_built() {
+        return true;
+    }
+    let (Some(x), Some(y)) = (anchor.0.checked_sub(1), anchor.1.checked_sub(1)) else {
+        return false;
+    };
+    let ring: Vec<_> = rectangle((x, y), (size.0 + 2, size.1 + 2))
+        .filter(|&tile| edge_distance(tile, anchor, size) == 1)
+        .filter(|&tile| res.nav.passable(tile))
+        .collect();
+    let reached = res.nav.preview_reachable_tiles(hearth, ring);
+    let mut walled = sim_core::nav::NavState::default();
+    walled.install(res.nav.map().clone());
+    for tile in rectangle(anchor, size) {
+        walled.set_cost(tile, sim_core::nav::IMPASSABLE);
+    }
+    walled.preview_reaches_all(hearth, reached)
 }
 
 fn lay_out_zone(
@@ -485,6 +509,41 @@ mod tests {
             prepare_stockpile_zone(&world, &res).is_empty(),
             "preparation cannot exceed the authored population cap"
         );
+    }
+
+    #[test]
+    fn storage_layout_never_walls_off_a_corridor() {
+        let (_, mut res) = fixture();
+        res.steward.scope = StewardScope::All;
+        let rule = zones::installed()
+            .connected()
+            .find(|rule| rule.category == ZoneUse::Storage)
+            .expect("storage");
+        res.settlements
+            .get_mut(&0)
+            .expect("settlement")
+            .formation_tile = (27, 24);
+        let corridor = |res: &mut SimResources, width: u32| {
+            for y in 0..48 {
+                for x in 0..48 {
+                    let i = res.tile_grid.idx(x, y);
+                    res.tile_grid.terrain_type[i] = if (25..25 + width).contains(&x) {
+                        sim_core::TerrainType::Plain
+                    } else {
+                        sim_core::TerrainType::Mountain
+                    };
+                }
+            }
+            let map = crate::runtime::nav::build(res);
+            res.nav.install(map);
+        };
+        corridor(&mut res, 6);
+        assert!(
+            find_zone_site(&res, rule).is_none(),
+            "a storehouse spanning the only corridor would cut the village in two"
+        );
+        corridor(&mut res, 8);
+        assert!(find_zone_site(&res, rule).is_some());
     }
 
     #[test]
