@@ -11,6 +11,25 @@ const Terrain = preload("res://scripts/world3d/terrain3d.gd")
 var _failures: int = 0
 
 
+class FieldWorld extends Node:
+	var phase: int = 1
+	func get_field_tiles() -> Dictionary:
+		return {"xs": PackedInt64Array([0]), "ys": PackedInt64Array([0]), "phases": PackedInt64Array([phase])}
+	func get_space() -> Dictionary:
+		return {}
+	func get_building_snapshot() -> Dictionary:
+		return {}
+	func get_world_info() -> Dictionary:
+		return {"seed": 0}
+
+
+class FieldTerrain extends "res://scripts/world3d/terrain3d.gd":
+	var full_recomputes: int = 0
+	func _compute_tiles() -> void:
+		full_recomputes += 1
+		super._compute_tiles()
+
+
 func _check(label: String, ok: bool) -> void:
 	print("W3D_TEXTURE %s %s" % [label, "PASS" if ok else "FAIL"])
 	_failures += 0 if ok else 1
@@ -42,6 +61,23 @@ func _run() -> void:
 	terrain.call("_compute_tile", 0, {}, [], {}, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, 4, 0.0, 1)
 	_check("floor_ground_texture_not_overridden", (terrain.get("_texture_tiles") as PackedByteArray)[0] == 46 and (terrain.get("_texture_weights") as PackedByteArray)[0] == 0)
 	terrain.free()
+	# Changing only the authoritative phase must refresh the same cell without rebuilding map heights.
+	var field_world: FieldWorld = FieldWorld.new()
+	var field_terrain: FieldTerrain = FieldTerrain.new()
+	root.add_child(field_terrain)
+	field_terrain.set_process(false)
+	field_terrain.width = 1
+	field_terrain.height = 1
+	field_terrain.set("_terrain", PackedByteArray([0]))
+	field_terrain.set("_world_sim", field_world)
+	for phase: int in [1, 2, 3, 0, 4, 5, 6]:
+		field_world.phase = phase
+		field_terrain.call("_poll_space")
+		var expected: int = 52 + phase if phase >= 1 and phase <= 3 else (6 if phase == 0 else 53)
+		_check("same_field_tile_phase_%d" % phase, (field_terrain.get("_texture_tiles") as PackedByteArray)[0] == expected)
+	_check("field_phases_keep_incremental_height_path", field_terrain.full_recomputes == 1)
+	field_terrain.free()
+	field_world.free()
 	# Given an imported material, when adding texture detail, its colour/name/PBR values survive.
 	var original: StandardMaterial3D = StandardMaterial3D.new()
 	original.resource_name = "stone"

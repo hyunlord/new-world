@@ -194,9 +194,8 @@ func _poll_space() -> void:
 	var fields: Dictionary = SimReads.read(_world_sim, "get_field_tiles")
 	var fxs: PackedInt64Array = fields.get("xs", PackedInt64Array())
 	var fphases: PackedInt64Array = fields.get("phases", PackedInt64Array())
-	# Only which tiles are fields colours the ground (not their phase), and only lit hearths clear a camp: key on
-	# those, so growing crops and new bedrolls do not recompute the whole map.
-	var field_key: String = "%d:%d:%d" % [fxs.size(), hash(fxs), hash(fields.get("ys"))] + ":" + str(hash(_lit_hearths()))
+	# Keep hearths at index 3; field phase changes take the incremental tile path below.
+	var field_key: String = "%d:%d:%d" % [fxs.size(), hash(fxs), hash(fields.get("ys"))] + ":" + str(hash(_lit_hearths())) + ":" + str(hash(fphases))
 	if version == _space_version and field_key == _field_key and not _raise.is_empty():
 		return
 	var dug: Dictionary = _tileset(space.get("dug_xs", PackedInt32Array()), space.get("dug_ys", PackedInt32Array()))
@@ -218,7 +217,7 @@ func _poll_space() -> void:
 				if not (pair[1] as Dictionary).has(t):
 					changed[t.y * width + t.x] = true
 			for t: Vector2i in pair[1]:
-				if not (pair[0] as Dictionary).has(t):
+				if not (pair[0] as Dictionary).has(t) or pair[0][t] != pair[1][t]:
 					changed[t.y * width + t.x] = true
 	var old_raise: PackedFloat32Array = _raise.duplicate() if not incremental else PackedFloat32Array()
 	var old_colour: PackedColorArray = _colour.duplicate() if not incremental else PackedColorArray()
@@ -385,6 +384,8 @@ func _compute_tile(i: int, raises: Dictionary, water_codes: Array, colours: Dict
 	var special: String = "ford" if _ford.has(t) else ("dug" if _dug.has(t) else ("field" if _field.has(t) else ("clearing" if _floor.has(t) else "")))
 	if special != "":
 		tile = textures.index("terrain_special", special, tile)
+		if special == "field":
+			tile = textures.index("field_phases", str(int(_field[t])), tile)
 	if special == "" and _clearing.has(t) and r == 0.0:
 		blend = float(_clearing[t])
 	_texture_tiles[i] = tile

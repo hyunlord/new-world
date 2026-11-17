@@ -12,6 +12,7 @@
   "roofs": {"thatch": 24, "bark": 26, "plank": 17},
   "surfaces": {"trunk": 14, "stone": 21, "earth": 4, "wood": 17, "wood_dark": 14, "clay": 38, "metal": 35, "thatch": 24, "hide": 28, "cloth": 29, "leather": 28, "fur": 31, "fur_light": 31, "snow": 8},
   "terrain_special": {"clearing": 46, "dug": 4, "field": 53, "ford": 23},
+  "field_phases": {"0": 6, "1": 53, "2": 54, "3": 55, "4": 53, "5": 53, "6": 53},
   "normal_tiles": [11, 14, 15, 20, 21, 22, 23, 24, 25, 26, 41, 43, 44, 49],
   "parts": {"log_end": 16},
   "alternates": {"14": 15, "24": 25},

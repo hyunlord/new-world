@@ -10,7 +10,7 @@
 
 ### Changed
 - Mean-normalized atlas detail increases macro contrast while retaining existing palette tints.
-- Existing sky and water materials sample painted layers; unavailable surface distinctions remain data-only.
+- Existing field phases select tilled/sown/sprouting soil. Sky and water materials sample painted layers; unavailable surface distinctions remain data-only.
 - Delivered on `v8/art-tex2` for planner review, without simulation or crowd changes.
 
 ## M3D-IMG Part T — material texture branch (2026-11-16)
