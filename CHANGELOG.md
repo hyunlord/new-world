@@ -3,7 +3,7 @@
 ## M3D-LOOK L1 — 2026-11-17 (review branch; validation in progress)
 
 ### Added
-- Shared painterly lighting, AgX/sky ambient with a 16³ grade LUT, rooted plant wind,
+- Shared painterly lighting, AgX/sky ambient with a 32³ texel-centred grade LUT, rooted plant wind,
   snapshot-local grass/flowers and zoom fade. Focused terrain/material/vegetation checks.
 - Four generated art-direction targets; prompts and comparison evidence are external in
   `/Users/rexxa/work/art-img-data/look1/`.
