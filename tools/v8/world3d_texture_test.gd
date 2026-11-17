@@ -125,7 +125,7 @@ func _run() -> void:
 			var material: Material = smoke_source.surface_get_material(surface)
 			if material is BaseMaterial3D:
 				var smoke: BaseMaterial3D = material
-				smoke_preserved = smoke.transparency == BaseMaterial3D.TRANSPARENCY_ALPHA and smoke.albedo_color.a > 0.0 and smoke.albedo_color.a < 0.5 and smoke_rendered.surface_get_material(surface) == smoke
+				smoke_preserved = smoke.transparency in [BaseMaterial3D.TRANSPARENCY_ALPHA, BaseMaterial3D.TRANSPARENCY_ALPHA_DEPTH_PRE_PASS] and smoke.albedo_color.a > 0.0 and smoke.albedo_color.a < 0.5 and smoke_rendered.surface_get_material(surface) == smoke
 	_check("actual_station_smoke_transparency_preserved", smoke_preserved)
 	original.resource_name = "unknown_future_material"
 	var unknown: Material = Textures.imported(original)
