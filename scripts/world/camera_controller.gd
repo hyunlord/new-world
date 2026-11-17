@@ -470,7 +470,7 @@ func _cancel_camp_framing() -> void:
 
 
 ## Wait for populated figures and consecutive settled HUD layouts, then frame once. Bodies are the view's screen
-## rects of the people (ViewProjection.person_rect: the 3D bodies).
+## rects of the people (ViewProjection.person_rect: the 3D bodies); every correction is checked by reprojection.
 func _frame_camp() -> void:
 	var ui: Node = get_node_or_null("/root/Main/UI")
 	if ui == null:
@@ -492,6 +492,10 @@ func _frame_camp() -> void:
 		_frame_camp_pending = false
 		_camp_report = {"status": "empty"}
 		return
+	# Settle the tilted rig before sampling; terrain easing otherwise invalidates the bounds.
+	var rig: Object = ViewProjection.provider.get("rig") if ViewProjection.active() else null
+	if rig != null:
+		rig.call("update_camera")
 	var bodies: Array[Rect2] = []
 	var included: Array[int] = []
 	var outside: Array[int] = []
@@ -511,18 +515,42 @@ func _frame_camp() -> void:
 		else:
 			outside.append(bits)
 	_frame_camp_pending = false
-	var result: Dictionary = MarkerLayout.frame_translation(bodies, obstacles, viewport)
-	_camp_report = {"status": "no_fit", "ids": included, "outside_ids": outside, "bodies": bodies, "obstacles": obstacles, "translation": Vector2.ZERO}
-	if not bool(result["found"]):
-		return
-	var shift: Vector2 = result["translation"]
 	var original: Vector2 = position
-	position -= (shift / zoom.x).rotated(screen_rotation)
-	_clamp_position()
-	var achieved: Vector2 = ((original - position) * zoom.x).rotated(-screen_rotation)
-	if not MarkerLayout.frame_translation_clear(bodies, obstacles, viewport, achieved):
-		position = original
-		_camp_report["status"] = "clamped"
-		return
-	_camp_report["status"] = "placed"
-	_camp_report["translation"] = achieved
+	_camp_report = {"status": "no_fit", "ids": included, "outside_ids": outside, "bodies": bodies.duplicate(), "obstacles": obstacles, "translation": Vector2.ZERO}
+	# A 2D world delta is only a proposal in the tilted perspective view. Reproject the
+	# same residents after each correction; never certify translated stale rectangles.
+	# Eight corrections bound Home's work. Exhaustion/clamping restores the original view.
+	for attempt: int in 9:
+		var complete: bool = not bodies.is_empty()
+		for body: Rect2 in bodies:
+			complete = complete and body.has_area()
+		if not complete:
+			_camp_report["status"] = "missing_bounds"
+			break
+		if MarkerLayout.frame_translation_clear(bodies, obstacles, viewport, Vector2.ZERO):
+			_camp_report["status"] = "placed"
+			_camp_report["projected_bodies"] = bodies.duplicate()
+			_camp_report["corrections"] = attempt
+			# Legacy view-state delta is diagnostic only; projected_bodies are the actual placement.
+			_camp_report["translation"] = ((original - position) * zoom.x).rotated(-screen_rotation)
+			return
+		if attempt == 8:
+			_camp_report["status"] = "exhausted"
+			break
+		var result: Dictionary = MarkerLayout.frame_translation(bodies, obstacles, viewport)
+		if not bool(result["found"]):
+			break
+		var previous: Vector2 = position
+		position -= ((result["translation"] as Vector2) / zoom.x).rotated(screen_rotation)
+		_clamp_position()
+		if position == previous:
+			_camp_report["status"] = "clamped"
+			break
+		if rig != null:
+			rig.call("update_camera")
+		bodies.clear()
+		for bits: int in included:
+			bodies.append(ViewProjection.person_rect(bits))
+	position = original
+	if rig != null:
+		rig.call("update_camera")
