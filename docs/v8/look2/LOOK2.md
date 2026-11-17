@@ -59,3 +59,13 @@ and `world3d_texture_test.gd`. For comparisons use `look2_contact.py --check`
 before its gated Blender render command. New yard assets need a snapshot-driven
 yard consumer from the M-GROW/polish integration; assets alone do not prove
 placement.
+
+## Integrated material boundary
+
+L1 `d728ad708`, T2 `67721fa56` and UI2 `34d25a089` are normal-merged.
+`Data3D` preserves source materials and imported LODs; structures and props adapt
+copies through `Textures3D.mesh`. Flora and plants consume source colours through
+their seasonal and wind shaders. Tinted prop copies retain LODs and choose the
+requested metal atlas tile after the model-specific override. Shared building
+roofs retain L2 trim, gables, room ownership, cutaway and picking. Roof-plane
+regressions inspect complete half-metre sheet coverage separately from trim.
