@@ -196,6 +196,12 @@ fn supplies_ready(
     let mut local = BTreeMap::<ItemKind, u32>::new();
     for (tile, stack) in &res.colony.ground_items {
         if tile_owner(res, *tile) == Some(settlement)
+            && res
+                .colony
+                .zone_of_tile
+                .get(tile)
+                .and_then(|id| res.colony.zones.get(id))
+                .is_some_and(|zone| zone.kind == ZoneKind::Stockpile)
             && !res
                 .colony
                 .reservations

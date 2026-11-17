@@ -273,7 +273,7 @@ fn missing_physical_replacement_beds_do_not_count_authored_capacity() {
 }
 
 #[test]
-fn upgrade_requires_all_local_materials_after_existing_commitments() {
+fn upgrade_requires_all_local_stocked_materials_after_existing_commitments() {
     let mut engine = fixture();
     let mut other = sim_core::components::Settlement::new_with_id(2, 0);
     other.formation_tile = (14, 14);
@@ -283,6 +283,20 @@ fn upgrade_requires_all_local_materials_after_existing_commitments() {
     engine.resources.colony.ground_items.insert(
         (14, 13),
         ItemStack::of(ItemSpec::raw(ItemKind::Log, None), 12),
+    );
+    assert!(
+        crate::commands::apply_and_log(
+            &mut engine.world,
+            &mut engine.resources,
+            sim_core::colony::Command::AddStockpile {
+                x0: 14,
+                y0: 13,
+                x1: 14,
+                y1: 13,
+            },
+            0,
+        )
+        .accepted
     );
     assert!(!supplies_ready(&engine.resources, 1, &needs, &available));
     engine.resources.colony.ground_items.insert(
@@ -297,13 +311,52 @@ fn upgrade_requires_all_local_materials_after_existing_commitments() {
         .get_mut(&(1, 2))
         .expect("local stock")
         .count = 12;
+    assert!(
+        !supplies_ready(&engine.resources, 1, &needs, &available),
+        "loose ground materials must be hauled into stock before an automatic upgrade"
+    );
+    assert!(
+        crate::commands::apply_and_log(
+            &mut engine.world,
+            &mut engine.resources,
+            sim_core::colony::Command::AddStockpile {
+                x0: 1,
+                y0: 2,
+                x1: 1,
+                y1: 2,
+            },
+            0,
+        )
+        .accepted
+    );
     assert!(supplies_ready(&engine.resources, 1, &needs, &available));
+    engine
+        .resources
+        .colony
+        .ground_items
+        .get_mut(&(1, 2))
+        .expect("local stock")
+        .count = 11;
+    assert!(!supplies_ready(&engine.resources, 1, &needs, &available));
+    engine
+        .resources
+        .colony
+        .ground_items
+        .get_mut(&(1, 2))
+        .expect("local stock")
+        .count = 12;
     assert!(!supplies_ready(
         &engine.resources,
         1,
         &needs,
         &[(ItemKind::Log, 11)].into_iter().collect()
     ));
+    engine
+        .resources
+        .colony
+        .reservations
+        .insert(ReserveKey::Stack((1, 2)), 0);
+    assert!(!supplies_ready(&engine.resources, 1, &needs, &available));
 }
 
 #[test]
@@ -425,8 +478,23 @@ fn ready_upgrade_fixture() -> (sim_engine::SimEngine, u32, u16) {
     )
     .expect("eligible exact upgrade cost");
     for (index, (item, count)) in needs.into_iter().enumerate() {
+        let x = 2 + index as u32;
+        assert!(
+            crate::commands::apply_and_log(
+                &mut engine.world,
+                &mut engine.resources,
+                Command::AddStockpile {
+                    x0: x,
+                    y0: 1,
+                    x1: x,
+                    y1: 1,
+                },
+                0,
+            )
+            .accepted
+        );
         engine.resources.colony.ground_items.insert(
-            (2 + index as u32, 1),
+            (x, 1),
             ItemStack::of(
                 ItemSpec::raw(item, None),
                 u16::try_from(count).expect("small cost"),
