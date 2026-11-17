@@ -1836,6 +1836,12 @@ pub fn colony_fingerprint(engine: &SimEngine) -> String {
         };
         text.push_str(&debug);
     }
+    if engine.resources.rules.colony.is_some() {
+        text.push_str(&format!(
+            "|growth:{:?}|{:?}|{:?}|{:?}|{:?}",
+            c.footfall, c.path_stage, c.footfall_touched, c.buildings, engine.resources.bed_of
+        ));
+    }
     if !engine.resources.content_state.is_empty() {
         text.push_str(&format!("|{:?}", engine.resources.content_state));
     }
