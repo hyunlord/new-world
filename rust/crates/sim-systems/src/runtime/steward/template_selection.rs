@@ -34,9 +34,10 @@ pub(super) fn ranked<'a>(
         .buildings
         .iter()
         .filter(|template| {
+            // era_ready intentionally omitted here: new builds are gated only by knowledge;
+            // the era wave drives upgrades via house_growth::upgrade_candidate, not new construction.
             template.status == ContentStatus::Connected
                 && template.category == BuildingCategory::Dwelling
-                && crate::runtime::house_growth::era_ready(res, catalog, &template.era)
                 && crate::runtime::building_templates::commands::known(
                     world,
                     &template.requires_knowledge,
