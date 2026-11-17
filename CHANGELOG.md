@@ -27,6 +27,18 @@
 - Existing inspector, card, chapter, technology, building, workshop, recipe and item-list surfaces use optional art with established fallbacks. Portrait selection derives from entity, life stage, sex and wardrobe without simulation RNG or save changes. Images retain aspect, ignore mouse input and use linear filtering; pixel fallback portraits retain nearest filtering.
 - `ItemIcons.ui_texture_of` keeps UI model icons separate from the loose-world `texture_of` path. The existing startup splash uses the selected loading art; no title, animal or yearly-goal panel is added.
 - Real UI screenshots at 1920×1080 and 1280×720 cover eight surfaces each; the current README sheet shows the desktop captures. The planner still owns the next full publication gate and merge; this branch does not claim either.
+## M3D-IMG Part T — material texture branch (2026-11-16)
+
+### Added
+- Generated 1024-square seamless terrain and material albedos, rough-surface normals,
+  and padded shared atlases under `assets/3d/textures/`. Exact prompts and raw
+  verification evidence live in `/Users/rexxa/work/art-img-data/tex/`.
+
+### Changed
+- Existing terrain/material shaders and static mesh materials sample painted detail
+  with the existing palette tint. Simulation and the crowd/VAT path are outside this pass.
+- Part T is delivered on `v8/art-tex` for planner integration; windowed capture and
+  FPS acceptance remain conditional on the shared GPU gate.
 
 ## M3D-SWITCH E2 — the 3D view is the only world view (branch v8/3d, not published)
 

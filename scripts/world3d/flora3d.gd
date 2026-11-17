@@ -498,6 +498,7 @@ func _mesh_variant(id: String, variant: String) -> Mesh:
 	var normals: PackedVector3Array = PackedVector3Array()
 	var cols: PackedColorArray = PackedColorArray()
 	var uvs: PackedVector2Array = PackedVector2Array()
+	var texture_uvs: PackedVector2Array = PackedVector2Array()
 	var index: PackedInt32Array = PackedInt32Array()
 	for s: int in src.get_surface_count():
 		var name: String = Data3D.surface_key(src, s)
@@ -517,9 +518,11 @@ func _mesh_variant(id: String, variant: String) -> Mesh:
 				normals.append(Vector3.UP)
 		var c: Color = params[0]
 		var flags: Vector2 = Vector2(float(params[2]), float(params[1]))
+		var texture_tile: int = preload("res://scripts/world3d/textures3d.gd").index("surfaces", name)
 		for _i: int in sv.size():
 			cols.append(c)
 			uvs.append(flags)
+			texture_uvs.append(Vector2(texture_tile, 0.0))
 		if si is PackedInt32Array and not (si as PackedInt32Array).is_empty():
 			for v: int in si:
 				index.append(v + offset)
@@ -536,6 +539,7 @@ func _mesh_variant(id: String, variant: String) -> Mesh:
 	merged[Mesh.ARRAY_NORMAL] = normals
 	merged[Mesh.ARRAY_COLOR] = cols
 	merged[Mesh.ARRAY_TEX_UV] = uvs
+	merged[Mesh.ARRAY_TEX_UV2] = texture_uvs
 	merged[Mesh.ARRAY_INDEX] = index
 	out.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, merged)
 	out.surface_set_material(0, _shared_material())
@@ -568,6 +572,7 @@ func _shared_material() -> Material:
 		return _materials[mkey]
 	var mat: ShaderMaterial = ShaderMaterial.new()
 	mat.shader = FLORA_SHADER
+	preload("res://scripts/world3d/textures3d.gd").setup(mat)
 	_materials[mkey] = mat
 	return mat
 
@@ -575,4 +580,6 @@ func _shared_material() -> Material:
 static func _original_colour(m: Material) -> Color:
 	if m is BaseMaterial3D:
 		return (m as BaseMaterial3D).albedo_color
+	if m is ShaderMaterial and (m as ShaderMaterial).get_shader_parameter("base_colour") is Color:
+		return (m as ShaderMaterial).get_shader_parameter("base_colour")
 	return Color(0.6, 0.6, 0.6)
