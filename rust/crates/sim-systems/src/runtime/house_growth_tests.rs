@@ -338,3 +338,244 @@ fn upgrade_targets_cover_the_house_and_expose_nonorigin_player_vetoes() {
         .anchor = (15, 15);
     assert!(targets(&engine.resources, &command).is_empty());
 }
+
+// Reuse the occupied hut as a finished spare home; construct the upgradeable
+// shell through the real template command and physical completion callbacks.
+fn ready_upgrade_fixture() -> (sim_engine::SimEngine, u32, u16) {
+    use sim_core::colony::{knowledge, steward, ColonySite, Command, MaterialNeeds};
+    let mut engine = fixture();
+    let catalog = installed_or_bundled();
+    let person = engine
+        .world
+        .query::<&Agent>()
+        .iter()
+        .next()
+        .expect("resident")
+        .0;
+    let mut known = knowledge::Knowledge::default();
+    for node in &catalog.knowledge_defs().nodes {
+        known.set(node.id, 1000, knowledge::Source::Seeded, 0);
+    }
+    engine
+        .world
+        .insert_one(person, known)
+        .expect("known upgrade");
+    engine.resources.colony.tech.era_progress =
+        vec![1000; catalog.knowledge_defs().eras.eras.len()];
+    engine
+        .resources
+        .building_kinds
+        .insert((1, 1), BuildingKind::Hearth);
+    engine.resources.colony.buildings.next_site_id = 1;
+    engine.resources.colony.buildings.next_piece_id = 1;
+    let site = engine.resources.colony.buildings.next_site_id;
+    let placed = crate::commands::apply_and_log(
+        &mut engine.world,
+        &mut engine.resources,
+        Command::BuildTemplate {
+            id: "log_house".into(),
+            anchor: (8, 8),
+            rotation: 0,
+            station: None,
+        },
+        0,
+    );
+    assert!(placed.accepted, "{placed:?}");
+    for _ in 0..4 {
+        let active: Vec<_> = engine
+            .world
+            .query::<(&ColonySite, &MaterialNeeds)>()
+            .iter()
+            .map(|(entity, (site, needs))| (site.top_left, site.kind.code(), entity, *needs))
+            .collect();
+        let mut active = active;
+        active.sort_by_key(|(tile, code, _, _)| (*tile, *code));
+        for (_, _, entity, mut needs) in active {
+            for line in &mut needs.lines {
+                line.delivered = line.needed;
+                engine
+                    .resources
+                    .colony
+                    .item_ledger
+                    .create(line.kind, u64::from(line.delivered));
+            }
+            engine
+                .world
+                .insert_one(entity, needs)
+                .expect("delivered fixture inputs");
+            crate::runtime::jobs::space::complete_site(
+                &mut engine.world,
+                &mut engine.resources,
+                entity,
+            );
+        }
+        super::super::building_templates::advance(&mut engine.world, &mut engine.resources);
+        if engine.resources.colony.buildings.sites[&site].status == BuildingStatus::Complete {
+            break;
+        }
+    }
+    assert!(super::super::building_templates::is_intact(
+        &engine.resources,
+        &engine.resources.colony.buildings.sites[&site]
+    ));
+    let needs = super::super::building_templates::upgrade::material_requirements(
+        &engine.world,
+        &engine.resources,
+        site,
+    )
+    .expect("eligible exact upgrade cost");
+    for (index, (item, count)) in needs.into_iter().enumerate() {
+        engine.resources.colony.ground_items.insert(
+            (2 + index as u32, 1),
+            ItemStack::of(
+                ItemSpec::raw(item, None),
+                u16::try_from(count).expect("small cost"),
+            ),
+        );
+        engine
+            .resources
+            .colony
+            .item_ledger
+            .create(item, u64::from(count));
+    }
+    engine.resources.steward.enabled = true;
+    engine.resources.current_tick = 360;
+    let rule = steward::rules()
+        .expect("steward rules")
+        .rules
+        .iter()
+        .find(|rule| {
+            matches!(
+                rule.action,
+                steward::Action::House {
+                    completion_role: Some(sim_core::rooms::RoomRole::Bedroom),
+                    ..
+                }
+            )
+        })
+        .expect("bedroom housing rule")
+        .id;
+    assert_eq!(
+        upgrade_candidate(&engine.world, &engine.resources),
+        Some(site)
+    );
+    (engine, site, rule)
+}
+
+#[test]
+fn steward_upgrade_dispatch_respects_scope_cooldown_and_interior_veto_and_replays() {
+    use crate::runtime::steward::StewardSystem;
+    use sim_core::colony::{
+        steward::{StewardScope, Target},
+        Command,
+    };
+    let mut accepted = None;
+    for (scope, cooldown, veto, should_upgrade) in [
+        (StewardScope::Food, false, false, false),
+        (StewardScope::Housing, true, false, false),
+        (StewardScope::Housing, false, true, false),
+        (StewardScope::Housing, false, false, true),
+        (StewardScope::All, false, false, true),
+    ] {
+        let (mut engine, site, rule) = ready_upgrade_fixture();
+        engine.resources.steward.scope = scope;
+        let now = engine.resources.current_tick;
+        if cooldown {
+            engine.resources.steward.cooldowns.insert(rule, now + 1);
+        }
+        if veto {
+            engine
+                .resources
+                .steward
+                .vetoes
+                .insert(Target::Tile(9, 9), now + 1);
+        }
+        // The house remains physically/materially eligible in every guarded case.
+        assert_eq!(
+            upgrade_candidate(&engine.world, &engine.resources),
+            Some(site)
+        );
+        let before = engine.resources.colony.command_log.len();
+        StewardSystem.tick(&mut engine.world, &mut engine.resources);
+        let upgrades: Vec<_> = engine.resources.colony.command_log[before..].iter().filter(|record|
+            matches!(&record.command, Command::Steward { command, .. }
+                if matches!(command.as_ref(), Command::UpgradeBuilding { site: target } if *target == site)))
+            .collect();
+        let waves: Vec<_> = engine
+            .resources
+            .chronicle
+            .entries()
+            .iter()
+            .filter(|entry| entry.kind == ChronicleKind::MaterialWave && entry.cause == site)
+            .collect();
+        assert_eq!(
+            upgrades.len(),
+            usize::from(should_upgrade),
+            "scope={scope:?} cooldown={cooldown} veto={veto}"
+        );
+        assert_eq!(waves.len(), usize::from(should_upgrade));
+        if should_upgrade {
+            assert!(upgrades[0].result.accepted);
+            assert!(
+                matches!(&upgrades[0].command, Command::Steward { rule: actual, .. } if *actual == rule)
+            );
+            assert_eq!(
+                engine.resources.colony.buildings.sites[&site].status,
+                BuildingStatus::Building
+            );
+            assert_eq!(
+                engine.resources.colony.buildings.sites[&site].cause,
+                BuildCause::Steward(u32::from(rule))
+            );
+            assert!(engine.resources.steward.cooldowns[&rule] > now);
+            assert!(engine
+                .resources
+                .steward
+                .owned
+                .iter()
+                .any(|owned| owned.rule == rule
+                    && owned.command == Command::UpgradeBuilding { site }
+                    && owned.targets.contains(&Target::Tile(9, 9))));
+            if scope == StewardScope::Housing {
+                accepted = Some((
+                    engine.resources.colony.command_log[before..].to_vec(),
+                    waves[0].clone(),
+                    engine.resources.colony.buildings.sites[&site].clone(),
+                ));
+            }
+        } else {
+            assert_eq!(
+                engine.resources.colony.buildings.sites[&site].template,
+                "log_house"
+            );
+            assert_eq!(
+                engine.resources.colony.buildings.sites[&site].status,
+                BuildingStatus::Complete
+            );
+        }
+    }
+    let (records, wave, site_after) = accepted.expect("live housing upgrade");
+    let (mut replay, site, _) = ready_upgrade_fixture();
+    replay.resources.steward.scope = StewardScope::Housing;
+    replay.resources.steward.replay = true;
+    let before = replay.resources.colony.command_log.len();
+    // Replay the complete source phase, including shared stockpile/fuel rules,
+    // so the upgrade keeps its exact command-log provenance index.
+    replay.resources.steward.pending = records
+        .iter()
+        .map(|record| (record.tick, record.command.clone()))
+        .collect();
+    StewardSystem.tick(&mut replay.world, &mut replay.resources);
+    assert_eq!(replay.resources.colony.buildings.sites[&site], site_after);
+    assert_eq!(replay.resources.colony.command_log[before..], records);
+    assert_eq!(
+        replay
+            .resources
+            .chronicle
+            .entries()
+            .iter()
+            .filter(|entry| entry.kind == ChronicleKind::MaterialWave)
+            .collect::<Vec<_>>(),
+        vec![&wave]
+    );
+}
