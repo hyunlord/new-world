@@ -2,7 +2,7 @@
 
 ## Context
 
-Part U2 of M3D-IMG2 extends the first generated-art pass without adding panels or changing the simulation. All 166 knowledge-node images and existing building/station portraits are already covered. The new scope is 119 item illustrations, 72 additional person portraits, 24 migrant/trader looks, 20 event vignettes, four future growth cards, three selected era splashes and one paved-road portrait: 243 selected assets planned. Each era gets three options; six alternatives stay outside the runtime tree. Generation, connection and final verification are still in progress when this decision is recorded.
+Part U2 of M3D-IMG2 extends the first generated-art pass without adding panels or changing the simulation. All 166 knowledge-node images and existing building/station portraits are already covered. The new scope is 119 item illustrations, 72 additional person portraits, 24 migrant/trader looks, 20 event vignettes, four future growth cards, three selected era splashes and one paved-road portrait: 243 adopted assets from 249 generated options. Each era has three options; six alternatives stay outside the runtime tree. External asset validation, actual-scene headless checks and GPU-locked windowed captures pass. Final remote receipts remain external; the planner publication gate and integration remain pending.
 
 ADR0068's optional image lookup, stable identity and existing-surface boundaries remain in force. Its four-look portrait selection is extended here; historical generation and verification results in that ADR are not revised.
 
@@ -14,7 +14,7 @@ ADR0068's optional image lookup, stable identity and existing-surface boundaries
 - Display era art within the existing chronicle surface. Do not create a full-screen transition, new dialog or title menu to show it. Reuse the existing migrant panel for optional migrant looks. Keep trader portraits, future M-GROW cards and vignettes lacking an appropriate real event data-only.
 - Preserve aspect ratio, linear filtering, localized text and non-interactive image nodes. Missing images keep established controls and content usable. No Rust code, numeric simulation data, bridge methods or save fields are changed.
 - Generate images through cloud image generation with the established warm, clean painterly palette. Fictional people remain fully clothed; text, logos, castles, stone towers, city walls and fortifications are excluded. Preserve every adopted prompt and bounded attempt record externally in `/Users/rexxa/work/art-img-data/ui2/`; local captures and contact sheets require the shared GPU lock.
-- Work and normally push only `v8/art-ui2`; the planner owns integration and publication. Asset counts, render evidence, headless checks and remote landing must be reported separately. This decision does not claim final validation, a full publication gate or a merge.
+- Work and normally push only `v8/art-ui2`; the planner owns integration and publication. Asset counts, render evidence, headless checks and remote landing must be reported separately. The scoped asset/UI validation does not claim a full publication gate or a merge.
 
 ## Alternatives considered
 
@@ -25,7 +25,7 @@ ADR0068's optional image lookup, stable identity and existing-surface boundaries
 
 ## Consequences
 
-The existing UI can accept image batches without becoming dependent on their availability. Content-to-art associations remain inspectable data, while the simulation and its event stream stay authoritative. Data-only art is delivered separately from connected art and is not counted as a working UI surface. Final coverage, screenshots and delivery receipts remain necessary to close the pass.
+The existing UI can accept image batches without becoming dependent on their availability. Content-to-art associations remain inspectable data, while the simulation and its event stream stay authoritative. Data-only art is delivered separately from connected art and is not counted as a working UI surface. The completed asset validation covers all 249 unique outputs and preserves all 119 original GLB icons; actual-scene headless verification reports ten surfaces with zero failures. Windowed verification now independently confirms ten surfaces each at native 1920×1080 and 1280×720 with zero capture failures, and thirteen final contact sheets cover all 249 options. The capture tool applies `--capture-size` after camera window fitting; round-1 files labeled laptop were actually 1920×1080, whereas the corrected U2 PNG dimensions are confirmed (`capture_resolution_issue.json`, `capture-size-validation.json`). The successful locked lane ends with `UI2_ART_REAL_CAPTURE_LANE_DONE` in `capture_retry_logs/attempt_8.log`. Final remote receipts remain external and planner publication remains a separate obligation.
 
 ## Date
 
