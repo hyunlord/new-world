@@ -289,6 +289,8 @@ A new modifier: append it to `Modifier::ALL` (codes are chronicle and bridge con
 
 ## Lessons
 
+M-GROW (2026-11-17): colony settlements live in `SimResources.settlements`, not ECS `Settlement` components. Count live `Agent` entities for population facts; exercise a real `colony_engine` fixture so a fabricated ECS settlement cannot hide a zero-population query. Sources: `rust/crates/sim-systems/src/runtime/diagnosis.rs`, `rust/crates/sim-test/tests/data_only_ext.rs` (selected zone case).
+
 | date | symptom | root cause | fix | source |
 |---|---|---|---|---|
 | 2026-10-23 | M5's benchmark kept the tick mean within +10 % of M4 but raised p99 ×1.22–1.63 | `QuarrelSystem` ran every 30 ticks at offset 0, so its whole pass (O(N²) neighbour gathering in a crowd: 279 people on one tile at N = 1,000) landed on the hour-aligned ticks where the 60/120/240-tick systems also run | cap the per-run work (the nearest 8 partners), split the pass into slices (five, by `AgentId % 5`, every 6 ticks, offset 3), move periodic systems off the hour (MoodSystem at minute 7, its morning test by hour); read the bench's `p99_tick` breakdown before guessing | `rust/crates/sim-systems/src/runtime/mood/quarrel.rs`; `docs/v8/m5/M5_DECISIONS.md` D18 |
@@ -342,3 +344,5 @@ A new modifier: append it to `Modifier::ALL` (codes are chronicle and bridge con
 | 2026-11-06 | a prepared ECS query passed semantic review but failed system registration with E0277 | hecs PreparedQuery retains pointer-bearing Fetch state and is not Send; RuntimeSystem ownership requires Send | compile-check cache types against engine Send/Sync bounds before integration; do not add unsafe trait assertions or change engine ownership for an unmeasured optimization | `docs/v8/m6b/M6B_DECISIONS.md` S1-PERF-6 |
 
 | 2026-11-08 | paused or cancelled template saves rejected valid sources with generation tick/source mismatch | submit logs the engine admission tick, while resources retain the last executed system tick | pass the actual command tick into build/upgrade and the engine/body boundary into pending-source validation; keep completed facts bounded by the executed tick | `rust/crates/sim-systems/src/commands.rs`; `rust/crates/sim-systems/src/runtime/building_templates/validation.rs`; `rust/crates/sim-systems/src/save/building_save_tests.rs` |
+
+| 2026-11-17 | New storage layouts admitted piles but made every Storehouse impossible; ordinary settlers then lacked winter reserves | Initial/expanded stock consumed future wall cells, while room capacity excluded the stock it should shelter | Share the physical interior predicate between requests, expansion and free-slot detection; count usable stock for Storehouse service capacity and test actual generated wall commands plus large-population bootstrap | `rust/crates/sim-systems/src/runtime/steward/planning.rs`; `rust/crates/sim-systems/src/runtime/steward/zone_growth.rs`; `rust/crates/sim-systems/src/runtime/steward/housing_tests.rs` |

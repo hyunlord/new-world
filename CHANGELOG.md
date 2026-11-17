@@ -1,5 +1,22 @@
 # Changelog
 
+## M-GROW-a — village growth candidate (2026-11-17)
+
+Implementation is under verification. Publication requires the frozen HEAD's full gate and separate crash detector; this entry is not a publication receipt.
+
+### Added
+- Data-authored paths, five village layout categories, and dwelling residence/yard stages (`paths.ron`, `zones.ron`, `yards.ron`). Daily growth records its causes; steward building requests retain their rule provenance and link to their layout zone.
+- Ground path stages, an optional zone layout overlay, localized growth chronicles and read-only yard props from existing 3D models. Decorations skip paths, doors and occupied tiles.
+- Ordinary-steward `mgrow_village_grows` acceptance: seeds 0–3 × 120 days, observed dirt-path movement, caused zones, a dwelling and yard, with mid-run save/load and command replay. Selected-pack zone and yard extensions exercise data-only authoring.
+
+### Changed
+- Colony movement uses authored tile costs and step intervals; footfall decays over active tiles at day boundaries. Paved paths remain placed construction.
+- Era-qualified dwelling upgrades require stocked materials and replacement beds, with at most one active dwelling construction per settlement. Initial values are recorded in `docs/v8/BALANCE_DEBT.md` for M-BAL.
+- Save format 24 appends growth state outside historical nested wire layouts; known historical saves migrate through explicit admission and growth validation. See ADR 0069 and `docs/v8/mgrow/DECISIONS.md`.
+
+### Removed
+- None.
+
 ## C3-b — iron chain, not yet published (2026-11-15)
 
 ### Added
