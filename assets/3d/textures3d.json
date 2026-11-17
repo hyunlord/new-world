@@ -1,6 +1,7 @@
 {
   "about": "Presentation texture atlas, row-major 8 by 8. 1024 cells contain 1008 texels and 8 wrap gutter texels each side. Missing bindings preserve flat material tint. Crowd/VAT textures are intentionally unchanged.",
   "strength": 0.5,
+  "linear_luminance_means": [0.248998, 0.22077, 0.233222, 0.393869, 0.183916, 0.214509, 0.094111, 0.556745, 0.666265, 0.718802, 0.209948, 0.220649, 0.188136, 0.140423, 0.144344, 0.097021, 0.350615, 0.323613, 0.154484, 0.464655, 0.198791, 0.217663, 0.238254, 0.25229, 0.410597, 0.398496, 0.212596, 0.368012, 0.167905, 0.637368, 0.254502, 0.156409, 0.220265, 0.199545, 0.094508, 0.124378, 0.090468, 0.181048, 0.250936, 0.35901],
   "tiles": ["grass_summer_a", "grass_summer_b", "grass_autumn", "dry_grass", "packed_earth_a", "packed_earth_b", "mud", "sand", "snow_a", "snow_b", "river_bed", "rock_face", "scree", "forest_floor", "log_bark_a", "log_bark_b", "log_end", "split_plank", "wattle", "daub", "mud_brick", "rough_stone", "cut_stone", "paved_road", "thatch_a", "thatch_b", "bark_shingle", "reed_mat", "hide", "linen", "wool", "fur", "copper", "bronze", "iron_bloom", "wrought_iron", "charcoal", "clay_raw", "clay_fired", "ash"],
   "terrain": {"0": 0, "1": 13, "2": 11, "3": 12, "4": 10, "5": 7, "6": 7, "7": 8, "8": 3, "9": 4},
   "styles": {"log": 14, "drystone": 21, "mud_brick": 20, "fired_brick": 20, "packed_earth": 4, "palisade": 14, "wattle": 18, "daub": 19},

@@ -1,16 +1,19 @@
 // wall.gdshader — walls, doors, fences, floors and construction sites of the 3D view (scripts/world3d/structures3d.gd).
 // COLOR is the material colour; UV.x the profile (0 block: running-bond mortar lines; 1 log; 2 palisade; 3 trim),
-// UV2.y the ground the piece stands on. The cutaway clamps every vertex to `cut_all` metres above its ground, and
+// UV2.x the atlas tile; UV2.y the ground the piece stands on. The cutaway clamps every vertex to `cut_all` metres above its ground, and
 // to `cut_rect_height` inside `cut_rect` (x0, z0, x1, z1) — the walls around a selected room.
 shader_type spatial;
 render_mode diffuse_lambert, specular_disabled;
 #include "res://shaders/world3d/painterly.gdshaderinc"
+#include "res://shaders/world3d/material_texture.gdshaderinc"
 
 uniform float cut_all = 99.0;
 uniform vec4 cut_rect = vec4(0.0);
 uniform float cut_rect_height = 99.0;
 
 varying vec3 world_pos;
+varying vec3 world_normal;
+varying float texture_tile;
 varying float profile;
 varying float cut_top;
 
@@ -29,6 +32,8 @@ void vertex() {
 	VERTEX.y = min(VERTEX.y, top);
 	world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	profile = UV.x;
+	texture_tile = UV2.x;
+	world_normal = normalize(MODEL_NORMAL_MATRIX * NORMAL);
 }
 
 void fragment() {
@@ -46,6 +51,7 @@ void fragment() {
 	if (cut_top > 0.5) {
 		c *= 0.8;
 	}
+	c *= material_triplanar(world_pos * 0.7, normalize(world_normal), texture_tile);
 	ALBEDO = painterly_albedo(c, world_pos);
 	ROUGHNESS = 0.92;
 }

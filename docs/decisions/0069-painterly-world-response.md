@@ -49,3 +49,9 @@ https://docs.godotengine.org/en/4.6/tutorials/shaders/shader_reference/spatial_s
 ### Sampling correction — 2026-11-17
 
 The initial16³ endpoint bake introduced extra contrast because Godot4.6 samples LUT coordinates directly. Use32³ texel-centre samples instead. Production-slice trilinear tests fail on the initial bake and preserve the intended midtone ramp and night signal after correction. Source: `tools/v8/look1_material_test.gd`; Godot4.6 `servers/rendering/renderer_rd/shaders/effects/tonemap.glsl`.
+
+### Captured material correction — 2026-11-17
+
+The first valid GPU comparison exposed two gaps hidden by headless shader checks: procedural walls/roofs did not bind the existing atlas, and the linear-luminance multiplier compressed grass/earth texture contrast to about2%. Reuse the existing atlas setup for those batches and carry each wall's material index in unused UV2.x; UV2.y remains the cutaway ground height. Store measured cell luminance in the atlas JSON and centre modulation on that mean, preserving palette ownership and draw batches. Distant detail fades without sampling neighbouring atlas cells. Daylight energy is lifted independently of night exposure. Grass root tint is lifted without adding geometry; shrub leaf normals reuse canopy smoothing.
+
+Visibility remains a separate acceptance check: a failed pixel count under the inherited HUD plaque is recorded against paired baseline captures, never waived by lowering its contrast threshold.

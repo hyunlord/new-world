@@ -19,6 +19,7 @@
 extends Node3D
 
 const Data3D = preload("res://scripts/world3d/data3d.gd")
+const Flora = preload("res://scripts/world3d/flora3d.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 const Facts = preload("res://scripts/ui/field_facts.gd")
 const PLANT_SHADER = preload("res://shaders/world3d/plants.gdshader")
@@ -61,7 +62,7 @@ func _ready() -> void:
 	_heads = _batch("Heads", _head_mesh(), mat)
 	var detail: ShaderMaterial = mat.duplicate() as ShaderMaterial
 	detail.set_shader_parameter("detail", true)
-	_grass = _batch("MeadowGrass", _tuft_mesh(), detail)
+	_grass = _batch("MeadowGrass", _tuft_mesh(0.82), detail)
 	_flowers = _batch("MeadowFlowers", _flower_mesh(), detail)
 
 
@@ -80,7 +81,7 @@ func _batch(node_name: String, mesh: ArrayMesh, mat: Material) -> MultiMeshInsta
 
 
 ## A tuft of blades 1 m tall around the origin, darker at the base (instance colour tints it).
-static func _tuft_mesh() -> ArrayMesh:
+static func _tuft_mesh(root_shade: float = 0.55) -> ArrayMesh:
 	var verts: PackedVector3Array = PackedVector3Array()
 	var cols: PackedColorArray = PackedColorArray()
 	for k: int in BLADES:
@@ -90,7 +91,7 @@ static func _tuft_mesh() -> ArrayMesh:
 		var root: Vector3 = dir * 0.04
 		var tip: Vector3 = dir * (0.16 + 0.05 * float(k % 3)) + Vector3(0, 0.8 + 0.2 * float((k * 5) % 3) / 2.0, 0)
 		verts.append_array([root - side, root + side, tip])
-		cols.append_array([Color(0.55, 0.55, 0.55), Color(0.55, 0.55, 0.55), Color.WHITE])
+		cols.append_array([Color(root_shade, root_shade, root_shade), Color(root_shade, root_shade, root_shade), Color.WHITE])
 	return _mesh(verts, cols)
 
 
@@ -374,9 +375,16 @@ func _painted(id: String, saturation: float) -> Mesh:
 	var base: Mesh = _desaturated(id, saturation)
 	if base is not ArrayMesh:
 		return base
-	var out: ArrayMesh = (base as ArrayMesh).duplicate() as ArrayMesh
-	for surface: int in out.get_surface_count():
-		out.surface_set_material(surface, _plant_material(out.surface_get_material(surface)))
+	var out: ArrayMesh = ArrayMesh.new()
+	for surface: int in base.get_surface_count():
+		var arrays: Array = base.surface_get_arrays(surface)
+		var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+		var normals: Variant = arrays[Mesh.ARRAY_NORMAL]
+		if Data3D.surface_key(base, surface) == "canopy" and normals is PackedVector3Array and (normals as PackedVector3Array).size() == vertices.size():
+			arrays[Mesh.ARRAY_NORMAL] = Flora.smooth_canopy_normals(vertices, normals)
+		out.add_surface_from_arrays(base.surface_get_primitive_type(surface), arrays)
+		out.surface_set_name(surface, (base as ArrayMesh).surface_get_name(surface))
+		out.surface_set_material(surface, _plant_material(base.surface_get_material(surface)))
 	_variants[key] = out
 	return out
 

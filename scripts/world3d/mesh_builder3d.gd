@@ -1,7 +1,7 @@
 # mesh_builder3d.gd — a small triangle accumulator for the 3D view's procedural meshes (walls, roofs, fences, sites).
 # Purpose: flat-shaded triangles with a vertex colour, UV (x: profile code for the wall shader, y: along-surface
-#   metres) and UV2 (y: the ground height the piece stands on, which the cutaway clamps against). Godot front faces are
-#   clockwise; `quad(a, b, c, d)` takes the corners clockwise as seen from the front.
+#   metres) and UV2 (x: atlas tile, -1 without a binding; y: ground height for the cutaway).
+#   Godot front faces are clockwise; `quad(a, b, c, d)` takes the corners clockwise as seen from the front.
 # Bridge methods called: none.
 extends RefCounted
 
@@ -13,6 +13,7 @@ var uv2s: PackedVector2Array = PackedVector2Array()
 ## Current profile code (UV.x) and ground base (UV2.y) for the next triangles.
 var profile: float = 0.0
 var base: float = 0.0
+var texture_tile: float = -1.0
 
 
 func is_empty() -> bool:
@@ -28,7 +29,7 @@ func tri(a: Vector3, b: Vector3, c: Vector3, col: Color, ua: float = 0.0, ub: fl
 	normals.append_array([n, n, n])
 	colours.append_array([col, col, col])
 	uvs.append_array([Vector2(profile, ua), Vector2(profile, ub), Vector2(profile, uc)])
-	uv2s.append_array([Vector2(0, base), Vector2(0, base), Vector2(0, base)])
+	uv2s.append_array([Vector2(texture_tile, base), Vector2(texture_tile, base), Vector2(texture_tile, base)])
 
 
 ## Quad a-b-c-d, clockwise seen from its front.

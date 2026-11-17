@@ -6,9 +6,11 @@
 shader_type spatial;
 render_mode diffuse_lambert, specular_disabled, cull_back;
 #include "res://shaders/world3d/painterly.gdshaderinc"
+#include "res://shaders/world3d/material_texture.gdshaderinc"
 
 uniform vec3 cover : source_color = vec3(0.72, 0.6, 0.34);
 uniform int pattern = 0;
+uniform float texture_tile = -1.0;
 uniform float fade = 1.0;
 global uniform float w3d_snow;
 
@@ -43,6 +45,7 @@ void fragment() {
 		float h = world_pos.y;
 		// Along the eaves: x for a ridge along x, z for a ridge along z.
 		float along = ridge_z < 0.5 ? world_pos.x : world_pos.z;
+		c *= material_detail(vec2(along, h) * 0.7, texture_tile);
 		if (pattern == 0) {
 			float course = fract(h / 0.16);
 			float straw = fract(sin(floor(along * 9.0) * 12.9898 + floor(h / 0.16) * 4.1) * 43758.5453);

@@ -17,6 +17,13 @@ static func index(family: String, key: String, fallback: int = -1) -> int:
 
 
 static func setup(mat: ShaderMaterial) -> void:
+	var means: PackedFloat32Array = PackedFloat32Array()
+	means.resize(64)
+	means.fill(0.5)
+	var configured: Array = bindings().get("linear_luminance_means", [])
+	for i: int in mini(configured.size(), means.size()):
+		means[i] = clampf(float(configured[i]), 0.0, 1.0)
+	mat.set_shader_parameter("material_luminance", means)
 	var path: String = "res://assets/3d/textures/albedo_atlas.webp"
 	if ResourceLoader.exists(path):
 		mat.set_shader_parameter("material_atlas", load(path) as Texture2D)

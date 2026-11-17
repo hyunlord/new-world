@@ -86,6 +86,7 @@ func _ready() -> void:
 	_resolver.load_imported()
 	wall_material = ShaderMaterial.new()
 	wall_material.shader = WALL_SHADER
+	Textures3D.setup(wall_material)
 
 
 func _on_world_reset() -> void:
@@ -242,7 +243,7 @@ func _wall_entry(style: String, raw_material: int, category: String, is_door: bo
 	var by_style: Dictionary = Data3D.binding("walls.by_style", {})
 	var wall_style: String = str(r.get("style_id", style))
 	var profile: String = str(by_style.get(wall_style, by_style.get(style, Data3D.binding("walls.fallback", ""))))
-	return {"door": is_door, "fence": false, "profile": profile, "colour": c, "category": cat, "material": key}
+	return {"door": is_door, "fence": false, "profile": profile, "style": wall_style, "colour": c, "category": cat, "material": key}
 
 
 ## Finished huts are not in get_space: their ring, door and floor come from the 2D building binding.
@@ -312,6 +313,8 @@ func _build_wall_chunk(k: Vector2i, floors: Dictionary) -> void:
 		var w: Dictionary = _walls[t]
 		var g: float = float(_terrain.call("stand_height", t))
 		b.base = g
+		b.texture_tile = float(Textures3D.index("styles", str(w.get("style", "")),
+			Textures3D.index("materials", str(w.get("material", "")), Textures3D.index("categories", str(w.get("category", ""))))))
 		if bool(w["fence"]):
 			if _fence_model(t) == "":
 				_fence(b, t, g)
@@ -324,6 +327,7 @@ func _build_wall_chunk(k: Vector2i, floors: Dictionary) -> void:
 			continue
 		var g2: float = float(_terrain.call("stand_height", t))
 		b.base = g2
+		b.texture_tile = -1.0
 		b.profile = PROFILE_TRIM
 		var fc: Color = floors[t]
 		b.box(Vector3(t.x + 0.02, g2 - 0.05, t.y + 0.02), Vector3(t.x + 0.98, g2 + floor_h, t.y + 0.98), fc.darkened(0.05), fc)
@@ -603,6 +607,8 @@ func _rebuild_roofs(rooms: Dictionary, sites: Array) -> void:
 		mi.name = "Roof_%d" % id
 		var mat: ShaderMaterial = ShaderMaterial.new()
 		mat.shader = ROOF_SHADER
+		Textures3D.setup(mat)
+		mat.set_shader_parameter("texture_tile", float(Textures3D.index("roofs", cover)))
 		mat.set_shader_parameter("cover", Data3D.colour((Data3D.binding("roofs.colours", {}) as Dictionary).get(cover, []), Color(0.7, 0.6, 0.35)))
 		mat.set_shader_parameter("pattern", int((Data3D.binding("roofs.patterns", {}) as Dictionary).get(cover, 0)))
 		mat.set_shader_parameter("fade", float(_roof_fade.get(id, 1.0)))

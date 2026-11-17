@@ -72,6 +72,32 @@ func _run() -> void:
 	var plants: Node3D = Plants.new()
 	host.add_child(plants)
 	plants.set_process(false)
+	var primary_arrays: Array = (plants.get_node("Tufts") as MultiMeshInstance3D).multimesh.mesh.surface_get_arrays(0)
+	var meadow_arrays: Array = (plants.get_node("MeadowGrass") as MultiMeshInstance3D).multimesh.mesh.surface_get_arrays(0)
+	var primary_colours: PackedColorArray = primary_arrays[Mesh.ARRAY_COLOR]
+	var meadow_colours: PackedColorArray = meadow_arrays[Mesh.ARRAY_COLOR]
+	_check("meadow roots lifted without changing primary tufts", meadow_colours[0].r > primary_colours[0].r and absf(primary_colours[0].r - 0.55) < 0.005 and meadow_colours[2] == Color.WHITE)
+	_check("meadow tint retains geometry budget", meadow_arrays[Mesh.ARRAY_VERTEX] == primary_arrays[Mesh.ARRAY_VERTEX])
+	var source_mesh: ArrayMesh = ArrayMesh.new()
+	var source_arrays: Array = []
+	source_arrays.resize(Mesh.ARRAY_MAX)
+	source_arrays[Mesh.ARRAY_VERTEX] = PackedVector3Array([Vector3.ZERO, Vector3.RIGHT, Vector3.FORWARD, Vector3.ZERO, Vector3.UP, Vector3.FORWARD])
+	source_arrays[Mesh.ARRAY_NORMAL] = PackedVector3Array([Vector3.UP, Vector3.UP, Vector3.UP, Vector3.RIGHT, Vector3.RIGHT, Vector3.RIGHT])
+	for surface_name: String in ["canopy", "trunk"]:
+		source_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, source_arrays)
+		source_mesh.surface_set_name(source_mesh.get_surface_count() - 1, surface_name)
+	var original_normals: PackedVector3Array = source_mesh.surface_get_arrays(0)[Mesh.ARRAY_NORMAL]
+	var variants: Dictionary = plants.get("_variants")
+	variants["look1_leaf_fixture|1.000"] = source_mesh
+	var smooth_mesh: ArrayMesh = plants.call("_painted", "look1_leaf_fixture", 1.0) as ArrayMesh
+	var leaf_normals: PackedVector3Array = smooth_mesh.surface_get_arrays(0)[Mesh.ARRAY_NORMAL]
+	_check("plant leaf seams smooth", leaf_normals[0].is_equal_approx(leaf_normals[3]) and leaf_normals[0].distance_to(Vector3(1, 1, 0).normalized()) < 0.001)
+	var trunk_normals: PackedVector3Array = smooth_mesh.surface_get_arrays(1)[Mesh.ARRAY_NORMAL]
+	var trunk_retained: bool = true
+	for i: int in original_normals.size():
+		trunk_retained = trunk_retained and trunk_normals[i].distance_to(original_normals[i]) < 0.001
+	_check("plant source and nonleaf normals retained", source_mesh.surface_get_arrays(0)[Mesh.ARRAY_NORMAL] == original_normals and trunk_retained)
+	_check("plant smoothing retains geometry", smooth_mesh.get_surface_count() == source_mesh.get_surface_count() and smooth_mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX] == source_arrays[Mesh.ARRAY_VERTEX])
 	plants.call("setup", world, terrain)
 	var xs: PackedInt64Array = PackedInt64Array()
 	var ys: PackedInt64Array = PackedInt64Array()
