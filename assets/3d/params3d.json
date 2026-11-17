@@ -1,6 +1,12 @@
 {
   "schema_version": 1,
   "about": "Tunables of the 3D view (M3D-1). 1 tile = 1 world unit (about 1 m). Read by scripts/world3d/*.gd through data3d.gd; nothing here is simulation state.",
+  "yards": {"tile_fill": 0.85},
+  "zones": {
+    "housing": [0.55, 0.75, 0.95], "storage": [0.89, 0.80, 0.59],
+    "workshop": [0.88, 0.58, 0.36], "field": [0.55, 0.78, 0.35],
+    "pen": [0.75, 0.60, 0.87], "default": [0.7, 0.7, 0.7]
+  },
   "camera": {
     "fov_deg": 30.0,
     "pitch_deg": 45.0,

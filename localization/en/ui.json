@@ -2005,5 +2005,22 @@
   "C3_CARD_IRON": "No iron nearby",
   "C3_CARD_IRON_BODY": "The settlement knows iron smelting, but no iron ore or bog iron has been found near the camp. Keep looking, or obtain iron from a trader.",
   "C3_CARD_IRON_WAIT": "Keep looking and wait",
-  "C3_CARD_IRON_TRADE": "Look for an iron exchange"
+  "C3_CARD_IRON_TRADE": "Look for an iron exchange",
+  "ZONE_FIELDS": "Fields zone",
+  "ZONE_PENS": "Pens zone",
+  "ZONE_WORK_YARD": "Work yard",
+  "CHRONICLE_ZONE_LAID_OUT": "The village expanded {zone} to the {direction} ← {cause}",
+  "ZONE_CAUSE_BEDS_SHORT": "not enough shelter (people {people}, beds {beds})",
+  "MGROW_ZONE_OVERLAY": "Village zones · Z to hide",
+  "BUILD_CAUSE_LAYOUT_FMT": "Within {zone} ← {cause}",
+  "ZONE_CAUSE_WORKSHOP_SPACE_SHORT": "space needed for work",
+  "ZONE_CAUSE_STORAGE_FULL": "storage space is full",
+  "ZONE_CAUSE_FIELD_NEED": "more growing space is needed",
+  "ZONE_CAUSE_PEN_NEED": "more livestock space is needed",
+  "ZONE_CAUSE_UNKNOWN": "settlement needs (people {people}, available spaces {beds})",
+  "HOUSE_STAGE_BARE": "newly built",
+  "HOUSE_STAGE_LIVED_IN": "lived-in",
+  "HOUSE_STAGE_YARD": "established yard",
+  "CHRONICLE_HOUSE_STAGE": "A home reached {stage} ← its residents settled in",
+  "CHRONICLE_MATERIAL_WAVE": "A home began an upgrade with {era} materials"
 }

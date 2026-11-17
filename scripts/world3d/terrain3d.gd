@@ -12,7 +12,7 @@
 #   Chunks build progressively (nearest the camera first, a few per frame) and rebuild when the space version, the
 #   field tiles or a reset change them.
 # Bridge methods called: via SimReads get_terrain_snapshot, get_world_info, get_space, get_field_tiles,
-#   get_building_snapshot; signal world_reset.
+#   get_building_snapshot, get_colony_versions; signal world_reset.
 extends Node3D
 
 const Data3D = preload("res://scripts/world3d/data3d.gd")
@@ -56,6 +56,7 @@ var _stamp_key: String = ""
 ## M-GROW 3.2: per-tile path stage (0 grass, 1 trodden, 2 dirt, 3 paved).
 var _path_stage: PackedByteArray = PackedByteArray()
 var _path_tex: ImageTexture = null
+var _path_version: int = -1
 
 
 func setup(world_sim: Node) -> void:
@@ -77,6 +78,7 @@ func _on_world_reset() -> void:
 	_loaded = false
 	_space_version = -1
 	_field_key = ""
+	_path_version = -1
 
 
 ## True once every chunk of the current world is built.
@@ -104,6 +106,7 @@ func _process(_delta: float) -> void:
 		_loaded = true
 	if (key != _stamp_key or stamp.is_empty()) and (not _loaded or _claim()):
 		_stamp_key = key
+		_poll_paths()
 		_poll_space()
 	elif _loaded and not _dirty.is_empty() and _claim():
 		_build_some(1)
@@ -141,6 +144,18 @@ func _load_world() -> void:
 	_mark_all()
 
 
+## Paths change only on a day boundary or construction; update the texture without remeshing.
+func _poll_paths() -> void:
+	var versions: Dictionary = SimReads.read(_world_sim, "get_colony_versions")
+	var version: int = int(versions.get("path_version", 0))
+	if version == _path_version:
+		return
+	_path_version = version
+	var snapshot: Dictionary = SimReads.read(_world_sim, "get_terrain_snapshot")
+	_path_stage = snapshot.get("path_stage", PackedByteArray())
+	_update_path_texture()
+
+
 ## M-GROW 3.2: build an R8 texture from path_stage bytes for the terrain shader.
 func _update_path_texture() -> void:
 	if width <= 0 or height <= 0:
@@ -150,7 +165,7 @@ func _update_path_texture() -> void:
 	if data.size() != n:
 		data.resize(n)
 	var img: Image = Image.create_from_data(width, height, false, Image.FORMAT_R8, data)
-	if _path_tex == null:
+	if _path_tex == null or _path_tex.get_width() != width or _path_tex.get_height() != height:
 		_path_tex = ImageTexture.create_from_image(img)
 	else:
 		_path_tex.update(img)

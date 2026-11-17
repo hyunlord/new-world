@@ -1,6 +1,6 @@
 # SimReads (node "SimReads" beside WorldSim in scenes/main.tscn): the read layer; every snapshot read (GETTERS) and
 #   mutation (MUTATORS) goes through it, frozen and cached per frame (porter/relations and the M4 knowledge reads per
-#   tick, terrain until reset; M5 get_story, get_animals, get_drafted per tick; M5.5 get_neighbours per frame).
+#   tick, terrain until path-version change or reset; M5 get_story, get_animals, get_drafted per tick; M5.5 get_neighbours per frame).
 # Bridge methods: get_agent_snapshot, get_settlement_snapshot, get_construction_snapshot, get_building_snapshot,
 #   get_resource_snapshot, get_time_snapshot, get_tallies, get_recent_deaths, get_society_snapshot, get_world_info,
 #   get_terrain_snapshot, get_activity_snapshot, get_porter_snapshot, get_settlement_relations, get_colony_versions,
@@ -87,6 +87,7 @@ var _tick: int = -1
 var _catalog: Dictionary = {}
 var _terrain: Dictionary = {}
 var _terrain_valid: bool = false
+var _terrain_path_version: int = -1
 var _frame: int = -1
 var _counts: Dictionary = {}
 var _usec: Dictionary = {}
@@ -173,6 +174,7 @@ func _on_world_reset() -> void:
 	invalidate()
 	_terrain = {}
 	_terrain_valid = false
+	_terrain_path_version = -1
 
 func read_raw(raw_getter: String) -> Dictionary:
 	if raw_getter not in GETTERS:
@@ -194,8 +196,11 @@ func read_raw(raw_getter: String) -> Dictionary:
 			return _tick_cache[raw_getter]
 	if raw_getter == "get_content_catalog" and not _catalog.is_empty():
 		return _catalog
-	if raw_getter == "get_terrain_snapshot" and _terrain_valid:
-		return _terrain
+	if raw_getter == "get_terrain_snapshot":
+		var path_version: int = int(read_raw("get_colony_versions").get("path_version", 0))
+		if _terrain_valid and path_version == _terrain_path_version:
+			return _terrain
+		_terrain_path_version = path_version
 	if _cache.has(raw_getter):
 		return _cache[raw_getter]
 	var started: int = Time.get_ticks_usec()

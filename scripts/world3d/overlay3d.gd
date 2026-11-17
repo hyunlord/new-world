@@ -1,7 +1,7 @@
 # overlay3d.gd (World3D/Overlay, made by world3d.gd): the 2D view's map overlays and the order feedback, projected
 #   onto the 3D terrain as one texel per tile (M3D-1 scope 8).
 # Purpose: an RGBA image of the map (terrain.gdshader `overlay_tex`, nearest) plus an outline image (`frame_tex`):
-#   stockpile zones (render_params `zones.tint_rgb`), housing zones, hunt zones (`zones.hunt_rgb`), designations
+#   automatic layout zones toggled with Z (params3d zones category colours); stockpile zones (render_params `zones.tint_rgb`), housing zones, hunt zones (`zones.hunt_rgb`), designations
 #   (chop/quarry/dig/deconstruct/clay marks, framed), field tiles; with the room overlay shown (R, Main/RoomIndex) every
 #   room tile in its role colour (RoomIndex.ROLE_COLORS); and the order tool's live state from OrderTool's public
 #   getters — the hovered tile framed in an area or build mode (`hover_tile`), the drag rectangle (`drag_tiles`), the
@@ -23,6 +23,8 @@ const Data3D = preload("res://scripts/world3d/data3d.gd")
 const CHANNEL_KEYS: Array[String] = ["W3D_OVERLAY_WARMTH", "W3D_OVERLAY_LIGHT", "W3D_OVERLAY_NOISE", "W3D_OVERLAY_FOOD",
 	"W3D_OVERLAY_DANGER", "W3D_OVERLAY_SOCIAL", "W3D_OVERLAY_SPIRITUAL", "W3D_OVERLAY_BEAUTY"]
 const TOGGLE_KEY: Key = KEY_O
+const ZONES_KEY: Key = KEY_Z
+var zones_shown: bool = false
 ## A placement tile or footprint that fits.
 const GOOD: Color = Color(0.45, 0.9, 0.45, 0.45)
 
@@ -85,6 +87,14 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo and (event as InputEventKey).keycode == ZONES_KEY \
+			and not (event as InputEventKey).ctrl_pressed and not (event as InputEventKey).meta_pressed:
+		zones_shown = not zones_shown
+		_base_key = ""
+		_stamp_key = ""
+		_update_label()
+		get_viewport().set_input_as_handled()
+		return
 	if event is InputEventKey and event.pressed and not event.echo and (event as InputEventKey).keycode == TOGGLE_KEY \
 			and not (event as InputEventKey).ctrl_pressed and not (event as InputEventKey).meta_pressed:
 		cycle_channel()
@@ -101,10 +111,14 @@ func cycle_channel() -> void:
 	channel = channel + 1 if channel + 1 < CHANNEL_KEYS.size() else -1
 	_influence_tick = -1
 	_base_key = ""
+	_update_label()
+
+
+func _update_label() -> void:
 	var locale: Node = get_node_or_null("/root/Locale")
-	_label.visible = channel >= 0
-	if channel >= 0:
-		_label.text = str(locale.call("ltr", CHANNEL_KEYS[channel])) if locale != null else CHANNEL_KEYS[channel]
+	_label.visible = channel >= 0 or zones_shown
+	var key: String = CHANNEL_KEYS[channel] if channel >= 0 else "MGROW_ZONE_OVERLAY"
+	_label.text = str(locale.call("ltr", key)) if locale != null else key
 
 
 func _process(delta: float) -> void:
@@ -150,7 +164,7 @@ func _process(delta: float) -> void:
 	var animals: Dictionary = SimReads.read(_world_sim, "get_animals")
 	var fields: Dictionary = SimReads.read(_world_sim, "get_field_tiles")
 	var key: String = "%d|%d|%d|%d|%s|%d|%d" % [int(overlay.get("version", 0)), int(rooms.get("version", 0)), int(animals.get("version", 0)),
-		hash(fields.get("phases", PackedInt64Array())), rooms_shown, channel, _influence_tick]
+		hash(fields.get("phases", PackedInt64Array())), rooms_shown, channel, _influence_tick] + str(zones_shown)
 	if key != _base_key:
 		_base_key = key
 		_build_base(overlay, rooms, animals, fields, rooms_shown)
@@ -192,8 +206,16 @@ func _build_base(overlay: Dictionary, rooms: Dictionary, animals: Dictionary, fi
 	var housing: Color = Color(0.55, 0.75, 0.95, alpha)
 	var hx: PackedInt32Array = overlay.get("housing_zone_xs", PackedInt32Array())
 	var hy: PackedInt32Array = overlay.get("housing_zone_ys", PackedInt32Array())
+	var automatic: Dictionary = {}
+	for row: Variant in overlay.get("layout_zones", []):
+		if row is Dictionary:
+			automatic[int((row as Dictionary).get("zone_id", -1))] = true
+	var hids: PackedInt64Array = overlay.get("housing_zone_ids", PackedInt64Array())
 	for i: int in mini(hx.size(), hy.size()):
-		_put(_base, _frame_base, Vector2i(hx[i], hy[i]), housing, false)
+		if i >= hids.size() or not automatic.has(hids[i]):
+			_put(_base, _frame_base, Vector2i(hx[i], hy[i]), housing, false)
+	if zones_shown:
+		_draw_layout_zones(overlay, alpha)
 	var hunt: Color = _rgb("zones.hunt_rgb", Color(0.95, 0.72, 0.3), alpha)
 	var hz: PackedInt32Array = animals.get("zones", PackedInt32Array())
 	_hunt_zones = 0
@@ -292,3 +314,24 @@ func _update_marker(delta: float) -> void:
 		_phase += delta * WorldMarker.PULSE_SPEED
 		var mat: StandardMaterial3D = (_marker.mesh as TorusMesh).material as StandardMaterial3D
 		mat.albedo_color.a = 0.65 + WorldMarker.PULSE_RANGE * sin(_phase)
+
+
+# Automatic layout envelopes are presentation only; Z hides both their fill and edge.
+func _draw_layout_zones(overlay: Dictionary, alpha: float) -> void:
+	for value: Variant in overlay.get("layout_zones", []):
+		if value is not Dictionary:
+			continue
+		var row: Dictionary = value
+		var xs: PackedInt64Array = row.get("xs", PackedInt64Array())
+		var ys: PackedInt64Array = row.get("ys", PackedInt64Array())
+		var tiles: Dictionary = {}
+		for i: int in mini(xs.size(), ys.size()):
+			tiles[Vector2i(xs[i], ys[i])] = true
+		var colour: Color = Data3D.colour(Data3D.param("zones." + str(row.get("category", "default")), []), Color(0.7, 0.7, 0.7))
+		colour.a = alpha
+		for tile: Vector2i in tiles:
+			var border: bool = false
+			for step: Vector2i in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
+				if not tiles.has(tile + step):
+					border = true
+			_put(_base, _frame_base, tile, colour, border)

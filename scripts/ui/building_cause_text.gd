@@ -19,6 +19,10 @@ static func lines(read: Dictionary, locale: Node, info: Dictionary) -> Array[Str
 		"steward": cause_key = "BUILD_CAUSE_STEWARD"
 		_: return [Chronicle.loc(locale, "BUILD_CAUSE_UNAVAILABLE")]
 	out.append(Chronicle.loc(locale, cause_key))
+	if read.has("zone_id"):
+		out.append(Chronicle.loc(locale, "BUILD_CAUSE_LAYOUT_FMT").format({
+			"zone": Chronicle.loc(locale, str(read.get("zone_name_key", "UI_UNKNOWN"))),
+			"cause": Chronicle.zone_reason(read, locale)}))
 	out.append(Chronicle.loc(locale, "BUILD_CAUSE_ORDER_FMT").format({
 		"day": Chronicle.day(int(read.get("tick", 0)), info),
 		"action": Chronicle.loc(locale, str(read.get("command_key", "UI_UNKNOWN"))),

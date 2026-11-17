@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 2053,
+    "active_key_count": 2070,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 2053,
+    "key_count": 2070,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -100,6 +100,7 @@
     "BUILDING_WOOD_BENCH": "Wood bench",
     "BUILDING_WORKSHOP_SHED": "Workshop shed",
     "BUILD_CAUSE_COMMAND": "Order",
+    "BUILD_CAUSE_LAYOUT_FMT": "Within {zone} ← {cause}",
     "BUILD_CAUSE_ORDER_BUILD": "Build order",
     "BUILD_CAUSE_ORDER_FMT": "Day {day} · {action} · ({x}, {y})",
     "BUILD_CAUSE_ORDER_UPGRADE": "Upgrade order",
@@ -213,6 +214,7 @@
     "CHRONICLE_BUILDING_COMPLETE": "Built {building} ← {cause}",
     "CHRONICLE_DAY_FMT": "Day %d",
     "CHRONICLE_ERA_CHANGED_FMT": "The era changed: {era}",
+    "CHRONICLE_HOUSE_STAGE": "A home reached {stage} ← its residents settled in",
     "CHRONICLE_HUT_BUILT": "A hut was finished in {settlement}",
     "CHRONICLE_KNOWLEDGE_AT_RISK_FMT": "⚠ {node}: only {person} knows it",
     "CHRONICLE_KNOWLEDGE_DISCOVERED_FMT": "{person} discovered {node}!",
@@ -220,8 +222,10 @@
     "CHRONICLE_KNOWLEDGE_LOST_FMT": "Knowledge lost: {node} (last: {person})",
     "CHRONICLE_KNOWLEDGE_LOST_NOBODY_FMT": "Knowledge lost: {node}",
     "CHRONICLE_KNOWLEDGE_TAUGHT_FMT": "{teacher} taught {learner} {node}",
+    "CHRONICLE_MATERIAL_WAVE": "A home began an upgrade with {era} materials",
     "CHRONICLE_ROOM_FORMED": "A new room: {role}",
     "CHRONICLE_TOOL_BROKE_FMT": "{person}'s {item} broke after {uses} uses",
+    "CHRONICLE_ZONE_LAID_OUT": "The village expanded {zone} to the {direction} ← {cause}",
     "CHRON_BECAME_ELDER": "Became an elder.",
     "CHRON_BORN_FALLBACK_NOTE": "(parents by the village's reckoning)",
     "CHRON_BORN_FMT": "Born in %s. Parents: %s and %s.",
@@ -306,6 +310,9 @@
     "ERA_NEOLITHIC": "Neolithic",
     "ERA_PALEOLITHIC": "Paleolithic",
     "ERA_TRANSITION_FMT": "{era} transition",
+    "HOUSE_STAGE_BARE": "newly built",
+    "HOUSE_STAGE_LIVED_IN": "lived-in",
+    "HOUSE_STAGE_YARD": "established yard",
     "HUD_BERRIES": "Wild berries",
     "HUD_COLD": "Cold",
     "HUD_DAY_FMT": "Day %d",
@@ -1209,6 +1216,7 @@
     "MATERIAL_GRANITE": "granite",
     "MATERIAL_LIMESTONE": "limestone",
     "MATERIAL_OAK": "oak",
+    "MGROW_ZONE_OVERLAY": "Village zones · Z to hide",
     "MIND_BEHAVIOUR_DO_JOB": "Working",
     "MIND_BEHAVIOUR_DRINK": "Drinking",
     "MIND_BEHAVIOUR_EAT": "Eating",
@@ -2077,8 +2085,17 @@
     "WORK_MINE": "Mine",
     "WORK_QUARRY": "Quarry",
     "WORK_SPLIT": "Firewood",
+    "ZONE_CAUSE_BEDS_SHORT": "not enough shelter (people {people}, beds {beds})",
+    "ZONE_CAUSE_FIELD_NEED": "more growing space is needed",
+    "ZONE_CAUSE_PEN_NEED": "more livestock space is needed",
+    "ZONE_CAUSE_STORAGE_FULL": "storage space is full",
+    "ZONE_CAUSE_UNKNOWN": "settlement needs (people {people}, available spaces {beds})",
+    "ZONE_CAUSE_WORKSHOP_SPACE_SHORT": "space needed for work",
+    "ZONE_FIELDS": "Fields zone",
     "ZONE_HOUSING": "Housing zone",
+    "ZONE_PENS": "Pens zone",
     "ZONE_STORAGE": "Storage zone",
-    "ZONE_WORKSHOP": "Workshop zone"
+    "ZONE_WORKSHOP": "Workshop zone",
+    "ZONE_WORK_YARD": "Work yard"
   }
 }

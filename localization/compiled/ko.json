@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 2053,
+    "active_key_count": 2070,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 2053,
+    "key_count": 2070,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -100,6 +100,7 @@
     "BUILDING_WOOD_BENCH": "목공대",
     "BUILDING_WORKSHOP_SHED": "작업 헛간",
     "BUILD_CAUSE_COMMAND": "명령",
+    "BUILD_CAUSE_LAYOUT_FMT": "{zone} 안에 지음 ← {cause}",
     "BUILD_CAUSE_ORDER_BUILD": "건설 지시",
     "BUILD_CAUSE_ORDER_FMT": "{day}일 · {action} · ({x}, {y})",
     "BUILD_CAUSE_ORDER_UPGRADE": "개량 지시",
@@ -213,6 +214,7 @@
     "CHRONICLE_BUILDING_COMPLETE": "{building}을(를) 지었다 ← {cause}",
     "CHRONICLE_DAY_FMT": "%d일째",
     "CHRONICLE_ERA_CHANGED_FMT": "시대가 바뀌었다: {era}",
+    "CHRONICLE_HOUSE_STAGE": "{stage} 단계에 이르렀다 ← 주민의 살림이 자리 잡음",
     "CHRONICLE_HUT_BUILT": "{settlement}에 오두막이 완성됨",
     "CHRONICLE_KNOWLEDGE_AT_RISK_FMT": "⚠ {node}: {person}만 안다",
     "CHRONICLE_KNOWLEDGE_DISCOVERED_FMT": "{person}가 {node} 발견했다!",
@@ -220,8 +222,10 @@
     "CHRONICLE_KNOWLEDGE_LOST_FMT": "기술 소실: {node} (마지막: {person})",
     "CHRONICLE_KNOWLEDGE_LOST_NOBODY_FMT": "기술 소실: {node}",
     "CHRONICLE_KNOWLEDGE_TAUGHT_FMT": "{teacher}가 {learner}에게 {node} 가르쳤다",
+    "CHRONICLE_MATERIAL_WAVE": "집을 {era} 재료로 고치기 시작했다",
     "CHRONICLE_ROOM_FORMED": "새 방이 생김 — {role}",
     "CHRONICLE_TOOL_BROKE_FMT": "{person}의 {item} 부러졌다 ({uses}번 씀)",
+    "CHRONICLE_ZONE_LAID_OUT": "마을이 {direction}쪽에 {zone} 공간을 늘렸다 ← {cause}",
     "CHRON_BECAME_ELDER": "노인이 됨.",
     "CHRON_BORN_FALLBACK_NOTE": "(마을이 정한 부모)",
     "CHRON_BORN_FMT": "%s에서 태어남. 부모: %s, %s",
@@ -306,6 +310,9 @@
     "ERA_NEOLITHIC": "신석기",
     "ERA_PALEOLITHIC": "구석기",
     "ERA_TRANSITION_FMT": "{era} 전환기",
+    "HOUSE_STAGE_BARE": "갓 지은 집",
+    "HOUSE_STAGE_LIVED_IN": "살림이 자리 잡은 집",
+    "HOUSE_STAGE_YARD": "마당이 갖춰진 집",
     "HUD_BERRIES": "야생 열매",
     "HUD_COLD": "추위",
     "HUD_DAY_FMT": "%d일차",
@@ -1209,6 +1216,7 @@
     "MATERIAL_GRANITE": "화강암",
     "MATERIAL_LIMESTONE": "석회암",
     "MATERIAL_OAK": "참나무",
+    "MGROW_ZONE_OVERLAY": "마을 구역 · Z로 닫기",
     "MIND_BEHAVIOUR_DO_JOB": "일하기",
     "MIND_BEHAVIOUR_DRINK": "물 마시기",
     "MIND_BEHAVIOUR_EAT": "식사",
@@ -2077,8 +2085,17 @@
     "WORK_MINE": "채굴",
     "WORK_QUARRY": "채석",
     "WORK_SPLIT": "장작",
+    "ZONE_CAUSE_BEDS_SHORT": "집이 부족(사람 {people}, 잠자리 {beds})",
+    "ZONE_CAUSE_FIELD_NEED": "농사지을 공간이 필요함",
+    "ZONE_CAUSE_PEN_NEED": "가축을 돌볼 공간이 필요함",
+    "ZONE_CAUSE_STORAGE_FULL": "물건을 둘 공간이 부족함",
+    "ZONE_CAUSE_UNKNOWN": "마을에 공간이 필요함(사람 {people}, 자리 {beds})",
+    "ZONE_CAUSE_WORKSHOP_SPACE_SHORT": "일할 공간이 부족함",
+    "ZONE_FIELDS": "밭 구역",
     "ZONE_HOUSING": "주거 구역",
+    "ZONE_PENS": "우리 구역",
     "ZONE_STORAGE": "보관 구역",
-    "ZONE_WORKSHOP": "작업 구역"
+    "ZONE_WORKSHOP": "작업 구역",
+    "ZONE_WORK_YARD": "작업 마당"
   }
 }

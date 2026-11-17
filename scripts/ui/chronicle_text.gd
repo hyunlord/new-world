@@ -33,7 +33,7 @@ const Content = preload("res://scripts/ui/content_context.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
 const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
 ## MindChoice (47) records only entry into the critical band; its node slot is not a display name.
-const LAST_KIND: int = 69
+const LAST_KIND: int = 72
 static var steward_labels: Dictionary = {}
 static var food_chronicle: Dictionary = {}
 ## M5 adds `index` (the entry's chronicle index) and its "→" link columns (absent in older reads: -1).
@@ -68,6 +68,8 @@ static func rows(packed: Dictionary) -> Array[Dictionary]:
 		row["livestock_evidence"] = livestock[index] if index < livestock.size() and livestock[index] is Dictionary else {}
 		var ore: Array = packed.get("ore_evidence", [])
 		row["ore_evidence"] = ore[index] if index < ore.size() and ore[index] is Dictionary else {}
+		var growth: Array = packed.get("growth_evidence", [])
+		row["growth_evidence"] = growth[index] if index < growth.size() and growth[index] is Dictionary else {}
 		result.append(row)
 	return result
 
@@ -180,6 +182,8 @@ static func sentence(row: Dictionary, viewed: int, locale: Node, info: Dictionar
 		61, 62, 63, 64, 65: return livestock_sentence(row.get("livestock_evidence", {}), locale)
 		66: return ore_sentence(row.get("ore_evidence", {}), locale)
 		67, 68, 69: return metal_sentence(row, locale)
+		70: return zone_laid_out_sentence(row, locale)
+		71, 72: return house_growth_sentence(row, locale)
 		54, 55, 56:
 			var crop: Dictionary = preload("res://scripts/ui/content_context.gd").row("crops", value)
 			var key: String = ["S1_CHRON_SOWN", "S1_CHRON_HARVEST", "S1_CHRON_FROST"][kind - 54]
@@ -354,6 +358,8 @@ static func why_lines(read: Dictionary, locale: Node, info: Dictionary) -> Array
 				row["livestock_evidence"] = livestock[i] if i < livestock.size() and livestock[i] is Dictionary else {}
 				var ore: Array = read.get("ore_evidence", [])
 				row["ore_evidence"] = ore[i] if i < ore.size() and ore[i] is Dictionary else {}
+				var growth: Array = read.get("growth_evidence", [])
+				row["growth_evidence"] = growth[i] if i < growth.size() and growth[i] is Dictionary else {}
 				text = line(row, -1, locale, info, true)
 				if text.is_empty():
 					text = loc(locale, "UI_UNKNOWN")
@@ -534,3 +540,29 @@ static func ore_cause(evidence: Dictionary, locale: Node) -> String:
 	if evidence.is_empty(): return loc(locale, "UI_UNKNOWN")
 	var key: String = "C2_ORE_CAUSE_QUARRY" if str(evidence.get("method", "")) == "quarry" else "C2_ORE_CAUSE_PROSPECTING"
 	return loc(locale, key).format({"knowledge": KnowledgeText.node_name(locale, int(evidence.get("knowledge", -1))), "worker": person(int(evidence.get("worker", -1)), locale)})
+
+
+## M-GROW 3.1: zone laid out by the steward.
+static func zone_laid_out_sentence(row: Dictionary, locale: Node) -> String:
+	var detail: Dictionary = row.get("growth_evidence", {})
+	return loc(locale, "CHRONICLE_ZONE_LAID_OUT").format({
+		"zone": loc(locale, str(detail.get("zone_name_key", "UI_UNKNOWN"))),
+		"direction": loc(locale, str(detail.get("zone_direction_key", "UI_UNKNOWN"))),
+		"cause": zone_reason(detail, locale)})
+
+
+static func zone_reason(detail: Dictionary, locale: Node) -> String:
+	var key: String = "ZONE_CAUSE_" + str(detail.get("zone_trigger", "unknown")).to_upper()
+	var text: String = loc(locale, key)
+	if text == key:
+		text = loc(locale, "ZONE_CAUSE_UNKNOWN")
+	return text.format({"people": int(detail.get("zone_people", 0)), "beds": int(detail.get("zone_slots", 0))})
+
+
+static func house_growth_sentence(row: Dictionary, locale: Node) -> String:
+	var detail: Dictionary = row.get("growth_evidence", {})
+	var is_stage: bool = int(row.get("kind", -1)) == 71
+	return loc(locale, "CHRONICLE_HOUSE_STAGE" if is_stage else "CHRONICLE_MATERIAL_WAVE").format({
+		"site": int(detail.get("site_id", -1)),
+		"stage": loc(locale, str(detail.get("house_stage_name_key", "UI_UNKNOWN"))),
+		"era": loc(locale, str(detail.get("era_name_key", "UI_UNKNOWN")))})

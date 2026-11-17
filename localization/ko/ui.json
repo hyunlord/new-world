@@ -2005,5 +2005,22 @@
   "C3_CARD_IRON": "가까이에 철광이 없습니다",
   "C3_CARD_IRON_BODY": "쇠를 녹이는 법은 알지만 마을 가까이에서 찾은 철광석이나 늪철이 없습니다. 더 둘러보거나 교역상에게 쇠를 구할 수 있습니다.",
   "C3_CARD_IRON_WAIT": "더 찾아보며 기다린다",
-  "C3_CARD_IRON_TRADE": "쇠 교역을 살핀다"
+  "C3_CARD_IRON_TRADE": "쇠 교역을 살핀다",
+  "ZONE_FIELDS": "밭 구역",
+  "ZONE_PENS": "우리 구역",
+  "ZONE_WORK_YARD": "작업 마당",
+  "CHRONICLE_ZONE_LAID_OUT": "마을이 {direction}쪽에 {zone} 공간을 늘렸다 ← {cause}",
+  "ZONE_CAUSE_BEDS_SHORT": "집이 부족(사람 {people}, 잠자리 {beds})",
+  "MGROW_ZONE_OVERLAY": "마을 구역 · Z로 닫기",
+  "BUILD_CAUSE_LAYOUT_FMT": "{zone} 안에 지음 ← {cause}",
+  "ZONE_CAUSE_WORKSHOP_SPACE_SHORT": "일할 공간이 부족함",
+  "ZONE_CAUSE_STORAGE_FULL": "물건을 둘 공간이 부족함",
+  "ZONE_CAUSE_FIELD_NEED": "농사지을 공간이 필요함",
+  "ZONE_CAUSE_PEN_NEED": "가축을 돌볼 공간이 필요함",
+  "ZONE_CAUSE_UNKNOWN": "마을에 공간이 필요함(사람 {people}, 자리 {beds})",
+  "HOUSE_STAGE_BARE": "갓 지은 집",
+  "HOUSE_STAGE_LIVED_IN": "살림이 자리 잡은 집",
+  "HOUSE_STAGE_YARD": "마당이 갖춰진 집",
+  "CHRONICLE_HOUSE_STAGE": "{stage} 단계에 이르렀다 ← 주민의 살림이 자리 잡음",
+  "CHRONICLE_MATERIAL_WAVE": "집을 {era} 재료로 고치기 시작했다"
 }

@@ -1,5 +1,5 @@
 # props3d.gd (World3D/Props, made by world3d.gd): stations, camp buildings, bedrolls, ground item stacks and fire
-#   light of the 3D view (M3D-1 scope 5: template buildings, workshops and item stacks).
+#   safe data-authored yard props from real template site stages, and fire light of the 3D view (M3D-1 scope 5: template buildings, workshops and item stacks).
 # Purpose: a finished workshop (get_workshops) is the Blender model its blueprint's construction style names
 #   (get_content_catalog `construction_style` → bindings3d `stations.by_style`, else the 2D workshop binding's structure
 #   id, else `stations.fallback`), standing at the footprint centre facing south, scaled down to fit a smaller
@@ -31,6 +31,9 @@ var _terrain: Node = null
 var _sky: Node = null
 var _key: String = ""
 var _items_key: String = ""
+var _yards_key: String = ""
+var _yard_nodes: Array[MeshInstance3D] = []
+var _yard_warm: Dictionary = {}
 var _stations: Array[MeshInstance3D] = []
 ## Tiles under a drawn station (people3d draws a worker standing there in front of it).
 var station_tiles: Dictionary = {}
@@ -65,6 +68,7 @@ func _ready() -> void:
 func _on_world_reset() -> void:
 	_key = ""
 	_items_key = ""
+	_yards_key = ""
 
 
 func _process(_delta: float) -> void:
@@ -81,6 +85,7 @@ func _process(_delta: float) -> void:
 	_stamp_key = skey
 	var shops: Dictionary = SimReads.read(_world_sim, "get_workshops")
 	var buildings: Dictionary = SimReads.read(_world_sim, "get_building_snapshot")
+	_rebuild_yards(buildings)
 	var settlements: Dictionary = SimReads.read(_world_sim, "get_settlement_snapshot")
 	var space: Dictionary = SimReads.read(_world_sim, "get_space")
 	var key: String = str(hash([shops.get("kinds"), shops.get("xs"), shops.get("ys"), shops.get("bill_active"), buildings.get("kinds"),
@@ -400,3 +405,42 @@ func _tinted_mesh(id: String, tint: String) -> Mesh:
 		out.surface_set_material(out.get_surface_count() - 1, mat)
 	_tinted[key] = out
 	return out
+
+
+# The bridge emits only free footprint-adjacent tiles; props never claim or block simulation space.
+func _rebuild_yards(buildings: Dictionary) -> void:
+	for model: String in buildings.get("yard_models", PackedStringArray()):
+		if not _yard_warm.has(model):
+			Data3D.mesh(model)
+			_yard_warm[model] = true
+	var sites: Array = buildings.get("template_sites", [])
+	var key: String = str(hash(sites.map(func(row: Dictionary) -> Variant: return [row.get("id"), row.get("yard_props", [])])))
+	if key == _yards_key:
+		return
+	_yards_key = key
+	for node: MeshInstance3D in _yard_nodes:
+		node.queue_free()
+	_yard_nodes.clear()
+	var claimed: Dictionary = {}
+	for value: Variant in sites:
+		if value is not Dictionary:
+			continue
+		for prop: Dictionary in (value as Dictionary).get("yard_props", []):
+			var tile: Vector2i = Vector2i(int(prop.get("x", 0)), int(prop.get("y", 0)))
+			if claimed.has(tile):
+				continue
+			claimed[tile] = true
+			var node: MeshInstance3D = MeshInstance3D.new()
+			node.name = "Yard_%s_%s" % [(value as Dictionary).get("id", -1), prop.get("id", "")]
+			node.mesh = Data3D.mesh(str(prop.get("model", "")))
+			var x: float = float(prop.get("x", 0)) + 0.5
+			var y: float = float(prop.get("y", 0)) + 0.5
+			# A decorative model fits wholly within its admitted free tile, including wide fence GLBs.
+			var bounds: AABB = node.mesh.get_aabb()
+			var size_limit: float = float(Data3D.param("yards.tile_fill", 0.85))
+			var fit: float = minf(1.0, size_limit / maxf(0.01, maxf(bounds.size.x, bounds.size.z)))
+			var yard_basis: Basis = Basis(Vector3.UP, float(prop.get("rotation", 0)) * PI * 0.5).scaled(Vector3.ONE * fit)
+			var centre: Vector3 = Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z)
+			node.transform = Transform3D(yard_basis, Vector3(x, float(_terrain.call("height_at", x, y)), y) - yard_basis * centre)
+			add_child(node)
+			_yard_nodes.append(node)
