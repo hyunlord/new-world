@@ -9,9 +9,9 @@
 //! Moves: 8 neighbours; a diagonal step is allowed only when both orthogonal
 //! neighbours are passable (no corner cutting). Entering a tile of cost `c`
 //! costs `c` straight and `c · 14 / 10` diagonally (plain 10 / 14, door 12 / 16).
-//! The heuristic is the octile distance at the plain cost
-//! (`10 · max(dx, dy) + 4 · min(dx, dy)`), admissible and consistent because no
-//! passable tile costs less than plain. Ties in the open set break by
+//! The heuristic uses the cheapest passable tile, capped at plain cost, with
+//! the same integer diagonal rounding as a step. Maps without cheaper paths
+//! retain the original plain-cost heuristic. Ties in the open set break by
 //! `(f, h, y, x)`, so a search is a pure function of the map and its endpoints.
 //! A goal on an impassable tile is reached from any passable 8-neighbour.
 //!
@@ -64,6 +64,8 @@ pub struct CostMap {
     width: u32,
     height: u32,
     cost: Vec<u8>,
+    minimum_cost: u8,
+    minimum_count: usize,
 }
 
 impl CostMap {
@@ -73,6 +75,8 @@ impl CostMap {
             width,
             height,
             cost: vec![COST_PLAIN; (width as usize) * (height as usize)],
+            minimum_cost: COST_PLAIN,
+            minimum_count: (width as usize) * (height as usize),
         }
     }
 
@@ -105,11 +109,49 @@ impl CostMap {
     pub fn set(&mut self, t: Tile, cost: u8) -> bool {
         match self.index(t) {
             Some(i) if self.cost[i] != cost => {
+                if self.cost[i] == self.minimum_cost {
+                    self.minimum_count = self.minimum_count.saturating_sub(1);
+                }
                 self.cost[i] = cost;
+                if cost != IMPASSABLE
+                    && (self.minimum_cost == IMPASSABLE || cost < self.minimum_cost)
+                {
+                    self.minimum_cost = cost;
+                    self.minimum_count = 1;
+                } else if cost != IMPASSABLE && cost == self.minimum_cost {
+                    self.minimum_count += 1;
+                }
+                // Only removal of the last cheapest tile requires a scan.
+                if self.minimum_count == 0 {
+                    self.minimum_cost = self
+                        .cost
+                        .iter()
+                        .copied()
+                        .filter(|c| *c != IMPASSABLE)
+                        .min()
+                        .unwrap_or(IMPASSABLE);
+                    self.minimum_count = self
+                        .cost
+                        .iter()
+                        .filter(|c| **c == self.minimum_cost && **c != IMPASSABLE)
+                        .count();
+                }
                 true
             }
             _ => false,
         }
+    }
+
+    fn heuristic_costs(&self) -> (u32, u32) {
+        let straight = u32::from(self.minimum_cost.min(COST_PLAIN));
+        (straight, straight * 14 / 10)
+    }
+
+    fn heuristic(&self, from: Tile, to: Tile) -> u32 {
+        let (straight, diagonal) = self.heuristic_costs();
+        let dx = from.0.abs_diff(to.0);
+        let dy = from.1.abs_diff(to.1);
+        straight * dx.max(dy) + (diagonal - straight) * dx.min(dy)
     }
 
     /// Whether `t` is on the map and passable.
@@ -741,11 +783,11 @@ impl NavState {
             }
         };
         let h = |t: Tile| {
-            let d = octile(t, to);
+            let d = map.heuristic(t, to);
             if goal_open {
                 d
             } else {
-                d.saturating_sub(14)
+                d.saturating_sub(map.heuristic_costs().1)
             }
         };
         self.stats.borrow_mut().searches += 1;
@@ -1012,6 +1054,42 @@ mod tests {
     }
 
     #[test]
+    fn cheap_surface_detour_is_optimal_and_minimum_tracks_removal() {
+        let mut map = CostMap::new(12, 5);
+        for x in 0..12 {
+            map.set((x, 0), 6);
+        }
+        let mut n = NavState::default();
+        n.install(map.clone());
+        let path = n.search((0, 2), (11, 2)).expect("reachable");
+        let mut at = (0, 2);
+        let total: u32 = path
+            .iter()
+            .map(|&next| {
+                let cost = map.step_cost(at, next);
+                at = next;
+                cost
+            })
+            .sum();
+        // Three plain diagonals, one road diagonal, seven road cardinals.
+        // 14 + 8 + 7*6 + 14 + 14 = 92, versus 110 on the direct grass route.
+        assert_eq!(total, 92, "{path:?}");
+        let old = original_tuple_search(&map, (0, 2), (11, 2), &mut Vec::new()).expect("old route");
+        assert_eq!(
+            cost_of(&n, (0, 2), &old),
+            110,
+            "old plain heuristic misses the cheaper detour"
+        );
+        assert!(path.iter().any(|tile| tile.1 == 0));
+        assert_eq!(map.heuristic((0, 0), (3, 2)), 22);
+        for x in 0..12 {
+            map.set((x, 0), COST_PLAIN);
+        }
+        assert_eq!(map, CostMap::new(12, 5));
+        assert_eq!(map.heuristic((0, 0), (3, 2)), octile((0, 0), (3, 2)));
+    }
+
+    #[test]
     fn frontier_retains_smallest_historical_key_even_when_latest_sum_wraps_up() {
         // For node 0 strict lower-g rediscovery increases wrapped f: 0 -> MAX.
         // Old search expands from the smallest historical key with latest g/parent.
@@ -1265,6 +1343,10 @@ mod tests {
                         IMPASSABLE
                     } else if r < 35 {
                         COST_DOOR
+                    } else if r < 40 {
+                        6
+                    } else if r < 45 {
+                        7
                     } else {
                         COST_PLAIN
                     };
