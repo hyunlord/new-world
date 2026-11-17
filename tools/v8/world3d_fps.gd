@@ -120,6 +120,7 @@ func _run() -> void:
 		"process_ms_mean": process_ms / maxi(1, samples), "draw_calls_mean": draw_calls / maxi(1, samples),
 		"primitives_mean": prims / maxi(1, samples),
 		"render_gpu_ms_mean": gpu_ms / maxi(1, samples), "render_cpu_ms_mean": cpu_ms / maxi(1, samples), "video_mem_bytes": Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED),
+		"camera_position": [camera.position.x, camera.position.y], "camera_zoom": [camera.zoom.x, camera.zoom.y],
 		"focus": root.has_focus(), "size": [root.size.x, root.size.y], "paused": _arg("--paused", "") == "1", "hide": _arg("--hide", "")}
 	print("W3D_FPS " + JSON.stringify(result))
 	quit(0)
