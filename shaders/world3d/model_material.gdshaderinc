@@ -13,7 +13,7 @@ varying vec3 material_normal;
 
 void vertex() {
 	material_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
-	material_normal = normalize((MODEL_MATRIX * vec4(NORMAL, 0.0)).xyz);
+	material_normal = normalize(MODEL_NORMAL_MATRIX * NORMAL);
 }
 
 void fragment() {
