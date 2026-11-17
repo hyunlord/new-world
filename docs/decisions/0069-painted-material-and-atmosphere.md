@@ -7,19 +7,21 @@ materials, painted atmosphere and trace assets without changing simulation facts
 ## Decision
 Reuse the padded atlas and existing mesh batches. Normalize sampled luminance by
 each tile mean, then apply bounded detail to the existing tint. Share four painted
-sky/cloud states and hills through the existing clock/season presentation. Mirror
-longitude to close panorama seams without changing vertical gradients. Add river
+sky/cloud states and hills through the existing clock/season presentation. Overlap and crossfade horizontal image ends to close panorama seams without
+changing vertical gradients. Add river
 normal/flow samplers to existing water, with bounded two-phase advection.
 Expose decals and unavailable surface variants in a data catalog for consumers.
 
 ## Alternatives considered
 - Per-asset material instances: unnecessary batch splits.
 - Inventing paths, dung or pond classifications: would fabricate simulation facts.
-- Repeated image generation to repair panorama edges: mirrored sampling closes the
-  seam while preserving accepted artwork and the three-attempt generation budget.
+- Mirrored longitude: color-continuous, but sky-facing QA exposed conspicuous
+  symmetric cloud shapes. Horizontal overlap preserves the accepted artwork.
 
 ## Consequences
-The same clouds and hills appear mirrored in opposing hemispheres. Imported
+A narrow horizontal overlap softens detail near the panorama join. Explicit mip0
+avoids derivative-driven dark lines at the longitude wrap; these low-frequency
+sky layers trade automatic mip selection for a continuous join. Imported
 textures remain VRAM-compressed with mipmaps. Existing state supplies sky blends;
 lighting, ambient and fog retain their existing policy. The orthographic game
 camera rarely exposes the horizon, so separate sky-facing QA is required.

@@ -19,17 +19,27 @@ vec4 premultiply(vec4 c) {
 	return vec4(c.rgb * c.a, c.a);
 }
 
+vec4 panorama(sampler2D tex, vec2 uv) {
+	// Overlap the ends instead of mirroring the whole cloud silhouette.
+	uv.x *= 0.85;
+	vec4 primary = premultiply(textureLod(tex, uv, 0.0));
+	if (uv.x < 0.15) {
+		vec4 wrapped = premultiply(textureLod(tex, vec2(uv.x + 0.85, uv.y), 0.0));
+		return mix(wrapped, primary, smoothstep(0.0, 0.15, uv.x));
+	}
+	return primary;
+}
+
 void sky() {
-	// Mirrored longitude closes the panorama without altering generated cloud alpha.
-	vec2 uv = vec2(abs(SKY_COORDS.x * 2.0 - 1.0), clamp(SKY_COORDS.y * 2.0, 0.0, 1.0));
-	vec3 base = mix(texture(day_sky, uv).rgb, texture(winter_sky, uv).rgb, blend_weights.z);
-	base = mix(base, texture(dusk_sky, uv).rgb, blend_weights.y);
-	base = mix(base, texture(night_sky, uv).rgb, blend_weights.x);
-	vec4 cloud = mix(premultiply(texture(day_cloud, uv)), premultiply(texture(winter_cloud, uv)), blend_weights.z);
-	cloud = mix(cloud, premultiply(texture(dusk_cloud, uv)), blend_weights.y);
-	cloud = mix(cloud, premultiply(texture(night_cloud, uv)), blend_weights.x);
+	vec2 uv = vec2(SKY_COORDS.x, clamp(SKY_COORDS.y * 2.0, 0.0, 1.0));
+	vec3 base = mix(panorama(day_sky, uv).rgb, panorama(winter_sky, uv).rgb, blend_weights.z);
+	base = mix(base, panorama(dusk_sky, uv).rgb, blend_weights.y);
+	base = mix(base, panorama(night_sky, uv).rgb, blend_weights.x);
+	vec4 cloud = mix(panorama(day_cloud, uv), panorama(winter_cloud, uv), blend_weights.z);
+	cloud = mix(cloud, panorama(dusk_cloud, uv), blend_weights.y);
+	cloud = mix(cloud, panorama(night_cloud, uv), blend_weights.x);
 	base = base * (1.0 - cloud.a * cloud_opacity) + cloud.rgb * cloud_opacity;
-	vec4 ridge = texture(hills, uv);
-	base = mix(base, ridge.rgb, ridge.a * hills_opacity);
+	vec4 ridge = panorama(hills, uv);
+	base = base * (1.0 - ridge.a * hills_opacity) + ridge.rgb * hills_opacity;
 	COLOR = mix(base, ground_colour, smoothstep(0.0, 0.4, -EYEDIR.y));
 }
