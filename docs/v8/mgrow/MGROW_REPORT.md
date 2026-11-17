@@ -1,9 +1,9 @@
 # M-GROW-a 구현 보고 초안 — UNPUBLISHED
 
-2026-11-17 13:29 KST 갱신. **UNPUBLISHED — 실행3의 기능 수용 시험은4/4 PASS이며, 고정 HEAD 전체 게이트·공식 크래시 감지·게시는 대기다.**
+2026-11-17 13:51 KST 갱신. **UNPUBLISHED — 기능 수용 실행3은4/4 PASS지만 개발용48일 비교에서seed5전멸 회귀가 확인됐다. 고정 HEAD 사전/전체 게이트·공식 크래시 감지·게시는 대기다.**
 기준선은 게시된 C3-b `fd3f5980139023167304e2ef6c0cce7ec08c937e`, 작업 브랜치는 `v8/mgrow`다.
 원시 증거 경로의 기준 디렉터리 `mgrow-data`는 `/Users/rexxa/work/mgrow-data/`다.
-보고 시점 구현 HEAD는 `772f80190`이며 최종 동결·게시 SHA가 아니다. 각 개발 로그는
+보고 시점 구현 HEAD는 `cb9d904fc`이며 최종 동결·게시 SHA가 아니다. 각 개발 로그는
 실행 당시 소스의 증거이며 이후 커밋 전체를 소급 검증하지 않는다.
 
 ## 구현 의도·내용
@@ -49,10 +49,31 @@ probe2는 첫 창고 수정 후, 후속 경계 수정 전 빌드의 **개발 진
 읽은 결과는 seed0생존14·seed1생존0·seed2생존16·seed3생존16이다
 (`reports/day120-attempt3-seed0.log`, `day120-attempt3-seed1.log`,
 `day120-attempt3-seed2.log`, `day120-attempt3-seed3.log`).
-따라서 seed1의 후반 전멸을 숨기지 않는다. 원인은 아직 확인하지 않았으며 M-BAL/후속
-원인 진단 항목이다.120일 생존을 새 수용 막대로 추가하거나 이 자료로 전체 안전성을
-통과했다고 주장하지 않는다. 이 후반 결과에 맞춘 튜닝도 하지 않는다. 목표의 기능 수용과
-별도48일 paired 붕괴 하한은 그대로이며 공식48일 검증은 대기다.
+120일 후보 생존 배열은 `[14,0,16,16]`이며 같은 설정의 BASE120일 배열은 비교 대기다.
+13:35 플래너 지시에 따라 BASE seed1이 살아 있으면 M-GROW 회귀로 보고 연대기/진단으로
+구조적 원인을 찾아 **pre-gate 전에 수정**해야 한다. BASE도 전멸하면 양쪽 배열을 함께
+기록한 뒤에만 기존 M-BAL 문제로 분류한다. 현재는 원인 미확인·비교 대기이며 M-BAL로
+확정하지 않는다. 새로운120일 생존 수치 막대나 결과 맞춤 튜닝은 추가하지 않는다.
+
+### 완료된 개발용48일 비교 — FAIL
+
+`development-smoke-3-base/summary.json`과 `development-smoke-3-head/summary.json`은
+각각 실행 exit0으로 완결됐다. 검증기는 seed5의 BASE 생존/후보 전멸에서 exit1로 거절했다
+(`reports/development-smoke-3-verdict.log`, `development-smoke-3-*.status.txt`).
+시드 순서는0–7이다.
+
+| 지표 | BASE | 후보 |
+| --- | --- | --- |
+|48일 생존|`[10,13,11,13,10,14,12,13]`|`[11,14,11,13,10,0,12,14]`|
+|KnowledgeLost 사건 수|`[1,0,0,0,0,0,0,0]`|`[0,0,0,0,0,21,0,0]`|
+
+seed5는 생존14→0, KnowledgeLost0→21이다. 양쪽 합계도1→21로 기존 한도4를 넘지만,
+실제 검증기는 먼저 전멸에서 종료했다. 이 결과를 안전성 통과로 표현하지 않는다.
+정확한 설정은 colony, seeds0..8,48일, workers4, stewardON, 명령 없음,
+story/neighbours 기본ON이며 `reports/development-smoke-3-provenance.json`에 이진 해시와
+BASE/후보 소스 이력이 있다. 후보는 identity-development-1 빌드이며 그 뒤 production은
+변경되지 않았다. 이는 POLISH 병합 전 **개발 실행**으로 공식 동결 크래시 감지나 Inert
+전환 횟수를 대신하지 않는다. 원인 진단/수정과 공식 고정 HEAD 재검증이 남았다.
 
 ## 수용·집중 시험
 
@@ -74,14 +95,21 @@ probe2는 첫 창고 수정 후, 후속 경계 수정 전 빌드의 **개발 진
 | --- | --- |
 | 실제 포장·길 속도 | `paths-integration-test-4.log`4/4, `paths-nav-test-3.log`14/14, `paths-core-test-3.log`4/4, `paths-day-test.log`3/3.18걸음 grass54/dirt36/paved36틱; 작업자가 실제 포장하고 철거해 복원 |
 | 데이터 전용 길 | `paths-selected-test.log`: 새 stage8·cost4·interval1과 새 바닥을 데이터만으로 추가해 실제 건설·이동 PASS |
-| 집·마당 | `reports/house-steward-dispatch-2.log`9/9 PASS,0.05초. 실제 거주·749/750시대 경계·지역 비축/재료·물리적 대체 잠자리와 실제 Steward 개축 dispatch의 scope/cooldown/내부 veto/재생 검사 |
+| 집·마당 | `reports/house-dispatch-final-3.log`9/9 PASS,0.05초. 실제 거주·749/750시대 경계·지역 비축/재료·물리적 대체 잠자리와 실제 Steward 개축 dispatch의 scope/cooldown/내부 veto/재생 검사 |
 | 데이터 전용 구역·마당 | 새 구역은 집사/선택 pack 시험으로 실행; `reports/zones-implementation.md`. 새 소품은 실제 건설→잠자리 배정→거주→bridge소품→길/문 제외→저장/재개 PASS: `reports/yard-extension-test-3.log` |
 | 옛 저장 | `reports/save-tests-7.log`:100PASS/0FAIL/3ignored, 실제 C1-b21·C2-b23·C3-23 재개. `reports/save-genuine20-1.log`: 실제 C1-a20 1PASS.13/16의 옛 immutable fixture는 못 찾아 기존 ignored 유지 |
 | 수동 구역 삭제 | `reports/manual-zone-removal-green.log`:3PASS, 불필요한 연결만 해제하고 실제 건물/과거 원인 보존. 자동 구역 정책은 아래 D2 대기 |
-| 정적·문서 | `reports/fmt-check-3.log`, `reports/clippy-3.log`/status0, `reports/docs-check-2.log` PASS. 최종 동결 HEAD의 pre-gate 결과가 아님. 변경 production Rust48파일의 unwrap/expect0 (`reports/production-unwrap-audit-2.txt`) |
+| 정적·문서 | `reports/fmt-check-3.log`, `reports/docs-check-2.log` PASS. Clippy4의 새 시험 `clone_on_copy` 실패는 보존; `cb9d904fc`의 한 줄 수정 후 `reports/clippy-5.log` PASS,4.39초. 변경 production Rust48파일의 unwrap/expect0 (`reports/production-unwrap-audit-2.txt`). 최종 pre-gate가 아님 |
+| 콘텐츠 부채 | `reports/content-debt-a1.log`: `content_debt_matches_data`1PASS/0FAIL,0.03초 |
+| 개발 baseline identity | `reports/identity-development-1.log`:228748공유값 차이0/한쪽경로0,64연대기 파일(19683항목)·64raw파일 동일, 결정론seed0–3 PASS |
 
 분야별 상세 파일: `reports/paths-audit.md`, `reports/save-audit.md`,
 `reports/house-stages.md`, `reports/presentation-a.md`.
+
+identity 실행 시작 HEAD는 `4f94c8572`이며 당시 수동 구역 수정이 작업트리에 있었다.
+따라서 커밋만 동결한 게시 증거가 아니다. 빌드 이후 production은 변경되지 않았지만,
+최종 동결 HEAD의 pre-gate/full-gate identity를 대체하지 않는다. Clippy4 실패는 새
+시험 코드의 Copy 값 clone 한 줄이며 숨기거나 생산 동작 변경으로 설명하지 않는다.
 
 ## 실제 장면 확인과 캡처
 
@@ -101,12 +129,23 @@ Z 기본off→on→off, 실제 마당 Props 노드2개(garden/fence), 거주8일
 - 한국어4개: `_ko_chronicle.png`, `_ko_why_70.png`, `_ko_why_71.png`, `_ko_building_why.png`.
 - 영어4개: `_en_chronicle.png`, `_en_why_70.png`, `_en_why_71.png`, `_en_building_why.png`.
 
-실제 화면 검토에서 한글·영어 원인 패널은 읽을 수 있었다. 일반 장면에는 도움말/권장 패널이 남아 대상을 가렸으므로 visual-verdict72/100, revise로 기록했다. 기존 `--ui off` 옵션으로 시작·구역·흙길·마당을 다시 캡처한다. 별도 UI 증거는 유지한다. POLISH 병합 후 최종 텍스처 확인·500명 z1 FPS·최신 contact sheet는 **대기**다.
+첫11장 검토에서 한글·영어 원인 패널은 읽을 수 있었지만 일반 장면의 도움말/권장
+패널이 대상을 가려72/100 revise였다. 이 결과를 보존하고 기존 `--ui off`로 다시 촬영했다.
+
+- `reports/clean-scenes-3.log`:1331/1332 시작·구역·첫 흙길·첫 마당8장, 모두 검토. 구역 확인 장면만Z를 켰다.
+- `reports/yard-angles-1.log`:1333회전 근접3장, 모두 검토. 마지막yaw3에서 빈 인접 칸의 텃밭과 울타리가 보인다.
+- `reports/visual-verdict-a2.json`:92/100 PASS(threshold90), **pre-POLISH 개발 증거**.
+- `reports/capture-review-a-pre-polish.md`: 모든 촬영/검토와 오류 상태 기록. 외부 `contact-sheet-a-pre-polish.png`6장 모음도 직접 검토했다(1944×1844).
+
+캡처7·clean3·yard-angles1은exit0/완료sentinel/스크립트 오류0이며, clean2의 Python3.9
+잠금 도구 import 실패와 이전 잠금 실패도 보존했다. 새로 장식을 주입하지 않았다.
+POLISH 병합 후 최종 텍스처·최종 캡처,500명 z1 FPS, 저장소 contact sheet/README
+교체는 **대기**다. 외부 개발 화면 모음은 그 완료를 뜻하지 않는다.
 
 ## 콘텐츠·부채·새 도구
 
-현재 a 데이터는 길4단계·구역5종·집3단계·마당 소품4개다. 전체 콘텐츠 수와
-`content_debt_matches_data` 최종 결과는 동결 전 확인한다. 초기 수치와 의심점은
+현재 a 데이터는 길4단계·구역5종·집3단계·마당 소품4개다.
+`content_debt_matches_data` 개발 시험은1PASS이며 전체 콘텐츠 수와 최종 동결 검증은 남았다. 초기 수치와 의심점은
 `docs/v8/BALANCE_DEBT.md`에 기록하며 결과에 맞춰 튜닝하지 않는다.
 
 현재 BASE 대비 `tools/` 추가량은120줄(`world3d_shots.gd`107,
@@ -117,10 +156,11 @@ Z 기본off→on→off, 실제 마당 Props 노드2개(garden/fence), 거주8일
 ## 게시 전 남은 경계
 
 - **D-MGROW-2 대기:** `QUESTION-2.md`의 자동 주거 구역 삭제 정책. 현 경계에서 삭제 후 고아 원인/건물 연결로 저장이 거절될 수 있어 전체 gate/게시 전에 닫아야 한다. 수동 구역 수정만으로 해결됐다고 보지 않는다.
+- **120일 BASE 비교·개발48일 회귀:** 후보120일 `[14,0,16,16]`의 BASE 비교가 필요하다. BASE seed1생존 시 구조적 회귀를 pre-gate 전에 수정한다. 별도로 완료된 개발48일 seed5전멸도 원인 진단/수정이 남았다.
 - **POLISH-DONE 대기:** 게시되면 origin/v8/main을 정상 병합하고 충돌 규칙을 지킨다. 새 terrain 텍스처 작업과 pre-gate 전에 반영한다.
 - **최종 SHA·pre-gate·전체 gate:** 모두 대기. 단계 수·재사용 여부·시작/종료시각·exit는 미확정이다. 모든 결과가 같은 동결 HEAD를 가리켜야 한다.
 - **공식 크래시 감지:** 별도 seeds0–7×48일 BASE/candidate 생존·KnowledgeLost 배열 모두 대기. probe2 수치를 대신 넣지 않는다.
-- **baseline identity·성능:** 새 공식 identity, N=1,000 전후 tick 보고, C3 ceiling,500명 z1 FPS 대기. 성능 비율로 새 균형 전제조건을 만들지 않는다.
+- **baseline identity·성능:** 개발 identity는 PASS이나 최종 동결 identity, N=1,000 전후 tick 보고, C3 ceiling,500명 z1 FPS 대기. 성능 비율로 새 균형 전제조건을 만들지 않는다.
 - **게시:** v8/main fast-forward 및 원격 SHA 확인 모두 대기. MGROW-DONE 작성 조건도 아직 성립하지 않았다.
 
 마당 장식은 좁거나 점유된 공간에서는 생략될 수 있고 별도 생산 효과가 없다.
