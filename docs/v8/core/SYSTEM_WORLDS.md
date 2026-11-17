@@ -51,6 +51,7 @@ Validation status: **NOT_RUN** for the production switch; parent-owned focused v
 | PathDaySystem | 145 | 1 | no | yes |
 | AgingSystem | 146 | 60 | yes | yes |
 | HearthFeedSystem | 146 | 60 | yes | yes |
+| HouseGrowthSystem | 146 | 1 | no | yes |
 | FireSystem | 147 | 60 | yes | yes |
 | FissionSystem | 148 | 1 | yes | yes |
 | RelationsSystem | 149 | 1 | yes | yes |
