@@ -96,6 +96,12 @@ fn site_needs(world: &World, site: (u32, u32)) -> Option<(Entity, MaterialNeeds)
         .map(|view| (view.entity, view.needs))
 }
 
+/// A working builder whose site is gone: ConstructionSystem finished it.
+pub(crate) fn build_finished(world: &World, job: &Job) -> bool {
+    matches!(job.kind, JobKind::Build { site } if site_needs(world, site).is_none())
+        && matches!(job.stage, JobStage::Working { .. })
+}
+
 /// Whether the job's target still exists.
 fn target_exists(
     world: &World,
@@ -234,9 +240,7 @@ fn step(
     let space =
         matches!(job.kind, JobKind::Build { site } if res.colony.space_sites.contains_key(&site));
     if state != expected_state(job.kind, job.stage, space) {
-        let built =
-            matches!(job.kind, JobKind::Build { site } if site_needs(world, site).is_none());
-        if built && matches!(job.stage, JobStage::Working { .. }) {
+        if build_finished(world, &job) {
             finish_in_place(world, res, entity);
         } else {
             release_job(world, res, entity, CancelReason::Interrupted);

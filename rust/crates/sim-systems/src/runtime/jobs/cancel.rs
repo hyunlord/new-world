@@ -79,8 +79,14 @@ pub fn release_job(
         res.cultivation.craft_origins.remove(&id);
     }
     if let Ok(job) = world.remove_one::<Job>(entity) {
-        *res.colony.tallies.cancels.entry(reason).or_insert(0) += 1;
-        count_lost_craft(res, &job);
+        // A site finished this tick before its builder was pulled away: the build still counts.
+        if super::execute::build_finished(world, &job) {
+            record_completion(world, entity, job.kind);
+            res.colony.tallies.jobs_done += 1;
+        } else {
+            *res.colony.tallies.cancels.entry(reason).or_insert(0) += 1;
+            count_lost_craft(res, &job);
+        }
     }
 }
 
@@ -202,5 +208,41 @@ pub fn on_death(world: &mut World, res: &mut SimResources, entity: Entity) {
             .entry(CancelReason::Died)
             .or_insert(0) += 1;
         count_lost_craft(res, &job);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn a_builder_pulled_away_after_its_site_finished_keeps_the_build() {
+        let mut world = World::new();
+        let mut res = SimResources::new(8, 8, sim_core::MaterialRegistry::new());
+        let job = |stage| Job {
+            kind: JobKind::Build { site: (3, 3) },
+            stage,
+            taken_at: 0,
+            amount: 0,
+            item: sim_core::colony::ItemKind::Log,
+            material: None,
+            fetch: None,
+            best_distance: 0,
+            progress_tick: 0,
+        };
+        let done = world.spawn((job(JobStage::Working { ticks_left: 0 }),));
+        let walking = world.spawn((job(JobStage::ToSource),));
+        release_job(&mut world, &mut res, done, CancelReason::Needs);
+        release_job(&mut world, &mut res, walking, CancelReason::Needs);
+        let builds = |e| {
+            world.get::<&sim_core::colony::Skills>(e).map_or(0, |s| {
+                s.completed[usize::from(JobKind::Build { site: (0, 0) }.code())]
+            })
+        };
+        assert_eq!((builds(done), builds(walking)), (1, 0));
+        assert_eq!(
+            res.colony.tallies.cancels.get(&CancelReason::Needs),
+            Some(&1)
+        );
     }
 }
