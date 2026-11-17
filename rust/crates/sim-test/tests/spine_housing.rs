@@ -87,3 +87,95 @@ fn spine_remove_zone_area_counts_overlapping_housing_and_stockpile_once() {
         .housing_zones
         .contains_key(&housing));
 }
+
+#[test]
+fn spine_manual_zone_trim_preserves_only_complete_building_membership_and_save() {
+    for remove_all in [false, true] {
+        let mut engine = scene();
+        let anchor = anchor(&engine, "log_house");
+        let zone = engine.resources.colony.next_zone_id;
+        command(
+            &mut engine,
+            Command::AddHousingZone {
+                x0: anchor.0,
+                y0: anchor.1,
+                x1: anchor.0 + 4,
+                y1: anchor.1 + 3,
+            },
+        );
+        let site = engine.resources.colony.buildings.next_site_id;
+        command(
+            &mut engine,
+            Command::BuildTemplate {
+                id: "log_house".into(),
+                anchor,
+                rotation: 0,
+                station: None,
+            },
+        );
+        let original_site = engine.resources.colony.buildings.sites[&site].clone();
+        assert_eq!(
+            engine.resources.colony.buildings.site_zones.get(&site),
+            Some(&zone)
+        );
+        assert!(!engine
+            .resources
+            .colony
+            .buildings
+            .zone_causes
+            .contains_key(&zone));
+
+        // An unused strip can disappear while the building remains fully inside.
+        command(
+            &mut engine,
+            Command::RemoveZoneArea {
+                x0: anchor.0 + 4,
+                y0: anchor.1,
+                x1: anchor.0 + 4,
+                y1: anchor.1 + 3,
+            },
+        );
+        assert_eq!(
+            engine.resources.colony.buildings.site_zones.get(&site),
+            Some(&zone)
+        );
+        let bytes = sim_systems::save::save(&mut engine).expect("unrelated edge trim saves");
+        let restored = sim_systems::save::load(&bytes).expect("unrelated edge trim loads");
+        assert_eq!(
+            restored.resources.colony.buildings.site_zones.get(&site),
+            Some(&zone)
+        );
+
+        command(
+            &mut engine,
+            Command::RemoveZoneArea {
+                x0: anchor.0,
+                y0: anchor.1,
+                x1: anchor.0 + if remove_all { 3 } else { 0 },
+                y1: anchor.1 + if remove_all { 3 } else { 0 },
+            },
+        );
+        let buildings = &engine.resources.colony.buildings;
+        assert!(
+            !buildings.site_zones.contains_key(&site),
+            "partial/full trim clears stale membership"
+        );
+        assert_eq!(buildings.housing_zones.contains_key(&zone), !remove_all);
+        assert_eq!(
+            buildings.sites[&site], original_site,
+            "physical plan and historical provenance stay intact"
+        );
+        let bytes = sim_systems::save::save(&mut engine).expect("trimmed manual zone saves");
+        let restored = sim_systems::save::load(&bytes).expect("trimmed manual zone loads");
+        assert!(!restored
+            .resources
+            .colony
+            .buildings
+            .site_zones
+            .contains_key(&site));
+        assert_eq!(
+            restored.resources.colony.buildings.sites[&site],
+            original_site
+        );
+    }
+}
