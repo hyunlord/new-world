@@ -1,9 +1,9 @@
 # M-GROW-a 구현 보고 초안 — UNPUBLISHED
 
-2026-11-17 14:24 KST 갱신. **UNPUBLISHED — 창고 준비 수정 후 개발48일 안전성 비교 PASS,120일 전멸 회귀 해소를 확인했다. 집 업그레이드 비축 조건을 추가 보강 중이며 고정 HEAD 사전/전체 게이트·공식 크래시 감지·게시는 대기다.**
+2026-11-17 14:50 KST 갱신. **UNPUBLISHED — 창고 준비와 업그레이드 비축 조건 수정 후 개발48일 안전성 비교 PASS,120일 수용4/4 PASS. D2 정책 결정·POLISH 병합·최종 캡처·고정 HEAD 사전/전체 게이트·공식 크래시 감지·게시는 대기다.**
 기준선은 게시된 C3-b `fd3f5980139023167304e2ef6c0cce7ec08c937e`, 작업 브랜치는 `v8/mgrow`다.
 원시 증거 경로의 기준 디렉터리 `mgrow-data`는 `/Users/rexxa/work/mgrow-data/`다.
-보고 시점 구현 HEAD는 `f9f9048de`이며 저장 준비 수정이 커밋됐다. 최종 동결·게시 SHA가 아니다. 각 개발 로그는
+보고 시점 구현 HEAD는 `57a684153`이며 저장 준비와 업그레이드 비축 조건 수정이 커밋됐다. 최종 동결·게시 SHA가 아니다. 각 개발 로그는
 실행 당시 소스의 증거이며 이후 커밋 전체를 소급 검증하지 않는다.
 
 ## 구현 의도·내용
@@ -108,7 +108,7 @@ helper를 재사용한다. 재화를 옮기거나 나무를 즉시 지우거나 
 해소됐음을 확인했다.120일 결과에 별도 균형 막대를 추가하지 않는다. 증거는
 `reports/development-smoke-4-{provenance,summary}.json`, `development-smoke-4-verify.log`,
 `reports/development-120d-head-2-provenance.json`, `development-120d-comparison-2.json`이다.
-수정 뒤 전체 명령 재생을 포함하는 수용 실행4는 진행 중이다. 이 개발 실행들은 이후
+수정 뒤 전체 명령 재생을 포함하는 수용 실행4도4/4 PASS(931.02초)다. 이 개발 실행들은 이후
 업그레이드 비축 조건 변경이나 최종 동결 HEAD의 공식 크래시 감지를 소급 검증하지 않는다.
 
 ### D1 업그레이드 재료 비축 조건 보강
@@ -119,6 +119,15 @@ helper를 재사용한다. 재화를 옮기거나 나무를 즉시 지우거나 
 (`reports/upgrade-stock-red-1.log`). 기존 지역·예약·다른 건설 약속·완성 침대·한 번에 한 채
 조건은 유지한다. `reports/upgrade-stock-green-1.log`에서9/9 PASS,
 `upgrade-stock-fmt-2.log`와 전체 `clippy-7.log`도 PASS다. 새 저장 상태나 수치 변경은 없다.
+
+최종 비축 조건 수정 커밋 `57a684153`의 release 빌드5(315초)로 다음을 다시 확인했다.
+
+- 개발48일 실행5: BASE 생존 `[10,13,11,13,10,14,12,13]`, 후보 `[11,13,11,13,10,13,12,14]`; KnowledgeLost 합계1→0, 기존 판정 PASS. `reports/development-smoke-5-{provenance,summary}.json`, `development-smoke-5-verify.log`.
+- 수용 실행5: seeds0–3×120일 모두 PASS(853.34초). 생존 `[14,17,16,16]`, 구역 `[5,6,5,6]`, 실제 빠른 흙길 이동 `[184424,199324,171852,204696]`. 모든 seed에서 유효 원인·구역 안 집·마당·최다 통행 흙길 이용,60일 저장/불러오기와 전체 명령 재생이 일치한다. `reports/village-grows-5.{log,status.txt}`, `village-grows-5-{provenance,summary}.json`, `scenes/attempt5/`.
+- `reports/bridge-build-a-4.log`: 실제 Godot debug 브리지 갱신 PASS(25.61초). `reports/docs-check-a-2.log`: docs PASS, 스키마77getters/1266keys. 이 브리지 빌드는 FPS 측정이 아니다.
+
+D2 결정과 POLISH 병합 뒤 최종 소스를 동결하여 공식 검증한다. 위 결과는 게시 게이트나
+공식 크래시 감지를 대신하지 않는다.
 
 ## 수용·집중 시험
 
