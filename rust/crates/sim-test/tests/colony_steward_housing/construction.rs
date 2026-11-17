@@ -212,7 +212,13 @@ fn construction(terrain: bool) {
                 .world
                 .query::<&sim_core::components::Agent>()
                 .iter()
-                .all(|(_, agent)| engine.resources.bed_of.contains_key(&agent.id));
+                .all(|(_, agent)| engine.resources.bed_of.contains_key(&agent.id))
+            && engine
+                .resources
+                .colony
+                .rooms
+                .values()
+                .any(|room| physically_built(&engine, room) && room.dwelling_kind.is_some());
         if housed {
             break;
         }
@@ -269,21 +275,14 @@ fn construction(terrain: bool) {
         "actual template dwelling requests must occur"
     );
     assert!(requests.iter().all(|record| record.result.accepted));
-    // M-GROW neolithic era builds Huts (no enclosed rooms); log-house era produces
-    // rooms with dwelling_kind. Either counts as proof that a template completed.
     assert!(
         engine
             .resources
-            .building_kinds
+            .colony
+            .rooms
             .values()
-            .any(|k| *k == sim_core::components::BuildingKind::Hut)
-            || engine
-                .resources
-                .colony
-                .rooms
-                .values()
-                .any(|room| physically_built(&engine, room) && room.dwelling_kind.is_some()),
-        "a completed building template (hut or room-based) must exist"
+            .any(|room| physically_built(&engine, room) && room.dwelling_kind.is_some()),
+        "a completed template has a real nonempty enclosed Room"
     );
     assert!(
         sim_systems::runtime::jobs::invariants::check(&engine.world, &engine.resources).is_ok()
