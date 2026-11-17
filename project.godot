@@ -18,10 +18,7 @@ config/name="WorldSim V7"
 config/description="Bottom-up emergent civilization simulation (V7 Reset)"
 run/main_scene="res://scenes/main.tscn"
 config/features=PackedStringArray("4.6", "Forward Plus")
-boot_splash/show_image=true
-boot_splash/image="res://assets/ui/generated/keyart/loading_0.png"
-boot_splash/stretch_mode=1
-boot_splash/use_filter=true
+boot_splash/show_image=false
 config/icon="res://icon.svg"
 
 [autoload]

@@ -17,8 +17,6 @@
 #   get_time_snapshot, get_neighbours; signal world_reset.
 extends Control
 
-const GeneratedArt = preload("res://scripts/ui/generated_art.gd")
-
 const PanelTooltips = preload("res://scripts/ui/panels/panel_tooltips.gd")
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
@@ -413,16 +411,6 @@ func _card(row: Dictionary, tech: Dictionary) -> Button:
 	lines.offset_bottom = -4
 	lines.add_theme_constant_override("separation", 0)
 	card.add_child(lines)
-	var art: TextureRect = GeneratedArt.image(Vector2(32, 32))
-	GeneratedArt.set_image(art, "tech", str(KnowledgeText.Content.row("knowledge", id).get("id", "")))
-	if art.visible:
-		lines.offset_right = -48
-	card.add_child(art)
-	art.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-	art.offset_left = -40
-	art.offset_right = -8
-	art.offset_top = 8
-	art.offset_bottom = 40
 	var name_label: Label = _cell_label(KnowledgeText.node_name(_locale, id, tech))
 	name_label.name = "Name"
 	name_label.add_theme_color_override("font_color", MUTED if code == 0 or code == 4 else TEXT)
@@ -552,9 +540,6 @@ func _fill_detail(tech: Dictionary) -> void:
 	if not bool(_detail_read.get("found", false)):
 		_add_line(_loc("M4_TECH_SELECT_HINT"), MUTED)
 		return
-	var art: TextureRect = GeneratedArt.image(Vector2(144, 144))
-	GeneratedArt.set_image(art, "tech", str(KnowledgeText.Content.row("knowledge", _selected).get("id", "")))
-	_detail.add_child(art)
 	var code: int = int(_detail_read.get("status", 0))
 	var heading: Label = _add_line(KnowledgeText.node_name(_locale, _selected, tech), TEXT)
 	heading.theme_type_variation = &"Heading"

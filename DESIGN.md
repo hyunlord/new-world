@@ -40,13 +40,3 @@ Camera zoom retains the ¼×/½×/1×/2× ladder and interpolates for 120 ms, an
 ## 7. Depth and surface
 
 Use the existing two-pixel border and dark translucent surface. Preserve map contrast behind panels; no decorative shadows, gradients or new branded styles. New UI must be inspected in real Godot windows at a laptop-sized fitting window and the capped desktop size. Browser/Lighthouse checks do not apply to this native Godot interface.
-
-## Generated UI art (Part U)
-
-Optional images under `assets/ui/generated` use the same earthy ochre, umber, moss,
-slate and birch-white palette, soft top-left daylight and clean painterly forms.
-Portraits occupy the existing 128-square slot; workshop portraits 128 square,
-building details 160 square, chapter illustrations 520×160, decision art 288×112,
-and tech art 32 square on cards / 144 square in details. Images preserve aspect
-ratio, use linear filtering, ignore mouse input and hide when absent. Existing
-text, controls, status borders, and authored fallback portraits remain available.

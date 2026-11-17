@@ -1,8 +1,6 @@
 # Catalogue-driven template groups, material gates, housing zones and construction sources.
 extends PanelContainer
 
-const GeneratedArt = preload("res://scripts/ui/generated_art.gd")
-
 signal template_chosen(row: Dictionary, station: String)
 signal housing_requested
 signal source_requested(site: int, record: int)
@@ -31,7 +29,6 @@ var _upgrade: Button
 var _why: Button
 var _materials: Label
 var _gate: Label
-var _portrait: TextureRect
 var _title: Label
 var _result: Label
 var _snapshot: Dictionary = {}
@@ -92,8 +89,6 @@ func _ready() -> void:
 	_detail.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	body.add_child(_detail)
 	_title = _label(_detail)
-	_portrait = GeneratedArt.image(Vector2(160, 160))
-	_detail.add_child(_portrait)
 	_stations = OptionButton.new()
 	_stations.item_selected.connect(_choose_station)
 	_detail.add_child(_stations)
@@ -339,7 +334,6 @@ func _fill_detail() -> void:
 	_detail.visible = not row.is_empty()
 	if row.is_empty():
 		return
-	GeneratedArt.set_image(_portrait, "buildings", _selected)
 	var option: Dictionary = _option(_selected, _station)
 	var site: Dictionary = _site_row()
 	_title.text = _tr(str(row["name_key"])) + " · " + _tr("BUILD_TIER").format({"tier": row.get("tier", 0)})

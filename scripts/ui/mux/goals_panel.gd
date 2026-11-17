@@ -5,8 +5,6 @@
 # Bridge methods: none; the coordinator supplies authoritative world facts and era rows.
 extends PanelContainer
 
-const GeneratedArt = preload("res://scripts/ui/generated_art.gd")
-
 signal opened
 signal chapter_completed(chapter_id: String)
 
@@ -24,7 +22,6 @@ var _view_index: int = -1
 var _chapter_picker: OptionButton
 var _completed_chapters: PackedStringArray = PackedStringArray()
 var _title: Label
-var _chapter_art: TextureRect
 var _chapter_title: Label
 var _conditions_box: VBoxContainer
 var _reward: Label
@@ -68,8 +65,6 @@ func _ready() -> void:
 	_chapter_title.autowrap_mode = TextServer.AUTOWRAP_WORD
 	_chapter_title.custom_minimum_size.x = 520
 	_column.add_child(_chapter_title)
-	_chapter_art = GeneratedArt.image(Vector2(520, 160))
-	_column.add_child(_chapter_art)
 	_conditions_box = VBoxContainer.new()
 	_conditions_box.add_theme_constant_override("separation", 4)
 	_column.add_child(_conditions_box)
@@ -279,7 +274,6 @@ func _refresh() -> void:
 	_chapter_picker.visible = options.size() > 1
 	# The plaque still uses current_chapter_data; only this panel can browse unlocked chapters.
 	var chapter: Dictionary = displayed_chapter()
-	GeneratedArt.set_image(_chapter_art, "chapters", str(chapter.get("id", "")))
 	if chapter.is_empty():
 		_chapter_title.text = _loc("LOOP_CHAPTER_PANEL_TITLE")
 		return

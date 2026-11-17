@@ -3,15 +3,16 @@
 ## M-POLISH+GATE — 2026-11-17
 
 ### Added
-- Merged `v8/art-tex` (generated material textures), `v8/art-ui` (portraits, chapter/card/tech/building art, item icons) and `v8/gate-reuse` (D-GATE-2 receipt reuse) onto C3-b.
+- Merged `v8/art-tex` (generated material textures) and `v8/gate-reuse` (D-GATE-2 receipt reuse) onto C3-b.
 
 ### Changed
 - D-GATE-1: `[profile.test]` compiles at `opt-level = 2` with `debug-assertions` and `overflow-checks` kept; `sim-systems` test override also `opt-level = 2` (`rust/Cargo.toml`, `docs/v8/c1/C1_DECISIONS.md`).
-- The learning helper only yields to the story banner when the banner shows a row; the taller art cards had pushed an empty banner over it (`mux_hud.gd`).
+- The learning helper only yields to the story banner when the banner shows a row; a taller decision-card stack pushes an empty banner over it (`mux_hud.gd`).
 
 ### Removed
+- The `v8/art-ui` merge (734cefca7) is reverted: with it, camp framing put a resident under the task plaque at night (step 39 day1_night_half, 0 qualifying px; reverting it alone passes). The branch stays on `origin/v8/art-ui`.
 - The `v8/3d-roof2` merge (4e1437eee) is reverted: its painted occluded people fell below the step-39 person-visibility threshold (e.g. 403 → 3 qualifying pixels); the branch stays on `origin/v8/3d-roof2` for a fix.
-- `docs/images/mart21_seasons.png` (2D-era strip; kept at `fd3f59801`) to stay within the 12-image limit.
+- `docs/images/mart21_seasons.png` (2D-era strip; kept at `fd3f59801`). The C2 contact sheet stays the current sheet.
 
 ## C3-b — iron chain, not yet published (2026-11-15)
 
@@ -41,19 +42,7 @@
   with the existing palette tint. Simulation and the crowd/VAT path are outside this pass.
 - Part T is delivered on `v8/art-tex` for planner integration; windowed capture and
   FPS acceptance remain conditional on the shared GPU gate.
-## M3D-IMG Part U — 2026-11-16 (v8/art-ui; planner integration pending)
 
-### Added
-- 318 adopted generated UI images: 72 person portraits, seven animals, ten chapters, five yearly goals, 18 decision cards, 166 knowledge nodes, 38 unique building/station portraits and two selected key-art images. Six key-art options were produced; four alternate options remain in the external data folder. Animal portraits(seven), yearly-goal art(five), and the selected title art(one) have no existing panel and remain in external data too;305 adopted generated images are available to the existing UI/startup surfaces.
-- 119 transparent 128-square item icons rendered from the existing single-item GLBs. Runtime art uses compact WebP; the selected loading image also has the PNG required by Godot's existing boot splash.
-- A cached presentation-only image loader (`scripts/ui/generated_art.gd`; ADR0068), deterministic portrait contract tests, and a real-scene eight-surface capture/optional headless verification tool. Prompts, all 340 generation attempts (18 rejected for subject/architecture), progress, screenshots, 22 pre-correction family sheets and the Korean report live under `/Users/rexxa/work/art-img-data/ui/`.
-
-- Final startup-splash capture and refresh of seven affected family sheets are blocked by the shared GPU lane (878 denied attempts over 90 minutes); they are not claimed complete.
-
-### Changed
-- Existing inspector, card, chapter, technology, building, workshop, recipe and item-list surfaces use optional art with established fallbacks. Portrait selection derives from entity, life stage, sex and wardrobe without simulation RNG or save changes. Images retain aspect, ignore mouse input and use linear filtering; pixel fallback portraits retain nearest filtering.
-- `ItemIcons.ui_texture_of` keeps UI model icons separate from the loose-world `texture_of` path. The existing startup splash uses the selected loading art; no title, animal or yearly-goal panel is added.
-- Real UI screenshots at 1920×1080 and 1280×720 cover eight surfaces each; the current README sheet shows the desktop captures. The planner still owns the next full publication gate and merge; this branch does not claim either.
 ## M-GATE-REUSE — 2026-11-16 (implementation branch, not full-gated)
 
 ### Added

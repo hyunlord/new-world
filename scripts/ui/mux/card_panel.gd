@@ -9,8 +9,6 @@
 #   cmd_* for card answers; signal world_reset.
 extends PanelContainer
 
-const GeneratedArt = preload("res://scripts/ui/generated_art.gd")
-
 const KoreanText = preload("res://scripts/ui/mux/korean_text.gd")
 const ChronicleText = preload("res://scripts/ui/chronicle_text.gd")
 const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
@@ -1098,9 +1096,6 @@ func _build_card_widget(card_id: String, card: Dictionary) -> void:
 	title_label.text = _format_card_text(str(def.get("title_key", "")), trigger_data)
 	title_label.add_theme_color_override("font_color", Color("e8c46e"))
 	card_box.add_child(title_label)
-	var art: TextureRect = GeneratedArt.image(Vector2(288, 112))
-	GeneratedArt.set_image(art, "cards", card_id)
-	card_box.add_child(art)
 	var body_label: Label = Label.new()
 	var body_key: String = str(def.get("body_ordered_key", "")) if trigger_data.has("order_id") and def.has("body_ordered_key") else str(def.get("body_key", ""))
 	var body: String = _format_card_text(body_key, trigger_data)
