@@ -552,8 +552,7 @@
         // Iron smelting is discovered from copper-smelting practice and charcoal stock, not from ore, so it is
         // discoverable on ore-only, bog-only and iron-less worlds (the last is what no_iron_nearby reports).
         // Iron weights follow the bible: iron_smelting 3, forging 3, iron_tools 2, stone_house 1, paved_road 1.
-        // Planner D-C3-1: paved_road is a placeable floor piece; M-GROW 3.2 adds per-tile speed (movement is one tile
-        // per interval; path cost only steers), which stays M-GROW debt.
+        // M-GROW: the completed floor's authored path stage supplies both route cost and movement cadence.
         (id: "iron_smelting", lane: "heat", era: "iron", tier: 1, status: Connected,
          debt: None, threshold: 300, prereqs: ["copper_smelting", "charcoal"], difficulty: 1,
          discover: [Practice(job_kind: "craft", count: 3), Stockpile("charcoal", 4), Knows("copper_smelting", 300)], gates: [Workshop("bloomery"), Recipe("smelt_bloom"), Recipe("smelt_bog_bloom")], marker_weight: 3,

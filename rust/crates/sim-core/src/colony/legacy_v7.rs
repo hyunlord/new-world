@@ -175,6 +175,7 @@ where
             command_log: old.command_log,
             item_ledger: old.item_ledger,
             overlay_version: old.overlay_version,
+            path_version: 0,
             tallies: old.tallies,
             tech: old.tech.into(),
             teach_orders: old.teach_orders,

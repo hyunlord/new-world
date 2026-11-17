@@ -26,6 +26,9 @@ impl RawSources {
                     include_str!("../../../data/colony/outcrops.ron"),
                 ),
                 ("eras.ron", include_str!("../../../data/colony/eras.ron")),
+                ("zones.ron", include_str!("../../../data/colony/zones.ron")),
+                ("paths.ron", include_str!("../../../data/colony/paths.ron")),
+                ("yards.ron", include_str!("../../../data/colony/yards.ron")),
                 (
                     "buildings.ron",
                     include_str!("../../../data/colony/buildings.ron"),
@@ -73,6 +76,9 @@ impl RawSources {
             if !matches!(
                 name.as_str(),
                 "eras.ron"
+                    | "zones.ron"
+                    | "yards.ron"
+                    | "paths.ron"
                     | "buildings.ron"
                     | "items.ron"
                     | "blueprints.ron"
@@ -103,6 +109,9 @@ impl RawSources {
 pub(super) fn normalize(name: &str) -> &str {
     match name {
         "eras" => "eras.ron",
+        "zones" => "zones.ron",
+        "yards" => "yards.ron",
+        "paths" => "paths.ron",
         "buildings" => "buildings.ron",
         "items" => "items.ron",
         "blueprints" => "blueprints.ron",

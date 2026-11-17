@@ -114,6 +114,31 @@ pub struct BuildingState {
     pub next_piece_id: u32,
     /// Housing zones use ColonyState's shared zone allocator but a separate index.
     pub housing_zones: BTreeMap<u32, BTreeSet<Tile>>,
+    /// Non-housing layout envelopes; never enter the stockpile or housing indexes.
+    #[serde(skip)]
+    pub layout_zones: BTreeMap<u32, BTreeSet<Tile>>,
+    /// Layout identity kept separately from the original command/steward provenance.
+    #[serde(skip)]
+    pub site_zones: BTreeMap<BuildingSiteId, u32>,
+    /// Occupancy-driven dwelling stages, persisted in the versioned growth tail.
+    #[serde(skip)]
+    pub house_growth: BTreeMap<BuildingSiteId, super::yards::HouseProgress>,
+    /// M-GROW 3.1: why each housing zone was created (zone_id → cause).
+    #[serde(skip)]
+    pub zone_causes: BTreeMap<u32, ZoneCause>,
+}
+
+/// Why a zone was created by the steward (M-GROW 3.1).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ZoneCause {
+    /// Zone kind id from zones.ron.
+    pub kind: String,
+    /// Trigger fact that fired.
+    pub trigger: String,
+    /// People count at the time.
+    pub people: u32,
+    /// Beds/slots count at the time.
+    pub slots: u32,
 }
 
 impl BuildingState {

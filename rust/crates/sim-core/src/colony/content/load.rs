@@ -189,6 +189,20 @@ pub(super) fn build(
         knowledge_defs: KnowledgeDefs::default(),
         knowledge_gates: Gates::default(),
         building_templates: TemplateCatalog::default(),
+        zones: super::super::zones::ZonesData::default(),
+        yards: super::super::yards::YardsData::default(),
+        paths: super::super::paths::PathsData::parse(
+            base.get("paths.ron")
+                .map(|bytes| std::str::from_utf8(bytes))
+                .transpose()
+                .map_err(|error| CatalogError::new("paths", error.to_string()))?
+                .unwrap_or(include_str!("../../../data/colony/paths.ron")),
+            extension
+                .contains_key("paths.ron")
+                .then(|| sources::text(&extension, "paths.ron"))
+                .transpose()?,
+        )
+        .map_err(|error| CatalogError::new("paths", error))?,
     };
     catalog.items = items
         .items
@@ -279,5 +293,39 @@ pub(super) fn build(
         &catalog,
     )
     .map_err(|error| CatalogError::new("buildings", error))?;
+    if base.contains_key("zones.ron") {
+        catalog.zones = super::super::zones::ZonesData::parse(
+            sources::text(&base, "zones.ron")?,
+            extension
+                .contains_key("zones.ron")
+                .then(|| sources::text(&extension, "zones.ron"))
+                .transpose()?,
+        )
+        .map_err(|error| CatalogError::new("zones", error))?;
+        for rule in &catalog.zones.rules {
+            if !catalog
+                .building_templates
+                .zone_kinds()
+                .iter()
+                .any(|kind| kind.id == rule.kind)
+            {
+                return Err(CatalogError::new(
+                    "zones",
+                    format!("unknown zone kind {}", rule.kind),
+                ));
+            }
+        }
+    }
+    if base.contains_key("yards.ron") {
+        catalog.yards = super::super::yards::YardsData::parse(
+            sources::text(&base, "yards.ron")?,
+            extension
+                .contains_key("yards.ron")
+                .then(|| sources::text(&extension, "yards.ron"))
+                .transpose()?,
+            &catalog,
+        )
+        .map_err(|error| CatalogError::new("yards", error))?;
+    }
     Ok(catalog)
 }

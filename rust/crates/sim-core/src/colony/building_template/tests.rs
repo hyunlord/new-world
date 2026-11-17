@@ -359,21 +359,16 @@ fn spine_unknown_storage_selector_is_rejected_before_installation() {
 }
 
 #[test]
-fn spine_zone_definitions_reserve_only_unwired_growth_drivers() {
+fn spine_zone_definitions_connect_layout_and_reserve_unwired_extensions() {
     let (catalog, templates) = family();
     let zones = templates.zone_kinds();
     assert_eq!(
         zones.iter().map(|z| z.id.as_str()).collect::<Vec<_>>(),
-        ["housing", "storage", "workshop"]
+        ["housing", "storage", "workshop", "fields", "pens"]
     );
-    assert_eq!(zones[0].status, ContentStatus::Connected);
-    assert!(zones[1..]
+    assert!(zones
         .iter()
-        .all(|zone| zone.status == ContentStatus::Inert
-            && zone
-                .debt
-                .as_deref()
-                .is_some_and(|debt| !debt.trim().is_empty())));
+        .all(|zone| zone.status == ContentStatus::Connected));
     let extension = r#"(schema_version:1, buildings:[], zone_kinds:[
         (id:"future_zone",name_key:"EXT_FUTURE_ZONE",status:Inert,debt:Some("Missing future driver; C2"))])"#;
     let merged =
@@ -409,19 +404,11 @@ fn spine_invalid_zone_rows_and_connected_zone_references_are_rejected() {
         ),
         (
             DATA.replacen(
-                "Missing automatic storage-zone growth planner; C2 content pass",
-                " ",
+                "name_key: \"ZONE_STORAGE\", status: Connected, debt: None",
+                "name_key: \"ZONE_STORAGE\", status: Inert, debt: Some(\" \")",
                 1,
             ),
             "inert zone needs debt",
-        ),
-        (
-            DATA.replacen(
-                "name_key: \"ZONE_STORAGE\", status: Inert",
-                "name_key: \"ZONE_STORAGE\", status: Connected",
-                1,
-            ),
-            "no connected zone driver",
         ),
         (
             DATA.replacen(
@@ -435,6 +422,11 @@ fn spine_invalid_zone_rows_and_connected_zone_references_are_rejected() {
             DATA.replacen(
                 "zone_kind: Some(\"housing\")",
                 "zone_kind: Some(\"storage\")",
+                1,
+            )
+            .replacen(
+                "name_key: \"ZONE_STORAGE\", status: Connected, debt: None",
+                "name_key: \"ZONE_STORAGE\", status: Inert, debt: Some(\"Unwired fixture\")",
                 1,
             ),
             "requires connected zone",

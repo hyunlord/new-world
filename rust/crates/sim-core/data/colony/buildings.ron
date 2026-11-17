@@ -2,10 +2,10 @@
 // Footprints are exterior dimensions. Exact materials are tested against default expanded plans.
 (schema_version: 1, zone_kinds: [
     (id: "housing", name_key: "ZONE_HOUSING", status: Connected, debt: None),
-    (id: "storage", name_key: "ZONE_STORAGE", status: Inert,
-     debt: Some("Missing automatic storage-zone growth planner; C2 content pass")),
-    (id: "workshop", name_key: "ZONE_WORKSHOP", status: Inert,
-     debt: Some("Missing automatic workshop-zone growth planner; C2 content pass")),
+    (id: "storage", name_key: "ZONE_STORAGE", status: Connected, debt: None),
+    (id: "workshop", name_key: "ZONE_WORKSHOP", status: Connected, debt: None),
+    (id: "fields", name_key: "ZONE_FIELDS", status: Connected, debt: None),
+    (id: "pens", name_key: "ZONE_PENS", status: Connected, debt: None),
 ], buildings: [
     (id: "hut", name_key: "BUILDING_HUT", era: "paleolithic", category: Dwelling, tier: 1,
      footprint: (3, 3), pieces: [(kind: "hut", at: Anchor)],

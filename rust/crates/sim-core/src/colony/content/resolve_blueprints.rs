@@ -35,6 +35,19 @@ pub(super) fn resolve(r: BlueprintRaw, c: &Catalog) -> Result<BlueprintDef, Cata
             "livestock barrier requires a wall layer",
         ));
     }
+    if let Some(stage) = r.completed_path_stage {
+        if r.completion != CompletionCategory::Floor
+            || r.completion_policy != CompletionPolicy::Authoritative
+            || c.paths()
+                .stage_by_code(stage)
+                .is_none_or(|stage| !stage.placed_only)
+        {
+            return Err(CatalogError::new(
+                context,
+                "constructed path requires an authoritative floor and a placed-only stage",
+            ));
+        }
+    }
     match r.completion {
         CompletionCategory::Wall | CompletionCategory::Door => {
             if r.render_wall_code.is_none_or(|code| code > 2) {
@@ -120,6 +133,7 @@ pub(super) fn resolve(r: BlueprintRaw, c: &Catalog) -> Result<BlueprintDef, Cata
         requires_knowledge: r.requires_knowledge,
         requires_space: r.requires_space,
         planned_nav: r.planned_nav,
+        completed_path_stage: r.completed_path_stage,
         blocks_livestock: r.blocks_livestock,
         supports_roof: r.supports_roof,
         material: r.material,

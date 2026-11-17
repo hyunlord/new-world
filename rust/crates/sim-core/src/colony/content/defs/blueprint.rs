@@ -126,6 +126,8 @@ pub struct BlueprintDef {
     pub requires_space: bool,
     /// Planned nav.
     pub planned_nav: PlannedNav,
+    /// Authored constructed walking surface after floor completion.
+    pub completed_path_stage: Option<u8>,
     /// People may pass a barrier while captive animals remain enclosed.
     pub blocks_livestock: bool,
     /// Whether a completed boundary piece can support an enclosed room's roof.

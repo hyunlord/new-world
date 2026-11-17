@@ -1,0 +1,26 @@
+// First design values; M-BAL owns tuning. Ids resolve buildings.ron zone_kinds.
+// A gap is empty tiles between edges. Growth is capped by population per kind.
+(schema_version: 1, zone_rules: [
+    // Four 4x4 two-bed dwellings with an internal one-tile gap serve the eight-person cap.
+    (kind: "housing", category: Housing, size: (9, 9), slot_size: (4, 4),
+     min_spacing: 1, max_gap: 1, adjacency: NextToZoneOrHearth, min_path_stage: 1,
+     trigger: "beds_short", scope: Housing, people_per_zone: 8,
+     // Ordinary housing preparation can clear trees; layout itself never clears them.
+     avoid: [Nodes, Fields, Structures, Outcrops]),
+    (kind: "workshop", category: Workshop, size: (6, 6), slot_size: (4, 4),
+     min_spacing: 1, max_gap: 2, adjacency: NextToZoneOrHearth, min_path_stage: 1,
+     trigger: "workshop_space_short", people_per_zone: 12,
+     avoid: [Trees, Nodes, Fields, Structures, Outcrops]),
+    (kind: "storage", category: Storage, size: (6, 6), slot_size: (4, 4),
+     min_spacing: 1, max_gap: 2, adjacency: NextToZoneOrHearth, min_path_stage: 1,
+     trigger: "storage_full", scope: All, people_per_zone: 12,
+     avoid: [Trees, Nodes, Fields, Structures, Outcrops]),
+    (kind: "fields", category: Field, size: (6, 6), slot_size: (3, 3),
+     min_spacing: 1, max_gap: 2, adjacency: NextToZoneOrHearth, min_path_stage: 1,
+     trigger: "field_need", scope: Food, people_per_zone: 8,
+     avoid: [Trees, Nodes, Fields, Structures, Outcrops]),
+    (kind: "pens", category: Pen, size: (8, 8), slot_size: (6, 6),
+     min_spacing: 1, max_gap: 2, adjacency: NextToZoneOrHearth, min_path_stage: 1,
+     trigger: "pen_need", scope: Food, people_per_zone: 16,
+     avoid: [Trees, Nodes, Fields, Structures, Outcrops]),
+])

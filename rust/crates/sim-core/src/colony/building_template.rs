@@ -10,7 +10,7 @@ mod tests;
 pub use catalogue::TemplateCatalog;
 pub use geometry::{material_cost, PlannedPiece};
 
-/// Authored automatic-growth zone; only housing has an executable driver.
+/// Authored automatic-growth zone; layout behaviour is resolved by selected zones data.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct BuildingZoneKind {

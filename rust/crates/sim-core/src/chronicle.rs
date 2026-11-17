@@ -207,11 +207,18 @@ pub enum ChronicleKind {
     /// C2-b: first successful chop with a `tool`-tagged item kind. subject; cause =
     /// `ItemKind::code`; caused by the first-ingot entry of its cast metal, if any.
     FirstToolUsed = 69,
+    /// M-GROW 3.1: steward laid out a new zone; cause = zone id;
+    /// value = `people << 32 | slots`; settlement.
+    ZoneLaidOut = 70,
+    /// Occupied dwelling reached an authored stage; cause = site id, value = stage code.
+    HouseStage = 71,
+    /// Steward began an era-material upgrade; cause = site id, value = era order.
+    MaterialWave = 72,
 }
 
 impl ChronicleKind {
     /// Every kind in discriminant order.
-    pub const ALL: [ChronicleKind; 70] = [
+    pub const ALL: [ChronicleKind; 73] = [
         Self::Born,
         Self::FoundingMember,
         Self::Paired,
@@ -282,6 +289,9 @@ impl ChronicleKind {
         Self::FirstIngot,
         Self::ToolUpgraded,
         Self::FirstToolUsed,
+        Self::ZoneLaidOut,
+        Self::HouseStage,
+        Self::MaterialWave,
     ];
 
     /// Stable numeric discriminant.
@@ -362,6 +372,9 @@ impl ChronicleKind {
             Self::FirstIngot => "first_ingot",
             Self::ToolUpgraded => "tool_upgraded",
             Self::FirstToolUsed => "first_tool_used",
+            Self::ZoneLaidOut => "zone_laid_out",
+            Self::HouseStage => "house_stage",
+            Self::MaterialWave => "material_wave",
         }
     }
 }
@@ -858,10 +871,13 @@ mod tests {
         assert_eq!(ChronicleKind::FirstIngot.as_u8(), 67);
         assert_eq!(ChronicleKind::ToolUpgraded.as_u8(), 68);
         assert_eq!(ChronicleKind::FirstToolUsed.as_u8(), 69);
-        assert_eq!(ChronicleKind::ALL.len(), 70);
+        // M-GROW 3.1: kind 70 appended; 0–69 unchanged.
+        assert_eq!(ChronicleKind::ZoneLaidOut.as_u8(), 70);
+        assert_eq!(ChronicleKind::ZoneLaidOut.as_str(), "zone_laid_out");
+        assert_eq!(ChronicleKind::ALL.len(), 73);
         let names: std::collections::BTreeSet<&str> =
             ChronicleKind::ALL.iter().map(|k| k.as_str()).collect();
-        assert_eq!(names.len(), 70);
+        assert_eq!(names.len(), 73);
         assert_eq!(DepartCause::TopUp.as_u8(), 4);
     }
 

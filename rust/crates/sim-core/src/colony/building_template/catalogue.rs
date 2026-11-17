@@ -56,9 +56,6 @@ impl TemplateCatalog {
                 return Err(format!("zone {}: invalid or duplicate identity", zone.id));
             }
             match zone.status {
-                ContentStatus::Connected if zone.id != "housing" => {
-                    return Err(format!("zone {}: no connected zone driver", zone.id));
-                }
                 ContentStatus::Inert
                     if zone.debt.as_deref().is_none_or(|d| d.trim().is_empty()) =>
                 {

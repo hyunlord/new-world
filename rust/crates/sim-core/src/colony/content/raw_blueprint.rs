@@ -22,6 +22,8 @@ pub(super) struct BlueprintRaw {
     pub requires_space: bool,
     pub planned_nav: PlannedNav,
     #[serde(default)]
+    pub completed_path_stage: Option<u8>,
+    #[serde(default)]
     pub blocks_livestock: bool,
     #[serde(default = "default_supports_roof")]
     pub supports_roof: bool,

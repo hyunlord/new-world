@@ -75,6 +75,9 @@ pub struct Catalog {
     knowledge_defs: KnowledgeDefs,
     knowledge_gates: Gates,
     building_templates: TemplateCatalog,
+    zones: super::zones::ZonesData,
+    yards: super::yards::YardsData,
+    paths: super::paths::PathsData,
 }
 macro_rules! family_access {
     ($id:ident,$def:ident,$field:ident,$index:ident,$one:ident,$code:ident,$name:ident,$serde:ident,$required:ident,$iter:ident,$ids:ident) => {
@@ -122,6 +125,10 @@ macro_rules! family_access {
     };
 }
 impl Catalog {
+    /// Selected natural and constructed walking surfaces.
+    pub fn paths(&self) -> &super::paths::PathsData {
+        &self.paths
+    }
     /// Validated flora membership and generation distributions.
     pub fn flora(&self) -> &FloraCatalog {
         &self.flora
@@ -312,6 +319,14 @@ impl Catalog {
     /// Validated authored-order templates from the same locally selected catalogue.
     pub fn building_templates(&self) -> &TemplateCatalog {
         &self.building_templates
+    }
+    /// Selected layout rules for ordinary settlement growth.
+    pub fn zones(&self) -> &super::zones::ZonesData {
+        &self.zones
+    }
+    /// Selected occupancy stages and yard prop definitions.
+    pub fn yards(&self) -> &super::yards::YardsData {
+        &self.yards
     }
     /// Gate masks derived only after local family resolution.
     pub fn knowledge_gates(&self) -> &Gates {

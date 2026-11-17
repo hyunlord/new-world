@@ -505,7 +505,7 @@
             material: FirstDelivered(fallback: "oak"), style_id: "slab_door",
             render_wall_code: Some(2), completion_policy: Authoritative, initial_bill: None,
         ),
-        // C3 (planner D-C3-1): a cut-stone road floor; placeable and drawn, but movement has no per-tile speed yet.
+        // A completed road activates its authored walking surface (M-GROW 3.2).
         (
             identity: (code: 32, id: "paved_road", name_key: "BUILDING_PAVED_ROAD", serde_name: "PavedRoad", serde_aliases: [], resolver_aliases: []),
             placeable: true, menu_order: 32, shortcut_slot: -1,
@@ -513,7 +513,7 @@
             needs: [(item: "cut_stone", count: 1, count_rule: None)], work: 20, work_rule: None,
             placement: Floor, completion: Floor, workshop_tags: [],
             requires_economy: true, requires_knowledge: true, requires_space: true,
-            planned_nav: Unchanged, blocks_livestock: false, supports_roof: false,
+            planned_nav: Unchanged, completed_path_stage: Some(3), blocks_livestock: false, supports_roof: false,
             material: Fixed(material: "cut_stone"), style_id: "packed_earth",
             render_wall_code: None, completion_policy: Authoritative, initial_bill: None,
         ),

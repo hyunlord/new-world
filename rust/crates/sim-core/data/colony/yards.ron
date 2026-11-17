@@ -1,0 +1,16 @@
+// M-GROW design defaults; balance is deferred to M-BAL.
+// All dwelling templates use this category fallback. Props are decorative and
+// are skipped on paths, doors and occupied tiles; they never claim sim tiles.
+(schema_version: 1, material_wave_permille: Some(750), max_simultaneous_upgrades: Some(1), stages: [
+    (id: "bare", code: 0, name_key: "HOUSE_STAGE_BARE", min_occupied_days: 0,
+     min_stored_goods: 0, min_occupant_skill: 0),
+    (id: "lived_in", code: 1, name_key: "HOUSE_STAGE_LIVED_IN", min_occupied_days: 2,
+     min_stored_goods: 0, min_occupant_skill: 0),
+    (id: "yard", code: 2, name_key: "HOUSE_STAGE_YARD", min_occupied_days: 8,
+     min_stored_goods: 1, min_occupant_skill: 1),
+], props: [
+    (id: "woodpile", model: "log_pile_s", min_stage: 1, offset: (-1, 0), rotation: 0),
+    (id: "drying", model: "drying_rack", min_stage: 2, offset: (-1, 2), rotation: 1),
+    (id: "garden", model: "crop_barley_growing", min_stage: 2, offset: (1, -1), rotation: 0),
+    (id: "fence", model: "pen_fence_05", min_stage: 2, offset: (2, -1), rotation: 0),
+])

@@ -44,6 +44,8 @@ pub mod story;
 pub mod values;
 pub mod wildlife;
 pub mod workshop;
+pub mod yards;
+pub mod zones;
 
 pub use building_site::{
     BuildCause, BuildingPiece, BuildingSite, BuildingSiteId, BuildingState, BuildingStatus,
@@ -260,6 +262,9 @@ pub struct ColonyState {
     pub item_ledger: ItemLedger,
     /// Bumped by any change to zones, designations, ground items, sites or trees.
     pub overlay_version: u64,
+    /// Derived render cache epoch; only actual walking-surface changes advance it.
+    #[serde(skip)]
+    pub path_version: u64,
     /// Counters.
     pub tallies: ColonyTallies,
     /// M4 (ADR 0026): the settlement's technology (`TechAggregateSystem`).
@@ -302,14 +307,14 @@ pub struct ColonyState {
     pub release_counts: BTreeMap<JobReleaseKey, u64>,
     /// M-GROW 3.2: per-tile footfall counter (indexed by `tile_grid.idx`).
     /// Incremented on each completed step; decayed at the day boundary.
-    #[serde(default)]
+    #[serde(skip)]
     pub footfall: Vec<u16>,
     /// M-GROW 3.2: per-tile path stage code (0 grass, 1 trodden, 2 dirt,
     /// 3 paved_road). Indexed by `tile_grid.idx`. Paved is placed only.
-    #[serde(default)]
+    #[serde(skip)]
     pub path_stage: Vec<u8>,
-    /// M-GROW 3.2: tiles touched by footfall this day (sparse set for the
-    /// day-boundary update; not saved — rebuilt from movement each day).
+    /// M-GROW 3.2: active nonzero-footfall tiles, retained until fully decayed.
+    /// Derived sparse work set; restored from saved counters after load.
     #[serde(skip)]
     pub footfall_touched: std::collections::BTreeSet<(u32, u32)>,
 }

@@ -1,13 +1,14 @@
 //! Worn paths: footfall-driven path stages (M-GROW 3.2).
 //!
-//! Data from `data/colony/paths.ron`; per-tile state lives in [`ColonyState`]
+//! Data from `data/colony/paths.ron`; per-tile state lives in [`super::ColonyState`]
 //! (`footfall`, `path_stage`, `footfall_touched`). The movement system
 //! increments footfall; a day-boundary system in sim-systems applies decay,
 //! promotes/demotes stages and refreshes nav costs.
 
 use serde::Deserialize;
-use std::sync::OnceLock;
+use std::collections::BTreeSet;
 
+#[cfg(test)]
 const PATHS_RON: &str = include_str!("../../data/colony/paths.ron");
 
 // ── RON schema ─────────────────────────────────────────────────────────
@@ -17,26 +18,32 @@ const PATHS_RON: &str = include_str!("../../data/colony/paths.ron");
 struct PathsFile {
     schema_version: u32,
     stages: Vec<RawStage>,
-    daily_decay_permille: u16,
+    #[serde(default)]
+    daily_decay_permille: Option<u16>,
 }
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
-#[allow(dead_code)]
 struct RawStage {
     id: String,
     code: u8,
     footfall_threshold: u16,
     nav_cost: u8,
     step_interval: u64,
+    #[serde(default)]
+    placed_only: bool,
 }
 
 // ── Public API ─────────────────────────────────────────────────────────
 
-/// One path stage (grass, trodden, dirt, paved_road).
-#[derive(Debug, Clone, Copy)]
+/// One authored natural or constructed walking surface.
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct PathStage {
-    /// Byte code stored in `ColonyState::path_stage` (0–3).
+    /// Stable content name, independent of movement mechanics.
+    pub id: String,
+    /// Requires a completed floor; never reached through footfall alone.
+    pub placed_only: bool,
+    /// Stable byte code stored in `ColonyState::path_stage`.
     pub code: u8,
     /// Minimum footfall to reach this stage.
     pub footfall_threshold: u16,
@@ -47,7 +54,7 @@ pub struct PathStage {
 }
 
 /// Parsed paths data, immutable after load.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct PathsData {
     /// All stages in code order.
     pub stages: Vec<PathStage>,
@@ -57,12 +64,11 @@ pub struct PathsData {
 
 impl PathsData {
     /// The stage for a given footfall value (highest threshold that fits).
-    /// Paved road (code 3) is never returned here; it is placed, not earned.
+    /// Placed-only surfaces are never earned through footfall.
     pub fn stage_for_footfall(&self, footfall: u16) -> &PathStage {
         let mut best = &self.stages[0];
         for s in &self.stages {
-            // paved_road (code 3) is placed-only; skip it.
-            if s.code == 3 {
+            if s.placed_only {
                 continue;
             }
             if footfall >= s.footfall_threshold && s.footfall_threshold >= best.footfall_threshold {
@@ -78,35 +84,81 @@ impl PathsData {
     }
 }
 
-fn parse_paths(text: &str) -> Result<PathsData, String> {
-    let file: PathsFile =
-        ron::from_str(text).map_err(|e| format!("paths.ron parse error: {e}"))?;
-    if file.schema_version != 1 {
-        return Err(format!(
-            "paths.ron: expected schema_version 1, got {}",
-            file.schema_version
-        ));
-    }
-    let stages: Vec<PathStage> = file
-        .stages
-        .into_iter()
-        .map(|s| PathStage {
-            code: s.code,
-            footfall_threshold: s.footfall_threshold,
-            nav_cost: s.nav_cost,
-            step_interval: s.step_interval,
+impl PathsData {
+    /// Validate base stages and append-only selected-pack stages.
+    pub fn parse(base: &str, extension: Option<&str>) -> Result<Self, String> {
+        let mut file = parse_file(base)?;
+        if let Some(text) = extension {
+            let extra = parse_file(text)?;
+            if extra.daily_decay_permille.is_some() {
+                return Err("paths: extensions cannot replace daily decay".into());
+            }
+            file.stages.extend(extra.stages);
+        }
+        let decay = file
+            .daily_decay_permille
+            .ok_or("paths: missing daily decay")?;
+        if decay > 1000 {
+            return Err("paths: daily decay must be in 0..=1000".into());
+        }
+        file.stages.sort_by_key(|stage| stage.code);
+        let mut ids = BTreeSet::new();
+        let mut codes = BTreeSet::new();
+        let mut thresholds = BTreeSet::new();
+        for stage in &file.stages {
+            if stage.id.is_empty()
+                || !ids.insert(stage.id.as_str())
+                || !codes.insert(stage.code)
+                || stage.nav_cost == 0
+                || stage.step_interval == 0
+                || (!stage.placed_only && !thresholds.insert(stage.footfall_threshold))
+            {
+                return Err(format!("paths: invalid or duplicate stage {}", stage.id));
+            }
+        }
+        if file.stages.first().is_none_or(|stage| {
+            stage.code != STAGE_GRASS || stage.footfall_threshold != 0 || stage.placed_only
+        }) {
+            return Err("paths: stage zero must be the natural zero-footfall fallback".into());
+        }
+        Ok(Self {
+            stages: file
+                .stages
+                .into_iter()
+                .map(|stage| PathStage {
+                    id: stage.id,
+                    placed_only: stage.placed_only,
+                    code: stage.code,
+                    footfall_threshold: stage.footfall_threshold,
+                    nav_cost: stage.nav_cost,
+                    step_interval: stage.step_interval,
+                })
+                .collect(),
+            daily_decay_permille: decay,
         })
-        .collect();
-    Ok(PathsData {
-        stages,
-        daily_decay_permille: file.daily_decay_permille,
-    })
+    }
+
+    /// Preserve explicit movement-rule overrides while applying authored surface ratios.
+    pub fn step_interval(&self, code: u8, base_interval: u64) -> u64 {
+        let base = self.stages[0].step_interval;
+        let interval = self
+            .stage_by_code(code)
+            .map_or(base, |stage| stage.step_interval);
+        base_interval.saturating_mul(interval).div_ceil(base).max(1)
+    }
 }
 
-/// The bundled paths data (parsed once).
+fn parse_file(text: &str) -> Result<PathsFile, String> {
+    let file: PathsFile = ron::from_str(text).map_err(|error| format!("paths: {error}"))?;
+    if file.schema_version != 1 {
+        return Err(format!("paths: unsupported schema {}", file.schema_version));
+    }
+    Ok(file)
+}
+
+/// Validated selected paths, shared with blueprint resolution and save revision checks.
 pub fn installed() -> &'static PathsData {
-    static DATA: OnceLock<PathsData> = OnceLock::new();
-    DATA.get_or_init(|| parse_paths(PATHS_RON).expect("paths.ron must parse"))
+    super::content::installed_or_bundled().paths()
 }
 
 /// Grass (default, no path).
@@ -121,6 +173,29 @@ pub const STAGE_PAVED: u8 = 3;
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn selected_stages_validate_and_drive_mechanics_without_code_changes() {
+        let extension = r#"(schema_version:1, stages:[
+            (id:"test_trail", code:4, footfall_threshold:200, nav_cost:5, step_interval:1),
+            (id:"test_floor", code:7, footfall_threshold:0, nav_cost:4, step_interval:1, placed_only:true),
+        ])"#;
+        let selected = PathsData::parse(PATHS_RON, Some(extension)).expect("extension");
+        assert_eq!(selected.stage_for_footfall(201).code, 4);
+        assert_eq!(selected.stage_by_code(7).expect("floor").nav_cost, 4);
+        assert_eq!(selected.step_interval(4, 3), 1);
+        assert_eq!(selected.step_interval(STAGE_DIRT, 1), 1);
+        assert_eq!(selected.step_interval(STAGE_DIRT, 6), 4);
+        for invalid in [
+            PATHS_RON.replace("nav_cost: 7", "nav_cost: 0"),
+            PATHS_RON.replace("code: 2", "code: 1"),
+            PATHS_RON.replace("step_interval: 3", "step_interval: 0"),
+            PATHS_RON.replace("Some(20)", "Some(1001)"),
+            PATHS_RON.replace("footfall_threshold: 30", "footfall_threshold: 0"),
+        ] {
+            assert!(PathsData::parse(&invalid, None).is_err());
+        }
+    }
 
     #[test]
     fn paths_ron_parses() {
