@@ -28,6 +28,13 @@ must remain readable.
 - Use the same usable interior for storage requests, extension and free-slot
   admission, preserving the future wall/door shell. Existing stock cells count
   as Storehouse service capacity; Bedroom furniture still needs free cells.
+- When actual storage demand has no legal empty placement, reuse the layout
+  search to find a site blocked only by preparable trees. The ordinary Stockpile
+  action emits existing Chop designations; FoodStorage uses the same helper only
+  with a positive ordinary capacity gap and no empty-cell expansion commands.
+  Workers must remove the trees before normal daily layout admission. Preserve
+  geometry, caps, path/obstacle guards, Nodes, vetoes and steward command policy.
+  Never create a layout or clear a tree as a planning side effect.
 - Keep `BuildCause::Steward(rule)` and store a separate site-zone link. The
   persisted zone cause records the trigger, population and prior capacity;
   the chronicle and building Why view use this evidence.
@@ -64,8 +71,13 @@ Colony trajectories change by design; byte-identical baseline means worlds
 without colony rules. Publication still requires exact save/load and replay,
 the ordinary-steward 120-day growth acceptance, selected-pack extension tests,
 real 3D captures, the frozen HEAD's full gate and its separate crash detector.
-These are pending verification, not waived by this design record. Initial
-values and limitations are recorded in `docs/v8/BALANCE_DEBT.md`.
+The first four-seed feature acceptance passed while candidate seed1 still died
+by day120 against a surviving BASE. Seed5 also failed the separate development
+48-day collapse floor. Missing tree preparation prevented initial or expanded
+storage, so the structural fix above needs fresh long-run verification before
+pre-gate. Focused command/worker tests are not proof that survival has recovered.
+Publication verification is pending, not waived by this record. Initial values
+and limitations remain in `docs/v8/BALANCE_DEBT.md`.
 
 ## Date
 

@@ -1,9 +1,9 @@
 # M-GROW-a 구현 보고 초안 — UNPUBLISHED
 
-2026-11-17 13:51 KST 갱신. **UNPUBLISHED — 기능 수용 실행3은4/4 PASS지만 개발용48일 비교에서seed5전멸 회귀가 확인됐다. 고정 HEAD 사전/전체 게이트·공식 크래시 감지·게시는 대기다.**
+2026-11-17 14:10 KST 갱신. **UNPUBLISHED — 기능 수용 실행3은4/4 PASS지만 개발용48일 비교에서seed5전멸 회귀가 확인됐다. 고정 HEAD 사전/전체 게이트·공식 크래시 감지·게시는 대기다.**
 기준선은 게시된 C3-b `fd3f5980139023167304e2ef6c0cce7ec08c937e`, 작업 브랜치는 `v8/mgrow`다.
 원시 증거 경로의 기준 디렉터리 `mgrow-data`는 `/Users/rexxa/work/mgrow-data/`다.
-보고 시점 구현 HEAD는 `cb9d904fc`이며 최종 동결·게시 SHA가 아니다. 각 개발 로그는
+보고 시점 구현 HEAD는 `f9f9048de`이며 저장 준비 수정이 커밋됐다. 최종 동결·게시 SHA가 아니다. 각 개발 로그는
 실행 당시 소스의 증거이며 이후 커밋 전체를 소급 검증하지 않는다.
 
 ## 구현 의도·내용
@@ -49,11 +49,12 @@ probe2는 첫 창고 수정 후, 후속 경계 수정 전 빌드의 **개발 진
 읽은 결과는 seed0생존14·seed1생존0·seed2생존16·seed3생존16이다
 (`reports/day120-attempt3-seed0.log`, `day120-attempt3-seed1.log`,
 `day120-attempt3-seed2.log`, `day120-attempt3-seed3.log`).
-120일 후보 생존 배열은 `[14,0,16,16]`이며 같은 설정의 BASE120일 배열은 비교 대기다.
-13:35 플래너 지시에 따라 BASE seed1이 살아 있으면 M-GROW 회귀로 보고 연대기/진단으로
-구조적 원인을 찾아 **pre-gate 전에 수정**해야 한다. BASE도 전멸하면 양쪽 배열을 함께
-기록한 뒤에만 기존 M-BAL 문제로 분류한다. 현재는 원인 미확인·비교 대기이며 M-BAL로
-확정하지 않는다. 새로운120일 생존 수치 막대나 결과 맞춤 튜닝은 추가하지 않는다.
+120일 비교가 완료됐다. BASE 생존은 `[14,16,16,16]`, 후보 실행3은 `[14,0,16,16]`이다
+(`reports/development-120d-comparison-1.json`). **BASE seed1이 살아 있어 M-GROW의
+후반 전멸 회귀가 확인됐으며 기존 M-BAL 문제로 넘기지 않는다.** 별도 후보 seed1×120일
+probe에서도15명이70.474–71.209일에 기아로 사망했다
+(`reports/collapse-seed1-120d-events.json`).13:35 플래너 지시대로 구조적 원인을 고치고
+pre-gate 전에 재검증해야 한다. 새120일 생존 수치 막대나 결과 맞춤 튜닝은 추가하지 않는다.
 
 ### 완료된 개발용48일 비교 — FAIL
 
@@ -71,9 +72,32 @@ seed5는 생존14→0, KnowledgeLost0→21이다. 양쪽 합계도1→21로 기�
 실제 검증기는 먼저 전멸에서 종료했다. 이 결과를 안전성 통과로 표현하지 않는다.
 정확한 설정은 colony, seeds0..8,48일, workers4, stewardON, 명령 없음,
 story/neighbours 기본ON이며 `reports/development-smoke-3-provenance.json`에 이진 해시와
-BASE/후보 소스 이력이 있다. 후보는 identity-development-1 빌드이며 그 뒤 production은
-변경되지 않았다. 이는 POLISH 병합 전 **개발 실행**으로 공식 동결 크래시 감지나 Inert
-전환 횟수를 대신하지 않는다. 원인 진단/수정과 공식 고정 HEAD 재검증이 남았다.
+BASE/후보 소스 이력이 있다. 당시 후보는 identity-development-1 빌드였으며 실행 시점까지
+production은 같았다. 아래 저장 준비 수정은 그 뒤의 변경이므로 이 실패를 덮어쓰지 않는다. 이는 POLISH 병합 전 **개발 실행**으로 공식 동결 크래시 감지나 Inert
+전환 횟수를 대신하지 않는다. 아래 구조적 수정의 새 장기 실행과 공식 고정 HEAD 재검증이 남았다.
+
+### 창고 구역의 벌목 준비 연결 — 집중 검증 완료, 장기 생존 재검증 대기
+
+seed5에서는 처음부터 창고 구역이 없었다. 모든 정상 후보가 장애물에 걸렸고 그중41개는
+나무만 치우면 기존 조건을 만족했다. 가장 적은 나무 후보는3그루였다. 새 구역 검색을
+복제하거나 금지물을 풀지 않고, 같은 기하 검색을 사용해 기존 Stockpile 규칙이 일반
+`DesignateChopTiles`를 요청하도록 했다. 작업자가 실제 나무를 제거한 뒤에만 정상 일일
+배치가 구역을 만든다. 크기·인구 상한·avoid·Nodes·길·veto·scope·cooldown은 유지한다.
+
+seed1의 실제60일 저장본은 비축16칸이 모두 찼고15칸은 비식량, 먹을 수 있는93단위는
+밖에 있었다. 창고 구역은1개/상한2개이며 정상 길 조건을 충족하는 둘째 구역 자리가
+있었지만11그루가 막았다. 따라서 길 조건이나 상한 문제가 아니다. FoodStorage 확장도
+실제 `ordinary_gap > 0`이고 빈 칸 확장 명령을 하나도 만들지 못했을 때만 같은 벌목 준비
+helper를 재사용한다. 재화를 옮기거나 나무를 즉시 지우거나 수치를 바꾸지 않는다.
+
+- `reports/collapse-seed5-preparation-green-5.log`: 구역8/8 PASS,8.34초; 실제 작업자가 벌목한 뒤 초기 비축을 만드는 회귀 포함.
+- `reports/collapse-steward-tests-3.log`: 집사150/150 PASS,21.98초. 이 실행 뒤 FoodStorage 연결을 추가했다.
+- `reports/collapse-storage-extension-green-1.log`: 식량 저장8/8 PASS,0.05초; 가득 찬 구역의 숲 확장 준비와 기존 취소/수용량 경계 유지.
+- `reports/collapse-seed1-day60-2.log`: 실제 저장본 진단1PASS,7.18초; 원래 길 조건에서11칸 Chop 요청, 전체 저장 바이트 불변. 장기 생존 실행이 아니다.
+- `reports/clippy-6.log`/status0: PASS,10.27초; `reports/fmt-check-4.status.txt`0. 이전 red·잘못된 fixture·컴파일 실패 원본은 보존했다.
+
+이 증거는 준비 명령과 실제 초기 벌목/비축 연결을 입증한다. **수정된 후보의 새로운
+48일/120일 장기 안전성 결과는 PENDING이며 생존 회귀 해결을 아직 선언하지 않는다.**
 
 ## 수용·집중 시험
 
@@ -107,8 +131,8 @@ BASE/후보 소스 이력이 있다. 후보는 identity-development-1 빌드이�
 `reports/house-stages.md`, `reports/presentation-a.md`.
 
 identity 실행 시작 HEAD는 `4f94c8572`이며 당시 수동 구역 수정이 작업트리에 있었다.
-따라서 커밋만 동결한 게시 증거가 아니다. 빌드 이후 production은 변경되지 않았지만,
-최종 동결 HEAD의 pre-gate/full-gate identity를 대체하지 않는다. Clippy4 실패는 새
+따라서 커밋만 동결한 게시 증거가 아니다. 그 뒤 저장 구역 벌목 준비 production 수정이
+추가됐으므로 현재 후보의 identity를 소급 입증하지 않으며, 최종 동결 HEAD에서 다시 확인한다. Clippy4 실패는 새
 시험 코드의 Copy 값 clone 한 줄이며 숨기거나 생산 동작 변경으로 설명하지 않는다.
 
 ## 실제 장면 확인과 캡처
@@ -149,14 +173,17 @@ POLISH 병합 후 최종 텍스처·최종 캡처,500명 z1 FPS, 저장소 conta
 `docs/v8/BALANCE_DEBT.md`에 기록하며 결과에 맞춰 튜닝하지 않는다.
 
 현재 BASE 대비 `tools/` 추가량은120줄(`world3d_shots.gd`107,
-`w3d_render_test.gd`13)이다. 외부 실행 runner 약50줄과 결함 진단24줄을 별도로 공개한다.
+`w3d_render_test.gd`13)이다. 외부 실행 runner 약50줄과 기존 결함 진단24줄에 더해,
+`reports/collapse-seed5-admission-diagnostic.rs`80줄,
+`collapse-seed1-storage-diagnostic.rs`25줄, `collapse-seed1-food-diagnostic.rs`57줄을 보존한다.
+이 진단 코드는 실제 실패 원인을 확인하기 위한 임시 코드이며 숨기거나 새 관측 체계로 만들지 않았다.
 수용 시험 `mgrow_village_grows.rs`277줄은 별도 집계다. 소규모 모델/텍스처 prewarm을
 포함한 최종 새 도구 총계는 아직 확정하지 않았으며 목표 상한1,500줄을 유지한다.
 
 ## 게시 전 남은 경계
 
 - **D-MGROW-2 대기:** `QUESTION-2.md`의 자동 주거 구역 삭제 정책. 현 경계에서 삭제 후 고아 원인/건물 연결로 저장이 거절될 수 있어 전체 gate/게시 전에 닫아야 한다. 수동 구역 수정만으로 해결됐다고 보지 않는다.
-- **120일 BASE 비교·개발48일 회귀:** 후보120일 `[14,0,16,16]`의 BASE 비교가 필요하다. BASE seed1생존 시 구조적 회귀를 pre-gate 전에 수정한다. 별도로 완료된 개발48일 seed5전멸도 원인 진단/수정이 남았다.
+- **확인된 생존 회귀 재검증:** BASE120일 `[14,16,16,16]` 대비 이전 후보 `[14,0,16,16]`; 개발48일 seed5도 전멸했다. 초기/확장 창고의 벌목 준비 연결은 집중 시험을 통과했지만 새48일/120일 장기 실행은 PENDING이다. pre-gate 전에 회귀 수정을 검증한다.
 - **POLISH-DONE 대기:** 게시되면 origin/v8/main을 정상 병합하고 충돌 규칙을 지킨다. 새 terrain 텍스처 작업과 pre-gate 전에 반영한다.
 - **최종 SHA·pre-gate·전체 gate:** 모두 대기. 단계 수·재사용 여부·시작/종료시각·exit는 미확정이다. 모든 결과가 같은 동결 HEAD를 가리켜야 한다.
 - **공식 크래시 감지:** 별도 seeds0–7×48일 BASE/candidate 생존·KnowledgeLost 배열 모두 대기. probe2 수치를 대신 넣지 않는다.
