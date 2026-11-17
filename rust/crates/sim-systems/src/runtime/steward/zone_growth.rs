@@ -71,6 +71,14 @@ pub(super) fn allows(res: &SimResources, category: ZoneUse, anchor: Tile, size: 
     {
         return true;
     }
+    // Bootstrap: no zones of this category exist yet → allow until the first is laid.
+    if zones::installed()
+        .connected()
+        .filter(|rule| rule.category == category)
+        .all(|rule| zone_tiles(res, rule).next().is_none())
+    {
+        return true;
+    }
     zones::installed()
         .connected()
         .filter(|rule| rule.category == category)
@@ -110,6 +118,14 @@ pub(super) fn stockpile_sides(res: &SimResources, requested: u32) -> std::ops::R
         || !zones::installed()
             .connected()
             .any(|rule| rule.category == ZoneUse::Storage)
+    {
+        return requested..=requested;
+    }
+    // Bootstrap: no Storage zones yet → keep the full requested size.
+    if zones::installed()
+        .connected()
+        .filter(|rule| rule.category == ZoneUse::Storage)
+        .all(|rule| zone_tiles(res, rule).next().is_none())
     {
         return requested..=requested;
     }
