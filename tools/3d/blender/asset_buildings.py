@@ -1,6 +1,5 @@
 """Assemble frozen authored templates; construction previews never alter simulation sites."""
 import json
-import math
 import os
 import sys
 from pathlib import Path
@@ -10,9 +9,13 @@ import asset_building_concepts as K
 import asset_stations as A
 import common as C
 import stations as S
+import stations_w3d as W
+import look2_props_details as D
+import look2_building_shell as L
+import look2_building_roofs as R
 
 DATA = Path(__file__).with_suffix('.json')
-STAGES = {'foundation': 0.18, 'half': 1.1, 'complete': 2.2}
+STAGES = {'foundation': 0.18, 'frame': 2.2, 'half': 1.1, 'complete': 2.2}
 ALIASES = {'hearth_fire': 'hearth', 'bee_skep_body': 'bee_skep',
            'food_drying_rack': 'drying_rack', 'smoking_rack': 'drying_rack'}
 
@@ -38,17 +41,16 @@ def component(m, placement, stage):
         m.box('wood', (0.82, 0.12, height), loc=(0, 0, height / 2))
     elif base in S.STATIONS:
         getattr(S, base)(m, S.STATIONS[base])
+        D.detail(m, base)
     elif kind == 'hut':
         m.cyl('wood', 1.15, height, segs=12)
         if stage == 'complete':
             m.cyl('thatch', 1.45, 1.25, loc=(0, 0, height), segs=12, r2=0.12)
         m.box('wood_dark', (0.65, 0.05, min(height, 1.5)), loc=(0, -1.16, min(height, 1.5) / 2))
     elif kind == 'bloomery':
-        m.cyl('clay', 0.42, min(height, 1.7), segs=10, r2=0.30)
-        m.cyl('earth', 0.22, 0.04, loc=(0, 0, min(height, 1.7)), segs=10)
+        W.bloomery(m, False)
     elif kind == 'forge':
-        m.box('stone', (0.95, 0.85, min(height, 0.7)), loc=(0, 0, min(height, 0.7) / 2))
-        m.cyl('earth', 0.30, 0.05, loc=(0, 0, min(height, 0.7)), segs=8)
+        W.forge(m, False)
     else:
         raise AssertionError('Unresolved authored component: ' + kind)
     verts = [v for v in m.bm.verts if v not in before]
@@ -95,24 +97,6 @@ def expand(template, footprints):
     return plan
 
 
-def roof(m, template):
-    w, h = template['footprint']
-    cover = 'thatch' if template['era'] in ('paleolithic', 'neolithic') else 'wood'
-    if template['roof'] == 'Round':
-        before = set(m.bm.verts)
-        m.cyl(cover, w / 2, 1.05, loc=(0, 0, 2.2), segs=12, r2=0.1)
-        for v in m.bm.verts:
-            if v not in before:
-                v.co.y *= h / w
-    else:
-        angle = math.atan2(1.05, h / 2)
-        length = math.hypot(h / 2, 1.05)
-        for side in (-1, 1):
-            for strip in range(max(4, w * 3)):
-                sx = -w / 2 + (strip + 0.5) * w / max(4, w * 3)
-                m.box(cover, (w / max(4, w * 3) - 0.012, length, 0.10), loc=(sx, side * h / 4, 2.725), rot=(-side * angle, 0, 0))
-
-
 def build():
     data = json.loads(DATA.read_text())
     assert len(data['templates']) == 25
@@ -134,17 +118,46 @@ def build():
             if tint:
                 channels = {'oak': ('trunk', 'wood'), 'pine': ('trunk', 'wood'), 'granite': ('stone',), 'clay': ('clay',), 'mud_brick': ('clay',)}
                 m.colors.update({channel: tuple(tint) for channel in channels.get(template['tint'], ())})
-            if template['id'] in K.KINDS:
+            if ring:
+                L.shell(m, template, stage)
+                if stage == 'complete':
+                    for placement in plan:
+                        if placement[0] not in ('door', 'packed_floor') and not placement[0].endswith('_wall'):
+                            component(m, placement, stage)
+                    if template['id'] == 'granary':
+                        for vertex in m.bm.verts:
+                            vertex.co.z += 0.32
+                        for x in (-1.35, 1.35):
+                            for y in (-1.35, 1.35):
+                                m.cyl('stone', 0.28, 0.35, loc=(x, y, 0), segs=8, r2=0.20)
+                        m.box('wood', (1.05, 0.30, 0.16), loc=(0, -1.82, 0.08))
+            elif template['id'] == 'hut':
+                L.hut(m, stage)
+            elif template['id'] in K.KINDS:
                 K.concept(m, template, stage)
+                if stage != 'foundation':
+                    R.roof(m, template, stage)
+            elif stage in ('foundation', 'frame'):
+                w, h = template['footprint']
+                for sx in (-1, 1):
+                    for sy in (-1, 1):
+                        x, y = sx * (w / 2 - 0.2), sy * (h / 2 - 0.2)
+                        m.box('stone', (0.30, 0.30, 0.16), loc=(x, y, 0.08))
+                        if stage == 'frame':
+                            m.rod('wood', (x, y, 0.12), (x, y, 1.4), 0.045, segs=5)
+                m.box('earth', (w - 0.12, h - 0.12, 0.07), loc=(0, 0, 0.035))
             else:
                 for placement in plan:
                     component(m, placement, stage)
-            if stage == 'complete' and (ring or template['id'] in K.KINDS) and template['warmth'] == 'Roofed':
-                roof(m, template)
+            for vertex in m.bm.verts:
+                vertex.co.z = max(vertex.co.z, 0.0)
+            triangles = sum(len(face.verts) - 2 for face in m.bm.faces)
+            assert 0 < triangles <= 6500, (mid, triangles)
             C.save_static(m, template['footprint'], entries, {
                 'family': 'building', 'template': template['id'], 'stage': stage,
                 'source_sha': data['source_sha'], 'source_status': 'connected' if template['connected'] else 'inert_concept',
-                'representation': 'inert_art_concept' if template['id'] in K.KINDS else 'authored_piece_assembly',
+                'representation': 'inert_art_concept' if template['id'] in K.KINDS else 'authored_footprint_envelope' if ring else 'authored_piece_assembly',
+                'look_revision': 'L2-crafted-v1',
                 'roof_cover': 'thatch' if template['era'] in ('paleolithic', 'neolithic') else 'plank',
                 'roof_style': template['roof'], 'tint_material': template['tint'],
                 'piece_count': len(plan), 'selected_station': next(iter(template['stations']), None),
@@ -152,7 +165,7 @@ def build():
             })
     out = Path(C.REPO) / 'assets/3d/buildings_manifest.json'
     out.write_text(json.dumps({'models': entries}, indent=2, sort_keys=True) + '\n')
-    assert len(entries) == 75
+    assert len(entries) == 100
     return entries
 
 

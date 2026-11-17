@@ -7,7 +7,7 @@
     2
    ],
    "height": 1.62,
-   "triangles": 596,
+   "triangles": 1346,
    "materials": [
     "stone",
     "clay",
@@ -40,7 +40,7 @@
     2
    ],
    "height": 1.62,
-   "triangles": 596,
+   "triangles": 1334,
    "materials": [
     "stone",
     "clay",
@@ -68,7 +68,7 @@
     3
    ],
    "height": 0.869,
-   "triangles": 496,
+   "triangles": 1376,
    "materials": [
     "earth",
     "glow",
@@ -93,7 +93,7 @@
     3
    ],
    "height": 0.869,
-   "triangles": 496,
+   "triangles": 1376,
    "materials": [
     "earth",
     "glow",
@@ -122,7 +122,7 @@
     3
    ],
    "height": 0.217,
-   "triangles": 496,
+   "triangles": 1368,
    "materials": [
     "earth",
     "glow",
@@ -147,7 +147,7 @@
     1
    ],
    "height": 0.55,
-   "triangles": 188,
+   "triangles": 400,
    "materials": [
     "stone",
     "wood",
@@ -173,7 +173,7 @@
     1
    ],
    "height": 0.57,
-   "triangles": 224,
+   "triangles": 416,
    "materials": [
     "stone",
     "wood",
@@ -204,7 +204,7 @@
     2
    ],
    "height": 1.44,
-   "triangles": 424,
+   "triangles": 1376,
    "materials": [
     "earth",
     "clay",
@@ -234,7 +234,7 @@
     2
    ],
    "height": 1.44,
-   "triangles": 424,
+   "triangles": 1392,
    "materials": [
     "earth",
     "clay",
@@ -260,7 +260,7 @@
     1
    ],
    "height": 0.62,
-   "triangles": 204,
+   "triangles": 236,
    "materials": [
     "trunk",
     "wood",
@@ -284,7 +284,7 @@
     1
    ],
    "height": 0.67,
-   "triangles": 236,
+   "triangles": 292,
    "materials": [
     "trunk",
     "wood",
@@ -314,7 +314,7 @@
     1
    ],
    "height": 0.54,
-   "triangles": 320,
+   "triangles": 538,
    "materials": [
     "stone",
     "earth",
@@ -334,8 +334,7 @@
     ]
    },
    "family": "station",
-   "state": "lit",
-   "overhang": true
+   "state": "lit"
   },
   "asset_hearth_unlit": {
    "file": "models/asset_hearth_unlit.glb",
@@ -343,8 +342,8 @@
     1,
     1
    ],
-   "height": 0.54,
-   "triangles": 320,
+   "height": 0.437,
+   "triangles": 652,
    "materials": [
     "stone",
     "earth",
@@ -368,7 +367,7 @@
     2
    ],
    "height": 2.2,
-   "triangles": 632,
+   "triangles": 1388,
    "materials": [
     "stone",
     "clay",
@@ -401,7 +400,7 @@
     2
    ],
    "height": 2.2,
-   "triangles": 632,
+   "triangles": 1432,
    "materials": [
     "stone",
     "clay",
@@ -429,7 +428,7 @@
     1
    ],
    "height": 0.62,
-   "triangles": 564,
+   "triangles": 974,
    "materials": [
     "stone",
     "earth",
@@ -449,8 +448,7 @@
     ]
    },
    "family": "station",
-   "state": "idle",
-   "overhang": true
+   "state": "idle"
   },
   "asset_forge_working": {
    "file": "models/asset_forge_working.glb",
@@ -459,7 +457,7 @@
     1
    ],
    "height": 0.62,
-   "triangles": 564,
+   "triangles": 842,
    "materials": [
     "stone",
     "earth",
@@ -484,8 +482,7 @@
     ]
    },
    "family": "station",
-   "state": "working",
-   "overhang": true
+   "state": "working"
   },
   "mason_bench_idle": {
    "file": "models/mason_bench_idle.glb",
@@ -494,7 +491,7 @@
     1
    ],
    "height": 1.056,
-   "triangles": 104,
+   "triangles": 240,
    "materials": [
     "wood_dark",
     "wood",
@@ -509,8 +506,8 @@
     2,
     1
    ],
-   "height": 1.063,
-   "triangles": 124,
+   "height": 1.062,
+   "triangles": 260,
    "materials": [
     "wood_dark",
     "wood",
@@ -526,8 +523,8 @@
     2,
     1
    ],
-   "height": 1.13,
-   "triangles": 180,
+   "height": 1.143,
+   "triangles": 508,
    "materials": [
     "wood_dark",
     "wood",
@@ -543,8 +540,8 @@
     2,
     1
    ],
-   "height": 1.13,
-   "triangles": 200,
+   "height": 1.143,
+   "triangles": 528,
    "materials": [
     "wood_dark",
     "wood",
@@ -560,8 +557,8 @@
     1,
     1
    ],
-   "height": 0.197,
-   "triangles": 48,
+   "height": 0.198,
+   "triangles": 176,
    "materials": [
     "clay"
    ],
@@ -575,8 +572,8 @@
     1,
     1
    ],
-   "height": 0.997,
-   "triangles": 240,
+   "height": 0.998,
+   "triangles": 880,
    "materials": [
     "clay"
    ],
@@ -590,8 +587,8 @@
     1,
     1
    ],
-   "height": 1.997,
-   "triangles": 480,
+   "height": 1.998,
+   "triangles": 1760,
    "materials": [
     "clay"
    ],
@@ -605,8 +602,8 @@
     1,
     1
    ],
-   "height": 0.197,
-   "triangles": 48,
+   "height": 0.198,
+   "triangles": 176,
    "materials": [
     "stone"
    ],
@@ -620,8 +617,8 @@
     1,
     1
    ],
-   "height": 0.997,
-   "triangles": 240,
+   "height": 0.998,
+   "triangles": 880,
    "materials": [
     "stone"
    ],
@@ -635,8 +632,8 @@
     1,
     1
    ],
-   "height": 1.997,
-   "triangles": 480,
+   "height": 1.998,
+   "triangles": 1760,
    "materials": [
     "stone"
    ],
@@ -650,11 +647,12 @@
     1,
     1
    ],
-   "height": 0.187,
-   "triangles": 20,
+   "height": 0.198,
+   "triangles": 44,
    "materials": [
     "trunk",
-    "wood"
+    "wood",
+    "wood_dark"
    ],
    "sockets": {},
    "family": "wall",
@@ -666,11 +664,12 @@
     1,
     1
    ],
-   "height": 0.987,
-   "triangles": 100,
+   "height": 0.998,
+   "triangles": 220,
    "materials": [
     "trunk",
-    "wood"
+    "wood",
+    "wood_dark"
    ],
    "sockets": {},
    "family": "wall",
@@ -682,11 +681,12 @@
     1,
     1
    ],
-   "height": 1.987,
-   "triangles": 200,
+   "height": 1.998,
+   "triangles": 440,
    "materials": [
     "trunk",
-    "wood"
+    "wood",
+    "wood_dark"
    ],
    "sockets": {},
    "family": "wall",
@@ -699,9 +699,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 20,
+   "triangles": 68,
    "materials": [
-    "trunk"
+    "trunk",
+    "thatch"
    ],
    "sockets": {},
    "family": "fence",
@@ -720,9 +721,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 52,
+   "triangles": 216,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -742,9 +744,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 52,
+   "triangles": 216,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -764,9 +767,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 84,
+   "triangles": 364,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -786,9 +790,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 52,
+   "triangles": 216,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -808,9 +813,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 84,
+   "triangles": 364,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -830,9 +836,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 84,
+   "triangles": 364,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -852,9 +859,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 116,
+   "triangles": 512,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -874,9 +882,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 52,
+   "triangles": 216,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -896,9 +905,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 84,
+   "triangles": 364,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -918,9 +928,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 84,
+   "triangles": 364,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -940,9 +951,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 116,
+   "triangles": 512,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -962,9 +974,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 84,
+   "triangles": 364,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -984,9 +997,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 116,
+   "triangles": 512,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -1006,9 +1020,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 116,
+   "triangles": 512,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -1028,9 +1043,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 148,
+   "triangles": 660,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -1050,9 +1066,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 20,
+   "triangles": 68,
    "materials": [
-    "trunk"
+    "trunk",
+    "thatch"
    ],
    "sockets": {},
    "family": "fence",
@@ -1071,9 +1088,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 116,
+   "triangles": 164,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -1093,9 +1111,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 116,
+   "triangles": 164,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -1115,9 +1134,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 212,
+   "triangles": 260,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -1137,9 +1157,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 116,
+   "triangles": 164,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -1159,9 +1180,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 212,
+   "triangles": 260,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -1181,9 +1203,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 212,
+   "triangles": 260,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -1203,9 +1226,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 308,
+   "triangles": 356,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -1225,9 +1249,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 116,
+   "triangles": 164,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -1247,9 +1272,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 212,
+   "triangles": 260,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -1269,9 +1295,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 212,
+   "triangles": 260,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -1291,9 +1318,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 308,
+   "triangles": 356,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -1313,9 +1341,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 212,
+   "triangles": 260,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -1335,9 +1364,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 308,
+   "triangles": 356,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -1357,9 +1387,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 308,
+   "triangles": 356,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -1379,9 +1410,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 404,
+   "triangles": 452,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},

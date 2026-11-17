@@ -18,11 +18,13 @@ import time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import common as C  # noqa: E402
 import stations as S  # noqa: E402
+import look2_props_details as D
+import look2_props_shapes as H
 
 TAU = 2 * math.pi
 FRAGMENT = os.path.join(C.MODELS_DIR, "w3d_stations_manifest.json")
 SMOKE = (0.70, 0.70, 0.72)
-MAX_TRIS = 3000
+MAX_TRIS = 6500
 
 # station -> footprint, states, light socket (Blender coords, working state only)
 W3D = {
@@ -132,6 +134,7 @@ def shaft_furnace(m, h, r0, r1, working, front_y, colors=None, lip=True):
     m.box("clay", (0.46, 0.14, 0.08), loc=(0, front_y, 0.34))
     for x in (-0.19, 0.19):
         m.box("clay", (0.09, 0.14, 0.34), loc=(x, front_y, 0.17))
+    D.furnace_courses(m, (h, r0, r1))
 
 
 # --------------------------------------------------------------------------- builders
@@ -353,6 +356,7 @@ def build(entries=None):
             m = C.Model(f"w3d_{name}_{state}")
             fn = globals()[name]
             fn(m, state) if name == "charcoal_clamp" else fn(m, state == "working")
+            H.finish(m)
             w, h = p["fp"]
             if state == "working":
                 m.sockets["light"] = p["light"]

@@ -8,7 +8,8 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import common as C  # noqa: E402
-from stations import basket, pot  # noqa: E402  (shared pot/basket shapes)
+import look2_props_shapes as H
+from stations import basket, pot, log  # noqa: E402  (shared pot/basket shapes)
 
 TAU = 2 * math.pi
 
@@ -39,7 +40,7 @@ def log_pile(m, p):
             x0 = (i - (count - 1) / 2) * r * 2.05
             z = r + layer * r * 1.75
             jy = 0.03 * ((i + layer) % 2)
-            m.rod("trunk", (x0, -ln / 2 + jy, z), (x0, ln / 2 + jy, z), r, segs=6, cap_mat="wood")
+            log(m, (x0, -ln / 2 + jy, z), (x0, ln / 2 + jy, z), r, segs=6)
 
 
 def firewood(m, p):
@@ -141,6 +142,8 @@ def build(entries):
         m = C.Model(iid)
         m.colors.update(p.get("colors", {}))
         (log_pile if iid.startswith("log_pile") else FNS[iid])(m, p)
+        H.finish(m)
+        H.fit(m, (1, 1))
         C.save_static(m, (1, 1), entries, {"family": "item"})
     C.check_budget({k: e for k, e in entries.items() if e.get("family") == "item"}, 20, 150)
     return entries

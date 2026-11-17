@@ -12,6 +12,8 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import common as C  # noqa: E402
+import look2_props_details as D
+import look2_props_shapes as H
 
 TAU = 2 * math.pi
 
@@ -43,19 +45,8 @@ STATIONS = {
 
 # --------------------------------------------------------------------------- shared bits
 
-def pot(m, loc, h=0.32, r=0.15, mat="clay", segs=8, mouth="earth"):
-    x, y, z = loc
-    m.lathe(mat, [(r * 0.6, 0), (r, h * 0.35), (r * 0.95, h * 0.65), (r * 0.62, h * 0.88),
-                  (r * 0.7, h)], loc=(x, y, z), segs=segs, top_mat=mouth)
-
-
-def basket(m, loc, h=0.22, r=0.17, segs=8):
-    m.lathe("thatch", [(r * 0.75, 0), (r, h * 0.8), (r * 1.05, h)], loc=loc, segs=segs,
-            top_mat="earth")
-
-
-def log(m, p0, p1, r=0.06, segs=6):
-    m.rod("trunk", p0, p1, r, segs=segs, cap_mat="wood")
+# These signatures are shared by the building, station and item generators.
+pot, basket, log = H.pot, H.basket, H.log
 
 
 def stone_ring(m, n, rad, size, z=0.0, scale=(1.2, 1.0, 0.8)):
@@ -128,7 +119,8 @@ def knapping_spot(m, p):
 
 def wood_bench(m, p):
     th = p["top_h"]
-    m.box("wood", (1.7, 0.6, 0.1), loc=(0, 0, th), jitter=0.01)
+    for y in (-0.2, 0, 0.2):
+        m.box("wood", (1.7, 0.19, 0.1), loc=(0, y, th), jitter=0.012)
     for x in (-0.7, 0.7):
         for y in (-0.22, 0.22):
             m.rod("wood_dark", (x * 1.08, y * 1.25, 0), (x, y, th - 0.05), 0.045, segs=5)
@@ -391,10 +383,7 @@ def well_body(m, p):
     m.rod("wood_dark", (1.2, 0, 1.6), (1.2, -0.3, 1.6), 0.03, segs=4)  # crank
     m.rod("leather", (0, 0, 1.55), (0, 0, 0.95), 0.012, segs=4)  # rope
     m.lathe("wood", [(0.12, 0), (0.15, 0.22)], loc=(0, 0, 0.75), segs=8, top_mat="metal")
-    for s in (-1, 1):  # little gable roof over the windlass
-        m.box("thatch", (2.6, 0.75, 0.08), loc=(0, s * 0.27, 2.08), rot=(s * -0.72, 0, 0),
-              jitter=0.02)
-    m.rod("wood", (-1.3, 0, 2.32), (1.3, 0, 2.32), 0.04, segs=5)
+    H.thatch(m, (2.7, 1.55, .5), 1.91)
 
 
 def bee_skep(m, p):
@@ -413,7 +402,11 @@ def build(entries):
         m.colors.update(p.get("colors", {}))
         fn = globals()["hearth" if sid.startswith("hearth") else sid]
         fn(m, p)
+        D.detail(m, "hearth" if sid == "hearth_unlit" else sid)
+        H.finish(m)
         w, h = p["fp"]
+        if sid != "door":
+            H.fit(m, (w, h))
         if "light" in p:
             m.sockets["light"] = p["light"]
         if sid != "door":

@@ -7,7 +7,7 @@
     1
    ],
    "height": 0.62,
-   "triangles": 204,
+   "triangles": 236,
    "materials": [
     "trunk",
     "wood",
@@ -30,7 +30,7 @@
     1
    ],
    "height": 0.62,
-   "triangles": 204,
+   "triangles": 236,
    "materials": [
     "trunk",
     "wood",
@@ -54,7 +54,7 @@
     1
    ],
    "height": 0.67,
-   "triangles": 236,
+   "triangles": 292,
    "materials": [
     "trunk",
     "wood",
@@ -84,7 +84,7 @@
     2
    ],
    "height": 2.2,
-   "triangles": 632,
+   "triangles": 1388,
    "materials": [
     "stone",
     "clay",
@@ -117,7 +117,7 @@
     2
    ],
    "height": 2.2,
-   "triangles": 632,
+   "triangles": 1432,
    "materials": [
     "stone",
     "clay",
@@ -145,7 +145,7 @@
     1
    ],
    "height": 0.55,
-   "triangles": 188,
+   "triangles": 400,
    "materials": [
     "stone",
     "wood",
@@ -171,7 +171,7 @@
     1
    ],
    "height": 0.57,
-   "triangles": 224,
+   "triangles": 416,
    "materials": [
     "stone",
     "wood",
@@ -202,7 +202,7 @@
     3
    ],
    "height": 0.869,
-   "triangles": 496,
+   "triangles": 1376,
    "materials": [
     "earth",
     "glow",
@@ -231,7 +231,7 @@
     3
    ],
    "height": 0.869,
-   "triangles": 496,
+   "triangles": 1376,
    "materials": [
     "earth",
     "glow",
@@ -256,7 +256,7 @@
     3
    ],
    "height": 0.217,
-   "triangles": 496,
+   "triangles": 1368,
    "materials": [
     "earth",
     "glow",
@@ -281,7 +281,7 @@
     1
    ],
    "height": 0.62,
-   "triangles": 564,
+   "triangles": 974,
    "materials": [
     "stone",
     "earth",
@@ -301,8 +301,7 @@
     ]
    },
    "family": "station",
-   "state": "idle",
-   "overhang": true
+   "state": "idle"
   },
   "asset_forge_working": {
    "file": "models/asset_forge_working.glb",
@@ -311,7 +310,7 @@
     1
    ],
    "height": 0.62,
-   "triangles": 564,
+   "triangles": 842,
    "materials": [
     "stone",
     "earth",
@@ -336,8 +335,7 @@
     ]
    },
    "family": "station",
-   "state": "working",
-   "overhang": true
+   "state": "working"
   },
   "asset_hearth_lit": {
    "file": "models/asset_hearth_lit.glb",
@@ -346,7 +344,7 @@
     1
    ],
    "height": 0.54,
-   "triangles": 320,
+   "triangles": 538,
    "materials": [
     "stone",
     "earth",
@@ -366,8 +364,7 @@
     ]
    },
    "family": "station",
-   "state": "lit",
-   "overhang": true
+   "state": "lit"
   },
   "asset_hearth_unlit": {
    "file": "models/asset_hearth_unlit.glb",
@@ -375,8 +372,8 @@
     1,
     1
    ],
-   "height": 0.54,
-   "triangles": 320,
+   "height": 0.437,
+   "triangles": 652,
    "materials": [
     "stone",
     "earth",
@@ -400,7 +397,7 @@
     2
    ],
    "height": 1.44,
-   "triangles": 424,
+   "triangles": 1376,
    "materials": [
     "earth",
     "clay",
@@ -430,7 +427,7 @@
     2
    ],
    "height": 1.44,
-   "triangles": 424,
+   "triangles": 1392,
    "materials": [
     "earth",
     "clay",
@@ -456,7 +453,7 @@
     2
    ],
    "height": 1.62,
-   "triangles": 596,
+   "triangles": 1346,
    "materials": [
     "stone",
     "clay",
@@ -489,7 +486,7 @@
     2
    ],
    "height": 1.62,
-   "triangles": 596,
+   "triangles": 1334,
    "materials": [
     "stone",
     "clay",
@@ -557,14 +554,482 @@
    "shoulder_height": 1.7,
    "species": "aurochs"
   },
+  "b_aurochs": {
+   "file": "source/chars/B/aurochs/aurochs.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.992,
+   "triangles": 1990,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down",
+    "run",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "Root",
+    "BackUpper.L",
+    "BackLower.L",
+    "BackUpper.R",
+    "BackLower.R",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "Neck",
+    "Head",
+    "Tail"
+   ],
+   "vat": {
+    "static": "vat/b_aurochs_static.glb",
+    "bin": "vat/b_aurochs_vat.bin",
+    "json": "vat/b_aurochs_vat.json",
+    "atlas": "vat/b_aurochs_atlas.png",
+    "vertex_count": 5970
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "aurochs"
+  },
+  "b_aurochs_lod": {
+   "file": "source/chars/B/aurochs/aurochs.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.879,
+   "triangles": 272,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down",
+    "run",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "Root",
+    "BackUpper.L",
+    "BackLower.L",
+    "BackUpper.R",
+    "BackLower.R",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "Neck",
+    "Head",
+    "Tail"
+   ],
+   "vat": {
+    "static": "vat/b_aurochs_lod_static.glb",
+    "bin": "vat/b_aurochs_lod_vat.bin",
+    "json": "vat/b_aurochs_lod_vat.json",
+    "atlas": "vat/b_aurochs_atlas.png",
+    "vertex_count": 816
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "aurochs"
+  },
+  "b_child": {
+   "file": "source/chars/B/child/child.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.2,
+   "triangles": 2442,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/b_child_static.glb",
+    "bin": "vat/b_child_vat.bin",
+    "json": "vat/b_child_vat.json",
+    "atlas": "vat/b_child_atlas.png",
+    "vertex_count": 7290
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "child"
+  },
+  "b_child_lod": {
+   "file": "source/chars/B/child/child.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.198,
+   "triangles": 273,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/b_child_lod_static.glb",
+    "bin": "vat/b_child_lod_vat.bin",
+    "json": "vat/b_child_lod_vat.json",
+    "atlas": "vat/b_child_atlas.png",
+    "vertex_count": 783
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "child"
+  },
+  "b_goat": {
+   "file": "source/chars/B/goat/goat.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.075,
+   "triangles": 2000,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down",
+    "run",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "Root",
+    "BackUpper.L",
+    "BackLower.L",
+    "BackUpper.R",
+    "BackLower.R",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "Neck",
+    "Head",
+    "Tail"
+   ],
+   "vat": {
+    "static": "vat/b_goat_static.glb",
+    "bin": "vat/b_goat_vat.bin",
+    "json": "vat/b_goat_vat.json",
+    "atlas": "vat/b_goat_atlas.png",
+    "vertex_count": 6000
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "goat"
+  },
+  "b_goat_lod": {
+   "file": "source/chars/B/goat/goat.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.067,
+   "triangles": 264,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "graze",
+    "lie_down",
+    "run",
+    "rest",
+    "attack"
+   ],
+   "bones": [
+    "Root",
+    "BackUpper.L",
+    "BackLower.L",
+    "BackUpper.R",
+    "BackLower.R",
+    "FrontUpper.L",
+    "FrontLower.L",
+    "FrontUpper.R",
+    "FrontLower.R",
+    "Neck",
+    "Head",
+    "Tail"
+   ],
+   "vat": {
+    "static": "vat/b_goat_lod_static.glb",
+    "bin": "vat/b_goat_lod_vat.bin",
+    "json": "vat/b_goat_lod_vat.json",
+    "atlas": "vat/b_goat_atlas.png",
+    "vertex_count": 792
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "goat"
+  },
+  "b_man": {
+   "file": "source/chars/B/man/man.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.7,
+   "triangles": 2436,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/b_man_static.glb",
+    "bin": "vat/b_man_vat.bin",
+    "json": "vat/b_man_vat.json",
+    "atlas": "vat/b_man_atlas.png",
+    "vertex_count": 7272
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "man"
+  },
+  "b_man_lod": {
+   "file": "source/chars/B/man/man.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.7,
+   "triangles": 262,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/b_man_lod_static.glb",
+    "bin": "vat/b_man_lod_vat.bin",
+    "json": "vat/b_man_lod_vat.json",
+    "atlas": "vat/b_man_atlas.png",
+    "vertex_count": 750
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "man"
+  },
+  "b_woman": {
+   "file": "source/chars/B/woman/woman.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.7,
+   "triangles": 2444,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/b_woman_static.glb",
+    "bin": "vat/b_woman_vat.bin",
+    "json": "vat/b_woman_vat.json",
+    "atlas": "vat/b_woman_atlas.png",
+    "vertex_count": 7296
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "woman"
+  },
+  "b_woman_lod": {
+   "file": "source/chars/B/woman/woman.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.697,
+   "triangles": 274,
+   "materials": [],
+   "sockets": {},
+   "family": "character",
+   "animations": [
+    "idle",
+    "walk",
+    "work",
+    "carry",
+    "sleep"
+   ],
+   "bones": [
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm_L",
+    "lower_arm_L",
+    "hand_L",
+    "upper_arm_R",
+    "lower_arm_R",
+    "hand_R",
+    "upper_leg_L",
+    "lower_leg_L",
+    "foot_L",
+    "upper_leg_R",
+    "lower_leg_R",
+    "foot_R"
+   ],
+   "vat": {
+    "static": "vat/b_woman_lod_static.glb",
+    "bin": "vat/b_woman_lod_vat.bin",
+    "json": "vat/b_woman_lod_vat.json",
+    "atlas": "vat/b_woman_atlas.png",
+    "vertex_count": 786
+   },
+   "textured": true,
+   "source_commit": "f0b91f999",
+   "subject": "woman"
+  },
   "basket": {
    "file": "models/basket.glb",
    "footprint": [
     1,
     1
    ],
-   "height": 0.431,
-   "triangles": 74,
+   "height": 0.426,
+   "triangles": 411,
    "materials": [
     "thatch",
     "earth",
@@ -580,7 +1045,7 @@
     1
    ],
    "height": 0.27,
-   "triangles": 200,
+   "triangles": 272,
    "materials": [
     "hide",
     "fur",
@@ -602,7 +1067,7 @@
     1
    ],
    "height": 0.98,
-   "triangles": 348,
+   "triangles": 700,
    "materials": [
     "stone",
     "thatch",
@@ -689,6 +1154,7 @@
     1
    ],
    "height": 0.98,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "stone",
     "thatch",
@@ -706,7 +1172,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "bee_skep",
    "tint_material": "pine",
-   "triangles": 348
+   "triangles": 648
   },
   "building_bee_skep_foundation": {
    "family": "building",
@@ -715,11 +1181,11 @@
     1,
     1
    ],
-   "height": 0.18,
+   "height": 0.16,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "stone",
-    "thatch",
-    "wood_dark"
+    "earth"
    ],
    "piece_count": 1,
    "representation": "authored_piece_assembly",
@@ -733,7 +1199,35 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "bee_skep",
    "tint_material": "pine",
-   "triangles": 348
+   "triangles": 60
+  },
+  "building_bee_skep_frame": {
+   "family": "building",
+   "file": "models/building_bee_skep_frame.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 1.4,
+   "look_revision": "L2-crafted-v1",
+   "materials": [
+    "stone",
+    "wood",
+    "earth"
+   ],
+   "piece_count": 1,
+   "representation": "authored_piece_assembly",
+   "roof_cover": "plank",
+   "roof_style": "Round",
+   "selected_station": null,
+   "sockets": {},
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "source_status": "inert_concept",
+   "stage": "frame",
+   "stage_note": "visual progress preview; not a discrete simulation stage",
+   "template": "bee_skep",
+   "tint_material": "pine",
+   "triangles": 124
   },
   "building_bee_skep_half": {
    "family": "building",
@@ -743,6 +1237,7 @@
     1
    ],
    "height": 0.98,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "stone",
     "thatch",
@@ -760,7 +1255,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "bee_skep",
    "tint_material": "pine",
-   "triangles": 348
+   "triangles": 648
   },
   "building_bloomery_complete": {
    "family": "building",
@@ -769,10 +1264,18 @@
     3,
     3
    ],
-   "height": 1.74,
+   "height": 2.07,
+   "look_revision": "L2-crafted-v1",
    "materials": [
+    "stone",
     "clay",
-    "earth"
+    "wood_dark",
+    "hide",
+    "metal",
+    "earth",
+    "wood",
+    "thatch",
+    "vein"
    ],
    "piece_count": 1,
    "representation": "authored_piece_assembly",
@@ -786,7 +1289,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "bloomery",
    "tint_material": "clay",
-   "triangles": 72
+   "triangles": 1298
   },
   "building_bloomery_foundation": {
    "family": "building",
@@ -795,9 +1298,10 @@
     3,
     3
    ],
-   "height": 0.18,
+   "height": 0.16,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "clay",
+    "stone",
     "earth"
    ],
    "piece_count": 1,
@@ -812,7 +1316,35 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "bloomery",
    "tint_material": "clay",
-   "triangles": 72
+   "triangles": 60
+  },
+  "building_bloomery_frame": {
+   "family": "building",
+   "file": "models/building_bloomery_frame.glb",
+   "footprint": [
+    3,
+    3
+   ],
+   "height": 1.4,
+   "look_revision": "L2-crafted-v1",
+   "materials": [
+    "stone",
+    "wood",
+    "earth"
+   ],
+   "piece_count": 1,
+   "representation": "authored_piece_assembly",
+   "roof_cover": "plank",
+   "roof_style": "Angular",
+   "selected_station": null,
+   "sockets": {},
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "source_status": "connected",
+   "stage": "frame",
+   "stage_note": "visual progress preview; not a discrete simulation stage",
+   "template": "bloomery",
+   "tint_material": "clay",
+   "triangles": 124
   },
   "building_bloomery_half": {
    "family": "building",
@@ -822,9 +1354,17 @@
     3
    ],
    "height": 1.1,
+   "look_revision": "L2-crafted-v1",
    "materials": [
+    "stone",
     "clay",
-    "earth"
+    "wood_dark",
+    "hide",
+    "metal",
+    "earth",
+    "wood",
+    "thatch",
+    "vein"
    ],
    "piece_count": 1,
    "representation": "authored_piece_assembly",
@@ -838,7 +1378,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "bloomery",
    "tint_material": "clay",
-   "triangles": 72
+   "triangles": 1298
   },
   "building_casting_bench_complete": {
    "family": "building",
@@ -847,20 +1387,21 @@
     4,
     4
    ],
-   "height": 3.294,
+   "height": 3.57,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
-    "wood",
-    "earth",
     "stone",
-    "metal",
-    "glow",
+    "earth",
+    "wood_dark",
+    "wood",
+    "trunk",
+    "leather",
     "clay",
-    "wood_dark"
+    "metal",
+    "glow"
    ],
-   "overhang": true,
    "piece_count": 17,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "plank",
    "roof_style": "Angular",
    "selected_station": "casting_bench",
@@ -871,7 +1412,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "casting_bench",
    "tint_material": "oak",
-   "triangles": 2992
+   "triangles": 5488
   },
   "building_casting_bench_foundation": {
    "family": "building",
@@ -880,19 +1421,14 @@
     4,
     4
    ],
-   "height": 0.18,
+   "height": 0.273,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
-    "wood",
-    "earth",
     "stone",
-    "metal",
-    "glow",
-    "clay",
-    "wood_dark"
+    "earth"
    ],
    "piece_count": 17,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "plank",
    "roof_style": "Angular",
    "selected_station": "casting_bench",
@@ -903,7 +1439,37 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "casting_bench",
    "tint_material": "oak",
-   "triangles": 504
+   "triangles": 252
+  },
+  "building_casting_bench_frame": {
+   "family": "building",
+   "file": "models/building_casting_bench_frame.glb",
+   "footprint": [
+    4,
+    4
+   ],
+   "height": 3.47,
+   "look_revision": "L2-crafted-v1",
+   "materials": [
+    "stone",
+    "earth",
+    "wood_dark",
+    "wood",
+    "trunk"
+   ],
+   "piece_count": 17,
+   "representation": "authored_footprint_envelope",
+   "roof_cover": "plank",
+   "roof_style": "Angular",
+   "selected_station": "casting_bench",
+   "sockets": {},
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "source_status": "connected",
+   "stage": "frame",
+   "stage_note": "visual progress preview; not a discrete simulation stage",
+   "template": "casting_bench",
+   "tint_material": "oak",
+   "triangles": 624
   },
   "building_casting_bench_half": {
    "family": "building",
@@ -912,19 +1478,17 @@
     4,
     4
    ],
-   "height": 1.1,
+   "height": 3.57,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
-    "wood",
-    "earth",
     "stone",
-    "metal",
-    "glow",
-    "clay",
-    "wood_dark"
+    "earth",
+    "wood_dark",
+    "wood",
+    "trunk"
    ],
    "piece_count": 17,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "plank",
    "roof_style": "Angular",
    "selected_station": "casting_bench",
@@ -935,7 +1499,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "casting_bench",
    "tint_material": "oak",
-   "triangles": 1604
+   "triangles": 1760
   },
   "building_charcoal_clamp_complete": {
    "family": "building",
@@ -945,6 +1509,7 @@
     3
    ],
    "height": 0.869,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "earth",
     "glow",
@@ -963,7 +1528,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "charcoal_clamp",
    "tint_material": "packed_earth",
-   "triangles": 496
+   "triangles": 1360
   },
   "building_charcoal_clamp_foundation": {
    "family": "building",
@@ -972,12 +1537,11 @@
     3,
     3
    ],
-   "height": 0.18,
+   "height": 0.16,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "earth",
-    "glow",
-    "trunk",
-    "wood"
+    "stone",
+    "earth"
    ],
    "piece_count": 1,
    "representation": "authored_piece_assembly",
@@ -991,7 +1555,35 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "charcoal_clamp",
    "tint_material": "packed_earth",
-   "triangles": 496
+   "triangles": 60
+  },
+  "building_charcoal_clamp_frame": {
+   "family": "building",
+   "file": "models/building_charcoal_clamp_frame.glb",
+   "footprint": [
+    3,
+    3
+   ],
+   "height": 1.4,
+   "look_revision": "L2-crafted-v1",
+   "materials": [
+    "stone",
+    "wood",
+    "earth"
+   ],
+   "piece_count": 1,
+   "representation": "authored_piece_assembly",
+   "roof_cover": "plank",
+   "roof_style": "Angular",
+   "selected_station": null,
+   "sockets": {},
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "source_status": "connected",
+   "stage": "frame",
+   "stage_note": "visual progress preview; not a discrete simulation stage",
+   "template": "charcoal_clamp",
+   "tint_material": "packed_earth",
+   "triangles": 124
   },
   "building_charcoal_clamp_half": {
    "family": "building",
@@ -1001,6 +1593,7 @@
     3
    ],
    "height": 0.869,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "earth",
     "glow",
@@ -1019,7 +1612,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "charcoal_clamp",
    "tint_material": "packed_earth",
-   "triangles": 496
+   "triangles": 1360
   },
   "building_chief_hall_complete": {
    "family": "building",
@@ -1028,15 +1621,17 @@
     5,
     5
    ],
-   "height": 3.296,
+   "height": 3.565,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "earth",
     "wood",
     "clay",
     "wood_dark",
-    "horn"
+    "horn",
+    "trunk",
+    "leather"
    ],
-   "overhang": true,
    "piece_count": 1,
    "representation": "inert_art_concept",
    "roof_cover": "plank",
@@ -1049,7 +1644,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "chief_hall",
    "tint_material": "clay",
-   "triangles": 1072
+   "triangles": 4524
   },
   "building_chief_hall_foundation": {
    "family": "building",
@@ -1059,6 +1654,7 @@
     5
    ],
    "height": 0.22,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "earth",
     "stone"
@@ -1077,6 +1673,35 @@
    "tint_material": "clay",
    "triangles": 60
   },
+  "building_chief_hall_frame": {
+   "family": "building",
+   "file": "models/building_chief_hall_frame.glb",
+   "footprint": [
+    5,
+    5
+   ],
+   "height": 3.47,
+   "look_revision": "L2-crafted-v1",
+   "materials": [
+    "earth",
+    "wood",
+    "wood_dark",
+    "trunk"
+   ],
+   "piece_count": 1,
+   "representation": "inert_art_concept",
+   "roof_cover": "plank",
+   "roof_style": "Angular",
+   "selected_station": null,
+   "sockets": {},
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "source_status": "inert_concept",
+   "stage": "frame",
+   "stage_note": "visual progress preview; not a discrete simulation stage",
+   "template": "chief_hall",
+   "tint_material": "clay",
+   "triangles": 264
+  },
   "building_chief_hall_half": {
    "family": "building",
    "file": "models/building_chief_hall_half.glb",
@@ -1084,13 +1709,15 @@
     5,
     5
    ],
-   "height": 1.447,
+   "height": 3.565,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "earth",
     "wood",
     "clay",
     "wood_dark",
-    "horn"
+    "horn",
+    "trunk"
    ],
    "piece_count": 1,
    "representation": "inert_art_concept",
@@ -1104,7 +1731,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "chief_hall",
    "tint_material": "clay",
-   "triangles": 412
+   "triangles": 1472
   },
   "building_cut_stone_house_complete": {
    "family": "building",
@@ -1113,18 +1740,20 @@
     4,
     4
    ],
-   "height": 3.294,
+   "height": 3.57,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "stone",
-    "wood",
     "earth",
+    "wood_dark",
+    "wood",
+    "trunk",
+    "leather",
     "hide",
-    "fur",
-    "leather"
+    "fur"
    ],
-   "overhang": true,
    "piece_count": 18,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "plank",
    "roof_style": "Angular",
    "selected_station": null,
@@ -1135,7 +1764,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "cut_stone_house",
    "tint_material": "granite",
-   "triangles": 6556
+   "triangles": 5580
   },
   "building_cut_stone_house_foundation": {
    "family": "building",
@@ -1144,17 +1773,14 @@
     4,
     4
    ],
-   "height": 0.18,
+   "height": 0.273,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "stone",
-    "wood",
-    "earth",
-    "hide",
-    "fur",
-    "leather"
+    "earth"
    ],
    "piece_count": 18,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "plank",
    "roof_style": "Angular",
    "selected_station": null,
@@ -1165,7 +1791,37 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "cut_stone_house",
    "tint_material": "granite",
-   "triangles": 988
+   "triangles": 252
+  },
+  "building_cut_stone_house_frame": {
+   "family": "building",
+   "file": "models/building_cut_stone_house_frame.glb",
+   "footprint": [
+    4,
+    4
+   ],
+   "height": 3.47,
+   "look_revision": "L2-crafted-v1",
+   "materials": [
+    "stone",
+    "earth",
+    "wood_dark",
+    "wood",
+    "trunk"
+   ],
+   "piece_count": 18,
+   "representation": "authored_footprint_envelope",
+   "roof_cover": "plank",
+   "roof_style": "Angular",
+   "selected_station": null,
+   "sockets": {},
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "source_status": "connected",
+   "stage": "frame",
+   "stage_note": "visual progress preview; not a discrete simulation stage",
+   "template": "cut_stone_house",
+   "tint_material": "granite",
+   "triangles": 624
   },
   "building_cut_stone_house_half": {
    "family": "building",
@@ -1174,17 +1830,17 @@
     4,
     4
    ],
-   "height": 1.1,
+   "height": 3.569,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "stone",
-    "wood",
     "earth",
-    "hide",
-    "fur",
-    "leather"
+    "wood_dark",
+    "wood",
+    "trunk"
    ],
    "piece_count": 18,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "plank",
    "roof_style": "Angular",
    "selected_station": null,
@@ -1195,7 +1851,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "cut_stone_house",
    "tint_material": "granite",
-   "triangles": 3628
+   "triangles": 1840
   },
   "building_drying_shed_complete": {
    "family": "building",
@@ -1204,17 +1860,21 @@
     4,
     4
    ],
-   "height": 3.25,
+   "height": 3.562,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
-    "wood",
+    "stone",
     "earth",
-    "hide",
+    "wood_dark",
+    "wood",
+    "trunk",
+    "thatch",
     "leather",
-    "thatch"
+    "clay",
+    "hide"
    ],
    "piece_count": 17,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "thatch",
    "roof_style": "Round",
    "selected_station": "drying_rack",
@@ -1225,7 +1885,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "drying_shed",
    "tint_material": "oak",
-   "triangles": 2732
+   "triangles": 6000
   },
   "building_drying_shed_foundation": {
    "family": "building",
@@ -1234,16 +1894,14 @@
     4,
     4
    ],
-   "height": 0.18,
+   "height": 0.272,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
-    "wood",
-    "earth",
-    "hide",
-    "leather"
+    "stone",
+    "earth"
    ],
    "piece_count": 17,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "thatch",
    "roof_style": "Round",
    "selected_station": "drying_rack",
@@ -1254,7 +1912,37 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "drying_shed",
    "tint_material": "oak",
-   "triangles": 488
+   "triangles": 252
+  },
+  "building_drying_shed_frame": {
+   "family": "building",
+   "file": "models/building_drying_shed_frame.glb",
+   "footprint": [
+    4,
+    4
+   ],
+   "height": 3.47,
+   "look_revision": "L2-crafted-v1",
+   "materials": [
+    "stone",
+    "earth",
+    "wood_dark",
+    "wood",
+    "trunk"
+   ],
+   "piece_count": 17,
+   "representation": "authored_footprint_envelope",
+   "roof_cover": "thatch",
+   "roof_style": "Round",
+   "selected_station": "drying_rack",
+   "sockets": {},
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "source_status": "connected",
+   "stage": "frame",
+   "stage_note": "visual progress preview; not a discrete simulation stage",
+   "template": "drying_shed",
+   "tint_material": "oak",
+   "triangles": 624
   },
   "building_drying_shed_half": {
    "family": "building",
@@ -1263,16 +1951,18 @@
     4,
     4
    ],
-   "height": 1.1,
+   "height": 3.561,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
-    "wood",
+    "stone",
     "earth",
-    "hide",
-    "leather"
+    "wood_dark",
+    "wood",
+    "trunk",
+    "thatch"
    ],
    "piece_count": 17,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "thatch",
    "roof_style": "Round",
    "selected_station": "drying_rack",
@@ -1283,7 +1973,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "drying_shed",
    "tint_material": "oak",
-   "triangles": 1588
+   "triangles": 1760
   },
   "building_forge_complete": {
    "family": "building",
@@ -1292,16 +1982,21 @@
     4,
     4
    ],
-   "height": 3.294,
+   "height": 3.57,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
-    "wood",
+    "stone",
     "earth",
-    "stone"
+    "wood_dark",
+    "wood",
+    "trunk",
+    "leather",
+    "clay",
+    "hide",
+    "metal"
    ],
-   "overhang": true,
    "piece_count": 17,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "plank",
    "roof_style": "Angular",
    "selected_station": "forge",
@@ -1312,7 +2007,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "forge",
    "tint_material": "granite",
-   "triangles": 2808
+   "triangles": 5734
   },
   "building_forge_foundation": {
    "family": "building",
@@ -1321,15 +2016,14 @@
     4,
     4
    ],
-   "height": 0.18,
+   "height": 0.273,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
-    "wood",
-    "earth",
-    "stone"
+    "stone",
+    "earth"
    ],
    "piece_count": 17,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "plank",
    "roof_style": "Angular",
    "selected_station": "forge",
@@ -1340,7 +2034,37 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "forge",
    "tint_material": "granite",
-   "triangles": 320
+   "triangles": 252
+  },
+  "building_forge_frame": {
+   "family": "building",
+   "file": "models/building_forge_frame.glb",
+   "footprint": [
+    4,
+    4
+   ],
+   "height": 3.47,
+   "look_revision": "L2-crafted-v1",
+   "materials": [
+    "stone",
+    "earth",
+    "wood_dark",
+    "wood",
+    "trunk"
+   ],
+   "piece_count": 17,
+   "representation": "authored_footprint_envelope",
+   "roof_cover": "plank",
+   "roof_style": "Angular",
+   "selected_station": "forge",
+   "sockets": {},
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "source_status": "connected",
+   "stage": "frame",
+   "stage_note": "visual progress preview; not a discrete simulation stage",
+   "template": "forge",
+   "tint_material": "granite",
+   "triangles": 624
   },
   "building_forge_half": {
    "family": "building",
@@ -1349,15 +2073,17 @@
     4,
     4
    ],
-   "height": 1.1,
+   "height": 3.57,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
-    "wood",
+    "stone",
     "earth",
-    "stone"
+    "wood_dark",
+    "wood",
+    "trunk"
    ],
    "piece_count": 17,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "plank",
    "roof_style": "Angular",
    "selected_station": "forge",
@@ -1368,7 +2094,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "forge",
    "tint_material": "granite",
-   "triangles": 1420
+   "triangles": 1760
   },
   "building_granary_complete": {
    "family": "building",
@@ -1377,15 +2103,19 @@
     4,
     4
    ],
-   "height": 3.25,
+   "height": 3.882,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
-    "wood",
+    "stone",
     "earth",
-    "thatch"
+    "wood_dark",
+    "wood",
+    "trunk",
+    "thatch",
+    "leather"
    ],
    "piece_count": 16,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "thatch",
    "roof_style": "Round",
    "selected_station": null,
@@ -1396,7 +2126,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "granary",
    "tint_material": "oak",
-   "triangles": 2524
+   "triangles": 4740
   },
   "building_granary_foundation": {
    "family": "building",
@@ -1405,14 +2135,14 @@
     4,
     4
    ],
-   "height": 0.18,
+   "height": 0.272,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
-    "wood",
+    "stone",
     "earth"
    ],
    "piece_count": 16,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "thatch",
    "roof_style": "Round",
    "selected_station": null,
@@ -1423,7 +2153,37 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "granary",
    "tint_material": "oak",
-   "triangles": 280
+   "triangles": 252
+  },
+  "building_granary_frame": {
+   "family": "building",
+   "file": "models/building_granary_frame.glb",
+   "footprint": [
+    4,
+    4
+   ],
+   "height": 3.47,
+   "look_revision": "L2-crafted-v1",
+   "materials": [
+    "stone",
+    "earth",
+    "wood_dark",
+    "wood",
+    "trunk"
+   ],
+   "piece_count": 16,
+   "representation": "authored_footprint_envelope",
+   "roof_cover": "thatch",
+   "roof_style": "Round",
+   "selected_station": null,
+   "sockets": {},
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "source_status": "connected",
+   "stage": "frame",
+   "stage_note": "visual progress preview; not a discrete simulation stage",
+   "template": "granary",
+   "tint_material": "oak",
+   "triangles": 624
   },
   "building_granary_half": {
    "family": "building",
@@ -1432,14 +2192,18 @@
     4,
     4
    ],
-   "height": 1.1,
+   "height": 3.561,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
+    "stone",
+    "earth",
+    "wood_dark",
     "wood",
-    "earth"
+    "trunk",
+    "thatch"
    ],
    "piece_count": 16,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "thatch",
    "roof_style": "Round",
    "selected_station": null,
@@ -1450,7 +2214,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "granary",
    "tint_material": "oak",
-   "triangles": 1380
+   "triangles": 1760
   },
   "building_hut_complete": {
    "family": "building",
@@ -1459,11 +2223,14 @@
     3,
     3
    ],
-   "height": 3.45,
+   "height": 3.22,
+   "look_revision": "L2-crafted-v1",
    "materials": [
+    "earth",
+    "stone",
+    "wood_dark",
     "wood",
-    "thatch",
-    "wood_dark"
+    "thatch"
    ],
    "piece_count": 1,
    "representation": "authored_piece_assembly",
@@ -1477,7 +2244,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "hut",
    "tint_material": "oak",
-   "triangles": 100
+   "triangles": 3424
   },
   "building_hut_foundation": {
    "family": "building",
@@ -1486,10 +2253,11 @@
     3,
     3
    ],
-   "height": 0.18,
+   "height": 0.243,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "wood",
-    "wood_dark"
+    "earth",
+    "stone"
    ],
    "piece_count": 1,
    "representation": "authored_piece_assembly",
@@ -1503,7 +2271,36 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "hut",
    "tint_material": "oak",
-   "triangles": 56
+   "triangles": 220
+  },
+  "building_hut_frame": {
+   "family": "building",
+   "file": "models/building_hut_frame.glb",
+   "footprint": [
+    3,
+    3
+   ],
+   "height": 3.08,
+   "look_revision": "L2-crafted-v1",
+   "materials": [
+    "earth",
+    "stone",
+    "wood_dark",
+    "wood"
+   ],
+   "piece_count": 1,
+   "representation": "authored_piece_assembly",
+   "roof_cover": "thatch",
+   "roof_style": "Round",
+   "selected_station": null,
+   "sockets": {},
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "source_status": "connected",
+   "stage": "frame",
+   "stage_note": "visual progress preview; not a discrete simulation stage",
+   "template": "hut",
+   "tint_material": "oak",
+   "triangles": 740
   },
   "building_hut_half": {
    "family": "building",
@@ -1512,10 +2309,14 @@
     3,
     3
    ],
-   "height": 1.1,
+   "height": 3.08,
+   "look_revision": "L2-crafted-v1",
    "materials": [
+    "earth",
+    "stone",
+    "wood_dark",
     "wood",
-    "wood_dark"
+    "thatch"
    ],
    "piece_count": 1,
    "representation": "authored_piece_assembly",
@@ -1529,7 +2330,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "hut",
    "tint_material": "oak",
-   "triangles": 56
+   "triangles": 2020
   },
   "building_kiln_complete": {
    "family": "building",
@@ -1539,6 +2340,7 @@
     3
    ],
    "height": 1.44,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "earth",
     "clay",
@@ -1558,7 +2360,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "kiln",
    "tint_material": "clay",
-   "triangles": 424
+   "triangles": 1304
   },
   "building_kiln_foundation": {
    "family": "building",
@@ -1567,13 +2369,11 @@
     3,
     3
    ],
-   "height": 0.18,
+   "height": 0.16,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "earth",
-    "clay",
-    "glow",
-    "trunk",
-    "wood"
+    "stone",
+    "earth"
    ],
    "piece_count": 1,
    "representation": "authored_piece_assembly",
@@ -1587,7 +2387,35 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "kiln",
    "tint_material": "clay",
-   "triangles": 424
+   "triangles": 60
+  },
+  "building_kiln_frame": {
+   "family": "building",
+   "file": "models/building_kiln_frame.glb",
+   "footprint": [
+    3,
+    3
+   ],
+   "height": 1.4,
+   "look_revision": "L2-crafted-v1",
+   "materials": [
+    "stone",
+    "wood",
+    "earth"
+   ],
+   "piece_count": 1,
+   "representation": "authored_piece_assembly",
+   "roof_cover": "thatch",
+   "roof_style": "Round",
+   "selected_station": null,
+   "sockets": {},
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "source_status": "connected",
+   "stage": "frame",
+   "stage_note": "visual progress preview; not a discrete simulation stage",
+   "template": "kiln",
+   "tint_material": "clay",
+   "triangles": 124
   },
   "building_kiln_half": {
    "family": "building",
@@ -1597,6 +2425,7 @@
     3
    ],
    "height": 1.1,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "earth",
     "clay",
@@ -1616,7 +2445,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "kiln",
    "tint_material": "clay",
-   "triangles": 424
+   "triangles": 1304
   },
   "building_log_house_complete": {
    "family": "building",
@@ -1625,18 +2454,21 @@
     4,
     4
    ],
-   "height": 3.25,
+   "height": 3.562,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
-    "wood",
+    "stone",
     "earth",
-    "hide",
-    "fur",
+    "wood_dark",
+    "wood",
+    "trunk",
+    "thatch",
     "leather",
-    "thatch"
+    "hide",
+    "fur"
    ],
    "piece_count": 18,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "thatch",
    "roof_style": "Round",
    "selected_station": null,
@@ -1647,7 +2479,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "log_house",
    "tint_material": "oak",
-   "triangles": 2924
+   "triangles": 5160
   },
   "building_log_house_foundation": {
    "family": "building",
@@ -1656,17 +2488,14 @@
     4,
     4
    ],
-   "height": 0.18,
+   "height": 0.272,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
-    "wood",
-    "earth",
-    "hide",
-    "fur",
-    "leather"
+    "stone",
+    "earth"
    ],
    "piece_count": 18,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "thatch",
    "roof_style": "Round",
    "selected_station": null,
@@ -1677,7 +2506,37 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "log_house",
    "tint_material": "oak",
-   "triangles": 680
+   "triangles": 252
+  },
+  "building_log_house_frame": {
+   "family": "building",
+   "file": "models/building_log_house_frame.glb",
+   "footprint": [
+    4,
+    4
+   ],
+   "height": 3.47,
+   "look_revision": "L2-crafted-v1",
+   "materials": [
+    "stone",
+    "earth",
+    "wood_dark",
+    "wood",
+    "trunk"
+   ],
+   "piece_count": 18,
+   "representation": "authored_footprint_envelope",
+   "roof_cover": "thatch",
+   "roof_style": "Round",
+   "selected_station": null,
+   "sockets": {},
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "source_status": "connected",
+   "stage": "frame",
+   "stage_note": "visual progress preview; not a discrete simulation stage",
+   "template": "log_house",
+   "tint_material": "oak",
+   "triangles": 624
   },
   "building_log_house_half": {
    "family": "building",
@@ -1686,17 +2545,18 @@
     4,
     4
    ],
-   "height": 1.1,
+   "height": 3.561,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
-    "wood",
+    "stone",
     "earth",
-    "hide",
-    "fur",
-    "leather"
+    "wood_dark",
+    "wood",
+    "trunk",
+    "thatch"
    ],
    "piece_count": 18,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "thatch",
    "roof_style": "Round",
    "selected_station": null,
@@ -1707,7 +2567,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "log_house",
    "tint_material": "oak",
-   "triangles": 1780
+   "triangles": 1760
   },
   "building_market_complete": {
    "family": "building",
@@ -1716,15 +2576,17 @@
     5,
     5
    ],
-   "height": 3.296,
+   "height": 3.565,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "earth",
     "wood",
     "wood_dark",
     "fruit",
-    "cloth"
+    "cloth",
+    "trunk",
+    "leather"
    ],
-   "overhang": true,
    "piece_count": 1,
    "representation": "inert_art_concept",
    "roof_cover": "plank",
@@ -1737,7 +2599,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "market",
    "tint_material": "oak",
-   "triangles": 644
+   "triangles": 2908
   },
   "building_market_foundation": {
    "family": "building",
@@ -1747,6 +2609,7 @@
     5
    ],
    "height": 0.22,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "earth",
     "stone"
@@ -1765,6 +2628,35 @@
    "tint_material": "oak",
    "triangles": 60
   },
+  "building_market_frame": {
+   "family": "building",
+   "file": "models/building_market_frame.glb",
+   "footprint": [
+    5,
+    5
+   ],
+   "height": 3.47,
+   "look_revision": "L2-crafted-v1",
+   "materials": [
+    "earth",
+    "wood",
+    "wood_dark",
+    "trunk"
+   ],
+   "piece_count": 1,
+   "representation": "inert_art_concept",
+   "roof_cover": "plank",
+   "roof_style": "Angular",
+   "selected_station": null,
+   "sockets": {},
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "source_status": "inert_concept",
+   "stage": "frame",
+   "stage_note": "visual progress preview; not a discrete simulation stage",
+   "template": "market",
+   "tint_material": "oak",
+   "triangles": 264
+  },
   "building_market_half": {
    "family": "building",
    "file": "models/building_market_half.glb",
@@ -1772,13 +2664,15 @@
     5,
     5
    ],
-   "height": 1.175,
+   "height": 3.565,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "earth",
     "wood",
     "wood_dark",
     "fruit",
-    "cloth"
+    "cloth",
+    "trunk"
    ],
    "piece_count": 1,
    "representation": "inert_art_concept",
@@ -1792,7 +2686,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "market",
    "tint_material": "oak",
-   "triangles": 284
+   "triangles": 816
   },
   "building_mud_brick_house_complete": {
    "family": "building",
@@ -1801,18 +2695,21 @@
     4,
     4
    ],
-   "height": 3.294,
+   "height": 3.57,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "clay",
-    "wood",
+    "stone",
     "earth",
+    "wood_dark",
+    "wood",
+    "trunk",
+    "leather",
+    "clay",
     "hide",
-    "fur",
-    "leather"
+    "fur"
    ],
-   "overhang": true,
    "piece_count": 18,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "plank",
    "roof_style": "Angular",
    "selected_station": null,
@@ -1823,7 +2720,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "mud_brick_house",
    "tint_material": "mud_brick",
-   "triangles": 6556
+   "triangles": 5580
   },
   "building_mud_brick_house_foundation": {
    "family": "building",
@@ -1832,17 +2729,14 @@
     4,
     4
    ],
-   "height": 0.18,
+   "height": 0.273,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "clay",
-    "wood",
-    "earth",
-    "hide",
-    "fur",
-    "leather"
+    "stone",
+    "earth"
    ],
    "piece_count": 18,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "plank",
    "roof_style": "Angular",
    "selected_station": null,
@@ -1853,7 +2747,37 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "mud_brick_house",
    "tint_material": "mud_brick",
-   "triangles": 988
+   "triangles": 252
+  },
+  "building_mud_brick_house_frame": {
+   "family": "building",
+   "file": "models/building_mud_brick_house_frame.glb",
+   "footprint": [
+    4,
+    4
+   ],
+   "height": 3.47,
+   "look_revision": "L2-crafted-v1",
+   "materials": [
+    "stone",
+    "earth",
+    "wood_dark",
+    "wood",
+    "trunk"
+   ],
+   "piece_count": 18,
+   "representation": "authored_footprint_envelope",
+   "roof_cover": "plank",
+   "roof_style": "Angular",
+   "selected_station": null,
+   "sockets": {},
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "source_status": "connected",
+   "stage": "frame",
+   "stage_note": "visual progress preview; not a discrete simulation stage",
+   "template": "mud_brick_house",
+   "tint_material": "mud_brick",
+   "triangles": 624
   },
   "building_mud_brick_house_half": {
    "family": "building",
@@ -1862,17 +2786,18 @@
     4,
     4
    ],
-   "height": 1.1,
+   "height": 3.57,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "clay",
-    "wood",
+    "stone",
     "earth",
-    "hide",
-    "fur",
-    "leather"
+    "wood_dark",
+    "wood",
+    "trunk",
+    "clay"
    ],
    "piece_count": 18,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "plank",
    "roof_style": "Angular",
    "selected_station": null,
@@ -1883,7 +2808,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "mud_brick_house",
    "tint_material": "mud_brick",
-   "triangles": 3628
+   "triangles": 1840
   },
   "building_oven_house_complete": {
    "family": "building",
@@ -1892,19 +2817,21 @@
     4,
     4
    ],
-   "height": 3.25,
+   "height": 3.562,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
-    "wood",
-    "earth",
     "stone",
-    "clay",
+    "earth",
     "wood_dark",
-    "glow",
-    "thatch"
+    "wood",
+    "trunk",
+    "thatch",
+    "leather",
+    "clay",
+    "glow"
    ],
    "piece_count": 17,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "thatch",
    "roof_style": "Round",
    "selected_station": "clay_oven",
@@ -1915,7 +2842,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "oven_house",
    "tint_material": "clay",
-   "triangles": 2740
+   "triangles": 6164
   },
   "building_oven_house_foundation": {
    "family": "building",
@@ -1924,18 +2851,14 @@
     4,
     4
    ],
-   "height": 0.18,
+   "height": 0.273,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
-    "wood",
-    "earth",
     "stone",
-    "clay",
-    "wood_dark",
-    "glow"
+    "earth"
    ],
    "piece_count": 17,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "thatch",
    "roof_style": "Round",
    "selected_station": "clay_oven",
@@ -1946,7 +2869,37 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "oven_house",
    "tint_material": "clay",
-   "triangles": 496
+   "triangles": 252
+  },
+  "building_oven_house_frame": {
+   "family": "building",
+   "file": "models/building_oven_house_frame.glb",
+   "footprint": [
+    4,
+    4
+   ],
+   "height": 3.47,
+   "look_revision": "L2-crafted-v1",
+   "materials": [
+    "stone",
+    "earth",
+    "wood_dark",
+    "wood",
+    "trunk"
+   ],
+   "piece_count": 17,
+   "representation": "authored_footprint_envelope",
+   "roof_cover": "thatch",
+   "roof_style": "Round",
+   "selected_station": "clay_oven",
+   "sockets": {},
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "source_status": "connected",
+   "stage": "frame",
+   "stage_note": "visual progress preview; not a discrete simulation stage",
+   "template": "oven_house",
+   "tint_material": "clay",
+   "triangles": 624
   },
   "building_oven_house_half": {
    "family": "building",
@@ -1955,18 +2908,18 @@
     4,
     4
    ],
-   "height": 1.1,
+   "height": 3.561,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
-    "wood",
-    "earth",
     "stone",
-    "clay",
+    "earth",
     "wood_dark",
-    "glow"
+    "wood",
+    "trunk",
+    "thatch"
    ],
    "piece_count": 17,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "thatch",
    "roof_style": "Round",
    "selected_station": "clay_oven",
@@ -1977,7 +2930,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "oven_house",
    "tint_material": "clay",
-   "triangles": 1596
+   "triangles": 1760
   },
   "building_pen_complete": {
    "family": "building",
@@ -1987,8 +2940,10 @@
     5
    ],
    "height": 2.2,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "piece_count": 16,
@@ -2003,7 +2958,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "pen",
    "tint_material": "oak",
-   "triangles": 1272
+   "triangles": 5472
   },
   "building_pen_foundation": {
    "family": "building",
@@ -2012,10 +2967,11 @@
     5,
     5
    ],
-   "height": 0.18,
+   "height": 0.16,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
-    "wood"
+    "stone",
+    "earth"
    ],
    "piece_count": 16,
    "representation": "authored_piece_assembly",
@@ -2029,7 +2985,35 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "pen",
    "tint_material": "oak",
-   "triangles": 1272
+   "triangles": 60
+  },
+  "building_pen_frame": {
+   "family": "building",
+   "file": "models/building_pen_frame.glb",
+   "footprint": [
+    5,
+    5
+   ],
+   "height": 1.4,
+   "look_revision": "L2-crafted-v1",
+   "materials": [
+    "stone",
+    "wood",
+    "earth"
+   ],
+   "piece_count": 16,
+   "representation": "authored_piece_assembly",
+   "roof_cover": "thatch",
+   "roof_style": "Round",
+   "selected_station": null,
+   "sockets": {},
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "source_status": "connected",
+   "stage": "frame",
+   "stage_note": "visual progress preview; not a discrete simulation stage",
+   "template": "pen",
+   "tint_material": "oak",
+   "triangles": 124
   },
   "building_pen_half": {
    "family": "building",
@@ -2039,8 +3023,10 @@
     5
    ],
    "height": 1.1,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "piece_count": 16,
@@ -2055,7 +3041,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "pen",
    "tint_material": "oak",
-   "triangles": 1272
+   "triangles": 5472
   },
   "building_shrine_complete": {
    "family": "building",
@@ -2064,15 +3050,18 @@
     4,
     4
    ],
-   "height": 3.294,
+   "height": 3.57,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "earth",
     "wood",
     "stone",
     "clay",
-    "horn"
+    "horn",
+    "wood_dark",
+    "trunk",
+    "leather"
    ],
-   "overhang": true,
    "piece_count": 1,
    "representation": "inert_art_concept",
    "roof_cover": "plank",
@@ -2085,7 +3074,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "shrine",
    "tint_material": "clay",
-   "triangles": 600
+   "triangles": 2504
   },
   "building_shrine_foundation": {
    "family": "building",
@@ -2095,6 +3084,7 @@
     4
    ],
    "height": 0.22,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "earth",
     "stone"
@@ -2113,6 +3103,35 @@
    "tint_material": "clay",
    "triangles": 60
   },
+  "building_shrine_frame": {
+   "family": "building",
+   "file": "models/building_shrine_frame.glb",
+   "footprint": [
+    4,
+    4
+   ],
+   "height": 3.47,
+   "look_revision": "L2-crafted-v1",
+   "materials": [
+    "earth",
+    "wood",
+    "wood_dark",
+    "trunk"
+   ],
+   "piece_count": 1,
+   "representation": "inert_art_concept",
+   "roof_cover": "plank",
+   "roof_style": "Angular",
+   "selected_station": null,
+   "sockets": {},
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "source_status": "inert_concept",
+   "stage": "frame",
+   "stage_note": "visual progress preview; not a discrete simulation stage",
+   "template": "shrine",
+   "tint_material": "clay",
+   "triangles": 264
+  },
   "building_shrine_half": {
    "family": "building",
    "file": "models/building_shrine_half.glb",
@@ -2120,13 +3139,16 @@
     4,
     4
    ],
-   "height": 1.22,
+   "height": 3.57,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "earth",
     "wood",
     "stone",
     "clay",
-    "horn"
+    "horn",
+    "wood_dark",
+    "trunk"
    ],
    "piece_count": 1,
    "representation": "inert_art_concept",
@@ -2140,7 +3162,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "shrine",
    "tint_material": "clay",
-   "triangles": 312
+   "triangles": 772
   },
   "building_smelter_complete": {
    "family": "building",
@@ -2149,21 +3171,21 @@
     4,
     4
    ],
-   "height": 3.294,
+   "height": 3.57,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
-    "wood",
-    "earth",
     "stone",
+    "earth",
+    "wood_dark",
+    "wood",
+    "trunk",
+    "leather",
     "clay",
     "glow",
-    "leather",
-    "thatch",
-    "wood_dark"
+    "thatch"
    ],
-   "overhang": true,
    "piece_count": 17,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "plank",
    "roof_style": "Angular",
    "selected_station": "smelter",
@@ -2174,7 +3196,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "smelter",
    "tint_material": "clay",
-   "triangles": 3364
+   "triangles": 6062
   },
   "building_smelter_foundation": {
    "family": "building",
@@ -2183,20 +3205,14 @@
     4,
     4
    ],
-   "height": 0.18,
+   "height": 0.273,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
-    "wood",
-    "earth",
     "stone",
-    "clay",
-    "glow",
-    "leather",
-    "thatch",
-    "wood_dark"
+    "earth"
    ],
    "piece_count": 17,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "plank",
    "roof_style": "Angular",
    "selected_station": "smelter",
@@ -2207,7 +3223,37 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "smelter",
    "tint_material": "clay",
-   "triangles": 876
+   "triangles": 252
+  },
+  "building_smelter_frame": {
+   "family": "building",
+   "file": "models/building_smelter_frame.glb",
+   "footprint": [
+    4,
+    4
+   ],
+   "height": 3.47,
+   "look_revision": "L2-crafted-v1",
+   "materials": [
+    "stone",
+    "earth",
+    "wood_dark",
+    "wood",
+    "trunk"
+   ],
+   "piece_count": 17,
+   "representation": "authored_footprint_envelope",
+   "roof_cover": "plank",
+   "roof_style": "Angular",
+   "selected_station": "smelter",
+   "sockets": {},
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "source_status": "connected",
+   "stage": "frame",
+   "stage_note": "visual progress preview; not a discrete simulation stage",
+   "template": "smelter",
+   "tint_material": "clay",
+   "triangles": 624
   },
   "building_smelter_half": {
    "family": "building",
@@ -2216,20 +3262,17 @@
     4,
     4
    ],
-   "height": 1.1,
+   "height": 3.57,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
-    "wood",
-    "earth",
     "stone",
-    "clay",
-    "glow",
-    "leather",
-    "thatch",
-    "wood_dark"
+    "earth",
+    "wood_dark",
+    "wood",
+    "trunk"
    ],
    "piece_count": 17,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "plank",
    "roof_style": "Angular",
    "selected_station": "smelter",
@@ -2240,7 +3283,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "smelter",
    "tint_material": "clay",
-   "triangles": 1976
+   "triangles": 1760
   },
   "building_smokehouse_complete": {
    "family": "building",
@@ -2249,17 +3292,21 @@
     4,
     4
    ],
-   "height": 3.25,
+   "height": 3.562,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
-    "wood",
+    "stone",
     "earth",
-    "hide",
+    "wood_dark",
+    "wood",
+    "trunk",
+    "thatch",
     "leather",
-    "thatch"
+    "clay",
+    "hide"
    ],
    "piece_count": 17,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "thatch",
    "roof_style": "Round",
    "selected_station": "smoking_rack",
@@ -2270,7 +3317,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "smokehouse",
    "tint_material": "oak",
-   "triangles": 2732
+   "triangles": 6000
   },
   "building_smokehouse_foundation": {
    "family": "building",
@@ -2279,16 +3326,14 @@
     4,
     4
    ],
-   "height": 0.18,
+   "height": 0.273,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
-    "wood",
-    "earth",
-    "hide",
-    "leather"
+    "stone",
+    "earth"
    ],
    "piece_count": 17,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "thatch",
    "roof_style": "Round",
    "selected_station": "smoking_rack",
@@ -2299,7 +3344,37 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "smokehouse",
    "tint_material": "oak",
-   "triangles": 488
+   "triangles": 252
+  },
+  "building_smokehouse_frame": {
+   "family": "building",
+   "file": "models/building_smokehouse_frame.glb",
+   "footprint": [
+    4,
+    4
+   ],
+   "height": 3.47,
+   "look_revision": "L2-crafted-v1",
+   "materials": [
+    "stone",
+    "earth",
+    "wood_dark",
+    "wood",
+    "trunk"
+   ],
+   "piece_count": 17,
+   "representation": "authored_footprint_envelope",
+   "roof_cover": "thatch",
+   "roof_style": "Round",
+   "selected_station": "smoking_rack",
+   "sockets": {},
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "source_status": "connected",
+   "stage": "frame",
+   "stage_note": "visual progress preview; not a discrete simulation stage",
+   "template": "smokehouse",
+   "tint_material": "oak",
+   "triangles": 624
   },
   "building_smokehouse_half": {
    "family": "building",
@@ -2308,16 +3383,18 @@
     4,
     4
    ],
-   "height": 1.1,
+   "height": 3.561,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
-    "wood",
+    "stone",
     "earth",
-    "hide",
-    "leather"
+    "wood_dark",
+    "wood",
+    "trunk",
+    "thatch"
    ],
    "piece_count": 17,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "thatch",
    "roof_style": "Round",
    "selected_station": "smoking_rack",
@@ -2328,7 +3405,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "smokehouse",
    "tint_material": "oak",
-   "triangles": 1588
+   "triangles": 1760
   },
   "building_stone_house_complete": {
    "family": "building",
@@ -2337,18 +3414,21 @@
     4,
     4
    ],
-   "height": 3.25,
+   "height": 3.562,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "stone",
-    "wood",
     "earth",
-    "hide",
-    "fur",
+    "wood_dark",
+    "wood",
+    "trunk",
+    "thatch",
     "leather",
-    "thatch"
+    "hide",
+    "fur"
    ],
    "piece_count": 18,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "thatch",
    "roof_style": "Round",
    "selected_station": null,
@@ -2359,7 +3439,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "stone_house",
    "tint_material": "granite",
-   "triangles": 6312
+   "triangles": 5068
   },
   "building_stone_house_foundation": {
    "family": "building",
@@ -2368,17 +3448,14 @@
     4,
     4
    ],
-   "height": 0.18,
+   "height": 0.272,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "stone",
-    "wood",
-    "earth",
-    "hide",
-    "fur",
-    "leather"
+    "earth"
    ],
    "piece_count": 18,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "thatch",
    "roof_style": "Round",
    "selected_station": null,
@@ -2389,7 +3466,37 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "stone_house",
    "tint_material": "granite",
-   "triangles": 988
+   "triangles": 252
+  },
+  "building_stone_house_frame": {
+   "family": "building",
+   "file": "models/building_stone_house_frame.glb",
+   "footprint": [
+    4,
+    4
+   ],
+   "height": 3.47,
+   "look_revision": "L2-crafted-v1",
+   "materials": [
+    "stone",
+    "earth",
+    "wood_dark",
+    "wood",
+    "trunk"
+   ],
+   "piece_count": 18,
+   "representation": "authored_footprint_envelope",
+   "roof_cover": "thatch",
+   "roof_style": "Round",
+   "selected_station": null,
+   "sockets": {},
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "source_status": "connected",
+   "stage": "frame",
+   "stage_note": "visual progress preview; not a discrete simulation stage",
+   "template": "stone_house",
+   "tint_material": "granite",
+   "triangles": 624
   },
   "building_stone_house_half": {
    "family": "building",
@@ -2398,17 +3505,18 @@
     4,
     4
    ],
-   "height": 1.1,
+   "height": 3.561,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "stone",
-    "wood",
     "earth",
-    "hide",
-    "fur",
-    "leather"
+    "wood_dark",
+    "wood",
+    "trunk",
+    "thatch"
    ],
    "piece_count": 18,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "thatch",
    "roof_style": "Round",
    "selected_station": null,
@@ -2419,7 +3527,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "stone_house",
    "tint_material": "granite",
-   "triangles": 3628
+   "triangles": 1840
   },
   "building_storehouse_complete": {
    "family": "building",
@@ -2428,15 +3536,19 @@
     4,
     4
    ],
-   "height": 3.25,
+   "height": 3.561,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
-    "wood",
+    "stone",
     "earth",
-    "thatch"
+    "wood_dark",
+    "wood",
+    "trunk",
+    "thatch",
+    "leather"
    ],
    "piece_count": 16,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "thatch",
    "roof_style": "Round",
    "selected_station": null,
@@ -2447,7 +3559,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "storehouse",
    "tint_material": "pine",
-   "triangles": 2524
+   "triangles": 4616
   },
   "building_storehouse_foundation": {
    "family": "building",
@@ -2456,14 +3568,14 @@
     4,
     4
    ],
-   "height": 0.18,
+   "height": 0.272,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
-    "wood",
+    "stone",
     "earth"
    ],
    "piece_count": 16,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "thatch",
    "roof_style": "Round",
    "selected_station": null,
@@ -2474,7 +3586,37 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "storehouse",
    "tint_material": "pine",
-   "triangles": 280
+   "triangles": 252
+  },
+  "building_storehouse_frame": {
+   "family": "building",
+   "file": "models/building_storehouse_frame.glb",
+   "footprint": [
+    4,
+    4
+   ],
+   "height": 3.47,
+   "look_revision": "L2-crafted-v1",
+   "materials": [
+    "stone",
+    "earth",
+    "wood_dark",
+    "wood",
+    "trunk"
+   ],
+   "piece_count": 16,
+   "representation": "authored_footprint_envelope",
+   "roof_cover": "thatch",
+   "roof_style": "Round",
+   "selected_station": null,
+   "sockets": {},
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "source_status": "connected",
+   "stage": "frame",
+   "stage_note": "visual progress preview; not a discrete simulation stage",
+   "template": "storehouse",
+   "tint_material": "pine",
+   "triangles": 624
   },
   "building_storehouse_half": {
    "family": "building",
@@ -2483,14 +3625,18 @@
     4,
     4
    ],
-   "height": 1.1,
+   "height": 3.562,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
+    "stone",
+    "earth",
+    "wood_dark",
     "wood",
-    "earth"
+    "trunk",
+    "thatch"
    ],
    "piece_count": 16,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "thatch",
    "roof_style": "Round",
    "selected_station": null,
@@ -2501,7 +3647,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "storehouse",
    "tint_material": "pine",
-   "triangles": 1380
+   "triangles": 1760
   },
   "building_trading_post_complete": {
    "family": "building",
@@ -2510,14 +3656,16 @@
     4,
     4
    ],
-   "height": 3.294,
+   "height": 3.57,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "earth",
     "wood",
     "wood_dark",
-    "metal"
+    "metal",
+    "trunk",
+    "leather"
    ],
-   "overhang": true,
    "piece_count": 1,
    "representation": "inert_art_concept",
    "roof_cover": "plank",
@@ -2530,7 +3678,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "trading_post",
    "tint_material": "oak",
-   "triangles": 548
+   "triangles": 2452
   },
   "building_trading_post_foundation": {
    "family": "building",
@@ -2540,6 +3688,7 @@
     4
    ],
    "height": 0.22,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "earth",
     "stone"
@@ -2558,6 +3707,35 @@
    "tint_material": "oak",
    "triangles": 60
   },
+  "building_trading_post_frame": {
+   "family": "building",
+   "file": "models/building_trading_post_frame.glb",
+   "footprint": [
+    4,
+    4
+   ],
+   "height": 3.47,
+   "look_revision": "L2-crafted-v1",
+   "materials": [
+    "earth",
+    "wood",
+    "wood_dark",
+    "trunk"
+   ],
+   "piece_count": 1,
+   "representation": "inert_art_concept",
+   "roof_cover": "plank",
+   "roof_style": "Angular",
+   "selected_station": null,
+   "sockets": {},
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "source_status": "inert_concept",
+   "stage": "frame",
+   "stage_note": "visual progress preview; not a discrete simulation stage",
+   "template": "trading_post",
+   "tint_material": "oak",
+   "triangles": 264
+  },
   "building_trading_post_half": {
    "family": "building",
    "file": "models/building_trading_post_half.glb",
@@ -2565,12 +3743,14 @@
     4,
     4
    ],
-   "height": 1.13,
+   "height": 3.57,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "earth",
     "wood",
     "wood_dark",
-    "metal"
+    "metal",
+    "trunk"
    ],
    "piece_count": 1,
    "representation": "inert_art_concept",
@@ -2584,7 +3764,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "trading_post",
    "tint_material": "oak",
-   "triangles": 260
+   "triangles": 720
   },
   "building_warehouse_complete": {
    "family": "building",
@@ -2593,14 +3773,17 @@
     6,
     6
    ],
-   "height": 3.297,
+   "height": 3.561,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "earth",
     "wood",
     "stone",
-    "thatch"
+    "wood_dark",
+    "thatch",
+    "trunk",
+    "leather"
    ],
-   "overhang": true,
    "piece_count": 1,
    "representation": "inert_art_concept",
    "roof_cover": "plank",
@@ -2613,7 +3796,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "warehouse",
    "tint_material": "granite",
-   "triangles": 1160
+   "triangles": 5044
   },
   "building_warehouse_foundation": {
    "family": "building",
@@ -2623,6 +3806,7 @@
     6
    ],
    "height": 0.22,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "earth",
     "stone"
@@ -2641,6 +3825,35 @@
    "tint_material": "granite",
    "triangles": 60
   },
+  "building_warehouse_frame": {
+   "family": "building",
+   "file": "models/building_warehouse_frame.glb",
+   "footprint": [
+    6,
+    6
+   ],
+   "height": 3.47,
+   "look_revision": "L2-crafted-v1",
+   "materials": [
+    "earth",
+    "wood",
+    "wood_dark",
+    "trunk"
+   ],
+   "piece_count": 1,
+   "representation": "inert_art_concept",
+   "roof_cover": "plank",
+   "roof_style": "Angular",
+   "selected_station": null,
+   "sockets": {},
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "source_status": "inert_concept",
+   "stage": "frame",
+   "stage_note": "visual progress preview; not a discrete simulation stage",
+   "template": "warehouse",
+   "tint_material": "granite",
+   "triangles": 264
+  },
   "building_warehouse_half": {
    "family": "building",
    "file": "models/building_warehouse_half.glb",
@@ -2648,12 +3861,15 @@
     6,
     6
    ],
-   "height": 1.1,
+   "height": 3.561,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "earth",
     "wood",
     "stone",
-    "thatch"
+    "wood_dark",
+    "thatch",
+    "trunk"
    ],
    "piece_count": 1,
    "representation": "inert_art_concept",
@@ -2667,7 +3883,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "warehouse",
    "tint_material": "granite",
-   "triangles": 428
+   "triangles": 1632
   },
   "building_well_complete": {
    "family": "building",
@@ -2676,14 +3892,16 @@
     3,
     3
    ],
-   "height": 2.375,
+   "height": 2.558,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "stone",
     "metal",
     "wood",
     "wood_dark",
     "leather",
-    "thatch"
+    "thatch",
+    "trunk"
    ],
    "piece_count": 1,
    "representation": "authored_piece_assembly",
@@ -2697,7 +3915,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "well",
    "tint_material": "granite",
-   "triangles": 460
+   "triangles": 2180
   },
   "building_well_foundation": {
    "family": "building",
@@ -2706,14 +3924,11 @@
     3,
     3
    ],
-   "height": 0.18,
+   "height": 0.16,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "stone",
-    "metal",
-    "wood",
-    "wood_dark",
-    "leather",
-    "thatch"
+    "earth"
    ],
    "piece_count": 1,
    "representation": "authored_piece_assembly",
@@ -2727,7 +3942,35 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "well",
    "tint_material": "granite",
-   "triangles": 460
+   "triangles": 60
+  },
+  "building_well_frame": {
+   "family": "building",
+   "file": "models/building_well_frame.glb",
+   "footprint": [
+    3,
+    3
+   ],
+   "height": 1.4,
+   "look_revision": "L2-crafted-v1",
+   "materials": [
+    "stone",
+    "wood",
+    "earth"
+   ],
+   "piece_count": 1,
+   "representation": "authored_piece_assembly",
+   "roof_cover": "thatch",
+   "roof_style": "Round",
+   "selected_station": null,
+   "sockets": {},
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "source_status": "inert_concept",
+   "stage": "frame",
+   "stage_note": "visual progress preview; not a discrete simulation stage",
+   "template": "well",
+   "tint_material": "granite",
+   "triangles": 124
   },
   "building_well_half": {
    "family": "building",
@@ -2737,13 +3980,15 @@
     3
    ],
    "height": 1.1,
+   "look_revision": "L2-crafted-v1",
    "materials": [
     "stone",
     "metal",
     "wood",
     "wood_dark",
     "leather",
-    "thatch"
+    "thatch",
+    "trunk"
    ],
    "piece_count": 1,
    "representation": "authored_piece_assembly",
@@ -2757,7 +4002,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "well",
    "tint_material": "granite",
-   "triangles": 460
+   "triangles": 2180
   },
   "building_workshop_shed_complete": {
    "family": "building",
@@ -2766,17 +4011,20 @@
     4,
     4
    ],
-   "height": 3.25,
+   "height": 3.562,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
-    "wood",
+    "stone",
     "earth",
     "wood_dark",
-    "stone",
-    "thatch"
+    "wood",
+    "trunk",
+    "thatch",
+    "leather",
+    "clay"
    ],
    "piece_count": 17,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "thatch",
    "roof_style": "Round",
    "selected_station": "wood_bench",
@@ -2787,7 +4035,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "workshop_shed",
    "tint_material": "oak",
-   "triangles": 2748
+   "triangles": 6054
   },
   "building_workshop_shed_foundation": {
    "family": "building",
@@ -2796,16 +4044,14 @@
     4,
     4
    ],
-   "height": 0.18,
+   "height": 0.273,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
-    "wood",
-    "earth",
-    "wood_dark",
-    "stone"
+    "stone",
+    "earth"
    ],
    "piece_count": 17,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "thatch",
    "roof_style": "Round",
    "selected_station": "wood_bench",
@@ -2816,7 +4062,37 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "workshop_shed",
    "tint_material": "oak",
-   "triangles": 504
+   "triangles": 252
+  },
+  "building_workshop_shed_frame": {
+   "family": "building",
+   "file": "models/building_workshop_shed_frame.glb",
+   "footprint": [
+    4,
+    4
+   ],
+   "height": 3.47,
+   "look_revision": "L2-crafted-v1",
+   "materials": [
+    "stone",
+    "earth",
+    "wood_dark",
+    "wood",
+    "trunk"
+   ],
+   "piece_count": 17,
+   "representation": "authored_footprint_envelope",
+   "roof_cover": "thatch",
+   "roof_style": "Round",
+   "selected_station": "wood_bench",
+   "sockets": {},
+   "source_sha": "cfeb57c9e1906eedd4e5d14447ba4faca20c4047",
+   "source_status": "connected",
+   "stage": "frame",
+   "stage_note": "visual progress preview; not a discrete simulation stage",
+   "template": "workshop_shed",
+   "tint_material": "oak",
+   "triangles": 624
   },
   "building_workshop_shed_half": {
    "family": "building",
@@ -2825,16 +4101,18 @@
     4,
     4
    ],
-   "height": 1.1,
+   "height": 3.562,
+   "look_revision": "L2-crafted-v1",
    "materials": [
-    "trunk",
-    "wood",
+    "stone",
     "earth",
     "wood_dark",
-    "stone"
+    "wood",
+    "trunk",
+    "thatch"
    ],
    "piece_count": 17,
-   "representation": "authored_piece_assembly",
+   "representation": "authored_footprint_envelope",
    "roof_cover": "thatch",
    "roof_style": "Round",
    "selected_station": "wood_bench",
@@ -2845,7 +4123,7 @@
    "stage_note": "visual progress preview; not a discrete simulation stage",
    "template": "workshop_shed",
    "tint_material": "oak",
-   "triangles": 1604
+   "triangles": 1760
   },
   "bush": {
    "file": "models/bush.glb",
@@ -2868,8 +4146,8 @@
     2,
     1
    ],
-   "height": 0.57,
-   "triangles": 224,
+   "height": 0.784,
+   "triangles": 536,
    "materials": [
     "stone",
     "wood",
@@ -2899,7 +4177,7 @@
     3
    ],
    "height": 0.869,
-   "triangles": 496,
+   "triangles": 1376,
    "materials": [
     "earth",
     "glow",
@@ -2942,7 +4220,7 @@
     1
    ],
    "height": 0.59,
-   "triangles": 216,
+   "triangles": 676,
    "materials": [
     "stone",
     "clay",
@@ -3565,7 +4843,7 @@
     1
    ],
    "height": 2.0,
-   "triangles": 216,
+   "triangles": 328,
    "materials": [
     "wood",
     "wood_dark",
@@ -3582,12 +4860,13 @@
     2,
     1
    ],
-   "height": 1.61,
-   "triangles": 208,
+   "height": 1.609,
+   "triangles": 500,
    "materials": [
     "wood",
     "hide",
-    "leather"
+    "leather",
+    "thatch"
    ],
    "sockets": {
     "work": [
@@ -3605,7 +4884,7 @@
     1
    ],
    "height": 0.165,
-   "triangles": 68,
+   "triangles": 152,
    "materials": [
     "wood",
     "trunk",
@@ -3680,7 +4959,7 @@
     1
    ],
    "height": 0.294,
-   "triangles": 216,
+   "triangles": 590,
    "materials": [
     "hide",
     "stone",
@@ -3702,13 +4981,16 @@
     1,
     1
    ],
-   "height": 0.54,
-   "triangles": 320,
+   "height": 0.934,
+   "triangles": 992,
    "materials": [
     "stone",
     "earth",
     "wood_dark",
-    "glow"
+    "glow",
+    "trunk",
+    "wood",
+    "thatch"
    ],
    "sockets": {
     "light": [
@@ -3722,8 +5004,7 @@
      0.85
     ]
    },
-   "family": "station",
-   "overhang": true
+   "family": "station"
   },
   "hearth_unlit": {
    "file": "models/hearth_unlit.glb",
@@ -3731,12 +5012,15 @@
     1,
     1
    ],
-   "height": 0.352,
-   "triangles": 276,
+   "height": 0.934,
+   "triangles": 886,
    "materials": [
     "stone",
     "earth",
-    "wood_dark"
+    "wood_dark",
+    "trunk",
+    "wood",
+    "thatch"
    ],
    "sockets": {
     "work": [
@@ -3745,8 +5029,7 @@
      0.85
     ]
    },
-   "family": "station",
-   "overhang": true
+   "family": "station"
   },
   "hide": {
    "file": "models/hide.glb",
@@ -3801,8 +5084,8 @@
     1,
     1
    ],
-   "height": 0.43,
-   "triangles": 120,
+   "height": 0.423,
+   "triangles": 672,
    "materials": [
     "trunk",
     "wood"
@@ -3820,8 +5103,8 @@
     1,
     1
    ],
-   "height": 0.28,
-   "triangles": 60,
+   "height": 0.273,
+   "triangles": 336,
    "materials": [
     "trunk",
     "wood"
@@ -3839,8 +5122,8 @@
     1,
     1
    ],
-   "height": 0.18,
-   "triangles": 20,
+   "height": 0.173,
+   "triangles": 112,
    "materials": [
     "trunk",
     "wood"
@@ -4253,8 +5536,8 @@
     1,
     1
    ],
-   "height": 0.55,
-   "triangles": 456,
+   "height": 0.564,
+   "triangles": 1944,
    "materials": [
     "clay",
     "earth"
@@ -4272,8 +5555,8 @@
     1,
     1
    ],
-   "height": 0.4,
-   "triangles": 228,
+   "height": 0.414,
+   "triangles": 972,
    "materials": [
     "clay",
     "earth"
@@ -4291,8 +5574,8 @@
     1,
     1
    ],
-   "height": 0.3,
-   "triangles": 76,
+   "height": 0.314,
+   "triangles": 324,
    "materials": [
     "clay",
     "earth"
@@ -4310,8 +5593,8 @@
     1,
     1
    ],
-   "height": 0.55,
-   "triangles": 456,
+   "height": 0.564,
+   "triangles": 1944,
    "materials": [
     "clay",
     "earth"
@@ -4329,8 +5612,8 @@
     1,
     1
    ],
-   "height": 0.4,
-   "triangles": 228,
+   "height": 0.414,
+   "triangles": 972,
    "materials": [
     "clay",
     "earth"
@@ -4348,8 +5631,8 @@
     1,
     1
    ],
-   "height": 0.3,
-   "triangles": 76,
+   "height": 0.314,
+   "triangles": 324,
    "materials": [
     "clay",
     "earth"
@@ -5095,8 +6378,8 @@
     1,
     1
    ],
-   "height": 0.55,
-   "triangles": 456,
+   "height": 0.564,
+   "triangles": 1944,
    "materials": [
     "clay",
     "earth"
@@ -5114,8 +6397,8 @@
     1,
     1
    ],
-   "height": 0.4,
-   "triangles": 228,
+   "height": 0.414,
+   "triangles": 972,
    "materials": [
     "clay",
     "earth"
@@ -5133,8 +6416,8 @@
     1,
     1
    ],
-   "height": 0.3,
-   "triangles": 76,
+   "height": 0.314,
+   "triangles": 324,
    "materials": [
     "clay",
     "earth"
@@ -5152,8 +6435,8 @@
     1,
     1
    ],
-   "height": 0.55,
-   "triangles": 456,
+   "height": 0.564,
+   "triangles": 1944,
    "materials": [
     "clay",
     "earth"
@@ -5171,8 +6454,8 @@
     1,
     1
    ],
-   "height": 0.4,
-   "triangles": 228,
+   "height": 0.414,
+   "triangles": 972,
    "materials": [
     "clay",
     "earth"
@@ -5190,8 +6473,8 @@
     1,
     1
    ],
-   "height": 0.3,
-   "triangles": 76,
+   "height": 0.314,
+   "triangles": 324,
    "materials": [
     "clay",
     "earth"
@@ -5374,8 +6657,8 @@
     1,
     1
    ],
-   "height": 0.55,
-   "triangles": 456,
+   "height": 0.564,
+   "triangles": 1944,
    "materials": [
     "clay",
     "earth"
@@ -5393,8 +6676,8 @@
     1,
     1
    ],
-   "height": 0.4,
-   "triangles": 228,
+   "height": 0.414,
+   "triangles": 972,
    "materials": [
     "clay",
     "earth"
@@ -5412,8 +6695,8 @@
     1,
     1
    ],
-   "height": 0.3,
-   "triangles": 76,
+   "height": 0.314,
+   "triangles": 324,
    "materials": [
     "clay",
     "earth"
@@ -5996,7 +7279,7 @@
     1
    ],
    "height": 0.681,
-   "triangles": 444,
+   "triangles": 2274,
    "materials": [
     "thatch",
     "earth",
@@ -6016,7 +7299,7 @@
     1
    ],
    "height": 0.531,
-   "triangles": 222,
+   "triangles": 1137,
    "materials": [
     "thatch",
     "earth",
@@ -6036,7 +7319,7 @@
     1
    ],
    "height": 0.431,
-   "triangles": 74,
+   "triangles": 379,
    "materials": [
     "thatch",
     "earth",
@@ -6328,8 +7611,8 @@
     1,
     1
    ],
-   "height": 0.55,
-   "triangles": 456,
+   "height": 0.564,
+   "triangles": 1944,
    "materials": [
     "clay",
     "earth"
@@ -6347,8 +7630,8 @@
     1,
     1
    ],
-   "height": 0.4,
-   "triangles": 228,
+   "height": 0.414,
+   "triangles": 972,
    "materials": [
     "clay",
     "earth"
@@ -6366,8 +7649,8 @@
     1,
     1
    ],
-   "height": 0.3,
-   "triangles": 76,
+   "height": 0.314,
+   "triangles": 324,
    "materials": [
     "clay",
     "earth"
@@ -6385,8 +7668,8 @@
     1,
     1
    ],
-   "height": 0.55,
-   "triangles": 456,
+   "height": 0.564,
+   "triangles": 1944,
    "materials": [
     "clay",
     "earth"
@@ -6404,8 +7687,8 @@
     1,
     1
    ],
-   "height": 0.4,
-   "triangles": 228,
+   "height": 0.414,
+   "triangles": 972,
    "materials": [
     "clay",
     "earth"
@@ -6423,8 +7706,8 @@
     1,
     1
    ],
-   "height": 0.3,
-   "triangles": 76,
+   "height": 0.314,
+   "triangles": 324,
    "materials": [
     "clay",
     "earth"
@@ -8727,8 +10010,8 @@
     1,
     1
    ],
-   "height": 0.55,
-   "triangles": 456,
+   "height": 0.564,
+   "triangles": 1944,
    "materials": [
     "clay",
     "earth"
@@ -8746,8 +10029,8 @@
     1,
     1
    ],
-   "height": 0.4,
-   "triangles": 228,
+   "height": 0.414,
+   "triangles": 972,
    "materials": [
     "clay",
     "earth"
@@ -8765,8 +10048,8 @@
     1,
     1
    ],
-   "height": 0.3,
-   "triangles": 76,
+   "height": 0.314,
+   "triangles": 324,
    "materials": [
     "clay",
     "earth"
@@ -10456,7 +11739,7 @@
     2
    ],
    "height": 1.44,
-   "triangles": 424,
+   "triangles": 1376,
    "materials": [
     "earth",
     "clay",
@@ -10484,8 +11767,8 @@
     1,
     1
    ],
-   "height": 0.257,
-   "triangles": 296,
+   "height": 0.254,
+   "triangles": 438,
    "materials": [
     "hide",
     "trunk",
@@ -10508,8 +11791,8 @@
     2,
     2
    ],
-   "height": 1.962,
-   "triangles": 496,
+   "height": 1.96,
+   "triangles": 940,
    "materials": [
     "wood",
     "wood_dark",
@@ -10524,8 +11807,7 @@
      0.2
     ]
    },
-   "family": "station",
-   "overhang": true
+   "family": "station"
   },
   "living_aurochs": {
    "file": "living/aurochs/aurochs.glb",
@@ -11841,8 +13123,8 @@
     1,
     1
    ],
-   "height": 0.55,
-   "triangles": 120,
+   "height": 0.542,
+   "triangles": 672,
    "materials": [
     "trunk",
     "wood"
@@ -11856,8 +13138,8 @@
     1,
     1
    ],
-   "height": 0.338,
-   "triangles": 100,
+   "height": 0.33,
+   "triangles": 560,
    "materials": [
     "trunk",
     "wood"
@@ -11871,8 +13153,8 @@
     1,
     1
    ],
-   "height": 0.18,
-   "triangles": 40,
+   "height": 0.173,
+   "triangles": 224,
    "materials": [
     "trunk",
     "wood"
@@ -11886,13 +13168,14 @@
     2,
     1
    ],
-   "height": 1.911,
-   "triangles": 348,
+   "height": 1.909,
+   "triangles": 616,
    "materials": [
     "wood",
     "wood_dark",
     "cloth",
-    "clay"
+    "clay",
+    "thatch"
    ],
    "sockets": {
     "work": [
@@ -11910,7 +13193,7 @@
     1
    ],
    "height": 1.056,
-   "triangles": 104,
+   "triangles": 240,
    "materials": [
     "wood_dark",
     "wood",
@@ -11925,8 +13208,8 @@
     2,
     1
    ],
-   "height": 1.063,
-   "triangles": 124,
+   "height": 1.062,
+   "triangles": 260,
    "materials": [
     "wood_dark",
     "wood",
@@ -11989,9 +13272,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 20,
+   "triangles": 68,
    "materials": [
-    "trunk"
+    "trunk",
+    "thatch"
    ],
    "sockets": {},
    "family": "fence",
@@ -12010,9 +13294,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 116,
+   "triangles": 164,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -12032,9 +13317,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 116,
+   "triangles": 164,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -12054,9 +13340,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 212,
+   "triangles": 260,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -12076,9 +13363,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 116,
+   "triangles": 164,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -12098,9 +13386,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 212,
+   "triangles": 260,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -12120,9 +13409,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 212,
+   "triangles": 260,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -12142,9 +13432,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 308,
+   "triangles": 356,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -12164,9 +13455,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 116,
+   "triangles": 164,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -12186,9 +13478,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 212,
+   "triangles": 260,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -12208,9 +13501,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 212,
+   "triangles": 260,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -12230,9 +13524,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 308,
+   "triangles": 356,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -12252,9 +13547,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 212,
+   "triangles": 260,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -12274,9 +13570,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 308,
+   "triangles": 356,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -12296,9 +13593,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 308,
+   "triangles": 356,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -12318,9 +13616,10 @@
     1.2
    ],
    "height": 1.8,
-   "triangles": 404,
+   "triangles": 452,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -12340,9 +13639,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 20,
+   "triangles": 68,
    "materials": [
-    "trunk"
+    "trunk",
+    "thatch"
    ],
    "sockets": {},
    "family": "fence",
@@ -12361,9 +13661,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 52,
+   "triangles": 216,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -12383,9 +13684,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 52,
+   "triangles": 216,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -12405,9 +13707,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 84,
+   "triangles": 364,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -12427,9 +13730,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 52,
+   "triangles": 216,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -12449,9 +13753,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 84,
+   "triangles": 364,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -12471,9 +13776,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 84,
+   "triangles": 364,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -12493,9 +13799,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 116,
+   "triangles": 512,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -12515,9 +13822,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 52,
+   "triangles": 216,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -12537,9 +13845,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 84,
+   "triangles": 364,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -12559,9 +13868,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 84,
+   "triangles": 364,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -12581,9 +13891,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 116,
+   "triangles": 512,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -12603,9 +13914,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 84,
+   "triangles": 364,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -12625,9 +13937,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 116,
+   "triangles": 512,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -12647,9 +13960,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 116,
+   "triangles": 512,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -12669,9 +13983,10 @@
     1.2
    ],
    "height": 0.9,
-   "triangles": 148,
+   "triangles": 660,
    "materials": [
     "trunk",
+    "thatch",
     "wood"
    ],
    "sockets": {},
@@ -13503,8 +14818,8 @@
     1,
     1
    ],
-   "height": 0.38,
-   "triangles": 86,
+   "height": 0.394,
+   "triangles": 324,
    "materials": [
     "clay",
     "earth"
@@ -13519,7 +14834,7 @@
     1
    ],
    "height": 0.49,
-   "triangles": 150,
+   "triangles": 686,
    "materials": [
     "clay",
     "earth"
@@ -13533,8 +14848,8 @@
     2,
     1
    ],
-   "height": 0.805,
-   "triangles": 476,
+   "height": 0.816,
+   "triangles": 1518,
    "materials": [
     "wood",
     "wood_dark",
@@ -13549,8 +14864,7 @@
      0.85
     ]
    },
-   "family": "station",
-   "overhang": true
+   "family": "station"
   },
   "pottery_wheel_idle": {
    "file": "models/pottery_wheel_idle.glb",
@@ -13558,8 +14872,8 @@
     2,
     1
    ],
-   "height": 1.13,
-   "triangles": 180,
+   "height": 1.143,
+   "triangles": 508,
    "materials": [
     "wood_dark",
     "wood",
@@ -13575,8 +14889,8 @@
     2,
     1
    ],
-   "height": 1.13,
-   "triangles": 200,
+   "height": 1.143,
+   "triangles": 528,
    "materials": [
     "wood_dark",
     "wood",
@@ -13655,8 +14969,7 @@
      1.35
     ]
    },
-   "family": "station",
-   "overhang": true
+   "family": "station"
   },
   "sack": {
    "file": "models/sack.glb",
@@ -13696,7 +15009,7 @@
     2
    ],
    "height": 1.62,
-   "triangles": 596,
+   "triangles": 1350,
    "materials": [
     "stone",
     "clay",
@@ -13728,7 +15041,7 @@
     1
    ],
    "height": 0.224,
-   "triangles": 120,
+   "triangles": 156,
    "materials": [
     "stone"
    ],
@@ -13741,8 +15054,8 @@
     2,
     1
    ],
-   "height": 1.65,
-   "triangles": 544,
+   "height": 1.654,
+   "triangles": 3150,
    "materials": [
     "wood_dark",
     "wood",
@@ -13800,7 +15113,7 @@
     1
    ],
    "height": 0.055,
-   "triangles": 48,
+   "triangles": 80,
    "materials": [
     "wood",
     "stone",
@@ -14000,11 +15313,12 @@
     1,
     1
    ],
-   "height": 1.987,
-   "triangles": 200,
+   "height": 1.998,
+   "triangles": 440,
    "materials": [
     "trunk",
-    "wood"
+    "wood",
+    "wood_dark"
    ],
    "sockets": {},
    "family": "wall",
@@ -14016,11 +15330,12 @@
     1,
     1
    ],
-   "height": 0.187,
-   "triangles": 20,
+   "height": 0.198,
+   "triangles": 44,
    "materials": [
     "trunk",
-    "wood"
+    "wood",
+    "wood_dark"
    ],
    "sockets": {},
    "family": "wall",
@@ -14032,11 +15347,12 @@
     1,
     1
    ],
-   "height": 0.987,
-   "triangles": 100,
+   "height": 0.998,
+   "triangles": 220,
    "materials": [
     "trunk",
-    "wood"
+    "wood",
+    "wood_dark"
    ],
    "sockets": {},
    "family": "wall",
@@ -14048,8 +15364,8 @@
     1,
     1
    ],
-   "height": 1.997,
-   "triangles": 480,
+   "height": 1.998,
+   "triangles": 1760,
    "materials": [
     "clay"
    ],
@@ -14063,8 +15379,8 @@
     1,
     1
    ],
-   "height": 0.197,
-   "triangles": 48,
+   "height": 0.198,
+   "triangles": 176,
    "materials": [
     "clay"
    ],
@@ -14078,8 +15394,8 @@
     1,
     1
    ],
-   "height": 0.997,
-   "triangles": 240,
+   "height": 0.998,
+   "triangles": 880,
    "materials": [
     "clay"
    ],
@@ -14093,8 +15409,8 @@
     1,
     1
    ],
-   "height": 1.997,
-   "triangles": 480,
+   "height": 1.998,
+   "triangles": 1760,
    "materials": [
     "stone"
    ],
@@ -14108,8 +15424,8 @@
     1,
     1
    ],
-   "height": 0.197,
-   "triangles": 48,
+   "height": 0.198,
+   "triangles": 176,
    "materials": [
     "stone"
    ],
@@ -14123,8 +15439,8 @@
     1,
     1
    ],
-   "height": 0.997,
-   "triangles": 240,
+   "height": 0.998,
+   "triangles": 880,
    "materials": [
     "stone"
    ],
@@ -14138,15 +15454,16 @@
     3,
     3
    ],
-   "height": 2.358,
-   "triangles": 460,
+   "height": 2.558,
+   "triangles": 3040,
    "materials": [
     "stone",
     "metal",
     "wood",
     "wood_dark",
     "leather",
-    "thatch"
+    "thatch",
+    "trunk"
    ],
    "sockets": {
     "work": [
@@ -14350,8 +15667,8 @@
     2,
     1
    ],
-   "height": 1.005,
-   "triangles": 224,
+   "height": 1.008,
+   "triangles": 646,
    "materials": [
     "wood",
     "wood_dark",
@@ -14365,8 +15682,95 @@
      0.85
     ]
    },
-   "family": "station",
-   "overhang": true
+   "family": "station"
+  },
+  "yard_cart": {
+   "file": "models/yard_cart.glb",
+   "footprint": [
+    2,
+    3
+   ],
+   "height": 1.127,
+   "triangles": 3166,
+   "materials": [
+    "wood",
+    "trunk",
+    "thatch",
+    "wood_dark",
+    "earth",
+    "clay"
+   ],
+   "sockets": {},
+   "family": "prop",
+   "art_pass": "look2"
+  },
+  "yard_grain_baskets": {
+   "file": "models/yard_grain_baskets.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 0.497,
+   "triangles": 1096,
+   "materials": [
+    "thatch",
+    "earth",
+    "clay"
+   ],
+   "sockets": {},
+   "family": "prop",
+   "art_pass": "look2"
+  },
+  "yard_hay": {
+   "file": "models/yard_hay.glb",
+   "footprint": [
+    1.2,
+    1.2
+   ],
+   "height": 0.776,
+   "triangles": 576,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "prop",
+   "art_pass": "look2"
+  },
+  "yard_tool_rack": {
+   "file": "models/yard_tool_rack.glb",
+   "footprint": [
+    2,
+    1
+   ],
+   "height": 1.313,
+   "triangles": 1128,
+   "materials": [
+    "trunk",
+    "wood",
+    "thatch",
+    "stone",
+    "wood_dark"
+   ],
+   "sockets": {},
+   "family": "prop",
+   "art_pass": "look2"
+  },
+  "yard_woodpile": {
+   "file": "models/yard_woodpile.glb",
+   "footprint": [
+    2,
+    1.6
+   ],
+   "height": 1.358,
+   "triangles": 2872,
+   "materials": [
+    "trunk",
+    "wood",
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "prop",
+   "art_pass": "look2"
   }
  },
  "units": "1 unit = 1 m = 1 tile; Godot coords (Y up, front +Z); origin = footprint centre on ground",

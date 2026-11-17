@@ -6,8 +6,8 @@
     1,
     1
    ],
-   "height": 0.18,
-   "triangles": 20,
+   "height": 0.173,
+   "triangles": 112,
    "materials": [
     "trunk",
     "wood"
@@ -25,8 +25,8 @@
     1,
     1
    ],
-   "height": 0.28,
-   "triangles": 60,
+   "height": 0.273,
+   "triangles": 336,
    "materials": [
     "trunk",
     "wood"
@@ -44,8 +44,8 @@
     1,
     1
    ],
-   "height": 0.43,
-   "triangles": 120,
+   "height": 0.423,
+   "triangles": 672,
    "materials": [
     "trunk",
     "wood"
@@ -458,8 +458,8 @@
     1,
     1
    ],
-   "height": 0.3,
-   "triangles": 76,
+   "height": 0.314,
+   "triangles": 324,
    "materials": [
     "clay",
     "earth"
@@ -477,8 +477,8 @@
     1,
     1
    ],
-   "height": 0.4,
-   "triangles": 228,
+   "height": 0.414,
+   "triangles": 972,
    "materials": [
     "clay",
     "earth"
@@ -496,8 +496,8 @@
     1,
     1
    ],
-   "height": 0.55,
-   "triangles": 456,
+   "height": 0.564,
+   "triangles": 1944,
    "materials": [
     "clay",
     "earth"
@@ -515,8 +515,8 @@
     1,
     1
    ],
-   "height": 0.3,
-   "triangles": 76,
+   "height": 0.314,
+   "triangles": 324,
    "materials": [
     "clay",
     "earth"
@@ -534,8 +534,8 @@
     1,
     1
    ],
-   "height": 0.4,
-   "triangles": 228,
+   "height": 0.414,
+   "triangles": 972,
    "materials": [
     "clay",
     "earth"
@@ -553,8 +553,8 @@
     1,
     1
    ],
-   "height": 0.55,
-   "triangles": 456,
+   "height": 0.564,
+   "triangles": 1944,
    "materials": [
     "clay",
     "earth"
@@ -1300,8 +1300,8 @@
     1,
     1
    ],
-   "height": 0.3,
-   "triangles": 76,
+   "height": 0.314,
+   "triangles": 324,
    "materials": [
     "clay",
     "earth"
@@ -1319,8 +1319,8 @@
     1,
     1
    ],
-   "height": 0.4,
-   "triangles": 228,
+   "height": 0.414,
+   "triangles": 972,
    "materials": [
     "clay",
     "earth"
@@ -1338,8 +1338,8 @@
     1,
     1
    ],
-   "height": 0.55,
-   "triangles": 456,
+   "height": 0.564,
+   "triangles": 1944,
    "materials": [
     "clay",
     "earth"
@@ -1357,8 +1357,8 @@
     1,
     1
    ],
-   "height": 0.3,
-   "triangles": 76,
+   "height": 0.314,
+   "triangles": 324,
    "materials": [
     "clay",
     "earth"
@@ -1376,8 +1376,8 @@
     1,
     1
    ],
-   "height": 0.4,
-   "triangles": 228,
+   "height": 0.414,
+   "triangles": 972,
    "materials": [
     "clay",
     "earth"
@@ -1395,8 +1395,8 @@
     1,
     1
    ],
-   "height": 0.55,
-   "triangles": 456,
+   "height": 0.564,
+   "triangles": 1944,
    "materials": [
     "clay",
     "earth"
@@ -1579,8 +1579,8 @@
     1,
     1
    ],
-   "height": 0.3,
-   "triangles": 76,
+   "height": 0.314,
+   "triangles": 324,
    "materials": [
     "clay",
     "earth"
@@ -1598,8 +1598,8 @@
     1,
     1
    ],
-   "height": 0.4,
-   "triangles": 228,
+   "height": 0.414,
+   "triangles": 972,
    "materials": [
     "clay",
     "earth"
@@ -1617,8 +1617,8 @@
     1,
     1
    ],
-   "height": 0.55,
-   "triangles": 456,
+   "height": 0.564,
+   "triangles": 1944,
    "materials": [
     "clay",
     "earth"
@@ -2201,7 +2201,7 @@
     1
    ],
    "height": 0.431,
-   "triangles": 74,
+   "triangles": 379,
    "materials": [
     "thatch",
     "earth",
@@ -2221,7 +2221,7 @@
     1
    ],
    "height": 0.531,
-   "triangles": 222,
+   "triangles": 1137,
    "materials": [
     "thatch",
     "earth",
@@ -2241,7 +2241,7 @@
     1
    ],
    "height": 0.681,
-   "triangles": 444,
+   "triangles": 2274,
    "materials": [
     "thatch",
     "earth",
@@ -2533,8 +2533,8 @@
     1,
     1
    ],
-   "height": 0.3,
-   "triangles": 76,
+   "height": 0.314,
+   "triangles": 324,
    "materials": [
     "clay",
     "earth"
@@ -2552,8 +2552,8 @@
     1,
     1
    ],
-   "height": 0.4,
-   "triangles": 228,
+   "height": 0.414,
+   "triangles": 972,
    "materials": [
     "clay",
     "earth"
@@ -2571,8 +2571,8 @@
     1,
     1
    ],
-   "height": 0.55,
-   "triangles": 456,
+   "height": 0.564,
+   "triangles": 1944,
    "materials": [
     "clay",
     "earth"
@@ -2590,8 +2590,8 @@
     1,
     1
    ],
-   "height": 0.3,
-   "triangles": 76,
+   "height": 0.314,
+   "triangles": 324,
    "materials": [
     "clay",
     "earth"
@@ -2609,8 +2609,8 @@
     1,
     1
    ],
-   "height": 0.4,
-   "triangles": 228,
+   "height": 0.414,
+   "triangles": 972,
    "materials": [
     "clay",
     "earth"
@@ -2628,8 +2628,8 @@
     1,
     1
    ],
-   "height": 0.55,
-   "triangles": 456,
+   "height": 0.564,
+   "triangles": 1944,
    "materials": [
     "clay",
     "earth"
@@ -4932,8 +4932,8 @@
     1,
     1
    ],
-   "height": 0.3,
-   "triangles": 76,
+   "height": 0.314,
+   "triangles": 324,
    "materials": [
     "clay",
     "earth"
@@ -4951,8 +4951,8 @@
     1,
     1
    ],
-   "height": 0.4,
-   "triangles": 228,
+   "height": 0.414,
+   "triangles": 972,
    "materials": [
     "clay",
     "earth"
@@ -4970,8 +4970,8 @@
     1,
     1
    ],
-   "height": 0.55,
-   "triangles": 456,
+   "height": 0.564,
+   "triangles": 1944,
    "materials": [
     "clay",
     "earth"

@@ -14,17 +14,23 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import common as C
 import stations as S
+import look2_props_shapes as H
 
 
 def masonry(m, style, height):
     mat = {"mud_brick": "clay", "stone": "stone", "log": "trunk"}[style]
     if style == "log":
         for z in range(round(height / 0.2)):
-            m.rod(mat, (-0.5, 0, z * 0.2 + 0.1), (0.5, 0, z * 0.2 + 0.1), 0.1, cap_mat="wood")
+            drift = 0.012 * ((z % 3) - 1)
+            m.rod(mat, (-0.49, drift, z * 0.2 + 0.1), (0.49, -drift, z * 0.2 + 0.1),
+                  0.1, r2=0.092, cap_mat="wood", jitter=0.003)
+            for x in (-.39, .39):
+                m.box("wood_dark", (.025, .12, .025), loc=(x, 0, z * .2 + .185))
     else:
         for z in range(round(height / 0.2)):
             for x in range(4):
-                m.box(mat, (0.245, 0.24, 0.195), loc=(-0.375 + x * 0.25, 0, 0.1 + z * 0.2))
+                m.box(mat, (0.239, 0.24, 0.19), loc=(-0.375 + x * 0.25, 0, 0.1 + z * 0.2),
+                      jitter=.004, taper=.96)
 
 
 def bench(m, kind, working):
@@ -46,10 +52,18 @@ def bench(m, kind, working):
 def fence(m, mask, palisade):
     height = 1.8 if palisade else 0.9
     m.cyl("trunk", 0.07, height, segs=6, r2=0.02 if palisade else 0.07)
+    H.lash(m, (0, 0, .71), .081)
     for bit, (x, y) in enumerate(((0, 0.5), (0.5, 0), (0, -0.5), (-0.5, 0))):
         if mask & (1 << bit):
             for z in (0.3, 0.7):
                 m.rod("wood", (0, 0, z), (x, y, z), 0.035, segs=5)
+            if not palisade:
+                for k in range(5):
+                    z = .23 + k * .105
+                    sway = .035 if k % 2 else -.035
+                    m.tube("wood", [(0, 0, z), (x * .5 - y * sway, y * .5 + x * sway, z + .012),
+                                    (x, y, z)], [.018] * 3, segs=4)
+                m.rod("trunk", (x * .5, y * .5, .1), (x * .5, y * .5, .8), .026, segs=5)
             if palisade:
                 for k in range(1, 5):
                     m.cyl("trunk", 0.065, height, loc=(x * k / 4, y * k / 4, 0), segs=5, r2=0.02)
@@ -95,16 +109,20 @@ def build():
             if active:
                 m.sockets["light"] = p.get("light", (0, 0, 0.5))
             m.sockets["work"] = (0, -(p["fp"][1] / 2 + 0.35), 0)
+            H.finish(m)
+            H.fit(m, p["fp"])
             C.save_static(m, p["fp"], entries, {"family": "station", "state": state})
     for kind in ("mason_bench", "pottery_wheel"):
         for working in (False, True):
             m = C.Model(f"{kind}_{'working' if working else 'idle'}")
             bench(m, kind, working)
+            H.finish(m)
             C.save_static(m, (2, 1), entries, {"family": "station"})
     for style in ("mud_brick", "stone", "log"):
         for stage, height in (("foundation", 0.2), ("half_built", 1.0), ("complete", 2.0)):
             m = C.Model(f"wall_{style}_{stage}")
             masonry(m, style, height)
+            H.finish(m)
             C.save_static(m, (1, 1), entries, {"family": "wall", "stage": stage})
     for palisade in (False, True):
         for mask in range(16):

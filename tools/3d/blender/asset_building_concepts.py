@@ -18,6 +18,8 @@ def concept(m, template, stage):
     for sx in (-1, 1):
         for sy in (-1, 1):
             m.rod('wood', (sx * x, sy * y, 0), (sx * x, sy * y, top), 0.10, segs=6)
+    if stage == 'frame':
+        return
     match template['id']:
         case 'shrine':
             for n in range(9):
@@ -43,16 +45,29 @@ def concept(m, template, stage):
             for level in range(max(1, round(top / 0.25))):
                 z = 0.125 + level * 0.25
                 for side in (-1, 1):
-                    m.box(material, (0.28, h - 0.4, 0.24), loc=(side * x, 0, z))
-                m.box(material, (w - 0.4, 0.28, 0.24), loc=(0, y, z))
+                    for block in range(4):
+                        py = -(h - 0.4) / 2 + (block + 0.5) * (h - 0.4) / 4
+                        m.box(material, (0.28, (h - 0.4) / 4 - 0.025, 0.235),
+                              loc=(side * x, py, z), jitter=0.009)
+                for block in range(4):
+                    px = -(w - 0.4) / 2 + (block + 0.5) * (w - 0.4) / 4
+                    m.box(material, ((w - 0.4) / 4 - 0.025, 0.28, 0.235),
+                          loc=(px, y, z), jitter=0.009)
                 for side in (-1, 1):
-                    m.box(material, ((w - 1.8) / 2, 0.28, 0.24), loc=(side * (w + 1.0) / 4, -y, z))
+                    for block in range(2):
+                        px = side * (0.9 + (block + 0.5) * (w - 2.2) / 4)
+                        m.box(material, ((w - 2.2) / 4 - 0.025, 0.28, 0.235),
+                              loc=(px, -y, z), jitter=0.009)
             if template['id'] == 'chief_hall':
                 for side in (-1, 1):
                     m.rod('wood_dark', (side * 0.9, -y - 0.05, 0), (side * 0.9, -y - 0.05, top), 0.13)
                 m.rod('wood', (-1.1, -y - 0.05, top), (1.1, -y - 0.05, top), 0.13)
                 m.rod('horn', (-0.32, -y - 0.18, top), (0.32, -y - 0.18, top + 0.30), 0.06)
             else:
+                for side in (-1, 1):
+                    m.rod('wood_dark', (side * 0.86, -y - 0.04, 0.1),
+                          (side * 0.86, -y - 0.04, top), 0.09, segs=7)
+                m.rod('wood', (-1.04, -y - 0.04, top), (1.04, -y - 0.04, top), 0.10, segs=7)
                 for px in (-1, 0, 1):
                     m.box('wood', (0.7, 0.6, 0.5), loc=(px, 0.65, 0.3))
                     m.ball('thatch', 0.3, loc=(px, -0.35, 0.35), scale=(0.8, 0.8, 1.2), subdiv=1)

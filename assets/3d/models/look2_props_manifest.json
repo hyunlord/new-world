@@ -1,0 +1,862 @@
+{
+  "models": {
+    "anvil": {
+      "family": "station",
+      "file": "models/anvil.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.62,
+      "materials": [
+        "trunk",
+        "wood",
+        "stone",
+        "metal"
+      ],
+      "sockets": {
+        "work": [
+          0,
+          0,
+          0.85
+        ]
+      },
+      "triangles": 236
+    },
+    "basket": {
+      "family": "item",
+      "file": "models/basket.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.426,
+      "materials": [
+        "thatch",
+        "earth",
+        "wood"
+      ],
+      "sockets": {},
+      "triangles": 411
+    },
+    "bedroll": {
+      "family": "station",
+      "file": "models/bedroll.glb",
+      "footprint": [
+        2,
+        1
+      ],
+      "height": 0.27,
+      "materials": [
+        "hide",
+        "fur",
+        "leather"
+      ],
+      "sockets": {
+        "work": [
+          0,
+          0,
+          0.85
+        ]
+      },
+      "triangles": 272
+    },
+    "bee_skep": {
+      "family": "station",
+      "file": "models/bee_skep.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.98,
+      "materials": [
+        "stone",
+        "thatch",
+        "wood_dark"
+      ],
+      "sockets": {
+        "work": [
+          0,
+          0,
+          0.85
+        ]
+      },
+      "triangles": 700
+    },
+    "casting_bench": {
+      "family": "station",
+      "file": "models/casting_bench.glb",
+      "footprint": [
+        2,
+        1
+      ],
+      "height": 0.784,
+      "materials": [
+        "stone",
+        "wood",
+        "metal",
+        "glow",
+        "clay",
+        "wood_dark"
+      ],
+      "sockets": {
+        "light": [
+          0.62,
+          0.3,
+          0.05
+        ],
+        "work": [
+          0,
+          0,
+          0.85
+        ]
+      },
+      "triangles": 536
+    },
+    "charcoal_clamp": {
+      "family": "station",
+      "file": "models/charcoal_clamp.glb",
+      "footprint": [
+        3,
+        3
+      ],
+      "height": 0.869,
+      "materials": [
+        "earth",
+        "glow",
+        "trunk",
+        "wood"
+      ],
+      "sockets": {
+        "light": [
+          0,
+          0.9,
+          0
+        ],
+        "work": [
+          0,
+          0,
+          1.85
+        ]
+      },
+      "triangles": 1376
+    },
+    "clay_oven": {
+      "family": "station",
+      "file": "models/clay_oven.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.59,
+      "materials": [
+        "stone",
+        "clay",
+        "wood_dark",
+        "glow",
+        "trunk",
+        "wood"
+      ],
+      "sockets": {
+        "light": [
+          0,
+          0.22,
+          0.36
+        ],
+        "work": [
+          0,
+          0,
+          0.85
+        ]
+      },
+      "triangles": 676
+    },
+    "cloth_bolt": {
+      "family": "item",
+      "file": "models/cloth_bolt.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.205,
+      "materials": [
+        "cloth",
+        "wood",
+        "leather"
+      ],
+      "sockets": {},
+      "triangles": 96
+    },
+    "door": {
+      "family": "station",
+      "file": "models/door.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 2.0,
+      "materials": [
+        "wood",
+        "wood_dark",
+        "leather"
+      ],
+      "overhang": true,
+      "pivot": "left edge (x=0); leaf spans +X to width, front faces +Z",
+      "sockets": {},
+      "triangles": 328
+    },
+    "drying_rack": {
+      "family": "station",
+      "file": "models/drying_rack.glb",
+      "footprint": [
+        2,
+        1
+      ],
+      "height": 1.609,
+      "materials": [
+        "wood",
+        "hide",
+        "leather",
+        "thatch"
+      ],
+      "sockets": {
+        "work": [
+          0,
+          0,
+          0.85
+        ]
+      },
+      "triangles": 500
+    },
+    "firewood": {
+      "family": "item",
+      "file": "models/firewood.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.165,
+      "materials": [
+        "wood",
+        "trunk",
+        "leather"
+      ],
+      "sockets": {},
+      "triangles": 152
+    },
+    "flint_pile": {
+      "family": "item",
+      "file": "models/flint_pile.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.221,
+      "materials": [
+        "vein",
+        "stone"
+      ],
+      "sockets": {},
+      "triangles": 120
+    },
+    "grinding_stone": {
+      "family": "station",
+      "file": "models/grinding_stone.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.294,
+      "materials": [
+        "hide",
+        "stone",
+        "thatch",
+        "earth"
+      ],
+      "sockets": {
+        "work": [
+          0,
+          0,
+          0.85
+        ]
+      },
+      "triangles": 590
+    },
+    "hearth": {
+      "family": "station",
+      "file": "models/hearth.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.934,
+      "materials": [
+        "stone",
+        "earth",
+        "wood_dark",
+        "glow",
+        "trunk",
+        "wood",
+        "thatch"
+      ],
+      "sockets": {
+        "light": [
+          0,
+          0.35,
+          0
+        ],
+        "work": [
+          0,
+          0,
+          0.85
+        ]
+      },
+      "triangles": 992
+    },
+    "hearth_unlit": {
+      "family": "station",
+      "file": "models/hearth_unlit.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.934,
+      "materials": [
+        "stone",
+        "earth",
+        "wood_dark",
+        "trunk",
+        "wood",
+        "thatch"
+      ],
+      "sockets": {
+        "work": [
+          0,
+          0,
+          0.85
+        ]
+      },
+      "triangles": 886
+    },
+    "hide": {
+      "family": "item",
+      "file": "models/hide.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.03,
+      "materials": [
+        "hide"
+      ],
+      "sockets": {},
+      "triangles": 72
+    },
+    "ingot_stack": {
+      "family": "item",
+      "file": "models/ingot_stack.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.15,
+      "materials": [
+        "metal"
+      ],
+      "sockets": {},
+      "triangles": 96
+    },
+    "kiln": {
+      "family": "station",
+      "file": "models/kiln.glb",
+      "footprint": [
+        2,
+        2
+      ],
+      "height": 1.44,
+      "materials": [
+        "earth",
+        "clay",
+        "glow",
+        "trunk",
+        "wood"
+      ],
+      "sockets": {
+        "light": [
+          0,
+          0.22,
+          0.82
+        ],
+        "work": [
+          0,
+          0,
+          1.35
+        ]
+      },
+      "triangles": 1376
+    },
+    "knapping_spot": {
+      "family": "station",
+      "file": "models/knapping_spot.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.254,
+      "materials": [
+        "hide",
+        "trunk",
+        "wood",
+        "stone",
+        "vein"
+      ],
+      "sockets": {
+        "work": [
+          0,
+          0,
+          0.85
+        ]
+      },
+      "triangles": 438
+    },
+    "lean_to": {
+      "family": "station",
+      "file": "models/lean_to.glb",
+      "footprint": [
+        2,
+        2
+      ],
+      "height": 1.96,
+      "materials": [
+        "wood",
+        "wood_dark",
+        "thatch",
+        "canopy",
+        "hide"
+      ],
+      "sockets": {
+        "work": [
+          0,
+          0,
+          0.2
+        ]
+      },
+      "triangles": 940
+    },
+    "log_pile_l": {
+      "family": "item",
+      "file": "models/log_pile_l.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.542,
+      "materials": [
+        "trunk",
+        "wood"
+      ],
+      "sockets": {},
+      "triangles": 672
+    },
+    "log_pile_m": {
+      "family": "item",
+      "file": "models/log_pile_m.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.33,
+      "materials": [
+        "trunk",
+        "wood"
+      ],
+      "sockets": {},
+      "triangles": 560
+    },
+    "log_pile_s": {
+      "family": "item",
+      "file": "models/log_pile_s.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.173,
+      "materials": [
+        "trunk",
+        "wood"
+      ],
+      "sockets": {},
+      "triangles": 224
+    },
+    "loom": {
+      "family": "station",
+      "file": "models/loom.glb",
+      "footprint": [
+        2,
+        1
+      ],
+      "height": 1.909,
+      "materials": [
+        "wood",
+        "wood_dark",
+        "cloth",
+        "clay",
+        "thatch"
+      ],
+      "sockets": {
+        "work": [
+          0,
+          0,
+          0.85
+        ]
+      },
+      "triangles": 616
+    },
+    "meat": {
+      "family": "item",
+      "file": "models/meat.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.19,
+      "materials": [
+        "fruit",
+        "horn"
+      ],
+      "sockets": {},
+      "triangles": 116
+    },
+    "ore_pile": {
+      "family": "item",
+      "file": "models/ore_pile.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.218,
+      "materials": [
+        "vein",
+        "stone"
+      ],
+      "sockets": {},
+      "triangles": 120
+    },
+    "pot": {
+      "family": "item",
+      "file": "models/pot.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.394,
+      "materials": [
+        "clay",
+        "earth"
+      ],
+      "sockets": {},
+      "triangles": 324
+    },
+    "pot_stack": {
+      "family": "item",
+      "file": "models/pot_stack.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.49,
+      "materials": [
+        "clay",
+        "earth"
+      ],
+      "sockets": {},
+      "triangles": 686
+    },
+    "pottery_bench": {
+      "family": "station",
+      "file": "models/pottery_bench.glb",
+      "footprint": [
+        2,
+        1
+      ],
+      "height": 0.816,
+      "materials": [
+        "wood",
+        "wood_dark",
+        "clay",
+        "earth",
+        "stone"
+      ],
+      "sockets": {
+        "work": [
+          0,
+          0,
+          0.85
+        ]
+      },
+      "triangles": 1518
+    },
+    "retting_pit": {
+      "family": "station",
+      "file": "models/retting_pit.glb",
+      "footprint": [
+        2,
+        2
+      ],
+      "height": 0.206,
+      "materials": [
+        "earth",
+        "metal",
+        "thatch",
+        "leather",
+        "stone"
+      ],
+      "sockets": {
+        "work": [
+          0,
+          0,
+          1.35
+        ]
+      },
+      "triangles": 484
+    },
+    "sack": {
+      "family": "item",
+      "file": "models/sack.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.45,
+      "materials": [
+        "cloth",
+        "leather"
+      ],
+      "sockets": {},
+      "triangles": 120
+    },
+    "smelter": {
+      "family": "station",
+      "file": "models/smelter.glb",
+      "footprint": [
+        2,
+        2
+      ],
+      "height": 1.62,
+      "materials": [
+        "stone",
+        "clay",
+        "glow",
+        "leather",
+        "wood",
+        "thatch",
+        "earth",
+        "wood_dark"
+      ],
+      "sockets": {
+        "light": [
+          0,
+          0.2,
+          0.5
+        ],
+        "work": [
+          0,
+          0,
+          1.35
+        ]
+      },
+      "triangles": 1350
+    },
+    "stone_pile": {
+      "family": "item",
+      "file": "models/stone_pile.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.224,
+      "materials": [
+        "stone"
+      ],
+      "sockets": {},
+      "triangles": 156
+    },
+    "storage_shelf": {
+      "family": "station",
+      "file": "models/storage_shelf.glb",
+      "footprint": [
+        2,
+        1
+      ],
+      "height": 1.654,
+      "materials": [
+        "wood_dark",
+        "wood",
+        "clay",
+        "earth",
+        "thatch"
+      ],
+      "sockets": {
+        "work": [
+          0,
+          0,
+          0.85
+        ]
+      },
+      "triangles": 3150
+    },
+    "tool": {
+      "family": "item",
+      "file": "models/tool.glb",
+      "footprint": [
+        1,
+        1
+      ],
+      "height": 0.055,
+      "materials": [
+        "wood",
+        "stone",
+        "leather"
+      ],
+      "sockets": {},
+      "triangles": 80
+    },
+    "well_body": {
+      "family": "station",
+      "file": "models/well_body.glb",
+      "footprint": [
+        3,
+        3
+      ],
+      "height": 2.558,
+      "materials": [
+        "stone",
+        "metal",
+        "wood",
+        "wood_dark",
+        "leather",
+        "thatch",
+        "trunk"
+      ],
+      "sockets": {
+        "work": [
+          0,
+          0,
+          1.85
+        ]
+      },
+      "triangles": 3040
+    },
+    "wood_bench": {
+      "family": "station",
+      "file": "models/wood_bench.glb",
+      "footprint": [
+        2,
+        1
+      ],
+      "height": 1.008,
+      "materials": [
+        "wood",
+        "wood_dark",
+        "trunk",
+        "stone"
+      ],
+      "sockets": {
+        "work": [
+          0,
+          0,
+          0.85
+        ]
+      },
+      "triangles": 646
+    },
+    "yard_cart": {
+      "art_pass": "look2",
+      "family": "prop",
+      "file": "models/yard_cart.glb",
+      "footprint": [
+        2,
+        3
+      ],
+      "height": 1.127,
+      "materials": [
+        "wood",
+        "trunk",
+        "thatch",
+        "wood_dark",
+        "earth",
+        "clay"
+      ],
+      "sockets": {},
+      "triangles": 3166
+    },
+    "yard_grain_baskets": {
+      "art_pass": "look2",
+      "family": "prop",
+      "file": "models/yard_grain_baskets.glb",
+      "footprint": [
+        1.2,
+        1.2
+      ],
+      "height": 0.497,
+      "materials": [
+        "thatch",
+        "earth",
+        "clay"
+      ],
+      "sockets": {},
+      "triangles": 1096
+    },
+    "yard_hay": {
+      "art_pass": "look2",
+      "family": "prop",
+      "file": "models/yard_hay.glb",
+      "footprint": [
+        1.2,
+        1.2
+      ],
+      "height": 0.776,
+      "materials": [
+        "thatch"
+      ],
+      "sockets": {},
+      "triangles": 576
+    },
+    "yard_tool_rack": {
+      "art_pass": "look2",
+      "family": "prop",
+      "file": "models/yard_tool_rack.glb",
+      "footprint": [
+        2,
+        1
+      ],
+      "height": 1.313,
+      "materials": [
+        "trunk",
+        "wood",
+        "thatch",
+        "stone",
+        "wood_dark"
+      ],
+      "sockets": {},
+      "triangles": 1128
+    },
+    "yard_woodpile": {
+      "art_pass": "look2",
+      "family": "prop",
+      "file": "models/yard_woodpile.glb",
+      "footprint": [
+        2,
+        1.6
+      ],
+      "height": 1.358,
+      "materials": [
+        "trunk",
+        "wood",
+        "thatch"
+      ],
+      "sockets": {},
+      "triangles": 2872
+    }
+  }
+}
