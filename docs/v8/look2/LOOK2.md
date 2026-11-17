@@ -62,7 +62,7 @@ placement.
 
 ## Integrated material boundary
 
-L1 `d728ad708`, T2 `4085470bf` and UI2 `83d1c7e4e` are normal-merged.
+L1 `998c73dd9`, T2 `424a1aa53` and UI2 `83d1c7e4e` are normal-merged.
 `Data3D` preserves source materials and imported LODs; structures and props adapt
 copies through `Textures3D.mesh`. Flora and plants consume source colours through
 their seasonal and wind shaders. Tinted prop copies retain LODs and choose the

@@ -33,7 +33,7 @@ void vertex() {
 	world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	profile = UV.x;
 	texture_tile = UV2.x;
-	texture_normal = normalize((MODEL_MATRIX * vec4(NORMAL, 0.0)).xyz);
+	texture_normal = normalize(MODEL_NORMAL_MATRIX * NORMAL);
 }
 
 void fragment() {

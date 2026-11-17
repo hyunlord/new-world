@@ -104,8 +104,8 @@
     "crop_ripe_by_category": {"fibre": [0.42, 0.52, 0.62]}
   },
   "light": {
-    "sun_energy": 1.55,
-    "ambient_energy": 0.48,
+    "sun_energy": 2.15,
+    "ambient_energy": 0.60,
     "exposure": 1.15,
     "night_sun_energy": 0.22,
     "night_ambient_energy": 0.55,
