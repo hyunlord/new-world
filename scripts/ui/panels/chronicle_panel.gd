@@ -21,6 +21,7 @@
 #   get_neighbours; signal world_reset.
 extends Control
 
+const GeneratedArt = preload("res://scripts/ui/generated_art.gd")
 const KoreanText = preload("res://scripts/ui/mux/korean_text.gd")
 const PanelTooltips = preload("res://scripts/ui/panels/panel_tooltips.gd")
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
@@ -73,6 +74,7 @@ var _highlighted_subjects: PackedInt64Array = PackedInt64Array()
 var _show_all: bool = false
 var _notable_kinds: Array[int] = []
 var _notable_button: Button = null
+var _illustrations: int = 0
 
 func _ready() -> void:
 	if not configure_feed_visibility(JSON.parse_string(FileAccess.get_file_as_string(FEED_PATH))):
@@ -124,6 +126,7 @@ func _ready() -> void:
 	_year_label.hide()
 	box.add_child(_year_label)
 	_body = RichTextLabel.new()
+	_body.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	_body.autowrap_mode = TextServer.AUTOWRAP_WORD
 	_body.bbcode_enabled = true
 	_body.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -261,6 +264,7 @@ func _refresh() -> void:
 	var ticks_per_day: int = maxi(1, int(info.get("ticks_per_day", 1440)))
 	var grouped: Array = _group_entries(filtered, ticks_per_day)
 	var lines: Array[String] = []
+	_illustrations = 0
 	_groups.clear()
 	for item: Variant in grouped:
 		if item is Dictionary and bool((item as Dictionary).get("_group", false)):
@@ -275,13 +279,13 @@ func _refresh() -> void:
 			lines.append("[url=group:%s]%s · %s[/url]" % [group_id, count_text, action_text])
 			if expanded:
 				for entry: Dictionary in entries:
-					lines.append(Chronicle.line(entry, -1, _locale, info, true, true))
+					lines.append(_illustrated_line(entry, info))
 			else:
-				lines.append(Chronicle.line(entries[0], -1, _locale, info, true, true))
+				lines.append(_illustrated_line(entries[0], info))
 		elif item is Dictionary and (item as Dictionary).has("_presentation_text"):
 			lines.append(str((item as Dictionary)["_presentation_text"]))
 		else:
-			lines.append(Chronicle.line(item as Dictionary, -1, _locale, info, true, true))
+			lines.append(_illustrated_line(item as Dictionary, info))
 	for group_id: String in _expanded_groups.keys():
 		if not _groups.has(group_id):
 			_expanded_groups.erase(group_id)
@@ -296,6 +300,19 @@ func _refresh() -> void:
 			_clear_highlights()
 	_body.text = "\n\n".join(lines)
 	_fit_body_lines.call_deferred()
+
+## Bound image memory/layout while retaining the exact native row and its cause links.
+func _illustrated_line(row: Dictionary, info: Dictionary) -> String:
+	var text: String = Chronicle.line(row, -1, _locale, info, true, true)
+	if _illustrations >= 3:
+		return text
+	var art: Dictionary = GeneratedArt.chronicle_art(row)
+	var picture: Texture2D = GeneratedArt.texture(str(art.get("family", "")), str(art.get("id", "")))
+	if picture == null:
+		return text
+	_illustrations += 1
+	return "[img=288x162]%s[/img]\n%s" % [picture.resource_path, text]
+
 
 ## M5: the filter controls' texts (rebuilt on a language change).
 func _refresh_filters() -> void:
@@ -397,8 +414,7 @@ func _fit_body_lines() -> void:
 	if _body_padding == null:
 		return
 	var line_height: float = ceilf(_body.get_theme_font("normal_font").get_height(_body.get_theme_font_size("normal_font_size")))
-	if _body.get_line_count() > 0:
-		line_height = maxf(line_height, _body.get_line_height(0))
+	# Inline art can make the first rendered line taller than the text grid.
 	var available: float = maxf(0.0, _body.size.y - _body_padding.content_margin_top - line_height)
 	# Keep the scroll viewport on whole text lines at both ends of the feed.
 	_body_padding.content_margin_bottom = line_height + fmod(available, line_height)

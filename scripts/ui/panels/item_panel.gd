@@ -2,6 +2,8 @@
 # Bridge reads: get_colony_overlay via SimReads, get_tile_food; no mutations.
 extends PanelContainer
 
+const GeneratedArt = preload("res://scripts/ui/generated_art.gd")
+const Content = preload("res://scripts/ui/content_context.gd")
 const ItemIcons = preload("res://scripts/ui/item_icons.gd")
 const KoreanText = preload("res://scripts/ui/mux/korean_text.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
@@ -59,6 +61,9 @@ func display_tile(tile: Vector2i) -> void:
 func _add_item_row(text: String, kind: int) -> void:
 	var row := HBoxContainer.new()
 	row.add_child(ItemIcons.icon(kind))
+	var illustration: TextureRect = GeneratedArt.image(Vector2(64, 64))
+	GeneratedArt.set_image(illustration, "item_illustrations", str(Content.row("items", kind).get("id", "")))
+	row.add_child(illustration)
 	var label := Label.new()
 	label.text = KoreanText.words(text)
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD

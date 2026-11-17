@@ -949,8 +949,8 @@ func _update_portrait(_agent_id: int) -> void:
 		return
 	var variant: int = int(look.get("variant", 0))
 	var path: String = ArtData.portrait_path(str(look.get("frames", "")), "v%d" % (variant + 1))
-	var generated: Texture2D = GeneratedArt.texture("portraits", GeneratedArt.portrait_id(
-		SimReads.read(_world_sim, "get_agent_snapshot"), _selected_entity_bits, SimReads.read(_world_sim, "get_tech")))
+	var generated: Texture2D = GeneratedArt.portrait(
+		SimReads.read(_world_sim, "get_agent_snapshot"), _selected_entity_bits, SimReads.read(_world_sim, "get_tech"))
 	_portrait.texture = generated if generated != null else ArtData.texture_at(path)
 	_portrait.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR if generated != null else CanvasItem.TEXTURE_FILTER_NEAREST
 	var row: Dictionary = ArtData.look(int(look.get("look", -1)))

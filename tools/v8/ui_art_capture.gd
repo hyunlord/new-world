@@ -41,7 +41,7 @@ func _panel(name: String) -> Control:
 
 
 func _hide_panels() -> void:
-	for name: String in ["AgentInspectorPanel", "Goals", "TechPanel", "BuildPanel", "WorkshopPanel", "CardPanel", "ItemPanel"]:
+	for name: String in ["AgentInspectorPanel", "Goals", "TechPanel", "BuildPanel", "WorkshopPanel", "CardPanel", "ItemPanel", "ChroniclePanel", "MigrantPanel"]:
 		var panel: Control = _panel(name)
 		if panel != null:
 			panel.hide()
@@ -57,6 +57,11 @@ func _paths(node: Node) -> PackedStringArray:
 		var path: String = node.icon.resource_path
 		if path.begins_with(Art.ROOT):
 			paths.append(path)
+	if node is RichTextLabel and node.is_visible_in_tree():
+		var images := RegEx.new()
+		images.compile("\\[img=288x162\\](res://assets/ui/generated/[^\\[]+)\\[/img\\]")
+		for found: RegExMatch in images.search_all(node.text):
+			paths.append(found.get_string(1))
 	for child: Node in node.get_children():
 		paths.append_array(_paths(child))
 	return paths
@@ -74,6 +79,11 @@ func _shot(name: String, panel: Control) -> void:
 			if image_path.begins_with(Art.ROOT + "items/"):
 				item_images += 1
 		_check(name + " has generated item icons", item_images > 0)
+	if name == "items" and "--u2" in OS.get_cmdline_user_args():
+		var illustrated: bool = false
+		for image_path: String in paths:
+			illustrated = illustrated or image_path.begins_with(Art.ROOT + "item_illustrations/")
+		_check("items has separate painterly illustration", illustrated)
 	var path: String = ""
 	if not _verify_only:
 		path = _out.path_join(name + ".png")
@@ -168,6 +178,8 @@ func _run() -> void:
 	_check("natural decision card exists", bool(cards.call("has_active_cards")))
 	cards.show()
 	await _shot("cards", cards)
+	if "--u2" in OS.get_cmdline_user_args():
+		await _u2_surfaces()
 	var file: FileAccess = FileAccess.open(_out.path_join("verification.json" if _verify_only else "screenshots.json"), FileAccess.WRITE)
 	if file != null:
 		file.store_string(JSON.stringify({"surfaces" if _verify_only else "shots": _records, "failures": _failures, "verify_only": _verify_only}, "\t"))
@@ -175,3 +187,26 @@ func _run() -> void:
 		_check("screenshot manifest opened", false)
 	print(("UI_ART_VERIFY_DONE surfaces=%d failures=%d" if _verify_only else "UI_ART_CAPTURE_DONE shots=%d failures=%d") % [_records.size(), _failures])
 	quit(0 if _failures == 0 else 1)
+
+
+## Wait for real native visitor events, without injecting art-only simulation facts.
+func _u2_surfaces() -> void:
+	var migrants: Control = _panel("MigrantPanel")
+	_check("migrant panel exists", migrants != null)
+	if migrants == null:
+		return
+	for _day: int in 16:
+		if int(migrants.call("shown_wave")) >= 0:
+			break
+		SimReads.mutate(_world, "advance_ticks", [1440])
+		await _frames(24)
+	var wave: int = int(migrants.call("shown_wave"))
+	_check("natural migrant wave exists", wave >= 0)
+	if wave >= 0:
+		_hide_panels()
+		migrants.call("open_wave", wave)
+		await _shot("migrants", migrants)
+	_hide_panels()
+	var chronicle: Control = _panel("ChroniclePanel")
+	chronicle.call("toggle_visible")
+	await _shot("chronicle", chronicle)
