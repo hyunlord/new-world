@@ -146,10 +146,19 @@ fn rectangle(anchor: Tile, size: Tile) -> impl Iterator<Item = Tile> {
 }
 
 fn blocked(res: &SimResources, rule: &ZoneRule, tile: Tile) -> bool {
+    blocked_for_layout(res, rule, tile, false)
+}
+
+fn blocked_for_layout(
+    res: &SimResources,
+    rule: &ZoneRule,
+    tile: Tile,
+    prepare_trees: bool,
+) -> bool {
     !crate::runtime::nav::passable(res, tile)
         || !crate::commands::camp_reaches(res, tile)
         || rule.avoid.iter().any(|blocker| match blocker {
-            ZoneBlocker::Trees => res.colony.trees.contains_key(&tile),
+            ZoneBlocker::Trees => !prepare_trees && res.colony.trees.contains_key(&tile),
             ZoneBlocker::Nodes => res.colony.nodes.contains_key(&tile),
             ZoneBlocker::Fields => res.cultivation.fields.contains_key(&tile),
             ZoneBlocker::Structures => {
@@ -184,6 +193,54 @@ fn edge_distance(tile: Tile, anchor: Tile, size: Tile) -> u32 {
 }
 
 fn find_zone_site(res: &SimResources, rule: &ZoneRule) -> Option<BTreeSet<Tile>> {
+    find_zone_site_for_preparation(res, rule, false)
+}
+
+/// Ordinary stockpile demand may prepare trees, but only workers can make the layout admissible.
+pub(super) fn prepare_stockpile_zone(
+    world: &World,
+    res: &SimResources,
+) -> Vec<sim_core::colony::Command> {
+    if !res.steward.enabled {
+        return Vec::new();
+    }
+    let people = u32::try_from(world.query::<&Agent>().iter().count()).unwrap_or(u32::MAX);
+    for rule in zones::installed()
+        .connected()
+        .filter(|rule| rule.category == ZoneUse::Storage)
+    {
+        if !res.steward.scope.permits(rule.scope)
+            || has_free_slot(res, rule)
+            || zone_tiles(res, rule).count()
+                >= usize::try_from(people.div_ceil(rule.people_per_zone).max(1))
+                    .unwrap_or(usize::MAX)
+            || find_zone_site(res, rule).is_some()
+        {
+            continue;
+        }
+        if let Some(site) = find_zone_site_for_preparation(res, rule, true) {
+            let trees: Vec<_> = site
+                .into_iter()
+                .filter(|tile| {
+                    res.colony.trees.contains_key(tile)
+                        && !res.colony.designations.contains_key(tile)
+                })
+                .collect();
+            return if trees.is_empty() {
+                Vec::new()
+            } else {
+                vec![sim_core::colony::Command::DesignateChopTiles { tiles: trees }]
+            };
+        }
+    }
+    Vec::new()
+}
+
+fn find_zone_site_for_preparation(
+    res: &SimResources,
+    rule: &ZoneRule,
+    prepare_trees: bool,
+) -> Option<BTreeSet<Tile>> {
     let mut village: BTreeSet<_> = res
         .colony
         .buildings
@@ -212,12 +269,18 @@ fn find_zone_site(res: &SimResources, rule: &ZoneRule) -> Option<BTreeSet<Tile>>
     candidates.sort_by_key(|&tile| (distance(tile, hearth), tile.1, tile.0));
     candidates.into_iter().find_map(|anchor| {
         let tiles: BTreeSet<_> = rectangle(anchor, rule.size).collect();
-        if tiles
+        if tiles.iter().any(|&tile| {
+            blocked_for_layout(res, rule, tile, prepare_trees)
+                || existing.contains(&tile)
+                || (prepare_trees
+                    && res.colony.trees.contains_key(&tile)
+                    && res.steward.vetoed(
+                        &sim_core::colony::steward::Target::Tile(tile.0, tile.1),
+                        res.current_tick,
+                    ))
+        }) || existing
             .iter()
-            .any(|&tile| blocked(res, rule, tile) || existing.contains(&tile))
-            || existing
-                .iter()
-                .any(|&tile| edge_distance(tile, anchor, rule.size) <= rule.min_spacing)
+            .any(|&tile| edge_distance(tile, anchor, rule.size) <= rule.min_spacing)
         {
             return None;
         }
@@ -338,6 +401,142 @@ mod tests {
         }
         res.settlements.insert(0, settlement);
         (world, res)
+    }
+
+    #[test]
+    fn storage_preparation_preserves_physical_guards_vetoes_and_caps() {
+        use sim_core::colony::steward::Target;
+        use sim_core::colony::{Command, Designation, NodeKind, ResourceNode, Tree};
+        let (mut world, mut res) = fixture();
+        res.steward.scope = StewardScope::All;
+        let rule = zones::installed()
+            .connected()
+            .find(|rule| rule.category == ZoneUse::Storage)
+            .expect("storage");
+        assert!(
+            prepare_stockpile_zone(&world, &res).is_empty(),
+            "a clear site needs no preparation"
+        );
+        for y in 0..res.tile_grid.height {
+            for x in 0..res.tile_grid.width {
+                res.colony.trees.insert((x, y), Tree { logs: 1 });
+            }
+        }
+        assert!(find_zone_site(&res, rule).is_none());
+        let orders = prepare_stockpile_zone(&world, &res);
+        let [Command::DesignateChopTiles { tiles }] = orders.as_slice() else {
+            panic!("ordinary tree preparation")
+        };
+        assert!(!tiles.is_empty());
+        assert!(
+            res.colony.buildings.layout_zones.is_empty(),
+            "preparation never lays out a blocked site"
+        );
+        for &tile in tiles {
+            res.colony.designations.insert(tile, Designation::Chop);
+        }
+        assert!(
+            prepare_stockpile_zone(&world, &res).is_empty(),
+            "wait for already designated trees"
+        );
+        res.colony.designations.clear();
+        for &(x, y) in res.colony.trees.keys() {
+            res.steward.vetoes.insert(Target::Tile(x, y), 100);
+        }
+        assert!(prepare_stockpile_zone(&world, &res).is_empty());
+        res.steward.vetoes.clear();
+        res.steward.enabled = false;
+        assert!(prepare_stockpile_zone(&world, &res).is_empty());
+        res.steward.enabled = true;
+        res.steward.scope = StewardScope::Housing;
+        assert!(
+            !prepare_stockpile_zone(&world, &res).is_empty(),
+            "All-family storage remains shared material supply in Housing scope"
+        );
+        res.steward.scope = StewardScope::All;
+        for &tile in res.colony.trees.keys() {
+            res.colony.nodes.insert(
+                tile,
+                ResourceNode {
+                    kind: NodeKind::Boulder,
+                    left: 1,
+                    material: sim_core::material::MaterialId::from_str_hash("test_blocker"),
+                },
+            );
+        }
+        assert!(
+            prepare_stockpile_zone(&world, &res).is_empty(),
+            "nodes remain mandatory physical blockers"
+        );
+        res.colony.nodes.clear();
+        let site = find_zone_site_for_preparation(&res, rule, true).expect("wooded site");
+        lay_out_zone(&mut world, &mut res, rule, site, 8);
+        assert!(
+            prepare_stockpile_zone(&world, &res).is_empty(),
+            "preparation cannot exceed the authored population cap"
+        );
+    }
+
+    #[test]
+    fn seed_five_storage_bootstrap_physically_clears_its_layout() {
+        use sim_core::colony::Command;
+        sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
+            .expect("bundled content");
+        let mut engine = crate::worldgen::build_world_with(
+            &crate::worldgen::WorldGenConfig::colony(5),
+            sim_core::rules::WorldRules::colony(5),
+        );
+        assert!(
+            crate::commands::apply_command(
+                &mut engine.world,
+                &mut engine.resources,
+                Command::SetSteward {
+                    on: true,
+                    scope: StewardScope::All
+                }
+            )
+            .accepted
+        );
+        while engine.resources.colony.zone_of_tile.is_empty()
+            && engine.current_tick() < 6 * engine.resources.ticks_per_day
+        {
+            engine.tick();
+        }
+        let prepared: Vec<_> = engine
+            .resources
+            .colony
+            .command_log
+            .iter()
+            .filter_map(|record| match &record.command {
+                Command::Steward { rule: 1, command } => match command.as_ref() {
+                    Command::DesignateChopTiles { tiles } => Some(tiles),
+                    _ => None,
+                },
+                _ => None,
+            })
+            .flatten()
+            .copied()
+            .collect();
+        assert!(
+            !prepared.is_empty(),
+            "ordinary stockpile demand prepares its site"
+        );
+        assert!(
+            prepared
+                .iter()
+                .all(|tile| !engine.resources.colony.trees.contains_key(tile)),
+            "workers physically cleared the planned trees"
+        );
+        assert!(
+            !engine.resources.colony.zone_of_tile.is_empty(),
+            "ordinary seed5 storage bootstraps after preparation"
+        );
+        assert!(engine
+            .resources
+            .colony
+            .zone_of_tile
+            .keys()
+            .all(|&tile| allows_stockpile(&engine.resources, tile, (1, 1))));
     }
 
     #[test]

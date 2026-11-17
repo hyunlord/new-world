@@ -121,6 +121,70 @@ fn full_nonfood_store_plans_bounded_empty_space_for_actual_food_hauling() {
 }
 
 #[test]
+fn full_layout_prepares_a_wooded_extension_without_moving_stock() {
+    use sim_core::colony::building_site::ZoneCause;
+    use sim_core::colony::steward::StewardScope;
+    use sim_core::colony::Tree;
+    let (mut world, mut res, policy) = fixture(true);
+    res.steward.enabled = true;
+    res.steward.scope = StewardScope::All;
+    for id in 10..13 {
+        world.spawn((Agent { id }, Position::new(12, 12)));
+    }
+    let layout: std::collections::BTreeSet<_> = (7..=12)
+        .flat_map(|x| (13..=18).map(move |y| (x, y)))
+        .collect();
+    let id = res.colony.next_zone_id;
+    res.colony.next_zone_id += 1;
+    res.colony.buildings.layout_zones.insert(id, layout.clone());
+    res.colony.buildings.zone_causes.insert(
+        id,
+        ZoneCause {
+            kind: "storage".into(),
+            trigger: "storage_full".into(),
+            people: 13,
+            slots: 16,
+        },
+    );
+    res.colony.path_stage.resize(24 * 24, 1);
+    for y in 0..24 {
+        for x in 0..24 {
+            if !layout.contains(&(x, y)) && !res.colony.ground_items.contains_key(&(x, y)) {
+                res.colony.trees.insert((x, y), Tree { logs: 1 });
+            }
+        }
+    }
+    let items = res.colony.ground_items.clone();
+    let zones = res.colony.zone_of_tile.clone();
+    let commands = super::plan(&world, &res, &policy);
+    let prepared: Vec<_> = commands
+        .iter()
+        .filter_map(|command| match command {
+            Command::DesignateChopTiles { tiles } => Some(tiles),
+            _ => None,
+        })
+        .flatten()
+        .copied()
+        .collect();
+    assert!(
+        !prepared.is_empty(),
+        "food storage demand prepares its next layout"
+    );
+    assert!(prepared
+        .iter()
+        .all(|tile| res.colony.trees.contains_key(tile)));
+    assert!(
+        !commands
+            .iter()
+            .any(|command| matches!(command, Command::AddStockpile { .. })),
+        "workers must clear the site before any new stockpile is admitted"
+    );
+    assert_eq!(items, res.colony.ground_items);
+    assert_eq!(zones, res.colony.zone_of_tile);
+    assert_eq!(res.colony.buildings.layout_zones.len(), 1);
+}
+
+#[test]
 fn enough_empty_compatible_capacity_does_not_expand_the_stockpile() {
     let (world, res, policy) = fixture(false);
     assert!(stock_commands(&world, &res, &policy).is_empty());
@@ -408,7 +472,7 @@ fn warm_people_get_storage_for_the_cold_winter_forecast() {
     assert!(facts.preparing);
     for (preparing, units) in [(true, 242), (false, 54)] {
         facts.preparing = preparing;
-        let commands = super::storage::plan(&res, &policy, &facts);
+        let commands = super::storage::plan(&world, &res, &policy, &facts);
         let cells: u64 = commands
             .iter()
             .map(|command| match command {

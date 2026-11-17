@@ -228,7 +228,7 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
                     }
                 }
             }
-            Vec::new()
+            super::zone_growth::prepare_stockpile_zone(world, res)
         }
         Action::Wood {
             items,

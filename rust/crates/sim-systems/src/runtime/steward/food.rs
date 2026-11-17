@@ -21,7 +21,7 @@ pub(super) fn workshop_space_needed(world: &World, res: &SimResources, policy: &
 pub fn plan(world: &World, res: &SimResources, policy: &FoodPlan) -> Vec<Command> {
     let facts = summary(world, res, policy);
     let mut commands = field_orders(world, res, policy, &facts);
-    commands.extend(storage::plan(res, policy, &facts));
+    commands.extend(storage::plan(world, res, policy, &facts));
     let roofed_store = res.colony.rooms.values().any(|room| {
         room.role == sim_core::rooms::RoomRole::Storehouse && super::housing::constructed(res, room)
     });

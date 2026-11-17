@@ -11,7 +11,12 @@ fn distance(a: Tile, b: Tile) -> u32 {
     a.0.abs_diff(b.0).max(a.1.abs_diff(b.1))
 }
 
-pub(super) fn plan(res: &SimResources, policy: &FoodPlan, facts: &FoodSummary) -> Vec<Command> {
+pub(super) fn plan(
+    world: &hecs::World,
+    res: &SimResources,
+    policy: &FoodPlan,
+    facts: &FoodSummary,
+) -> Vec<Command> {
     let Some(hearth) = crate::runtime::jobs::hearth::hearth_tiles(res)
         .first()
         .copied()
@@ -216,7 +221,7 @@ pub(super) fn plan(res: &SimResources, policy: &FoodPlan, facts: &FoodSummary) -
             tile.0,
         )
     });
-    candidates
+    let commands: Vec<_> = candidates
         .into_iter()
         .filter(|&tile| {
             let covered = store_tiles.contains(&tile);
@@ -236,5 +241,10 @@ pub(super) fn plan(res: &SimResources, policy: &FoodPlan, facts: &FoodSummary) -
             x1: x,
             y1: y,
         })
-        .collect()
+        .collect();
+    if commands.is_empty() && ordinary_gap > 0 {
+        super::super::zone_growth::prepare_stockpile_zone(world, res)
+    } else {
+        commands
+    }
 }
