@@ -12,7 +12,7 @@
 - T2 painted textures are normally merged. Evidence and remaining GPU/performance dependencies are recorded in `/Users/rexxa/work/art-img-data/look2/REPORT.md`.
 
 ### Removed
-- No simulation features, models or character rigs.
+- One historical M1 starter image leaves the working tree to keep merged current sheets within the 12-image cap; its original commit link remains in `docs/v8/play/PLAY_REPORT.md`. No simulation features, models or character rigs.
 ## M3D-LOOK L1 — 2026-11-17 (review branch; validation in progress)
 
 ### Added

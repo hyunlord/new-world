@@ -1,5 +1,7 @@
 ## 구현 완료 보고 — V8-PLAY
 
+2026-11-17 보관 위치: [M1 시작 화면](https://github.com/hyunlord/new-world/blob/03d5abb61eeb8765891e2e0fc2f96071c12bc5f2/docs/images/m1_01_start_2x.png)은 원래 커밋에 보존된다. 현재 화면 시트의 12장 한도를 위해 작업 트리 사본만 정리했다.
+
 목표: `docs/v8/play/PLAY_GOAL.md` Part 1–4. 결정 기록 `docs/v8/play/PLAY_DECISIONS.md`(D1–D14), 리뷰 기록 `docs/v8/play/PLAY_REVIEW.md`.
 게임 코드(`rust/`, `scripts/`, `scenes/`, `assets/`, `localization/`, `shaders/`)는 한 줄도 바꾸지 않았다.
 
