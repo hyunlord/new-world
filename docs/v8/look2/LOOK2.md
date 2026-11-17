@@ -93,3 +93,18 @@ contains alpha0.16/BLEND and the existing transparent-material exception preserv
 it without a snow atlas lookup. Eleven smoke GLBs change; the other673 model files
 and all manifests remain byte-identical. Cached materials reset to opaque for
 ordinary snow. GLB and actual imported-consumer regressions cover this boundary.
+
+## Delivery status
+
+Implementation source `9d1e82931` is delivered on `origin/v8/look2` with normal
+push proof. Corrected GPU acceptance remains blocked: twelve attempts from
+13:51 to14:49KST failed the canonical lock, each separated by at least five
+minutes. No other process was interrupted. The first images remain rejected
+historical evidence, not accepted screenshots of the corrected source. No
+500-agent/10,000-instance FPS floor or full publication gate is claimed.
+
+The external Korean report, progress log and DONE marker explicitly carry
+`BLOCKED_GPU_VALIDATION`. Resume with the external `gpu-review-fixed.sh` under
+the canonical wrapper; it captures only the corrected candidate, rebuilds
+contacts and attempts paired performance. Compose the fifteen comparisons with
+`compose_triptychs.py`, review every family, and record real FPS before acceptance.

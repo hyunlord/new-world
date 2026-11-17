@@ -1,5 +1,6 @@
 # WorldSim 역사
 
+- 2026-11-17 — L2 건물·소품 구현을 별도 브랜치로 전달했다(`9d1e82931`, [재현·경계](v8/look2/LOOK2.md)); 건물100/소품118 계약·결정성·재질/LOD 검사 통과, 수정 후 GPU 화면과 FPS는 공유 잠금으로 미검증이며 게시 완료가 아니다.
 - 2026-11-16 — M3D-SWITCH: 3D 화면이 유일한 월드 화면이 되었다. 2D 월드 레이어15개·셰이더5개를 지우고 UI는 유지했으며, 2D를 재던 게이트 단계(23·34·36·38·39·41·46·48)를 같은 기준의 3D 검사로 옮겼다. 시뮬레이션 무변경, 고디 유지 판정. 지워진 2D 렌더러는 `373ff81b2:scripts/world/` 이력에 있다([ADR0068](decisions/0068-3d-only-view.md)).
 - 2026-11-17 — M3D-IMG2 Part U2 범위 확장: 249안 중 아이템119·초상72·방문자24·사건20·성장4·시대3·포장도로1의243장을 채택하고 자산·실제10표면 headless 검증(실패0)을 통과했다([ADR0069](decisions/0069-expanded-ui-art-from-existing-witnesses.md)); GPU 잠금 안에서1920×1080/1280×720 각10장·실패0과249안의13접촉시트를 확인했다. 최종 원격 영수증은 외부ui2에 남기며 planner 통합·게시 게이트는 대기다.
 - 2026-11-16 — M3D-IMG Part U: 생성322안 중318장·GLB아이콘119종을 기존 UI에 연결하고16화면을 확인했다(U2 재확인: 두 세트 모두1920×1080, 이전 laptop1280×720 주장은 철회; 외부 `ui2/capture_resolution_issue.json`)(`9ea8e0ec6`, [ADR0068](decisions/0068-optional-generated-ui-art.md)); 동물/타이틀 새 패널 없이 planner 통합 대기다. 이전 C2 시트는 `1647f7e81:docs/images/c2_contact_sheet.png`에 보존한다.
@@ -18,7 +19,6 @@
 - 2026-11-06 — M6b Stage1 세 번째 held-out1648–1679도 통나무·한파 FAIL로 미게시. 별도 소스 검토에서 다중 화덕의 겨울 비축량 누락을 확인해 계산1줄과 회귀 시험으로 수정했다. 기존 실패와 baseline 동일성35·새 사전 검증을 구분하며 최종 전체 gate·새 held-out은 아직 통과하지 않았다([보고서](v8/m6b/M6B_REPORT.md)).
 - 2026-11-05 — M6b Stage1 게시 후보 `a0ec36d1`: 농경·물리적 씨앗·토양, 생산 제한과 기존 땔감 주문 실행, 명시적 가르침을 구현. 보정26·일반 안전성34/34·BASE 동일성22차(228748값 차이0)·고정 카드 검사는 PASS; held-out·최종 gate·게시는 미완료이며 밭 아트는 [#687](https://github.com/hyunlord/new-world/issues/687)에 이월. [보고서](v8/m6b/M6B_REPORT.md), [ADR0058](decisions/0058-physical-cultivation-and-bounded-stewardship.md).
 - 2026-11-04 — M6b Stage0 중단·미게시(D-S0-1..4). 추가 도구408파일88,383줄을2파일696줄로 축소하고 게시된 M-LOOP/M-READ gate로 복귀했다. 상대 KnowledgeLost·생존 계약29테스트 PASS, 전체 generic gate/고의결함 증명 미완료는 [#685](https://github.com/hyunlord/new-world/issues/685)에 이월. Stage1 농경·#684로 전환하며 원래 실패와 raw는 보존한다.
-
 - 2026-10-30 — M6a R1: owner11:20KST의2회 수리 보정 후 동결. P26 `9b6644579` 전체42/48 PASS·25/30/39/40/41/45FAIL; soak기아·KnowledgeLost0이나 신선부패3/32·성능4항목·거래0·가시성16/60·빈토스트·stall캡처오류가 남음. waiver미사용·미게시·#670–673OPEN, P27문서전용NOT_FULL_GATED. [보고서](v8/m6a/M6A_REPORT.md).
 
 - 2026-10-30 — M6a 최종 P12 `a9ae9c87`: 전체 게이트2 44/48 PASS·26/39/41/45 FAIL, timeout/signal 없이 exit1. BASE 결정적64파일 동일·새 성능33쌍 PASS이나 수용2개 막대·soak·가시성52/60·stall52.056ms FAIL 유지, NO waiver·미게시·#670–673 OPEN. 후속 P13은 문서 전용 NOT_FULL_GATED; 목표 미완료. [보고서](v8/m6a/M6A_REPORT.md).
