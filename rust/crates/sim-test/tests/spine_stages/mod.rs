@@ -81,7 +81,7 @@ pub fn grow_housing_zone(engine: &mut SimEngine) -> u32 {
             .buildings
             .sites
             .values()
-            .any(|site| site.cause == BuildCause::Zone(zone))
+            .any(|site| in_zone(engine, site, zone))
     });
     let site = engine
         .resources
@@ -89,7 +89,7 @@ pub fn grow_housing_zone(engine: &mut SimEngine) -> u32 {
         .buildings
         .sites
         .values()
-        .find(|site| site.cause == BuildCause::Zone(zone))
+        .find(|site| in_zone(engine, site, zone))
         .expect("actual zone order")
         .clone();
     assert_eq!(
@@ -120,14 +120,14 @@ pub fn grow_housing_zone(engine: &mut SimEngine) -> u32 {
     let entry = complete.completion_entry.expect("one zone completion");
     assert_eq!(
         engine.resources.chronicle.entries()[entry as usize].cause,
-        1
+        2
     );
     assert_eq!(
         engine.resources.chronicle.cause_of(entry),
         Some(CauseRef::Building {
             site: site.id,
             record: site.source_record,
-            origin: BuildCause::Zone(zone),
+            origin: site.cause,
         })
     );
     assert!(engine
@@ -208,4 +208,14 @@ pub fn upgrade_house(engine: &mut SimEngine, id: u32) {
     assert_eq!(engine.resources.colony.beds, beds);
     assert_eq!(engine.resources.tile_grid.floor_material, floors);
     history::check(engine, id, &original);
+}
+
+/// D-MGROW-1 Q3: a steward build keeps `Steward(rule)` and records its zone on the site.
+fn in_zone(
+    engine: &SimEngine,
+    site: &sim_core::colony::building_site::BuildingSite,
+    zone: u32,
+) -> bool {
+    matches!(site.cause, BuildCause::Steward(_))
+        && engine.resources.colony.buildings.site_zones.get(&site.id) == Some(&zone)
 }

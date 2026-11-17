@@ -110,7 +110,8 @@ fn content_debt_covers_reserved_zones_once_without_activating_them() {
             .iter()
             .map(|zone| zone.id.as_str())
             .collect::<Vec<_>>(),
-        ["storage", "workshop"]
+        // D-MGROW-1 Q1: storage/workshop zone layout is Connected; none stay reserved.
+        Vec::<&str>::new()
     );
     assert_eq!(rows.len(), inert.len());
     for (row, zone) in rows.iter().zip(inert) {

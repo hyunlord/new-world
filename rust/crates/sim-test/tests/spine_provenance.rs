@@ -57,9 +57,14 @@ fn spine_direct_inside_zone_stays_command_and_steward_retains_actual_origin() {
             }),
         },
     );
+    // D-MGROW-1 Q3: the steward origin stays; the zone is recorded on the site.
     assert_eq!(
         engine.resources.colony.buildings.sites[&zoned].cause,
-        BuildCause::Zone(zone)
+        BuildCause::Steward(u32::from(rule))
+    );
+    assert_eq!(
+        engine.resources.colony.buildings.site_zones.get(&zoned),
+        Some(&zone)
     );
     cancel_remaining(&mut engine, zoned);
     command(
