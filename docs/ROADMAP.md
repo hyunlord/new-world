@@ -1,5 +1,7 @@
 # 로드맵 (V8)
 
+> **M3D-IMG Part U — 구현·8표면 검증 완료, 최종 GPU 검증 대기 (2026-11-16):** `v8/art-ui`에서 생성 아트 **322안 중318장**과 GLB 아이콘 **119종**을 준비하고 기존 UI에 연결했다. 키아트 미선택4안과 거절18회 원본·프롬프트는 외부 데이터에 보존한다. 1920×1080/1280×720 실제8표면씩 캡처와 headless 검증을 수행했다. 동물7·연간목표5·선택 타이틀1은 기존 화면이 없어 data에 보관했고 기존 시작 splash만 연결했다. [화면](images/art_ui_contact_sheet.png), [결정](decisions/0068-optional-generated-ui-art.md); 원본·검증·한국어 보고는 `/Users/rexxa/work/art-img-data/ui/`. 시작 splash 촬영과 교체분 접촉시트 갱신은 공유 GPU 잠금으로90분/878회 대기 후 미완료다. planner의 차기 gated publish 통합 대기이며 main 게시·전체 게이트를 주장하지 않는다.
+
 > **M3D-ASSETS — 자산 제공 완료 (2026-11-15):** `v8/3d-assets`에서 정적572·생물28개 모델을 제공한다. [인벤토리](../assets/3d/INVENTORY.md), [결정](decisions/0067-content-complete-3d-asset-pack.md). 렌더러 통합·플레이 수용과 구분하며 원격 C3 기준 부재를 기록한다.
 
 > **C2 #15 — 완료 (2026-11-12):** C2-a `ad790ddd1`과 C2-b `8e4170c42`를 각각 전체 게이트36/36 PASS 뒤 v8/wip→v8/main fast-forward로 게시했다. 청동 데이터·광맥 발견(a)에 이어 실제 채굴·주석 교역·금속 사슬(b, `c2_chain_bronze`)을 연결했다. 동물 실루엣은 D-C2-1로 별도 art-import에 맡겼다. [보고](v8/c2/C2_REPORT.md), [결정](v8/c2/C2_DECISIONS.md). 아래 C1/M-SPINE 게시 전 문구는 당시 기록이다.

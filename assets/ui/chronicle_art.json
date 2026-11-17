@@ -1,0 +1,19 @@
+[
+  {"match":{"kind":0},"id":"birth"},
+  {"match":{"kind":11,"cause":3},"id":"elder_death"},
+  {"match":{"kind":28},"id":"knowledge_lost"},
+  {"match":{"kind":29},"catalogue":"pressures","column":"cause","field":"category","values":["cold"],"id":"harsh_winter"},
+  {"match":{"kind":29},"catalogue":"pressures","column":"cause","field":"category","values":["pack"],"id":"wolves_at_edge"},
+  {"match":{"kind":38},"id":"migrants_arrive"},
+  {"match":{"kind":41},"id":"traders_arrive"},
+  {"match":{"kind":54},"id":"first_field"},
+  {"match":{"kind":55},"id":"harvest"},
+  {"match":{"kind":57},"id":"first_cloth"},
+  {"match":{"kind":59},"catalogue":"eras","values":["neolithic","bronze","iron"],"family":"eras"},
+  {"match":{"kind":60},"catalogue":"buildings","values":["stone_house"],"id":"stone_house"},
+  {"match":{"kind":61},"id":"first_livestock"},
+  {"match":{"kind":67},"catalogue":"items","values":["copper_ingot"],"id":"first_copper"},
+  {"match":{"kind":67},"catalogue":"items","values":["iron_bloom"],"id":"first_iron_bloom"},
+  {"match":{"kind":69},"catalogue":"items","column":"cause","values":["bronze_axe"],"id":"first_bronze_axe"},
+  {"match":{"kind":69},"catalogue":"items","column":"cause","values":["iron_axe","iron_hoe","iron_sickle","iron_saw","iron_knife","iron_adze","iron_spear","iron_sword"],"id":"first_iron_tool"}
+]
