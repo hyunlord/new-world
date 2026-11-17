@@ -1,15 +1,16 @@
 # Changelog
 
-## M3D-IMG2 Part U2 — 2026-11-17 (v8/art-ui2; generation and verification in progress)
+## M3D-IMG2 Part U2 — 2026-11-17 (v8/art-ui2; art and scoped verification complete; planner publication pending)
 
 ### Added
-- Expanded art scope: 119 item illustrations, 72 additional person portraits, 24 migrant/trader looks, 20 chronicle vignettes, four future M-GROW cards, three selected era splashes and one paved-road portrait (243 selected assets planned). The era splashes have three generated options each; six valid alternatives remain in external data. These counts describe the scope, not a completed validation or delivery claim.
+- 243 adopted images from 249 generated options: 119 item illustrations, 72 additional person portraits, 24 migrant/trader looks, 20 chronicle vignettes, four future M-GROW cards, three selected era splashes and one paved-road portrait. Six valid era alternatives remain in external data. Asset validation passes for all 249 unique images; total person portraits are now 144, knowledge coverage remains 166, and all 119 GLB icons are preserved.
 - `assets/ui/chronicle_art.json` maps existing chronicle witnesses and catalogue IDs to optional event/era art; no new event or simulation behavior is introduced (ADR0069). Prompts, generation records, selection reasons and verification evidence belong in `/Users/rexxa/work/art-img-data/ui2/`.
 
 ### Changed
 - Inspector portraits select eight looks per age/sex/era, retaining the corresponding original four-look image when an added asset is absent and the authored portrait when generated art is missing. Item illustrations sit beside the existing model-rendered icons; those icons and loose-world item textures are unchanged.
 - Existing chronicle and migrant surfaces gain optional art. Trader looks, future growth cards and vignettes without a matching real event remain data-only; no new panels are added. All 166 knowledge images and existing building/station portraits are reused.
-- Work remains on the dedicated art branch with no Rust, numeric simulation data or save changes. Final captures, tests, remote delivery and the planner publication gate are separate evidence requirements and are not claimed here.
+- Asset validation and actual-scene headless verification pass (`UI_ART_VERIFY_DONE surfaces=10 failures=0`); the protected simulation paths are unchanged. GPU-locked windowed captures also pass: ten surfaces each at native 1920×1080 and 1280×720, 20 PNGs total, zero capture failures. Thirteen final contact sheets cover all 249 options. Evidence: external `asset_validation.json`, `verify-u2/verification.json`, `capture-attempt1/`, `capture-size-validation.json`, `contact_sheets/index.json` and `capture_retry_logs/attempt_8.log` (`UI2_ART_REAL_CAPTURE_LANE_DONE`). Final remote receipts remain external; the planner publication gate and merge remain separate and pending.
+- Capture tooling applies explicit `--capture-size` after the game camera fits its window. Round-1 desktop and laptop PNGs were both 1920×1080, so the prior 1280×720 capture claim is withdrawn (`capture_resolution_issue.json`); U2 now verifies the corrected native PNG dimensions at 1920×1080 and 1280×720, rather than inferring size from the requested command line.
 
 ## M3D-IMG Part U — 2026-11-16 (v8/art-ui; planner integration pending)
 
@@ -23,7 +24,7 @@
 ### Changed
 - Existing inspector, card, chapter, technology, building, workshop, recipe and item-list surfaces use optional art with established fallbacks. Portrait selection derives from entity, life stage, sex and wardrobe without simulation RNG or save changes. Images retain aspect, ignore mouse input and use linear filtering; pixel fallback portraits retain nearest filtering.
 - `ItemIcons.ui_texture_of` keeps UI model icons separate from the loose-world `texture_of` path. The existing startup splash uses the selected loading art; no title, animal or yearly-goal panel is added.
-- Real UI screenshots at 1920×1080 and 1280×720 cover eight surfaces each; the current README sheet shows the desktop captures. The planner still owns the next full publication gate and merge; this branch does not claim either.
+- Two round-1 capture sets cover eight surfaces each; later U2 inspection found that both sets actually contain 1920×1080 PNGs, including the set labeled laptop. The earlier 1280×720 claim is withdrawn; the original captures remain preserved. The planner still owns the next full publication gate and merge; this branch does not claim either.
 
 ## M3D-SWITCH E2 — the 3D view is the only world view (branch v8/3d, not published)
 
