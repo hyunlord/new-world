@@ -29,7 +29,12 @@ type FactReaderBox<'a> = Box<dyn Fn(&str) -> Option<i64> + 'a>;
 
 /// Read a named fact for a settlement from the colony state and world.
 /// Returns `None` for unknown fact names; every value is an integer.
-fn settlement_fact(world: &hecs::World, resources: &SimResources, fact_name: &str) -> Option<i64> {
+/// Read a named settlement fact; `pub(crate)` for zone growth triggers.
+pub(crate) fn settlement_fact(
+    world: &hecs::World,
+    resources: &SimResources,
+    fact_name: &str,
+) -> Option<i64> {
     if resources.rules.colony.is_none() {
         return Some(0);
     }
@@ -78,7 +83,16 @@ fn settlement_fact(world: &hecs::World, resources: &SimResources, fact_name: &st
             }
             Some(count)
         }
-        "adult_count" => Some(i64::from(first_settlement_member_count(world))),
+        "adult_count" => Some(
+            i64::try_from(
+                world
+                    .query::<&sim_core::components::Agent>()
+                    .without::<&sim_core::components::Child>()
+                    .iter()
+                    .count(),
+            )
+            .unwrap_or(i64::MAX),
+        ),
         "idle_adult_count" => {
             let members = i64::from(first_settlement_member_count(world));
             let busy = col.reservations.len() as i64;
@@ -160,6 +174,51 @@ fn settlement_fact(world: &hecs::World, resources: &SimResources, fact_name: &st
             Some(if has_roof { 1 } else { 0 })
         }
         "bed_count" => Some(col.beds.len() as i64),
+        "storage_full" => {
+            let outside = settlement_fact(world, resources, "ground_items_nearby").unwrap_or(0);
+            let free = settlement_fact(world, resources, "free_cells").unwrap_or(0);
+            Some(i64::from(outside > 0 && free == 0))
+        }
+        "workshop_space_short" => Some(i64::from(
+            crate::runtime::steward::planning::workshop_space_needed(world, resources),
+        )),
+        "field_need" => Some(
+            i64::try_from(crate::runtime::steward::food::field_space_needed(
+                world, resources,
+            ))
+            .unwrap_or(i64::MAX),
+        ),
+        "pen_need" => {
+            let catalog = sim_core::colony::content::installed_or_bundled();
+            let capture_known = catalog
+                .animals()
+                .filter_map(|animal| animal.tameable.as_ref())
+                .filter_map(|policy| catalog.knowledge_defs().id_of(&policy.capture_knowledge))
+                .any(|id| {
+                    crate::runtime::knowledge::anyone_practises(
+                        world,
+                        sim_core::colony::knowledge::bit(id),
+                    )
+                });
+            let capacity = col
+                .buildings
+                .sites
+                .values()
+                .filter(|site| {
+                    site.status != sim_core::colony::building_site::BuildingStatus::Cancelled
+                })
+                .filter_map(|site| catalog.building_templates().get(&site.template))
+                .map(|template| u64::from(template.function.livestock_capacity))
+                .sum::<u64>();
+            Some(i64::from(
+                capture_known && capacity <= resources.livestock.animals.len() as u64,
+            ))
+        }
+        "beds_short" => {
+            let people = world.query::<&sim_core::components::Agent>().iter().count();
+            let beds = crate::runtime::steward::planning::covered_beds(resources);
+            Some(i64::from(people > beds as usize))
+        }
         _ => None,
     }
 }

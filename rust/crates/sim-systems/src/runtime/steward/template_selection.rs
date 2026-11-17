@@ -36,6 +36,7 @@ pub(super) fn ranked<'a>(
         .filter(|template| {
             template.status == ContentStatus::Connected
                 && template.category == BuildingCategory::Dwelling
+                && crate::runtime::house_growth::era_ready(res, catalog, &template.era)
                 && crate::runtime::building_templates::commands::known(
                     world,
                     &template.requires_knowledge,
@@ -65,6 +66,14 @@ pub(super) fn select<'a>(
 }
 
 pub(super) fn inside_housing(res: &SimResources, anchor: Tile, size: Tile) -> bool {
+    if !super::super::zone_growth::allows(
+        res,
+        sim_core::colony::zones::ZoneUse::Housing,
+        anchor,
+        size,
+    ) {
+        return false;
+    }
     if res.colony.buildings.housing_zones.is_empty() {
         return true;
     }

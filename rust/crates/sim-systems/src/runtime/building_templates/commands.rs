@@ -120,22 +120,20 @@ pub(crate) fn build_at(
             phase: PiecePhase::Pending,
         });
     }
-    let cause = match cause {
-        BuildCause::Steward(_) => res
-            .colony
-            .buildings
-            .housing_zones
-            .iter()
-            .find_map(|(&zone, tiles)| {
-                (anchor.1..bottom)
-                    .all(|y| (anchor.0..right).all(|x| tiles.contains(&(x, y))))
-                    .then_some(BuildCause::Zone(zone))
-            })
-            .unwrap_or(cause),
-        BuildCause::Command | BuildCause::Zone(_) => cause,
-    };
+    let zone = state
+        .housing_zones
+        .iter()
+        .chain(&state.layout_zones)
+        .find_map(|(&zone, tiles)| {
+            (anchor.1..bottom)
+                .all(|y| (anchor.0..right).all(|x| tiles.contains(&(x, y))))
+                .then_some(zone)
+        });
     let site_id = state.next_site_id;
     let state = &mut res.colony.buildings;
+    if let Some(zone) = zone {
+        state.site_zones.insert(site_id, zone);
+    }
     state.next_site_id = next_site;
     state.next_piece_id = next_piece;
     state.sites.insert(

@@ -12,6 +12,10 @@ use sim_core::colony::steward::FoodPlan;
 use sim_core::colony::Command;
 use sim_engine::SimResources;
 pub use summary::{summary, winter_need, FoodSummary};
+/// Missing cooking and vessel stations use the same targets as ordinary food planning.
+pub(super) fn workshop_space_needed(world: &World, res: &SimResources, policy: &FoodPlan) -> bool {
+    cooking::workshop_space_needed(world, res, policy)
+}
 
 /// Plan normal replayable commands from one current food snapshot.
 pub fn plan(world: &World, res: &SimResources, policy: &FoodPlan) -> Vec<Command> {
@@ -128,6 +132,39 @@ fn seed_reserve(
     ))
 }
 
+/// Unmet physical field area under the current steward's authored cultivation plan.
+pub(crate) fn field_space_needed(world: &World, res: &SimResources) -> u64 {
+    let Ok(data) = sim_core::colony::steward::rules() else {
+        return 0;
+    };
+    data.rules
+        .iter()
+        .filter(|rule| res.steward.scope.permits(rule.scope))
+        .filter_map(|rule| {
+            let sim_core::colony::steward::Action::FoodPlan(policy) = &rule.action else {
+                return None;
+            };
+            let plan = policy.cultivation.as_ref()?;
+            let facts = summary(world, res, policy);
+            let days = res
+                .rules
+                .calendar
+                .days_per_season
+                .saturating_mul(res.rules.calendar.seasons_per_year);
+            let (target, cap) =
+                cultivation_area(plan, annual_food_milli(res, policy, &facts, days));
+            let accepted = res
+                .cultivation
+                .fields
+                .values()
+                .filter(|field| field.crop == plan.crop && field.active)
+                .count() as u64;
+            Some(target.min(cap).saturating_sub(accepted))
+        })
+        .max()
+        .unwrap_or(0)
+}
+
 fn field_orders(
     world: &World,
     res: &SimResources,
@@ -188,6 +225,12 @@ fn field_orders(
                 && !res.steward.vetoed(
                     &sim_core::colony::steward::Target::Tile(x, y),
                     res.current_tick,
+                )
+                && super::zone_growth::allows(
+                    res,
+                    sim_core::colony::zones::ZoneUse::Field,
+                    (x, y),
+                    (1, 1),
                 )
                 && !reserved.contains(&(x, y))
                 && crate::runtime::cultivation::commands::zoneable(res, (x, y))

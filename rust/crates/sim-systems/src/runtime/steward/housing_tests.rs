@@ -2,6 +2,244 @@
 use super::*;
 use sim_core::rooms::{Room, RoomRole};
 
+#[test]
+fn storage_late_bootstrap_fits_twenty_two_adults_inside_the_authored_layout() {
+    sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
+        .expect("bundled content");
+    let mut engine = crate::worldgen::build_world_with(
+        &crate::worldgen::WorldGenConfig::colony(0),
+        sim_core::rules::WorldRules::colony(0),
+    );
+    engine.tick();
+    // Isolate population admission without waiting for migration; no ticks run
+    // with these population-only actors. Physical placement uses the real map.
+    for id in 10..22 {
+        engine.world.spawn((Agent { id },));
+    }
+    fund_template_fixture(&mut engine);
+    assert_eq!(
+        engine
+            .world
+            .query::<&Agent>()
+            .without::<&Child>()
+            .iter()
+            .count(),
+        22
+    );
+    let rules = sim_core::colony::steward::rules().expect("rules");
+    let stock_rule = rules
+        .rules
+        .iter()
+        .find(|rule| matches!(rule.action, Action::Stockpile { .. }))
+        .expect("stock rule");
+    let legacy = plan(&engine.world, &engine.resources, stock_rule);
+    assert!(
+        matches!(legacy.as_slice(), [Command::AddStockpile { x0, y0, x1, y1 }] if x1-x0 == 4 && y1-y0 == 4),
+        "disabled layout keeps the original five by five request"
+    );
+    assert!(
+        crate::commands::apply_command(
+            &mut engine.world,
+            &mut engine.resources,
+            Command::SetSteward {
+                on: true,
+                scope: sim_core::colony::steward::StewardScope::All
+            }
+        )
+        .accepted
+    );
+    super::super::zone_growth::maybe_grow_zones(&mut engine.world, &mut engine.resources);
+    let orders = plan(&engine.world, &engine.resources, stock_rule);
+    assert!(
+        !orders.is_empty(),
+        "a population request larger than the interior must still bootstrap"
+    );
+    for command in orders {
+        assert!(
+            crate::commands::apply_command(
+                &mut engine.world,
+                &mut engine.resources,
+                Command::Steward {
+                    rule: stock_rule.id,
+                    command: Box::new(command)
+                },
+            )
+            .accepted
+        );
+    }
+    let stock: BTreeSet<_> = engine
+        .resources
+        .colony
+        .zone_of_tile
+        .keys()
+        .copied()
+        .collect();
+    assert_eq!(
+        stock.len(),
+        16,
+        "the six by six zone has a four by four usable interior"
+    );
+    let action = &rules
+        .rules
+        .iter()
+        .find(|rule| {
+            matches!(
+                rule.action,
+                Action::House {
+                    completion_role: Some(RoomRole::Storehouse),
+                    ..
+                }
+            )
+        })
+        .expect("store rule")
+        .action;
+    let hearth = hearth_tiles(&engine.resources)[0];
+    let ready = house(&engine.world, &engine.resources, hearth, action, false);
+    assert!(
+        !ready.commands.is_empty(),
+        "the admitted stockpile retains a feasible storehouse"
+    );
+    assert!(stock.is_subset(&ready.covered));
+    assert!(stock.is_disjoint(&ready.reserved));
+    for command in ready.commands {
+        assert!(
+            crate::commands::apply_command(
+                &mut engine.world,
+                &mut engine.resources,
+                command.clone()
+            )
+            .accepted,
+            "ordinary shell command {command:?}"
+        );
+    }
+}
+
+#[test]
+fn storage_layout_keeps_a_buildable_shell_around_usable_stockpile_capacity() {
+    sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
+        .expect("bundled content");
+    let mut engine = crate::worldgen::build_world_with(
+        &crate::worldgen::WorldGenConfig::colony(0),
+        sim_core::rules::WorldRules::colony(0),
+    );
+    let rules = sim_core::colony::steward::rules().expect("rules");
+    assert!(
+        crate::commands::apply_command(
+            &mut engine.world,
+            &mut engine.resources,
+            Command::SetSteward {
+                on: true,
+                scope: sim_core::colony::steward::StewardScope::All,
+            },
+        )
+        .accepted
+    );
+    while engine.resources.colony.zone_of_tile.is_empty()
+        && engine.current_tick() < 2 * engine.resources.ticks_per_day
+    {
+        engine.tick();
+    }
+    assert!(
+        !engine.resources.colony.zone_of_tile.is_empty(),
+        "ordinary stockpile has a usable layout"
+    );
+    let stock: BTreeSet<_> = engine
+        .resources
+        .colony
+        .zone_of_tile
+        .keys()
+        .copied()
+        .collect();
+    assert_eq!(
+        stock.len(),
+        16,
+        "ten founders request the authored four by four pile"
+    );
+    for &(x, y) in &stock {
+        assert!(
+            super::super::zone_growth::allows(
+                &engine.resources,
+                sim_core::colony::zones::ZoneUse::Storage,
+                (x - 1, y - 1),
+                (3, 3),
+            ),
+            "stock tile {x},{y} must leave the physical wall envelope"
+        );
+    }
+    let action = &rules
+        .rules
+        .iter()
+        .find(|rule| {
+            matches!(
+                rule.action,
+                Action::House {
+                    completion_role: Some(RoomRole::Storehouse),
+                    ..
+                }
+            )
+        })
+        .expect("store rule")
+        .action;
+    let hearth = hearth_tiles(&engine.resources)[0];
+    // Force genuine extension demand: all interior slots contain nonfood, with
+    // fresh food waiting outside. The shared extension path must keep the shell.
+    for &tile in &stock {
+        engine.resources.colony.ground_items.insert(
+            tile,
+            sim_core::colony::ItemStack::of(
+                sim_core::colony::ItemSpec::raw(sim_core::colony::ItemKind::Log, None),
+                1,
+            ),
+        );
+    }
+    let food_kind = sim_core::colony::ItemKind::from_name("berries").expect("berries");
+    engine.resources.colony.ground_items.insert(
+        hearth,
+        sim_core::colony::ItemStack::of(sim_core::colony::ItemSpec::raw(food_kind, None), 20),
+    );
+    engine.resources.food.ages.insert(
+        sim_core::colony::food::FoodOwner::Ground(hearth),
+        sim_core::colony::food::FoodAge {
+            born_day: crate::runtime::food::day(&engine.resources),
+        },
+    );
+    let policy = rules
+        .rules
+        .iter()
+        .find_map(|rule| match &rule.action {
+            Action::FoodPlan(policy) => Some(policy),
+            _ => None,
+        })
+        .expect("food policy");
+    assert!(
+        !super::super::food::plan(&engine.world, &engine.resources, policy)
+            .iter()
+            .any(|command| matches!(command, Command::AddStockpile { .. })),
+        "food extensions cannot consume the only wall envelope"
+    );
+    let ready = house(&engine.world, &engine.resources, hearth, action, true);
+    assert!(
+        !ready.commands.is_empty(),
+        "existing usable stockpile cells are storehouse service capacity"
+    );
+    assert!(stock.is_subset(&ready.covered));
+    assert!(
+        stock.is_disjoint(&ready.reserved),
+        "stock is inside the physical shell"
+    );
+    for command in ready.commands {
+        assert!(
+            crate::commands::apply_command(
+                &mut engine.world,
+                &mut engine.resources,
+                command.clone()
+            )
+            .accepted,
+            "ordinary shell command {command:?}"
+        );
+    }
+}
+
 fn fixture() -> (sim_engine::SimEngine, Action, Tile) {
     sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
         .expect("bundled content");
@@ -24,6 +262,13 @@ fn fixture() -> (sim_engine::SimEngine, Action, Tile) {
         position.y = hearth.1;
     }
     fund_template_fixture(&mut engine);
+    // Physical shell/field tests use the fully known log-house material era.
+    engine.resources.colony.tech = crate::runtime::knowledge::aggregate::compute(
+        &engine.world,
+        &engine.resources,
+        &engine.resources.colony.tech,
+    )
+    .0;
     (engine, rules.rules[2].action.clone(), hearth)
 }
 

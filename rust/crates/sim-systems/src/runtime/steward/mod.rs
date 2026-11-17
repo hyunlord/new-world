@@ -12,6 +12,7 @@ pub mod lifecycle;
 mod livestock;
 pub mod planning;
 mod production;
+mod zone_growth;
 use hecs::World;
 use sim_core::colony::{steward::rules, Command};
 use sim_engine::{RuntimeSystem, SimResources};
@@ -37,6 +38,8 @@ impl RuntimeSystem for StewardSystem {
         // replayed world reaches the same `need_since` as the live one.
         if res.steward.enabled {
             track_needs(world, res);
+            // Derived layout runs at the same phase for live and replayed commands.
+            zone_growth::maybe_grow_zones(world, res);
         }
         if res.steward.replay {
             let pending = std::mem::take(&mut res.steward.pending);
@@ -138,7 +141,20 @@ fn track_needs(world: &World, res: &mut SimResources) {
 }
 
 fn issue(world: &mut World, res: &mut SimResources, command: Command) -> bool {
-    crate::commands::apply_and_log(world, res, command, res.current_tick).accepted
+    let upgrade = match &command {
+        Command::Steward { command, .. } => match command.as_ref() {
+            Command::UpgradeBuilding { site } => Some(*site),
+            _ => None,
+        },
+        _ => None,
+    };
+    let accepted = crate::commands::apply_and_log(world, res, command, res.current_tick).accepted;
+    if accepted {
+        if let Some(site) = upgrade {
+            super::house_growth::note_upgrade(world, res, site);
+        }
+    }
+    accepted
 }
 
 // Optional call-local telemetry: elapsed time and counters never enter simulation decisions.

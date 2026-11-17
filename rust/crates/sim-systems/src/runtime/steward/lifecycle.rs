@@ -9,6 +9,25 @@ use sim_engine::SimResources;
 /// Targets of ordinary commands, captured before mutation.
 pub fn targets(res: &SimResources, cmd: &Command) -> Vec<Target> {
     match cmd {
+        Command::UpgradeBuilding { site } => res
+            .colony
+            .buildings
+            .sites
+            .get(site)
+            .filter(|building| building.footprint.0 > 0 && building.footprint.1 > 0)
+            .and_then(|building| {
+                let right = building.anchor.0.checked_add(building.footprint.0)?;
+                let bottom = building.anchor.1.checked_add(building.footprint.1)?;
+                if right > res.tile_grid.width || bottom > res.tile_grid.height {
+                    return None;
+                }
+                Some(
+                    (building.anchor.1..bottom)
+                        .flat_map(|y| (building.anchor.0..right).map(move |x| Target::Tile(x, y)))
+                        .collect(),
+                )
+            })
+            .unwrap_or_default(),
         Command::DesignateCapture { animal } => res
             .colony
             .wildlife

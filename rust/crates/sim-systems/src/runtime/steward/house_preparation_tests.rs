@@ -554,7 +554,7 @@ fn house_preparation_matches_every_capacity_cell_origin_and_ranking_key() {
             if phase == 5 {
                 e.resources.rules.colony.as_mut().expect("colony").space = None;
             }
-            let (capacity, stock_capacity) = house_capacity(&e.resources, bed);
+            let (capacity, stock_capacity) = house_capacity(&e.resources, bed, false);
             assert_eq!(
                 capacity,
                 reference_capacity(&e.resources, bed),
@@ -760,7 +760,7 @@ fn prepared_capacity_preserves_preview_with_adversarial_tile_contents() {
         BlueprintKind::PackedFloor,
         BlueprintKind::LogWall,
     ] {
-        let (actual, _) = house_capacity(&e.resources, kind);
+        let (actual, _) = house_capacity(&e.resources, kind, false);
         assert_eq!(
             actual,
             reference_capacity(&e.resources, kind),
@@ -935,6 +935,28 @@ fn capped_wood_counts_logs_in_transit_and_on_shelves_once() {
     use sim_core::colony::{Carry, ItemSpec, ItemStack, Job, JobKind, JobStage, Workshop};
     for owner in 0..5 {
         let mut e = engine(29);
+        // This acquisition-budget fixture specifically prices an eligible log
+        // house; unrelated era discovery is outside the cargo/shelf assertion.
+        let catalog = sim_core::colony::content::installed_or_bundled();
+        let era_name = &catalog
+            .building_templates()
+            .get("log_house")
+            .expect("log house")
+            .era;
+        let order = catalog
+            .knowledge_defs()
+            .eras
+            .eras
+            .iter()
+            .find(|era| &era.id == era_name)
+            .expect("dwelling era")
+            .order as usize;
+        e.resources
+            .colony
+            .tech
+            .era_progress
+            .resize(catalog.knowledge_defs().eras.eras.len(), 0);
+        e.resources.colony.tech.era_progress[order] = catalog.yards().material_wave_permille;
         let data = sim_core::colony::steward::rules().expect("rules");
         let wood = data
             .rules

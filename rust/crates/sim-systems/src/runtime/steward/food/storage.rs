@@ -185,7 +185,8 @@ pub(super) fn plan(res: &SimResources, policy: &FoodPlan, facts: &FoodSummary) -
                 .min(res.tile_grid.width.saturating_sub(1))
         {
             let tile = (x, y);
-            if res.colony.zone_of_tile.contains_key(&tile)
+            if !super::super::zone_growth::allows_stockpile(res, tile, (1, 1))
+                || res.colony.zone_of_tile.contains_key(&tile)
                 || crate::runtime::cultivation::occupies(res, tile)
                 || res.colony.ground_items.contains_key(&tile)
                 || res.colony.designations.contains_key(&tile)

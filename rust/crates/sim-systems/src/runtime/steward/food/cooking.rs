@@ -571,6 +571,27 @@ pub(super) fn plan(
     policy: &FoodPlan,
     facts: &FoodSummary,
 ) -> Vec<Command> {
+    plan_with_workshop(world, res, policy, facts, |kind| workshop(world, res, kind))
+}
+
+/// Observe the same unmet recipe targets without searching for a layout-dependent site.
+pub(super) fn workshop_space_needed(world: &World, res: &SimResources, policy: &FoodPlan) -> bool {
+    let facts = super::summary(world, res, policy);
+    let mut needed = false;
+    plan_with_workshop(world, res, policy, &facts, |kind| {
+        needed |= workshop_prerequisites(world, res, kind);
+        None
+    });
+    needed
+}
+
+fn plan_with_workshop(
+    world: &World,
+    res: &SimResources,
+    policy: &FoodPlan,
+    facts: &FoodSummary,
+    mut missing_workshop: impl FnMut(RecipeKind) -> Option<Command>,
+) -> Vec<Command> {
     let seed_reserve = super::dependencies::cooking_reserve(world, res, policy, facts);
     let emergency = facts.usable_units.saturating_mul(1000) < facts.daily_milli;
     let bootstrap = super::dependencies::seed_recipe(policy);
@@ -742,7 +763,7 @@ pub(super) fn plan(
                 });
             }
         } else if target > 0 || recipe.food_requirements.duration_days > 0 && facts.preparing {
-            if let Some(command) = workshop(world, res, kind) {
+            if let Some(command) = missing_workshop(kind) {
                 commands.push(command);
                 if Some(kind) != bootstrap {
                     break;
@@ -847,18 +868,25 @@ fn assigned_crafts(world: &World, res: &SimResources, kind: RecipeKind) -> u64 {
         .count() as u64
 }
 
-fn workshop(world: &World, res: &SimResources, kind: RecipeKind) -> Option<Command> {
-    let recipe = kind.recipe()?;
-    let size = recipe.workshop.plan(&res.rules.colony?).0;
-    if world
-        .query::<&ColonySite>()
-        .iter()
-        .any(|(_, site)| recipe.supports_workshop(site.kind))
-        || !crate::runtime::knowledge::anyone_practises(
+fn workshop_prerequisites(world: &World, res: &SimResources, kind: RecipeKind) -> bool {
+    let Some(recipe) = kind.recipe() else {
+        return false;
+    };
+    res.rules.colony.is_some()
+        && !world
+            .query::<&ColonySite>()
+            .iter()
+            .any(|(_, site)| recipe.supports_workshop(site.kind))
+        && crate::runtime::knowledge::anyone_practises(
             world,
             knowledge::gates().build(recipe.workshop),
         )
-    {
+}
+
+fn workshop(world: &World, res: &SimResources, kind: RecipeKind) -> Option<Command> {
+    let recipe = kind.recipe()?;
+    let size = recipe.workshop.plan(&res.rules.colony?).0;
+    if !workshop_prerequisites(world, res, kind) {
         return None;
     }
     let hearth = crate::runtime::jobs::hearth::hearth_tiles(res)
@@ -891,6 +919,12 @@ fn workshop(world: &World, res: &SimResources, kind: RecipeKind) -> Option<Comma
                             .any(|fx| crate::runtime::cultivation::occupies(res, (fx, fy)))
                     });
                 if !occupied
+                    && super::super::zone_growth::allows(
+                        res,
+                        sim_core::colony::zones::ZoneUse::Workshop,
+                        (x, y),
+                        size,
+                    )
                     && crate::commands::camp_reaches(res, (x, y))
                     && crate::commands::check_blueprint(res, recipe.workshop, x, y).is_ok()
                 {

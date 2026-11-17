@@ -103,6 +103,19 @@ pub(super) fn plan(world: &World, res: &SimResources) -> Vec<Command> {
                 continue;
             }
             for rotation in 0..4 {
+                let size = if rotation % 2 == 0 {
+                    template.footprint
+                } else {
+                    (template.footprint.1, template.footprint.0)
+                };
+                if !super::zone_growth::allows(
+                    res,
+                    sim_core::colony::zones::ZoneUse::Pen,
+                    anchor,
+                    size,
+                ) {
+                    continue;
+                }
                 if crate::runtime::building_templates::commands::preview(
                     world,
                     res,

@@ -201,25 +201,31 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
             while side.saturating_mul(side) < area {
                 side += 1;
             }
-            for (x, y) in candidates(res, hearth) {
-                if x.saturating_add(side) >= res.tile_grid.width
-                    || y.saturating_add(side) >= res.tile_grid.height
-                {
-                    continue;
-                }
-                if (y..y + side).all(|yy| {
-                    (x..x + side).all(|xx| {
-                        can_hold_items(res, (xx, yy))
-                            && !res.colony.zone_of_tile.contains_key(&(xx, yy))
-                            && permitted(res, (xx, yy))
-                    })
-                }) {
-                    return vec![Command::AddStockpile {
-                        x0: x,
-                        y0: y,
-                        x1: x + side - 1,
-                        y1: y + side - 1,
-                    }];
+            let locations = candidates(res, hearth);
+            for side in super::zone_growth::stockpile_sides(res, side).rev() {
+                for &(x, y) in &locations {
+                    if x.saturating_add(side) >= res.tile_grid.width
+                        || y.saturating_add(side) >= res.tile_grid.height
+                    {
+                        continue;
+                    }
+                    if !super::zone_growth::allows_stockpile(res, (x, y), (side, side)) {
+                        continue;
+                    }
+                    if (y..y + side).all(|yy| {
+                        (x..x + side).all(|xx| {
+                            can_hold_items(res, (xx, yy))
+                                && !res.colony.zone_of_tile.contains_key(&(xx, yy))
+                                && permitted(res, (xx, yy))
+                        })
+                    }) {
+                        return vec![Command::AddStockpile {
+                            x0: x,
+                            y0: y,
+                            x1: x + side - 1,
+                            y1: y + side - 1,
+                        }];
+                    }
                 }
             }
             Vec::new()
@@ -282,18 +288,23 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
         }
         action @ Action::House { .. } => {
             if let Some(command) = super::completion::plan(res, rule) {
-                vec![command]
-            } else {
-                house(world, res, hearth, action, false).commands
+                return vec![command];
             }
+            if matches!(
+                action,
+                Action::House {
+                    completion_role: Some(sim_core::rooms::RoomRole::Bedroom),
+                    ..
+                }
+            ) {
+                if let Some(site) = crate::runtime::house_growth::upgrade_candidate(world, res) {
+                    return vec![Command::UpgradeBuilding { site }];
+                }
+            }
+            house(world, res, hearth, action, false).commands
         }
         Action::Bills {
-            recipes,
-            winter_recipe,
-            days,
-            fuel,
-            stocked,
-            replace_tag,
+            recipes, stocked, ..
         } => {
             if stocked
                 .iter()
@@ -301,54 +312,9 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
             {
                 return Vec::new();
             }
+            let wanted = wanted_bills(world, res, &rule.action);
             let mut profile = BillsProfile::new(res.current_tick);
             let mut reserved_house = None;
-            let replacing = replace_tag
-                .as_deref()
-                .map(|tag| super::production::tool_holders(world, tag));
-            let mut chosen = false;
-            let mut wanted: Vec<_> = recipes
-                .iter()
-                .map(|&(kind, target)| {
-                    let Some(definition) = kind.recipe() else {
-                        return (kind, target);
-                    };
-                    let target = match replacing {
-                        None => target,
-                        // Only the first practised recipe replaces; later fallbacks are zeroed.
-                        Some(_) if chosen || !super::production::recipe_practised(world, kind) => 0,
-                        Some(holders) => {
-                            chosen = true;
-                            u16::try_from(u32::from(target).saturating_mul(holders))
-                                .unwrap_or(u16::MAX)
-                        }
-                    };
-                    let physical = maintain_count(world, res, definition.output.0);
-                    let counted =
-                        crate::runtime::jobs::bills::bill_count(world, res, definition.output.0);
-                    let effective =
-                        u32::from(target).saturating_sub(physical.saturating_sub(counted));
-                    (kind, u16::try_from(effective).unwrap_or(u16::MAX))
-                })
-                .collect();
-            if *days > 0 {
-                let mut target = fuel_target(res, *winter_recipe, *days, fuel.as_ref());
-                if fuel.is_some() {
-                    if let Some(definition) = winter_recipe.recipe() {
-                        let counted = crate::runtime::jobs::bills::bill_count(
-                            world,
-                            res,
-                            definition.output.0,
-                        );
-                        target = counted.saturating_add(target.saturating_sub(fuel_supplied(
-                            world,
-                            res,
-                            *winter_recipe,
-                        )));
-                    }
-                }
-                wanted.push((*winter_recipe, u16::try_from(target).unwrap_or(u16::MAX)));
-            }
             profile.phase(1);
             let mut out = super::production::inputs(world, res, hearth, &wanted);
             profile.phase(0);
@@ -447,10 +413,21 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
                                     .all(|x| !crate::runtime::cultivation::occupies(res, (x, y)))
                             })
                         });
-                        avoids_house && avoids_fields && permitted(res, t) && {
-                            profile.check();
-                            check_blueprint(res, def.workshop, t.0, t.1).is_ok()
-                        }
+                        avoids_house
+                            && avoids_fields
+                            && footprint_size.is_some_and(|size| {
+                                super::zone_growth::allows(
+                                    res,
+                                    sim_core::colony::zones::ZoneUse::Workshop,
+                                    t,
+                                    size,
+                                )
+                            })
+                            && permitted(res, t)
+                            && {
+                                profile.check();
+                                check_blueprint(res, def.workshop, t.0, t.1).is_ok()
+                            }
                     });
                     profile.phase(0);
                     if let Some((x, y)) = location {
@@ -537,6 +514,7 @@ struct HousePlan {
 fn house_capacity(
     res: &SimResources,
     bed: sim_core::colony::BlueprintKind,
+    store: bool,
 ) -> (Vec<usize>, Vec<usize>) {
     let stride = res.tile_grid.width as usize + 1;
     let size = stride * (res.tile_grid.height as usize + 1);
@@ -596,7 +574,7 @@ fn house_capacity(
             let tile_flags = flags[res.tile_grid.idx(xx, yy)];
             stock_row += usize::from(tile_flags & STOCKED != 0);
             row += usize::from(
-                tile_flags == 0
+                (tile_flags & if store { !STOCKED } else { u8::MAX }) == 0
                     && (!floor
                         || res.tile_grid.floor_material[res.tile_grid.idx(xx, yy)].is_none())
                     && crate::runtime::jobs::items::unoccupied_tile_can_hold_items(res, tile)
@@ -914,7 +892,7 @@ fn house_geometry(
     profile.phase(1);
     // Prefix counts make candidate capacity checks constant-time, independent of envelope area.
     let stride = res.tile_grid.width as usize + 1;
-    let (capacity, stock_capacity) = house_capacity(res, bed);
+    let (capacity, stock_capacity) = house_capacity(res, bed, store);
     let free_cells = |x: u32, y: u32, width: u32, height: u32| {
         rectangle_count(&capacity, stride, x, y, width, height)
     };
@@ -954,6 +932,16 @@ fn house_geometry(
             }
             if template.is_some()
                 && !template_selection::inside_housing(res, (x, y), (width + 2, height + 2))
+            {
+                continue;
+            }
+            if store
+                && !super::zone_growth::allows(
+                    res,
+                    sim_core::colony::zones::ZoneUse::Storage,
+                    (x, y),
+                    (width + 2, height + 2),
+                )
             {
                 continue;
             }
@@ -1185,7 +1173,11 @@ fn house_geometry(
                         valid = false;
                         break;
                     }
-                    if facts & STOCK == 0 && placeable(2, tile) {
+                    // A store uses existing usable stock cells as service capacity;
+                    // a bedroom still needs unallocated cells for its bed placements.
+                    if (store && free_cells(xx - 1, yy - 1, 1, 1) == 1)
+                        || (!store && facts & STOCK == 0 && placeable(2, tile))
+                    {
                         free.push(tile);
                     }
                 }
@@ -1487,9 +1479,122 @@ fn teach(world: &World, res: &SimResources) -> Vec<Command> {
     Vec::new()
 }
 
-/// LOOP-CAL-9: compute the wood cap target for diagnostic output.
-/// Returns `(target, building_need, pending_shelter)` or `None` if the cap
-/// is not active (no `cap_log_margin`).
+/// Recipe targets shared by actual orders and their layout prerequisite.
+fn wanted_bills(
+    world: &World,
+    res: &SimResources,
+    action: &Action,
+) -> Vec<(sim_core::colony::RecipeKind, u16)> {
+    let Action::Bills {
+        recipes,
+        winter_recipe,
+        days,
+        fuel,
+        stocked,
+        replace_tag,
+    } = action
+    else {
+        return Vec::new();
+    };
+    if stocked
+        .iter()
+        .any(|&kind| crate::runtime::jobs::bills::stockpiled(res, kind) == 0)
+    {
+        return Vec::new();
+    }
+    let replacing = replace_tag
+        .as_deref()
+        .map(|tag| super::production::tool_holders(world, tag));
+    let mut chosen = false;
+    let mut wanted: Vec<_> = recipes
+        .iter()
+        .map(|&(kind, target)| {
+            let Some(definition) = kind.recipe() else {
+                return (kind, target);
+            };
+            let target = match replacing {
+                None => target,
+                // Only the first practised recipe replaces; later fallbacks are zeroed.
+                Some(_) if chosen || !super::production::recipe_practised(world, kind) => 0,
+                Some(holders) => {
+                    chosen = true;
+                    u16::try_from(u32::from(target).saturating_mul(holders)).unwrap_or(u16::MAX)
+                }
+            };
+            let physical = maintain_count(world, res, definition.output.0);
+            let counted = crate::runtime::jobs::bills::bill_count(world, res, definition.output.0);
+            let effective = u32::from(target).saturating_sub(physical.saturating_sub(counted));
+            (kind, u16::try_from(effective).unwrap_or(u16::MAX))
+        })
+        .collect();
+    if *days > 0 {
+        let mut target = fuel_target(res, *winter_recipe, *days, fuel.as_ref());
+        if fuel.is_some() {
+            if let Some(definition) = winter_recipe.recipe() {
+                let counted =
+                    crate::runtime::jobs::bills::bill_count(world, res, definition.output.0);
+                target = counted.saturating_add(target.saturating_sub(fuel_supplied(
+                    world,
+                    res,
+                    *winter_recipe,
+                )));
+            }
+        }
+        wanted.push((*winter_recipe, u16::try_from(target).unwrap_or(u16::MAX)));
+    }
+    wanted
+}
+
+/// Unmet, known production work that needs a workshop footprint.
+pub(crate) fn workshop_space_needed(world: &World, res: &SimResources) -> bool {
+    let Ok(data) = sim_core::colony::steward::rules() else {
+        return false;
+    };
+    data.rules
+        .iter()
+        .filter(|rule| {
+            res.steward.scope.permits(rule.scope)
+                && (!rule.extended || res.steward.extended || rule.grace_ticks.is_some())
+        })
+        .any(|rule| {
+            if let Action::FoodPlan(policy) = &rule.action {
+                return super::food::workshop_space_needed(world, res, policy);
+            }
+            wanted_bills(world, res, &rule.action)
+                .into_iter()
+                .any(|(recipe, target)| {
+                    let Some(def) = recipe.recipe() else {
+                        return false;
+                    };
+                    target > 0
+                        && crate::runtime::knowledge::anyone_practises(
+                            world,
+                            knowledge::gates().build(def.workshop),
+                        )
+                        && crate::runtime::knowledge::anyone_practises(
+                            world,
+                            knowledge::gates().recipe(recipe),
+                        )
+                        && !res
+                            .colony
+                            .workshops
+                            .values()
+                            .any(|shop| def.supports_workshop(shop.kind))
+                        && !world
+                            .query::<&ColonySite>()
+                            .iter()
+                            .any(|(_, site)| def.supports_workshop(site.kind))
+                })
+        })
+}
+
+/// Number of sleeping slots covered by existing buildings (beds + hut capacity).
+pub fn covered_beds(res: &SimResources) -> u32 {
+    template_housing::covered(res)
+}
+
+/// LOOP-CAL-9: wood cap target `(target, building_need, pending_shelter)`.
+/// Returns `None` when the cap is not active (no `cap_log_margin`).
 pub fn wood_cap_target(world: &World, res: &SimResources) -> Option<(u32, u32, u32)> {
     wood_budget_observation(world, res)
         .map(|(target, building, pending, _, _)| (target, building, pending))
@@ -2646,7 +2751,21 @@ impl Drop for BillsProfile {
         sample.close();
         let total =
             u64::try_from(sample.last.duration_since(sample.start).as_nanos()).unwrap_or(u64::MAX);
-        eprintln!("MUX2_BILLS_PROFILE {{\"tick\":{},\"total_ns\":{},\"other_ns\":{},\"inputs_ns\":{},\"reserve_ns\":{},\"generation_ns\":{},\"ranking_ns\":{},\"search_ns\":{},\"attempts\":{},\"candidates\":{},\"visited\":{},\"blueprint_checks\":{}}}", sample.tick, total, sample.times[0], sample.times[1], sample.times[2], sample.times[3], sample.times[4], sample.times[5], sample.attempts, sample.candidates, sample.visited, sample.checks);
+        eprintln!(
+            "MUX2_BILLS_PROFILE {{\"tick\":{},\"total_ns\":{},\"other_ns\":{},\"inputs_ns\":{},\"reserve_ns\":{},\"generation_ns\":{},\"ranking_ns\":{},\"search_ns\":{},\"attempts\":{},\"candidates\":{},\"visited\":{},\"blueprint_checks\":{}}}",
+            sample.tick,
+            total,
+            sample.times[0],
+            sample.times[1],
+            sample.times[2],
+            sample.times[3],
+            sample.times[4],
+            sample.times[5],
+            sample.attempts,
+            sample.candidates,
+            sample.visited,
+            sample.checks
+        );
     }
 }
 
