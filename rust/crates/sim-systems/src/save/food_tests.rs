@@ -85,6 +85,7 @@ fn known_system_additions_preserve_registration_order() {
             buildings: false,
             livestock: false,
             ore: false,
+            paths: false,
             diagnosis: true,
         },
     )
@@ -100,6 +101,7 @@ fn known_system_additions_preserve_registration_order() {
             buildings: false,
             livestock: false,
             ore: false,
+            paths: false,
             diagnosis: true,
         }
     )

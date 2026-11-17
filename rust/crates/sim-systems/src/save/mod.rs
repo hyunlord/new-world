@@ -35,11 +35,13 @@ mod evidence_tests;
 mod food_catalog;
 #[cfg(test)]
 mod food_tests;
+mod growth;
 mod knowledge_upper;
 mod legacy_bronze_v23;
 mod legacy_buildings_v18;
 mod legacy_food_v13;
 mod legacy_food_v16;
+mod legacy_growth_v23;
 mod legacy_knowledge_v19;
 mod legacy_livestock_v20;
 mod legacy_metal_v22;
@@ -100,7 +102,7 @@ pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 /// 21 = livestock sidecar, immutable event witnesses and 26 completed-job counters.
 /// 22 = 256-node knowledge upper words and explicit ore deposits/witnesses.
 /// 23 = 27 completed-job counters (mining) and the metal-chain provenance tail.
-/// 24 = per-tile footfall and path stage (M-GROW 3.2 worn paths).
+/// 24 = separate growth tail: footfall/path stages, zone provenance and dwelling stages.
 pub const FORMAT_VERSION: u32 = 24;
 mod cultivation_catalog;
 mod cultivation_validation;
@@ -185,6 +187,7 @@ struct BodyRef<'a> {
     neighbour_upper: &'a knowledge_upper::UpperWords,
     ore: &'a sim_core::colony::ore::OreState,
     metal: &'a sim_core::colony::ore::MetalState,
+    growth: &'a growth::GrowthState,
 }
 
 /// The body after the header, as read (same fields, same order).
@@ -266,6 +269,14 @@ struct Body {
     metal: sim_core::colony::ore::MetalState,
 }
 
+/// Format24 appends growth without changing any predecessor's nested layouts.
+#[cfg_attr(test, derive(Serialize))]
+#[derive(Deserialize)]
+struct BodyV24 {
+    legacy: Body,
+    growth: growth::GrowthState,
+}
+
 /// Exact format12 body, before independently persisted food state.
 #[derive(Serialize, Deserialize)]
 struct LegacyBodyV12 {
@@ -329,21 +340,8 @@ pub fn save(engine: &mut SimEngine) -> Result<Vec<u8>, SaveError> {
     .map_err(SaveError::Encode)?;
     crate::runtime::ore::validate_state_at_boundary(&engine.resources)
         .map_err(SaveError::Encode)?;
-    // M-GROW 3.2: footfall/path_stage must be empty or match the grid size.
-    {
-        let grid_len =
-            (engine.resources.tile_grid.width as usize) * (engine.resources.tile_grid.height as usize);
-        let fl = engine.resources.colony.footfall.len();
-        let sl = engine.resources.colony.path_stage.len();
-        if (fl != 0 && fl != grid_len) || (sl != 0 && sl != grid_len) {
-            return Err(SaveError::Encode(format!(
-                "footfall/path_stage length mismatch: footfall {fl}, path_stage {sl}, grid {grid_len}"
-            )));
-        }
-        if engine.resources.colony.path_stage.iter().any(|&s| s > 3) {
-            return Err(SaveError::Encode("path_stage code > 3".into()));
-        }
-    }
+    growth::validate(&engine.resources).map_err(SaveError::Encode)?;
+    let growth = growth::GrowthState::capture(&engine.resources);
     let neighbour_upper = knowledge_upper::capture(&engine.resources).map_err(SaveError::Encode)?;
     let world = world::capture(&engine.world).map_err(SaveError::World)?;
     let systems = engine.system_states().map_err(SaveError::Systems)?;
@@ -363,6 +361,7 @@ pub fn save(engine: &mut SimEngine) -> Result<Vec<u8>, SaveError> {
         neighbour_upper: &neighbour_upper,
         ore: &engine.resources.ore,
         metal: &engine.resources.metal,
+        growth: &growth,
     };
     let mut out = Vec::with_capacity(1 << 20);
     out.extend_from_slice(&MAGIC);
@@ -427,6 +426,7 @@ pub fn load_with(
         sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
             .map_err(|error| SaveError::Decode(error.to_string()))?;
     }
+    let mut growth = growth::GrowthState::default();
     let mut body: Body = if legacy {
         let old: LegacyBody = decode(encoded).map_err(SaveError::Decode)?;
         Body {
@@ -544,7 +544,8 @@ pub fn load_with(
                     || (legacy_v18
                         && legacy_buildings_v18::accepts_catalog(&envelope.revision, catalog)?)
                     || (source_version == 23
-                        && legacy_bronze_v23::accepts_catalog(&envelope.revision, catalog)?)
+                        && (legacy_bronze_v23::accepts_catalog(&envelope.revision, catalog)?
+                            || legacy_growth_v23::accepts_catalog(&envelope.revision, catalog)?))
             };
             if !catalog_accepted {
                 return Err(SaveError::Decode(format!(
@@ -630,8 +631,12 @@ pub fn load_with(
                 legacy_cultivation_v15::decode_body(&envelope.payload)?
             } else if legacy_v14 {
                 legacy_steward_v14::decode_published_v14(&envelope.payload)?
-            } else {
+            } else if source_version < 24 {
                 decode(&envelope.payload).map_err(SaveError::Decode)?
+            } else {
+                let current: BodyV24 = decode(&envelope.payload).map_err(SaveError::Decode)?;
+                growth = current.growth;
+                current.legacy
             }
         }
     };
@@ -643,6 +648,8 @@ pub fn load_with(
     resources.cultivation = body.cultivation;
     resources.processing = body.processing;
     resources.colony.buildings = body.buildings;
+    growth.restore(&mut resources);
+    growth::validate(&resources).map_err(SaveError::Decode)?;
     resources.livestock = body.livestock;
     crate::runtime::livestock::rebuild_product_cache(&mut resources);
     resources.ore = body.ore;
@@ -736,6 +743,7 @@ pub fn load_with(
             buildings: source_version <= 18 && resources.rules.colony.is_some(),
             livestock: source_version <= 20 && resources.rules.colony.is_some(),
             ore: source_version <= 21 && resources.rules.colony.is_some(),
+            paths: source_version < 24 && resources.rules.colony.is_some(),
             diagnosis: true, // M-READ: always add presentation-only systems
         },
     )?;
@@ -760,6 +768,8 @@ struct LegacySystemAdditions {
     livestock: bool,
     /// Authenticated predecessor colony-only slot introduced in format22.
     ore: bool,
+    /// Format24 colony-only path decay and dwelling growth slots.
+    paths: bool,
     /// M-READ: presentation-only diagnosis and requests systems (no saved state).
     diagnosis: bool,
 }
@@ -779,6 +789,7 @@ fn insert_legacy_systems(
             "BuildingTemplateSystem" => additions.buildings,
             "LivestockSystem" => additions.livestock,
             "OreDiscoverySystem" => additions.ore,
+            "PathDaySystem" | "HouseGrowthSystem" => additions.paths,
             "DiagnosisSystem" | "RequestsSystem" => additions.diagnosis,
             _ => false,
         };

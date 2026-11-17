@@ -94,6 +94,7 @@ fn only_authenticated_pre22_ore_slot_is_inserted() {
         buildings: false,
         livestock: false,
         ore,
+        paths: false,
         diagnosis: false,
     };
     let mut restored = old.clone();
@@ -150,10 +151,20 @@ fn genuine_base21_keeps_history_and_starts_with_empty_ore() {
             .count(),
         1
     );
+    for added in ["PathDaySystem", "HouseGrowthSystem"] {
+        assert_eq!(
+            slots.iter().filter(|row| row.0 == added).count(),
+            1,
+            "exactly one authenticated {added} slot"
+        );
+    }
     assert_eq!(
         slots
             .into_iter()
-            .filter(|row| row.0 != "OreDiscoverySystem")
+            .filter(|row| !matches!(
+                row.0.as_str(),
+                "OreDiscoverySystem" | "PathDaySystem" | "HouseGrowthSystem"
+            ))
             .collect::<Vec<_>>(),
         old.systems
     );

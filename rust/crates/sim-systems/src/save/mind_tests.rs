@@ -137,7 +137,8 @@ fn invalid_saved_policy_is_rejected_before_registration() {
     let mut engine = engine_with_history();
     let bytes = save(&mut engine).expect("valid save");
     let mut envelope: Envelope = decode(read_header(&bytes).expect("header")).expect("envelope");
-    let mut body: Body = decode(&envelope.payload).expect("body");
+    let mut current: BodyV24 = decode(&envelope.payload).expect("body");
+    let body = &mut current.legacy;
     body.mind.policy_source = Some(SOURCE.replace("hunger", "unknown_fact"));
     envelope.payload = encode(&BodyRef {
         current_tick: body.current_tick,
@@ -155,6 +156,7 @@ fn invalid_saved_policy_is_rejected_before_registration() {
         neighbour_upper: &body.neighbour_upper,
         ore: &body.ore,
         metal: &body.metal,
+        growth: &current.growth,
     })
     .expect("malformed fixture");
     let mut corrupt = MAGIC.to_vec();
@@ -412,6 +414,8 @@ fn switch_v11_bytes(engine: &mut SimEngine) -> Vec<u8> {
                         | "BuildingTemplateSystem"
                         | "LivestockSystem"
                         | "OreDiscoverySystem"
+                        | "PathDaySystem"
+                        | "HouseGrowthSystem"
                 )
             })
             .collect(),
@@ -476,7 +480,12 @@ fn switch_v11_colony_migrates_only_the_legacy_decision_slot() {
     assert!(!old.systems.iter().any(|(name, _)| {
         matches!(
             name.as_str(),
-            "FoodDailySystem" | "BuildingTemplateSystem" | "LivestockSystem" | "OreDiscoverySystem"
+            "FoodDailySystem"
+                | "BuildingTemplateSystem"
+                | "LivestockSystem"
+                | "OreDiscoverySystem"
+                | "PathDaySystem"
+                | "HouseGrowthSystem"
         )
     }));
     let retained: Vec<_> = old
@@ -503,6 +512,8 @@ fn switch_v11_colony_migrates_only_the_legacy_decision_slot() {
                     | "BuildingTemplateSystem"
                     | "LivestockSystem"
                     | "OreDiscoverySystem"
+                    | "PathDaySystem"
+                    | "HouseGrowthSystem"
             )
         })
         .collect();
@@ -517,6 +528,18 @@ fn switch_v11_colony_migrates_only_the_legacy_decision_slot() {
         1,
         "one authenticated later livestock slot is inserted"
     );
+    for system in ["PathDaySystem", "HouseGrowthSystem"] {
+        assert_eq!(
+            loaded
+                .system_states()
+                .unwrap()
+                .iter()
+                .filter(|(name, _)| name == system)
+                .count(),
+            1,
+            "one authenticated later {system} slot is inserted"
+        );
+    }
     assert_eq!(loaded.current_tick(), tick);
     assert!(loaded.system_names().contains(&"ColonyMindSystem"));
     assert!(!loaded.system_names().contains(&"AgentDecisionSystem"));
@@ -662,9 +685,10 @@ fn accepted_order_can_save_at_next_tick_boundary_without_advancing_clock() {
     let bytes = save(&mut engine).expect("accepted next-boundary order must save immediately");
     assert_eq!(engine.resources.current_tick, last_tick);
     let mut corrupt: Envelope = decode(&bytes[12..]).unwrap();
-    let mut body: Body = decode(&corrupt.payload).unwrap();
+    let mut current: BodyV24 = decode(&corrupt.payload).unwrap();
+    let body = &mut current.legacy;
     body.resources.colony.command_log.last_mut().unwrap().tick = boundary + 1;
-    corrupt.payload = encode(&body).unwrap();
+    corrupt.payload = encode(&current).unwrap();
     let mut malformed = bytes[..12].to_vec();
     malformed.extend(encode(&corrupt).unwrap());
     assert!(matches!(load(&malformed), Err(SaveError::Decode(_))));

@@ -157,6 +157,8 @@ fn authenticated_original13_fixtures_keep_all_physical_food_and_system_slots() {
             for (after, added) in [
                 ("JobExecuteSystem", "OreDiscoverySystem"),
                 ("VisitorSystem", "LivestockSystem"),
+                ("BedAssignmentSystem", "PathDaySystem"),
+                ("HearthFeedSystem", "HouseGrowthSystem"),
             ] {
                 let slot = expected_systems
                     .iter()

@@ -169,7 +169,8 @@ fn recurring_wool_full_save_restores_omitted_cooldown_before_continuation() {
     assert_eq!(engine.resources.colony.item_ledger.created_of(wool), 1);
     let bytes = super::super::save(&mut engine).expect("full save with wool witness");
     let envelope: super::super::Envelope = super::super::decode(&bytes[12..]).expect("envelope");
-    let body: super::super::Body = super::super::decode(&envelope.payload).expect("saved body");
+    let body: super::super::BodyV24 = super::super::decode(&envelope.payload).expect("saved body");
+    let body = body.legacy;
     assert!(
         body.livestock.wool_last_day.is_empty(),
         "cache is omitted from actual save"
@@ -321,6 +322,7 @@ fn additions(livestock: bool) -> super::super::LegacySystemAdditions {
         buildings: false,
         livestock,
         ore: false,
+        paths: false,
         diagnosis: false,
     }
 }
@@ -495,9 +497,24 @@ fn genuine_published_a20_keeps_counters_upper_masks_physical_state_and_slots() {
                 .count(),
             1
         );
+        for added in ["OreDiscoverySystem", "PathDaySystem", "HouseGrowthSystem"] {
+            assert_eq!(
+                registered.iter().filter(|row| row.0 == added).count(),
+                1,
+                "exactly one authenticated {added} slot"
+            );
+        }
         let old_slots = registered
             .iter()
-            .filter(|row| row.0 != "LivestockSystem" && row.0 != "OreDiscoverySystem")
+            .filter(|row| {
+                !matches!(
+                    row.0.as_str(),
+                    "LivestockSystem"
+                        | "OreDiscoverySystem"
+                        | "PathDaySystem"
+                        | "HouseGrowthSystem"
+                )
+            })
             .cloned()
             .collect::<Vec<_>>();
         assert_eq!(
