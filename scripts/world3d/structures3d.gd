@@ -11,7 +11,7 @@
 #   MultiMesh per model, else procedural posts and two rails; other openings are doors: two
 #   posts and a lintel in the wall, and a door leaf (model `door`) that swings open while a person stands on it and is cut down with the walls. A
 #   finished hut (2D building binding with a `ring`) gets its ring of walls and its door from that binding. Floors are
-#   thin slabs in the floor material, or the model of bindings3d `floors.by_material` (the C3 paved road's flagstones). Roofs: each roofed room (get_rooms, not dug) gets one hipped roof, a height field
+#   thin slabs in the floor material, or the model of bindings3d `floors.by_material` (the C3 paved road's flagstones). Roofs: each roofed room (get_rooms, not dug) gets one gabled (rectangular) or hipped (irregular) roof, a height field
 #   over half-metre cells that rises from the wall line at `structures.roof_pitch_deg` (capped at
 #   `structures.roof_max_rise`) with a one-cell overhang that stops short of any other room, so no roof passes
 #   through another; the cover (thatch, bark, plank:
@@ -32,6 +32,7 @@ extends Node3D
 
 const Data3D = preload("res://scripts/world3d/data3d.gd")
 const Builder = preload("res://scripts/world3d/mesh_builder3d.gd")
+const CraftDetail = preload("res://scripts/world3d/look2_structure_detail.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 const MaterialResolver = preload("res://scripts/world/art/material_resolver.gd")
 const WALL_SHADER = preload("res://shaders/world3d/wall.gdshader")
@@ -347,9 +348,12 @@ func _wall(b: Builder, t: Vector2i, g: float, hgt: float, thick: float, w: Dicti
 	for d: Vector2i in DIRS:
 		if _connects(t, d):
 			arms.append(d)
+	if str(w["profile"]) != "palisade":
+		CraftDetail.foundation(b, Vector3(cx, g, cz), arms, half)
 	match str(w["profile"]):
 		"log":
 			b.profile = PROFILE_LOG
+			var window: bool = hgt >= 2.0 and CraftDetail.window_tile(t, _walls)
 			var r: float = half
 			var count: int = maxi(3, roundi(hgt / (2.0 * r)))
 			var step: float = hgt / float(count)
@@ -382,8 +386,16 @@ func _wall(b: Builder, t: Vector2i, g: float, hgt: float, thick: float, w: Dicti
 						continue
 					var a: Vector3 = Vector3(cx + ax.x * from, y, cz + ax.y * from)
 					var e: Vector3 = Vector3(cx + ax.x * to, y, cz + ax.y * to)
-					var shade: float = 0.92 + 0.08 * float((t.x * 7 + t.y * 13 + i * 5) % 3) / 2.0
-					b.log_prism(a, e, r * 1.02, Color(c.r * shade, c.g * shade, c.b * shade))
+					var shade: float = 0.90 + 0.10 * float(posmod(t.x * 7 + t.y * 13 + i * 5, 5)) / 4.0
+					var radius: float = r * (0.99 + 0.03 * float(posmod(t.x + t.y + i, 3)))
+					var tint: Color = Color(c.r * shade, c.g * shade, c.b * shade)
+					if window and y - g > 1.0 and y - g < 1.75:
+						b.log_prism(a, Vector3(cx - ax.x * 0.24, y, cz - ax.y * 0.24), radius, tint)
+						b.log_prism(Vector3(cx + ax.x * 0.24, y, cz + ax.y * 0.24), e, radius, tint)
+					else:
+						b.log_prism(a, e, radius, tint)
+			if window:
+				CraftDetail.window_frame(b, Vector3(cx, g, cz), axes[0], half)
 		"palisade":
 			b.profile = PROFILE_PALISADE
 			b.stake(cx, cz, g - 0.1, g + hgt + 0.25, half * 0.55, c)
@@ -424,6 +436,9 @@ func _door_frame(b: Builder, t: Vector2i, g: float, hgt: float, thick: float, w:
 	var cz: float = t.y + 0.5
 	var trim: Color = (w["colour"] as Color).darkened(0.25)
 	b.profile = PROFILE_TRIM
+	# A shallow stone threshold stays inside the door tile and below the moving leaf.
+	b.box(Vector3(cx - (0.47 if ax.x == 1 else half + 0.13), g - 0.04, cz - (0.47 if ax.y == 1 else half + 0.13)),
+		Vector3(cx + (0.47 if ax.x == 1 else half + 0.13), g + 0.055, cz + (0.47 if ax.y == 1 else half + 0.13)), Color(0.48, 0.46, 0.38))
 	var post: float = 0.09
 	for side: int in [-1, 1]:
 		var off: float = side * (door_w * 0.5 + post)
@@ -672,9 +687,9 @@ static func _near_other(n: Vector2i, room_id: int, claimed: Dictionary) -> bool:
 	return false
 
 
-## A hipped roof as one height field over the roof cells (lattice every 0.5 m): height rises with the Chebyshev
+## A roof as one height field over the roof cells (lattice every 0.5 m): irregular rooms rise with the Chebyshev
 ## distance from the wall line, so L shapes get hips and valleys and the surface is single-valued (it cannot pass
-## through itself); the overhang ring slopes on down past the walls. Lifted so the wall tops stay under it.
+## through itself); whole rectangular rooms instead have a gable along the longer axis. Lifted above the wall tops.
 func _roof_mesh(tiles: Array, room_id: int, claimed: Dictionary, mat: Material) -> ArrayMesh:
 	var b: Builder = Builder.new()
 	var hgt: float = float(Data3D.param("structures.wall_height", 2.2))
@@ -709,10 +724,13 @@ func _roof_mesh(tiles: Array, room_id: int, claimed: Dictionary, mat: Material) 
 			if v.x >= x0 and v.x <= x1 and v.y >= y0 and v.y <= y1:
 				best = maxf(best, float(mini(mini(v.x - x0, x1 - v.x), mini(v.y - y0, y1 - v.y))))
 		height[v] = best
+	var gabled: bool = rects.size() == 1 and rects[0].get_area() == tiles.size()
+	if gabled:
+		CraftDetail.gable_heights(height, rects[0])
 	var white: Color = Color(1, 1, 1)
-	# One height step per 0.5 m lattice cell at the full pitch: the roof reaches roof_max_rise quickly and tops out flat.
+	# Heights are half-metre steps; use metres so the configured pitch is the actual roof slope.
 	var p: Callable = func(v: Vector2i) -> Vector3:
-		return Vector3(v.x * 0.5, top + minf(rise_max, float(height[v]) * pitch), v.y * 0.5)
+		return Vector3(v.x * 0.5, top + minf(rise_max, float(height[v]) * 0.5 * pitch), v.y * 0.5)
 	var down: Vector3 = Vector3(0, thick, 0)
 	for c: Vector2i in cells:
 		var v00: Vector3 = p.call(c)
@@ -748,6 +766,14 @@ func _roof_mesh(tiles: Array, room_id: int, claimed: Dictionary, mat: Material) 
 					a = v01
 					e = v00
 			b.quad_out(a, e, e - down, a - down, white.darkened(0.25), Vector3(d.x, 0, d.y))
+			var inward: Vector3 = Vector3(-d.x * 0.5, 0, -d.y * 0.5)
+			var ia: Vector3 = p.call(Vector2i(roundi((a.x + inward.x) * 2.0), roundi((a.z + inward.z) * 2.0)))
+			var ie: Vector3 = p.call(Vector2i(roundi((e.x + inward.x) * 2.0), roundi((e.z + inward.z) * 2.0)))
+			b.profile = 0.0 if d.y != 0 else 1.0
+			CraftDetail.eave(b, PackedVector3Array([a, e, ia, ie]), thick)
+	CraftDetail.ridge_caps(b, height, p)
+	if gabled:
+		CraftDetail.gable_ends(b, rects[0], p)
 	return b.commit(mat)
 
 
