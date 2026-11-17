@@ -1,0 +1,7 @@
+// Data-only executable layout identity using the existing storage behaviour.
+(schema_version: 1, zone_rules: [
+    (kind: "test_garden", category: Storage, size: (3, 3), slot_size: (1, 1),
+     min_spacing: 1, max_gap: 2, adjacency: NextToZoneOrHearth, min_path_stage: 0,
+     trigger: "adult_count", people_per_zone: 16,
+     avoid: [Trees, Nodes, Fields, Structures, Outcrops]),
+])

@@ -4,6 +4,7 @@
     "EXT_HIDE": "시험 가죽",
     "EXT_RECIPE": "시험 가죽 가공",
     "EXT_KNOWLEDGE": "시험 가죽 기술",
+    "EXT_WALK_FLOOR": "시험 보행 바닥",
     "EXT_WALL": "시험 흙벽돌 벽",
     "EXT_COLD": "시험 한파",
     "EXT_ANIMAL": "시험 초식동물",
@@ -26,6 +27,7 @@
     "EXT_DOMESTIC_ANIMAL": "시험 가축",
     "EXT_BOG": "시험 늪 광석",
     "EXT_BOG_OUTCROP": "시험 늪 광상",
-    "EXT_BOG_RECIPE": "시험 괴철 제련"
+    "EXT_BOG_RECIPE": "시험 괴철 제련",
+    "EXT_ZONE_GARDEN": "시험 정원 구획"
   }
 }

@@ -1,5 +1,6 @@
 // Data-only templates; no simulation or bridge content-name branch.
-(schema_version:1,buildings:[
+(schema_version:1,zone_kinds:[
+(id:"test_garden",name_key:"EXT_ZONE_GARDEN",status:Connected,debt:None)],buildings:[
 (id:"test_mudbrick_screen",name_key:"EXT_BUILDING_SCREEN",era:"paleolithic",category:Utility,tier:1,
  footprint:(1,1),pieces:[(kind:"test_mudbrick_wall",at:Anchor)],stations:[],requires_knowledge:[],
  materials:{"clay":2},function:(beds:0,storage:None,workshop_tags:[],warmth:Roofed),

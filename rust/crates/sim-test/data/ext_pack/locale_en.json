@@ -4,6 +4,7 @@
     "EXT_HIDE": "Test hide",
     "EXT_RECIPE": "Test hide craft",
     "EXT_KNOWLEDGE": "Test hide knowledge",
+    "EXT_WALK_FLOOR": "Test walking floor",
     "EXT_WALL": "Test mudbrick wall",
     "EXT_COLD": "Test cold",
     "EXT_ANIMAL": "Test grazer",
@@ -26,6 +27,7 @@
     "EXT_DOMESTIC_ANIMAL": "test livestock",
     "EXT_BOG": "Test bog ore",
     "EXT_BOG_OUTCROP": "Test bog deposit",
-    "EXT_BOG_RECIPE": "Test bloom smelting"
+    "EXT_BOG_RECIPE": "Test bloom smelting",
+    "EXT_ZONE_GARDEN": "Test garden zone"
   }
 }

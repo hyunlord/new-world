@@ -32,6 +32,9 @@ fn selected_pack_runs_all_simulation_families_and_rejects_bad_boundaries() {
         "pressure",
         "animal",
         "ore",
+        "zone",
+        "yard",
+        "path",
         "duplicate",
         "malformed",
         "missing",
@@ -61,7 +64,8 @@ fn selected_pack_child() {
     match case.as_str() {
         "base_before" | "base_after" => bundled_pack(),
         "duplicate" | "malformed" | "missing" | "overflow" => invalid_pack(&case),
-        "craft_build_learn" | "pressure" | "animal" | "spine" | "ore" => {
+        "craft_build_learn" | "pressure" | "animal" | "spine" | "ore" | "zone" | "yard"
+        | "path" => {
             sim_test::content_boot::from_environment().expect("real host selected-pack bootstrap");
             match case.as_str() {
                 "craft_build_learn" => craft_build_learn(),
@@ -69,6 +73,9 @@ fn selected_pack_child() {
                 "pressure" => pressure(),
                 "animal" => animal(),
                 "ore" => ore_extension(),
+                "zone" => zone_extension(),
+                "yard" => yard_extension(),
+                "path" => path_extension(),
                 _ => unreachable!(),
             }
         }
@@ -903,4 +910,247 @@ fn ore_extension() {
     assert_eq!(engine.resources.colony.item_ledger.crafted_of(ingot), 1);
     sim_systems::runtime::jobs::invariants::check(&engine.world, &engine.resources)
         .expect("exact extension ledger");
+}
+
+/// Selected data alone creates a physical zone through the ordinary steward.
+fn zone_extension() {
+    let catalog = content::installed().expect("selected catalogue");
+    assert!(catalog.zones().rule_for("test_garden").is_some());
+    let mut engine = sim_test::colony_engine(0);
+    assert!(
+        submit(
+            &mut engine,
+            Command::SetSteward {
+                on: true,
+                scope: sim_core::colony::steward::StewardScope::All,
+            }
+        )
+        .accepted
+    );
+    engine.tick();
+    let (&id, _) = engine
+        .resources
+        .colony
+        .buildings
+        .zone_causes
+        .iter()
+        .find(|(_, cause)| cause.kind == "test_garden")
+        .expect("ordinary data-only layout created");
+    assert_eq!(engine.resources.colony.buildings.layout_zones[&id].len(), 9);
+    assert!(engine
+        .resources
+        .chronicle
+        .entries()
+        .iter()
+        .any(
+            |entry| entry.kind == sim_core::chronicle::ChronicleKind::ZoneLaidOut
+                && entry.cause == id
+        ));
+    let bytes = save::save(&mut engine).expect("save selected zone");
+    let loaded = save::load(&bytes).expect("load selected zone");
+    assert_eq!(
+        loaded.resources.colony.buildings.layout_zones,
+        engine.resources.colony.buildings.layout_zones
+    );
+    assert_eq!(
+        loaded.resources.colony.buildings.zone_causes,
+        engine.resources.colony.buildings.zone_causes
+    );
+}
+
+/// A selected prop appears after real construction and assigned residence, then yields to paths/doors.
+fn yard_extension() {
+    use sim_core::colony::building_site::BuildingStatus;
+    use sim_core::colony::Skills;
+    use sim_core::components::Settlement;
+    use sim_systems::runtime::{
+        agent::BedAssignmentSystem, building_templates::BuildingTemplateSystem,
+        house_growth::HouseGrowthSystem,
+    };
+    let catalog = content::installed().expect("selected yards catalogue");
+    assert!(catalog
+        .yards()
+        .props
+        .iter()
+        .any(|prop| prop.id == "test_yard_hay"));
+    let mut engine = job_world_m2(32, 32);
+    engine.resources.rules.colony = Some(ColonyRule::M4);
+    engine.resources.rules.agent.night_rest =
+        sim_core::rules::WorldRules::colony(0).agent.night_rest;
+    engine.register_system(Box::new(BuildingTemplateSystem));
+    engine.register_system(Box::new(BedAssignmentSystem::default()));
+    engine.register_system(Box::new(HouseGrowthSystem));
+    let person = worker(&mut engine, 6, 6);
+    let id = agent_id(&engine, person);
+    let settlement_id = engine.resources.issue_settlement_id();
+    let mut settlement = Settlement::new_with_id(settlement_id, 0);
+    settlement.formation_tile = (6, 6);
+    settlement.add_member_agent(id);
+    engine
+        .resources
+        .settlements
+        .insert(settlement_id, settlement);
+    know(&mut engine, person, &["hut_building"]);
+    let mut skills = Skills::default();
+    skills.entries[0].level = 1;
+    engine
+        .world
+        .insert_one(person, skills)
+        .expect("resident skill");
+    drop_items(&mut engine, (5, 5), ItemSpec::raw(ItemKind::Log, None), 12);
+    let site_id = engine.resources.colony.buildings.next_site_id;
+    let result = submit(
+        &mut engine,
+        Command::BuildTemplate {
+            id: "hut".into(),
+            anchor: (10, 10),
+            rotation: 0,
+            station: None,
+        },
+    );
+    assert!(result.accepted, "{result:?}");
+    assert!(
+        run_until(&mut engine, 3000, |engine| {
+            engine.resources.colony.buildings.sites[&site_id].status == BuildingStatus::Complete
+        }) < 3000
+    );
+    assert!(
+        submit(
+            &mut engine,
+            Command::AddStockpile {
+                x0: 4,
+                y0: 4,
+                x1: 4,
+                y1: 4
+            }
+        )
+        .accepted
+    );
+    drop_items(&mut engine, (4, 4), ItemSpec::raw(ItemKind::Log, None), 1);
+    assert!(
+        run_until(&mut engine, 12 * 1440, |engine| {
+            engine
+                .resources
+                .colony
+                .buildings
+                .house_growth
+                .get(&site_id)
+                .is_some_and(|p| p.stage == 2)
+        }) < 12 * 1440
+    );
+    assert!(
+        engine.resources.bed_of.contains_key(&id),
+        "ordinary hut bed assigned"
+    );
+    let site = &engine.resources.colony.buildings.sites[&site_id];
+    let props = sim_bridge::ffi::home_housing::collect_yard_props(&engine.resources, catalog, site);
+    let prop = props
+        .iter()
+        .find(|prop| prop.id == "test_yard_hay")
+        .expect("data-only visible prop");
+    assert_eq!(prop.model, "item_049_hay_s");
+    assert_eq!(prop.rotation, 2);
+    let tile = prop.tile;
+    let index = engine.resources.tile_grid.idx(tile.0, tile.1);
+    engine.resources.colony.path_stage.resize(32 * 32, 0);
+    engine.resources.colony.path_stage[index] = 1;
+    assert!(
+        !sim_bridge::ffi::home_housing::collect_yard_props(&engine.resources, catalog, site)
+            .iter()
+            .any(|prop| prop.id == "test_yard_hay")
+    );
+    engine.resources.colony.path_stage[index] = 0;
+    engine.resources.tile_grid.set_door(index, true);
+    assert!(
+        !sim_bridge::ffi::home_housing::collect_yard_props(&engine.resources, catalog, site)
+            .iter()
+            .any(|prop| prop.id == "test_yard_hay")
+    );
+    engine.resources.tile_grid.set_door(index, false);
+    assert_eq!(
+        sim_bridge::ffi::home_housing::collect_yard_props(&engine.resources, catalog, site),
+        props
+    );
+    let bytes = save::save(&mut engine).expect("save selected yard stage");
+    let loaded = save::load_with(&bytes, |engine| {
+        register_spine_jobs(engine);
+        engine.register_system(Box::new(BedAssignmentSystem::default()));
+        engine.register_system(Box::new(HouseGrowthSystem));
+    })
+    .expect("load selected yard stage");
+    assert_eq!(
+        loaded.resources.colony.buildings.house_growth,
+        engine.resources.colony.buildings.house_growth
+    );
+    assert_eq!(
+        sim_bridge::ffi::home_housing::collect_yard_props(
+            &loaded.resources,
+            catalog,
+            &loaded.resources.colony.buildings.sites[&site_id]
+        ),
+        props
+    );
+}
+
+fn path_extension() {
+    use sim_core::rules::ColonyRule;
+    let kind = BlueprintKind::from_name("test_walk_floor").expect("selected floor");
+    let stage = content::installed()
+        .expect("selected catalogue")
+        .paths()
+        .stage_by_code(8)
+        .expect("selected surface");
+    assert_eq!(stage.nav_cost, 4);
+    let mut engine = job_world_m2(16, 16);
+    engine.resources.rules.colony = Some(ColonyRule::M3);
+    worker(&mut engine, 3, 3);
+    drop_items(&mut engine, (3, 4), ItemSpec::raw(ItemKind::Clay, None), 1);
+    let result =
+        sim_systems::commands::submit(&mut engine, Command::PlaceBlueprint { kind, x: 6, y: 6 });
+    assert!(result.accepted, "{result:?}");
+    assert!(
+        run_until(&mut engine, 1000, |e| e
+            .resources
+            .colony
+            .tallies
+            .space_built
+            == 1)
+            < 1000
+    );
+    let index = engine.resources.tile_grid.idx(6, 6);
+    assert_eq!(engine.resources.colony.path_stage[index], 8);
+    assert_eq!(
+        sim_systems::runtime::nav::tile_cost(&engine.resources, (6, 6)),
+        4
+    );
+    engine.world.clear();
+    engine.resources.rules.agent.move_interval_ticks = 3;
+    let walker = engine.world.spawn((
+        sim_core::components::Agent { id: 99 },
+        sim_core::components::Position::new(6, 6),
+        sim_systems::runtime::agent::MovementRng::new(9),
+        sim_core::components::AgentState::Seeking {
+            target: sim_core::components::TargetKind::Job,
+        },
+        sim_core::components::SeekTarget::new((7, 6)),
+    ));
+    engine.resources.current_tick = 1;
+    sim_systems::runtime::agent::AgentMovementSystem::new()
+        .tick(&mut engine.world, &mut engine.resources);
+    let position = engine
+        .world
+        .get::<&sim_core::components::Position>(walker)
+        .expect("walker");
+    assert_eq!(
+        (position.x, position.y),
+        (7, 6),
+        "selected surface moves on tick1, where grass must wait until3"
+    );
+    assert_eq!(
+        content::installed()
+            .expect("selected")
+            .paths()
+            .step_interval(8, 3),
+        1
+    );
 }

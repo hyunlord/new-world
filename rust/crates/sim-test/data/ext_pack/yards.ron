@@ -1,0 +1,4 @@
+// A new yard prop reaches the ordinary house-stage and snapshot path without code IDs.
+(schema_version:1,props:[
+    (id:"test_yard_hay",model:"item_049_hay_s",min_stage:2,offset:(-1,1),rotation:2),
+])
