@@ -23,13 +23,15 @@ ALIASES = {'hearth_fire': 'hearth', 'bee_skep_body': 'bee_skep',
 def component(m, placement, stage):
     """Place one authored blueprint, fitting its primitive to its declared tile bounds."""
     kind, x, y, size, mask = placement
-    before = set(m.bm.verts)
+    existing = m.bm.verts.layers.int.new('component_existing')
+    for vertex in m.bm.verts:
+        vertex[existing] = 1
     height = STAGES[stage]
     base = ALIASES.get(kind, kind)
     if kind.endswith('_wall'):
         style = 'log' if kind == 'log_wall' else 'mud_brick' if kind == 'mud_brick_wall' else 'stone'
         A.masonry(m, style, height)
-        wall = [v for v in m.bm.verts if v not in before]
+        wall = [v for v in m.bm.verts if not v[existing]]
         depth = max(v.co.y for v in wall) - min(v.co.y for v in wall)
         for v in wall:
             v.co.y *= 0.98 / depth
@@ -39,6 +41,8 @@ def component(m, placement, stage):
         m.box('earth', (0.98, 0.98, 0.06), loc=(0, 0, 0.03))
     elif kind == 'door':
         m.box('wood', (0.82, 0.12, height), loc=(0, 0, height / 2))
+    elif base in W.W3D:
+        getattr(W, base)(m, 'idle' if base == 'charcoal_clamp' else False)
     elif base in S.STATIONS:
         getattr(S, base)(m, S.STATIONS[base])
         D.detail(m, base)
@@ -47,13 +51,9 @@ def component(m, placement, stage):
         if stage == 'complete':
             m.cyl('thatch', 1.45, 1.25, loc=(0, 0, height), segs=12, r2=0.12)
         m.box('wood_dark', (0.65, 0.05, min(height, 1.5)), loc=(0, -1.16, min(height, 1.5) / 2))
-    elif kind == 'bloomery':
-        W.bloomery(m, False)
-    elif kind == 'forge':
-        W.forge(m, False)
     else:
         raise AssertionError('Unresolved authored component: ' + kind)
-    verts = [v for v in m.bm.verts if v not in before]
+    verts = [v for v in m.bm.verts if not v[existing]]
     assert verts, kind
     xmin, xmax = min(v.co.x for v in verts), max(v.co.x for v in verts)
     ymin, ymax = min(v.co.y for v in verts), max(v.co.y for v in verts)
@@ -64,6 +64,7 @@ def component(m, placement, stage):
         v.co.x = (v.co.x - (xmin + xmax) / 2) * sx + x
         v.co.y = (v.co.y - (ymin + ymax) / 2) * sy + y
         v.co.z *= sz
+    m.bm.verts.layers.int.remove(existing)
 
 
 def expand(template, footprints):

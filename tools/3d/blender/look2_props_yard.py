@@ -41,6 +41,8 @@ def cart(m: C.Model) -> None:
 def hay(m: C.Model) -> None:
     """Three tied sheaves with a ragged straw silhouette."""
     for x, y, angle in ((-.23, -.12, -.15), (.2, .09, .16), (0, .18, -.04)):
+        m.lathe("thatch", [(.16, .025), (.17, .12), (.13, .3), (.09, .42),
+                           (.12, .59), (.085, .69)], loc=(x + angle * .45, y, 0), segs=10)
         for i in range(9):
             a = math.tau * i / 9
             m.rod("thatch", (x + math.cos(a) * .19, y + math.sin(a) * .19, .035),

@@ -62,10 +62,27 @@ placement.
 
 ## Integrated material boundary
 
-L1 `d728ad708`, T2 `67721fa56` and UI2 `34d25a089` are normal-merged.
+L1 `d728ad708`, T2 `4085470bf` and UI2 `83d1c7e4e` are normal-merged.
 `Data3D` preserves source materials and imported LODs; structures and props adapt
 copies through `Textures3D.mesh`. Flora and plants consume source colours through
 their seasonal and wind shaders. Tinted prop copies retain LODs and choose the
 requested metal atlas tile after the model-specific override. Shared building
 roofs retain L2 trim, gables, room ownership, cutaway and picking. Roof-plane
 regressions inspect complete half-metre sheet coverage separately from trim.
+
+## GPU review corrections
+
+The first full contact review exposed building shells collapsed by interior
+placement: BMesh wrapper identity is not stable across builder operations.
+Tag existing vertices with an integer layer and remove it only after transforms;
+the seven-builder regression checks every old coordinate. Roof frames now meet
+wall plates; bounded thatch fringes and filled hay cores improve silhouettes.
+Legacy furnaces reuse the detailed state builders; bench details stay on the
+matching tabletop. Re-export remains deterministic and within unchanged budgets
+(buildings: 6,404 triangles and nine materials maximum).
+
+A real Metal capture exposed a shared shader argument named `albedo` resolving
+to the plants material's vec4 uniform. Rename that argument and check all seven
+consumer namespaces; headless import alone cannot prove GPU shader compilation.
+Failed captures, first contact reviews and their hashes remain in external
+`after-failed-compile`, `triptychs-failed-compile`, `contacts-v1-rejected` archives.

@@ -237,49 +237,15 @@ def clay_oven(m, p):
 
 
 def charcoal_clamp(m, p):
-    R, H = 1.3, 0.85
-    m.ball("earth", R, loc=(0, 0, 0), scale=(1, 1, H / R), subdiv=2, jitter=0.04, ground=True)
-    for i in range(p["holes"]):  # smoke holes with a hot glow inside
-        a = TAU * i / p["holes"] + 0.3
-        d = 0.35 + 0.45 * (i % 2)
-        x, y = math.cos(a) * d, math.sin(a) * d
-        z = H * math.sqrt(max(0.0, 1 - (d / R) ** 2)) - 0.04
-        m.cyl("earth", 0.13, 0.08, loc=(x, y, z), segs=6, r2=0.09)
-        m.cyl("glow", 0.07, 0.02, loc=(x, y, z + 0.07), segs=6)
-    m.cyl("glow", 0.09, 0.03, loc=(0, 0, H - 0.03), segs=6)
-    for i in range(9):  # spare logs leaning around the base
-        a = TAU * i / 9 + 0.15
-        r0 = R + 0.05
-        log(m, (math.cos(a) * r0, math.sin(a) * r0, 0.0),
-            (math.cos(a + 0.12) * (r0 - 0.2), math.sin(a + 0.12) * (r0 - 0.2), 0.45), r=0.055,
-            segs=5)
-    m.rod("wood", (-1.2, -1.3, 0.02), (-0.4, -1.1, 0.75), 0.025, segs=4)  # rake handle
+    """Share the authored furnace form while retaining the legacy ID and sockets."""
+    import stations_w3d as W
+    W.charcoal_clamp(m, "working")
 
 
 def smelter(m, p):
-    h = p["shaft_h"]
-    stone_ring(m, 8, 0.5, 0.17, scale=(1.3, 1.0, 0.8))
-    m.lathe("clay", [(0.46, 0.0), (0.45, 0.4), (0.34, 1.15), (0.28, h - 0.08), (0.3, h)],
-            segs=10, top_mat="glow")
-    m.cyl("clay", 0.33, 0.07, loc=(0, 0, h - 0.05), segs=10, r2=0.31, caps=False)  # lip
-    # glowing tapping arch at the front, framed with clay
-    m.box("glow", (0.3, 0.14, 0.3), loc=(0, -0.43, 0.17), taper=0.75)
-    m.box("clay", (0.48, 0.12, 0.08), loc=(0, -0.45, 0.36))
-    m.box("clay", (0.09, 0.12, 0.36), loc=(-0.2, -0.45, 0.18))
-    m.box("clay", (0.09, 0.12, 0.36), loc=(0.2, -0.45, 0.18))
-    m.ball("glow", 0.12, loc=(0, -0.62, 0.0), scale=(1.4, 1, 0.3), subdiv=1, ground=True)  # spill
-    # tuyere and two skin bellows on the right side
-    m.rod("clay", (0.75, -0.05, 0.28), (0.35, -0.02, 0.32), 0.055, segs=6)
-    for y in (-0.28, 0.2):
-        m.ball("leather", 0.2, loc=(0.78, y, 0.1), scale=(1.1, 1.0, 0.45), subdiv=1, jitter=0.05)
-        m.rod("wood", (0.78, y, 0.18), (0.82, y - 0.05, 0.62), 0.025, segs=4)
-        m.rod("leather", (0.62, y, 0.1), (0.72, -0.05, 0.28), 0.03, segs=4)
-    # slag heap and charcoal basket
-    for i in range(4):
-        m.ball("stone", 0.08 + 0.02 * (i % 2), loc=(-0.62 - 0.08 * (i % 2), -0.55 + 0.12 * i, 0.04),
-               subdiv=1, jitter=0.2)
-    basket(m, (-0.65, 0.5, 0.0), h=0.24, r=0.18)
-    m.ball("wood_dark", 0.15, loc=(-0.65, 0.5, 0.22), scale=(1, 1, 0.4), subdiv=1, jitter=0.2)
+    """Share the authored furnace form while retaining the legacy ID and sockets."""
+    import stations_w3d as W
+    W.smelter(m, True)
 
 
 def casting_bench(m, p):
@@ -311,18 +277,9 @@ def anvil(m, p):
 
 
 def kiln(m, p):
-    m.cyl("earth", 0.88, 0.1, segs=12, r2=0.82)
-    m.lathe("clay", [(0.78, 0.0), (0.78, 0.35), (0.72, 0.95), (0.5, 1.22), (0.22, 1.36)],
-            loc=(0, 0.05, 0.08), segs=12, top_mat="glow")
-    m.box("glow", (0.3, 0.14, 0.24), loc=(0, -0.76, 0.22), taper=0.75)
-    m.box("clay", (0.5, 0.18, 0.1), loc=(0, -0.78, 0.39))
-    for x in (-0.21, 0.21):
-        m.box("clay", (0.1, 0.18, 0.34), loc=(x, -0.78, 0.17))
-    for i in range(4):  # stoke wood
-        log(m, (-0.65 + 0.07 * i, -0.85, 0.04 + 0.07 * (i % 2)),
-            (-0.3 + 0.07 * i, -0.95, 0.04 + 0.07 * (i % 2)), r=0.04, segs=5)
-    pot(m, (0.68, -0.68, 0), h=0.3, r=0.13)
-    pot(m, (0.88, -0.45, 0), h=0.22, r=0.1)
+    """Share the authored furnace form while retaining the legacy ID and sockets."""
+    import stations_w3d as W
+    W.kiln(m, True)
 
 
 def storage_shelf(m, p):

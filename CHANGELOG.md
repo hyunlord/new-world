@@ -8,6 +8,7 @@
 ### Changed
 - All 25 authored building families and station/prop families gain layered roofs, joinery, woven vessels and shared-material detail while preserving historical IDs and sockets.
 - Real rectangular room roofs are gabled, with batched layered eaves, ridge trim, stone feet and framed openings; irregular room ownership and cutaway remain snapshot-driven.
+- GPU/contact review fixes preserve existing shell vertices during component placement, remove floating bench details, and avoid a plants/shared-shader parameter collision.
 - T2 painted textures are normally merged. Evidence and remaining GPU/performance dependencies are recorded in `/Users/rexxa/work/art-img-data/look2/REPORT.md`.
 
 ### Removed

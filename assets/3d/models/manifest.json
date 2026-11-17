@@ -664,8 +664,8 @@
     2,
     1
    ],
-   "height": 0.784,
-   "triangles": 536,
+   "height": 0.57,
+   "triangles": 416,
    "materials": [
     "stone",
     "wood",
@@ -694,13 +694,16 @@
     3,
     3
    ],
-   "height": 0.869,
-   "triangles": 1376,
+   "height": 2.957,
+   "triangles": 1292,
    "materials": [
     "earth",
     "glow",
+    "canopy",
+    "snow",
     "trunk",
-    "wood"
+    "wood",
+    "wood_dark"
    ],
    "sockets": {
     "light": [
@@ -1025,12 +1028,14 @@
     2,
     2
    ],
-   "height": 1.44,
-   "triangles": 1376,
+   "height": 2.757,
+   "triangles": 3632,
    "materials": [
     "earth",
     "clay",
     "glow",
+    "horn",
+    "snow",
     "trunk",
     "wood"
    ],
@@ -1248,7 +1253,7 @@
     1
    ],
    "height": 0.816,
-   "triangles": 1518,
+   "triangles": 1398,
    "materials": [
     "wood",
     "wood_dark",
@@ -1373,17 +1378,18 @@
     2,
     2
    ],
-   "height": 1.62,
-   "triangles": 1350,
+   "height": 2.779,
+   "triangles": 2208,
    "materials": [
     "stone",
     "clay",
     "glow",
-    "leather",
-    "wood",
-    "thatch",
+    "wood_dark",
+    "hide",
     "earth",
-    "wood_dark"
+    "thatch",
+    "vein",
+    "snow"
    ],
    "sockets": {
     "light": [
@@ -1933,7 +1939,7 @@
     1.2
    ],
    "height": 0.776,
-   "triangles": 576,
+   "triangles": 924,
    "materials": [
     "thatch"
    ],

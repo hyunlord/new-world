@@ -18,6 +18,26 @@ ROOT = Path(__file__).resolve().parents[3]
 MODELS = ROOT / "assets/3d/models"
 
 
+def check_bench_support() -> None:
+    """Low benches must not inherit pegs floating at the tall wood bench height."""
+    for identity, ceiling in (("pottery_bench", .43), ("casting_bench", .34)):
+        raw = (MODELS / f"{identity}.glb").read_bytes()
+        size = struct.unpack_from("<I", raw, 12)[0]
+        doc = json.loads(raw[20:20 + size])
+        heights = []
+        for mesh in doc["meshes"]:
+            for part in mesh["primitives"]:
+                if doc["materials"][part["material"]]["name"] != "wood_dark":
+                    continue
+                accessor = doc["accessors"][part["attributes"]["POSITION"]]
+                view = doc["bufferViews"][accessor["bufferView"]]
+                start = 28 + size + view.get("byteOffset", 0) + accessor.get("byteOffset", 0)
+                stride = view.get("byteStride", 12)
+                heights.extend(struct.unpack_from("<fff", raw, start + i * stride)[1]
+                               for i in range(accessor["count"]))
+        assert heights and max(heights) <= ceiling, (identity, max(heights), ceiling)
+
+
 def check_open_pot() -> None:
     """The old flat cap sealed the mouth; no triangle may cover its top centre."""
     raw = (MODELS / "pot.glb").read_bytes()
@@ -77,11 +97,16 @@ def check() -> None:
             working = identity.endswith("_working")
             assert ("glow" in row["materials"]) == working, identity
             assert ("light" in row["sockets"]) == working, identity
+        if identity.startswith(("asset_smelter_", "asset_bloomery_", "asset_kiln_", "asset_charcoal_clamp_")):
+            active = row["state"] in ("lit", "burning", "working")
+            assert ("glow" in row["materials"]) == active, identity
+            assert ("light" in row["sockets"]) == active, identity
     assert set(k for k in rows if k.startswith("yard_")) == {
         "yard_cart", "yard_hay", "yard_woodpile", "yard_tool_rack", "yard_grain_baskets"}
     check_open_pot()
+    check_bench_support()
     check_fences()
-    print("PASS: 118 L2 models; five append-only yard IDs; vessel opening; states; bounds; 32 fence masks")
+    print("PASS: 118 L2 models; five yard IDs; vessel opening; bench support; states; bounds; 32 fence masks")
 
 
 if __name__ == "__main__":

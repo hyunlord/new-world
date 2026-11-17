@@ -90,7 +90,7 @@
         2,
         1
       ],
-      "height": 0.784,
+      "height": 0.57,
       "materials": [
         "stone",
         "wood",
@@ -111,7 +111,7 @@
           0.85
         ]
       },
-      "triangles": 536
+      "triangles": 416
     },
     "charcoal_clamp": {
       "family": "station",
@@ -120,12 +120,15 @@
         3,
         3
       ],
-      "height": 0.869,
+      "height": 2.957,
       "materials": [
         "earth",
         "glow",
+        "canopy",
+        "snow",
         "trunk",
-        "wood"
+        "wood",
+        "wood_dark"
       ],
       "sockets": {
         "light": [
@@ -139,7 +142,7 @@
           1.85
         ]
       },
-      "triangles": 1376
+      "triangles": 1292
     },
     "clay_oven": {
       "family": "station",
@@ -373,11 +376,13 @@
         2,
         2
       ],
-      "height": 1.44,
+      "height": 2.757,
       "materials": [
         "earth",
         "clay",
         "glow",
+        "horn",
+        "snow",
         "trunk",
         "wood"
       ],
@@ -393,7 +398,7 @@
           1.35
         ]
       },
-      "triangles": 1376
+      "triangles": 3632
     },
     "knapping_spot": {
       "family": "station",
@@ -594,7 +599,7 @@
           0.85
         ]
       },
-      "triangles": 1518
+      "triangles": 1398
     },
     "retting_pit": {
       "family": "station",
@@ -642,16 +647,17 @@
         2,
         2
       ],
-      "height": 1.62,
+      "height": 2.779,
       "materials": [
         "stone",
         "clay",
         "glow",
-        "leather",
-        "wood",
-        "thatch",
+        "wood_dark",
+        "hide",
         "earth",
-        "wood_dark"
+        "thatch",
+        "vein",
+        "snow"
       ],
       "sockets": {
         "light": [
@@ -665,7 +671,7 @@
           1.35
         ]
       },
-      "triangles": 1350
+      "triangles": 2208
     },
     "stone_pile": {
       "family": "item",
@@ -820,7 +826,7 @@
         "thatch"
       ],
       "sockets": {},
-      "triangles": 576
+      "triangles": 924
     },
     "yard_tool_rack": {
       "art_pass": "look2",

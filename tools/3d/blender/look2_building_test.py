@@ -36,6 +36,10 @@ def check() -> None:
             hashes.add(hashlib.sha256(model_path.read_bytes()).hexdigest())
             vertices = positions(model_path)
             width, depth = entry['footprint']
+            if stage == 'complete' and any(piece['at'] == 'Ring' and piece['kind'].endswith('_wall')
+                                           for piece in template['pieces']):
+                assert max(p[0] for p in vertices) - min(p[0] for p in vertices) >= width - .5, name
+                assert max(p[2] for p in vertices) - min(p[2] for p in vertices) >= depth - .5, name
             assert all(-width / 2 - .01 <= p[0] <= width / 2 + .01 and
                        -depth / 2 - .01 <= p[2] <= depth / 2 + .01 and p[1] >= -.00001
                        for p in vertices), name

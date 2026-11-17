@@ -18,7 +18,7 @@ def detail(m: C.Model, identity: str) -> None:
         case "lean_to":
             for x in (-.85, .85):
                 H.lash(m, (x, -.55, 1.56), .083)
-        case "wood_bench" | "pottery_bench" | "casting_bench":
+        case "wood_bench":
             for x in (-.6, .6):
                 m.rod("wood_dark", (x, -.24, .12), (x, .24, .6), .025, segs=5)
             for x in (-.68, -.32, .32, .68):
@@ -62,7 +62,7 @@ def detail(m: C.Model, identity: str) -> None:
                 H.rim(m, (0, 0, z), ("thatch", radius, .015))
         case "knapping_spot" | "grinding_stone" | "retting_pit" | "anvil" | "door":
             pass
-        case "smelter" | "bloomery" | "kiln" | "forge" | "charcoal_clamp":
+        case "smelter" | "bloomery" | "kiln" | "forge" | "charcoal_clamp" | "pottery_bench" | "casting_bench":
             pass
         case _:
             raise AssertionError("Unregistered station detail: " + identity)

@@ -15,6 +15,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import common as C
 import stations as S
 import look2_props_shapes as H
+import stations_w3d as W
 
 
 def masonry(m, style, height):
@@ -79,18 +80,22 @@ def build():
         for state in states:
             m = C.Model(f"asset_{source}_{state}")
             p = dict(S.STATIONS[base])
-            getattr(S, base)(m, p)
             active = state in ("lit", "burning", "working")
+            match source:  # noqa: MATCH_OK — authored registry above is the complete input domain.
+                case "charcoal_clamp":
+                    W.charcoal_clamp(m, {"idle": "idle", "burning": "working", "spent": "done"}[state])
+                case "smelter" | "bloomery" | "kiln":
+                    getattr(W, source)(m, active)
+                case "casting_bench" | "anvil" | "hearth" | "forge":
+                    getattr(S, base)(m, p)
+                case _:
+                    raise AssertionError("Unregistered state builder: " + source)
             if not active:
                 for face in m.bm.faces:
                     if m.mats[face.material_index] == "glow":
                         if "wood_dark" not in m.mats:
                             m.mats.append("wood_dark")
                         face.material_index = m.mats.index("wood_dark")
-            if source == "charcoal_clamp" and state == "spent":
-                for v in m.bm.verts:
-                    v.co.z *= 0.25
-                m.colors["earth"] = (0.08, 0.07, 0.06)
             if source == "casting_bench" and state == "empty":
                 import bmesh
                 faces = [f for f in m.bm.faces if m.mats[f.material_index] == "metal"]
@@ -102,10 +107,6 @@ def build():
             if source == "anvil" and active:
                 m.box("glow", (0.23, 0.07, 0.04), loc=(0, 0, 0.65))
                 m.rod("wood", (-0.2, -0.15, 0.1), (0.2, -0.15, 0.5), 0.025)
-            if source == "bloomery":
-                m.cyl("clay", 0.27, 0.6, loc=(0, 0, 1.6), r2=0.20, caps=False)
-                m.rod("clay", (-0.7, 0, 0.2), (-0.3, 0, 0.3), 0.06)
-                m.colors["clay"] = (0.43, 0.27, 0.20)
             if active:
                 m.sockets["light"] = p.get("light", (0, 0, 0.5))
             m.sockets["work"] = (0, -(p["fp"][1] / 2 + 0.35), 0)
