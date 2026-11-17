@@ -1,5 +1,18 @@
 # Changelog
 
+## M3D-IMG2 Part T2 — richer material and atmosphere art (2026-11-17)
+
+### Added
+- 55 generated assets: 33 material variants, nine transparent life-trace decals,
+  nine sky/cloud/hill layers, and four river/pond normal/flow maps.
+- Presentation-only asset catalog and atmosphere configuration; placement remains
+  consumer-supplied for M-GROW. Prompts and raw evidence: `/Users/rexxa/work/art-img-data/tex2/`.
+
+### Changed
+- Mean-normalized atlas detail increases macro contrast while retaining existing palette tints.
+- Existing sky and water materials sample painted layers; unavailable surface distinctions remain data-only.
+- Delivered on `v8/art-tex2` for planner review, without simulation or crowd changes.
+
 ## M3D-IMG Part T — material texture branch (2026-11-16)
 
 ### Added

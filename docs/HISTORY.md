@@ -1,5 +1,7 @@
 # WorldSim 역사
 
+- 2026-11-17 — M3D-IMG2 Part T2: 생성 자산55개와 재질 대비·하늘·물 연결을 별도 브랜치로 제공한다. 시뮬레이션은 변경하지 않으며 후속 통합은 플래너가 담당한다(`assets/3d/texture_catalog_t2.json`, [ADR0069](decisions/0069-painted-material-and-atmosphere.md)).
+
 - 2026-11-16 — M3D-IMG Part T: 지형·건축·도구 재질용 생성 텍스처 브랜치를 분리했다. 게임 게시와 화면/성능 수용은 별도 검증한다(`assets/3d/textures/`, [ADR0068](decisions/0068-generated-material-texture-atlas.md)).
 
 - 2026-11-15 — M3D-ASSETS: 정적572·생물28개 3D 자산과 원본62개 보존, 콘텐츠 인벤토리·건설 미리보기·게임 카메라 비교를 별도 제공한다. 원격 C3 부재와 미연결 건물 콘셉트를 명시하며 렌더러 통합·전체 게임 게시와 구분한다 (`assets/3d/ASSETS.md`, `docs/decisions/0067-content-complete-3d-asset-pack.md`).

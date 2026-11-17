@@ -18,6 +18,9 @@ var _terrain: Node = null
 var _night: float = 0.0
 var _season: int = -1
 var _hour_override: float = -1.0
+var _painted_sky: ShaderMaterial
+var _sky_blend: Vector3 = Vector3(-1.0, -1.0, -1.0)
+var _sky_blend_step: float = 0.02
 
 
 func setup(world_sim: Node, terrain: Node) -> void:
@@ -34,6 +37,14 @@ func _ready() -> void:
 	sky_material.ground_bottom_color = Color(0.3, 0.32, 0.3)
 	var sky_res: Sky = Sky.new()
 	sky_res.sky_material = sky_material
+	var atmosphere: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/3d/atmosphere_t2.json"))
+	var sky_config: Dictionary = atmosphere.get("sky", {})
+	_painted_sky = _create_painted_sky(sky_config)
+	if _painted_sky != null:
+		sky_res.sky_material = _painted_sky
+		sky_res.process_mode = Sky.PROCESS_MODE_REALTIME
+		sky_res.radiance_size = Sky.RADIANCE_SIZE_256
+		_sky_blend_step = maxf(0.001, float(sky_config.get("blend_step", 0.02)))
 	environment.background_mode = Environment.BG_SKY
 	environment.sky = sky_res
 	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
@@ -72,6 +83,24 @@ func _ready() -> void:
 	sun.directional_shadow_max_distance = float(Data3D.param("light.shadow_distance", 90.0))
 	sun.light_color = Color(1.0, 0.96, 0.88)
 	add_child(sun)
+
+
+func _create_painted_sky(config: Dictionary) -> ShaderMaterial:
+	var textures: Dictionary = config.get("textures", {})
+	var material: ShaderMaterial = ShaderMaterial.new()
+	material.shader = preload("res://shaders/world3d/painted_sky.gdshader")
+	for key: String in ["day_sky", "dusk_sky", "night_sky", "winter_sky", "day_cloud", "dusk_cloud", "night_cloud", "winter_cloud", "hills"]:
+		var path: String = str(textures.get(key, ""))
+		if path.is_empty() or not ResourceLoader.exists(path):
+			return null
+		var texture: Texture2D = load(path) as Texture2D
+		if texture == null:
+			return null
+		material.set_shader_parameter(key, texture)
+	material.set_shader_parameter("cloud_opacity", clampf(float(config.get("cloud_opacity", 0.65)), 0.0, 1.0))
+	material.set_shader_parameter("hills_opacity", clampf(float(config.get("hills_opacity", 0.5)), 0.0, 1.0))
+	material.set_shader_parameter("ground_colour", Data3D.colour(config.get("ground_colour", []), Color(0.3, 0.32, 0.3)))
+	return material
 
 
 ## Pin the hour (tools: captures at a fixed light); -1 follows the clock.
@@ -117,6 +146,12 @@ func _apply_hour(hour: float) -> void:
 	elif hour >= float(dusk[0]):
 		day = 1.0 - (hour - float(dusk[0])) / maxf(0.01, float(dusk[1]) - float(dusk[0]))
 	_night = 1.0 - day
+	if _painted_sky != null:
+		var winter: float = float((Data3D.param("terrain.snow_cover", {}) as Dictionary).get(str(_season), 0.0))
+		var weights: Vector3 = Vector3(snappedf(_night, _sky_blend_step), snappedf(4.0 * day * _night, _sky_blend_step), winter)
+		if weights != _sky_blend:
+			_sky_blend = weights
+			_painted_sky.set_shader_parameter("blend_weights", weights)
 	RenderingServer.global_shader_parameter_set("w3d_night", _night)
 	# Sun path: azimuth east (6h) → south (12h) → west (18h); elevation peaks at noon. At night a low moon.
 	var frac: float = clampf((hour - 6.0) / 12.0, -0.2, 1.2)

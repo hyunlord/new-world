@@ -1,5 +1,7 @@
 # 로드맵 (V8)
 
+> **M3D-IMG2 Part T2 (2026-11-17):** `v8/art-tex2`에 재질·데칼·하늘·물55개를 제공한다. [결정](decisions/0069-painted-material-and-atmosphere.md). 다음은 플래너의 통합 검토이며, M-GROW의 흔적 배치와 경로 단계 선택은 데이터 계약으로 이월한다. 검증 원본: `/Users/rexxa/work/art-img-data/tex2/REPORT.md`.
+
 > **M3D-IMG Part T — 텍스처 작업 브랜치 (2026-11-16):** `v8/art-tex`에서 생성 알베도·노멀과 기존 재질 연결을 제공한다. [결정](decisions/0068-generated-material-texture-atlas.md). 전후 화면·500명 FPS는 공유 GPU 게이트 허용 후 검증하며, 이 브랜치는 게임 게시가 아니다.
 
 > **M3D-ASSETS — 자산 제공 완료 (2026-11-15):** `v8/3d-assets`에서 정적572·생물28개 모델을 제공한다. [인벤토리](../assets/3d/INVENTORY.md), [결정](decisions/0067-content-complete-3d-asset-pack.md). 렌더러 통합·플레이 수용과 구분하며 원격 C3 기준 부재를 기록한다.

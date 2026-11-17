@@ -1,6 +1,8 @@
 // One atlas sampler keeps existing mesh batches and material draw calls intact.
 uniform sampler2D material_atlas : source_color, filter_linear_mipmap, repeat_disable;
 uniform float texture_strength = 0.0;
+uniform float texture_repeat_scale = 1.0;
+uniform float material_luminance[64];
 uniform sampler2D material_normal_atlas : hint_normal, filter_linear_mipmap, repeat_disable;
 
 vec2 material_uv(vec2 p, float tile) {
@@ -9,7 +11,8 @@ vec2 material_uv(vec2 p, float tile) {
 }
 
 vec3 material_detail(vec2 p, float tile) {
-	if (tile < -0.5 || texture_strength < 0.001) { return vec3(1.0); }
+	if (tile < -0.5 || tile > 63.0 || texture_strength < 0.001) { return vec3(1.0); }
+	p *= texture_repeat_scale;
 	vec2 uv = material_uv(p, tile);
 	// Explicit derivatives avoid a false coarse mip at the periodic wrap seam.
 	// Cap the footprint at the 8-pixel gutter so distant mips cannot read adjacent materials.
@@ -17,11 +20,14 @@ vec3 material_detail(vec2 p, float tile) {
 	vec2 dy = clamp(dFdy(p) * (1008.0 / 8192.0), vec2(-8.0 / 8192.0), vec2(8.0 / 8192.0));
 	vec3 texel = textureGrad(material_atlas, uv, dx, dy).rgb;
 	float value = dot(texel, vec3(0.2126, 0.7152, 0.0722));
-	return mix(vec3(1.0), vec3(0.78 + value * 0.55), texture_strength);
+	// Remove each tile's mean so stronger painted variation retains the authored palette.
+	float detail = clamp(1.0 + (value - material_luminance[int(tile + 0.5)]) * 2.0, 0.65, 1.45);
+	return mix(vec3(1.0), vec3(detail), texture_strength);
 }
 
 vec3 material_bump(vec3 p, vec3 n, float tile) {
-	if (tile < -0.5 || texture_strength < 0.001) { return n; }
+	if (tile < -0.5 || tile > 63.0 || texture_strength < 0.001) { return n; }
+	p *= texture_repeat_scale;
 	vec3 dx = clamp(dFdx(p) * (1008.0 / 8192.0), vec3(-8.0 / 8192.0), vec3(8.0 / 8192.0));
 	vec3 dy = clamp(dFdy(p) * (1008.0 / 8192.0), vec3(-8.0 / 8192.0), vec3(8.0 / 8192.0));
 	vec2 a = textureGrad(material_normal_atlas, material_uv(p.zy, tile), dx.zy, dy.zy).rg * 2.0 - 1.0;

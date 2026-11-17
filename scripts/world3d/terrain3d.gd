@@ -71,6 +71,24 @@ func _ready() -> void:
 	water_material = ShaderMaterial.new()
 	water_material.shader = WATER_SHADER
 	water_material.set_shader_parameter("water_colour", Data3D.colour(Data3D.param("terrain.water_colour", []), Color(0.16, 0.36, 0.45, 0.82)))
+	var atmosphere: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/3d/atmosphere_t2.json"))
+	_setup_water_textures(atmosphere.get("water", {}))
+
+
+func _setup_water_textures(config: Dictionary) -> void:
+	water_material.set_shader_parameter("painted_water", false)
+	for key: String in ["normal", "flow"]:
+		var path: String = str(config.get(key, ""))
+		if path.is_empty() or not ResourceLoader.exists(path):
+			return
+		var texture: Texture2D = load(path) as Texture2D
+		if texture == null:
+			return
+		water_material.set_shader_parameter("water_" + key, texture)
+	water_material.set_shader_parameter("water_repeat_scale", maxf(0.001, float(config.get("repeat_scale", 0.25))))
+	water_material.set_shader_parameter("water_normal_strength", clampf(float(config.get("normal_strength", 0.2)), 0.0, 1.0))
+	water_material.set_shader_parameter("water_flow_speed", clampf(float(config.get("flow_speed", 0.06)), 0.0, 1.0))
+	water_material.set_shader_parameter("painted_water", true)
 
 
 func _on_world_reset() -> void:
@@ -367,7 +385,6 @@ func _compute_tile(i: int, raises: Dictionary, water_codes: Array, colours: Dict
 	var special: String = "ford" if _ford.has(t) else ("dug" if _dug.has(t) else ("field" if _field.has(t) else ("clearing" if _floor.has(t) else "")))
 	if special != "":
 		tile = textures.index("terrain_special", special, tile)
-		blend = 1.0 if special == "clearing" else 0.0
 	if special == "" and _clearing.has(t) and r == 0.0:
 		blend = float(_clearing[t])
 	_texture_tiles[i] = tile

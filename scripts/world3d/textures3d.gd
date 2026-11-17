@@ -20,6 +20,14 @@ static func setup(mat: ShaderMaterial) -> void:
 	if ResourceLoader.exists(path):
 		mat.set_shader_parameter("material_atlas", load(path) as Texture2D)
 		mat.set_shader_parameter("texture_strength", float(bindings().get("strength", 0.5)))
+		mat.set_shader_parameter("texture_repeat_scale", float(bindings().get("repeat_scale", 1.0)))
+		var means: PackedFloat32Array = PackedFloat32Array()
+		means.resize(64)
+		means.fill(0.5)
+		var configured: Array = bindings().get("linear_luminance_means", [])
+		for tile: int in mini(configured.size(), means.size()):
+			means[tile] = clampf(float(configured[tile]), 0.0, 1.0)
+		mat.set_shader_parameter("material_luminance", means)
 	var normal_path: String = "res://assets/3d/textures/normal_atlas.webp"
 	if ResourceLoader.exists(normal_path):
 		mat.set_shader_parameter("material_normal_atlas", load(normal_path) as Texture2D)

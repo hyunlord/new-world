@@ -7,6 +7,12 @@ render_mode blend_mix, depth_draw_opaque, cull_back, specular_schlick_ggx;
 global uniform float w3d_time;
 uniform vec4 water_colour : source_color = vec4(0.16, 0.36, 0.45, 0.82);
 uniform sampler2D depth_tex : hint_depth_texture, filter_linear;
+uniform bool painted_water = false;
+uniform sampler2D water_normal : hint_normal, filter_linear_mipmap, repeat_enable;
+uniform sampler2D water_flow : filter_linear_mipmap, repeat_enable;
+uniform float water_repeat_scale = 0.25;
+uniform float water_normal_strength = 0.2;
+uniform float water_flow_speed = 0.06;
 
 varying vec3 world_pos;
 
@@ -33,6 +39,16 @@ void fragment() {
 	float a = vnoise(p * 1.7 + vec2(t * 0.35, t * 0.21));
 	float b = vnoise(p * 3.1 - vec2(t * 0.27, -t * 0.31));
 	vec3 nrm = normalize(vec3((a - 0.5) * 0.35 + (b - 0.5) * 0.2, 1.0, (b - 0.5) * 0.35 - (a - 0.5) * 0.2));
+	if (painted_water) {
+		vec2 uv = p * water_repeat_scale;
+		vec2 flow = texture(water_flow, uv).rg * 2.0 - 1.0;
+		// Crossfade bounded advection phases instead of stretching the flow indefinitely.
+		float phase = fract(t * water_flow_speed);
+		vec2 first = texture(water_normal, uv - flow * phase).rg;
+		vec2 second = texture(water_normal, uv - flow * fract(phase + 0.5)).rg;
+		vec2 detail = mix(first, second, abs(phase * 2.0 - 1.0)) * 2.0 - 1.0;
+		nrm = normalize(nrm + vec3(detail.x, 0.0, detail.y) * water_normal_strength);
+	}
 	NORMAL = normalize((VIEW_MATRIX * vec4(nrm, 0.0)).xyz);
 	float depth = texture(depth_tex, SCREEN_UV).r;
 	vec4 ndc = vec4(SCREEN_UV * 2.0 - 1.0, depth, 1.0);

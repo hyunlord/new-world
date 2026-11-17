@@ -1,0 +1,31 @@
+{
+  "about": "Presentation-only sky layers and existing-water detail. Pond assets remain catalog-only until an authoritative surface selector exists. Flow RG is linear signed X/Z direction encoded as direction*0.5+0.5.",
+  "sky": {
+    "textures": {
+      "day_sky": "res://assets/3d/textures/sky_day.png",
+      "dusk_sky": "res://assets/3d/textures/sky_dusk.png",
+      "night_sky": "res://assets/3d/textures/sky_night.png",
+      "winter_sky": "res://assets/3d/textures/sky_winter.png",
+      "day_cloud": "res://assets/3d/textures/cloud_day.png",
+      "dusk_cloud": "res://assets/3d/textures/cloud_dusk.png",
+      "night_cloud": "res://assets/3d/textures/cloud_night.png",
+      "winter_cloud": "res://assets/3d/textures/cloud_winter.png",
+      "hills": "res://assets/3d/textures/hills.png"
+    },
+    "cloud_opacity": 0.65,
+    "hills_opacity": 0.5,
+    "ground_colour": [0.3, 0.32, 0.3],
+    "blend_step": 0.02
+  },
+  "water": {
+    "normal": "res://assets/3d/textures/water_river_normal.png",
+    "flow": "res://assets/3d/textures/water_river_flow.png",
+    "repeat_scale": 0.25,
+    "normal_strength": 0.2,
+    "flow_speed": 0.06,
+    "pond": {
+      "normal": "res://assets/3d/textures/water_pond_normal.png",
+      "flow": "res://assets/3d/textures/water_pond_flow.png"
+    }
+  }
+}
