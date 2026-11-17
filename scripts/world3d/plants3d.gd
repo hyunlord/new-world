@@ -12,6 +12,8 @@
 #   `plants.phase_colors`, ripe heads in `ripe_accent`), field tufts as a 3 × 3 grid (growing short and green, ripe tall
 #   with heads in the crop category's colour, params3d `plants.crop_ripe_by_category`, else `plants.ripe`; harvested
 #   straw stubble). Read when the tick passes a `flora.slow_read_ticks` boundary and rebuilt only when the rows change.
+#   Low grass and occasional flowers decorate growing/ripe wild-plant tiles; only this detail fades with zoom.
+#   All plant materials share rooted shader wind and painterly lighting, with no per-frame instance updates.
 # Bridge methods called: get_plants; via SimReads/FieldFacts get_field_tiles, get_crop_defs, get_time_snapshot,
 #   get_world_info, get_content_catalog (World3D.catalog); signal world_reset.
 extends Node3D
@@ -19,6 +21,7 @@ extends Node3D
 const Data3D = preload("res://scripts/world3d/data3d.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 const Facts = preload("res://scripts/ui/field_facts.gd")
+const PLANT_SHADER = preload("res://shaders/world3d/plants.gdshader")
 
 const BLADES: int = 7
 
@@ -26,6 +29,8 @@ var _world_sim: Node = null
 var _terrain: Node = null
 var _tufts: MultiMeshInstance3D = null
 var _heads: MultiMeshInstance3D = null
+var _grass: MultiMeshInstance3D = null
+var _flowers: MultiMeshInstance3D = null
 ## "model|chunk x|chunk y" → its MultiMeshInstance3D.
 var _models: Dictionary = {}
 ## "model|saturation" → the model with desaturated materials.
@@ -50,13 +55,14 @@ func setup(world_sim: Node, terrain: Node) -> void:
 
 
 func _ready() -> void:
-	var mat: StandardMaterial3D = StandardMaterial3D.new()
-	mat.vertex_color_use_as_albedo = true
-	mat.vertex_color_is_srgb = true
-	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
-	mat.roughness = 0.9
+	var mat: ShaderMaterial = _plant_material(null) as ShaderMaterial
+	mat.set_shader_parameter("use_vertex_colour", true)
 	_tufts = _batch("Tufts", _tuft_mesh(), mat)
 	_heads = _batch("Heads", _head_mesh(), mat)
+	var detail: ShaderMaterial = mat.duplicate() as ShaderMaterial
+	detail.set_shader_parameter("detail", true)
+	_grass = _batch("MeadowGrass", _tuft_mesh(), detail)
+	_flowers = _batch("MeadowFlowers", _flower_mesh(), detail)
 
 
 func _batch(node_name: String, mesh: ArrayMesh, mat: Material) -> MultiMeshInstance3D:
@@ -100,6 +106,21 @@ static func _head_mesh() -> ArrayMesh:
 		verts.append_array([c - up, c + w, c + up, c - up, c + up, c - w])
 		for _i: int in 6:
 			cols.append(Color.WHITE)
+	return _mesh(verts, cols)
+
+
+## Open five-petal heads face the elevated game camera; geometry stays opaque and double-sided.
+static func _flower_mesh() -> ArrayMesh:
+	var verts: PackedVector3Array = PackedVector3Array()
+	var cols: PackedColorArray = PackedColorArray()
+	for flower: int in 3:
+		var centre: Vector3 = Vector3(cos(float(flower) * 2.4) * 0.22, 0.7 + 0.12 * flower, sin(float(flower) * 2.4) * 0.22)
+		for petal: int in 5:
+			var angle: float = TAU * float(petal) / 5.0
+			var along: Vector3 = Vector3(cos(angle), 0.2, sin(angle)) * 0.12
+			var across: Vector3 = Vector3(-sin(angle), 0.0, cos(angle)) * 0.05
+			verts.append_array([centre, centre + along - across, centre + along + across])
+			cols.append_array([Color(0.86, 0.69, 0.34), Color.WHITE, Color.WHITE])
 	return _mesh(verts, cols)
 
 
@@ -148,6 +169,12 @@ func _rebuild(plants: Dictionary, fields: Array[Dictionary], season: int) -> voi
 	var winter: float = float((ArtData.params().get("season", {}) as Dictionary).get("winter_saturation", 0.35)) if season == 3 else 1.0
 	var tufts: Array = []
 	var heads: Array = []
+	var grass: Array = []
+	var flowers: Array = []
+	var grass_colour: Color = Data3D.colour(Data3D.param("plants.detail_grass_colour", []), Color(0.43, 0.51, 0.24))
+	var flower_colour: Color = Data3D.colour(Data3D.param("plants.detail_flower_colour", []), Color(0.82, 0.80, 0.66))
+	var grass_count: int = maxi(0, int(Data3D.param("plants.detail_grass_per_plant", 3)))
+	var flower_modulus: int = maxi(1, int(Data3D.param("plants.detail_flower_modulus", 5)))
 	# "model|chunk x|chunk y" → [[position, yaw, scale], …].
 	var placed: Dictionary = {}
 	var seed: int = int(SimReads.read(_world_sim, "get_world_info").get("seed", 0))
@@ -169,6 +196,13 @@ func _rebuild(plants: Dictionary, fields: Array[Dictionary], season: int) -> voi
 			_tile_rand[t] = rnd
 		var j: Vector2 = Vector2(float(rnd[0]), float(rnd[1]))
 		var p: Vector2 = Vector2(t) + Vector2(0.5, 0.5) + j * 0.4
+		if season != 3 and (phase == 1 or phase == 2):
+			for clump: int in grass_count:
+				var angle: float = float(rnd[2]) + float(clump) * 2.4
+				var at: Vector2 = Vector2(t) + Vector2(0.5, 0.5) + Vector2(cos(angle), sin(angle)) * 0.32
+				grass.append([at, 0.18 + 0.04 * (clump % 3), grass_colour])
+			if phase == 2 and posmod(hash([seed, t, 47]), flower_modulus) == 0:
+				flowers.append([p, 0.3, flower_colour])
 		var kind: int = int(kinds[i]) if i < kinds.size() else -1
 		var wkey: int = kind * 8 + phase
 		if not _wild_cache.has(wkey):
@@ -217,6 +251,8 @@ func _rebuild(plants: Dictionary, fields: Array[Dictionary], season: int) -> voi
 		if int(_batch_hash.get(pair[0], 0)) != h:
 			_batch_hash[pair[0]] = h
 			_fill(pair[1], pair[2])
+	_fill_detail(_grass, grass)
+	_fill_detail(_flowers, flowers)
 	_fill_models(placed, winter)
 
 
@@ -242,6 +278,42 @@ static func _put(placed: Dictionary, model: String, row: Array) -> void:
 	(placed[key] as Array).append(row)
 
 
+## Empty parent batches share a mesh; chunk children are CPU-culled beyond the shader's fade distance.
+func _fill_detail(parent: MultiMeshInstance3D, rows: Array) -> void:
+	var batches: Dictionary = {}
+	for row: Array in rows:
+		_put(batches, str(parent.name), row)
+	var live: Dictionary = {}
+	for child: Node in parent.get_children():
+		if child is MultiMeshInstance3D:
+			live[str(child.name)] = child
+	for key: String in batches:
+		var node_name: String = key.replace("|", "_")
+		var batch_rows: Array = batches[key]
+		var stamp: int = hash(batch_rows)
+		var mmi: MultiMeshInstance3D = live.get(node_name)
+		live.erase(node_name)
+		if mmi != null and int(_batch_hash.get(key, 0)) == stamp:
+			continue
+		if mmi == null:
+			mmi = MultiMeshInstance3D.new()
+			mmi.name = node_name
+			mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			mmi.visibility_range_end = float(Data3D.param("plants.detail_fade_end", 65.0))
+			var mm: MultiMesh = MultiMesh.new()
+			mm.transform_format = MultiMesh.TRANSFORM_3D
+			mm.use_colors = true
+			mm.mesh = parent.multimesh.mesh
+			mmi.multimesh = mm
+			parent.add_child(mmi)
+		_batch_hash[key] = stamp
+		_fill(mmi.multimesh, batch_rows)
+	for node_name: String in live:
+		var stale: Node = live[node_name]
+		parent.remove_child(stale)
+		stale.queue_free()
+
+
 ## One MultiMesh per (model, chunk) key of `placed` (rows [position, yaw, scale]); keys no longer placed are freed.
 func _fill_models(placed: Dictionary, saturation: float) -> void:
 	for id: String in _models.keys():
@@ -258,7 +330,7 @@ func _fill_models(placed: Dictionary, saturation: float) -> void:
 		_batch_hash[id] = h
 		var mm: MultiMesh = MultiMesh.new()
 		mm.transform_format = MultiMesh.TRANSFORM_3D
-		mm.mesh = _desaturated(id.get_slice("|", 0), saturation)
+		mm.mesh = _painted(id.get_slice("|", 0), saturation)
 		mm.instance_count = rows.size()
 		for i: int in rows.size():
 			var p: Vector2 = rows[i][0]
@@ -292,6 +364,47 @@ func _desaturated(id: String, saturation: float) -> Mesh:
 			out.surface_set_material(s, m)
 	_variants[key] = out
 	return out
+
+
+## Preserve the source-colour contract of _desaturated; only the runtime batches receive wind materials.
+func _painted(id: String, saturation: float) -> Mesh:
+	var key: String = "painted|%s|%.3f" % [id, saturation]
+	if _variants.has(key):
+		return _variants[key]
+	var base: Mesh = _desaturated(id, saturation)
+	if base is not ArrayMesh:
+		return base
+	var out: ArrayMesh = (base as ArrayMesh).duplicate() as ArrayMesh
+	for surface: int in out.get_surface_count():
+		out.surface_set_material(surface, _plant_material(out.surface_get_material(surface)))
+	_variants[key] = out
+	return out
+
+
+static func _plant_material(source: Material) -> Material:
+	if source != null and source is not BaseMaterial3D:
+		return source
+	if source is BaseMaterial3D:
+		var original: BaseMaterial3D = source
+		# The plant pack is opaque/two-sided; preserve special future materials instead of flattening their effects.
+		if original.transparency != BaseMaterial3D.TRANSPARENCY_DISABLED or original.cull_mode != BaseMaterial3D.CULL_DISABLED or original.emission_enabled or original.normal_enabled or original.metallic > 0.0 or original.shading_mode != BaseMaterial3D.SHADING_MODE_PER_PIXEL:
+			return source
+		if original.uv1_triplanar or original.uv1_scale != Vector3.ONE or original.uv1_offset != Vector3.ZERO or original.next_pass != null:
+			return source
+	var mat: ShaderMaterial = ShaderMaterial.new()
+	mat.shader = PLANT_SHADER
+	mat.set_shader_parameter("fade_start", float(Data3D.param("plants.detail_fade_start", 42.0)))
+	mat.set_shader_parameter("fade_end", float(Data3D.param("plants.detail_fade_end", 65.0)))
+	if source is BaseMaterial3D:
+		var original: BaseMaterial3D = source
+		mat.set_shader_parameter("albedo", original.albedo_color)
+		mat.set_shader_parameter("use_vertex_colour", original.vertex_color_use_as_albedo)
+		mat.set_shader_parameter("vertex_colour_srgb", original.vertex_color_is_srgb)
+		mat.set_shader_parameter("roughness", original.roughness)
+		mat.set_shader_parameter("has_texture", original.albedo_texture != null)
+		if original.albedo_texture != null:
+			mat.set_shader_parameter("albedo_texture", original.albedo_texture)
+	return mat
 
 
 func _fill(mm: MultiMesh, rows: Array) -> void:

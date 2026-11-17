@@ -24,6 +24,7 @@
 extends Node3D
 
 const Data3D = preload("res://scripts/world3d/data3d.gd")
+const Textures3D = preload("res://scripts/world3d/textures3d.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 
 var _world_sim: Node = null
@@ -230,7 +231,7 @@ func _place(id: String, rect: Rect2i, lit: bool, node_name: String) -> void:
 	var mi: MeshInstance3D = MeshInstance3D.new()
 	mi.name = node_name
 	var shown: String = state_model(id, lit)
-	var mesh: Mesh = Data3D.mesh(shown)
+	var mesh: Mesh = Textures3D.mesh(Data3D.mesh(shown), shown)
 	mi.mesh = mesh
 	var row: Dictionary = Data3D.model_row(shown)
 	if row.is_empty():
@@ -383,8 +384,8 @@ func _tinted_mesh(id: String, tint: String) -> Mesh:
 		return _tinted[key]
 	var base: Mesh = Data3D.mesh(id)
 	if tint == "" or base is not ArrayMesh:
-		_tinted[key] = base
-		return base
+		_tinted[key] = Textures3D.mesh(base, id)
+		return _tinted[key]
 	var src: ArrayMesh = base
 	var out: ArrayMesh = ArrayMesh.new()
 	for s: int in src.get_surface_count():
@@ -393,10 +394,11 @@ func _tinted_mesh(id: String, tint: String) -> Mesh:
 		var mat: Material = src.surface_get_material(s)
 		if name in ["vein", "metal"]:
 			var m: StandardMaterial3D = StandardMaterial3D.new()
+			m.resource_name = name
 			m.albedo_color = Data3D.material_colour(tint, "Mineral")
 			m.metallic = 0.5 if name == "metal" else 0.1
 			m.roughness = 0.4
 			mat = m
-		out.surface_set_material(out.get_surface_count() - 1, mat)
+		out.surface_set_material(out.get_surface_count() - 1, Textures3D.imported(mat, id))
 	_tinted[key] = out
 	return out

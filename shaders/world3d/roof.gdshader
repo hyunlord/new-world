@@ -5,6 +5,7 @@
 // and 1 for a ridge along z (shingle and plank lines run down the slope).
 shader_type spatial;
 render_mode diffuse_lambert, specular_disabled, cull_back;
+#include "res://shaders/world3d/painterly.gdshaderinc"
 
 uniform vec3 cover : source_color = vec3(0.72, 0.6, 0.34);
 uniform int pattern = 0;
@@ -58,6 +59,10 @@ void fragment() {
 	if (COLOR.a > 0.5) {
 		c = mix(c, vec3(0.80, 0.85, 0.92), w3d_snow * 0.9 * smoothstep(0.3, 0.7, up));
 	}
-	ALBEDO = c;
+	ALBEDO = painterly_albedo(c, world_pos);
 	ROUGHNESS = 0.95;
+}
+
+void light() {
+	DIFFUSE_LIGHT += painterly_diffuse(NORMAL, LIGHT, VIEW, ALBEDO, LIGHT_COLOR, ATTENUATION);
 }

@@ -9,6 +9,8 @@
 #   the four tiles of a corner, varied by the world-seeded value noise (View.value_noise), packed earth around the
 #   camp hearths and on floors, dug floor colour and tilled soil on field tiles (get_field_tiles). The shared
 #   ShaderMaterial (shaders/world3d/terrain.gdshader) takes the season tint, snow cover and the per-tile overlay image.
+#   Shared lattice normals smooth natural slopes without moving the heightfield; the bed dip in UV.x blends banks.
+#   The round-1 atlas follows the terrain/clearing bindings, retaining the existing vertex palette.
 #   Chunks build progressively (nearest the camera first, a few per frame) and rebuild when the space version, the
 #   field tiles or a reset change them.
 # Bridge methods called: via SimReads get_terrain_snapshot, get_world_info, get_space, get_field_tiles,
@@ -41,6 +43,9 @@ var _craise: PackedFloat32Array = PackedFloat32Array()
 ## Raise of each tile above the base (plateaus +, water beds -).
 var _raise: PackedFloat32Array = PackedFloat32Array()
 var _colour: PackedColorArray = PackedColorArray()
+var _texture_tiles: PackedByteArray = PackedByteArray()
+var _texture_weights: PackedByteArray = PackedByteArray()
+var _texture_map: ImageTexture
 var _dug: Dictionary = {}
 var _floor: Dictionary = {}
 var _ford: Dictionary = {}
@@ -63,7 +68,9 @@ func setup(world_sim: Node) -> void:
 func _ready() -> void:
 	material = ShaderMaterial.new()
 	material.shader = TERRAIN_SHADER
+	preload("res://scripts/world3d/textures3d.gd").setup(material)
 	material.set_shader_parameter("cliff_colour", Data3D.colour(Data3D.param("terrain.cliff_colour", []), Color(0.43, 0.39, 0.34)))
+	material.set_shader_parameter("shore_colour", Data3D.colour(Data3D.param("terrain.ford_colour", []), Color(0.55, 0.52, 0.45)))
 	water_material = ShaderMaterial.new()
 	water_material.shader = WATER_SHADER
 	water_material.set_shader_parameter("water_colour", Data3D.colour(Data3D.param("terrain.water_colour", []), Color(0.16, 0.36, 0.45, 0.82)))
@@ -212,18 +219,21 @@ func _poll_space() -> void:
 		_compute_clearing()
 		_compute_tiles()
 		if old_raise.size() != _raise.size():
+			_update_texture_map()
 			return
 		for i: int in _raise.size():
 			if old_raise[i] != _raise[i] or old_colour[i] != _colour[i]:
 				changed[i] = true
+	_update_texture_map()
 	for i: int in changed:
 		var tile: Vector2i = Vector2i(i % width, int(float(i) / float(width)))
-		# A step changes the skirts of the neighbouring chunk too.
-		for d: Vector2i in [Vector2i.ZERO, Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
-			var t: Vector2i = tile + d
-			if t.x >= 0 and t.y >= 0 and t.x < width and t.y < height:
-				@warning_ignore("integer_division")
-				_dirty[Vector2i(t.x / _chunk, t.y / _chunk)] = true
+		# Corner gradients reach one corner beyond the changed tile, including diagonal chunks.
+		for dy: int in range(-2, 3):
+			for dx: int in range(-2, 3):
+				var t: Vector2i = tile + Vector2i(dx, dy)
+				if t.x >= 0 and t.y >= 0 and t.x < width and t.y < height:
+					@warning_ignore("integer_division")
+					_dirty[Vector2i(t.x / _chunk, t.y / _chunk)] = true
 
 
 static func _tileset(xs: Variant, ys: Variant) -> Dictionary:
@@ -285,6 +295,8 @@ func _compute_tiles() -> void:
 	var n: int = width * height
 	_raise.resize(n)
 	_colour.resize(n)
+	_texture_tiles.resize(n)
+	_texture_weights.resize(n)
 	var raises: Dictionary = Data3D.param("terrain.raise", {})
 	var water_codes: Array = Data3D.param("terrain.water_codes", [4])
 	var bed: float = float(Data3D.param("terrain.water_bed", -0.55))
@@ -353,6 +365,33 @@ func _compute_tile(i: int, raises: Dictionary, water_codes: Array, colours: Dict
 		c = c.lerp(clearing_c, float(_clearing[t]))
 	var v: float = 1.0 + (View.value_noise(seed, t.x, t.y, noise_scale, 5) - 0.5) * 2.0 * noise_tint
 	_colour[i] = Color(c.r * v, c.g * v, c.b * v)
+	var textures = preload("res://scripts/world3d/textures3d.gd")
+	var tile: int = textures.index("terrain", str(code), 0)
+	var blend: float = 0.0
+	var special: String = "ford" if _ford.has(t) else ("dug" if _dug.has(t) else ("field" if _field.has(t) else ("clearing" if _floor.has(t) else "")))
+	if special != "":
+		tile = textures.index("terrain_special", special, tile)
+		blend = 1.0 if special == "clearing" else 0.0
+	if special == "" and _clearing.has(t) and r == 0.0:
+		blend = float(_clearing[t])
+	_texture_tiles[i] = tile
+	# The second channel keeps the existing clearing's continuous weight.
+	_texture_weights[i] = roundi(blend * 255.0)
+
+
+func _update_texture_map() -> void:
+	var pixels: PackedByteArray = PackedByteArray()
+	pixels.resize(width * height * 3)
+	for i: int in _texture_tiles.size():
+		pixels[i * 3] = _texture_tiles[i]
+		pixels[i * 3 + 1] = _texture_weights[i]
+		pixels[i * 3 + 2] = 0
+	var image: Image = Image.create_from_data(width, height, false, Image.FORMAT_RGB8, pixels)
+	if _texture_map == null or _texture_map.get_width() != width or _texture_map.get_height() != height:
+		_texture_map = ImageTexture.create_from_image(image)
+		material.set_shader_parameter("biome_tex", _texture_map)
+	else:
+		_texture_map.update(image)
 
 
 ## Per-corner water dip: a corner sinks by the bed depth times the share of its four tiles that are water (a ford
@@ -610,18 +649,43 @@ func _build_chunk(key: Vector2i) -> void:
 	wm.mesh = _surface(water_verts, PackedColorArray(), water_material)
 
 
-static func _surface(verts: PackedVector3Array, cols: PackedColorArray, mat: Material) -> ArrayMesh:
+## A world-lattice gradient gives both chunks the same normal at a shared edge.
+func _corner_normal(cx: int, cy: int) -> Vector3:
+	var left: int = maxi(cx - 1, 0)
+	var right: int = mini(cx + 1, width)
+	var near_z: int = maxi(cy - 1, 0)
+	var far_z: int = mini(cy + 1, height)
+	var stride: int = width + 1
+	var dx: float = (_ch(cy * stride + right) + _craise[cy * stride + right]
+		- _ch(cy * stride + left) - _craise[cy * stride + left]) / maxf(1.0, right - left)
+	var dz: float = (_ch(far_z * stride + cx) + _craise[far_z * stride + cx]
+		- _ch(near_z * stride + cx) - _craise[near_z * stride + cx]) / maxf(1.0, far_z - near_z)
+	return Vector3(-dx, 1.0, -dz).normalized()
+
+
+func _surface(verts: PackedVector3Array, cols: PackedColorArray, mat: Material) -> ArrayMesh:
 	var arrays: Array = []
 	arrays.resize(Mesh.ARRAY_MAX)
 	arrays[Mesh.ARRAY_VERTEX] = verts
 	var normals: PackedVector3Array = PackedVector3Array()
 	normals.resize(verts.size())
+	var shore: PackedVector2Array = PackedVector2Array()
+	if mat == material:
+		shore.resize(verts.size())
 	for t: int in range(0, verts.size(), 3):
 		var nrm: Vector3 = (verts[t + 2] - verts[t]).cross(verts[t + 1] - verts[t]).normalized()
-		normals[t] = nrm
-		normals[t + 1] = nrm
-		normals[t + 2] = nrm
+		for k: int in range(t, t + 3):
+			normals[k] = nrm
+			if mat == material:
+				var cx: int = clampi(roundi(verts[k].x), 0, width)
+				var cy: int = clampi(roundi(verts[k].z), 0, height)
+				shore[k] = Vector2(-_ch_dip(cy * (width + 1) + cx), 0.0)
+				# Keep excavation walls crisp; smooth only the continuous heightfield.
+				if nrm.y > 0.01 and not _corner_touches_dug(cx, cy):
+					normals[k] = _corner_normal(cx, cy)
 	arrays[Mesh.ARRAY_NORMAL] = normals
+	if not shore.is_empty():
+		arrays[Mesh.ARRAY_TEX_UV] = shore
 	if not cols.is_empty():
 		arrays[Mesh.ARRAY_COLOR] = cols
 	var mesh: ArrayMesh = ArrayMesh.new()

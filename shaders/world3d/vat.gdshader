@@ -9,6 +9,7 @@ shader_type spatial;
 render_mode diffuse_lambert, specular_disabled;
 
 #include "res://shaders/world3d/vat_anim.gdshaderinc"
+#include "res://shaders/world3d/painterly.gdshaderinc"
 uniform vec3 other_colour : source_color = vec3(0.28, 0.2, 0.14);
 uniform bool textured = false;
 uniform sampler2D atlas : source_color, filter_linear_mipmap, repeat_disable;
@@ -29,6 +30,7 @@ varying vec3 tint;
 varying float mean_luma;
 varying flat int tint_region;
 varying float far_k;
+varying vec3 painted_position;
 
 vec3 unpack_rgb(float v) {
 	float x = floor(v + 0.5);
@@ -46,6 +48,7 @@ vec3 srgb_to_linear(vec3 c) {
 void vertex() {
 	float dist = length((MODEL_MATRIX * vec4(0.0, 0.0, 0.0, 1.0)).xyz - CAMERA_POSITION_WORLD);
 	VERTEX = vat_position(UV2, INSTANCE_CUSTOM) * far_scale_at(dist);
+	painted_position = VERTEX;
 	far_k = smoothstep(far_scale.x, far_scale.x * 2.0, dist) * far_fill.a;
 	int region = int(UV2.y + 0.5);
 	if (region == 1) {
@@ -87,10 +90,15 @@ void fragment() {
 		}
 		ALBEDO = clamp(c, 0.0, 1.0);
 	}
+	ALBEDO = painterly_albedo(ALBEDO, painted_position);
 	if (far_k > 0.0) {
 		vec3 fill = srgb_to_linear(mix(far_fill.rgb, far_fill_night, clamp(w3d_night, 0.0, 1.0)));
 		ALBEDO = mix(ALBEDO, fill * 0.35, far_k);
 		EMISSION = fill * 0.65 * far_k;
 	}
 	ROUGHNESS = 0.85;
+}
+
+void light() {
+	DIFFUSE_LIGHT += painterly_diffuse(NORMAL, LIGHT, VIEW, ALBEDO, LIGHT_COLOR, ATTENUATION);
 }

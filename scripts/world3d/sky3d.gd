@@ -36,24 +36,28 @@ func _ready() -> void:
 	sky_res.sky_material = sky_material
 	environment.background_mode = Environment.BG_SKY
 	environment.sky = sky_res
-	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+	environment.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
+	environment.ambient_light_sky_contribution = 0.65
 	environment.ambient_light_color = Data3D.colour(Data3D.param("light.day_ambient", []), Color(0.8, 0.82, 0.86))
 	environment.ambient_light_energy = float(Data3D.param("light.ambient_energy", 0.55))
-	environment.tonemap_mode = Environment.TONE_MAPPER_FILMIC
+	environment.tonemap_mode = Environment.TONE_MAPPER_AGX
+	environment.tonemap_exposure = float(Data3D.param("light.exposure", 1.15))
 	environment.tonemap_white = 8.0
 	environment.adjustment_enabled = true
 	environment.adjustment_saturation = float(Data3D.param("light.saturation", 0.9))
 	environment.adjustment_contrast = 1.03
+	environment.adjustment_color_correction = make_grade_lut()
 	environment.ssao_enabled = true
-	environment.ssao_radius = 1.4
-	environment.ssao_intensity = 1.8
+	environment.ssao_radius = 1.1
+	environment.ssao_intensity = 1.25
 	environment.ssao_light_affect = 0.15
 	environment.fog_enabled = true
 	environment.fog_light_color = Color(0.82, 0.78, 0.70)
 	environment.fog_density = float(Data3D.param("light.fog_density", 0.0022))
 	environment.fog_sky_affect = 0.0
+	environment.fog_aerial_perspective = 0.35
 	environment.glow_enabled = true
-	environment.glow_intensity = 0.6
+	environment.glow_intensity = 0.25
 	environment.glow_hdr_threshold = 1.2
 	var we: WorldEnvironment = WorldEnvironment.new()
 	we.environment = environment
@@ -62,6 +66,7 @@ func _ready() -> void:
 	sun.name = "Sun"
 	sun.shadow_enabled = true
 	sun.shadow_blur = 2.0
+	sun.light_angular_distance = 0.7
 	sun.shadow_bias = 0.04
 	sun.shadow_normal_bias = 1.2
 	sun.directional_shadow_blend_splits = true
@@ -72,6 +77,31 @@ func _ready() -> void:
 	sun.directional_shadow_max_distance = float(Data3D.param("light.shadow_distance", 90.0))
 	sun.light_color = Color(1.0, 0.96, 0.88)
 	add_child(sun)
+
+
+## Small RGB LUT: blue-grey pigment shadows and warm paper highlights, matching look1/TARGET.png.
+static func make_grade_slices() -> Array[Image]:
+	var slices: Array[Image] = []
+	for b: int in 16:
+		var slice: Image = Image.create(16, 16, false, Image.FORMAT_RGB8)
+		for g: int in 16:
+			for r: int in 16:
+				var c: Vector3 = Vector3(r, g, b) / 15.0
+				var value: float = c.dot(Vector3(0.2126, 0.7152, 0.0722))
+				var shadow: float = (1.0 - value) * (1.0 - value)
+				var highlight: float = value * value
+				c = c * 0.98 + Vector3(0.004, 0.006, 0.012) * shadow + Vector3(0.02, 0.012, -0.005) * highlight
+				slice.set_pixel(r, g, Color(clampf(c.x, 0.0, 1.0), clampf(c.y, 0.0, 1.0), clampf(c.z, 0.0, 1.0)))
+		slices.append(slice)
+	return slices
+
+
+static func make_grade_lut() -> ImageTexture3D:
+	var lut: ImageTexture3D = ImageTexture3D.new()
+	var error: Error = lut.create(Image.FORMAT_RGB8, 16, 16, 16, false, make_grade_slices())
+	if error != OK:
+		push_error("sky3d: cannot create painterly colour grade: %s" % error_string(error))
+	return lut
 
 
 ## Pin the hour (tools: captures at a fixed light); -1 follows the clock.
@@ -101,6 +131,7 @@ func _process(_delta: float) -> void:
 			var tint: Color = Data3D.colour((Data3D.param("terrain.season_tint", {}) as Dictionary).get(str(season), []), Color.WHITE)
 			mat.set_shader_parameter("season_tint", Vector3(tint.r, tint.g, tint.b))
 			mat.set_shader_parameter("snow", float((Data3D.param("terrain.snow_cover", {}) as Dictionary).get(str(season), 0.0)))
+			mat.set_shader_parameter("autumn", 1.0 if season == 2 else 0.0)
 		# Roofs and plants read the same cover (global `w3d_snow`).
 		RenderingServer.global_shader_parameter_set("w3d_snow", float((Data3D.param("terrain.snow_cover", {}) as Dictionary).get(str(season), 0.0)))
 

@@ -31,6 +31,7 @@
 extends Node3D
 
 const Data3D = preload("res://scripts/world3d/data3d.gd")
+const Textures3D = preload("res://scripts/world3d/textures3d.gd")
 const Builder = preload("res://scripts/world3d/mesh_builder3d.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 const MaterialResolver = preload("res://scripts/world/art/material_resolver.gd")
@@ -212,7 +213,7 @@ func _place_fence_models() -> void:
 	for id: String in batches:
 		var mm: MultiMesh = MultiMesh.new()
 		mm.transform_format = MultiMesh.TRANSFORM_3D
-		mm.mesh = Data3D.mesh(id)
+		mm.mesh = Textures3D.mesh(Data3D.mesh(id), id)
 		mm.instance_count = (batches[id] as Array).size()
 		for i: int in mm.instance_count:
 			mm.set_instance_transform(i, Transform3D(Basis.IDENTITY, batches[id][i]))
@@ -475,7 +476,7 @@ func _collect_doors() -> void:
 	for n: MeshInstance3D in _door_nodes:
 		n.queue_free()
 	_door_nodes.clear()
-	var leaf: Mesh = Data3D.mesh("door") if Data3D.has_model("door") else null
+	var leaf: Mesh = Textures3D.mesh(Data3D.mesh("door"), "door") if Data3D.has_model("door") else null
 	for d: Dictionary in _doors:
 		var mi: MeshInstance3D = MeshInstance3D.new()
 		if leaf != null:
@@ -873,7 +874,7 @@ static func stage_model(stages: Variant, p: float) -> String:
 ## Model `id` centred on `rect` at ground `g`, turned by `yaw`; `fit` scales its manifest footprint into the rect.
 func _site_model(id: String, rect: Rect2, g: float, yaw: float, fit: bool) -> void:
 	var mi: MeshInstance3D = MeshInstance3D.new()
-	mi.mesh = Data3D.mesh(id)
+	mi.mesh = Textures3D.mesh(Data3D.mesh(id), id)
 	var s: float = 1.0
 	var fp: Array = Data3D.model_row(id).get("footprint", [])
 	if fit and fp.size() >= 2:

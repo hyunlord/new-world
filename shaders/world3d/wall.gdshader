@@ -4,6 +4,7 @@
 // to `cut_rect_height` inside `cut_rect` (x0, z0, x1, z1) — the walls around a selected room.
 shader_type spatial;
 render_mode diffuse_lambert, specular_disabled;
+#include "res://shaders/world3d/painterly.gdshaderinc"
 
 uniform float cut_all = 99.0;
 uniform vec4 cut_rect = vec4(0.0);
@@ -45,6 +46,10 @@ void fragment() {
 	if (cut_top > 0.5) {
 		c *= 0.8;
 	}
-	ALBEDO = c;
+	ALBEDO = painterly_albedo(c, world_pos);
 	ROUGHNESS = 0.92;
+}
+
+void light() {
+	DIFFUSE_LIGHT += painterly_diffuse(NORMAL, LIGHT, VIEW, ALBEDO, LIGHT_COLOR, ATTENUATION);
 }
