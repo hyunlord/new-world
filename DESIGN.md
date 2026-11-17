@@ -50,3 +50,12 @@ building details 160 square, chapter illustrations 520×160, decision art 288×1
 and tech art 32 square on cards / 144 square in details. Images preserve aspect
 ratio, use linear filtering, ignore mouse input and hide when absent. Existing
 text, controls, status borders, and authored fallback portraits remain available.
+
+Part U2 keeps these same image and interaction rules. Larger item illustrations
+complement the model-rendered icons rather than replacing them. Chronicle art
+illustrates recorded events and era changes only; it must not imply an event
+that the simulation did not record. Eight-look portraits fall back to the
+original four-look set, then the established authored portrait. Migrant art uses
+the existing panel; trader and future-growth art remain data-only until an
+appropriate existing surface and real event are available. No new overlay or
+full-screen transition is introduced solely to display an era illustration.

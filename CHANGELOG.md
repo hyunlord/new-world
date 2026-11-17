@@ -43,6 +43,17 @@
 
 ### Removed
 - None.
+## M3D-IMG2 Part U2 — 2026-11-17 (v8/art-ui2; generation and verification in progress)
+
+### Added
+- Expanded art scope: 119 item illustrations, 72 additional person portraits, 24 migrant/trader looks, 20 chronicle vignettes, four future M-GROW cards, three selected era splashes and one paved-road portrait (243 selected assets planned). The era splashes have three generated options each; six valid alternatives remain in external data. These counts describe the scope, not a completed validation or delivery claim.
+- `assets/ui/chronicle_art.json` maps existing chronicle witnesses and catalogue IDs to optional event/era art; no new event or simulation behavior is introduced (ADR0069). Prompts, generation records, selection reasons and verification evidence belong in `/Users/rexxa/work/art-img-data/ui2/`.
+
+### Changed
+- Inspector portraits select eight looks per age/sex/era, retaining the corresponding original four-look image when an added asset is absent and the authored portrait when generated art is missing. Item illustrations sit beside the existing model-rendered icons; those icons and loose-world item textures are unchanged.
+- Existing chronicle and migrant surfaces gain optional art. Trader looks, future growth cards and vignettes without a matching real event remain data-only; no new panels are added. All 166 knowledge images and existing building/station portraits are reused.
+- Work remains on the dedicated art branch with no Rust, numeric simulation data or save changes. Final captures, tests, remote delivery and the planner publication gate are separate evidence requirements and are not claimed here.
+
 ## M3D-IMG Part U — 2026-11-16 (v8/art-ui; planner integration pending)
 
 ### Added
