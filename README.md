@@ -11,9 +11,14 @@
 
 > 현재 정착지는 방과 창고, 제작·작업 우선순위, 기술 전승, 징집, 이주민·교역을 갖춘 정착지다. 기본 확대는 1×이고 64px 타일과 채택된 사람·자연 아트를 쓴다. 아래의 첫 플레이 순서와 전체 조작표로 시작한다.
 
+**L1 통합 주의:** 아래 ROOF2 화면은 당시 기록이다. L1은 지붕 기하만 통합하고 가림 인물은 기존 실루엣으로 유지한다. L1의 실제 화면·가시성 검증은 진행 중이다.
+
+**ROOF2 화면 검증 (2026-11-16, `v8/3d-roof2`):** [현재 8장 화면 모음](https://github.com/hyunlord/new-world/blob/efb9aa183ceed2a913c310c306833224b396667d/docs/images/roof2_contact_sheet.png)은 같은 저장·카메라의 여름/겨울 집과 황혼/밤 주민을 각각 1×·2×로 담았다. 반복 지붕 홈과 가려진 주민의 검정 몸 표현을 수정했다. 프레젠테이션 후속 브랜치이며 `v8/main` 게시·전체 게이트와 구분한다.
+
 **현재 게시판은 C1-b (`4a44336e7`, 2026-11-10):** 신석기 콘텐츠와 실제 포획→성체 쌍→출생→착유→도축 사슬을 갖췄다. 전체 게이트49/49와 wip→main 게시를 확인했다. 이전 농경·직조 작업과 측정의 상세 기록은 [M6b 보고](docs/v8/m6b/M6B_REPORT.md)에 보존되어 있다.
 
 [지금 UI 화면 모음](docs/images/art_ui_contact_sheet.png)은 `v8/art-ui` 후보의 인물·챕터·기술·건설·작업장·레시피·아이템·카드 실제1920×1080 캡처다. 1280×720에서도 같은8표면을 확인했다. UI 아트 통합 후보이며 전체 게이트·main 게시 완료를 뜻하지 않는다. 이전 [C2 화면 모음](https://github.com/hyunlord/new-world/blob/1647f7e81c2f802a6b88a909d9ada0f997f3d860/docs/images/c2_contact_sheet.png)과 [C2 보고](docs/v8/c2/C2_REPORT.md), [C1 게시 기록](docs/v8/c1/C1_REPORT.md), [M-SPINE 기록](docs/v8/spine/M_SPINE_B_REPORT.md), [M6a 기록](docs/v8/m6a/M6A_REPORT.md), [물·물가·겨울 눈 비교](docs/images/mux_compare_sheet.png)는 기존 작업의 기록이다.
+[C2 화면 모음](https://github.com/hyunlord/new-world/blob/818f18663/docs/images/c2_contact_sheet.png)은 청동기 기술, 실제 보행으로 찾은 구리 광맥과 발견 원인, 제련·주조 조리법, 지어진 흙벽돌집, 같은 실제 가축 저장의 실루엣 변경 전후를 담았다. 모두 이번 작업에서 게임 창1920×1080으로 새로 촬영했다. C1-b 게시판은 `4a44336e7`이며, C2-a 후보의 검사·게시 조건은 [C2 보고](docs/v8/c2/C2_REPORT.md)에 기록한다. 채굴부터 주석 교역과 청동 도구 사용까지의 사슬은 C2-b 작업이다. [C1 게시 기록](docs/v8/c1/C1_REPORT.md), [M-SPINE 기록](docs/v8/spine/M_SPINE_B_REPORT.md), [M6a 기록](docs/v8/m6a/M6A_REPORT.md), [물·물가·겨울 눈 비교](docs/images/mux_compare_sheet.png).
 
 먼저 ‘지금 할 일’에서 현재 작업과 올해 목표를 읽고, 카드의 조건을 확인한 뒤 선택한다. 중요한 연대기에서 사건과 기록된 원인을 확인한다. 창립자 역할 표시는 명령을 보내지 않으며 P의 역할을 직접 선택하면 그 주민의 작업 우선순위가 바뀐다.
 
