@@ -27,6 +27,12 @@ ADR0068's optional image lookup, stable identity and existing-surface boundaries
 
 The existing UI can accept image batches without becoming dependent on their availability. Content-to-art associations remain inspectable data, while the simulation and its event stream stay authoritative. Data-only art is delivered separately from connected art and is not counted as a working UI surface. The completed asset validation covers all 249 unique outputs and preserves all 119 original GLB icons; actual-scene headless verification reports ten surfaces with zero failures. Windowed verification now independently confirms ten surfaces each at native 1920×1080 and 1280×720 with zero capture failures, and thirteen final contact sheets cover all 249 options. The capture tool applies `--capture-size` after camera window fitting; round-1 files labeled laptop were actually 1920×1080, whereas the corrected U2 PNG dimensions are confirmed (`capture_resolution_issue.json`, `capture-size-validation.json`). The successful locked lane ends with `UI2_ART_REAL_CAPTURE_LANE_DONE` in `capture_retry_logs/attempt_8.log`. Final remote receipts remain external and planner publication remains a separate obligation.
 
+### Visibility follow-up candidate — 2026-11-17
+
+Polish step39 found a presentation regression introduced by `322a3a0b8`: a 288×112 illustration above each decision card increases the HUD stack and changes obstacle relocation and camp framing. The failing `day1_night_half` agent4 has 0 qualifying pixels against the required60 beneath TaskPlaque. The camera is `[6014,6160]`, versus `[5642,6276]` after reverting art-ui. Showing art only on the top card did not change the failing camera; the scratch revert `a26cbb69e` passed 8/8 and polish reverted the art-ui merge as `176385964`.
+
+The follow-up candidate retains every image and localized control but places each card illustration beside its text at 128×72. This corrects the card layout boundary rather than changing camera policy, simulation behavior, visibility thresholds or the oracle. Exact step39 validation is pending; the earlier asset/headless/20-screenshot results remain scoped evidence and do not establish a full-gate pass or resolution of this defect. Preserve failed receipts. Sources: external `ui2/visibility-fix/DEBUG.md` and `/Users/rexxa/work/polish-data/PROGRESS.md` at 13:13.
+
 ## Date
 
 2026-11-17

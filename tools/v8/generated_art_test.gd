@@ -76,6 +76,10 @@ func _run() -> void:
 			push_error("Chronicle illustration layout/fallback failed")
 			quit(1)
 			return
+	if not await _card_layout():
+		push_error("Card art footprint/fallback failed")
+		quit(1)
+		return
 	print("GENERATED_ART_TEST_DONE")
 	quit()
 
@@ -106,4 +110,48 @@ func _chronicle_layout() -> bool:
 	Art._textures[Art.ROOT + "events/first_cloth.webp"] = original
 	body.free()
 	panel.free()
+	return passed
+
+
+## Three real cards retain every illustration without adding a separate image row.
+func _card_layout() -> bool:
+	var locale: Node = root.get_node("Locale")
+	var passed: bool = true
+	var definitions: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/ui/cards.json"))
+	for language: String in ["ko", "en"]:
+		locale.call("set_language", language)
+		var heights: Array[float] = []
+		for illustrated: bool in [false, true]:
+			var panel := preload("res://scripts/ui/mux/card_panel.gd").new()
+			panel._locale = locale
+			var column := VBoxContainer.new()
+			column.theme = preload("res://assets/ui/worldsim_theme.tres")
+			column.size = Vector2(600, 1)
+			column.add_theme_constant_override("separation", 12)
+			panel._card_list = column
+			root.add_child(column)
+			for definition: Dictionary in definitions["cards"]:
+				var card_id: String = str(definition["id"])
+				if card_id not in ["knowledge_risk", "need_warmth", "tools_low"]:
+					continue
+				var path: String = Art.ROOT + "cards/" + card_id + ".webp"
+				var texture: Texture2D = Art.texture("cards", card_id)
+				if texture == null:
+					passed = false
+				Art._textures[path] = texture if illustrated else null
+				panel._build_card_widget(card_id, {"def": definition, "trigger_data": {}})
+				Art._textures[path] = texture
+			for _frame: int in 6:
+				await process_frame
+			var images: int = 0
+			for node: Node in column.find_children("GeneratedArt", "TextureRect", true, false):
+				if (node as TextureRect).visible:
+					images += 1
+			passed = passed and images == (3 if illustrated else 0) and column.size.x <= 600
+			heights.append(column.size.y)
+			print("CARD_LAYOUT language=%s art=%s size=%s images=%d" % [language, illustrated, column.size, images])
+			column.free()
+			panel.free()
+		# Allow text reflow beside thumbnails, but not even one former 112px image row.
+		passed = passed and heights[1] <= heights[0] + 72
 	return passed

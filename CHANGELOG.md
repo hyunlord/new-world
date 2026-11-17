@@ -1,6 +1,6 @@
 # Changelog
 
-## M3D-IMG2 Part U2 — 2026-11-17 (v8/art-ui2; art and scoped verification complete; planner publication pending)
+## M3D-IMG2 Part U2 — 2026-11-17 (v8/art-ui2; art/scoped checks complete; visibility follow-up candidate pending)
 
 ### Added
 - 243 adopted images from 249 generated options: 119 item illustrations, 72 additional person portraits, 24 migrant/trader looks, 20 chronicle vignettes, four future M-GROW cards, three selected era splashes and one paved-road portrait. Six valid era alternatives remain in external data. Asset validation passes for all 249 unique images; total person portraits are now 144, knowledge coverage remains 166, and all 119 GLB icons are preserved.
@@ -11,6 +11,10 @@
 - Existing chronicle and migrant surfaces gain optional art. Trader looks, future growth cards and vignettes without a matching real event remain data-only; no new panels are added. All 166 knowledge images and existing building/station portraits are reused.
 - Asset validation and actual-scene headless verification pass (`UI_ART_VERIFY_DONE surfaces=10 failures=0`); the protected simulation paths are unchanged. GPU-locked windowed captures also pass: ten surfaces each at native 1920×1080 and 1280×720, 20 PNGs total, zero capture failures. Thirteen final contact sheets cover all 249 options. Evidence: external `asset_validation.json`, `verify-u2/verification.json`, `capture-attempt1/`, `capture-size-validation.json`, `contact_sheets/index.json` and `capture_retry_logs/attempt_8.log` (`UI2_ART_REAL_CAPTURE_LANE_DONE`). Final remote receipts remain external; the planner publication gate and merge remain separate and pending.
 - Capture tooling applies explicit `--capture-size` after the game camera fits its window. Round-1 desktop and laptop PNGs were both 1920×1080, so the prior 1280×720 capture claim is withdrawn (`capture_resolution_issue.json`); U2 now verifies the corrected native PNG dimensions at 1920×1080 and 1280×720, rather than inferring size from the requested command line.
+
+### Visibility follow-up candidate
+- Polish step39 exposed a world-visibility regression introduced by `322a3a0b8`: placing 288×112 art above every decision card enlarges the HUD stack, relocates its obstacles and changes camp framing. At `day1_night_half`, agent4 was under the task plaque with 0/60 qualifying pixels; camera `[6014,6160]` differed from the art-ui-reverted `[5642,6276]`. A top-card-only experiment did not fix it; the scratch art-ui revert passed 8/8, and polish reverted the merge as `176385964`.
+- The follow-up candidate places every card image beside its text at 128×72, preserving all images and controls. Exact step39 capture/verification remains pending; no threshold, visibility oracle or simulation change is proposed. Prior 249-option asset validation and 20 UI captures remain valid scoped evidence, not a full-gate pass or proof that this regression is fixed. Evidence: external `ui2/visibility-fix/DEBUG.md` and `/Users/rexxa/work/polish-data/PROGRESS.md` at 13:13.
 
 ## M3D-IMG Part U — 2026-11-16 (v8/art-ui; planner integration pending)
 
