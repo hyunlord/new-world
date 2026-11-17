@@ -26,7 +26,17 @@ pub(super) fn maybe_grow_zones(world: &mut World, res: &mut SimResources) {
         }
         let requested =
             crate::runtime::diagnosis::settlement_fact(world, res, &rule.trigger).unwrap_or(0);
-        if requested <= 0 || has_free_slot(res, rule) {
+        // Bootstrap: seed the first layout zone on the initial day before diagnosis has
+        // observed demand, so planning actions can place buildings/stockpiles on the
+        // same tick.  Storage is gated on StewardScope::All so a Housing-only steward
+        // does not open storage eagerly.  Housing bootstraps unconditionally so hut
+        // orders land inside the zone from tick 0 regardless of scope.
+        use sim_core::colony::steward::StewardScope;
+        let bootstrap = (rule.category == ZoneUse::Storage
+            && res.steward.scope != StewardScope::Housing)
+            || (rule.category == ZoneUse::Housing
+                && res.colony.buildings.housing_zones.is_empty());
+        if (requested <= 0 && !bootstrap) || has_free_slot(res, rule) {
             continue;
         }
         let count = zone_tiles(res, rule).count();
@@ -71,14 +81,6 @@ pub(super) fn allows(res: &SimResources, category: ZoneUse, anchor: Tile, size: 
     {
         return true;
     }
-    // Bootstrap: no zones of this category exist yet → allow until the first is laid.
-    if zones::installed()
-        .connected()
-        .filter(|rule| rule.category == category)
-        .all(|rule| zone_tiles(res, rule).next().is_none())
-    {
-        return true;
-    }
     zones::installed()
         .connected()
         .filter(|rule| rule.category == category)
@@ -118,14 +120,6 @@ pub(super) fn stockpile_sides(res: &SimResources, requested: u32) -> std::ops::R
         || !zones::installed()
             .connected()
             .any(|rule| rule.category == ZoneUse::Storage)
-    {
-        return requested..=requested;
-    }
-    // Bootstrap: no Storage zones yet → keep the full requested size.
-    if zones::installed()
-        .connected()
-        .filter(|rule| rule.category == ZoneUse::Storage)
-        .all(|rule| zone_tiles(res, rule).next().is_none())
     {
         return requested..=requested;
     }
