@@ -121,6 +121,7 @@ class Model:
         self.rng = rng(model_id if seed is None else seed)
         self.sockets = {}
         self.colors = {}  # material name -> default RGB override baked into this glb only
+        self.opacity = {}  # material name -> alpha override; absent surfaces stay opaque
 
     # ---- internals
     def _finish_part(self, verts, mat, bone, jitter=0.0):
@@ -261,8 +262,13 @@ class Model:
         for m in self.mats:
             mat = material(m)
             col = self.colors.get(m, PALETTE[m][0])
-            mat.node_tree.nodes.get("Principled BSDF").inputs["Base Color"].default_value = (*col, 1.0)
-            mat.diffuse_color = (*col, 1.0)
+            alpha = self.opacity.get(m, 1.0)
+            bsdf = mat.node_tree.nodes.get("Principled BSDF")
+            bsdf.inputs["Base Color"].default_value = (*col, alpha)
+            bsdf.inputs["Alpha"].default_value = alpha
+            mat.diffuse_color = (*col, alpha)
+            # Palette datablocks are reused between exports; reset opaque surfaces too.
+            mat.surface_render_method = "BLENDED" if alpha < 1.0 else "DITHERED"
             me.materials.append(mat)
         obj = bpy.data.objects.new(name or self.id, me)
         bpy.context.scene.collection.objects.link(obj)

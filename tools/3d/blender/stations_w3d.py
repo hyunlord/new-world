@@ -77,6 +77,7 @@ def hot(m, working, idle_mat="wood_dark"):
 def smoke(m, x, y, z, n=3, r=0.14):
     """Separate puffs drifting downwind (+X) and growing as they rise."""
     m.colors["snow"] = SMOKE
+    m.opacity["snow"] = 0.16
     zi = z
     for i in range(n):
         ri = r * (1 + 0.4 * i)

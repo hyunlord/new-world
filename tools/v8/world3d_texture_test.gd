@@ -117,6 +117,16 @@ func _run() -> void:
 	original.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	_check("special_alpha_path_preserved", Textures.imported(original) == original)
 	original.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
+	var smoke_source: Mesh = Data3D.mesh("w3d_kiln_working")
+	var smoke_rendered: Mesh = Textures.mesh(smoke_source, "w3d_kiln_working")
+	var smoke_preserved: bool = false
+	for surface: int in smoke_source.get_surface_count():
+		if Data3D.surface_key(smoke_source, surface) == "snow":
+			var material: Material = smoke_source.surface_get_material(surface)
+			if material is BaseMaterial3D:
+				var smoke: BaseMaterial3D = material
+				smoke_preserved = smoke.transparency == BaseMaterial3D.TRANSPARENCY_ALPHA and smoke.albedo_color.a > 0.0 and smoke.albedo_color.a < 0.5 and smoke_rendered.surface_get_material(surface) == smoke
+	_check("actual_station_smoke_transparency_preserved", smoke_preserved)
 	original.resource_name = "unknown_future_material"
 	var unknown: Material = Textures.imported(original)
 	_check("unknown_material_fallback", unknown is ShaderMaterial and float((unknown as ShaderMaterial).get_shader_parameter("texture_tile")) == -1.0 and Flora._original_colour(unknown) == original.albedo_color)

@@ -86,3 +86,10 @@ to the plants material's vec4 uniform. Rename that argument and check all seven
 consumer namespaces; headless import alone cannot prove GPU shader compilation.
 Failed captures, first contact reviews and their hashes remain in external
 `after-failed-compile`, `triptychs-failed-compile`, `contacts-v1-rejected` archives.
+
+The retained opaque station-smoke defect is corrected at export: `Model.opacity`
+changes only the smoke surface, whose existing name remains `snow`. The GLB
+contains alpha0.16/BLEND and the existing transparent-material exception preserves
+it without a snow atlas lookup. Eleven smoke GLBs change; the other673 model files
+and all manifests remain byte-identical. Cached materials reset to opaque for
+ordinary snow. GLB and actual imported-consumer regressions cover this boundary.
