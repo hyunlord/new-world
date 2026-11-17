@@ -92,8 +92,8 @@
     "work_puffs": {"amount": 10, "colour": [0.78, 0.7, 0.55]}
   },
   "plants": {
-    "detail_fade_start": 42.0,
-    "detail_fade_end": 65.0,
+    "detail_fade_start": 48.0,
+    "detail_fade_end": 70.0,
     "detail_grass_per_plant": 3,
     "detail_flower_modulus": 5,
     "detail_grass_colour": [0.43, 0.51, 0.24],

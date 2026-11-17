@@ -80,10 +80,20 @@ void fragment() {
 		c = mix(c, mark.rgb * mark.rgb, clamp(mark.a * 1.6, 0.0, 0.75));
 	}
 	float up = clamp(world_normal.y, 0.0, 1.0);
-	c = mix(c, vec3(0.80, 0.85, 0.92), w3d_snow * smoothstep(0.45, 0.85, up));
-	// Broad light/dark masses reveal the authored overlapping crowns without noisy leaf speckles.
-	c *= mix(1.0, mix(0.84, 1.12, smoothstep(-0.25, 0.8, world_normal.y)), leaf_surface);
-	ALBEDO = painterly_albedo(c, world_pos);
+	float snow = w3d_snow * smoothstep(0.45, 0.85, up);
+	if (leaf_surface > 0.5) {
+		// Replace the shared pigment/wash pair with smaller foliage brush clusters at the same sample count.
+		float pigment = painted_noise(world_pos * vec3(6.0, 9.0, 6.0));
+		float wash = painted_noise(world_pos * 0.45);
+		float brush = smoothstep(0.28, 0.75, pigment);
+		c *= mix(vec3(0.83, 0.91, 0.91), vec3(1.15, 1.10, 0.85), brush) * (0.95 + 0.10 * wash);
+		c *= mix(0.95, 1.05, smoothstep(-0.25, 0.8, world_normal.y));
+		c = mix(c, vec3(0.80, 0.85, 0.92), snow);
+		ALBEDO = c;
+	} else {
+		c = mix(c, vec3(0.80, 0.85, 0.92), snow);
+		ALBEDO = painterly_albedo(c, world_pos);
+	}
 	ROUGHNESS = 0.9;
 	if (kind > 0.5 && kind < 1.5) {
 		EMISSION = c * 2.5;

@@ -62,7 +62,7 @@ func _ready() -> void:
 	_heads = _batch("Heads", _head_mesh(), mat)
 	var detail: ShaderMaterial = mat.duplicate() as ShaderMaterial
 	detail.set_shader_parameter("detail", true)
-	_grass = _batch("MeadowGrass", _tuft_mesh(0.82), detail)
+	_grass = _batch("MeadowGrass", _tuft_mesh(0.82, 2.0), detail)
 	_flowers = _batch("MeadowFlowers", _flower_mesh(), detail)
 
 
@@ -81,15 +81,15 @@ func _batch(node_name: String, mesh: ArrayMesh, mat: Material) -> MultiMeshInsta
 
 
 ## A tuft of blades 1 m tall around the origin, darker at the base (instance colour tints it).
-static func _tuft_mesh(root_shade: float = 0.55) -> ArrayMesh:
+static func _tuft_mesh(root_shade: float = 0.55, width_scale: float = 1.0) -> ArrayMesh:
 	var verts: PackedVector3Array = PackedVector3Array()
 	var cols: PackedColorArray = PackedColorArray()
 	for k: int in BLADES:
 		var a: float = TAU * float(k) / float(BLADES) + 0.4 * float(k % 2)
 		var dir: Vector3 = Vector3(cos(a), 0.0, sin(a))
-		var side: Vector3 = Vector3(-dir.z, 0.0, dir.x) * 0.035
-		var root: Vector3 = dir * 0.04
-		var tip: Vector3 = dir * (0.16 + 0.05 * float(k % 3)) + Vector3(0, 0.8 + 0.2 * float((k * 5) % 3) / 2.0, 0)
+		var side: Vector3 = Vector3(-dir.z, 0.0, dir.x) * 0.035 * width_scale
+		var root: Vector3 = dir * 0.04 * width_scale
+		var tip: Vector3 = dir * (0.16 + 0.05 * float(k % 3)) * width_scale + Vector3(0, 0.8 + 0.2 * float((k * 5) % 3) / 2.0, 0)
 		verts.append_array([root - side, root + side, tip])
 		cols.append_array([Color(root_shade, root_shade, root_shade), Color(root_shade, root_shade, root_shade), Color.WHITE])
 	return _mesh(verts, cols)
@@ -300,7 +300,7 @@ func _fill_detail(parent: MultiMeshInstance3D, rows: Array) -> void:
 			mmi = MultiMeshInstance3D.new()
 			mmi.name = node_name
 			mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-			mmi.visibility_range_end = float(Data3D.param("plants.detail_fade_end", 65.0))
+			mmi.visibility_range_end = float(Data3D.param("plants.detail_fade_end", 70.0))
 			var mm: MultiMesh = MultiMesh.new()
 			mm.transform_format = MultiMesh.TRANSFORM_3D
 			mm.use_colors = true
@@ -401,8 +401,8 @@ static func _plant_material(source: Material) -> Material:
 			return source
 	var mat: ShaderMaterial = ShaderMaterial.new()
 	mat.shader = PLANT_SHADER
-	mat.set_shader_parameter("fade_start", float(Data3D.param("plants.detail_fade_start", 42.0)))
-	mat.set_shader_parameter("fade_end", float(Data3D.param("plants.detail_fade_end", 65.0)))
+	mat.set_shader_parameter("fade_start", float(Data3D.param("plants.detail_fade_start", 48.0)))
+	mat.set_shader_parameter("fade_end", float(Data3D.param("plants.detail_fade_end", 70.0)))
 	if source is BaseMaterial3D:
 		var original: BaseMaterial3D = source
 		mat.set_shader_parameter("albedo", original.albedo_color)
