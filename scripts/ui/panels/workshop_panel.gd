@@ -14,6 +14,8 @@
 #   cmd_remove_bill, cmd_set_bill_mode, cmd_move_bill, cmd_set_bill_suspended; signal world_reset.
 extends Control
 
+const GeneratedArt = preload("res://scripts/ui/generated_art.gd")
+
 const PanelTooltips = preload("res://scripts/ui/panels/panel_tooltips.gd")
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
@@ -34,6 +36,7 @@ var _world_sim: Node = null
 var _locale: Node = null
 var _shop: int = -1
 var _key: int = 0
+var _portrait: TextureRect
 var _title: Label
 var _food_why: Button
 var _diagnosis: Label
@@ -68,6 +71,8 @@ func _ready() -> void:
 	head.add_child(_title)
 	_close = _button("Close", "", close)
 	head.add_child(_close)
+	_portrait = GeneratedArt.image(Vector2(128, 128))
+	column.add_child(_portrait)
 	_shelf = Label.new()
 	_shelf.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_shelf.add_theme_color_override("font_color", MUTED)
@@ -182,6 +187,7 @@ func _refresh() -> void:
 	if key == _key:
 		return
 	_key = key
+	GeneratedArt.set_image(_portrait, "buildings", str(EconomyText.Content.row("blueprints", kind).get("id", "")))
 	_title.text = EconomyText.building(_locale, kind)
 	_close.text = _loc("UI_CLOSE")
 	_add.text = _loc("BILL_ADD")
@@ -322,7 +328,7 @@ func _fill_recipes(kind: int) -> void:
 		any = true
 		var text: String = "%s → %s ×%d" % [EconomyText.recipe(_locale, codes[i]), EconomyText.item(_locale, outputs[i]), amounts[i]]
 		var recipe: Button = _button("Recipe_%s" % names[i], text, _add_bill.bind(names[i]))
-		recipe.icon = ItemIcons.texture_of(outputs[i])
+		recipe.icon = ItemIcons.ui_texture_of(outputs[i])
 		recipe.expand_icon = false
 		recipe.add_theme_constant_override("icon_max_width", 32)
 		recipe.set_meta("item_kind", outputs[i])

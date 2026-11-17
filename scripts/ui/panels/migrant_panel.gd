@@ -10,6 +10,7 @@
 #   get_world_info; via SimReads.mutate cmd_accept_migrants, cmd_decline_migrants; signal world_reset.
 extends Control
 
+const GeneratedArt = preload("res://scripts/ui/generated_art.gd")
 const PanelTooltips = preload("res://scripts/ui/panels/panel_tooltips.gd")
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
@@ -205,10 +206,18 @@ func _refresh(read: Dictionary) -> void:
 
 
 func _add_person(person: Dictionary, language: String) -> void:
+	var row := HBoxContainer.new()
+	_people.add_child(row)
+	var portrait: TextureRect = GeneratedArt.image(Vector2(72, 72))
+	# Native waves currently use founder ages 16–40; portraits do not change their identity or age.
+	var identity: String = "migrant_%s_%d" % ["female" if person["female"] else "male", posmod(hash([person["agent"], person["female"]]), 6)]
+	GeneratedArt.set_image(portrait, "visitors", identity)
+	row.add_child(portrait)
 	var box: VBoxContainer = VBoxContainer.new()
 	box.name = "Person_%d" % int(person["agent"])
 	box.add_theme_constant_override("separation", 2)
-	_people.add_child(box)
+	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(box)
 	var head: Label = _label(box, TEXT)
 	head.text = NeighbourText.trf(_locale, "M55_MIGRANT_PERSON_FMT", {"name": Names.display_name(int(person["agent"]), language),
 		"sex": NeighbourText.sex(_locale, bool(person["female"])), "age": int(person["age"])})
@@ -221,6 +230,8 @@ func _add_person(person: Dictionary, language: String) -> void:
 	knowledge.text = NeighbourText.know_text(_locale, know)
 	var apparel: Label = _label(box, MUTED)
 	apparel.text = NeighbourText.trf(_locale, "M55_MIGRANT_APPAREL_FMT", {"top": StoryText.top(_locale, int(person["top"]))})
+	for label: Label in [head, knowledge, apparel]:
+		label.custom_minimum_size.x = PANEL_RECT.size.x - 128
 	_person_texts.append(" / ".join([head.text, knowledge.text, apparel.text]))
 
 
