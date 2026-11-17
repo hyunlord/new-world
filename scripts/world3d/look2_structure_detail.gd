@@ -5,6 +5,7 @@
 extends RefCounted
 
 const Builder = preload("res://scripts/world3d/mesh_builder3d.gd")
+const Textures = preload("res://scripts/world3d/textures3d.gd")
 const DIRS: Array[Vector2i] = [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]
 
 
@@ -21,6 +22,8 @@ static func window_tile(tile: Vector2i, walls: Dictionary) -> bool:
 
 
 static func foundation(b: Builder, centre: Vector3, arms: Array[Vector2i], half: float) -> void:
+	var wall_texture: float = b.texture_tile
+	b.texture_tile = Textures.index("surfaces", "stone")
 	b.profile = 0.0
 	var stone: Color = Color(0.43, 0.42, 0.34)
 	b.box(centre + Vector3(-half - 0.055, -0.05, -half - 0.055),
@@ -33,9 +36,12 @@ static func foundation(b: Builder, centre: Vector3, arms: Array[Vector2i], half:
 		var lo: Vector3 = a.min(e) - across + Vector3(0, -0.04, 0)
 		var hi: Vector3 = a.max(e) + across + Vector3(0, 0.19, 0)
 		b.box(lo, hi, stone.darkened(0.04), stone.lightened(0.08))
+	b.texture_tile = wall_texture
 
 
 static func window_frame(b: Builder, centre: Vector3, axis: Vector2i, half: float) -> void:
+	var wall_texture: float = b.texture_tile
+	b.texture_tile = Textures.index("surfaces", "wood_dark")
 	b.profile = 3.0
 	var along: Vector3 = Vector3(axis.x, 0, axis.y)
 	var normal: Vector3 = Vector3(axis.y, 0, axis.x)
@@ -49,6 +55,7 @@ static func window_frame(b: Builder, centre: Vector3, axis: Vector2i, half: floa
 			b.log_prism(origin - along * 0.34 + Vector3.UP * y,
 				origin + along * 0.34 + Vector3.UP * y, 0.075, trim.lightened(0.08), 5)
 		b.log_prism(origin + Vector3.UP * 1.05, origin + Vector3.UP * 1.76, 0.022, trim, 4)
+	b.texture_tile = wall_texture
 
 
 static func gable_heights(heights: Dictionary, room: Rect2i) -> void:

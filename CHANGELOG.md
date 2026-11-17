@@ -1,5 +1,18 @@
 # Changelog
 
+## L2 — crafted buildings and props (2026-11-17; planner integration pending)
+
+### Added
+- 25 frame-stage building previews, five reusable yard props, same-ID target comparison tooling and mesh contract checks.
+
+### Changed
+- All 25 authored building families and station/prop families gain layered roofs, joinery, woven vessels and shared-material detail while preserving historical IDs and sockets.
+- Real rectangular room roofs are gabled, with batched layered eaves, ridge trim, stone feet and framed openings; irregular room ownership and cutaway remain snapshot-driven.
+- T2 painted textures are normally merged. Evidence and remaining GPU/performance dependencies are recorded in `/Users/rexxa/work/art-img-data/look2/REPORT.md`.
+
+### Removed
+- No simulation features, models or character rigs.
+
 ## C3-b — iron chain, not yet published (2026-11-15)
 
 ### Added

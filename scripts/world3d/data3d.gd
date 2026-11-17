@@ -175,7 +175,20 @@ static func merge_meshes(root: Node, model_id: String = "") -> ArrayMesh:
 				arrays[Mesh.ARRAY_BONES] = null
 				arrays[Mesh.ARRAY_WEIGHTS] = null
 				var material: Material = (node as MeshInstance3D).get_active_material(s)
-				out.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+				# Godot exposes imported LODs as packed index bytes through RenderingServer.
+				# Vertex order is unchanged; bake the same max-axis error scale the renderer uses.
+				var surface: Dictionary = RenderingServer.mesh_get_surface(m.get_rid(), s)
+				var index_stride: int = 2 if int(surface["vertex_count"]) <= 65536 else 4
+				var scale: Vector3 = xf.basis.get_scale().abs()
+				var lod_scale: float = maxf(scale.x, maxf(scale.y, scale.z))
+				var lods: Dictionary = {}
+				for level: Dictionary in surface.get("lods", []):
+					var bytes: PackedByteArray = level["index_data"]
+					var indices: PackedInt32Array = PackedInt32Array()
+					for offset: int in range(0, bytes.size(), index_stride):
+						indices.append(bytes.decode_u16(offset) if index_stride == 2 else bytes.decode_u32(offset))
+					lods[float(level["edge_length"]) * lod_scale] = indices
+				out.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays, [], lods)
 				var idx: int = out.get_surface_count() - 1
 				out.surface_set_material(idx, preload("res://scripts/world3d/textures3d.gd").imported(material, model_id))
 				out.surface_set_name(idx, material.resource_name if material != null else "")

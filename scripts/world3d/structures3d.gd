@@ -446,8 +446,11 @@ func _door_frame(b: Builder, t: Vector2i, g: float, hgt: float, thick: float, w:
 	var trim: Color = (w["colour"] as Color).darkened(0.25)
 	b.profile = PROFILE_TRIM
 	# A shallow stone threshold stays inside the door tile and below the moving leaf.
+	var wall_texture: float = b.texture_tile
+	b.texture_tile = preload("res://scripts/world3d/textures3d.gd").index("surfaces", "stone")
 	b.box(Vector3(cx - (0.47 if ax.x == 1 else half + 0.13), g - 0.04, cz - (0.47 if ax.y == 1 else half + 0.13)),
 		Vector3(cx + (0.47 if ax.x == 1 else half + 0.13), g + 0.055, cz + (0.47 if ax.y == 1 else half + 0.13)), Color(0.48, 0.46, 0.38))
+	b.texture_tile = wall_texture
 	var post: float = 0.09
 	for side: int in [-1, 1]:
 		var off: float = side * (door_w * 0.5 + post)
