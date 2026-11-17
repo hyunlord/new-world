@@ -74,6 +74,24 @@ func _ready() -> void:
 	water_material = ShaderMaterial.new()
 	water_material.shader = WATER_SHADER
 	water_material.set_shader_parameter("water_colour", Data3D.colour(Data3D.param("terrain.water_colour", []), Color(0.16, 0.36, 0.45, 0.82)))
+	var atmosphere: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/3d/atmosphere_t2.json"))
+	_setup_water_textures(atmosphere.get("water", {}))
+
+
+func _setup_water_textures(config: Dictionary) -> void:
+	water_material.set_shader_parameter("painted_water", false)
+	for key: String in ["normal", "flow"]:
+		var path: String = str(config.get(key, ""))
+		if path.is_empty() or not ResourceLoader.exists(path):
+			return
+		var texture: Texture2D = load(path) as Texture2D
+		if texture == null:
+			return
+		water_material.set_shader_parameter("water_" + key, texture)
+	water_material.set_shader_parameter("water_repeat_scale", maxf(0.001, float(config.get("repeat_scale", 0.25))))
+	water_material.set_shader_parameter("water_normal_strength", clampf(float(config.get("normal_strength", 0.2)), 0.0, 1.0))
+	water_material.set_shader_parameter("water_flow_speed", clampf(float(config.get("flow_speed", 0.06)), 0.0, 1.0))
+	water_material.set_shader_parameter("painted_water", true)
 
 
 func _on_world_reset() -> void:
@@ -179,9 +197,8 @@ func _poll_space() -> void:
 	var fields: Dictionary = SimReads.read(_world_sim, "get_field_tiles")
 	var fxs: PackedInt64Array = fields.get("xs", PackedInt64Array())
 	var fphases: PackedInt64Array = fields.get("phases", PackedInt64Array())
-	# Only which tiles are fields colours the ground (not their phase), and only lit hearths clear a camp: key on
-	# those, so growing crops and new bedrolls do not recompute the whole map.
-	var field_key: String = "%d:%d:%d" % [fxs.size(), hash(fxs), hash(fields.get("ys"))] + ":" + str(hash(_lit_hearths()))
+	# Keep hearths at index 3; field phase changes take the incremental tile path below.
+	var field_key: String = "%d:%d:%d" % [fxs.size(), hash(fxs), hash(fields.get("ys"))] + ":" + str(hash(_lit_hearths())) + ":" + str(hash(fphases))
 	if version == _space_version and field_key == _field_key and not _raise.is_empty():
 		return
 	var dug: Dictionary = _tileset(space.get("dug_xs", PackedInt32Array()), space.get("dug_ys", PackedInt32Array()))
@@ -203,7 +220,7 @@ func _poll_space() -> void:
 				if not (pair[1] as Dictionary).has(t):
 					changed[t.y * width + t.x] = true
 			for t: Vector2i in pair[1]:
-				if not (pair[0] as Dictionary).has(t):
+				if not (pair[0] as Dictionary).has(t) or pair[0][t] != pair[1][t]:
 					changed[t.y * width + t.x] = true
 	var old_raise: PackedFloat32Array = _raise.duplicate() if not incremental else PackedFloat32Array()
 	var old_colour: PackedColorArray = _colour.duplicate() if not incremental else PackedColorArray()
@@ -371,7 +388,8 @@ func _compute_tile(i: int, raises: Dictionary, water_codes: Array, colours: Dict
 	var special: String = "ford" if _ford.has(t) else ("dug" if _dug.has(t) else ("field" if _field.has(t) else ("clearing" if _floor.has(t) else "")))
 	if special != "":
 		tile = textures.index("terrain_special", special, tile)
-		blend = 1.0 if special == "clearing" else 0.0
+		if special == "field":
+			tile = textures.index("field_phases", str(int(_field[t])), tile)
 	if special == "" and _clearing.has(t) and r == 0.0:
 		blend = float(_clearing[t])
 	_texture_tiles[i] = tile

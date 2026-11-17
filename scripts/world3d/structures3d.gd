@@ -296,7 +296,7 @@ func _floor_tiles(space: Dictionary) -> Dictionary:
 		var category: String = str(r.get("category", "")) if r.get("category") != null else ""
 		var c: Color = Data3D.material_colour(key, category)
 		var textures = preload("res://scripts/world3d/textures3d.gd")
-		out[Vector2i(xs[i], ys[i])] = {"colour": c, "texture": textures.index("materials", key, textures.index("categories", category))}
+		out[Vector2i(xs[i], ys[i])] = {"colour": c, "texture": textures.index("floors", str(r.get("style_id", "")), textures.index("materials", key, textures.index("categories", category)))}
 	return out
 
 

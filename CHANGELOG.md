@@ -67,6 +67,19 @@
 - Existing inspector, card, chapter, technology, building, workshop, recipe and item-list surfaces use optional art with established fallbacks. Portrait selection derives from entity, life stage, sex and wardrobe without simulation RNG or save changes. Images retain aspect, ignore mouse input and use linear filtering; pixel fallback portraits retain nearest filtering.
 - `ItemIcons.ui_texture_of` keeps UI model icons separate from the loose-world `texture_of` path. The existing startup splash uses the selected loading art; no title, animal or yearly-goal panel is added.
 - Real UI screenshots at 1920×1080 and 1280×720 cover eight surfaces each; the current README sheet shows the desktop captures. The planner still owns the next full publication gate and merge; this branch does not claim either.
+## M3D-IMG2 Part T2 — richer material and atmosphere art (2026-11-17)
+
+### Added
+- 55 generated assets: 33 material variants, nine transparent life-trace decals,
+  nine sky/cloud/hill layers, and four river/pond normal/flow maps.
+- Presentation-only asset catalog and atmosphere configuration; placement remains
+  consumer-supplied for M-GROW. Prompts and raw evidence: `/Users/rexxa/work/art-img-data/tex2/`.
+
+### Changed
+- Mean-normalized atlas detail increases macro contrast while retaining existing palette tints.
+- Existing field phases select tilled/sown/sprouting soil. Sky and water materials sample painted layers; unavailable surface distinctions remain data-only.
+- Delivered on `v8/art-tex2` for planner review, without simulation or crowd changes.
+
 ## M3D-IMG Part T — material texture branch (2026-11-16)
 
 ### Added
