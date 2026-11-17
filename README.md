@@ -13,7 +13,9 @@
 
 **현재 게시판은 C1-b (`4a44336e7`, 2026-11-10):** 신석기 콘텐츠와 실제 포획→성체 쌍→출생→착유→도축 사슬을 갖췄다. 전체 게이트49/49와 wip→main 게시를 확인했다. 이전 농경·직조 작업과 측정의 상세 기록은 [M6b 보고](docs/v8/m6b/M6B_REPORT.md)에 보존되어 있다.
 
-[C2 화면 모음](docs/images/c2_contact_sheet.png)은 청동기 기술, 실제 보행으로 찾은 구리 광맥과 발견 원인, 제련·주조 조리법, 지어진 흙벽돌집, 같은 실제 가축 저장의 실루엣 변경 전후를 담았다. 모두 이번 작업에서 게임 창1920×1080으로 새로 촬영했다. C1-b 게시판은 `4a44336e7`이며, C2-a 후보의 검사·게시 조건은 [C2 보고](docs/v8/c2/C2_REPORT.md)에 기록한다. 채굴부터 주석 교역과 청동 도구 사용까지의 사슬은 C2-b 작업이다. [C1 게시 기록](docs/v8/c1/C1_REPORT.md), [M-SPINE 기록](docs/v8/spine/M_SPINE_B_REPORT.md), [M6a 기록](docs/v8/m6a/M6A_REPORT.md), [물·물가·겨울 눈 비교](docs/images/mux_compare_sheet.png).
+[C2 화면 모음](https://github.com/hyunlord/new-world/blob/bf1dbbc7f/docs/images/c2_contact_sheet.png)은 청동기 기술, 실제 보행으로 찾은 구리 광맥과 발견 원인, 제련·주조 조리법, 지어진 흙벽돌집, 같은 실제 가축 저장의 실루엣 변경 전후를 담았다. 모두 이번 작업에서 게임 창1920×1080으로 새로 촬영했다. C1-b 게시판은 `4a44336e7`이며, C2-a 후보의 검사·게시 조건은 [C2 보고](docs/v8/c2/C2_REPORT.md)에 기록한다. 채굴부터 주석 교역과 청동 도구 사용까지의 사슬은 C2-b 작업이다. [C1 게시 기록](docs/v8/c1/C1_REPORT.md), [M-SPINE 기록](docs/v8/spine/M_SPINE_B_REPORT.md), [M6a 기록](docs/v8/m6a/M6A_REPORT.md), [물·물가·겨울 눈 비교](docs/images/mux_compare_sheet.png).
+
+[T2 현재 3D 재질 화면](docs/images/tex2_contact_sheet.png)은 여름·겨울·밤의 z1/z2를 담았다. `v8/art-tex2` 후보 `4085470bf`는 큰 재질 무늬, 시간·계절별 그림 하늘, 강물 노멀·흐름을 적용한다. 같은 1920×1080·실제 500명·30초 측정에서 기준 99.91 FPS, 후보 98.18 FPS로 60 FPS 조건을 통과했다. 단일 비교이며 전체 게시 게이트나 main 병합 완료를 뜻하지 않는다.
 
 먼저 ‘지금 할 일’에서 현재 작업과 올해 목표를 읽고, 카드의 조건을 확인한 뒤 선택한다. 중요한 연대기에서 사건과 기록된 원인을 확인한다. 창립자 역할 표시는 명령을 보내지 않으며 P의 역할을 직접 선택하면 그 주민의 작업 우선순위가 바뀐다.
 
