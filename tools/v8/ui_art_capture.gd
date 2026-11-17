@@ -2,7 +2,7 @@
 # Bridge methods: load_world (optional), advance_ticks (tooling), get_agent_snapshot/get_agent_detail,
 # get_tech, get_workshops, get_content_catalog, get_time_snapshot, get_colony_overlay. No invented simulation objects.
 # --verify-only validates controls/resources headlessly; never captures pixels.
-# Run windowed under the prescribed GPU lock wrapper, with -- --out DIR [--save FILE] --renderer=3d.
+# Run windowed under the prescribed GPU lock wrapper, with -- --out DIR [--save FILE] [--capture-size WIDTHxHEIGHT] --renderer=3d.
 extends SceneTree
 
 const Content = preload("res://scripts/ui/content_context.gd")
@@ -13,6 +13,7 @@ var _out: String
 var _records: Array[Dictionary] = []
 var _failures: int = 0
 var _verify_only: bool = false
+var _capture_size: Vector2i = Vector2i.ZERO
 
 
 func _init() -> void:
@@ -23,6 +24,18 @@ func _arg(key: String) -> String:
 	var args: PackedStringArray = OS.get_cmdline_user_args()
 	var index: int = args.find(key)
 	return args[index + 1] if index >= 0 and index + 1 < args.size() else ""
+
+
+## Reject malformed and unbounded capture requests before creating the main scene.
+static func parse_capture_size(value: String) -> Vector2i:
+	var dimensions: PackedStringArray = value.split("x")
+	if dimensions.size() != 2 or not dimensions[0].is_valid_int() or not dimensions[1].is_valid_int():
+		return Vector2i.ZERO
+	var width: int = dimensions[0].to_int()
+	var height: int = dimensions[1].to_int()
+	if width < 1 or height < 1 or width > 4096 or height > 4096:
+		return Vector2i.ZERO
+	return Vector2i(width, height)
 
 
 func _frames(count: int = 12) -> void:
@@ -85,13 +98,23 @@ func _shot(name: String, panel: Control) -> void:
 			illustrated = illustrated or image_path.begins_with(Art.ROOT + "item_illustrations/")
 		_check("items has separate painterly illustration", illustrated)
 	var path: String = ""
+	var image_size: Vector2i = Vector2i.ZERO
+	if _capture_size != Vector2i.ZERO:
+		_check(name + " requested window size", root.size == _capture_size)
 	if not _verify_only:
 		path = _out.path_join(name + ".png")
-		_check(name + " saved", root.get_texture().get_image().save_png(path) == OK)
+		var screenshot: Image = root.get_texture().get_image()
+		image_size = screenshot.get_size()
+		if _capture_size != Vector2i.ZERO:
+			_check(name + " captured pixel size", image_size == _capture_size)
+		_check(name + " saved", screenshot.save_png(path) == OK)
 	var record: Dictionary = {"surface": str(panel.get_path()), "images": paths,
-		"tick": SimReads.read(_world, "get_time_snapshot").get("tick", -1)}
+		"tick": SimReads.read(_world, "get_time_snapshot").get("tick", -1),
+		"requested_size": [_capture_size.x, _capture_size.y], "window_size": [root.size.x, root.size.y],
+		"viewport_size": [root.get_visible_rect().size.x, root.get_visible_rect().size.y]}
 	if not _verify_only:
 		record["file"] = path
+		record["image_size"] = [image_size.x, image_size.y]
 	_records.append(record)
 	print(("UI_ART_VERIFY " if _verify_only else "UI_ART_SHOT ") + JSON.stringify(record))
 
@@ -99,6 +122,12 @@ func _shot(name: String, panel: Control) -> void:
 func _run() -> void:
 	_out = _arg("--out")
 	_verify_only = "--verify-only" in OS.get_cmdline_user_args()
+	if "--capture-size" in OS.get_cmdline_user_args():
+		_capture_size = parse_capture_size(_arg("--capture-size"))
+		if _capture_size == Vector2i.ZERO:
+			push_error("--capture-size requires WIDTHxHEIGHT, each dimension 1..4096")
+			quit(1)
+			return
 	if _out.is_empty() or (DisplayServer.get_name() == "headless" and not _verify_only):
 		push_error("ui_art_capture requires --out and a real window")
 		quit(1)
@@ -108,6 +137,12 @@ func _run() -> void:
 	root.add_child(_main)
 	_world = _main.get_node("WorldSim")
 	await _frames()
+	if _capture_size != Vector2i.ZERO:
+		# Camera _ready fits the play window; apply capture dimensions only after that finishes.
+		root.mode = Window.MODE_WINDOWED
+		root.size = _capture_size
+		await _frames()
+		_check("post-ready window size", root.size == _capture_size)
 	_world.set_process(false)
 	_world.call("set_sim_speed", 0.0)
 	if not _arg("--save").is_empty():
