@@ -194,9 +194,6 @@ func with_findability(mat: ShaderMaterial) -> ShaderMaterial:
 	var xray: ShaderMaterial = ShaderMaterial.new()
 	xray.shader = XRAY_SHADER
 	_set_anim(xray)
-	if atlas != null:
-		xray.set_shader_parameter("atlas", atlas)
-		xray.set_shader_parameter("textured", true)
 	xray.set_shader_parameter("far_scale", Vector2(float(far[0]), float(far[1])))
 	var dc: Color = Data3D.colour(Data3D.param("people.xray.day", []), Color(0.14, 0.11, 0.09))
 	var nc: Color = Data3D.colour(Data3D.param("people.xray.night", []), Color(0.91, 0.89, 0.81))

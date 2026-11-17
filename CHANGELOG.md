@@ -3,13 +3,14 @@
 ## M-POLISH+GATE — 2026-11-17
 
 ### Added
-- Merged `v8/3d-roof2` (shared hip roofs, occluded people keep colours), `v8/art-tex` (generated material textures), `v8/art-ui` (portraits, chapter/card/tech/building art, item icons) and `v8/gate-reuse` (D-GATE-2 receipt reuse) onto C3-b.
+- Merged `v8/art-tex` (generated material textures), `v8/art-ui` (portraits, chapter/card/tech/building art, item icons) and `v8/gate-reuse` (D-GATE-2 receipt reuse) onto C3-b.
 
 ### Changed
 - D-GATE-1: `[profile.test]` compiles at `opt-level = 2` with `debug-assertions` and `overflow-checks` kept; `sim-systems` test override also `opt-level = 2` (`rust/Cargo.toml`, `docs/v8/c1/C1_DECISIONS.md`).
 - The learning helper only yields to the story banner when the banner shows a row; the taller art cards had pushed an empty banner over it (`mux_hud.gd`).
 
 ### Removed
+- The `v8/3d-roof2` merge (4e1437eee) is reverted: its painted occluded people fell below the step-39 person-visibility threshold (e.g. 403 → 3 qualifying pixels); the branch stays on `origin/v8/3d-roof2` for a fix.
 - `docs/images/mart21_seasons.png` (2D-era strip; kept at `fd3f59801`) to stay within the 12-image limit.
 
 ## C3-b — iron chain, not yet published (2026-11-15)
@@ -27,17 +28,7 @@
 ### Removed
 - None.
 
-## M3D-ROOF2 — 2026-11-16
 
-### Changed
-- Roof lattice triangles follow the raised hip diagonal, eliminating repeated triangular notches in the shared summer/winter mesh.
-- Occluded textured people retain their painted atlas instead of a black body silhouette beside a visible grey head (`vat_xray.gdshader`, `vat3d.gd`).
-- Roofed rooms within one template building share a roof and cutaway ownership instead of drawing separate intersecting roofs (`structures3d.gd`).
-
-### Added
-- Current eight-shot ROOF2 contact sheet replaces the previous C2 sheet; its historical README link points to the base commit.
-- Headless wardrobe atlas and findability material coverage (`people_material_test.gd`).
-- Headless actual-mesh roof regression coverage for long and compound footprints, building ownership and season-invariant geometry (`roof_geometry_test.gd`).
 ## M3D-IMG Part T — material texture branch (2026-11-16)
 
 ### Added
