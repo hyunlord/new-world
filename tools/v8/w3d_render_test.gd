@@ -57,6 +57,9 @@ class FakeWorld extends Node:
 	func get_terrain_snapshot() -> Dictionary:
 		return reads.get("get_terrain_snapshot", {})
 
+	func get_colony_versions() -> Dictionary:
+		return reads.get("get_colony_versions", {})
+
 	func get_world_info() -> Dictionary:
 		return reads.get("get_world_info", {})
 
@@ -177,7 +180,7 @@ func _ground(world: Node, terrain: Node) -> void:
 	var live: String = _mesh_sha(_chunk_mesh(terrain, key))
 	# A second Terrain fed the same snapshots (the GroundBaker re-bake of the 2D test).
 	var fake: FakeWorld = FakeWorld.new()
-	for getter: String in ["get_terrain_snapshot", "get_world_info", "get_space", "get_field_tiles", "get_building_snapshot", "get_time_snapshot"]:
+	for getter: String in ["get_terrain_snapshot", "get_colony_versions", "get_world_info", "get_space", "get_field_tiles", "get_building_snapshot", "get_time_snapshot"]:
 		fake.reads[getter] = SimReads.read(world, getter).duplicate(true)
 	var view: FakeView = FakeView.new()
 	root.add_child(view)
@@ -211,6 +214,15 @@ func _ground(world: Node, terrain: Node) -> void:
 	# GROUND 2: dig one raised tile inside a chunk.
 	var width: int = int(second.get("width"))
 	var height: int = int(second.get("height"))
+	var path_mesh: Mesh = _chunk_mesh(second, key)
+	var paths: PackedByteArray = fake.reads["get_terrain_snapshot"].get("path_stage", PackedByteArray()).duplicate()
+	paths.resize(width * height)
+	paths[hearth.y * width + hearth.x] = 2
+	fake.reads["get_terrain_snapshot"]["path_stage"] = paths
+	fake.reads["get_colony_versions"]["path_version"] = int(fake.reads["get_colony_versions"].get("path_version", 0)) + 1
+	second.call("_poll_paths")
+	_check("GROUND", "path_update_without_remesh", second.get("_path_stage") == paths
+		and _chunk_mesh(second, key) == path_mesh)
 	var dug_tiles: Dictionary = {}
 	var space: Dictionary = fake.reads["get_space"]
 	var dxs: PackedInt32Array = space.get("dug_xs", PackedInt32Array())

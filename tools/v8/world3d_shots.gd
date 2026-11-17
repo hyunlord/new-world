@@ -7,11 +7,15 @@
 #   `--rooms 1` shows the room overlay (R); `--channel N` (3D) shows influence channel N (O pressed N+1 times);
 #   `--advance T` runs the clock T ticks before the shots (both renderers replay the same world).
 #   `--ui off` hides the HUD/panels CanvasLayer for clean world frames.
+#   `--zones 1` toggles the automatic layout overlay with the player's Z key.
+#   `--growth-check 1` proves saved growth in ko/en UI; `capture` also saves real panels (renderer/lock required).
 #   (3D needs a real renderer: use the default Forward+ driver, not opengl3, for 3D shots.)
-# Bridge methods called: load_world, advance_ticks (direct); via SimReads get_time_snapshot.
+# Bridge methods called: load_world, advance_ticks, get_chronicle_since, get_building_cause (direct);
+#   via SimReads get_time_snapshot/get_world_info/get_building_snapshot; normal panels read their own Why data.
 extends SceneTree
 
 const View = preload("res://scripts/world/colony/view.gd")
+const GrowthText = preload("res://scripts/ui/chronicle_text.gd")
 
 var _main: Node = null
 var _world: Node = null
@@ -66,8 +70,16 @@ func _run() -> void:
 	if _arg("--advance") != "":
 		_world.call("advance_ticks", int(_arg("--advance")))
 		await _frames(10)
+	if _arg("--growth-check") != "" and not await _growth_check(out, prefix):
+		_fail("growth scene proof failed; see W3D_GROWTH evidence")
+		return
 	if _arg("--rooms") == "1":
 		_main.get_node("RoomIndex").call("toggle")
+	if w3d != null and _arg("--zones") == "1":
+		var key: InputEventKey = InputEventKey.new()
+		key.keycode = KEY_Z
+		key.pressed = true
+		w3d.get_node("Overlay").call("_unhandled_input", key)
 	if w3d != null and _arg("--channel") != "":
 		for _k: int in int(_arg("--channel")) + 1:
 			w3d.get_node("Overlay").call("cycle_channel")
@@ -110,14 +122,16 @@ func _run() -> void:
 ## Print where the built things are (template sites, workshops, rooms) to choose shot tiles.
 func _dump() -> void:
 	var b: Dictionary = SimReads.read(_world, "get_building_snapshot")
+	print("W3D_LAYOUTS %s" % JSON.stringify(SimReads.read(_world, "get_colony_overlay").get("layout_zones", [])))
 	for site: Variant in b.get("template_sites", []):
 		var d: Dictionary = site
+		print("W3D_YARD stage=%s props=%s" % [d.get("house_stage", 0), JSON.stringify(d.get("yard_props", []))])
 		print("W3D_SITE %s %s at %d,%d %dx%d roofed=%s intact=%s" % [d.get("template_id"), d.get("status"), int(d.get("x")), int(d.get("y")), int(d.get("width")), int(d.get("height")), d.get("roofed"), d.get("is_intact")])
 	print("W3D_BUILDINGS %s %s %s" % [b.get("kinds"), b.get("xs"), b.get("ys")])
 	var w: Dictionary = SimReads.read(_world, "get_workshops")
 	print("W3D_WORKSHOPS kinds=%s xs=%s ys=%s ws=%s hs=%s" % [w.get("kinds"), w.get("xs"), w.get("ys"), w.get("ws"), w.get("hs")])
 	var r: Dictionary = SimReads.read(_world, "get_rooms")
-	print("W3D_ROOMS ids=%s roofed=%s cx=%s cy=%s tiles=%s" % [r.get("ids"), r.get("roofed"), r.get("centre_xs"), r.get("centre_ys"), r.get("tiles")])
+	print("W3D_ROOMS ids=%s roles=%s roofed=%s cx=%s cy=%s tiles=%s" % [r.get("ids"), r.get("roles"), r.get("roofed"), r.get("centre_xs"), r.get("centre_ys"), r.get("tiles")])
 	var a: Dictionary = SimReads.read(_world, "get_agent_snapshot")
 	print("W3D_AGENTS n=%d xs=%s ys=%s" % [(a.get("xs", PackedInt32Array()) as PackedInt32Array).size(), a.get("xs"), a.get("ys")])
 	print("W3D_TIME %s" % JSON.stringify(SimReads.read(_world, "get_time_snapshot")))
@@ -138,3 +152,94 @@ func _dump() -> void:
 	print("W3D_ITEM_SHAPES %s" % JSON.stringify(shapes))
 	for row: Variant in cat.get("blueprints", []):
 		print("W3D_BP %d %s %s %s" % [int(row.get("code", -1)), row.get("id"), row.get("construction_style"), row.get("completion_category")])
+
+
+## Inspect real saved events and normal UI link actions; never manufacture a row or simulation fact.
+func _growth_check(out: String, prefix: String) -> bool:
+	var w3d: Node = _main.get_node_or_null("World3D")
+	if w3d == null or (_arg("--growth-check") == "capture" and DisplayServer.get_name() == "headless"):
+		return false
+	var overlay: Node = w3d.get_node("Overlay")
+	if bool(overlay.get("zones_shown")):
+		return false
+	var key: InputEventKey = InputEventKey.new()
+	key.keycode = KEY_Z
+	key.pressed = true
+	for shown: bool in [true, false]:
+		overlay.call("_unhandled_input", key)
+		if bool(overlay.get("zones_shown")) != shown:
+			return false
+	var events: Dictionary = {}
+	var cursor: int = 0
+	while true:
+		var page: Dictionary = _world.call("get_chronicle_since", cursor, 512)
+		for row: Dictionary in GrowthText.rows(page):
+			if int(row.get("kind", -1)) in [70, 71]:
+				events[int(row["kind"])] = row
+		var next: int = int(page.get("next", cursor))
+		if next >= int(page.get("total", next)):
+			break
+		if next <= cursor:
+			return false
+		cursor = next
+	var detail: Dictionary = (events.get(70, {}) as Dictionary).get("growth_evidence", {})
+	if not events.has(71) or int(detail.get("zone_people", -1)) <= 0 or int(detail.get("zone_slots", -1)) < 0:
+		return false
+	var site: Dictionary = {}
+	var cause: Dictionary = {}
+	for candidate: Dictionary in SimReads.read(_world, "get_building_snapshot").get("template_sites", []):
+		if not (candidate.get("yard_props", []) as Array).is_empty():
+			var read: Dictionary = _world.call("get_building_cause", int(candidate["id"]), int(candidate["source_record"]))
+			if bool(read.get("valid", false)) and read.has("zone_id") and read.get("cause_kind") == "steward":
+				site = candidate
+				cause = read
+				break
+	if site.is_empty():
+		return false
+	w3d.get_node("Terrain").call("build_all")
+	await _frames(120)
+	var yard_nodes: Array = w3d.get_node("Props").get("_yard_nodes")
+	if yard_nodes.is_empty():
+		return false
+	var locale: Node = root.get_node("Locale")
+	var original_language: String = str(locale.get("_current_lang"))
+	var feed: Control = _main.get_node("UI/ChroniclePanel")
+	var why: Control = _main.get_node("UI/WhyPanel")
+	var info: Dictionary = SimReads.read(_world, "get_world_info")
+	for language: String in ["ko", "en"]:
+		locale.call("set_language", language)
+		if not feed.visible:
+			feed.call("toggle_visible")
+		await _frames(3)
+		var stage_text: String = GrowthText.sentence(events[71], -1, locale, info)
+		if not str(feed.call("plain_text")).contains(stage_text):
+			print("W3D_GROWTH missing visible stage: ", stage_text)
+			return false
+		await _growth_capture(out.path_join(prefix + "_" + language + "_chronicle.png"))
+		for kind: int in [70, 71]:
+			feed.call("_follow_link", "why:%d" % int(events[kind]["index"]))
+			var sentence: String = GrowthText.sentence(events[kind], -1, locale, info)
+			var text: String = str(why.call("plain_text"))
+			if not why.visible or not text.contains(sentence) or text.contains("CHRONICLE_") or text.contains("ZONE_CAUSE_"):
+				return false
+			print("W3D_GROWTH %s" % JSON.stringify({"locale": language, "kind": kind, "text": text, "evidence": events[kind].get("growth_evidence", {})}))
+			await _growth_capture(out.path_join(prefix + "_" + language + "_why_%d.png" % kind))
+		why.call("_follow_link", "building:%d:%d" % [int(site["id"]), int(site["source_record"])])
+		var building_text: String = str(why.call("plain_text"))
+		if not building_text.contains(GrowthText.zone_reason(cause, locale)) or not building_text.contains(GrowthText.loc(locale, "BUILD_CAUSE_STEWARD")):
+			return false
+		print("W3D_GROWTH_BUILDING %s" % JSON.stringify({"locale": language, "text": building_text, "cause": cause}))
+		await _growth_capture(out.path_join(prefix + "_" + language + "_building_why.png"))
+		why.call("close")
+	feed.hide()
+	locale.call("set_language", original_language)
+	print("W3D_GROWTH_PASS %s" % JSON.stringify({"save": _arg("--save"), "zone": detail, "site": site, "yard_nodes": yard_nodes.size(), "zones_default_off_toggle": true}))
+	return true
+
+
+func _growth_capture(path: String) -> void:
+	if _arg("--growth-check") != "capture":
+		return
+	await _frames(5)
+	await RenderingServer.frame_post_draw
+	root.get_viewport().get_texture().get_image().save_png(path)
