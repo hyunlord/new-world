@@ -508,6 +508,8 @@ func _mesh_variant(id: String, variant: String) -> Mesh:
 		var arrays: Array = src.surface_get_arrays(s)
 		var sv: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
 		var sn: Variant = arrays[Mesh.ARRAY_NORMAL]
+		if name == "canopy" and sn is PackedVector3Array and (sn as PackedVector3Array).size() == sv.size():
+			sn = smooth_canopy_normals(sv, sn)
 		var si: Variant = arrays[Mesh.ARRAY_INDEX]
 		var offset: int = verts.size()
 		verts.append_array(sv)
@@ -551,11 +553,12 @@ func _mesh_variant(id: String, variant: String) -> Mesh:
 func _surface_params(name: String, original: Material, variant: String, sp: String, habit: String) -> Array:
 	var c: Color = _original_colour(original)
 	var sway: float = 0.0
-	if sp != "" and name == "canopy":
-		var by_species: Dictionary = Data3D.binding("flora.species_canopy_by_season", {})
-		var table: Variant = by_species.get(sp, (Data3D.binding("flora.canopy_by_season", {}) as Dictionary).get(habit, []))
-		if table is Array and (table as Array).size() > _season:
-			c = Data3D.colour((table as Array)[_season], c)
+	if name == "canopy":
+		if sp != "":
+			var by_species: Dictionary = Data3D.binding("flora.species_canopy_by_season", {})
+			var table: Variant = by_species.get(sp, (Data3D.binding("flora.canopy_by_season", {}) as Dictionary).get(habit, []))
+			if table is Array and _season >= 0 and (table as Array).size() > _season:
+				c = Data3D.colour((table as Array)[_season], c)
 		sway = 1.0
 	elif sp != "" and name == "trunk":
 		var trunks: Dictionary = Data3D.binding("flora.trunk", {})
@@ -564,6 +567,19 @@ func _surface_params(name: String, original: Material, variant: String, sp: Stri
 	elif variant.begins_with("vein=") and name == "vein":
 		c = Data3D.material_colour(variant.trim_prefix("vein="), "Mineral")
 	return [c, sway, 1.0 if name == "glow" else (2.0 if name == "vein" else 0.0)]
+
+
+## Weld lighting across duplicated flat-shaded leaf vertices; keep the authored lobes and trunk edges intact.
+static func smooth_canopy_normals(vertices: PackedVector3Array, normals: PackedVector3Array) -> PackedVector3Array:
+	var sums: Dictionary = {}
+	for i: int in vertices.size():
+		sums[vertices[i]] = (sums.get(vertices[i], Vector3.ZERO) as Vector3) + normals[i]
+	var result: PackedVector3Array = PackedVector3Array()
+	result.resize(vertices.size())
+	for i: int in vertices.size():
+		var normal: Vector3 = sums[vertices[i]]
+		result[i] = normal.normalized() if normal.length_squared() > 0.000001 else normals[i]
+	return result
 
 
 func _shared_material() -> Material:

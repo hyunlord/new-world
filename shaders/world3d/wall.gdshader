@@ -5,6 +5,7 @@
 shader_type spatial;
 render_mode diffuse_lambert, specular_disabled;
 #include "res://shaders/world3d/material_texture.gdshaderinc"
+#include "res://shaders/world3d/painterly.gdshaderinc"
 
 uniform float cut_all = 99.0;
 uniform vec4 cut_rect = vec4(0.0);
@@ -51,7 +52,11 @@ void fragment() {
 	if (cut_top > 0.5) {
 		c *= 0.8;
 	}
-	ALBEDO = c;
+	ALBEDO = painterly_albedo(c, world_pos);
 	NORMAL = normalize((VIEW_MATRIX * vec4(material_bump(world_pos * 0.7, texture_normal, texture_tile), 0.0)).xyz);
 	ROUGHNESS = 0.92;
+}
+
+void light() {
+	DIFFUSE_LIGHT += painterly_diffuse(NORMAL, LIGHT, VIEW, ALBEDO, LIGHT_COLOR, ATTENUATION);
 }

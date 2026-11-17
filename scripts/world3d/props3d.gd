@@ -24,6 +24,7 @@
 extends Node3D
 
 const Data3D = preload("res://scripts/world3d/data3d.gd")
+const Textures3D = preload("res://scripts/world3d/textures3d.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 
 var _world_sim: Node = null
@@ -230,7 +231,7 @@ func _place(id: String, rect: Rect2i, lit: bool, node_name: String) -> void:
 	var mi: MeshInstance3D = MeshInstance3D.new()
 	mi.name = node_name
 	var shown: String = state_model(id, lit)
-	var mesh: Mesh = Data3D.mesh(shown)
+	var mesh: Mesh = Textures3D.mesh(Data3D.mesh(shown), shown)
 	mi.mesh = mesh
 	var row: Dictionary = Data3D.model_row(shown)
 	if row.is_empty():
@@ -383,23 +384,22 @@ func _tinted_mesh(id: String, tint: String) -> Mesh:
 		return _tinted[key]
 	var base: Mesh = Data3D.mesh(id)
 	if tint == "" or base is not ArrayMesh:
-		_tinted[key] = base
-		return base
+		_tinted[key] = Textures3D.mesh(base, id)
+		return _tinted[key]
 	var src: ArrayMesh = base
-	var out: ArrayMesh = ArrayMesh.new()
+	var out: ArrayMesh = src.duplicate() as ArrayMesh
 	for s: int in src.get_surface_count():
-		out.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, src.surface_get_arrays(s))
 		var name: String = Data3D.surface_key(src, s)
 		var mat: Material = src.surface_get_material(s)
 		if name in ["vein", "metal"]:
 			var m: StandardMaterial3D = StandardMaterial3D.new()
+			m.resource_name = name
 			m.albedo_color = Data3D.material_colour(tint, "Mineral")
 			m.metallic = 0.5 if name == "metal" else 0.1
 			m.roughness = 0.4
-			m.resource_name = name
-			mat = preload("res://scripts/world3d/textures3d.gd").imported(m)
+			mat = Textures3D.imported(m, id)
 			if mat is ShaderMaterial:
-				(mat as ShaderMaterial).set_shader_parameter("texture_tile", float(preload("res://scripts/world3d/textures3d.gd").index("materials", tint, preload("res://scripts/world3d/textures3d.gd").index("surfaces", name))))
-		out.surface_set_material(out.get_surface_count() - 1, mat)
+				(mat as ShaderMaterial).set_shader_parameter("texture_tile", float(Textures3D.index("materials", tint, Textures3D.index("surfaces", name))))
+		out.surface_set_material(s, Textures3D.imported(mat, id))
 	_tinted[key] = out
 	return out

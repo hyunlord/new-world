@@ -149,7 +149,7 @@ static func mesh(id: String) -> Mesh:
 
 
 ## Merge every MeshInstance3D under `root` (with its transform relative to root) into one ArrayMesh.
-static func merge_meshes(root: Node, model_id: String = "") -> ArrayMesh:
+static func merge_meshes(root: Node, _model_id: String = "") -> ArrayMesh:
 	var out: ArrayMesh = ArrayMesh.new()
 	var stack: Array = [[root, Transform3D.IDENTITY]]
 	while not stack.is_empty():
@@ -190,7 +190,7 @@ static func merge_meshes(root: Node, model_id: String = "") -> ArrayMesh:
 					lods[float(level["edge_length"]) * lod_scale] = indices
 				out.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays, [], lods)
 				var idx: int = out.get_surface_count() - 1
-				out.surface_set_material(idx, preload("res://scripts/world3d/textures3d.gd").imported(material, model_id))
+				out.surface_set_material(idx, material)
 				out.surface_set_name(idx, material.resource_name if material != null else "")
 		for child: Node in node.get_children():
 			stack.append([child, xf])

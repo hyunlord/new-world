@@ -924,6 +924,11 @@ and item icons. See [ADR0063](decisions/0063-surface-ore-and-metal-chain.md).
 
 ## 3D view (M3D-1, ADR 0066)
 
+L1 shares `shaders/world3d/painterly.gdshaderinc` across world surfaces. The consumer-only
+adapter in `scripts/world3d/textures3d.gd` retains original materials for seasonal recolouring.
+Sky supplies AgX and a 16³ LUT; terrain normals use a shared lattice and plant detail is
+derived from existing snapshot tiles (ADR 0069).
+
 `scenes/world3d/World3D.tscn` (`scripts/world3d/world3d.gd`) is added under `Main` by `scripts/core/main_bootstrap.gd`;
 since M3D-SWITCH E2 it is the only world view (the 2D renderer and the `--renderer=2d` escape hatch are deleted;
 `ColonyView` is a hidden container for `OrderTool` and `WorldMarker`). Layers, each a

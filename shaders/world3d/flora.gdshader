@@ -8,6 +8,8 @@ render_mode diffuse_lambert, specular_disabled;
 #include "res://shaders/world3d/material_texture.gdshaderinc"
 varying float texture_tile;
 
+#include "res://shaders/world3d/painterly.gdshaderinc"
+
 global uniform float w3d_snow;
 global uniform float w3d_time;
 varying float kind;
@@ -24,11 +26,13 @@ varying vec4 mark;
 varying vec3 world_normal;
 varying vec3 world_pos;
 varying float local_height;
+varying float leaf_surface;
 
 void vertex() {
 	vec3 origin = (MODEL_MATRIX * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
 	float phase = origin.x * 0.37 + origin.z * 0.61;
-	float bend = max(VERTEX.y - 1.0, 0.0) * UV.y;
+	float bend = max(VERTEX.y - 0.15, 0.0) * UV.y;
+	leaf_surface = step(0.8, UV.y);
 	kind = UV.x;
 	local_height = VERTEX.y;
 	texture_tile = UV2.x;
@@ -81,7 +85,9 @@ void fragment() {
 	}
 	float up = clamp(world_normal.y, 0.0, 1.0);
 	c = mix(c, vec3(0.80, 0.85, 0.92), w3d_snow * smoothstep(0.45, 0.85, up));
-	ALBEDO = c;
+	// Broad light/dark masses reveal the authored overlapping crowns without noisy leaf speckles.
+	c *= mix(1.0, mix(0.84, 1.12, smoothstep(-0.25, 0.8, world_normal.y)), leaf_surface);
+	ALBEDO = painterly_albedo(c, world_pos);
 	ROUGHNESS = 0.9;
 	if (kind > 0.5 && kind < 1.5) {
 		EMISSION = c * 2.5;
@@ -92,4 +98,8 @@ void fragment() {
 		ROUGHNESS = 0.35;
 		METALLIC = 0.3;
 	}
+}
+
+void light() {
+	DIFFUSE_LIGHT += painterly_diffuse(NORMAL, LIGHT, VIEW, ALBEDO, LIGHT_COLOR, ATTENUATION);
 }

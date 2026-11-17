@@ -1,11 +1,13 @@
 // terrain.gdshader — the 3D view's ground (scripts/world3d/terrain3d.gd, M3D-1 scope 3/8/9).
 // Albedo is the per-corner vertex colour (terrain code colour, clearing, floors, fields) times the season tint,
-// broken up by a fine value noise; slopes steeper than ~40° turn to `cliff_colour` rock; snow covers upward faces by `snow` (winter). `overlay_tex` is one texel per map
+// broken up by broad painted noise and the shared atlas; slopes turn to triplanar rock and UV.x blends the bank.
+// Snow covers upward faces by `snow` (winter). `overlay_tex` is one texel per map
 // tile (RGBA fill; alpha 0 = nothing) for the overlays and order feedback; `frame_tex` marks tiles whose outline is
 // drawn (R = outline strength) so hover, drag rectangles and refused tiles read as framed tiles.
 shader_type spatial;
 render_mode diffuse_lambert, specular_disabled;
 #include "res://shaders/world3d/material_texture.gdshaderinc"
+#include "res://shaders/world3d/painterly.gdshaderinc"
 uniform sampler2D biome_tex : filter_nearest, repeat_disable;
 uniform float autumn = 0.0;
 
@@ -17,6 +19,7 @@ uniform sampler2D frame_tex : filter_nearest, repeat_disable;
 uniform float overlay_on = 0.0;
 uniform float grid_on = 0.0;
 uniform vec3 cliff_colour : source_color = vec3(0.43, 0.39, 0.34);
+uniform vec3 shore_colour : source_color = vec3(0.55, 0.52, 0.45);
 
 varying vec3 world_pos;
 varying vec3 world_normal;
@@ -47,7 +50,7 @@ void vertex() {
 	world_normal = normalize((MODEL_MATRIX * vec4(NORMAL, 0.0)).xyz);
 }
 
-vec3 ground_detail(vec2 tile_pos, vec2 p) {
+vec3 ground_detail(vec2 tile_pos, vec3 p, vec3 normal) {
 	vec2 biome = texture(biome_tex, (tile_pos + 0.5) / map_size).rg;
 	float tile = floor(biome.r * 255.0 + 0.5);
 	float variant = step(0.5, hash12(tile_pos));
@@ -56,26 +59,35 @@ vec3 ground_detail(vec2 tile_pos, vec2 p) {
 	} else if (abs(tile - 4.0) < 0.5) {
 		tile += variant;
 	}
-	vec3 detail = material_detail(p * 0.32, tile);
-	return biome.g > 0.001 ? mix(detail, material_detail(p * 0.32, 4.0 + variant), biome.g) : detail;
+	vec3 detail = normal.y > 0.96 ? material_detail(p.xz * 0.32, tile) : material_triplanar(p * 0.32, normal, tile);
+	return biome.g > 0.001 ? mix(detail, material_detail(p.xz * 0.32, 4.0 + variant), biome.g) : detail;
 }
 
-vec3 blended_ground(vec2 p) {
+vec3 blended_ground(vec3 p, vec3 normal) {
 	// The same four neighbouring tiles that supply each vertex's existing colour.
-	vec2 base = floor(p - 0.5);
-	vec2 f = fract(p - 0.5);
-	return mix(mix(ground_detail(base, p), ground_detail(base + vec2(1.0, 0.0), p), f.x),
-		mix(ground_detail(base + vec2(0.0, 1.0), p), ground_detail(base + vec2(1.0), p), f.x), f.y);
+	vec2 base = floor(p.xz - 0.5);
+	vec2 f = smoothstep(vec2(0.0), vec2(1.0), fract(p.xz - 0.5));
+	return mix(mix(ground_detail(base, p, normal), ground_detail(base + vec2(1.0, 0.0), p, normal), f.x),
+		mix(ground_detail(base + vec2(0.0, 1.0), p, normal), ground_detail(base + vec2(1.0), p, normal), f.x), f.y);
 }
 
 void fragment() {
 	vec3 c = srgb_to_linear(COLOR.rgb) * season_tint;
-	c *= blended_ground(world_pos.xz);
-	float n = vnoise(world_pos.xz * 3.0) * 0.6 + vnoise(world_pos.xz * 11.0) * 0.4;
-	c *= 0.90 + 0.20 * n;
-	float up = clamp(world_normal.y, 0.0, 1.0);
+	vec3 normal = normalize(world_normal);
+	c *= blended_ground(world_pos, normal);
+	float n = vnoise(world_pos.xz * 0.22) * 0.7 + vnoise(world_pos.xz * 1.5) * 0.3;
+	c = painterly_albedo(c, world_pos);
+	float up = clamp(normal.y, 0.0, 1.0);
+	// The bed dip is shared at lattice corners, so banks blend continuously across chunk edges.
+	float shore = smoothstep(0.01, 0.32, UV.x) * (1.0 - smoothstep(0.5, 0.85, UV.x));
+	if (shore > 0.001) {
+		c = mix(c, shore_colour * material_detail(world_pos.xz * 0.32, 7.0), shore * 0.65);
+	}
 	// Steep slopes show bare rock instead of grass.
-	c = mix(c, cliff_colour * (0.85 + 0.3 * n) * material_triplanar(world_pos * 0.4, world_normal, 11.0), 1.0 - smoothstep(0.62, 0.8, up));
+	float cliff = 1.0 - smoothstep(0.62, 0.8, up);
+	if (cliff > 0.001) {
+		c = mix(c, painterly_albedo(cliff_colour, world_pos) * material_triplanar(world_pos * 0.4, normal, 11.0), cliff);
+	}
 	float cover = snow * smoothstep(0.55, 0.9, up) * smoothstep(0.25, 0.55, n + snow * 0.4);
 	vec3 snow_detail = mix(material_detail(world_pos.xz * 0.25, 8.0), material_detail(world_pos.xz * 0.25, 9.0), vnoise(world_pos.xz * 0.17));
 	c = mix(c, vec3(0.80, 0.85, 0.92) * snow_detail, cover);
@@ -96,4 +108,8 @@ void fragment() {
 	}
 	ALBEDO = c;
 	ROUGHNESS = 0.95;
+}
+
+void light() {
+	DIFFUSE_LIGHT += painterly_diffuse(NORMAL, LIGHT, VIEW, ALBEDO, LIGHT_COLOR, ATTENUATION);
 }

@@ -12,6 +12,22 @@
 
 ### Removed
 - No simulation features, models or character rigs.
+## M3D-LOOK L1 — 2026-11-17 (review branch; validation in progress)
+
+### Added
+- Shared painterly lighting, AgX/sky ambient with a 16³ grade LUT, rooted plant wind,
+  snapshot-local grass/flowers and zoom fade. Focused terrain/material/vegetation checks.
+- Four generated art-direction targets; prompts and comparison evidence are external in
+  `/Users/rexxa/work/art-img-data/look1/`.
+
+### Changed
+- Continuous terrain normals preserve the heightfield; triplanar ground, shore blends,
+  canopy normals and depth-tinted water replace flat surface lighting.
+- Consumer materials share the response without replacing seasonal source colours, VAT
+  animation, skeletons or simulation state.
+
+### Removed
+- None. Optional SDFGI/SSIL and tilt-shift remain disabled.
 
 ## C3-b — iron chain, not yet published (2026-11-15)
 

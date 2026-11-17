@@ -28,6 +28,10 @@ smoke are this repo's validators).
 
 ## Rules
 
+L1 lesson (2026-11-17): headless `ImageTexture3D.get_data()` has no GPU readback on the dummy
+renderer. Verify the same production LUT slices on CPU and reserve texture readback for a
+windowed gated test; never accept empty slices as a pass (`tools/v8/look1_material_test.gd`).
+
 ### Bridge and simulation state
 - **Do** read argument-less bridge getters through `SimReads.read(world, "get_x")` (or the `SimReads` helpers). `SimReads` is `scripts/core/sim_reads.gd` (`class_name SimReads`, node `Main/SimReads`); `read` serves only names in `GETTERS`, cached and frozen once per frame; names also in `TICK_GETTERS` (today `get_porter_snapshot`, `get_settlement_relations`) are cached once per simulation tick; terrain until a reset. *Reason:* 15 independent `get_agent_snapshot` callers cost a 10.2 ms frame (3.97 ms after).
 - **Don't** write simulation state from GDScript. The only calls with an effect are the `MUTATORS` in `sim_reads.gd` (the M1 orders `cmd_*`, which become recorded commands; tooling/lifecycle `advance_ticks`, `reset_world`, `reset_world_stress`, `on_building_placed`) and the speed control `set_sim_speed`. *Reason:* Rust owns the state; identity and determinism are measured there, never in the live game.
