@@ -1,0 +1,721 @@
+{
+  "schema_version": 1,
+  "about": "Presentation-only assets. Consumers choose placement from authoritative simulation observations; no automatic trace spawning.",
+  "assets": [
+    {
+      "id": "grass_summer_a",
+      "category": "material",
+      "texture": "res://assets/3d/textures/grass_summer_a.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "428a568d83f5433824446db9e5867f05c588eea104e7152abfb022049eacb6be"
+    },
+    {
+      "id": "grass_summer_b",
+      "category": "material",
+      "texture": "res://assets/3d/textures/grass_summer_b.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "fd1574053d169238f74de9c31dc6b9342551ca098bb3012c3372f961b77b5a90"
+    },
+    {
+      "id": "packed_earth_a",
+      "category": "material",
+      "texture": "res://assets/3d/textures/packed_earth_a.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "80e4e8e04441cef2523a66d3dc44b14ab8c4fee155148673ed7023613ce49a79"
+    },
+    {
+      "id": "packed_earth_b",
+      "category": "material",
+      "texture": "res://assets/3d/textures/packed_earth_b.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "85d9615ea2c725bad6072a38a45821a878b1ab428daa935b82aacbbad5df32b9"
+    },
+    {
+      "id": "snow_a",
+      "category": "material",
+      "texture": "res://assets/3d/textures/snow_a.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "76e53122262079c8852cd3596a4b017a56feb35143be73562754966ecea9a8ca"
+    },
+    {
+      "id": "snow_b",
+      "category": "material",
+      "texture": "res://assets/3d/textures/snow_b.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "a94af8e17e77e69a59dedbcf83163cdcb00083983ba3fc22be49c936dfba5ea1"
+    },
+    {
+      "id": "log_bark_a",
+      "category": "material",
+      "texture": "res://assets/3d/textures/log_bark_a.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "351bde4e97925141959a801e7a9dacea516380d106900cbcd03b58f578af2b86"
+    },
+    {
+      "id": "log_bark_b",
+      "category": "material",
+      "texture": "res://assets/3d/textures/log_bark_b.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "3bedbc243191ffb8997a8d6a3eea6354ba5254e8ba74d513724f670a46609ea7"
+    },
+    {
+      "id": "thatch_a",
+      "category": "material",
+      "texture": "res://assets/3d/textures/thatch_a.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "6de6e15c16d92a9462d74198f553c4bb9ad716ef15bf1cd68890d3a5106f611e"
+    },
+    {
+      "id": "thatch_b",
+      "category": "material",
+      "texture": "res://assets/3d/textures/thatch_b.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "5ced3a42c8f811a79a3cc7e15efda69c6c358f4d25d8c3fc61d9f8e1cca36551"
+    },
+    {
+      "id": "wattle_daub",
+      "category": "material",
+      "texture": "res://assets/3d/textures/wattle_daub.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "a916f1ae62e03786f5414168e9f0db954dd41b8dedcbfcee57c1668247ab3b11"
+    },
+    {
+      "id": "log_wall",
+      "category": "material",
+      "texture": "res://assets/3d/textures/log_wall.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "aab7f18b4528ecb2b3e096160a7d75fddd7b41e670622d397a377116078e91ce"
+    },
+    {
+      "id": "mud_brick",
+      "category": "material",
+      "texture": "res://assets/3d/textures/mud_brick.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "75f685dcdf1dc642622fe9b01177d23400d0dcff06b6c45106d2b86758b04995"
+    },
+    {
+      "id": "rough_stone",
+      "category": "material",
+      "texture": "res://assets/3d/textures/rough_stone.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "5728e20b18087a2a04f0b67ab0a0c47923df5bcff0cb6f2bc9792a927a1b2e6e"
+    },
+    {
+      "id": "cut_stone",
+      "category": "material",
+      "texture": "res://assets/3d/textures/cut_stone.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "035a27aad1350bbdfe0a5096a005fccdfbd76cfa5e3f87ae7633f6be7f77bca8"
+    },
+    {
+      "id": "timber_plaster",
+      "category": "material",
+      "texture": "res://assets/3d/textures/timber_plaster.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "1fbb108558194b920b334d80fddf254e138240fbdbe2d527b33476133714611e"
+    },
+    {
+      "id": "reed_thatch",
+      "category": "material",
+      "texture": "res://assets/3d/textures/reed_thatch.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "dd052c569a14ea589ea6181e66f18a5e9c9c1e2f5ea92596187282288725c65f"
+    },
+    {
+      "id": "bark_shingle",
+      "category": "material",
+      "texture": "res://assets/3d/textures/bark_shingle.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "0e95265d42ba7be0dcf3345816b1a8820daad08e34abca18d3f3060926a3f0ae"
+    },
+    {
+      "id": "wooden_shingle",
+      "category": "material",
+      "texture": "res://assets/3d/textures/wooden_shingle.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "2cec47d4b9146d0f0cb6605028f3892815b9812e916170937b6099d53782a15c"
+    },
+    {
+      "id": "turf_roof",
+      "category": "material",
+      "texture": "res://assets/3d/textures/turf_roof.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "6be512607a23033ddb53e6262778eabde7f0dfa8ba7a1813e58c175ca4d7d41b"
+    },
+    {
+      "id": "floor_earth",
+      "category": "material",
+      "texture": "res://assets/3d/textures/floor_earth.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "43bed25a94d1f0ab52a1fb9a3732e6b7f2c8c2627ca0ef2791cda325d3e0014a"
+    },
+    {
+      "id": "rush_mat",
+      "category": "material",
+      "texture": "res://assets/3d/textures/rush_mat.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "2a8ca7989ec8065c0114c88b001012526b0f27b9c824a591928210a6c507eb85"
+    },
+    {
+      "id": "floor_plank",
+      "category": "material",
+      "texture": "res://assets/3d/textures/floor_plank.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "a0cc6fefd4eeed39ca0390664ab060782d241f95c3049cd96856e90872e0d1d9"
+    },
+    {
+      "id": "flagstone",
+      "category": "material",
+      "texture": "res://assets/3d/textures/flagstone.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "12172c5f3585288d3dfdfef8cba21f6df15f34b7a455ea474f081eaa64a959e5"
+    },
+    {
+      "id": "trodden_grass",
+      "category": "material",
+      "texture": "res://assets/3d/textures/trodden_grass.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "e4afbddae1556ef38706514c3834bd4006a3b7067b7b785a6d1c8e0bc5e4d823"
+    },
+    {
+      "id": "dirt_path",
+      "category": "material",
+      "texture": "res://assets/3d/textures/dirt_path.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "abea7c5b6648ee33fa6cee5a2561cc3ca870db361b3181e8953dc3ad94aecfd2"
+    },
+    {
+      "id": "muddy_path",
+      "category": "material",
+      "texture": "res://assets/3d/textures/muddy_path.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "21a8c1616e5499cc45a7c3955e80c523901c3b353ac4623ce07fdaa2e416c9de"
+    },
+    {
+      "id": "paved_road",
+      "category": "material",
+      "texture": "res://assets/3d/textures/paved_road.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "6021289878fb5c82120fbdccef9eadf49f0f2c2a5748d20b0c1ad26a7c749dd0"
+    },
+    {
+      "id": "field_tilled",
+      "category": "material",
+      "texture": "res://assets/3d/textures/field_tilled.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "af79a803aedba2b5fdebc076daf8b188a753e446ee2d1c9e2bde446f859c6b0b"
+    },
+    {
+      "id": "field_sown",
+      "category": "material",
+      "texture": "res://assets/3d/textures/field_sown.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "72c0434fbb3fed716cf24a75bfe52221568011c6fdb6c28f42922e28940a0e1e"
+    },
+    {
+      "id": "field_sprouting",
+      "category": "material",
+      "texture": "res://assets/3d/textures/field_sprouting.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "e9c10965889ad05d7c243a606b7e7602de21e5506edec1bcae033523b8d305e1"
+    },
+    {
+      "id": "frost",
+      "category": "material",
+      "texture": "res://assets/3d/textures/frost.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "64f5de5d9fb84c3782b0782039f9970cef83efe1105ef342e65de0fdb9f7bc5d"
+    },
+    {
+      "id": "winter_mud",
+      "category": "material",
+      "texture": "res://assets/3d/textures/winter_mud.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "307c6d8be8a80d2252bd160f36a2dd35e9ca4fe3c520ebe6c883a00310bc7b13"
+    },
+    {
+      "id": "decal_bare_footprints",
+      "category": "decal",
+      "texture": "res://assets/3d/textures/decal_bare_footprints.png",
+      "tileable": false,
+      "alpha": true,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "fda55b7ed79d6fe23c7c9fa6c5a1f8270398ef0e50ca7c16547d2d3b8ef9a695"
+    },
+    {
+      "id": "decal_shoe_footprints",
+      "category": "decal",
+      "texture": "res://assets/3d/textures/decal_shoe_footprints.png",
+      "tileable": false,
+      "alpha": true,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "c0c75731f1d649c6a329e9f15cd4b29c778b22d2937ad175fc6f13310c6d4703"
+    },
+    {
+      "id": "decal_cart_ruts",
+      "category": "decal",
+      "texture": "res://assets/3d/textures/decal_cart_ruts.png",
+      "tileable": false,
+      "alpha": true,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "f5d589704b9d3e2cdfa3ec092b32aad63850f47adab905ac18d3e55434761207"
+    },
+    {
+      "id": "decal_hearth_scorch",
+      "category": "decal",
+      "texture": "res://assets/3d/textures/decal_hearth_scorch.png",
+      "tileable": false,
+      "alpha": true,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "4ff1a8a825bfe2c61d353101194d088ec2063eff260a8f4ac6b7b54a596732af"
+    },
+    {
+      "id": "decal_puddles",
+      "category": "decal",
+      "texture": "res://assets/3d/textures/decal_puddles.png",
+      "tileable": false,
+      "alpha": true,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "ee74cdca1ca32ebc52f7cd5ea9ba2bcd137f3aec8f0a5c06dbfdea4f6feb26aa"
+    },
+    {
+      "id": "decal_spilt_grain",
+      "category": "decal",
+      "texture": "res://assets/3d/textures/decal_spilt_grain.png",
+      "tileable": false,
+      "alpha": true,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "062be4fdb19ade4c678bbba0e81ff9ef04327b00b557a5408508a72393be3e5d"
+    },
+    {
+      "id": "decal_wood_chips",
+      "category": "decal",
+      "texture": "res://assets/3d/textures/decal_wood_chips.png",
+      "tileable": false,
+      "alpha": true,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "e6440a4bfb0086f202a685ab5a6a7841595a5b659b5848b5e931fb5cb3bbfeb3"
+    },
+    {
+      "id": "decal_stone_chips",
+      "category": "decal",
+      "texture": "res://assets/3d/textures/decal_stone_chips.png",
+      "tileable": false,
+      "alpha": true,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "d66d5325319151d02bb64de2b08e6487386b11a0b28a9d488ea78a25c964dfea"
+    },
+    {
+      "id": "decal_animal_dung",
+      "category": "decal",
+      "texture": "res://assets/3d/textures/decal_animal_dung.png",
+      "tileable": false,
+      "alpha": true,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "d579725c03f743ea2f0b2e131044cac04f37b6a6367d751a0caa754243f053dc"
+    },
+    {
+      "id": "sky_day",
+      "category": "sky",
+      "texture": "res://assets/3d/textures/sky_day.png",
+      "tileable": false,
+      "alpha": false,
+      "size": [
+        2048,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "3f01deb5bb5c47edfc422224c7d505ab186e454bf02a48c9fdb03194b80e4597"
+    },
+    {
+      "id": "sky_dusk",
+      "category": "sky",
+      "texture": "res://assets/3d/textures/sky_dusk.png",
+      "tileable": false,
+      "alpha": false,
+      "size": [
+        2048,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "4b439cc5d5b90572356bc36cf776b6f9bf7e388162443206d78e858c765ba385"
+    },
+    {
+      "id": "sky_night",
+      "category": "sky",
+      "texture": "res://assets/3d/textures/sky_night.png",
+      "tileable": false,
+      "alpha": false,
+      "size": [
+        2048,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "cb54b9a9919db634f886fd0020698b2f989e6ed85313cf8fcb5298d6ed909c8a"
+    },
+    {
+      "id": "sky_winter",
+      "category": "sky",
+      "texture": "res://assets/3d/textures/sky_winter.png",
+      "tileable": false,
+      "alpha": false,
+      "size": [
+        2048,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "325914e8b2fe31c3dec52e813c27023c9b0ea0cb77f2916c9d04a61b2c844797"
+    },
+    {
+      "id": "cloud_day",
+      "category": "sky",
+      "texture": "res://assets/3d/textures/cloud_day.png",
+      "tileable": false,
+      "alpha": true,
+      "size": [
+        2048,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "e122728af0366238aa06de0e514b8093dcc60a06b1fa812132d6d21b713f6620"
+    },
+    {
+      "id": "cloud_dusk",
+      "category": "sky",
+      "texture": "res://assets/3d/textures/cloud_dusk.png",
+      "tileable": false,
+      "alpha": true,
+      "size": [
+        2048,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "eb7f49741d7970ab026c076e3a44e039ce51bea7ae798b4ca5dc8e8cd4f65f74"
+    },
+    {
+      "id": "cloud_night",
+      "category": "sky",
+      "texture": "res://assets/3d/textures/cloud_night.png",
+      "tileable": false,
+      "alpha": true,
+      "size": [
+        2048,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "db3ae653463f2ce95d9864b187ec8277755b1b562c0d54ddeca666eb013527af"
+    },
+    {
+      "id": "cloud_winter",
+      "category": "sky",
+      "texture": "res://assets/3d/textures/cloud_winter.png",
+      "tileable": false,
+      "alpha": true,
+      "size": [
+        2048,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "fee9e03a13909f047be2bd5df38ac894a8d19bfe43d7469ef82fb20351619f1f"
+    },
+    {
+      "id": "hills",
+      "category": "sky",
+      "texture": "res://assets/3d/textures/hills.png",
+      "tileable": false,
+      "alpha": true,
+      "size": [
+        2048,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "245c19aa36ea0e1eba45714023493a2bc5a3d49de57139a08cac1c6927a3b866"
+    },
+    {
+      "id": "water_river_normal",
+      "category": "water",
+      "texture": "res://assets/3d/textures/water_river_normal.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "23714603998ec1275c2b5375a49d7c306ddeb9d4feaace77cfaf6653b1033393"
+    },
+    {
+      "id": "water_pond_normal",
+      "category": "water",
+      "texture": "res://assets/3d/textures/water_pond_normal.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "2692e6bb330d65027b4104c4209707c79d8458cd7b7156c6ed0e3ee087a5122e"
+    },
+    {
+      "id": "water_river_flow",
+      "category": "water",
+      "texture": "res://assets/3d/textures/water_river_flow.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "d6022c81f03e79709a6637f36f4c525972e62e48a4652f43cdf5e388e2a4724c"
+    },
+    {
+      "id": "water_pond_flow",
+      "category": "water",
+      "texture": "res://assets/3d/textures/water_pond_flow.png",
+      "tileable": true,
+      "alpha": false,
+      "size": [
+        1024,
+        1024
+      ],
+      "placement": "consumer_supplied",
+      "sha256": "4138cb04787114cdd66098e323efb872c725f2ecbfc55b7d6d52c63c0ca06809"
+    }
+  ]
+}
