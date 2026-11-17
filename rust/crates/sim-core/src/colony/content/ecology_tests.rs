@@ -270,6 +270,11 @@ fn tameable_data_only_species_resolves_renamed_products_and_category_art() {
                 name: "blueprints.ron".into(),
                 bytes: include_bytes!("../../../../sim-test/data/ext_pack/blueprints.ron").to_vec(),
             },
+            // The pack's walk floor completes to its own placed-only path stage.
+            NamedSource {
+                name: "paths.ron".into(),
+                bytes: include_bytes!("../../../../sim-test/data/ext_pack/paths.ron").to_vec(),
+            },
         ],
     };
     let catalog =
