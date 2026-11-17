@@ -11,6 +11,11 @@ Tracking: [thermal model #691](https://github.com/hyunlord/new-world/issues/691)
 
 - prospect designation: the `no_iron_nearby` card offers wait or trade for iron only. There is no prospecting designation or command, so "send prospectors" is not offered (planner D-C3-1). Planned pass: M-GROW.
 - ~~paved road speed~~: resolved by M-GROW 3.2 (per-tile path stage cost + step interval).
+
+## M-GROW-a — automatic layout control (2026-11-17)
+
+- player override of automatic zones — M-NATION/UX: automatic layouts are immutable steward planning facts (D-MGROW-2). The existing erase action removes manual housing and real stockpiles, preserves automatic layouts and historical causes, and explains the boundary with a short ko/en notice. Z shows/hides layouts; construction cancellation and steward scope/off remain available. Direct editing needs explicit future planning/history semantics; strict save validation stays in force.
+
 <!-- generated-content-debt -->
 
 ## Authored content debt

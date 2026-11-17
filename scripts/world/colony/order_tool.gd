@@ -393,8 +393,28 @@ func area(a: Vector2i, b: Vector2i) -> Dictionary:
 	var arguments: Array = [a.x, a.y, b.x, b.y]
 	if mode == Mode.FIELD:
 		arguments.append(field_crop)
+	if mode == Mode.REMOVE_ZONE and _world_sim != null:
+		var preserved: bool = automatic_zone_overlaps(SimReads.read(_world_sim, "get_colony_overlay"), a, b)
+		var result: Variant = SimReads.mutate(_world_sim, "cmd_remove_zone_area", arguments)
+		var notice: Dictionary = result.duplicate() if result is Dictionary else {}
+		notice["automatic_zone_preserved"] = preserved
+		_finish("cmd_remove_zone_area", notice)
+		return _last_result
 	_send(AREA_COMMANDS[mode], arguments)
 	return _last_result
+
+
+## Automatic envelopes remain village plans even when removable stockpile tiles overlap them.
+static func automatic_zone_overlaps(overlay: Dictionary, a: Vector2i, b: Vector2i) -> bool:
+	for value: Variant in overlay.get("layout_zones", []):
+		if value is not Dictionary:
+			continue
+		var xs: PackedInt64Array = value.get("xs", PackedInt64Array())
+		var ys: PackedInt64Array = value.get("ys", PackedInt64Array())
+		for i: int in mini(xs.size(), ys.size()):
+			if xs[i] >= mini(a.x, b.x) and xs[i] <= maxi(a.x, b.x) and ys[i] >= mini(a.y, b.y) and ys[i] <= maxi(a.y, b.y):
+				return true
+	return false
 
 
 ## M5: two results as one: accepted when either was, counts summed, the first's reason otherwise.
@@ -710,6 +730,11 @@ func _refresh_ghost() -> void:
 static func toast_text(result: Dictionary, locale: Node, command: String = "", kind: String = "") -> String:
 	if locale == null:
 		return str(result)
+	if command == "cmd_remove_zone_area" and bool(result.get("automatic_zone_preserved", false)):
+		var notice: String = str(locale.call("ltr", "MGROW_AUTOMATIC_ZONE_PRESERVED"))
+		if bool(result.get("accepted", false)):
+			return str(locale.call("trf", TOAST_KEYS[command], {"count": int(result.get("count", 0))})) + " · " + notice
+		return notice
 	if bool(result.get("accepted", false)):
 		if command == "cmd_place_blueprint" and kind != "" and kind != "hut":
 			return EconomyText.trf(locale, "UI_ORDER_TOAST_BUILD_FMT", {"name": EconomyText.building(locale, EconomyText.build_code(kind))})

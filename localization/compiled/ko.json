@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 2070,
+    "active_key_count": 2071,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 2070,
+    "key_count": 2071,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -1216,6 +1216,7 @@
     "MATERIAL_GRANITE": "화강암",
     "MATERIAL_LIMESTONE": "석회암",
     "MATERIAL_OAK": "참나무",
+    "MGROW_AUTOMATIC_ZONE_PRESERVED": "이 구역은 마을이 세운 계획이어서 지울 수 없어요.",
     "MGROW_ZONE_OVERLAY": "마을 구역 · Z로 닫기",
     "MIND_BEHAVIOUR_DO_JOB": "일하기",
     "MIND_BEHAVIOUR_DRINK": "물 마시기",

@@ -38,6 +38,15 @@ must remain readable.
 - Keep `BuildCause::Steward(rule)` and store a separate site-zone link. The
   persisted zone cause records the trigger, population and prior capacity;
   the chronicle and building Why view use this evidence.
+- Automatic zones are immutable steward planning facts (D-MGROW-2). Existing
+  `RemoveZoneArea` / `remove_housing_area` removes player-drawn housing zones
+  and real stockpile zones, leaving automatic layout envelopes unchanged.
+  When the action touches an automatic zone, show a short ko/en Locale notice
+  explaining that it is the village's own plan. Removing manual housing cleans
+  its `site_zones` links; retain strict save validation and historical causes.
+  Z only shows/hides automatic layouts. Construction cancellation and steward
+  scope/off remain the available controls; direct automatic-zone editing is
+  deferred as "player override of automatic zones — M-NATION/UX".
 - Count occupied days only for intact completed dwellings with assigned living
   residents. Monotone stages consult local stored goods and resident skill.
   Era material waves use existing `upgrade_from`/`upgrade_to` chains at 750‰;
@@ -64,6 +73,10 @@ must remain readable.
   names or schema-aware missing-field recovery. Append a versioned body tail.
 - Give decorations construction or production effects: adds mechanics outside
   the pass. They represent existing facts and never claim simulation tiles.
+- Let the existing erase command silently trim automatic layouts: this leaves
+  orphan causes/site memberships or changes the meaning of historical plans.
+  Do not weaken save validation or erase those causes to permit the operation;
+  a future player override needs explicit planning/history semantics.
 
 ## Consequences
 
@@ -74,10 +87,14 @@ real 3D captures, the frozen HEAD's full gate and its separate crash detector.
 The first four-seed feature acceptance passed while candidate seed1 still died
 by day120 against a surviving BASE. Seed5 also failed the separate development
 48-day collapse floor. Missing tree preparation prevented initial or expanded
-storage, so the structural fix above needs fresh long-run verification before
-pre-gate. Focused command/worker tests are not proof that survival has recovered.
-Publication verification is pending, not waived by this record. Initial values
-and limitations remain in `docs/v8/BALANCE_DEBT.md`.
+storage. Subsequent development comparisons and full replay acceptance confirm
+recovery: BASE120-day survivors [14,16,16,16], candidate [14,17,16,16]; the
+separate development48-day collapse floor also passes. Preserve the original
+failures and source-specific evidence in `docs/v8/mgrow/MGROW_REPORT.md`.
+This is development evidence, not the exact frozen HEAD's pre-gate, full gate
+or official crash detector; those publication requirements remain pending.
+Automatic-layout player overrides remain M-NATION/UX debt. Initial values and
+limitations remain in `docs/v8/BALANCE_DEBT.md`.
 
 ## Date
 
@@ -86,6 +103,6 @@ and limitations remain in `docs/v8/BALANCE_DEBT.md`.
 ## Source
 
 Owner #686; `worldsim-operations/dispatch/goal_worldsim_mgrow.md` §§1–5;
-`mgrow-data/D-MGROW-1.md` (2026-11-17); implementation in
+`mgrow-data/D-MGROW-1.md` and `mgrow-data/D-MGROW-2.md` (2026-11-17); implementation in
 `runtime/steward/zone_growth.rs`, `runtime/paths.rs`, `runtime/house_growth.rs`
 and `save/growth.rs` under `rust/crates/sim-systems/src/`.

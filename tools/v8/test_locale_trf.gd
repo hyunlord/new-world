@@ -13,6 +13,7 @@ const EconomyTextScript = preload("res://scripts/ui/economy_text.gd")
 const KnowledgeTextScript = preload("res://scripts/ui/knowledge_text.gd")
 const ChronicleText = preload("res://scripts/ui/chronicle_text.gd")
 const Content = preload("res://scripts/ui/content_context.gd")
+const OrderTool = preload("res://scripts/world/colony/order_tool.gd")
 
 var _failures: int = 0
 
@@ -51,6 +52,7 @@ func _run() -> void:
 		print("TRF_TEST_FAIL no Locale autoload")
 	else:
 		locale.call("set_language", "ko")
+		_test_automatic_zone_notice(locale, "이 구역은 마을이 세운 계획이어서 지울 수 없어요.", "구역 2칸 지움")
 		_test_food_evidence(locale)
 		_check("ko table", str(locale.call("trf", "UI_BLUEPRINT_LOGS", {"delivered": 5, "needed": 12})), "통나무 5/12")
 		_check("ko count", str(locale.call("trf", "UI_ORDER_RESULT_COUNT", {"count": 15})), "15개")
@@ -89,6 +91,7 @@ func _run() -> void:
 		_check_food_chronicle(locale, 27, "구운 뿌리를")
 		_check_food_chronicle(locale, 23, "죽을")
 		locale.call("set_language", "en")
+		_test_automatic_zone_notice(locale, "This zone is the village's own plan and stays in place.", "2 zone tiles removed")
 		_test_food_evidence(locale)
 		_check_food_chronicle(locale, 27, EconomyTextScript.item(locale, 27))
 		_check("m4 en era", KnowledgeTextScript.era_line(locale, {"era": 1, "progress": 318}), "Neolithic transition 31 %")
@@ -103,6 +106,20 @@ func _run() -> void:
 		quit(0)
 	else:
 		quit(1)
+
+
+func _test_automatic_zone_notice(locale: Node, notice: String, removed: String) -> void:
+	var result: Dictionary = {"accepted": false, "reason": "nothing", "automatic_zone_preserved": true}
+	_check("automatic zone retained", OrderTool.toast_text(result, locale, "cmd_remove_zone_area"), notice)
+	result["accepted"] = true
+	result["count"] = 2
+	_check("mixed zone removal", OrderTool.toast_text(result, locale, "cmd_remove_zone_area"), removed + " · " + notice)
+	result["automatic_zone_preserved"] = false
+	_check("manual zone removal", OrderTool.toast_text(result, locale, "cmd_remove_zone_area"), removed)
+	var overlay: Dictionary = {"layout_zones": [{"xs": PackedInt64Array([4, 5]), "ys": PackedInt64Array([6, 6])}]}
+	_check("reverse rectangle overlap", str(OrderTool.automatic_zone_overlaps(overlay, Vector2i(8, 9), Vector2i(5, 6))), "true")
+	_check("outside rectangle", str(OrderTool.automatic_zone_overlaps(overlay, Vector2i(4, 4), Vector2i(8, 5))), "false")
+	_check("manual-only overlay", str(OrderTool.automatic_zone_overlaps({}, Vector2i.ZERO, Vector2i(100, 100))), "false")
 
 
 func _check_food_chronicle(locale: Node, item_code: int, expected_item: String) -> void:

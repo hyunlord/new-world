@@ -1,9 +1,9 @@
 # M-GROW-a 구현 보고 초안 — UNPUBLISHED
 
-2026-11-17 14:50 KST 갱신. **UNPUBLISHED — 창고 준비와 업그레이드 비축 조건 수정 후 개발48일 안전성 비교 PASS,120일 수용4/4 PASS. D2 정책 결정·POLISH 병합·최종 캡처·고정 HEAD 사전/전체 게이트·공식 크래시 감지·게시는 대기다.**
+2026-11-17 16:09 KST 갱신. **UNPUBLISHED — 창고 준비와 업그레이드 비축 조건 수정 후 개발48일 안전성 비교 PASS,120일 수용4/4 PASS. D2 보호·집중/실제 UI headless 검증은 통과했으며 POLISH 병합·최종 캡처·고정 HEAD 사전/전체 게이트·공식 크래시 감지·게시는 대기다.**
 기준선은 게시된 C3-b `fd3f5980139023167304e2ef6c0cce7ec08c937e`, 작업 브랜치는 `v8/mgrow`다.
 원시 증거 경로의 기준 디렉터리 `mgrow-data`는 `/Users/rexxa/work/mgrow-data/`다.
-보고 시점 구현 HEAD는 `57a684153`이며 저장 준비와 업그레이드 비축 조건 수정이 커밋됐다. 최종 동결·게시 SHA가 아니다. 각 개발 로그는
+앞선 장기 개발 실행의 구현 HEAD는 `57a684153`이며 저장 준비와 업그레이드 비축 조건 수정이 커밋됐다. 최종 동결·게시 SHA가 아니다. 각 개발 로그는
 실행 당시 소스의 증거이며 이후 커밋 전체를 소급 검증하지 않는다.
 
 ## 구현 의도·내용
@@ -126,7 +126,7 @@ helper를 재사용한다. 재화를 옮기거나 나무를 즉시 지우거나 
 - 수용 실행5: seeds0–3×120일 모두 PASS(853.34초). 생존 `[14,17,16,16]`, 구역 `[5,6,5,6]`, 실제 빠른 흙길 이동 `[184424,199324,171852,204696]`. 모든 seed에서 유효 원인·구역 안 집·마당·최다 통행 흙길 이용,60일 저장/불러오기와 전체 명령 재생이 일치한다. `reports/village-grows-5.{log,status.txt}`, `village-grows-5-{provenance,summary}.json`, `scenes/attempt5/`.
 - `reports/bridge-build-a-4.log`: 실제 Godot debug 브리지 갱신 PASS(25.61초). `reports/docs-check-a-2.log`: docs PASS, 스키마77getters/1266keys. 이 브리지 빌드는 FPS 측정이 아니다.
 
-D2 결정과 POLISH 병합 뒤 최종 소스를 동결하여 공식 검증한다. 위 결과는 게시 게이트나
+POLISH 병합과 최종 캡처 뒤 최종 소스를 동결하여 공식 검증한다. 위 결과는 게시 게이트나
 공식 크래시 감지를 대신하지 않는다.
 
 ## 수용·집중 시험
@@ -152,7 +152,7 @@ D2 결정과 POLISH 병합 뒤 최종 소스를 동결하여 공식 검증한다
 | 집·마당 | `reports/house-dispatch-final-3.log`9/9 PASS,0.05초. 실제 거주·749/750시대 경계·지역 비축/재료·물리적 대체 잠자리와 실제 Steward 개축 dispatch의 scope/cooldown/내부 veto/재생 검사 |
 | 데이터 전용 구역·마당 | 새 구역은 집사/선택 pack 시험으로 실행; `reports/zones-implementation.md`. 새 소품은 실제 건설→잠자리 배정→거주→bridge소품→길/문 제외→저장/재개 PASS: `reports/yard-extension-test-3.log` |
 | 옛 저장 | `reports/save-tests-7.log`:100PASS/0FAIL/3ignored, 실제 C1-b21·C2-b23·C3-23 재개. `reports/save-genuine20-1.log`: 실제 C1-a20 1PASS.13/16의 옛 immutable fixture는 못 찾아 기존 ignored 유지 |
-| 수동 구역 삭제 | `reports/manual-zone-removal-green.log`:3PASS, 불필요한 연결만 해제하고 실제 건물/과거 원인 보존. 자동 구역 정책은 아래 D2 대기 |
+| 수동 구역 삭제 | `reports/manual-zone-removal-green.log`:3PASS, 불필요한 연결만 해제하고 실제 건물/과거 원인 보존. 자동 구역은 아래 D2 보호/회귀 검증 완료 |
 | 정적·문서 | `reports/fmt-check-3.log`, `reports/docs-check-2.log` PASS. Clippy4의 새 시험 `clone_on_copy` 실패는 보존; `cb9d904fc`의 한 줄 수정 후 `reports/clippy-5.log` PASS,4.39초. 변경 production Rust48파일의 unwrap/expect0 (`reports/production-unwrap-audit-2.txt`). 최종 pre-gate가 아님 |
 | 콘텐츠 부채 | `reports/content-debt-a1.log`: `content_debt_matches_data`1PASS/0FAIL,0.03초 |
 | 개발 baseline identity | `reports/identity-development-1.log`:228748공유값 차이0/한쪽경로0,64연대기 파일(19683항목)·64raw파일 동일, 결정론seed0–3 PASS |
@@ -202,8 +202,8 @@ POLISH 병합 후 최종 텍스처·최종 캡처,500명 z1 FPS, 저장소 conta
 `content_debt_matches_data` 개발 시험은1PASS이며 전체 콘텐츠 수와 최종 동결 검증은 남았다. 초기 수치와 의심점은
 `docs/v8/BALANCE_DEBT.md`에 기록하며 결과에 맞춰 튜닝하지 않는다.
 
-현재 BASE 대비 `tools/` 추가량은120줄(`world3d_shots.gd`107,
-`w3d_render_test.gd`13)이다. 외부 실행 runner 약50줄과 기존 결함 진단24줄에 더해,
+현재 BASE 대비 `tools/` 추가량은153줄(`world3d_shots.gd`123,
+`w3d_render_test.gd`13, `test_locale_trf.gd`17)이다. 외부 실행 runner54줄과 기존 결함 진단24줄에 더해,
 `reports/collapse-seed5-admission-diagnostic.rs`80줄,
 `collapse-seed1-storage-diagnostic.rs`25줄, `collapse-seed1-food-diagnostic.rs`57줄을 보존한다.
 이 진단 코드는 실제 실패 원인을 확인하기 위한 임시 코드이며 숨기거나 새 관측 체계로 만들지 않았다.
@@ -212,7 +212,7 @@ POLISH 병합 후 최종 텍스처·최종 캡처,500명 z1 FPS, 저장소 conta
 
 ## 게시 전 남은 경계
 
-- **D-MGROW-2 대기:** `QUESTION-2.md`의 자동 주거 구역 삭제 정책. 현 경계에서 삭제 후 고아 원인/건물 연결로 저장이 거절될 수 있어 전체 gate/게시 전에 닫아야 한다. 수동 구역 수정만으로 해결됐다고 보지 않는다.
+- **D-MGROW-2 경계 검증 완료:** 기본안 승인 후 자동 구역 보존 guard를 연결했다. 자동 구역 부분/전체 삭제 보호, 수동 주거·실제 비축 혼합 삭제, 과거 원인/저장 재개5/5 PASS(`d2-housing-1.log`,1.52초). 실제 attempt5 저장본의 OrderTool 삭제 입력 뒤 구역 snapshot 불변과 ko/en 토스트를 headless 확인했다(`d2-scene-ui-1.log`, `W3D_GROWTH_PASS`, 오류0). 번역 시험·엄격 GDScript3파일/FFI84호출·전체Clippy PASS(`d2-locale-test-1.log`, `d2-gdstrict-1.log`, `d2-clippy-1.log`). 문서 검사도 시스템 표/77getters/1266keys 포함 PASS(`d2-docs-1.log`); 변경 production Rust48파일 unwrap/expect0(`production-unwrap-audit-4.txt`). 이 결과는 GPU 가독성/최종 gate를 대신하지 않는다. 자동 구역 직접 편집은 M-NATION/UX 부채다.
 - **최종 소스 재검증:** 창고 준비 수정의 개발48일 PASS와120일 회귀 해소를 확인했다. 별도 D1 업그레이드 비축 조건 보강을 포함한 최종 수용/동결 게이트·공식 크래시 감지는 남았다.
 - **POLISH-DONE 대기:** 게시되면 origin/v8/main을 정상 병합하고 충돌 규칙을 지킨다. 새 terrain 텍스처 작업과 pre-gate 전에 반영한다.
 - **최종 SHA·pre-gate·전체 gate:** 모두 대기. 단계 수·재사용 여부·시작/종료시각·exit는 미확정이다. 모든 결과가 같은 동결 HEAD를 가리켜야 한다.

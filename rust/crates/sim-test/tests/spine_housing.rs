@@ -3,6 +3,132 @@ mod spine_support;
 use sim_core::colony::Command;
 use spine_support::*;
 
+fn automatic_housing() -> (sim_engine::SimEngine, u32) {
+    let mut engine = scene();
+    command(
+        &mut engine,
+        Command::SetSteward {
+            on: true,
+            scope: sim_core::colony::steward::StewardScope::Housing,
+        },
+    );
+    engine.tick();
+    command(
+        &mut engine,
+        Command::SetSteward {
+            on: false,
+            scope: sim_core::colony::steward::StewardScope::Housing,
+        },
+    );
+    let buildings = &engine.resources.colony.buildings;
+    let zone = *buildings
+        .housing_zones
+        .keys()
+        .find(|id| buildings.zone_causes.contains_key(*id))
+        .expect("ordinary steward creates automatic housing");
+    (engine, zone)
+}
+
+#[test]
+fn spine_automatic_zone_partial_and_full_erase_are_noops_and_roundtrip() {
+    let (mut engine, zone) = automatic_housing();
+    let original = engine.resources.colony.buildings.clone();
+    let history = engine.resources.chronicle.entries().to_vec();
+    let tiles = &original.housing_zones[&zone];
+    assert!(tiles.len() > 1, "partial erase differs from full erase");
+    assert!(tiles
+        .iter()
+        .all(|tile| !engine.resources.colony.zone_of_tile.contains_key(tile)));
+    let x0 = tiles.iter().map(|tile| tile.0).min().expect("zone x0");
+    let y0 = tiles.iter().map(|tile| tile.1).min().expect("zone y0");
+    let x1 = tiles.iter().map(|tile| tile.0).max().expect("zone x1");
+    let y1 = tiles.iter().map(|tile| tile.1).max().expect("zone y1");
+    assert!(tiles.contains(&(x0, y0)), "automatic layout is rectangular");
+    for erase in [
+        Command::RemoveZoneArea {
+            x0,
+            y0,
+            x1: x0,
+            y1: y0,
+        },
+        Command::RemoveZoneArea { x0, y0, x1, y1 },
+    ] {
+        let result = sim_systems::commands::submit(&mut engine, erase);
+        assert_eq!(
+            result,
+            sim_core::colony::CommandResult::rejected(sim_core::colony::RejectReason::Nothing)
+        );
+        assert_eq!(engine.resources.colony.buildings, original);
+        assert_eq!(engine.resources.chronicle.entries(), history);
+        let bytes = sim_systems::save::save(&mut engine).expect("protected automatic zone saves");
+        engine = sim_systems::save::load(&bytes).expect("protected automatic zone loads");
+        assert_eq!(engine.resources.colony.buildings, original);
+        assert_eq!(engine.resources.chronicle.entries(), history);
+    }
+}
+
+#[test]
+fn spine_mixed_erase_removes_manual_and_stockpile_but_keeps_automatic_zones() {
+    let (mut engine, _) = automatic_housing();
+    let original = engine.resources.colony.buildings.clone();
+    let history = engine.resources.chronicle.entries().to_vec();
+    let manual = (0..engine.resources.tile_grid.height)
+        .flat_map(|y| (0..engine.resources.tile_grid.width).map(move |x| (x, y)))
+        .find(|tile| {
+            !original
+                .housing_zones
+                .values()
+                .any(|zone| zone.contains(tile))
+                && !engine.resources.colony.zone_of_tile.contains_key(tile)
+        })
+        .expect("tile outside automatic housing and stockpiles");
+    command(
+        &mut engine,
+        Command::AddHousingZone {
+            x0: manual.0,
+            y0: manual.1,
+            x1: manual.0,
+            y1: manual.1,
+        },
+    );
+    let stock = anchor(&engine, "log_house");
+    command(
+        &mut engine,
+        Command::AddStockpile {
+            x0: stock.0,
+            y0: stock.1,
+            x1: stock.0,
+            y1: stock.1,
+        },
+    );
+    let mut removed: std::collections::BTreeSet<_> = engine
+        .resources
+        .colony
+        .zone_of_tile
+        .keys()
+        .copied()
+        .collect();
+    assert!(!removed.is_empty(), "mixed erase includes a real stockpile");
+    removed.insert(manual);
+    let erase = Command::RemoveZoneArea {
+        x0: 0,
+        y0: 0,
+        x1: engine.resources.tile_grid.width - 1,
+        y1: engine.resources.tile_grid.height - 1,
+    };
+    let result = sim_systems::commands::submit(&mut engine, erase);
+    assert!(result.accepted);
+    assert_eq!(result.count as usize, removed.len());
+    assert!(engine.resources.colony.zones.is_empty());
+    assert!(engine.resources.colony.zone_of_tile.is_empty());
+    assert_eq!(engine.resources.colony.buildings, original);
+    assert_eq!(engine.resources.chronicle.entries(), history);
+    let bytes = sim_systems::save::save(&mut engine).expect("mixed zone erase saves");
+    let loaded = sim_systems::save::load(&bytes).expect("mixed zone erase loads");
+    assert_eq!(loaded.resources.colony.buildings, original);
+    assert_eq!(loaded.resources.chronicle.entries(), history);
+}
+
 #[test]
 fn spine_remove_zone_area_subtracts_housing_without_stockpile_alias() {
     let mut engine = scene();

@@ -189,6 +189,7 @@
   "UI_ORDER_TOAST_STOCKPILE": "비축 구역 {count}칸 추가",
   "UI_ORDER_TOAST_HUT": "오두막 청사진 {count}개 놓음",
   "UI_ORDER_TOAST_REMOVE_ZONE": "구역 {count}칸 지움",
+  "MGROW_AUTOMATIC_ZONE_PRESERVED": "이 구역은 마을이 세운 계획이어서 지울 수 없어요.",
   "UI_ORDER_TOAST_CANCEL": "명령 {count}개 취소",
   "UI_ORDER_HINT_IDLE": "F1–F4·F6–F8·F10 명령 · R 방 · P 우선순위 · T 기술 · K 가르치기 · D 소집 · M 기분 · Space 멈춤 · Home/H 캠프로",
   "UI_ORDER_HINT_IDLE_MAC": "fn + F1–F4·F6–F8·F10 명령 · R 방 · P 우선순위 · T 기술 · K 가르치기 · D 소집 · M 기분 · Space 멈춤 · Home/H 캠프로",

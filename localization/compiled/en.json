@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 2070,
+    "active_key_count": 2071,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 2070,
+    "key_count": 2071,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -1216,6 +1216,7 @@
     "MATERIAL_GRANITE": "granite",
     "MATERIAL_LIMESTONE": "limestone",
     "MATERIAL_OAK": "oak",
+    "MGROW_AUTOMATIC_ZONE_PRESERVED": "This zone is the village's own plan and stays in place.",
     "MGROW_ZONE_OVERLAY": "Village zones · Z to hide",
     "MIND_BEHAVIOUR_DO_JOB": "Working",
     "MIND_BEHAVIOUR_DRINK": "Drinking",

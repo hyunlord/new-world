@@ -34,12 +34,14 @@ pub(super) fn remove_housing_area(res: &mut SimResources, tiles: &[Tile]) -> BTr
     let mut changed_manual = BTreeSet::new();
     let state = &mut res.colony.buildings;
     for (&id, zone) in &mut state.housing_zones {
+        // Automatic layouts are village planning facts, not player designations.
+        if state.zone_causes.contains_key(&id) {
+            continue;
+        }
         for tile in tiles {
             if zone.remove(tile) {
                 removed.insert(*tile);
-                if !state.zone_causes.contains_key(&id) {
-                    changed_manual.insert(id);
-                }
+                changed_manual.insert(id);
             }
         }
     }

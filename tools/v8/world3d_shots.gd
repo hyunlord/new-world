@@ -11,11 +11,13 @@
 #   `--growth-check 1` proves saved growth in ko/en UI; `capture` also saves real panels (renderer/lock required).
 #   (3D needs a real renderer: use the default Forward+ driver, not opengl3, for 3D shots.)
 # Bridge methods called: load_world, advance_ticks, get_chronicle_since, get_building_cause (direct);
-#   via SimReads get_time_snapshot/get_world_info/get_building_snapshot; normal panels read their own Why data.
+#   via SimReads get_time_snapshot/get_world_info/get_building_snapshot/get_colony_overlay;
+#   OrderTool.area sends cmd_remove_zone_area; normal panels read their own Why data.
 extends SceneTree
 
 const View = preload("res://scripts/world/colony/view.gd")
 const GrowthText = preload("res://scripts/ui/chronicle_text.gd")
+const OrderTool = preload("res://scripts/world/colony/order_tool.gd")
 
 var _main: Node = null
 var _world: Node = null
@@ -231,6 +233,20 @@ func _growth_check(out: String, prefix: String) -> bool:
 		print("W3D_GROWTH_BUILDING %s" % JSON.stringify({"locale": language, "text": building_text, "cause": cause}))
 		await _growth_capture(out.path_join(prefix + "_" + language + "_building_why.png"))
 		why.call("close")
+		feed.hide()
+		var tool: Node = _main.get_node("ColonyView/OrderTool")
+		var before: String = JSON.stringify(SimReads.read(_world, "get_colony_overlay").get("layout_zones", []))
+		var tile: Vector2i = Vector2i(int(site["x"]), int(site["y"]))
+		tool.call("set_mode", OrderTool.Mode.REMOVE_ZONE)
+		var result: Dictionary = tool.call("area", tile, tile)
+		var toast: Label = _main.get_node("UI/OrderBar").get("_toast")
+		if not bool(result.get("automatic_zone_preserved", false)) or not toast.text.contains(str(locale.call("ltr", "MGROW_AUTOMATIC_ZONE_PRESERVED"))):
+			return false
+		if JSON.stringify(SimReads.read(_world, "get_colony_overlay").get("layout_zones", [])) != before:
+			return false
+		print("W3D_GROWTH_ZONE_PRESERVED %s" % JSON.stringify({"locale": language, "result": result, "text": toast.text}))
+		await _growth_capture(out.path_join(prefix + "_" + language + "_zone_preserved.png"))
+		tool.call("set_mode", OrderTool.Mode.NONE)
 	feed.hide()
 	locale.call("set_language", original_language)
 	print("W3D_GROWTH_PASS %s" % JSON.stringify({"save": _arg("--save"), "zone": detail, "site": site, "yard_nodes": yard_nodes.size(), "zones_default_off_toggle": true}))

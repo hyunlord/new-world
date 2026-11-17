@@ -189,6 +189,7 @@
   "UI_ORDER_TOAST_STOCKPILE": "Stockpile: {count} tiles added",
   "UI_ORDER_TOAST_HUT": "{count} hut blueprint placed",
   "UI_ORDER_TOAST_REMOVE_ZONE": "{count} zone tiles removed",
+  "MGROW_AUTOMATIC_ZONE_PRESERVED": "This zone is the village's own plan and stays in place.",
   "UI_ORDER_TOAST_CANCEL": "{count} orders cancelled",
   "UI_ORDER_HINT_IDLE": "F1–F4·F6–F8·F10 orders · R rooms · P priorities · T tech · K teach · D draft · M mood · Space pause · Home/H camp",
   "UI_ORDER_HINT_IDLE_MAC": "fn + F1–F4·F6–F8·F10 orders · R rooms · P priorities · T tech · K teach · D draft · M mood · Space pause · Home/H camp",
