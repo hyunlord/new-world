@@ -917,6 +917,13 @@ fn house_geometry(
             }
         }
     }
+    let housing_bounds = template
+        .is_some()
+        .then(|| super::zone_growth::allowed_bounds(res, sim_core::colony::zones::ZoneUse::Housing))
+        .flatten();
+    let storage_bounds = store
+        .then(|| super::zone_growth::allowed_bounds(res, sim_core::colony::zones::ZoneUse::Storage))
+        .flatten();
     let mut locations = Vec::new();
     for ((x, y, width), is_local) in house_origins(res, width, &local_origins) {
         let minimum_height =
@@ -931,6 +938,12 @@ fn house_geometry(
                 break;
             }
             // Zone containment only gets harder as the envelope grows taller (D-MGROW-6).
+            let envelope = (width + 2, height + 2);
+            if !super::zone_growth::within(housing_bounds, (x, y), envelope)
+                || !super::zone_growth::within(storage_bounds, (x, y), envelope)
+            {
+                break;
+            }
             if template.is_some()
                 && !template_selection::inside_housing(res, (x, y), (width + 2, height + 2))
             {
