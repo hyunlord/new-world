@@ -618,6 +618,7 @@
   "M5_FILTER_MOOD": "다툼·기분",
   "M5_FILTER_KNOWLEDGE": "지식",
   "M5_FILTER_LIFE": "삶",
+  "M5_FILTER_GROWTH": "마을 성장",
   "M5_FILTER_PERSON": "고른 사람만",
   "M5_YEAR_LINE_FMT": "{year}년 차 정리 · 출생 {births} · 사망 {deaths} · 압력 {pressures} · 발견 {discoveries} · 다툼 {quarrels} · 사슴 {hunted} · 늑대 {wolves}",
   "NEIGHBOUR_NAME_0": "붉은바위",

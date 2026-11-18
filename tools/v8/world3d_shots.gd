@@ -212,6 +212,7 @@ func _growth_check(out: String, prefix: String) -> bool:
 		locale.call("set_language", language)
 		if not feed.visible:
 			feed.call("toggle_visible")
+		feed.call("set_filter", 5)  # 마을 성장: growth lines however old
 		await _frames(3)
 		var stage_text: String = GrowthText.sentence(events[71], -1, locale, info)
 		if not str(feed.call("plain_text")).contains(stage_text):
@@ -247,6 +248,7 @@ func _growth_check(out: String, prefix: String) -> bool:
 		print("W3D_GROWTH_ZONE_PRESERVED %s" % JSON.stringify({"locale": language, "result": result, "text": toast.text}))
 		await _growth_capture(out.path_join(prefix + "_" + language + "_zone_preserved.png"))
 		tool.call("set_mode", OrderTool.Mode.NONE)
+	feed.call("set_filter", 0)
 	feed.hide()
 	locale.call("set_language", original_language)
 	print("W3D_GROWTH_PASS %s" % JSON.stringify({"save": _arg("--save"), "zone": detail, "site": site, "yard_nodes": yard_nodes.size(), "zones_default_off_toggle": true}))

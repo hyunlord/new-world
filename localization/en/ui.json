@@ -618,6 +618,7 @@
   "M5_FILTER_MOOD": "Quarrels · mood",
   "M5_FILTER_KNOWLEDGE": "Knowledge",
   "M5_FILTER_LIFE": "Life",
+  "M5_FILTER_GROWTH": "Village growth",
   "M5_FILTER_PERSON": "Selected person",
   "M5_YEAR_LINE_FMT": "Year {year} · births {births} · deaths {deaths} · pressures {pressures} · discoveries {discoveries} · quarrels {quarrels} · deer {hunted} · wolves {wolves}",
   "NEIGHBOUR_NAME_0": "Red Rock",

@@ -2081,7 +2081,7 @@ func _weaving_shots(main: Node, world: Node, camera: Camera2D) -> void:
 	notes.append({"shot": "08-card.png", "cards": cards.get("_active"), "diagnosis": world.call("get_settlement_diagnosis")})
 	panel.call("close")
 	chronicle.call("toggle_visible")
-	chronicle.call("set_filter", 5)
+	chronicle.call("set_filter", 6)  # 삶 (after 마을 성장)
 	chronicle.call("set_person_only", false)
 	await _wait(10)
 	var feed: Array = chronicle.get("_entries")
