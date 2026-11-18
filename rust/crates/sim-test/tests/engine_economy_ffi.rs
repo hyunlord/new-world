@@ -278,7 +278,11 @@ fn workshop_state_rows_show_input_short_and_abandoned() {
     if let Some(shop) = engine.resources.colony.workshops.get_mut(&bench) {
         shop.active = None;
     }
-    assert_eq!(row(&engine).map(|r| r.0), Some(true), "no haft inputs anywhere");
+    assert_eq!(
+        row(&engine).map(|r| r.0),
+        Some(true),
+        "no haft inputs anywhere"
+    );
     let season = engine.resources.rules.calendar.ticks_per_season();
     engine.resources.colony.workshop_last_used.insert(bench, 0);
     engine.resources.current_tick = season;
