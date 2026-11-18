@@ -56,6 +56,8 @@ var _roof_fade: Dictionary = {}
 var _room_rects: Dictionary = {}
 ## Room id → wall-top height (the plane a click on that roof resolves at).
 var _roof_top: Dictionary = {}
+## Bumped whenever a roof is built, removed, or crosses half fade: people3d re-hides/shows figures under roofs then.
+var roof_cover_version: int = 0
 var _tile_room: Dictionary = {}
 var _doors: Array[Dictionary] = []
 var _door_nodes: Array[MeshInstance3D] = []
@@ -544,6 +546,7 @@ func _rebuild_roofs(rooms: Dictionary, sites: Array) -> void:
 	for k: Variant in _roofs.keys():
 		(_roofs[k] as Node).queue_free()
 	_roofs.clear()
+	roof_cover_version += 1
 	_room_rects.clear()
 	_roof_top.clear()
 	_tile_room.clear()
@@ -976,7 +979,10 @@ func _update_cutaway(delta: float) -> void:
 	var low: float = float(Data3D.param("structures.cutaway_wall_height", 0.9))
 	for id: int in _roofs:
 		var target: float = 0.0 if all_cut or selected.has(id) else 1.0
-		var f: float = move_toward(float(_roof_fade.get(id, 1.0)), target, speed)
+		var f0: float = float(_roof_fade.get(id, 1.0))
+		var f: float = move_toward(f0, target, speed)
+		if (f0 > 0.5) != (f > 0.5):
+			roof_cover_version += 1
 		_roof_fade[id] = f
 		var mi: MeshInstance3D = _roofs[id]
 		mi.visible = f > 0.001
@@ -1016,6 +1022,11 @@ func roof_hit(origin: Vector3, dir: Vector3) -> float:
 		if Rect2(Vector2(r.position) - Vector2(over, over), Vector2(r.size) + Vector2(over, over) * 2.0).has_point(Vector2(p.x, p.z)):
 			best = t
 	return best
+
+
+## Whether tile `t` is under a roof that is drawn now (not cut away): a figure there is indoors, out of sight.
+func roof_covers(t: Vector2i) -> bool:
+	return _tile_room.has(t) and _roofs.has(_tile_room[t]) and float(_roof_fade.get(_tile_room[t], 1.0)) > 0.5
 
 
 ## Test/tool hooks.
