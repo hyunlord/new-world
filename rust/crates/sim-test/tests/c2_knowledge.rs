@@ -110,7 +110,7 @@ fn c2_knowledge_validator() {
         } else {
             let debt = node.debt.as_deref().expect("named future pass");
             assert!(
-                ["C3:", "M8:", "M9:", "M-GROW:", "M-BAL:"]
+                ["C3:", "M-NATION:", "M8:", "M9:", "M-GROW:", "M-BAL:"]
                     .iter()
                     .any(|prefix| debt.starts_with(prefix)),
                 "{name}: {debt}"
