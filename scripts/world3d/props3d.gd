@@ -341,7 +341,9 @@ func _chimney(site: Dictionary, season: int) -> void:
 	holder.name = "Chimney_%s" % site.get("id", -1)
 	var x: float = float(site.get("x", 0)) + float(site.get("width", 1)) * 0.5
 	var y: float = float(site.get("y", 0)) + float(site.get("height", 1)) * 0.5
-	holder.position = Vector3(x, float(_terrain.call("height_at", x, y)) + float(Data3D.param("chimney.height", 2.0)), y)
+	# Above the roof ridge (walls + the roof's capped rise), else the puffs spawn inside the roof mesh.
+	var ridge: float = float(Data3D.param("structures.wall_height", 2.2)) + float(Data3D.param("structures.roof_max_rise", 2.4))
+	holder.position = Vector3(x, float(_terrain.call("height_at", x, y)) + ridge + float(Data3D.param("chimney.height", 0.3)), y)
 	var smoke: CPUParticles3D = _work_puffs({"sockets": {"light": [0.0, 0.0, 0.0]}}, "smoke")
 	smoke.amount = amount
 	holder.add_child(smoke)

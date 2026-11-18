@@ -76,14 +76,14 @@ vec3 blended_ground(vec2 p) {
 		mix(ground_detail(base + vec2(0.0, 1.0), p), ground_detail(base + vec2(1.0), p), f.x), f.y);
 }
 
-// Scattered oval prints, ~40 % of quarter-tile cells (1 inside a print, 0 outside).
+// Scattered oval prints, ~40 % of half-tile cells (1 inside a print, 0 outside); quarter-tile prints were specks at z1.
 float footprints(vec2 p) {
-	vec2 cell = floor(p * 4.0);
+	vec2 cell = floor(p * 2.0);
 	float h = hash12(cell + vec2(17.0, 3.0));
 	if (h > 0.4) {
 		return 0.0;
 	}
-	vec2 f = fract(p * 4.0) - 0.5;
+	vec2 f = fract(p * 2.0) - 0.5;
 	f.x += (h - 0.2) * 0.6;
 	return 1.0 - smoothstep(0.2, 0.28, length(f * vec2(2.4, 1.4)));
 }
