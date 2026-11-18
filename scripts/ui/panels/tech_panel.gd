@@ -126,6 +126,7 @@ func _ready() -> void:
 	body.add_child(map_column)
 	_jump = OptionButton.new()
 	_jump.name = "LaneJump"
+	PanelTooltips.attach(_jump, "tech")
 	_jump.item_selected.connect(_jump_lane)
 	map_column.add_child(_jump)
 	_headers = GridContainer.new()

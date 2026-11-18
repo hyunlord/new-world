@@ -21,6 +21,7 @@ extends Control
 const ControlsCatalog = preload("res://scripts/ui/mux/controls_catalog.gd")
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const Icons = preload("res://scripts/ui/hud/ui1_icons.gd")
+const PanelTooltips = preload("res://scripts/ui/panels/panel_tooltips.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 const SiteGhost = preload("res://scripts/world/art/site_ghost.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
@@ -294,6 +295,7 @@ func _build_menu() -> void:
 	_templates_button.focus_mode = Control.FOCUS_ALL
 	_templates_button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	_templates_button.text = _loc("UI_ORDER_BUILD") + " · " + _loc("BUILD_GROUP_AVAILABLE")
+	PanelTooltips.attach(_templates_button, "build")
 	_templates_button.pressed.connect(open_templates)
 	column.add_child(_templates_button)
 	for i: int in EconomyText.menu_order().size():

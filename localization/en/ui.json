@@ -623,6 +623,7 @@
   "M5_WHY_NONE": "No earlier cause",
   "M5_FILTER_ALL": "All",
   "UI1_CHRONICLE_GROWTH": "Growth",
+  "UI1_TIP_CHRONICLE_GROWTH": "Show village zones, housing milestones and material waves.",
   "UI1_CHRONICLE_COLLAPSE": "Collapse chronicle",
   "UI1_CHRONICLE_EXPAND": "Expand chronicle",
   "M5_FILTER_PRESSURE": "Pressure",

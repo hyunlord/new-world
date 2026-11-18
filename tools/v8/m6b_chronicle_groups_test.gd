@@ -4,7 +4,6 @@
 extends SceneTree
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
 var failures: int = 0
-var hovered_meta: String = ""
 func _init() -> void:
 	call_deferred("_run")
 func check(label: String, ok: bool) -> void:
@@ -14,40 +13,31 @@ func check(label: String, ok: bool) -> void:
 func frames() -> void:
 	for _i: int in 5:
 		await process_frame
-func _meta_hover(meta: Variant) -> void:
-	hovered_meta = str(meta)
-
 func click_group(body: RichTextLabel, tag: String) -> void:
-	# Find the rendered first header through Godot's real metadata hover hit test.
-	var outside: InputEventMouseMotion = InputEventMouseMotion.new()
-	outside.position = Vector2(1900, 1050)
-	Input.warp_mouse(outside.position)
-	Input.parse_input_event(outside)
-	await frames()
-	hovered_meta = ""
-	var target: Vector2 = Vector2.ZERO
-	for y: int in range(8, 56, 8):
-		var motion: InputEventMouseMotion = InputEventMouseMotion.new()
-		motion.position = body.get_global_transform_with_canvas() * Vector2(48, y)
-		Input.warp_mouse(motion.position)
-		Input.parse_input_event(motion)
-		await frames()
-		if hovered_meta.begins_with("group:"):
-			target = motion.position
-			break
-	check(tag + " actual header hover", not target.is_zero_approx())
-	if target.is_zero_approx():
-		print("CHRONICLE_GROUPS_HIT ", body.get_global_rect(), " hovered=", root.gui_get_hovered_control(), " meta=", hovered_meta)
+	var top: float = body.get_theme_stylebox("normal").get_margin(SIDE_TOP)
+	var local: Vector2 = Vector2(48, top + body.get_line_offset(0) + body.get_line_height(0) * 0.5)
+	var target: Vector2 = body.get_global_transform_with_canvas() * local
+	var motion := InputEventMouseMotion.new()
+	motion.position = target
+	root.push_input(motion, true)
+	await process_frame
+	# RichTextLabel's hover signal samples the OS cursor. Its cursor shape uses the same metadata hit test with a local point.
+	var hit: bool = root.gui_get_hovered_control() == body and body.get_cursor_shape(local) == Control.CURSOR_POINTING_HAND
+	check(tag + " actual header hover", hit)
+	if not hit:
+		print("CHRONICLE_GROUPS_HIT ", body.get_global_rect(), " hovered=", root.gui_get_hovered_control(), " target=", target)
 		return
 	for pressed: bool in [true, false]:
 		var event: InputEventMouseButton = InputEventMouseButton.new()
 		event.position = target
 		event.button_index = MOUSE_BUTTON_LEFT
 		event.pressed = pressed
-		Input.parse_input_event(event)
+		root.push_input(event, true)
 		await process_frame
 	await frames()
 func capture(tag: String) -> void:
+	if DisplayServer.get_name() == "headless":
+		return
 	await RenderingServer.frame_post_draw
 	check(tag + " capture", root.get_texture().get_image().save_png(OS.get_environment("WORLDSIM_TEST_SETTINGS_DIR").path_join(tag + ".png")) == OK)
 func _run() -> void:
@@ -119,7 +109,6 @@ func _run() -> void:
 			await frames()
 			check(tag + " removed group clears highlights", (panel.get("_highlighted_subjects") as PackedInt64Array).is_empty())
 	# Matching-surface check: actual first-header press/release, independently of direct metadata checks above.
-	body.meta_hover_started.connect(_meta_hover)
 	var store: RefCounted = main.get_node("UI/MuxHud").get("store")
 	for language: String in ["ko", "en"]:
 		locale.call("set_language", language)

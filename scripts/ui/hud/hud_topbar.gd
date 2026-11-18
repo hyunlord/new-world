@@ -34,6 +34,7 @@ const RISK_COLOR: Color = Color("e05a48")
 const QUIET_COLOR: Color = Color("c8b89a")
 
 const FOOD_REFRESH_SECONDS: float = 0.5
+const COUNTER_REFRESH_SECONDS: float = 0.15
 var _controls: ControlsCatalog = ControlsCatalog.new()
 var _world_sim: Node = null
 var _shelters_label: Button
@@ -53,6 +54,9 @@ var _logs_label: Label
 var _speed_label: Label
 var _zoom_label: Label
 var _display_speed: float = 1.0
+var _camera: Camera2D
+var _controls_paused: bool = false
+var _controls_zoom: float = -1.0
 var _pause_icon: Control
 var _death_total: int = 0
 ## M4: the era line, the at-risk badge (opens the tech map) and the at-risk warning line.
@@ -67,6 +71,7 @@ var _food_tooltip: PanelContainer
 var _food_tooltip_text: Label
 var _food_supply: Dictionary = {}
 var _food_poll_left: float = 0.0
+var _counter_poll_left: float = 0.0
 var _legacy_food: int = 0
 var _lower_row: HBoxContainer
 const DEATH_TALLY_KEYS: Array[String] = ["deaths_starvation", "deaths_dehydration", "deaths_combat", "deaths_old_age", "deaths_exposure"]
@@ -74,6 +79,7 @@ const DEATH_TALLY_KEYS: Array[String] = ["deaths_starvation", "deaths_dehydratio
 
 func _ready() -> void:
 	_world_sim = get_node_or_null("/root/Main/WorldSim")
+	_camera = get_node_or_null("/root/Main/Camera2D") as Camera2D
 
 	_locale = get_node_or_null("/root/Locale")
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -192,6 +198,7 @@ func _ready() -> void:
 
 	_poll_food_supply()
 	_refresh()
+	_refresh_controls(true)
 	_refresh_tooltips()
 	if _locale != null:
 		_locale.connect("language_changed", _on_language_changed)
@@ -210,6 +217,7 @@ func _chip(row: HBoxContainer, node_name: String, role: String) -> Button:
 func _on_language_changed(_language: String) -> void:
 	_refresh_tooltips()
 	_refresh()
+	_refresh_controls(true)
 	if _food_tooltip.visible:
 		_place_food_tooltip()
 
@@ -293,10 +301,15 @@ func _unhandled_input(event: InputEvent) -> void:
 func _process(delta: float) -> void:
 	if _world_sim == null:
 		return
+	_refresh_controls()
 	_food_poll_left -= delta
 	if _food_poll_left <= 0.0:
 		_food_poll_left = FOOD_REFRESH_SECONDS
 		_poll_food_supply()
+	_counter_poll_left -= delta
+	if _counter_poll_left > 0.0:
+		return
+	_counter_poll_left = COUNTER_REFRESH_SECONDS
 	_refresh()
 	if _food_tooltip.visible:
 		_place_food_tooltip()
@@ -404,8 +417,9 @@ func _refresh() -> void:
 	var item_counts: Variant = overlay.get("item_counts", null)
 	_logs_label.visible = item_counts is PackedInt32Array
 	if item_kinds is PackedInt64Array and item_counts is PackedInt32Array:
+		var log_kind: int = Content.item_role("tree_output")
 		for index: int in mini(item_kinds.size(), item_counts.size()):
-			if item_kinds[index] == Content.item_role("tree_output"):
+			if item_kinds[index] == log_kind:
 				logs += item_counts[index]
 	_logs_label.text = _loc("HUD_LOGS") + " %d" % logs
 	var cold_count: int = 0
@@ -438,24 +452,28 @@ func _refresh() -> void:
 	var values: Array[int] = [_legacy_food, berries, int(tallies.get("births", 0)), deaths]
 	for index: int in 4:
 		_resource_labels[index].text = _loc(keys[index]) + " %d" % values[index]
-	# M1: the camera owns the speed (keys 1–4 = 1×–4×, 12–48 ticks per second) and the pause (P).
-	var camera: Node = get_node_or_null("/root/Main/Camera2D")
-	var paused: bool = camera != null and camera.has_method("is_paused") and bool(camera.call("is_paused"))
-	if camera != null and camera.has_method("get_speed"):
-		_display_speed = _safe_float(camera.call("get_speed"))
-	_speed_label.text = _loc("UI_SPEED_PAUSED") if paused else _loc("HUD_SPEED_FMT") % str(int(_display_speed))
 	_food_compact.text = _loc("UI1_FOOD_CHIP").format({"stock": _food_stock()})
 	_wood_compact.text = _wood_label.text
+	_refresh_knowledge()
+
+
+func _refresh_controls(force: bool = false) -> void:
+	var paused: bool = _camera != null and bool(_camera.call("is_paused"))
+	var speed: float = _safe_float(_camera.call("get_speed")) if _camera != null else 1.0
+	var zoom: float = _camera.zoom.x if _camera != null else 1.0
+	if not force and paused == _controls_paused and speed == _display_speed and zoom == _controls_zoom:
+		return
+	_controls_paused = paused
+	_display_speed = speed
+	_controls_zoom = zoom
+	_speed_label.text = _loc("UI_SPEED_PAUSED") if paused else _loc("HUD_SPEED_FMT") % str(int(speed))
 	_speed_compact.text = _speed_label.text
 	var speed_icon: Texture2D = Icons.texture("pause" if paused else "speed")
 	if _speed_compact.icon != speed_icon:
 		_speed_compact.icon = speed_icon
 	# M-ART2 (goal §3.6): the camera's zoom step ("확대 ½×").
-	var cam: Camera2D = camera as Camera2D
-	if cam != null:
-		_zoom_label.text = _loc("UI_ZOOM").replace("{zoom}", zoom_word(cam.zoom.x))
+	_zoom_label.text = _loc("UI_ZOOM").replace("{zoom}", zoom_word(zoom))
 	_pause_icon.modulate.a = 1.0 if paused else 0.35
-	_refresh_knowledge()
 
 
 ## Keep legacy text accessors current; Goals owns the visible era/risk counters.

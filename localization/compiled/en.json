@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 2110,
+    "active_key_count": 2111,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 2110,
+    "key_count": 2111,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -1896,6 +1896,7 @@
     "UI1_REASON": "Reason: {reason}",
     "UI1_ROOMS": "View rooms",
     "UI1_TILE_WARMTH": "Warmth at this location",
+    "UI1_TIP_CHRONICLE_GROWTH": "Show village zones, housing milestones and material waves.",
     "UI1_WARMTH": "Warmth",
     "UI_ACTION_IDLE": "Idle",
     "UI_ACTIVITY_CRAFT": "Making things",

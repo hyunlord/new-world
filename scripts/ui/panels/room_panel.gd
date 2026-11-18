@@ -87,12 +87,14 @@ func _ready() -> void:
 	var why_button := Button.new()
 	why_button.name = "Why"
 	why_button.text = _loc("MUX_WHY")
+	PanelTooltips.attach(why_button, "", "MUX_WHY")
 	why_button.pressed.connect(_open_tile_why)
 	column.add_child(why_button)
 	_food_button = Button.new()
 	_food_button.name = "FoodWhy"
 	_food_button.disabled = true
 	_food_button.text = _loc("M6A_FOOD_WHY")
+	PanelTooltips.attach(_food_button, "", "M6A_FOOD_WHY")
 	_food_button.pressed.connect(_open_food)
 	column.add_child(_food_button)
 	_close = Button.new()

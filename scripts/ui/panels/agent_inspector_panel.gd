@@ -293,6 +293,7 @@ func _ready() -> void:
 	_why_button = Button.new()
 	_why_button.name = "Why"
 	_why_button.text = _loc("MUX_WHY")
+	PanelTooltips.attach(_why_button, "", "MUX_WHY")
 	_why_button.pressed.connect(_open_tile_why)
 	_vbox.add_child(_why_button)
 	_mind_label = _make_label("")

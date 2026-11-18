@@ -397,6 +397,7 @@ func _refresh_filters() -> void:
 		_filter_box.set_meta("language", _language)
 	_filter_box.select(_filter if _filter != GROWTH_FILTER else 0)
 	_growth_button.text = Chronicle.loc(_locale, "UI1_CHRONICLE_GROWTH")
+	_growth_button.tooltip_text = Chronicle.loc(_locale, "UI1_TIP_CHRONICLE_GROWTH")
 	_growth_button.set_pressed_no_signal(_filter == GROWTH_FILTER)
 	_person_button.text = Chronicle.loc(_locale, "M5_FILTER_PERSON")
 	_person_button.set_pressed_no_signal(_person_only)

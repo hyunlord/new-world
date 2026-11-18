@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 2110,
+    "active_key_count": 2111,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 2110,
+    "key_count": 2111,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -1896,6 +1896,7 @@
     "UI1_REASON": "이유: {reason}",
     "UI1_ROOMS": "방 보기",
     "UI1_TILE_WARMTH": "현재 위치의 온기",
+    "UI1_TIP_CHRONICLE_GROWTH": "마을 구역 배치, 집의 성장 단계와 자재 반입을 봅니다.",
     "UI1_WARMTH": "온기",
     "UI_ACTION_IDLE": "대기 중",
     "UI_ACTIVITY_CRAFT": "무언가 만드는 중",

@@ -623,6 +623,7 @@
   "M5_WHY_NONE": "더 거슬러 올라갈 원인이 없음",
   "M5_FILTER_ALL": "전체",
   "UI1_CHRONICLE_GROWTH": "성장",
+  "UI1_TIP_CHRONICLE_GROWTH": "마을 구역 배치, 집의 성장 단계와 자재 반입을 봅니다.",
   "UI1_CHRONICLE_COLLAPSE": "연대기 접기",
   "UI1_CHRONICLE_EXPAND": "연대기 펼치기",
   "M5_FILTER_PRESSURE": "압력",

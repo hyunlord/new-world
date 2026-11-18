@@ -409,6 +409,9 @@ func _steward_checks() -> void:
 	var chronicle: Control = _main.get_node("UI/ChroniclePanel") as Control
 	chronicle.show()
 	chronicle.call("_process", 0.0)
+	var notable_filter: Button = chronicle.find_child("NotableFilter", true, false) as Button
+	if notable_filter != null and notable_filter.button_pressed:
+		notable_filter.button_pressed = false
 	chronicle.call("_refresh")
 	_check("chronicle panel includes steward line", str(chronicle.call("plain_text")).replace("\u2060", "").contains(str(root.get_node("Locale").call("ltr", "MUX_STEWARD_ACTION"))))
 	chronicle.hide()
