@@ -930,10 +930,11 @@ fn house_geometry(
             if y + height + 2 >= res.tile_grid.height {
                 break;
             }
+            // Zone containment only gets harder as the envelope grows taller (D-MGROW-6).
             if template.is_some()
                 && !template_selection::inside_housing(res, (x, y), (width + 2, height + 2))
             {
-                continue;
+                break;
             }
             if store
                 && !super::zone_growth::allows(
@@ -943,7 +944,7 @@ fn house_geometry(
                     (width + 2, height + 2),
                 )
             {
-                continue;
+                break;
             }
             if free_cells(x, y, width, height) >= (beds + service_cells) as usize {
                 locations.push((x, y, width, height));
