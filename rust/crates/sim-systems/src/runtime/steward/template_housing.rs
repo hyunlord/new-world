@@ -254,7 +254,15 @@ pub(super) fn anchor_house(
         .keys()
         .map(|key| key.tile())
         .collect();
-    for anchor in candidates(res, hearth) {
+    let bounds =
+        super::super::zone_growth::allowed_bounds(res, sim_core::colony::zones::ZoneUse::Housing);
+    // Same order as `candidates`, without sorting anchors that cannot hold a housing envelope.
+    let mut anchors: Vec<_> = interior_tiles(res)
+        .into_iter()
+        .filter(|&anchor| super::super::zone_growth::within(bounds, anchor, size))
+        .collect();
+    anchors.sort_by_key(|&(x, y)| (distance((x, y), hearth), y, x));
+    for anchor in anchors {
         let Some(right) = anchor.0.checked_add(size.0) else {
             continue;
         };
