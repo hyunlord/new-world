@@ -151,6 +151,7 @@ func _ready() -> void:
 	# M-LOOP §2.5: notable/all toggle — default shows only notable kinds.
 	_notable_button = Button.new()
 	_notable_button.name = "NotableFilter"
+	PanelTooltips.attach(_notable_button, "chronicle", "MUX_TIP_CHRONICLE_FILTER")
 	_notable_button.toggle_mode = true
 	_notable_button.focus_mode = Control.FOCUS_NONE
 	_notable_button.set_pressed_no_signal(not _show_all)
