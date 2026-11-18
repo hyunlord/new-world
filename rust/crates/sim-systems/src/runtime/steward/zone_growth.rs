@@ -89,6 +89,39 @@ pub(super) fn allows(res: &SimResources, category: ZoneUse, anchor: Tile, size: 
         })
 }
 
+/// Bounding box `(low, high)` inclusive that every `allows` rectangle of `category` must fit
+/// inside; `None` when `allows` is unconstrained. A cheap necessary check for hot loops.
+pub(super) fn allowed_bounds(res: &SimResources, category: ZoneUse) -> Option<(Tile, Tile)> {
+    if !res.steward.enabled
+        || !zones::installed()
+            .connected()
+            .any(|rule| rule.category == category)
+    {
+        return None;
+    }
+    let mut bounds = ((u32::MAX, u32::MAX), (0, 0));
+    for rule in zones::installed()
+        .connected()
+        .filter(|rule| rule.category == category)
+    {
+        for &(x, y) in zone_tiles(res, rule).flatten() {
+            bounds.0 = (bounds.0 .0.min(x), bounds.0 .1.min(y));
+            bounds.1 = (bounds.1 .0.max(x), bounds.1 .1.max(y));
+        }
+    }
+    Some(bounds)
+}
+
+/// Whether the rectangle can lie inside `allowed_bounds`.
+pub(super) fn within(bounds: Option<(Tile, Tile)>, anchor: Tile, size: Tile) -> bool {
+    bounds.is_none_or(|(low, high)| {
+        anchor.0 >= low.0
+            && anchor.1 >= low.1
+            && anchor.0.saturating_add(size.0) <= high.0.saturating_add(1)
+            && anchor.1.saturating_add(size.1) <= high.1.saturating_add(1)
+    })
+}
+
 /// Stockpiles occupy a storehouse interior, leaving its one-tile physical shell legal.
 pub(super) fn allows_stockpile(res: &SimResources, anchor: Tile, size: Tile) -> bool {
     if !res.steward.enabled
@@ -302,18 +335,9 @@ fn find_zone_site_for_preparation(
         })
         .collect();
     candidates.sort_by_key(|&tile| (distance(tile, hearth), tile.1, tile.0));
+    // Pure checks, cheapest first: the first passing anchor is the same in any order.
     candidates.into_iter().find_map(|anchor| {
-        let tiles: BTreeSet<_> = rectangle(anchor, rule.size).collect();
-        if tiles.iter().any(|&tile| {
-            blocked_for_layout(res, rule, tile, prepare_trees)
-                || existing.contains(&tile)
-                || (prepare_trees
-                    && res.colony.trees.contains_key(&tile)
-                    && res.steward.vetoed(
-                        &sim_core::colony::steward::Target::Tile(tile.0, tile.1),
-                        res.current_tick,
-                    ))
-        }) || existing
+        if existing
             .iter()
             .any(|&tile| edge_distance(tile, anchor, rule.size) <= rule.min_spacing)
         {
@@ -336,7 +360,7 @@ fn find_zone_site_for_preparation(
                 (rule.size.0 + 2, rule.size.1 + 2),
             )
             .any(|tile| {
-                !tiles.contains(&tile)
+                edge_distance(tile, anchor, rule.size) > 0
                     && tile.0 < res.tile_grid.width
                     && tile.1 < res.tile_grid.height
                     && res
@@ -348,6 +372,19 @@ fn find_zone_site_for_preparation(
             if !near_path {
                 return None;
             }
+        }
+        let tiles: BTreeSet<_> = rectangle(anchor, rule.size).collect();
+        if tiles.iter().any(|&tile| {
+            blocked_for_layout(res, rule, tile, prepare_trees)
+                || existing.contains(&tile)
+                || (prepare_trees
+                    && res.colony.trees.contains_key(&tile)
+                    && res.steward.vetoed(
+                        &sim_core::colony::steward::Target::Tile(tile.0, tile.1),
+                        res.current_tick,
+                    ))
+        }) {
+            return None;
         }
         if rule.category == ZoneUse::Storage && !keeps_access(res, anchor, rule.size, hearth) {
             return None;
@@ -437,6 +474,20 @@ fn lay_out_zone(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn within_matches_inclusive_zone_bounds() {
+        let bounds = Some(((2, 2), (5, 5)));
+        assert!(within(bounds, (2, 2), (4, 4)));
+        assert!(!within(bounds, (2, 2), (5, 4)));
+        assert!(!within(bounds, (1, 2), (1, 1)));
+        assert!(within(None, (0, 0), (9, 9)));
+        assert!(!within(
+            Some(((u32::MAX, u32::MAX), (0, 0))),
+            (0, 0),
+            (1, 1)
+        ));
+    }
     use sim_core::colony::building_site::{BuildCause, BuildingSite, BuildingStatus};
     use sim_core::colony::steward::StewardScope;
 
