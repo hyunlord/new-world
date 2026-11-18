@@ -569,6 +569,25 @@ func _rebuild_roofs(rooms: Dictionary, sites: Array) -> void:
 		roofed_ids.append(rid)
 		for c: Vector2i in footprint_cells(tiles_of[rid]):
 			claimed[c] = rid
+	# A roofed template site whose interior the sim does not count as a room (a hut's single tile is below the room
+	# size) still gets its roof: one pseudo-room per site, id -1 - site index, over the interior tiles.
+	for si: int in sites.size():
+		var d: Dictionary = sites[si] if sites[si] is Dictionary else {}
+		if not bool(d.get("roofed", false)) or str(d.get("status", "")) != "complete":
+			continue
+		var inner: Array = []
+		for y: int in range(int(d.get("y", 0)) + 1, int(d.get("y", 0)) + int(d.get("height", 0)) - 1):
+			for x: int in range(int(d.get("x", 0)) + 1, int(d.get("x", 0)) + int(d.get("width", 0)) - 1):
+				inner.append(Vector2i(x, y))
+		if inner.is_empty() or inner.any(func(t: Vector2i) -> bool: return _tile_room.has(t)):
+			continue
+		var pid: int = -1 - si
+		tiles_of[pid] = inner
+		roofed_ids.append(pid)
+		for t: Vector2i in inner:
+			_tile_room[t] = pid
+		for c: Vector2i in footprint_cells(inner):
+			claimed[c] = pid
 	for id: int in roofed_ids:
 		var tiles: Array = tiles_of[id]
 		var bounds: Rect2i = Rect2i(tiles[0], Vector2i.ONE)
