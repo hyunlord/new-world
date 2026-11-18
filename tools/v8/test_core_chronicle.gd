@@ -4,6 +4,7 @@ extends SceneTree
 
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
 const Feed = preload("res://scripts/ui/panels/chronicle_panel.gd")
+const KoreanText = preload("res://scripts/ui/mux/korean_text.gd")
 var _failures: int = 0
 
 func _init() -> void:
@@ -30,7 +31,7 @@ func _run() -> void:
 	for language: String in ["en", "ko"]:
 		locale.call("set_language", language)
 		var expected: String = "Responded to an urgent need" if language == "en" else "긴급한 필요에 대응함"
-		_check(language + " critical sentence", Chronicle.sentence(row, 8, locale, {}).replace("\u2060", "") == expected)
+		_check(language + " critical sentence", KoreanText.raw(Chronicle.sentence(row, 8, locale, {})) == expected)
 		_check(language + " unrelated person excluded", Chronicle.sentence(row, 9, locale, {}).is_empty())
 		var line: String = Chronicle.line(row, -1, locale, {}, true, true)
 		_check(language + " person retained", "person:8" in line)
@@ -56,7 +57,7 @@ func _run() -> void:
 		_check(language + " zone, stage and material events have visible pictograms", body.text.count("[img ") == 3
 			and body.text.contains(zone_line) and body.text.contains(stage_line) and body.text.contains(wave_line))
 		_check(language + " growth filter excludes family", not body.text.contains(family_line))
-		_check(language + " growth control localized", growth.text == ("Growth" if language == "en" else "성장"))
+		_check(language + " growth control localized", KoreanText.raw(growth.text) == ("Growth" if language == "en" else "성장"))
 		collapse.button_pressed = true
 		await process_frame
 		_check(language + " collapse hides content and shrinks card", feed.visible and not body.is_visible_in_tree() and feed.size.y < 100.0)
