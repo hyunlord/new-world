@@ -272,8 +272,34 @@ fn find_zone_site_for_preparation(
         .flat_map(|tiles| tiles.iter().copied())
         .chain(res.colony.zone_of_tile.keys().copied())
         .collect();
-    let mut candidates: Vec<_> = (1..res.tile_grid.height.saturating_sub(rule.size.1))
-        .flat_map(|y| (1..res.tile_grid.width.saturating_sub(rule.size.0)).map(move |x| (x, y)))
+    // Adjacency needs a village tile within max_gap + 1 of the rectangle, so anchors outside the
+    // village bounding box widened by that reach can never qualify (D-MGROW-6: bounded search).
+    let reach = rule.max_gap.saturating_add(1);
+    let window = |axis: fn(&Tile) -> u32, size: u32| {
+        let low = village.iter().map(axis).min().unwrap_or(0);
+        let high = village.iter().map(axis).max().unwrap_or(0);
+        (
+            low.saturating_sub(reach.saturating_add(size.saturating_sub(1))),
+            high.saturating_add(reach),
+        )
+    };
+    let (x_low, x_high) = window(|tile| tile.0, rule.size.0);
+    let (y_low, y_high) = window(|tile| tile.1, rule.size.1);
+    let mut candidates: Vec<_> = (y_low.max(1)
+        ..res
+            .tile_grid
+            .height
+            .saturating_sub(rule.size.1)
+            .min(y_high.saturating_add(1)))
+        .flat_map(|y| {
+            (x_low.max(1)
+                ..res
+                    .tile_grid
+                    .width
+                    .saturating_sub(rule.size.0)
+                    .min(x_high.saturating_add(1)))
+                .map(move |x| (x, y))
+        })
         .collect();
     candidates.sort_by_key(|&tile| (distance(tile, hearth), tile.1, tile.0));
     candidates.into_iter().find_map(|anchor| {
