@@ -174,7 +174,7 @@ pub(super) fn validate(res: &SimResources) -> Result<(), String> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::save::{decode, encode, load, load_with, save, BodyV24, Envelope};
+    use crate::save::{decode, encode, load, load_with, save, BodyV24, BodyV25, Envelope};
 
     fn engine() -> sim_engine::SimEngine {
         sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
@@ -199,7 +199,7 @@ mod tests {
         );
         assert_eq!(save(&mut restored).expect("stable growth"), valid);
         let mut envelope: Envelope = decode(&valid[12..]).expect("envelope");
-        let mut body: BodyV24 = decode(&envelope.payload).expect("body24");
+        let mut body: BodyV25 = decode(&envelope.payload).expect("body25");
         body.growth.path_stage.pop();
         envelope.payload = encode(&body).expect("malformed growth");
         let mut corrupt = valid[..12].to_vec();
@@ -207,6 +207,56 @@ mod tests {
         let mut registered = false;
         assert!(load_with(&corrupt, |_| registered = true).is_err());
         assert!(!registered);
+    }
+
+    #[test]
+    fn workshop_last_use_tail_roundtrips_and_rejects_unknown_workshops() {
+        let mut engine = engine();
+        engine.resources.colony.workshops.insert(
+            7,
+            sim_core::colony::Workshop {
+                id: 7,
+                kind: sim_core::colony::BlueprintKind::WoodBench,
+                top_left: (0, 0),
+                size: (2, 1),
+                bills: vec![],
+                shelf: vec![],
+                active: None,
+            },
+        );
+        engine.resources.colony.workshop_last_used.insert(7, 0);
+        let valid = save(&mut engine).expect("save last use");
+        let restored = load_with(&valid, |_| {}).expect("restore last use");
+        assert_eq!(
+            restored.resources.colony.workshop_last_used,
+            [(7, 0)].into_iter().collect()
+        );
+        let mut envelope: Envelope = decode(&valid[12..]).expect("envelope");
+        let mut body: BodyV25 = decode(&envelope.payload).expect("body25");
+        let mut legacy = valid[..8].to_vec();
+        legacy.extend(24u32.to_le_bytes());
+        let mut old = Envelope {
+            revision: envelope.revision.clone(),
+            payload: Vec::new(),
+        };
+        let BodyV25 {
+            legacy: v24_body,
+            growth: v24_growth,
+            ..
+        } = decode(&envelope.payload).expect("body25 for v24");
+        old.payload = encode(&BodyV24 {
+            legacy: v24_body,
+            growth: v24_growth,
+        })
+        .expect("body24");
+        legacy.extend(encode(&old).expect("envelope24"));
+        let migrated = load_with(&legacy, |_| {}).expect("format24 loads");
+        assert!(migrated.resources.colony.workshop_last_used.is_empty());
+        body.workshop_last_used.insert(99, 0);
+        envelope.payload = encode(&body).expect("orphan last use");
+        let mut corrupt = valid[..12].to_vec();
+        corrupt.extend(encode(&envelope).expect("envelope"));
+        assert!(load_with(&corrupt, |_| {}).is_err());
     }
 
     #[test]
@@ -399,7 +449,7 @@ mod tests {
         let valid = save(&mut engine).expect("valid save");
         for stage in [u8::MAX, sim_core::colony::paths::STAGE_PAVED] {
             let mut envelope: Envelope = decode(&valid[12..]).expect("envelope");
-            let mut body: BodyV24 = decode(&envelope.payload).expect("body24");
+            let mut body: BodyV25 = decode(&envelope.payload).expect("body25");
             body.growth.path_stage[0] = stage;
             envelope.payload = encode(&body).expect("corrupt stage");
             let mut corrupt = valid[..12].to_vec();

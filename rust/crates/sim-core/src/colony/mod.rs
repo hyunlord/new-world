@@ -317,6 +317,10 @@ pub struct ColonyState {
     /// Derived sparse work set; restored from saved counters after load.
     #[serde(skip)]
     pub footfall_touched: std::collections::BTreeSet<(u32, u32)>,
+    /// M-GROW 3.4: tick each workshop was finished or last finished a craft (presentation only:
+    /// the bridge's working/idle/ruined look; no system reads it). Persisted by the format25 tail.
+    #[serde(skip)]
+    pub workshop_last_used: BTreeMap<WorkshopId, u64>,
 }
 
 /// Measurement-only key of a job released to a need (`ColonyState::release_counts`):

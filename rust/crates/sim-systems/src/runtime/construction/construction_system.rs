@@ -469,6 +469,10 @@ fn complete_workshop(resources: &mut SimResources, site: ColonySite, needs: Mate
             });
         }
     }
+    resources
+        .colony
+        .workshop_last_used
+        .insert(id, resources.current_tick);
     resources.colony.workshops.insert(
         id,
         Workshop {

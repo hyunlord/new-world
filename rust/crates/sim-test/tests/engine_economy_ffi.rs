@@ -253,3 +253,34 @@ fn the_baseline_has_no_economy() {
     let overlay = collect_colony_overlay(&engine.world, &engine.resources);
     assert!(overlay.nodes.is_empty() && overlay.designation_kinds.is_empty());
 }
+
+/// M-GROW 3.4 `workshop_state_rows`: a bill with no inputs anywhere reads out-of-input; a workshop
+/// unused for a season reads abandoned (bridge-only facts, no sim writes).
+#[test]
+fn workshop_state_rows_show_input_short_and_abandoned() {
+    let mut engine = job_world_m2(32, 32);
+    worker(&mut engine, 3, 3);
+    let bench = build_workshop(&mut engine, BlueprintKind::WoodBench, (12, 12), (4, 4));
+    let row = |e: &sim_engine::SimEngine| {
+        collect_workshops(&e.resources)
+            .into_iter()
+            .find(|r| r.id == bench)
+            .map(|r| (r.input_short, r.abandoned))
+    };
+    assert_eq!(row(&engine), Some((false, false)), "fresh: idle, in use");
+    let add = EconomyCommand::AddBill {
+        workshop: i64::from(bench),
+        recipe: "haft_axe".into(),
+        mode: "make".into(),
+        count: 1,
+    };
+    assert!(submit_economy(&mut engine, &add).accepted);
+    if let Some(shop) = engine.resources.colony.workshops.get_mut(&bench) {
+        shop.active = None;
+    }
+    assert_eq!(row(&engine).map(|r| r.0), Some(true), "no haft inputs anywhere");
+    let season = engine.resources.rules.calendar.ticks_per_season();
+    engine.resources.colony.workshop_last_used.insert(bench, 0);
+    engine.resources.current_tick = season;
+    assert_eq!(row(&engine).map(|r| r.1), Some(true), "unused a season");
+}

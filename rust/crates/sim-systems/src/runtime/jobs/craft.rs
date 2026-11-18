@@ -423,6 +423,9 @@ pub fn finish_craft(
         .and_then(|shop| shop.bills.iter_mut().find(|b| b.id == bill))
     {
         found.done += 1;
+        res.colony
+            .workshop_last_used
+            .insert(workshop, res.current_tick);
     }
     res.colony.tallies.crafts_done += 1;
     let entry = res

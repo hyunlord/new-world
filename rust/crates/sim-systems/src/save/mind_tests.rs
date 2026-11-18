@@ -137,7 +137,7 @@ fn invalid_saved_policy_is_rejected_before_registration() {
     let mut engine = engine_with_history();
     let bytes = save(&mut engine).expect("valid save");
     let mut envelope: Envelope = decode(read_header(&bytes).expect("header")).expect("envelope");
-    let mut current: BodyV24 = decode(&envelope.payload).expect("body");
+    let mut current: BodyV25 = decode(&envelope.payload).expect("body");
     let body = &mut current.legacy;
     body.mind.policy_source = Some(SOURCE.replace("hunger", "unknown_fact"));
     envelope.payload = encode(&BodyRef {
@@ -157,6 +157,7 @@ fn invalid_saved_policy_is_rejected_before_registration() {
         ore: &body.ore,
         metal: &body.metal,
         growth: &current.growth,
+        workshop_last_used: &current.workshop_last_used,
     })
     .expect("malformed fixture");
     let mut corrupt = MAGIC.to_vec();
@@ -685,7 +686,7 @@ fn accepted_order_can_save_at_next_tick_boundary_without_advancing_clock() {
     let bytes = save(&mut engine).expect("accepted next-boundary order must save immediately");
     assert_eq!(engine.resources.current_tick, last_tick);
     let mut corrupt: Envelope = decode(&bytes[12..]).unwrap();
-    let mut current: BodyV24 = decode(&corrupt.payload).unwrap();
+    let mut current: BodyV25 = decode(&corrupt.payload).unwrap();
     let body = &mut current.legacy;
     body.resources.colony.command_log.last_mut().unwrap().tick = boundary + 1;
     corrupt.payload = encode(&current).unwrap();

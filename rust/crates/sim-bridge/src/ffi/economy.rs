@@ -189,6 +189,11 @@ pub struct WorkshopRow {
     /// C2-b: a waiting bill's `fuel`-tagged input the shelf lacks, and the `BlueprintKind::code`
     /// of the workshop that makes it: `(item, source)`, -1 when unknown.
     pub fuel_short: Option<(u32, i64)>,
+    /// M-GROW 3.4: idle with a waiting bill whose inputs neither the shelf nor the ground
+    /// supply holds (the out-of-input look).
+    pub input_short: bool,
+    /// M-GROW 3.4: unused (no finished craft, nor finished) for at least one season.
+    pub abandoned: bool,
 }
 
 /// Every finished workshop, in id order.
@@ -222,8 +227,37 @@ pub fn collect_workshops(resources: &SimResources) -> Vec<WorkshopRow> {
                 .map(|s| (s.kind.code(), s.count))
                 .collect(),
             fuel_short: fuel_short(shop),
+            input_short: input_short(resources, shop),
+            abandoned: resources
+                .colony
+                .workshop_last_used
+                .get(&shop.id)
+                .is_some_and(|&tick| {
+                    resources.current_tick.saturating_sub(tick)
+                        >= resources.rules.calendar.ticks_per_season().max(1)
+                }),
         })
         .collect()
+}
+
+/// Idle, and the first waiting bill lacks an input on the shelf plus the carriable ground supply.
+fn input_short(resources: &SimResources, shop: &sim_core::colony::Workshop) -> bool {
+    shop.active.is_none()
+        && shop
+            .bills
+            .iter()
+            .find(|b| {
+                !b.suspended
+                    && !matches!(b.mode, sim_core::colony::BillMode::Make(n) if b.done >= u32::from(n))
+            })
+            .and_then(|b| b.recipe.recipe())
+            .is_some_and(|recipe| {
+                recipe.inputs.iter().any(|&(kind, need)| {
+                    u32::from(shop.shelved(kind))
+                        + sim_systems::runtime::jobs::bills::available(resources, kind)
+                        < u32::from(need)
+                })
+            })
 }
 
 /// The first waiting (unsuspended, unfinished, not active) bill's missing `fuel`-tagged input.
@@ -281,6 +315,14 @@ pub(super) fn workshops_to_dict(rows: &[WorkshopRow]) -> VarDictionary {
             rows.iter()
                 .map(|r| r.fuel_short.map_or(-1, |f| i64::from(f.0))),
         ),
+    );
+    dict.set(
+        "input_short",
+        i32s(rows.iter().map(|r| i64::from(r.input_short))),
+    );
+    dict.set(
+        "abandoned",
+        i32s(rows.iter().map(|r| i64::from(r.abandoned))),
     );
     dict.set(
         "fuel_short_sources",
