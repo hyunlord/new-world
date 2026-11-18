@@ -6,7 +6,7 @@
 #   `Godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script res://tools/v8/world3d_shots.gd -- ...`
 #   `--rooms 1` shows the room overlay (R); `--channel N` (3D) shows influence channel N (O pressed N+1 times);
 #   `--advance T` runs the clock T ticks before the shots (both renderers replay the same world).
-#   `--ui off` hides the HUD/panels CanvasLayer for clean world frames.
+#   `--ui off` hides the HUD/panels CanvasLayer for clean world frames; `--keys "N,…"` presses player keys first.
 #   `--zones 1` toggles the automatic layout overlay with the player's Z key.
 #   `--growth-check 1` proves saved growth in ko/en UI; `capture` also saves real panels (renderer/lock required).
 #   (3D needs a real renderer: use the default Forward+ driver, not opengl3, for 3D shots.)
@@ -87,6 +87,13 @@ func _run() -> void:
 			w3d.get_node("Overlay").call("cycle_channel")
 	if _arg("--ui") == "off":
 		(_main.get_node("UI") as CanvasLayer).visible = false
+	# `--keys "N,…"` presses the player's own keys (e.g. N opens the neighbours panel) before the shots.
+	for key_name: String in _arg("--keys").split(",", false):
+		var press: InputEventKey = InputEventKey.new()
+		press.keycode = OS.find_keycode_from_string(key_name)
+		press.pressed = true
+		Input.parse_input_event(press)
+		await _frames(10)
 	if _arg("--dump") != "":
 		_dump()
 	var n: int = 0
@@ -128,10 +135,10 @@ func _dump() -> void:
 	for site: Variant in b.get("template_sites", []):
 		var d: Dictionary = site
 		print("W3D_YARD stage=%s props=%s" % [d.get("house_stage", 0), JSON.stringify(d.get("yard_props", []))])
-		print("W3D_SITE %s %s at %d,%d %dx%d roofed=%s intact=%s" % [d.get("template_id"), d.get("status"), int(d.get("x")), int(d.get("y")), int(d.get("width")), int(d.get("height")), d.get("roofed"), d.get("is_intact")])
+		print("W3D_SITE %s %s at %d,%d %dx%d roofed=%s intact=%s occupants=%s" % [d.get("template_id"), d.get("status"), int(d.get("x")), int(d.get("y")), int(d.get("width")), int(d.get("height")), d.get("roofed"), d.get("is_intact"), d.get("occupants", 0)])
 	print("W3D_BUILDINGS %s %s %s" % [b.get("kinds"), b.get("xs"), b.get("ys")])
 	var w: Dictionary = SimReads.read(_world, "get_workshops")
-	print("W3D_WORKSHOPS kinds=%s xs=%s ys=%s ws=%s hs=%s" % [w.get("kinds"), w.get("xs"), w.get("ys"), w.get("ws"), w.get("hs")])
+	print("W3D_WORKSHOPS kinds=%s xs=%s ys=%s ws=%s hs=%s active=%s input_short=%s abandoned=%s" % [w.get("kinds"), w.get("xs"), w.get("ys"), w.get("ws"), w.get("hs"), w.get("bill_active"), w.get("input_short"), w.get("abandoned")])
 	var r: Dictionary = SimReads.read(_world, "get_rooms")
 	print("W3D_ROOMS ids=%s roles=%s roofed=%s cx=%s cy=%s tiles=%s" % [r.get("ids"), r.get("roles"), r.get("roofed"), r.get("centre_xs"), r.get("centre_ys"), r.get("tiles")])
 	var a: Dictionary = SimReads.read(_world, "get_agent_snapshot")
