@@ -12,6 +12,7 @@
 - Render tuning for both passes lives in `assets/3d/mood.json`.
 - Dusk and night use brighter blue-teal fill, and the daylight grade is warmer. A stronger distant villager rim improves separation from the ground.
 - Leaf clusters extend past the canopy silhouette, with more colour variation and shaded foliage underneath.
+- A visible-body stencil keeps x-ray silhouettes off villagers’ own surfaces. Hidden silhouettes blend once per pixel with a muted blue-grey palette at night.
 
 ## M-GROW-a — village growth candidate (2026-11-17)
 

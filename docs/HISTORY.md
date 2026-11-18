@@ -1,6 +1,6 @@
 # WorldSim 역사
 
-- 2026-11-18 — MOOD1 / DETAIL1 검토 2차(`2cb379246))에서 밤 환경광과 낮의 따뜻한 색을 더하고 잎 무리와 원거리 주민 윤곽을 강화했다. 밤 1배 평균 Y′ 57.05(목표 48.63), GPU 성능 기준 충족, 가시성 단계39 7/8, 미게시([ADR0071](decisions/0071-world-look.md)).
+- 2026-11-18 — MOOD1 / DETAIL1 검토 3차(`289a3e7bd`)에서 가림 표시에 스텐실을 적용했다. 주민 등 얼룩이 사라졌으나 가시성 단계39 2/8, 재실 주택 야간 MOOD1 FPS −8.37%로 미게시. 2차(`2cb379246`)는 밤 평균 Y′ 57.05(목표 48.63), 가시성 7/8이었다([ADR0071](decisions/0071-world-look.md)).
 - 2026-11-17 — M-GROW-a 구현 후보: 길의 마모·이동 간격, 원인을 남기는 집사 구역 배치, 거주 단계·마당과 안전한 시대별 개축, format24 저장 확장을 연결했다. 4개 시드의120일 기능·저장·재생 수용 시험은 통과했으나, 최종 캡처·고정 SHA 전체 게이트·크래시 감지·게시는 대기이며 완료 선언이 아니다([보고서](v8/mgrow/MGROW_REPORT.md), [ADR0070](decisions/0070-bounded-village-growth.md)).
 - 2026-11-17 — M-POLISH+GATE: art-tex·gate-reuse를 C3-b 위에 병합하고(3d-roof2·art-ui 병합은 주민 가시성 단계39 실패로 되돌림, 각 브랜치에 보존) D-GATE-1(test 프로필 opt-level 2, 디버그 단언·오버플로 검사 유지)을 더했다. 길어진 카드 묶음이 빈 이야기 띠를 학습 도우미 위로 밀어 도우미가 숨던 문제를 고쳤고, 2D 시절 `mart21_seasons.png`는 `fd3f59801` 이력에 보존한다. 시뮬레이션 무변경([결정](v8/c1/C1_DECISIONS.md)).
 - 2026-11-16 — M-GATE-REUSE 도구 구현: 고정 입력에 묶인 전체 debug 사전 실행 영수증을 full gate step4에서 재사용하며 불일치는 재실행한다. Python 도구 검증과 전체 게임 게이트 검증을 구분하고 C3-b 이후 통합을 기다린다([D-GATE-2](v8/c1/C1_DECISIONS.md), [ADR0069](decisions/0069-frozen-debug-suite-reuse.md)).
