@@ -1,113 +1,190 @@
-[gd_resource type="Theme" load_steps=11 format=3]
+[gd_resource type="Theme" load_steps=12 format=3]
 
-[ext_resource type="FontFile" path="res://assets/fonts/galmuri/Galmuri11.ttf" id="1_body"]
-[ext_resource type="FontFile" path="res://assets/fonts/galmuri/Galmuri9.ttf" id="2_small"]
-[ext_resource type="FontFile" path="res://assets/fonts/galmuri/Galmuri11-Bold.ttf" id="3_heading"]
+[ext_resource type="FontFile" path="res://assets/fonts/pretendard/Pretendard-Regular.otf" id="1_body"]
+[ext_resource type="FontFile" path="res://assets/fonts/noto-serif-kr/NotoSerifKR-Regular.woff" id="2_title"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
-bg_color = Color(0.063, 0.043, 0.012, 0.92)
+[sub_resource type="FontVariation" id="BodyBold"]
+base_font = ExtResource("1_body")
+variation_embolden = 0.45
+
+[sub_resource type="StyleBoxFlat" id="Panel"]
+bg_color = Color(0.168627, 0.137255, 0.109804, 0.88)
+border_color = Color(0.929412, 0.890196, 0.819608, 0.25)
+border_width_left = 1
+content_margin_left = 12.0
+border_width_top = 1
+content_margin_top = 8.0
+border_width_right = 1
+content_margin_right = 12.0
+border_width_bottom = 1
+content_margin_bottom = 8.0
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_left = 4
+corner_radius_bottom_right = 4
+shadow_color = Color(0, 0, 0, 0.3)
+shadow_size = 12
+shadow_offset = Vector2(0, 4)
+
+[sub_resource type="StyleBoxFlat" id="Tooltip"]
+bg_color = Color(0.168627, 0.137255, 0.109804, 0.88)
+border_color = Color(0.929412, 0.890196, 0.819608, 0.25)
+border_width_left = 1
+content_margin_left = 12.0
+border_width_top = 1
+content_margin_top = 8.0
+border_width_right = 1
+content_margin_right = 12.0
+border_width_bottom = 1
+content_margin_bottom = 8.0
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_left = 12
+corner_radius_bottom_right = 12
+shadow_color = Color(0, 0, 0, 0.3)
+shadow_size = 12
+shadow_offset = Vector2(0, 4)
+
+[sub_resource type="StyleBoxFlat" id="Chip"]
+bg_color = Color(0.227451, 0.188235, 0.152941, 0.96)
+border_color = Color(0.929412, 0.890196, 0.819608, 0.25)
+border_width_left = 1
+content_margin_left = 10.0
+border_width_top = 1
+content_margin_top = 5.0
+border_width_right = 1
+content_margin_right = 10.0
+border_width_bottom = 1
+content_margin_bottom = 5.0
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_left = 3
+corner_radius_bottom_right = 3
+
+[sub_resource type="StyleBoxFlat" id="Hover"]
+bg_color = Color(0.32, 0.24, 0.18, 1)
+border_color = Color(0.929412, 0.890196, 0.819608, 0.25)
+border_width_left = 1
+content_margin_left = 10.0
+border_width_top = 1
+content_margin_top = 5.0
+border_width_right = 1
+content_margin_right = 10.0
+border_width_bottom = 1
+content_margin_bottom = 5.0
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_left = 3
+corner_radius_bottom_right = 3
+
+[sub_resource type="StyleBoxFlat" id="Pressed"]
+bg_color = Color(0.39, 0.24, 0.17, 1)
+border_color = Color(0.929412, 0.890196, 0.819608, 0.25)
+border_width_left = 1
+content_margin_left = 10.0
+border_width_top = 1
+content_margin_top = 5.0
+border_width_right = 1
+content_margin_right = 10.0
+border_width_bottom = 1
+content_margin_bottom = 5.0
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_left = 3
+corner_radius_bottom_right = 3
+
+[sub_resource type="StyleBoxFlat" id="Disabled"]
+bg_color = Color(0.17, 0.14, 0.11, 0.75)
+border_color = Color(0.929412, 0.890196, 0.819608, 0.25)
+border_width_left = 1
+content_margin_left = 10.0
+border_width_top = 1
+content_margin_top = 5.0
+border_width_right = 1
+content_margin_right = 10.0
+border_width_bottom = 1
+content_margin_bottom = 5.0
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_left = 3
+corner_radius_bottom_right = 3
+
+[sub_resource type="StyleBoxFlat" id="Focus"]
+bg_color = Color(0.168627, 0.137255, 0.109804, 0.88)
+border_color = Color(0.709804, 0.337255, 0.184314, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.161, 0.149, 0.129, 1)
-content_margin_left = 12.0
-content_margin_top = 8.0
-content_margin_right = 12.0
-content_margin_bottom = 8.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_MapActionButton_normal"]
-content_margin_left = 4.0
-content_margin_top = 4.0
-content_margin_right = 4.0
-content_margin_bottom = 4.0
-bg_color = Color(0.1, 0.1, 0.1, 0.45)
 corner_radius_top_left = 3
 corner_radius_top_right = 3
-corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
-corner_detail = 5
+corner_radius_bottom_right = 3
+draw_center = false
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_MapActionButton_hover"]
-content_margin_left = 4.0
-content_margin_top = 4.0
-content_margin_right = 4.0
-content_margin_bottom = 4.0
-bg_color = Color(0.225, 0.225, 0.225, 0.45)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-corner_detail = 5
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_MapActionButton_pressed"]
-content_margin_left = 4.0
-content_margin_top = 4.0
-content_margin_right = 4.0
-content_margin_bottom = 4.0
-bg_color = Color(0, 0, 0, 0.45)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-corner_detail = 5
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_MapActionOptionButton_normal"]
-content_margin_left = 8.0
-content_margin_top = 4.0
-content_margin_right = 8.0
-content_margin_bottom = 4.0
-bg_color = Color(0.1, 0.1, 0.1, 0.45)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-corner_detail = 5
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_MapActionOptionButton_hover"]
-content_margin_left = 8.0
-content_margin_top = 4.0
-content_margin_right = 8.0
-content_margin_bottom = 4.0
-bg_color = Color(0.225, 0.225, 0.225, 0.45)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-corner_detail = 5
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_MapActionOptionButton_pressed"]
-content_margin_left = 8.0
-content_margin_top = 4.0
-content_margin_right = 8.0
-content_margin_bottom = 4.0
-bg_color = Color(0, 0, 0, 0.45)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-corner_detail = 5
+[sub_resource type="StyleBoxFlat" id="NeedFill"]
+bg_color = Color(0.709804, 0.337255, 0.184314, 1)
+border_color = Color(0.929412, 0.890196, 0.819608, 0.25)
+border_width_left = 1
+content_margin_left = 0.0
+border_width_top = 1
+content_margin_top = 0.0
+border_width_right = 1
+content_margin_right = 0.0
+border_width_bottom = 1
+content_margin_bottom = 0.0
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_left = 2
+corner_radius_bottom_right = 2
 
 [resource]
 default_font = ExtResource("1_body")
-default_font_size = 24
-Label/colors/font_color = Color(0.933, 0.918, 0.824, 1)
-Label/font_sizes/font_size = 24
-SmallNumber/base_type = &"Label"
-SmallNumber/fonts/font = ExtResource("2_small")
-SmallNumber/font_sizes/font_size = 20
+default_font_size = 18
+Label/colors/font_color = Color(0.929412, 0.890196, 0.819608, 1)
+RichTextLabel/fonts/bold_font = SubResource("BodyBold")
+RichTextLabel/colors/default_color = Color(0.929412, 0.890196, 0.819608, 1)
 Heading/base_type = &"Label"
-Heading/fonts/font = ExtResource("3_heading")
+Heading/fonts/font = ExtResource("2_title")
 Heading/font_sizes/font_size = 24
-Panel/styles/panel = SubResource("StyleBoxFlat_panel")
-PanelContainer/styles/panel = SubResource("StyleBoxFlat_panel")
-Heading/colors/font_color = Color(0.745, 0.549, 0.400, 1)
-
+SmallNumber/base_type = &"Label"
+SmallNumber/font_sizes/font_size = 15
+UI1Group/base_type = &"Label"
+UI1Group/font_sizes/font_size = 15
+UI1Group/styles/normal = SubResource("Chip")
+UI1Chip/base_type = &"Button"
+UI1Chip/constants/icon_max_width = 20
 MapActionButton/base_type = &"Button"
-MapActionButton/styles/normal = SubResource("StyleBoxFlat_MapActionButton_normal")
-MapActionButton/styles/hover = SubResource("StyleBoxFlat_MapActionButton_hover")
-MapActionButton/styles/pressed = SubResource("StyleBoxFlat_MapActionButton_pressed")
 MapActionOptionButton/base_type = &"OptionButton"
-MapActionOptionButton/styles/normal = SubResource("StyleBoxFlat_MapActionOptionButton_normal")
-MapActionOptionButton/styles/hover = SubResource("StyleBoxFlat_MapActionOptionButton_hover")
-MapActionOptionButton/styles/pressed = SubResource("StyleBoxFlat_MapActionOptionButton_pressed")
+TooltipLabel/colors/font_color = Color(0.929412, 0.890196, 0.819608, 1)
+TooltipLabel/font_sizes/font_size = 15
+ProgressBar/styles/background = SubResource("Disabled")
+ProgressBar/styles/fill = SubResource("NeedFill")
+Panel/styles/panel = SubResource("Panel")
+PanelContainer/styles/panel = SubResource("Panel")
+TooltipPanel/styles/panel = SubResource("Tooltip")
+PopupPanel/styles/panel = SubResource("Panel")
+Button/styles/normal = SubResource("Chip")
+Button/styles/hover = SubResource("Hover")
+Button/styles/pressed = SubResource("Pressed")
+Button/styles/hover_pressed = SubResource("Pressed")
+Button/styles/disabled = SubResource("Disabled")
+Button/styles/focus = SubResource("Focus")
+Button/colors/font_color = Color(0.929412, 0.890196, 0.819608, 1)
+Button/colors/font_hover_color = Color(0.929412, 0.890196, 0.819608, 1)
+Button/colors/font_pressed_color = Color(0.929412, 0.890196, 0.819608, 1)
+Button/colors/font_focus_color = Color(0.929412, 0.890196, 0.819608, 1)
+Button/colors/font_hover_pressed_color = Color(0.929412, 0.890196, 0.819608, 1)
+Button/colors/font_disabled_color = Color(0.929412, 0.890196, 0.819608, 0.5)
+OptionButton/styles/normal = SubResource("Chip")
+OptionButton/styles/hover = SubResource("Hover")
+OptionButton/styles/pressed = SubResource("Pressed")
+OptionButton/styles/hover_pressed = SubResource("Pressed")
+OptionButton/styles/disabled = SubResource("Disabled")
+OptionButton/styles/focus = SubResource("Focus")
+OptionButton/colors/font_color = Color(0.929412, 0.890196, 0.819608, 1)
+OptionButton/colors/font_hover_color = Color(0.929412, 0.890196, 0.819608, 1)
+OptionButton/colors/font_pressed_color = Color(0.929412, 0.890196, 0.819608, 1)
+OptionButton/colors/font_focus_color = Color(0.929412, 0.890196, 0.819608, 1)
+OptionButton/colors/font_hover_pressed_color = Color(0.929412, 0.890196, 0.819608, 1)
+OptionButton/colors/font_disabled_color = Color(0.929412, 0.890196, 0.819608, 0.5)

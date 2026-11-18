@@ -324,6 +324,7 @@ The full procedure with code skeletons is `.claude/skills/worldsim-architecture/
 | `scripts/ui/hud/` | `hud_topbar.gd`, `order_bar.gd` (F1–F5 buttons and the order toast) |
 | `scripts/ui/panels/` | `task_plaque.gd` (annual goal and current task), `current_activity_text.gd` (pure snapshot classification), `chronicle_panel.gd`, `agent_inspector_panel.gd`, `causal_panel.gd` (explicit why actions only; compact anchored scroll panel), `item_panel.gd` (item inspector with why action), `priority_panel.gd` (work priorities and explicit player-selected role presets), `workshop_panel.gd` (M2 bills of the selected workshop), `room_panel.gd` (M3: a room's role dropdown → `cmd_set_room_role`, tiles, beds, doors, covered items; made by `order_bar.gd`), `art_ui.gd` (shared panel style) |
 | `scripts/ui/mux/` | HUD, settings, alerts, goals, help and learning panels; `controls_catalog.gd` shares the README registry; `korean_text.gd` adds display-only word joiners without changing raw Locale strings |
+| `scripts/ui/hud/` and `scripts/ui/panels/` | Settlement counters and order groups use the project theme and UI pictograms. The Why connector projects its world target, and the Why and person cards share a bounded tooltip chain from existing cause reads ([ADR 0071](decisions/0071-settlement-hud.md)). |
 | `scripts/ui/` | text helpers shared by panels (`chronicle_text.gd`, `person_names.gd`, `person_read_cache.gd`) |
 
 Every `.gd` starts with a comment block: purpose and the bridge methods it

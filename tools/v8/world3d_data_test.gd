@@ -255,7 +255,7 @@ func _without_2d(main: Node, w3d: Node) -> void:
 	for _i: int in 5:
 		await process_frame
 	var portrait: Dictionary = inspector.call("portrait_state")
-	_check("e1_inspector_portrait", not str(portrait.get("look", "")).is_empty(), str(portrait))
+	_check("e1_inspector_initial_badge", str(portrait.get("initial", "")).length() == 1 and str((inspector.get("_label_id") as Label).text).begins_with(str(portrait["initial"])), str(portrait))
 	var rect: Rect2 = ViewProjection.person_rect(bits)
 	_check("e1_person_rect", rect.has_area(), str(rect))
 	# A wild animal in the hunt mode.

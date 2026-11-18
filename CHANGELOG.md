@@ -1,5 +1,20 @@
 # Changelog
 
+## UI1 — settlement HUD (2026-11-18)
+
+### Added
+
+- Warm brown theme, bone pictograms, Pretendard body text and Noto Serif KR card titles.
+- Resource and menu chips, grouped command buttons, connected evidence tooltips, person need bars and filterable growth entries in the chronicle.
+
+### Changed
+
+- The food chip shows available stock and daily consumption evidence. Harvest and depletion estimates require a daily harvest total from the bridge.
+
+### Removed
+
+- The persistent two-line function-key legend. Command tooltips carry the corresponding shortcuts.
+
 ## M-GROW-a — published f9caf0ba5, 2026-11-19
 
 Full gate 51/51 (fullgate-a-3, step 41 PASS without waiver, max 46.9 ms) and crash detector PASS on the exact HEAD; receipts in `docs/v8/mgrow/MGROW_REPORT.md` (D-MGROW-3).

@@ -1,6 +1,6 @@
 # hud_topbar.gd (UI/HudTopbar in scenes/main.tscn): top bar with the date (M1.5 calendar: "3년 차 · 봄 2일째"),
 #   clock (dawn/day/evening/night), population, villages, shelters (V7 shelters +
-#   M1 huts), sites (V7 construction sites + M1 hut blueprints), stored food and firewood stocks, logs lying in
+#   M1 huts and intact roofed templates), construction sites and blueprints, stored food and firewood, logs lying in
 #   stacks (M1 items), wild berries on the whole map, births, deaths, cold count, pause and display speed;
 #   L toggles ko/en.
 # M4 (goal 9.1): beside the calendar the era line "신석기 전환기 31 %" (get_tech `era`, `progress` ‰ as whole percent)
@@ -14,13 +14,14 @@
 #   and the trade dialog (UI/TradePanel) beside itself, after the story banner so the dialogs draw over it.
 # Read-only, localized counters from authoritative simulation snapshots.
 # Bridge methods: via SimReads get_agent_snapshot, get_settlement_snapshot, get_construction_snapshot,
-#   get_building_snapshot, get_time_snapshot (day_index, time_of_day, season, day_of_season, days_per_season,
-#   winter_severity, year_index), get_resource_snapshot, get_tallies, get_colony_overlay, get_tech.
+#   get_building_snapshot, get_ui_facts, get_time_snapshot (day_index, time_of_day, season, day_of_season, days_per_season,
+#   winter_severity, year_index), get_resource_snapshot, get_tallies, get_colony_overlay, get_tech, get_story.
 extends Control
 
 const Content = preload("res://scripts/ui/content_context.gd")
 const ControlsCatalog = preload("res://scripts/ui/mux/controls_catalog.gd")
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
+const Icons = preload("res://scripts/ui/hud/ui1_icons.gd")
 const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
 const TechPanel = preload("res://scripts/ui/panels/tech_panel.gd")
@@ -32,17 +33,16 @@ const TradePanel = preload("res://scripts/ui/panels/trade_panel.gd")
 const RISK_COLOR: Color = Color("e05a48")
 const QUIET_COLOR: Color = Color("c8b89a")
 
-const HUD_MARGIN: int = 12
-const HUD_SEPARATION: int = 16
+const FOOD_REFRESH_SECONDS: float = 0.5
 var _controls: ControlsCatalog = ControlsCatalog.new()
 var _world_sim: Node = null
-var _shelters_label: Label
-var _agents_label: Label
+var _shelters_label: Button
+var _agents_label: Button
 var _settlements_label: Label
 var _settlements_row: HBoxContainer
-var _sites_label: Label
+var _sites_label: Button
 var _locale: Node = null
-var _clock_label: Label
+var _clock_label: Button
 var _resource_labels: Array[Label] = []
 var _cold_label: Label
 var _cold_icon: TextureRect
@@ -53,7 +53,6 @@ var _logs_label: Label
 var _speed_label: Label
 var _zoom_label: Label
 var _display_speed: float = 1.0
-var _clock_icon: Sprite2D
 var _pause_icon: Control
 var _death_total: int = 0
 ## M4: the era line, the at-risk badge (opens the tech map) and the at-risk warning line.
@@ -61,10 +60,14 @@ var _era_label: Label
 var _risk_button: Button
 var _warn_label: Label
 ## M-LOOP §1.2b: compact upper-row labels replacing the lower row.
-var _food_compact: Label
-var _wood_compact: Label
-var _speed_compact: Label
-var _pause_compact: Control
+var _food_compact: Button
+var _wood_compact: Button
+var _speed_compact: Button
+var _food_tooltip: PanelContainer
+var _food_tooltip_text: Label
+var _food_supply: Dictionary = {}
+var _food_poll_left: float = 0.0
+var _legacy_food: int = 0
 var _lower_row: HBoxContainer
 const DEATH_TALLY_KEYS: Array[String] = ["deaths_starvation", "deaths_dehydration", "deaths_combat", "deaths_old_age", "deaths_exposure"]
 
@@ -74,59 +77,53 @@ func _ready() -> void:
 
 	_locale = get_node_or_null("/root/Locale")
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var panel: PanelContainer = ArtUI.panel(self, Rect2(12, 12, 1896, 0))
+	var panel: PanelContainer = ArtUI.panel(self, Rect2(12, 12, 0, 0))
+	panel.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
 	var column: VBoxContainer = VBoxContainer.new()
+	column.add_theme_constant_override("separation", 0)
+	column.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	panel.add_child(column)
 	var hbox: HBoxContainer = HBoxContainer.new()
 	hbox.add_theme_constant_override("separation", 8)
+	hbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	column.add_child(hbox)
-	_clock_label = ArtUI.pair(hbox, "day")
-	_clock_icon = hbox.get_child(0).get_child(0) as Sprite2D
-	_agents_label = ArtUI.pair(hbox, "people")
+	_clock_label = _chip(hbox, "DateChip", "calendar")
+	_agents_label = _chip(hbox, "PopulationChip", "people")
+	_shelters_label = _chip(hbox, "ShelterChip", "house")
+	_sites_label = _chip(hbox, "ConstructionChip", "build")
+	_food_compact = _chip(hbox, "FoodChip", "food")
+	_food_compact.focus_mode = Control.FOCUS_ALL
+	_food_compact.mouse_entered.connect(_show_food_tooltip)
+	_food_compact.mouse_exited.connect(_hide_food_tooltip)
+	_food_compact.focus_entered.connect(_show_food_tooltip)
+	_food_compact.focus_exited.connect(_hide_food_tooltip)
+	_food_compact.pressed.connect(_show_food_tooltip)
+	_wood_compact = _chip(hbox, "FirewoodChip", "wood")
+	_speed_compact = _chip(hbox, "SpeedChip", "speed")
 	_settlements_row = HBoxContainer.new()
 	_settlements_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_settlements_row.add_theme_constant_override("separation", 8)
 	hbox.add_child(_settlements_row)
 	_settlements_label = ArtUI.pair(_settlements_row, "settlements")
-	_shelters_label = ArtUI.pair(hbox, "shelters")
-	_sites_label = ArtUI.pair(hbox, "construction")
-	_era_label = Label.new()
-	_era_label.name = "EraLabel"
-	_era_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_era_label.add_theme_color_override("font_color", Color("e8c46e"))
-	hbox.add_child(_era_label)
-	_risk_button = Button.new()
-	_risk_button.name = "RiskBadge"
-	_risk_button.focus_mode = Control.FOCUS_NONE
-	_risk_button.flat = true
-	_risk_button.mouse_filter = Control.MOUSE_FILTER_STOP
-	_risk_button.pressed.connect(open_tech_map)
-	hbox.add_child(_risk_button)
-	var era_gap: Control = Control.new()
-	era_gap.custom_minimum_size.x = 8
-	era_gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	hbox.add_child(era_gap)
 	_winter_label = Label.new()
 	_winter_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_winter_label.add_theme_color_override("font_color", Color("a8c0d0"))
 	hbox.add_child(_winter_label)
-	# M-LOOP §1.2b: compact food, wood, speed in the upper row; era/risk moved to chapter panel.
-	_era_label.visible = false
-	_risk_button.visible = false
-	_food_compact = Label.new()
-	_food_compact.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	hbox.add_child(_food_compact)
-	_wood_compact = Label.new()
-	_wood_compact.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	hbox.add_child(_wood_compact)
-	_pause_compact = ArtUI.icon("pause")
-	hbox.add_child(_pause_compact)
-	_speed_compact = Label.new()
-	_speed_compact.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	hbox.add_child(_speed_compact)
+	_food_tooltip = ArtUI.panel(self, Rect2())
+	_food_tooltip.name = "FoodTooltip"
+	_food_tooltip.z_index = 1
+	_food_tooltip_text = Label.new()
+	_food_tooltip_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_food_tooltip.add_child(_food_tooltip_text)
+	_food_tooltip.hide()
 	var lower: HBoxContainer = HBoxContainer.new()
 	lower.add_theme_constant_override("separation", 8)
 	lower.visible = false
+	_era_label = Label.new()
+	_era_label.name = "EraLabel"
+	lower.add_child(_era_label)
+	_risk_button = Button.new()
+	_risk_button.name = "RiskBadge"
+	_risk_button.pressed.connect(open_tech_map)
+	lower.add_child(_risk_button)
 	_lower_row = lower
 	column.add_child(lower)
 	for role: String in ["food", "foraged_food", "births", "deaths"]:
@@ -193,21 +190,73 @@ func _ready() -> void:
 	# default values. No push_error / push_warning here so the edge-case
 	# (HUD instantiated before SimBridge registers) does not spam logs.
 
+	_poll_food_supply()
 	_refresh()
 	_refresh_tooltips()
 	if _locale != null:
 		_locale.connect("language_changed", _on_language_changed)
 
 
+func _chip(row: HBoxContainer, node_name: String, role: String) -> Button:
+	var chip: Button = Button.new()
+	chip.name = node_name
+	chip.theme_type_variation = &"UI1Chip"
+	chip.focus_mode = Control.FOCUS_NONE
+	chip.icon = Icons.texture(role)
+	row.add_child(chip)
+	return chip
+
+
 func _on_language_changed(_language: String) -> void:
 	_refresh_tooltips()
+	_refresh()
+	if _food_tooltip.visible:
+		_place_food_tooltip()
+
+
+func _poll_food_supply() -> void:
+	_food_supply = _snapshot("get_ui_facts").get("food_chain", {})
+
+
+func _show_food_tooltip() -> void:
+	_food_tooltip.show()
+	_place_food_tooltip()
+
+
+func _hide_food_tooltip() -> void:
+	if not _food_compact.has_focus() and not _food_compact.get_global_rect().has_point(get_global_mouse_position()):
+		_food_tooltip.hide()
+
+
+func _place_food_tooltip() -> void:
+	var lines: PackedStringArray = [_loc("UI1_FOOD_STOCK").format({"stock": _food_stock()})]
+	if bool(_food_supply.get("found", false)) and _food_supply.has("daily_milli"):
+		var daily: float = _safe_float(_food_supply["daily_milli"]) / 1000.0
+		lines.append(_loc("UI1_FOOD_USE").format({"daily": "%.1f" % daily}))
+	_food_tooltip_text.text = "\n".join(lines)
+	var chip_rect: Rect2 = _food_compact.get_global_rect()
+	var minimum: Vector2 = _food_tooltip.get_combined_minimum_size()
+	_food_tooltip.size = minimum
+	_food_tooltip.global_position = Vector2(maxf(12.0, chip_rect.end.x - minimum.x), chip_rect.end.y + 8.0)
+
+
+func _food_stock() -> int:
+	return int(_food_supply.get("stored_units", _legacy_food)) if bool(_food_supply.get("found", false)) else _legacy_food
+
+
+static func _safe_float(value: Variant) -> float:
+	if value is float or value is int:
+		var number: float = float(value)
+		if is_finite(number):
+			return number
+	return 0.0
 
 
 func _refresh_tooltips() -> void:
 	for entry: Array in [[_clock_label, "MUX_TIP_CALENDAR", "language"], [_agents_label, "MUX_TIP_POPULATION", "select"],
 			[_settlements_label, "MUX_TIP_SETTLEMENTS", "home"], [_shelters_label, "MUX_TIP_SHELTERS", "build"],
 			[_sites_label, "MUX_TIP_SITES", "build"], [_winter_label, "MUX_TIP_WINTER", ""],
-			[_wood_label, "MUX_TIP_FIREWOOD", "stockpile"], [_logs_label, "MUX_TIP_LOGS", "chop"],
+			[_wood_label, "MUX_TIP_FIREWOOD", "stockpile"], [_wood_compact, "MUX_TIP_FIREWOOD", "stockpile"], [_logs_label, "MUX_TIP_LOGS", "chop"],
 			[_cold_label, "MUX_TIP_COLD", "select"], [_cold_icon, "MUX_TIP_COLD", "select"],
 			[_era_label, "MUX_TIP_ERA", "tech"], [_risk_button, "MUX_TIP_TECH_RISK", "tech"],
 			[_warn_label, "MUX_TIP_TECH_RISK", "teach"]]:
@@ -219,6 +268,7 @@ func _refresh_tooltips() -> void:
 	var speeds: PackedStringArray = PackedStringArray()
 	for i: int in range(1, 5): speeds.append(_controls.tooltip("speed_%d" % i))
 	_set_tip(_speed_label, "\n".join(speeds))
+	_set_tip(_speed_compact, _controls.tooltip("pause") + "\n" + "\n".join(speeds))
 
 
 func _set_tip(control: Control, text: String) -> void:
@@ -240,10 +290,16 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if _world_sim == null:
 		return
+	_food_poll_left -= delta
+	if _food_poll_left <= 0.0:
+		_food_poll_left = FOOD_REFRESH_SECONDS
+		_poll_food_supply()
 	_refresh()
+	if _food_tooltip.visible:
+		_place_food_tooltip()
 
 
 func _refresh() -> void:
@@ -292,6 +348,13 @@ func _refresh() -> void:
 				for kind: int in kind_array:
 					if kind == 1 or kind == 3:
 						shelter_n += 1
+			var template_sites: Variant = building_dict.get("template_sites", [])
+			if template_sites is Array:
+				for site: Dictionary in template_sites:
+					if site.get("status") == "building":
+						site_n += 1
+					elif bool(site.get("complete", false)) and bool(site.get("roofed", false)) and bool(site.get("is_intact", false)):
+						shelter_n += 1
 
 	if _shelters_label != null:
 		_shelters_label.text = _loc("BUILDING_SHELTER") + " %d" % shelter_n
@@ -305,9 +368,9 @@ func _refresh() -> void:
 		_sites_label.text = _loc("BUILDING_STATE_BUILDING") + " %d" % site_n
 
 	var clock: Dictionary = _snapshot("get_time_snapshot")
-	var minutes: int = clampi(roundi(float(clock.get("time_of_day", 0.0)) * 60.0), 0, 1439)
+	var minutes: int = clampi(roundi(_safe_float(clock.get("time_of_day")) * 60.0), 0, 1439)
 	var hour: int = int(minutes / 60.0)
-	var time_text: String = "%02d:%02d · " % [hour, minutes % 60] + _loc(phase_key(hour))
+	var time_text: String = "%02d:%02d" % [hour, minutes % 60]
 	var date_text: String = _date_label(clock)
 	# M1.5: the calendar date replaces the running day counter (it would contradict "봄 2일째");
 	# a world without seasons keeps "N일차".
@@ -318,15 +381,18 @@ func _refresh() -> void:
 	_winter_label.visible = severity >= 0 and severity <= 2
 	if _winter_label.visible:
 		_winter_label.text = _loc(["HUD_WINTER_MILD", "HUD_WINTER_NORMAL", "HUD_WINTER_HARSH"][severity])
-	var food: int = 0
+	_legacy_food = 0
 	var settlement: Dictionary = _snapshot("get_settlement_snapshot")
 	var stocks: Variant = settlement.get("food_stocks", null)
 	if stocks is PackedInt32Array:
 		for amount: int in stocks:
-			food += amount
+			_legacy_food += amount
 	var wood_stocks: Variant = settlement.get("wood_stocks", null)
-	_wood_row.visible = wood_stocks is PackedInt32Array
-	if wood_stocks is PackedInt32Array:
+	var story: Dictionary = _snapshot("get_story")
+	_wood_row.visible = story.has("firewood") or wood_stocks is PackedInt32Array
+	if story.has("firewood"):
+		_wood_label.text = _loc("HUD_STOCKPILE_WOOD") + " %d" % int(story["firewood"])
+	elif wood_stocks is PackedInt32Array:
 		var wood: int = 0
 		for amount: int in wood_stocks:
 			wood += amount
@@ -369,37 +435,27 @@ func _refresh() -> void:
 		deaths += int(tallies.get(key, 0))
 	_death_total = deaths
 	var keys: Array[String] = ["HUD_STOCKPILE_FOOD", "HUD_BERRIES", "UI_BIRTHS", "UI_DEATHS"]
-	var values: Array[int] = [food, berries, int(tallies.get("births", 0)), deaths]
+	var values: Array[int] = [_legacy_food, berries, int(tallies.get("births", 0)), deaths]
 	for index: int in 4:
 		_resource_labels[index].text = _loc(keys[index]) + " %d" % values[index]
 	# M1: the camera owns the speed (keys 1–4 = 1×–4×, 12–48 ticks per second) and the pause (P).
 	var camera: Node = get_node_or_null("/root/Main/Camera2D")
 	var paused: bool = camera != null and camera.has_method("is_paused") and bool(camera.call("is_paused"))
 	if camera != null and camera.has_method("get_speed"):
-		_display_speed = float(camera.call("get_speed"))
+		_display_speed = _safe_float(camera.call("get_speed"))
 	_speed_label.text = _loc("UI_SPEED_PAUSED") if paused else _loc("HUD_SPEED_FMT") % str(int(_display_speed))
-	# M-LOOP §1.2b: update the compact upper-row labels.
-	if _food_compact != null:
-		_food_compact.text = _loc("HUD_STOCKPILE_FOOD") + " %d" % food
-	if _wood_compact != null:
-		var wood_val: int = 0
-		if wood_stocks is PackedInt32Array:
-			for amount: int in wood_stocks:
-				wood_val += amount
-		_wood_compact.text = _loc("HUD_STOCKPILE_WOOD") + " %d" % wood_val
-	if _speed_compact != null:
-		_speed_compact.text = _loc("UI_SPEED_PAUSED") if paused else _loc("HUD_SPEED_FMT") % str(int(_display_speed))
-	if _pause_compact != null:
-		_pause_compact.modulate.a = 1.0 if paused else 0.35
+	_food_compact.text = _loc("UI1_FOOD_CHIP").format({"stock": _food_stock()})
+	_wood_compact.text = _wood_label.text
+	_speed_compact.text = _speed_label.text
+	var speed_icon: Texture2D = Icons.texture("pause" if paused else "speed")
+	if _speed_compact.icon != speed_icon:
+		_speed_compact.icon = speed_icon
 	# M-ART2 (goal §3.6): the camera's zoom step ("확대 ½×").
 	var cam: Camera2D = camera as Camera2D
 	if cam != null:
 		_zoom_label.text = _loc("UI_ZOOM").replace("{zoom}", zoom_word(cam.zoom.x))
 	_pause_icon.modulate.a = 1.0 if paused else 0.35
 	_refresh_knowledge()
-	ArtUI.apply_icon(_clock_icon, "night" if hour >= 21 or hour < 5 else "day")
-	_clock_icon.offset = Vector2.ZERO
-	_clock_icon.scale = Vector2(2, 2)
 
 
 ## Keep legacy text accessors current; Goals owns the visible era/risk counters.

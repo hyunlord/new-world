@@ -19,6 +19,7 @@ const ChronicleText = preload("res://scripts/ui/chronicle_text.gd")
 const LessonHighlight = preload("res://scripts/ui/mux/lesson_highlight.gd")
 const LegacyLayout = preload("res://scripts/ui/mux/legacy_layout.gd")
 const CardPanel = preload("res://scripts/ui/mux/card_panel.gd")
+const Icons = preload("res://scripts/ui/hud/ui1_icons.gd")
 const THEME = preload("res://assets/ui/worldsim_theme.tres")
 const PLAQUE_MIN_WIDTH: float = 560.0
 const LEARNING_PANELS: Dictionary = {"AgentInspectorPanel": "person_selected", "PriorityPanel": "priorities_opened", "RoomPanel": "rooms_opened", "TechPanel": "tech_opened", "NeighboursPanel": "neighbours_opened"}
@@ -149,15 +150,13 @@ func _ready() -> void:
 	settings.extended_toggled.connect(_set_extended)
 	for panel: Control in [settings, help, goals]:
 		panel.visibility_changed.connect(_sync_foreground)
-	_why_button = _button("WhyButton", func() -> void: get_node("/root/Main/ColonyView/OrderTool").call("select_why"))
-	_goals_button = _button("GoalsButton", goals.toggle_panel)
-	_settings_button = _button("SettingsButton", settings.toggle_panel)
-	_help_button = _button("HelpButton", help.toggle_panel)
-	for entry: Array in [["PrioritiesButton", "P", "PriorityPanel", "toggle_visible", "priorities"], ["TechButton", "T", "TechPanel", "open", "tech"], ["NeighboursButton", "N", "NeighboursPanel", "open", "neighbours"]]:
-		var button: Button = _button(str(entry[0]), _open_panel.bind(str(entry[2]), str(entry[3])))
-		button.text = str(entry[1])
+	_goals_button = _button("GoalsButton", "goals", goals.toggle_panel)
+	_why_button = _button("WhyButton", "why", func() -> void: get_node("/root/Main/ColonyView/OrderTool").call("select_why"))
+	for entry: Array in [["PrioritiesButton", "priorities", "PriorityPanel", "toggle_visible", "priorities"], ["TechButton", "book", "TechPanel", "open", "tech"], ["NeighboursButton", "people", "NeighboursPanel", "open", "neighbours"]]:
+		var button: Button = _button(str(entry[0]), str(entry[1]), _open_panel.bind(str(entry[2]), str(entry[3])))
 		button.set_meta("mux_control", str(entry[4]))
-		button.tooltip_text = catalog.tooltip(str(entry[4]))
+	_settings_button = _button("SettingsButton", "settings", settings.toggle_panel)
+	_help_button = _button("HelpButton", "", help.toggle_panel)
 	minimap.map_used.connect(func() -> void: helper.observe("minimap_used"))
 	_camera.connect("camera_activity", _camera_activity)
 	alerts.alert_activated.connect(func(_id: String) -> void: helper.observe("alerts_used"))
@@ -185,10 +184,12 @@ func _ready() -> void:
 	_baseline_notifications()
 	_layout.call_deferred()
 
-func _button(node_name: String, action: Callable) -> Button:
+func _button(node_name: String, role: String, action: Callable) -> Button:
 	var button: Button = Button.new()
 	button.name = node_name
-	button.theme_type_variation = &"MapActionButton"
+	button.theme_type_variation = &"UI1Chip"
+	if not role.is_empty():
+		button.icon = Icons.texture(role)
 	button.pressed.connect(action)
 	_actions.add_child(button)
 	return button
@@ -211,7 +212,7 @@ func _locale_changed(_language: String) -> void:
 	_why_button.text = _loc("MUX_WHY")
 	_why_button.tooltip_text = catalog.tooltip("why")
 	_steward.tooltip_text = _loc("MUX_STEWARD_TIP")
-	_help_button.text = "?"
+	_help_button.text = _loc("UI1_HELP_CHIP")
 	_help_button.tooltip_text = catalog.tooltip("help")
 	_goals_button.text = _loc("MUX_GOALS_TITLE")
 	_goals_button.tooltip_text = catalog.tooltip("goals")
@@ -222,7 +223,7 @@ func _locale_changed(_language: String) -> void:
 			(child as Button).tooltip_text = catalog.tooltip(str(child.get_meta("mux_control")))
 			for entry: Dictionary in catalog.entries:
 				if str(entry["id"]) == str(child.get_meta("mux_control")):
-					(child as Button).text = "%s (%s)" % [_loc(str(entry["text_key"])), Catalog.input_text(entry)]
+					(child as Button).text = _loc(str(entry["text_key"]))
 	_layout.call_deferred()
 
 ## Container minimums settle after rebuilt/localized card children are laid out.

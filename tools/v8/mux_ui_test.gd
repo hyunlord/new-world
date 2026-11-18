@@ -343,7 +343,13 @@ func _tooltip_checks() -> void:
 		for node: Node in buttons:
 			var button: Button = node as Button
 			button.mouse_entered.emit()
-			covered = covered and not button.tooltip_text.strip_edges().is_empty() and not "MUX_" in button.tooltip_text
+			if button.name == &"FoodChip":
+				var tip: PanelContainer = panel.get_node("FoodTooltip") as PanelContainer
+				var food_text: String = (tip.get_child(0) as Label).text
+				covered = covered and tip.visible and not food_text.is_empty() and not "UI1_" in food_text
+				tip.hide()
+			else:
+				covered = covered and not button.tooltip_text.strip_edges().is_empty() and not "MUX_" in button.tooltip_text
 		_check(panel_name + " instantiated buttons have localized tooltips", covered)
 
 func _steward_checks() -> void:
@@ -750,7 +756,7 @@ func _orderbar_locale_assertions(language: String, selected_kind: String) -> voi
 	var gather_ok: bool = true
 	for i: int in main_buttons.size():
 		var entry: Dictionary = OrderBar.MODES[i]
-		main_ok = main_ok and (main_buttons[i] as Button).text == "%s %s" % [OS.get_keycode_string(int(entry["hotkey"])), locale.call("ltr", str(entry["key"]))]
+		main_ok = main_ok and (main_buttons[i] as Button).text == str(locale.call("ltr", str(entry["key"])))
 	var menu_rows: Array[Dictionary] = Economy.Content.menu()
 	for i: int in build_buttons.size():
 		var kind: Dictionary = Economy.build_kind(Economy.menu_order()[i])
@@ -763,7 +769,7 @@ func _orderbar_locale_assertions(language: String, selected_kind: String) -> voi
 	_check(language + " all order buttons refresh", main_ok)
 	_check(language + " all build buttons refresh", build_ok)
 	_check(language + " all gather buttons refresh", gather_ok)
-	_check(language + " rooms label refreshes", (bar.get("_rooms_button") as Button).text == str(locale.call("ltr", "UI_ROOMS_TOGGLE")))
+	_check(language + " rooms label refreshes", (bar.get("_rooms_button") as Button).text == str(locale.call("ltr", "UI1_ROOMS")))
 	_check(language + " current build hint refreshes", (bar.get("_hint") as Label).text == OrderBar.build_hint(locale, Economy.build_code(selected_kind)))
 	_check(language + " language switch preserves mode and selected tool", int(bar.call("current_mode")) == OrderBar.BUILD_MODE and str((bar.get("_tool") as Node).get("build_kind")) == selected_kind)
 

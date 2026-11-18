@@ -52,7 +52,6 @@ static func present(agent_id: int, lang: String) -> String:
 	return unbroken(display_name(agent_id, lang))
 
 static func prepare_rich_text(label: RichTextLabel) -> void:
-	label.add_theme_font_override("bold_font", preload("res://assets/fonts/galmuri/Galmuri11-Bold.ttf"))
 	label.selection_enabled = true
 	if label.has_meta("p12_clean_copy"):
 		return

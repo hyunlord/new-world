@@ -1,23 +1,11 @@
-# order_bar.gd (UI/OrderBar in scenes/main.tscn): the M1 order bar at the bottom of the screen.
-# Six modes — 베기 / 비축 구역 / 짓기 / 구역 지우기 / 취소 / 채석 — chosen by a click or F1–F4, F6 and F7 (the
-#   number keys 1–4 set the speed; M1 DECISIONS D24); Esc or a right click leaves the mode. M2: F3 (짓기) opens a
-#   build menu above its button — 오두막 / 돌깎이 자리 / 목공대 / 건조대 — where 1–4 (or a click) pick the
-#   blueprint and enter OrderTool's build mode with that footprint (while the menu is open, 1–4 choose, not the
-#   speed; F3 or Esc closes it); F7 (채석) is an area mode like 베기. Shows the mode's hint (with no
-#   mode: the order keys, P = priorities, Space = pause and Home/H = centre on the camp) and, on a backing panel above the
-#   bar, a short toast with each order's result (count with its noun, or the reject reason). M-ART2: each mode button
-#   carries the imported sprite bindings.json `order_icons` names for its icon (fitted into 24 × 24; none when null);
-#   each build-menu entry the finished look of its blueprint (scripts/world/art/site_ghost.gd: a workshop, the
-#   bedroll, a hut ring, a wall / door / floor from the material system) fitted into 32 × 32; the active mode's button
-#   is pressed and its label gold. On macOS the idle hint reads "fn + F1–F4·F6" (the F-keys need fn).
+# Bottom command card and the build/gather menus, with context-sensitive tool hints and order feedback.
 # M1.5 save/load: F5 saves the world to user://saves/<seed>-<tick>.wsave, F9 loads the last save of this session
 #   (else the newest file in user://saves); each shows a toast (UI_SAVE_DONE / UI_LOAD_DONE / UI_SAVE_FAILED /
 #   UI_LOAD_FAILED). The cancel order moved from F5 to F6 for this.
 # M3 (goal 9.1–9.3): the build menu grows to nine — 5 통나무 벽, 6 문, 7 바닥, 8 침상, 9 돌담 (EconomyText.menu_order();
 #   1–9 pick while it is open); walls and floors show the drag hint "통나무 벽 · 드래그: 줄 · Shift+드래그: 네모(속 빔)";
 #   F8 파기 and F10 철거 are area modes; a "방 보기 R" button toggles the room overlay (Main/RoomIndex;
-#   R does the same) and stays pressed while it is shown. The bar holds the buttons on one line and the hint on a
-#   second while learning or using a tool; idle help collapses after the first order or 180 seconds, and ? reopens it.
+#   R does the same) and stays pressed while it is shown. The bar shows instructions when a tool is active.
 #   It sits 12 px above the screen's bottom once laid out, the toast and the build menu above it. This node
 #   also creates the room panel (UI/RoomPanel, room_panel.gd) beside itself.
 # M4 (goal 9.5): the build menu grows to eleven — 0 토기대 and - 갈돌 after 1–9 (EconomyText.menu_order()); F7 enters
@@ -25,13 +13,14 @@
 #   switches to the clay-pit area mode (OrderTool CLAY; while the submenu is open, 1 and 2 choose, not the speed; Esc,
 #   a pick, an order or another mode closes it); the F7 button stays pressed in either mode.
 # M5 (goal 3.5): the F7 submenu grows to four — "3 사냥 (사슴)" (OrderTool HUNT: click a deer) and "4 사냥 구역" (OrderTool
-#   HUNT_ZONE: drag a hunt zone), with their hints; the idle hint names D 소집 and M 기분.
+#   HUNT_ZONE: drag a hunt zone), with their hints.
 # Bridge methods: via SimReads get_world_info, get_time_snapshot; save_world, load_world (SimReads.mutate; the load
 #   emits world_reset, which every layer already rebuilds on). The orders themselves go through OrderTool.
 extends Control
 
 const ControlsCatalog = preload("res://scripts/ui/mux/controls_catalog.gd")
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
+const Icons = preload("res://scripts/ui/hud/ui1_icons.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 const SiteGhost = preload("res://scripts/world/art/site_ghost.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
@@ -77,7 +66,12 @@ const DIG_MODES: Array[int] = [QUARRY_MODE, CLAY_MODE, HUNT_MODE, HUNT_ZONE_MODE
 const BAR_BOTTOM: float = 1080.0 - 12.0
 const ACTIVE: Color = Color("e8c46e")
 const TOAST_SECONDS: float = 2.0
-const KEY_HELP_SECONDS: float = 180.0
+const GROUPS: Array[Dictionary] = [
+	{"key": "UI1_GROUP_GATHER", "modes": [1, QUARRY_MODE, 7]},
+	{"key": "UI1_GROUP_ZONE", "modes": [2, 4]},
+	{"key": "UI1_GROUP_BUILD", "modes": [BUILD_MODE, 8]},
+	{"key": "UI1_GROUP_INSPECT", "modes": [5]},
+]
 ## M1.5 quick save and load keys and folder.
 const SAVE_KEY: Key = KEY_F5
 const LOAD_KEY: Key = KEY_F9
@@ -87,10 +81,7 @@ var _controls: ControlsCatalog = ControlsCatalog.new()
 var _tool: Node = null
 var _buttons: Array[Button] = []
 var _hint: Label
-var _key_help_expanded: bool = true
-var _key_help_elapsed: float = 0.0
-var _key_help_timer_done: bool = false
-var _first_player_order_seen: bool = false
+var _group_labels: Array[Label] = []
 var _toast: Label
 var _toast_panel: PanelContainer
 var _toast_left: float = 0.0
@@ -133,32 +124,50 @@ func _ready() -> void:
 	var row: HBoxContainer = HBoxContainer.new()
 	row.add_theme_constant_override("separation", 8)
 	lines.add_child(row)
+	var group_rows: Dictionary = {}
+	for group: Dictionary in GROUPS:
+		if not group_rows.is_empty():
+			var divider: ColorRect = ColorRect.new()
+			divider.color = Color(0.9294, 0.8902, 0.8196, 0.25)
+			divider.custom_minimum_size.x = 1.0
+			divider.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			row.add_child(divider)
+		var group_column: VBoxContainer = VBoxContainer.new()
+		group_column.add_theme_constant_override("separation", 4)
+		row.add_child(group_column)
+		var heading: Label = Label.new()
+		heading.theme_type_variation = &"UI1Group"
+		heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		heading.text = _loc(str(group["key"]))
+		group_column.add_child(heading)
+		_group_labels.append(heading)
+		var commands: HBoxContainer = HBoxContainer.new()
+		commands.add_theme_constant_override("separation", 4)
+		group_column.add_child(commands)
+		for mode: int in group["modes"]:
+			group_rows[mode] = commands
 	for entry: Dictionary in MODES:
-		var button: Button = Button.new()
-		button.toggle_mode = true
-		button.focus_mode = Control.FOCUS_NONE
-		button.text = "%s %s" % [OS.get_keycode_string(int(entry["hotkey"])), _loc(str(entry["key"]))]
-		button.icon = _icon(str(entry["icon"]))
-		button.add_theme_color_override("font_pressed_color", ACTIVE)
-		button.add_theme_color_override("font_hover_pressed_color", ACTIVE)
-		button.pressed.connect(_on_button.bind(int(entry["mode"])))
-		row.add_child(button)
+		var mode: int = int(entry["mode"])
+		var role: String = str(entry["icon"]).trim_prefix("icon_")
+		if role == "remove":
+			role = "remove_zone"
+		var button: Button = _command_button(_loc(str(entry["key"])), role)
+		if mode == BUILD_MODE:
+			button.name = "BuildOrder"
+		elif mode == QUARRY_MODE:
+			button.name = "GatherOrder"
+		button.pressed.connect(_on_button.bind(mode))
+		(group_rows[mode] as HBoxContainer).add_child(button)
 		_buttons.append(button)
-	# M3: the room overlay toggle (R).
-	_rooms_button = Button.new()
+	_rooms_button = _command_button(_loc("UI1_ROOMS"), "rooms")
 	_rooms_button.name = "RoomsToggle"
-	_rooms_button.toggle_mode = true
-	_rooms_button.focus_mode = Control.FOCUS_NONE
-	_rooms_button.text = _loc("UI_ROOMS_TOGGLE")
-	_rooms_button.add_theme_color_override("font_pressed_color", ACTIVE)
-	_rooms_button.add_theme_color_override("font_hover_pressed_color", ACTIVE)
 	_rooms_button.toggled.connect(_on_rooms_button)
-	row.add_child(_rooms_button)
+	(group_rows[5] as HBoxContainer).add_child(_rooms_button)
 	_hint = Label.new()
 	_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_hint.add_theme_color_override("font_color", Color("c8b89a"))
 	lines.add_child(_hint)
-	_hint.text = _loc(_idle_hint())
+	_hint.hide()
 	# The toast sits on its own panel just above the bar; the panel shrinks to the text on every show.
 	_toast_panel = ArtUI.panel(self, Rect2(12, 1080 - 112 - 8 - 48, 0, 0))
 	_toast_panel.name = "Toast"
@@ -177,7 +186,7 @@ func _ready() -> void:
 	get_parent().add_child.call_deferred(_field_panel)
 	if _tool != null:
 		_tool.connect("mode_changed", _on_mode_changed)
-		_tool.connect("order_sent", _on_order_sent)
+		_tool.connect("order_sent", close_dig_menu.unbind(2))
 		_tool.connect("field_selected", Callable(_field_panel, "open_tile"))
 	_rooms = get_node_or_null("/root/Main/RoomIndex")
 	if _rooms != null:
@@ -192,16 +201,31 @@ func _ready() -> void:
 		get_parent().add_child.call_deferred(room_panel)
 
 
+func _command_button(text: String, role: String) -> Button:
+	var button: Button = Button.new()
+	button.toggle_mode = true
+	button.text = text
+	button.icon = Icons.texture(role)
+	button.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	button.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
+	button.custom_minimum_size = Vector2(86, 57)
+	button.add_theme_color_override("font_pressed_color", ACTIVE)
+	button.add_theme_color_override("font_hover_pressed_color", ACTIVE)
+	return button
+
+
 func _on_language_changed(_language: String) -> void:
 	for i: int in _buttons.size():
 		var entry: Dictionary = MODES[i]
-		_buttons[i].text = "%s %s" % [OS.get_keycode_string(int(entry["hotkey"])), _loc(str(entry["key"]))]
+		_buttons[i].text = _loc(str(entry["key"]))
+	for i: int in GROUPS.size():
+		_group_labels[i].text = _loc(str(GROUPS[i]["key"]))
 	for i: int in _menu_buttons.size():
 		var kind: Dictionary = EconomyText.build_kind(EconomyText.menu_order()[i])
 		_menu_buttons[i].text = "%s %s" % [_menu_shortcut(i), _loc(str(kind["key"]))]
 	for i: int in _dig_buttons.size():
 		_dig_buttons[i].text = "%d %s" % [i + 1, _loc(str(DIG_MENU[i]["key"]))]
-	_rooms_button.text = _loc("UI_ROOMS_TOGGLE")
+	_rooms_button.text = _loc("UI1_ROOMS")
 	_templates_button.text = _loc("UI_ORDER_BUILD") + " · " + _loc("BUILD_GROUP_AVAILABLE")
 	_refresh_tooltips()
 	_on_mode_changed(current_mode())
@@ -357,14 +381,6 @@ func choose_dig(index: int) -> void:
 	select_mode(int(DIG_MENU[index]["mode"]))
 
 
-func _on_order_sent(_command: String, _result: Dictionary) -> void:
-	close_dig_menu()
-	if not _first_player_order_seen:
-		_first_player_order_seen = true
-		_key_help_expanded = false
-		_refresh_key_help()
-
-
 ## Whether the F3 build menu is open.
 func build_menu_open() -> bool:
 	return _menu != null and _menu.visible
@@ -398,11 +414,6 @@ func choose_build(index: int) -> void:
 	_menu.visible = false
 	if _tool != null:
 		_tool.call("set_build", str(EconomyText.build_kind(EconomyText.menu_order()[index])["name"]))
-
-
-## The idle hint key: macOS keyboards need fn for the F-keys.
-static func _idle_hint() -> String:
-	return "UI_ORDER_HINT_IDLE_MAC" if OS.get_name() == "macOS" else "UI_ORDER_HINT_IDLE"
 
 
 ## The order icon `name` (an `icon` of MODES / DIG_MENU): bindings.json `order_icons[name]` names a manifest id,
@@ -478,7 +489,7 @@ func _on_mode_changed(mode: int) -> void:
 		var on: bool = int(MODES[i]["mode"]) == mode or (int(MODES[i]["mode"]) == BUILD_MODE and build_menu_open()) \
 			or (int(MODES[i]["mode"]) == QUARRY_MODE and DIG_MODES.has(mode))
 		_buttons[i].set_pressed_no_signal(on)
-	_hint.text = _loc(_idle_hint()) if mode == 0 else ""
+	_hint.text = ""
 	for entry: Dictionary in MODES:
 		if int(entry["mode"]) == mode:
 			_hint.text = _loc(str(entry["hint"]))
@@ -500,7 +511,8 @@ func _on_mode_changed(mode: int) -> void:
 		_hint.text = build_hint(_locale, code)
 	elif mode == 0 and build_menu_open():
 		_hint.text = _loc("UI_ORDER_HINT_BUILD_MENU")
-	_refresh_key_help()
+	_hint.visible = not _hint.text.is_empty()
+	_place_bar.call_deferred()
 
 
 ## The build mode's hint for blueprint kind `code`: walls and floors "{name} · 드래그: 줄 · Shift+드래그: 네모(…)",
@@ -541,12 +553,6 @@ func _display_toast(text: String) -> void:
 
 
 func _process(delta: float) -> void:
-	if not _key_help_timer_done:
-		_key_help_elapsed += delta
-		if _key_help_elapsed >= KEY_HELP_SECONDS:
-			_key_help_timer_done = true
-			_key_help_expanded = false
-			_refresh_key_help()
 	if _toast_left > 0.0:
 		_toast_left -= delta
 		if _toast_left <= 0.0:
@@ -602,23 +608,6 @@ static func _newest_save() -> String:
 			best = path
 			best_time = time
 	return best
-
-
-## Observe help without consuming it: the existing help panel also handles this shortcut.
-func _input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and not event.echo:
-		if event.keycode == KEY_QUESTION or (event.keycode == KEY_SLASH and event.shift_pressed):
-			_key_help_expanded = true
-			_key_help_timer_done = true
-			_refresh_key_help()
-
-
-func _refresh_key_help() -> void:
-	if _hint == null:
-		return
-	# Compact idle help leaves every action button in place; active tools keep their instructions.
-	_hint.visible = _key_help_expanded or current_mode() != 0 or build_menu_open() or dig_menu_open() or (_tool != null and int(_tool.call("selected_housing_zone")) >= 0)
-	_place_bar.call_deferred()
 
 
 func _unhandled_input(event: InputEvent) -> void:

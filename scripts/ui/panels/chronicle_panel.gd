@@ -24,6 +24,7 @@ extends Control
 const KoreanText = preload("res://scripts/ui/mux/korean_text.gd")
 const PanelTooltips = preload("res://scripts/ui/panels/panel_tooltips.gd")
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
+const Icons = preload("res://scripts/ui/hud/ui1_icons.gd")
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
 const WhyPanel = preload("res://scripts/ui/panels/why_panel.gd")
@@ -33,10 +34,13 @@ const FEED_PATH: String = "res://assets/ui/chronicle_feed.json"
 const GROUPING_PATH: String = "res://assets/ui/chronicle_grouping.json"
 const NOTABLE: Array[int] = [0, 2, 11, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37,
 	38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65]
-## M5: the kind groups of the filter (0 = all): 압력, 사냥·늑대, 다툼·기분, 지식, 마을 성장 (M-GROW zone/house
-## stage/material lines, so they are found however old), 삶 (every other notable kind).
-const FILTER_KEYS: Array[String] = ["M5_FILTER_ALL", "M5_FILTER_PRESSURE", "M5_FILTER_HUNT", "M5_FILTER_MOOD", "M5_FILTER_KNOWLEDGE", "M5_FILTER_GROWTH", "M5_FILTER_LIFE"]
-const FILTER_KINDS: Array = [[], [29, 30, 36, 37], [31, 34, 35], [19, 32, 33], [24, 25, 26, 27, 28, 44, 59], [70, 71, 72, 73], []]
+## M5: the kind groups of the filter (0 = all): 압력, 사냥·늑대, 다툼·기분, 지식, 삶 (every other notable kind).
+const FILTER_KEYS: Array[String] = ["M5_FILTER_ALL", "M5_FILTER_PRESSURE", "M5_FILTER_HUNT", "M5_FILTER_MOOD", "M5_FILTER_KNOWLEDGE", "M5_FILTER_LIFE"]
+const FILTER_KINDS: Array = [[], [29, 30, 36, 37], [31, 34, 35], [19, 32, 33], [24, 25, 26, 27, 28, 44, 59], []]
+const GROWTH_FILTER: int = 6
+const GROWTH_KINDS: Array[int] = [12, 14, 22, 23, 54, 59, 60, 70, 71, 72, 73]
+const FEED_LIMIT: int = 60
+const CARD_SIZE: Vector2 = Vector2(500, 296)
 ## M5: the Drafted kind and its "left the draft at a critical need" cause.
 const DRAFTED_KIND: int = 34
 const SELF_UNDRAFT: int = 2
@@ -44,7 +48,10 @@ const SELF_UNDRAFT: int = 2
 const LOSS_TOAST_TICKS: int = 1440
 var _world: Node
 var _locale: Node
+var _panel: PanelContainer
+var _content: VBoxContainer
 var _title: Label
+var _collapse_button: Button
 var _body: RichTextLabel
 var _body_padding: StyleBoxEmpty
 var _next: int = 0
@@ -52,6 +59,7 @@ var _total: int = 0
 var _tick: int = -1
 var _language: String = ""
 var _entries: Array[Dictionary] = []
+var _growth_entries: Array[Dictionary] = []
 var _pending_porter: Dictionary = {}
 var _unknown_kinds: int = 0
 var _feed_visibility: Dictionary = {}
@@ -60,6 +68,7 @@ var _filter: int = 0
 var _person_only: bool = false
 var _filter_box: OptionButton
 var _person_button: Button
+var _growth_button: Button
 var _year_label: Label
 var _year_shown: int = -1
 var _year_key: int = -2
@@ -86,23 +95,52 @@ func _ready() -> void:
 	if _world != null:
 		_world.connect("world_reset", _reset)
 	position = Vector2(12, 124)
-	size = Vector2(620, 480)
+	size = CARD_SIZE
 	mouse_filter = Control.MOUSE_FILTER_STOP
-	var panel: PanelContainer = ArtUI.panel(self, Rect2(Vector2.ZERO, size))
+	_panel = ArtUI.panel(self, Rect2(Vector2.ZERO, size))
 	var box := VBoxContainer.new()
-	panel.add_child(box)
+	_panel.add_child(box)
+	var header_chip := PanelContainer.new()
+	header_chip.add_theme_stylebox_override("panel", get_theme_stylebox("normal", "UI1Group"))
+	box.add_child(header_chip)
+	var header := HBoxContainer.new()
+	header_chip.add_child(header)
+	var book := TextureRect.new()
+	book.texture = Icons.texture("book")
+	book.custom_minimum_size = Vector2(24, 24)
+	book.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	book.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	book.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	header.add_child(book)
 	_title = Label.new()
 	_title.theme_type_variation = &"Heading"
-	box.add_child(_title)
+	_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	header.add_child(_title)
+	_collapse_button = Button.new()
+	_collapse_button.name = "CollapseChronicle"
+	_collapse_button.theme_type_variation = &"UI1Chip"
+	_collapse_button.flat = true
+	_collapse_button.toggle_mode = true
+	_collapse_button.toggled.connect(_set_collapsed)
+	header.add_child(_collapse_button)
+	_content = VBoxContainer.new()
+	box.add_child(_content)
+	_content.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	var filters: HBoxContainer = HBoxContainer.new()
 	filters.add_theme_constant_override("separation", 8)
-	box.add_child(filters)
+	_content.add_child(filters)
 	_filter_box = OptionButton.new()
 	PanelTooltips.attach(_filter_box, "chronicle", "MUX_TIP_CHRONICLE_FILTER")
 	_filter_box.name = "KindFilter"
 	_filter_box.focus_mode = Control.FOCUS_NONE
 	_filter_box.item_selected.connect(set_filter)
 	filters.add_child(_filter_box)
+	_growth_button = Button.new()
+	_growth_button.name = "GrowthFilter"
+	_growth_button.theme_type_variation = &"UI1Chip"
+	_growth_button.toggle_mode = true
+	_growth_button.toggled.connect(_toggle_growth)
+	filters.add_child(_growth_button)
 	_person_button = Button.new()
 	PanelTooltips.attach(_person_button, "chronicle")
 	_person_button.name = "PersonFilter"
@@ -121,16 +159,15 @@ func _ready() -> void:
 	_year_label = Label.new()
 	_year_label.name = "YearSummary"
 	_year_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_year_label.add_theme_color_override("font_color", Color("e8c46e"))
 	_year_label.hide()
-	box.add_child(_year_label)
+	_content.add_child(_year_label)
 	_body = RichTextLabel.new()
 	_body.autowrap_mode = TextServer.AUTOWRAP_WORD
 	_body.bbcode_enabled = true
 	_body.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_body.meta_clicked.connect(_follow_link)
-	box.add_child(_body)
+	_content.add_child(_body)
 	Names.prepare_rich_text(_body)
 	_body_padding = StyleBoxEmpty.new()
 	_body_padding.content_margin_top = 4.0
@@ -160,8 +197,6 @@ func _process(_delta: float) -> void:
 			_ingest_row(row)
 		if _unknown_kinds != unknown_before:
 			print_debug("Chronicle skipped unknown kinds: ", _unknown_kinds)
-		while _entries.size() > 60:
-			_entries.pop_front()
 	if visible and (changed or Chronicle.language(_locale) != _language):
 		_refresh()
 
@@ -201,7 +236,7 @@ func _ingest_row(row: Dictionary) -> void:
 			_unknown_kinds += 1
 		elif kind in NOTABLE or _feed_visibility.has(str(kind)):
 			if keeps_kind(kind):
-				_entries.append(row)
+				_remember_row(row)
 			# Notification delivery is independent of feed presentation.
 			if kind == 28 and int(row.get("tick", 0)) >= _tick - LOSS_TOAST_TICKS:
 				_toast_loss(row)
@@ -221,7 +256,18 @@ func _ingest_row(row: Dictionary) -> void:
 	else:
 		_pending_porter = row.duplicate()
 		_pending_porter["porter_count"] = 1
-		_entries.append(_pending_porter)
+		_remember_row(_pending_porter)
+
+
+func _remember_row(row: Dictionary) -> void:
+	_entries.append(row)
+	if _entries.size() > FEED_LIMIT:
+		_entries.pop_front()
+	# Keep older growth events reachable after frequent routine events fill the main feed.
+	if int(row["kind"]) in GROWTH_KINDS:
+		_growth_entries.append(row)
+		if _growth_entries.size() > FEED_LIMIT:
+			_growth_entries.pop_front()
 
 ## M4: the loss toast on the order bar.
 func _toast_loss(row: Dictionary) -> void:
@@ -238,24 +284,26 @@ func _toast_text(text: String) -> void:
 ## These entries are not saved, not hashed; they are rebuilt in _entries and rendered as text.
 func add_presentation_entry(text: String) -> void:
 	var tick: int = _tick if _tick >= 0 else 0
-	_entries.append({"kind": -1, "tick": tick, "_presentation_text": text, "subject": -1})
-	while _entries.size() > 60:
-		_entries.pop_front()
+	_remember_row({"kind": -1, "tick": tick, "_presentation_text": text, "subject": -1})
 	if visible:
 		_refresh()
 
 func _refresh() -> void:
 	_language = Chronicle.language(_locale)
+	_title.text = Chronicle.loc(_locale, "UI_CHRONICLE_TITLE")
+	_refresh_collapse_button()
+	if not _content.visible:
+		return
 	if _world != null and _world.has_method("get_neighbours"):
 		NeighbourText.observe(SimReads.read(_world, "get_neighbours"))
-	_title.text = Chronicle.loc(_locale, "UI_CHRONICLE_TITLE")
 	_refresh_filters()
 	_refresh_year()
 	var info: Dictionary = SimReads.read(_world, "get_world_info") if _world != null and _world.has_method("get_world_info") else {}
 	var person: int = _selected_person()
 	var filtered: Array[Dictionary] = []
-	for index: int in range(_entries.size() - 1, -1, -1):
-		var row: Dictionary = _entries[index]
+	var feed_rows: Array[Dictionary] = _growth_entries if _filter == GROWTH_FILTER else _entries
+	for index: int in range(feed_rows.size() - 1, -1, -1):
+		var row: Dictionary = feed_rows[index]
 		if not passes_filtered(row, _filter, person if _person_only else -1):
 			continue
 		filtered.append(row)
@@ -276,13 +324,15 @@ func _refresh() -> void:
 			lines.append("[url=group:%s]%s · %s[/url]" % [group_id, count_text, action_text])
 			if expanded:
 				for entry: Dictionary in entries:
-					lines.append(Chronicle.line(entry, -1, _locale, info, true, true))
+					lines.append(_event_line(entry, info))
 			else:
-				lines.append(Chronicle.line(entries[0], -1, _locale, info, true, true))
+				lines.append(_event_line(entries[0], info))
 		elif item is Dictionary and (item as Dictionary).has("_presentation_text"):
-			lines.append(str((item as Dictionary)["_presentation_text"]))
+			lines.append(_event_icon(-1) + str((item as Dictionary)["_presentation_text"]))
 		else:
-			lines.append(Chronicle.line(item as Dictionary, -1, _locale, info, true, true))
+			var line: String = _event_line(item as Dictionary, info)
+			if not line.is_empty():
+				lines.append(line)
 	for group_id: String in _expanded_groups.keys():
 		if not _groups.has(group_id):
 			_expanded_groups.erase(group_id)
@@ -298,6 +348,46 @@ func _refresh() -> void:
 	_body.text = "\n\n".join(lines)
 	_fit_body_lines.call_deferred()
 
+
+func _event_line(row: Dictionary, info: Dictionary) -> String:
+	var line: String = Chronicle.line(row, -1, _locale, info, true, true)
+	return "" if line.is_empty() else _event_icon(int(row["kind"])) + line
+
+
+func _event_icon(kind: int) -> String:
+	var role: String = "generic"
+	if kind in [0, 2, 3, 4, 10]:
+		role = "family"
+	elif kind in [25, 26, 44, 66]:
+		role = "discovery"
+	elif kind in [24, 57, 58, 67, 68, 69, 72]:
+		role = "material"
+	elif kind in GROWTH_KINDS:
+		role = "house"
+	var icon: AtlasTexture = Icons.texture(role) as AtlasTexture
+	if icon == null:
+		return ""
+	var region: Rect2 = icon.region
+	return "[img width=20 height=20 region=%d,%d,%d,%d]%s[/img]  " % [
+		region.position.x, region.position.y, region.size.x, region.size.y, icon.atlas.resource_path]
+
+
+func _set_collapsed(collapsed: bool) -> void:
+	_content.visible = not collapsed
+	_panel.size = Vector2(CARD_SIZE.x, _panel.get_combined_minimum_size().y) if collapsed else CARD_SIZE
+	size = _panel.size
+	if collapsed:
+		_clear_highlights()
+	_refresh()
+
+
+func _refresh_collapse_button() -> void:
+	var collapsed: bool = not _content.visible
+	_collapse_button.icon = Icons.texture("chevron" if collapsed else "up-chevron")
+	_collapse_button.tooltip_text = Chronicle.loc(_locale, "UI1_CHRONICLE_EXPAND" if collapsed else "UI1_CHRONICLE_COLLAPSE")
+	_collapse_button.accessibility_name = _collapse_button.tooltip_text
+
+
 ## M5: the filter controls' texts (rebuilt on a language change).
 func _refresh_filters() -> void:
 	if _filter_box.item_count != FILTER_KEYS.size() or str(_filter_box.get_meta("language", "")) != _language:
@@ -305,7 +395,9 @@ func _refresh_filters() -> void:
 		for i: int in FILTER_KEYS.size():
 			_filter_box.add_item(Chronicle.loc(_locale, FILTER_KEYS[i]), i)
 		_filter_box.set_meta("language", _language)
-	_filter_box.select(_filter)
+	_filter_box.select(_filter if _filter != GROWTH_FILTER else 0)
+	_growth_button.text = Chronicle.loc(_locale, "UI1_CHRONICLE_GROWTH")
+	_growth_button.set_pressed_no_signal(_filter == GROWTH_FILTER)
 	_person_button.text = Chronicle.loc(_locale, "M5_FILTER_PERSON")
 	_person_button.set_pressed_no_signal(_person_only)
 	# M-LOOP §2.5: notable/all toggle label.
@@ -319,11 +411,15 @@ func _toggle_notable(notable_on: bool) -> void:
 	_refresh()
 
 
+func _toggle_growth(on: bool) -> void:
+	set_filter(GROWTH_FILTER if on else 0)
+
+
 ## M5: whether `row` shows under kind group `group` (0 all; 5 삶 = no other group) and, when `person` ≥ 0, names them.
 ## M-LOOP §2.5: `notable_kinds` filters the default view when non-empty.
 func passes_filtered(row: Dictionary, group: int, person: int) -> bool:
 	# M-LOOP §2.5: when not showing all and notable_kinds is defined, filter to notable only.
-	if not _show_all and not _notable_kinds.is_empty():
+	if group != GROWTH_FILTER and not _show_all and not _notable_kinds.is_empty():
 		var kind: int = int(row.get("kind", -1))
 		if kind not in _notable_kinds:
 			return false
@@ -332,6 +428,8 @@ func passes_filtered(row: Dictionary, group: int, person: int) -> bool:
 
 static func passes(row: Dictionary, group: int, person: int) -> bool:
 	var kind: int = int(row.get("kind", -1))
+	if group == GROWTH_FILTER and kind not in GROWTH_KINDS:
+		return false
 	if group > 0 and group < FILTER_KINDS.size():
 		var kinds: Array = FILTER_KINDS[group]
 		if group == FILTER_KINDS.size() - 1:
@@ -344,9 +442,9 @@ static func passes(row: Dictionary, group: int, person: int) -> bool:
 		return int(row.get("subject", -1)) == person or int(row.get("other", -1)) == person or int(row.get("third", -1)) == person
 	return true
 
-## M5: choose kind group `group` (0 all … 5 삶; also used by tools).
+## Select a kind group, including the independent growth filter.
 func set_filter(group: int) -> void:
-	_filter = clampi(group, 0, FILTER_KEYS.size() - 1)
+	_filter = clampi(group, 0, GROWTH_FILTER)
 	_refresh()
 
 ## M5: show only the inspector's person (also used by tools).
@@ -449,6 +547,7 @@ func _reset() -> void:
 	_total = 0
 	_tick = -1
 	_entries.clear()
+	_growth_entries.clear()
 	_groups.clear()
 	_expanded_groups.clear()
 	_pending_porter = {}

@@ -1,6 +1,6 @@
 # Explicit tile explanation: bounded, anchored popup; empty requests show a two-second toast.
 # M-READ: open_mind accepts an optional why_not dictionary and shows the why-not line below candidates.
-# Bridge: get_tile_causal_history directly; get_knowledge_waits/get_colony_overlay through SimReads.
+# Bridge: get_tile_causal_history and get_event_chain directly; get_knowledge_waits/get_colony_overlay through SimReads.
 extends Control
 
 const FoodText = preload("res://scripts/ui/food_text.gd")
@@ -12,6 +12,7 @@ const PopupObstacles = preload("res://scripts/world/colony/marker_layout.gd")
 
 const KoreanText = preload("res://scripts/ui/mux/korean_text.gd")
 
+const CauseTooltips = preload("res://scripts/ui/panels/cause_tooltips.gd")
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const View = preload("res://scripts/world/colony/view.gd")
 const ViewProjection = preload("res://scripts/world/view_projection.gd")
@@ -66,6 +67,7 @@ var _panel: PanelContainer
 var _column: VBoxContainer
 var _scroll: ScrollContainer
 var _anchor_tile: Vector2i
+var _person_bits: int = -1
 var _placement_exhausted: bool = false
 
 func _ready() -> void:
@@ -79,6 +81,7 @@ func _ready() -> void:
 	var heading := HBoxContainer.new()
 	_column.add_child(heading)
 	_title_label = Label.new()
+	_title_label.theme_type_variation = &"Heading"
 	_title_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_title_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	heading.add_child(_title_label)
@@ -103,6 +106,7 @@ func _reset() -> void:
 	hide()
 
 func open_tile(tile: Vector2i) -> void:
+	_person_bits = -1
 	_food_tiles.clear()
 	var world: Node = get_node_or_null("/root/Main/WorldSim")
 	if world == null:
@@ -170,8 +174,9 @@ func _filter_labeled(history: Array) -> Array:
 
 # The inspector supplies its cached read; opening this panel never evaluates policy.
 # M-READ: accepts an optional why_not dictionary to show the blocked-candidate line.
-func open_mind(mind: Dictionary, tile: Vector2i, why_not: Dictionary = {}) -> void:
+func open_mind(mind: Dictionary, tile: Vector2i, why_not: Dictionary = {}, person_bits: int = -1) -> void:
 	_food_tiles.clear()
+	_person_bits = person_bits
 	_anchor_tile = tile
 	for child: Node in _history_container.get_children():
 		_history_container.remove_child(child)
@@ -187,7 +192,7 @@ func open_mind(mind: Dictionary, tile: Vector2i, why_not: Dictionary = {}) -> vo
 	var why_line: String = DiagnosisText.why_not_line(why_not, get_node_or_null("/root/Locale"))
 	if not why_line.is_empty():
 		var why_label: Label = _add_line(why_line)
-		why_label.add_theme_color_override("font_color", Color("e8a848"))
+		why_label.add_theme_color_override("font_color", Color(CauseTooltips.RUST))
 	get_parent().move_child(self, get_parent().get_child_count() - 1)
 	show()
 	_fit()
@@ -219,21 +224,25 @@ func _mind_fact_reason(fact: Dictionary) -> String:
 			conditions.append(_ltr(key).format({"fact": label}))
 	return " · ".join(conditions)
 
-func mind_summary(mind: Dictionary) -> String:
+func mind_reasons(mind: Dictionary) -> PackedStringArray:
 	var reasons: PackedStringArray = []
-	var facts: Array = mind.get("facts", [])
 	# The bridge ranks selected-node inputs using saved policy metadata.
-	for item: Dictionary in facts:
-		var reason: String = _mind_fact_reason(item)
+	for fact: Dictionary in mind.get("facts", []):
+		var reason: String = _mind_fact_reason(fact)
 		if not reason.is_empty():
 			reasons.append(reason)
 		if reasons.size() == 2:
 			break
+	return reasons
+
+func mind_summary(mind: Dictionary) -> String:
+	var reasons: PackedStringArray = mind_reasons(mind)
 	if reasons.is_empty():
 		reasons.append(_ltr("MIND_REASON_UNAVAILABLE"))
 	return _ltr("MIND_NOW_WHY_FMT").format({"choice": _mind_name(str(mind.get("name_key", ""))), "reason": " · ".join(reasons)})
 
 func display_history(history: Array, tile_x: int, tile_y: int) -> void:
+	_person_bits = -1
 	if _history_container == null:
 		return
 	_anchor_tile = Vector2i(tile_x, tile_y)
@@ -250,7 +259,7 @@ func display_history(history: Array, tile_x: int, tile_y: int) -> void:
 	if not wait.is_empty():
 		var wait_label: Label = _add_line(wait)
 		wait_label.name = "Wait"
-		wait_label.add_theme_color_override("font_color", Color("e05a48"))
+		wait_label.add_theme_color_override("font_color", Color(CauseTooltips.RUST))
 	for event: Variant in history:
 		if event is Dictionary:
 			_add_line(_format_event(event))
@@ -342,6 +351,29 @@ func _process(_delta: float) -> void:
 		_refresh_food()
 	if visible:
 		_fit()
+		queue_redraw()
+
+func _draw() -> void:
+	if _person_bits >= 0:
+		var person: Rect2 = ViewProjection.person_rect(_person_bits)
+		if person.has_area():
+			CauseTooltips.draw_connector(self, person.get_center())
+		return
+	CauseTooltips.draw_connector(self, ViewProjection.world_to_screen(View.tile_centre(_anchor_tile)))
+
+func reason_chain(mind: Dictionary, tile: Vector2i) -> Array[String]:
+	var reasons: PackedStringArray = mind_reasons(mind)
+	if reasons.is_empty():
+		return []
+	var result: Array[String] = [" · ".join(reasons)]
+	var world: Node = get_node_or_null("/root/Main/WorldSim")
+	if world != null and int(mind.get("parent", -1)) >= 0:
+		var trace: Array = world.get_event_chain(tile.x, tile.y, int(mind["parent"]))
+		for item: Dictionary in trace:
+			result.append(_format_event(item))
+			if result.size() >= CauseTooltips.MAX_DEPTH:
+				break
+	return result
 
 func _input(event: InputEvent) -> void:
 	if not visible:
@@ -518,6 +550,7 @@ func open_food(tile: Vector2i) -> void:
 	open_food_tiles(tiles)
 
 func open_food_tiles(tiles: Array[Vector2i]) -> void:
+	_person_bits = -1
 	if tiles.is_empty(): return
 	_food_tiles.assign(tiles)
 	_anchor_tile = tiles[0]

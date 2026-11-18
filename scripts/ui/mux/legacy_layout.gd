@@ -131,6 +131,8 @@ func _layout_panels(available: Rect2) -> void:
 		var desired: Vector2 = Vector2(origin.x, maxf(origin.y, region.position.y))
 		if node_name in CENTERED:
 			desired = region.get_center() - bounds.size * effective * 0.5
+		elif node_name == "ChroniclePanel":
+			desired.y = region.end.y - bounds.size.y * effective
 		elif node_name == "AgentInspectorPanel":
 			desired.x = region.end.x - bounds.size.x * effective
 		_place(panel, bounds, desired, region, effective, node_name)
@@ -149,7 +151,7 @@ func _layout_topbar() -> void:
 	var minimum: Vector2 = panel.get_combined_minimum_size()
 	var natural: Vector2 = minimum
 	var effective: float = fit_scale(natural, available, _factor)
-	panel.size = Vector2(available.x / effective, natural.y)
+	panel.size = natural
 	_place(panel, Rect2(Vector2.ZERO, panel.size), Vector2.ONE * MARGIN, Rect2(Vector2.ONE * MARGIN, available), effective, "HudTopbar")
 	_top_bottom = panel.position.y + panel.size.y * effective
 
@@ -168,9 +170,8 @@ func _layout_orderbar() -> void:
 	var effective: float = fit_scale(natural, available.size, _factor)
 	bar.size = natural
 	_bar_top = _area.y - MARGIN - natural.y * effective
-	_place(bar, Rect2(Vector2.ZERO, natural), Vector2(MARGIN, _bar_top), available, effective, "OrderBar")
+	_place(bar, Rect2(Vector2.ZERO, natural), Vector2((_area.x - natural.x * effective) * 0.5, _bar_top), available, effective, "OrderBar")
 	var above: Rect2 = Rect2(MARGIN, _top_bottom + MARGIN, _area.x - MARGIN * 2, maxf(1.0, _bar_top - _top_bottom - MARGIN - GAP))
-	var buttons: Array[Node] = bar.find_children("*", "Button", true, false)
 	for child: Node in owner.get_children():
 		if not child is PanelContainer or child == bar or child.name == &"Toast":
 			continue
@@ -178,14 +179,9 @@ func _layout_orderbar() -> void:
 		var panel_size: Vector2 = panel.get_combined_minimum_size()
 		var panel_scale: float = fit_scale(panel_size, above.size, _factor)
 		panel.size = panel_size
-		var anchor_x: float = MARGIN
-		var button_index: int = -1
-		if panel.name == &"BuildMenu":
-			button_index = 2
-		elif panel.name == &"DigMenu":
-			button_index = 5
-		if button_index >= 0 and button_index < buttons.size():
-			anchor_x = (buttons[button_index] as Control).global_position.x
+		var button_name: String = "BuildOrder" if panel.name == &"BuildMenu" else "GatherOrder"
+		var button: Control = bar.find_child(button_name, true, false) as Control
+		var anchor_x: float = button.global_position.x if button != null else MARGIN
 		var desired: Vector2 = Vector2(anchor_x, _bar_top - GAP - panel_size.y * panel_scale)
 		_place(panel, Rect2(Vector2.ZERO, panel_size), desired, above, panel_scale, "OrderBar/" + str(panel.name))
 

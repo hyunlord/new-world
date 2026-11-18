@@ -405,6 +405,17 @@ func _completed(language: String, stage: String) -> void:
 	var why: Control = _main.get_node("UI/WhyPanel") as Control
 	var cause: Dictionary = _world.call("get_building_cause", int(site["id"]), int(site["source_record"]))
 	_check("native source opens exact building cause", bool(cause.get("valid", false)) and why.visible and str(why.call("plain_text")).replace("\u2060", "").contains(str(_locale.call("ltr", cause.get("name_key", "UI_UNKNOWN")))), {"cause": cause, "visible": why.visible, "body": (why.get("_body") as RichTextLabel).text, "plain": why.call("plain_text"), "bbcode": (why.get("_body") as RichTextLabel).bbcode_enabled, "expected": _locale.call("ltr", cause.get("name_key", "UI_UNKNOWN")), "locale": _locale.get("_current_lang")})
+	if str(cause.get("zone_trigger", "")) == "beds_short" and cause.has("zone_people") and cause.has("zone_slots"):
+		var body: RichTextLabel = why.get("_body") as RichTextLabel
+		var tooltips: Node = why.get("_tooltips")
+		var expected: String = str(_locale.call("ltr", "UI1_HOUSING_COUNTS")).format({"people": cause["zone_people"], "beds": cause["zone_slots"]})
+		_check("saved shortage links to recorded counts", body.text.contains("[url=cause:0]"))
+		body.meta_hover_started.emit("cause:0")
+		await _frames(2)
+		var cards: Array = tooltips.get("_cards")
+		var details: RichTextLabel = cards[0].get_child(0) as RichTextLabel if not cards.is_empty() else null
+		_check("saved shortage opens exact leaf tooltip", details != null and details.is_visible_in_tree() and details.get_parsed_text().replace("\u2060", "") == expected and not details.text.contains("[url="))
+		tooltips.clear()
 	await _capture(language + "_" + stage + "_source")
 	why.call("close")
 	_panel.call("open_site", int(site["id"]))
@@ -459,7 +470,7 @@ func _history(language: String) -> void:
 		await _frames()
 		# Native click on the last why-chain line; assert outcome, never emit meta_clicked.
 		await _point(body.global_position + Vector2(80, body.get_line_offset(maxi(0, body.get_line_count() - 1)) + 12))
-		_check("native historical source link", not body.bbcode_enabled and str(why.call("plain_text")).replace("\u2060", "").contains(str(_locale.call("ltr", cause.get("name_key", "UI_UNKNOWN")))), {"cause": cause, "visible": why.visible, "body": body.text, "plain": why.call("plain_text"), "bbcode": body.bbcode_enabled, "expected": _locale.call("ltr", cause.get("name_key", "UI_UNKNOWN")), "locale": _locale.get("_current_lang")})
+		_check("native historical source link", int(why.call("current_index")) == -1 and str(why.call("plain_text")).replace("\u2060", "").contains(str(_locale.call("ltr", cause.get("name_key", "UI_UNKNOWN")))), {"cause": cause, "visible": why.visible, "body": body.text, "plain": why.call("plain_text"), "bbcode": body.bbcode_enabled, "expected": _locale.call("ltr", cause.get("name_key", "UI_UNKNOWN")), "locale": _locale.get("_current_lang")})
 		await _capture(language + "_historical_source")
 		why.call("close")
 

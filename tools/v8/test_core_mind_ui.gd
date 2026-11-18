@@ -1,5 +1,5 @@
 # Native M-CORE QA: real scene, real selected person, current records and rendered frames.
-# Bridge: get_agent_mind/get_agent_detail/get_person_chronicle directly; get_agent_snapshot/get_time_snapshot/
+# Bridge: get_agent_mind/get_agent_detail/get_person_chronicle/get_event_chain directly; get_agent_snapshot/get_time_snapshot/
 # get_world_info through SimReads; advance_ticks, reset_world and optional load_world through SimReads.
 # No synthetic facts, injected state, renderer substitutes or policy evaluation in the UI.
 # Detached presentation-only checks exercise data-defined feed retention; runtime scenarios remain real.
@@ -178,6 +178,30 @@ func _present(name: String, mind: Dictionary) -> void:
 	var label: Label = _inspector.find_child("MindReason", true, false) as Label
 	_check(name + " mind reason visible", label != null and label.is_visible_in_tree() and not label.text.is_empty())
 	_check(name + " mind reason matches selected record", label != null and label.text == str(_causal.call("mind_summary", mind)))
+	var reason: LinkButton = _inspector.find_child("Reason", true, false) as LinkButton
+	_check(name + " selected choice offers recorded reason", reason != null and reason.visible and not reason.disabled)
+	if reason != null and not reason.disabled:
+		var scroll_to_reason: ScrollContainer = _inspector.get("_scroll") as ScrollContainer
+		scroll_to_reason.ensure_control_visible(reason)
+		await _frames()
+		await _click(reason)
+		var tooltips: Node = _inspector.get("_tooltips")
+		var cards: Array = tooltips.get("_cards")
+		var first: RichTextLabel = cards[0].get_child(0) as RichTextLabel if not cards.is_empty() else null
+		var facts: Array = mind.get("facts", [])
+		var expected: String = str(_causal.call("_mind_fact_reason", facts[0])) if not facts.is_empty() else ""
+		_check(name + " reason tooltip contains recorded first fact", first != null and first.is_visible_in_tree() and not expected.is_empty() and first.get_parsed_text().contains(expected))
+		if first != null:
+			var detail: Dictionary = _world.get_agent_detail(_bits)
+			var trace: Array = _world.get_event_chain(int(detail["x"]), int(detail["y"]), int(mind.get("parent", -1)))
+			_check(name + " reason link requires retained parent", first.text.contains("[url=cause:1]") == (not trace.is_empty()))
+			if not trace.is_empty():
+				first.meta_hover_started.emit("cause:1")
+				await _frames(1)
+				var second: RichTextLabel = cards[1].get_child(0) as RichTextLabel if cards.size() > 1 else null
+				_check(name + " retained parent opens as nested event", second != null and second.get_parsed_text() == str(_causal.call("_format_event", trace[0])))
+		tooltips.clear()
+		scroll_to_reason.scroll_vertical = 0
 	await _capture(name + "-person", mind)
 	var why: Button = _inspector.find_child("Why", true, false) as Button
 	_check(name + " Why button exists", why != null)

@@ -13,7 +13,7 @@
 #
 # Temperament and family use separate selected-agent getters.
 # The nine-key detail schema remains unchanged.
-# Bridge methods: get_agent_detail (direct); via SimReads get_agent_snapshot (incl. M1.5 ages_years, infants,
+# Bridge methods: get_agent_detail and get_tile_detail (direct); via SimReads get_agent_snapshot (incl. M1.5 ages_years, infants,
 #   pregnant_days), get_porter_snapshot, get_world_info (ticks_per_day, ticks_per_year, clock_offset_ticks),
 #   get_activity_snapshot; via person_read_cache.gd get_person, get_person_chronicle, get_agent_family,
 #   get_agent_temperament; M2 get_agent_economy (direct, once per tick for the selected person: skills with
@@ -43,8 +43,10 @@ const KoreanText = preload("res://scripts/ui/mux/korean_text.gd")
 const PanelTooltips = preload("res://scripts/ui/panels/panel_tooltips.gd")
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
-const ArtData = preload("res://scripts/world/art/art_data.gd")
-const PANEL_WIDTH := 360.0
+const Icons = preload("res://scripts/ui/hud/ui1_icons.gd")
+const CauseTooltips = preload("res://scripts/ui/panels/cause_tooltips.gd")
+const ViewProjection = preload("res://scripts/world/view_projection.gd")
+const PANEL_WIDTH := 420.0
 const Names = preload("res://scripts/ui/person_names.gd")
 const Porter = preload("res://scripts/world/porter_presentation.gd")
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
@@ -162,10 +164,16 @@ var _food_data: Dictionary = {}
 var _hunger_bar: ProgressBar
 var _thirst_bar: ProgressBar
 var _sleep_bar: ProgressBar
-var _portrait: TextureRect
-var _look_label: Label
-# M1: the colony view's person layers (skin, hair, tunic) copied at 6× (no V7 sprite in the colony view).
-var _portrait_box: Control
+var _badge: Label
+var _person_header: HBoxContainer
+var _person_summary: VBoxContainer
+var _reason: LinkButton
+var _needs_heading: Label
+var _tooltips := CauseTooltips.new()
+var _tile: Vector2i
+var _warmth_bar: ProgressBar
+var _warmth_tick: int = -1
+var _warmth_tile: Vector2i = Vector2i(-1, -1)
 var _cold_label: Label
 var _carried_label: Label
 # M1 (9.6): the job line ("지금: …") from the snapshot's `jobs` column.
@@ -237,25 +245,47 @@ func _ready() -> void:
 	_scroll.get_v_scroll_bar().value_changed.connect(_queue_readable_edges.unbind(1))
 	_vbox.resized.connect(_queue_readable_edges)
 	_scroll_layout.resized.connect(_queue_readable_edges)
-	_label_id = _make_label("")
+	_person_header = HBoxContainer.new()
+	_person_header.add_theme_constant_override("separation", 14)
+	_vbox.add_child(_person_header)
+	var badge_box := PanelContainer.new()
+	badge_box.theme_type_variation = &"TooltipPanel"
+	badge_box.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	_person_header.add_child(badge_box)
+	_badge = Label.new()
+	_badge.name = "Portrait"
+	_badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_badge.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_badge.custom_minimum_size = Vector2(48.0, 48.0)
+	_badge.add_theme_font_size_override("font_size", 24)
+	badge_box.add_child(_badge)
+	_person_summary = VBoxContainer.new()
+	_person_summary.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_person_header.add_child(_person_summary)
+	_label_id = _summary_label()
 	_label_id.theme_type_variation = &"Heading"
+	_label_age = _summary_label()
+	_mood_label = _summary_label()
+	_mood_label.name = "Mood"
+	_job_label = _summary_label()
+	_vbox.add_child(HSeparator.new())
+	_needs_heading = _make_label(_loc("UI1_NEEDS"))
+	_needs_heading.theme_type_variation = &"UI1Group"
+	_hunger_bar = _make_bar(_loc("UI1_HUNGER"), "hunger", NEED_SATURATION)
+	_sleep_bar = _make_bar(_loc("UI1_FATIGUE"), "sleep", NEED_SATURATION)
+	_warmth_bar = _make_bar(_loc("UI1_WARMTH"), "warmth", 255.0)
+	(_warmth_bar.get_parent() as Control).tooltip_text = _loc("UI1_TILE_WARMTH")
+	_vbox.add_child(HSeparator.new())
+	_reason = LinkButton.new()
+	_reason.name = "Reason"
+	_reason.mouse_entered.connect(_open_reason)
+	_reason.pressed.connect(_open_reason)
+	_reason.add_theme_color_override("font_color", Color(CauseTooltips.RUST))
+	_reason.add_theme_color_override("font_hover_color", CauseTooltips.BONE)
+	_vbox.add_child(_reason)
+	add_child(_tooltips)
 	_porter_status = _make_label("")
 	_porter_status.hide()
-	var portrait_box: CenterContainer = CenterContainer.new()
-	portrait_box.custom_minimum_size = Vector2(128, 128)
-	_vbox.add_child(portrait_box)
-	_portrait = TextureRect.new()
-	_portrait.name = "Portrait"
-	_portrait.custom_minimum_size = Vector2(128, 128)
-	_portrait.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
-	_portrait.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	portrait_box.add_child(_portrait)
-	_portrait_box = portrait_box
-	_look_label = _make_label("")
-	_look_label.name = "Look"
-	_look_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_label_age = _make_label("")
-	_label_age.visible = false
 	_village_label = _make_label("")
 	_dwelling_label = _make_label("")
 	_dwelling_label.name = "Dwelling"
@@ -270,7 +300,7 @@ func _ready() -> void:
 	_mind_label.hide()
 	_why_not_label = _make_label("")
 	_why_not_label.name = "WhyNot"
-	_why_not_label.add_theme_color_override("font_color", Color("e8a848"))
+	_why_not_label.add_theme_color_override("font_color", Color(CauseTooltips.RUST))
 	_why_not_label.hide()
 	_diag_label = _make_label("")
 	_diag_label.name = "Diagnosis"
@@ -282,27 +312,22 @@ func _ready() -> void:
 	_vbox.move_child(_why_not_label, _diag_label.get_index() + 1)
 	_label_state = _make_label("")
 	_label_target = _make_label("")
-	_hunger_bar = _make_bar(_loc("UI_HUNGER"))
 	_food_label = _make_label("")
-	_thirst_bar = _make_bar(_loc("NEED_THIRST"))
-	_sleep_bar = _make_bar(_loc("NEED_SLEEP"))
-	_job_label = _make_label("")
+	_thirst_bar = _make_bar(_loc("NEED_THIRST"), "thirst", NEED_SATURATION)
 	_carried_label = _make_label("")
 	_cold_label = _make_label("")
 	_cold_label.hide()
 	_tool_label = _make_label("")
 	_bed_label = _make_label("")
 	_bed_label.hide()
-	_mood_label = _make_label("")
-	_mood_label.name = "Mood"
 	_top_label = _make_label("")
 	_top_label.name = "Apparel"
 	_draft_label = _make_label("")
 	_draft_label.name = "Draft"
-	_draft_label.add_theme_color_override("font_color", Color("f07060"))
+	_draft_label.add_theme_color_override("font_color", Color(CauseTooltips.RUST))
 	_flee_label = _make_label("")
 	_flee_label.name = "Flee"
-	_flee_label.add_theme_color_override("font_color", Color("f0c040"))
+	_flee_label.add_theme_color_override("font_color", Color(CauseTooltips.RUST))
 	_sick_label = _make_label("")
 	_sick_label.name = "Sick"
 	_sick_label.add_theme_color_override("font_color", Color("a8d888"))
@@ -314,7 +339,7 @@ func _ready() -> void:
 	_skills_heading.theme_type_variation = &"Heading"
 	_skills_label = _make_label("")
 	for node: Node in _vbox.get_children():
-		if node is Control and node != _label_id:
+		if node is Control and node != _person_header:
 			_live_nodes.append(node as Control)
 	_record_summary = _make_label("")
 	_record_summary.hide()
@@ -325,8 +350,6 @@ func _ready() -> void:
 	_life_text = RichTextLabel.new()
 	_life_text.autowrap_mode = TextServer.AUTOWRAP_WORD
 	Names.prepare_rich_text(_life_text)
-	_life_text.add_theme_font_size_override("normal_font_size", 24)
-	_life_text.add_theme_font_size_override("bold_font_size", 24)
 	_life_text.bbcode_enabled = true
 	_life_text.fit_content = true
 	_life_text.scroll_active = false
@@ -420,29 +443,45 @@ func _make_label(text: String) -> Label:
 	return lbl
 
 
-func _make_bar(bar_name: String) -> ProgressBar:
-	var hdr: Label = Label.new()
+func _summary_label() -> Label:
+	var label := Label.new()
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_person_summary.add_child(label)
+	return label
+
+
+func _make_bar(bar_name: String, icon: String, maximum: float) -> ProgressBar:
+	var hdr := Label.new()
 	hdr.text = bar_name
+	hdr.custom_minimum_size.x = 66.0
 	_bar_headers.append(hdr)
-	var row: HBoxContainer = HBoxContainer.new()
-	row.add_child(ArtUI.icon(["hunger", "thirst", "sleep"][_bar_headers.size() - 1]))
+	var row := HBoxContainer.new()
+	var pictogram := TextureRect.new()
+	pictogram.texture = Icons.texture(icon)
+	pictogram.custom_minimum_size = Vector2(22.0, 22.0)
+	pictogram.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	pictogram.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	pictogram.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(pictogram)
 	row.add_child(hdr)
 	_vbox.add_child(row)
-	var bar: ProgressBar = ProgressBar.new()
-	bar.min_value = 0.0
-	# A18: runtime binding to NEED_SATURATION matches Rust SATURATION=100.0.
-	bar.max_value = NEED_SATURATION
-	bar.value = 0.0
+	var bar := ProgressBar.new()
+	bar.max_value = maximum
 	bar.show_percentage = false
-	bar.custom_minimum_size.y = 12
-	var fill: StyleBoxFlat = StyleBoxFlat.new()
-	fill.bg_color = [Color8(184, 12, 7), Color8(47, 92, 133), Color8(190, 140, 102)][_bar_headers.size() - 1]
-	bar.add_theme_stylebox_override("fill", fill)
-	var background: StyleBoxFlat = StyleBoxFlat.new()
-	background.bg_color = Color8(41, 38, 33)
-	bar.add_theme_stylebox_override("background", background)
-	_vbox.add_child(bar)
+	bar.custom_minimum_size.y = 12.0
+	bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	bar.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(bar)
 	return bar
+
+
+static func _safe_float(value: Variant) -> float:
+	if value is int or value is float:
+		var number: float = float(value)
+		if is_finite(number):
+			return number
+	return 0.0
 
 
 # V7 Phase 14-γ — populate the 8 fields from the FFI detail dict.
@@ -459,12 +498,14 @@ func display_agent(detail: Dictionary) -> void:
 	var y: int = int(detail.get("y", 0))
 	var state_tag: int = int(detail.get("state_tag", 0))
 	var target_kind: int = int(detail.get("target_kind", 0))
-	var hunger: float = float(detail.get("hunger", 0.0))
-	var thirst: float = float(detail.get("thirst", 0.0))
-	var sleep_val: float = float(detail.get("sleep", 0.0))
+	var hunger: float = _safe_float(detail.get("hunger"))
+	var thirst: float = _safe_float(detail.get("thirst"))
+	var sleep_val: float = _safe_float(detail.get("sleep"))
+	_tile = Vector2i(x, y)
 	_person_cache.sync(_world_sim)
 	var previous_selection: int = _selected_entity_bits
 	if _selected_person != agent_id:
+		_tooltips.clear()
 		_formatted_person = -1
 		_life_expanded = false
 	_selected_person = agent_id
@@ -474,7 +515,9 @@ func display_agent(detail: Dictionary) -> void:
 	if previous_selection != _selected_entity_bits:
 		_scroll.scroll_vertical = 0
 		_knowledge_key = Vector2i(-1, -1)
-	_label_id.text = _loc("INSPECTOR_PERSON_FMT") % [Names.present(agent_id, Chronicle.language(_locale)), agent_id]
+	var person_name: String = Names.display_name(agent_id, Chronicle.language(_locale))
+	_label_id.text = Names.unbroken(person_name)
+	_badge.text = person_name.left(1)
 	var home: int = SettlementSelection.home_for_agent(agent_id)
 	_village_label.visible = home >= 0
 	_village_label.text = Names.unbroken(SettlementSelection.name_for(home, _locale)) if home >= 0 else ""
@@ -495,16 +538,29 @@ func display_agent(detail: Dictionary) -> void:
 	_thirst_bar.value = thirst
 	_sleep_bar.value = sleep_val
 	# A19 lifecycle: panel becomes visible only after a found=true call.
-	_bar_headers[0].text = _loc("UI_HUNGER")
-	_bar_headers[1].text = _loc("NEED_THIRST")
-	_bar_headers[2].text = _loc("NEED_SLEEP")
+	_needs_heading.text = _loc("UI1_NEEDS")
+	(_warmth_bar.get_parent() as Control).tooltip_text = _loc("UI1_TILE_WARMTH")
+	_bar_headers[0].text = _loc("UI1_HUNGER")
+	_bar_headers[1].text = _loc("UI1_FATIGUE")
+	_bar_headers[2].text = _loc("UI1_WARMTH")
+	_bar_headers[3].text = _loc("NEED_THIRST")
+	var tick: int = int(SimReads.read(_world_sim, "get_time_snapshot").get("tick", -1))
+	if tick != _warmth_tick or _tile != _warmth_tile:
+		_warmth_tick = tick
+		_warmth_tile = _tile
+		var ambient: Dictionary = _world_sim.get_tile_detail(x, y) if _world_sim != null else {}
+		_warmth_bar.value = _safe_float(ambient.get("warmth"))
 	_label_age.text = _age_line(agent_id)
 	_label_age.visible = not _label_age.text.is_empty()
-	_update_portrait(agent_id)
 	var carried_wood: int = _carried_amount(agent_id, "carried_woods")
 	_carried_label.text = (_loc("INSPECTOR_CARRYING_WOOD_FMT") % carried_wood) if carried_wood > 0 else (_loc("INSPECTOR_CARRYING_FMT") % _carried_food(agent_id))
 	var job: int = _carried_amount_byte(agent_id, "jobs")
-	_job_label.text = "%s: %s" % [_loc("UI_INSPECT_NOW"), _loc(job_name_key(job))]
+	var work: String = _state_text(state_tag, activity)
+	if job > 0:
+		work = _loc(job_name_key(job))
+	elif target_kind > 0 and target_kind < 8:
+		work += " · " + _target_text(target_kind, activity)
+	_job_label.text = _loc("UI1_PERSON_NOW").format({"task": work})
 	var logs: int = _carried_amount(agent_id, "carry_counts")
 	if logs > 0:
 		_carried_label.text = "%s: %s %d" % [_loc("UI_INSPECT_CARRYING"), _loc("ITEM_LOG"), logs]
@@ -523,7 +579,7 @@ func _make_knowledge_tab() -> void:
 	_tab_row.name = "Tabs"
 	_tab_row.add_theme_constant_override("separation", 8)
 	_vbox.add_child(_tab_row)
-	_vbox.move_child(_tab_row, _label_id.get_index() + 1)
+	_vbox.move_child(_tab_row, _reason.get_index() + 1)
 	var group: ButtonGroup = ButtonGroup.new()
 	for tab: int in [TAB_INFO, TAB_KNOWLEDGE, TAB_STORY]:
 		var button: Button = Button.new()
@@ -551,8 +607,6 @@ func _make_knowledge_tab() -> void:
 	_story_text = RichTextLabel.new()
 	_story_text.autowrap_mode = TextServer.AUTOWRAP_WORD
 	Names.prepare_rich_text(_story_text)
-	_story_text.add_theme_font_size_override("normal_font_size", 24)
-	_story_text.add_theme_font_size_override("bold_font_size", 24)
 	_story_text.bbcode_enabled = true
 	_story_text.fit_content = true
 	_story_text.scroll_active = false
@@ -591,6 +645,7 @@ func _apply_tab() -> void:
 	_story_box.visible = story
 	if not knowledge and not story:
 		return
+	_tooltips.clear()
 	for node: Control in _live_nodes:
 		node.visible = false
 	_temperament_box.hide()
@@ -652,7 +707,6 @@ func _refresh_m5(agent_id: int) -> void:
 		return
 	_mood_label.text = KoreanText.words(StoryText.mood_line(_locale, _m5))
 	_mood_label.visible = _mood_label.text != ""
-	_mood_label.add_theme_color_override("font_color", StoryText.band_color(int(_m5.get("band", 0))))
 	_top_label.text = StoryText.apparel_line(_locale, _m5)
 	_top_label.show()
 	_draft_label.text = StoryText.draft_line(_locale, _m5, SimReads.read(_world_sim, "get_animals"))
@@ -919,6 +973,7 @@ func _resolve_entity_bits(agent_id: int) -> int:
 func _process(_delta: float) -> void:
 	if not visible or _world_sim == null:
 		return
+	queue_redraw()
 	if _record_mode:
 		_person_cache.sync(_world_sim)
 		_refresh_record()
@@ -934,28 +989,15 @@ func _process(_delta: float) -> void:
 			show_person(_selected_person)
 
 
-## M-ART2 (goal §3.6): the person's portrait (the POLISH2 portrait of their look and face variant, 128 px) and the
-## look in words ("가죽 랩 · 묶은 머리 · 얼굴 3") from the person's snapshot row (PeopleView.person_look) and
-## manifest.json; hidden when the person is not in the snapshot.
-func _update_portrait(_agent_id: int) -> void:
-	var look: Dictionary = PeopleView.person_look(SimReads.read(_world_sim, "get_agent_snapshot"), _selected_entity_bits) if _world_sim != null else {}
-	if look.is_empty():
-		_portrait.texture = null
-		_look_label.text = ""
-		return
-	var variant: int = int(look.get("variant", 0))
-	var path: String = ArtData.portrait_path(str(look.get("frames", "")), "v%d" % (variant + 1))
-	_portrait.texture = ArtData.texture_at(path)
-	var row: Dictionary = ArtData.look(int(look.get("look", -1)))
-	var top: String = _loc("LOOK_TOP_" + str(row.get("top", "")).to_upper())
-	var hair: String = _loc("LOOK_HAIR_" + str(row.get("hair", "")).to_upper())
-	_look_label.text = KoreanText.words(str(_locale.call("trf", "UI_INSPECT_LOOK_FMT", {"top": top, "hair": hair, "face": variant + 1})) if _locale != null else "%s · %s" % [top, hair])
+func _draw() -> void:
+	if _selected_entity_bits >= 0 and not _record_mode:
+		var person: Rect2 = ViewProjection.person_rect(_selected_entity_bits)
+		if person.has_area():
+			CauseTooltips.draw_connector(self, person.get_center())
 
 
-## The portrait's texture path and the look line (for tests).
 func portrait_state() -> Dictionary:
-	return {"path": _portrait.texture.resource_path if _portrait.texture != null else "", "look": _look_label.text,
-		"size": _portrait.texture.get_size() if _portrait.texture != null else Vector2.ZERO}
+	return {"initial": _badge.text}
 
 
 func _carried_food(agent_id: int) -> int:
@@ -1176,6 +1218,7 @@ func show_person(agent_id: int) -> void:
 			_refresh_personal_sections()
 		return
 	if _selected_person != agent_id:
+		_tooltips.clear()
 		_formatted_person = -1
 		_scroll.scroll_vertical = 0
 		_life_expanded = false
@@ -1191,6 +1234,10 @@ func _set_live_visible(value: bool) -> void:
 	for node: Control in _live_nodes:
 		node.visible = value
 	_record_summary.visible = not value
+	(_badge.get_parent() as Control).visible = value
+	_label_age.visible = value
+	_mood_label.visible = value
+	_job_label.visible = value
 
 
 func _world_info() -> Dictionary:
@@ -1279,6 +1326,8 @@ func _follow_link(meta: Variant) -> void:
 
 func _world_reset() -> void:
 	_food_tick = -1
+	_warmth_tick = -1
+	_warmth_tile = Vector2i(-1, -1)
 	_food_entity = -1
 	_food_data = {}
 	_mind_tick = -1
@@ -1358,7 +1407,7 @@ func _target_text(target_kind: int, activity: Dictionary) -> String:
 # Bridge: get_agent_mind(entity_bits), once per visible selection and simulation tick.
 func _refresh_mind() -> void:
 	_why_button.text = _loc("MUX_WHY")
-	if not visible or _world_sim == null or _selected_entity_bits < 0:
+	if _world_sim == null or _selected_entity_bits < 0:
 		return
 	var tick: int = int(SimReads.read(_world_sim, "get_time_snapshot").get("tick", -1))
 	if tick != _mind_tick or _selected_entity_bits != _mind_entity:
@@ -1368,6 +1417,20 @@ func _refresh_mind() -> void:
 	_mind_label.visible = bool(_mind_snapshot.get("found", false))
 	if _mind_label.visible:
 		_mind_label.text = get_node("../CausalPanel").mind_summary(_mind_snapshot)
+	var recorded: bool = _mind_label.visible and not get_node("../CausalPanel").mind_reasons(_mind_snapshot).is_empty()
+	var choice: String = _loc("MIND_REASON_UNAVAILABLE")
+	if recorded:
+		choice = str(get_node("../CausalPanel").call("_mind_name", str(_mind_snapshot.get("name_key", ""))))
+	_reason.text = _loc("UI1_REASON").format({"reason": choice})
+	_reason.underline = LinkButton.UNDERLINE_MODE_ALWAYS if recorded else LinkButton.UNDERLINE_MODE_NEVER
+	_reason.disabled = not recorded
+	_reason.focus_mode = FOCUS_ALL if recorded else FOCUS_NONE
+
+func _open_reason() -> void:
+	if not _reason.disabled:
+		var lines: Array[String] = get_node("../CausalPanel").reason_chain(_mind_snapshot, _tile)
+		_tooltips.open_chain(_reason, lines)
+
 
 func _open_tile_why() -> void:
 	if _world_sim == null or _selected_entity_bits < 0:
@@ -1375,7 +1438,7 @@ func _open_tile_why() -> void:
 	_refresh_mind()
 	var detail: Dictionary = _world_sim.get_agent_detail(_selected_entity_bits)
 	if bool(_mind_snapshot.get("found", false)):
-		get_node("../CausalPanel").open_mind(_mind_snapshot, Vector2i(int(detail.get("x", 0)), int(detail.get("y", 0))), _why_not_data)
+		get_node("../CausalPanel").open_mind(_mind_snapshot, Vector2i(int(detail.get("x", 0)), int(detail.get("y", 0))), _why_not_data, _selected_entity_bits)
 		return
 	if bool(detail.get("found", false)):
 		get_node("../CausalPanel").call("open_tile", Vector2i(int(detail.get("x",0)), int(detail.get("y",0))))
