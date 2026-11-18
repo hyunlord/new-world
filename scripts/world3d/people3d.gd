@@ -183,6 +183,8 @@ func _process(delta: float) -> void:
 			if not moving and props != null and (props.get("station_tiles") as Dictionary).has(m["tile"]):
 				p += Vector2(0.0, 0.6)
 				yaw = PI
+			elif not moving:
+				p += m.get("spread", Vector2.ZERO)
 			var y: float = float(_terrain.call("height_at", p.x, p.y))
 			var scale: float = float(st["scale"])
 			var basis: Basis = Basis(Vector3.UP, yaw).scaled(Vector3(scale, scale, scale))
@@ -487,6 +489,29 @@ func _refresh(snap: Dictionary) -> void:
 			_aid_of.erase(_state[aid]["bits"])
 			_state.erase(aid)
 			_motion.erase(aid)
+	_spread_sharers()
+
+
+## People settled on one tile (several sleepers on a camp sleep tile) are drawn spread around its centre, each in
+## its own slot, instead of exactly on top of each other (presentation only; the figure stays inside its tile).
+func _spread_sharers() -> void:
+	var sharers: Dictionary = {}
+	for aid: int in _motion:
+		var m: Dictionary = _motion[aid]
+		if float(m["t"]) >= 1.0:
+			if not sharers.has(m["tile"]):
+				sharers[m["tile"]] = []
+			(sharers[m["tile"]] as Array).append(aid)
+	for tile: Vector2i in sharers:
+		var group: Array = sharers[tile]
+		group.sort()
+		for k: int in group.size():
+			var off: Vector2 = Vector2.ZERO if group.size() < 2 else Vector2.from_angle(TAU * float(k) / float(group.size())) * 0.28
+			var m: Dictionary = _motion[group[k]]
+			if m.get("spread", Vector2.ZERO) != off:
+				m["spread"] = off
+				_state[group[k]]["dirty"] = true
+				_active[group[k]] = true
 
 
 static func _pos(m: Dictionary) -> Vector2:
