@@ -61,7 +61,6 @@ var _was_running: bool = true
 ## Current era id (bindings3d `people.by_era` picks the age/sex/era variant).
 var _era: String = ""
 var _era_tick: int = -1000000
-var _roof_version: int = -1
 
 
 func setup(world_sim: Node, terrain: Node) -> void:
@@ -160,13 +159,6 @@ func _process(delta: float) -> void:
 		_was_running = running
 		for aid: int in _state:
 			_active[aid] = true
-	var structures: Node = get_parent().get("structures") if get_parent() != null else null
-	var roof_version: int = int(structures.get("roof_cover_version")) if structures != null else 0
-	if roof_version != _roof_version:
-		_roof_version = roof_version
-		for aid: int in _state:
-			_state[aid]["dirty"] = true
-			_active[aid] = true
 	for aid: int in _active.keys():
 		if not _state.has(aid):
 			_active.erase(aid)
@@ -195,10 +187,6 @@ func _process(delta: float) -> void:
 				p += m.get("spread", Vector2.ZERO)
 			var y: float = float(_terrain.call("height_at", p.x, p.y))
 			var scale: float = float(st["scale"])
-			# Indoors under a drawn roof: not drawn (else the figure or its x-ray silhouette reads as standing on the
-			# roof); selecting the person or the room cuts the roof away and shows them again.
-			if not moving and structures != null and bool(structures.call("roof_covers", m["tile"])):
-				scale = 0.0001
 			var basis: Basis = Basis(Vector3.UP, yaw).scaled(Vector3(scale, scale, scale))
 			var feet: Vector3 = Vector3(p.x, y, p.y)
 			st["feet"] = feet
