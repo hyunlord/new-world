@@ -95,7 +95,10 @@
     "xray": {"day": [0.14, 0.11, 0.09], "day_alpha": 0.8, "night": [0.91, 0.89, 0.81], "night_alpha": 0.7}
   },
   "stations": {
-    "work_puffs": {"amount": 10, "colour": [0.78, 0.7, 0.55]}
+    "work_puffs": {"amount": 10, "colour": [0.78, 0.7, 0.55]},
+    "smoke": {"amount": 8, "colour": [0.42, 0.40, 0.38]},
+    "short_marker": "item_039_basket_s",
+    "ruin": {"tilt_deg": 7.0, "sink": 0.12}
   },
   "plants": {
     "growing": [0.36, 0.5, 0.2],

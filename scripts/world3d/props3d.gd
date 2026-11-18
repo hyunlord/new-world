@@ -55,6 +55,8 @@ func setup(world_sim: Node, terrain: Node, sky: Node) -> void:
 
 
 func _ready() -> void:
+	# Renderer warmup (D-MGROW-1 Q4): load the M-GROW 3.4 out-of-input marker before it first appears.
+	Data3D.mesh(str(Data3D.param("stations.short_marker", "")))
 	var fire: Color = Data3D.colour(Data3D.param("light.fire_colour", []), Color(1.0, 0.62, 0.3))
 	_glow_on = StandardMaterial3D.new()
 	_glow_on.albedo_color = fire
@@ -88,7 +90,8 @@ func _process(_delta: float) -> void:
 	_rebuild_yards(buildings)
 	var settlements: Dictionary = SimReads.read(_world_sim, "get_settlement_snapshot")
 	var space: Dictionary = SimReads.read(_world_sim, "get_space")
-	var key: String = str(hash([shops.get("kinds"), shops.get("xs"), shops.get("ys"), shops.get("bill_active"), buildings.get("kinds"),
+	var key: String = str(hash([shops.get("kinds"), shops.get("xs"), shops.get("ys"), shops.get("bill_active"), shops.get("input_short"),
+		shops.get("abandoned"), buildings.get("kinds"),
 		buildings.get("xs"), buildings.get("ys"), settlements.get("fire_lit"), space.get("version")]))
 	if key != _key:
 		_key = key
@@ -149,6 +152,9 @@ func _rebuild_stations(shops: Dictionary, buildings: Dictionary, settlements: Di
 	for i: int in mini(bill_shops.size(), bill_active.size()):
 		if bill_active[i] == 1:
 			active[bill_shops[i]] = true
+	# M-GROW 3.4: idle for lack of inputs, or unused for a season (bridge get_workshops input_short / abandoned).
+	var short: PackedInt32Array = shops.get("input_short", PackedInt32Array())
+	var abandoned: PackedInt32Array = shops.get("abandoned", PackedInt32Array())
 	var footprints: Array[Rect2i] = []
 	var firing: Dictionary = {}
 	for i: int in mini(kinds.size(), mini(xs.size(), ys.size())):
@@ -163,7 +169,10 @@ func _rebuild_stations(shops: Dictionary, buildings: Dictionary, settlements: Di
 		for sy: int in rect.size.y:
 			for sx: int in rect.size.x:
 				station_tiles[rect.position + Vector2i(sx, sy)] = true
-		_place(_station_model(int(kinds[i]), styles), rect, active.has(i), "shop%d" % (ids[i] if i < ids.size() else i))
+		var look: String = ""
+		if not active.has(i):
+			look = "ruin" if i < abandoned.size() and abandoned[i] == 1 else ("short" if i < short.size() and short[i] == 1 else "")
+		_place(_station_model(int(kinds[i]), styles), rect, active.has(i), "shop%d" % (ids[i] if i < ids.size() else i), look)
 		_counts["workshops"] = int(_counts["workshops"]) + 1
 	# Legacy camp buildings.
 	var bx: PackedInt32Array = buildings.get("xs", PackedInt32Array())
@@ -230,8 +239,9 @@ static func state_model(id: String, working: bool) -> String:
 
 
 ## Place model `id` centred on footprint `rect`, facing south; `lit` (working) picks its state model and turns its
-## glow and light on.
-func _place(id: String, rect: Rect2i, lit: bool, node_name: String) -> void:
+## glow and light on (a lit model also smokes). M-GROW 3.4 `look`: "short" (out of input) sets an overturned empty
+## basket at the work socket; "ruin" (unused a season) leans and sinks the idle model (params3d `stations.ruin`).
+func _place(id: String, rect: Rect2i, lit: bool, node_name: String, look: String = "") -> void:
 	var mi: MeshInstance3D = MeshInstance3D.new()
 	mi.name = node_name
 	var shown: String = state_model(id, lit)
@@ -246,8 +256,20 @@ func _place(id: String, rect: Rect2i, lit: bool, node_name: String) -> void:
 	var s: float = clampf(minf(float(rect.size.x) / fw, float(rect.size.y) / fh), 0.85, 1.0)
 	var centre: Vector2 = Vector2(rect.position) + Vector2(rect.size) * 0.5
 	var g: float = float(_terrain.call("height_at", centre.x, centre.y))
-	mi.transform = Transform3D(Basis.IDENTITY.scaled(Vector3(s, s, s)), Vector3(centre.x, g, centre.y))
+	var basis: Basis = Basis.IDENTITY
+	if look == "ruin":
+		basis = Basis(Vector3(1, 0, 0.4).normalized(), deg_to_rad(float(Data3D.param("stations.ruin.tilt_deg", 7.0))))
+		g -= float(Data3D.param("stations.ruin.sink", 0.12))
+	mi.transform = Transform3D(basis.scaled(Vector3(s, s, s)), Vector3(centre.x, g, centre.y))
 	add_child(mi)
+	if look == "short":
+		var marker: MeshInstance3D = MeshInstance3D.new()
+		marker.name = "OutOfInput"
+		marker.mesh = Data3D.mesh(str(Data3D.param("stations.short_marker", "")))
+		var work: Variant = (row.get("sockets", {}) as Dictionary).get("work")
+		var at: Vector3 = Vector3(float(work[0]), 0.0, float(work[2]) + 0.35) if work is Array and (work as Array).size() >= 3 else Vector3(0.0, 0.0, 0.6)
+		marker.transform = Transform3D(Basis(Vector3.RIGHT, PI * 0.55).scaled(Vector3.ONE * 1.6), at + Vector3(0, 0.12, 0))
+		mi.add_child(marker)
 	_stations.append(mi)
 	var is_lit_model: bool = bool((Data3D.binding("stations.lit", {}) as Dictionary).get(id, false))
 	for surface: int in mesh.get_surface_count():
@@ -255,6 +277,8 @@ func _place(id: String, rect: Rect2i, lit: bool, node_name: String) -> void:
 			mi.set_surface_override_material(surface, _glow_on if lit else _glow_off)
 	if lit and not is_lit_model:
 		mi.add_child(_work_puffs(row))
+	elif lit:
+		mi.add_child(_work_puffs(row, "smoke"))
 	if is_lit_model and lit:
 		var light: OmniLight3D = OmniLight3D.new()
 		var sockets: Dictionary = row.get("sockets", {})
@@ -272,13 +296,15 @@ func _place(id: String, rect: Rect2i, lit: bool, node_name: String) -> void:
 
 ## Chips and dust rising off a station without a fire while it works a bill (params3d `stations.work_puffs`), so a
 ## working bench reads apart from an idle one.
-func _work_puffs(row: Dictionary) -> CPUParticles3D:
+## `kind` "smoke": grey smoke rising from a lit (fired) station's light socket (params3d `stations.smoke`); the same
+## unshaded billboard material, so no new shader variant.
+func _work_puffs(row: Dictionary, kind: String = "work_puffs") -> CPUParticles3D:
 	var p: CPUParticles3D = CPUParticles3D.new()
-	p.name = "Working"
-	var socket: Variant = (row.get("sockets", {}) as Dictionary).get("work")
+	p.name = "Working" if kind == "work_puffs" else "Smoke"
+	var socket: Variant = (row.get("sockets", {}) as Dictionary).get("work" if kind == "work_puffs" else "light")
 	p.position = Vector3(float(socket[0]), float(socket[1]), float(socket[2])) if socket is Array and (socket as Array).size() >= 3 else Vector3(0, 0.85, 0)
-	p.amount = int(Data3D.param("stations.work_puffs.amount", 10))
-	p.lifetime = 0.9
+	p.amount = int(Data3D.param("stations.%s.amount" % kind, 10))
+	p.lifetime = 0.9 if kind == "work_puffs" else 2.4
 	p.explosiveness = 0.2
 	p.direction = Vector3.UP
 	p.spread = 35.0
@@ -292,8 +318,13 @@ func _work_puffs(row: Dictionary) -> CPUParticles3D:
 	var mat: StandardMaterial3D = StandardMaterial3D.new()
 	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	mat.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
-	mat.albedo_color = Data3D.colour(Data3D.param("stations.work_puffs.colour", []), Color(0.78, 0.7, 0.55))
+	mat.albedo_color = Data3D.colour(Data3D.param("stations.%s.colour" % kind, []), Color(0.78, 0.7, 0.55))
 	quad.material = mat
+	if kind != "work_puffs":
+		p.position.y += 0.4
+		p.spread = 12.0
+		p.gravity = Vector3(0.15, 0.25, 0)
+		quad.size = Vector2(0.16, 0.16)
 	p.mesh = quad
 	p.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	return p
