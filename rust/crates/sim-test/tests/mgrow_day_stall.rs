@@ -18,7 +18,7 @@ fn mgrow_worst_tick_under_50ms_for_three_days() {
         if us > worst.0 {
             worst = (us, tick);
         }
-        if us > LIMIT_US || tick % 1440 == 0 {
+        if us > LIMIT_US || tick.is_multiple_of(1440) {
             let mut slow: Vec<(u64, &str)> = profile
                 .last_tick_ns
                 .iter()
