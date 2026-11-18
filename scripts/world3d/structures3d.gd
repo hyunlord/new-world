@@ -25,7 +25,8 @@
 #   stage model (`sites.templates`, by completed / total pieces) scaled to its footprint and turned by its rotation,
 #   else its footprint outline. Snapshots are read when the
 #   overlay or rooms counter moves (or every `flora.slow_read_ticks`); walls rebuild per 32×32 chunk only when the
-#   wall/floor content changes, roofs when the rooms version or the template sites change.
+#   wall/floor content changes, roofs when the rooms version or the template sites change. Occupied roofed
+#   surface rooms have emissive windows on their exterior walls at night.
 # Bridge methods called: via SimReads get_space, get_rooms, get_building_snapshot, get_colony_overlay,
 #   get_agent_snapshot, get_content_catalog; signal world_reset.
 extends Node3D
@@ -71,6 +72,13 @@ var _chunk: int = 32
 var _stamp_key: String = ""
 var _occupied: Dictionary = {}
 var _occupied_tick: int = -2
+var _occupied_rooms: Dictionary = {}
+var _windows: Dictionary = {}
+var _window_mesh: QuadMesh
+var _window_material: StandardMaterial3D
+var _window_elevation: float
+var _window_offset: float
+var _window_emission: float
 
 
 func setup(world_sim: Node, terrain: Node) -> void:
@@ -84,12 +92,27 @@ func _ready() -> void:
 	wall_material = ShaderMaterial.new()
 	wall_material.shader = WALL_SHADER
 	preload("res://scripts/world3d/textures3d.gd").setup(wall_material)
+	_window_mesh = QuadMesh.new()
+	_window_mesh.size = Vector2(float(Data3D.mood("room_lights.window_width", 0.44)), float(Data3D.mood("room_lights.window_height", 0.32)))
+	_window_elevation = float(Data3D.mood("room_lights.window_elevation", 1.35))
+	_window_offset = float(Data3D.mood("room_lights.window_offset", 0.025))
+	_window_emission = float(Data3D.mood("room_lights.window_emission", 2.1))
+	var window_colour: Color = Data3D.colour(Data3D.mood("room_lights.window_colour", []), Color(1.0, 0.56, 0.20))
+	_window_material = StandardMaterial3D.new()
+	_window_material.albedo_color = window_colour
+	_window_material.emission_enabled = true
+	_window_material.emission = window_colour
+	_window_mesh.material = _window_material
 
 
 func _on_world_reset() -> void:
 	_space_version = -2
 	_rooms_key = ""
 	_sites_key = ""
+	_stamp_key = ""
+	_occupied_tick = -2
+	_occupied_rooms.clear()
+	_clear_windows()
 
 
 func _process(delta: float) -> void:
@@ -500,26 +523,37 @@ func _collect_doors() -> void:
 		_door_nodes.append(mi)
 
 
-func _update_doors() -> void:
-	if _doors.is_empty():
+func _update_occupancy() -> void:
+	if _doors.is_empty() and _roofs.is_empty():
 		return
 	var tick: int = int((get_parent().get("stamp") as Dictionary).get("tick", -1)) if get_parent() != null else -1
-	if tick != _occupied_tick:
-		_occupied_tick = tick
-		_occupied.clear()
-		var agents: Dictionary = SimReads.read(_world_sim, "get_agent_snapshot")
-		var xs: PackedInt32Array = agents.get("xs", PackedInt32Array())
-		var ys: PackedInt32Array = agents.get("ys", PackedInt32Array())
-		for i: int in mini(xs.size(), ys.size()):
-			_occupied[Vector2i(xs[i], ys[i])] = true
-	var occupied: Dictionary = _occupied
+	if tick == _occupied_tick:
+		return
+	_occupied_tick = tick
+	_occupied.clear()
+	_occupied_rooms.clear()
+	var agents: Dictionary = SimReads.read(_world_sim, "get_agent_snapshot")
+	var xs: PackedInt32Array = agents.get("xs", PackedInt32Array())
+	var ys: PackedInt32Array = agents.get("ys", PackedInt32Array())
+	for i: int in mini(xs.size(), ys.size()):
+		var tile: Vector2i = Vector2i(xs[i], ys[i])
+		_occupied[tile] = true
+		var room: int = int(_tile_room.get(tile, -1))
+		if _roofs.has(room):
+			_occupied_rooms[room] = true
+
+
+func _update_doors() -> void:
+	_update_occupancy()
+	if _doors.is_empty():
+		return
 	var door_w: float = float(Data3D.param("structures.door_width", 0.9))
 	var door_h: float = float(Data3D.param("structures.door_height", 2.0))
 	var has_model: bool = Data3D.has_model("door")
 	for i: int in mini(_doors.size(), _door_nodes.size()):
 		var d: Dictionary = _doors[i]
 		var t: Vector2i = d["tile"]
-		var target: float = 1.0 if occupied.has(t) else 0.0
+		var target: float = 1.0 if _occupied.has(t) else 0.0
 		d["open"] = move_toward(float(d["open"]), target, get_process_delta_time() * 3.0)
 		var ax: Vector2i = d["axis"]
 		var g: float = float(_terrain.call("stand_height", t))
@@ -544,6 +578,9 @@ func _rebuild_roofs(rooms: Dictionary, sites: Array) -> void:
 	for k: Variant in _roofs.keys():
 		(_roofs[k] as Node).queue_free()
 	_roofs.clear()
+	_clear_windows()
+	_occupied_rooms.clear()
+	_occupied_tick = -2
 	_room_rects.clear()
 	_roof_top.clear()
 	_tile_room.clear()
@@ -588,6 +625,70 @@ func _rebuild_roofs(rooms: Dictionary, sites: Array) -> void:
 		mi.mesh = _roof_mesh(tiles, id, claimed, mat)
 		add_child(mi)
 		_roofs[id] = mi
+		_add_windows(id, tiles)
+
+
+func _clear_windows() -> void:
+	for panes: Array in _windows.values():
+		for pane: MeshInstance3D in panes:
+			pane.hide()
+			pane.queue_free()
+	_windows.clear()
+
+
+## One pane per façade, mounted on a wall beside a roofed room tile.
+func _add_windows(room: int, tiles: Array) -> void:
+	var panes: Array[MeshInstance3D] = []
+	var thickness: float = float(Data3D.param("structures.wall_thickness", 0.35))
+	for outward: Vector2i in DIRS:
+		for inside: Vector2i in tiles:
+			var wall: Vector2i = inside + outward
+			var row: Dictionary = _walls.get(wall, {})
+			if row.is_empty() or bool(row["door"]) or str(row["profile"]) == "palisade":
+				continue
+			var outside: Vector2i = wall + outward
+			if _tile_room.has(outside) or _walls.has(outside):
+				continue
+			var pos: Vector3 = Vector3(wall.x + 0.5, float(_terrain.call("stand_height", wall)) + _window_elevation, wall.y + 0.5)
+			pos += Vector3(outward.x, 0.0, outward.y) * (thickness * 0.5 + _window_offset)
+			var pane: MeshInstance3D = MeshInstance3D.new()
+			pane.name = "Window_%d" % room
+			pane.mesh = _window_mesh
+			pane.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			pane.position = pos
+			pane.rotation.y = atan2(float(outward.x), float(outward.y))
+			pane.hide()
+			add_child(pane)
+			panes.append(pane)
+			break
+	if not panes.is_empty():
+		_windows[room] = panes
+
+
+func occupied_room_at(tile: Vector2i) -> bool:
+	return _occupied_rooms.has(int(_tile_room.get(tile, -1)))
+
+
+## Append the occupied rooms' nearest visible exterior pane to the shared light pool.
+func append_window_lights(candidates: Array[Dictionary], eye: Vector3, level: float) -> void:
+	_window_material.emission_energy_multiplier = _window_emission * level
+	for room: int in _windows:
+		var nearest: Vector3 = Vector3.ZERO
+		var best: float = INF
+		var lit: bool = level > 0.0 and _occupied_rooms.has(room)
+		for pane: MeshInstance3D in _windows[room]:
+			var cut: float = _cut_all
+			if _cut_rect.has_point(Vector2(pane.position.x, pane.position.z)):
+				cut = minf(cut, _cut_rect_h)
+			pane.visible = lit and cut >= _window_elevation + _window_mesh.size.y * 0.5
+			if pane.visible:
+				var pos: Vector3 = pane.global_position
+				var distance: float = eye.distance_squared_to(pos)
+				if distance < best:
+					nearest = pos
+					best = distance
+		if best < INF:
+			candidates.append({"position": nearest, "distance": best, "fire": false, "phase": 0.0})
 
 
 ## Roof cover by the template site holding the room (its era), else the walls' material category.

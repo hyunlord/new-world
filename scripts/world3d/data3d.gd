@@ -12,6 +12,7 @@ extends RefCounted
 const PARAMS_PATH: String = "res://assets/3d/params3d.json"
 const BINDINGS_PATH: String = "res://assets/3d/bindings3d.json"
 
+static var _mood: Dictionary = {}
 static var _params: Dictionary = {}
 static var _bindings: Dictionary = {}
 static var _meshes: Dictionary = {}
@@ -33,6 +34,7 @@ static func _load() -> void:
 		return
 	_loaded = true
 	_params = _read(PARAMS_PATH)
+	_mood = _read("res://assets/3d/mood.json")
 	_bindings = _read(BINDINGS_PATH)
 	_manifest = {}
 	for pattern: Variant in _bindings.get("manifests", []):
@@ -60,6 +62,12 @@ static func _expand(pattern: String) -> PackedStringArray:
 static func param(path: String, fallback: Variant) -> Variant:
 	_load()
 	return _dig(_params, path, fallback)
+
+
+## Render grading and surface tunables shared by the world view.
+static func mood(path: String, fallback: Variant) -> Variant:
+	_load()
+	return _dig(_mood, path, fallback)
 
 
 ## The value at dotted `path` in bindings3d.json, or `fallback`.
