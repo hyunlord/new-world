@@ -263,6 +263,22 @@ pub(super) fn growth_evidence(res: &SimResources, index: Option<u32>) -> VarDict
                     .map_or("UI_UNKNOWN", |stage| stage.name_key.as_str()),
             );
         }
+        ChronicleKind::ReputationChanged => {
+            let keys: PackedStringArray = (0..2)
+                .map(|slot| (entry.cause >> (8 * slot)) & 0xFF)
+                .filter(|byte| *byte != 0)
+                .map(|byte| {
+                    GString::from(
+                        super::neighbours::reputation_cause_key(
+                            (byte >> 1) as usize - 1,
+                            byte & 1 == 1,
+                        )
+                        .as_str(),
+                    )
+                })
+                .collect();
+            row.set("reputation_cause_keys", keys);
+        }
         ChronicleKind::MaterialWave => {
             row.set("site_id", i64::from(entry.cause));
             row.set(
@@ -339,6 +355,17 @@ pub(super) fn append_house_stage(
     let progress = res.colony.buildings.house_growth.get(&site.id);
     let stage = progress.map_or(0, |p| p.stage);
     row.set("house_stage", i64::from(stage));
+    // M-GROW 3.5: people whose bed lies inside the footprint (chimney smoke).
+    let inside = |(x, y): (u32, u32)| {
+        x >= site.anchor.0
+            && y >= site.anchor.1
+            && x < site.anchor.0.saturating_add(site.footprint.0)
+            && y < site.anchor.1.saturating_add(site.footprint.1)
+    };
+    row.set(
+        "occupants",
+        i64::try_from(res.bed_of.values().filter(|bed| inside(**bed)).count()).unwrap_or(0),
+    );
     row.set(
         "occupied_days",
         i64::from(progress.map_or(0, |p| p.occupied_days)),

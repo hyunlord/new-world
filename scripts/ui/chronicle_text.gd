@@ -33,7 +33,7 @@ const Content = preload("res://scripts/ui/content_context.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
 const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
 ## MindChoice (47) records only entry into the critical band; its node slot is not a display name.
-const LAST_KIND: int = 72
+const LAST_KIND: int = 73
 static var steward_labels: Dictionary = {}
 static var food_chronicle: Dictionary = {}
 ## M5 adds `index` (the entry's chronicle index) and its "→" link columns (absent in older reads: -1).
@@ -184,6 +184,7 @@ static func sentence(row: Dictionary, viewed: int, locale: Node, info: Dictionar
 		67, 68, 69: return metal_sentence(row, locale)
 		70: return zone_laid_out_sentence(row, locale)
 		71, 72: return house_growth_sentence(row, locale)
+		73: return reputation_sentence(row, locale)
 		54, 55, 56:
 			var crop: Dictionary = preload("res://scripts/ui/content_context.gd").row("crops", value)
 			var key: String = ["S1_CHRON_SOWN", "S1_CHRON_HARVEST", "S1_CHRON_FROST"][kind - 54]
@@ -557,6 +558,17 @@ static func zone_reason(detail: Dictionary, locale: Node) -> String:
 	if text == key:
 		text = loc(locale, "ZONE_CAUSE_UNKNOWN")
 	return text.format({"people": int(detail.get("zone_people", 0)), "beds": int(detail.get("zone_slots", 0))})
+
+
+## M-GROW 3.6: the reputation's value and its (up to two) largest causes at the time.
+static func reputation_sentence(row: Dictionary, locale: Node) -> String:
+	var keys: Variant = (row.get("growth_evidence", {}) as Dictionary).get("reputation_cause_keys", PackedStringArray())
+	var words: Array[String] = []
+	if keys is PackedStringArray:
+		for key: String in keys as PackedStringArray:
+			words.append(loc(locale, key))
+	return loc(locale, "CHRONICLE_REPUTATION").format({"value": int(row.get("value", 0)),
+		"causes": ", ".join(words) if not words.is_empty() else loc(locale, "REPUTATION_CAUSES_NONE")})
 
 
 static func house_growth_sentence(row: Dictionary, locale: Node) -> String:

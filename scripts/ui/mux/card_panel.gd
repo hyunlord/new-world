@@ -14,6 +14,7 @@ const ChronicleText = preload("res://scripts/ui/chronicle_text.gd")
 const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
 const Content = preload("res://scripts/ui/content_context.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
+const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
 const THEME = preload("res://assets/ui/worldsim_theme.tres")
 const CARDS_PATH: String = "res://assets/ui/cards.json"
 const MAX_OPEN: int = 3
@@ -240,6 +241,8 @@ func _check_bridge_trigger(read_name: String) -> bool:
 			return bool(SimReads.read(_world, "get_ui_facts").get("tin_shortage", false))
 		"no_iron_nearby":
 			return bool(SimReads.read(_world, "get_ui_facts").get("no_iron_nearby", false))
+		"reputation_low":
+			return bool(SimReads.read(_world, "get_ui_facts").get(read_name, false))
 		"cloth_short":
 			return bool(SimReads.read(_world, "get_settlement_diagnosis").get("cloth_short", false))
 		"tools_below_need":
@@ -317,6 +320,11 @@ func _collect_trigger_data(card_def: Dictionary) -> Dictionary:
 		return data
 	if card_id == "no_iron_nearby":
 		data["caravan_id"] = int(SimReads.read(_world, "get_ui_facts").get("iron_caravan", -1))
+		return data
+	if card_id == "reputation_low":
+		var nb: Dictionary = SimReads.read(_world, "get_neighbours")
+		data["value"] = int(nb.get("reputation", -1))
+		data["causes"] = NeighbourText.reputation_causes(_locale, nb, 2)
 		return data
 	if card_id == "first_kid":
 		data["livestock_id"] = int(SimReads.read(_world, "get_livestock").get("first_kid_id", -1))

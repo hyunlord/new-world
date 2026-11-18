@@ -375,6 +375,21 @@
         "metal",
         "trade"
       ]
+    },
+    {
+      "id": "reputation_low",
+      "enabled": true,
+      "trigger": {"kind": "bridge", "read": "reputation_low"},
+      "title_key": "REPUTATION_CARD",
+      "body_key": "REPUTATION_CARD_BODY",
+      "options": [
+        {"text_key": "REPUTATION_CARD_BUILD", "command": "open_build_menu", "params": "", "recommended": true},
+        {"text_key": "LOOP_CARD_STEWARD", "command": "steward_default", "params": "", "recommended": false}
+      ],
+      "default": "none",
+      "expires_hours": 24,
+      "priority": 7,
+      "tags": ["reputation", "migration"]
     }
   ]
 }

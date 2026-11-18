@@ -113,7 +113,7 @@ func _refresh() -> void:
 		return
 	var read: Dictionary = SimReads.read(_world_sim, "get_neighbours") if _world_sim.has_method("get_neighbours") else {}
 	var language: String = NeighbourText.language(_locale)
-	var key: int = hash([read.get("version", -1), language])
+	var key: int = hash([read.get("version", -1), language, read.get("reputation", -1), read.get("reputation_cause_values", []), read.get("reputation_refused", 0)])
 	if key == _key:
 		return
 	_key = key
@@ -125,6 +125,7 @@ func _refresh() -> void:
 		_cards.remove_child(child)
 		child.queue_free()
 	_card_texts.clear()
+	_cards.add_child(_reputation_card(read))
 	var rows: Array[Dictionary] = NeighbourText.neighbours(read)
 	if rows.is_empty():
 		_tally.text = NeighbourText.ltr(_locale, "M55_NB_NONE")
@@ -168,6 +169,30 @@ func _card(row: Dictionary, waves: Array[Dictionary], caravans: Array[Dictionary
 	for node: int in NeighbourText.rumoured_nodes(int(row["rumoured"]), int(row.get("rumoured_high", 0)), int(row.get("rumoured_upper_low", 0)), int(row.get("rumoured_upper_high", 0))):
 		names.append(KnowledgeText.node_name(_locale, node))
 	_line(box, ", ".join(names) if not names.is_empty() else NeighbourText.ltr(_locale, "M55_NB_RUMOUR_NONE"), MUTED, lines)
+	_card_texts.append(" | ".join(lines))
+	return card
+
+
+## M-GROW 3.6: our own village's reputation (0–100) and its largest causes, before the neighbours.
+func _reputation_card(read: Dictionary) -> PanelContainer:
+	var card: PanelContainer = PanelContainer.new()
+	card.name = "Reputation"
+	card.custom_minimum_size.x = CARD_WIDTH
+	var box: VBoxContainer = VBoxContainer.new()
+	box.add_theme_constant_override("separation", 4)
+	card.add_child(box)
+	var lines: Array[String] = []
+	var value: int = int(read.get("reputation", -1))
+	if value < 0:
+		_line(box, NeighbourText.ltr(_locale, "M55_NB_REPUTATION_NONE"), MUTED, lines)
+	else:
+		var heading: Label = _line(box, NeighbourText.trf(_locale, "M55_NB_REPUTATION_FMT", {"value": value}), NeighbourText.attitude_color(value), lines)
+		heading.theme_type_variation = &"Heading"
+		box.add_child(_attitude_bar(value))
+		_line(box, NeighbourText.trf(_locale, "M55_NB_REPUTATION_CAUSES_FMT", {"causes": NeighbourText.reputation_causes(_locale, read, 3)}), TEXT, lines)
+		var refused: int = int(read.get("reputation_refused", 0))
+		if refused > 0:
+			_line(box, NeighbourText.trf(_locale, "M55_NB_REPUTATION_REFUSED_FMT", {"count": refused}), MUTED, lines)
 	_card_texts.append(" | ".join(lines))
 	return card
 

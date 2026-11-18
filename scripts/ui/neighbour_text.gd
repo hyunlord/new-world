@@ -41,6 +41,19 @@ static func trf(locale: Node, key: String, params: Dictionary) -> String:
 	return EconomyText.trf(locale, key, params)
 
 
+## M-GROW 3.6: the `limit` largest reputation causes of a get_neighbours read, joined ("잠자리가 모자람, …").
+static func reputation_causes(locale: Node, read: Dictionary, limit: int) -> String:
+	var keys: Variant = read.get("reputation_cause_keys", PackedStringArray())
+	var values: Variant = read.get("reputation_cause_values", PackedInt64Array())
+	var words: Array[String] = []
+	if keys is PackedStringArray and values is PackedInt64Array:
+		for i: int in mini((keys as PackedStringArray).size(), (values as PackedInt64Array).size()):
+			if words.size() >= limit or int((values as PackedInt64Array)[i]) == 0:
+				break
+			words.append(ltr(locale, (keys as PackedStringArray)[i]))
+	return ", ".join(words) if not words.is_empty() else ltr(locale, "REPUTATION_CAUSES_NONE")
+
+
 static func language(locale: Node) -> String:
 	return str(locale.get("_current_lang")) if locale != null else "en"
 

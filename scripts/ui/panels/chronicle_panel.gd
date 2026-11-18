@@ -36,7 +36,7 @@ const NOTABLE: Array[int] = [0, 2, 11, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23, 2
 ## M5: the kind groups of the filter (0 = all): 압력, 사냥·늑대, 다툼·기분, 지식, 마을 성장 (M-GROW zone/house
 ## stage/material lines, so they are found however old), 삶 (every other notable kind).
 const FILTER_KEYS: Array[String] = ["M5_FILTER_ALL", "M5_FILTER_PRESSURE", "M5_FILTER_HUNT", "M5_FILTER_MOOD", "M5_FILTER_KNOWLEDGE", "M5_FILTER_GROWTH", "M5_FILTER_LIFE"]
-const FILTER_KINDS: Array = [[], [29, 30, 36, 37], [31, 34, 35], [19, 32, 33], [24, 25, 26, 27, 28, 44, 59], [70, 71, 72], []]
+const FILTER_KINDS: Array = [[], [29, 30, 36, 37], [31, 34, 35], [19, 32, 33], [24, 25, 26, 27, 28, 44, 59], [70, 71, 72, 73], []]
 ## M5: the Drafted kind and its "left the draft at a critical need" cause.
 const DRAFTED_KIND: int = 34
 const SELF_UNDRAFT: int = 2

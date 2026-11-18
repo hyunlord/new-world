@@ -2024,5 +2024,22 @@
   "HOUSE_STAGE_LIVED_IN": "lived-in",
   "HOUSE_STAGE_YARD": "established yard",
   "CHRONICLE_HOUSE_STAGE": "A home reached {stage} ← its residents settled in",
-  "CHRONICLE_MATERIAL_WAVE": "A home began an upgrade with {era} materials"
+  "CHRONICLE_MATERIAL_WAVE": "A home began an upgrade with {era} materials",
+  "REPUTATION_CARD": "People want to leave",
+  "REPUTATION_CARD_BODY": "The village's reputation has fallen to {value} ({causes}). Migrants from the neighbours will not come like this. More beds and food and keeping wolves away raise it.",
+  "REPUTATION_CARD_BUILD": "Build shelter",
+  "CHRONICLE_REPUTATION": "The village's reputation is now {value} ← {causes}",
+  "REPUTATION_CAUSE_FOOD_UP": "plenty of food",
+  "REPUTATION_CAUSE_FOOD_DOWN": "food is short",
+  "REPUTATION_CAUSE_SHELTER_UP": "enough beds",
+  "REPUTATION_CAUSE_SHELTER_DOWN": "too few beds",
+  "REPUTATION_CAUSE_SAFETY_UP": "no wolf attacks",
+  "REPUTATION_CAUSE_SAFETY_DOWN": "people bitten by wolves",
+  "REPUTATION_CAUSE_TRADE_UP": "trade with neighbours",
+  "REPUTATION_CAUSE_TRADE_DOWN": "no trade",
+  "REPUTATION_CAUSES_NONE": "no clear reason",
+  "M55_NB_REPUTATION_FMT": "Our village's reputation {value}/100",
+  "M55_NB_REPUTATION_NONE": "Our village's reputation: set after the first month",
+  "M55_NB_REPUTATION_CAUSES_FMT": "Why: {causes}",
+  "M55_NB_REPUTATION_REFUSED_FMT": "Migrant groups that stayed away for the low reputation: {count}"
 }
