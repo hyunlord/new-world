@@ -20,7 +20,7 @@ uniform vec3 cliff_colour : source_color = vec3(0.43, 0.39, 0.34);
 // M-GROW 3.2: worn path stages (0 grass, 1 trodden, 2 dirt, 3 paved).
 // Stage colours are multiplied by the art-tex atlas detail: packed_earth (tiles 4/5) for trodden/dirt, paved_road (23).
 uniform sampler2D path_tex : filter_nearest, repeat_disable;
-uniform vec3 trodden_colour : source_color = vec3(0.42, 0.38, 0.28);
+uniform vec3 trodden_colour : source_color = vec3(0.66, 0.60, 0.38);
 uniform vec3 dirt_colour : source_color = vec3(0.50, 0.40, 0.25);
 uniform vec3 paved_colour : source_color = vec3(0.55, 0.50, 0.42);
 
@@ -82,12 +82,24 @@ void fragment() {
 	// M-GROW 3.2: blend path stage colour onto the ground.
 	vec2 puv = world_pos.xz / map_size;
 	if (puv.x >= 0.0 && puv.y >= 0.0 && puv.x <= 1.0 && puv.y <= 1.0) {
-		float stage = texture(path_tex, puv).r * 255.0;
+		// Worn stages spread 0.35 tile past their tile (max of the neighbours) so a one-tile path reads as a band;
+		// the spread edge blends weaker than the tile itself.
+		float own = texture(path_tex, puv).r * 255.0;
+		vec2 o = vec2(0.35) / map_size;
+		float spread = max(max(texture(path_tex, puv + vec2(o.x, 0.0)).r, texture(path_tex, puv - vec2(o.x, 0.0)).r),
+			max(texture(path_tex, puv + vec2(0.0, o.y)).r, texture(path_tex, puv - vec2(0.0, o.y)).r)) * 255.0;
+		float stage = own;
+		float edge = 1.0;
+		if (spread > own + 0.5 && spread < 2.5) {
+			stage = spread;
+			edge = 0.7;
+		}
 		vec3 earth = material_detail(world_pos.xz * 0.32, 4.0 + step(0.5, hash12(floor(world_pos.xz))));
 		if (stage > 0.5 && stage < 1.5) {
-			c = mix(c, srgb_to_linear(trodden_colour) * earth, 0.35 + 0.1 * n);
+			// Trodden: pale, dry, flattened grass — lighter and yellower than any grass checker tone.
+			c = mix(c, srgb_to_linear(trodden_colour) * earth, (0.55 + 0.1 * n) * edge);
 		} else if (stage > 1.5 && stage < 2.5) {
-			c = mix(c, srgb_to_linear(dirt_colour) * earth, 0.6 + 0.1 * n);
+			c = mix(c, srgb_to_linear(dirt_colour) * earth, (0.75 + 0.1 * n) * edge);
 		} else if (stage > 2.5) {
 			c = mix(c, srgb_to_linear(paved_colour) * material_detail(world_pos.xz * 0.32, 23.0), 0.75);
 		}
