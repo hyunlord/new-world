@@ -925,7 +925,7 @@
             category: "food", material_format_key: "", tags: ["food"], stack_max: 30, carry: 10,
             stack_rule: None, carry_rule: None, value: 5, made_by: None, clue_nodes: [],
             chop: None, weapon: None, cutter: None, food: None, fuel_units: None, apparel: None,
-            era: "bronze", lane: "food", status: Inert, debt: Some("M-GROW: no hive timer fits both honey food ages and beeswax nonfood output."),
+            era: "bronze", lane: "food", status: Inert, debt: Some("M-NATION: no hive timer fits both honey food ages and beeswax nonfood output."),
             art: (shape: Vessel, tint_material: "pine"),
         ),
         (
@@ -933,7 +933,7 @@
             category: "material", material_format_key: "", tags: ["wax"], stack_max: 30, carry: 10,
             stack_rule: None, carry_rule: None, value: 5, made_by: None, clue_nodes: [],
             chop: None, weapon: None, cutter: None, food: None, fuel_units: None, apparel: None,
-            era: "bronze", lane: "food", status: Inert, debt: Some("M-GROW: no hive timer fits both honey food ages and beeswax nonfood output."),
+            era: "bronze", lane: "food", status: Inert, debt: Some("M-NATION: no hive timer fits both honey food ages and beeswax nonfood output."),
             art: (shape: Lump, tint_material: "pine"),
         ),
         (
@@ -981,7 +981,7 @@
             category: "material", material_format_key: "", tags: ["building_material"], stack_max: 30, carry: 10,
             stack_rule: None, carry_rule: None, value: 4, made_by: None, clue_nodes: [],
             chop: None, weapon: None, cutter: None, food: None, fuel_units: None, apparel: None,
-            era: "bronze", lane: "building", status: Inert, debt: Some("M-GROW: limestone-specific extraction and material-filtered recipe inputs are absent; burn_lime requires inert lime_plaster."),
+            era: "bronze", lane: "building", status: Inert, debt: Some("M-NATION: limestone-specific extraction and material-filtered recipe inputs are absent; burn_lime requires inert lime_plaster."),
             art: (shape: Lump, tint_material: "limestone"),
         ),
         (
@@ -1005,7 +1005,7 @@
             category: "material", material_format_key: "", tags: ["ornament"], stack_max: 30, carry: 10,
             stack_rule: None, carry_rule: None, value: 8, made_by: None, clue_nodes: [],
             chop: None, weapon: None, cutter: None, food: None, fuel_units: None, apparel: None,
-            era: "bronze", lane: "heat", status: Inert, debt: Some("M-GROW: glass furnace and glass production are absent."),
+            era: "bronze", lane: "heat", status: Inert, debt: Some("M-NATION: glass furnace and glass production are absent."),
             art: (shape: Lump, tint_material: "tin"),
         ),
         (
@@ -1021,7 +1021,7 @@
             category: "material", material_format_key: "", tags: ["mineral"], stack_max: 30, carry: 10,
             stack_rule: None, carry_rule: None, value: 2, made_by: None, clue_nodes: [],
             chop: None, weapon: None, cutter: None, food: None, fuel_units: None, apparel: None,
-            era: "bronze", lane: "building", status: Inert, debt: Some("M-GROW: quarrying yields generic stone without a limestone-specific physical item source."),
+            era: "bronze", lane: "building", status: Inert, debt: Some("M-NATION: quarrying yields generic stone without a limestone-specific physical item source."),
             art: (shape: Ore, tint_material: "limestone"),
         ),
         // C3 iron items: capacities, values, chop/weapon tiers are initial design values, not balance acceptance.

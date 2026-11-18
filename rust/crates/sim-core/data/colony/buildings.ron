@@ -148,7 +148,7 @@
      stations: [], requires_knowledge: ["granary", "stone_masonry"], materials: {},
      function: (beds: 0, storage: None, workshop_tags: [], warmth: Roofed),
      upgrade_from: None, upgrade_to: None, zone_kind: None,
-     status: Inert, debt: Some("M-GROW: storage is a selector only; the four-fold capacity has no data hook."), art: (roof: Angular, tint_material: "granite", icon: "store")),
+     status: Inert, debt: Some("M-NATION: the steward lays out storage zones, but the four-fold capacity has no data hook."), art: (roof: Angular, tint_material: "granite", icon: "store")),
     (id: "oven_house", name_key: "BUILDING_OVEN_HOUSE", era: "neolithic", category: Workshop, tier: 2,
      footprint: (4, 4), pieces: [(kind: "log_wall", at: Ring), (kind: "door", at: Edge(South)), (kind: "packed_floor", at: Interior)],
      stations: ["clay_oven"], requires_knowledge: ["oven", "timber_wall", "doorway", "packed_floor"], materials: {"log": 23, "clay": 4, "stone": 2},
@@ -160,7 +160,7 @@
      stations: [], requires_knowledge: ["beekeeping"], materials: {},
      function: (beds: 0, storage: None, workshop_tags: [], warmth: Open),
      upgrade_from: None, upgrade_to: None, zone_kind: None,
-     status: Inert, debt: Some("M-GROW: no existing colony hive timer supports honey food ages and beeswax nonfood output together."), art: (roof: Round, tint_material: "pine", icon: "grain")),
+     status: Inert, debt: Some("M-NATION: no existing colony hive timer supports honey food ages and beeswax nonfood output together."), art: (roof: Round, tint_material: "pine", icon: "grain")),
     // C3: the iron-age stone house is house tier 5 and the upgrade after mud brick; only the wall ring changes kind.
     // Appended rather than editing stone_house, whose saved sites and log-house upgrades must keep validating.
     (id: "cut_stone_house", name_key: "BUILDING_CUT_STONE_HOUSE", era: "iron", category: Dwelling, tier: 5,
