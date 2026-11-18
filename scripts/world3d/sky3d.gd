@@ -102,6 +102,8 @@ func _process(_delta: float) -> void:
 			mat.set_shader_parameter("season_tint", Vector3(tint.r, tint.g, tint.b))
 			mat.set_shader_parameter("snow", float((Data3D.param("terrain.snow_cover", {}) as Dictionary).get(str(season), 0.0)))
 			mat.set_shader_parameter("autumn", 1.0 if season == 2 else 0.0)
+			# M-GROW 3.5: footprints show in snow (snow cover) and in mud (params3d `terrain.mud_cover`).
+			mat.set_shader_parameter("mud", float((Data3D.param("terrain.mud_cover", {}) as Dictionary).get(str(season), 0.0)))
 		# Roofs and plants read the same cover (global `w3d_snow`).
 		RenderingServer.global_shader_parameter_set("w3d_snow", float((Data3D.param("terrain.snow_cover", {}) as Dictionary).get(str(season), 0.0)))
 

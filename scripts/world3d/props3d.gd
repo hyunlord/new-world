@@ -87,7 +87,7 @@ func _process(_delta: float) -> void:
 	_stamp_key = skey
 	var shops: Dictionary = SimReads.read(_world_sim, "get_workshops")
 	var buildings: Dictionary = SimReads.read(_world_sim, "get_building_snapshot")
-	_rebuild_yards(buildings)
+	_rebuild_yards(buildings, int(SimReads.read(_world_sim, "get_time_snapshot").get("season", 0)))
 	var settlements: Dictionary = SimReads.read(_world_sim, "get_settlement_snapshot")
 	var space: Dictionary = SimReads.read(_world_sim, "get_space")
 	var key: String = str(hash([shops.get("kinds"), shops.get("xs"), shops.get("ys"), shops.get("bill_active"), shops.get("input_short"),
@@ -330,6 +330,25 @@ func _work_puffs(row: Dictionary, kind: String = "work_puffs") -> CPUParticles3D
 	return p
 
 
+func _chimney(site: Dictionary, season: int) -> void:
+	var occupants: int = int(site.get("occupants", 0))
+	if occupants <= 0 or not bool(site.get("complete", false)):
+		return
+	var amount: int = int((Data3D.param("chimney.amount_by_season", {}) as Dictionary).get(str(season), 0)) + occupants * int(Data3D.param("chimney.per_occupant", 1))
+	if amount <= 0:
+		return
+	var holder: MeshInstance3D = MeshInstance3D.new()
+	holder.name = "Chimney_%s" % site.get("id", -1)
+	var x: float = float(site.get("x", 0)) + float(site.get("width", 1)) * 0.5
+	var y: float = float(site.get("y", 0)) + float(site.get("height", 1)) * 0.5
+	holder.position = Vector3(x, float(_terrain.call("height_at", x, y)) + float(Data3D.param("chimney.height", 2.0)), y)
+	var smoke: CPUParticles3D = _work_puffs({"sockets": {"light": [0.0, 0.0, 0.0]}}, "smoke")
+	smoke.amount = amount
+	holder.add_child(smoke)
+	add_child(holder)
+	_yard_nodes.append(holder)
+
+
 # --- items -------------------------------------------------------------------------------------------------
 
 func _rebuild_items(overlay: Dictionary) -> void:
@@ -363,7 +382,9 @@ func _rebuild_items(overlay: Dictionary) -> void:
 			var x: float = t.x + 0.5 + off.x
 			var z: float = t.y + 0.5 + off.y
 			var yaw: float = float((t.x * 37 + t.y * 91 + copy * 53) % 360) * PI / 180.0
-			(batches[bkey] as Array).append(Transform3D(Basis(Vector3.UP, yaw), Vector3(x, float(_terrain.call("height_at", x, z)), z)))
+			# M-GROW 3.5: a pile grows with its count, up to `items.pile_growth` larger at `items.pile_full` items.
+			var grow: float = 1.0 + float(Data3D.param("items.pile_growth", 0.0)) * clampf(float(n - 1) / maxf(1.0, float(Data3D.param("items.pile_full", 30)) - 1.0), 0.0, 1.0)
+			(batches[bkey] as Array).append(Transform3D(Basis(Vector3.UP, yaw).scaled(Vector3.ONE * grow), Vector3(x, float(_terrain.call("height_at", x, z)), z)))
 	for k: String in _item_nodes.keys():
 		if not batches.has(k):
 			(_item_nodes[k] as Node).queue_free()
@@ -442,13 +463,15 @@ func _tinted_mesh(id: String, tint: String) -> Mesh:
 
 
 # The bridge emits only free footprint-adjacent tiles; props never claim or block simulation space.
-func _rebuild_yards(buildings: Dictionary) -> void:
+## M-GROW 3.5: an occupied finished house also smokes from its roof (params3d `chimney`: amount by season plus per
+## occupant), the station smoke billboard reused, so no new material.
+func _rebuild_yards(buildings: Dictionary, season: int) -> void:
 	for model: String in buildings.get("yard_models", PackedStringArray()):
 		if not _yard_warm.has(model):
 			Data3D.mesh(model)
 			_yard_warm[model] = true
 	var sites: Array = buildings.get("template_sites", [])
-	var key: String = str(hash(sites.map(func(row: Dictionary) -> Variant: return [row.get("id"), row.get("yard_props", [])])))
+	var key: String = str(hash([season, sites.map(func(row: Dictionary) -> Variant: return [row.get("id"), row.get("yard_props", []), row.get("occupants", 0), row.get("complete", false)])]))
 	if key == _yards_key:
 		return
 	_yards_key = key
@@ -459,6 +482,7 @@ func _rebuild_yards(buildings: Dictionary) -> void:
 	for value: Variant in sites:
 		if value is not Dictionary:
 			continue
+		_chimney(value as Dictionary, season)
 		for prop: Dictionary in (value as Dictionary).get("yard_props", []):
 			var tile: Vector2i = Vector2i(int(prop.get("x", 0)), int(prop.get("y", 0)))
 			if claimed.has(tile):

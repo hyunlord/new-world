@@ -46,6 +46,7 @@
     "field_colour": [0.40, 0.29, 0.18],
     "season_tint": {"0": [1.0, 1.04, 0.96], "1": [1.04, 1.0, 0.88], "2": [1.08, 0.94, 0.78], "3": [1.0, 1.0, 1.0]},
     "snow_cover": {"3": 0.85},
+    "mud_cover": {"0": 0.6, "2": 0.3},
     "water_colour": [0.10, 0.26, 0.36, 0.88]
   },
   "render": {
@@ -106,6 +107,8 @@
     "straw": [0.72, 0.62, 0.38],
     "crop_ripe_by_category": {"fibre": [0.42, 0.52, 0.62]}
   },
+  "chimney": {"about": "M-GROW 3.5 house smoke: particles = amount_by_season[season] + occupants × per_occupant (0 spring … 3 winter).", "amount_by_season": {"0": 2, "1": 0, "2": 3, "3": 6}, "per_occupant": 1, "height": 2.0},
+  "items": {"about": "M-GROW 3.5: a ground pile scales up to 1 + pile_growth at pile_full items.", "pile_growth": 0.35, "pile_full": 30},
   "light": {
     "sun_energy": 1.3,
     "ambient_energy": 0.42,

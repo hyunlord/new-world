@@ -23,6 +23,8 @@ uniform sampler2D path_tex : filter_nearest, repeat_disable;
 uniform vec3 trodden_colour : source_color = vec3(0.66, 0.60, 0.38);
 uniform vec3 dirt_colour : source_color = vec3(0.50, 0.40, 0.25);
 uniform vec3 paved_colour : source_color = vec3(0.55, 0.50, 0.42);
+// M-GROW 3.5: footprints on worn (trodden/dirt) tiles, pressed through the snow cover and darkened by `mud` (spring).
+uniform float mud = 0.0;
 
 varying vec3 world_pos;
 varying vec3 world_normal;
@@ -74,7 +76,20 @@ vec3 blended_ground(vec2 p) {
 		mix(ground_detail(base + vec2(0.0, 1.0), p), ground_detail(base + vec2(1.0), p), f.x), f.y);
 }
 
+// Scattered oval prints, ~40 % of quarter-tile cells (1 inside a print, 0 outside).
+float footprints(vec2 p) {
+	vec2 cell = floor(p * 4.0);
+	float h = hash12(cell + vec2(17.0, 3.0));
+	if (h > 0.4) {
+		return 0.0;
+	}
+	vec2 f = fract(p * 4.0) - 0.5;
+	f.x += (h - 0.2) * 0.6;
+	return 1.0 - smoothstep(0.2, 0.28, length(f * vec2(2.4, 1.4)));
+}
+
 void fragment() {
+	float worn = 0.0;
 	vec3 c = srgb_to_linear(COLOR.rgb) * season_tint;
 	c *= blended_ground(world_pos.xz);
 	float n = vnoise(world_pos.xz * 3.0) * 0.6 + vnoise(world_pos.xz * 11.0) * 0.4;
@@ -85,6 +100,7 @@ void fragment() {
 		// Worn stages spread 0.35 tile past their tile (max of the neighbours) so a one-tile path reads as a band;
 		// the spread edge blends weaker than the tile itself.
 		float own = texture(path_tex, puv).r * 255.0;
+		worn = step(0.5, own) * step(own, 2.5);
 		vec2 o = vec2(0.35) / map_size;
 		float spread = max(max(texture(path_tex, puv + vec2(o.x, 0.0)).r, texture(path_tex, puv - vec2(o.x, 0.0)).r),
 			max(texture(path_tex, puv + vec2(0.0, o.y)).r, texture(path_tex, puv - vec2(0.0, o.y)).r)) * 255.0;
@@ -110,6 +126,9 @@ void fragment() {
 	float cover = snow * smoothstep(0.55, 0.9, up) * smoothstep(0.25, 0.55, n + snow * 0.4);
 	vec3 snow_detail = mix(material_detail(world_pos.xz * 0.25, 8.0), material_detail(world_pos.xz * 0.25, 9.0), vnoise(world_pos.xz * 0.17));
 	c = mix(c, vec3(0.80, 0.85, 0.92) * snow_detail, cover);
+	// Busy tiles keep prints: blue-grey dents in snow, dark wet earth in mud.
+	float prints = worn * footprints(world_pos.xz) * max(cover, mud);
+	c = mix(c, mix(c * 0.55, vec3(0.42, 0.47, 0.58) * snow_detail, cover), prints * 0.8);
 	vec2 uv = world_pos.xz / map_size;
 	if (overlay_on > 0.5 && uv.x >= 0.0 && uv.y >= 0.0 && uv.x <= 1.0 && uv.y <= 1.0) {
 		vec4 o = texture(overlay_tex, uv);
