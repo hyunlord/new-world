@@ -193,6 +193,7 @@ where
             path_stage: Vec::new(),
             footfall_touched: Default::default(),
             workshop_last_used: Default::default(),
+            reputation: Default::default(),
         }
     }
 }

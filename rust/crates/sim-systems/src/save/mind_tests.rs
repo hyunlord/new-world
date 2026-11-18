@@ -158,6 +158,7 @@ fn invalid_saved_policy_is_rejected_before_registration() {
         metal: &body.metal,
         growth: &current.growth,
         workshop_last_used: &current.workshop_last_used,
+        reputation: &current.reputation,
     })
     .expect("malformed fixture");
     let mut corrupt = MAGIC.to_vec();

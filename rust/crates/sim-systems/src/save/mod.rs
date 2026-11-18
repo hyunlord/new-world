@@ -103,7 +103,7 @@ pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 /// 22 = 256-node knowledge upper words and explicit ore deposits/witnesses.
 /// 23 = 27 completed-job counters (mining) and the metal-chain provenance tail.
 /// 24 = separate growth tail: footfall/path stages, zone provenance and dwelling stages.
-/// 25 = workshop last-use ticks tail (M-GROW 3.4 building looks).
+/// 25 = workshop last-use ticks and settlement reputation tail (M-GROW 3.4 building looks, 3.6 reputation).
 pub const FORMAT_VERSION: u32 = 25;
 mod cultivation_catalog;
 mod cultivation_validation;
@@ -190,6 +190,7 @@ struct BodyRef<'a> {
     metal: &'a sim_core::colony::ore::MetalState,
     growth: &'a growth::GrowthState,
     workshop_last_used: &'a std::collections::BTreeMap<sim_core::colony::WorkshopId, u64>,
+    reputation: &'a sim_core::colony::reputation::ReputationState,
 }
 
 /// The body after the header, as read (same fields, same order).
@@ -279,13 +280,14 @@ struct BodyV24 {
     growth: growth::GrowthState,
 }
 
-/// Format25 appends workshop last-use ticks after the format24 growth tail.
+/// Format25 appends workshop last-use ticks and the reputation after the format24 growth tail.
 #[cfg_attr(test, derive(Serialize))]
 #[derive(Deserialize)]
 struct BodyV25 {
     legacy: Body,
     growth: growth::GrowthState,
     workshop_last_used: std::collections::BTreeMap<sim_core::colony::WorkshopId, u64>,
+    reputation: sim_core::colony::reputation::ReputationState,
 }
 
 /// Exact format12 body, before independently persisted food state.
@@ -374,6 +376,7 @@ pub fn save(engine: &mut SimEngine) -> Result<Vec<u8>, SaveError> {
         metal: &engine.resources.metal,
         growth: &growth,
         workshop_last_used: &engine.resources.colony.workshop_last_used,
+        reputation: &engine.resources.colony.reputation,
     };
     let mut out = Vec::with_capacity(1 << 20);
     out.extend_from_slice(&MAGIC);
@@ -440,6 +443,7 @@ pub fn load_with(
     }
     let mut growth = growth::GrowthState::default();
     let mut workshop_last_used = std::collections::BTreeMap::new();
+    let mut reputation = sim_core::colony::reputation::ReputationState::default();
     let mut body: Body = if legacy {
         let old: LegacyBody = decode(encoded).map_err(SaveError::Decode)?;
         Body {
@@ -654,6 +658,7 @@ pub fn load_with(
                 let current: BodyV25 = decode(&envelope.payload).map_err(SaveError::Decode)?;
                 growth = current.growth;
                 workshop_last_used = current.workshop_last_used;
+                reputation = current.reputation;
                 current.legacy
             }
         }
@@ -676,6 +681,10 @@ pub fn load_with(
         )));
     }
     resources.colony.workshop_last_used = workshop_last_used;
+    if let Some(data) = sim_core::colony::reputation::data() {
+        reputation.validate(data).map_err(SaveError::Decode)?;
+    }
+    resources.colony.reputation = reputation;
     resources.livestock = body.livestock;
     crate::runtime::livestock::rebuild_product_cache(&mut resources);
     resources.ore = body.ore;

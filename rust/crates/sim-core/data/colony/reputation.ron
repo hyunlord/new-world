@@ -1,0 +1,32 @@
+// M-GROW 3.6 settlement reputation (goal_worldsim_mgrow §3.6; D-MGROW-1 Q5). Read by
+// sim_core::colony::reputation::data() (embedded, parsed once; a unit test parses it).
+// Every number is a first design value; balance is deferred to M-BAL (docs/v8/BALANCE_DEBT.md).
+// - periods_per_season: the "month" — the value is recomputed this many times per season, at day boundaries.
+// - base: the value with every cause neutral. Each cause adds score × weight / 1000, score in -1000..=1000, so the
+//   value is exactly base + the sum of the causes. base − Σweight >= 0 and base + Σweight <= 100 (checked).
+// - causes (order = the saved contribution order; append only): ids are fixed facts —
+//   food: stored edible days vs food_good_days; shelter: covered beds vs people; safety: people bitten by wolves
+//   since the last period (bite_penalty_permille each); trade: trades since the last period (trade_bonus_permille
+//   each, never negative). Festivals do not exist and are not a cause.
+// - roll_permille_per_point: added to a seasonal migrant wave roll per point above base (removed below base).
+// - refuse_below: below this value every arriving migrant wave is refused (no departures: D-MGROW-1 Q5, M8).
+// - card_below: below this value the "사람들이 떠나려 해요" card is offered.
+// - chronicle_step: a chronicle line is written on the first value and whenever it moves this far from the last line.
+(
+    schema_version: 1,
+    periods_per_season: 3,
+    base: 50,
+    causes: [
+        (id: "food", weight: 15),
+        (id: "shelter", weight: 15),
+        (id: "safety", weight: 12),
+        (id: "trade", weight: 8),
+    ],
+    food_good_days: 12,
+    bite_penalty_permille: 500,
+    trade_bonus_permille: 500,
+    roll_permille_per_point: 4,
+    refuse_below: 20,
+    card_below: 30,
+    chronicle_step: 10,
+)

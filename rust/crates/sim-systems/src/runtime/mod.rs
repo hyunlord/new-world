@@ -32,6 +32,7 @@ pub mod needs;
 pub mod neighbours;
 pub mod ore;
 pub mod paths;
+pub mod reputation;
 pub mod resource_regen;
 pub mod rooms;
 pub mod settlement;

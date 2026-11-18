@@ -99,6 +99,7 @@ pub(in crate::ffi) fn ui_facts_to_dict(v: &UiFacts) -> VarDictionary {
     d.set("first_iron_tool_used", v.first_iron_tool_used);
     d.set("no_iron_nearby", v.no_iron_nearby);
     d.set("iron_caravan", v.iron_caravan);
+    d.set("reputation_low", v.reputation_low);
     d.set(
         "food_chain",
         super::super::food::summary_to_dict(v.food.as_ref()),

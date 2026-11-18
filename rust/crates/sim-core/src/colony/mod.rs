@@ -37,6 +37,7 @@ pub mod ore;
 pub mod paths;
 pub mod people;
 pub mod processing;
+pub mod reputation;
 pub mod requests;
 pub mod skills;
 pub mod steward;
@@ -321,6 +322,9 @@ pub struct ColonyState {
     /// the bridge's working/idle/ruined look; no system reads it). Persisted by the format25 tail.
     #[serde(skip)]
     pub workshop_last_used: BTreeMap<WorkshopId, u64>,
+    /// M-GROW 3.6: settlement reputation and its causes. Persisted by the format25 tail.
+    #[serde(skip)]
+    pub reputation: reputation::ReputationState,
 }
 
 /// Measurement-only key of a job released to a need (`ColonyState::release_counts`):

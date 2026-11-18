@@ -51,6 +51,12 @@ pub struct NeighboursView {
     pub clues: Vec<(u8, u32)>,
     /// Tallies: migrants joined, trades, gifts, eurekas.
     pub tallies: (u64, u64, u64, u64),
+    /// M-GROW 3.6: the settlement reputation (0..=100), -1 before the first month.
+    pub reputation: i64,
+    /// Its causes, largest first: (locale key with direction, signed contribution).
+    pub reputation_causes: Vec<(String, i32)>,
+    /// Migrant waves refused for a low reputation.
+    pub reputation_refused: u32,
 }
 
 fn deadline(state: VisitState, days: u32, day_ticks: u64) -> i64 {
@@ -145,7 +151,37 @@ pub fn collect_neighbours(world: &hecs::World, res: &SimResources) -> Neighbours
             nb.tallies.gifts,
             nb.tallies.eurekas,
         ),
+        reputation: res.colony.reputation.value.map_or(-1, i64::from),
+        reputation_causes: reputation_causes(&res.colony.reputation),
+        reputation_refused: res.colony.reputation.refused,
     }
+}
+
+/// Locale key of cause `index` moving in `negative` direction (`REPUTATION_CAUSE_<ID>_UP/_DOWN`).
+pub(super) fn reputation_cause_key(index: usize, negative: bool) -> String {
+    sim_core::colony::reputation::data()
+        .and_then(|d| d.causes.get(index))
+        .map_or_else(
+            || "UI_UNKNOWN".to_string(),
+            |c| {
+                format!(
+                    "REPUTATION_CAUSE_{}_{}",
+                    c.id.to_uppercase(),
+                    if negative { "DOWN" } else { "UP" }
+                )
+            },
+        )
+}
+
+fn reputation_causes(state: &sim_core::colony::reputation::ReputationState) -> Vec<(String, i32)> {
+    state
+        .ranked()
+        .into_iter()
+        .map(|i| {
+            let part = state.contributions[i];
+            (reputation_cause_key(i, part < 0), part)
+        })
+        .collect()
 }
 
 /// Marshal [`NeighboursView`].
@@ -219,6 +255,22 @@ pub(super) fn neighbours_to_dict(v: &NeighboursView) -> VarDictionary {
     d.set("trades", i64::try_from(v.tallies.1).unwrap_or(i64::MAX));
     d.set("gifts", i64::try_from(v.tallies.2).unwrap_or(i64::MAX));
     d.set("eurekas", i64::try_from(v.tallies.3).unwrap_or(i64::MAX));
+    d.set("reputation", v.reputation);
+    d.set(
+        "reputation_cause_keys",
+        v.reputation_causes
+            .iter()
+            .map(|(key, _)| GString::from(key.as_str()))
+            .collect::<PackedStringArray>(),
+    );
+    d.set(
+        "reputation_cause_values",
+        v.reputation_causes
+            .iter()
+            .map(|(_, part)| i64::from(*part))
+            .collect::<PackedInt64Array>(),
+    );
+    d.set("reputation_refused", i64::from(v.reputation_refused));
     d
 }
 

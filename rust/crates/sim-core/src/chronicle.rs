@@ -214,11 +214,14 @@ pub enum ChronicleKind {
     HouseStage = 71,
     /// Steward began an era-material upgrade; cause = site id, value = era order.
     MaterialWave = 72,
+    /// M-GROW 3.6: the settlement reputation moved; value = reputation (0..=100); cause = the two largest
+    /// causes, each a byte `(cause index + 1) << 1 | negative` (low byte first, 0 = none).
+    ReputationChanged = 73,
 }
 
 impl ChronicleKind {
     /// Every kind in discriminant order.
-    pub const ALL: [ChronicleKind; 73] = [
+    pub const ALL: [ChronicleKind; 74] = [
         Self::Born,
         Self::FoundingMember,
         Self::Paired,
@@ -292,6 +295,7 @@ impl ChronicleKind {
         Self::ZoneLaidOut,
         Self::HouseStage,
         Self::MaterialWave,
+        Self::ReputationChanged,
     ];
 
     /// Stable numeric discriminant.
@@ -375,6 +379,7 @@ impl ChronicleKind {
             Self::ZoneLaidOut => "zone_laid_out",
             Self::HouseStage => "house_stage",
             Self::MaterialWave => "material_wave",
+            Self::ReputationChanged => "reputation_changed",
         }
     }
 }
@@ -874,10 +879,12 @@ mod tests {
         // M-GROW 3.1: kind 70 appended; 0–69 unchanged.
         assert_eq!(ChronicleKind::ZoneLaidOut.as_u8(), 70);
         assert_eq!(ChronicleKind::ZoneLaidOut.as_str(), "zone_laid_out");
-        assert_eq!(ChronicleKind::ALL.len(), 73);
+        // M-GROW 3.6: kind 73 appended.
+        assert_eq!(ChronicleKind::ReputationChanged.as_u8(), 73);
+        assert_eq!(ChronicleKind::ALL.len(), 74);
         let names: std::collections::BTreeSet<&str> =
             ChronicleKind::ALL.iter().map(|k| k.as_str()).collect();
-        assert_eq!(names.len(), 73);
+        assert_eq!(names.len(), 74);
         assert_eq!(DepartCause::TopUp.as_u8(), 4);
     }
 

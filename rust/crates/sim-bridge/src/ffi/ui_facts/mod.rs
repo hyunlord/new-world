@@ -60,6 +60,8 @@ pub struct UiFacts {
     pub no_iron_nearby: bool,
     /// C3: the lowest-id waiting caravan offering iron-tagged goods, or -1.
     pub iron_caravan: i64,
+    /// M-GROW 3.6: the settlement reputation is below the card threshold (reputation.ron `card_below`).
+    pub reputation_low: bool,
     /// Actual food-chain storage and winter demand.
     pub food: Option<super::food::FoodSummaryView>,
     /// People sorted by AgentId.
@@ -138,6 +140,7 @@ pub fn collect_ui_facts(world: &hecs::World, res: &SimResources) -> UiFacts {
     out.no_iron_nearby = sim_systems::runtime::ore::no_iron_nearby(world, res);
     out.iron_caravan =
         sim_systems::runtime::ore::caravan_offering(res, "metal_iron").map_or(-1, i64::from);
+    out.reputation_low = sim_systems::runtime::reputation::low(res);
     out.people = people::collect(world, res);
     out.settlements = economy::collect(world, res);
     out.stockpile_tiles = places::storage(res);

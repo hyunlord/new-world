@@ -368,6 +368,11 @@ pub fn migrants(
 /// Send wave `size` from the neighbour with the higher attitude today (no-op when the colony is at its cap or no
 /// edge is reachable).
 fn send_wave(world: &World, res: &mut SimResources, rule: &NeighbourRule, size: u8) {
+    // M-GROW 3.6: a settlement with a low reputation draws no newcomers (no departures: D-MGROW-1 Q5).
+    if crate::runtime::reputation::refuses(res) {
+        res.colony.reputation.refused += 1;
+        return;
+    }
     if colony_people(world) >= rule.population_cap {
         res.colony.neighbours.tallies.capped += 1;
         return;
@@ -480,6 +485,7 @@ impl RuntimeSystem for NeighbourSystem {
             return;
         }
         res.colony.neighbours.next_day = day + 1;
+        crate::runtime::reputation::update(world, res, day);
         let seed = res.world_seed;
         if res.colony.neighbours.list.is_empty() {
             res.colony.neighbours.list = generate(seed, &rule);
@@ -533,11 +539,15 @@ impl RuntimeSystem for NeighbourSystem {
             let attitude = wave_source(&res.colony.neighbours.list)
                 .and_then(|id| res.colony.neighbours.neighbour(id))
                 .map_or(0, |n| n.attitude);
-            let chance = roll_permille(
-                &rule,
-                surplus_days(world, res, &rule),
-                trade::stock_value(res),
-                attitude,
+            let chance = crate::runtime::reputation::roll_adjusted(
+                res,
+                roll_permille(
+                    &rule,
+                    surplus_days(world, res, &rule),
+                    trade::stock_value(res),
+                    attitude,
+                ),
+                rule.roll_max_permille,
             );
             res.colony.neighbours.tallies.rolls += 1;
             if keyed_below(
