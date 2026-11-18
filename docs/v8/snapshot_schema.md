@@ -1069,6 +1069,8 @@ order; their bills (work order) and shelf stacks flattened, each with the row in
 | `bill_active` | PackedInt32Array | 1 = the bill the workshop works now |
 | `fuel_short_items` | PackedInt64Array | C2-b, per workshop row: `ItemKind::code` of a waiting bill's `fuel`-tagged input the shelf lacks, -1 none |
 | `fuel_short_sources` | PackedInt64Array | C2-b, per workshop row: `BlueprintKind::code` of the workshop whose recipe makes that fuel, -1 unknown |
+| `input_short` | PackedInt32Array | M-GROW 3.4, per workshop row: 1 = idle with a waiting bill whose inputs neither shelf nor ground supply holds (out-of-input look) |
+| `abandoned` | PackedInt32Array | M-GROW 3.4, per workshop row: 1 = no finished craft for at least one season (ruined look) |
 | `shelf_shops` | PackedInt32Array | row index of the shelf stack's workshop |
 | `shelf_kinds` | PackedInt64Array | `ItemKind::code` |
 | `shelf_counts` | PackedInt32Array | items on the shelf |
@@ -1498,6 +1500,10 @@ caravans by number (the gone ones stay), clues by node id. In `SimReads.GETTERS`
 | `clue_nodes` | PackedInt32Array | nodes hinted by an artifact the colony holds that no colonist practises (eureka) |
 | `clue_items` | PackedInt64Array | the hinting artifact's `ItemKind::code`, one per `clue_nodes` row |
 | `migrants_joined` | int | people who joined so far |
+| `reputation` | int | M-GROW 3.6: settlement reputation 0–100, -1 before the first month |
+| `reputation_cause_keys` | PackedStringArray | its causes, largest first: locale key with direction |
+| `reputation_cause_values` | PackedInt64Array | signed contribution per cause, aligned with the keys |
+| `reputation_refused` | int | migrant waves refused for a low reputation |
 | `trades` | int | trades so far |
 | `gifts` | int | gifts so far |
 | `eurekas` | int | discoveries helped by an artifact so far |
@@ -1593,6 +1599,7 @@ C1-b additive nested fields:
 | `first_iron_tool_used` | bool | C3: durable first-tool-use witness of a metal_iron item; chapter9 fact |
 | `no_iron_nearby` | bool | C3: an adult practises iron_smelting (false when the catalogue lacks it) and no revealed deposit yielding a metal_iron item lies within 80 Chebyshev tiles of the camp hearth |
 | `iron_caravan` | int | C3: lowest id of a waiting caravan offering metal_iron goods, -1 none |
+| `reputation_low` | bool | M-GROW 3.6: reputation below the data threshold ("사람들이 떠나려 해요" card fact) |
 | `rumoured_upper_low` | PackedInt64Array | optional neighbour bits128–191, signed bit patterns; both upper columns omitted when all upper bits are zero |
 | `rumoured_upper_high` | PackedInt64Array | optional neighbour bits192–255, aligned with neighbour ids |
 | `age_days` | PackedInt64Array | Nested animal row current pure whole-day age; -1 non-tameable wild animal. |
@@ -1755,6 +1762,7 @@ The static checker compares the union of literal keys, including nested builders
 | `tiers` | `tech.tiers` |
 | `transition_permille` | `tech.eras[].transition_permille` |
 | `a` | `waits.a` |
+| `abandoned` | `workshops.abandoned` |
 | `adults` | `tech.adults` |
 | `at_risk` | `tech.at_risk` |
 | `attitudes` | `neighbours.attitudes` |
@@ -1802,6 +1810,7 @@ The static checker compares the union of literal keys, including nested builders
 | `holders` | `tech.holders` |
 | `hps` | `animals.hps` |
 | `hs` | `workshops.hs` |
+| `input_short` | `workshops.input_short` |
 | `huntable` | `animals.huntable` |
 | `ids` | `tech.ids`, `neighbours.ids`, `animals.ids`, `rooms.ids`, `workshops.ids` |
 | `intensities` | `story.intensities` |
@@ -1811,6 +1820,10 @@ The static checker compares the union of literal keys, including nested builders
 | `marked` | `animals.marked` |
 | `marker_weights` | `tech.marker_weights` |
 | `migrants_joined` | `neighbours.migrants_joined` |
+| `reputation` | `neighbours.reputation` |
+| `reputation_cause_keys` | `neighbours.reputation_cause_keys` |
+| `reputation_cause_values` | `neighbours.reputation_cause_values` |
+| `reputation_refused` | `neighbours.reputation_refused` |
 | `name_keys` | `tech.name_keys`, `neighbours.name_keys`, `story.name_keys`, `animals.name_keys` |
 | `names` | `tech.names`, `story.names`, `animals.names` |
 | `nodes` | `waits.nodes` |
