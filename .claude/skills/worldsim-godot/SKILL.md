@@ -15,7 +15,7 @@ GDScript draws, takes input and shows UI. The simulation is Rust (`rust/crates/`
 | bridge node | `Main/WorldSim` (class `WorldSimNode`) in `scenes/main.tscn` |
 | read layer | `scripts/core/sim_reads.gd` (`SimReads`, node `Main/SimReads`, right after `WorldSim`) |
 | text | autoload `Locale` (`scripts/core/locale.gd`); sources `localization/{ko,en}/{ui,buildings}.json`, compiled to `localization/compiled/{ko,en}.json` |
-| theme / fonts | `assets/ui/worldsim_theme.tres`: Galmuri11 24 px default and headings, Galmuri9 20 px `SmallNumber` |
+| theme / fonts | `assets/ui/worldsim_theme.tres`: Pretendard 18 px body and 15 px small labels, Noto Serif KR 24 px card titles |
 | render settings | `project.godot`: nearest texture filter, 2D transform + vertex pixel snap, 1920×1080 `canvas_items` stretch |
 | tools | `tools/v8/gdscript_strict_check.sh`, `smoke.sh` + `smoke.gd`, `capture.gd`, `run_bounded.sh`; gate steps 2, 3, 8, 9, 17 (`test_locale_trf.gd`) and 20 (`uid_check`) in `tools/v8/gate.sh` |
 
@@ -307,6 +307,7 @@ outline) made a forest read as green dots that hid the people and 34 logs read a
 | 2026-10-25 | A standalone legacy UI run omitted test settings isolation despite the gate providing it | Shell-only convention did not protect direct harness execution | Require an existing external settings directory in the harness before scene instantiation; retain the incident when no pre-run settings copy exists instead of guessing a restore | `docs/ISSUES.md` ISS-283; `tools/v8/m5_ui_test.gd` |
 | 2026-10-28 | Batched quarter markers still took24.57ms/frame at200people | Per-frame collision placement dominated; interpolated positions invalidated a whole-layout cache | Profile layout separately from drawing; cache stable tile-target placement, keep current leaders/picking, and prove exact search against a frozen oracle | `docs/decisions/0048-cache-exact-marker-placement.md`; `docs/decisions/0051-place-markers-at-stable-tile-targets.md` |
 | 2026-10-28 | Headless MultiMesh integration assertions read empty transforms/colors | Dummy renderer implements per-instance getters as stubs | Run presentation/picking integration on a real renderer; keep pure geometry tests headless and never treat dummy output as visual evidence | `tools/v8/mux21_layout_test.gd`; `docs/v8/mux2_1/MUX21_DECISIONS.md` D13 |
+| 2026-11-18 | A visible Korean chronicle label failed a locale assertion | UI layout adds invisible word joiners to keep short Korean phrases together | Compare visible labels with `KoreanText.raw()` and check layout separately | `tools/v8/test_core_chronicle.gd` |
 | 2026-10-28 | Real defence records and drafted people existed without the steward toast | Defence does not advance the ordinary action sequence used by the UI shortcut | Page notifications by chronicle cursor independently of action sequence; preserve load baseline and cursor dedup tests | `scripts/ui/mux/mux_hud.gd`; `tools/v8/mux21_toast_test.gd` |
 
 | 2026-10-29 | Causal title pushed EN1.25 popup to427.5px; wrapping then exceeded half-height | Unwrapped Label minimum width overrides requested panel width; fixed chrome allowance ignores wrapped heading height | Wrap bounded headings and derive body budget from actual header/theme minima; test every supported UI scale in EN and KO | `scripts/ui/panels/causal_panel.gd`; `tools/v8/mux21_why_locale_test.gd`; MUX21 D22 |
