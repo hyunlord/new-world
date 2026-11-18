@@ -19,6 +19,7 @@ records the M-GROW-a architecture.
 | Appended growth save tail | Preserve nested format23 wire order, explicitly admit authentic predecessor identities/systems, and validate all added state. |
 | Baseline identity scope | Non-colony worlds stay byte-identical. Colony outcomes change through real paths/zones; the paired crash detector is the collapse floor. |
 | M-GROW-b boundaries | Refuse waves plus departure-warning card; actual departures stay Inert for M8. Season-only weather-lore forecast is approved; prospect goes to M-NATION. No new hauling/traction mechanic. |
+| D-MGROW-3: one publication gate per frozen HEAD; receipts ride the next stage | The publication gate runs once on the frozen HEAD, which is published ff-only after the crash detector. PERF_LEDGER rows and that gate's gate/crash/ff receipts go into the FIRST commit of the next stage (M-GROW-b for M-GROW-a; the next pass for M-GROW-b), each row naming the SHA it was measured on, and ride that stage's gate. External receipts stay in mgrow-data meanwhile. Never write future SHAs or gate numbers into the repo before the gate; never publish a docs-only commit without a gate. Applies to later passes too. |
 
 Publication requires the exact frozen commit's green pre-gate, full gate and
 separate crash detector, with PLAY_ROOT/PLAY_DATA under mgrow-data and

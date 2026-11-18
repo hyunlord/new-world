@@ -1,8 +1,8 @@
 # Changelog
 
-## M-GROW-a — village growth candidate (2026-11-17)
+## M-GROW-a — published f9caf0ba5, 2026-11-19
 
-Implementation is under verification. Publication requires the frozen HEAD's full gate and separate crash detector; this entry is not a publication receipt.
+Full gate 51/51 (fullgate-a-3, step 41 PASS without waiver, max 46.9 ms) and crash detector PASS on the exact HEAD; receipts in `docs/v8/mgrow/MGROW_REPORT.md` (D-MGROW-3).
 
 ### Added
 - Data-authored paths, five village layout categories, and dwelling residence/yard stages (`paths.ron`, `zones.ron`, `yards.ron`). Daily growth records its causes; steward building requests retain their rule provenance and link to their layout zone.
