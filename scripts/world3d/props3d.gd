@@ -14,9 +14,9 @@
 #   drawn once in its own colours; an id or bucket without a model falls back to the 2D item binding's asset for the
 #   bucket → `items.by_asset`, else the catalogue `art_shape` → `items.by_shape`, else `items.fallback`, with `vein`
 #   and `metal` surfaces in the item's `art_tint_material` colour and 2–8 items as two copies, 9+ three. Lit models
-#   (bindings3d `stations.lit`, keyed by the station model) carry an OmniLight3D at the drawn model's `light` socket
-#   and glow while lit: the hearth while its settlement's fire burns, a workshop while it works an active bill. Light
-#   energy follows the night (Sky.night_factor) but never reaches zero, so a working smelter reads by day too. A
+#   (bindings3d `stations.lit`, keyed by the station model) provide a light socket and glow while lit: the hearth
+#   while its settlement's fire burns, a workshop while it works an active bill.
+#   At night, fire sockets in occupied roofed rooms and exterior windows share a camera-ranked light pool. A
 #   working station without a fire throws up chips and dust instead (`stations.work_puffs`). `drawn_counts()` counts
 #   the workshops and hearths the last rebuild drew (tests).
 # Bridge methods called: via SimReads get_workshops, get_building_snapshot, get_settlement_snapshot, get_space,
@@ -37,7 +37,20 @@ var _yard_warm: Dictionary = {}
 var _stations: Array[MeshInstance3D] = []
 ## Tiles under a drawn station (people3d draws a worker standing there in front of it).
 var station_tiles: Dictionary = {}
-var _lights: Array[Dictionary] = []
+var _fire_sockets: Array[Dictionary] = []
+var _light_pool: Array[OmniLight3D] = []
+var _light_budget: int
+var _light_threshold: float
+var _light_range: float
+var _fire_range: float
+var _light_energy: float
+var _fire_energy: float
+var _light_colour: Color
+var _fire_socket_height: float
+var _flicker_amount: float
+var _flicker_rate: float
+var _flicker_secondary_rate: float
+var _lighting_active: bool = false
 var _item_nodes: Dictionary = {}
 var _glow_on: StandardMaterial3D
 var _glow_off: StandardMaterial3D
@@ -57,12 +70,22 @@ func setup(world_sim: Node, terrain: Node, sky: Node) -> void:
 func _ready() -> void:
 	# Renderer warmup (D-MGROW-1 Q4): load the M-GROW 3.4 out-of-input marker before it first appears.
 	Data3D.mesh(str(Data3D.param("stations.short_marker", "")))
-	var fire: Color = Data3D.colour(Data3D.param("light.fire_colour", []), Color(1.0, 0.62, 0.3))
+	_light_budget = clampi(int(Data3D.mood("room_lights.cap", 24)), 0, 24)
+	_light_threshold = clampf(float(Data3D.mood("room_lights.activation", 0.25)), 0.0, 0.99)
+	_light_range = float(Data3D.mood("room_lights.range", 3.5))
+	_fire_range = float(Data3D.mood("room_lights.fire_range", 4.5))
+	_light_energy = float(Data3D.mood("room_lights.energy", 0.9))
+	_fire_energy = float(Data3D.mood("room_lights.fire_energy", 1.65))
+	_light_colour = Data3D.colour(Data3D.mood("room_lights.colour", []), Color(1.0, 0.57, 0.24))
+	_fire_socket_height = float(Data3D.mood("room_lights.fire_socket_height", 0.25))
+	_flicker_amount = float(Data3D.mood("room_lights.flicker_amount", 0.1))
+	_flicker_rate = float(Data3D.mood("room_lights.flicker_rate", 11.0))
+	_flicker_secondary_rate = float(Data3D.mood("room_lights.flicker_secondary_rate", 3.7))
 	_glow_on = StandardMaterial3D.new()
-	_glow_on.albedo_color = fire
+	_glow_on.albedo_color = _light_colour
 	_glow_on.emission_enabled = true
-	_glow_on.emission = fire
-	_glow_on.emission_energy_multiplier = 3.0
+	_glow_on.emission = _light_colour
+	_glow_on.emission_energy_multiplier = float(Data3D.mood("room_lights.fire_emission", 3.0))
 	_glow_off = StandardMaterial3D.new()
 	_glow_off.albedo_color = Color(0.16, 0.13, 0.12)
 
@@ -71,6 +94,10 @@ func _on_world_reset() -> void:
 	_key = ""
 	_items_key = ""
 	_yards_key = ""
+	_stamp_key = ""
+	_fire_sockets.clear()
+	for light: OmniLight3D in _light_pool:
+		light.hide()
 
 
 func _process(_delta: float) -> void:
@@ -82,7 +109,7 @@ func _process(_delta: float) -> void:
 	# A refresh takes World3D's heavy-work slot (one per frame, none on a simulation step); else try next frame.
 	if (skey == _stamp_key and not stamp.is_empty()) or (get_parent() != null and get_parent().has_method("claim_heavy")
 			and not bool(get_parent().call("claim_heavy"))):
-		_flicker()
+		_update_lights()
 		return
 	_stamp_key = skey
 	var shops: Dictionary = SimReads.read(_world_sim, "get_workshops")
@@ -101,16 +128,55 @@ func _process(_delta: float) -> void:
 	if ikey != _items_key:
 		_items_key = ikey
 		_rebuild_items(overlay)
-	_flicker()
+	_update_lights()
 
 
-func _flicker() -> void:
+func _update_lights() -> void:
 	var night: float = float(_sky.call("night_factor")) if _sky != null else 0.0
-	var base_energy: float = float(Data3D.param("light.fire_light_energy", 2.2))
-	for l: Dictionary in _lights:
-		var light: OmniLight3D = l["light"]
-		var flicker: float = 0.9 + 0.1 * sin(Time.get_ticks_msec() * 0.011 + float(l["phase"])) * sin(Time.get_ticks_msec() * 0.0037 + float(l["phase"]) * 2.0)
-		light.light_energy = base_energy * (0.35 + 0.65 * night) * flicker
+	var level: float = smoothstep(_light_threshold, 1.0, night)
+	if level <= 0.0 and not _lighting_active:
+		return
+	var camera: Camera3D = get_viewport().get_camera_3d()
+	if camera == null:
+		return
+	_lighting_active = level > 0.0
+	var structures: Node = get_node("../Structures")
+	var eye: Vector3 = camera.global_position
+	var candidates: Array[Dictionary] = []
+	structures.call("append_window_lights", candidates, eye, level)
+	if _lighting_active:
+		for socket: Dictionary in _fire_sockets:
+			if not bool(structures.call("occupied_room_at", socket["tile"])):
+				continue
+			var pos: Vector3 = socket["position"]
+			candidates.append({"position": pos, "distance": eye.distance_squared_to(pos), "fire": true, "phase": socket["phase"]})
+	var count: int = keep_nearest_lights(candidates, _light_budget)
+	var time: float = float(get_parent().get("anim_time"))
+	for i: int in count:
+		if i == _light_pool.size():
+			var node: OmniLight3D = OmniLight3D.new()
+			node.light_color = _light_colour
+			node.shadow_enabled = false
+			add_child(node)
+			_light_pool.append(node)
+		var light: OmniLight3D = _light_pool[i]
+		var row: Dictionary = candidates[i]
+		var fire: bool = row["fire"]
+		var phase: float = row["phase"]
+		var flicker: float = 1.0 - _flicker_amount * (1.0 - sin(time * _flicker_rate + phase) * sin(time * _flicker_secondary_rate + phase * 2.0))
+		light.global_position = row["position"]
+		light.omni_range = _fire_range if fire else _light_range
+		light.light_energy = level * (_fire_energy * flicker if fire else _light_energy)
+		light.show()
+	for i: int in range(count, _light_pool.size()):
+		_light_pool[i].hide()
+
+
+static func keep_nearest_lights(candidates: Array[Dictionary], budget: int) -> int:
+	var count: int = mini(candidates.size(), budget)
+	if candidates.size() > count:
+		candidates.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return float(a["distance"]) < float(b["distance"]))
+	return count
 
 
 func _catalog_styles() -> Dictionary:
@@ -136,7 +202,7 @@ func _rebuild_stations(shops: Dictionary, buildings: Dictionary, settlements: Di
 	for n: MeshInstance3D in _stations:
 		n.queue_free()
 	_stations.clear()
-	_lights.clear()
+	_fire_sockets.clear()
 	_counts = {"workshops": 0, "hearths": 0}
 	station_tiles.clear()
 	var styles: Dictionary = _catalog_styles()
@@ -280,18 +346,14 @@ func _place(id: String, rect: Rect2i, lit: bool, node_name: String, look: String
 	elif lit:
 		mi.add_child(_work_puffs(row, "smoke"))
 	if is_lit_model and lit:
-		var light: OmniLight3D = OmniLight3D.new()
 		var sockets: Dictionary = row.get("sockets", {})
 		var socket: Variant = sockets.get("light")
 		var at: Vector3 = Vector3(0, 0.8, 0)
 		if socket is Array and (socket as Array).size() >= 3:
 			at = Vector3(float(socket[0]), float(socket[1]), float(socket[2]))
-		light.position = at + Vector3(0, 0.25, 0)
-		light.light_color = Data3D.colour(Data3D.param("light.fire_colour", []), Color(1.0, 0.62, 0.3))
-		light.omni_range = float(Data3D.param("light.fire_light_range", 7.0))
-		light.shadow_enabled = false
-		mi.add_child(light)
-		_lights.append({"light": light, "phase": float(rect.position.x * 7 + rect.position.y * 3)})
+		var position_in_world: Vector3 = mi.to_global(at + Vector3(0, _fire_socket_height, 0))
+		var room_tile: Vector2i = Vector2i(floori(centre.x), floori(centre.y))
+		_fire_sockets.append({"position": position_in_world, "tile": room_tile, "phase": float(rect.position.x * 7 + rect.position.y * 3)})
 
 
 ## Chips and dust rising off a station without a fire while it works a bill (params3d `stations.work_puffs`), so a

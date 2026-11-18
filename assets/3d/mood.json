@@ -1,0 +1,56 @@
+{
+  "hardship": {
+    "food_days": 30.0,
+    "death_days": 10.0,
+    "per_death": 0.25,
+    "winter": 0.2,
+    "smooth_days": 3.0,
+    "sample_days": 0.25
+  },
+  "grade": {
+    "lut_steps": 32,
+    "day": {
+      "saturation": 0.65, "contrast": 1.02, "exposure": 0.95,
+      "ambient": [0.83, 0.87, 0.79], "ambient_energy": 0.37,
+      "sun": [1.0, 0.92, 0.77], "sun_energy": 1.04,
+      "fog": [0.62, 0.69, 0.73], "fog_density": 0.0028, "sky_energy": 0.85,
+      "lut": [[0, 0, 0], [0.237, 0.248, 0.216], [0.485, 0.500, 0.455], [0.735, 0.745, 0.697], [0.99, 0.99, 0.95]]
+    },
+    "dusk": {
+      "saturation": 0.56, "contrast": 1.02, "exposure": 0.87,
+      "ambient": [0.43, 0.55, 0.69], "ambient_energy": 0.32,
+      "sun": [0.62, 0.72, 0.9], "sun_energy": 0.4,
+      "fog": [0.32, 0.38, 0.48], "fog_density": 0.0036, "sky_energy": 0.4,
+      "lut": [[0, 0, 0], [0.211, 0.23, 0.25], [0.44, 0.48, 0.52], [0.70, 0.735, 0.76], [0.99, 0.99, 1.0]]
+    },
+    "night": {
+      "saturation": 0.62, "contrast": 1.04, "exposure": 0.91,
+      "ambient": [0.26, 0.37, 0.59], "ambient_energy": 0.37,
+      "sun": [0.52, 0.65, 0.91], "sun_energy": 0.09,
+      "fog": [0.16, 0.20, 0.30], "fog_density": 0.0028, "sky_energy": 0.16,
+      "lut": [[0, 0, 0], [0.216, 0.236, 0.254], [0.448, 0.483, 0.52], [0.713, 0.742, 0.774], [1.0, 1.0, 1.0]]
+    },
+    "hardship": {
+      "saturation": 0.45, "contrast": 0.95, "exposure": 0.89,
+      "ambient": [0.72, 0.79, 0.87], "ambient_energy": 0.45,
+      "sun": [0.81, 0.84, 0.88], "sun_energy": 0.69,
+      "fog": [0.52, 0.59, 0.64], "fog_density": 0.0038, "sky_energy": 0.7,
+      "lut": [[0, 0, 0], [0.228, 0.238, 0.25], [0.465, 0.48, 0.495], [0.708, 0.729, 0.749], [0.97, 0.98, 1.0]]
+    }
+  },
+  "sky": {
+    "top": [0.35, 0.50, 0.65], "horizon": [0.68, 0.75, 0.80],
+    "ground_horizon": [0.48, 0.54, 0.57], "ground_bottom": [0.25, 0.29, 0.30],
+    "sun_min_elevation": 8.0, "sun_max_elevation": 39.0,
+    "moon_elevation": 40.0, "moon_azimuth": 25.0,
+    "tonemap_white": 8.0, "fog_sky_affect": 0.0
+  },
+  "room_lights": {
+    "cap": 24, "range": 3.5, "fire_range": 4.5, "energy": 0.9, "fire_energy": 1.65,
+    "colour": [1.0, 0.57, 0.24], "window_colour": [1.0, 0.56, 0.2],
+    "window_emission": 2.1, "fire_emission": 3.0, "activation": 0.25,
+    "window_width": 0.44, "window_height": 0.32, "window_elevation": 1.35,
+    "window_offset": 0.025, "fire_socket_height": 0.25,
+    "flicker_amount": 0.1, "flicker_rate": 11.0, "flicker_secondary_rate": 3.7
+  }
+}
