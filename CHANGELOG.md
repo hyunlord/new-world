@@ -10,6 +10,8 @@
 ### Changed
 - Terrain blends the existing texture atlas across tiles and keeps worn paths distinct. Ground, bark, rock and wood use surface detail and roughness variation.
 - Render tuning for both passes lives in `assets/3d/mood.json`.
+- Dusk and night use brighter blue-teal fill, and the daylight grade is warmer. A stronger distant villager rim improves separation from the ground.
+- Leaf clusters extend past the canopy silhouette, with more colour variation and shaded foliage underneath.
 
 ## M-GROW-a — village growth candidate (2026-11-17)
 

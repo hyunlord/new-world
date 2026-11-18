@@ -8,10 +8,12 @@ render_mode diffuse_lambert, specular_disabled;
 #include "res://shaders/world3d/material_texture.gdshaderinc"
 uniform sampler2D leaf_cards : source_color, filter_linear_mipmap, repeat_disable;
 uniform float leaf_cutoff = 0.44;
-uniform float shell_distance = 70.0;
+uniform float shell_distance = 88.0;
 uniform float shell_wind = 0.052;
+uniform float core_shade = 0.43;
 uniform float roughness_variation = 0.15;
 varying float texture_tile;
+varying float canopy_height;
 
 global uniform float w3d_snow;
 global uniform float w3d_time;
@@ -38,6 +40,7 @@ void vertex() {
 	kind = card ? 0.0 : UV.x;
 	local_height = VERTEX.y;
 	texture_tile = UV2.x;
+	canopy_height = UV2.y - 1.0;
 	VERTEX.x += sin(w3d_time * 1.3 + phase) * bend * (card ? shell_wind : 0.025);
 	VERTEX.z += cos(w3d_time * 1.1 + phase * 1.3) * bend * (card ? shell_wind * 0.72 : 0.018);
 	if (card && distance(origin, CAMERA_POSITION_WORLD) > shell_distance) {
@@ -94,7 +97,10 @@ void fragment() {
 	vec3 c = srgb_to_linear(COLOR.rgb);
 	vec3 norm = normalize(world_normal);
 	if (card) {
-		c *= 0.73 + leaf.r * 0.72;
+		c *= 0.66 + leaf.r * 0.90;
+	} else if (canopy_height >= 0.0) {
+		// A darker interior under brighter leaf clumps also gives the distant silhouette depth.
+		c *= mix(1.0 - core_shade, 1.05, smoothstep(0.0, 1.0, canopy_height));
 	} else if (texture_tile >= 0.0) {
 		vec3 tex_pos = world_pos * material_scale;
 		c *= material_triplanar(tex_pos, norm, texture_tile);
