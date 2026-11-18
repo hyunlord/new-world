@@ -4,7 +4,12 @@
 // tile (RGBA fill; alpha 0 = nothing) for the overlays and order feedback; `frame_tex` marks tiles whose outline is
 // drawn (R = outline strength) so hover, drag rectangles and refused tiles read as framed tiles.
 shader_type spatial;
+#ifdef SLICE_PBR
+render_mode diffuse_burley, specular_schlick_ggx;
+#include "res://shaders/world3d/slice_pbr.gdshaderinc"
+#else
 render_mode diffuse_lambert, specular_disabled;
+#endif
 #include "res://shaders/world3d/material_texture.gdshaderinc"
 uniform sampler2D biome_tex : filter_nearest, repeat_disable;
 uniform float autumn = 0.0;
@@ -92,12 +97,84 @@ vec3 blended_ground(vec2 p, vec2 tex_pos, float variant) {
 	return mix(mix(da, db, f.x), mix(dc, dd, f.x), f.y);
 }
 
+#ifdef SLICE_PBR
+float slice_biome_layer(vec2 biome) {
+	int tile = int(floor(biome.r * 255.0 + 0.5));
+	if (tile == 13) { return SLICE_FOREST; }
+	float layer = slice_slot(float(tile));
+	return layer < 0.0 ? SLICE_GRASS : layer;
+}
+
+SliceSurface slice_ground(vec2 p, vec2 uv, vec2 dx, vec2 dy) {
+	vec2 base = floor(p - 0.5);
+	vec2 f = smoothstep(vec2(0.0), vec2(1.0), fract(p - 0.5));
+	vec2 a = biome_at(base);
+	vec2 b = biome_at(base + vec2(1.0, 0.0));
+	vec2 c = biome_at(base + vec2(0.0, 1.0));
+	vec2 d = biome_at(base + vec2(1.0));
+	float la = slice_biome_layer(a);
+	float lb = slice_biome_layer(b);
+	float lc = slice_biome_layer(c);
+	float ld = slice_biome_layer(d);
+	SliceSurface fa = slice_sample(uv, dx, dy, la);
+	SliceSurface fb = fa;
+	SliceSurface fc = fa;
+	SliceSurface fd = fa;
+	if (lb != la) { fb = slice_sample(uv, dx, dy, lb); }
+	if (lc != la) { fc = slice_sample(uv, dx, dy, lc); }
+	if (ld == lb) {
+		fd = fb;
+	} else if (ld == lc) {
+		fd = fc;
+	} else if (ld != la) {
+		fd = slice_sample(uv, dx, dy, ld);
+	}
+	SliceSurface ground = slice_mix(slice_mix(fa, fb, f.x), slice_mix(fc, fd, f.x), f.y);
+	float clearing = mix(mix(a.g, b.g, f.x), mix(c.g, d.g, f.x), f.y);
+	float stage = texture(path_tex, p / map_size).r * 255.0;
+	float path = max(clearing, smoothstep(0.03, 1.0, stage) * path_strength.x);
+	path = mix(path, path_strength.y, smoothstep(1.0, 2.0, stage));
+	if (path > 0.0) {
+		ground = slice_mix(ground, slice_sample(uv, dx, dy, SLICE_DIRT), path);
+	}
+	if (stage > 2.0) {
+		ground = slice_mix(ground, slice_sample(uv, dx, dy, SLICE_ROCK), smoothstep(2.0, 3.0, stage) * path_strength.z);
+	}
+	return ground;
+}
+#endif
+
 void fragment() {
 	vec2 p = world_pos.xz;
 	vec2 tex_pos = p * ground_scale;
 	float n = vnoise(p * edge_noise_scale);
 	float macro_noise = vnoise(p * macro_scale);
 	vec2 warp = vec2(n - 0.5, vnoise(p.yx * edge_noise_scale + 3.0) - 0.5) * edge_warp;
+#ifdef SLICE_PBR
+	vec3 nrm = normalize(world_normal);
+	float up = clamp(nrm.y, 0.0, 1.0);
+	float rock = 1.0 - smoothstep(0.62, 0.8, up);
+	// Derivatives are taken before the material branches so mip levels stay stable at biome edges.
+	vec3 tex_world = world_pos * ground_scale;
+	vec3 tex_dx = dFdx(tex_world);
+	vec3 tex_dy = dFdy(tex_world);
+	SliceSurface surface = slice_ground(p + warp, tex_pos, tex_dx.xz, tex_dy.xz);
+	surface.bump = vec3(surface.bump.x, 0.0, -surface.bump.y);
+	if (rock > 0.0) {
+		surface = slice_mix(surface, slice_triplanar(tex_world, tex_dx, tex_dy, nrm, SLICE_ROCK), rock);
+	}
+	vec3 vertex_tint = mix(vec3(1.0), srgb_to_linear(COLOR.rgb) * 1.8, 0.30);
+	vec3 c = surface.albedo * vertex_tint * season_tint * (1.0 + macro_strength * (macro_noise - 0.5));
+	float cover = snow * smoothstep(0.55, 0.9, up) * smoothstep(0.25, 0.55, n + snow * 0.4);
+	if (cover > 0.0) {
+		vec3 snow_detail = mix(material_detail(tex_pos, 8.0), material_detail(tex_pos, 9.0), macro_noise);
+		c = mix(c, vec3(0.80, 0.85, 0.92) * snow_detail, cover);
+	}
+	NORMAL = normalize((VIEW_MATRIX * vec4(slice_perturb(nrm, surface.bump, 0.62 * (1.0 - cover)), 0.0)).xyz);
+	AO = mix(surface.ao, 1.0, cover);
+	ROUGHNESS = mix(surface.roughness, 0.96, cover);
+	SPECULAR = 0.32;
+#else
 	float variant = step(0.5, vnoise(p * macro_scale + 7.0));
 	vec3 detail = blended_ground(p + warp, tex_pos, variant);
 	vec3 c = srgb_to_linear(COLOR.rgb) * season_tint * detail * (1.0 + macro_strength * (macro_noise - 0.5));
@@ -136,6 +213,8 @@ void fragment() {
 		NORMAL = normalize((VIEW_MATRIX * vec4(nrm, 0.0)).xyz);
 	}
 	AO = 1.0 - ambient_occlusion * clamp((1.0 - h) + 0.35 * rock, 0.0, 1.0);
+	ROUGHNESS = mix(roughness_range.x, roughness_range.y, clamp(h, 0.0, 1.0));
+#endif
 	vec2 uv = world_pos.xz / map_size;
 	if (overlay_on > 0.5 && uv.x >= 0.0 && uv.y >= 0.0 && uv.x <= 1.0 && uv.y <= 1.0) {
 		vec4 o = texture(overlay_tex, uv);
@@ -152,5 +231,4 @@ void fragment() {
 		c *= 1.0 - 0.18 * (1.0 - smoothstep(0.01, 0.03, ge));
 	}
 	ALBEDO = c;
-	ROUGHNESS = mix(roughness_range.x, roughness_range.y, clamp(h, 0.0, 1.0));
 }

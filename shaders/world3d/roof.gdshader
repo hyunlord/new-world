@@ -4,7 +4,12 @@
 // stable screen-space dither; the global `w3d_snow` covers the upper roof faces in winter; (the cutaway), so no transparency sorting is needed. UV.x is 0 for a ridge along x
 // and 1 for a ridge along z (shingle and plank lines run down the slope).
 shader_type spatial;
+#ifdef SLICE_PBR
+render_mode diffuse_burley, specular_schlick_ggx, cull_back;
+#include "res://shaders/world3d/slice_pbr.gdshaderinc"
+#else
 render_mode diffuse_lambert, specular_disabled, cull_back;
+#endif
 #include "res://shaders/world3d/material_texture.gdshaderinc"
 uniform float texture_tile = -1.0;
 
@@ -40,6 +45,22 @@ void fragment() {
 	if (fade < 0.999 && bayer4(FRAGCOORD.xy) > fade) {
 		discard;
 	}
+#ifdef SLICE_PBR
+	vec3 tex_pos = world_pos * (0.55 * material_scale);
+	vec3 dx = dFdx(tex_pos);
+	vec3 dy = dFdy(tex_pos);
+	vec3 face = normalize(texture_normal);
+	float layer = COLOR.a > 0.5 ? slice_slot(texture_tile) : SLICE_LOG;
+	if (layer >= 0.0) {
+		SliceSurface surface = slice_triplanar(tex_pos, dx, dy, face, layer);
+		float snow_cover = COLOR.a > 0.5 ? w3d_snow * 0.9 * smoothstep(0.3, 0.7, up) : 0.0;
+		ALBEDO = mix(surface.albedo, vec3(0.80, 0.85, 0.92), snow_cover);
+		NORMAL = normalize((VIEW_MATRIX * vec4(slice_perturb(face, surface.bump, 0.68 * (1.0 - snow_cover)), 0.0)).xyz);
+		AO = mix(surface.ao, 1.0, snow_cover);
+		ROUGHNESS = mix(surface.roughness, 0.96, snow_cover);
+		SPECULAR = 0.32;
+	} else {
+#endif
 	vec3 c = srgb_to_linear(COLOR.rgb);
 	float grain = 1.0;
 	if (COLOR.a > 0.5) {
@@ -71,4 +92,7 @@ void fragment() {
 	norm = material_height_normal(world_pos, norm, grain);
 	NORMAL = normalize((VIEW_MATRIX * vec4(norm, 0.0)).xyz);
 	ROUGHNESS = 0.95;
+#ifdef SLICE_PBR
+	}
+#endif
 }

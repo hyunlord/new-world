@@ -4,7 +4,12 @@
 // UV.x the kind (1 glow: emissive embers; 2 vein: a faint self-light and a sparkle so ore veins read at the default
 // zoom); the global `w3d_snow` whitens upward faces (winter).
 shader_type spatial;
+#ifdef SLICE_PBR
+render_mode diffuse_burley, specular_schlick_ggx;
+#include "res://shaders/world3d/slice_pbr.gdshaderinc"
+#else
 render_mode diffuse_lambert, specular_disabled;
+#endif
 #include "res://shaders/world3d/material_texture.gdshaderinc"
 uniform sampler2D leaf_cards : source_color, filter_linear_mipmap, repeat_disable;
 uniform float leaf_cutoff = 0.44;
@@ -96,15 +101,35 @@ void fragment() {
 	}
 	vec3 c = srgb_to_linear(COLOR.rgb);
 	vec3 norm = normalize(world_normal);
+	float roughness = clamp(0.9 + roughness_variation * (leaf.r - 0.5), 0.0, 1.0);
+#ifdef SLICE_PBR
+	vec3 tex_world = world_pos * material_scale;
+	vec3 dx = dFdx(tex_world);
+	vec3 dy = dFdy(tex_world);
+#endif
+
 	if (card) {
 		c *= 0.66 + leaf.r * 0.90;
 	} else if (canopy_height >= 0.0) {
 		// A darker interior under brighter leaf clumps also gives the distant silhouette depth.
 		c *= mix(1.0 - core_shade, 1.05, smoothstep(0.0, 1.0, canopy_height));
 	} else if (texture_tile >= 0.0) {
+#ifdef SLICE_PBR
+		float layer = slice_slot(texture_tile);
+		if (layer >= 0.0) {
+			SliceSurface surface = slice_triplanar(tex_world, dx, dy, norm, layer);
+			c = surface.albedo * mix(vec3(1.0), c * 1.7, 0.25);
+			AO = surface.ao;
+			roughness = surface.roughness;
+			NORMAL = normalize((VIEW_MATRIX * vec4(slice_perturb(norm, surface.bump, 0.6), 0.0)).xyz);
+		} else {
+#endif
 		vec3 tex_pos = world_pos * material_scale;
 		c *= material_triplanar(tex_pos, norm, texture_tile);
 		NORMAL = normalize((VIEW_MATRIX * vec4(material_bump(tex_pos, norm, texture_tile), 0.0)).xyz);
+#ifdef SLICE_PBR
+		}
+#endif
 	}
 	if (mark.a > 0.01) {
 		c = mix(c, mark.rgb * mark.rgb, clamp(mark.a * 1.6, 0.0, 0.75));
@@ -112,7 +137,7 @@ void fragment() {
 	float up = clamp(world_normal.y, 0.0, 1.0);
 	c = mix(c, vec3(0.80, 0.85, 0.92), w3d_snow * smoothstep(0.45, 0.85, up));
 	ALBEDO = c;
-	ROUGHNESS = clamp(0.9 + roughness_variation * (leaf.r - 0.5), 0.0, 1.0);
+	ROUGHNESS = roughness;
 	if (kind > 0.5 && kind < 1.5) {
 		EMISSION = c * 2.5;
 	}

@@ -12,6 +12,8 @@ var _terrain: Node = null
 var _night: float = 0.0
 var _season: int = -1
 var _hour_override: float = -1.0
+## Negative uses the normal time-of-day sun path.
+var slice_day_elevation: float = -1.0
 var _hardship_override: float = -1.0
 var _hardship: float = 0.0
 var _target: float = 0.0
@@ -224,7 +226,10 @@ func _apply_hour(hour: float, hardship: float) -> void:
 	var frac: float = clampf((hour - 6.0) / 12.0, -0.2, 1.2)
 	var elevation: float = deg_to_rad(lerpf(float(_sky_data["sun_min_elevation"]), float(_sky_data["sun_max_elevation"]), sin(clampf(frac, 0.0, 1.0) * PI)))
 	var azimuth: float = lerpf(-PI * 0.5, PI * 0.5, frac)
-	if day <= 0.0:
+	if slice_day_elevation >= 0.0 and day >= 1.0:
+		elevation = deg_to_rad(slice_day_elevation)
+		azimuth = deg_to_rad(-32.0)
+	elif day <= 0.0:
 		elevation = deg_to_rad(float(_sky_data["moon_elevation"]))
 		azimuth = deg_to_rad(float(_sky_data["moon_azimuth"]))
 	var to_sun: Vector3 = Vector3(sin(azimuth) * cos(elevation), sin(elevation), cos(azimuth) * cos(elevation))

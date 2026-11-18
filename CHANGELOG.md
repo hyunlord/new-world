@@ -1,5 +1,11 @@
 # Changelog
 
+## Slice 1 renderer experiment — 2026-11-19
+
+### Added
+- Local day-120 quality experiment with CC0 PBR materials, leaf-card vegetation, and the existing Tripo crowd animation.
+- Standalone opt-in Forward+ capture and benchmark entry point, including paired GPU comparisons. See `docs/v8/slice1/README.md`.
+
 ## MOOD1 / DETAIL1 — 2026-11-18
 
 ### Added

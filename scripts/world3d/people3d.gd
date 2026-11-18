@@ -43,6 +43,8 @@ var _top_colours: Dictionary = {}
 ## Tools only (world3d_fps.gd `--replicate`): draw every person this many times, offset, to load the renderer past the
 ## bridge's stress cap. Never set in the game.
 var replicate: int = 1
+var _slice_rect: Rect2i
+var _slice_model: String = ""
 var _looks: Dictionary = {}
 var _snap_tick: int = -1
 ## AgentId → {model, bin, look, scale, bits, flags, clip, dirty, feet, h}; the slot in its bin is stable while they
@@ -190,6 +192,7 @@ func _process(delta: float) -> void:
 			var basis: Basis = Basis(Vector3.UP, yaw).scaled(Vector3(scale, scale, scale))
 			var feet: Vector3 = Vector3(p.x, y, p.y)
 			st["feet"] = feet
+			st["draw_yaw"] = yaw
 			st["h"] = height * scale
 			for c: int in copies:
 				var off: Vector3 = Vector3(float((c * 7) % 5) - 2.0, 0.0, float((c * 3) % 5) - 2.0) * 0.6 if c > 0 else Vector3.ZERO
@@ -326,8 +329,20 @@ func _bin_node(node_name: String, mat: Material) -> MultiMeshInstance3D:
 	return mmi
 
 
+## Debug slice presentation only. An empty rectangle keeps the complete crowd.
+func configure_slice(rect: Rect2i, model: String) -> bool:
+	if model != "" and _model(model).is_empty():
+		return false
+	_slice_rect = rect
+	_slice_model = model
+	_snap_tick = -1
+	return true
+
+
 ## The model of row `i`: by life stage (1 child) and sex (1 female), falling back to `people.model`.
 func _model_of(snap: Dictionary, i: int) -> String:
+	if _slice_model != "":
+		return _slice_model
 	var stage: int = _byte(snap, "life_stages", i)
 	var sex: String = "female" if _byte(snap, "sexes", i) == 1 else "male"
 	var age: String = "child" if stage == 1 else ("elder" if stage == 2 else "")
@@ -422,13 +437,18 @@ func _refresh(snap: Dictionary) -> void:
 	bins.resize(n)
 	var need: Dictionary = {}
 	for i: int in n:
+		var tile: Vector2i = Vector2i(xs[i], ys[i])
+		if _slice_rect.has_area() and not _slice_rect.has_point(tile):
+			continue
 		models[i] = _model_of(snap, i)
-		bins[i] = _bin(models[i], Vector2i(xs[i], ys[i]))
+		bins[i] = _bin(models[i], tile)
 		need[bins[i]] = int(need.get(bins[i], 0)) + 1
 	for key: String in need:
 		_grow(key, int(need[key]), copies)
 	var seen: Dictionary = {}
 	for i: int in n:
+		if bins[i].is_empty():
+			continue
 		var aid: int = aids[i]
 		seen[aid] = true
 		var model: String = models[i]
@@ -635,7 +655,7 @@ func state_of(bits: int) -> Dictionary:
 		return {}
 	var d: Dictionary = _state[aid]
 	var m: Dictionary = _motion.get(aid, {})
-	return {"tile": m.get("tile", Vector2i(-1, -1)), "settled": float(m.get("t", 1.0)) >= 1.0, "feet": d["feet"],
+	return {"tile": m.get("tile", Vector2i(-1, -1)), "settled": float(m.get("t", 1.0)) >= 1.0, "feet": d["feet"], "yaw": float(d.get("draw_yaw", 0.0)),
 		"model": d["model"], "look_id": int(d.get("look_id", 0)), "variant": int(d.get("variant", 0)),
 		"clip": _clip_of(d, _world_sim.process_mode != Node.PROCESS_MODE_DISABLED and float(m.get("t", 1.0)) < 1.0), "scale": float(d["scale"])}
 

@@ -22,6 +22,7 @@ extends Node3D
 const Data3D = preload("res://scripts/world3d/data3d.gd")
 const View = preload("res://scripts/world/colony/view.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
+const SlicePbr = preload("res://scripts/world3d/slice_pbr.gd")
 const FLORA_SHADER = preload("res://shaders/world3d/flora.gdshader")
 const LEAF_CARD = "res://assets/3d/textures/leaf_card.png"
 
@@ -44,10 +45,21 @@ var _slow_tick: int = -1000000
 var _season: int = -1
 var _instances: Dictionary = {}
 var _materials: Dictionary = {}
+var _slice_pbr: bool = false
 var _variants: Dictionary = {}
 var _stumps: Dictionary = {}
 var _chunk: int = 32
 var _markers: MultiMeshInstance3D = null
+var _slice_vegetation: bool = false
+var _slice_tiles: Rect2i
+
+
+## Called by the standalone presentation experiment. An empty rect covers the stress world.
+func configure_slice_vegetation(tiles: Rect2i) -> void:
+	_slice_vegetation = true
+	_slice_tiles = tiles
+	_stamp_key = ""
+	_on_world_reset()
 
 
 func setup(world_sim: Node, terrain: Node) -> void:
@@ -280,6 +292,13 @@ func _add_tree(batches: Dictionary, t: Vector2i, sp: String, jitter: float, smin
 		size *= large_scale
 	if _near_built.has(t):
 		size *= float(near_scale[int(_near_built[t]) - 1])
+	if _slice_vegetation and (not _slice_tiles.has_area() or _slice_tiles.has_point(t)):
+		model = "slice_conifer" if _habit(sp) == "conifer" else "slice_broadleaf"
+		_add(batches, model + "|", t, h, jitter, size)
+		if not _near_built.has(t) and h % 4 == 0:
+			# Understory follows the real tree distribution without obscuring berry resources.
+			_add(batches, "slice_fern|", t, View.key_hash(_seed, t.x, t.y, 31), 0.45, 0.9)
+		return
 	_add(batches, model + "|" + _variant_key(sp), t, h, jitter, size)
 
 
@@ -481,6 +500,8 @@ func _apply_markers(points: Array[Transform3D], colours: Array[Color]) -> void:
 ## surface's colour is baked into the vertex colour and its sway / glow / vein flags into UV, so a tree is one draw per
 ## pass (two surfaces per tree doubled the draw calls, the measured bottleneck of a forested view).
 func _mesh_variant(id: String, variant: String) -> Mesh:
+	if _slice_vegetation and id.begins_with("slice_"):
+		return preload("res://scripts/world3d/slice1/vegetation.gd").mesh(id)
 	var vkey: String = "%s|%s|%d" % [id, variant, _season]
 	if _variants.has(vkey):
 		return _variants[vkey]
@@ -635,12 +656,22 @@ func _surface_params(name: String, original: Material, variant: String, sp: Stri
 	return [c, sway, 1.0 if name == "glow" else (2.0 if name == "vein" else 0.0)]
 
 
+func set_slice_pbr(enabled: bool) -> bool:
+	if enabled and not SlicePbr.load_textures():
+		return false
+	_slice_pbr = enabled
+	for mat: ShaderMaterial in _materials.values():
+		if not SlicePbr.configure(mat, FLORA_SHADER, enabled):
+			return false
+	return true
+
+
 func _shared_material() -> Material:
 	var mkey: String = "shared|%d" % _season
 	if _materials.has(mkey):
 		return _materials[mkey]
 	var mat: ShaderMaterial = ShaderMaterial.new()
-	mat.shader = FLORA_SHADER
+	SlicePbr.configure(mat, FLORA_SHADER, _slice_pbr)
 	preload("res://scripts/world3d/textures3d.gd").setup(mat)
 	mat.set_shader_parameter("leaf_cards", load(LEAF_CARD) as Texture2D)
 	mat.set_shader_parameter("leaf_cutoff", float(Data3D.mood("detail.canopy.cutoff", 0.44)))

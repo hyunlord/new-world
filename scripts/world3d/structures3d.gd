@@ -35,6 +35,7 @@ const Data3D = preload("res://scripts/world3d/data3d.gd")
 const Builder = preload("res://scripts/world3d/mesh_builder3d.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 const MaterialResolver = preload("res://scripts/world/art/material_resolver.gd")
+const SlicePbr = preload("res://scripts/world3d/slice_pbr.gd")
 const WALL_SHADER = preload("res://shaders/world3d/wall.gdshader")
 const ROOF_SHADER = preload("res://shaders/world3d/roof.gdshader")
 const DIRS: Array[Vector2i] = [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)]
@@ -44,6 +45,7 @@ const PROFILE_PALISADE: float = 2.0
 const PROFILE_TRIM: float = 3.0
 
 var wall_material: ShaderMaterial
+var _slice_pbr: bool = false
 var _world_sim: Node = null
 var _terrain: Node = null
 var _resolver: MaterialResolver = MaterialResolver.new()
@@ -103,6 +105,17 @@ func _ready() -> void:
 	_window_material.emission_enabled = true
 	_window_material.emission = window_colour
 	_window_mesh.material = _window_material
+
+
+func set_slice_pbr(enabled: bool) -> bool:
+	if not SlicePbr.configure(wall_material, WALL_SHADER, enabled):
+		return false
+	_slice_pbr = enabled
+	for roof: MeshInstance3D in _roofs.values():
+		var mat: ShaderMaterial = roof.mesh.surface_get_material(0)
+		if not SlicePbr.configure(mat, ROOF_SHADER, enabled):
+			return false
+	return true
 
 
 func _on_world_reset() -> void:
@@ -616,7 +629,7 @@ func _rebuild_roofs(rooms: Dictionary, sites: Array) -> void:
 		var mi: MeshInstance3D = MeshInstance3D.new()
 		mi.name = "Roof_%d" % id
 		var mat: ShaderMaterial = ShaderMaterial.new()
-		mat.shader = ROOF_SHADER
+		SlicePbr.configure(mat, ROOF_SHADER, _slice_pbr)
 		preload("res://scripts/world3d/textures3d.gd").setup(mat)
 		mat.set_shader_parameter("texture_tile", float(preload("res://scripts/world3d/textures3d.gd").index("roofs", cover)))
 		mat.set_shader_parameter("cover", Data3D.colour((Data3D.binding("roofs.colours", {}) as Dictionary).get(cover, []), Color(0.7, 0.6, 0.35)))

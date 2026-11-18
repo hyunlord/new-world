@@ -17,6 +17,7 @@ extends Node3D
 
 const Data3D = preload("res://scripts/world3d/data3d.gd")
 const View = preload("res://scripts/world/colony/view.gd")
+const SlicePbr = preload("res://scripts/world3d/slice_pbr.gd")
 const TERRAIN_SHADER = preload("res://shaders/world3d/terrain.gdshader")
 const WATER_SHADER = preload("res://shaders/world3d/water.gdshader")
 const Grass = preload("res://scripts/world3d/grass3d.gd")
@@ -93,6 +94,10 @@ func _ready() -> void:
 	water_material = ShaderMaterial.new()
 	water_material.shader = WATER_SHADER
 	water_material.set_shader_parameter("water_colour", Data3D.colour(Data3D.param("terrain.water_colour", []), Color(0.16, 0.36, 0.45, 0.82)))
+
+
+func set_slice_pbr(enabled: bool) -> bool:
+	return SlicePbr.configure(material, TERRAIN_SHADER, enabled)
 
 
 func _on_world_reset() -> void:

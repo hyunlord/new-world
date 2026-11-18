@@ -24,6 +24,7 @@
 extends Node3D
 
 const Data3D = preload("res://scripts/world3d/data3d.gd")
+const SlicePbr = preload("res://scripts/world3d/slice_pbr.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 
 var _world_sim: Node = null
@@ -55,6 +56,7 @@ var _item_nodes: Dictionary = {}
 var _glow_on: StandardMaterial3D
 var _glow_off: StandardMaterial3D
 var _tinted: Dictionary = {}
+var _slice_pbr: bool = false
 var _stamp_key: String = ""
 ## What the last station rebuild drew: workshops and lit camp buildings (the hearth), for tests and tools.
 var _counts: Dictionary = {"workshops": 0, "hearths": 0}
@@ -86,6 +88,19 @@ func _ready() -> void:
 	_glow_on.emission_energy_multiplier = float(Data3D.mood("room_lights.fire_emission", 3.0))
 	_glow_off = StandardMaterial3D.new()
 	_glow_off.albedo_color = Color(0.16, 0.13, 0.12)
+
+
+func set_slice_pbr(enabled: bool) -> bool:
+	if enabled and not SlicePbr.load_textures():
+		return false
+	if enabled != _slice_pbr:
+		_slice_pbr = enabled
+		_tinted.clear()
+		_stamp_key = ""
+		_key = ""
+		_items_key = ""
+		_yards_key = ""
+	return true
 
 
 func _on_world_reset() -> void:
@@ -301,7 +316,7 @@ func _place(id: String, rect: Rect2i, lit: bool, node_name: String) -> void:
 	var mi: MeshInstance3D = MeshInstance3D.new()
 	mi.name = node_name
 	var shown: String = state_model(id, lit)
-	var mesh: Mesh = Data3D.mesh(shown)
+	var mesh: Mesh = _tinted_mesh(shown, "") if _slice_pbr else Data3D.mesh(shown)
 	mi.mesh = mesh
 	var row: Dictionary = Data3D.model_row(shown)
 	if row.is_empty():
@@ -449,7 +464,7 @@ func _tinted_mesh(id: String, tint: String) -> Mesh:
 	if _tinted.has(key):
 		return _tinted[key]
 	var base: Mesh = Data3D.mesh(id)
-	if tint == "" or base is not ArrayMesh:
+	if (tint == "" and not _slice_pbr) or base is not ArrayMesh:
 		_tinted[key] = base
 		return base
 	var src: ArrayMesh = base
@@ -458,7 +473,7 @@ func _tinted_mesh(id: String, tint: String) -> Mesh:
 		out.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, src.surface_get_arrays(s))
 		var name: String = Data3D.surface_key(src, s)
 		var mat: Material = src.surface_get_material(s)
-		if name in ["vein", "metal"]:
+		if tint != "" and name in ["vein", "metal"]:
 			var m: StandardMaterial3D = StandardMaterial3D.new()
 			m.albedo_color = Data3D.material_colour(tint, "Mineral")
 			m.metallic = 0.5 if name == "metal" else 0.1
@@ -467,6 +482,12 @@ func _tinted_mesh(id: String, tint: String) -> Mesh:
 			mat = preload("res://scripts/world3d/textures3d.gd").imported(m)
 			if mat is ShaderMaterial:
 				(mat as ShaderMaterial).set_shader_parameter("texture_tile", float(preload("res://scripts/world3d/textures3d.gd").index("materials", tint, preload("res://scripts/world3d/textures3d.gd").index("surfaces", name))))
+		if _slice_pbr and mat is ShaderMaterial:
+			var source: ShaderMaterial = mat
+			if SlicePbr.slot_is_pbr(int(source.get_shader_parameter("texture_tile"))):
+				var ultra: ShaderMaterial = source.duplicate()
+				if SlicePbr.configure(ultra, source.shader, true):
+					mat = ultra
 		out.surface_set_material(out.get_surface_count() - 1, mat)
 	_tinted[key] = out
 	return out
@@ -497,7 +518,8 @@ func _rebuild_yards(buildings: Dictionary) -> void:
 			claimed[tile] = true
 			var node: MeshInstance3D = MeshInstance3D.new()
 			node.name = "Yard_%s_%s" % [(value as Dictionary).get("id", -1), prop.get("id", "")]
-			node.mesh = Data3D.mesh(str(prop.get("model", "")))
+			var model: String = str(prop.get("model", ""))
+			node.mesh = _tinted_mesh(model, "") if _slice_pbr else Data3D.mesh(model)
 			var x: float = float(prop.get("x", 0)) + 0.5
 			var y: float = float(prop.get("y", 0)) + 0.5
 			# A decorative model fits wholly within its admitted free tile, including wide fence GLBs.
