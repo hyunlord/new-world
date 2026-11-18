@@ -438,10 +438,11 @@ func _rebuild_yards(buildings: Dictionary) -> void:
 			node.mesh = Data3D.mesh(str(prop.get("model", "")))
 			var x: float = float(prop.get("x", 0)) + 0.5
 			var y: float = float(prop.get("y", 0)) + 0.5
-			# A decorative model fits wholly within its admitted free tile, including wide fence GLBs.
+			# A decorative model fits wholly within its admitted free tile (wide fence GLBs shrink); small ones (a log
+			# pile, a sprouting bed) grow up to `yards.max_upscale` to fill it, so they read at the default zoom.
 			var bounds: AABB = node.mesh.get_aabb()
 			var size_limit: float = float(Data3D.param("yards.tile_fill", 0.85))
-			var fit: float = minf(1.0, size_limit / maxf(0.01, maxf(bounds.size.x, bounds.size.z)))
+			var fit: float = minf(float(Data3D.param("yards.max_upscale", 1.0)), size_limit / maxf(0.01, maxf(bounds.size.x, bounds.size.z)))
 			var yard_basis: Basis = Basis(Vector3.UP, float(prop.get("rotation", 0)) * PI * 0.5).scaled(Vector3.ONE * fit)
 			var centre: Vector3 = Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z)
 			node.transform = Transform3D(yard_basis, Vector3(x, float(_terrain.call("height_at", x, y)), y) - yard_basis * centre)
