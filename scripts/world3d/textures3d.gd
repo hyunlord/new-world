@@ -16,6 +16,11 @@ static func index(family: String, key: String, fallback: int = -1) -> int:
 
 
 static func setup(mat: ShaderMaterial) -> void:
+	var data: GDScript = load("res://scripts/world3d/data3d.gd") as GDScript
+	var look: Dictionary = data.mood("detail.surface", {})
+	mat.set_shader_parameter("material_scale", float(look.get("texture_scale", 1.0)))
+	mat.set_shader_parameter("material_normal_strength", float(look.get("normal_strength", 0.15)))
+	mat.set_shader_parameter("material_grain_height", float(look.get("grain_height", 0.036)))
 	var path: String = "res://assets/3d/textures/albedo_atlas.webp"
 	if ResourceLoader.exists(path):
 		mat.set_shader_parameter("material_atlas", load(path) as Texture2D)

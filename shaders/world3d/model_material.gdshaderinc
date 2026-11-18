@@ -15,10 +15,14 @@ void vertex() {
 }
 
 void fragment() {
-	ALBEDO = base_colour.rgb * material_triplanar(material_pos * 0.7, material_normal, texture_tile);
+	vec3 tex_pos = material_pos * (0.7 * material_scale);
+	vec3 detail = material_triplanar(tex_pos, material_normal, texture_tile);
+	ALBEDO = base_colour.rgb * detail;
 	if (vertex_tint) { ALBEDO *= COLOR.rgb; }
 	vec3 facing_normal = FRONT_FACING ? material_normal : -material_normal;
-	NORMAL = normalize((VIEW_MATRIX * vec4(material_bump(material_pos * 0.7, facing_normal, texture_tile), 0.0)).xyz);
+	vec3 norm = material_bump(tex_pos, facing_normal, texture_tile);
+	norm = material_height_normal(material_pos, norm, detail.r);
+	NORMAL = normalize((VIEW_MATRIX * vec4(norm, 0.0)).xyz);
 	ROUGHNESS = roughness;
 	METALLIC = metallic;
 	SPECULAR = specular;

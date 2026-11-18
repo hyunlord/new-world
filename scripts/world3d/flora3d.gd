@@ -23,6 +23,7 @@ const Data3D = preload("res://scripts/world3d/data3d.gd")
 const View = preload("res://scripts/world/colony/view.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 const FLORA_SHADER = preload("res://shaders/world3d/flora.gdshader")
+const LEAF_CARD = "res://assets/3d/textures/leaf_card.png"
 
 var _world_sim: Node = null
 var _terrain: Node = null
@@ -529,6 +530,14 @@ func _mesh_variant(id: String, variant: String) -> Mesh:
 		else:
 			for v: int in sv.size():
 				index.append(v + offset)
+		if sp != "" and name == "canopy":
+			var patch: Array = _leaf_cards(sv, c, verts.size())
+			verts.append_array(patch[0])
+			normals.append_array(patch[1])
+			cols.append_array(patch[2])
+			uvs.append_array(patch[3])
+			texture_uvs.append_array(patch[4])
+			index.append_array(patch[5])
 	var out: ArrayMesh = ArrayMesh.new()
 	if verts.is_empty():
 		_variants[vkey] = out
@@ -545,6 +554,42 @@ func _mesh_variant(id: String, variant: String) -> Mesh:
 	out.surface_set_material(0, _shared_material())
 	_variants[vkey] = out
 	return out
+
+
+## Leaf patches on the authored canopy, in its existing MultiMesh surface and species palette.
+static func _leaf_cards(source: PackedVector3Array, colour: Color, offset: int) -> Array:
+	var vertices: PackedVector3Array = PackedVector3Array()
+	var normals: PackedVector3Array = PackedVector3Array()
+	var colours: PackedColorArray = PackedColorArray()
+	var uvs: PackedVector2Array = PackedVector2Array()
+	var flags: PackedVector2Array = PackedVector2Array()
+	var index: PackedInt32Array = PackedInt32Array()
+	if not source.is_empty():
+		var bounds: AABB = AABB(source[0], Vector3.ZERO)
+		for p: Vector3 in source:
+			bounds = bounds.expand(p)
+		var settings: Dictionary = Data3D.mood("detail.canopy", {})
+		var count: int = mini(source.size(), int(settings.get("cards", 14)))
+		var tilt: float = float(settings.get("tilt", 0.33))
+		var width: float = maxf(bounds.size.x, bounds.size.z) * float(settings.get("width_fraction", 0.32))
+		for i: int in count:
+			var angle: float = float(i) * 2.399963
+			var horizontal: Vector3 = Vector3(cos(angle), 0.0, sin(angle)) * width * 0.5
+			var vertical: Vector3 = (Vector3.UP + Vector3(sin(angle), 0.0, -cos(angle)) * tilt).normalized() * width * 0.42
+			var middle: Vector3 = source[floori((float(i) + 0.5) * source.size() / count)].lerp(bounds.get_center(), 0.08)
+			var light_normal: Vector3 = (middle - bounds.get_center() + Vector3.UP * width).normalized()
+			var start: int = offset + vertices.size()
+			vertices.append_array([middle - horizontal + vertical, middle + horizontal + vertical,
+				middle + horizontal - vertical, middle - horizontal - vertical])
+			uvs.append_array([Vector2.ZERO, Vector2.RIGHT, Vector2.ONE, Vector2.DOWN])
+			for _j: int in 4:
+				normals.append(light_normal)
+				colours.append(colour)
+				flags.append(Vector2(-2.0, 0.0))
+			# Double-sided cutouts without changing culling for the opaque trunk and core.
+			index.append_array([start, start + 1, start + 2, start, start + 2, start + 3,
+				start + 2, start + 1, start, start + 3, start + 2, start])
+	return [vertices, normals, colours, uvs, flags, index]
 
 
 ## [colour, sway, kind (0 plain, 1 glow, 2 vein)] of a source surface for this variant and season.
@@ -573,6 +618,12 @@ func _shared_material() -> Material:
 	var mat: ShaderMaterial = ShaderMaterial.new()
 	mat.shader = FLORA_SHADER
 	preload("res://scripts/world3d/textures3d.gd").setup(mat)
+	mat.set_shader_parameter("leaf_cards", load(LEAF_CARD) as Texture2D)
+	mat.set_shader_parameter("leaf_cutoff", float(Data3D.mood("detail.canopy.cutoff", 0.44)))
+	mat.set_shader_parameter("shell_distance", float(Data3D.mood("detail.canopy.shell_distance", 70.0)))
+	mat.set_shader_parameter("shell_wind", float(Data3D.mood("detail.canopy.wind_strength", 0.052)))
+	mat.set_shader_parameter("roughness_variation", float(Data3D.mood("detail.surface.roughness_variation", 0.15)))
+	mat.set_shader_parameter("texture_strength", float(Data3D.mood("detail.surface.flora_texture_strength", 0.83)))
 	_materials[mkey] = mat
 	return mat
 

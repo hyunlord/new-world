@@ -6,6 +6,11 @@
 shader_type spatial;
 render_mode diffuse_lambert, specular_disabled;
 #include "res://shaders/world3d/material_texture.gdshaderinc"
+uniform sampler2D leaf_cards : source_color, filter_linear_mipmap, repeat_disable;
+uniform float leaf_cutoff = 0.44;
+uniform float shell_distance = 70.0;
+uniform float shell_wind = 0.052;
+uniform float roughness_variation = 0.15;
 varying float texture_tile;
 
 global uniform float w3d_snow;
@@ -28,12 +33,16 @@ varying float local_height;
 void vertex() {
 	vec3 origin = (MODEL_MATRIX * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
 	float phase = origin.x * 0.37 + origin.z * 0.61;
-	float bend = max(VERTEX.y - 1.0, 0.0) * UV.y;
-	kind = UV.x;
+	bool card = UV2.x < -1.5;
+	float bend = max(VERTEX.y - 1.0, 0.0) * (card ? 1.0 : UV.y);
+	kind = card ? 0.0 : UV.x;
 	local_height = VERTEX.y;
 	texture_tile = UV2.x;
-	VERTEX.x += sin(w3d_time * 1.3 + phase) * bend * 0.025;
-	VERTEX.z += cos(w3d_time * 1.1 + phase * 1.3) * bend * 0.018;
+	VERTEX.x += sin(w3d_time * 1.3 + phase) * bend * (card ? shell_wind : 0.025);
+	VERTEX.z += cos(w3d_time * 1.1 + phase * 1.3) * bend * (card ? shell_wind * 0.72 : 0.018);
+	if (card && distance(origin, CAMERA_POSITION_WORLD) > shell_distance) {
+		VERTEX = vec3(0.0);
+	}
 	world_normal = normalize((MODEL_MATRIX * vec4(NORMAL, 0.0)).xyz);
 	world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	vec2 uv = (floor(origin.xz) + 0.5) / max(w3d_map_size, vec2(1.0));
@@ -52,6 +61,14 @@ float bayer4(vec2 p) {
 }
 
 void fragment() {
+	bool card = texture_tile < -1.5;
+	vec4 leaf = vec4(1.0);
+	if (card) {
+		leaf = texture(leaf_cards, UV);
+		if (leaf.a < leaf_cutoff) {
+			discard;
+		}
+	}
 	// X-ray: plants between the camera and the look target dissolve inside a cylinder around that line.
 	vec3 axis = w3d_focus - w3d_camera;
 	float len = length(axis);
@@ -75,14 +92,21 @@ void fragment() {
 		}
 	}
 	vec3 c = srgb_to_linear(COLOR.rgb);
-	c *= material_triplanar(world_pos * 0.7, world_normal, texture_tile);
+	vec3 norm = normalize(world_normal);
+	if (card) {
+		c *= 0.73 + leaf.r * 0.72;
+	} else if (texture_tile >= 0.0) {
+		vec3 tex_pos = world_pos * material_scale;
+		c *= material_triplanar(tex_pos, norm, texture_tile);
+		NORMAL = normalize((VIEW_MATRIX * vec4(material_bump(tex_pos, norm, texture_tile), 0.0)).xyz);
+	}
 	if (mark.a > 0.01) {
 		c = mix(c, mark.rgb * mark.rgb, clamp(mark.a * 1.6, 0.0, 0.75));
 	}
 	float up = clamp(world_normal.y, 0.0, 1.0);
 	c = mix(c, vec3(0.80, 0.85, 0.92), w3d_snow * smoothstep(0.45, 0.85, up));
 	ALBEDO = c;
-	ROUGHNESS = 0.9;
+	ROUGHNESS = clamp(0.9 + roughness_variation * (leaf.r - 0.5), 0.0, 1.0);
 	if (kind > 0.5 && kind < 1.5) {
 		EMISSION = c * 2.5;
 	}

@@ -41,10 +41,12 @@ void fragment() {
 		discard;
 	}
 	vec3 c = srgb_to_linear(COLOR.rgb);
+	float grain = 1.0;
 	if (COLOR.a > 0.5) {
 		c *= cover;
 		float variant = texture_tile == 24.0 ? step(0.5, fract(sin(dot(floor(world_pos.xz / 4.0), vec2(12.9898, 78.233))) * 43758.5453)) : 0.0;
-		c *= material_detail(vec2(ridge_z < 0.5 ? world_pos.x : world_pos.z, world_pos.y) * 0.65, texture_tile + variant);
+		grain = material_detail(vec2(ridge_z < 0.5 ? world_pos.x : world_pos.z, world_pos.y) * (0.65 * material_scale), texture_tile + variant).r;
+		c *= grain;
 		float h = world_pos.y;
 		// Along the eaves: x for a ridge along x, z for a ridge along z.
 		float along = ridge_z < 0.5 ? world_pos.x : world_pos.z;
@@ -65,6 +67,8 @@ void fragment() {
 		c = mix(c, vec3(0.80, 0.85, 0.92) * material_detail(world_pos.xz * 0.3, 8.0), w3d_snow * 0.9 * smoothstep(0.3, 0.7, up));
 	}
 	ALBEDO = c;
-	NORMAL = normalize((VIEW_MATRIX * vec4(material_bump(world_pos * 0.65, texture_normal, texture_tile), 0.0)).xyz);
+	vec3 norm = material_bump(world_pos * (0.65 * material_scale), texture_normal, texture_tile);
+	norm = material_height_normal(world_pos, norm, grain);
+	NORMAL = normalize((VIEW_MATRIX * vec4(norm, 0.0)).xyz);
 	ROUGHNESS = 0.95;
 }

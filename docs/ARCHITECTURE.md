@@ -940,6 +940,11 @@ the `scripts/world/view_projection.gd` provider for screen ↔ world conversion.
 `assets/3d/bindings3d.json`, models and VAT from `tools/3d/blender/build_all.py`.
 Material detail uses `assets/3d/textures3d.json` and `scripts/world3d/textures3d.gd`: shared padded albedo/normal atlases in `assets/3d/textures/`, sampled by existing terrain, wall, roof and static-model materials. Original tints and surface counts remain; the crowd/VAT material path is unchanged. See [ADR0068](decisions/0068-generated-material-texture-atlas.md).
 
+`assets/3d/mood.json` also tunes the read-only clock and hardship grade,
+occupied-room light pool, terrain blending, foliage, fog and sky. Grass batches
+follow Terrain's chunk rebuild and visible ground exclusions. See
+[ADR0071](decisions/0071-world-look.md).
+
 
 ## Village growth (M-GROW-a, ADR 0070)
 

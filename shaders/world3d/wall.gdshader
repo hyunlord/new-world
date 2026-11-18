@@ -37,7 +37,7 @@ void vertex() {
 
 void fragment() {
 	vec3 c = srgb_to_linear(COLOR.rgb);
-	c *= material_triplanar(world_pos * 0.7, texture_normal, texture_tile);
+	c *= material_triplanar(world_pos * (0.7 * material_scale), texture_normal, texture_tile);
 	if (profile < 0.5) {
 		// Masonry: courses of 0.22 m, joints every 0.4 m offset by half on alternate courses.
 		float course = world_pos.y / 0.22;
@@ -52,6 +52,6 @@ void fragment() {
 		c *= 0.8;
 	}
 	ALBEDO = c;
-	NORMAL = normalize((VIEW_MATRIX * vec4(material_bump(world_pos * 0.7, texture_normal, texture_tile), 0.0)).xyz);
+	NORMAL = normalize((VIEW_MATRIX * vec4(material_bump(world_pos * (0.7 * material_scale), texture_normal, texture_tile), 0.0)).xyz);
 	ROUGHNESS = 0.92;
 }

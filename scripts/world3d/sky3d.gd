@@ -46,11 +46,16 @@ func _ready() -> void:
 	_dusk = Data3D.param("light.dusk_hours", [18.0, 20.0])
 	_shadow_distance = float(Data3D.param("light.shadow_distance", 90.0))
 	environment = Environment.new()
-	var sky_material: ProceduralSkyMaterial = ProceduralSkyMaterial.new()
-	sky_material.sky_top_color = Data3D.colour(_sky_data["top"])
-	sky_material.sky_horizon_color = Data3D.colour(_sky_data["horizon"])
-	sky_material.ground_horizon_color = Data3D.colour(_sky_data["ground_horizon"])
-	sky_material.ground_bottom_color = Data3D.colour(_sky_data["ground_bottom"])
+	var sky_material: ShaderMaterial = ShaderMaterial.new()
+	sky_material.shader = preload("res://shaders/world3d/sky.gdshader")
+	sky_material.set_shader_parameter("sky_top", Data3D.colour(_sky_data["top"]))
+	sky_material.set_shader_parameter("sky_horizon", Data3D.colour(_sky_data["horizon"]))
+	for key: String in ["ground_horizon", "ground_bottom", "cloud_colour"]:
+		sky_material.set_shader_parameter(key, Data3D.colour(_sky_data[key]))
+	for key: String in ["cloud_scale", "cloud_opacity"]:
+		sky_material.set_shader_parameter(key, float(_sky_data[key]))
+	var thresholds: Array = _sky_data["cloud_thresholds"]
+	sky_material.set_shader_parameter("cloud_thresholds", Vector2(float(thresholds[0]), float(thresholds[1])))
 	var sky_res: Sky = Sky.new()
 	sky_res.sky_material = sky_material
 	environment.background_mode = Environment.BG_SKY
@@ -63,11 +68,13 @@ func _ready() -> void:
 	correction.gradient = _lut
 	environment.adjustment_color_correction = correction
 	environment.ssao_enabled = true
-	environment.ssao_radius = 1.4
-	environment.ssao_intensity = 1.8
-	environment.ssao_light_affect = 0.15
+	environment.ssao_radius = float(_sky_data["ssao_radius"])
+	environment.ssao_intensity = float(_sky_data["ssao_intensity"])
+	environment.ssao_light_affect = float(_sky_data["ssao_light_affect"])
 	environment.fog_enabled = true
 	environment.fog_sky_affect = float(_sky_data["fog_sky_affect"])
+	environment.fog_height = float(_sky_data["fog_height"])
+	environment.fog_height_density = float(_sky_data["fog_height_density"])
 	environment.glow_enabled = true
 	environment.glow_intensity = 0.6
 	environment.glow_hdr_threshold = 1.2

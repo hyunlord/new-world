@@ -1,5 +1,16 @@
 # Changelog
 
+## MOOD1 / DETAIL1 — 2026-11-18
+
+### Added
+- The existing clock blends daylight, dusk and night grades. A smoothed hardship grade reads the food runway, recent deaths and winter from the bridge.
+- Occupied roofed rooms show emissive windows. The nearest eligible windows and fire sockets share a 24-light pool.
+- Instanced grass and leaf cards add wind movement. A cloud sky and height fog add depth at low camera angles.
+
+### Changed
+- Terrain blends the existing texture atlas across tiles and keeps worn paths distinct. Ground, bark, rock and wood use surface detail and roughness variation.
+- Render tuning for both passes lives in `assets/3d/mood.json`.
+
 ## M-GROW-a — village growth candidate (2026-11-17)
 
 Implementation is under verification. Publication requires the frozen HEAD's full gate and separate crash detector; this entry is not a publication receipt.

@@ -116,6 +116,7 @@ func _run() -> void:
 	for _i: int in 5:
 		await process_frame
 	await _ground(world, terrain)
+	_grass(terrain)
 	_data_only_wall(w3d)
 	_people(world, w3d)
 	_trees(world, w3d)
@@ -416,6 +417,30 @@ func _people(world: Node, w3d: Node) -> void:
 	_check("PEOPLE", "missing_character_falls_back", adult >= 0 and model_now == fallback, "%s want %s" % [model_now, fallback])
 
 
+## Ground-cover exclusions use actual construction and field snapshots.
+func _grass(terrain: Node) -> void:
+	var space: Dictionary = {
+		"wall_xs": PackedInt32Array([2]), "wall_ys": PackedInt32Array([3]),
+		"floor_xs": PackedInt32Array([7]), "floor_ys": PackedInt32Array([4]),
+	}
+	var fields: Dictionary = {"xs": PackedInt64Array([5]), "ys": PackedInt64Array([7])}
+	var rooms: Dictionary = {
+		"ids": PackedInt32Array([10, 11]), "roofed": PackedByteArray([1, 0]),
+		"tile_xs": PackedInt32Array([9, 11]), "tile_ys": PackedInt32Array([9, 11]),
+		"tile_rooms": PackedInt32Array([10, 11]),
+	}
+	var blocked: Dictionary = TerrainScript._grass_occupied_tiles(space, fields, {}, rooms)
+	_check("GRASS", "built_field_roof_exclusions", blocked.size() == 4 and blocked.has(Vector2i(2, 3))
+		and blocked.has(Vector2i(7, 4)) and blocked.has(Vector2i(5, 7)) and blocked.has(Vector2i(9, 9))
+		and not blocked.has(Vector2i(11, 11)))
+	var grass: Node = terrain.get_node("Grass")
+	var reserved: int = 0
+	for count: int in (grass.get("_desired") as Dictionary).values():
+		reserved += count
+	var cap: int = int(Data3D.mood("detail.grass.cap", 150000))
+	_check("GRASS", "camera_budget", reserved > 0 and reserved <= cap, "%d / %d" % [reserved, cap])
+
+
 ## TREES 6, 7 and 8.
 func _trees(world: Node, w3d: Node) -> void:
 	var flora: Node3D = FloraScript.new()
@@ -426,6 +451,7 @@ func _trees(world: Node, w3d: Node) -> void:
 	var trunks: Dictionary = Data3D.binding("flora.trunk", {})
 	var bad: Array[String] = []
 	var bare_ok: Array[String] = []
+	var shell_ok: bool = true
 	var ids: Array = species.keys()
 	ids.append("fixture_alder_e2")
 	for sp: String in ids:
@@ -438,13 +464,21 @@ func _trees(world: Node, w3d: Node) -> void:
 			flora.set("_season", season)
 			var mesh: Mesh = flora.call("_mesh_variant", model, "species=" + sp)
 			var cols: PackedColorArray = PackedColorArray()
+			var leaf_cards: bool = false
 			if mesh != null and mesh.get_surface_count() > 0:
-				cols = mesh.surface_get_arrays(0)[Mesh.ARRAY_COLOR]
+				var arrays: Array = mesh.surface_get_arrays(0)
+				cols = arrays[Mesh.ARRAY_COLOR]
+				var flags: PackedVector2Array = arrays[Mesh.ARRAY_TEX_UV2]
+				for flag: Vector2 in flags:
+					if flag.x < -1.5:
+						leaf_cards = true
+						break
 			var n: int = cols.size()
 			if season == 1:
 				summer = n
 			# Numbers in JSON are floats: compare by value (a bare Array.has(int) never matches them).
 			var is_bare: bool = (bare.get(habit, []) as Array).any(func(v: Variant) -> bool: return int(v) == season)
+			shell_ok = shell_ok and leaf_cards != is_bare
 			var canopy: Color = Data3D.colour(table[season] if season < table.size() else [], Color(-1, -1, -1))
 			var has_canopy: bool = canopy.r >= 0.0 and _has_colour(cols, canopy)
 			var trunk: Color = Data3D.colour(trunks.get(sp, trunks.get("default", [])), Color(-1, -1, -1))
@@ -456,6 +490,7 @@ func _trees(world: Node, w3d: Node) -> void:
 				bad.append("%s s%d not bare (%d vs %d)" % [sp, season, n, summer])
 	_check("TREES", "four_seasons_per_species", bad.is_empty() and species.size() > 0, str(bad.slice(0, 4)))
 	_check("TREES", "bare_winter", not bare_ok.is_empty(), str(bare_ok))
+	_check("TREES", "seasonal_leaf_shell", shell_ok)
 	var fallback_habit: String = str(Data3D.binding("flora.fallback_habit", ""))
 	var habit_models: Array = ((Data3D.binding("flora.habits", {}) as Dictionary).get(fallback_habit, {}) as Dictionary).get("models", [])
 	_check("TREES", "data_only_species", str(flora.call("_habit", "fixture_alder_e2")) == fallback_habit and flora.call("_species_models", "fixture_alder_e2") == habit_models and not habit_models.is_empty(),
