@@ -201,11 +201,11 @@ func _configure_view(shot: String) -> bool:
 	rig.set_process(shot != "low")
 	var target: Vector2 = _focus if shot == "z1" else _close
 	var zoom: float = 1.0 if shot == "z1" else 4.0
-	if shot == "forest" or shot == "roof":
-		target = _point("--" + shot, _focus)
+	if shot in ["forest", "roof", "roof-closed"]:
+		target = _point("--forest" if shot == "forest" else "--roof", _focus)
 		zoom = 2.0 if shot == "roof" else 2.8
 		if _arg("--anchor-shots") == "1":
-			zoom = 4.0 if shot == "roof" else 2.0
+			zoom = 4.0 if shot == "roof" else (3.95 if shot == "roof-closed" else 2.0)
 	_camera.zoom = Vector2.ONE * zoom
 	_camera.position = target * float(View.TILE)
 	_camera.call("_clamp_position")
@@ -232,13 +232,15 @@ func _configure_view(shot: String) -> bool:
 	if not is_finite(nearest):
 		return false
 	var cam: Camera3D = rig.get("camera")
-	var pos: Vector3 = feet - forward * 3.6 + forward.cross(Vector3.UP) * 0.65
+	var anchored: bool = _arg("--low-look") != ""
+	var pos: Vector3 = feet - forward * (1.9 if anchored else 3.6) + forward.cross(Vector3.UP) * 0.65
 	var height: float = float(_w3d.get_node("Terrain").call("height_at", pos.x, pos.z))
 	pos.y = maxf(height, feet.y) + 1.72
 	var aim: Vector3 = feet + forward * 2.8 + Vector3.UP * 0.8
-	if _arg("--low-look") != "":
-		aim = Vector3(look_at.x, feet.y + 0.9, look_at.y)
-	cam.fov = 60.0
+	if anchored:
+		var toward: Vector2 = (look_at - Vector2(feet.x, feet.z)).normalized()
+		aim = feet + Vector3(toward.x, 0.0, toward.y) * 1.5 + Vector3.UP * 1.15
+	cam.fov = 53.0 if anchored else 60.0
 	cam.near = 0.15
 	cam.look_at_from_position(pos, aim, Vector3.UP)
 	RenderingServer.global_shader_parameter_set("w3d_camera", pos)
@@ -268,6 +270,8 @@ func _capture() -> void:
 			for detail: String in ["forest", "roof"]:
 				if _arg("--" + detail) != "":
 					shots.append(detail)
+			if anchor_shots and _arg("--roof") != "":
+				shots.append("roof-closed")
 		for shot: String in shots:
 			cam.fov = fov
 			cam.near = near
@@ -275,6 +279,13 @@ func _capture() -> void:
 				_fail("no villager for behind-the-back shot")
 				return
 			await _frames(96)
+			if shot in ["roof", "roof-closed"] and anchor_shots:
+				var roof_fades: Dictionary = _w3d.get_node("Structures").get("_roof_fade")
+				var expected_fade: float = 0.0 if shot == "roof" else 1.0
+				if not roof_fades.values().has(expected_fade):
+					_fail("live roof did not reach expected fade %s: %s" % [expected_fade, roof_fades])
+					return
+				print("ANCHOR2_ROOF %s %s" % [shot, roof_fades])
 			await RenderingServer.frame_post_draw
 			var arm: String = "anchor-s2" if _style2 else ("slice" if _ultra else "current")
 			var name: String = "%s_%s_%s.png" % [arm, period, shot]
