@@ -92,7 +92,7 @@
     "far_fill": [0.16, 0.13, 0.11],
     "far_fill_night": [0.91, 0.89, 0.81],
     "far_fill_strength": 1.0,
-    "outline": {"px": 2.0, "far_px": 6.0, "day": [0.07, 0.055, 0.05], "night": [0.91, 0.89, 0.81]},
+    "outline": {"px": 2.0, "far_px": 5.0, "day": [0.14, 0.11, 0.09], "night": [0.91, 0.89, 0.81]},
     "xray": {"day": [0.14, 0.11, 0.09], "day_alpha": 0.8, "night": [0.57, 0.65, 0.66], "night_alpha": 0.54}
   },
   "stations": {
