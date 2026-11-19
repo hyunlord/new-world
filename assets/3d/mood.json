@@ -1,4 +1,12 @@
 {
+  "style2": {
+    "grade_zoom_neutral": 0.25,
+    "grade_zoom_full": 0.75,
+    "tree_card_distance": 64.0,
+    "grass_shade": [0.62, 0.57, 0.33],
+    "grass_root_shade": [0.34, 0.32, 0.19],
+    "grass_winter_shade": [0.54, 0.50, 0.39]
+  },
   "hardship": {
     "food_days": 30.0,
     "death_days": 10.0,

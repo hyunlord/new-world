@@ -74,7 +74,7 @@ def validate_p7_admission(report: Node) -> None:
 
 
 # M3D-SWITCH E2: the world draws only in 3D; these receipts measure the 3D view.
-def commands(root: Path, output: Path, kind: Kind, godot: Path) -> list[list[str]]:
+def commands(root: Path, output: Path, kind: Kind, godot: Path, style: str = '') -> list[list[str]]:
     base = ['bash', str(root / 'tools/v8/run_bounded.sh')]
     engine = [str(godot), '--path', str(root), '--resolution', '1920x1080']
     match kind:
@@ -82,10 +82,11 @@ def commands(root: Path, output: Path, kind: Kind, godot: Path) -> list[list[str
             return [base + [str(stall_timeout())] + engine + ['--always-on-top', '--windowed', '--script',
                                               'res://tools/v8/mux2_stall_test.gd', '--', str(output / 'run')]]
         case 'visibility':
+            style_args = [f'--style={style}'] if style else []
             return [base + ['1800'] + engine + ['--headless', '--script',
                     'res://tools/v8/mux2_visibility_saves.gd', '--', str(output / 'saves')],
                     base + ['1200'] + engine + ['--script', 'res://tools/v8/mux2_visibility_test.gd',
-                    '--', '--manifest', str(output / 'saves/manifest.json'), '--out', str(output / 'run')]]
+                    '--', '--manifest', str(output / 'saves/manifest.json'), '--out', str(output / 'run'), *style_args]]
         case 'why':
             return [base + ['180'] + engine + ['--script', 'res://tools/v8/mux2_why_input_test.gd']]
         case unreachable:
@@ -114,7 +115,7 @@ def validate_output(root: Path, out: Path, kind: Kind) -> list[Path]:
     return extra
 
 
-def capture(root: Path, output: Path, kind: Kind, godot: Path) -> None:
+def capture(root: Path, output: Path, kind: Kind, godot: Path, style: str = '') -> None:
     out = external(output, root)
     require(not out.exists(), 'capture output must be new')
     clean_sources(root)
@@ -134,7 +135,7 @@ def capture(root: Path, output: Path, kind: Kind, godot: Path) -> None:
         code = -1
         try:
             with (out / 'command.log').open('w') as log:
-                for command in commands(root, out, kind, godot):
+                for command in commands(root, out, kind, godot, style):
                     log.write(json.dumps(command) + '\n')
                     log.flush()
                     code = subprocess.run(command, cwd=root, env=env, stdout=log,
@@ -186,6 +187,7 @@ def main() -> int:
     parser.add_argument('--kind', choices=KINDS, required=True)
     parser.add_argument('--out', type=Path)
     parser.add_argument('--receipt', type=Path)
+    parser.add_argument('--style', choices=('s2',), default='')
     parser.add_argument('--godot', type=Path,
                         default=Path(os.environ.get('GODOT_BIN', '/Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot')))
     args = parser.parse_args()
@@ -194,7 +196,11 @@ def main() -> int:
         match args.action:
             case 'capture':
                 require(args.out is not None, '--out required')
-                capture(root, args.out, args.kind, args.godot.resolve())
+                require(not args.style or args.kind == 'visibility', '--style requires visibility')
+                if args.style:
+                    capture(root, args.out, args.kind, args.godot.resolve(), args.style)
+                else:
+                    capture(root, args.out, args.kind, args.godot.resolve())
             case 'verify':
                 require(args.receipt is not None, '--receipt required')
                 verify(root, args.receipt, args.kind)

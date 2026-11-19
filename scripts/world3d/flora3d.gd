@@ -23,6 +23,7 @@ const Data3D = preload("res://scripts/world3d/data3d.gd")
 const View = preload("res://scripts/world/colony/view.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 const SlicePbr = preload("res://scripts/world3d/slice_pbr.gd")
+const SliceVegetation = preload("res://scripts/world3d/slice1/vegetation.gd")
 const FLORA_SHADER = preload("res://shaders/world3d/flora.gdshader")
 const LEAF_CARD = "res://assets/3d/textures/leaf_card.png"
 
@@ -52,12 +53,15 @@ var _chunk: int = 32
 var _markers: MultiMeshInstance3D = null
 var _slice_vegetation: bool = false
 var _slice_tiles: Rect2i
+var _tree_card_distance: float = 0.0
 
 
 ## Called by the standalone presentation experiment. An empty rect covers the stress world.
 func configure_slice_vegetation(tiles: Rect2i) -> void:
 	_slice_vegetation = true
 	_slice_tiles = tiles
+	if SlicePbr.style2():
+		_tree_card_distance = float(Data3D.mood("style2.tree_card_distance", 64.0))
 	_stamp_key = ""
 	_on_world_reset()
 
@@ -295,7 +299,7 @@ func _add_tree(batches: Dictionary, t: Vector2i, sp: String, jitter: float, smin
 	if _slice_vegetation and (not _slice_tiles.has_area() or _slice_tiles.has_point(t)):
 		model = "slice_conifer" if _habit(sp) == "conifer" else "slice_broadleaf"
 		_add(batches, model + "|", t, h, jitter, size)
-		if not _near_built.has(t) and h % 4 == 0:
+		if _tree_card_distance <= 0.0 and not _near_built.has(t) and h % 4 == 0:
 			# Understory follows the real tree distribution without obscuring berry resources.
 			_add(batches, "slice_fern|", t, View.key_hash(_seed, t.x, t.y, 31), 0.45, 0.9)
 		return
@@ -469,6 +473,22 @@ func _apply(family: String, batches: Dictionary, only: Dictionary = {}) -> void:
 			add_child(mmi)
 			_instances[k] = mmi
 		mmi.multimesh = mm
+		if _tree_card_distance > 0.0 and parts[0].begins_with("slice_"):
+			_apply_far_cards(mmi, parts[0], mm)
+
+
+func _apply_far_cards(near: MultiMeshInstance3D, model: String, instances: MultiMesh) -> void:
+	var far: MultiMeshInstance3D = near.get_node_or_null("FarCards") as MultiMeshInstance3D
+	if far == null:
+		far = MultiMeshInstance3D.new()
+		far.name = "FarCards"
+		far.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		near.add_child(far)
+		near.visibility_range_end = _tree_card_distance
+		far.visibility_range_begin = _tree_card_distance
+	var cards: MultiMesh = instances.duplicate() as MultiMesh
+	cards.mesh = SliceVegetation.card(model)
+	far.multimesh = cards
 
 
 func _apply_markers(points: Array[Transform3D], colours: Array[Color]) -> void:
@@ -501,7 +521,7 @@ func _apply_markers(points: Array[Transform3D], colours: Array[Color]) -> void:
 ## pass (two surfaces per tree doubled the draw calls, the measured bottleneck of a forested view).
 func _mesh_variant(id: String, variant: String) -> Mesh:
 	if _slice_vegetation and id.begins_with("slice_"):
-		return preload("res://scripts/world3d/slice1/vegetation.gd").mesh(id)
+		return SliceVegetation.mesh(id)
 	var vkey: String = "%s|%s|%d" % [id, variant, _season]
 	if _variants.has(vkey):
 		return _variants[vkey]

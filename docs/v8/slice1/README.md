@@ -26,4 +26,10 @@ until /opt/homebrew/bin/python3 tools/v8/mux2_gate_lock.py -- \
 
 The external `LICENSES.md` lists the Poly Haven raw files and derived vegetation inputs. Material arrays use 1024-pixel layers with mipmaps. The vegetation exporter converts publisher DWAA EXRs to PNG for Godot's importer and retains mesh LOD generation. The Tripo character VAT and atlas files come from local `v8/tripo1` at `872dd4917`.
 
+## Style 2 anchor
+
+Append `-- --style=s2` to a regular Godot launch to enable the anchor across the game. With the Slice 1 script, pass `--style=s2` alongside the framing arguments. Use `--mode=capture --anchor-shots=1` with `--forest`, `--roof` and a fresh external `--out` path for the four daylight views. `--fixed-fps 48` before the Godot argument separator and `--mode=walk` after it record the three-second diagnostic walk. Both commands require the shared GPU lock.
+
+The optional `--style s2` parameter on the step 39 receipt command selects the anchor for the existing eight-scene visibility test. The style variant uses the packaged texture strips and derived CC0 foliage in `assets/3d/anchor2/`. See [ADR 0072](../../decisions/0072-style-2-anchor.md).
+
 The fir branch albedo and normal, and broadleaf branch normal are stored as 8-bit RGB PNG after export for the repository file-size cap. Convert the three copied textures with Pillow using `image.convert("RGB").save(path, optimize=True)`. The foliage cutout maps remain separate.

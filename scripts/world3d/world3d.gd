@@ -103,6 +103,11 @@ func _ready() -> void:
 	add_picker(animals)
 	rig = _layer("CameraRig", RigScript)
 	rig.call("setup", camera2d, terrain)
+	if OS.get_cmdline_user_args().has("--style=s2"):
+		for layer: Node3D in [terrain, structures, flora, props]:
+			if not bool(layer.call("set_slice_pbr", true)):
+				push_error("Style 2 material setup failed on " + str(layer.name))
+		flora.call("configure_slice_vegetation", Rect2i())
 	ViewProjection.provider = self
 	_apply_render_scale()
 

@@ -31,11 +31,19 @@ var _dusk: Array
 var _shadow_distance: float
 var _previous_hour: float = -1.0
 var _previous_hardship: float = -1.0
+var _previous_grade: float = 1.0
+var _grade_camera: Camera2D
+var _grade_zoom: Vector2
+var _map_light: Dictionary
 
 
 func setup(world_sim: Node, terrain: Node) -> void:
 	_world_sim = world_sim
 	_terrain = terrain
+	if OS.get_cmdline_user_args().has("--style=s2"):
+		_grade_camera = get_parent().get("camera2d") as Camera2D
+		_grade_zoom = Vector2(float(Data3D.mood("style2.grade_zoom_neutral", 0.25)), float(Data3D.mood("style2.grade_zoom_full", 0.75)))
+		_map_light = Data3D.param("light", {})
 	if _world_sim != null:
 		_world_sim.connect("world_reset", _reset_hardship)
 
@@ -126,8 +134,11 @@ func _process(_delta: float) -> void:
 	var season: int = int(time.get("season", 0))
 	_update_hardship(time, season)
 	var hardship: float = _hardship_override if _hardship_override >= 0.0 else _hardship
-	if hour != _previous_hour or hardship != _previous_hardship:
-		_apply_hour(hour, hardship)
+	var grade: float = 1.0
+	if _grade_camera != null:
+		grade = clampf(inverse_lerp(_grade_zoom.x, _grade_zoom.y, _grade_camera.zoom.x), 0.0, 1.0)
+	if hour != _previous_hour or hardship != _previous_hardship or grade != _previous_grade:
+		_apply_hour(hour, hardship, grade)
 	if season != _season and _terrain != null:
 		_season = season
 		var mat: ShaderMaterial = _terrain.get("material") as ShaderMaterial
@@ -210,9 +221,11 @@ func _read_deaths(since: int) -> void:
 		_deaths.pop_front()
 
 
-func _apply_hour(hour: float, hardship: float) -> void:
+func _apply_hour(hour: float, hardship: float, grade: float = 1.0) -> void:
+	var grade_changed: bool = grade != _previous_grade
 	_previous_hour = hour
 	_previous_hardship = hardship
+	_previous_grade = grade
 	var day: float = 1.0
 	if hour < float(_dawn[0]) or hour >= float(_dusk[1]):
 		day = 0.0
@@ -224,7 +237,10 @@ func _apply_hour(hour: float, hardship: float) -> void:
 	RenderingServer.global_shader_parameter_set("w3d_night", _night)
 	# The existing sun path crosses the south; the moon holds its direction at night.
 	var frac: float = clampf((hour - 6.0) / 12.0, -0.2, 1.2)
-	var elevation: float = deg_to_rad(lerpf(float(_sky_data["sun_min_elevation"]), float(_sky_data["sun_max_elevation"]), sin(clampf(frac, 0.0, 1.0) * PI)))
+	var peak: float = float(_sky_data["sun_max_elevation"])
+	if grade < 1.0:
+		peak = lerpf(58.0, peak, grade)
+	var elevation: float = deg_to_rad(lerpf(float(_sky_data["sun_min_elevation"]), peak, sin(clampf(frac, 0.0, 1.0) * PI)))
 	var azimuth: float = lerpf(-PI * 0.5, PI * 0.5, frac)
 	if slice_day_elevation >= 0.0 and day >= 1.0:
 		elevation = deg_to_rad(slice_day_elevation)
@@ -236,7 +252,7 @@ func _apply_hour(hour: float, hardship: float) -> void:
 	sun.look_at_from_position(Vector3.ZERO, -to_sun, Vector3.UP)
 	var steps: int = maxi(1, int(_profiles["lut_steps"]))
 	var key: Vector3i = Vector3i(roundi(day * steps), roundi(hardship * steps), 0)
-	if key == _lut_key:
+	if key == _lut_key and not grade_changed:
 		return
 	_lut_key = key
 	var daylight: float = float(key.x) / steps
@@ -256,14 +272,42 @@ func _apply_hour(hour: float, hardship: float) -> void:
 	environment.adjustment_saturation = _number(a, b, grim, "saturation", blend, stress_blend)
 	environment.adjustment_contrast = _number(a, b, grim, "contrast", blend, stress_blend)
 	environment.tonemap_exposure = _number(a, b, grim, "exposure", blend, stress_blend)
+	if _grade_camera != null:
+		_blend_map_grade(day, frac, grade)
 	var offsets: PackedFloat32Array = []
 	var colours: PackedColorArray = []
 	var points: int = (a["lut"] as Array).size()
 	for i: int in points:
-		offsets.append(float(i) / (points - 1))
-		colours.append(Data3D.colour(a["lut"][i]).lerp(Data3D.colour(b["lut"][i]), blend).lerp(Data3D.colour(grim["lut"][i]), stress_blend))
+		var x: float = float(i) / (points - 1)
+		var tint: Color = Data3D.colour(a["lut"][i]).lerp(Data3D.colour(b["lut"][i]), blend).lerp(Data3D.colour(grim["lut"][i]), stress_blend)
+		offsets.append(x)
+		colours.append(Color(x, x, x).lerp(tint, grade) if grade < 1.0 else tint)
 	_lut.offsets = offsets
 	_lut.colors = colours
+
+
+## MOOD1 R4 map endpoint, using the same 0.25–0.75 zoom interpolation as the LUT.
+func _blend_map_grade(day: float, frac: float, grade: float) -> void:
+	environment.fog_height_density = float(_sky_data["fog_height_density"]) * grade
+	environment.ssao_intensity = lerpf(1.8, float(_sky_data["ssao_intensity"]), grade)
+	environment.ssao_light_affect = lerpf(0.15, float(_sky_data["ssao_light_affect"]), grade)
+	if grade >= 1.0:
+		return
+	var map_sun: float = lerpf(float(_map_light["night_sun_energy"]), float(_map_light["sun_energy"]), day)
+	var warm: float = clampf(1.0 - absf(frac - 0.5) * 2.0, 0.0, 1.0)
+	var map_sun_color: Color = Color(1.0, 0.78, 0.6).lerp(Color(1.0, 0.97, 0.9), warm).lerp(Color(0.6, 0.7, 1.0), _night)
+	var map_ambient: float = lerpf(float(_map_light["night_ambient_energy"]), float(_map_light["ambient_energy"]), day)
+	var map_ambient_color: Color = Data3D.colour(_map_light["night_ambient"]).lerp(Data3D.colour(_map_light["day_ambient"]), day)
+	sun.light_energy = lerpf(map_sun, sun.light_energy, grade)
+	sun.light_color = map_sun_color.lerp(sun.light_color, grade)
+	environment.ambient_light_energy = lerpf(map_ambient, environment.ambient_light_energy, grade)
+	environment.ambient_light_color = map_ambient_color.lerp(environment.ambient_light_color, grade)
+	environment.fog_density = lerpf(float(_map_light["fog_density"]), environment.fog_density, grade)
+	environment.fog_light_color = Color(0.12, 0.14, 0.22).lerp(Color(0.82, 0.78, 0.70), day).lerp(environment.fog_light_color, grade)
+	environment.background_energy_multiplier = lerpf(lerpf(0.12, 1.0, day), environment.background_energy_multiplier, grade)
+	environment.adjustment_saturation = lerpf(float(_map_light["saturation"]), environment.adjustment_saturation, grade)
+	environment.adjustment_contrast = lerpf(1.03, environment.adjustment_contrast, grade)
+	environment.tonemap_exposure = lerpf(1.0, environment.tonemap_exposure, grade)
 
 
 static func _number(a: Dictionary, b: Dictionary, grim: Dictionary, key: String, blend: float, stress: float) -> float:

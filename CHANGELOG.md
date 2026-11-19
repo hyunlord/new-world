@@ -1,5 +1,11 @@
 # Changelog
 
+## Style 2 anchor — 2026-11-19
+
+### Added
+- Optional `--style=s2` in the normal 3D scene with simplified ground, logs and thatch, CC0 vegetation and a retextured Tripo villager.
+- Distance-driven walk and crowd/tree LODs for the anchor, plus the MOOD1 R4 zoom fade. See `docs/decisions/0072-style-2-anchor.md`.
+
 ## Slice 1 renderer experiment — 2026-11-19
 
 ### Added

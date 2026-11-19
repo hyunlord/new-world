@@ -47,7 +47,10 @@ func _ready() -> void:
 		if _settings.has(key):
 			_material.set_shader_parameter(key, float(_settings[key]))
 	for key: String in ["shade", "root_shade", "winter_shade"]:
-		_material.set_shader_parameter(key, Data3D.colour(_settings.get(key, []), Color.WHITE))
+		var colour: Variant = _settings.get(key, [])
+		if OS.get_cmdline_user_args().has("--style=s2"):
+			colour = Data3D.mood("style2.grass_" + key, colour)
+		_material.set_shader_parameter(key, Data3D.colour(colour, Color.WHITE))
 	_mesh = QuadMesh.new()
 	_mesh.material = _material
 	_mesh.size = Vector2(float(_settings.get("width", 0.48)), 1.0)

@@ -45,6 +45,9 @@ var _top_colours: Dictionary = {}
 var replicate: int = 1
 var _slice_rect: Rect2i
 var _slice_model: String = ""
+const STYLE2_MODEL: String = "s2_woman"
+const STYLE2_LOD_DISTANCE: float = 27.0
+var _style2: bool = OS.get_cmdline_user_args().has("--style=s2")
 var _looks: Dictionary = {}
 var _snap_tick: int = -1
 ## AgentId → {model, bin, look, scale, bits, flags, clip, dirty, feet, h}; the slot in its bin is stable while they
@@ -201,11 +204,17 @@ func _process(delta: float) -> void:
 					lm.set_instance_transform(cap * c + slot, Transform3D(basis, feet + off))
 				bm.set_instance_transform(cap * c + slot, Transform3D(Basis().scaled(Vector3(scale, 1.0, scale)), feet + off + Vector3(0, 0.03, 0)))
 		# Paused mid-step: stand (not walk on the spot).
-		var clip: float = _clip_pack(st["model"], _clip_of(st, running and float(m["t"]) < 1.0))
-		if clip != float(st["clip"]) or bool(st["dirty"]):
+		var clip_name: String = _clip_of(st, running and float(m["t"]) < 1.0)
+		var clip: float = _clip_pack(st["model"], clip_name)
+		var gait: bool = st["model"] == STYLE2_MODEL and clip_name == "walk"
+		if clip != float(st["clip"]) or bool(st["dirty"]) or gait:
 			st["clip"] = clip
 			var look: Dictionary = st["look"]
-			var custom: Color = Color(clip, float(aid % 97) * 0.173, float(look["hair_p"]), float(look["cloth_p"]))
+			var phase: float = float(aid % 97) * 0.173
+			if gait:
+				var distance: float = float(m.get("gait_distance", 0.0)) + (m["from"] as Vector2).distance_to(_pos(m))
+				phase = distance / float(st["scale"]) - float(get_parent().get("anim_time"))
+			var custom: Color = Color(clip, phase, float(look["hair_p"]), float(look["cloth_p"]))
 			for c: int in copies:
 				mm.set_instance_color(cap * c + slot, look["skin"])
 				mm.set_instance_custom_data(cap * c + slot, custom)
@@ -263,15 +272,21 @@ func _model_ids() -> Array[String]:
 func _model(model: String) -> Dictionary:
 	if _models.has(model):
 		return _models[model]
-	var vat: RefCounted = Vat.load_character(model, true)
+	var painted: bool = model == STYLE2_MODEL
+	var vat: RefCounted = Vat.load_character(model, not painted)
 	if not bool(vat.get("ok")):
 		return {}
 	var other: Color = Data3D.colour(Data3D.binding("people.other_colour", []), Color(0.3, 0.22, 0.15))
 	var row: Dictionary = {"vat": vat, "mat": vat.call("with_findability", vat.call("material", other)), "lod_vat": null, "lod_mat": null}
-	var lod: RefCounted = Vat.load_character(model + "_lod", true)
+	var lod: RefCounted = Vat.load_character(model + "_lod", not painted)
 	if bool(lod.get("ok")):
 		row["lod_vat"] = lod
 		row["lod_mat"] = lod.call("with_findability", lod.call("material", other))
+		if painted:
+			var pass_material: ShaderMaterial = row["lod_mat"]
+			while pass_material != null:
+				pass_material.set_shader_parameter("vat_step_frames", true)
+				pass_material = pass_material.next_pass as ShaderMaterial
 	_models[model] = row
 	return row
 
@@ -281,6 +296,8 @@ func _model(model: String) -> Dictionary:
 func _simplify_far(on: bool) -> void:
 	# Large crowds also switch to LOD closer (`people.simple_lod_distance`).
 	var lod_at: float = float(Data3D.param("people.simple_lod_distance" if on else "people.lod_distance", 55.0))
+	if _style2:
+		lod_at = minf(lod_at, STYLE2_LOD_DISTANCE)
 	if lod_at != _lod_at:
 		_lod_at = lod_at
 		for crowd: Dictionary in _crowds.values():
@@ -308,6 +325,8 @@ func _bin(model: String, tile: Vector2i) -> String:
 		return key
 	var row: Dictionary = _models[model]
 	var lod_at: float = _lod_at if _lod_at > 0.0 else float(Data3D.param("people.lod_distance", 55.0))
+	if _style2:
+		lod_at = minf(lod_at, STYLE2_LOD_DISTANCE)
 	var mmi: MultiMeshInstance3D = _bin_node("Crowd_" + key, row["mat"])
 	var lod: MultiMeshInstance3D = null
 	if row["lod_vat"] != null:
@@ -343,6 +362,8 @@ func configure_slice(rect: Rect2i, model: String) -> bool:
 func _model_of(snap: Dictionary, i: int) -> String:
 	if _slice_model != "":
 		return _slice_model
+	if _style2 and not _model(STYLE2_MODEL).is_empty():
+		return STYLE2_MODEL
 	var stage: int = _byte(snap, "life_stages", i)
 	var sex: String = "female" if _byte(snap, "sexes", i) == 1 else "male"
 	var age: String = "child" if stage == 1 else ("elder" if stage == 2 else "")
@@ -468,6 +489,8 @@ func _refresh(snap: Dictionary) -> void:
 			_motion[aid] = m
 		elif m["tile"] != tile:
 			var now_pos: Vector2 = _pos(m)
+			if model == STYLE2_MODEL:
+				m["gait_distance"] = float(m.get("gait_distance", 0.0)) + (m["from"] as Vector2).distance_to(now_pos)
 			m["from"] = now_pos
 			m["to"] = target
 			m["t"] = 0.0

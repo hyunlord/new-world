@@ -6,6 +6,7 @@ global uniform float w3d_time;
 uniform sampler2D vat : filter_nearest, repeat_disable;
 uniform float width = 1.0;
 uniform float fps = 15.0;
+uniform bool vat_step_frames = false;
 uniform vec2 far_scale = vec2(1.0e6, 1.0);
 
 vec3 vat_position(vec2 uv2, vec4 custom) {
@@ -17,6 +18,9 @@ vec3 vat_position(vec2 uv2, vec4 custom) {
 	int f0 = int(floor(f));
 	int f1 = int(mod(float(f0 + 1), count));
 	vec3 p0 = texelFetch(vat, ivec2(column, int(start) + f0), 0).xyz;
+	if (vat_step_frames) {
+		return p0;
+	}
 	vec3 p1 = texelFetch(vat, ivec2(column, int(start) + f1), 0).xyz;
 	return mix(p0, p1, fract(f));
 }

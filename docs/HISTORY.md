@@ -1,5 +1,6 @@
 # WorldSim 역사
 
+- 2026-11-19 — Slice 1에서 절제된 사실풍 앵커를 추가했다. 주민의 새 보행, 원거리 나무 카드, 기존 지붕 단면 보존을 로컬에서 검토한다([ADR0072](decisions/0072-style-2-anchor.md)).
 - 2026-11-18 — MOOD1 / DETAIL1 검토 3차(`289a3e7bd`)에서 가림 표시에 스텐실을 적용했다. 주민 등 얼룩이 사라졌으나 가시성 단계39 2/8, 재실 주택 야간 MOOD1 FPS −8.37%로 미게시. 2차(`2cb379246`)는 밤 평균 Y′ 57.05(목표 48.63), 가시성 7/8이었다([ADR0071](decisions/0071-world-look.md)).
 - 2026-11-17 — M-GROW-a 구현 후보: 길의 마모·이동 간격, 원인을 남기는 집사 구역 배치, 거주 단계·마당과 안전한 시대별 개축, format24 저장 확장을 연결했다. 4개 시드의120일 기능·저장·재생 수용 시험은 통과했으나, 최종 캡처·고정 SHA 전체 게이트·크래시 감지·게시는 대기이며 완료 선언이 아니다([보고서](v8/mgrow/MGROW_REPORT.md), [ADR0070](decisions/0070-bounded-village-growth.md)).
 - 2026-11-17 — M-POLISH+GATE: art-tex·gate-reuse를 C3-b 위에 병합하고(3d-roof2·art-ui 병합은 주민 가시성 단계39 실패로 되돌림, 각 브랜치에 보존) D-GATE-1(test 프로필 opt-level 2, 디버그 단언·오버플로 검사 유지)을 더했다. 길어진 카드 묶음이 빈 이야기 띠를 학습 도우미 위로 밀어 도우미가 숨던 문제를 고쳤고, 2D 시절 `mart21_seasons.png`는 `fd3f59801` 이력에 보존한다. 시뮬레이션 무변경([결정](v8/c1/C1_DECISIONS.md)).
@@ -18,7 +19,6 @@
 - 2026-11-06 — M6b Stage1 세 번째 held-out1648–1679도 통나무·한파 FAIL로 미게시. 별도 소스 검토에서 다중 화덕의 겨울 비축량 누락을 확인해 계산1줄과 회귀 시험으로 수정했다. 기존 실패와 baseline 동일성35·새 사전 검증을 구분하며 최종 전체 gate·새 held-out은 아직 통과하지 않았다([보고서](v8/m6b/M6B_REPORT.md)).
 - 2026-11-05 — M6b Stage1 게시 후보 `a0ec36d1`: 농경·물리적 씨앗·토양, 생산 제한과 기존 땔감 주문 실행, 명시적 가르침을 구현. 보정26·일반 안전성34/34·BASE 동일성22차(228748값 차이0)·고정 카드 검사는 PASS; held-out·최종 gate·게시는 미완료이며 밭 아트는 [#687](https://github.com/hyunlord/new-world/issues/687)에 이월. [보고서](v8/m6b/M6B_REPORT.md), [ADR0058](decisions/0058-physical-cultivation-and-bounded-stewardship.md).
 - 2026-11-04 — M6b Stage0 중단·미게시(D-S0-1..4). 추가 도구408파일88,383줄을2파일696줄로 축소하고 게시된 M-LOOP/M-READ gate로 복귀했다. 상대 KnowledgeLost·생존 계약29테스트 PASS, 전체 generic gate/고의결함 증명 미완료는 [#685](https://github.com/hyunlord/new-world/issues/685)에 이월. Stage1 농경·#684로 전환하며 원래 실패와 raw는 보존한다.
-
 - 2026-10-30 — M6a R1: owner11:20KST의2회 수리 보정 후 동결. P26 `9b6644579` 전체42/48 PASS·25/30/39/40/41/45FAIL; soak기아·KnowledgeLost0이나 신선부패3/32·성능4항목·거래0·가시성16/60·빈토스트·stall캡처오류가 남음. waiver미사용·미게시·#670–673OPEN, P27문서전용NOT_FULL_GATED. [보고서](v8/m6a/M6A_REPORT.md).
 
 - 2026-10-30 — M6a 최종 P12 `a9ae9c87`: 전체 게이트2 44/48 PASS·26/39/41/45 FAIL, timeout/signal 없이 exit1. BASE 결정적64파일 동일·새 성능33쌍 PASS이나 수용2개 막대·soak·가시성52/60·stall52.056ms FAIL 유지, NO waiver·미게시·#670–673 OPEN. 후속 P13은 문서 전용 NOT_FULL_GATED; 목표 미완료. [보고서](v8/m6a/M6A_REPORT.md).
