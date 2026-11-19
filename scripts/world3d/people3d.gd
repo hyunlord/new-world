@@ -512,6 +512,7 @@ func _refresh(snap: Dictionary) -> void:
 	var bins: PackedStringArray = PackedStringArray()
 	bins.resize(n)
 	var need: Dictionary = {}
+	var seen: Dictionary = {}
 	for i: int in n:
 		var tile: Vector2i = Vector2i(xs[i], ys[i])
 		if _slice_rect.has_area() and not _slice_rect.has_point(tile):
@@ -519,16 +520,26 @@ func _refresh(snap: Dictionary) -> void:
 		models[i] = _model_of(snap, i)
 		bins[i] = _bin(models[i], tile)
 		need[bins[i]] = int(need.get(bins[i], 0)) + 1
+		if _style2:
+			var aid: int = aids[i]
+			seen[aid] = true
+			if _state.has(aid) and _state[aid].get("bin", "") != bins[i]:
+				_release(aid, copies)
+				_state[aid]["dirty"] = true
+	# Release departing slots before assigning arrivals. A tight bin can swap all its occupants in one snapshot.
+	if _style2:
+		for aid: int in _state:
+			if not seen.has(aid):
+				_release(aid, copies)
 	for key: String in need:
 		_grow(key, int(need[key]), copies)
-	var seen: Dictionary = {}
 	for i: int in n:
 		if bins[i].is_empty():
 			continue
 		var aid: int = aids[i]
 		seen[aid] = true
 		var model: String = models[i]
-		if _state.has(aid) and _state[aid].get("bin", "") != bins[i]:
+		if not _style2 and _state.has(aid) and _state[aid].get("bin", "") != bins[i]:
 			_release(aid, copies)
 			_state[aid]["dirty"] = true
 		var crowd: Dictionary = _crowds[bins[i]]

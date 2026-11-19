@@ -52,8 +52,8 @@ func _run() -> void:
 	stage.add_child(camera)
 	camera.look_at_from_position(Vector3(0.0, 1.5, 5.0), Vector3(0.0, 0.89, 0.0))
 	camera.make_current()
-	RenderingServer.global_shader_parameter_set("w3d_night", 0.0)
-	RenderingServer.global_shader_parameter_set("w3d_xray", 0.0)
+	for parameter: String in ["w3d_time", "w3d_night", "w3d_xray"]:
+		RenderingServer.global_shader_parameter_add(parameter, RenderingServer.GLOBAL_VAR_TYPE_FLOAT, 0.0)
 
 	var clips: Dictionary = {}
 	for i: int in People.STYLE2_SCALES.size():
