@@ -248,13 +248,17 @@ func _capture() -> void:
 		_fail("could not create capture directory")
 		return
 	var anchor_shots: bool = _arg("--anchor-shots") == "1"
-	var periods: Array[String] = ["day"] if anchor_shots else ["day", "dusk"]
+	var periods: Array[String] = ["day"]
+	if not anchor_shots:
+		periods.append("dusk")
 	for period: String in periods:
 		await _set_light(12.0 if period == "day" else 18.8)
 		var cam: Camera3D = _w3d.call("camera")
 		var fov: float = cam.fov
 		var near: float = cam.near
-		var shots: Array[String] = ["z1", "low"] if anchor_shots else ["z1", "z4", "low"]
+		var shots: Array[String] = ["z1", "z4", "low"]
+		if anchor_shots:
+			shots.erase("z4")
 		if period == "day":
 			for detail: String in ["forest", "roof"]:
 				if _arg("--" + detail) != "":
