@@ -1,5 +1,10 @@
 # Changelog
 
+## Style 2 model kit — 2026-11-20
+
+### Added
+- Optional Tripo villager variants, modular thatch roof and log wall meshes, and shelter, hearth, rack, bed, and storage props. See `docs/decisions/0073-style-2-model-kit.md`.
+
 ## Style 2 anchor — 2026-11-19
 
 ### Added

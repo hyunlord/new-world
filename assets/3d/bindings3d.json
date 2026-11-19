@@ -3,6 +3,20 @@
   "about": "Simulation identities -> 3D models and colours (M3D-1, ADR 0033: kinds are data). Keys are the identities the bridge already sends: tree species (get_trees material names), blueprint construction_style ids (get_content_catalog blueprints), item art_shape / art_tint_material, animal ids, outcrop tint materials, wall styles (get_space wall_styles via the 2D material resolver). Every family has a fallback; scripts/world3d/** names no content id.",
   "models_dir": "res://assets/3d/models",
   "manifests": ["res://assets/3d/models/manifest.json", "res://assets/3d/models/w3d_*_manifest.json", "res://assets/3d/assets_manifest.json"],
+  "s2kit": {
+    "lod_distance": 28,
+    "wall_profiles": {"log": "h1"},
+    "roof_covers": {"thatch": "h2"},
+    "props": {
+      "lean_to": "x1",
+      "hearth": "x2",
+      "hearth_unlit": "x2",
+      "drying_rack": "x3",
+      "bedroll": "x4",
+      "storage_shelf": "x5"
+    },
+    "prop_yaw": {"x4": 90}
+  },
   "flora": {
     "species": {
       "oak": {

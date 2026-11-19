@@ -36,6 +36,7 @@ const Builder = preload("res://scripts/world3d/mesh_builder3d.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 const MaterialResolver = preload("res://scripts/world/art/material_resolver.gd")
 const SlicePbr = preload("res://scripts/world3d/slice_pbr.gd")
+const Kit = preload("res://scripts/world3d/s2kit.gd")
 const WALL_SHADER = preload("res://shaders/world3d/wall.gdshader")
 const ROOF_SHADER = preload("res://shaders/world3d/roof.gdshader")
 const DIRS: Array[Vector2i] = [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)]
@@ -46,6 +47,9 @@ const PROFILE_TRIM: float = 3.0
 
 var wall_material: ShaderMaterial
 var _slice_pbr: bool = false
+var _style2: bool = SlicePbr.style2()
+var _kit_walls: Dictionary = {}
+var _kit_wall_materials: Dictionary = {}
 var _world_sim: Node = null
 var _terrain: Node = null
 var _resolver: MaterialResolver = MaterialResolver.new()
@@ -112,8 +116,8 @@ func set_slice_pbr(enabled: bool) -> bool:
 		return false
 	_slice_pbr = enabled
 	for roof: MeshInstance3D in _roofs.values():
-		var mat: ShaderMaterial = roof.mesh.surface_get_material(0)
-		if not SlicePbr.configure(mat, ROOF_SHADER, enabled):
+		var mat: ShaderMaterial = roof.get_active_material(0) as ShaderMaterial
+		if mat.shader != Kit.SHADER and not SlicePbr.configure(mat, ROOF_SHADER, enabled):
 			return false
 	return true
 
@@ -206,6 +210,8 @@ func _rebuild_walls(space: Dictionary, buildings: Dictionary) -> void:
 	for t: Vector2i in floors.keys():
 		dirty[_chunk_of(t)] = true
 	for k: Vector2i in _chunks.keys():
+		dirty[k] = true
+	for k: Vector2i in _kit_walls.keys():
 		dirty[k] = true
 	for k: Vector2i in dirty:
 		_build_wall_chunk(k, floors)
@@ -340,6 +346,8 @@ func _connects(t: Vector2i, d: Vector2i) -> bool:
 
 func _build_wall_chunk(k: Vector2i, floors: Dictionary) -> void:
 	var b: Builder = Builder.new()
+	var kit_batches: Dictionary = {}
+	var kit_profiles: Dictionary = Data3D.binding("s2kit.wall_profiles", {}) if _style2 else {}
 	var hgt: float = float(Data3D.param("structures.wall_height", 2.2))
 	var thick: float = float(Data3D.param("structures.wall_thickness", 0.35))
 	var floor_h: float = float(Data3D.param("structures.floor_height", 0.06))
@@ -359,7 +367,11 @@ func _build_wall_chunk(k: Vector2i, floors: Dictionary) -> void:
 		elif bool(w["door"]):
 			_door_frame(b, t, g, hgt, thick, w)
 		else:
-			_wall(b, t, g, hgt, thick, w)
+			var kit_id: String = str(kit_profiles.get(w["profile"], ""))
+			if kit_id.is_empty() or not _kit_wall(kit_id, t, g, hgt, thick, kit_batches):
+				_wall(b, t, g, hgt, thick, w)
+	if _style2:
+		_build_kit_wall_batches(k, kit_batches)
 	for t: Variant in floors.keys():
 		if _chunk_of(t) != k:
 			continue
@@ -381,6 +393,60 @@ func _build_wall_chunk(k: Vector2i, floors: Dictionary) -> void:
 		add_child(mi)
 		_chunks[k] = mi
 	mi.mesh = b.commit(wall_material)
+
+
+## The straight kit piece has no corner, T, or cross joint.
+func _kit_wall(id: String, tile: Vector2i, ground: float, height: float, thickness: float, batches: Dictionary) -> bool:
+	var along_x: bool = _connects(tile, Vector2i.LEFT) or _connects(tile, Vector2i.RIGHT)
+	var along_z: bool = _connects(tile, Vector2i.UP) or _connects(tile, Vector2i.DOWN)
+	if along_x and along_z:
+		return false
+	var model: ArrayMesh = Kit.mesh(id)
+	if model == null:
+		return false
+	if not batches.has(id):
+		batches[id] = []
+	var yaw: float = -PI * 0.5 if along_z else 0.0
+	var centre: Vector3 = Vector3(tile.x + 0.5, ground, tile.y + 0.5)
+	(batches[id] as Array).append(Kit.fit(model, Vector3(1.02, height, thickness), yaw, centre))
+	return true
+
+
+func _build_kit_wall_batches(chunk: Vector2i, batches: Dictionary) -> void:
+	for old: MultiMeshInstance3D in _kit_walls.get(chunk, []):
+		old.queue_free()
+	_kit_walls.erase(chunk)
+	if batches.is_empty():
+		return
+	var nodes: Array[MultiMeshInstance3D] = []
+	for id: String in batches:
+		var has_lod: bool = Kit.mesh(id, true) != null
+		for lod: bool in [false, true]:
+			var model: ArrayMesh = Kit.mesh(id, lod)
+			if model == null:
+				continue
+			var transforms: Array = batches[id]
+			var multimesh: MultiMesh = MultiMesh.new()
+			multimesh.transform_format = MultiMesh.TRANSFORM_3D
+			multimesh.mesh = model
+			multimesh.instance_count = transforms.size()
+			for i: int in transforms.size():
+				multimesh.set_instance_transform(i, transforms[i])
+			var material_key: String = id + ("_lod" if lod else "")
+			if not _kit_wall_materials.has(material_key):
+				_kit_wall_materials[material_key] = Kit.material_for(model, true)
+			var part: MultiMeshInstance3D = MultiMeshInstance3D.new()
+			part.multimesh = multimesh
+			part.material_override = _kit_wall_materials[material_key]
+			if has_lod:
+				if lod:
+					part.visibility_range_begin = Kit.distance()
+					part.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+				else:
+					part.visibility_range_end = Kit.distance()
+			add_child(part)
+			nodes.append(part)
+	_kit_walls[chunk] = nodes
 
 
 func _wall(b: Builder, t: Vector2i, g: float, hgt: float, thick: float, w: Dictionary) -> void:
@@ -628,17 +694,49 @@ func _rebuild_roofs(rooms: Dictionary, sites: Array) -> void:
 		var cover: String = _roof_cover(tiles, sites)
 		var mi: MeshInstance3D = MeshInstance3D.new()
 		mi.name = "Roof_%d" % id
-		var mat: ShaderMaterial = ShaderMaterial.new()
-		SlicePbr.configure(mat, ROOF_SHADER, _slice_pbr)
-		preload("res://scripts/world3d/textures3d.gd").setup(mat)
-		mat.set_shader_parameter("texture_tile", float(preload("res://scripts/world3d/textures3d.gd").index("roofs", cover)))
-		mat.set_shader_parameter("cover", Data3D.colour((Data3D.binding("roofs.colours", {}) as Dictionary).get(cover, []), Color(0.7, 0.6, 0.35)))
-		mat.set_shader_parameter("pattern", int((Data3D.binding("roofs.patterns", {}) as Dictionary).get(cover, 0)))
-		mat.set_shader_parameter("fade", float(_roof_fade.get(id, 1.0)))
-		mi.mesh = _roof_mesh(tiles, id, claimed, mat)
+		if not _style2 or not _kit_roof(mi, tiles, bounds, id, claimed, cover):
+			var mat: ShaderMaterial = ShaderMaterial.new()
+			SlicePbr.configure(mat, ROOF_SHADER, _slice_pbr)
+			preload("res://scripts/world3d/textures3d.gd").setup(mat)
+			mat.set_shader_parameter("texture_tile", float(preload("res://scripts/world3d/textures3d.gd").index("roofs", cover)))
+			mat.set_shader_parameter("cover", Data3D.colour((Data3D.binding("roofs.colours", {}) as Dictionary).get(cover, []), Color(0.7, 0.6, 0.35)))
+			mat.set_shader_parameter("pattern", int((Data3D.binding("roofs.patterns", {}) as Dictionary).get(cover, 0)))
+			mat.set_shader_parameter("fade", float(_roof_fade.get(id, 1.0)))
+			mi.mesh = _roof_mesh(tiles, id, claimed, mat)
 		add_child(mi)
 		_roofs[id] = mi
 		_add_windows(id, tiles)
+
+
+## Stretch the gable over rectangular footprints whose full eaves fit beside neighboring roofs.
+func _kit_roof(node: MeshInstance3D, tiles: Array, bounds: Rect2i, room_id: int, claimed: Dictionary, cover: String) -> bool:
+	var covers: Dictionary = Data3D.binding("s2kit.roof_covers", {})
+	var id: String = str(covers.get(cover, ""))
+	if id.is_empty() or tiles.size() != bounds.get_area():
+		return false
+	var full: Vector2i = bounds.size * 2 + Vector2i(4, 4)
+	if roof_cells(tiles, room_id, claimed).size() != full.x * full.y:
+		return false
+	var model: ArrayMesh = Kit.mesh(id)
+	if model == null:
+		return false
+	var height: float = float(Data3D.param("structures.wall_height", 2.2))
+	var pitch: float = tan(deg_to_rad(float(Data3D.param("structures.roof_pitch_deg", 38.0))))
+	var half_wall: float = float(Data3D.param("structures.wall_thickness", 0.35)) * 0.5
+	var span: float = float(mini(full.x, full.y)) * 0.5
+	var ridge: float = float(maxi(full.x, full.y)) * 0.5
+	var rise: float = minf(float(Data3D.param("structures.roof_max_rise", 2.4)), span * 0.5 * pitch)
+	var eave_height: float = _roof_ground(tiles) + height + 0.03
+	var center: Vector2 = Vector2(bounds.position) + Vector2(bounds.size) * 0.5
+	var yaw: float = PI * 0.5 if full.x > full.y else 0.0
+	_roof_top[room_id] = eave_height + half_wall * pitch
+	node.mesh = model
+	node.transform = Kit.fit(model, Vector3(span, rise, ridge), yaw, Vector3(center.x, eave_height, center.y))
+	var mat: ShaderMaterial = Kit.material_for(model, false)
+	mat.set_shader_parameter("fade", float(_roof_fade.get(room_id, 1.0)))
+	node.material_override = mat
+	Kit.add_lod(node, id)
+	return true
 
 
 func _clear_windows() -> void:
@@ -797,6 +895,16 @@ static func _near_other(n: Vector2i, room_id: int, claimed: Dictionary) -> bool:
 	return false
 
 
+func _roof_ground(tiles: Array) -> float:
+	var ground: float = -INF
+	for t: Vector2i in tiles:
+		ground = maxf(ground, float(_terrain.call("stand_height", t)))
+		for dd: Vector2i in DIRS:
+			if _walls.has(t + dd):
+				ground = maxf(ground, float(_terrain.call("stand_height", t + dd)))
+	return ground
+
+
 ## A hipped roof as one height field over the roof cells (lattice every 0.5 m): height rises with the Chebyshev
 ## distance from the wall line, so L shapes get hips and valleys and the surface is single-valued (it cannot pass
 ## through itself); the overhang ring slopes on down past the walls. Lifted so the wall tops stay under it.
@@ -807,12 +915,7 @@ func _roof_mesh(tiles: Array, room_id: int, claimed: Dictionary, mat: Material) 
 	var pitch: float = tan(deg_to_rad(float(Data3D.param("structures.roof_pitch_deg", 38.0))))
 	var thick: float = float(Data3D.param("structures.roof_thickness", 0.12))
 	var rise_max: float = float(Data3D.param("structures.roof_max_rise", 2.4))
-	var ground: float = -INF
-	for t: Vector2i in tiles:
-		ground = maxf(ground, float(_terrain.call("stand_height", t)))
-		for dd: Vector2i in DIRS:
-			if _walls.has(t + dd):
-				ground = maxf(ground, float(_terrain.call("stand_height", t + dd)))
+	var ground: float = _roof_ground(tiles)
 	var top: float = ground + hgt + half_wall * pitch + 0.03
 	_roof_top[room_id] = top
 	b.base = ground
@@ -1077,7 +1180,7 @@ func _update_cutaway(delta: float) -> void:
 		mi.visible = f > 0.001
 		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if f > 0.5 else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		if mi.mesh != null and mi.mesh.get_surface_count() > 0:
-			(mi.mesh.surface_get_material(0) as ShaderMaterial).set_shader_parameter("fade", f)
+			(mi.get_active_material(0) as ShaderMaterial).set_shader_parameter("fade", f)
 	_cut_all = move_toward(_cut_all, low if all_cut else 99.0, speed * 98.0)
 	var rect: Rect2 = Rect2()
 	for id: int in selected:
@@ -1091,6 +1194,10 @@ func _update_cutaway(delta: float) -> void:
 	wall_material.set_shader_parameter("cut_all", _cut_all)
 	wall_material.set_shader_parameter("cut_rect", Vector4(_cut_rect.position.x, _cut_rect.position.y, _cut_rect.end.x, _cut_rect.end.y))
 	wall_material.set_shader_parameter("cut_rect_height", _cut_rect_h)
+	for material: ShaderMaterial in _kit_wall_materials.values():
+		material.set_shader_parameter("cut_all", _cut_all)
+		material.set_shader_parameter("cut_rect", Vector4(_cut_rect.position.x, _cut_rect.position.y, _cut_rect.end.x, _cut_rect.end.y))
+		material.set_shader_parameter("cut_rect_height", _cut_rect_h)
 
 
 ## The ray parameter where `origin + dir · t` meets a visible roof (its wall-top plane over the roofed rectangle

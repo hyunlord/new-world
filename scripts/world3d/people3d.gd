@@ -45,8 +45,11 @@ var _top_colours: Dictionary = {}
 var replicate: int = 1
 var _slice_rect: Rect2i
 var _slice_model: String = ""
-const STYLE2_MODEL: String = "s2_woman"
-const STYLE2_LOD_DISTANCE: float = 27.0
+const STYLE2_FALLBACK: String = "s2_woman"
+const STYLE2_MODELS: Array[String] = ["s2_p1", "s2_p2", "s2_p3", "s2_p4"]
+const STYLE2_SCALES: Array[float] = [1.0, 0.95, 0.70, 0.97]
+const STYLE2_MID_DISTANCE: float = 10.0
+const STYLE2_LOD_DISTANCE: float = 18.0
 var _style2: bool = OS.get_cmdline_user_args().has("--style=s2")
 var _looks: Dictionary = {}
 var _snap_tick: int = -1
@@ -77,7 +80,7 @@ func setup(world_sim: Node, terrain: Node) -> void:
 		_aid_of.clear()
 		_active.clear()
 		for crowd: Dictionary in _crowds.values():
-			for n: Variant in [crowd["mmi"], crowd["lod"], crowd["blob"]]:
+			for n: Variant in [crowd["mmi"], crowd["mid"], crowd["lod"], crowd["blob"]]:
 				if n != null:
 					(n as Node).queue_free()
 		_crowds.clear()
@@ -176,6 +179,7 @@ func _process(delta: float) -> void:
 		var crowd: Dictionary = _crowds[st["bin"]]
 		var mm: MultiMesh = crowd["mmi"].multimesh
 		var lm: MultiMesh = crowd["lod"].multimesh if crowd["lod"] != null else null
+		var mid: MultiMesh = crowd["mid"].multimesh if crowd["mid"] != null else null
 		var bm: MultiMesh = crowd["blob"].multimesh
 		var cap: int = _cap(mm, copies)
 		var slot: int = int(crowd["slot"][aid])
@@ -203,13 +207,16 @@ func _process(delta: float) -> void:
 			for c: int in copies:
 				var off: Vector3 = Vector3(float((c * 7) % 5) - 2.0, 0.0, float((c * 3) % 5) - 2.0) * 0.6 if c > 0 else Vector3.ZERO
 				mm.set_instance_transform(cap * c + slot, Transform3D(basis, feet + off))
+				if mid != null:
+					mid.set_instance_transform(cap * c + slot, Transform3D(basis, feet + off))
 				if lm != null:
 					lm.set_instance_transform(cap * c + slot, Transform3D(basis, feet + off))
 				bm.set_instance_transform(cap * c + slot, Transform3D(Basis().scaled(Vector3(scale, 1.0, scale)), feet + off + Vector3(0, 0.03, 0)))
 		# Paused mid-step: stand (not walk on the spot).
 		var clip_name: String = _clip_of(st, running and float(m["t"]) < 1.0)
 		var clip: float = _clip_pack(st["model"], clip_name)
-		var gait: bool = st["model"] == STYLE2_MODEL and clip_name == "walk"
+		var painted: bool = bool(crowd["painted"])
+		var gait: bool = painted and clip_name == "walk"
 		if clip != float(st["clip"]) or bool(st["dirty"]) or gait:
 			st["clip"] = clip
 			var look: Dictionary = st["look"]
@@ -219,11 +226,14 @@ func _process(delta: float) -> void:
 				phase = distance / float(st["scale"]) - float(get_parent().get("anim_time"))
 			var custom: Color = Color(clip, phase, float(look["hair_p"]), float(look["cloth_p"]))
 			var skin: Color = look["skin"]
-			if st["model"] == STYLE2_MODEL:
+			if painted:
 				skin.a = fposmod(float(aid) * 0.618034, 1.0)
 			for c: int in copies:
 				mm.set_instance_color(cap * c + slot, skin)
 				mm.set_instance_custom_data(cap * c + slot, custom)
+				if mid != null:
+					mid.set_instance_color(cap * c + slot, skin)
+					mid.set_instance_custom_data(cap * c + slot, custom)
 				if lm != null:
 					lm.set_instance_color(cap * c + slot, skin)
 					lm.set_instance_custom_data(cap * c + slot, custom)
@@ -274,16 +284,21 @@ func _model_ids() -> Array[String]:
 	return out
 
 
-## The VATs and materials of `model` (and of its `<model>_lod` bake), loaded once; {} when the model is missing.
+## The VATs and materials of `model`, loaded once; {} when the model is missing.
 func _model(model: String) -> Dictionary:
 	if _models.has(model):
 		return _models[model]
-	var painted: bool = model == STYLE2_MODEL
+	var painted: bool = model == STYLE2_FALLBACK or STYLE2_MODELS.has(model)
 	var vat: RefCounted = Vat.load_character(model, not painted)
 	if not bool(vat.get("ok")):
 		return {}
 	var other: Color = Data3D.colour(Data3D.binding("people.other_colour", []), Color(0.3, 0.22, 0.15))
-	var row: Dictionary = {"vat": vat, "mat": vat.call("with_findability", vat.call("material", other, painted), painted), "lod_vat": null, "lod_mat": null}
+	var row: Dictionary = {"vat": vat, "mat": vat.call("with_findability", vat.call("material", other, painted), painted), "lod_vat": null, "lod_mat": null, "mid_vat": null, "mid_mat": null, "painted": painted}
+	if STYLE2_MODELS.has(model):
+		var mid: RefCounted = Vat.load_character(model + "_mid", false)
+		if bool(mid.get("ok")):
+			row["mid_vat"] = mid
+			row["mid_mat"] = mid.call("with_findability", mid.call("material", other, true), true)
 	var lod: RefCounted = Vat.load_character(model + "_lod", not painted)
 	if bool(lod.get("ok")):
 		row["lod_vat"] = lod
@@ -308,7 +323,14 @@ func _simplify_far(on: bool) -> void:
 		_lod_at = lod_at
 		for crowd: Dictionary in _crowds.values():
 			if crowd["lod"] != null:
-				crowd["mmi"].visibility_range_end = lod_at
+				if crowd["mid"] != null:
+					var near_at: float = minf(STYLE2_MID_DISTANCE, lod_at)
+					crowd["mmi"].visibility_range_end = near_at
+					crowd["mid"].visibility_range_begin = near_at
+					crowd["mid"].visibility_range_end = lod_at
+					crowd["mid"].visible = near_at < lod_at
+				else:
+					crowd["mmi"].visibility_range_end = lod_at
 				crowd["lod"].visibility_range_begin = lod_at
 			crowd["blob"].visibility_range_end = lod_at
 	for row: Dictionary in _models.values():
@@ -335,14 +357,22 @@ func _bin(model: String, tile: Vector2i) -> String:
 		lod_at = minf(lod_at, STYLE2_LOD_DISTANCE)
 	var mmi: MultiMeshInstance3D = _bin_node("Crowd_" + key, row["mat"])
 	var lod: MultiMeshInstance3D = null
+	var mid: MultiMeshInstance3D = null
 	if row["lod_vat"] != null:
 		mmi.visibility_range_end = lod_at
 		lod = _bin_node("Lod_" + key, row["lod_mat"])
 		lod.visibility_range_begin = lod_at
+		if row["mid_vat"] != null:
+			var near_at: float = minf(STYLE2_MID_DISTANCE, lod_at)
+			mmi.visibility_range_end = near_at
+			mid = _bin_node("Mid_" + key, row["mid_mat"])
+			mid.visibility_range_begin = near_at
+			mid.visibility_range_end = lod_at
+			mid.visible = near_at < lod_at
 	var blob: MultiMeshInstance3D = _bin_node("Contact_" + key, null)
 	blob.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	blob.visibility_range_end = lod_at
-	_crowds[key] = {"model": model, "chunk": chunk, "mmi": mmi, "lod": lod, "blob": blob, "slot": {}, "free": []}
+	_crowds[key] = {"model": model, "chunk": chunk, "mmi": mmi, "mid": mid, "lod": lod, "blob": blob, "painted": row["painted"], "slot": {}, "free": []}
 	return key
 
 
@@ -368,8 +398,12 @@ func configure_slice(rect: Rect2i, model: String) -> bool:
 func _model_of(snap: Dictionary, i: int) -> String:
 	if _slice_model != "":
 		return _slice_model
-	if _style2 and not _model(STYLE2_MODEL).is_empty():
-		return STYLE2_MODEL
+	if _style2:
+		var id: String = style2_model(snap, i)
+		if not _model(id).is_empty():
+			return id
+		if not _model(STYLE2_FALLBACK).is_empty():
+			return STYLE2_FALLBACK
 	var stage: int = _byte(snap, "life_stages", i)
 	var sex: String = "female" if _byte(snap, "sexes", i) == 1 else "male"
 	var age: String = "child" if stage == 1 else ("elder" if stage == 2 else "")
@@ -381,6 +415,18 @@ func _model_of(snap: Dictionary, i: int) -> String:
 			if not id.is_empty() and not _model(id).is_empty():
 				return id
 	return str(Data3D.binding("people.model", ""))
+
+
+## Same row order as the people transforms. Life stage is only a fallback for rows without a recorded age.
+static func style2_model(snap: Dictionary, i: int) -> String:
+	var ages: PackedInt32Array = snap.get("ages_years", PackedInt32Array())
+	var age: int = ages[i] if i < ages.size() else -1
+	var stage: int = _byte(snap, "life_stages", i)
+	if (age >= 0 and age < 13) or (age < 0 and stage == 1):
+		return STYLE2_MODELS[2]
+	if age >= 55 or (age < 0 and stage == 2):
+		return STYLE2_MODELS[3]
+	return STYLE2_MODELS[1 if _byte(snap, "sexes", i) == 1 else 0]
 
 
 ## The colony's current era id (get_tech current_era_order → the catalogue era row), read on the slow cadence.
@@ -404,10 +450,13 @@ func _grow(key: String, need: int, copies: int) -> void:
 	var size: float = float(maxi(4, int(Data3D.param("people.chunk_tiles", 16))))
 	var corner: Vector3 = Vector3(float(crowd["chunk"].x) * size, 0.0, float(crowd["chunk"].y) * size)
 	var aabb: AABB = AABB(corner - Vector3(3.0, 8.0, 3.0), Vector3(size + 6.0, 24.0, size + 6.0))
-	var count: int = maxi(8, need + (need >> 2)) * copies
+	# The kit splits each chunk into up to four bins, so avoid reserving eight copies per sparse cohort.
+	var count: int = maxi(2 if crowd["mid"] != null else 8, need + (need >> 2)) * copies
 	var row: Dictionary = _models[crowd["model"]]
 	var hidden: Transform3D = Transform3D(Basis().scaled(Vector3.ZERO), corner)
 	var parts: Array = [["mmi", row["vat"].get("mesh"), true], ["blob", _blob_mesh, false]]
+	if row["mid_vat"] != null and row["lod_vat"] != null:
+		parts.append(["mid", row["mid_vat"].get("mesh"), true])
 	if row["lod_vat"] != null:
 		parts.append(["lod", row["lod_vat"].get("mesh"), true])
 	for part: Array in parts:
@@ -441,7 +490,7 @@ func _release(aid: int, copies: int) -> void:
 	var size: float = float(maxi(4, int(Data3D.param("people.chunk_tiles", 16))))
 	var hidden: Transform3D = Transform3D(Basis().scaled(Vector3.ZERO), Vector3(float(crowd["chunk"].x) * size, 0.0, float(crowd["chunk"].y) * size))
 	for c: int in copies:
-		for n: Variant in [crowd["mmi"], crowd["lod"], crowd["blob"]]:
+		for n: Variant in [crowd["mmi"], crowd["mid"], crowd["lod"], crowd["blob"]]:
 			if n != null:
 				(n as MultiMeshInstance3D).multimesh.set_instance_transform(cap * c + slot, hidden)
 	(crowd["free"] as Array).append(slot)
@@ -495,7 +544,7 @@ func _refresh(snap: Dictionary) -> void:
 			_motion[aid] = m
 		elif m["tile"] != tile:
 			var now_pos: Vector2 = _pos(m)
-			if model == STYLE2_MODEL:
+			if bool(crowd["painted"]):
 				m["gait_distance"] = float(m.get("gait_distance", 0.0)) + (m["from"] as Vector2).distance_to(now_pos)
 			m["from"] = now_pos
 			m["to"] = target
@@ -517,6 +566,9 @@ func _refresh(snap: Dictionary) -> void:
 		# A model made for children already has a child's height; the scale only shrinks the adult fallback.
 		var own_child: bool = model == str((Data3D.binding("people.models", {}) as Dictionary).get("child", ""))
 		var scale: float = (1.0 if own_child else child_scale) * (0.75 if _byte(snap, "infants", i) == 1 else 1.0) if stage == 1 else 1.0
+		var kit_index: int = STYLE2_MODELS.find(model) if _style2 else -1
+		if kit_index >= 0:
+			scale = STYLE2_SCALES[kit_index]
 		if st.get("look") != look or float(st.get("scale", -1.0)) != scale:
 			st["dirty"] = true
 		st["model"] = model
@@ -692,8 +744,8 @@ func state_of(bits: int) -> Dictionary:
 		"clip": _clip_of(d, _world_sim.process_mode != Node.PROCESS_MODE_DISABLED and float(m.get("t", 1.0)) < 1.0), "scale": float(d["scale"])}
 
 
-## Tools (gate step 39): every drawn figure instance of entity `bits` as [MultiMesh, index] pairs — the full and the
-## LOD crowd of its bin, all replicate copies; contact shadows excluded. [] when not drawn.
+## Tools (gate step 39): every drawn figure instance of entity `bits` as [MultiMesh, index] pairs across all LODs
+## and replicate copies. Contact shadows are excluded.
 func figure_instances(bits: int) -> Array:
 	var out: Array = []
 	var aid: int = int(_aid_of.get(bits, -1))
@@ -704,7 +756,7 @@ func figure_instances(bits: int) -> Array:
 		return out
 	var copies: int = maxi(1, replicate)
 	var cap: int = _cap(crowd["mmi"].multimesh, copies)
-	for n: Variant in [crowd["mmi"], crowd["lod"]]:
+	for n: Variant in [crowd["mmi"], crowd["mid"], crowd["lod"]]:
 		if n != null:
 			for c: int in copies:
 				out.append([(n as MultiMeshInstance3D).multimesh, cap * c + int(crowd["slot"][aid])])

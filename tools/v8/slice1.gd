@@ -3,6 +3,7 @@
 # SimReads calls: load_world, reset_world_stress and time, world and people snapshots.
 extends SceneTree
 
+const People3D = preload("res://scripts/world3d/people3d.gd")
 const View = preload("res://scripts/world/colony/view.gd")
 const TripoAnimals = {"goat": "tripo_goat", "wild_goat": "tripo_goat"}
 const Features: Array[String] = ["pbr", "vegetation", "people", "sdfgi", "ssao", "ssil", "volumetric", "taa", "shadows", "sun", "resolution"]
@@ -104,7 +105,8 @@ func _run() -> void:
 	var drawn: int = int(people.call("count"))
 	var time: Dictionary = SimReads.read(_world, "get_time_snapshot")
 	var info: Dictionary = SimReads.read(_world, "get_world_info")
-	var all: PackedInt64Array = SimReads.read(_world, "get_agent_snapshot").get("ids", PackedInt64Array())
+	var snapshot: Dictionary = SimReads.read(_world, "get_agent_snapshot")
+	var all: PackedInt64Array = snapshot.get("ids", PackedInt64Array())
 	if (stress and (drawn != 500 or all.size() != 500)) or (not stress and (drawn < 6 or drawn > 10)):
 		_fail("unexpected population in view: %d of %d" % [drawn, all.size()])
 		return
@@ -112,9 +114,16 @@ func _run() -> void:
 		_fail("save is not the day-120 boundary: %s" % JSON.stringify(time))
 		return
 	if _has("people") or _style2:
-		var expected_model: String = "s2_woman" if _style2 else "tripo_woman"
 		for body: Dictionary in people.call("bodies", 0):
-			var shown: Dictionary = people.call("state_of", int(body["id"]))
+			var bits: int = int(body["id"])
+			var shown: Dictionary = people.call("state_of", bits)
+			var expected_model: String = "tripo_woman"
+			if _style2:
+				var index: int = all.find(bits)
+				if index < 0:
+					_fail("a drawn villager has no snapshot row")
+					return
+				expected_model = People3D.style2_model(snapshot, index)
 			if shown.get("model") != expected_model:
 				_fail("a villager is missing " + expected_model)
 				return
