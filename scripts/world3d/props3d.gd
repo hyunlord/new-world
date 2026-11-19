@@ -88,6 +88,20 @@ func _ready() -> void:
 	_glow_on.emission_energy_multiplier = float(Data3D.mood("room_lights.fire_emission", 3.0))
 	_glow_off = StandardMaterial3D.new()
 	_glow_off.albedo_color = Color(0.16, 0.13, 0.12)
+	# Renderer warmup: a dark omni light from the start, so the first lit night does not
+	# switch the scene's omni-light pipelines mid-play (step 41 frame spike), and the pool exists up front.
+	var warm: OmniLight3D = OmniLight3D.new()
+	warm.light_energy = 0.0
+	warm.omni_range = 0.01
+	warm.shadow_enabled = false
+	add_child(warm)
+	for _i: int in _light_budget:
+		var node: OmniLight3D = OmniLight3D.new()
+		node.light_color = _light_colour
+		node.shadow_enabled = false
+		node.visible = false
+		add_child(node)
+		_light_pool.append(node)
 
 
 func _on_world_reset() -> void:
