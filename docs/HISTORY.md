@@ -1,7 +1,6 @@
 # WorldSim 역사
 
-- 2026-11-19 — MERGE1: UI1 HUD와 MOOD1 색보정(줌에 따라 지도 모습으로 페이드)·방 조명·밤 실루엣을 M-GROW 위에 합쳤다. DETAIL1(지형 텍스처·풀·잎·구름·SSAO)은 화풍2로 대체되어 제외했고, 단계39를 깨던 스텐실 투시와 진한 낮 외곽선은 v8/main 것을 유지했다. 시뮬레이션 무변경.
-- 2026-11-18 — UI1 구현 브랜치: 자원·메뉴 칩, 명령 카드, 성장 연대기, 주민 욕구와 이유를 따뜻한 테마로 정리했다. 시뮬레이션 변경은 없으며 게시는 별도 검증 후 진행한다([ADR0071](decisions/0071-settlement-hud.md)).
+- 2026-11-19 — MERGE1: UI1 HUD(자원·메뉴 칩, 명령 카드, 성장 연대기, 주민 욕구와 이유, 따뜻한 테마, [ADR0071](decisions/0071-settlement-hud.md))와 MOOD1 색보정(줌에 따라 지도 모습으로 페이드)·방 조명·밤 실루엣을 M-GROW 위에 합쳤다. DETAIL1(지형 텍스처·풀·잎·구름·SSAO)은 화풍2로 대체되어 제외했고, 단계39를 깨던 스텐실 투시와 진한 낮 외곽선은 v8/main 것을 유지했다. 시뮬레이션 무변경.
 - 2026-11-19 — M-GROW-a 길의 마모·이동 간격, 원인을 남기는 집사 구역 배치, 거주 단계·마당과 안전한 시대별 개축, format24 저장 확장을 `f9caf0ba5`로 게시했다. 전체 게이트51/51(단계41 면제 없이 최대46.9ms), 크래시 감지 PASS. 앞선 두 전체 게이트의 단계41 실패와 정지·수정(fix-F/G)은 [보고서](v8/mgrow/MGROW_REPORT.md)에 보존한다([ADR0070](decisions/0070-bounded-village-growth.md)).
 - 2026-11-17 — M-POLISH+GATE: art-tex·gate-reuse를 C3-b 위에 병합하고(3d-roof2·art-ui 병합은 주민 가시성 단계39 실패로 되돌림, 각 브랜치에 보존) D-GATE-1(test 프로필 opt-level 2, 디버그 단언·오버플로 검사 유지)을 더했다. 길어진 카드 묶음이 빈 이야기 띠를 학습 도우미 위로 밀어 도우미가 숨던 문제를 고쳤고, 2D 시절 `mart21_seasons.png`는 `fd3f59801` 이력에 보존한다. 시뮬레이션 무변경([결정](v8/c1/C1_DECISIONS.md)).
 - 2026-11-16 — M-GATE-REUSE 도구 구현: 고정 입력에 묶인 전체 debug 사전 실행 영수증을 full gate step4에서 재사용하며 불일치는 재실행한다. Python 도구 검증과 전체 게임 게이트 검증을 구분하고 C3-b 이후 통합을 기다린다([D-GATE-2](v8/c1/C1_DECISIONS.md), [ADR0069](decisions/0069-frozen-debug-suite-reuse.md)).

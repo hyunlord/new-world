@@ -145,7 +145,7 @@ def schema_key(path: Path, tokens: list[Token], index: int, value: str) -> bool:
     relative = path.relative_to(ROOT).as_posix()
     story_readers = {
         "scripts/ui/story_text.gd", "scripts/ui/mux/learning_facts.gd",
-        "scripts/ui/mux/ui_facts_adapter.gd",
+        "scripts/ui/mux/ui_facts_adapter.gd", "scripts/ui/hud/hud_topbar.gd",
     }
     if value == "firewood" and relative == "scripts/ui/mux/ui_facts_adapter.gd":
         preceding = [token.value for token in tokens[max(0, index - 7):index]]
