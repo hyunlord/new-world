@@ -459,25 +459,29 @@ func _apply(family: String, batches: Dictionary, only: Dictionary = {}) -> void:
 		var data: Array = batches[bk]
 		var xforms: Array = data[0]
 		var cols: Array = data[1]
-		var mm: MultiMesh = MultiMesh.new()
-		mm.transform_format = MultiMesh.TRANSFORM_3D
-		mm.use_colors = true
-		mm.mesh = mesh
-		mm.instance_count = xforms.size()
-		for i: int in xforms.size():
-			mm.set_instance_transform(i, xforms[i])
-			mm.set_instance_color(i, cols[i])
 		var mmi: MultiMeshInstance3D = _instances.get(k)
 		if mmi == null:
 			mmi = MultiMeshInstance3D.new()
 			add_child(mmi)
 			_instances[k] = mmi
-		mmi.multimesh = mm
+		mmi.multimesh = _new_batch(mesh, xforms, cols)
 		if _tree_card_distance > 0.0 and parts[0].begins_with("slice_"):
-			_apply_far_cards(mmi, parts[0], mm)
+			_apply_far_cards(mmi, parts[0], xforms, cols)
 
 
-func _apply_far_cards(near: MultiMeshInstance3D, model: String, instances: MultiMesh) -> void:
+func _new_batch(mesh: Mesh, xforms: Array, colours: Array) -> MultiMesh:
+	var mm: MultiMesh = MultiMesh.new()
+	mm.transform_format = MultiMesh.TRANSFORM_3D
+	mm.use_colors = true
+	mm.mesh = mesh
+	mm.instance_count = xforms.size()
+	for i: int in xforms.size():
+		mm.set_instance_transform(i, xforms[i])
+		mm.set_instance_color(i, colours[i])
+	return mm
+
+
+func _apply_far_cards(near: MultiMeshInstance3D, model: String, xforms: Array, colours: Array) -> void:
 	var far: MultiMeshInstance3D = near.get_node_or_null("FarCards") as MultiMeshInstance3D
 	if far == null:
 		far = MultiMeshInstance3D.new()
@@ -486,9 +490,7 @@ func _apply_far_cards(near: MultiMeshInstance3D, model: String, instances: Multi
 		near.add_child(far)
 		near.visibility_range_end = _tree_card_distance
 		far.visibility_range_begin = _tree_card_distance
-	var cards: MultiMesh = instances.duplicate() as MultiMesh
-	cards.mesh = SliceVegetation.card(model)
-	far.multimesh = cards
+	far.multimesh = _new_batch(SliceVegetation.card(model), xforms, colours)
 
 
 func _apply_markers(points: Array[Transform3D], colours: Array[Color]) -> void:
