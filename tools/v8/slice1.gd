@@ -190,6 +190,8 @@ func _configure() -> bool:
 func _set_light(hour: float) -> void:
 	var sky: Node = _w3d.get_node("Sky")
 	sky.call("set_hour_override", hour)
+	if _arg("--anchor-shots") == "1" or _style2:
+		sky.call("set_hardship_override", 0.0)
 	await process_frame
 	await process_frame
 
@@ -211,6 +213,7 @@ func _configure_view(shot: String) -> bool:
 	if shot != "low":
 		return true
 	var people: Node = _w3d.get_node("People")
+	var look_at: Vector2 = _point("--low-look", _focus)
 	var bodies: Array = people.call("bodies", 0)
 	var nearest: float = INF
 	var feet: Vector3
@@ -220,7 +223,7 @@ func _configure_view(shot: String) -> bool:
 		var distance: float = Vector2(p.x, p.z).distance_squared_to(_close)
 		var state: Dictionary = people.call("state_of", int(body["id"]))
 		var look: Vector3 = Vector3.BACK.rotated(Vector3.UP, float(state.get("yaw", 0.0)))
-		if look.dot(Vector3(_focus.x - p.x, 0.0, _focus.y - p.z)) < 0.0:
+		if _arg("--low-look") != "" and look.dot(Vector3(look_at.x - p.x, 0.0, look_at.y - p.z)) < 0.0:
 			distance += 100.0
 		if distance < nearest:
 			nearest = distance
@@ -233,6 +236,8 @@ func _configure_view(shot: String) -> bool:
 	var height: float = float(_w3d.get_node("Terrain").call("height_at", pos.x, pos.z))
 	pos.y = maxf(height, feet.y) + 1.72
 	var aim: Vector3 = feet + forward * 2.8 + Vector3.UP * 0.8
+	if _arg("--low-look") != "":
+		aim = Vector3(look_at.x, feet.y + 0.9, look_at.y)
 	cam.fov = 60.0
 	cam.near = 0.15
 	cam.look_at_from_position(pos, aim, Vector3.UP)
@@ -301,7 +306,7 @@ func _walk() -> void:
 	var bits: int = ids[i]
 	var draft: Dictionary = SimReads.mutate(_world, "cmd_draft", [aid, true])
 	var order: Dictionary = SimReads.mutate(_world, "cmd_draft_move", [aid, target.x, target.y])
-	if not bool(draft.get("ok")) or not bool(order.get("ok")):
+	if not bool(draft.get("accepted", false)) or not bool(order.get("accepted", false)):
 		_fail("walk order failed: %s %s" % [draft, order])
 		return
 	await _set_light(12.0)
