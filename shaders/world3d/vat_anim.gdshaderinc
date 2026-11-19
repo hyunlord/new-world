@@ -25,7 +25,7 @@ vec3 vat_position(vec2 uv2, vec4 custom, float distance) {
 	}
 	// The reclined pose is shallow in projection. Widen its distant profile without moving its feet.
 	if (start == distant_sleep_clip) {
-		p0.y *= 1.0 + smoothstep(48.0, 95.0, distance);
+		p0.y *= 1.0 + 1.45 * smoothstep(48.0, 95.0, distance);
 	}
 	return p0;
 }
