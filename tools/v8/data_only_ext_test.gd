@@ -85,7 +85,8 @@ func _run() -> void:
 	var resolved: Dictionary = resolver.call("resolve", "test_mudbrick", "clay", "", "wall")
 	_check("novel style identity uses existing art", str(resolved.get("style_id", "")) == "test_mudbrick" and not (resolved.get("textures", {}) as Dictionary).is_empty())
 	_check_alias_negatives(dto)
-	world.call("advance_ticks", 1)
+	# Through SimReads so its tick cache sees the step (the HUD food chip also reads get_ui_facts).
+	SimReads.mutate(world, "advance_ticks", [1])
 	var facts: Dictionary = Facts.adapt(world.call("get_ui_facts"))
 	_check("real world facts accepted", hud.alerts.refresh_from_facts(facts))
 	var matching: Array[Dictionary] = hud.alerts.evaluator.active_alerts().filter(func(row: Dictionary) -> bool: return row["id"] == "test_supply")
