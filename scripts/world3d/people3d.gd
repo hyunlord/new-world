@@ -264,11 +264,11 @@ func _model(model: String) -> Dictionary:
 	if not bool(vat.get("ok")):
 		return {}
 	var other: Color = Data3D.colour(Data3D.binding("people.other_colour", []), Color(0.3, 0.22, 0.15))
-	var row: Dictionary = {"vat": vat, "mat": vat.call("with_findability", vat.call("material", other, true)), "lod_vat": null, "lod_mat": null}
+	var row: Dictionary = {"vat": vat, "mat": vat.call("with_findability", vat.call("material", other)), "lod_vat": null, "lod_mat": null}
 	var lod: RefCounted = Vat.load_character(model + "_lod", true)
 	if bool(lod.get("ok")):
 		row["lod_vat"] = lod
-		row["lod_mat"] = lod.call("with_findability", lod.call("material", other, true))
+		row["lod_mat"] = lod.call("with_findability", lod.call("material", other))
 	_models[model] = row
 	return row
 

@@ -13,7 +13,6 @@
 extends RefCounted
 
 const VAT_SHADER = preload("res://shaders/world3d/vat.gdshader")
-const PEOPLE_SHADER = preload("res://shaders/world3d/vat_people.gdshader")
 const OUTLINE_SHADER = preload("res://shaders/world3d/vat_outline.gdshader")
 const XRAY_SHADER = preload("res://shaders/world3d/vat_xray.gdshader")
 const Data3D = preload("res://scripts/world3d/data3d.gd")
@@ -154,9 +153,9 @@ static func atlas_region(c: Color) -> int:
 	return 1
 
 
-func material(other: Color, people: bool = false) -> ShaderMaterial:
+func material(other: Color) -> ShaderMaterial:
 	var mat: ShaderMaterial = ShaderMaterial.new()
-	mat.shader = PEOPLE_SHADER if people else VAT_SHADER
+	mat.shader = VAT_SHADER
 	if atlas != null:
 		mat.set_shader_parameter("atlas", atlas)
 		mat.set_shader_parameter("textured", true)
@@ -176,7 +175,7 @@ func material(other: Color, people: bool = false) -> ShaderMaterial:
 
 ## People only: far figures enlarged (params3d `people.far_scale` [from metres, max]), a screen-constant outline pass
 ## (`people.outline`: px, far_px, day and night colours) and a see-through silhouette where something stands in front
-## (`people.xray`) that skips pixels occupied by a visible body.
+## (`people.xray`), chained as next passes.
 func with_findability(mat: ShaderMaterial) -> ShaderMaterial:
 	var far: Array = Data3D.param("people.far_scale", [60.0, 1.6])
 	mat.set_shader_parameter("far_scale", Vector2(float(far[0]), float(far[1])))
