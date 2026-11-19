@@ -18,6 +18,7 @@ const VISIBLE_MASK_SHADER = preload("res://shaders/world3d/vat_visible_mask.gdsh
 const XRAY_SHADER = preload("res://shaders/world3d/vat_xray.gdshader")
 const Data3D = preload("res://scripts/world3d/data3d.gd")
 const DIR: String = "res://assets/3d/vat"
+static var _style2_shader: Shader
 
 var id: String = ""
 var meta: Dictionary = {}
@@ -154,9 +155,12 @@ static func atlas_region(c: Color) -> int:
 	return 1
 
 
-func material(other: Color) -> ShaderMaterial:
+func material(other: Color, style2: bool = false) -> ShaderMaterial:
 	var mat: ShaderMaterial = ShaderMaterial.new()
-	mat.shader = VAT_SHADER
+	if style2 and _style2_shader == null:
+		_style2_shader = Shader.new()
+		_style2_shader.code = "#define S2_VAT\n" + VAT_SHADER.code
+	mat.shader = _style2_shader if style2 else VAT_SHADER
 	if atlas != null:
 		mat.set_shader_parameter("atlas", atlas)
 		mat.set_shader_parameter("textured", true)
@@ -211,6 +215,10 @@ func with_findability(mat: ShaderMaterial, style2: bool = false) -> ShaderMateri
 	xray.set_shader_parameter("night_colour", Color(nc, float(Data3D.param("people.xray.night_alpha", 0.54))))
 	if style2:
 		xray.set_shader_parameter("night_colour", Color(nc, 0.78))
+		xray.set_shader_parameter("distant_only", true)
+		var sleep_start: float = floorf(clip_pack("sleep") / 256.0)
+		for pass_material: ShaderMaterial in [mat, line, mask, xray]:
+			pass_material.set_shader_parameter("distant_sleep_clip", sleep_start)
 	mask.next_pass = xray
 	line.next_pass = mask
 	mat.next_pass = line

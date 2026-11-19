@@ -9,13 +9,17 @@ global uniform float w3d_night;
 uniform vec4 day_colour : source_color = vec4(0.06, 0.055, 0.05, 0.9);
 uniform vec4 night_colour : source_color = vec4(0.57, 0.65, 0.66, 0.54);
 
+uniform bool distant_only = false;
+varying float outline_weight;
+
 void vertex() {
 	float dist = length((MODEL_MATRIX * vec4(0.0, 0.0, 0.0, 1.0)).xyz - CAMERA_POSITION_WORLD);
-	VERTEX = vat_position(UV2, INSTANCE_CUSTOM) * far_scale_at(dist);
+	outline_weight = smoothstep(34.0, 44.0, dist);
+	VERTEX = vat_position(UV2, INSTANCE_CUSTOM, dist) * far_scale_at(dist);
 }
 
 void fragment() {
 	vec4 c = mix(day_colour, night_colour, clamp(w3d_night, 0.0, 1.0));
 	ALBEDO = c.rgb;
-	ALPHA = c.a;
+	ALPHA = c.a * (distant_only ? outline_weight : 1.0);
 }

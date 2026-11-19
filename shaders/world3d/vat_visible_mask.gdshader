@@ -7,7 +7,7 @@ stencil_mode write, 27;
 
 void vertex() {
 	float dist = length((MODEL_MATRIX * vec4(0.0, 0.0, 0.0, 1.0)).xyz - CAMERA_POSITION_WORLD);
-	VERTEX = vat_position(UV2, INSTANCE_CUSTOM) * far_scale_at(dist);
+	VERTEX = vat_position(UV2, INSTANCE_CUSTOM, dist) * far_scale_at(dist);
 }
 
 void fragment() {

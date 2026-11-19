@@ -6,7 +6,12 @@
 // clothing (3) takes a small hue shift (`cloth_hue_mix`) and a clamped value shift (`cloth_value`); region 0 as painted.
 // INSTANCE_CUSTOM.r = clip start × 256 + clip frame count, .g = phase in seconds (per instance, so a crowd is not in step).
 shader_type spatial;
+#ifdef S2_VAT
+// Haze still affects the landscape, while far villagers retain a readable silhouette.
+render_mode diffuse_lambert, specular_disabled, fog_disabled;
+#else
 render_mode diffuse_lambert, specular_disabled;
+#endif
 
 #include "res://shaders/world3d/vat_anim.gdshaderinc"
 uniform vec3 other_colour : source_color = vec3(0.28, 0.2, 0.14);
@@ -30,7 +35,7 @@ varying vec3 tint;
 varying float mean_luma;
 varying flat int tint_region;
 varying float far_k;
-varying float cloth_luma;
+varying float wardrobe_value;
 
 vec3 unpack_rgb(float v) {
 	float x = floor(v + 0.5);
@@ -47,11 +52,11 @@ vec3 srgb_to_linear(vec3 c) {
 
 void vertex() {
 	float dist = length((MODEL_MATRIX * vec4(0.0, 0.0, 0.0, 1.0)).xyz - CAMERA_POSITION_WORLD);
-	VERTEX = vat_position(UV2, INSTANCE_CUSTOM) * far_scale_at(dist);
+	VERTEX = vat_position(UV2, INSTANCE_CUSTOM, dist) * far_scale_at(dist);
 	vec2 fade = far_fill_range.y > 0.0 ? far_fill_range : vec2(far_scale.x, far_scale.x * 2.0);
 	far_k = smoothstep(fade.x, fade.y, dist) * far_fill.a;
 	if (far_fill_range.y > 0.0) {
-		cloth_luma = luma(unpack_rgb(INSTANCE_CUSTOM.a));
+		wardrobe_value = COLOR.a;
 	}
 	int region = int(UV2.y + 0.5);
 	if (region == 1) {
@@ -97,7 +102,7 @@ void fragment() {
 		vec3 fill = srgb_to_linear(mix(far_fill.rgb, far_fill_night, clamp(w3d_night, 0.0, 1.0)));
 		if (far_fill_range.y > 0.0) {
 			// Keep lit figures individually readable when their night silhouettes overlap.
-			fill *= mix(1.0, mix(0.45, 1.4, cloth_luma), w3d_night);
+			fill *= mix(mix(0.7, 2.1, wardrobe_value), mix(0.48, 1.27, wardrobe_value), w3d_night);
 		}
 		ALBEDO = mix(ALBEDO, fill * 0.35, far_k);
 		EMISSION = fill * 0.65 * far_k;

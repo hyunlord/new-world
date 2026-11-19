@@ -16,7 +16,7 @@ uniform vec3 night_colour : source_color = vec3(0.91, 0.89, 0.81);
 
 void vertex() {
 	float dist = length((MODEL_MATRIX * vec4(0.0, 0.0, 0.0, 1.0)).xyz - CAMERA_POSITION_WORLD);
-	vec3 p = vat_position(UV2, INSTANCE_CUSTOM) * far_scale_at(dist);
+	vec3 p = vat_position(UV2, INSTANCE_CUSTOM, dist) * far_scale_at(dist);
 	// One screen pixel in metres at this distance.
 	float px = 2.0 * dist / (PROJECTION_MATRIX[1][1] * VIEWPORT_SIZE.y);
 	float s = far_scale_at(dist);

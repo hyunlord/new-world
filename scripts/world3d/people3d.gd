@@ -189,7 +189,10 @@ func _process(delta: float) -> void:
 				p += Vector2(0.0, 0.6)
 				yaw = PI
 			elif not moving:
-				p += m.get("spread", Vector2.ZERO)
+				var spread: Vector2 = m.get("spread", Vector2.ZERO)
+				p += spread
+				if _style2 and bool((st["flags"] as Array)[0]) and not spread.is_zero_approx():
+					yaw = atan2(spread.x, spread.y)
 			var y: float = float(_terrain.call("height_at", p.x, p.y))
 			var scale: float = float(st["scale"])
 			var basis: Basis = Basis(Vector3.UP, yaw).scaled(Vector3(scale, scale, scale))
@@ -215,11 +218,14 @@ func _process(delta: float) -> void:
 				var distance: float = float(m.get("gait_distance", 0.0)) + (m["from"] as Vector2).distance_to(_pos(m))
 				phase = distance / float(st["scale"]) - float(get_parent().get("anim_time"))
 			var custom: Color = Color(clip, phase, float(look["hair_p"]), float(look["cloth_p"]))
+			var skin: Color = look["skin"]
+			if st["model"] == STYLE2_MODEL:
+				skin.a = fposmod(float(aid) * 0.618034, 1.0)
 			for c: int in copies:
-				mm.set_instance_color(cap * c + slot, look["skin"])
+				mm.set_instance_color(cap * c + slot, skin)
 				mm.set_instance_custom_data(cap * c + slot, custom)
 				if lm != null:
-					lm.set_instance_color(cap * c + slot, look["skin"])
+					lm.set_instance_color(cap * c + slot, skin)
 					lm.set_instance_custom_data(cap * c + slot, custom)
 		st["dirty"] = false
 		# Done once it stands still, or the clock is stopped (a paused mid-step figure is drawn as it is).
@@ -277,11 +283,11 @@ func _model(model: String) -> Dictionary:
 	if not bool(vat.get("ok")):
 		return {}
 	var other: Color = Data3D.colour(Data3D.binding("people.other_colour", []), Color(0.3, 0.22, 0.15))
-	var row: Dictionary = {"vat": vat, "mat": vat.call("with_findability", vat.call("material", other), painted), "lod_vat": null, "lod_mat": null}
+	var row: Dictionary = {"vat": vat, "mat": vat.call("with_findability", vat.call("material", other, painted), painted), "lod_vat": null, "lod_mat": null}
 	var lod: RefCounted = Vat.load_character(model + "_lod", not painted)
 	if bool(lod.get("ok")):
 		row["lod_vat"] = lod
-		row["lod_mat"] = lod.call("with_findability", lod.call("material", other), painted)
+		row["lod_mat"] = lod.call("with_findability", lod.call("material", other, painted), painted)
 		if painted:
 			var pass_material: ShaderMaterial = row["lod_mat"]
 			while pass_material != null:
@@ -522,7 +528,10 @@ func _refresh(snap: Dictionary) -> void:
 		st["bits"] = ids[i] if i < ids.size() else -1
 		_aid_of[st["bits"]] = aid
 		var flags: Array = _flags(snap, i)
-		if bool(st["dirty"]) or flags != st.get("flags") or m["tile"] != tile or float(m["t"]) < 1.0:
+		var flags_changed: bool = flags != st.get("flags")
+		if _style2 and flags_changed and m.has("spread"):
+			st["dirty"] = true
+		if bool(st["dirty"]) or flags_changed or m["tile"] != tile or float(m["t"]) < 1.0:
 			_active[aid] = true
 		st["flags"] = flags
 		_state[aid] = st
@@ -549,7 +558,7 @@ func _spread_sharers() -> void:
 		var group: Array = sharers[tile]
 		group.sort()
 		for k: int in group.size():
-			var off: Vector2 = Vector2.ZERO if group.size() < 2 else Vector2.from_angle(TAU * float(k) / float(group.size())) * 0.28
+			var off: Vector2 = Vector2.ZERO if group.size() < 2 else Vector2.from_angle(TAU * float(k) / float(group.size())) * (0.44 if _style2 else 0.28)
 			var m: Dictionary = _motion[group[k]]
 			if m.get("spread", Vector2.ZERO) != off:
 				m["spread"] = off
