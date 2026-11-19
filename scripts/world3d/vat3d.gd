@@ -177,12 +177,15 @@ func material(other: Color) -> ShaderMaterial:
 ## People only: far figures enlarged (params3d `people.far_scale` [from metres, max]), a screen-constant outline pass
 ## (`people.outline`: px, far_px, day and night colours) and a see-through silhouette where something stands in front
 ## (`people.xray`) that skips pixels occupied by a visible body.
-func with_findability(mat: ShaderMaterial) -> ShaderMaterial:
-	var far: Array = Data3D.param("people.far_scale", [60.0, 1.6])
+func with_findability(mat: ShaderMaterial, style2: bool = false) -> ShaderMaterial:
+	var far: Array = Data3D.param("people.style2_far_scale" if style2 else "people.far_scale", [60.0, 1.6])
 	mat.set_shader_parameter("far_scale", Vector2(float(far[0]), float(far[1])))
 	var fill: Color = Data3D.colour(Data3D.param("people.far_fill", []), Color(0.16, 0.13, 0.11))
 	mat.set_shader_parameter("far_fill", Color(fill, float(Data3D.param("people.far_fill_strength", 1.0))))
 	mat.set_shader_parameter("far_fill_night", Data3D.colour(Data3D.param("people.far_fill_night", []), Color(0.91, 0.89, 0.81)))
+	if style2:
+		mat.set_shader_parameter("far_fill_range", Vector2(25.0, 48.0))
+		mat.set_shader_parameter("far_fill", Vector4(0.012, 0.010, 0.009, 1.0))
 	var line: ShaderMaterial = ShaderMaterial.new()
 	line.shader = OUTLINE_SHADER
 	_set_anim(line)
@@ -206,6 +209,8 @@ func with_findability(mat: ShaderMaterial) -> ShaderMaterial:
 	var nc: Color = Data3D.colour(Data3D.param("people.xray.night", []), Color(0.57, 0.65, 0.66))
 	xray.set_shader_parameter("day_colour", Color(dc, float(Data3D.param("people.xray.day_alpha", 0.9))))
 	xray.set_shader_parameter("night_colour", Color(nc, float(Data3D.param("people.xray.night_alpha", 0.54))))
+	if style2:
+		xray.set_shader_parameter("night_colour", Color(nc, 0.78))
 	mask.next_pass = xray
 	line.next_pass = mask
 	mat.next_pass = line

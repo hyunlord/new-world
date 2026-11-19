@@ -294,8 +294,8 @@ func _walk() -> void:
 	if not _style2 or out.is_empty() or DirAccess.make_dir_recursive_absolute(out) != OK:
 		_fail("walk capture requires Style 2 and an output directory")
 		return
-	var aid: int = _arg("--walk-agent", "20").to_int()
-	var target: Vector2i = Vector2i(_point("--walk-to", Vector2(89, 110)))
+	var aid: int = _arg("--walk-agent", "0").to_int()
+	var target: Vector2i = Vector2i(_point("--walk-to", Vector2(87, 108)))
 	var people: Node = _w3d.get_node("People")
 	var ids: PackedInt64Array = SimReads.read(_world, "get_agent_snapshot").get("ids", PackedInt64Array())
 	var agent_ids: PackedInt64Array = SimReads.read(_world, "get_agent_snapshot").get("agent_ids", PackedInt64Array())

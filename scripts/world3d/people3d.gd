@@ -277,11 +277,11 @@ func _model(model: String) -> Dictionary:
 	if not bool(vat.get("ok")):
 		return {}
 	var other: Color = Data3D.colour(Data3D.binding("people.other_colour", []), Color(0.3, 0.22, 0.15))
-	var row: Dictionary = {"vat": vat, "mat": vat.call("with_findability", vat.call("material", other)), "lod_vat": null, "lod_mat": null}
+	var row: Dictionary = {"vat": vat, "mat": vat.call("with_findability", vat.call("material", other), painted), "lod_vat": null, "lod_mat": null}
 	var lod: RefCounted = Vat.load_character(model + "_lod", not painted)
 	if bool(lod.get("ok")):
 		row["lod_vat"] = lod
-		row["lod_mat"] = lod.call("with_findability", lod.call("material", other))
+		row["lod_mat"] = lod.call("with_findability", lod.call("material", other), painted)
 		if painted:
 			var pass_material: ShaderMaterial = row["lod_mat"]
 			while pass_material != null:
@@ -656,7 +656,7 @@ func _far_scale(feet: Vector3) -> float:
 	if cam == null:
 		return 1.0
 	if _far_param.is_empty():
-		_far_param = Data3D.param("people.far_scale", [55.0, 2.2])
+		_far_param = Data3D.param("people.style2_far_scale" if _style2 else "people.far_scale", [55.0, 2.2])
 	return clampf(cam.global_position.distance_to(feet) / float(_far_param[0]), 1.0, float(_far_param[1]))
 
 

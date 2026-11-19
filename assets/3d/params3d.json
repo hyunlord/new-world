@@ -88,6 +88,7 @@
     "simple_lod_distance": 8.0,
     "tint": {"skin_value": [0.8, 1.2], "hair_mix": 0.6, "cloth_hue_mix": 0.3, "cloth_value": [0.8, 1.2]},
     "far_scale": [55.0, 2.2],
+    "style2_far_scale": [49.0, 2.65],
     "far_fill": [0.045, 0.04, 0.035],
     "far_fill_night": [0.91, 0.89, 0.81],
     "far_fill_strength": 1.0,
