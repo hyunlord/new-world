@@ -8,6 +8,7 @@ uniform float width = 1.0;
 uniform float fps = 15.0;
 uniform bool vat_step_frames = false;
 uniform float distant_sleep_clip = -1.0;
+uniform float distant_sleep_lift = 1.45;
 uniform vec2 far_scale = vec2(1.0e6, 1.0);
 
 vec3 vat_position(vec2 uv2, vec4 custom, float distance) {
@@ -25,7 +26,7 @@ vec3 vat_position(vec2 uv2, vec4 custom, float distance) {
 	}
 	// The reclined pose is shallow in projection. Widen its distant profile without moving its feet.
 	if (start == distant_sleep_clip) {
-		p0.y *= 1.0 + 1.45 * smoothstep(48.0, 95.0, distance);
+		p0.y *= 1.0 + distant_sleep_lift * smoothstep(48.0, 95.0, distance);
 	}
 	return p0;
 }

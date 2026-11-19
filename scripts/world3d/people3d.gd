@@ -293,16 +293,17 @@ func _model(model: String) -> Dictionary:
 	if not bool(vat.get("ok")):
 		return {}
 	var other: Color = Data3D.colour(Data3D.binding("people.other_colour", []), Color(0.3, 0.22, 0.15))
-	var row: Dictionary = {"vat": vat, "mat": vat.call("with_findability", vat.call("material", other, painted), painted), "lod_vat": null, "lod_mat": null, "mid_vat": null, "mid_mat": null, "painted": painted}
-	if STYLE2_MODELS.has(model):
+	var kit: bool = STYLE2_MODELS.has(model)
+	var row: Dictionary = {"vat": vat, "mat": vat.call("with_findability", vat.call("material", other, painted), painted, kit), "lod_vat": null, "lod_mat": null, "mid_vat": null, "mid_mat": null, "painted": painted}
+	if kit:
 		var mid: RefCounted = Vat.load_character(model + "_mid", false)
 		if bool(mid.get("ok")):
 			row["mid_vat"] = mid
-			row["mid_mat"] = mid.call("with_findability", mid.call("material", other, true), true)
+			row["mid_mat"] = mid.call("with_findability", mid.call("material", other, true), true, kit)
 	var lod: RefCounted = Vat.load_character(model + "_lod", not painted)
 	if bool(lod.get("ok")):
 		row["lod_vat"] = lod
-		row["lod_mat"] = lod.call("with_findability", lod.call("material", other, painted), painted)
+		row["lod_mat"] = lod.call("with_findability", lod.call("material", other, painted), painted, kit)
 		if painted:
 			var pass_material: ShaderMaterial = row["lod_mat"]
 			while pass_material != null:

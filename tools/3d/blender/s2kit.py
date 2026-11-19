@@ -93,8 +93,6 @@ def weights(key: str, x: float, z: float) -> dict[str, float]:
     wrist = .55 if key == "p4" and side == "R" else .50
     upper = blend(z, elbow - .04, elbow + .04)
     hand = 1 - blend(z, wrist - .035, wrist + .025)
-    if key == "p4" and side == "R" and x > .255 and z < .53:
-        arm, upper, hand = 1.0, 0.0, 1.0
     leg_top = .40 if key == "p3" else .43
     leg = (1 - blend(z, leg_top - .045, leg_top + .070)) * (1 - arm)
     thigh = blend(z, .22, .33)
@@ -103,7 +101,7 @@ def weights(key: str, x: float, z: float) -> dict[str, float]:
     head = blend(z, .82 if key == "p3" else .84, .87 if key == "p3" else .90)
     chest = blend(z, .63, .75)
     spine = blend(z, .49, .63)
-    return {
+    influences = {
         f"upper_arm_{side}": arm * upper,
         f"lower_arm_{side}": arm * (1 - upper) * (1 - hand),
         f"hand_{side}": arm * (1 - upper) * hand,
@@ -115,6 +113,12 @@ def weights(key: str, x: float, z: float) -> dict[str, float]:
         "chest": trunk * (1 - head) * spine * chest,
         "head": trunk * head,
     }
+    if key == "p4" and side == "R":
+        # The fused shaft lies beyond the forearm. Keep the whole shaft rigid and blend at the grip.
+        grip = blend(x, .205, .235)
+        influences = {name: weight * (1 - grip) for name, weight in influences.items()}
+        influences["hand_R"] += grip
+    return influences
 
 
 def bind(mesh: bpy.types.Object, arm: bpy.types.Object, key: str) -> None:

@@ -181,7 +181,7 @@ func material(other: Color, style2: bool = false) -> ShaderMaterial:
 ## People only: far figures enlarged (params3d `people.far_scale` [from metres, max]), a screen-constant outline pass
 ## (`people.outline`: px, far_px, day and night colours) and a see-through silhouette where something stands in front
 ## (`people.xray`) that skips pixels occupied by a visible body.
-func with_findability(mat: ShaderMaterial, style2: bool = false) -> ShaderMaterial:
+func with_findability(mat: ShaderMaterial, style2: bool = false, kit: bool = false) -> ShaderMaterial:
 	var far: Array = Data3D.param("people.style2_far_scale" if style2 else "people.far_scale", [60.0, 1.6])
 	mat.set_shader_parameter("far_scale", Vector2(float(far[0]), float(far[1])))
 	var fill: Color = Data3D.colour(Data3D.param("people.far_fill", []), Color(0.16, 0.13, 0.11))
@@ -219,6 +219,9 @@ func with_findability(mat: ShaderMaterial, style2: bool = false) -> ShaderMateri
 		var sleep_start: float = floorf(clip_pack("sleep") / 256.0)
 		for pass_material: ShaderMaterial in [mat, line, mask, xray]:
 			pass_material.set_shader_parameter("distant_sleep_clip", sleep_start)
+			if kit:
+				# The new coats are shallower in the reclined pose at a distance.
+				pass_material.set_shader_parameter("distant_sleep_lift", 2.65)
 	mask.next_pass = xray
 	line.next_pass = mask
 	mat.next_pass = line
