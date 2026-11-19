@@ -77,7 +77,7 @@ func _ready() -> void:
 	flora = _layer("Flora", FloraScript)
 	flora.call("setup", world_sim, terrain)
 	sky = _layer("Sky", SkyScript)
-	sky.call("setup", world_sim, terrain)
+	sky.call("setup", world_sim, terrain, camera2d)
 	structures = _layer("Structures", StructuresScript)
 	structures.call("setup", world_sim, terrain)
 	props = _layer("Props", PropsScript)

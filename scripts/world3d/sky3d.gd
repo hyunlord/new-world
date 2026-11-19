@@ -9,6 +9,7 @@ var sun: DirectionalLight3D
 var environment: Environment
 var _world_sim: Node = null
 var _terrain: Node = null
+var _camera2d: Camera2D
 var _night: float = 0.0
 var _season: int = -1
 var _hour_override: float = -1.0
@@ -29,17 +30,21 @@ var _dusk: Array
 var _shadow_distance: float
 var _previous_hour: float = -1.0
 var _previous_hardship: float = -1.0
+var _previous_grade: float = -1.0
+var _map_light: Dictionary
 
 
-func setup(world_sim: Node, terrain: Node) -> void:
+func setup(world_sim: Node, terrain: Node, camera2d: Camera2D = null) -> void:
 	_world_sim = world_sim
 	_terrain = terrain
+	_camera2d = camera2d
 	if _world_sim != null:
 		_world_sim.connect("world_reset", _reset_hardship)
 
 
 func _ready() -> void:
 	_profiles = Data3D.mood("grade", {})
+	_map_light = Data3D.param("light", {})
 	_hardship_data = Data3D.mood("hardship", {})
 	_sky_data = Data3D.mood("sky", {})
 	_dawn = Data3D.param("light.dawn_hours", [5.0, 7.0])
@@ -117,8 +122,10 @@ func _process(_delta: float) -> void:
 	var season: int = int(time.get("season", 0))
 	_update_hardship(time, season)
 	var hardship: float = _hardship_override if _hardship_override >= 0.0 else _hardship
-	if hour != _previous_hour or hardship != _previous_hardship:
-		_apply_hour(hour, hardship)
+	var zoom: float = _camera2d.zoom.x if _camera2d != null else 1.0
+	var grade: float = _grade_at_zoom(zoom)
+	if hour != _previous_hour or hardship != _previous_hardship or grade != _previous_grade:
+		_apply_hour(hour, hardship, grade)
 	if season != _season and _terrain != null:
 		_season = season
 		var mat: ShaderMaterial = _terrain.get("material") as ShaderMaterial
@@ -203,9 +210,17 @@ func _read_deaths(since: int) -> void:
 		_deaths.pop_front()
 
 
-func _apply_hour(hour: float, hardship: float) -> void:
+func _grade_at_zoom(zoom: float) -> float:
+	var low: float = float(_profiles["zoom_neutral"])
+	var high: float = float(_profiles["zoom_full"])
+	return clampf((zoom - low) / maxf(0.01, high - low), 0.0, 1.0)
+
+
+func _apply_hour(hour: float, hardship: float, grade: float = 1.0) -> void:
+	var grade_changed: bool = grade != _previous_grade
 	_previous_hour = hour
 	_previous_hardship = hardship
+	_previous_grade = grade
 	var day: float = 1.0
 	if hour < float(_dawn[0]) or hour >= float(_dusk[1]):
 		day = 0.0
@@ -217,7 +232,8 @@ func _apply_hour(hour: float, hardship: float) -> void:
 	RenderingServer.global_shader_parameter_set("w3d_night", _night)
 	# The existing sun path crosses the south; the moon holds its direction at night.
 	var frac: float = clampf((hour - 6.0) / 12.0, -0.2, 1.2)
-	var elevation: float = deg_to_rad(lerpf(float(_sky_data["sun_min_elevation"]), float(_sky_data["sun_max_elevation"]), sin(clampf(frac, 0.0, 1.0) * PI)))
+	var peak: float = lerpf(58.0, float(_sky_data["sun_max_elevation"]), grade)
+	var elevation: float = deg_to_rad(lerpf(float(_sky_data["sun_min_elevation"]), peak, sin(clampf(frac, 0.0, 1.0) * PI)))
 	var azimuth: float = lerpf(-PI * 0.5, PI * 0.5, frac)
 	if day <= 0.0:
 		elevation = deg_to_rad(float(_sky_data["moon_elevation"]))
@@ -226,7 +242,7 @@ func _apply_hour(hour: float, hardship: float) -> void:
 	sun.look_at_from_position(Vector3.ZERO, -to_sun, Vector3.UP)
 	var steps: int = maxi(1, int(_profiles["lut_steps"]))
 	var key: Vector3i = Vector3i(roundi(day * steps), roundi(hardship * steps), 0)
-	if key == _lut_key:
+	if key == _lut_key and not grade_changed:
 		return
 	_lut_key = key
 	var daylight: float = float(key.x) / steps
@@ -236,22 +252,30 @@ func _apply_hour(hour: float, hardship: float) -> void:
 	var grim: Dictionary = _profiles["hardship"]
 	var blend: float = fposmod(daylight * 2.0, 1.0) if daylight < 1.0 else 1.0
 	var stress_blend: float = stress * smoothstep(0.5, 1.0, daylight)
-	sun.light_energy = _number(a, b, grim, "sun_energy", blend, stress_blend)
-	sun.light_color = _colour(a, b, grim, "sun", blend, stress_blend)
-	environment.ambient_light_energy = _number(a, b, grim, "ambient_energy", blend, stress_blend)
-	environment.ambient_light_color = _colour(a, b, grim, "ambient", blend, stress_blend)
-	environment.fog_density = _number(a, b, grim, "fog_density", blend, stress_blend)
-	environment.fog_light_color = _colour(a, b, grim, "fog", blend, stress_blend)
-	environment.background_energy_multiplier = _number(a, b, grim, "sky_energy", blend, stress_blend)
-	environment.adjustment_saturation = _number(a, b, grim, "saturation", blend, stress_blend)
-	environment.adjustment_contrast = _number(a, b, grim, "contrast", blend, stress_blend)
-	environment.tonemap_exposure = _number(a, b, grim, "exposure", blend, stress_blend)
+	# At map scale recover the published lighting and filmic adjustments.
+	var map_sun: float = lerpf(float(_map_light["night_sun_energy"]), float(_map_light["sun_energy"]), day)
+	var warm: float = clampf(1.0 - absf(frac - 0.5) * 2.0, 0.0, 1.0)
+	var map_sun_color: Color = Color(1.0, 0.78, 0.6).lerp(Color(1.0, 0.97, 0.9), warm).lerp(Color(0.6, 0.7, 1.0), _night)
+	var map_ambient: float = lerpf(float(_map_light["night_ambient_energy"]), float(_map_light["ambient_energy"]), day)
+	var map_ambient_color: Color = Data3D.colour(_map_light["night_ambient"]).lerp(Data3D.colour(_map_light["day_ambient"]), day)
+	sun.light_energy = lerpf(map_sun, _number(a, b, grim, "sun_energy", blend, stress_blend), grade)
+	sun.light_color = map_sun_color.lerp(_colour(a, b, grim, "sun", blend, stress_blend), grade)
+	environment.ambient_light_energy = lerpf(map_ambient, _number(a, b, grim, "ambient_energy", blend, stress_blend), grade)
+	environment.ambient_light_color = map_ambient_color.lerp(_colour(a, b, grim, "ambient", blend, stress_blend), grade)
+	environment.fog_density = lerpf(float(_map_light["fog_density"]), _number(a, b, grim, "fog_density", blend, stress_blend), grade)
+	environment.fog_light_color = Color(0.12, 0.14, 0.22).lerp(Color(0.82, 0.78, 0.70), day).lerp(_colour(a, b, grim, "fog", blend, stress_blend), grade)
+	environment.background_energy_multiplier = lerpf(lerpf(0.12, 1.0, day), _number(a, b, grim, "sky_energy", blend, stress_blend), grade)
+	environment.adjustment_saturation = lerpf(float(_map_light["saturation"]), _number(a, b, grim, "saturation", blend, stress_blend), grade)
+	environment.adjustment_contrast = lerpf(1.03, _number(a, b, grim, "contrast", blend, stress_blend), grade)
+	environment.tonemap_exposure = lerpf(1.0, _number(a, b, grim, "exposure", blend, stress_blend), grade)
 	var offsets: PackedFloat32Array = []
 	var colours: PackedColorArray = []
 	var points: int = (a["lut"] as Array).size()
 	for i: int in points:
-		offsets.append(float(i) / (points - 1))
-		colours.append(Data3D.colour(a["lut"][i]).lerp(Data3D.colour(b["lut"][i]), blend).lerp(Data3D.colour(grim["lut"][i]), stress_blend))
+		var x: float = float(i) / (points - 1)
+		offsets.append(x)
+		var tint: Color = Data3D.colour(a["lut"][i]).lerp(Data3D.colour(b["lut"][i]), blend).lerp(Data3D.colour(grim["lut"][i]), stress_blend)
+		colours.append(Color(x, x, x).lerp(tint, grade))
 	_lut.offsets = offsets
 	_lut.colors = colours
 

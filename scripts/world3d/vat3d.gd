@@ -13,8 +13,8 @@
 extends RefCounted
 
 const VAT_SHADER = preload("res://shaders/world3d/vat.gdshader")
+const PEOPLE_SHADER = preload("res://shaders/world3d/vat_people.gdshader")
 const OUTLINE_SHADER = preload("res://shaders/world3d/vat_outline.gdshader")
-const VISIBLE_MASK_SHADER = preload("res://shaders/world3d/vat_visible_mask.gdshader")
 const XRAY_SHADER = preload("res://shaders/world3d/vat_xray.gdshader")
 const Data3D = preload("res://scripts/world3d/data3d.gd")
 const DIR: String = "res://assets/3d/vat"
@@ -154,9 +154,9 @@ static func atlas_region(c: Color) -> int:
 	return 1
 
 
-func material(other: Color) -> ShaderMaterial:
+func material(other: Color, people: bool = false) -> ShaderMaterial:
 	var mat: ShaderMaterial = ShaderMaterial.new()
-	mat.shader = VAT_SHADER
+	mat.shader = PEOPLE_SHADER if people else VAT_SHADER
 	if atlas != null:
 		mat.set_shader_parameter("atlas", atlas)
 		mat.set_shader_parameter("textured", true)
@@ -192,22 +192,15 @@ func with_findability(mat: ShaderMaterial) -> ShaderMaterial:
 	line.set_shader_parameter("day_colour", Data3D.colour(Data3D.param("people.outline.day", []), Color(0.14, 0.11, 0.09)))
 	line.set_shader_parameter("night_colour", Data3D.colour(Data3D.param("people.outline.night", []), Color(0.91, 0.89, 0.81)))
 	line.set_shader_parameter("outline_far_px", float(Data3D.param("people.outline.far_px", 4.0)))
-	var mask: ShaderMaterial = ShaderMaterial.new()
-	mask.shader = VISIBLE_MASK_SHADER
-	_set_anim(mask)
-	mask.set_shader_parameter("far_scale", Vector2(float(far[0]), float(far[1])))
-	# Stamp every visible body before any transparent silhouette draws.
-	mask.render_priority = -1
 	var xray: ShaderMaterial = ShaderMaterial.new()
 	xray.shader = XRAY_SHADER
 	_set_anim(xray)
 	xray.set_shader_parameter("far_scale", Vector2(float(far[0]), float(far[1])))
-	var dc: Color = Data3D.colour(Data3D.param("people.xray.day", []), Color(0.06, 0.055, 0.05))
+	var dc: Color = Data3D.colour(Data3D.param("people.xray.day", []), Color(0.14, 0.11, 0.09))
 	var nc: Color = Data3D.colour(Data3D.param("people.xray.night", []), Color(0.57, 0.65, 0.66))
-	xray.set_shader_parameter("day_colour", Color(dc, float(Data3D.param("people.xray.day_alpha", 0.9))))
+	xray.set_shader_parameter("day_colour", Color(dc, float(Data3D.param("people.xray.day_alpha", 0.8))))
 	xray.set_shader_parameter("night_colour", Color(nc, float(Data3D.param("people.xray.night_alpha", 0.54))))
-	mask.next_pass = xray
-	line.next_pass = mask
+	line.next_pass = xray
 	mat.next_pass = line
 	return mat
 

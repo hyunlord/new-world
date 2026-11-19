@@ -89,11 +89,11 @@
     "simple_lod_distance": 8.0,
     "tint": {"skin_value": [0.8, 1.2], "hair_mix": 0.6, "cloth_hue_mix": 0.3, "cloth_value": [0.8, 1.2]},
     "far_scale": [55.0, 2.2],
-    "far_fill": [0.045, 0.04, 0.035],
+    "far_fill": [0.16, 0.13, 0.11],
     "far_fill_night": [0.91, 0.89, 0.81],
     "far_fill_strength": 1.0,
-    "outline": {"px": 2.0, "far_px": 7.0, "day": [0.045, 0.04, 0.035], "night": [0.91, 0.89, 0.81]},
-    "xray": {"day": [0.06, 0.055, 0.05], "day_alpha": 0.9, "night": [0.57, 0.65, 0.66], "night_alpha": 0.54}
+    "outline": {"px": 2.0, "far_px": 6.0, "day": [0.07, 0.055, 0.05], "night": [0.91, 0.89, 0.81]},
+    "xray": {"day": [0.14, 0.11, 0.09], "day_alpha": 0.8, "night": [0.57, 0.65, 0.66], "night_alpha": 0.54}
   },
   "stations": {
     "work_puffs": {"amount": 10, "colour": [0.78, 0.7, 0.55]},
