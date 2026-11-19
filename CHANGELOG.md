@@ -1,5 +1,17 @@
 # Changelog
 
+## MERGE1 — UI1 and the MOOD1 grade on M-GROW (2026-11-19)
+
+### Added
+
+- MOOD1 day, dusk, night and hardship grade (`assets/3d/mood.json`), faded to the published map look between zoom 0.75 and 0.25.
+- Warm room and window lights in occupied roofed rooms at night (camera-ranked pool, cap 24) and blue-grey night silhouettes for hidden villagers.
+
+### Not merged
+
+- DETAIL1 (terrain splat textures, grass cards, leaf canopies, cloud sky, height fog, SSAO tuning): superseded by art style 2.
+- MOOD1's stencil x-ray and darker day outline: they failed or nearly failed step 39 at 0.25x; v8/main's depth-gap x-ray and outline stay.
+
 ## UI1 — settlement HUD (2026-11-18)
 
 ### Added
