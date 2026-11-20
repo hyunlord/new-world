@@ -16,7 +16,9 @@ chunks for tall bank reed clumps and small stones on water-adjacent tiles. Bring
 slightly lower and use a warmer ambient fill, fading the change before dusk.
 
 Centre the knee and ankle weight bands on the rest joints of the 17-bone rig
-and bake the four sources at all three detail levels.
+and bake the four sources at all three detail levels. Increase the opacity of
+Style 2’s existing distant night silhouettes so the reclined figures remain
+readable against roofs.
 
 ## Alternatives considered
 

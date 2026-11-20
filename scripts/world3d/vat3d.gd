@@ -214,7 +214,7 @@ func with_findability(mat: ShaderMaterial, style2: bool = false, kit: bool = fal
 	xray.set_shader_parameter("day_colour", Color(dc, float(Data3D.param("people.xray.day_alpha", 0.9))))
 	xray.set_shader_parameter("night_colour", Color(nc, float(Data3D.param("people.xray.night_alpha", 0.54))))
 	if style2:
-		xray.set_shader_parameter("night_colour", Color(nc, 0.78))
+		xray.set_shader_parameter("night_colour", Color(nc, 0.96))
 		xray.set_shader_parameter("distant_only", true)
 		var sleep_start: float = floorf(clip_pack("sleep") / 256.0)
 		for pass_material: ShaderMaterial in [mat, line, mask, xray]:
