@@ -6,6 +6,7 @@
   "s2kit": {
     "lod_distance": 28,
     "wall_profiles": {"log": "h1"},
+    "door_frame": "h3",
     "roof_covers": {"thatch": "h2"},
     "props": {
       "lean_to": "x1",

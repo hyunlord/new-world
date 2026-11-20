@@ -34,14 +34,19 @@ void vertex() {
 	float phase = dot(origin.xz, vec2(0.49, 0.63));
 	float wind = sin(w3d_time * wind_speed + phase) * wind_strength * VERTEX.y * VERTEX.y;
 	VERTEX = (VERTEX + vec3(wind, 0.0, 0.0)) * vec3(1.0, height * mix(1.0, winter_height, w3d_snow), 1.0) * fade;
+	bool bare = path > 0.001 || clearing >= clearing_limit;
 	if (s2) {
-		VERTEX.y *= mix(1.0, 1.5, built.b) * (1.0 - 0.72 * built.g);
+		float stage = path * 255.0;
+		float trodden = max(max(clearing * 0.42, stage * 0.65), built.g);
+		VERTEX.y *= mix(1.0, 1.5, built.b) * (1.0 - 0.74 * clamp(trodden, 0.0, 1.0));
+		bare = stage >= 1.8 || built.g >= 0.9;
 	}
-	if (path > 0.001 || clearing >= clearing_limit || built.r > 0.5) {
+	if (bare || built.r > 0.5) {
 		// Collapse excluded cards to a degenerate triangle before rasterization.
 		VERTEX = vec3(0.0);
 	}
-	NORMAL = normalize(vec3(NORMAL.x * 0.35, 1.0, NORMAL.z * 0.35));
+	float normal_side = s2 ? 0.18 : 0.35;
+	NORMAL = normalize(vec3(NORMAL.x * normal_side, 1.0, NORMAL.z * normal_side));
 }
 
 void fragment() {
@@ -50,6 +55,11 @@ void fragment() {
 		discard;
 	}
 	vec3 leaf = mix(root_shade, shade, clamp(blade_y, 0.0, 1.0));
-	ALBEDO = mix(leaf, winter_shade, w3d_snow) * (0.70 + texel.r * 0.45) * COLOR.r;
+	float texture_value = 0.70 + texel.r * 0.45;
+	if (s2) {
+		leaf = mix(root_shade, shade, smoothstep(0.20, 0.95, blade_y) * mix(0.70, 1.0, COLOR.g));
+		texture_value = mix(0.92, 1.06, texel.r);
+	}
+	ALBEDO = mix(leaf, winter_shade, w3d_snow) * texture_value * COLOR.r;
 	ROUGHNESS = 0.92;
 }

@@ -288,7 +288,7 @@ func _rebuild_stations(shops: Dictionary, buildings: Dictionary, settlements: Di
 		_place(bed_model, Rect2i(bedx[i], bedy[i], int(fp[0]), int(fp[1])), false, "bed%d" % i)
 
 
-func _fire_lit(settlements: Dictionary, t: Vector2i) -> bool:
+static func _fire_lit(settlements: Dictionary, t: Vector2i) -> bool:
 	var fx: PackedInt32Array = settlements.get("formation_xs", PackedInt32Array())
 	var fy: PackedInt32Array = settlements.get("formation_ys", PackedInt32Array())
 	var lit: PackedByteArray = settlements.get("fire_lit", PackedByteArray())

@@ -1,5 +1,13 @@
 # Changelog
 
+## Style 2 house shells — 2026-11-20
+
+### Added
+- Roofed template shells, five construction stages driven by site work, and an Inside view toggle for Style 2. See `docs/decisions/0075-style-2-house-shells.md`.
+
+### Changed
+- Style 2 shows clumped golden-tipped grass, keeps early tracks grassy, and gives the afternoon a warmer grade.
+
 ## Style 2 environment — 2026-11-20
 
 ### Changed

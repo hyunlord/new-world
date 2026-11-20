@@ -188,6 +188,11 @@ func _build_chunk(key: Vector2i) -> MultiMeshInstance3D:
 	var i: int = 0
 	var terrain: Node3D = get_parent()
 	var stones: Array[Transform3D] = []
+	var patches: Dictionary = {}
+	if _s2:
+		var patch_tiles: int = maxi(1, int(_settings["patch_tiles"]))
+		for tile: Vector2i in tiles:
+			patches[tile] = View.value_noise(_seed, tile.x, tile.y, patch_tiles, 81)
 	# Interleave one sample per tile in each tier. Reducing visible_instance_count thins every tile in the batch.
 	for tier: int in _per_tile:
 		for t: Vector2i in tiles:
@@ -199,6 +204,12 @@ func _build_chunk(key: Vector2i) -> MultiMeshInstance3D:
 			var yaw: float = TAU * v
 			var scale_factor: float = 1.0 + (2.0 * v - 1.0) * _size_variation
 			var blade_scale: Vector3 = Vector3.ONE * scale_factor
+			var tint: Color = Color(0.75 + 0.25 * v, 1.0, 1.0)
+			if _s2:
+				var patch: float = float(patches[t])
+				blade_scale.x *= lerpf(0.74, 1.20, patch)
+				blade_scale.y *= lerpf(0.40, 1.40, smoothstep(0.19, 0.80, patch))
+				tint = Color(lerpf(0.94, 1.04, v), lerpf(v, patch, 0.65), 1.0)
 			if _s2 and tier == 0:
 				var code: int = _terrain[t.y * _width + t.x]
 				var shore: Vector2i = _water_neighbour(t)
@@ -213,7 +224,7 @@ func _build_chunk(key: Vector2i) -> MultiMeshInstance3D:
 						stones.append(Transform3D(Basis(Vector3.UP, yaw).scaled(Vector3.ONE * lerpf(0.17, 0.35, v)), Vector3(bank.x, bank_y, bank.y)))
 			var basis: Basis = Basis(Vector3.UP, yaw).scaled(blade_scale)
 			mm.set_instance_transform(i, Transform3D(basis, Vector3(x, y, z)))
-			mm.set_instance_color(i, Color(0.75 + 0.25 * v, 1.0, 1.0))
+			mm.set_instance_color(i, tint)
 			i += 1
 	var batch: MultiMeshInstance3D = MultiMeshInstance3D.new()
 	batch.name = "Grass_%d_%d" % [key.x, key.y]

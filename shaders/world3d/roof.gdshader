@@ -16,6 +16,9 @@ uniform float texture_tile = -1.0;
 uniform vec3 cover : source_color = vec3(0.72, 0.6, 0.34);
 uniform int pattern = 0;
 uniform float fade = 1.0;
+uniform float lay_top = 10000.0;
+uniform bool radial_thatch = false;
+uniform vec2 cone_center;
 global uniform float w3d_snow;
 
 varying vec3 world_pos;
@@ -42,6 +45,9 @@ void vertex() {
 }
 
 void fragment() {
+	if (world_pos.y > lay_top) {
+		discard;
+	}
 	if (fade < 0.999 && bayer4(FRAGCOORD.xy) > fade) {
 		discard;
 	}
@@ -71,7 +77,14 @@ void fragment() {
 		float h = world_pos.y;
 		// Along the eaves: x for a ridge along x, z for a ridge along z.
 		float along = ridge_z < 0.5 ? world_pos.x : world_pos.z;
-		if (pattern == 0) {
+		if (radial_thatch) {
+			vec2 radial = world_pos.xz - cone_center;
+			float angle = atan(radial.y, radial.x);
+			float bundle = cos(angle * 56.0) * 0.07 + sin(angle * 97.0) * 0.055;
+			float strands = cos(angle * 177.0 + h * 3.0) * 0.045;
+			float course = smoothstep(0.0, 0.8, fract(h / 0.28 + bundle));
+			c *= 0.94 + bundle + strands + 0.1 * course;
+		} else if (pattern == 0) {
 			float course = fract(h / 0.16);
 			float straw = fract(sin(floor(along * 9.0) * 12.9898 + floor(h / 0.16) * 4.1) * 43758.5453);
 			c *= (0.78 + 0.22 * smoothstep(0.0, 0.7, course)) * (0.92 + 0.12 * straw);

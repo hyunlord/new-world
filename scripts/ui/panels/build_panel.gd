@@ -201,6 +201,10 @@ func _reset() -> void:
 	hide()
 
 
+func selected_site() -> int:
+	return _site if is_visible_in_tree() else -1
+
+
 func open_site(id: int) -> void:
 	open()
 	for value: Variant in _snapshot.get("template_sites", []):

@@ -110,9 +110,9 @@ float slice_biome_layer(vec2 biome) {
 	return layer < 0.0 ? SLICE_GRASS : layer;
 }
 
-vec3 s2_biome_weights(float layer, float clearing) {
+vec3 s2_biome_weights(float layer) {
 	return vec3(layer == SLICE_FOREST ? 1.0 : 0.0,
-		layer == SLICE_DIRT || layer == SLICE_MUD ? 1.0 : clearing * 0.44,
+		layer == SLICE_DIRT || layer == SLICE_MUD ? 1.0 : 0.0,
 		layer == SLICE_ROCK ? 1.0 : 0.0);
 }
 
@@ -145,11 +145,14 @@ SliceSurface slice_ground(vec2 p, vec2 uv, vec2 dx, vec2 dy, out vec3 s2_weights
 	s2_weights = vec3(0.0);
 	if (s2) {
 		s2_weights = mix(
-			mix(s2_biome_weights(la, a.g), s2_biome_weights(lb, b.g), f.x),
-			mix(s2_biome_weights(lc, c.g), s2_biome_weights(ld, d.g), f.x), f.y);
+			mix(s2_biome_weights(la), s2_biome_weights(lb), f.x),
+			mix(s2_biome_weights(lc), s2_biome_weights(ld), f.x), f.y);
 	}
 	stage = texture(path_tex, p / map_size).r * 255.0;
 	float path = max(clearing, smoothstep(0.03, 1.0, stage) * path_strength.x);
+	if (s2) {
+		path = smoothstep(0.9, 2.0, stage) * path_strength.y;
+	}
 	path = mix(path, path_strength.y, smoothstep(1.0, 2.0, stage));
 	if (path > 0.0) {
 		ground = slice_mix(ground, slice_sample(uv, dx, dy, SLICE_DIRT), path);
@@ -186,10 +189,11 @@ void fragment() {
 	vec3 c = surface.albedo * vertex_tint * season_tint * (1.0 + macro_strength * (macro_noise - 0.5));
 	if (s2) {
 		vec2 mask = texture(s2_mask, (p + warp) / map_size).rg;
-		float wear = max(max(mask.r * 0.62, mask.g), s2_weights.g);
-		wear = max(wear, smoothstep(0.05, 1.65, s2_path_stage));
-		float patch = smoothstep(0.16, 0.88, macro_noise);
+		float wear = max(smoothstep(0.15, 0.88, mask.g), 0.32 * s2_weights.g);
+		wear = max(wear, smoothstep(1.15, 2.0, s2_path_stage));
+		float patch = smoothstep(0.16, 0.88, mix(macro_noise, n, 0.25));
 		vec3 meadow_tone = mix(meadow, meadow_gold, patch) * (1.0 - 0.19 * s2_weights.r);
+		meadow_tone = mix(meadow_tone, meadow_gold, 0.24 * min(s2_path_stage, 1.0));
 		float texture_value = dot(surface.albedo, vec3(0.299, 0.587, 0.114));
 		float detail_value = 0.77 + 0.39 * smoothstep(0.12, 0.38, texture_value) + 0.07 * n;
 		float exposed_stone = max(max(rock, s2_weights.b), smoothstep(2.1, 2.9, s2_path_stage));

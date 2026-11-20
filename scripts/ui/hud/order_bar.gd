@@ -104,6 +104,7 @@ var _menu_buttons: Array[Button] = []
 var _templates_button: Button
 var _bar: PanelContainer
 var _rooms_button: Button
+var _inside_button: Button
 var _rooms: Node = null
 ## M4: the F7 submenu.
 var _dig_menu: PanelContainer
@@ -154,6 +155,16 @@ func _ready() -> void:
 	_rooms_button.add_theme_color_override("font_hover_pressed_color", ACTIVE)
 	_rooms_button.toggled.connect(_on_rooms_button)
 	row.add_child(_rooms_button)
+	if preload("res://scripts/world3d/slice_pbr.gd").style2():
+		_inside_button = Button.new()
+		_inside_button.name = "InsideView"
+		_inside_button.toggle_mode = true
+		_inside_button.focus_mode = Control.FOCUS_NONE
+		_inside_button.text = "I " + _loc("UI_INSIDE_VIEW")
+		_inside_button.add_theme_color_override("font_pressed_color", ACTIVE)
+		_inside_button.add_theme_color_override("font_hover_pressed_color", ACTIVE)
+		_inside_button.toggled.connect(_on_inside_view)
+		row.add_child(_inside_button)
 	_hint = Label.new()
 	_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_hint.add_theme_color_override("font_color", Color("c8b89a"))
@@ -202,6 +213,8 @@ func _on_language_changed(_language: String) -> void:
 	for i: int in _dig_buttons.size():
 		_dig_buttons[i].text = "%d %s" % [i + 1, _loc(str(DIG_MENU[i]["key"]))]
 	_rooms_button.text = _loc("UI_ROOMS_TOGGLE")
+	if _inside_button != null:
+		_inside_button.text = "I " + _loc("UI_INSIDE_VIEW")
 	_templates_button.text = _loc("UI_ORDER_BUILD") + " · " + _loc("BUILD_GROUP_AVAILABLE")
 	_refresh_tooltips()
 	_on_mode_changed(current_mode())
@@ -232,6 +245,12 @@ func _place_bar() -> void:
 ## The bar's top edge in UI pixels.
 func bar_top() -> float:
 	return _bar.position.y if _bar != null else 1080.0 - 112.0
+
+
+func _on_inside_view(on: bool) -> void:
+	var structures: Node = get_node_or_null("/root/Main/World3D/Structures")
+	if structures != null:
+		structures.set("inside_view", on)
 
 
 func _on_rooms_button(on: bool) -> void:
@@ -625,6 +644,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not (event is InputEventKey and event.pressed and not event.echo):
 		return
 	var key: InputEventKey = event
+	if key.keycode == KEY_I and _inside_button != null:
+		_inside_button.button_pressed = not _inside_button.button_pressed
+		get_viewport().set_input_as_handled()
+		return
 	if key.keycode == KEY_R and _tool != null and bool(_tool.call("template_active")):
 		_tool.call("rotate_template")
 		get_viewport().set_input_as_handled()

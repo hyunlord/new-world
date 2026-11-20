@@ -4,6 +4,7 @@ render_mode diffuse_burley, specular_schlick_ggx;
 
 uniform sampler2D albedo_tex : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform bool wall = false;
+uniform vec3 door_opening = vec3(0.0);
 uniform float cut_all = 99.0;
 uniform vec4 cut_rect = vec4(0.0);
 uniform float cut_rect_height = 99.0;
@@ -12,8 +13,10 @@ global uniform float w3d_snow;
 
 varying float cut_top;
 varying float up;
+varying vec2 local_xy;
 
 void vertex() {
+	local_xy = VERTEX.xy;
 	cut_top = 0.0;
 	if (wall) {
 		vec3 wp = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
@@ -29,6 +32,9 @@ void vertex() {
 }
 
 void fragment() {
+	if (abs(local_xy.x - door_opening.x) < door_opening.y && local_xy.y < door_opening.z) {
+		discard;
+	}
 	if (fade < 0.999) {
 		ivec2 p = ivec2(mod(FRAGCOORD.xy, 4.0));
 		float bayer[16] = float[](0.0, 8.0, 2.0, 10.0, 12.0, 4.0, 14.0, 6.0, 3.0, 11.0, 1.0, 9.0, 15.0, 7.0, 13.0, 5.0);

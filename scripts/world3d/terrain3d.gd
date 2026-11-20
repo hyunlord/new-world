@@ -210,6 +210,8 @@ func _update_path_texture() -> void:
 	var data: PackedByteArray = _path_stage if _path_stage.size() == n else PackedByteArray()
 	if data.size() != n:
 		data.resize(n)
+	if _s2:
+		data = _meadow_path_stages(data, width, height)
 	var img: Image = Image.create_from_data(width, height, false, Image.FORMAT_R8, data)
 	if _path_tex == null or _path_tex.get_width() != width or _path_tex.get_height() != height:
 		_path_tex = ImageTexture.create_from_image(img)
@@ -217,6 +219,20 @@ func _update_path_texture() -> void:
 		_path_tex.update(img)
 	material.set_shader_parameter("path_tex", _path_tex)
 	_grass.set_maps(_path_tex, _texture_map)
+
+
+## Wide patches of accumulated traffic read as short grass. Narrow runs and paving keep their original surface.
+static func _meadow_path_stages(stages: PackedByteArray, w: int, h: int) -> PackedByteArray:
+	var display: PackedByteArray = stages.duplicate()
+	for y: int in range(1, h - 1):
+		for x: int in range(1, w - 1):
+			var i: int = y * w + x
+			if stages[i] != 2:
+				continue
+			var adjacent: int = int(stages[i - 1] >= 2) + int(stages[i + 1] >= 2) + int(stages[i - w] >= 2) + int(stages[i + w] >= 2)
+			if adjacent >= 3:
+				display[i] = 1
+	return display
 
 
 func _mark_all() -> void:
@@ -367,10 +383,9 @@ func _update_grass_mask(space: Dictionary, fields: Dictionary, buildings: Dictio
 
 static func _mark_wear(wear: Dictionary, tile: Vector2i) -> void:
 	wear[tile] = 255
-	for y: int in range(-1, 2):
-		for x: int in range(-1, 2):
-			var neighbour: Vector2i = tile + Vector2i(x, y)
-			wear[neighbour] = maxi(int(wear.get(neighbour, 0)), 150 if x == 0 or y == 0 else 80)
+	for offset: Vector2i in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
+		var neighbour: Vector2i = tile + offset
+		wear[neighbour] = maxi(int(wear.get(neighbour, 0)), 46)
 
 
 static func _grass_occupied_tiles(space: Dictionary, fields: Dictionary, buildings: Dictionary, rooms: Dictionary) -> Dictionary:

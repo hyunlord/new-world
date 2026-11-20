@@ -60,6 +60,15 @@
     "large_scale": 1.18,
     "near_built_scale": [0.55, 0.7, 0.85]
   },
+  "s2_house": {
+    "cutaway_seconds": 0.3,
+    "cutaway_lift": 0.9,
+    "round_wall_height": 1.25,
+    "thatch": [0.78, 0.66, 0.42],
+    "footing": [0.48, 0.46, 0.41],
+    "earth_ring": [0.44, 0.32, 0.21],
+    "timber": [0.47, 0.30, 0.16]
+  },
   "structures": {
     "wall_height": 2.2,
     "wall_thickness": 0.35,

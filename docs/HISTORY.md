@@ -1,6 +1,6 @@
 # WorldSim 역사
 
-- 2026-11-20 — S2ENV에서 스타일 2의 초지와 관목, 낮 조명을 보강하고 주민 4종의 무릎·발목 굽힘을 보정했다([ADR0074](decisions/0074-style-2-environment.md)).
+- 2026-11-20 — S2HOUSE에서 템플릿 단위의 지붕과 공사 연출을 추가하고 눌린 풀과 오후광을 다듬었다([ADR0075](decisions/0075-style-2-house-shells.md)). S2ENV에서 스타일 2의 초지와 관목, 낮 조명을 보강하고 주민 4종의 무릎·발목 굽힘을 보정했다([ADR0074](decisions/0074-style-2-environment.md)).
 - 2026-11-20 — S2KIT에서 절제된 사실풍의 주민·건축·소품을 보강했다. 비교 대상은 ANCHOR2의 120일차 마을이다([ADR0073](decisions/0073-style-2-model-kit.md)).
 - 2026-11-19 — Slice 1에서 절제된 사실풍 앵커를 추가했다. 주민의 새 보행, 원거리 나무 카드, 기존 지붕 단면 보존을 로컬에서 검토한다([ADR0072](decisions/0072-style-2-anchor.md)).
 - 2026-11-18 — MOOD1 / DETAIL1 검토 3차(`289a3e7bd`)에서 가림 표시에 스텐실을 적용했다. 주민 등 얼룩이 사라졌으나 가시성 단계39 2/8, 재실 주택 야간 MOOD1 FPS −8.37%로 미게시. 2차(`2cb379246`)는 밤 평균 Y′ 57.05(목표 48.63), 가시성 7/8이었다([ADR0071](decisions/0071-world-look.md)).

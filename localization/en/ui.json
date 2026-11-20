@@ -301,6 +301,7 @@
   "UI_ORDER_TOAST_PLACE_MANY_FMT": "{count} {name} blueprints placed",
   "UI_ORDER_TOAST_REFUSED_FMT": "{count} tiles refused — {reason}",
   "UI_ORDER_TOAST_ROOM_ROLE": "Room role changed",
+  "UI_INSIDE_VIEW": "Inside view",
   "UI_ROOMS_TOGGLE": "Rooms R",
   "ROOM_ROLE_BEDROOM": "Bedroom",
   "ROOM_ROLE_STOREHOUSE": "Storehouse",
