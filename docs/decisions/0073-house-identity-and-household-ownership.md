@@ -1,4 +1,4 @@
-# ADR 0072 — House identity and household ownership (HOUSE1)
+# ADR 0073 — House identity and household ownership (HOUSE1)
 
 ## Context
 

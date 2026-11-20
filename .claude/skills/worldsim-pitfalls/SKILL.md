@@ -235,3 +235,12 @@ fresh dictionary on reset instead of clearing it. Compare JSON-parsed numeric
 fixtures in the same numeric domain; integer-versus-float Dictionary equality
 can fail despite identical printed values. Source:
 `scripts/world/colony/outcrop_layer.gd`; `tools/v8/mart2_ground_test.gd`.
+
+A bed rule that leaves beds empty is a survival change, not a cosmetic one: people
+without a bed sleep outdoors, and animal–person fights are cancelled only under a
+roof, so stranded sleepers die in raids and slow every long scripted chain. Read the
+failing chain's death causes before blaming its stage logic. Separately, a test that
+calls the Steward planner on a single tick can see the occupancy wait (envelope
+reserved, no command); step a bounded time until it proposes. Source:
+`rust/crates/sim-systems/src/runtime/agent/beds.rs` (D-HOUSE1-1);
+`rust/crates/sim-test/tests/spine_stages/mod.rs`.

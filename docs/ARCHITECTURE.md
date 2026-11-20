@@ -975,7 +975,7 @@ adjacent yard props from selected data and preloads their models. These views
 never mutate simulation state. Snapshot fields are documented in
 `docs/v8/snapshot_schema.md`.
 
-HOUSE1 (ADR 0072) makes a house an entity without a new system:
+HOUSE1 (ADR 0073) makes a house an entity without a new system:
 `runtime/housing.rs` keeps `HousingState` (house history keyed by the root
 `BuildingSiteId`, persistent households, ownership) in
 `colony.buildings.housing`. `BuildingTemplateSystem` records a Dwelling's

@@ -4,7 +4,7 @@
 
 ### Added
 
-- Houses as entities: `HouseId` reuses the root Dwelling building site; `HouseHistory` keeps the first completion tick (ADR 0072).
+- Houses as entities: `HouseId` reuses the root Dwelling building site; `HouseHistory` keeps the first completion tick (ADR 0073).
 - Persistent households (`HouseholdId`, head, members, parent) and house ownership; residence rule data (`residence_rule` in `yards.ron`, absent = Neolocal).
 - Chronicle kinds 74 `HouseholdFormed` and 75 `HouseOwnershipChanged` with Korean/English sentences.
 - Bridge reads `get_house_snapshot` (incl. `household_groups`, `primary_household`, a housing `revision`) and `get_household_snapshot` (schema 19, read on demand, not in `SimReads.GETTERS`); `dwelling_site_id` resolves through the house index first.

@@ -1,4 +1,4 @@
-//! HOUSE1 harnesses (ADR 0072): house identity over upgrades, residents vs reachable beds,
+//! HOUSE1 harnesses (ADR 0073): house identity over upgrades, residents vs reachable beds,
 //! legacy dates and replay, and exclusive/inherited household ownership on real colony worlds.
 //! Each harness fails when its scenario never reaches the behaviour it measures.
 mod spine_support;

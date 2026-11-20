@@ -1,5 +1,5 @@
 //! HOUSE1 housing helpers (not a system): house history and ownership, persistent households,
-//! exclusive owned beds and the derived `HouseView` read (ADR 0072).
+//! exclusive owned beds and the derived `HouseView` read (ADR 0073).
 //!
 //! Boundaries (no per-tick scan): `BuildingTemplateSystem` (p153) calls [`record_completion`] when
 //! a Dwelling template physically completes; `BedAssignmentSystem` (p145) calls [`reconcile`]

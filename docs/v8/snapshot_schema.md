@@ -856,7 +856,7 @@ Active roofs use existing site wash. Opaque completed roofs additionally require
 
 ### `get_house_snapshot`
 `collect_houses(&SimResources) -> Vec<HouseView>` (`sim_systems::runtime::housing::house_views`) → `houses_to_dict`
-(`ffi/houses.rs`). HOUSE1 (ADR 0072): one row per house — a Dwelling template site that physically completed at least
+(`ffi/houses.rs`). HOUSE1 (ADR 0073): one row per house — a Dwelling template site that physically completed at least
 once — in house id order. Derived on read; only `first_completed_tick` and `owner_household` come from saved state.
 Cell lists are flat `[x0, y0, x1, y1, …]` in row-major order; nullable ints are -1. Empty `rows` in a baseline world.
 The audit's H3 `bed_refs` / `hearth_refs` ship as the flat columns `bed_cells` + `bed_slots` + `bed_reachable` and

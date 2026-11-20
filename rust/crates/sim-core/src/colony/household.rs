@@ -1,4 +1,4 @@
-//! HOUSE1: persistent house identity, households and house ownership (ADR 0072).
+//! HOUSE1: persistent house identity, households and house ownership (ADR 0073).
 //!
 //! A house reuses its root [`BuildingSiteId`]; the grid and furniture stay the physical truth and
 //! [`HouseView`] is a derived read over them. Households are persistent groups with a monotonic
