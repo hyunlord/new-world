@@ -1,0 +1,55 @@
+{
+  "chop": {
+    "tags": ["chopping wood", "overhead swing"],
+    "takes": ["79_01"],
+    "trim": [4.6, 6.133333333333333],
+    "loop": true,
+    "speed": {"p1": 1, "p2": 1, "p3": 1, "p4": 0.85},
+    "posture": [0, 0, -0.035],
+    "prop": "axe",
+    "hands": {
+      "R": {"target": "prop", "offset": [0, 0, 0]},
+      "L": {
+        "target": "prop",
+        "offset": [0, 0, 0.22],
+        "slide": [[0.0, 0.0], [0.55, 0.045], [0.8, -0.095], [1.0, 0.0]]
+      }
+    },
+    "target": {
+      "kind": "swing",
+      "anchor": [0, -0.64, 0.55],
+      "tip": [0.142, 0, 0.50],
+      "orientation": [0, -0.92, -0.38],
+      "fixture_radius": 0.155,
+      "solid": true
+    },
+    "fixture": "block",
+    "foot_lock": true,
+    "contacts": [0.8043478260869565]
+  },
+  "cook": {
+    "tags": ["mixing batter", "stir"],
+    "takes": ["79_13"],
+    "trim": [2.5, 3.7666666666666666],
+    "loop": true,
+    "speed": {"p1": 1, "p2": 1, "p3": 1, "p4": 0.85},
+    "posture": [0, -0.02, -0.10],
+    "prop": "ladle",
+    "hands": {
+      "R": {"target": "prop", "offset": [0, 0, 0]},
+      "L": {"target": "anchor", "offset": [0.193, 0.177, 0]}
+    },
+    "target": {
+      "kind": "circle",
+      "anchor": [0.055, -0.38, 0.79],
+      "radius": 0.17,
+      "depth": 0.065,
+      "tip": [0, 0, 0.51],
+      "orientation": [0, -0.45, -0.89],
+      "fixture_radius": 0.25
+    },
+    "fixture": "pot",
+    "foot_lock": true,
+    "contacts": [0.0, 0.25, 0.5, 0.75]
+  }
+}

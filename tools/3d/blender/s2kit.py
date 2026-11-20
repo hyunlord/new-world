@@ -123,7 +123,7 @@ def weights(key: str, x: float, z: float) -> dict[str, float]:
     return influences
 
 
-def bind(mesh: bpy.types.Object, arm: bpy.types.Object, key: str) -> None:
+def bind(mesh: bpy.types.Object, arm: bpy.types.Object, key: str, weights_for_vertex=None) -> None:
     """Inverse-skin the A pose into the unchanged ANCHOR2 skeleton rest pose."""
     animation = arm.animation_data
     animation.action = None
@@ -146,7 +146,7 @@ def bind(mesh: bpy.types.Object, arm: bpy.types.Object, key: str) -> None:
     for vertex in vertices:
         point = vertex.co.copy()
         xx, zz = point.x / height, (point.z - bottom) / height
-        influences = weights(key, xx, zz)
+        influences = weights(key, xx, zz) if weights_for_vertex is None else weights_for_vertex(vertex.index, xx, zz)
         assert abs(sum(influences.values()) - 1) < 1e-6
         point = Vector((xx * HEIGHT, point.y * HEIGHT / height, zz * HEIGHT))
         matrix = Matrix(((0, 0, 0, 0),) * 4)
