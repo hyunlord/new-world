@@ -321,7 +321,12 @@ func _build_resources(batches: Dictionary, resources: Dictionary) -> void:
 		if i < ra.size() and ra[i] <= 0 and (row as Dictionary).has("depleted"):
 			m = str(row["depleted"])
 		var t2: Vector2i = Vector2i(rx[i], ry[i])
-		_add(batches, m + "|", t2, View.key_hash(_seed, t2.x, t2.y, 37), jitter * 0.5, 1.0)
+		var size: float = 1.0
+		if _tree_card_distance > 0.0 and (row as Dictionary).has("s2_model"):
+			m = str(row["s2_model"])
+			if i < ra.size() and ra[i] <= 0:
+				size = 0.64
+		_add(batches, m + "|", t2, View.key_hash(_seed, t2.x, t2.y, 37), jitter * 0.5, size)
 
 
 func _build_nodes(batches: Dictionary, overlay: Dictionary) -> void:
@@ -465,7 +470,7 @@ func _apply(family: String, batches: Dictionary, only: Dictionary = {}) -> void:
 			add_child(mmi)
 			_instances[k] = mmi
 		mmi.multimesh = _new_batch(mesh, xforms, cols)
-		if _tree_card_distance > 0.0 and parts[0].begins_with("slice_"):
+		if _tree_card_distance > 0.0 and parts[0] in ["slice_broadleaf", "slice_conifer"]:
 			_apply_far_cards(mmi, parts[0], xforms, cols)
 
 

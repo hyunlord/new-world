@@ -1,5 +1,10 @@
 # Changelog
 
+## Style 2 environment — 2026-11-20
+
+### Changed
+- Style 2 meadow ground, worn work areas, denser grass, fern understory and warmer daylight. The four villager rigs use joint-centred knee and ankle weights at all detail levels. See `docs/decisions/0074-style-2-environment.md`.
+
 ## Style 2 model kit — 2026-11-20
 
 ### Added

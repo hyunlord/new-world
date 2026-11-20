@@ -11,7 +11,7 @@
 #   ShaderMaterial (shaders/world3d/terrain.gdshader) takes the season tint, snow cover and the per-tile overlay image.
 #   Chunks build progressively (nearest the camera first, a few per frame) and rebuild when the space version, the
 #   field tiles or a reset change them.
-# Bridge methods called: via SimReads get_terrain_snapshot, get_world_info, get_space, get_field_tiles,
+# Bridge methods called: via SimReads get_workshops (S2 wear), get_terrain_snapshot, get_world_info, get_space, get_field_tiles,
 #   get_building_snapshot, get_colony_versions, get_rooms; signal world_reset.
 extends Node3D
 
@@ -63,6 +63,7 @@ var _stamp_key: String = ""
 var _path_stage: PackedByteArray = PackedByteArray()
 var _path_tex: ImageTexture = null
 var _path_version: int = -1
+var _s2: bool
 var _grass: Grass
 var _grass_mask_key: int = 0
 var _grass_rooms_version: int = -1
@@ -75,6 +76,7 @@ func setup(world_sim: Node) -> void:
 
 
 func _ready() -> void:
+	_s2 = SlicePbr.style2()
 	_grass = Grass.new()
 	_grass.name = "Grass"
 	add_child(_grass)
@@ -97,7 +99,13 @@ func _ready() -> void:
 
 
 func set_slice_pbr(enabled: bool) -> bool:
-	return SlicePbr.configure(material, TERRAIN_SHADER, enabled)
+	if not SlicePbr.configure(material, TERRAIN_SHADER, enabled):
+		return false
+	if enabled and _s2:
+		material.set_shader_parameter("s2", true)
+		for key: String in ["meadow", "meadow_gold", "worn_earth"]:
+			material.set_shader_parameter(key, Data3D.colour(Data3D.mood("style2.ground." + key, [])))
+	return true
 
 
 func _on_world_reset() -> void:
@@ -318,10 +326,51 @@ func _update_grass_mask(space: Dictionary, fields: Dictionary, buildings: Dictio
 	var mask_key: int = hash([space.get("wall_xs"), space.get("wall_ys"), space.get("floor_xs"), space.get("floor_ys"),
 		space.get("dug_xs"), space.get("dug_ys"), space.get("bed_xs"), space.get("bed_ys"), fields.get("xs"), fields.get("ys"),
 		buildings.get("xs"), buildings.get("ys"), buildings.get("kinds"), rooms_version])
+	var shops: Dictionary = {}
+	if _s2:
+		shops = SimReads.read(_world_sim, "get_workshops")
+		mask_key = hash([mask_key, space.get("wall_is_door"), shops.get("xs"), shops.get("ys"), shops.get("ws"), shops.get("hs")])
 	if mask_key == _grass_mask_key:
 		return
 	_grass_mask_key = mask_key
-	_grass.set_built(_grass_occupied_tiles(space, fields, buildings, _grass_rooms))
+	var blocked: Dictionary = _grass_occupied_tiles(space, fields, buildings, _grass_rooms)
+	if not _s2:
+		_grass.set_built(blocked)
+		return
+	var wear: Dictionary = {}
+	var edges: Dictionary = {}
+	var doors: PackedByteArray = space.get("wall_is_door", PackedByteArray())
+	var wx: PackedInt32Array = space.get("wall_xs", PackedInt32Array())
+	var wy: PackedInt32Array = space.get("wall_ys", PackedInt32Array())
+	for i: int in mini(doors.size(), mini(wx.size(), wy.size())):
+		if doors[i] == 1:
+			_mark_wear(wear, Vector2i(wx[i], wy[i]))
+	for tile: Vector2i in _lit_hearths(buildings):
+		_mark_wear(wear, tile)
+	var bx: PackedInt32Array = shops.get("xs", PackedInt32Array())
+	var by: PackedInt32Array = shops.get("ys", PackedInt32Array())
+	var ws: PackedInt32Array = shops.get("ws", PackedInt32Array())
+	var hs: PackedInt32Array = shops.get("hs", PackedInt32Array())
+	for i: int in mini(bx.size(), by.size()):
+		for y: int in range(hs[i] if i < hs.size() else 1):
+			for x: int in range(ws[i] if i < ws.size() else 1):
+				var tile: Vector2i = Vector2i(bx[i] + x, by[i] + y)
+				_mark_wear(wear, tile)
+				blocked[tile] = true
+	var fx: PackedInt64Array = fields.get("xs", PackedInt64Array())
+	var fy: PackedInt64Array = fields.get("ys", PackedInt64Array())
+	for i: int in mini(fx.size(), fy.size()):
+		for step: Vector2i in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
+			edges[Vector2i(fx[i], fy[i]) + step] = true
+	material.set_shader_parameter("s2_mask", _grass.set_built(blocked, wear, edges))
+
+
+static func _mark_wear(wear: Dictionary, tile: Vector2i) -> void:
+	wear[tile] = 255
+	for y: int in range(-1, 2):
+		for x: int in range(-1, 2):
+			var neighbour: Vector2i = tile + Vector2i(x, y)
+			wear[neighbour] = maxi(int(wear.get(neighbour, 0)), 150 if x == 0 or y == 0 else 80)
 
 
 static func _grass_occupied_tiles(space: Dictionary, fields: Dictionary, buildings: Dictionary, rooms: Dictionary) -> Dictionary:

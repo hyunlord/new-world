@@ -20,6 +20,7 @@ uniform float clearing_limit = 0.48;
 uniform float wind_strength = 0.21;
 uniform float wind_speed = 1.25;
 uniform float cutoff = 0.38;
+uniform bool s2 = false;
 varying float blade_y;
 
 void vertex() {
@@ -28,12 +29,15 @@ void vertex() {
 	float fade = 1.0 - smoothstep(radius * 0.66, radius, distance(origin.xz, w3d_focus.xz));
 	float path = textureLod(path_tex, uv, 0.0).r;
 	float clearing = textureLod(biome_tex, uv, 0.0).g;
-	float built = textureLod(built_tex, uv, 0.0).r;
+	vec3 built = textureLod(built_tex, uv, 0.0).rgb;
 	blade_y = VERTEX.y;
 	float phase = dot(origin.xz, vec2(0.49, 0.63));
 	float wind = sin(w3d_time * wind_speed + phase) * wind_strength * VERTEX.y * VERTEX.y;
 	VERTEX = (VERTEX + vec3(wind, 0.0, 0.0)) * vec3(1.0, height * mix(1.0, winter_height, w3d_snow), 1.0) * fade;
-	if (path > 0.001 || clearing >= clearing_limit || built > 0.5) {
+	if (s2) {
+		VERTEX.y *= mix(1.0, 1.5, built.b) * (1.0 - 0.72 * built.g);
+	}
+	if (path > 0.001 || clearing >= clearing_limit || built.r > 0.5) {
 		// Collapse excluded cards to a degenerate triangle before rasterization.
 		VERTEX = vec3(0.0);
 	}

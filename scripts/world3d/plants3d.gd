@@ -22,6 +22,9 @@ const Facts = preload("res://scripts/ui/field_facts.gd")
 
 const BLADES: int = 7
 
+const SliceVegetation = preload("res://scripts/world3d/slice1/vegetation.gd")
+
+var _s2: bool
 var _world_sim: Node = null
 var _terrain: Node = null
 var _tufts: MultiMeshInstance3D = null
@@ -50,6 +53,7 @@ func setup(world_sim: Node, terrain: Node) -> void:
 
 
 func _ready() -> void:
+	_s2 = OS.get_cmdline_user_args().has("--style=s2")
 	var mat: StandardMaterial3D = StandardMaterial3D.new()
 	mat.vertex_color_use_as_albedo = true
 	mat.vertex_color_is_srgb = true
@@ -169,6 +173,9 @@ func _rebuild(plants: Dictionary, fields: Array[Dictionary], season: int) -> voi
 			_tile_rand[t] = rnd
 		var j: Vector2 = Vector2(float(rnd[0]), float(rnd[1]))
 		var p: Vector2 = Vector2(t) + Vector2(0.5, 0.5) + j * 0.4
+		if _s2:
+			_put(placed, "slice_fern", [p, float(rnd[2]), [0.38, 0.58, 0.72, 0.45][phase]])
+			continue
 		var kind: int = int(kinds[i]) if i < kinds.size() else -1
 		var wkey: int = kind * 8 + phase
 		if not _wild_cache.has(wkey):
@@ -258,7 +265,8 @@ func _fill_models(placed: Dictionary, saturation: float) -> void:
 		_batch_hash[id] = h
 		var mm: MultiMesh = MultiMesh.new()
 		mm.transform_format = MultiMesh.TRANSFORM_3D
-		mm.mesh = _desaturated(id.get_slice("|", 0), saturation)
+		var model: String = id.get_slice("|", 0)
+		mm.mesh = SliceVegetation.mesh(model) if model == "slice_fern" else _desaturated(model, saturation)
 		mm.instance_count = rows.size()
 		for i: int in rows.size():
 			var p: Vector2 = rows[i][0]
@@ -269,6 +277,9 @@ func _fill_models(placed: Dictionary, saturation: float) -> void:
 		if mmi == null:
 			mmi = MultiMeshInstance3D.new()
 			mmi.name = "Model_" + id.replace("|", "_")
+			if model == "slice_fern":
+				mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+				mmi.visibility_range_end = float(Data3D.mood("style2.fern_distance", 41.0))
 			add_child(mmi)
 			_models[id] = mmi
 		mmi.multimesh = mm

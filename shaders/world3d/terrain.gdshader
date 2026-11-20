@@ -7,6 +7,11 @@ shader_type spatial;
 #ifdef SLICE_PBR
 render_mode diffuse_burley, specular_schlick_ggx;
 #include "res://shaders/world3d/slice_pbr.gdshaderinc"
+uniform bool s2 = false;
+uniform sampler2D s2_mask : filter_linear, repeat_disable;
+uniform vec3 meadow : source_color;
+uniform vec3 meadow_gold : source_color;
+uniform vec3 worn_earth : source_color;
 #else
 render_mode diffuse_lambert, specular_disabled;
 #endif
@@ -105,7 +110,13 @@ float slice_biome_layer(vec2 biome) {
 	return layer < 0.0 ? SLICE_GRASS : layer;
 }
 
-SliceSurface slice_ground(vec2 p, vec2 uv, vec2 dx, vec2 dy) {
+vec3 s2_biome_weights(float layer, float clearing) {
+	return vec3(layer == SLICE_FOREST ? 1.0 : 0.0,
+		layer == SLICE_DIRT || layer == SLICE_MUD ? 1.0 : clearing * 0.44,
+		layer == SLICE_ROCK ? 1.0 : 0.0);
+}
+
+SliceSurface slice_ground(vec2 p, vec2 uv, vec2 dx, vec2 dy, out vec3 s2_weights, out float stage) {
 	vec2 base = floor(p - 0.5);
 	vec2 f = smoothstep(vec2(0.0), vec2(1.0), fract(p - 0.5));
 	vec2 a = biome_at(base);
@@ -131,7 +142,13 @@ SliceSurface slice_ground(vec2 p, vec2 uv, vec2 dx, vec2 dy) {
 	}
 	SliceSurface ground = slice_mix(slice_mix(fa, fb, f.x), slice_mix(fc, fd, f.x), f.y);
 	float clearing = mix(mix(a.g, b.g, f.x), mix(c.g, d.g, f.x), f.y);
-	float stage = texture(path_tex, p / map_size).r * 255.0;
+	s2_weights = vec3(0.0);
+	if (s2) {
+		s2_weights = mix(
+			mix(s2_biome_weights(la, a.g), s2_biome_weights(lb, b.g), f.x),
+			mix(s2_biome_weights(lc, c.g), s2_biome_weights(ld, d.g), f.x), f.y);
+	}
+	stage = texture(path_tex, p / map_size).r * 255.0;
 	float path = max(clearing, smoothstep(0.03, 1.0, stage) * path_strength.x);
 	path = mix(path, path_strength.y, smoothstep(1.0, 2.0, stage));
 	if (path > 0.0) {
@@ -158,13 +175,26 @@ void fragment() {
 	vec3 tex_world = world_pos * ground_scale;
 	vec3 tex_dx = dFdx(tex_world);
 	vec3 tex_dy = dFdy(tex_world);
-	SliceSurface surface = slice_ground(p + warp, tex_pos, tex_dx.xz, tex_dy.xz);
+	vec3 s2_weights;
+	float s2_path_stage;
+	SliceSurface surface = slice_ground(p + warp, tex_pos, tex_dx.xz, tex_dy.xz, s2_weights, s2_path_stage);
 	surface.bump = vec3(surface.bump.x, 0.0, -surface.bump.y);
 	if (rock > 0.0) {
 		surface = slice_mix(surface, slice_triplanar(tex_world, tex_dx, tex_dy, nrm, SLICE_ROCK), rock);
 	}
 	vec3 vertex_tint = mix(vec3(1.0), srgb_to_linear(COLOR.rgb) * 1.8, 0.30);
 	vec3 c = surface.albedo * vertex_tint * season_tint * (1.0 + macro_strength * (macro_noise - 0.5));
+	if (s2) {
+		vec2 mask = texture(s2_mask, (p + warp) / map_size).rg;
+		float wear = max(max(mask.r * 0.62, mask.g), s2_weights.g);
+		wear = max(wear, smoothstep(0.05, 1.65, s2_path_stage));
+		float patch = smoothstep(0.16, 0.88, macro_noise);
+		vec3 meadow_tone = mix(meadow, meadow_gold, patch) * (1.0 - 0.19 * s2_weights.r);
+		float texture_value = dot(surface.albedo, vec3(0.299, 0.587, 0.114));
+		float detail_value = 0.77 + 0.39 * smoothstep(0.12, 0.38, texture_value) + 0.07 * n;
+		float exposed_stone = max(max(rock, s2_weights.b), smoothstep(2.1, 2.9, s2_path_stage));
+		c = mix(mix(meadow_tone, worn_earth, wear) * detail_value * season_tint, c, exposed_stone);
+	}
 	float cover = snow * smoothstep(0.55, 0.9, up) * smoothstep(0.25, 0.55, n + snow * 0.4);
 	if (cover > 0.0) {
 		vec3 snow_detail = mix(material_detail(tex_pos, 8.0), material_detail(tex_pos, 9.0), macro_noise);

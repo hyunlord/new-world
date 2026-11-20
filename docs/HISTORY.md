@@ -1,5 +1,6 @@
 # WorldSim 역사
 
+- 2026-11-20 — S2ENV에서 스타일 2의 초지와 관목, 낮 조명을 보강하고 주민 4종의 무릎·발목 굽힘을 보정했다([ADR0074](decisions/0074-style-2-environment.md)).
 - 2026-11-20 — S2KIT에서 절제된 사실풍의 주민·건축·소품을 보강했다. 비교 대상은 ANCHOR2의 120일차 마을이다([ADR0073](decisions/0073-style-2-model-kit.md)).
 - 2026-11-19 — Slice 1에서 절제된 사실풍 앵커를 추가했다. 주민의 새 보행, 원거리 나무 카드, 기존 지붕 단면 보존을 로컬에서 검토한다([ADR0072](decisions/0072-style-2-anchor.md)).
 - 2026-11-18 — MOOD1 / DETAIL1 검토 3차(`289a3e7bd`)에서 가림 표시에 스텐실을 적용했다. 주민 등 얼룩이 사라졌으나 가시성 단계39 2/8, 재실 주택 야간 MOOD1 FPS −8.37%로 미게시. 2차(`2cb379246`)는 밤 평균 Y′ 57.05(목표 48.63), 가시성 7/8이었다([ADR0071](decisions/0071-world-look.md)).
@@ -69,7 +70,6 @@
 - 2026-10-27 — 별도 P-3d 커밋 `826a7ecd9e38ca3fc1fff253baa0933aee593022`의 최종 shadow OFF99.474271%·ON99.505779%, baseline/safety와 fresh1264–1295 outcomes/why를 통과했다. 최종33쌍 교차 측정은 N1000 2.208505ms·N2000 4.086183ms 및 C3 통과지만 n200_side64 평균1.348105배·p991.314991배로 필수 성능 FAIL이다. 전체 게이트는 hard stop 종료 기록을 위해22:41:15KST에 중단했다(INCOMPLETE, wrapper143). 1–24단계 명령exit0이나 step12 시간은 INVALID다. step25는 반복 도중 중단되어 NOT_COMPLETE,26–45는 NOT_RUN이다. step41 새 frame/waiver 근거는 없다. 미게시다. 이전 기록과 seed1238 늑대 사망0→3은 보존한다.
 
 - 2026-10-27 — 플래너 P-1–P-6으로 성능 수리를 재개했다. 보존 커밋 p12 `1ca297b82`는10개 요약·D26 canonical outcome/why·baseline 동일성을 통과했지만 유효 성능은 미달이다. D30의 별도 스케줄링 후보는 정책157노드를 고정한 채 exploratory shadow OFF99.4743%·ON99.5058%,16guard replay·13primitive fixture를 통과했다. fresh1264–1295·최종 성능·전체 gate·게시는 대기이며 원래 p8 FAIL을 유지한다.
-
 
 - 2026-10-27 — 최종 p8 `44e0a0266c085d409c16c77f4a2a0181b8a2a750` 게이트42/45·exit1,04:02:02–05:58:54 KST(7012초)로 FAIL 종료했다(D24). 실패25 bench·41 stall·45 core_evaluation. stall 양 배율 캡처는 완료했지만1× 최대91.652ms·>50ms2회 FAIL,½×49.522ms·>50ms0회 PASS. 기준선분리42·data-only43·그림자44 PASS를 보존한다. 목표에 따라 튜닝·면제·재시도·게시 없이 중단·보고하고 작업트리/근거를 보존한다. 이슈의 로컬fixed는 원격 폐쇄가 아니다.
 

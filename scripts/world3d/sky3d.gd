@@ -35,6 +35,7 @@ var _previous_grade: float = 1.0
 var _grade_camera: Camera2D
 var _grade_zoom: Vector2
 var _map_light: Dictionary
+var _s2_day: Dictionary = {}
 
 
 func setup(world_sim: Node, terrain: Node) -> void:
@@ -44,6 +45,7 @@ func setup(world_sim: Node, terrain: Node) -> void:
 		_grade_camera = get_parent().get("camera2d") as Camera2D
 		_grade_zoom = Vector2(float(Data3D.mood("style2.grade_zoom_neutral", 0.25)), float(Data3D.mood("style2.grade_zoom_full", 0.75)))
 		_map_light = Data3D.param("light", {})
+		_s2_day = Data3D.mood("style2.day", {})
 	if _world_sim != null:
 		_world_sim.connect("world_reset", _reset_hardship)
 
@@ -248,6 +250,8 @@ func _apply_hour(hour: float, hardship: float, grade: float = 1.0) -> void:
 	elif day <= 0.0:
 		elevation = deg_to_rad(float(_sky_data["moon_elevation"]))
 		azimuth = deg_to_rad(float(_sky_data["moon_azimuth"]))
+	if not _s2_day.is_empty():
+		elevation *= lerpf(1.0, float(_s2_day["elevation_scale"]), smoothstep(0.6, 1.0, day) * grade)
 	var to_sun: Vector3 = Vector3(sin(azimuth) * cos(elevation), sin(elevation), cos(azimuth) * cos(elevation))
 	sun.look_at_from_position(Vector3.ZERO, -to_sun, Vector3.UP)
 	var steps: int = maxi(1, int(_profiles["lut_steps"]))
@@ -272,6 +276,16 @@ func _apply_hour(hour: float, hardship: float, grade: float = 1.0) -> void:
 	environment.adjustment_saturation = _number(a, b, grim, "saturation", blend, stress_blend)
 	environment.adjustment_contrast = _number(a, b, grim, "contrast", blend, stress_blend)
 	environment.tonemap_exposure = _number(a, b, grim, "exposure", blend, stress_blend)
+	if not _s2_day.is_empty():
+		var warmth: float = smoothstep(0.6, 1.0, daylight) * (1.0 - stress_blend)
+		sun.light_color = sun.light_color.lerp(Data3D.colour(_s2_day["sun"]), warmth)
+		environment.ambient_light_energy = lerpf(environment.ambient_light_energy, float(_s2_day["ambient_energy"]), warmth)
+		environment.ambient_light_color = environment.ambient_light_color.lerp(Data3D.colour(_s2_day["ambient"]), warmth)
+		environment.fog_light_color = environment.fog_light_color.lerp(Data3D.colour(_s2_day["fog"]), warmth)
+		var sky_material: ShaderMaterial = environment.sky.sky_material as ShaderMaterial
+		for sky_key: String in ["top", "horizon"]:
+			var neutral: Color = Data3D.colour(_sky_data[sky_key])
+			sky_material.set_shader_parameter("sky_" + sky_key, neutral.lerp(Data3D.colour(_s2_day["sky_" + sky_key]), warmth))
 	if _grade_camera != null:
 		_blend_map_grade(day, frac, grade)
 	var offsets: PackedFloat32Array = []

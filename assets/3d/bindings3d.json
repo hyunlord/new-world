@@ -77,7 +77,8 @@
     "codes": {
       "0": {
         "model": "berry_bush",
-        "depleted": "bush"
+        "depleted": "bush",
+        "s2_model": "slice_fern"
       },
       "3": {
         "model": "firewood"

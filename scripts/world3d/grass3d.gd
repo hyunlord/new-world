@@ -5,8 +5,12 @@ extends Node3D
 const Data3D = preload("res://scripts/world3d/data3d.gd")
 const View = preload("res://scripts/world/colony/view.gd")
 const GRASS_SHADER = preload("res://shaders/world3d/grass.gdshader")
+const CARDINALS: Array[Vector2i] = [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]
 const CARD_TEXTURE = "res://assets/3d/textures/grass_card.png"
 
+var _s2: bool
+var _water_codes: Array
+var _stone_mesh: Mesh
 var _settings: Dictionary
 var _material: ShaderMaterial
 var _mesh: QuadMesh
@@ -31,7 +35,12 @@ var _lod: int = -1
 
 
 func _ready() -> void:
-	_settings = Data3D.mood("detail.grass", {})
+	_s2 = OS.get_cmdline_user_args().has("--style=s2")
+	_settings = (Data3D.mood("detail.grass", {}) as Dictionary).duplicate()
+	if _s2:
+		_settings.merge(Data3D.mood("style2.grass", {}), true)
+		_water_codes = Data3D.param("terrain.water_codes", [4])
+		_stone_mesh = Data3D.mesh(str(Data3D.binding("nodes.fallback", "")))
 	_chunk = maxi(4, int(_settings.get("chunk_tiles", 12)))
 	_per_tile = maxi(1, int(_settings.get("tufts_per_tile", 5)))
 	_terrain_codes = _settings.get("terrain_codes", [0, 1, 3])
@@ -47,10 +56,8 @@ func _ready() -> void:
 		if _settings.has(key):
 			_material.set_shader_parameter(key, float(_settings[key]))
 	for key: String in ["shade", "root_shade", "winter_shade"]:
-		var colour: Variant = _settings.get(key, [])
-		if OS.get_cmdline_user_args().has("--style=s2"):
-			colour = Data3D.mood("style2.grass_" + key, colour)
-		_material.set_shader_parameter(key, Data3D.colour(colour, Color.WHITE))
+		_material.set_shader_parameter(key, Data3D.colour(_settings.get(key, []), Color.WHITE))
+	_material.set_shader_parameter("s2", _s2)
 	_mesh = QuadMesh.new()
 	_mesh.material = _material
 	_mesh.size = Vector2(float(_settings.get("width", 0.48)), 1.0)
@@ -77,18 +84,27 @@ func set_maps(paths: ImageTexture, biome: ImageTexture) -> void:
 	_material.set_shader_parameter("biome_tex", biome)
 
 
-func set_built(tiles: Dictionary) -> void:
+func set_built(tiles: Dictionary, wear: Dictionary = {}, edges: Dictionary = {}) -> ImageTexture:
 	var bytes: PackedByteArray = PackedByteArray()
-	bytes.resize(_width * _height)
+	var channels: int = 3 if _s2 else 1
+	bytes.resize(_width * _height * channels)
 	for tile: Vector2i in tiles:
 		if tile.x >= 0 and tile.x < _width and tile.y >= 0 and tile.y < _height:
-			bytes[tile.y * _width + tile.x] = 255
-	var image: Image = Image.create_from_data(_width, _height, false, Image.FORMAT_R8, bytes)
+			bytes[(tile.y * _width + tile.x) * channels] = 255
+	if _s2:
+		for tile: Vector2i in wear:
+			if tile.x >= 0 and tile.x < _width and tile.y >= 0 and tile.y < _height:
+				bytes[(tile.y * _width + tile.x) * channels + 1] = int(wear[tile])
+		for tile: Vector2i in edges:
+			if tile.x >= 0 and tile.x < _width and tile.y >= 0 and tile.y < _height:
+				bytes[(tile.y * _width + tile.x) * channels + 2] = 255
+	var image: Image = Image.create_from_data(_width, _height, false, Image.FORMAT_RGB8 if _s2 else Image.FORMAT_R8, bytes)
 	if _mask == null:
 		_mask = ImageTexture.create_from_image(image)
 		_material.set_shader_parameter("built_tex", _mask)
 	else:
 		_mask.update(image)
+	return _mask
 
 
 func refresh(focus: Vector2, zoom: float) -> void:
@@ -171,6 +187,7 @@ func _build_chunk(key: Vector2i) -> MultiMeshInstance3D:
 	mm.instance_count = tiles.size() * _per_tile
 	var i: int = 0
 	var terrain: Node3D = get_parent()
+	var stones: Array[Transform3D] = []
 	# Interleave one sample per tile in each tier. Reducing visible_instance_count thins every tile in the batch.
 	for tier: int in _per_tile:
 		for t: Vector2i in tiles:
@@ -181,7 +198,20 @@ func _build_chunk(key: Vector2i) -> MultiMeshInstance3D:
 			var v: float = float((h >> 20) & 1023) / 1024.0
 			var yaw: float = TAU * v
 			var scale_factor: float = 1.0 + (2.0 * v - 1.0) * _size_variation
-			var basis: Basis = Basis(Vector3.UP, yaw).scaled(Vector3.ONE * scale_factor)
+			var blade_scale: Vector3 = Vector3.ONE * scale_factor
+			if _s2 and tier == 0:
+				var code: int = _terrain[t.y * _width + t.x]
+				var shore: Vector2i = _water_neighbour(t)
+				if code == 1 or shore != Vector2i.ZERO:
+					blade_scale.y *= float(_settings["edge_scale"])
+				if shore != Vector2i.ZERO:
+					blade_scale.x *= 0.70
+					blade_scale.y *= 1.32
+					if h % 4 == 0:
+						var bank: Vector2 = Vector2(t) + Vector2(0.5, 0.5) + Vector2(shore) * 0.36
+						var bank_y: float = float(terrain.call("height_at", bank.x, bank.y))
+						stones.append(Transform3D(Basis(Vector3.UP, yaw).scaled(Vector3.ONE * lerpf(0.17, 0.35, v)), Vector3(bank.x, bank_y, bank.y)))
+			var basis: Basis = Basis(Vector3.UP, yaw).scaled(blade_scale)
 			mm.set_instance_transform(i, Transform3D(basis, Vector3(x, y, z)))
 			mm.set_instance_color(i, Color(0.75 + 0.25 * v, 1.0, 1.0))
 			i += 1
@@ -191,4 +221,24 @@ func _build_chunk(key: Vector2i) -> MultiMeshInstance3D:
 	batch.multimesh = mm
 	add_child(batch)
 	_batches[key] = batch
+	if not stones.is_empty() and _stone_mesh != null:
+		var rocks: MultiMesh = MultiMesh.new()
+		rocks.transform_format = MultiMesh.TRANSFORM_3D
+		rocks.mesh = _stone_mesh
+		rocks.instance_count = stones.size()
+		for index: int in stones.size():
+			rocks.set_instance_transform(index, stones[index])
+		var bank_batch: MultiMeshInstance3D = MultiMeshInstance3D.new()
+		bank_batch.name = "BankStones"
+		bank_batch.multimesh = rocks
+		bank_batch.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		batch.add_child(bank_batch)
 	return batch
+
+
+func _water_neighbour(tile: Vector2i) -> Vector2i:
+	for step: Vector2i in CARDINALS:
+		var p: Vector2i = tile + step
+		if p.x >= 0 and p.y >= 0 and p.x < _width and p.y < _height and int(_terrain[p.y * _width + p.x]) in _water_codes:
+			return step
+	return Vector2i.ZERO
