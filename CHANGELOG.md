@@ -1,5 +1,11 @@
 # Changelog
 
+## Style 2 houses and daylight — 2026-11-20
+
+### Changed
+- Style 2 follows the built footprint through construction and completion, with layered thatch, planar roof joins and packed-earth cutaways. See `docs/decisions/0076-style-2-house-shapes-and-light.md`.
+- Style 2 also roofs constructed rooms outside the template catalogue and gives daylight softer directional shadows, closer contact shading and gentler distance haze.
+
 ## Style 2 house shells — 2026-11-20
 
 ### Added

@@ -790,9 +790,14 @@ func _click_hit(hit: Dictionary, tile: Vector2i) -> void:
 			return
 	var rooms: Node = get_node_or_null("/root/Main/RoomIndex")
 	var room_panel: Node = get_node_or_null("/root/Main/UI/RoomPanel")
-	if rooms != null and room_panel != null and bool(rooms.call("is_shown")):
-		var room: int = int(rooms.call("room_at", tile))
+	if room_panel != null:
+		var show_overlay: bool = rooms != null and bool(rooms.call("is_shown"))
+		var room: int = int(rooms.call("room_at", tile)) if show_overlay else ViewProjection.untemplated_room_at(tile)
 		if room >= 0 and room_panel.has_method("display_room"):
+			if not show_overlay:
+				var selected_build: Control = get_node_or_null("/root/Main/UI/BuildPanel") as Control
+				if selected_build != null:
+					selected_build.hide()
 			room_panel.call("display_room", room)
 			room_panel.call("set_food_tile", tile)
 			var causal_panel: CanvasItem = get_node_or_null("/root/Main/UI/CausalPanel") as CanvasItem

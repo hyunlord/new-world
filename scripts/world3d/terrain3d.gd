@@ -49,6 +49,7 @@ var _texture_weights: PackedByteArray = PackedByteArray()
 var _texture_map: ImageTexture
 var _dug: Dictionary = {}
 var _floor: Dictionary = {}
+var _house_ground: Dictionary = {}
 var _ford: Dictionary = {}
 var _field: Dictionary = {}
 var _clearing: Dictionary = {}
@@ -184,6 +185,7 @@ func _load_world() -> void:
 	_grass_mask_key = 0
 	_grass_rooms_version = -1
 	_grass_rooms = {}
+	_house_ground.clear()
 	_grass.reset_map(width, height, _terrain, int(SimReads.read(_world_sim, "get_world_info").get("seed", 0)))
 	_poll_space()
 	_grass.show()
@@ -335,6 +337,19 @@ func _poll_space(rooms_version: int = -1) -> void:
 		_update_path_texture()
 
 
+## Style 2 packs the real completed house interior into bare ground at its existing terrain height.
+func set_house_ground(tiles: Dictionary) -> void:
+	if _house_ground != tiles:
+		_house_ground = tiles
+		_stamp_key = ""
+
+
+func house_floor_lift(tile: Vector2i) -> float:
+	if _house_ground.has(tile) and _floor.has(tile):
+		return float(Data3D.param("structures.floor_height", 0.06))
+	return 0.0
+
+
 func _update_grass_mask(space: Dictionary, fields: Dictionary, buildings: Dictionary, rooms_version: int) -> void:
 	if rooms_version >= 0 and rooms_version != _grass_rooms_version:
 		_grass_rooms_version = rooms_version
@@ -345,7 +360,7 @@ func _update_grass_mask(space: Dictionary, fields: Dictionary, buildings: Dictio
 	var shops: Dictionary = {}
 	if _s2:
 		shops = SimReads.read(_world_sim, "get_workshops")
-		mask_key = hash([mask_key, space.get("wall_is_door"), shops.get("xs"), shops.get("ys"), shops.get("ws"), shops.get("hs")])
+		mask_key = hash([mask_key, space.get("wall_is_door"), shops.get("xs"), shops.get("ys"), shops.get("ws"), shops.get("hs"), _house_ground])
 	if mask_key == _grass_mask_key:
 		return
 	_grass_mask_key = mask_key
@@ -354,6 +369,9 @@ func _update_grass_mask(space: Dictionary, fields: Dictionary, buildings: Dictio
 		_grass.set_built(blocked)
 		return
 	var wear: Dictionary = {}
+	for tile: Vector2i in _house_ground:
+		blocked[tile] = true
+		wear[tile] = 255
 	var edges: Dictionary = {}
 	var doors: PackedByteArray = space.get("wall_is_door", PackedByteArray())
 	var wx: PackedInt32Array = space.get("wall_xs", PackedInt32Array())
@@ -378,7 +396,7 @@ func _update_grass_mask(space: Dictionary, fields: Dictionary, buildings: Dictio
 	for i: int in mini(fx.size(), fy.size()):
 		for step: Vector2i in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
 			edges[Vector2i(fx[i], fy[i]) + step] = true
-	material.set_shader_parameter("s2_mask", _grass.set_built(blocked, wear, edges))
+	material.set_shader_parameter("s2_mask", _grass.set_built(blocked, wear, edges, _house_ground))
 
 
 static func _mark_wear(wear: Dictionary, tile: Vector2i) -> void:

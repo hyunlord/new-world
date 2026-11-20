@@ -47,6 +47,8 @@ const PROFILE_BLOCK: float = 0.0
 const PROFILE_LOG: float = 1.0
 const PROFILE_PALISADE: float = 2.0
 const PROFILE_TRIM: float = 3.0
+# Room and template IDs each occupy their own u32 namespace in the bridge.
+const S2_ROOM_ROOF_BASE: int = 1 << 32
 
 var wall_material: ShaderMaterial
 var _slice_pbr: bool = false
@@ -57,11 +59,12 @@ var _house_plans: Dictionary = {}
 var _house_wall: Dictionary = {}
 var _house_rooms: Dictionary = {}
 var _room_at_tile: Dictionary = {}
+var _s2_roof_footprints: Dictionary = {}
+var _room_wall_trim: Dictionary = {}
 var _house_stages: Dictionary = {}
 var _house_progress: Dictionary = {}
 var _house_sites: Dictionary = {}
 var _has_house_work: bool = false
-var _roof_origins: Dictionary = {}
 var _roof_details: Dictionary = {}
 var _hearth_vents: Dictionary = {}
 var _house_hearths: Dictionary = {}
@@ -99,6 +102,7 @@ var _occupied: Dictionary = {}
 var _occupied_tick: int = -2
 var _occupied_rooms: Dictionary = {}
 var _windows: Dictionary = {}
+var _window_frames: Dictionary = {}
 var _window_mesh: QuadMesh
 var _window_material: StandardMaterial3D
 var _window_elevation: float
@@ -134,6 +138,8 @@ func set_slice_pbr(enabled: bool) -> bool:
 	if not SlicePbr.configure(wall_material, WALL_SHADER, enabled):
 		return false
 	_slice_pbr = enabled
+	if _style2 and enabled:
+		wall_material.set_shader_parameter("clean_log", true)
 	for roof: MeshInstance3D in _roofs.values():
 		var mat: ShaderMaterial = roof.get_active_material(0) as ShaderMaterial
 		if mat != null and mat.shader != Kit.SHADER and not SlicePbr.configure(mat, ROOF_SHADER, enabled):
@@ -150,6 +156,7 @@ func _on_world_reset() -> void:
 	_s2_lights_key = 0
 	if _style2:
 		_roof_fade.clear()
+		_s2_roof_footprints.clear()
 	_space_version = -2
 	_rooms_key = ""
 	_sites_key = ""
@@ -194,10 +201,19 @@ func _process(delta: float) -> void:
 	var rooms: Dictionary = SimReads.read(_world_sim, "get_rooms")
 	var rkey: String = "%d|%d|%d" % [int(rooms.get("version", 0)), hash(str(sites)), version]
 	if _style2:
-		rkey = "%s|%s|%s" % [rooms.get("version"), bkey, version]
+		rkey = "%s|%s|%s|%s" % [rooms.get("version"), bkey, version, hash(_houses.keys())]
 	if rkey != _rooms_key:
 		_rooms_key = rkey
+		var old_room_trim: Dictionary = _room_wall_trim
 		_rebuild_roofs(rooms, sites)
+		if _style2 and old_room_trim != _room_wall_trim:
+			var trim_chunks: Dictionary = {}
+			for trim_set: Dictionary in [old_room_trim, _room_wall_trim]:
+				for tile: Vector2i in trim_set:
+					trim_chunks[_chunk_of(tile)] = true
+			var floors: Dictionary = _floor_tiles(space)
+			for chunk: Vector2i in trim_chunks:
+				_build_wall_chunk(chunk, floors)
 	if _style2 and not _roofs.is_empty():
 		_update_hearths()
 	var overlay: Dictionary = SimReads.read(_world_sim, "get_colony_overlay")
@@ -388,6 +404,7 @@ func _build_wall_chunk(k: Vector2i, floors: Dictionary) -> void:
 	var b: Builder = Builder.new()
 	var kit_batches: Dictionary = {}
 	var kit_profiles: Dictionary = Data3D.binding("s2kit.wall_profiles", {}) if _style2 else {}
+	var kit_trim: Dictionary = Data3D.binding("s2kit.house_wall_trim", {}) if _style2 else {}
 	var hgt: float = float(Data3D.param("structures.wall_height", 2.2))
 	var thick: float = float(Data3D.param("structures.wall_thickness", 0.35))
 	var floor_h: float = float(Data3D.param("structures.floor_height", 0.06))
@@ -403,26 +420,30 @@ func _build_wall_chunk(k: Vector2i, floors: Dictionary) -> void:
 			b.texture_tile = textures.index("alternates", str(int(b.texture_tile)), int(b.texture_tile))
 		var house: Dictionary = _house_wall.get(t, {})
 		if not house.is_empty():
-			var rounded: bool = str(house["art_roof"]) == "round"
-			if not bool(w["door"]):
-				if rounded:
-					continue
-				_footing(b, t, g, thick)
-			elif rounded:
-				_door_frame(b, t, g, _round_height(), thick, w)
+			var rounded: bool = bool(house["round"])
+			if rounded:
+				var pit: Dictionary = Data3D.binding("s2kit.pit_house", {})
+				if bool(w["door"]) and bool(house["complete"]) and Kit.mesh(str(pit.get("base", ""))) == null:
+					_door_frame(b, t, g, _round_height(), thick, w)
+					var id: int = int(house["id"])
+					_round_threshold(b, t, g, _house_door_side(id, _house_bounds(_houses[id])))
 				continue
+		var trimmed: bool = not house.is_empty() or _room_wall_trim.has(t)
+		if trimmed and not bool(w["door"]):
+			if str(w["profile"]) == "log":
+				_kit_corner(str(kit_trim.get("corner", "")), t, g, hgt, thick, kit_batches)
+			if not _kit_footing(str(kit_trim.get("footing", "")), t, g, thick, kit_batches) and not house.is_empty():
+				_footing(b, t, g, thick)
 		if bool(w["fence"]):
 			if _fence_model(t) == "":
 				_fence(b, t, g)
 		elif bool(w["door"]):
-			if house.is_empty() or not _kit_door(t, g, hgt, thick, kit_batches):
+			var authored: bool = trimmed and _kit_house_door(str(kit_trim.get("door", "")), t, g, hgt, thick, kit_batches)
+			if not authored and (house.is_empty() or not _kit_door(t, g, hgt, thick, kit_batches)):
 				_door_frame(b, t, g, hgt, thick, w)
 		else:
-			var kit_id: String = str(kit_profiles.get("log" if not house.is_empty() else w["profile"], ""))
+			var kit_id: String = str(kit_profiles.get(w["profile"], ""))
 			if kit_id.is_empty() or not _kit_wall(kit_id, t, g, hgt, thick, kit_batches):
-				if not house.is_empty():
-					b.texture_tile = textures.index("styles", "log")
-					w = {"profile": "log", "colour": Data3D.colour(Data3D.param("s2_house.timber", []))}
 				_wall(b, t, g, hgt, thick, w)
 	if _style2:
 		_build_kit_wall_batches(k, kit_batches)
@@ -458,12 +479,77 @@ func _kit_wall(id: String, tile: Vector2i, ground: float, height: float, thickne
 	var model: ArrayMesh = Kit.mesh(id)
 	if model == null:
 		return false
-	if not batches.has(id):
-		batches[id] = []
 	var yaw: float = -PI * 0.5 if along_z else 0.0
 	var centre: Vector3 = Vector3(tile.x + 0.5, ground, tile.y + 0.5)
-	(batches[id] as Array).append(Kit.fit(model, Vector3(1.02, height, thickness), yaw, centre))
+	_append_kit_fit(id, model, Vector3(1.02, height, thickness), yaw, centre, batches)
 	return true
+
+
+func _append_kit_fit(id: String, model: Mesh, size: Vector3, yaw: float, ground: Vector3, batches: Dictionary, cut_offset: float = 0.0) -> void:
+	if not batches.has(id):
+		batches[id] = []
+	(batches[id] as Array).append({"fit": Kit.fit(model, size, yaw, ground), "cut_offset": cut_offset})
+
+
+func _kit_house_door(id: String, tile: Vector2i, ground: float, height: float, thickness: float, batches: Dictionary) -> bool:
+	var model: ArrayMesh = Kit.mesh(id)
+	if model == null:
+		return false
+	var axis: Vector2i = _run_axis(tile)
+	var out: Vector2i = Vector2i(axis.y, axis.x)
+	var house: Dictionary = _house_wall.get(tile, {})
+	var room: int = int(_room_wall_trim.get(tile, -1))
+	var centre: Vector2 = Vector2(tile) + Vector2.ONE * 0.5
+	if not house.is_empty():
+		var bounds: Rect2i = _house_bounds(_houses[int(house["id"])])
+		if (centre - Rect2(bounds).get_center()).dot(Vector2(out)) < 0.0:
+			out = -out
+	elif int(_room_at_tile.get(tile + out, -2)) == room:
+		out = -out
+	centre += Vector2(out) * (thickness * 0.30)
+	var width: float = float(Data3D.param("structures.door_width", 0.9)) + 0.22
+	var top: float = minf(height, float(Data3D.param("structures.door_height", 2.0)) + 0.16)
+	_append_kit_fit(id, model, Vector3(width, top, thickness * 0.84), atan2(out.x, out.y), Vector3(centre.x, ground, centre.y), batches)
+	return true
+
+
+func _kit_footing(id: String, tile: Vector2i, ground: float, thickness: float, batches: Dictionary) -> bool:
+	var model: ArrayMesh = Kit.mesh(id)
+	if model == null:
+		return false
+	var room: int = int(_room_wall_trim.get(tile, -1))
+	var house: Dictionary = _house_wall.get(tile, {})
+	for along: Vector2i in DIRS:
+		var neighbour: Vector2i = tile + along
+		if not _connects(tile, along) or bool((_walls[neighbour] as Dictionary)["door"]):
+			continue
+		if house.is_empty() and int(_room_wall_trim.get(neighbour, -2)) != room:
+			continue
+		var centre: Vector2 = Vector2(tile) + Vector2.ONE * 0.5 + Vector2(along) * 0.25
+		_append_kit_fit(id, model, Vector3(thickness * 1.43, 0.28, 0.57), atan2(along.x, along.y),
+			Vector3(centre.x, ground - 0.025, centre.y), batches)
+	return true
+
+
+func _kit_corner(id: String, tile: Vector2i, ground: float, height: float, thickness: float, batches: Dictionary) -> void:
+	var model: ArrayMesh = Kit.mesh(id)
+	if model == null:
+		return
+	var arms: Array[Vector2i] = []
+	for direction: Vector2i in DIRS:
+		if _connects(tile, direction):
+			arms.append(direction)
+	if arms.size() != 2 or Vector2(arms[0]).dot(Vector2(arms[1])) != 0.0:
+		return
+	var out: Vector2 = -Vector2(arms[0] + arms[1])
+	var centre: Vector2 = Vector2(tile) + Vector2.ONE * 0.5 + out * (thickness * 0.38)
+	var yaw: float = atan2(out.x, out.y) - PI * 0.25
+	var count: int = maxi(3, roundi(height / thickness))
+	var course: float = height / float(count)
+	for row: int in count:
+		var lift: float = course * (float(row) + 0.10)
+		_append_kit_fit(id, model, Vector3(thickness * 0.85, course * 0.78, thickness * 0.90), yaw,
+			Vector3(centre.x, ground + lift, centre.y), batches, lift)
 
 
 ## The kit's door and frame share one mesh. Mask the baked door in its local
@@ -473,11 +559,9 @@ func _kit_door(tile: Vector2i, ground: float, height: float, thickness: float, b
 	var model: ArrayMesh = Kit.mesh(id)
 	if model == null:
 		return false
-	if not batches.has(id):
-		batches[id] = []
 	var yaw: float = -PI * 0.5 if _run_axis(tile).y != 0 else 0.0
 	var centre: Vector3 = Vector3(tile.x + 0.5, ground, tile.y + 0.5)
-	(batches[id] as Array).append(Kit.fit(model, Vector3(1.18, height, thickness), yaw, centre))
+	_append_kit_fit(id, model, Vector3(1.18, height, thickness), yaw, centre, batches)
 	return true
 
 
@@ -488,6 +572,7 @@ func _build_kit_wall_batches(chunk: Vector2i, batches: Dictionary) -> void:
 	if batches.is_empty():
 		return
 	var nodes: Array[MultiMeshInstance3D] = []
+	var kit_trim: Dictionary = Data3D.binding("s2kit.house_wall_trim", {})
 	for id: String in batches:
 		var has_lod: bool = Kit.mesh(id, true) != null
 		for lod: bool in [false, true]:
@@ -495,21 +580,38 @@ func _build_kit_wall_batches(chunk: Vector2i, batches: Dictionary) -> void:
 			if model == null:
 				continue
 			var transforms: Array = batches[id]
+			var raised: bool = id == str(kit_trim.get("corner", ""))
 			var multimesh: MultiMesh = MultiMesh.new()
 			multimesh.transform_format = MultiMesh.TRANSFORM_3D
+			multimesh.use_custom_data = raised
 			multimesh.mesh = model
 			multimesh.instance_count = transforms.size()
 			for i: int in transforms.size():
-				multimesh.set_instance_transform(i, transforms[i])
+				var entry: Dictionary = transforms[i]
+				multimesh.set_instance_transform(i, entry["fit"])
+				if raised:
+					multimesh.set_instance_custom_data(i, Color(float(entry["cut_offset"]) / 4.0, 0.0, 0.0, 0.0))
 			var material_key: String = id + ("_lod" if lod else "")
 			if not _kit_wall_materials.has(material_key):
-				var material: ShaderMaterial = Kit.material_for(model, true)
-				if id == str(Data3D.binding("s2kit.door_frame", "")):
+				var material: ShaderMaterial = Kit.material_for(model, true, id)
+				if id == str(Data3D.binding("s2kit.wall_profiles.log", "")):
+					var box: AABB = model.get_aabb()
+					material.set_shader_parameter("clean_log", true)
+					material.set_shader_parameter("log_size", box.size.max(Vector3.ONE * 0.0001))
+					material.set_shader_parameter("log_origin", Vector3(box.position.x, box.position.y, box.get_center().z))
+					var log_tile: Texture2D = Kit.texture(str(Data3D.binding("s2kit.house_log_tile", "")))
+					if log_tile != null:
+						material.set_shader_parameter("log_tile", log_tile)
+						material.set_shader_parameter("mapped_log", true)
+				elif id == str(Data3D.binding("s2kit.door_frame", "")):
 					var box: AABB = model.get_aabb()
 					var opening: float = float(Data3D.param("structures.door_width", 0.9)) / 1.18
 					var door_height: float = float(Data3D.param("structures.door_height", 2.0))
 					var wall_height: float = float(Data3D.param("structures.wall_height", 2.2))
 					material.set_shader_parameter("door_opening", Vector3(box.get_center().x, box.size.x * opening * 0.5, box.position.y + box.size.y * door_height / wall_height))
+				elif id in kit_trim.values():
+					material.set_shader_parameter("wall_base_y", model.get_aabb().position.y)
+					material.set_shader_parameter("raised_wall", raised)
 				_kit_wall_materials[material_key] = material
 			var part: MultiMeshInstance3D = MultiMeshInstance3D.new()
 			part.multimesh = multimesh
@@ -726,8 +828,9 @@ func _update_doors() -> void:
 			cut = minf(cut, _cut_rect_h)
 		# The cutaway lowers the leaf with the walls instead of leaving an empty gap.
 		var house: Dictionary = _house_wall.get(t, {})
-		if str(house.get("art_roof", "")) == "round":
-			cut = minf(cut, _round_height() * 0.81)
+		if bool(house.get("round", false)):
+			cut = minf(cut, float(Data3D.param("s2_house.round_door_height", 0.78)))
+			_door_nodes[i].transform = _door_nodes[i].transform.scaled_local(Vector3(0.80, 1.0, 1.0))
 		var keep: float = clampf(cut / door_h, 0.05, 1.0)
 		_door_nodes[i].transform = _door_nodes[i].transform.scaled_local(Vector3(1.0, keep, 1.0))
 
@@ -769,17 +872,31 @@ func _sync_houses(sites: Array) -> void:
 			# derived from the actual building binding in _add_hut_rings.
 			_house_plans[id] = {"source": source, "pieces": pieces, "walls": walls, "doors": doors,
 				"footprint": HouseShell.enclosed_tiles(_house_bounds(site), walls)}
-		if status == "complete":
+		var rounded: bool = _round_shell(id)
+		if status == "complete" or rounded:
 			var plan: Dictionary = _house_plans[id]
 			var bounds: Rect2i = _house_bounds(site)
 			var inner: Rect2i = bounds.grow(-1)
 			for tile: Vector2i in HouseShell.tiles(bounds):
 				if (plan["walls"] as Dictionary).has(tile) or ((plan["walls"] as Dictionary).is_empty() and not inner.has_point(tile)):
-					_house_wall[tile] = {"id": id, "art_roof": site["art_roof"]}
+					_house_wall[tile] = {"id": id, "round": rounded, "complete": status == "complete"}
 
 
 static func _house_bounds(site: Dictionary) -> Rect2i:
 	return Rect2i(int(site["x"]), int(site["y"]), int(site["width"]), int(site["height"]))
+
+
+func _round_shell(id: int) -> bool:
+	if not _houses.has(id) or not _house_plans.has(id):
+		return false
+	var site: Dictionary = _houses[id]
+	var size: Vector2i = _house_bounds(site).size
+	var plan: Dictionary = _house_plans[id]
+	var footprint: Array = plan["footprint"]
+	var walls: Dictionary = plan["walls"]
+	var limit: int = int(Data3D.param("s2_house.round_max_span", 3))
+	return str(site.get("art_roof", "")) == "round" and mini(size.x, size.y) >= 2 and maxi(size.x, size.y) <= limit \
+		and footprint.size() == size.x * size.y and footprint.size() > walls.size()
 
 
 static func _round_height() -> float:
@@ -787,7 +904,7 @@ static func _round_height() -> float:
 
 
 func _window_height(id: int) -> float:
-	return minf(_window_elevation, _round_height() * 0.60) if _style2 and str((_houses.get(id, {}) as Dictionary).get("art_roof", "")) == "round" else _window_elevation
+	return minf(_window_elevation, _round_height() * 0.60) if _style2 and _round_shell(id) else _window_elevation
 
 
 func _footing(b: Builder, tile: Vector2i, ground: float, thick: float) -> void:
@@ -806,6 +923,15 @@ func _footing(b: Builder, tile: Vector2i, ground: float, thick: float) -> void:
 	b.texture_tile = previous
 
 
+func _round_threshold(b: Builder, tile: Vector2i, ground: float, facing: Vector2) -> void:
+	var stone: Color = Data3D.colour(Data3D.param("s2_house.footing", []))
+	b.profile = PROFILE_TRIM
+	b.texture_tile = preload("res://scripts/world3d/textures3d.gd").index("surfaces", "stone")
+	var step: Vector3 = Vector3(tile.x + 0.5, ground, tile.y + 0.5) + Vector3(facing.x, 0.0, facing.y) * 0.08
+	var half: Vector3 = Vector3(0.30, 0.0, 0.30) + Vector3(absf(facing.y), 0.0, absf(facing.x)) * 0.09
+	b.box(step - half + Vector3.DOWN * 0.08, step + half + Vector3.UP * 0.13, stone)
+
+
 func _rebuild_house_roofs(rooms: Dictionary) -> void:
 	for node: Node3D in _roof_details.values():
 		node.hide()
@@ -816,24 +942,31 @@ func _rebuild_house_roofs(rooms: Dictionary) -> void:
 			vent.queue_free()
 	_hearth_vents.clear()
 	_roof_details.clear()
-	_roof_origins.clear()
 	_house_rooms.clear()
+	_room_wall_trim = {}
+	_s2_roof_footprints.clear()
 	_s2_lights_key = 0
 	_room_at_tile.clear()
-	for id: int in _roof_fade.keys():
-		if not _houses.has(id):
-			_roof_fade.erase(id)
 	var tx: PackedInt32Array = rooms.get("tile_xs", PackedInt32Array())
 	var ty: PackedInt32Array = rooms.get("tile_ys", PackedInt32Array())
 	var ids: PackedInt32Array = rooms.get("tile_rooms", PackedInt32Array())
+	var room_tiles: Dictionary = {}
 	for i: int in mini(ids.size(), mini(tx.size(), ty.size())):
-		_room_at_tile[Vector2i(tx[i], ty[i])] = ids[i]
+		var tile: Vector2i = Vector2i(tx[i], ty[i])
+		_room_at_tile[tile] = ids[i]
+		if not room_tiles.has(ids[i]):
+			room_tiles[ids[i]] = []
+		(room_tiles[ids[i]] as Array).append(tile)
+	var packed_ground: Dictionary = {}
+	var template_tiles: Dictionary = {}
 	for id: int in _houses:
 		var site: Dictionary = _houses[id]
+		var footprint: Array[Vector2i] = _house_plans[id]["footprint"]
+		for tile: Vector2i in footprint:
+			template_tiles[tile] = true
 		if str(site["status"]) != "complete":
 			continue
 		var bounds: Rect2i = _house_bounds(site)
-		var footprint: Array[Vector2i] = _house_plans[id]["footprint"]
 		var interior: Array[Vector2i] = []
 		for tile: Vector2i in footprint:
 			_tile_room[tile] = id
@@ -841,6 +974,7 @@ func _rebuild_house_roofs(rooms: Dictionary) -> void:
 				_house_rooms[int(_room_at_tile[tile])] = id
 			if not _house_wall.has(tile):
 				interior.append(tile)
+				packed_ground[tile] = true
 		_room_rects[id] = bounds
 		var facing: Vector2 = _house_door_side(id, bounds)
 		var ground: float = _roof_ground(footprint)
@@ -849,13 +983,91 @@ func _rebuild_house_roofs(rooms: Dictionary) -> void:
 		add_child(mi)
 		_make_house_roof(mi, site, bounds, footprint, ground, facing, 1.0)
 		_roofs[id] = mi
-		_roof_origins[id] = mi.position
+		_s2_roof_footprints[id] = footprint
 		_add_windows(id, interior)
+	_add_room_shells(rooms, room_tiles, template_tiles, packed_ground)
+	for id: int in _roof_fade.keys():
+		if not _roofs.has(id):
+			_roof_fade.erase(id)
+	_terrain.set_house_ground(packed_ground)
+
+
+func _add_room_shells(rooms: Dictionary, room_tiles: Dictionary, template_tiles: Dictionary, packed_ground: Dictionary) -> void:
+	var ids: PackedInt32Array = rooms.get("ids", PackedInt32Array())
+	var roles: PackedInt32Array = rooms.get("roles", PackedInt32Array())
+	var roofed: PackedByteArray = rooms.get("roofed", PackedByteArray())
+	var dug: PackedByteArray = rooms.get("dug", PackedByteArray())
+	for i: int in mini(ids.size(), roofed.size()):
+		var room: int = ids[i]
+		if roofed[i] == 0 or (i < dug.size() and dug[i] != 0) or _house_rooms.has(room):
+			continue
+		var interior: Array = room_tiles.get(room, [])
+		if interior.is_empty():
+			continue
+		var role: int = roles[i] if i < roles.size() else 0
+		var footprint: Array = _built_room_footprint(interior, template_tiles, role == 1 or role == 2)
+		if footprint.is_empty():
+			continue
+		var bounds: Rect2i = Rect2i(footprint[0], Vector2i.ONE)
+		var id: int = S2_ROOM_ROOF_BASE + room
+		for tile: Vector2i in footprint:
+			bounds = bounds.expand(tile).expand(tile + Vector2i.ONE)
+			# A shared wall is clickable for the first of its adjoining rooms.
+			if not _tile_room.has(tile):
+				_tile_room[tile] = id
+			if _walls.has(tile) and not template_tiles.has(tile) and not _room_wall_trim.has(tile):
+				_room_wall_trim[tile] = room
+		_house_rooms[room] = id
+		_room_rects[id] = bounds
+		var mi: MeshInstance3D = MeshInstance3D.new()
+		mi.name = "RoomRoof_%d" % room
+		add_child(mi)
+		_make_house_roof(mi, {"id": id}, bounds, footprint, _roof_ground(footprint), Vector2.DOWN, 1.0)
+		_roofs[id] = mi
+		_s2_roof_footprints[id] = footprint
+		for tile: Vector2i in interior:
+			packed_ground[tile] = true
+		_add_windows(id, interior)
+
+
+func _built_room_footprint(interior: Array, template_tiles: Dictionary, room_use: bool) -> Array:
+	var cells: Dictionary = {}
+	var perimeter: Dictionary = {}
+	for tile: Vector2i in interior:
+		if template_tiles.has(tile):
+			return []
+		cells[tile] = true
+	var enclosed: bool = true
+	var door: bool = false
+	for tile: Vector2i in interior:
+		for direction: Vector2i in DIRS:
+			var border: Vector2i = tile + direction
+			if cells.has(border) or perimeter.has(border):
+				continue
+			var wall: Dictionary = _walls.get(border, {})
+			if wall.is_empty() or bool(wall["fence"]):
+				enclosed = false
+				continue
+			perimeter[border] = true
+			door = door or bool(wall["door"])
+	if perimeter.is_empty() or not (room_use or (enclosed and door)):
+		return []
+	for tile: Vector2i in interior:
+		for i: int in DIRS.size():
+			var side: Vector2i = DIRS[i]
+			var next: Vector2i = DIRS[(i + 1) % DIRS.size()]
+			if perimeter.has(tile + side) and perimeter.has(tile + next):
+				var corner: Vector2i = tile + side + next
+				var wall: Dictionary = _walls.get(corner, {})
+				if not wall.is_empty() and not bool(wall["fence"]):
+					cells[corner] = true
+	cells.merge(perimeter)
+	return cells.keys()
 
 
 func _house_door_side(id: int, bounds: Rect2i) -> Vector2:
 	for tile: Vector2i in HouseShell.tiles(bounds):
-		if int((_house_wall.get(tile, {}) as Dictionary).get("id", -1)) == id and bool((_walls.get(tile, {}) as Dictionary).get("door", false)):
+		if (_house_plans[id]["doors"] as Dictionary).has(tile) or (int((_house_wall.get(tile, {}) as Dictionary).get("id", -1)) == id and bool((_walls.get(tile, {}) as Dictionary).get("door", false))):
 			return (Vector2(tile) + Vector2.ONE * 0.5 - Rect2(bounds).get_center()).normalized()
 	return Vector2.DOWN.rotated(float(int(_houses[id]["rotation"])) * PI * 0.5)
 
@@ -872,39 +1084,49 @@ func _house_roof_material() -> ShaderMaterial:
 
 func _make_house_roof(node: MeshInstance3D, site: Dictionary, bounds: Rect2i, footprint: Array, ground: float, facing: Vector2, layers: float) -> void:
 	var id: int = int(site["id"])
-	var rounded: bool = str(site["art_roof"]) == "round"
+	var rounded: bool = _round_shell(id)
 	var irregular: bool = footprint.size() != bounds.get_area()
 	var center: Vector2 = Rect2(bounds).get_center()
 	var height: float = _round_height() if rounded else float(Data3D.param("structures.wall_height", 2.2))
 	var eave: float = ground + height + 0.03
-	var pitch: float = tan(deg_to_rad(float(Data3D.param("structures.roof_pitch_deg", 38.0))))
+	var pitch_key: String = "s2_house.round_roof_pitch_deg" if rounded else "structures.roof_pitch_deg"
+	var pitch: float = tan(deg_to_rad(float(Data3D.param(pitch_key, 38.0))))
 	var rise_max: float = float(Data3D.param("structures.roof_max_rise", 2.4))
 	var radius: Vector2 = Vector2(bounds.size) * 0.51
-	var rise: float = minf(rise_max, minf(radius.x, radius.y) * pitch)
+	var eave_radius: Vector2 = radius * float(Data3D.param("s2_house.round_eave_ratio", 0.88)) if rounded else radius
+	var rise: float = minf(rise_max, minf(eave_radius.x, eave_radius.y) * pitch)
+	if rounded and layers >= 1.0 and _install_pit_house(node, id, center, radius, ground, facing):
+		return
 	var mat: ShaderMaterial = _house_roof_material()
+	var hearths: Dictionary = _hearths_in(footprint)
+	var vents: Array[Vector3] = []
+	var roof_parts: Dictionary = Data3D.binding("s2kit.house_roof_trim", {})
+	var ridge_id: String = str(roof_parts.get("ridge", "")) if layers >= 1.0 and not (rounded or irregular) else ""
+	var ridge: ArrayMesh = Kit.mesh(ridge_id)
+	var vent_id: String = str(roof_parts.get("vent", "")) if maxi(bounds.size.x, bounds.size.y) >= 6 else ""
+	var vent_part: ArrayMesh = Kit.mesh(vent_id)
+	var aperture_half: float = 0.17 if vent_part != null else 0.12
+	if not irregular and layers >= 1.0:
+		if not rounded:
+			for tile: Vector2i in hearths.values():
+				vents.append(_vent_point(center, radius, eave, rise, rounded, tile))
+		if vents.is_empty():
+			vents.append(Vector3(center.x, eave + rise, center.y))
 	if rounded:
 		mat.set_shader_parameter("radial_thatch", true)
 		mat.set_shader_parameter("cone_center", center)
-		node.mesh = HouseShell.cone(center, radius, eave, rise, not _hearths_in(footprint).is_empty(), mat)
-	elif irregular:
-		node.mesh = HouseShell.angular_roof(footprint, bounds, ground, eave, pitch, rise_max, mat)
+		node.mesh = HouseShell.cone(center, eave_radius, eave, rise, not vents.is_empty(), mat)
 	else:
-		var covers: Dictionary = Data3D.binding("s2kit.roof_covers", {})
-		var kit_id: String = str(covers.get(Data3D.binding("roofs.fallback", ""), ""))
-		var h2: ArrayMesh = Kit.mesh(kit_id) if layers >= 1.0 else null
-		if h2 != null:
-			node.mesh = h2
-			node.transform = Kit.fit(h2, Vector3(2.0 * minf(radius.x, radius.y), rise, 2.0 * maxf(radius.x, radius.y)), PI * 0.5 if radius.x > radius.y else 0.0, Vector3(center.x, eave, center.y))
-			node.material_override = Kit.material_for(h2, false)
-			Kit.add_lod(node, kit_id)
-		else:
-			node.mesh = HouseShell.angular_roof(footprint, bounds, ground, eave, pitch, rise_max, mat)
+		node.mesh = HouseShell.angular_roof(footprint, bounds, ground, eave, pitch, rise_max, mat, vents, ridge != null, aperture_half)
 	if layers < 1.0:
 		mat.set_shader_parameter("lay_top", eave + rise * layers)
 		return
 	_roof_top[id] = eave + rise * 0.42
 	var trim: Builder = Builder.new()
 	trim.base = ground
+	var details: MeshInstance3D = MeshInstance3D.new()
+	details.name = "HouseTrim_%d" % id
+	add_child(details)
 	if rounded:
 		var berm: Builder = Builder.new()
 		HouseShell.earth_ring(berm, center, radius, ground, height, facing)
@@ -914,16 +1136,130 @@ func _make_house_roof(node: MeshInstance3D, site: Dictionary, bounds: Rect2i, fo
 		add_child(base_node)
 		_roof_details[-id - 1] = base_node
 	elif not irregular:
-		HouseShell.gable_ends(trim, center, radius, ground, eave, rise)
-	var by_room: Dictionary = _hearths_in(footprint)
-	for tile: Vector2i in by_room.values():
-		var vent: Vector3 = _vent_point(center, radius, eave, rise, rounded, tile, by_room.size())
-		HouseShell.vent(trim, vent)
+		_mount_gable_trim(details, trim, roof_parts, center, radius, ground, eave, rise)
+		if ridge != null:
+			_mount_ridge_trim(details, ridge_id, ridge, center, radius, eave + rise, vents, aperture_half)
+	var ridge_x: bool = radius.x > radius.y
+	for position: Vector3 in vents:
+		if vent_part == null:
+			HouseShell.vent(trim, position)
+		else:
+			var opening: MeshInstance3D = Kit.fitted_part(vent_id, vent_part, Vector3(0.44, 0.20, 0.44),
+				0.0 if ridge_x else -PI * 0.5, position - Vector3.UP * 0.08)
+			opening.name = "SmokeOpening"
+			details.add_child(opening, true)
 	if not trim.is_empty():
-		var details: MeshInstance3D = MeshInstance3D.new()
 		details.mesh = trim.commit(_house_roof_material())
-		add_child(details)
+	if details.mesh != null or details.get_child_count() > 0:
 		_roof_details[id] = details
+	else:
+		details.queue_free()
+
+
+func _mount_gable_trim(group: Node3D, fallback: Builder, parts: Dictionary, center: Vector2, radius: Vector2, ground: float, eave: float, rise: float) -> void:
+	var gable_id: String = str(parts.get("gable", ""))
+	var model: ArrayMesh = Kit.mesh(gable_id)
+	var ridge_x: bool = radius.x > radius.y
+	var ridge_dir: Vector3 = Vector3.RIGHT if ridge_x else Vector3.BACK
+	var span: float = maxf(radius.x, radius.y)
+	var width: float = minf(radius.x, radius.y)
+	var base: Vector3 = Vector3(center.x, eave, center.y)
+	if model == null:
+		HouseShell.gable_ends(fallback, center, radius, ground, eave, rise)
+	else:
+		for side: float in [-1.0, 1.0]:
+			var yaw: float = (0.0 if ridge_x else -PI * 0.5) + (PI if side < 0 else 0.0)
+			var pos: Vector3 = base + ridge_dir * (span - 0.20) * side - Vector3.UP * 0.08
+			var part: MeshInstance3D = Kit.fitted_part(gable_id, model, Vector3(0.33, rise * 1.17, width * 1.70), yaw, pos)
+			part.name = "GableTrim_%s" % ("Near" if side > 0.0 else "Far")
+			group.add_child(part)
+	_mount_eave_trim(group, str(parts.get("eave", "")), base, ridge_dir, span, width, ridge_x)
+
+
+func _mount_eave_trim(group: Node3D, id: String, base: Vector3, along: Vector3, span: float, width: float, ridge_x: bool) -> void:
+	var model: ArrayMesh = Kit.mesh(id)
+	if model == null:
+		return
+	var count: int = maxi(1, roundi(span * 2.0 / 0.64))
+	var spacing: float = span * 2.0 / count
+	var across: Vector3 = Vector3.BACK if ridge_x else Vector3.RIGHT
+	var batch: MultiMesh = MultiMesh.new()
+	batch.transform_format = MultiMesh.TRANSFORM_3D
+	batch.mesh = model
+	batch.instance_count = count * 2
+	for row: int in 2:
+		var side: float = 1.0 if row == 0 else -1.0
+		var yaw: float = (0.0 if ridge_x else PI * 0.5) + row * PI
+		for i: int in count:
+			var pos: Vector3 = base + across * (width + 0.018) * side + along * (-span + (i + 0.5) * spacing) - Vector3.UP * 0.11
+			batch.set_instance_transform(row * count + i, Kit.fit(model, Vector3(spacing, 0.16, 0.18), yaw, pos))
+	var fringe: MultiMeshInstance3D = MultiMeshInstance3D.new()
+	fringe.name = "ThatchFringe"
+	fringe.multimesh = batch
+	fringe.material_override = Kit.material_for(model, false, id)
+	group.add_child(fringe)
+
+
+func _mount_ridge_trim(group: Node3D, id: String, model: ArrayMesh, center: Vector2, radius: Vector2, top: float,
+		vents: Array[Vector3], aperture: float) -> void:
+	var along_x: bool = radius.x > radius.y
+	var along: Vector3 = Vector3.RIGHT if along_x else Vector3.BACK
+	var mid: Vector3 = Vector3(center.x, top, center.y)
+	var length: float = maxf(radius.x, radius.y)
+	var holes: Array[float] = []
+	for vent: Vector3 in vents:
+		holes.append((vent - mid).dot(along))
+	holes.sort()
+	holes.append(length + aperture)
+	var start: float = -length
+	var number: int = 0
+	for hole: float in holes:
+		var finish: float = minf(length, hole - aperture)
+		var span: float = finish - start
+		if span > 0.03:
+			var sections: int = maxi(1, roundi(span / 1.55))
+			var step: float = span / sections
+			for i: int in sections:
+				var pos: Vector3 = mid + along * (start + (i + 0.5) * step) + Vector3.UP * 0.02
+				var pole: MeshInstance3D = Kit.fitted_part(id, model, Vector3(step + 0.012, 0.14, 0.19), 0.0 if along_x else -PI * 0.5, pos)
+				pole.name = "RidgeTrim_%d" % number
+				group.add_child(pole)
+				number += 1
+		start = maxf(start, hole + aperture)
+
+
+func _install_pit_house(node: MeshInstance3D, id: int, center: Vector2, radius: Vector2, ground: float, facing: Vector2) -> bool:
+	var kit: Dictionary = Data3D.binding("s2kit.pit_house", {})
+	var whole_id: String = str(kit.get("whole", ""))
+	var roof_id: String = str(kit.get("roof", ""))
+	var base_id: String = str(kit.get("base", ""))
+	var whole: ArrayMesh = Kit.mesh(whole_id)
+	var roof: ArrayMesh = Kit.mesh(roof_id)
+	var base: ArrayMesh = Kit.mesh(base_id)
+	if whole == null or roof == null or base == null:
+		return false
+	var yaw: float = atan2(facing.x, facing.y) - deg_to_rad(float(kit.get("door_yaw_deg", 0.0)))
+	var fit: Transform3D = Kit.fit_proportional(whole, radius * 2.0, yaw, Vector3(center.x, ground, center.y))
+	node.mesh = roof
+	node.transform = fit
+	node.material_override = Kit.material_for(roof, false, roof_id)
+	node.set_meta("house_kit", whole_id)
+	node.set_meta("roof_rest_y", fit.origin.y)
+	var tip: float = (fit * roof.get_aabb().end).y
+	_roof_top[id] = lerpf(ground, tip, 0.66)
+	node.set_meta("house_smoke_y", tip)
+	Kit.add_lod(node, roof_id)
+	var plinth: MeshInstance3D = MeshInstance3D.new()
+	plinth.name = "PitBase_%d" % id
+	plinth.mesh = base
+	plinth.transform = fit
+	if not _kit_wall_materials.has(base_id):
+		_kit_wall_materials[base_id] = Kit.material_for(base, true, base_id)
+	plinth.material_override = _kit_wall_materials[base_id]
+	Kit.add_lod(plinth, base_id)
+	add_child(plinth)
+	_roof_details[-id - 1] = plinth
+	return true
 
 
 func _index_house_hearths(buildings: Dictionary) -> void:
@@ -947,14 +1283,11 @@ func _hearths_in(footprint: Array) -> Dictionary:
 	return out
 
 
-static func _vent_point(center: Vector2, radius: Vector2, eave: float, rise: float, rounded: bool, tile: Vector2i, count: int) -> Vector3:
+static func _vent_point(center: Vector2, radius: Vector2, eave: float, rise: float, rounded: bool, tile: Vector2i) -> Vector3:
 	var offset: Vector2 = Vector2(tile) + Vector2.ONE * 0.5 - center
 	var ridge: Vector2 = Vector2.ZERO
 	var height: float = eave + rise
-	if rounded and count > 1:
-		ridge = offset.limit_length(minf(radius.x, radius.y) * 0.65)
-		height -= rise * (ridge / radius).length()
-	elif not rounded:
+	if not rounded:
 		ridge = Vector2(clampf(offset.x, -radius.x * 0.78, radius.x * 0.78), 0.0) if radius.x > radius.y else Vector2(0.0, clampf(offset.y, -radius.y * 0.78, radius.y * 0.78))
 	return Vector3(center.x + ridge.x, height, center.y + ridge.y)
 
@@ -971,21 +1304,25 @@ func _update_hearths() -> void:
 			old.hide()
 			old.queue_free()
 		var vents: Array[CPUParticles3D] = []
-		var hearths: Dictionary = _hearths_in(_house_plans[id]["footprint"])
+		var hearths: Dictionary = _hearths_in(_s2_roof_footprints[id])
 		var bounds: Rect2i = _room_rects[id]
 		var centre: Vector2 = Rect2(bounds).get_center()
 		var radius: Vector2 = Vector2(bounds.size) * 0.51
-		var rounded: bool = str(_houses[id]["art_roof"]) == "round"
+		var rounded: bool = _round_shell(id)
 		var pitch: float = tan(deg_to_rad(float(Data3D.param("structures.roof_pitch_deg", 38.0))))
 		var rise: float = minf(float(Data3D.param("structures.roof_max_rise", 2.4)), minf(radius.x, radius.y) * pitch)
 		var eave: float = float(_roof_top[id]) - rise * 0.42
 		for tile: Vector2i in hearths.values():
 			if not Props._fire_lit(settlements, tile):
 				continue
-			var vent: CPUParticles3D = HouseShell.smoke(_vent_point(centre, radius, eave, rise, rounded, tile, hearths.size()) + Vector3.UP * 0.16)
+			var mouth: Vector3 = _vent_point(centre, radius, eave, rise, rounded, tile)
+			mouth.y = float((_roofs[id] as Node3D).get_meta("house_smoke_y", mouth.y))
+			var vent: CPUParticles3D = HouseShell.smoke(mouth + Vector3.UP * 0.16)
 			vent.visible = float(_roof_fade.get(id, 1.0)) > 0.55
 			add_child(vent)
 			vents.append(vent)
+			if rounded:
+				break
 		_hearth_vents[id] = vents
 		_lit_houses[id] = not vents.is_empty()
 
@@ -1021,7 +1358,7 @@ func _rebuild_house_sites(b: Builder, overlay: Dictionary) -> void:
 		var bounds: Rect2i = _house_bounds(site)
 		var footprint: Array[Vector2i] = plan["footprint"]
 		var g: float = _roof_ground(footprint)
-		var rounded: bool = str(site["art_roof"]) == "round"
+		var rounded: bool = _round_shell(id)
 		var h: float = _round_height() if rounded else float(Data3D.param("structures.wall_height", 2.2))
 		var walls: Dictionary = {}
 		for tile: Vector2i in plan["walls"]:
@@ -1036,11 +1373,15 @@ func _rebuild_house_sites(b: Builder, overlay: Dictionary) -> void:
 			var centre: Vector2 = Rect2(bounds).get_center()
 			var entry: Vector2 = centre + Vector2.DOWN.rotated(float(int(site["rotation"])) * PI * 0.5) * (Vector2(bounds.size).length() * 0.31)
 			doors[Vector2i(floori(entry.x), floori(entry.y))] = true
-		HouseShell.frame(b, bounds, g, h, stage, p, walls, doors)
+		var facing: Vector2 = _house_door_side(id, bounds)
+		if rounded:
+			HouseShell.round_frame(b, Rect2(bounds).get_center(), Vector2(bounds.size) * 0.51, g, h, stage, p, facing)
+		else:
+			HouseShell.frame(b, bounds, g, h, stage, p, walls, doors)
 		if stage == 3:
 			var partial: MeshInstance3D = MeshInstance3D.new()
 			_site_models.add_child(partial)
-			_make_house_roof(partial, site, bounds, footprint, g, Vector2.DOWN, lerpf(0.13, 0.96, (p - 0.70) / 0.30))
+			_make_house_roof(partial, site, bounds, footprint, g, facing, lerpf(0.13, 0.96, (p - 0.70) / 0.30))
 
 
 func house_stage(id: int) -> int:
@@ -1053,6 +1394,20 @@ func house_progress(id: int) -> float:
 
 func house_fade(id: int) -> float:
 	return float(_roof_fade.get(id, 1.0)) if _roofs.has(id) else -1.0
+
+
+func roof_key_at(tile: Vector2i) -> int:
+	var id: int = int(_tile_room.get(tile, -1))
+	return id if _style2 and _s2_roof_footprints.has(id) else -1
+
+
+func untemplated_room_at(tile: Vector2i) -> int:
+	var id: int = roof_key_at(tile)
+	return id - S2_ROOM_ROOF_BASE if id >= S2_ROOM_ROOF_BASE else -1
+
+
+func room_roof_fade(room: int) -> float:
+	return house_fade(int(_house_rooms.get(room, -1)))
 
 
 func _rebuild_roofs(rooms: Dictionary, sites: Array) -> void:
@@ -1119,12 +1474,20 @@ func _clear_windows() -> void:
 			pane.hide()
 			pane.queue_free()
 	_windows.clear()
+	for frames: Array in _window_frames.values():
+		for frame: MeshInstance3D in frames:
+			frame.hide()
+			frame.queue_free()
+	_window_frames.clear()
 
 
 ## One pane per façade, mounted on a wall beside a roofed room tile.
 func _add_windows(room: int, tiles: Array) -> void:
 	var panes: Array[MeshInstance3D] = []
+	var frames: Array[MeshInstance3D] = []
 	var thickness: float = float(Data3D.param("structures.wall_thickness", 0.35))
+	var window_id: String = str(Data3D.binding("s2kit.house_wall_trim", {}).get("window", ""))
+	var trim: ArrayMesh = Kit.mesh(window_id) if _style2 and not _round_shell(room) else null
 	for outward: Vector2i in DIRS:
 		for inside: Vector2i in tiles:
 			var wall: Vector2i = inside + outward
@@ -1136,7 +1499,7 @@ func _add_windows(room: int, tiles: Array) -> void:
 				continue
 			var pos: Vector3 = Vector3(wall.x + 0.5, float(_terrain.call("stand_height", wall)) + _window_height(room), wall.y + 0.5)
 			pos += Vector3(outward.x, 0.0, outward.y) * (thickness * 0.5 + _window_offset)
-			if _style2 and str(_houses[room]["art_roof"]) == "round":
+			if _style2 and _round_shell(room):
 				var bounds: Rect2 = Rect2(_room_rects[room])
 				var radial: Vector2 = Vector2(outward)
 				var offset: Vector2 = radial * (bounds.size * 0.51 - Vector2.ONE * 0.28)
@@ -1151,9 +1514,18 @@ func _add_windows(room: int, tiles: Array) -> void:
 			pane.hide()
 			add_child(pane)
 			panes.append(pane)
+			if trim != null:
+				var out: Vector3 = Vector3(outward.x, 0.0, outward.y)
+				var frame: MeshInstance3D = Kit.fitted_part(window_id, trim, Vector3(0.64, 0.45, 0.075),
+					pane.rotation.y, pos - Vector3.UP * 0.225 + out * 0.03)
+				frame.name = "WindowTrim_%d_%d" % [room, frames.size()]
+				add_child(frame)
+				frames.append(frame)
 			break
 	if not panes.is_empty():
 		_windows[room] = panes
+	if not frames.is_empty():
+		_window_frames[room] = frames
 
 
 func occupied_room_at(tile: Vector2i) -> bool:
@@ -1571,7 +1943,8 @@ func _update_cutaway(delta: float) -> void:
 	var all_cut: bool = global_cut()
 	if _style2:
 		all_cut = (all_cut or inside_view) and selected.is_empty()
-	var low: float = float(Data3D.param("structures.cutaway_wall_height", 0.9))
+	var cut_height: String = "s2_house.cutaway_wall_height" if _style2 else "structures.cutaway_wall_height"
+	var low: float = float(Data3D.param(cut_height, 0.9))
 	for id: int in _roofs:
 		var target: float = 0.0 if all_cut or selected.has(id) else 1.0
 		var previous: float = float(_roof_fade.get(id, 1.0))
@@ -1588,12 +1961,18 @@ func _update_cutaway(delta: float) -> void:
 		if mi.mesh != null and mi.mesh.get_surface_count() > 0:
 			(mi.get_active_material(0) as ShaderMaterial).set_shader_parameter("fade", f)
 		if _style2:
-			mi.position = (_roof_origins[id] as Vector3) + Vector3.UP * (1.0 - f) * float(Data3D.param("s2_house.cutaway_lift", 0.9))
+			var lift: float = (1.0 - f) * float(Data3D.param("s2_house.cutaway_lift", 0.9))
+			mi.position.y = float(mi.get_meta("roof_rest_y", 0.0)) + lift
 			var trim: MeshInstance3D = _roof_details.get(id)
 			if trim != null:
-				trim.position.y = mi.position.y - (_roof_origins[id] as Vector3).y
+				trim.position.y = lift
 				trim.visible = mi.visible
-				(trim.get_active_material(0) as ShaderMaterial).set_shader_parameter("fade", f)
+				if trim.mesh != null:
+					(trim.get_active_material(0) as ShaderMaterial).set_shader_parameter("fade", f)
+				for part: GeometryInstance3D in trim.get_children():
+					(part.material_override as ShaderMaterial).set_shader_parameter("fade", f)
+			for frame: MeshInstance3D in _window_frames.get(id, []):
+				frame.visible = f > 0.85
 	_cut_all = move_toward(_cut_all, low if all_cut else 99.0, speed * 98.0)
 	var rect: Rect2 = Rect2()
 	for id: int in selected:
@@ -1630,9 +2009,10 @@ func roof_hit(origin: Vector3, dir: Vector3) -> float:
 		var p: Vector3 = origin + dir * t
 		var r: Rect2i = _room_rects[id]
 		if _style2:
-			if int(_tile_room.get(Vector2i(floori(p.x), floori(p.z)), -1)) != id:
+			# A loaded save clears its plans before the next scheduled roof rebuild.
+			if roof_key_at(Vector2i(floori(p.x), floori(p.z))) != id:
 				continue
-			if str(_houses[id]["art_roof"]) == "round":
+			if _round_shell(id):
 				var radial: Vector2 = (Vector2(p.x, p.z) - Rect2(r).get_center()) / (Vector2(r.size) * 0.51)
 				if radial.length_squared() > 1.0:
 					continue

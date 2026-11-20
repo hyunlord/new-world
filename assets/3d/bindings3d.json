@@ -8,6 +8,49 @@
     "wall_profiles": {"log": "h1"},
     "door_frame": "h3",
     "roof_covers": {"thatch": "h2"},
+    "house_thatch_tile": "th_thatch",
+    "long_thatch_tile": "th_long_thatch",
+    "house_log_tile": "th_logs",
+    "pit_house": {
+      "whole": "th_pithouse",
+      "roof": "th_pithouse_roof",
+      "base": "th_pithouse_base",
+      "door_yaw_deg": 0
+    },
+    "house_shelter": {
+      "whole": "th_shelter",
+      "bay": "th_shelter_bay",
+      "rear": "th_shelter_end",
+      "bay_spacing": 0.62,
+      "ridge_x": false,
+      "station_models": {"lean_to": "replace", "drying_rack": "cover"}
+    },
+    "house_roof_trim": {
+      "gable": "th_loghouse_gable",
+      "ridge": "th_loghouse_ridge",
+      "vent": "th_longhouse_vent",
+      "eave": "th_loghouse_eave"
+    },
+    "house_wall_trim": {
+      "door": "th_loghouse_door",
+      "window": "th_loghouse_window",
+      "corner": "th_loghouse_corner",
+      "footing": "th_loghouse_footing"
+    },
+    "part_atlases": {
+      "th_pithouse_roof": "th_pithouse",
+      "th_pithouse_base": "th_pithouse",
+      "th_shelter_bay": "th_shelter",
+      "th_shelter_end": "th_shelter",
+      "th_loghouse_gable": "th_loghouse",
+      "th_loghouse_ridge": "th_loghouse",
+      "th_loghouse_eave": "th_loghouse",
+      "th_loghouse_door": "th_loghouse",
+      "th_loghouse_window": "th_loghouse",
+      "th_loghouse_corner": "th_loghouse",
+      "th_loghouse_footing": "th_loghouse",
+      "th_longhouse_vent": "th_longhouse"
+    },
     "props": {
       "lean_to": "x1",
       "hearth": "x2",

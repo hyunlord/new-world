@@ -187,8 +187,10 @@ void fragment() {
 	}
 	vec3 vertex_tint = mix(vec3(1.0), srgb_to_linear(COLOR.rgb) * 1.8, 0.30);
 	vec3 c = surface.albedo * vertex_tint * season_tint * (1.0 + macro_strength * (macro_noise - 0.5));
+	float sheltered = 0.0;
 	if (s2) {
-		vec2 mask = texture(s2_mask, (p + warp) / map_size).rg;
+		vec4 mask = texture(s2_mask, (p + warp) / map_size);
+		sheltered = smoothstep(0.12, 0.36, mask.a);
 		float wear = max(smoothstep(0.15, 0.88, mask.g), 0.32 * s2_weights.g);
 		wear = max(wear, smoothstep(1.15, 2.0, s2_path_stage));
 		float patch = smoothstep(0.16, 0.88, mix(macro_noise, n, 0.25));
@@ -198,8 +200,9 @@ void fragment() {
 		float detail_value = 0.77 + 0.39 * smoothstep(0.12, 0.38, texture_value) + 0.07 * n;
 		float exposed_stone = max(max(rock, s2_weights.b), smoothstep(2.1, 2.9, s2_path_stage));
 		c = mix(mix(meadow_tone, worn_earth, wear) * detail_value * season_tint, c, exposed_stone);
+		c = mix(c, worn_earth * detail_value * season_tint, sheltered);
 	}
-	float cover = snow * smoothstep(0.55, 0.9, up) * smoothstep(0.25, 0.55, n + snow * 0.4);
+	float cover = snow * (1.0 - sheltered) * smoothstep(0.55, 0.9, up) * smoothstep(0.25, 0.55, n + snow * 0.4);
 	if (cover > 0.0) {
 		vec3 snow_detail = mix(material_detail(tex_pos, 8.0), material_detail(tex_pos, 9.0), macro_noise);
 		c = mix(c, vec3(0.80, 0.85, 0.92) * snow_detail, cover);

@@ -27,6 +27,11 @@ static func world_to_screen(world: Vector2) -> Vector2:
 	return provider.call("world_to_screen", world) if active() else Vector2(-10000, -10000)
 
 
+## The room selected by an S2 footprint roof when room overlays are closed.
+static func untemplated_room_at(tile: Vector2i) -> int:
+	return int(provider.call("untemplated_room_at", tile)) if active() and provider.has_method("untemplated_room_at") else -1
+
+
 ## What is drawn under screen point `screen` in order mode `mode` (OrderTool.Mode; people answer only with no mode,
 ## animals also in the hunt mode): {kind: "caravan"|"wave"|"person"|"animal", id, world (feet, world px), species
 ## (animals)}, or {}.

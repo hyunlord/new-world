@@ -84,9 +84,9 @@ func set_maps(paths: ImageTexture, biome: ImageTexture) -> void:
 	_material.set_shader_parameter("biome_tex", biome)
 
 
-func set_built(tiles: Dictionary, wear: Dictionary = {}, edges: Dictionary = {}) -> ImageTexture:
+func set_built(tiles: Dictionary, wear: Dictionary = {}, edges: Dictionary = {}, house_ground: Dictionary = {}) -> ImageTexture:
 	var bytes: PackedByteArray = PackedByteArray()
-	var channels: int = 3 if _s2 else 1
+	var channels: int = 4 if _s2 else 1
 	bytes.resize(_width * _height * channels)
 	for tile: Vector2i in tiles:
 		if tile.x >= 0 and tile.x < _width and tile.y >= 0 and tile.y < _height:
@@ -98,7 +98,10 @@ func set_built(tiles: Dictionary, wear: Dictionary = {}, edges: Dictionary = {})
 		for tile: Vector2i in edges:
 			if tile.x >= 0 and tile.x < _width and tile.y >= 0 and tile.y < _height:
 				bytes[(tile.y * _width + tile.x) * channels + 2] = 255
-	var image: Image = Image.create_from_data(_width, _height, false, Image.FORMAT_RGB8 if _s2 else Image.FORMAT_R8, bytes)
+		for tile: Vector2i in house_ground:
+			if tile.x >= 0 and tile.x < _width and tile.y >= 0 and tile.y < _height:
+				bytes[(tile.y * _width + tile.x) * channels + 3] = 255
+	var image: Image = Image.create_from_data(_width, _height, false, Image.FORMAT_RGBA8 if _s2 else Image.FORMAT_R8, bytes)
 	if _mask == null:
 		_mask = ImageTexture.create_from_image(image)
 		_material.set_shader_parameter("built_tex", _mask)

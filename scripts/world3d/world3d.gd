@@ -195,6 +195,10 @@ func screen_to_world(screen: Vector2) -> Vector2:
 	return Vector2(p.x, p.z) * _px()
 
 
+func untemplated_room_at(tile: Vector2i) -> int:
+	return int(structures.call("untemplated_room_at", tile)) if structures != null else -1
+
+
 ## ViewProjection provider: the body under screen point `screen` in order mode `mode`: the first picker with a body
 ## whose feet-to-head segment passes within `people.pick_radius_px` (or its own half-width) of the point, the nearest
 ## such body to the camera; {kind, id, world[, species]} or {}. A body counts only when both ends are on screen.

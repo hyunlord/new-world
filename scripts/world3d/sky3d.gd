@@ -37,6 +37,8 @@ var _grade_zoom: Vector2
 var _map_light: Dictionary
 var _s2_day: Dictionary = {}
 var _warm_day: Dictionary = {}
+var _house_lighting: Dictionary = {}
+var _house_effects: PackedStringArray
 
 
 func setup(world_sim: Node, terrain: Node) -> void:
@@ -48,6 +50,16 @@ func setup(world_sim: Node, terrain: Node) -> void:
 		_map_light = Data3D.param("light", {})
 		_s2_day = Data3D.mood("style2.day", {})
 		_warm_day = _s2_day.get("warm_day", {})
+		_house_lighting = Data3D.mood("style2.house_lighting", {})
+		_house_effects = PackedStringArray(_house_lighting.get("enabled", []))
+		if OS.has_environment("WORLDSIM_S2HOUSE2_LIGHTING"):
+			_house_effects = OS.get_environment("WORLDSIM_S2HOUSE2_LIGHTING").split(",", false)
+			if _house_effects == PackedStringArray(["none"]):
+				_house_effects.clear()
+			for effect: String in _house_effects:
+				assert(effect != "enabled" and _house_lighting.has(effect), "Unknown S2 house lighting trial: " + effect)
+			print("S2HOUSE2_LIGHTING ", ",".join(_house_effects) if not _house_effects.is_empty() else "none")
+		_apply_house_lighting()
 	if _world_sim != null:
 		_world_sim.connect("world_reset", _reset_hardship)
 
@@ -109,6 +121,21 @@ func _ready() -> void:
 	sun.directional_shadow_max_distance = _shadow_distance
 	add_child(sun)
 	_apply_hour(12.0, 0.0)
+
+
+func _apply_house_lighting() -> void:
+	if "ssil" in _house_effects:
+		environment.ssil_enabled = true
+		environment.ssil_radius = float(_house_lighting["ssil"]["radius"])
+		environment.ssil_intensity = float(_house_lighting["ssil"]["intensity"])
+	if "sun" in _house_effects:
+		sun.shadow_blur = float(_house_lighting["sun"]["shadow_blur"])
+	if "fog" in _house_effects:
+		environment.fog_aerial_perspective = float(_house_lighting["fog"]["aerial"])
+	if "bloom" in _house_effects:
+		environment.glow_intensity = float(_house_lighting["bloom"]["intensity"])
+		environment.glow_hdr_threshold = float(_house_lighting["bloom"]["hdr_threshold"])
+		environment.glow_bloom = float(_house_lighting["bloom"]["bloom"])
 
 
 ## Pin the hour (tools: captures at a fixed light); -1 follows the clock.
@@ -261,6 +288,12 @@ func _apply_hour(hour: float, hardship: float, grade: float = 1.0) -> void:
 		elevation *= lerpf(1.0, float(_s2_day["elevation_scale"]), smoothstep(0.6, 1.0, day) * grade)
 		if warmth > 0.0:
 			elevation *= lerpf(1.0, float(_warm_day["elevation_scale"]), warmth * grade)
+	if "sun" in _house_effects:
+		var noon: float = float(_house_lighting["sun"]["noon_elevation"])
+		var target: float = lerpf(float(_sky_data["sun_min_elevation"]), noon, sin(clampf(frac, 0.0, 1.0) * PI))
+		if slice_day_elevation >= 0.0:
+			target = noon
+		elevation = lerpf(elevation, deg_to_rad(target), smoothstep(0.6, 1.0, day) * grade)
 	var to_sun: Vector3 = Vector3(sin(azimuth) * cos(elevation), sin(elevation), cos(azimuth) * cos(elevation))
 	sun.look_at_from_position(Vector3.ZERO, -to_sun, Vector3.UP)
 	var steps: int = maxi(1, int(_profiles["lut_steps"]))
@@ -304,12 +337,29 @@ func _apply_hour(hour: float, hardship: float, grade: float = 1.0) -> void:
 			sky_material.set_shader_parameter("sky_" + sky_key, neutral.lerp(graded, day_mix))
 	if _grade_camera != null:
 		_blend_map_grade(day, frac, grade)
+	if "ssao" in _house_effects:
+		var ao: Dictionary = _house_lighting["ssao"]
+		environment.ssao_radius = lerpf(float(_sky_data["ssao_radius"]), float(ao["radius"]), grade)
+		environment.ssao_intensity = lerpf(environment.ssao_intensity, float(ao["intensity"]), grade)
+		environment.ssao_light_affect = lerpf(environment.ssao_light_affect, float(ao["light_affect"]), grade)
+	var house_day: float = daylight * grade * (1.0 - stress_blend)
+	if "sun" in _house_effects:
+		var sun_grade: Dictionary = _house_lighting["sun"]
+		sun.light_color = sun.light_color.lerp(Data3D.colour(sun_grade["colour"]), float(sun_grade["colour_mix"]) * house_day)
+	if "fog" in _house_effects:
+		environment.fog_density *= lerpf(1.0, float(_house_lighting["fog"]["density_scale"]), house_day)
+	if "grade" in _house_effects:
+		environment.adjustment_contrast += float(_house_lighting["grade"]["contrast"]) * house_day
+		environment.adjustment_saturation += float(_house_lighting["grade"]["saturation"]) * house_day
 	var offsets: PackedFloat32Array = []
 	var colours: PackedColorArray = []
 	var points: int = (a["lut"] as Array).size()
 	for i: int in points:
 		var x: float = float(i) / (points - 1)
 		var tint: Color = Data3D.colour(a["lut"][i]).lerp(Data3D.colour(b["lut"][i]), blend).lerp(Data3D.colour(grim["lut"][i]), stress_blend)
+		if "grade" in _house_effects:
+			var midtones: Color = Data3D.colour(_house_lighting["grade"]["midtones"])
+			tint = tint.lerp(tint * midtones, 4.0 * x * (1.0 - x) * house_day)
 		offsets.append(x)
 		colours.append(Color(x, x, x).lerp(tint, grade) if grade < 1.0 else tint)
 	_lut.offsets = offsets

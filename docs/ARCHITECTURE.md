@@ -941,9 +941,14 @@ the `scripts/world/view_projection.gd` provider for screen ↔ world conversion.
 Material detail uses `assets/3d/textures3d.json` and `scripts/world3d/textures3d.gd`: shared padded albedo/normal atlases in `assets/3d/textures/`, sampled by existing terrain, wall, roof and static-model materials. Original tints and surface counts remain; the crowd/VAT material path is unchanged. See [ADR0068](decisions/0068-generated-material-texture-atlas.md).
 
 Style 2 joins roofed template site rows to the cached rotated placement plan.
-`house_shell3d.gd` builds the geometry and `structures3d.gd` derives
-construction and occupancy from the existing snapshots.
-See [ADR 0075](decisions/0075-style-2-house-shells.md).
+`house_shell3d.gd` builds thatched gables, compact round roofs and intersecting
+planar hips. `structures3d.gd` uses the same shell during construction and
+after completion, and provides the interior ground mask to `terrain3d.gd`.
+Enclosed rooms outside template sites use the same shell builder and the room
+panel controls their cutaway. `sky3d.gd` reads the Style 2 house lighting
+profile from `assets/3d/mood.json`.
+See [ADR 0075](decisions/0075-style-2-house-shells.md) and
+[ADR 0076](decisions/0076-style-2-house-shapes-and-light.md).
 
 `assets/3d/mood.json` also tunes the read-only clock and hardship grade,
 occupied-room light pool, terrain blending, foliage, fog and sky. Grass batches
