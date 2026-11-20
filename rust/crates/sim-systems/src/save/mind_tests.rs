@@ -137,7 +137,7 @@ fn invalid_saved_policy_is_rejected_before_registration() {
     let mut engine = engine_with_history();
     let bytes = save(&mut engine).expect("valid save");
     let mut envelope: Envelope = decode(read_header(&bytes).expect("header")).expect("envelope");
-    let mut current: BodyV25 = decode(&envelope.payload).expect("body");
+    let mut current: BodyV26 = decode(&envelope.payload).expect("body");
     let body = &mut current.legacy;
     body.mind.policy_source = Some(SOURCE.replace("hunger", "unknown_fact"));
     envelope.payload = encode(&BodyRef {
@@ -161,6 +161,9 @@ fn invalid_saved_policy_is_rejected_before_registration() {
         reputation: &current.reputation,
     })
     .expect("malformed fixture");
+    envelope
+        .payload
+        .extend(encode(&current.housing).expect("housing tail"));
     let mut corrupt = MAGIC.to_vec();
     corrupt.extend_from_slice(&FORMAT_VERSION.to_le_bytes());
     corrupt.extend(encode(&envelope).expect("envelope"));
@@ -687,7 +690,7 @@ fn accepted_order_can_save_at_next_tick_boundary_without_advancing_clock() {
     let bytes = save(&mut engine).expect("accepted next-boundary order must save immediately");
     assert_eq!(engine.resources.current_tick, last_tick);
     let mut corrupt: Envelope = decode(&bytes[12..]).unwrap();
-    let mut current: BodyV25 = decode(&corrupt.payload).unwrap();
+    let mut current: BodyV26 = decode(&corrupt.payload).unwrap();
     let body = &mut current.legacy;
     body.resources.colony.command_log.last_mut().unwrap().tick = boundary + 1;
     corrupt.payload = encode(&current).unwrap();

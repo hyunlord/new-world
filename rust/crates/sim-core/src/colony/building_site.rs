@@ -126,6 +126,9 @@ pub struct BuildingState {
     /// M-GROW 3.1: why each housing zone was created (zone_id → cause).
     #[serde(skip)]
     pub zone_causes: BTreeMap<u32, ZoneCause>,
+    /// HOUSE1: houses, households and ownership, persisted in the format26 tail.
+    #[serde(skip)]
+    pub housing: super::household::HousingState,
 }
 
 /// Why a zone was created by the steward (M-GROW 3.1).

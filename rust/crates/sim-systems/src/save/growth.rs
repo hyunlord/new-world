@@ -174,12 +174,45 @@ pub(super) fn validate(res: &SimResources) -> Result<(), String> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::save::{decode, encode, load, load_with, save, BodyV24, BodyV25, Envelope};
+    use crate::save::{decode, encode, load, load_with, save, BodyV24, BodyV26, Envelope};
 
     fn engine() -> sim_engine::SimEngine {
         sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
             .expect("bundle");
         sim_engine::SimEngine::new(4, 4, sim_core::MaterialRegistry::new())
+    }
+
+    #[test]
+    fn housing_tail_is_format26_and_rejects_dangling_ownership() {
+        use sim_core::colony::household::{HouseHistory, HouseId, HouseholdId};
+        let mut engine = engine();
+        let valid = save(&mut engine).expect("save");
+        assert_eq!(&valid[8..12], &26u32.to_le_bytes());
+        let mut envelope: Envelope = decode(&valid[12..]).expect("envelope");
+        let mut body: BodyV26 = decode(&envelope.payload).expect("body26");
+        assert_eq!(
+            body.housing,
+            Default::default(),
+            "baseline worlds carry no housing"
+        );
+        body.housing.founded = true;
+        body.housing
+            .houses
+            .insert(HouseId(3), HouseHistory::default());
+        body.housing.ownership.insert(HouseId(3), HouseholdId(0));
+        envelope.payload = encode(&body).expect("dangling owner");
+        let mut corrupt = valid[..12].to_vec();
+        corrupt.extend(encode(&envelope).expect("envelope"));
+        let mut registered = false;
+        assert!(load_with(&corrupt, |_| registered = true).is_err());
+        assert!(!registered);
+        let legacy = crate::save::save_format25(&mut engine).expect("format25");
+        assert_eq!(&legacy[8..12], &25u32.to_le_bytes());
+        let loaded = load_with(&legacy, |_| {}).expect("format25 loads");
+        assert_eq!(
+            loaded.resources.colony.buildings.housing,
+            Default::default()
+        );
     }
 
     #[test]
@@ -199,7 +232,7 @@ mod tests {
         );
         assert_eq!(save(&mut restored).expect("stable growth"), valid);
         let mut envelope: Envelope = decode(&valid[12..]).expect("envelope");
-        let mut body: BodyV25 = decode(&envelope.payload).expect("body25");
+        let mut body: BodyV26 = decode(&envelope.payload).expect("body25");
         body.growth.path_stage.pop();
         envelope.payload = encode(&body).expect("malformed growth");
         let mut corrupt = valid[..12].to_vec();
@@ -232,14 +265,14 @@ mod tests {
             [(7, 0)].into_iter().collect()
         );
         let mut envelope: Envelope = decode(&valid[12..]).expect("envelope");
-        let mut body: BodyV25 = decode(&envelope.payload).expect("body25");
+        let mut body: BodyV26 = decode(&envelope.payload).expect("body25");
         let mut legacy = valid[..8].to_vec();
         legacy.extend(24u32.to_le_bytes());
         let mut old = Envelope {
             revision: envelope.revision.clone(),
             payload: Vec::new(),
         };
-        let BodyV25 {
+        let BodyV26 {
             legacy: v24_body,
             growth: v24_growth,
             ..
@@ -449,7 +482,7 @@ mod tests {
         let valid = save(&mut engine).expect("valid save");
         for stage in [u8::MAX, sim_core::colony::paths::STAGE_PAVED] {
             let mut envelope: Envelope = decode(&valid[12..]).expect("envelope");
-            let mut body: BodyV25 = decode(&envelope.payload).expect("body25");
+            let mut body: BodyV26 = decode(&envelope.payload).expect("body25");
             body.growth.path_stage[0] = stage;
             envelope.payload = encode(&body).expect("corrupt stage");
             let mut corrupt = valid[..12].to_vec();

@@ -169,7 +169,7 @@ fn recurring_wool_full_save_restores_omitted_cooldown_before_continuation() {
     assert_eq!(engine.resources.colony.item_ledger.created_of(wool), 1);
     let bytes = super::super::save(&mut engine).expect("full save with wool witness");
     let envelope: super::super::Envelope = super::super::decode(&bytes[12..]).expect("envelope");
-    let body: super::super::BodyV25 = super::super::decode(&envelope.payload).expect("saved body");
+    let body: super::super::BodyV26 = super::super::decode(&envelope.payload).expect("saved body");
     let body = body.legacy;
     assert!(
         body.livestock.wool_last_day.is_empty(),

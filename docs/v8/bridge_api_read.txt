@@ -81,6 +81,8 @@ func WorldSimNode.get_current_task
 func WorldSimNode.get_drafted
 func WorldSimNode.get_event_chain
 func WorldSimNode.get_field_tiles
+func WorldSimNode.get_house_snapshot
+func WorldSimNode.get_household_snapshot
 func WorldSimNode.get_influence_overlay
 func WorldSimNode.get_knowledge_waits
 func WorldSimNode.get_livestock

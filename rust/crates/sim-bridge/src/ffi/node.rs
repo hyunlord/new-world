@@ -434,6 +434,23 @@ impl WorldSimNode {
         out
     }
 
+    /// HOUSE1: derived house rows (identity, rooms, beds, residents, owner household).
+    #[func]
+    fn get_house_snapshot(&self) -> VarDictionary {
+        let res = &self.engine.resources;
+        super::houses::houses_to_dict(
+            res,
+            &super::houses::collect_houses(&self.engine.world, res),
+        )
+    }
+
+    /// HOUSE1: persistent households (id, head, members, owned houses).
+    #[func]
+    fn get_household_snapshot(&self) -> VarDictionary {
+        let res = &self.engine.resources;
+        super::houses::households_to_dict(res, &super::houses::collect_households(res))
+    }
+
     /// Read the exact ordered placement plan without allocating or submitting commands.
     #[func]
     fn get_build_template_preview(

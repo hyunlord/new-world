@@ -1,7 +1,7 @@
 //! Runtime scheduling for deterministic aggregate template progress.
 //! Priority: 153; interval: 1 tick, colony only, after room recognition.
 //! Reads: physical construction sites, completed piece identities, rooms, command log.
-//! Writes: building sites, room template associations, stockpile zones, chronicle.
+//! Writes: building sites, room template associations, stockpile zones, chronicle, house history/ownership.
 use hecs::World;
 use sim_engine::{RuntimeSystem, SimResources};
 

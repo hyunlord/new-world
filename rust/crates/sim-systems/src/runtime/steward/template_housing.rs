@@ -24,6 +24,14 @@ pub(super) fn covered(res: &SimResources) -> u32 {
     room_beds.saturating_add(huts.saturating_mul(res.rules.colony.map_or(0, |rule| rule.hut_beds)))
 }
 
+/// Sleeping places still needed: people beyond covered beds, or (HOUSE1 rule 6) the members of
+/// households without an owned or vacant house, whichever is larger (both in beds).
+pub(super) fn unhoused(world: &World, res: &SimResources) -> u32 {
+    (world.query::<&Agent>().iter().count() as u32)
+        .saturating_sub(covered(res))
+        .max(crate::runtime::housing::housing_demand(world, res))
+}
+
 /// Keep the complete declared envelope reserved while physical layers activate in sequence.
 pub(super) fn pending_tiles(res: &SimResources) -> BTreeSet<Tile> {
     res.colony
@@ -187,7 +195,7 @@ pub(super) fn anchor_house(
     if pending(res)
         || !res.colony.space_sites.is_empty()
         || (!reserve_only && world.query::<&ColonySite>().iter().next().is_some())
-        || covered(res) >= world.query::<&Agent>().iter().count() as u32
+        || unhoused(world, res) == 0
     {
         return HousePlan::default();
     }

@@ -1,6 +1,6 @@
 # Snapshot schema — the bridge's read surface
 
-Schema version: 18 — ACTION1 adds visible action and item cue reads. Version 17 — M-GROW-a appends zone layout evidence, house stages and decorative yard projections to existing getters. Version 16 — M-SPINE-b adds template catalogue/zone definitions, physical site/options and placement/cause reads, housing overlay, assigned-bed template home and command revision. Implementation integrated; b runtime validation pending. Version 15 — M-SPINE-a adds data-authored era/lane catalogues, tech status/debt and per-era progress. Version 14 — M6b Stage2 appends physical apparel/wear and weaving diagnosis facts (implementation in progress). Version 13 — M6a adds plant, meal and physical-food storage reads plus harvest designation. Version 12 — M-CORE adds the read-only `get_agent_mind` choice and reason view. Version 11 — M-UX2 adds independent defence state/command and the optional native timing diagnostic. Version 10 — M-UX Stage B adds pressure/animal catalogue metadata, actual pressure banner identity and species presentation columns. Schema 9 introduced the immutable core catalogue, factory preflight, full-width content columns and mechanical door flags. Catalogue DTO version remains 1; it is independent of this document version.
+Schema version: 19 — HOUSE1 adds `get_house_snapshot` and `get_household_snapshot` (house identity over the root building site, residents, capacity, persistent households and ownership); `dwelling_site_id` now resolves through the same house index first. Version 18 — ACTION1 adds visible action and item cue reads. Version 17 — M-GROW-a appends zone layout evidence, house stages and decorative yard projections to existing getters. Version 16 — M-SPINE-b adds template catalogue/zone definitions, physical site/options and placement/cause reads, housing overlay, assigned-bed template home and command revision. Implementation integrated; b runtime validation pending. Version 15 — M-SPINE-a adds data-authored era/lane catalogues, tech status/debt and per-era progress. Version 14 — M6b Stage2 appends physical apparel/wear and weaving diagnosis facts (implementation in progress). Version 13 — M6a adds plant, meal and physical-food storage reads plus harvest designation. Version 12 — M-CORE adds the read-only `get_agent_mind` choice and reason view. Version 11 — M-UX2 adds independent defence state/command and the optional native timing diagnostic. Version 10 — M-UX Stage B adds pressure/animal catalogue metadata, actual pressure banner identity and species presentation columns. Schema 9 introduced the immutable core catalogue, factory preflight, full-width content columns and mechanical door flags. Catalogue DTO version remains 1; it is independent of this document version.
 
 History: 8 (M-UX adds `get_ui_facts`, `get_steward`, and the logged `cmd_set_steward` mode command. 7 — M-ART2: the snapshot's appearance columns `sexes`, `look_ids`, `variants` from `collect_appearance` (`ffi/appearance.rs`, rule file `rust/crates/sim-bridge/data/appearance.ron`) and `get_space`'s `wall_materials`, `wall_styles`, `wall_categories`, `floor_materials`, `floor_styles`, `floor_categories`; no getter added or removed. 6 — M5.5: the neighbour reads `get_neighbours`, `get_wave`, `get_caravan`, the snapshot's `fleeing`, `get_agent_m5`'s `fleeing`, `get_year_summary`'s `migrants_joined`, `trades`, `eurekas` and chronicle kinds 38–44; M5: the story, animal and mood reads `get_story`, `get_animals`, `get_agent_m5`, `get_drafted`, `get_chronicle_why`, `get_year_summary`, `get_teach_suggestion`, the snapshot's `tops`, `mood_bands`, `drafted`, `sick` and the chronicle rows' `index` and links; M4 the knowledge reads `get_tech`, `get_tech_node`, `get_agent_knowledge`, `get_teach_orders`, `get_knowledge_waits`, `get_space`'s fords and the new item, recipe, blueprint, job and chronicle codes; M3 added built space, rooms, the place preview and the overlay's `item_covered`; M2 the economy reads and the overlay's node, mark and quality columns).
 
@@ -853,6 +853,64 @@ order then authored station order. These ids do not join the legacy `ids` column
 
 Active roofs use existing site wash. Opaque completed roofs additionally require
 `is_intact`; cancelled/damaged sites do not create phantom finished buildings.
+
+### `get_house_snapshot`
+`collect_houses(&SimResources) -> Vec<HouseView>` (`sim_systems::runtime::housing::house_views`) → `houses_to_dict`
+(`ffi/houses.rs`). HOUSE1 (ADR 0072): one row per house — a Dwelling template site that physically completed at least
+once — in house id order. Derived on read; only `first_completed_tick` and `owner_household` come from saved state.
+Cell lists are flat `[x0, y0, x1, y1, …]` in row-major order; nullable ints are -1. Empty `rows` in a baseline world.
+The audit's H3 `bed_refs` / `hearth_refs` ship as the flat columns `bed_cells` + `bed_slots` + `bed_reachable` and
+`hearth_cells` (D-HOUSE1: packed parallel columns instead of nested reference rows). Not in `SimReads.GETTERS`: no
+view reads it every frame yet, so callers read it on demand (`world_sim.get_house_snapshot()`) and re-read when
+`revision`, `geometry_revision` or the overlay version moved.
+
+| key | type | meaning |
+|---|---|---|
+| `tick` | int | completed ticks at the read |
+| `revision` | int | `HousingState::revision`: moves when households, ownership or bed assignments change (cache key together with `geometry_revision` and `get_colony_versions`' `overlay_version`) |
+| `rows` | Array[Dictionary] | the house rows below |
+| `house_id` | int | house id = root `BuildingSiteId` |
+| `root_site_id` | int | the same id (the site that owns template/upgrade history) |
+| `geometry_revision` | int | `rooms_version` at the read |
+| `settlement_id` | int | settlement whose formation tile is nearest (ties lowest id), or -1 |
+| `template_key` | String | current template id |
+| `template_name_key` | String | its localization key (`UI_UNKNOWN` if absent) |
+| `era_key` | String | current template era id |
+| `tier` | int | current template tier |
+| `yard_stage` | int | dwelling yard stage code |
+| `occupied_days` | int | occupied days counted by house growth |
+| `status` | String | `complete`, `upgrading` (same-id generation building) or `damaged` |
+| `first_completed_tick` | int | first physical completion tick, -1 when unknown (legacy history lost) |
+| `last_extended_tick` | int | always -1 (extensions are H2) |
+| `completed_cells` | PackedInt32Array | cells of the completed pieces |
+| `roof_cells` | PackedInt32Array | roofed interior room cells; empty unless `complete` |
+| `room_ids` | PackedInt64Array | RoomIds strictly inside the footprint |
+| `bed_cells` | PackedInt32Array | bed tiles inside the footprint (bedrolls, hut centre) |
+| `bed_slots` | PackedInt64Array | sleeping slots per bed tile (hut: `hut_beds`) |
+| `bed_reachable` | PackedInt64Array | 1 when the settlement can walk to the bed |
+| `hearth_cells` | PackedInt32Array | hearth tiles inside the footprint |
+| `resident_ids` | PackedInt64Array | AgentIds assigned (`bed_of`) to a bed inside, ascending |
+| `household_groups` | PackedInt64Array | parallel to `resident_ids`: each resident's current family group (`households()`, keyed by the group's lowest AgentId); a display key, not the persistent `owner_household` |
+| `primary_household` | int | the group key with most residents here (ties lowest key), -1 when nobody lives here |
+| `resident_count` | int | length of `resident_ids` |
+| `capacity` | int | sum of reachable bed slots |
+| `owner_household` | int | owning HouseholdId, or -1 when vacant |
+| `household_member_ids` | PackedInt64Array | AgentIds of the owning household (empty when vacant) |
+
+### `get_household_snapshot`
+`collect_households(&SimResources) -> Vec<HouseholdRow>` → `households_to_dict` (`ffi/houses.rs`). HOUSE1: living
+persistent households in HouseholdId order (monotonic, never reused). Empty `rows` in a baseline world.
+
+| key | type | meaning |
+|---|---|---|
+| `tick` | int | completed ticks at the read |
+| `rows` | Array[Dictionary] | the household rows below |
+| `id` | int | HouseholdId |
+| `head` | int | AgentId of the oldest adult (ties lowest id) |
+| `members` | PackedInt64Array | member AgentIds, ascending |
+| `formed_tick` | int | tick the household formed |
+| `parent` | int | HouseholdId it split from, or -1 |
+| `owned_houses` | PackedInt64Array | owned house ids, ascending |
 
 ### `get_construction_snapshot`
 `collect_construction_snapshot(&World) -> Vec<ConstructionSnapshotRow>` → `construction_rows_to_dict`

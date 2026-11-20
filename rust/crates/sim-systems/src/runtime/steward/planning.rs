@@ -777,13 +777,10 @@ fn house_geometry(
     {
         return HousePlan::default();
     }
-    let covered = template_housing::covered(res);
     let beds = if store {
         0
     } else {
-        (world.query::<&Agent>().iter().count() as u32)
-            .saturating_sub(covered)
-            .min(max_beds)
+        template_housing::unhoused(world, res).min(max_beds)
     };
     if (store
         && res.colony.rooms.values().any(|room| {
@@ -1696,9 +1693,7 @@ fn pending_shelter_logs(
         return 0;
     };
     // Count beds in constructed rooms (same as the house function).
-    let covered = template_housing::covered(res);
-    let agents = world.query::<&Agent>().iter().count() as u32;
-    let beds = agents.saturating_sub(covered).min(max_beds);
+    let beds = template_housing::unhoused(world, res).min(max_beds);
     if beds == 0 {
         return 0;
     }

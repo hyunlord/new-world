@@ -538,3 +538,11 @@ r1(BASE `c1aeb3585`, 시드0–15×48일, 명령 없음)과 수정 뒤 확인 �
   늑대에 물림 1회당 −500‰, 교역 1회당 +500‰.
 - 이주: 기준보다 1점 높을 때마다 계절 이주 굴림 +4‰(`roll_permille_per_point`), 20 미만이면 오는 이주 무리를
   돌려보냄(`refuse_below`), 30 미만이면 "사람들이 떠나려 해요" 카드(`card_below`), 10점 움직일 때 연대기(`chronicle_step`).
+
+## HOUSE1 households and house ownership
+
+| Feature | Tunable | Current value | Intended effect | Suspected issue |
+|---|---|---|---|---|
+| Residence | `residence_rule` (`yards.ron`, optional) | absent = Neolocal | Couples found their own household and claim a vacant house | Every single founder is a household, so steward house demand may build more houses than the old bed shortfall |
+| Exclusive beds | owned-house beds | owner household + houseless sub-households only | A house reads as one family's home | Spare owned beds stay empty while others sleep in camp beds; mood/cold cost unmeasured |
+| Steward demand | houseless households − vacant houses | max with the old bed shortfall | Build a house per houseless household | Wood draw on early seeds uncalibrated (paired smoke pending) |

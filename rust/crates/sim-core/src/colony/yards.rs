@@ -57,6 +57,8 @@ pub struct YardsData {
     pub material_wave_permille: u16,
     /// Upper bound on active dwelling generations before admitting an upgrade.
     pub max_simultaneous_upgrades: u8,
+    /// HOUSE1: post-marital residence rule; absent in the data = Neolocal.
+    pub residence_rule: super::household::ResidenceRule,
 }
 
 #[derive(Deserialize)]
@@ -71,6 +73,8 @@ struct File {
     material_wave_permille: Option<u16>,
     #[serde(default)]
     max_simultaneous_upgrades: Option<u8>,
+    #[serde(default)]
+    residence_rule: Option<super::household::ResidenceRule>,
 }
 
 impl YardsData {
@@ -79,7 +83,10 @@ impl YardsData {
         let mut file = parse_file(base)?;
         if let Some(text) = extension {
             let extra = parse_file(text)?;
-            if extra.material_wave_permille.is_some() || extra.max_simultaneous_upgrades.is_some() {
+            if extra.material_wave_permille.is_some()
+                || extra.max_simultaneous_upgrades.is_some()
+                || extra.residence_rule.is_some()
+            {
                 return Err("yards: extensions cannot replace the material-wave threshold".into());
             }
             file.stages.extend(extra.stages);
@@ -135,6 +142,7 @@ impl YardsData {
             props: file.props,
             material_wave_permille,
             max_simultaneous_upgrades,
+            residence_rule: file.residence_rule.unwrap_or_default(),
         })
     }
 
@@ -182,6 +190,35 @@ mod tests {
         assert!(YardsData::parse(
             DATA,
             Some(extension.replace("extra", "woodpile").as_str()),
+            catalog
+        )
+        .is_err());
+    }
+
+    #[test]
+    fn residence_rule_is_data_with_a_neolocal_fallback() {
+        use super::super::household::ResidenceRule;
+        let catalog = super::super::content::installed_or_bundled();
+        let data = YardsData::parse(DATA, None, catalog).expect("yards");
+        assert_eq!(data.residence_rule, ResidenceRule::Neolocal);
+        // Data only: the same file with an authored rule selects it, no code change.
+        let authored = DATA.replacen(
+            "(schema_version: 1,",
+            "(schema_version: 1, residence_rule: Some(Patrilocal),",
+            1,
+        );
+        assert_ne!(authored, DATA);
+        let data = YardsData::parse(&authored, None, catalog).expect("authored rule");
+        assert_eq!(data.residence_rule, ResidenceRule::Patrilocal);
+        let extension = "(schema_version:1,residence_rule:Some(Matrilocal))";
+        assert!(YardsData::parse(DATA, Some(extension), catalog).is_err());
+        assert!(YardsData::parse(
+            &DATA.replacen(
+                "(schema_version: 1,",
+                "(schema_version: 1, residence_rule: Some(Avunculocal),",
+                1
+            ),
+            None,
             catalog
         )
         .is_err());

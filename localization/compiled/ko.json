@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 2111,
+    "active_key_count": 2120,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 2111,
+    "key_count": 2120,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -214,6 +214,9 @@
     "CHRONICLE_BUILDING_COMPLETE": "{building}을(를) 지었다 ← {cause}",
     "CHRONICLE_DAY_FMT": "%d일째",
     "CHRONICLE_ERA_CHANGED_FMT": "시대가 바뀌었다: {era}",
+    "CHRONICLE_HOUSEHOLD_FORMED": "{person}을(를) 중심으로 새 가구가 생겼다",
+    "CHRONICLE_HOUSE_OWNER_GAINED": "{household}번 가구가 {house}번 집에 들어갔다 ← {reason}",
+    "CHRONICLE_HOUSE_OWNER_LOST": "{house}번 집이 비었다 ← {reason}",
     "CHRONICLE_HOUSE_STAGE": "{stage} 단계에 이르렀다 ← 주민의 살림이 자리 잡음",
     "CHRONICLE_HUT_BUILT": "{settlement}에 오두막이 완성됨",
     "CHRONICLE_KNOWLEDGE_AT_RISK_FMT": "⚠ {node}: {person}만 안다",
@@ -311,6 +314,12 @@
     "ERA_NEOLITHIC": "신석기",
     "ERA_PALEOLITHIC": "구석기",
     "ERA_TRANSITION_FMT": "{era} 전환기",
+    "HOUSE_OWNER_REASON_0": "새로 지은 집",
+    "HOUSE_OWNER_REASON_1": "빈 집으로 이사",
+    "HOUSE_OWNER_REASON_2": "상속",
+    "HOUSE_OWNER_REASON_3": "가구가 끝남",
+    "HOUSE_OWNER_REASON_4": "마을을 떠남",
+    "HOUSE_OWNER_REASON_5": "집이 무너짐",
     "HOUSE_STAGE_BARE": "갓 지은 집",
     "HOUSE_STAGE_LIVED_IN": "살림이 자리 잡은 집",
     "HOUSE_STAGE_YARD": "마당이 갖춰진 집",

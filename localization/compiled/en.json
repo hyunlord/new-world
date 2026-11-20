@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 2111,
+    "active_key_count": 2120,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 2111,
+    "key_count": 2120,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -214,6 +214,9 @@
     "CHRONICLE_BUILDING_COMPLETE": "Built {building} ← {cause}",
     "CHRONICLE_DAY_FMT": "Day %d",
     "CHRONICLE_ERA_CHANGED_FMT": "The era changed: {era}",
+    "CHRONICLE_HOUSEHOLD_FORMED": "A new household formed around {person}",
+    "CHRONICLE_HOUSE_OWNER_GAINED": "Household {household} took house {house} ← {reason}",
+    "CHRONICLE_HOUSE_OWNER_LOST": "House {house} stood empty ← {reason}",
     "CHRONICLE_HOUSE_STAGE": "A home reached {stage} ← its residents settled in",
     "CHRONICLE_HUT_BUILT": "A hut was finished in {settlement}",
     "CHRONICLE_KNOWLEDGE_AT_RISK_FMT": "⚠ {node}: only {person} knows it",
@@ -311,6 +314,12 @@
     "ERA_NEOLITHIC": "Neolithic",
     "ERA_PALEOLITHIC": "Paleolithic",
     "ERA_TRANSITION_FMT": "{era} transition",
+    "HOUSE_OWNER_REASON_0": "newly built",
+    "HOUSE_OWNER_REASON_1": "moved into an empty house",
+    "HOUSE_OWNER_REASON_2": "inherited",
+    "HOUSE_OWNER_REASON_3": "the household ended",
+    "HOUSE_OWNER_REASON_4": "left the village",
+    "HOUSE_OWNER_REASON_5": "the house was lost",
     "HOUSE_STAGE_BARE": "newly built",
     "HOUSE_STAGE_LIVED_IN": "lived-in",
     "HOUSE_STAGE_YARD": "established yard",

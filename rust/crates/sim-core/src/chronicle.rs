@@ -217,11 +217,17 @@ pub enum ChronicleKind {
     /// M-GROW 3.6: the settlement reputation moved; value = reputation (0..=100); cause = the two largest
     /// causes, each a byte `(cause index + 1) << 1 | negative` (low byte first, 0 = none).
     ReputationChanged = 73,
+    /// HOUSE1: a household formed (a neolocal pairing or a newcomer without a family household).
+    /// subject = head; cause = household id; value = parent household id or -1; settlement.
+    HouseholdFormed = 74,
+    /// HOUSE1: a house changed owner. cause = house (root site) id; value =
+    /// `household::pack_ownership_change(from, to, reason)`; settlement.
+    HouseOwnershipChanged = 75,
 }
 
 impl ChronicleKind {
     /// Every kind in discriminant order.
-    pub const ALL: [ChronicleKind; 74] = [
+    pub const ALL: [ChronicleKind; 76] = [
         Self::Born,
         Self::FoundingMember,
         Self::Paired,
@@ -296,6 +302,8 @@ impl ChronicleKind {
         Self::HouseStage,
         Self::MaterialWave,
         Self::ReputationChanged,
+        Self::HouseholdFormed,
+        Self::HouseOwnershipChanged,
     ];
 
     /// Stable numeric discriminant.
@@ -380,6 +388,8 @@ impl ChronicleKind {
             Self::HouseStage => "house_stage",
             Self::MaterialWave => "material_wave",
             Self::ReputationChanged => "reputation_changed",
+            Self::HouseholdFormed => "household_formed",
+            Self::HouseOwnershipChanged => "house_ownership_changed",
         }
     }
 }
@@ -881,10 +891,13 @@ mod tests {
         assert_eq!(ChronicleKind::ZoneLaidOut.as_str(), "zone_laid_out");
         // M-GROW 3.6: kind 73 appended.
         assert_eq!(ChronicleKind::ReputationChanged.as_u8(), 73);
-        assert_eq!(ChronicleKind::ALL.len(), 74);
+        // HOUSE1: kinds 74–75 appended.
+        assert_eq!(ChronicleKind::HouseholdFormed.as_u8(), 74);
+        assert_eq!(ChronicleKind::HouseOwnershipChanged.as_u8(), 75);
+        assert_eq!(ChronicleKind::ALL.len(), 76);
         let names: std::collections::BTreeSet<&str> =
             ChronicleKind::ALL.iter().map(|k| k.as_str()).collect();
-        assert_eq!(names.len(), 74);
+        assert_eq!(names.len(), 76);
         assert_eq!(DepartCause::TopUp.as_u8(), 4);
     }
 

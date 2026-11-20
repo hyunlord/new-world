@@ -1,5 +1,20 @@
 # Changelog
 
+## HOUSE1 — house identity and household ownership (2026-11-20)
+
+### Added
+
+- Houses as entities: `HouseId` reuses the root Dwelling building site; `HouseHistory` keeps the first completion tick (ADR 0072).
+- Persistent households (`HouseholdId`, head, members, parent) and house ownership; residence rule data (`residence_rule` in `yards.ron`, absent = Neolocal).
+- Chronicle kinds 74 `HouseholdFormed` and 75 `HouseOwnershipChanged` with Korean/English sentences.
+- Bridge reads `get_house_snapshot` (incl. `household_groups`, `primary_household`, a housing `revision`) and `get_household_snapshot` (schema 19, read on demand, not in `SimReads.GETTERS`); `dwelling_site_id` resolves through the house index first.
+- Save format 26 (housing tail); format-25 and older colony saves found households by rule 1 and recover first completion dates from the chronicle without events.
+- Harnesses `harness_house_identity_survives_upgrade_and_room_split`, `harness_house_residents_match_reachable_beds`, `harness_house_legacy_dates_and_replay_are_exact`, `harness_household_ownership_exclusive_and_inherited`.
+
+### Changed
+
+- Colony behaviour (intended): an owned house's beds go only to its household and houseless sub-households; the steward's housing demand also counts households without a house. Baseline worlds are unchanged.
+
 ## ACTION1 — Visible villager actions (2026-11-20)
 
 ### Added

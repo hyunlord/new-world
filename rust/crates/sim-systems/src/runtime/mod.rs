@@ -20,6 +20,7 @@ pub mod construction;
 pub mod diagnosis;
 pub mod food;
 pub mod house_growth;
+pub mod housing;
 pub mod influence;
 pub mod jobs;
 pub mod knowledge;

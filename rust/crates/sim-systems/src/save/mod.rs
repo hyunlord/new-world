@@ -104,7 +104,8 @@ pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 /// 23 = 27 completed-job counters (mining) and the metal-chain provenance tail.
 /// 24 = separate growth tail: footfall/path stages, zone provenance and dwelling stages.
 /// 25 = workshop last-use ticks and settlement reputation tail (M-GROW 3.4 building looks, 3.6 reputation).
-pub const FORMAT_VERSION: u32 = 25;
+/// 26 = HOUSE1 tail: house history, households and house ownership (`HousingState`).
+pub const FORMAT_VERSION: u32 = 26;
 mod cultivation_catalog;
 mod cultivation_validation;
 mod legacy_cultivation_v15;
@@ -290,6 +291,18 @@ struct BodyV25 {
     reputation: sim_core::colony::reputation::ReputationState,
 }
 
+/// Format26 appends the HOUSE1 housing state after the format25 tail; the payload is the
+/// format25 payload followed by the encoded [`sim_core::colony::household::HousingState`].
+#[cfg_attr(test, derive(Serialize))]
+#[derive(Deserialize)]
+struct BodyV26 {
+    legacy: Body,
+    growth: growth::GrowthState,
+    workshop_last_used: std::collections::BTreeMap<sim_core::colony::WorkshopId, u64>,
+    reputation: sim_core::colony::reputation::ReputationState,
+    housing: sim_core::colony::household::HousingState,
+}
+
 /// Exact format12 body, before independently persisted food state.
 #[derive(Serialize, Deserialize)]
 struct LegacyBodyV12 {
@@ -331,6 +344,24 @@ struct LegacyBodyV10 {
 /// module docs). On error the engine may hold reserved ids and must be
 /// discarded or reloaded.
 pub fn save(engine: &mut SimEngine) -> Result<Vec<u8>, SaveError> {
+    save_as(engine, FORMAT_VERSION)
+}
+
+/// Write the exact format25 layout (no housing tail) of `engine`, as the published predecessor
+/// did; used by the HOUSE1 legacy-migration tests and harnesses.
+#[doc(hidden)]
+pub fn save_format25(engine: &mut SimEngine) -> Result<Vec<u8>, SaveError> {
+    save_as(engine, 25)
+}
+
+fn save_as(engine: &mut SimEngine, version: u32) -> Result<Vec<u8>, SaveError> {
+    engine
+        .resources
+        .colony
+        .buildings
+        .housing
+        .validate()
+        .map_err(SaveError::Encode)?;
     building_validation::validate(&engine.resources.colony.buildings).map_err(SaveError::Encode)?;
     let command_boundary = engine.current_tick();
     crate::runtime::building_templates::validate_state_at_boundary(
@@ -380,12 +411,18 @@ pub fn save(engine: &mut SimEngine) -> Result<Vec<u8>, SaveError> {
     };
     let mut out = Vec::with_capacity(1 << 20);
     out.extend_from_slice(&MAGIC);
-    out.extend_from_slice(&FORMAT_VERSION.to_le_bytes());
+    out.extend_from_slice(&version.to_le_bytes());
     let catalog = sim_core::colony::content::installed()
         .map_err(|error| SaveError::Encode(error.to_string()))?;
+    let mut payload = encode(&body).map_err(SaveError::Encode)?;
+    if version >= 26 {
+        // Struct fields are concatenated, so the tail is the format25 payload plus this field.
+        payload
+            .extend(encode(&engine.resources.colony.buildings.housing).map_err(SaveError::Encode)?);
+    }
     let envelope = Envelope {
         revision: catalog.revision().to_owned(),
-        payload: encode(&body).map_err(SaveError::Encode)?,
+        payload,
     };
     out.extend_from_slice(&encode(&envelope).map_err(SaveError::Encode)?);
     engine.world = world::build(&world).map_err(SaveError::World)?;
@@ -444,6 +481,7 @@ pub fn load_with(
     let mut growth = growth::GrowthState::default();
     let mut workshop_last_used = std::collections::BTreeMap::new();
     let mut reputation = sim_core::colony::reputation::ReputationState::default();
+    let mut housing = sim_core::colony::household::HousingState::default();
     let mut body: Body = if legacy {
         let old: LegacyBody = decode(encoded).map_err(SaveError::Decode)?;
         Body {
@@ -654,11 +692,18 @@ pub fn load_with(
                 let old: BodyV24 = decode(&envelope.payload).map_err(SaveError::Decode)?;
                 growth = old.growth;
                 old.legacy
+            } else if source_version == 25 {
+                let old: BodyV25 = decode(&envelope.payload).map_err(SaveError::Decode)?;
+                growth = old.growth;
+                workshop_last_used = old.workshop_last_used;
+                reputation = old.reputation;
+                old.legacy
             } else {
-                let current: BodyV25 = decode(&envelope.payload).map_err(SaveError::Decode)?;
+                let current: BodyV26 = decode(&envelope.payload).map_err(SaveError::Decode)?;
                 growth = current.growth;
                 workshop_last_used = current.workshop_last_used;
                 reputation = current.reputation;
+                housing = current.housing;
                 current.legacy
             }
         }
@@ -760,6 +805,60 @@ pub fn load_with(
     crate::runtime::livestock::validate_state_at_boundary(&world, &resources, body.current_tick)
         .map_err(SaveError::Decode)?;
     crate::runtime::building_templates::associate_rooms(&mut resources);
+    if source_version < 26 {
+        // HOUSE1: rule-1 founding and chronicle dates; no events, baseline untouched.
+        crate::runtime::housing::migrate(&world, &mut resources);
+    } else {
+        housing.validate().map_err(SaveError::Decode)?;
+        if resources.rules.colony.is_none()
+            && housing != sim_core::colony::household::HousingState::default()
+        {
+            return Err(SaveError::Decode(
+                "baseline save holds housing state".into(),
+            ));
+        }
+        if let Some(house) = housing
+            .houses
+            .keys()
+            .find(|house| !resources.colony.buildings.sites.contains_key(&house.0))
+        {
+            return Err(SaveError::Decode(format!(
+                "house {} names no building site",
+                house.0
+            )));
+        }
+        if let Some(house) = housing.ownership.keys().find(|house| {
+            resources
+                .colony
+                .buildings
+                .sites
+                .get(&house.0)
+                .is_none_or(|site| !crate::runtime::housing::is_dwelling(site))
+        }) {
+            return Err(SaveError::Decode(format!(
+                "owned house {} is not a dwelling",
+                house.0
+            )));
+        }
+        // Members are living agents, or people the chronicle closed since the last housing
+        // boundary (a death between 20:00 passes is pruned at the next one).
+        let living: std::collections::BTreeSet<_> = world
+            .query::<&sim_core::components::Agent>()
+            .iter()
+            .map(|(_, agent)| agent.id)
+            .collect();
+        if let Some(member) = housing
+            .households
+            .values()
+            .flat_map(|household| household.members.iter())
+            .find(|id| !living.contains(id) && resources.chronicle.person(**id).is_none())
+        {
+            return Err(SaveError::Decode(format!(
+                "household member {member} is no known person"
+            )));
+        }
+        resources.colony.buildings.housing = housing;
+    }
     let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
     let legacy_colony_brain =
         resources.rules.colony.is_some() && resources.mind.policy_source.is_none();
@@ -922,6 +1021,7 @@ fn read_header(bytes: &[u8]) -> Result<&[u8], SaveError> {
         && found != 22
         && found != 23
         && found != 24
+        && found != 25
     {
         return Err(SaveError::Version {
             found,

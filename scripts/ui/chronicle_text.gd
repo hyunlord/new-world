@@ -1,5 +1,6 @@
 # chronicle_text.gd: static helpers that turn packed chronicle columns into rows and localized BBCode lines
 #   (day prefix, person/village links, death and porter wording); used by chronicle_panel.gd and agent_inspector_panel.gd.
+#   HOUSE1 kinds 74 HouseholdFormed (subject head) and 75 HouseOwnershipChanged (house_owner_sentence).
 #   M3 kind 23 (RoomFormed: cause = the room's role code, value = its id): "새 방이 생김 — 침실".
 #   M4 kinds 24 ToolBroke (subject holder, cause item code, value uses) "Fox의 돌도끼가 부러졌다 (40번 씀)",
 #   25 KnowledgeLearned (subject learner, other teacher, cause channel 2 oral / 3 observed / 4 apprenticed, value node)
@@ -185,6 +186,8 @@ static func sentence(row: Dictionary, viewed: int, locale: Node, info: Dictionar
 		70: return zone_laid_out_sentence(row, locale)
 		71, 72: return house_growth_sentence(row, locale)
 		73: return reputation_sentence(row, locale)
+		74: return loc(locale, "CHRONICLE_HOUSEHOLD_FORMED").format({"person": person(subject, locale)})
+		75: return house_owner_sentence(value, cause, locale)
 		54, 55, 56:
 			var crop: Dictionary = preload("res://scripts/ui/content_context.gd").row("crops", value)
 			var key: String = ["S1_CHRON_SOWN", "S1_CHRON_HARVEST", "S1_CHRON_FROST"][kind - 54]
@@ -569,6 +572,15 @@ static func reputation_sentence(row: Dictionary, locale: Node) -> String:
 			words.append(loc(locale, key))
 	return loc(locale, "CHRONICLE_REPUTATION").format({"value": int(row.get("value", 0)),
 		"causes": ", ".join(words) if not words.is_empty() else loc(locale, "REPUTATION_CAUSES_NONE")})
+
+
+## HOUSE1 kind 75: cause = house id; value = reason | (from + 1) << 8 | (to + 1) << 36 (0 = none).
+static func house_owner_sentence(value: int, house: int, locale: Node) -> String:
+	var reason: String = loc(locale, "HOUSE_OWNER_REASON_%d" % (value & 0xFF))
+	var to: int = ((value >> 36) & 0x0FFFFFFF) - 1
+	if to < 0:
+		return loc(locale, "CHRONICLE_HOUSE_OWNER_LOST").format({"house": house, "reason": reason})
+	return loc(locale, "CHRONICLE_HOUSE_OWNER_GAINED").format({"house": house, "household": to, "reason": reason})
 
 
 static func house_growth_sentence(row: Dictionary, locale: Node) -> String:

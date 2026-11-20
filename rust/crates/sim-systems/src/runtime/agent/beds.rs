@@ -2,8 +2,8 @@
 //!
 //! Priority: 145 · Interval: 1 tick · Gate: `WorldRules.agent.night_rest` and (`WorldRules.society.shelter_planning` or `WorldRules.colony`)
 //! Reads: `Agent`, `Kin`, `Child`, `BodyHealth` (households); `SimResources.building_owner`, `building_kinds`, `settlements`, `rules.society.family`, `rules.colony`
-//! Writes: `SimResources.bed_of`
-//! Events: none
+//! Writes: `SimResources.bed_of`; HOUSE1 `colony.buildings.housing` via `housing::reconcile`
+//! Events: HOUSE1 `HouseholdFormed`, `HouseOwnershipChanged` (colony, through `housing::reconcile`)
 //!
 //! M3 (ADR 0023, colony with built space): every finished bedroll
 //! (`colony.beds`) is a one-person bed owned by the settlement whose formation
@@ -51,7 +51,10 @@ impl RuntimeSystem for BedAssignmentSystem {
         if planning.is_none() && hut_beds.is_none() {
             return;
         }
-        let capacity_of = |tile: &(u32, u32)| match resources.building_kinds.get(tile) {
+        let capacity_of = |resources: &SimResources, tile: &(u32, u32)| match resources
+            .building_kinds
+            .get(tile)
+        {
             Some(BuildingKind::Shelter) => {
                 planning.map_or(0, |rule| rule.residents_per_shelter) as usize
             }
@@ -115,6 +118,10 @@ impl RuntimeSystem for BedAssignmentSystem {
         if minute != 1200 && shelters == self.last_shelters {
             return;
         }
+        // HOUSE1: households and ownership move at this boundary (20:00 or a shelter change).
+        crate::runtime::housing::reconcile(world, resources);
+        let all_beds: Vec<(u32, u32)> = shelters.iter().map(|&(_, _, y, x)| (x, y)).collect();
+        let claims = crate::runtime::housing::bed_claims(resources, &all_beds);
         let live: BTreeSet<_> = world
             .query::<&Agent>()
             .iter()
@@ -124,7 +131,7 @@ impl RuntimeSystem for BedAssignmentSystem {
         let mut settlements: Vec<_> = resources.settlements.iter().collect();
         settlements.sort_by_key(|&(&sid, _)| sid);
         for (&sid, settlement) in settlements {
-            let beds: Vec<_> = shelters
+            let mut beds: Vec<_> = shelters
                 .iter()
                 .filter(|&&(owner, _, _, _)| owner == sid)
                 .map(|&(_, _, y, x)| (x, y))
@@ -136,7 +143,30 @@ impl RuntimeSystem for BedAssignmentSystem {
                 .filter(|id| live.contains(id) && !assigned.contains_key(id))
                 .collect();
             members.sort();
-            let capacities: Vec<usize> = beds.iter().map(capacity_of).collect();
+            if let Some(claims) = &claims {
+                // HOUSE1 rule 4: an owned house's beds go only to its household (and houseless
+                // sub-households), in rank order; everyone else uses the open beds as before.
+                let local: BTreeSet<_> = members.iter().copied().collect();
+                for (owner, sleepers) in &claims.sleepers {
+                    let mut slots = beds
+                        .iter()
+                        .filter(|bed| claims.owner_of.get(*bed) == Some(owner))
+                        .flat_map(|bed| std::iter::repeat_n(*bed, capacity_of(resources, bed)));
+                    for id in sleepers.iter().filter(|id| local.contains(*id)) {
+                        if assigned.contains_key(id) {
+                            continue;
+                        }
+                        let Some(bed) = slots.next() else {
+                            break;
+                        };
+                        assigned.insert(*id, bed);
+                    }
+                }
+                beds.retain(|bed| !claims.owner_of.contains_key(bed));
+                members.retain(|id| !assigned.contains_key(id));
+            }
+            let capacities: Vec<usize> =
+                beds.iter().map(|bed| capacity_of(resources, bed)).collect();
             if resources.rules.society.family.is_some() {
                 if capacities.iter().all(|&c| c == 0) {
                     continue;
@@ -173,6 +203,11 @@ impl RuntimeSystem for BedAssignmentSystem {
                 };
                 assigned.insert(id, bed);
             }
+        }
+        if resources.rules.colony.is_some() && resources.bed_of != assigned {
+            // HOUSE1: residents moved; the house snapshot's cache key follows.
+            let housing = &mut resources.colony.buildings.housing;
+            housing.revision = housing.revision.wrapping_add(1);
         }
         resources.bed_of = assigned;
         self.last_shelters = shelters;

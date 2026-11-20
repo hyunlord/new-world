@@ -19,6 +19,7 @@ pub mod diagnosis;
 pub mod eras;
 pub mod food;
 pub mod food_evidence;
+pub mod household;
 mod items;
 mod job;
 pub mod knowledge;

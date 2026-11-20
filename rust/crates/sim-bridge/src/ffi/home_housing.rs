@@ -22,6 +22,19 @@ pub fn collect_template_home(
     agent: u64,
 ) -> Option<TemplateHome> {
     let bed = *res.bed_of.get(&agent)?;
+    // HOUSE1: the shared house index answers first; the room/hut evidence below stays the fallback.
+    if let Some(site) = sim_systems::runtime::housing::house_at(res, bed)
+        .and_then(|house| res.colony.buildings.sites.get(&house.0))
+        .filter(|site| sim_systems::runtime::building_templates::is_intact(res, site))
+    {
+        if let Some(template) = catalog.building_templates().get(&site.template) {
+            return Some(TemplateHome {
+                dwelling_kind: site.template.clone(),
+                name_key: template.name_key.clone(),
+                site_id: site.id,
+            });
+        }
+    }
     let room = sim_systems::runtime::rooms::room_at(res, bed);
     let site = if let Some(room) = room {
         let kind = room.dwelling_kind.as_deref()?;

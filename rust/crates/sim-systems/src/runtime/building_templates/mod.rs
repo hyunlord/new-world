@@ -75,6 +75,7 @@ pub fn advance(world: &mut World, res: &mut SimResources) {
         return;
     }
     let ids: Vec<_> = res.colony.buildings.sites.keys().copied().collect();
+    let mut completed = Vec::new();
     for id in ids {
         let Some(mut site) = res.colony.buildings.sites.get(&id).cloned() else {
             continue;
@@ -223,9 +224,14 @@ pub fn advance(world: &mut World, res: &mut SimResources) {
                         origin: site.cause,
                     }),
                 ));
+                completed.push(id);
             }
         }
         res.colony.buildings.sites.insert(id, site);
+    }
+    // HOUSE1: house history and rule-2 ownership at the physical completion boundary.
+    for id in completed {
+        crate::runtime::housing::record_completion(world, res, id);
     }
     associate_rooms(res);
 }

@@ -136,7 +136,7 @@ fn processing_save_rejects_unauthored_output_duration_and_overcapacity() {
         }
         // Corrupt the explicit tail independently of the guarded writer.
         let mut envelope: Envelope = decode(&valid_bytes[12..]).unwrap();
-        let mut body: BodyV25 = decode(&envelope.payload).unwrap();
+        let mut body: BodyV26 = decode(&envelope.payload).unwrap();
         body.legacy.processing = engine.resources.processing.clone();
         envelope.payload = encode(&body).unwrap();
         let mut corrupt = valid_bytes[..12].to_vec();

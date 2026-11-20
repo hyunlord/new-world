@@ -2063,5 +2063,14 @@
   "UI1_GROUP_BUILD": "건설",
   "UI1_GROUP_INSPECT": "확인",
   "UI1_ROOMS": "방 보기",
-  "UI1_HELP_CHIP": "?"
+  "UI1_HELP_CHIP": "?",
+  "CHRONICLE_HOUSEHOLD_FORMED": "{person}을(를) 중심으로 새 가구가 생겼다",
+  "CHRONICLE_HOUSE_OWNER_GAINED": "{household}번 가구가 {house}번 집에 들어갔다 ← {reason}",
+  "CHRONICLE_HOUSE_OWNER_LOST": "{house}번 집이 비었다 ← {reason}",
+  "HOUSE_OWNER_REASON_0": "새로 지은 집",
+  "HOUSE_OWNER_REASON_1": "빈 집으로 이사",
+  "HOUSE_OWNER_REASON_2": "상속",
+  "HOUSE_OWNER_REASON_3": "가구가 끝남",
+  "HOUSE_OWNER_REASON_4": "마을을 떠남",
+  "HOUSE_OWNER_REASON_5": "집이 무너짐"
 }

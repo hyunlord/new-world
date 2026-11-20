@@ -2063,5 +2063,14 @@
   "UI1_GROUP_BUILD": "Build",
   "UI1_GROUP_INSPECT": "Inspect",
   "UI1_ROOMS": "View rooms",
-  "UI1_HELP_CHIP": "?"
+  "UI1_HELP_CHIP": "?",
+  "CHRONICLE_HOUSEHOLD_FORMED": "A new household formed around {person}",
+  "CHRONICLE_HOUSE_OWNER_GAINED": "Household {household} took house {house} ← {reason}",
+  "CHRONICLE_HOUSE_OWNER_LOST": "House {house} stood empty ← {reason}",
+  "HOUSE_OWNER_REASON_0": "newly built",
+  "HOUSE_OWNER_REASON_1": "moved into an empty house",
+  "HOUSE_OWNER_REASON_2": "inherited",
+  "HOUSE_OWNER_REASON_3": "the household ended",
+  "HOUSE_OWNER_REASON_4": "left the village",
+  "HOUSE_OWNER_REASON_5": "the house was lost"
 }
