@@ -35,8 +35,16 @@ pub fn grow_housing_zone(engine: &mut SimEngine) -> u32 {
                 && matches!(rule.action, sim_core::colony::steward::Action::House { .. })
         })
         .expect("actual dwelling rule");
-    let planned =
+    // The planner holds a chosen envelope without a command while someone stands on it or its
+    // trees are still marked; step (at most a day) until it proposes, as the Steward would.
+    let wait_until = engine.current_tick() + 1_440;
+    let mut planned =
         sim_systems::runtime::steward::planning::plan(&engine.world, &engine.resources, rule);
+    while planned.is_empty() && engine.current_tick() < wait_until {
+        engine.tick();
+        planned =
+            sim_systems::runtime::steward::planning::plan(&engine.world, &engine.resources, rule);
+    }
     println!(
         "SPINE_HOUSING_PREFLIGHT tick={} plan={planned:?}",
         engine.current_tick()

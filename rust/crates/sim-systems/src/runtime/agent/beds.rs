@@ -143,8 +143,9 @@ impl RuntimeSystem for BedAssignmentSystem {
                 .filter(|id| live.contains(id) && !assigned.contains_key(id))
                 .collect();
             members.sort();
+            let mut spare = BTreeMap::new();
             if let Some(claims) = &claims {
-                // HOUSE1 rule 4: an owned house's beds go only to its household (and houseless
+                // HOUSE1 rule 4: an owned house's beds go first to its household (and houseless
                 // sub-households), in rank order; everyone else uses the open beds as before.
                 let local: BTreeSet<_> = members.iter().copied().collect();
                 for (owner, sleepers) in &claims.sleepers {
@@ -162,11 +163,28 @@ impl RuntimeSystem for BedAssignmentSystem {
                         assigned.insert(*id, bed);
                     }
                 }
+                // D-HOUSE1-1: slots the owners leave empty lodge whoever has no open bed (after
+                // the open beds), so nobody sleeps outdoors beside an empty owned bed.
+                for bed in beds.iter().filter(|bed| claims.owner_of.contains_key(*bed)) {
+                    let used = assigned.values().filter(|taken| *taken == bed).count();
+                    let left = capacity_of(resources, bed).saturating_sub(used);
+                    if left > 0 {
+                        spare.insert(*bed, left);
+                    }
+                }
                 beds.retain(|bed| !claims.owner_of.contains_key(bed));
+                beds.extend(spare.keys().copied());
                 members.retain(|id| !assigned.contains_key(id));
             }
-            let capacities: Vec<usize> =
-                beds.iter().map(|bed| capacity_of(resources, bed)).collect();
+            let capacities: Vec<usize> = beds
+                .iter()
+                .map(|bed| {
+                    spare
+                        .get(bed)
+                        .copied()
+                        .unwrap_or_else(|| capacity_of(resources, bed))
+                })
+                .collect();
             if resources.rules.society.family.is_some() {
                 if capacities.iter().all(|&c| c == 0) {
                     continue;

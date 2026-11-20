@@ -163,14 +163,25 @@ fn exclusivity_violations(engine: &SimEngine) -> usize {
     house_views(&engine.world, &engine.resources)
         .into_iter()
         .filter_map(|row| row.owner_household.map(|owner| (row, owner)))
-        .map(|(row, owner)| {
-            let allowed = household_members(engine, owner);
-            row.resident_ids
-                .iter()
-                .filter(|id| !allowed.contains(id))
-                .count()
-        })
+        .map(|(row, owner)| displaced(engine, &household_members(engine, owner), &row.resident_ids))
         .sum()
+}
+
+/// Rule 4 with D-HOUSE1-1 lodging: owners come first, so every lodger in an owned house while a
+/// member of the owning household (or its sub-households) sleeps elsewhere or nowhere is a breach.
+fn displaced(engine: &SimEngine, allowed: &BTreeSet<AgentId>, residents: &[AgentId]) -> usize {
+    let living: BTreeSet<AgentId> = engine
+        .world
+        .query::<&sim_core::components::Agent>()
+        .iter()
+        .map(|(_, agent)| agent.id)
+        .collect();
+    let lodgers = residents.iter().filter(|id| !allowed.contains(id)).count();
+    let missing = allowed
+        .iter()
+        .filter(|id| living.contains(id) && !residents.contains(id))
+        .count();
+    lodgers.min(missing)
 }
 
 /// Owners that no longer exist or have no living member.
@@ -228,7 +239,10 @@ fn kill_owning_adults(engine: &mut SimEngine) -> Option<(HouseId, HouseholdId)> 
     let members = state.households.get(&owner)?.members.clone();
     let victims: Vec<_> = engine
         .world
-        .query::<(&sim_core::components::Agent, &sim_core::components::Position)>()
+        .query::<(
+            &sim_core::components::Agent,
+            &sim_core::components::Position,
+        )>()
         .iter()
         .filter(|(_, (agent, _))| members.contains(&agent.id) && grown.contains(&agent.id))
         .map(|(entity, (agent, pos))| (entity, agent.id, (pos.x, pos.y)))
@@ -291,18 +305,18 @@ fn owned_bed_violations(engine: &SimEngine) -> usize {
         else {
             continue;
         };
-        let allowed = household_members(engine, *owner);
-        violations += res
+        let residents: Vec<AgentId> = res
             .bed_of
             .iter()
-            .filter(|(agent, (x, y))| {
+            .filter(|(_, (x, y))| {
                 *x >= site.anchor.0
                     && *y >= site.anchor.1
                     && *x < site.anchor.0 + site.footprint.0
                     && *y < site.anchor.1 + site.footprint.1
-                    && !allowed.contains(agent)
             })
-            .count();
+            .map(|(agent, _)| *agent)
+            .collect();
+        violations += displaced(engine, &household_members(engine, *owner), &residents);
     }
     violations
 }
@@ -456,9 +470,10 @@ fn harness_house_residents_match_reachable_beds() {
             .owner_household
             .expect("both houses owned after the boundary");
         let allowed = household_members(&engine, owner);
-        assert!(
-            row.resident_ids.iter().all(|id| allowed.contains(id)),
-            "{row:?} holds non-members of {owner:?}"
+        assert_eq!(
+            displaced(&engine, &allowed, &row.resident_ids),
+            0,
+            "{row:?} lodges others while members of {owner:?} lack its beds"
         );
         assert_eq!(
             row.primary_household.is_some(),

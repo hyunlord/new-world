@@ -544,5 +544,5 @@ r1(BASE `c1aeb3585`, 시드0–15×48일, 명령 없음)과 수정 뒤 확인 �
 | Feature | Tunable | Current value | Intended effect | Suspected issue |
 |---|---|---|---|---|
 | Residence | `residence_rule` (`yards.ron`, optional) | absent = Neolocal | Couples found their own household and claim a vacant house | Every single founder is a household, so steward house demand may build more houses than the old bed shortfall |
-| Exclusive beds | owned-house beds | owner household + houseless sub-households only | A house reads as one family's home | Spare owned beds stay empty while others sleep in camp beds; mood/cold cost unmeasured |
-| Steward demand | houseless households − vacant houses | max with the old bed shortfall | Build a house per houseless household | Wood draw on early seeds uncalibrated (paired smoke pending) |
+| Exclusive beds | owned-house beds | owner household + houseless sub-households first; spare slots lodge the bedless (D-HOUSE1-1) | A house reads as one family's home without stranding beds | Lodgers mix unrelated people in a family's house; strict exclusivity cost three progression fixtures via outdoor raid deaths |
+| Steward demand | houseless households − vacant houses | max with the old bed shortfall | Build a house per houseless household | Wood draw on early seeds uncalibrated (paired smoke 2026-11-21 alive within −1 of BASE) |

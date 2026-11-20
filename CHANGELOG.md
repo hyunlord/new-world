@@ -13,7 +13,7 @@
 
 ### Changed
 
-- Colony behaviour (intended): an owned house's beds go only to its household and houseless sub-households; the steward's housing demand also counts households without a house. Baseline worlds are unchanged.
+- Colony behaviour (intended): an owned house's beds go first to its household and houseless sub-households, and spare slots lodge people without an open bed (D-HOUSE1-1); the steward's housing demand also counts households without a house. Baseline worlds are unchanged.
 
 ## ACTION1 — Visible villager actions (2026-11-20)
 

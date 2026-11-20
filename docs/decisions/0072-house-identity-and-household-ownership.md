@@ -19,7 +19,7 @@ persistent household id, exclusive beds and inheritance (Laslett & Wall 1972; Mu
   with most of the group's beds, conflicts to the larger then lower id); a completed dwelling goes to the largest
   houseless household; pairing follows `residence_rule` (optional in `yards.ron`, default Neolocal): neolocal couples
   form a new household (parent = lower former id) and claim the nearest vacant house, else sleep with the parent
-  household as a sub-household; owned beds are exclusive to the household and its houseless sub-households;
+  household as a sub-household; owned beds go first to the household and its houseless sub-households (D-HOUSE1-1: slots they leave empty lodge people who have no open bed, after the open beds);
   orphaned minors join grandparents' then siblings' households, which inherit the house if they own none; without
   kin the minors keep their household but the house becomes vacant; departure and physical loss vacate. At founding a
   group sleeping in a house another group won becomes that owner's sub-household. Only households with a living adult
@@ -30,6 +30,15 @@ persistent household id, exclusive beds and inheritance (Laslett & Wall 1972; Mu
 - No new system and no per-tick scan: completion (`BuildingTemplateSystem`, p153) and the bed-assignment boundary
   (`BedAssignmentSystem`, p145, 20:00 or a shelter change) apply the rules. Events `HouseholdFormed` (74) and
   `HouseOwnershipChanged` (75) are chronicle kinds; founding and save migration emit none.
+
+## D-HOUSE1-1 — lodging in spare owned beds (2026-11-21)
+
+Strict exclusivity left founders outdoors beside empty owned beds: a starting colony is mostly one-person
+households, so each small house went to one or two people while others slept outside, where raiders can
+fight them (`wildlife/fight.rs` drops animal–person fights only under a roof). Three progression fixtures
+regressed (steward day-10 housing, the C2 bronze chain, the spine log-house chain) although the paired smoke
+held. Owners keep priority: a lodger never takes a slot a member of the owning household or its houseless
+sub-households needs, and lodgers still count as housing demand. The owner may restore strict exclusivity.
 
 ## Alternatives considered
 
