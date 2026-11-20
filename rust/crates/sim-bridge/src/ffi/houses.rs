@@ -123,7 +123,10 @@ pub(super) fn houses_to_dict(res: &SimResources, rows: &[HouseView]) -> VarDicti
         );
         row.set("hearth_cells", cells(&view.hearth_refs));
         row.set("resident_ids", ids(view.resident_ids.iter().copied()));
-        row.set("household_groups", ids(view.household_groups.iter().copied()));
+        row.set(
+            "household_groups",
+            ids(view.household_groups.iter().copied()),
+        );
         row.set(
             "primary_household",
             view.primary_household

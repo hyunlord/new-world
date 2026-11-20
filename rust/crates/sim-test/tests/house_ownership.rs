@@ -4,13 +4,14 @@
 mod spine_support;
 
 use sim_core::chronicle::ChronicleKind;
-use sim_core::colony::household::{unpack_ownership_change, HouseId, HouseView, HouseholdId};
 use sim_core::colony::building_site::BuildingStatus;
+use sim_core::colony::household::{unpack_ownership_change, HouseId, HouseView, HouseholdId};
 use sim_core::colony::{Command, ItemKind, ItemSpec};
 use sim_core::components::{AgentId, BuildingKind};
 use sim_engine::SimEngine;
 use sim_systems::runtime::food::items::{create_ground, FoodSource};
 use sim_systems::runtime::housing::house_views;
+use sim_systems::runtime::survival::despawn_agent;
 use spine_support::{anchor, camp, command, complete, scene, until};
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -197,11 +198,54 @@ fn dangling_owners(engine: &SimEngine) -> usize {
 fn adults(engine: &SimEngine) -> BTreeSet<AgentId> {
     engine
         .world
-        .query::<(&sim_core::components::Agent, Option<&sim_core::components::Child>)>()
+        .query::<(
+            &sim_core::components::Agent,
+            Option<&sim_core::components::Child>,
+        )>()
         .iter()
         .filter(|(_, (_, child))| child.is_none())
         .map(|(_, (agent, _))| agent.id)
         .collect()
+}
+
+/// Kill every adult of the lowest owned house's household (preferring one with children) through
+/// the ordinary death path, so rule 5 runs even when no natural death orphans a house in 48 days.
+fn kill_owning_adults(engine: &mut SimEngine) -> Option<(HouseId, HouseholdId)> {
+    let grown = adults(engine);
+    let state = &engine.resources.colony.buildings.housing;
+    let has_minor = |owner: &HouseholdId| {
+        state
+            .households
+            .get(owner)
+            .is_some_and(|h| h.members.iter().any(|m| !grown.contains(m)))
+    };
+    let (house, owner) = state
+        .ownership
+        .iter()
+        .find(|(_, owner)| has_minor(owner))
+        .or_else(|| state.ownership.iter().next())
+        .map(|(house, owner)| (*house, *owner))?;
+    let members = state.households.get(&owner)?.members.clone();
+    let victims: Vec<_> = engine
+        .world
+        .query::<(&sim_core::components::Agent, &sim_core::components::Position)>()
+        .iter()
+        .filter(|(_, (agent, _))| members.contains(&agent.id) && grown.contains(&agent.id))
+        .map(|(entity, (agent, pos))| (entity, agent.id, (pos.x, pos.y)))
+        .collect();
+    let tick = engine.current_tick();
+    for (entity, id, pos) in victims {
+        despawn_agent(
+            &mut engine.world,
+            &mut engine.resources,
+            entity,
+            id,
+            pos,
+            sim_core::causal::event::DeathReason::Combat,
+            tick,
+        );
+    }
+    Some((house, owner))
 }
 
 /// Adult-led households without a house while a vacant usable house of their settlement stands.
@@ -408,13 +452,18 @@ fn harness_house_residents_match_reachable_beds() {
             );
         }
         occupied += usize::from(!row.resident_ids.is_empty());
-        let owner = row.owner_household.expect("both houses owned after the boundary");
+        let owner = row
+            .owner_household
+            .expect("both houses owned after the boundary");
         let allowed = household_members(&engine, owner);
         assert!(
             row.resident_ids.iter().all(|id| allowed.contains(id)),
             "{row:?} holds non-members of {owner:?}"
         );
-        assert_eq!(row.primary_household.is_some(), !row.resident_ids.is_empty());
+        assert_eq!(
+            row.primary_household.is_some(),
+            !row.resident_ids.is_empty()
+        );
         assert_eq!(row.household_groups.len(), row.resident_ids.len());
     }
     assert_ne!(
@@ -483,7 +532,11 @@ fn harness_house_legacy_dates_and_replay_are_exact() {
     for (agent, bed) in &migrated.resources.bed_of {
         if inside(*bed) {
             *counts
-                .entry(state.household_of(*agent).expect("resident has a household"))
+                .entry(
+                    state
+                        .household_of(*agent)
+                        .expect("resident has a household"),
+                )
                 .or_default() += 1;
         }
     }
@@ -602,6 +655,12 @@ fn harness_household_ownership_exclusive_and_inherited() {
                 }
             }
             seen_entries = entries.len();
+            if seed == 0 && tick == 20 * day {
+                let (house, owner) =
+                    kill_owning_adults(&mut engine).expect("seed 0 owns a house by day 20");
+                adultless.insert(house, (owner, tick));
+                orphaned_here += 1;
+            }
             // Rule 4 holds after every tick, not only at the boundary.
             violations += owned_bed_violations(&engine);
             // Rule 5: a house whose owner lost its last living adult is inherited or vacant
@@ -656,9 +715,18 @@ fn harness_household_ownership_exclusive_and_inherited() {
             couples.len(),
             eligible.len()
         );
-        assert!(checks + 1 >= days, "seed {seed}: a boundary check every day");
-        assert_eq!(violations, 0, "seed {seed}: owned beds are exclusive after every tick");
-        assert_eq!(late_handovers, 0, "seed {seed}: orphaned houses hand over within a day");
+        assert!(
+            checks + 1 >= days,
+            "seed {seed}: a boundary check every day"
+        );
+        assert_eq!(
+            violations, 0,
+            "seed {seed}: owned beds are exclusive after every tick"
+        );
+        assert_eq!(
+            late_handovers, 0,
+            "seed {seed}: orphaned houses hand over within a day"
+        );
         assert_eq!(
             missed_vacancies, 0,
             "seed {seed}: no adult-led houseless household beside a vacant house"
@@ -672,7 +740,16 @@ fn harness_household_ownership_exclusive_and_inherited() {
         "HOUSE1 seeds 0-3: eligible_couples={eligible_couples} claimed_in_2d={couples_claimed} \
          orphaned_houses={orphaned_houses}"
     );
-    assert!(eligible_couples >= 1, "some neolocal couple formed with two days left");
-    assert!(couples_claimed >= 1, "a neolocal couple claimed a house within 2 days");
-    assert!(orphaned_houses >= 1, "a household lost its last adult while owning a house");
+    assert!(
+        eligible_couples >= 1,
+        "some neolocal couple formed with two days left"
+    );
+    assert!(
+        couples_claimed >= 1,
+        "a neolocal couple claimed a house within 2 days"
+    );
+    assert!(
+        orphaned_houses >= 1,
+        "a household lost its last adult while owning a house"
+    );
 }

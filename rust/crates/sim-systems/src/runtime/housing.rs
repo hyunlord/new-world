@@ -166,7 +166,11 @@ fn adult_led(state: &HousingState, people: &BTreeMap<AgentId, Person>) -> BTreeS
     state
         .households
         .values()
-        .filter(|h| h.members.iter().any(|m| people.get(m).is_some_and(|p| p.adult)))
+        .filter(|h| {
+            h.members
+                .iter()
+                .any(|m| people.get(m).is_some_and(|p| p.adult))
+        })
         .map(|h| h.id)
         .collect()
 }
@@ -1061,7 +1065,9 @@ pub fn house_views(world: &World, res: &SimResources) -> Vec<HouseView> {
             primary_household: {
                 let mut counts: BTreeMap<AgentId, usize> = BTreeMap::new();
                 for id in &residents {
-                    *counts.entry(groups.get(id).copied().unwrap_or(*id)).or_default() += 1;
+                    *counts
+                        .entry(groups.get(id).copied().unwrap_or(*id))
+                        .or_default() += 1;
                 }
                 counts
                     .into_iter()

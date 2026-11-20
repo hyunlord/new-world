@@ -438,10 +438,7 @@ impl WorldSimNode {
     #[func]
     fn get_house_snapshot(&self) -> VarDictionary {
         let res = &self.engine.resources;
-        super::houses::houses_to_dict(
-            res,
-            &super::houses::collect_houses(&self.engine.world, res),
-        )
+        super::houses::houses_to_dict(res, &super::houses::collect_houses(&self.engine.world, res))
     }
 
     /// HOUSE1: persistent households (id, head, members, owned houses).

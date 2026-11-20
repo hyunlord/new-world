@@ -169,10 +169,8 @@ fn heirless_minors_keep_their_household_and_never_claim() {
         mother: Some(3),
         ..Kin::default()
     };
-    let (mut world, mut res) = fixture(&[
-        (3, true, true, Kin::default()),
-        (9, false, false, orphan),
-    ]);
+    let (mut world, mut res) =
+        fixture(&[(3, true, true, Kin::default()), (9, false, false, orphan)]);
     reconcile_with(&world, &mut res, ResidenceRule::Neolocal);
     let home = res.colony.buildings.housing.household_of(9);
     assert!(home.is_some());
@@ -188,9 +186,20 @@ fn heirless_minors_keep_their_household_and_never_claim() {
     let before = res.colony.buildings.housing.revision;
     reconcile_with(&world, &mut res, ResidenceRule::Neolocal);
     let state = &res.colony.buildings.housing;
-    assert_eq!(state.household_of(9), home, "no kin: the minor keeps the household");
+    assert_eq!(
+        state.household_of(9),
+        home,
+        "no kin: the minor keeps the household"
+    );
     assert_eq!(state.households[&home.expect("home")].head, 9);
     assert!(state.validate().is_ok());
-    assert!(state.revision > before, "a membership change moves the revision");
-    assert_eq!(housing_demand(&world, &res), 0, "an adult-less household is no demand");
+    assert!(
+        state.revision > before,
+        "a membership change moves the revision"
+    );
+    assert_eq!(
+        housing_demand(&world, &res),
+        0,
+        "an adult-less household is no demand"
+    );
 }
