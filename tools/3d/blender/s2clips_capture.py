@@ -15,6 +15,7 @@ import numpy as np
 import common as C
 import s2clips as A
 import s2clips_pose as P
+from stations import stone_ring
 
 
 PROPS = {"chop": "axe", "carry": "logs", "cook": "ladle"}
@@ -31,6 +32,7 @@ class ReviewAction:
     anchor: tuple[float, float, float] | None = None
     hand: int = 0
     radius: float | None = None
+    detail: float | None = None
 
 
 class Clip(TypedDict):
@@ -81,13 +83,24 @@ def fixture(name: str | None, anchor: tuple[float, float, float] | None = None,
                 shape.rod("wood_dark", (x + length * math.cos(start), y + length * math.sin(start), top + .0008),
                           (x + length * math.cos(end), y + length * math.sin(end), top + .0008), .002, segs=4)
         return shape.build_object()
-    if name not in ("cook", "pot"):
+    if name not in ("cook", "pot", "hearth"):
         return None
     centre = P.POT_CENTRE if anchor is None else anchor[:2]
     pot_rim = .335 if anchor is None else anchor[2]
     pot_scale = 1. if radius is None else radius / .180
     raised = max(0., pot_rim - .335)
-    if raised > .02:
+    if name == "hearth":
+        shape.colors["stone"] = (.29, .245, .19)
+        shape.colors["earth"] = (.24, .22, .21)
+        stone_ring(shape, 9, .182 * pot_scale, .110, scale=(1., .86, .79))
+        shape.cyl("earth", .168 * pot_scale, .025, segs=9)
+        shape.ball("glow", .106, (0, 0, .031), (1, 1, .28), subdiv=1)
+        for angle in (.35, 2.55, 4.65):
+            shape.rod("wood_dark", (.135 * math.cos(angle), .135 * math.sin(angle), .03), (0, 0, .06),
+                      .022, segs=5)
+            shape.cyl("glow", .049, .115, loc=(.053 * math.cos(angle), .053 * math.sin(angle), .032),
+                      segs=5, r2=0.)
+    elif raised > .02:
         shape.rod("earth", (*centre, 0), (*centre, raised + .062), .166 * pot_scale,
                   segs=11, r2=.101 * pot_scale)
         for level in (.30, .74):
@@ -104,6 +117,8 @@ def fixture(name: str | None, anchor: tuple[float, float, float] | None = None,
         for x, y in ((.13, 0), (-.11, -.04), (.02, -.13), (-.03, .15)):
             shape.ball("wood_dark", .065, (centre[0] + x, centre[1] + y, .035), (1, .7, .45))
     hearth = shape.build_object()
+    if name == "hearth":
+        hearth.matrix_world = Matrix.Translation((*centre, 0.))
     rings = ((.085, .048), (.161, .077), (.206, .164), (.210, .235),
              (.198, .297), (.207, .322), (.199, .335), (.180, .326),
              (.177, .293), (.186, .233), (.183, .164), (.145, .103), (.077, .074))
@@ -113,7 +128,8 @@ def fixture(name: str | None, anchor: tuple[float, float, float] | None = None,
         for side in range(segments):
             angle = math.tau * side / segments
             r = radius * pot_scale * (1 + .012 * math.sin(3 * angle))
-            points.append((centre[0] + r * math.cos(angle), centre[1] + r * math.sin(angle), z + pot_rim - .335))
+            x, y = (0., 0.) if name == "hearth" else centre
+            points.append((x + r * math.cos(angle), y + r * math.sin(angle), z + pot_rim - .335))
     faces = [(row * segments + side, row * segments + (side + 1) % segments,
               (row + 1) * segments + (side + 1) % segments, (row + 1) * segments + side)
              for row in range(len(rings) - 1) for side in range(segments)]
@@ -178,23 +194,39 @@ def capture_body(root: Path, out: Path, mesh: bpy.types.Object, body: str, names
         prop_name = action.prop if action is not None else PROPS.get(name)
         prop = A.prop_mesh(prop_name) if prop_name is not None else None
         context = fixture(name) if action is None else fixture(action.fixture, action.anchor, action.radius)
+        detail = min(count - 1, round(end * action.detail)) if action is not None and action.detail is not None else None
+        if detail is not None:
+            review_clips[name]["detail"] = detail
         hand = 0 if action is None else action.hand
         if context is not None:
             context.matrix_world = stage_scale @ context.matrix_world
         for frame in (range(count) if body == "p1" else picks):
-            geometry.vertices.foreach_set("co", A.blender_positions(vat[clip["start"] + frame]).ravel())
+            positions = A.blender_positions(vat[clip["start"] + frame])
+            geometry.vertices.foreach_set("co", positions.ravel())
             geometry.update()
             if prop is not None:
                 transform = prop_sockets[name][frame] if prop_sockets is not None else sockets[name][frame][hand]
                 prop.matrix_world = stage_scale @ transform
             for view, direction in sides.items():
-                if frame not in picks and view == "side":
+                if frame not in picks and frame != detail and view == "side":
                     continue
                 focal = Vector((0, -.29, .98))
                 camera_object.location = focal + 6 * direction.normalized()
                 camera_object.rotation_euler = (-direction).to_track_quat("-Z", "Y").to_euler()
                 scene.render.filepath = str(directory / f"{name}-{body}-{view}-{frame:03d}.png")
                 bpy.ops.render.render(write_still=True)
+                if frame == detail:
+                    low, high = scale * np.percentile(positions[:, 2], [65, 100])
+                    if prop is not None:
+                        high = max(high, max((prop.matrix_world @ vertex.co).z for vertex in prop.data.vertices))
+                    focal = Vector((0, -.11, (low + high) / 2))
+                    camera_object.location = focal + 6 * direction.normalized()
+                    camera_object.data.ortho_scale = max(1.18, 1.2 * (high - low))
+                    scene.render.resolution_x = scene.render.resolution_y = 440
+                    scene.render.filepath = str(directory / f"detail-{name}-{body}-{view}-{frame:03d}.png")
+                    bpy.ops.render.render(write_still=True)
+                    camera_object.data.ortho_scale = 2.45
+                    scene.render.resolution_x = scene.render.resolution_y = 260
         for subject_mesh in (prop, context):
             if subject_mesh is not None:
                 for child in list(subject_mesh.children):

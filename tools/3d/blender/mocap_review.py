@@ -11,7 +11,7 @@ import json
 from pathlib import Path
 import subprocess
 import sys
-from typing import Final, TypedDict
+from typing import Final, NotRequired, TypedDict
 
 from PIL import Image, ImageDraw, ImageFont
 
@@ -39,6 +39,7 @@ class Clip(TypedDict):
     loop: bool
     duration: float
     picks: list[int]
+    detail: NotRequired[int]
 
 
 class Body(TypedDict):
@@ -152,6 +153,26 @@ def write_gif(capture: Capture, key: str, output: Path) -> None:
             raise ReviewError(f"{output}: GIF duration drifts from the 30 fps timeline")
 
 
+def detail_sheet(capture: Capture, key: str, output: Path) -> None:
+    if "detail" not in capture.bodies["p1"]["clips"][key]:
+        return
+    cell = 440
+    header = 42
+    layout = Image.new("RGB", (cell * len(BODY_LABELS), (cell + header) * len(VIEWS)), BACKGROUND)
+    text = ImageDraw.Draw(layout)
+    font = ImageFont.load_default(size=21)
+    for row, (view, label) in enumerate(VIEWS.items()):
+        for col, (body, name) in enumerate(BODY_LABELS.items()):
+            sample = capture.bodies[body]["clips"][key]["detail"]
+            path = capture.directory / f"detail-{key}-{body}-{view}-{sample:03d}.png"
+            x, y = cell * col, (cell + header) * row
+            text.text((x + 12, y + 8), f"{name} / {label} / {sample / capture.bodies[body]['fps']:.2f}s",
+                      font=font, fill=INK)
+            with Image.open(path) as frame:
+                layout.paste(frame, (x, y + header))
+    layout.save(output)
+
+
 def main(argv: list[str]) -> int:
     """Run one captured spec or the matched CLIPS1/MOCAP1 review."""
     match argv:
@@ -166,6 +187,7 @@ def main(argv: list[str]) -> int:
             new_capture = read_capture(Path(new), "MOCAP1")
             destination = Path(output)
             make_sheet((old_capture, new_capture), PILOT, destination / "compare-sheet.png")
+            detail_sheet(new_capture, "chop", destination / "chop-apex.png")
             for key in PILOT:
                 for src, suffix in ((old_capture, "old"), (new_capture, "new")):
                     name = DISPLAY_NAMES[key].lower()

@@ -3,6 +3,7 @@
 Usage under the shared GPU lock: blender -b -P s2clips.py -- S2KIT_DIR OUT review
 """
 
+from collections.abc import Callable
 import json
 from pathlib import Path
 import sys
@@ -32,6 +33,13 @@ PALMS = {
     "p2": ((-.201, -.011, .459), (.201, -.011, .462)),
     "p3": ((-.217, -.022, .451), (.219, -.025, .452)),
     "p4": ((-.275, -.114, .585), (.286, -.078, .467)),
+}
+# Internal arm centres measured in the normalized A-pose scans, in metres.
+ARM_CENTRES = {
+    "p1": (((-.205, .036, 1.25), (-.273, .040, 1.005)), ((.205, .036, 1.25), (.273, .039, 1.005))),
+    "p2": (((-.179, .034, 1.24), (-.252, .027, 1.005)), ((.179, .034, 1.24), (.246, .027, 1.005))),
+    "p3": (((-.179, .043, 1.20), (-.259, .038, .977)), ((.179, .043, 1.20), (.259, .038, .977))),
+    "p4": (((-.222, .048, 1.24), (-.327, .040, 1.012)), ((.214, .055, 1.24), (.321, .045, 1.010))),
 }
 
 
@@ -92,7 +100,7 @@ def remove_staff(mesh: bpy.types.Object) -> None:
     data.free()
 
 
-def action_weights(mesh: bpy.types.Object, body: str) -> list[dict[str, float]]:
+def action_weights(mesh: bpy.types.Object, body: str, fitted: bool = False) -> list[dict[str, float]]:
     """Find the separated forearms below the armpits before assigning joint bands."""
     vertices = mesh.data.vertices
     bottom = min(v.co.z for v in vertices)
@@ -141,6 +149,30 @@ def action_weights(mesh: bpy.types.Object, body: str) -> list[dict[str, float]]:
         return {key: val * (1 - mix) + target.get(key, 0.) * mix for key, val in base.items()}
 
     raw = [per_vertex(v.index, v.co.x / height, z[v.index]) for v in vertices]
+    if fitted:
+        for side, palm, centres in zip(("R", "L"), PALMS[body], ARM_CENTRES[body]):
+            shoulder, elbow = (Vector(point) / kit.HEIGHT for point in centres)
+            run = Vector(palm) - shoulder
+            along = run.normalized()
+            names = (f"upper_arm_{side}", f"lower_arm_{side}", f"hand_{side}")
+            sign = -1 if side == "R" else 1
+            flexion = (elbow - shoulder).dot(along) / run.length
+            for row, vertex in zip(raw, vertices):
+                point = Vector((vertex.co.x / height, vertex.co.y / height, z[vertex.index]))
+                if point.x * sign < .075:
+                    continue
+                delta = point - shoulder
+                distance = delta.dot(along)
+                axial = distance / run.length
+                radial = (delta - distance * along).length
+                support = kit.blend(axial, -.08, .45) * (1 - kit.blend(radial, .074, .122))
+                support *= kit.blend(point.z, .385, .440)
+                upper = 1 - kit.blend(axial, flexion - .24, flexion + .24)
+                hand = kit.blend(axial, .82, 1.)
+                for name in row:
+                    row[name] *= 1 - support
+                for name, weight in zip(names, (upper, (1 - upper) * (1 - hand), (1 - upper) * hand)):
+                    row[name] = row.get(name, 0.) + support * weight
     # Smooth along connected sleeve loops. Nearby surfaces across the scan's arm gap stay separate.
     keys = tuple(dict.fromkeys(key for row in raw for key in row))
     weights = np.array([[row.get(key, 0.) for key in keys] for row in raw])
@@ -162,8 +194,28 @@ def action_weights(mesh: bpy.types.Object, body: str) -> list[dict[str, float]]:
     return [dict(zip(keys, row)) for row in weights]
 
 
+def fit_arm_rest(arm: bpy.types.Object, body: str, palms: tuple[Vector, Vector]) -> None:
+    """Center the shared arm hierarchy inside the actual scanned sleeves."""
+    bpy.context.view_layer.objects.active = arm
+    bpy.ops.object.mode_set(mode="EDIT")
+    try:
+        for side, palm, centres in zip(("R", "L"), palms, ARM_CENTRES[body]):
+            shoulder, elbow = map(Vector, centres)
+            wrist = palm.lerp(elbow, .15)
+            for name, head, tail in (("upper_arm", shoulder, elbow), ("lower_arm", elbow, wrist),
+                                     ("hand", wrist, palm)):
+                edit = arm.data.edit_bones[f"{name}_{side}"]
+                edit.head, edit.tail = head, tail
+                edit.align_roll(Vector((0., -1., 0.)))
+    finally:
+        bpy.ops.object.mode_set(mode="OBJECT")
+    arm.data["scan_arm_rest"] = True
+
+
 def source_rig(
     root: Path, body: str, budget: int, *, stabilize_grips: bool = False,
+    before_bind: Callable[[bpy.types.Object], None] | None = None,
+    align_arm_weights: bool = False,
 ) -> tuple[bpy.types.Object, bpy.types.Object, tuple[int, int]]:
     C.reset_scene()
     mesh = kit.import_mesh(root / "prepared" / f"{body}-{budget}.glb")
@@ -175,7 +227,7 @@ def source_rig(
     for other in list(bpy.data.objects):
         if other not in (mesh, arm):
             bpy.data.objects.remove(other, do_unlink=True)
-    weights = action_weights(mesh, body)
+    weights = action_weights(mesh, body, align_arm_weights)
     bottom = min(v.co.z for v in mesh.data.vertices)
     height = max(v.co.z for v in mesh.data.vertices) - bottom
     grip_vertices = []
@@ -195,7 +247,12 @@ def source_rig(
                     keep = distance * distance * (3. - 2. * distance)
                     weights[vertex.index] = {name: weight * keep for name, weight in row.items()}
                     weights[vertex.index][hand] += 1. - keep
-    kit.bind(mesh, arm, body, lambda index, _x, _z: weights[index])
+    if before_bind is not None:
+        before_bind(mesh)
+    if align_arm_weights:
+        fit_arm_rest(arm, body, tuple((mesh.data.vertices[i].co - Vector((0., 0., bottom))) * kit.HEIGHT / height
+                                      for i in grip_vertices))
+    kit.bind(mesh, arm, body, lambda index, _x, _z: weights[index], a_pose=align_arm_weights)
     return arm, mesh, (grip_vertices[0], grip_vertices[1])
 
 

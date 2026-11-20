@@ -123,8 +123,8 @@ def weights(key: str, x: float, z: float) -> dict[str, float]:
     return influences
 
 
-def bind(mesh: bpy.types.Object, arm: bpy.types.Object, key: str, weights_for_vertex=None) -> None:
-    """Inverse-skin the A pose into the unchanged ANCHOR2 skeleton rest pose."""
+def bind(mesh: bpy.types.Object, arm: bpy.types.Object, key: str, weights_for_vertex=None, *, a_pose=False) -> None:
+    """Bind the scan to a fitted A pose or inverse-skin it into the shared T pose."""
     animation = arm.animation_data
     animation.action = None
     for track in animation.nla_tracks:
@@ -132,10 +132,11 @@ def bind(mesh: bpy.types.Object, arm: bpy.types.Object, key: str, weights_for_ve
     for bone in arm.pose.bones:
         bone.matrix_basis = Matrix.Identity(4)
         bone.rotation_mode = "QUATERNION"
-    for side, sign in (("L", 1), ("R", -1)):
-        shoulder = arm.pose.bones[f"upper_arm_{side}"]
-        angle = 0.97 if key == "p4" and side == "R" else 1.14
-        shoulder.rotation_quaternion = anchor._offset(shoulder, Quaternion(C.Y, sign * angle))
+    if not a_pose:
+        for side, sign in (("L", 1), ("R", -1)):
+            shoulder = arm.pose.bones[f"upper_arm_{side}"]
+            angle = 0.97 if key == "p4" and side == "R" else 1.14
+            shoulder.rotation_quaternion = anchor._offset(shoulder, Quaternion(C.Y, sign * angle))
     bpy.context.view_layer.update()
     matrices = {bone.name: arm.matrix_world @ bone.matrix @ bone.bone.matrix_local.inverted()
                 for bone in arm.pose.bones}

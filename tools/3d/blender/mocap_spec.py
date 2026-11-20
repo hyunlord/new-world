@@ -13,12 +13,17 @@ import math
 from pathlib import Path
 import re
 from types import MappingProxyType
-from typing import TypeAlias
+from typing import Final, TypeAlias
 
 Value: TypeAlias = "str | int | float | bool | None | list[Value] | dict[str, Value]"
 XYZ: TypeAlias = tuple[float, float, float]
 BODIES = ("p1", "p2", "p3", "p4")
 ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]*")
+LAYER_MASK_FIELDS: Final = (
+    "root hips spine chest neck head "
+    "upper_arm_R lower_arm_R hand_R upper_leg_R lower_leg_R foot_R "
+    "upper_arm_L lower_arm_L hand_L upper_leg_L lower_leg_L foot_L"
+)
 
 
 class SpecError(ValueError):
@@ -42,6 +47,33 @@ class Target:
     orientation: XYZ
     fixture_radius: float
     solid: bool
+    release_offset: XYZ
+    release_pitch: float
+
+
+@dataclass(frozen=True, slots=True)
+class BaseLayer:
+    """A moving or static capture with optional per-bone influence."""
+
+    key: str
+    tags: tuple[str, ...]
+    takes: tuple[str, ...]
+    trim: tuple[float, float]
+    heading: float
+    weight: float
+    mask: Mapping[str, float]
+
+
+@dataclass(frozen=True, slots=True)
+class ArmLimits:
+    """Maximum arm angles in degrees and clavicle lift in metres."""
+
+    upper_roll: float
+    lower_roll: float
+    elevation: float
+    clavicle_lift: float
+    spine_extension: float = 0.
+    elbow_flexion: float = 150.
 
 
 @dataclass(frozen=True, slots=True)
@@ -62,6 +94,11 @@ class Action:
     reverse: bool
     heading: float
     posture: XYZ
+    base_layer: BaseLayer | None
+    arm_limits: Mapping[str, ArmLimits]
+    retime: tuple[tuple[float, float], ...]
+    duration: float | None
+    impact_window: tuple[float, float]
 
 
 @dataclass(frozen=True, slots=True)
@@ -159,7 +196,8 @@ def _hand(value: Value) -> Hand:
 
 
 def _target(value: Value) -> Target:
-    row = _map(value, "kind anchor radius depth tip orientation fixture_radius solid", "kind")
+    row = _map(value, "kind anchor radius depth tip orientation fixture_radius solid release_offset release_pitch",
+               "kind")
     kind = _text(row["kind"])
     if kind not in {"swing", "circle", "reach", "free"}:
         raise SpecError(f"unknown target kind {kind!r}")
@@ -173,7 +211,8 @@ def _target(value: Value) -> Target:
         raise SpecError("target orientation must be nonzero")
     return Target(kind, _xyz(row.get("anchor", [0, 0, 0])), radius,
                   _num(row.get("depth", .065), 0), _xyz(row.get("tip", [0, 0, 0])), orientation,
-                  _num(row.get("fixture_radius", .155), 0), _bool(row.get("solid", False)))
+                  _num(row.get("fixture_radius", .155), 0), _bool(row.get("solid", False)),
+                  _xyz(row.get("release_offset", [0, 0, 0])), _num(row.get("release_pitch", 0), -90, 90))
 
 
 def _bodies(value: Value, elder: float, default: float, low: float,
@@ -184,14 +223,78 @@ def _bodies(value: Value, elder: float, default: float, low: float,
     })
 
 
-def _action(key: str, value: Value) -> Action:
-    row = _map(value, "tags takes trim loop speed stoop prop hands target foot_lock contacts fixture "
-               "reverse heading posture",
-               "trim loop target foot_lock")
+def _source(row: Mapping[str, Value]) -> tuple[tuple[str, ...], tuple[str, ...]]:
     tags = tuple(_text(tag) for tag in _array(row.get("tags", [])))
     takes = tuple(_id(take) for take in _array(row.get("takes", [])))
     if not tags and not takes:
         raise SpecError("expected a take pin or search tags")
+    return tags, takes
+
+
+def _base_layer(key: str, value: Value) -> BaseLayer:
+    row = _map(value, "tags takes trim heading weight mask", "trim mask")
+    tags, takes = _source(row)
+    start, finish = (_num(second, 0) for second in _array(row["trim"], 2))
+    if start > finish:
+        raise SpecError("base layer trim must start at or before it ends")
+    mask = MappingProxyType({bone: _num(weight, 0, 1) for bone, weight in
+                             _map(row["mask"], LAYER_MASK_FIELDS).items()})
+    if not mask:
+        raise SpecError("base layer mask needs at least one bone or root translation")
+    return BaseLayer(f"{key} lower body", tags, takes, (start, finish),
+                     _num(row.get("heading", 0), -360, 360), _num(row.get("weight", 1), 0, 1), mask)
+
+
+def _arm_limits(body: str, value: Value) -> ArmLimits:
+    angles = "upper_roll lower_roll elevation"
+    try:
+        row = _map(value, f"{angles} clavicle_lift spine_extension elbow_flexion", angles)
+        return ArmLimits(_num(row["upper_roll"], 0, 180), _num(row["lower_roll"], 0, 180),
+                         _num(row["elevation"], 0, 90), _num(row.get("clavicle_lift", 0), 0, .10),
+                         _num(row.get("spine_extension", 0), 0, 25),
+                         _num(row.get("elbow_flexion", 150), 60, 170))
+    except SpecError as error:
+        raise SpecError(f"arm_limits ({body}): {error}") from error
+
+
+def _retime(value: Value) -> tuple[tuple[float, float], ...]:
+    """Read normalized output/source anchors for monotonic playback."""
+    try:
+        points = tuple((_num(output, 0, 1), _num(source, 0, 1)) for output, source in
+                       (_array(point, 2) for point in _array(value)))
+        if not points or points[0] != (0, 0) or points[-1] != (1, 1):
+            raise SpecError("expected endpoints [0, 0] and [1, 1]")
+        _ordered(tuple(output for output, _ in points))
+        _ordered(tuple(source for _, source in points))
+    except SpecError as error:
+        raise SpecError(f"retime: {error}") from error
+    return points
+
+
+def _positive(value: Value, field: str, high: float = math.inf) -> float:
+    try:
+        number = _num(value, 0, high)
+        if number == 0:
+            raise SpecError("expected a positive number")
+    except SpecError as error:
+        raise SpecError(f"{field}: {error}") from error
+    return number
+
+
+def _impact_window(value: Value) -> tuple[float, float]:
+    """Read the approach and release lengths in output phase units."""
+    try:
+        approach, release = _array(value, 2)
+    except SpecError as error:
+        raise SpecError(f"impact_window: {error}") from error
+    return _positive(approach, "impact_window approach", 0.5), _positive(release, "impact_window release", 0.5)
+
+
+def _action(key: str, value: Value) -> Action:
+    row = _map(value, "tags takes trim loop speed stoop prop hands target foot_lock contacts fixture "
+               "reverse heading posture base_layer arm_limits retime duration impact_window",
+               "trim loop target foot_lock")
+    tags, takes = _source(row)
     start, finish = (_num(second, 0) for second in _array(row["trim"], 2))
     if start >= finish:
         raise SpecError("trim must start before it ends")
@@ -205,16 +308,27 @@ def _action(key: str, value: Value) -> Action:
         raise SpecError("prop and at least one prop grip must be specified together")
     target = _target(row["target"])
     loop = _bool(row["loop"])
+    impact_window = _impact_window(row["impact_window"]) if "impact_window" in row else (.14, .14)
     if target.kind == "reach" and prop is not None and (not contacts or loop):
         raise SpecError("reaching for a prop requires a one-shot and a contact phase")
+    if (any(target.release_offset) or target.release_pitch) and (
+        target.kind != "swing" or not contacts or contacts[0] + impact_window[1] >= 1.
+    ):
+        raise SpecError("a release target needs a swing contact and room to release before the end")
     if loop and any(hand.slide and hand.slide[0][1] != hand.slide[-1][1] for hand in hands.values()):
         raise SpecError("a loop's sliding grip must join at the same offset")
+    arm_limits = MappingProxyType({body: _arm_limits(body, limits) for body, limits in
+                                  _map(row.get("arm_limits", {}), " ".join((*BODIES, "default"))).items()})
     return Action(_id(key), tags, takes, (start, finish), loop,
                   _bodies(row.get("speed", {}), .85, 1., .01),
                   _bodies(row.get("stoop", {}), 7., 0., 0., 45.), prop, hands,
                   target, _bool(row["foot_lock"]), contacts,
                   _id(row["fixture"]) if "fixture" in row else None, _bool(row.get("reverse", False)),
-                  _num(row.get("heading", 0), -360, 360), _xyz(row.get("posture", [0, 0, 0])))
+                  _num(row.get("heading", 0), -360, 360), _xyz(row.get("posture", [0, 0, 0])),
+                  _base_layer(key, row["base_layer"]) if "base_layer" in row else None, arm_limits,
+                  _retime(row["retime"]) if "retime" in row else (),
+                  _positive(row["duration"], "duration") if "duration" in row else None,
+                  impact_window)
 
 
 def load(path: Path) -> tuple[Action, ...]:
@@ -241,7 +355,7 @@ def _rank(query: tuple[str, ...], value: Value) -> int:
     return sum(needle in tags or f" {needle} " in description for needle in query)
 
 
-def select(action: Action, index_path: Path) -> Take:
+def select(action: Action | BaseLayer, index_path: Path) -> Take:
     """Respect ordered take pins, or rank cached takes by the matched search phrases."""
     index = _read(index_path)
     if action.takes:

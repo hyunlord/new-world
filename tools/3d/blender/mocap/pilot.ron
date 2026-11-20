@@ -2,17 +2,31 @@
   "chop": {
     "tags": ["chopping wood", "overhead swing"],
     "takes": ["79_01"],
-    "trim": [4.6, 6.133333333333333],
+    "trim": [4.6, 7.45],
+    "duration": 1.5,
+    "retime": [[0, 0], [0.4666666667, 0.3099415205], [0.6666666667, 0.4327485380],
+               [0.6888888889, 0.4678362573], [0.7555555556, 0.8654970760], [0.8444444444, 0.9239766082], [1, 1]],
+    "impact_window": [0.14, 0.09],
     "loop": true,
     "speed": {"p1": 1, "p2": 1, "p3": 1, "p4": 0.85},
     "posture": [0, 0, -0.035],
+    "arm_limits": {
+      "p1": {"upper_roll": 22, "lower_roll": 30, "elevation": 59,
+             "clavicle_lift": 0.026, "spine_extension": 11, "elbow_flexion": 150},
+      "p2": {"upper_roll": 21, "lower_roll": 28, "elevation": 58,
+             "clavicle_lift": 0.026, "spine_extension": 11, "elbow_flexion": 150},
+      "p3": {"upper_roll": 19, "lower_roll": 26, "elevation": 55,
+             "clavicle_lift": 0.021, "spine_extension": 10, "elbow_flexion": 147},
+      "p4": {"upper_roll": 18, "lower_roll": 25, "elevation": 56,
+             "clavicle_lift": 0.022, "spine_extension": 9, "elbow_flexion": 145}
+    },
     "prop": "axe",
     "hands": {
       "R": {"target": "prop", "offset": [0, 0, 0]},
       "L": {
         "target": "prop",
         "offset": [0, 0, 0.22],
-        "slide": [[0.0, 0.0], [0.55, 0.045], [0.8, -0.095], [1.0, 0.0]]
+        "slide": [[0.0, 0.0], [0.4666666667, 0.045], [0.6666666667, -0.095], [1.0, 0.0]]
       }
     },
     "target": {
@@ -21,11 +35,13 @@
       "tip": [0.142, 0, 0.50],
       "orientation": [0, -0.92, -0.38],
       "fixture_radius": 0.155,
-      "solid": true
+      "solid": true,
+      "release_offset": [0, 0.055, 0.09],
+      "release_pitch": 10
     },
     "fixture": "block",
     "foot_lock": true,
-    "contacts": [0.8043478260869565]
+    "contacts": [0.6666666666666666]
   },
   "cook": {
     "tags": ["mixing batter", "stir"],
@@ -33,22 +49,32 @@
     "trim": [2.5, 3.7666666666666666],
     "loop": true,
     "speed": {"p1": 1, "p2": 1, "p3": 1, "p4": 0.85},
-    "posture": [0, -0.02, -0.10],
+    "stoop": {"p1": 18, "p2": 18, "p3": 18, "p4": 22},
+    "base_layer": {
+      "tags": ["kneeling", "stationary"],
+      "takes": ["23_03"],
+      "trim": [2.7, 3.9666666666666666],
+      "heading": 163,
+      "weight": 1,
+      "mask": {"root": 1, "hips": 1, "spine": 0.5, "chest": 0.35,
+               "upper_leg_R": 1, "lower_leg_R": 1, "foot_R": 1,
+               "upper_leg_L": 1, "lower_leg_L": 1, "foot_L": 1}
+    },
     "prop": "ladle",
     "hands": {
       "R": {"target": "prop", "offset": [0, 0, 0]},
-      "L": {"target": "anchor", "offset": [0.193, 0.177, 0]}
+      "L": {"target": "anchor", "offset": [0.20, 0.15, 0]}
     },
     "target": {
       "kind": "circle",
-      "anchor": [0.055, -0.38, 0.79],
+      "anchor": [-0.13, -0.44, 0.44],
       "radius": 0.17,
       "depth": 0.065,
       "tip": [0, 0, 0.51],
-      "orientation": [0, -0.45, -0.89],
+      "orientation": [0, -0.65, -0.76],
       "fixture_radius": 0.25
     },
-    "fixture": "pot",
+    "fixture": "hearth",
     "foot_lock": true,
     "contacts": [0.0, 0.25, 0.5, 0.75]
   }

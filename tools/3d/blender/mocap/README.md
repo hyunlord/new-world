@@ -38,6 +38,9 @@ converted BVHs carry a different playback rate in their header. A trim starting
 at zero begins on the first captured frame, skipping the calibration pose.
 `loop` selects seam wrapping or a clamped one-shot. `speed` is a per-body playback multiplier
 (default 1.0, p4 0.85). `stoop` adds forward bend in degrees (default p4 7).
+Set `duration` in seconds when the output differs from the trim length. Set
+`retime` to pairs of normalized playback and source phases. Both axes must
+increase from `[0, 0]` to `[1, 1]`.
 Use `heading` for a constant yaw correction in degrees. `reverse` plays the
 same trim backward so a lift can also provide a set-down. The rig is baked at
 one unit height across the four mesh shapes. Review renders use the S2 scale
@@ -62,6 +65,23 @@ output playback order.
 | `target.orientation` | Direction of the prop's local +Z axis at the target. |
 | `fixture` and `target.fixture_radius` | Optional reference geometry for captures and its size in metres. |
 | `target.solid` | Keep the prop above a strike surface within `fixture_radius`. |
+| `impact_window` | Approach and release widths in playback phase units. |
+| `target.release_offset`, `target.release_pitch` | Optional blade-tip movement in metres and upward pitch in degrees after impact. |
+
+For a layered pose, give `base_layer` a take or search tags and its own `trim`
+and `heading`. `weight` multiplies each per-bone value in `mask`. The `root`
+channel blends hip displacement. Bone channels blend parent-local rotations.
+Use matching hip, leg and foot weights for a planted kneel or squat. A trim with
+equal endpoints holds a pose. Props and contact constraints run on the blended pose.
+
+`arm_limits` accepts per-body `upper_roll`, `lower_roll` and `elevation` in
+degrees from horizontal. `elbow_flexion` limits how far the elbow can fold from
+a straight arm. `clavicle_lift` in metres and `spine_extension` in
+degrees support an overhead reach. For these actions, the bone pivots follow the
+scanned A pose and a local surface correction holds the palms fixed. The build
+checks shoulder and elbow edge stretch (at most 1.35×) and triangle area (at least
+0.35×) against the prepared mesh in both the baked poses and the decoded VAT.
+The contacts receipt includes the worst frames and the measured whole-body stretch.
 
 To use a capture again, copy its source selection and trim to another visual
 key. Reuse the swing with a different edge or strike point, or change the

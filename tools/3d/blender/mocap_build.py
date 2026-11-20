@@ -40,8 +40,9 @@ def main() -> int:
     if args.compare and {action.key for action in actions} != {"chop", "cook"}:
         parser.error("CLIPS1 comparison requires the chop and cook pilot keys")
     for action in actions:
-        take = select(action, paths[1])
-        print(f"MOCAP_SOURCE {action.key} {take.id} {take.fps:g} Hz {take.url}", flush=True)
+        for source in ((action,) if action.base_layer is None else (action, action.base_layer)):
+            take = select(source, paths[1])
+            print(f"MOCAP_SOURCE {source.key} {take.id} {take.fps:g} Hz {take.url}", flush=True)
     python = str(HOME_BREW_PYTHON) if HOME_BREW_PYTHON.is_file() else sys.executable
     lock = [python, str(REPO / "tools/v8/mux2_gate_lock.py"), "--"]
     worker = [args.blender, "--background", "--factory-startup", "--disable-autoexec",
