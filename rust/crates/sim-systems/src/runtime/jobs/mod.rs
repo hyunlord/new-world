@@ -34,6 +34,7 @@ mod pot_supply;
 pub mod processing;
 pub mod space;
 pub mod teach;
+pub(crate) mod visible_action;
 
 #[cfg(test)]
 mod harvest_encoding_tests;

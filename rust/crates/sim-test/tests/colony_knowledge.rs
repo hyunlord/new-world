@@ -505,6 +505,8 @@ fn talk_at_the_fire_teaches_knapping_at_350_with_the_keyed_chance() {
 /// practitioner (`Source::Apprenticed`) and the chronicle logs it.
 #[test]
 fn an_apprenticeship_makes_a_door_maker_within_four_days() {
+    use sim_core::colony::visible_action::{Phase, VisibleActionKind as Action};
+
     let mut engine = knowledge_world(3, &[]);
     let teacher = worker(&mut engine, 12, 12);
     let learner = worker(&mut engine, 6, 6);
@@ -532,9 +534,25 @@ fn an_apprenticeship_makes_a_door_maker_within_four_days() {
         r.reason,
         Some(sim_core::colony::RejectReason::NoPractitioner)
     );
+    let mut saw_lesson = false;
     let used = run_until(&mut engine, 4 * 1440, |e| {
+        if !saw_lesson {
+            let rows = sim_systems::visible_action_rows(&e.world, &e.resources);
+            let teacher = rows.iter().find(|row| row.agent_id == t).expect("teacher");
+            if (teacher.action, teacher.phase) == (Action::Teach, Phase::Perform) {
+                let learner = rows.iter().find(|row| row.agent_id == l).expect("learner");
+                assert_eq!(
+                    (learner.action, learner.phase),
+                    (Action::Learn, Phase::Perform)
+                );
+                assert_eq!((teacher.partner, learner.partner), (Some(l), Some(t)));
+                assert_eq!(teacher.target, learner.target);
+                saw_lesson = true;
+            }
+        }
         e.resources.colony.tallies.teach_done == 1
     });
+    assert!(saw_lesson, "no performing teacher/learner pair appeared");
     assert!(used < 4 * 1440, "done within 4 days ({used} ticks)");
     let k = engine
         .world

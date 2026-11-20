@@ -2,6 +2,9 @@
 use crate::runtime::food::{self, items};
 use hecs::World;
 use sim_core::colony::food::{FoodOwner, FoodStackKey};
+use sim_core::colony::visible_action::{
+    CarriedItemView, VisibleActionCue, VisibleCueKind, VisibleTarget, VisibleTargetKind,
+};
 use sim_core::colony::{BlueprintKind, Carry, ItemKind, ItemSpec, JobKind, Workshop};
 use sim_core::components::{Agent, Position};
 use sim_core::rules::WorldRules;
@@ -139,6 +142,35 @@ fn job_pickup_shelf_delivery_and_cancellation_keep_original_birth_day() {
     );
     super::cancel::drop_carry(&mut world, &mut res, person);
     assert_eq!(res.food.ages[&FoodOwner::Ground((2, 2))].born_day, 0);
+    let tick = res.current_tick;
+    let item = CarriedItemView::of(spec, 2);
+    let source = VisibleTarget::at(VisibleTargetKind::Stack, (2, 2));
+    let workshop = VisibleTarget::identified(VisibleTargetKind::Workshop, (4, 5), 1);
+    let expected = [
+        (VisibleCueKind::PickedUp, source),
+        (VisibleCueKind::Deposited, workshop),
+        (VisibleCueKind::PickedUp, source),
+        (VisibleCueKind::Deposited, source),
+    ]
+    .into_iter()
+    .enumerate()
+    .map(|(sequence, (kind, target))| VisibleActionCue {
+        agent_id: 1,
+        sequence: u32::try_from(sequence).unwrap(),
+        tick,
+        kind,
+        target,
+        item,
+    })
+    .collect::<Vec<_>>();
+    assert_eq!(
+        res.visible_action_cues
+            .since_tick(None)
+            .copied()
+            .collect::<Vec<_>>(),
+        expected,
+    );
+    assert_eq!(res.visible_action_cues.since_tick(Some(tick)).count(), 0);
     food::validate(&world, &res).unwrap();
 }
 
@@ -158,6 +190,7 @@ fn expired_carried_food_is_booked_as_spoilage_on_cancel() {
     assert!(world.get::<&Carry>(person).is_err());
     assert_eq!(res.food.tallies.spoiled_units, 2);
     assert_eq!(res.colony.item_ledger.consumed_of(roots), 2);
+    assert_eq!(res.visible_action_cues.since_tick(Some(0)).count(), 0);
     food::validate(&world, &res).unwrap();
 }
 

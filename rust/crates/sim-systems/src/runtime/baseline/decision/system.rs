@@ -64,6 +64,7 @@ use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use hecs::World;
 use sim_core::causal::{CausalEvent, DecisionReason, EventId, MemoryRecallTrigger};
 use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
+use sim_core::colony::visible_action::{VisibleCueKind, VisibleTarget, VisibleTargetKind};
 use sim_core::components::{
     Agent, AgentId, AgentState, BuildingBlueprint, Child, ConstructionSite, Elder, Founding,
     Hunger, Inventory, Lineage, Memory, MemoryArm, PorterStage, PorterTrip, Position, ResourceKind,
@@ -3347,7 +3348,19 @@ impl RuntimeSystem for AgentDecisionSystem {
                                             );
                                             // Infinite source: take freely, no decrement.
                                             if let Some(inv) = inventory_opt.as_mut() {
-                                                inv.add(ResourceKind::Food, want);
+                                                let taken =
+                                                    want - inv.add(ResourceKind::Food, want);
+                                                resources.visible_action_cues.record_legacy(
+                                                    tick,
+                                                    agent.id,
+                                                    VisibleCueKind::PickedUp,
+                                                    VisibleTarget::at(
+                                                        VisibleTargetKind::Plant,
+                                                        key,
+                                                    ),
+                                                    ResourceKind::Food,
+                                                    taken,
+                                                );
                                             }
                                         } else {
                                             let take = (*counter as u32).min(want);
@@ -3372,6 +3385,17 @@ impl RuntimeSystem for AgentDecisionSystem {
                                                             );
                                                         resources.food_tiles.remove(&key);
                                                     }
+                                                    resources.visible_action_cues.record_legacy(
+                                                        tick,
+                                                        agent.id,
+                                                        VisibleCueKind::PickedUp,
+                                                        VisibleTarget::at(
+                                                            VisibleTargetKind::Plant,
+                                                            key,
+                                                        ),
+                                                        ResourceKind::Food,
+                                                        actually,
+                                                    );
                                                 }
                                             }
                                         }
@@ -3416,6 +3440,14 @@ impl RuntimeSystem for AgentDecisionSystem {
                                             resources.wood_tiles.insert(key, left);
                                         }
                                         resources.tallies.wood_gathered += u64::from(actually);
+                                        resources.visible_action_cues.record_legacy(
+                                            tick,
+                                            agent.id,
+                                            VisibleCueKind::PickedUp,
+                                            VisibleTarget::at(VisibleTargetKind::Stack, key),
+                                            ResourceKind::Wood,
+                                            actually,
+                                        );
                                     }
                                 }
                                 *state = AgentState::Idle;

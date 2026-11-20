@@ -1,6 +1,6 @@
 # Snapshot schema — the bridge's read surface
 
-Schema version: 17 — M-GROW-a appends zone layout evidence, house stages and decorative yard projections to existing getters. Version 16 — M-SPINE-b adds template catalogue/zone definitions, physical site/options and placement/cause reads, housing overlay, assigned-bed template home and command revision. Implementation integrated; b runtime validation pending. Version 15 — M-SPINE-a adds data-authored era/lane catalogues, tech status/debt and per-era progress. Version 14 — M6b Stage2 appends physical apparel/wear and weaving diagnosis facts (implementation in progress). Version 13 — M6a adds plant, meal and physical-food storage reads plus harvest designation. Version 12 — M-CORE adds the read-only `get_agent_mind` choice and reason view. Version 11 — M-UX2 adds independent defence state/command and the optional native timing diagnostic. Version 10 — M-UX Stage B adds pressure/animal catalogue metadata, actual pressure banner identity and species presentation columns. Schema 9 introduced the immutable core catalogue, factory preflight, full-width content columns and mechanical door flags. Catalogue DTO version remains 1; it is independent of this document version.
+Schema version: 18 — ACTION1 adds visible action and item cue reads. Version 17 — M-GROW-a appends zone layout evidence, house stages and decorative yard projections to existing getters. Version 16 — M-SPINE-b adds template catalogue/zone definitions, physical site/options and placement/cause reads, housing overlay, assigned-bed template home and command revision. Implementation integrated; b runtime validation pending. Version 15 — M-SPINE-a adds data-authored era/lane catalogues, tech status/debt and per-era progress. Version 14 — M6b Stage2 appends physical apparel/wear and weaving diagnosis facts (implementation in progress). Version 13 — M6a adds plant, meal and physical-food storage reads plus harvest designation. Version 12 — M-CORE adds the read-only `get_agent_mind` choice and reason view. Version 11 — M-UX2 adds independent defence state/command and the optional native timing diagnostic. Version 10 — M-UX Stage B adds pressure/animal catalogue metadata, actual pressure banner identity and species presentation columns. Schema 9 introduced the immutable core catalogue, factory preflight, full-width content columns and mechanical door flags. Catalogue DTO version remains 1; it is independent of this document version.
 
 History: 8 (M-UX adds `get_ui_facts`, `get_steward`, and the logged `cmd_set_steward` mode command. 7 — M-ART2: the snapshot's appearance columns `sexes`, `look_ids`, `variants` from `collect_appearance` (`ffi/appearance.rs`, rule file `rust/crates/sim-bridge/data/appearance.ron`) and `get_space`'s `wall_materials`, `wall_styles`, `wall_categories`, `floor_materials`, `floor_styles`, `floor_categories`; no getter added or removed. 6 — M5.5: the neighbour reads `get_neighbours`, `get_wave`, `get_caravan`, the snapshot's `fleeing`, `get_agent_m5`'s `fleeing`, `get_year_summary`'s `migrants_joined`, `trades`, `eurekas` and chronicle kinds 38–44; M5: the story, animal and mood reads `get_story`, `get_animals`, `get_agent_m5`, `get_drafted`, `get_chronicle_why`, `get_year_summary`, `get_teach_suggestion`, the snapshot's `tops`, `mood_bands`, `drafted`, `sick` and the chronicle rows' `index` and links; M4 the knowledge reads `get_tech`, `get_tech_node`, `get_agent_knowledge`, `get_teach_orders`, `get_knowledge_waits`, `get_space`'s fords and the new item, recipe, blueprint, job and chronicle codes; M3 added built space, rooms, the place preview and the overlay's `item_covered`; M2 the economy reads and the overlay's node, mark and quality columns).
 
@@ -426,6 +426,77 @@ agents with an `Activity`, ordered by `(AgentId, entity bits)`.
 | `place_x` | PackedInt32Array | the activity's place, tile x |
 | `place_y` | PackedInt32Array | the activity's place, tile y |
 | `until_tick` | PackedInt64Array | completion tick after arrival; -1 while walking there |
+
+### `get_visible_action_snapshot`
+`sim_systems::visible_action_rows` → `visible_action_snapshot_to_dict` (`ffi/visible_action.rs`). One live agent per
+row, strictly ordered by AgentId. Join with `get_agent_snapshot().agent_ids`. All packed arrays have equal lengths,
+including in an empty world. Scalar `tick` and `revision` identify the read boundary together. `SimReads` caches this
+getter per simulation tick and invalidates it on commands and world replacement, including same-frame paused commands.
+
+| key | type | meaning |
+|---|---|---|
+| `tick` | int | completed tick count, same clock as `get_time_snapshot` |
+| `revision` | int | monotonic node-local command and replacement revision, independent of tick and unsaved |
+| `agent_ids` | PackedInt64Array | AgentId in the existing signed-bit representation |
+| `actions` | PackedByteArray | mechanical action codes listed below |
+| `phases` | PackedByteArray | 0 Idle, 1 Approach, 2 Perform, 3 Transport |
+| `goal_xs` | PackedInt32Array | current movement goal x or -1 |
+| `goal_ys` | PackedInt32Array | current movement goal y or -1 |
+| `target_kinds` | PackedInt32Array | target namespace listed below, or -1 |
+| `target_xs` | PackedInt32Array | physical target tile x or -1 |
+| `target_ys` | PackedInt32Array | physical target tile y or -1 |
+| `target_ids` | PackedInt64Array | ID in the target namespace or -1; tile-addressed targets can omit it |
+| `partner_ids` | PackedInt64Array | participating live partner AgentId or -1 |
+| `held_items` | PackedInt64Array | held item catalogue code or -1 |
+| `held_materials` | PackedInt64Array | held item material ID or -1 |
+| `held_quantities` | PackedInt32Array | actual item quantity or -1 |
+| `tool_items` | PackedInt64Array | actual tool item catalogue code or -1 |
+| `tool_materials` | PackedInt64Array | tool material ID or -1 |
+| `tool_qualities` | PackedInt32Array | tool quality 0–100 or -1 |
+| `recipes` | PackedInt64Array | selected recipe catalogue code or -1 |
+| `started_at_ticks` | PackedInt64Array | authoritative action start or -1 |
+| `until_ticks` | PackedInt64Array | authoritative action end or -1 |
+| `visual_keys` | PackedStringArray | selected action clip key from the immutable visual mapping |
+| `fallback_keys` | PackedStringArray | mapped fallback clip key |
+
+Action codes: 0 Idle, 1 TendFire, 2 RoutineHandwork, 3 Sit, 4 Explore, 5 Play, 6 Chop, 7 Carry, 8 Build,
+9 Dismantle, 10 Dig, 11 Mine, 12 Craft, 13 Teach, 14 Learn, 15 Hunt, 16 Strike, 17 Flee, 18 DraftMove,
+19 Equip, 20 Harvest, 21 Till, 22 Sow, 23 TendCrop, 24 Capture, 25 Milk, 26 Slaughter, 27 Eat, 28 Drink,
+29 Talk, 30 Sleep. Craft specializations resolve through the recipe tags in the visual mapping.
+
+Target namespaces: 0 Tile, 1 Bed, 2 Hearth, 3 Workshop, 4 Site, 5 WildAnimal, 6 Livestock, 7 Agent, 8 Stack,
+9 Tree, 10 Plant, 11 Field, 12 Deposit, 13 Pen, 14 FoodStore, 15 PersonalFood, 16 Water, 17 Trade,
+18 Stockpile zone, 19 Pot, 20 SettlementStore. Join a target ID only within its namespace. Zero is a valid code or ID.
+
+### `get_visible_action_cues`
+`get_visible_action_cues(since_tick)` → `visible_action_cues_to_dict` (`ffi/visible_action.rs`). Returns successful
+physical item cues with execution ticks strictly greater than the cursor. Pass -1 for all retained cues. The ring
+retains the latest 256 operations, clears on reset or load, and is excluded from saves. All packed arrays have equal
+lengths and use the snapshot's ID, target and material conventions. The order is execution tick then commit sequence.
+
+Poll once per view via `SimReads.visible_action_cues`. Play each `(tick, sequence)` once per world. A command can
+commit another cue at the current execution tick, so overlap the tail on command revision changes and deduplicate.
+Clear the cursor and seen keys when the world is replaced. If `evicted_through_tick > since_tick`, the request
+has missing history. Use the sustained pose for that gap.
+
+| key | type | meaning |
+|---|---|---|
+| `tick` | int | completed tick count, same as the snapshot |
+| `revision` | int | world node command and replacement revision |
+| `evicted_through_tick` | int | last evicted cue's execution tick or -1 before the first eviction |
+| `ticks` | PackedInt64Array | execution tick of the committing operation |
+| `sequences` | PackedInt64Array | zero-based order within execution tick |
+| `agent_ids` | PackedInt64Array | actor AgentId |
+| `kinds` | PackedByteArray | 0 PickedUp, 1 Deposited, 2 Equipped |
+| `target_kinds` | PackedInt32Array | target namespace |
+| `target_xs` | PackedInt32Array | target tile x or -1 |
+| `target_ys` | PackedInt32Array | target tile y or -1 |
+| `target_ids` | PackedInt64Array | target ID or -1 |
+| `items` | PackedInt64Array | actual transferred item catalogue code |
+| `materials` | PackedInt64Array | item material ID or -1 |
+| `quantities` | PackedInt32Array | transferred quantity |
+| `visual_keys` | PackedStringArray | mapped one-shot clip key |
+| `fallback_keys` | PackedStringArray | mapped fallback clip key |
 
 ### `get_relationship_snapshot`
 `collect_relationship_snapshot(&SimResources)` → `relationship_rows_to_variant_array` (`ffi/reads_agent.rs`).
@@ -1964,10 +2035,13 @@ it with `worldsim_probe --scene colony --seeds S..S+1 --ascii --tick T [--rect x
 script's entries for ticks below T right before that tick's systems, as the colony probe does. `--rect` crops the full
 grid and is clipped to the map.
 
-`--people-json FILE` writes `{seed, tick, count, people, appearance}`: `people` is one `[x, y]` per person, sorted
+`--people-json FILE` writes `{seed, tick, count, people, appearance, visible_actions}`: `people` is one `[x, y]` per person, sorted
 (compared with the Godot agent layer by `tools/v8/renderer_agreement.sh`); M-ART2 adds `appearance`, one
 `{agent_id, x, y, sex, look, variant}` per person in AgentId order — the snapshot's `agent_ids`, `xs`, `ys`, `sexes`,
 `look_ids`, `variants` from the same collectors (C2 agreement extended to appearance; `engine_appearance_ffi.rs`).
+Action1 adds `visible_actions` in AgentId order. The gate compares each row's `agent_id`, `action`, `phase`,
+`goal_x`, `goal_y`, `target_kind`, `target_x`, `target_y`, `target_id`, and `partner_id` with `get_visible_action_snapshot`
+in the real scene at the same replay tick. The codes and missing values follow the snapshot schema above.
 
 Layer order, later wins: **terrain < marks/zones < items < buildings/sites < trees < people**.
 

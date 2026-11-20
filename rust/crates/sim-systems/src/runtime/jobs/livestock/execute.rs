@@ -1,5 +1,8 @@
 //! Travel, physical tool pickup and uninterrupted work for livestock jobs.
 use super::*;
+use sim_core::colony::visible_action::{
+    CarriedItemView, VisibleCueKind, VisibleTarget, VisibleTargetKind,
+};
 use sim_core::colony::Carry;
 
 fn put(world: &mut World, entity: Entity, job: Job) {
@@ -49,7 +52,15 @@ pub fn step(
             super::super::cancel::cancel(world, res, entity, CancelReason::TargetGone);
             return;
         }
-        let _ = world.insert_one(entity, Carry::of(spec, 1));
+        if world.insert_one(entity, Carry::of(spec, 1)).is_ok() {
+            res.visible_action_cues.record(
+                res.current_tick,
+                owner,
+                VisibleCueKind::PickedUp,
+                VisibleTarget::at(VisibleTargetKind::Stack, from),
+                CarriedItemView::of(spec, 1),
+            );
+        }
         res.colony.reservations.remove(&ReserveKey::Stack(from));
         job.fetch = None;
         let Some(goal) = target_tile(res, &job) else {

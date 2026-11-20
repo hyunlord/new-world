@@ -73,6 +73,17 @@ pub(super) fn build(
     let base = base.into_map()?;
     let extension = extension.unwrap_or_default().into_map()?;
     let revision = sources::revision(&base, &extension);
+    let (action_visuals, recipe_visual_rules) = action_visuals::parse(
+        if base.contains_key(action_visuals::SOURCE) {
+            sources::text(&base, action_visuals::SOURCE)?
+        } else {
+            action_visuals::BUNDLED
+        },
+        extension
+            .contains_key(action_visuals::SOURCE)
+            .then(|| sources::text(&extension, action_visuals::SOURCE))
+            .transpose()?,
+    )?;
     let mut items: ItemFile = parse(&base, "items.ron")?;
     let mut blueprints: BlueprintFile = parse(&base, "blueprints.ron")?;
     let mut recipes: RecipeFile = parse(&base, "recipes.ron")?;
@@ -188,6 +199,7 @@ pub(super) fn build(
         revision,
         knowledge_defs: KnowledgeDefs::default(),
         knowledge_gates: Gates::default(),
+        action_visuals,
         building_templates: TemplateCatalog::default(),
         zones: super::super::zones::ZonesData::default(),
         yards: super::super::yards::YardsData::default(),
@@ -224,6 +236,8 @@ pub(super) fn build(
         .into_iter()
         .map(|r| resolve_recipes::resolve(r, &catalog))
         .collect::<Result<_, _>>()?;
+    catalog.action_visuals.recipes =
+        action_visuals::compile_recipes(recipe_visual_rules, &catalog)?;
     for (role, name) in items.roles {
         let id = catalog
             .item_by_name(&name)

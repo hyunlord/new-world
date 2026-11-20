@@ -46,6 +46,7 @@ pub mod space;
 pub mod steward;
 pub mod story;
 pub mod ui_facts;
+mod visible_action;
 
 pub use card_targets::{collect_command_log, collect_harvest_target, CommandLogRow, HarvestTarget};
 pub use steward::{collect_steward, submit_set_steward, StewardView};

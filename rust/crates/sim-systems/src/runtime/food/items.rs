@@ -1,8 +1,12 @@
 //! Atomic food ownership transitions; age never resets during a move.
 pub use super::placement::{book_creation, create_ground, create_ground_batches, relocate_ground};
-use hecs::World;
+use hecs::{Entity, World};
 use sim_core::colony::food::{FoodAge, FoodOwner};
+use sim_core::colony::visible_action::{
+    CarriedItemView, VisibleCueKind, VisibleTarget, VisibleTargetKind,
+};
 use sim_core::colony::ItemSpec;
+use sim_core::components::AgentId;
 use sim_engine::SimResources;
 use std::fmt;
 
@@ -79,6 +83,46 @@ pub fn stack(
     owner: FoodOwner,
 ) -> Option<sim_core::colony::ItemStack> {
     super::owners::stack(world, res, owner)
+}
+
+/// Physical tile of an active, edible owner. Reachability is checked by the caller.
+pub(in crate::runtime) fn edible_tile(
+    world: &World,
+    res: &SimResources,
+    entity: Entity,
+    agent: AgentId,
+    origin: (u32, u32),
+    owner: FoodOwner,
+) -> Option<(u32, u32)> {
+    use sim_core::colony::{Carry, ItemStack};
+    let tile = match owner {
+        FoodOwner::Ground(tile) => tile,
+        FoodOwner::Pot { id, .. } => res.food.pots.get(&id)?.tile,
+        FoodOwner::Carried(id) if id == agent => origin,
+        FoodOwner::Carried(_) | FoodOwner::Shelf { .. } => return None,
+    };
+    let stack = match owner {
+        FoodOwner::Carried(_) => {
+            let carry = world.get::<&Carry>(entity).ok()?;
+            ItemStack::of(carry.spec(), carry.count)
+        }
+        _ => stack(world, res, owner)?,
+    };
+    let food = stack.kind.definition().food.as_ref()?;
+    let age = res.food.ages.get(&owner)?;
+    let day = crate::runtime::food::day(res);
+    if stack.count == 0
+        || !food.raw_edible
+        || age.born_day > day
+        || age.remaining(
+            day,
+            food.lifetime_days(crate::runtime::food::storage::class(res, owner)),
+        ) == 0
+        || !res.nav.passable(tile)
+    {
+        return None;
+    }
+    Some(tile)
 }
 
 /// Take at most `count` items; an expired or untracked food stack cannot move.
@@ -170,7 +214,40 @@ pub fn transfer(
     // World is exclusively borrowed, so admission remains valid between these writes.
     let taken = take(world, res, from, batch.count, day)?;
     put(world, res, to, taken, day).map_err(|(error, _)| error)?;
+    let cue = match (from, to) {
+        (FoodOwner::Carried(agent), target) => Some((agent, VisibleCueKind::Deposited, target)),
+        (source, FoodOwner::Carried(agent)) => Some((agent, VisibleCueKind::PickedUp, source)),
+        _ => None,
+    };
+    if let Some((agent, kind, target)) = cue.and_then(|(agent, kind, owner)| {
+        transfer_target(res, owner).map(|target| (agent, kind, target))
+    }) {
+        res.visible_action_cues.record(
+            res.current_tick,
+            agent,
+            kind,
+            target,
+            CarriedItemView::of(taken.spec, taken.count),
+        );
+    }
     Ok(batch.count)
+}
+
+fn transfer_target(res: &SimResources, owner: FoodOwner) -> Option<VisibleTarget> {
+    Some(match owner {
+        FoodOwner::Ground(tile) => VisibleTarget::at(VisibleTargetKind::Stack, tile),
+        FoodOwner::Pot { id, .. } => VisibleTarget::identified(
+            VisibleTargetKind::Pot,
+            res.food.pots.get(&id)?.tile,
+            u64::from(id),
+        ),
+        FoodOwner::Shelf { workshop, .. } => VisibleTarget::identified(
+            VisibleTargetKind::Workshop,
+            res.colony.workshops.get(&workshop)?.work_tile(),
+            u64::from(workshop),
+        ),
+        FoodOwner::Carried(_) => return None,
+    })
 }
 
 /// Destination tiles and whole-item counts produced by ground placement.
@@ -206,6 +283,17 @@ pub fn drop_ground(
     let plan = super::ground::plan(res, tile, &[batch], day)?;
     take(world, res, from, batch.count, day)?;
     super::ground::apply(res, &plan);
+    if let FoodOwner::Carried(agent) = from {
+        for (tile, placed) in plan {
+            res.visible_action_cues.record(
+                res.current_tick,
+                agent,
+                VisibleCueKind::Deposited,
+                VisibleTarget::at(VisibleTargetKind::Stack, tile),
+                CarriedItemView::of(placed.spec, placed.count),
+            );
+        }
+    }
     Ok(batch.count)
 }
 

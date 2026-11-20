@@ -42,6 +42,7 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use hecs::{Entity, World};
 use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
+use sim_core::colony::visible_action::{VisibleCueKind, VisibleTarget, VisibleTargetKind};
 use sim_core::components::{
     Agent, AgentId, AgentState, Child, Elder, Founding, Hunger, Inventory, PairDay, PorterKind,
     PorterStage, PorterTrip, Position, RelationState, SeekTarget, Settlement, SettlementId,
@@ -372,6 +373,18 @@ fn progress(world: &mut World, resources: &mut SimResources, rule: &RelationsRul
                     let load = unload(world, entity, trip.kind, remaining(&record));
                     if let Some(settlement) = resources.settlements.get_mut(&trip.to) {
                         settlement.store(trip.kind.resource(), load);
+                        resources.visible_action_cues.record_legacy(
+                            tick,
+                            id,
+                            VisibleCueKind::Deposited,
+                            VisibleTarget::identified(
+                                VisibleTargetKind::SettlementStore,
+                                settlement.formation_tile,
+                                u64::from(trip.to),
+                            ),
+                            trip.kind.resource(),
+                            load,
+                        );
                     }
                     record.delivered += load;
                     resources.tallies.porter_deliveries += 1;
@@ -430,6 +443,18 @@ fn progress(world: &mut World, resources: &mut SimResources, rule: &RelationsRul
                     let back = unload(world, entity, trip.kind, left);
                     if let Some(settlement) = resources.settlements.get_mut(&trip.from) {
                         settlement.store(trip.kind.resource(), back);
+                        resources.visible_action_cues.record_legacy(
+                            tick,
+                            id,
+                            VisibleCueKind::Deposited,
+                            VisibleTarget::identified(
+                                VisibleTargetKind::SettlementStore,
+                                home,
+                                u64::from(trip.from),
+                            ),
+                            trip.kind.resource(),
+                            back,
+                        );
                     }
                     record.returned += back;
                     resources.tallies.porter_units_returned += u64::from(back);
@@ -915,6 +940,20 @@ fn depart(
             }
         }
         let carried = withdrawn - overflow;
+        if let Some(settlement) = resources.settlements.get(&departure.from) {
+            resources.visible_action_cues.record_legacy(
+                tick,
+                id,
+                VisibleCueKind::PickedUp,
+                VisibleTarget::identified(
+                    VisibleTargetKind::SettlementStore,
+                    settlement.formation_tile,
+                    u64::from(departure.from),
+                ),
+                departure.kind.resource(),
+                carried,
+            );
+        }
         let trip = PorterTrip {
             from: departure.from,
             to: departure.to,

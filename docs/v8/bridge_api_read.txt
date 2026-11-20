@@ -123,6 +123,8 @@ func WorldSimNode.get_trees
 func WorldSimNode.get_ui_facts
 func WorldSimNode.get_wave
 func WorldSimNode.get_why_not
+func WorldSimNode.get_visible_action_cues
+func WorldSimNode.get_visible_action_snapshot
 func WorldSimNode.get_work_priorities
 func WorldSimNode.get_workshops
 func WorldSimNode.get_world_info

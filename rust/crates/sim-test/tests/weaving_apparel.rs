@@ -2,6 +2,9 @@
 mod colony_support;
 
 use sim_core::colony::people::{Apparel, Top};
+use sim_core::colony::visible_action::{
+    CarriedItemView, VisibleCueKind, VisibleTarget, VisibleTargetKind,
+};
 use sim_core::colony::{ItemKind, ItemSpec, Job, JobKind, JobStage};
 use sim_core::components::Agent;
 use sim_engine::RuntimeSystem;
@@ -68,6 +71,29 @@ fn equipping_and_death_keep_exact_physical_garments() {
         .ground_items
         .values()
         .any(|s| s.spec() == old));
+    let cues: Vec<_> = engine
+        .resources
+        .visible_action_cues
+        .since_tick(None)
+        .copied()
+        .collect();
+    let [returned, equipped] = cues.as_slice() else {
+        panic!("expected return and equip cues, got {cues:?}");
+    };
+    assert_eq!(
+        (returned.agent_id, returned.kind),
+        (id, VisibleCueKind::Deposited)
+    );
+    assert_eq!(returned.item, CarriedItemView::of(old, 1));
+    assert_eq!(
+        (equipped.agent_id, equipped.kind),
+        (id, VisibleCueKind::Equipped)
+    );
+    assert_eq!(
+        equipped.target,
+        VisibleTarget::at(VisibleTargetKind::Stack, (3, 3))
+    );
+    assert_eq!(equipped.item, CarriedItemView::of(new, 1));
     cancel::on_death(&mut engine.world, &mut engine.resources, entity);
     assert!(engine.world.get::<&Apparel>(entity).is_err());
     assert!(engine

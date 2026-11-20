@@ -247,6 +247,7 @@ after a reset or a load). The exact exported list is checked by gate step 13, cu
 | lifecycle and speed | `reset_world`, `reset_world_stress` (benchmark world), `set_sim_speed`, `advance_ticks` (tooling) |
 | save files (M1.5) | `save_world(path) -> bool`, `load_world(path) -> bool` (absolute path; GDScript globalizes `user://saves/<seed>-<tick>.wsave`; a load replaces the engine and emits `world_reset`; bytes from `sim_systems::save`) |
 | per-frame snapshots | `get_agent_snapshot`, `get_building_snapshot`, `get_construction_snapshot`, `get_resource_snapshot`, `get_terrain_snapshot`, `get_time_snapshot`, `get_tallies`, `get_world_info`, `get_recent_deaths`, `get_activity_snapshot`, `get_porter_snapshot` |
+| visible actions (ACTION1) | `get_visible_action_snapshot` (per tick and command revision via SimReads), `get_visible_action_cues(since_tick)` (bounded physical pickup, deposit and equip history) |
 | one agent | `get_agent_detail`, `get_agent_id`, `get_agent_temperament`, `get_agent_family`, `get_relationship_snapshot`, `get_person` |
 | settlements | `get_settlement_snapshot`, `get_society_snapshot`, `get_settlement_relations` |
 | chronicle | `get_chronicle_since`, `get_person_chronicle`, `get_settlement_chronicle` |
@@ -262,7 +263,7 @@ after a reset or a load). The exact exported list is checked by gate step 13, cu
 | calendar and ages (M1.5) | `get_time_snapshot`'s `year_index`, `season_index`, `day_of_year`, `days_per_year`; `get_world_info`'s `ticks_per_year`; the agent snapshot's `ages_years`, `infants`, `pregnant_days` columns |
 
 Every getter, key, type, id space and row order is documented in
-`docs/v8/snapshot_schema.md` (schema version 11, M-UX2); the gate step
+`docs/v8/snapshot_schema.md` (schema version 18, ACTION1); the gate step
 `schema_docs` (`python3 tools/v8/check_docs_helpers.py schema .`) fails on any
 getter or key missing there (ADR 0016 C2).
 

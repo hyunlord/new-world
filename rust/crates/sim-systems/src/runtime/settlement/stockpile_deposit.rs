@@ -32,6 +32,7 @@
 use std::collections::HashMap;
 
 use hecs::{Entity, World};
+use sim_core::colony::visible_action::{VisibleCueKind, VisibleTarget, VisibleTargetKind};
 use sim_core::components::{
     Agent, AgentId, Inventory, Position, ResourceKind, SettlementId, SETTLEMENT_PROXIMITY_RADIUS,
 };
@@ -165,6 +166,23 @@ impl RuntimeSystem for StockpileDepositSystem {
                             settlement.store(ResourceKind::Food, taken);
                         }
                         settlement.store(ResourceKind::Wood, wood);
+                        let target = VisibleTarget::identified(
+                            VisibleTargetKind::SettlementStore,
+                            home,
+                            u64::from(sid),
+                        );
+                        for (kind, count) in
+                            [(ResourceKind::Food, taken), (ResourceKind::Wood, wood)]
+                        {
+                            resources.visible_action_cues.record_legacy(
+                                resources.current_tick,
+                                aid,
+                                VisibleCueKind::Deposited,
+                                target,
+                                kind,
+                                count,
+                            );
+                        }
                     }
                     // Pass 4: a member who walked home to haul has delivered.
                     if resources.haulers.remove(&aid) {

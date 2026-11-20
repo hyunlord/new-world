@@ -9,10 +9,10 @@
 #   feet (World3D/People `state_of(bits)` `feet`, one 3D unit per tile) floored to a tile and must equal the figure's
 #   own tile (`tile`); look and variant are `look_id` / `variant` of what is drawn. Every drawn figure is listed
 #   (`bodies(0)`, `count()`), never a fresh bridge read of positions; the AgentId of each entity comes from the agent
-#   snapshot's identity columns only. Tooling only: the game never runs this script.
+#   snapshot's identity columns only. Include the real scene's visible action rows at that boundary.
 # Bridge methods called: via SimReads.mutate_raw reset_world, cmd_set_steward, advance_ticks, cmd_designate_chop_tiles,
 #   cmd_designate_chop, cmd_cancel_area, cmd_add_stockpile, cmd_remove_zone_area, cmd_place_blueprint; directly
-#   get_time_snapshot (to check the reached tick), get_steward (the probe fixture is OFF), set_sim_speed (0 while the
+#   get_visible_action_snapshot via SimReads.read; get_time_snapshot (to check the reached tick), get_steward (the probe fixture is OFF), set_sim_speed (0 while the
 #   figures settle), get_agent_snapshot (entity bits -> AgentId).
 # usage: Godot --headless --path . --script res://tools/v8/renderer_agreement.gd -- \
 #          --out <abs json> --commands <abs commands json> [--seed 100] [--tick 900]
@@ -141,8 +141,22 @@ func _run() -> void:
 			"look": int(state.get("look_id", -1)), "variant": int(state.get("variant", -1))})
 	tiles.sort()
 	detail.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a["agent_id"]) < int(b["agent_id"]))
+	var actions: Dictionary = SimReads.read(world, "get_visible_action_snapshot")
+	if int(actions.get("tick", -1)) != _tick:
+		_fail("visible action snapshot missed the replay boundary")
+		return
+	var visible_actions: Array[Dictionary] = []
+	var action_ids: PackedInt64Array = actions["agent_ids"]
+	for i: int in action_ids.size():
+		visible_actions.append({
+			"agent_id": action_ids[i], "action": actions["actions"][i], "phase": actions["phases"][i],
+			"goal_x": actions["goal_xs"][i], "goal_y": actions["goal_ys"][i],
+			"target_kind": actions["target_kinds"][i], "target_x": actions["target_xs"][i],
+			"target_y": actions["target_ys"][i], "target_id": actions["target_ids"][i],
+			"partner_id": actions["partner_ids"][i],
+		})
 	var out: Dictionary = {"seed": _seed, "tick": _now(world), "count": tiles.size(), "people": tiles,
-		"settled": settled, "detail": detail}
+		"settled": settled, "detail": detail, "visible_actions": visible_actions}
 	var file: FileAccess = FileAccess.open(_out, FileAccess.WRITE)
 	if file == null:
 		_fail("cannot write " + _out)

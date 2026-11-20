@@ -5,6 +5,9 @@ use hecs::{Entity, World};
 use sim_core::colony::content::installed_or_bundled;
 use sim_core::colony::cultivation::{FieldPhase, FieldWork, OriginShare};
 use sim_core::colony::food::FoodOwner;
+use sim_core::colony::visible_action::{
+    CarriedItemView, VisibleCueKind, VisibleTarget, VisibleTargetKind,
+};
 use sim_core::colony::{CancelReason, Carry, ItemSpec, Job, JobKind, JobStage, ReserveKey};
 use sim_core::components::{AgentId, AgentState, SeekTarget, TargetKind};
 use sim_engine::SimResources;
@@ -56,8 +59,17 @@ pub(in crate::runtime::jobs) fn step(
                     def.seed_item,
                     def.seeds_per_tile,
                 );
-                if count > 0 && def.seed_item.definition().food.is_none() {
-                    let _ = world.insert_one(entity, Carry::of(spec, count));
+                if count > 0
+                    && def.seed_item.definition().food.is_none()
+                    && world.insert_one(entity, Carry::of(spec, count)).is_ok()
+                {
+                    res.visible_action_cues.record(
+                        res.current_tick,
+                        id,
+                        VisibleCueKind::PickedUp,
+                        VisibleTarget::at(VisibleTargetKind::Stack, from),
+                        CarriedItemView::of(spec, count),
+                    );
                 }
                 res.colony.reservations.remove(&ReserveKey::Stack(from));
                 if count != def.seeds_per_tile {
@@ -158,6 +170,13 @@ pub(super) fn complete(
                 );
             }
             res.cultivation.counters.sowings += 1;
+            res.visible_action_cues.record(
+                res.current_tick,
+                id,
+                VisibleCueKind::Deposited,
+                VisibleTarget::at(VisibleTargetKind::Field, tile),
+                CarriedItemView::of(consumed.spec, consumed.count),
+            );
             FieldPhase::Sown { planted_day: today }
         }
         JobKind::TendField { .. } => field.phase,

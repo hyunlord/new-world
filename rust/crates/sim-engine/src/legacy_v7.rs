@@ -397,6 +397,7 @@ where
             ore: Default::default(),
             metal: Default::default(),
             food_supply_cache: Default::default(),
+            visible_action_cues: Default::default(),
             fatal_animal_attacks: Vec::new(),
             diagnosis_cache: Default::default(),
             requests_cache: Default::default(),

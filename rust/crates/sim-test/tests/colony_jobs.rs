@@ -6,6 +6,7 @@
 mod colony_support;
 
 use colony_support::*;
+use sim_core::colony::visible_action::{VisibleCueKind, VisibleTargetKind};
 use sim_core::colony::{
     BlueprintKind, CancelReason, Command, ItemKind, JobKind, JobStage, ReserveKey,
 };
@@ -111,6 +112,25 @@ fn jobs_haul_to_stockpile() {
     assert!(job_of(&engine, a).is_none() && job_of(&engine, b).is_none());
     // 38 logs over 5-log trips: at least 8 haul jobs finished.
     assert!(engine.resources.colony.tallies.jobs_done >= 8);
+    let mut picked_up = 0;
+    let mut deposited = 0;
+    for cue in engine.resources.visible_action_cues.since_tick(None) {
+        assert_eq!(cue.item.item, ItemKind::Log);
+        assert_eq!(cue.target.kind, VisibleTargetKind::Stack);
+        let tile = cue.target.tile.expect("stack tile");
+        match cue.kind {
+            VisibleCueKind::PickedUp => {
+                assert!(matches!(tile, (4, 4) | (5, 4)));
+                picked_up += cue.item.qty;
+            }
+            VisibleCueKind::Deposited => {
+                assert!(engine.resources.colony.zone_of_tile.contains_key(&tile));
+                deposited += cue.item.qty;
+            }
+            VisibleCueKind::Equipped => panic!("haul unexpectedly equipped an item"),
+        }
+    }
+    assert_eq!((picked_up, deposited), (38, 38));
 }
 
 #[test]

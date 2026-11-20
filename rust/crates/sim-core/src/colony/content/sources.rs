@@ -1,5 +1,5 @@
 //! Frozen source bytes and deterministic selected-content revision.
-use super::CatalogError;
+use super::{action_visuals, CatalogError};
 use std::collections::BTreeMap;
 
 /// One logically named immutable source, independent of its filesystem location.
@@ -21,6 +21,7 @@ impl RawSources {
     pub fn bundled() -> Self {
         Self {
             sources: [
+                (action_visuals::SOURCE, action_visuals::BUNDLED),
                 (
                     "outcrops.ron",
                     include_str!("../../../data/colony/outcrops.ron"),
@@ -76,6 +77,7 @@ impl RawSources {
             if !matches!(
                 name.as_str(),
                 "eras.ron"
+                    | action_visuals::SOURCE
                     | "zones.ron"
                     | "yards.ron"
                     | "paths.ron"
@@ -108,6 +110,7 @@ impl RawSources {
 }
 pub(super) fn normalize(name: &str) -> &str {
     match name {
+        "action_visuals" => action_visuals::SOURCE,
         "eras" => "eras.ron",
         "zones" => "zones.ron",
         "yards" => "yards.ron",
@@ -154,6 +157,10 @@ pub(super) fn revision(
     ] {
         feed(label);
         for (name, bytes) in map {
+            // Presentation mapping edits must keep the simulation's save envelope byte stable.
+            if name == action_visuals::SOURCE {
+                continue;
+            }
             feed(&u64::try_from(name.len()).unwrap_or(u64::MAX).to_le_bytes());
             feed(name.as_bytes());
             feed(&u64::try_from(bytes.len()).unwrap_or(u64::MAX).to_le_bytes());

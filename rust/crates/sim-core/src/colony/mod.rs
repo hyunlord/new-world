@@ -43,6 +43,8 @@ pub mod skills;
 pub mod steward;
 pub mod story;
 pub mod values;
+/// Read-only action and cue types.
+pub mod visible_action;
 pub mod wildlife;
 pub mod workshop;
 pub mod yards;

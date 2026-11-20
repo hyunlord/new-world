@@ -408,6 +408,10 @@ pub struct SimResources {
     #[serde(skip, default)]
     pub food_supply_cache: std::cell::RefCell<food_supply_cache::FoodSupplyCache>,
 
+    /// Recent presentation cues. Never written to a save.
+    #[serde(skip)]
+    pub visible_action_cues: sim_core::colony::visible_action::VisibleActionCues,
+
     /// Fatal animal hits this tick; cleared before every normal/profiled tick.
     #[serde(skip)]
     pub fatal_animal_attacks: Vec<FatalAnimalAttack>,
@@ -903,6 +907,7 @@ impl SimResources {
             ore: Default::default(),
             metal: Default::default(),
             food_supply_cache: Default::default(),
+            visible_action_cues: Default::default(),
             fatal_animal_attacks: Vec::new(),
             building_event_queue: VecDeque::new(),
             causal_log: CausalLogStorage::new(),
@@ -1286,7 +1291,7 @@ impl SimEngine {
     pub fn install_saved(
         &mut self,
         world: World,
-        resources: SimResources,
+        mut resources: SimResources,
         current_tick: u64,
         states: &[(String, Vec<u8>)],
     ) -> Result<(), String> {
@@ -1308,6 +1313,7 @@ impl SimEngine {
         for (system, (_, bytes)) in self.systems.iter_mut().zip(states) {
             system.load_state(bytes)?;
         }
+        resources.visible_action_cues = Default::default();
         self.world = world;
         self.resources = resources;
         self.current_tick = current_tick;

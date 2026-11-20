@@ -11,7 +11,7 @@ use sim_core::colony::{CancelReason, Carry, Job, JobKind, JobStage, ReserveKey, 
 use sim_core::components::{Agent, AgentId, AgentState, Position, SeekTarget};
 use sim_engine::SimResources;
 
-use super::items::put_items;
+use super::items::put_items_for;
 
 /// Hold `key` for `agent`.
 pub fn reserve(res: &mut SimResources, key: ReserveKey, agent: AgentId) {
@@ -37,7 +37,13 @@ pub fn drop_carry(world: &mut World, res: &mut SimResources, entity: Entity) {
             super::food_transfers::drop(world, res, entity, tile);
             return;
         }
-        put_items(res, tile, carry.spec(), carry.count);
+        put_items_for(
+            res,
+            tile,
+            carry.spec(),
+            carry.count,
+            agent_id(world, entity),
+        );
         let _ = world.remove_one::<Carry>(entity);
     }
 }
@@ -184,7 +190,7 @@ pub fn on_death(world: &mut World, res: &mut SimResources, entity: Entity) {
         .map(|t| t.item)
         .zip(world.get::<&Position>(entity).ok().map(|p| (p.x, p.y)));
     if let Some((item, tile)) = tool {
-        put_items(res, tile, item, 1);
+        put_items_for(res, tile, item, 1, agent_id(world, entity));
         let _ = world.remove_one::<Tool>(entity);
     }
     // M5: a worn top is left where the person fell (ADR 0029).
@@ -194,7 +200,7 @@ pub fn on_death(world: &mut World, res: &mut SimResources, entity: Entity) {
         .map(|a| a.spec())
         .zip(world.get::<&Position>(entity).ok().map(|p| (p.x, p.y)));
     if let Some((spec, tile)) = worn {
-        put_items(res, tile, spec, 1);
+        put_items_for(res, tile, spec, 1, agent_id(world, entity));
         let _ = world.remove_one::<sim_core::colony::people::Apparel>(entity);
     }
     if let Some(id) = agent_id(world, entity) {

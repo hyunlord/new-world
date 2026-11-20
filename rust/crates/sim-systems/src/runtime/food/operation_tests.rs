@@ -272,6 +272,7 @@ fn blocked_field_food_drop_retains_physical_cargo_and_origin() {
         0,
     )
     .expect("pick up");
+    let cues_before = res.visible_action_cues.since_tick(None).count();
     let wood = ItemKind::from_name("firewood").expect("incompatible stack");
     let count = crate::runtime::jobs::items::stack_max(&res, wood);
     for y in 0..8 {
@@ -302,5 +303,9 @@ fn blocked_field_food_drop_retains_physical_cargo_and_origin() {
         OriginShare::FIELD
     );
     assert!(res.cultivation.eaten_by_year.is_empty());
+    assert_eq!(
+        res.visible_action_cues.since_tick(None).count(),
+        cues_before
+    );
     super::validate(&world, &res).expect("failed placement changes no balance");
 }

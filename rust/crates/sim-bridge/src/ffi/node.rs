@@ -98,6 +98,7 @@ use super::story::{
     collect_chronicle_why, collect_drafted, collect_story, collect_year_summary, drafted_to_dict,
     story_to_dict, submit_story, submit_undraft_all, year_summary_to_dict, StoryCommand,
 };
+use super::visible_action::{visible_action_cues_to_dict, visible_action_snapshot_to_dict};
 use godot::classes::INode;
 use godot::prelude::*;
 use sim_core::influence::InfluenceChannel;
@@ -128,6 +129,7 @@ pub struct WorldSimNode {
     /// wall-time feeds the fixed-timestep loop changes, never `FIXED_DT`.
     sim_speed: f64,
     mux2_profile: Option<Mux2Profile>,
+    visible_action_revision_base: i64,
     base: Base<Node>,
 }
 
@@ -163,6 +165,21 @@ fn mux2_elapsed_ns(start: std::time::Instant) -> u64 {
 }
 
 impl WorldSimNode {
+    fn visible_action_revision(&self) -> i64 {
+        self.visible_action_revision_base.saturating_add(
+            i64::try_from(self.engine.resources.colony.command_log.len()).unwrap_or(i64::MAX),
+        )
+    }
+
+    fn replace_engine(&mut self, engine: SimEngine) {
+        self.visible_action_revision_base = self.visible_action_revision().saturating_add(1);
+        self.engine = engine;
+        self.reset_mux2_profile();
+        self.accumulator = 0.0;
+        self.base_mut()
+            .call_deferred("emit_signal", &["world_reset".to_variant()]);
+    }
+
     fn reset_mux2_profile(&mut self) {
         if let Some(profile) = self.mux2_profile.as_ref() {
             self.mux2_profile = Some(Mux2Profile::new(
@@ -283,6 +300,7 @@ impl WorldSimNode {
             accumulator: 0.0,
             sim_speed: 1.0,
             mux2_profile,
+            visible_action_revision_base: 0,
             base,
         }))
     }
@@ -344,11 +362,7 @@ impl WorldSimNode {
     #[func]
     fn reset_world(&mut self, seed: i64) -> bool {
         self.world_seed = seed as u64;
-        self.engine = build_game_engine(self.world_seed);
-        self.reset_mux2_profile();
-        self.accumulator = 0.0;
-        self.base_mut()
-            .call_deferred("emit_signal", &["world_reset".to_variant()]);
+        self.replace_engine(build_game_engine(self.world_seed));
         true
     }
 
@@ -359,11 +373,10 @@ impl WorldSimNode {
     #[func]
     fn reset_world_stress(&mut self, seed: i64, agents: i64) -> bool {
         self.world_seed = seed as u64;
-        self.engine = build_stress_engine(self.world_seed, agents.clamp(1, 5000) as u32);
-        self.reset_mux2_profile();
-        self.accumulator = 0.0;
-        self.base_mut()
-            .call_deferred("emit_signal", &["world_reset".to_variant()]);
+        self.replace_engine(build_stress_engine(
+            self.world_seed,
+            agents.clamp(1, 5000) as u32,
+        ));
         true
     }
 
@@ -391,11 +404,7 @@ impl WorldSimNode {
         match load_engine_from_file(std::path::Path::new(&path.to_string())) {
             Ok(engine) => {
                 self.world_seed = engine.resources.world_seed;
-                self.engine = engine;
-                self.reset_mux2_profile();
-                self.accumulator = 0.0;
-                self.base_mut()
-                    .call_deferred("emit_signal", &["world_reset".to_variant()]);
+                self.replace_engine(engine);
                 true
             }
             Err(e) => {
@@ -1652,6 +1661,22 @@ impl WorldSimNode {
     #[func]
     fn get_activity_snapshot(&self) -> VarDictionary {
         activity_rows_to_dict(&collect_activity_snapshot(&self.engine.world))
+    }
+
+    /// Current visible actions, in AgentId order. The tick/revision pair identifies the read boundary.
+    #[func]
+    fn get_visible_action_snapshot(&self) -> VarDictionary {
+        visible_action_snapshot_to_dict(
+            &sim_systems::visible_action_rows(&self.engine.world, &self.engine.resources),
+            self.engine.current_tick(),
+            self.visible_action_revision(),
+        )
+    }
+
+    /// Recent committed item operations strictly after `since_tick` (-1 for all retained cues).
+    #[func]
+    fn get_visible_action_cues(&self, since_tick: i64) -> VarDictionary {
+        visible_action_cues_to_dict(&self.engine, self.visible_action_revision(), since_tick)
     }
 
     /// V7 Phase 12-β.2 (A3) FFI — construction-site snapshot for the

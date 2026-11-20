@@ -92,6 +92,8 @@ pub mod save;
 pub mod subprofile;
 pub mod worldgen;
 
+pub use runtime::jobs::visible_action::visible_action_rows;
+
 /// Register the Phase 2 influence stack on `engine` in priority order.
 ///
 /// Registers (in priority order after sorting):

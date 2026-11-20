@@ -7,8 +7,8 @@
 //! buildings (`get_building_snapshot`), trees (`get_trees`), the agent
 //! snapshot with its job/carry columns (`get_agent_snapshot`), the snapshot's
 //! M-ART2 appearance columns (`collect_appearance`: `--people-json`'s
-//! `appearance`, [`people_looks`]) and the clock (`get_time_snapshot`). It never reads systems or engine state the bridge
-//! does not expose. Stumps have no collector: like `tree_layer.gd`, the
+//! `appearance`, [`people_looks`]), the visible action rows (`get_visible_action_snapshot`) and the clock
+//! (`get_time_snapshot`). Stumps have no collector: like `tree_layer.gd`, the
 //! [`StumpTracker`] derives them from successive `get_trees` reads (a tree
 //! that disappears leaves a stump for [`STUMP_TICKS`]).
 //!
@@ -21,9 +21,10 @@ use super::colony::{load_script, resolve, ScriptEntry};
 use sim_bridge::ffi::{
     collect_agent_jobs, collect_agent_snapshot, collect_appearance, collect_building_snapshot,
     collect_colony_overlay, collect_terrain_snapshot, collect_time_snapshot, collect_trees,
-    AgentSnapshotRow,
+    signed_or_none, AgentSnapshotRow,
 };
 use sim_engine::SimEngine;
+use sim_systems::visible_action_rows;
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::PathBuf;
 
@@ -453,6 +454,10 @@ impl AsciiArgs {
     }
 }
 
+fn json_tile(tile: Option<Tile>) -> (i64, i64) {
+    tile.map_or((-1, -1), |(x, y)| (i64::from(x), i64::from(y)))
+}
+
 /// Run the colony to `--tick`, print (or write) the grid, optionally the legend and the people JSON.
 pub fn run(args: &AsciiArgs) -> Result<(), String> {
     let script = match &args.commands {
@@ -475,8 +480,28 @@ pub fn run(args: &AsciiArgs) -> Result<(), String> {
     if let Some(path) = &args.people_json {
         let tiles = people_tiles(&engine);
         let looks = people_looks(&engine)?;
+        let actions: Vec<_> = visible_action_rows(&engine.world, &engine.resources)
+            .into_iter()
+            .map(|row| {
+                let (gx, gy) = json_tile(row.goal);
+                let (tx, ty) = json_tile(row.target.and_then(|target| target.tile));
+                serde_json::json!({
+                    "agent_id": signed_or_none(Some(row.agent_id)),
+                    "action": row.action as u8,
+                    "phase": row.phase as u8,
+                    "goal_x": gx,
+                    "goal_y": gy,
+                    "target_kind": row.target.map_or(-1, |target| i32::from(target.kind as u8)),
+                    "target_x": tx,
+                    "target_y": ty,
+                    "target_id": signed_or_none(row.target.and_then(|target| target.object_id)),
+                    "partner_id": signed_or_none(row.partner),
+                })
+            })
+            .collect();
         let json = serde_json::json!({
             "seed": args.seed,
+            "visible_actions": actions,
             "tick": collect_time_snapshot(&engine).tick,
             "count": tiles.len(),
             "people": tiles.iter().map(|t| [t.0, t.1]).collect::<Vec<_>>(),

@@ -1,4 +1,5 @@
 //! Immutable content catalogue: local validation precedes one explicit process installation.
+mod action_visuals;
 mod boot;
 pub mod defs;
 #[cfg(test)]
@@ -31,6 +32,7 @@ mod validate_ecology;
 use super::building_template::TemplateCatalog;
 use super::knowledge::{Gates, KnowledgeDefs};
 use crate::material::MaterialId;
+pub use action_visuals::{ActionVisuals, VisualKey};
 pub use boot::{bootstrap, installed, installed_or_bundled, BootSelection};
 pub use defs::*;
 pub use error::{BootError, CatalogAccessError, CatalogError};
@@ -78,6 +80,7 @@ pub struct Catalog {
     zones: super::zones::ZonesData,
     yards: super::yards::YardsData,
     paths: super::paths::PathsData,
+    action_visuals: ActionVisuals,
 }
 macro_rules! family_access {
     ($id:ident,$def:ident,$field:ident,$index:ident,$one:ident,$code:ident,$name:ident,$serde:ident,$required:ident,$iter:ident,$ids:ident) => {
@@ -125,6 +128,10 @@ macro_rules! family_access {
     };
 }
 impl Catalog {
+    /// Authored action visuals for this selection.
+    pub fn action_visuals(&self) -> &ActionVisuals {
+        &self.action_visuals
+    }
     /// Selected natural and constructed walking surfaces.
     pub fn paths(&self) -> &super::paths::PathsData {
         &self.paths
@@ -298,7 +305,7 @@ impl Catalog {
     pub fn historical_stone_wall_material(&self, id: MaterialId) -> bool {
         self.historical_stone_materials.contains(&id)
     }
-    /// Selected content revision, independent of filesystem staging paths.
+    /// Save-compatible content revision, independent of staging paths and action visuals.
     pub fn revision(&self) -> &str {
         &self.revision
     }

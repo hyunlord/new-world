@@ -21,19 +21,22 @@ use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
 use sim_core::colony::knowledge::gates;
 use sim_core::colony::knowledge::KnowledgeMask;
 use sim_core::colony::people::{Apparel, Top};
+use sim_core::colony::visible_action::{
+    CarriedItemView, VisibleCueKind, VisibleTarget, VisibleTargetKind,
+};
 use sim_core::colony::wildlife::AnimalKind;
 use sim_core::colony::{
     CancelReason, Designation, ItemKind, ItemSpec, Job, JobKind, JobStage, ReserveKey, SkillKind,
     Tool,
 };
-use sim_core::components::{AgentId, AgentState, Lineage, SeekTarget, TargetKind};
+use sim_core::components::{Agent, AgentId, AgentState, Lineage, SeekTarget, TargetKind};
 use sim_core::rng::{keyed_below, STREAM_WILDLIFE};
 use sim_core::rules::WildlifeRule;
 use sim_engine::SimResources;
 
 use super::cancel::{cancel, finish};
 use super::craft;
-use super::items::{chebyshev, put_items, take_items};
+use super::items::{chebyshev, put_items, put_items_for, take_items};
 
 /// The wildlife rule in force (`None` outside the M5 colony).
 pub fn rule(res: &SimResources) -> Option<WildlifeRule> {
@@ -264,16 +267,26 @@ pub fn pick_up_tool(
     };
     let (taken, spec) = take_items(res, tile, kind, 1);
     if taken == 1 {
+        let agent = world.get::<&Agent>(entity).ok().map(|agent| agent.id);
         if let Ok(old) = world.get::<&Tool>(entity).map(|t| t.item) {
-            put_items(res, pos, old, 1);
+            put_items_for(res, pos, old, 1, agent);
         }
-        let _ = world.insert_one(
+        let equipped = world.insert_one(
             entity,
             Tool {
                 item: spec,
                 uses: 0,
             },
         );
+        if let (Ok(()), Some(agent)) = (equipped, agent) {
+            res.visible_action_cues.record(
+                res.current_tick,
+                agent,
+                VisibleCueKind::Equipped,
+                VisibleTarget::at(VisibleTargetKind::Stack, tile),
+                CarriedItemView::of(spec, 1),
+            );
+        }
     }
 }
 
@@ -650,14 +663,14 @@ pub(super) fn hearth_haul_destination(
     id: AgentId,
     from: (u32, u32),
     to: (u32, u32),
-    pos: (u32, u32),
     spec: ItemSpec,
+    reaches: impl FnOnce() -> bool,
 ) -> bool {
     spec.kind == ItemKind::role("grazer_meat")
         && crate::worldgen::colony::hearth(res).is_some()
         && from != to
         && super::items::room_on(res, to, spec) > 0
-        && res.nav.reaches(res.nav.region_of(pos), to)
+        && reaches()
         && res
             .colony
             .reservations
@@ -692,7 +705,11 @@ fn hearth_haul_cell(
     }
     candidates
         .into_iter()
-        .filter(|to| hearth_haul_destination(res, id, from, *to, pos, spec))
+        .filter(|&to| {
+            hearth_haul_destination(res, id, from, to, spec, || {
+                res.nav.reaches(res.nav.region_of(pos), to)
+            })
+        })
         .min_by_key(|to| (chebyshev(from, *to), to.1, to.0))
 }
 
@@ -790,10 +807,10 @@ pub fn equip_step(
     if taken == 1 {
         let old = world.get::<&Apparel>(entity).ok().map(|a| a.spec());
         if let Some(old) = old {
-            put_items(res, pos, old, 1);
+            put_items_for(res, pos, old, 1, Some(id));
         }
         let day = crate::runtime::resource_regen::day_index(res).min(u64::from(u16::MAX)) as u16;
-        let _ = world.insert_one(
+        let equipped = world.insert_one(
             entity,
             Apparel {
                 top,
@@ -803,6 +820,15 @@ pub fn equip_step(
                 wear_remaining_hours: spec.wear_remaining_hours,
             },
         );
+        if equipped.is_ok() {
+            res.visible_action_cues.record(
+                res.current_tick,
+                id,
+                VisibleCueKind::Equipped,
+                VisibleTarget::at(VisibleTargetKind::Stack, from),
+                CarriedItemView::of(spec, 1),
+            );
+        }
         res.colony.wildlife.version += 1;
     }
     finish(world, res, entity);

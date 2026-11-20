@@ -1,5 +1,13 @@
 # Changelog
 
+## ACTION1 — Visible villager actions (2026-11-20)
+
+### Added
+
+- AgentId-ordered visible actions with phase, physical target, partner, held items, tools and recipe.
+- Recent pickup, deposit and equip cues and a validated visual-key table with explicit fallbacks.
+- Replay and real-scene checks for the read model. The save format remains unchanged.
+
 ## MERGE1 — UI1 and the MOOD1 grade on M-GROW (2026-11-19)
 
 ### Added

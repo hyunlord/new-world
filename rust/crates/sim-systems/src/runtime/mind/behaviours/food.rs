@@ -79,39 +79,11 @@ pub(super) fn advance(c: &mut EffectContext<'_>) -> EffectResult {
 
 /// Resolve the admitted owner from live physical state without reranking alternatives.
 fn eligible(c: &EffectContext<'_>, owner: sim_core::colony::food::FoodOwner) -> Option<(u32, u32)> {
-    use sim_core::colony::food::FoodOwner;
-    use sim_core::colony::{Carry, ItemStack};
     let res = &*c.resources;
     let origin = (c.position.x, c.position.y);
-    let tile = match owner {
-        FoodOwner::Ground(tile) => tile,
-        FoodOwner::Pot { id, .. } => res.food.pots.get(&id)?.tile,
-        FoodOwner::Carried(id) if id == c.agent => origin,
-        FoodOwner::Carried(_) | FoodOwner::Shelf { .. } => return None,
-    };
-    let stack = match owner {
-        FoodOwner::Carried(_) => {
-            let carry = c.world.get::<&Carry>(c.entity).ok()?;
-            ItemStack::of(carry.spec(), carry.count)
-        }
-        _ => crate::runtime::food::items::stack(c.world, res, owner)?,
-    };
-    let food = stack.kind.definition().food.as_ref()?;
-    let age = res.food.ages.get(&owner)?;
-    let day = crate::runtime::food::day(res);
-    if stack.count == 0
-        || !food.raw_edible
-        || age.born_day > day
-        || age.remaining(
-            day,
-            food.lifetime_days(crate::runtime::food::storage::class(res, owner)),
-        ) == 0
-        || !res.nav.passable(tile)
-        || !res.nav.reachable(origin, tile)
-    {
-        return None;
-    }
-    Some(tile)
+    let tile =
+        crate::runtime::food::items::edible_tile(c.world, res, c.entity, c.agent, origin, owner)?;
+    res.nav.reachable(origin, tile).then_some(tile)
 }
 
 pub(super) fn finish(c: &mut EffectContext<'_>) -> EffectResult {

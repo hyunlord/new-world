@@ -4,8 +4,11 @@
 //! M2: a stack holds one [`ItemSpec`] bucket (kind, material, quality / 10),
 //! and each kind has its own stack maximum (`ColonyRule::stack_max`).
 use hecs::{Entity, World};
+use sim_core::colony::visible_action::{
+    CarriedItemView, VisibleCueKind, VisibleTarget, VisibleTargetKind,
+};
 use sim_core::colony::{ColonySite, ItemKind, ItemSpec, ItemStack, MaterialNeeds};
-use sim_core::components::ConstructionSite;
+use sim_core::components::{AgentId, ConstructionSite};
 use sim_core::TerrainType;
 use sim_engine::SimResources;
 use std::collections::BTreeMap;
@@ -95,12 +98,23 @@ pub fn put_items(
     spec: ItemSpec,
     n: u16,
 ) -> Vec<(u32, u32)> {
+    put_items_for(res, tile, spec, n, None)
+}
+
+/// Put an agent's cargo or old equipment down, recording each actual placement.
+pub(super) fn put_items_for(
+    res: &mut SimResources,
+    tile: (u32, u32),
+    spec: ItemSpec,
+    n: u16,
+    depositor: Option<AgentId>,
+) -> Vec<(u32, u32)> {
     let region = (res.rules.colony.is_some() && res.nav.is_built() && res.nav.passable(tile))
         .then(|| res.nav.region_of(tile))
         .filter(|r| *r != 0);
-    let (mut filled, mut left) = put_items_in(res, tile, spec, n, region);
+    let (mut filled, mut left) = put_items_in(res, tile, spec, n, region, depositor);
     if region.is_some() && left > 0 {
-        let (more, rest) = put_items_in(res, tile, spec, left, None);
+        let (more, rest) = put_items_in(res, tile, spec, left, None, depositor);
         filled.extend(more);
         left = rest;
     }
@@ -138,6 +152,7 @@ fn put_items_in(
     spec: ItemSpec,
     n: u16,
     region: Option<u32>,
+    depositor: Option<AgentId>,
 ) -> (Vec<(u32, u32)>, u16) {
     let (w, h) = (res.tile_grid.width, res.tile_grid.height);
     let mut left = n;
@@ -170,6 +185,15 @@ fn put_items_in(
                     .entry(t)
                     .or_insert(ItemStack::of(spec, 0));
                 stack.absorb(spec, add);
+                if let Some(agent) = depositor {
+                    res.visible_action_cues.record(
+                        res.current_tick,
+                        agent,
+                        VisibleCueKind::Deposited,
+                        VisibleTarget::at(VisibleTargetKind::Stack, t),
+                        CarriedItemView::of(spec, add),
+                    );
+                }
                 left -= add;
                 filled.push(t);
             }

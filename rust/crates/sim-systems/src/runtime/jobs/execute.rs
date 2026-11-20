@@ -29,6 +29,9 @@
 use hecs::{Entity, World};
 use sim_core::colony::knowledge::KnowledgeMask;
 use sim_core::colony::materials::OAK;
+use sim_core::colony::visible_action::{
+    CarriedItemView, VisibleCueKind, VisibleTarget, VisibleTargetKind,
+};
 use sim_core::colony::{
     CancelReason, Carry, Designation, ItemKind, ItemSpec, ItemStack, Job, JobKind, JobStage,
     MaterialNeeds, ReserveKey,
@@ -39,7 +42,7 @@ use sim_engine::{RuntimeSystem, SimResources};
 
 use super::cancel::{cancel, finish, finish_in_place, release_job};
 use super::craft;
-use super::items::{chebyshev, colony_sites, put_items, take_items};
+use super::items::{chebyshev, colony_sites, put_items, put_items_for, take_items};
 use sim_core::colony::skills::{axe_permille, scaled_ticks};
 use sim_core::colony::{quality_bucket, SkillKind, Tool};
 
@@ -82,7 +85,7 @@ fn set_state(world: &mut World, entity: Entity, next: AgentState) {
 
 /// The state a worker in `stage` of `kind` must be in (`space`: a Build of an
 /// M3 space site, which the job layer works itself).
-fn expected_state(kind: JobKind, stage: JobStage, space: bool) -> AgentState {
+pub(super) fn expected_state(kind: JobKind, stage: JobStage, space: bool) -> AgentState {
     match (kind, stage) {
         (JobKind::Build { .. }, JobStage::Working { .. }) if !space => BUILD,
         (_, JobStage::Working { .. }) => WORK_JOB,
@@ -117,13 +120,14 @@ pub(crate) fn build_finished(world: &World, res: &SimResources, job: &Job) -> bo
 }
 
 /// Whether the job's target still exists.
-fn target_exists(
+pub(super) fn target_exists(
     world: &World,
     res: &SimResources,
     id: AgentId,
     entity: Entity,
     job: &Job,
     pot_sources: &super::pot_supply::SourceIndex,
+    reaches: impl Fn((u32, u32), (u32, u32)) -> bool,
 ) -> bool {
     let colony = &res.colony;
     let stack = |tile: (u32, u32)| {
@@ -134,7 +138,9 @@ fn target_exists(
     };
     let hearth_destination = |from, to, spec| {
         world.get::<&Position>(entity).ok().is_some_and(|pos| {
-            super::hunt::hearth_haul_destination(res, id, from, to, (pos.x, pos.y), spec)
+            super::hunt::hearth_haul_destination(res, id, from, to, spec, || {
+                reaches((pos.x, pos.y), to)
+            })
         })
     };
     match (job.kind, job.stage) {
@@ -261,7 +267,9 @@ fn step(
         }
         return;
     }
-    if !target_exists(world, res, id, entity, &job, pot_sources) {
+    if !target_exists(world, res, id, entity, &job, pot_sources, |from, to| {
+        res.nav.reaches(res.nav.region_of(from), to)
+    }) {
         cancel(world, res, entity, CancelReason::TargetGone);
         return;
     }
@@ -327,7 +335,7 @@ fn step(
                     walk(world, res, id, entity, &mut job, pos, axe);
                     return;
                 }
-                pick_up_axe(world, res, entity, &mut job, axe, pos);
+                pick_up_axe(world, res, id, entity, &mut job, axe, pos);
                 put_job(world, entity, job);
                 return;
             }
@@ -473,9 +481,17 @@ fn step(
                     job.progress_tick = tick;
                     if spec.kind.definition().food.is_some() {
                         let _ = world.insert_one(entity, SeekTarget::new(dest));
-                    } else {
-                        let _ =
-                            world.insert(entity, (Carry::of(spec, taken), SeekTarget::new(dest)));
+                    } else if world
+                        .insert(entity, (Carry::of(spec, taken), SeekTarget::new(dest)))
+                        .is_ok()
+                    {
+                        res.visible_action_cues.record(
+                            tick,
+                            id,
+                            VisibleCueKind::PickedUp,
+                            VisibleTarget::at(VisibleTargetKind::Stack, from),
+                            CarriedItemView::of(spec, taken),
+                        );
                     }
                 }
             }
@@ -583,7 +599,7 @@ fn step(
                     }
                 }
                 JobKind::Gather { .. } => {
-                    if gather_batch(world, res, rule, entity, &mut job, pos) {
+                    if gather_batch(world, res, rule, id, entity, &mut job, pos) {
                         put_job(world, entity, job);
                         return;
                     }
@@ -658,6 +674,7 @@ fn work_ticks(
 fn pick_up_axe(
     world: &mut World,
     res: &mut SimResources,
+    id: AgentId,
     entity: Entity,
     job: &mut Job,
     axe: (u32, u32),
@@ -675,16 +692,30 @@ fn pick_up_axe(
     let speed = |s: ItemSpec| {
         sim_core::colony::skills::axe_permille(s.kind, sim_core::colony::quality_bucket(s.quality))
     };
+    let equip = |world: &mut World, res: &mut SimResources| {
+        if world
+            .insert_one(
+                entity,
+                Tool {
+                    item: spec,
+                    uses: 0,
+                },
+            )
+            .is_ok()
+        {
+            res.visible_action_cues.record(
+                res.current_tick,
+                id,
+                VisibleCueKind::Equipped,
+                VisibleTarget::at(VisibleTargetKind::Stack, axe),
+                CarriedItemView::of(spec, 1),
+            );
+        }
+    };
     if let Some(old) = held.filter(|old| taken == 1 && speed(spec) < speed(*old)) {
         // C2-b upgrade: the old axe goes down where the worker stands; the faster one is held.
-        put_items(res, pos, old, 1);
-        let _ = world.insert_one(
-            entity,
-            Tool {
-                item: spec,
-                uses: 0,
-            },
-        );
+        put_items_for(res, pos, old, 1, Some(id));
+        equip(world, res);
         if let Ok(agent) = world.get::<&sim_core::components::Agent>(entity) {
             res.chronicle.push(
                 sim_core::chronicle::ChronicleEntry::new(
@@ -697,13 +728,7 @@ fn pick_up_axe(
             );
         }
     } else if taken == 1 && held.is_none() {
-        let _ = world.insert_one(
-            entity,
-            Tool {
-                item: spec,
-                uses: 0,
-            },
-        );
+        equip(world, res);
     } else if taken == 1 {
         put_items(res, pos, spec, 1);
     }
@@ -863,6 +888,7 @@ fn gather_batch(
     world: &mut World,
     res: &mut SimResources,
     rule: &ColonyRule,
+    id: AgentId,
     entity: Entity,
     job: &mut Job,
     pos: (u32, u32),
@@ -887,7 +913,15 @@ fn gather_batch(
         res.colony
             .item_ledger
             .create(ItemKind::role("deadwood_output"), u64::from(take));
-        let _ = world.insert_one(entity, Carry::of(spec, total));
+        if world.insert_one(entity, Carry::of(spec, total)).is_ok() {
+            res.visible_action_cues.record(
+                res.current_tick,
+                id,
+                VisibleCueKind::PickedUp,
+                VisibleTarget::at(VisibleTargetKind::Tile, spot),
+                CarriedItemView::of(spec, u16::from(take)),
+            );
+        }
     }
     if total == 0 {
         return false;
@@ -990,7 +1024,7 @@ fn clay_batch(res: &mut SimResources, node: (u32, u32), at: (u32, u32)) {
 fn arrive(
     world: &mut World,
     res: &mut SimResources,
-    _id: AgentId,
+    id: AgentId,
     entity: Entity,
     job: &Job,
     pos: (u32, u32),
@@ -1003,30 +1037,63 @@ fn arrive(
     }
     let _ = world.remove_one::<Carry>(entity);
     if let Some(carry) = carry {
+        let spec = carry.spec();
         match job.kind {
             JobKind::Supply { workshop, .. } => match res.colony.workshops.get_mut(&workshop) {
                 Some(shop) => {
-                    let spec = carry.spec();
-                    match shop.shelf.iter_mut().find(|s| s.spec().merges_with(&spec)) {
-                        Some(stack) => stack.absorb(spec, carry.count),
-                        None => shop.shelf.push(ItemStack::of(spec, carry.count)),
-                    }
+                    let target = VisibleTarget::identified(
+                        VisibleTargetKind::Workshop,
+                        shop.work_tile(),
+                        u64::from(workshop),
+                    );
+                    let delivered =
+                        match shop.shelf.iter_mut().find(|s| s.spec().merges_with(&spec)) {
+                            Some(stack) => {
+                                let before = stack.count;
+                                stack.absorb(spec, carry.count);
+                                stack.count - before
+                            }
+                            None => {
+                                shop.shelf.push(ItemStack::of(spec, carry.count));
+                                carry.count
+                            }
+                        };
                     res.colony.touch(false);
+                    if delivered > 0 {
+                        res.visible_action_cues.record(
+                            res.current_tick,
+                            id,
+                            VisibleCueKind::Deposited,
+                            target,
+                            CarriedItemView::of(spec, delivered),
+                        );
+                    }
                 }
                 None => {
-                    put_items(res, pos, carry.spec(), carry.count);
+                    put_items_for(res, pos, spec, carry.count, Some(id));
                 }
             },
             JobKind::Deliver { site, .. } => {
                 let mut rest = carry.count;
                 if let Some((site_entity, _)) = site_needs(world, site) {
                     if let Ok(mut needs) = world.get::<&mut MaterialNeeds>(site_entity) {
-                        rest -= needs.deliver_spec(carry.spec(), rest);
+                        let delivered = needs.deliver_spec(spec, rest);
+                        rest -= delivered;
+                        if delivered > 0 {
+                            let target = super::visible_action::site_target(res, site);
+                            res.visible_action_cues.record(
+                                res.current_tick,
+                                id,
+                                VisibleCueKind::Deposited,
+                                target,
+                                CarriedItemView::of(spec, delivered),
+                            );
+                        }
                     }
                     res.colony.touch(false);
                 }
                 if rest > 0 {
-                    put_items(res, pos, carry.spec(), rest);
+                    put_items_for(res, pos, spec, rest, Some(id));
                 }
             }
             // M5.5 (ADR 0032): handed to the caravan — it leaves the colony's ledger.
@@ -1035,9 +1102,10 @@ fn arrive(
                     .item_ledger
                     .trade_out(carry.kind, u64::from(carry.count));
                 res.colony.neighbours.version += 1;
+                super::food_transfers::trade_cue(res, id, pos, spec, carry.count);
             }
             _ => {
-                put_items(res, pos, carry.spec(), carry.count);
+                put_items_for(res, pos, spec, carry.count, Some(id));
             }
         }
     }

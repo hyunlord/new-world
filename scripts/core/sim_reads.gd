@@ -6,6 +6,7 @@
 #   get_terrain_snapshot, get_activity_snapshot, get_porter_snapshot, get_settlement_relations, get_colony_versions,
 #   get_trees, get_colony_overlay, get_workshops, get_work_priorities, get_recipes, get_space, get_rooms, get_tech,
 #   get_teach_orders, get_knowledge_waits, get_story, get_animals, get_drafted, get_neighbours (GETTERS);
+#   get_visible_action_snapshot (cached per tick); get_visible_action_cues(since_tick);
 #   get_tile_causal_events; get_field_tiles, get_crop_defs (cached read-only cultivation/catalog projections);
 #   advance_ticks, reset_world, reset_world_stress, on_building_placed, cmd_designate_chop, cmd_designate_chop_tiles,
 #   cmd_cancel_area, cmd_add_stockpile, cmd_remove_zone_area, cmd_place_blueprint, cmd_designate_quarry,
@@ -33,7 +34,7 @@ const GETTERS: Array[String] = [
 	"get_building_snapshot", "get_resource_snapshot", "get_time_snapshot",
 	"get_tallies", "get_recent_deaths", "get_society_snapshot",
 	"get_world_info", "get_terrain_snapshot",
-	"get_activity_snapshot", "get_porter_snapshot", "get_settlement_relations",
+	"get_activity_snapshot", "get_visible_action_snapshot", "get_porter_snapshot", "get_settlement_relations",
 	"get_colony_versions", "get_trees", "get_colony_overlay",
 	"get_field_tiles", "get_crop_defs",
 	# M2: workshops with bills and shelf, the adults' work priorities, the recipe table.
@@ -54,6 +55,7 @@ const GETTERS: Array[String] = [
 ## Read once per simulation tick (M4: the knowledge reads change only when a tick runs or a command is sent).
 const TICK_GETTERS: Array[String] = ["get_porter_snapshot", "get_settlement_relations", "get_tech", "get_teach_orders", "get_knowledge_waits",
 	"get_story", "get_animals", "get_livestock", "get_outcrops", "get_drafted", "get_ui_facts", "get_steward",
+	"get_visible_action_snapshot",
 	"get_settlement_diagnosis", "get_requests", "get_current_task", "get_card_harvest_target"]
 const MUTATORS: Array[String] = [
 	"advance_ticks", "reset_world", "reset_world_stress",
@@ -113,6 +115,15 @@ static func read(world: Node, raw_getter: String) -> Dictionary:
 		return {}
 	var result: Variant = world.call(raw_getter)
 	return result if result is Dictionary else {}
+
+## Poll once for the view, using the same cursor for every consumer of that batch.
+static func visible_action_cues(world: Node, since_tick: int) -> Dictionary:
+	var world_sim: WorldSimNode = world as WorldSimNode
+	if world_sim == null:
+		return {}
+	var snapshot: Dictionary = world_sim.get_visible_action_cues(since_tick)
+	_freeze(snapshot)
+	return snapshot
 
 static func causal_events(world: Node, xs: PackedInt32Array, ys: PackedInt32Array, kinds: PackedStringArray) -> Array:
 	var reader: Node = resolve(world)

@@ -2,6 +2,7 @@
 use super::context::*;
 
 use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
+use sim_core::colony::visible_action::{VisibleCueKind, VisibleTarget, VisibleTargetKind};
 use sim_core::components::{
     Agent, AgentState, Inventory, ResourceKind, SettlementRelations, TargetKind, Temperament,
     INVENTORY_CAPACITY,
@@ -212,13 +213,14 @@ fn consume(c: &mut EffectContext<'_>) -> EffectResult {
             }
         }
     }
+    let mut picked_up = 0;
     if want > 0 {
         if let Some(counter) = resources.food_tiles.get_mut(&key) {
             *food_version += 1;
             if *counter == RESOURCE_SOURCE_INFINITE {
                 // Infinite source: take freely, no decrement.
                 if let Some(inv) = inventory_opt.as_mut() {
-                    inv.add(ResourceKind::Food, want);
+                    picked_up = want - inv.add(ResourceKind::Food, want);
                 }
             } else {
                 let take = (*counter as u32).min(want);
@@ -226,6 +228,7 @@ fn consume(c: &mut EffectContext<'_>) -> EffectResult {
                     if let Some(inv) = inventory_opt.as_mut() {
                         let overflow = inv.add(ResourceKind::Food, take);
                         let actually = take - overflow; // overflow == 0 (want <= room)
+                        picked_up = actually;
                         *counter = counter.saturating_sub(actually as u8);
                         resources.tallies.food_harvested += u64::from(actually);
                         if *counter == 0 {
@@ -236,6 +239,14 @@ fn consume(c: &mut EffectContext<'_>) -> EffectResult {
             }
         }
     }
+    resources.visible_action_cues.record_legacy(
+        tick,
+        agent.id,
+        VisibleCueKind::PickedUp,
+        VisibleTarget::at(VisibleTargetKind::Plant, key),
+        ResourceKind::Food,
+        picked_up,
+    );
     *state = AgentState::Idle;
     Ok(EffectStatus::Finished)
 }

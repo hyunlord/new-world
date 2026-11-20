@@ -38,3 +38,31 @@ mod harvest_stock_boundary_tests;
 mod harvest_admission_tests;
 #[cfg(test)]
 mod winter_stock_duty_tests;
+
+/// Read a running choice's lifecycle binding against the target already committed
+/// by its effect. Projection never resolves a fresh target or runs a policy.
+pub(in crate::runtime) fn visible_action_target(
+    res: &sim_engine::SimResources,
+    agent: sim_core::components::AgentId,
+    state: sim_core::components::AgentState,
+    activity: Option<sim_core::components::Activity>,
+    candidate: context::TargetCandidate,
+) -> Option<behaviours::ActionTarget> {
+    let choice = res
+        .mind
+        .running
+        .get(&agent)
+        .filter(|choice| !choice.finished)?;
+    let dictionary = res.mind.history.as_ref()?.dictionary();
+    if choice.revision.code() != dictionary.revision() {
+        return None;
+    }
+    let binding = behaviours::lookup(dictionary.node_label(choice.node.index())?.behaviour)?;
+    if binding.externally_owned {
+        return None;
+    }
+    let target = binding.action_target(Some(candidate)).ok()?;
+    binding.adopts(state, activity, target).then_some(target)
+}
+
+pub(in crate::runtime) use behaviours::ActionTarget;

@@ -11,8 +11,8 @@
 #      through the bridge's cmd_* methods, advances to tick 900 and dumps the tiles of the people the 3D People
 #      layer draws (M3D-SWITCH E2; the tile under each figure's drawn feet, once every figure finished its step);
 #   4. the two multisets of tiles are compared, every drawn figure must stand on its own tile and be settled, and
-#      (M-ART2) every person's look and face variant by AgentId (appearance agreement: the text renderer's
-#      `appearance` rows = what People draws).
+#      every person's drawn look and face variant (M-ART2) and the real scene's action/phase/target rows
+#      (ACTION1) agree with the text probe by AgentId.
 # Prints `RENDERER_AGREEMENT PASS n=<people>` (exit 0) or `RENDERER_AGREEMENT FAIL <reason>` with the
 # differences (exit 1). Logs and intermediate files go to <log_dir> (keep it outside the repository).
 # RENDERER_AGREEMENT_TICK=T checks tick T instead of 900 (T > 360, after the U-script orders; at most 1440).
@@ -99,8 +99,21 @@ appearance_bad = sorted(k for k in set(looks_text) | set(looks_godot) if looks_t
 if appearance_bad:
     problems.append(f"appearance differs for {len(appearance_bad)} people: " + ", ".join(
         f"{k}: text {looks_text.get(k)} godot {looks_godot.get(k)}" for k in appearance_bad[:5]))
+text_actions = text.get("visible_actions", [])
+godot_actions = godot.get("visible_actions", [])
+expected_ids = sorted(looks_text)
+for label, rows in (("text", text_actions), ("Godot", godot_actions)):
+    ids = [row["agent_id"] for row in rows]
+    if not ids or ids != expected_ids:
+        problems.append(f"{label} visible actions do not match the ordered live AgentIds: {ids}")
+if text_actions != godot_actions:
+    mismatches = [(left, right) for left, right in zip(text_actions, godot_actions) if left != right]
+    problems.append(f"visible action rows disagree: {mismatches[:3]}")
+targeted = sum(row["phase"] > 0 and row["target_kind"] >= 0 for row in text_actions)
+if tick == 900 and not targeted:
+    problems.append("tick 900 lacks a visible action with a target")
 if problems:
     print("RENDERER_AGREEMENT FAIL " + "; ".join(problems))
     raise SystemExit(1)
-print(f"RENDERER_AGREEMENT PASS n={n} tiles={len(a)} tick={tick} appearance={len(looks_text)} agree")
+print(f"RENDERER_AGREEMENT PASS n={n} tiles={len(a)} tick={tick} appearance={len(looks_text)} actions={len(text_actions)} targeted={targeted} agree")
 PY

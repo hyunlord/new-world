@@ -1,8 +1,11 @@
 //! Age-preserving food moves at job pickup, delivery and cancellation seams.
 use hecs::{Entity, World};
 use sim_core::colony::food::{FoodOwner, FoodStackKey};
+use sim_core::colony::visible_action::{
+    CarriedItemView, VisibleCueKind, VisibleTarget, VisibleTargetKind,
+};
 use sim_core::colony::{Carry, ItemKind, ItemSpec, JobKind};
-use sim_core::components::Agent;
+use sim_core::components::{Agent, AgentId};
 use sim_engine::SimResources;
 
 use crate::runtime::food::{items, storage};
@@ -128,6 +131,7 @@ pub(super) fn arrive(
                         u64::from(food.units) * u64::from(batch.count);
                 }
                 res.colony.neighbours.version += 1;
+                trade_cue(res, id, tile, batch.spec, batch.count);
             }
         }
         _ => {
@@ -176,6 +180,28 @@ pub(super) fn arrive(
             drop(world, res, entity, tile);
         }
     }
+}
+
+pub(super) fn trade_cue(
+    res: &mut SimResources,
+    agent: AgentId,
+    tile: (u32, u32),
+    spec: ItemSpec,
+    count: u16,
+) {
+    let caravan = res.colony.neighbours.trading_caravan();
+    let target = VisibleTarget {
+        kind: VisibleTargetKind::Trade,
+        tile: Some(caravan.and_then(|c| c.spot).unwrap_or(tile)),
+        object_id: caravan.map(|c| u64::from(c.id)),
+    };
+    res.visible_action_cues.record(
+        res.current_tick,
+        agent,
+        VisibleCueKind::Deposited,
+        target,
+        CarriedItemView::of(spec, count),
+    );
 }
 
 /// Real destination room for a food haul includes vessels deployed on that tile.
