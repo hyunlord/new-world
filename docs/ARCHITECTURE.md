@@ -264,7 +264,7 @@ after a reset or a load). The exact exported list is checked by gate step 13, cu
 | calendar and ages (M1.5) | `get_time_snapshot`'s `year_index`, `season_index`, `day_of_year`, `days_per_year`; `get_world_info`'s `ticks_per_year`; the agent snapshot's `ages_years`, `infants`, `pregnant_days` columns |
 
 Every getter, key, type, id space and row order is documented in
-`docs/v8/snapshot_schema.md` (schema version 18, ACTION1); the gate step
+`docs/v8/snapshot_schema.md` (schema version 19, HOUSE1); the gate step
 `schema_docs` (`python3 tools/v8/check_docs_helpers.py schema .`) fails on any
 getter or key missing there (ADR 0016 C2).
 
