@@ -95,8 +95,10 @@ def weights(key: str, x: float, z: float) -> dict[str, float]:
     hand = 1 - blend(z, wrist - .035, wrist + .025)
     leg_top = .40 if key == "p3" else .43
     leg = (1 - blend(z, leg_top - .045, leg_top + .070)) * (1 - arm)
-    thigh = blend(z, .22, .33)
-    foot = 1 - blend(z, .035, .105)
+    # The shared rest rig places the knee at .26 and the ankle at .04 of height.
+
+    thigh = blend(z, .235, .285)
+    foot = 1 - blend(z, .025, .062)
     trunk = 1 - arm - leg
     head = blend(z, .82 if key == "p3" else .84, .87 if key == "p3" else .90)
     chest = blend(z, .63, .75)
