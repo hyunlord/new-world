@@ -23,6 +23,8 @@ and measured physical work from the existing snapshots.
 
 Keep early travel wear grassy and preserve the grass instance budget. Warmer
 daylight falls back to the shared twilight and night colours.
+Raise the existing Style 2 night silhouette value so villagers remain
+readable against pale thatch.
 
 ## Alternatives considered
 

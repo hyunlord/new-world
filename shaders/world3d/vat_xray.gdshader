@@ -22,6 +22,8 @@ void vertex() {
 
 void fragment() {
 	vec4 c = mix(day_colour, night_colour, clamp(w3d_night, 0.0, 1.0));
-	ALBEDO = c.rgb * (distant_only ? mix(1.0, wardrobe_value, w3d_night) : 1.0);
+	// Lift the Style 2 night silhouette above pale thatch.
+	float night_value = 1.8 * max(wardrobe_value, 0.85);
+	ALBEDO = c.rgb * (distant_only ? mix(1.0, night_value, w3d_night) : 1.0);
 	ALPHA = c.a * (distant_only ? outline_weight : 1.0);
 }
