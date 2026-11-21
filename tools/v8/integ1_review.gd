@@ -4,9 +4,14 @@
 #   actions — z5 near view that moves (1.5 s pans) to a villager performing a non-idle, non-walk action every 6 s;
 #   camera — one smooth zoom z1 → z4 at noon (the per-stage tilt follows the zoom);
 #   roofs — z4 on the houses: closed, hover a house (opens after 0.3 s), select it (RoomPanel.select_house), V on, V off;
-#   night — z2 at 22:00 with a slow pan. Prints `INTEG1_REVIEW <json>` per second of actions (visual keys on screen)
+#   night — z2 at 22:00 with a slow pan;
+#   work — queues chop (nearest trees), a hollow log-wall ring, quarry and dig rectangles near the camp through the
+#   ordinary cmd_* mutators, lets the colony walk there, then follows working villagers at z5 for `--seconds` (35) and
+#   writes `clips.jsonl` (per frame: followed agent, visual key, near clip); `--close chop,build` adds 5 s close shots
+#   of one villager per key (z5, `close/`). Prints `INTEG1_REVIEW <json>` per second of actions (visual keys on screen)
 #   and `INTEG1_REVIEW_DONE frames=<n>`; any failure quits 1. Moves the real mouse cursor (roofs).
-# Bridge methods called: load_world (direct); via SimReads get_agent_snapshot, get_visible_action_snapshot.
+# Bridge methods called: load_world (direct); via SimReads get_agent_snapshot, get_visible_action_snapshot, get_trees,
+#   get_terrain_snapshot; mutators advance_ticks, cmd_designate_chop, cmd_place_rect, cmd_designate_quarry, cmd_designate_dig.
 extends SceneTree
 
 const View = preload("res://scripts/world/colony/view.gd")
@@ -60,6 +65,8 @@ func _run() -> void:
 	if _w3d == null:
 		_fail("no World3D")
 		return
+	# Review frames compare the grade itself; the settlement hardship tint is pinned to 0 (debug builds).
+	_w3d.get_node("Sky").call("set_hardship_override", float(_arg("--hardship", "0")))
 	var seconds: float = float(_arg("--seconds", "0"))
 	match scene:
 		"actions":
@@ -70,6 +77,18 @@ func _run() -> void:
 			await _roofs()
 		"night":
 			await _night(seconds if seconds > 0.0 else 10.0)
+		"work":
+			await _work(seconds if seconds > 0.0 else 35.0)
+		"probe":
+			_orders(Vector2i(_camp()))
+			for step: int in 30:
+				SimReads.mutate(_world, "advance_ticks", [200])
+				await process_frame
+				var counts: Dictionary = {}
+				var rows: Dictionary = _rows()
+				for aid: int in rows:
+					counts[rows[aid]["key"]] = int(counts.get(rows[aid]["key"], 0)) + 1
+				print("INTEG1_PROBE ", (step + 1) * 200, " ", JSON.stringify(counts))
 		_:
 			_fail("unknown scene " + scene)
 			return
@@ -248,3 +267,138 @@ func _roofs() -> void:
 	await _key(KEY_V)
 	await _hold(60)
 	print("INTEG1_REVIEW " + JSON.stringify({"step": "closed_again", "fade": structures.call("roof_fade", house)}))
+
+
+const SHOWN: Array[String] = ["chop", "build", "dig", "mine", "cook", "carry", "pick_up", "set_down", "talk", "harvest", "craft"]
+
+
+## AgentId → {tile, key, bits} for every villager with an action row.
+func _rows() -> Dictionary:
+	var acts: Dictionary = SimReads.read(_world, "get_visible_action_snapshot")
+	var agents: Dictionary = SimReads.read(_world, "get_agent_snapshot")
+	var at: Dictionary = {}
+	var aids: PackedInt64Array = agents.get("agent_ids", PackedInt64Array())
+	for i: int in aids.size():
+		at[aids[i]] = i
+	var out: Dictionary = {}
+	var keys: PackedStringArray = acts.get("visual_keys", PackedStringArray())
+	var ids: PackedInt64Array = acts.get("agent_ids", PackedInt64Array())
+	for k: int in mini(keys.size(), ids.size()):
+		if at.has(ids[k]):
+			var i: int = at[ids[k]]
+			out[ids[k]] = {"tile": Vector2((agents["xs"] as PackedInt32Array)[i] + 0.5, (agents["ys"] as PackedInt32Array)[i] + 0.5),
+				"key": keys[k], "bits": (agents["ids"] as PackedInt64Array)[i]}
+	return out
+
+
+func _orders(camp: Vector2i) -> void:
+	var trees: Dictionary = SimReads.read(_world, "get_trees")
+	var near: Array[Vector2i] = []
+	for i: int in (trees.get("xs", PackedInt32Array()) as PackedInt32Array).size():
+		near.append(Vector2i(trees["xs"][i], trees["ys"][i]))
+	near.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return a.distance_squared_to(camp) < b.distance_squared_to(camp))
+	for tree: Vector2i in near.slice(0, 8):
+		print("INTEG1_ORDER chop ", JSON.stringify(SimReads.mutate(_world, "cmd_designate_chop", [tree.x, tree.y, tree.x, tree.y])))
+	var ring: Vector2i = camp + Vector2i(-5, 3)
+	print("INTEG1_ORDER wall ", JSON.stringify(SimReads.mutate(_world, "cmd_place_rect", ["log_wall", ring.x, ring.y, ring.x + 3, ring.y + 3, true])))
+	print("INTEG1_ORDER floor ", JSON.stringify(SimReads.mutate(_world, "cmd_place_rect", ["packed_floor", camp.x + 3, camp.y - 6, camp.x + 6, camp.y - 4, false])))
+	print("INTEG1_ORDER quarry ", JSON.stringify(SimReads.mutate(_world, "cmd_designate_quarry", [camp.x - 12, camp.y - 12, camp.x + 12, camp.y + 12])))
+	var terrain: Dictionary = SimReads.read(_world, "get_terrain_snapshot")
+	var w: int = int(terrain.get("width", 0))
+	var codes: PackedByteArray = terrain.get("terrain", PackedByteArray())
+	var hill: Vector2i = Vector2i(-1, -1)
+	for i: int in codes.size():
+		if codes[i] == 3:
+			var t: Vector2i = Vector2i(i % w, floori(float(i) / w))
+			if hill.x < 0 or t.distance_squared_to(camp) < hill.distance_squared_to(camp):
+				hill = t
+	if hill.x >= 0:
+		print("INTEG1_ORDER dig ", hill, " ", JSON.stringify(SimReads.mutate(_world, "cmd_designate_dig", [hill.x - 1, hill.y - 1, hill.x + 1, hill.y + 1])))
+
+
+func _work(_seconds: float) -> void:
+	(_main.get_node("UI") as CanvasLayer).visible = false
+	_w3d.get_node("Sky").call("set_hour_override", 12.0)
+	var camp: Vector2 = _camp()
+	_orders(Vector2i(camp))
+	var people: Node = _w3d.get_node("People")
+	var log_file: FileAccess = FileAccess.open(_out.path_join("clips.jsonl"), FileAccess.WRITE)
+	var seen: Dictionary = {}
+	var focus: Vector2 = camp
+	var main_frames: int = 0
+	# `--segments lead:seconds,…`: advance `lead` ticks (villagers take the orders), then follow for `seconds`.
+	for segment: String in _arg("--segments", "150:18,1400:17").split(",", false):
+		var parts: PackedStringArray = segment.split(":")
+		SimReads.mutate(_world, "advance_ticks", [int(parts[0])])
+		for _i: int in 20:
+			await process_frame
+		var main_out: String = _out
+		_frame = main_frames
+		await _close_shots(seen)
+		_out = main_out
+		_frame = main_frames
+		var followed: int = -1
+		_look(focus, 4.0)
+		for f: int in int(float(parts[1]) * 30.0):
+			var rows: Dictionary = _rows()
+			var row: Dictionary = rows.get(followed, {})
+			# Every 4 s (or when the followed villager stops working) take the nearest villager doing an unseen action.
+			if f % 120 == 0 or row.is_empty() or not SHOWN.has(str(row.get("key", ""))):
+				var best: float = INF
+				for aid: int in rows:
+					var r: Dictionary = rows[aid]
+					if SHOWN.has(r["key"]):
+						var d: float = (r["tile"] as Vector2).distance_to(focus) + float(seen.get(r["key"], 0)) * 0.2
+						if d < best:
+							best = d
+							followed = aid
+				row = rows.get(followed, {})
+			if not row.is_empty():
+				focus = focus.lerp(row["tile"], 0.06)
+				_look(focus, 4.0)
+			var clip: String = str((people.call("state_of", int(row.get("bits", -1))) as Dictionary).get("near_clip", "")) if not row.is_empty() else ""
+			if not row.is_empty() and clip != "":
+				seen[row["key"]] = int(seen.get(row["key"], 0)) + 1
+			log_file.store_line(JSON.stringify({"frame": _frame, "agent": followed, "visual_key": row.get("key", ""), "clip": clip}))
+			await _shoot()
+		main_frames = _frame
+	log_file.close()
+	print("INTEG1_REVIEW_WORK " + JSON.stringify(seen))
+
+## 5 s close shots (z5) of one villager per `--close` key, before the follow cam; frames in `close/<key>/`.
+func _close_shots(seen: Dictionary) -> void:
+	var base: String = _out
+	for key: String in _arg("--close", "").split(",", false):
+		if seen.has("close_" + key):
+			continue
+		var target: int = -1
+		var rows: Dictionary = _rows()
+		var people: Node = _w3d.get_node("People")
+		# A villager whose near clip already plays the action (not still walking to it).
+		for _wait: int in 240:
+			for aid: int in rows:
+				if rows[aid]["key"] == key and str((people.call("state_of", int(rows[aid]["bits"])) as Dictionary).get("near_clip", "")) == key:
+					target = aid
+					break
+			if target >= 0:
+				break
+			# Near clips play only near the camera: look at the first villager with the key while waiting.
+			for aid: int in rows:
+				if rows[aid]["key"] == key:
+					_look(rows[aid]["tile"], 4.0)
+					break
+			await process_frame
+			rows = _rows()
+		print("INTEG1_REVIEW_CLOSE %s agent %d" % [key, target])
+		if target < 0:
+			continue
+		seen["close_" + key] = true
+		_out = base.path_join("close").path_join(key)
+		_frame = 0
+		DirAccess.make_dir_recursive_absolute(_out)
+		for _f: int in 150:
+			var r: Dictionary = _rows().get(target, {})
+			if not r.is_empty():
+				_look(r["tile"], float(_arg("--close-zoom", "3")))
+			await _shoot()
+	_out = base

@@ -68,6 +68,9 @@ func _run() -> void:
 	var w3d: Node = _main.get_node_or_null("World3D")
 	if w3d != null and _arg("--hour") != "":
 		w3d.get_node("Sky").call("set_hour_override", float(_arg("--hour")))
+	# `--hardship H` pins the settlement hardship tint (debug builds) so captures compare the grade itself.
+	if w3d != null and _arg("--hardship") != "":
+		w3d.get_node("Sky").call("set_hardship_override", float(_arg("--hardship")))
 	# `--advance N` runs the clock N ticks first (e.g. into winter); the 2D and 3D runs replay the same world.
 	if _arg("--advance") != "":
 		_world.call("advance_ticks", int(_arg("--advance")))
