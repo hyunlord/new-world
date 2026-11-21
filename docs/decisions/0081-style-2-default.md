@@ -23,8 +23,8 @@ close views, white hide piles, gable thatch that read as planks and a faceted co
   saturation, LUT midtones), the warm midday becomes an optional `noon` profile, and the sky gains optional clouds,
   height fog, SSAO, shadow blur and aerial perspective. `--style=legacy` reads `legacy.grade` and `legacy.sky`, the
   unchanged `v8/main` values.
-- Camera: the pitch above the horizon is data per zoom stage (`camera.pitch_by_zoom`: z1 50°, z2 45°, z3 40°, z4 and
-  z5 45°), interpolated in log zoom so zoom tweens tilt smoothly. The Camera2D clamp uses the tilted view's ground
+- Camera: the pitch above the horizon is data per zoom stage (`camera.pitch_by_zoom`: z1 48°, z2 40°, z3 34°, z4 28°,
+  z5 22°; REVIEW-FIX-1), interpolated in log zoom so zoom tweens tilt smoothly. The Camera2D clamp uses the tilted view's ground
   reach (half width, ahead, behind) so the visible ground stays on the map.
 - Roofs (Style 2): closed at every zoom. A roof opens with the existing cutaway (fade and lift) only for the
   selected house (whose walls also drop), the house hovered for `s2_house.hover_open_seconds` (0.3 s) and, while the

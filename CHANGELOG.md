@@ -10,7 +10,7 @@
 
 ### Changed
 - Style 2 is the default play style; `--style=legacy` keeps the previous look for one release as a regression fallback.
-- The camera pitch follows the zoom stage (z1 50°, z2 45°, z3 40°, z4–z5 45°, `camera.pitch_by_zoom`), and the camera clamp keeps the tilted view on the map.
+- The camera pitch follows the zoom stage (z1 48°, z2 40°, z3 34°, z4 28°, z5 22°, `camera.pitch_by_zoom`), and the camera clamp keeps the tilted view on the map.
 - Style 2 roofs stay closed at every zoom; only the selected, hovered or inside-view houses open.
 - The Style 2 grade is expressed in the MOOD1 schema (one mood system); the legacy grade lives under `mood.json` `legacy`.
 - Near Style 2 villagers pick their mocap clip from ACTION1's visible-action rows and cues (`mocap.clip_for_visual`), with fallback and idle/walk defaults.
