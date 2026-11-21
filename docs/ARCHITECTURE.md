@@ -943,8 +943,15 @@ the `scripts/world/view_projection.gd` provider for screen ↔ world conversion.
 `assets/3d/bindings3d.json`, models and VAT from `tools/3d/blender/build_all.py`.
 Material detail uses `assets/3d/textures3d.json` and `scripts/world3d/textures3d.gd`: shared padded albedo/normal atlases in `assets/3d/textures/`, sampled by existing terrain, wall, roof and static-model materials. Original tints and surface counts remain; the crowd/VAT material path is unchanged. See [ADR0068](decisions/0068-generated-material-texture-atlas.md).
 
+Style 2 is the default play style since INTEG1 (`Data3D.style2()`; `--style=legacy`
+keeps the previous look for one release, ADR 0081). `camera_rig.gd` tilts the view
+per zoom stage (`camera.pitch_by_zoom`) and gives `camera_controller.gd` the tilted
+ground reach for its clamp.
+
 Style 2 selects 30 Hz motion capture for the near villager tier. `mocap3d.gd`
-reads the presentation state and draws baked grips and fixtures on the near VAT
+reads `get_visible_action_snapshot` and its cues once per tick and maps each visual
+key to a clip (`params3d` `mocap.clip_for_visual`, then the fallback key, then idle
+or walk); it draws baked grips and fixtures on the near VAT
 clock. Mid and far tiers use the existing loops. The RON build and its physical
 checks are documented in [ADR0080](decisions/0080-style-2-motion-capture.md).
 
@@ -953,8 +960,12 @@ Style 2 joins roofed template site rows to the cached rotated placement plan.
 planar hips. `structures3d.gd` uses the same shell during construction and
 after completion, and provides the interior ground mask to `terrain3d.gd`.
 Enclosed rooms outside template sites use the same shell builder and the room
-panel controls their cutaway. `sky3d.gd` reads the Style 2 house lighting
-profile from `assets/3d/mood.json`.
+panel controls their cutaway. Roofs stay closed at every zoom; the selected
+house, a house hovered for `s2_house.hover_open_seconds` and, with the inside
+view (V), houses within `s2_house.inside_radius` of the focus open.
+`sky3d.gd` is one mood system: the Style 2 grade is the default `grade`/`sky`
+data in `assets/3d/mood.json` (optional `noon` profile, clouds, height fog,
+SSAO); `--style=legacy` reads its `legacy` block.
 See [ADR 0078](decisions/0078-style-2-house-shells.md) and
 [ADR 0079](decisions/0079-style-2-house-shapes-and-light.md).
 

@@ -1,5 +1,6 @@
 # WorldSim 역사
 
+- 2026-11-21 — INTEG1: 스타일 2 작업선(`v8/s2kit`)을 실제 병합 커밋으로 v8 본선에 합치고 기본 화면으로 바꿨다. 이전 화면은 `--style=legacy`로 한 릴리스 동안 유지한다. 줌별 기울기, 닫힌 지붕 규칙, 가죽·이엉·솥 재질, 집 정보, 행동→동작 연결을 더했다. 작업선 ADR은 0074–0080으로 번호를 바꿨다. [ADR 0081](decisions/0081-style-2-default.md)
 - 2026-11-21 — HOUSE1: 집을 기존 건설 ID(루트 BuildingSiteId)로 식별하고, 지속 가구 ID·소유권·상속·신거주 규칙(Neolocal 기본)과 format26 저장을 더했다. 소유 가구가 침상을 먼저 쓰고 빈 자리는 침상 없는 주민이 묵는다(D-HOUSE1-1). [ADR 0073](decisions/0073-house-identity-and-household-ownership.md)
 - 2026-11-21 — MOCAP1에서 공개 CMU 동작 12종을 주민 네 체형에 맞췄다. 스타일 2 근거리에 도구와 접촉을 맞춘 30 Hz 동작을 적용했다. 종전 주택 화면 모음은 Git 이력 `71ea70ae:docs/images/s2house_contact_sheet.png`에 보존한다. [결정](decisions/0080-style-2-motion-capture.md)
 - 2026-11-20 — ACTION1: 주민 행동과 물품 이전 신호를 읽기 전용으로 연결했다. [ADR 0072](decisions/0072-visible-actions.md)

@@ -1,5 +1,21 @@
 # Changelog
 
+## INTEG1 — Style 2 on v8/main (2026-11-21)
+
+### Added
+- Style 2 terrain, mood, villagers, Tripo house shells and the 12 mocap motions from `v8/s2kit`, merged with history (merge commit). See `docs/decisions/0081-style-2-default.md`.
+- Inside view (HUD button, V) opens the roofs near the view focus; a hovered house opens after 0.3 s.
+- House section in the room panel ("X's house": first completion, template and era, rooms, beds, hearths, family, lodgers, free beds) and a clickable home line in the inspector (Korean and English).
+- Style 2 hides are irregular pelts, the log-house gable thatch shows straw courses, and the cook's vessel is a round-bottomed clay pot.
+
+### Changed
+- Style 2 is the default play style; `--style=legacy` keeps the previous look for one release as a regression fallback.
+- The camera pitch follows the zoom stage (z1 50°, z2 45°, z3 40°, z4–z5 45°, `camera.pitch_by_zoom`), and the camera clamp keeps the tilted view on the map.
+- Style 2 roofs stay closed at every zoom; only the selected, hovered or inside-view houses open.
+- The Style 2 grade is expressed in the MOOD1 schema (one mood system); the legacy grade lives under `mood.json` `legacy`.
+- Near Style 2 villagers pick their mocap clip from ACTION1's visible-action rows and cues (`mocap.clip_for_visual`), with fallback and idle/walk defaults.
+- The art track's ADRs are renumbered 0074–0080.
+
 ## Style 2 villager motion capture — 2026-11-21
 
 ### Added
