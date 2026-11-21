@@ -15,6 +15,7 @@
 extends SceneTree
 
 const View = preload("res://scripts/world/colony/view.gd")
+const Data3D = preload("res://scripts/world3d/data3d.gd")
 const BORING: Array[String] = ["idle", "walk", "sleep", "run", ""]
 
 var _main: Node = null
@@ -283,11 +284,12 @@ func _rows() -> Dictionary:
 	var out: Dictionary = {}
 	var keys: PackedStringArray = acts.get("visual_keys", PackedStringArray())
 	var ids: PackedInt64Array = acts.get("agent_ids", PackedInt64Array())
+	var phases: PackedByteArray = acts.get("phases", PackedByteArray())
 	for k: int in mini(keys.size(), ids.size()):
 		if at.has(ids[k]):
 			var i: int = at[ids[k]]
 			out[ids[k]] = {"tile": Vector2((agents["xs"] as PackedInt32Array)[i] + 0.5, (agents["ys"] as PackedInt32Array)[i] + 0.5),
-				"key": keys[k], "bits": (agents["ids"] as PackedInt64Array)[i]}
+				"key": keys[k], "bits": (agents["ids"] as PackedInt64Array)[i], "perform": k < phases.size() and phases[k] == 2}
 	return out
 
 
@@ -347,8 +349,13 @@ func _work(_seconds: float) -> void:
 				var best: float = INF
 				for aid: int in rows:
 					var r: Dictionary = rows[aid]
-					if SHOWN.has(r["key"]):
+					# Performing (ACTION1 phase 2) beats walking to the job.
+					if SHOWN.has(r["key"]) and (bool(r["perform"]) or r["key"] == "carry"):
 						var d: float = (r["tile"] as Vector2).distance_to(focus) + float(seen.get(r["key"], 0)) * 0.2
+						# A villager whose near clip already plays its action wins over one still walking to it.
+						var playing: String = str((people.call("state_of", int(r["bits"])) as Dictionary).get("near_clip", ""))
+						if playing == str((Data3D.param("mocap.clip_for_visual", {}) as Dictionary).get(r["key"], r["key"])):
+							d -= 30.0
 						if d < best:
 							best = d
 							followed = aid
@@ -396,9 +403,13 @@ func _close_shots(seen: Dictionary) -> void:
 		_out = base.path_join("close").path_join(key)
 		_frame = 0
 		DirAccess.make_dir_recursive_absolute(_out)
+		var clips: FileAccess = FileAccess.open(_out.path_join("clips.jsonl"), FileAccess.WRITE)
 		for _f: int in 150:
 			var r: Dictionary = _rows().get(target, {})
 			if not r.is_empty():
 				_look(r["tile"], float(_arg("--close-zoom", "3")))
+			clips.store_line(JSON.stringify({"frame": _frame, "agent": target, "visual_key": r.get("key", ""),
+				"clip": str((people.call("state_of", int(r.get("bits", -1))) as Dictionary).get("near_clip", "")) if not r.is_empty() else ""}))
 			await _shoot()
+		clips.close()
 	_out = base
