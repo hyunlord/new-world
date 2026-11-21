@@ -104,7 +104,7 @@ func _workers(near: Vector2) -> Array[Dictionary]:
 	var acts: Dictionary = SimReads.read(_world, "get_visible_action_snapshot")
 	var agents: Dictionary = SimReads.read(_world, "get_agent_snapshot")
 	var at: Dictionary = {}
-	var ids: PackedInt64Array = agents.get("ids", PackedInt64Array())
+	var ids: PackedInt64Array = agents.get("agent_ids", PackedInt64Array())
 	for i: int in ids.size():
 		at[ids[i]] = Vector2((agents["xs"] as PackedInt32Array)[i] + 0.5, (agents["ys"] as PackedInt32Array)[i] + 0.5)
 	var out: Array[Dictionary] = []
@@ -211,11 +211,13 @@ func _roofs() -> void:
 	var structures: Node = _w3d.get_node("Structures")
 	var house: int = -1
 	var house_tile: Vector2 = focus
+	var best: float = INF
 	for dy: int in range(-4, 5):
 		for dx: int in range(-4, 5):
 			var t: Vector2i = Vector2i(int(focus.x) + dx, int(focus.y) + dy)
 			var key: int = int(structures.call("roof_key_at", t))
-			if key >= 0 and house < 0:
+			if key >= 0 and Vector2(dx, dy).length() < best:
+				best = Vector2(dx, dy).length()
 				house = key
 				house_tile = Vector2(t) + Vector2(0.5, 0.5)
 	if house < 0:
@@ -225,9 +227,14 @@ func _roofs() -> void:
 	_move_mouse(empty)
 	await _hold(60)
 	print("INTEG1_REVIEW " + JSON.stringify({"step": "closed", "fade": structures.call("roof_fade", house)}))
-	_move_mouse(_screen_of(house_tile, 2.4))
+	_move_mouse(_screen_of(house_tile, 0.0))
 	await _hold(75)
-	print("INTEG1_REVIEW " + JSON.stringify({"step": "hover", "fade": structures.call("roof_fade", house)}))
+	var hovered: Control = root.get_viewport().gui_get_hovered_control()
+	print("INTEG1_REVIEW " + JSON.stringify({"step": "hover", "fade": structures.call("roof_fade", house), "mouse": str(root.get_viewport().get_mouse_position()),
+		"aim": str(_screen_of(house_tile, 0.0)), "gui": str(hovered.get_path()) if hovered != null else "", "world": str(_w3d.call("screen_to_world", root.get_viewport().get_mouse_position()))}))
+	# Select the house the pointer opened, so hover and selection show the same roof.
+	if int(structures.get("_hover_house")) >= 0:
+		house = int(structures.get("_hover_house"))
 	var room_panel: Node = _main.get_node("UI/RoomPanel")
 	room_panel.call("select_house", house)
 	_move_mouse(empty)
