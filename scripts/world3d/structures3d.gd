@@ -85,6 +85,8 @@ var _rooms_key: String = ""
 var _sites_key: String = ""
 var _walls: Dictionary = {}
 var _chunks: Dictionary = {}
+## Wall chunk → content signature at its last build; a wall change rebuilds only the chunks whose signature moved.
+var _chunk_sigs: Dictionary = {}
 var _roofs: Dictionary = {}
 var _roof_fade: Dictionary = {}
 var _room_rects: Dictionary = {}
@@ -123,6 +125,8 @@ func setup(world_sim: Node, terrain: Node) -> void:
 
 func _ready() -> void:
 	_resolver.load_imported()
+	if _style2:
+		Kit.prewarm()
 	wall_material = ShaderMaterial.new()
 	wall_material.shader = WALL_SHADER
 	preload("res://scripts/world3d/textures3d.gd").setup(wall_material)
@@ -163,6 +167,8 @@ func _on_world_reset() -> void:
 		_roof_fade.clear()
 		_s2_roof_footprints.clear()
 	_space_version = -2
+	# A new world can put identical wall content on different ground: rebuild every chunk once.
+	_chunk_sigs.clear()
 	_rooms_key = ""
 	_sites_key = ""
 	_stamp_key = ""
@@ -187,6 +193,8 @@ func _process(delta: float) -> void:
 		_update_cutaway(delta)
 		return
 	_stamp_key = stamp_key
+	var started: int = Time.get_ticks_usec()
+	var budget: int = int(float(Data3D.param("structures.rebuild_budget_ms", 12.0)) * 1000.0)
 	var space: Dictionary = SimReads.read(_world_sim, "get_space")
 	var buildings: Dictionary = SimReads.read(_world_sim, "get_building_snapshot")
 	var sites: Array = buildings.get("template_sites", [])
@@ -207,6 +215,12 @@ func _process(delta: float) -> void:
 	var rkey: String = "%d|%d|%d" % [int(rooms.get("version", 0)), hash(str(sites)), version]
 	if _style2:
 		rkey = "%s|%s|%s|%s" % [rooms.get("version"), bkey, version, hash(_houses.keys())]
+	if rkey != _rooms_key and Time.get_ticks_usec() - started > budget:
+		# Walls used this frame's slot: rebuild the roofs on the next claimed frame (no single-frame stall).
+		_stamp_key = ""
+		_update_doors()
+		_update_cutaway(delta)
+		return
 	if rkey != _rooms_key:
 		_rooms_key = rkey
 		var old_room_trim: Dictionary = _room_wall_trim
@@ -226,6 +240,11 @@ func _process(delta: float) -> void:
 	if _style2:
 		skey = "%s|%s" % [hash([overlay.get("site_xs"), overlay.get("site_ys"), overlay.get("site_ws"),
 			overlay.get("site_hs"), overlay.get("site_kinds"), overlay.get("site_progress"), overlay.get("site_required")]), hash(str(sites))]
+	if skey != _sites_key and Time.get_ticks_usec() - started > budget:
+		_stamp_key = ""
+		_update_doors()
+		_update_cutaway(delta)
+		return
 	if skey != _sites_key:
 		_sites_key = skey
 		_rebuild_sites(overlay, sites)
@@ -262,18 +281,16 @@ func _rebuild_walls(space: Dictionary, buildings: Dictionary) -> void:
 				w["fence"] = true
 				break
 	var floors: Dictionary = _floor_tiles(space)
+	var sigs: Dictionary = _wall_chunk_signatures(floors)
 	var dirty: Dictionary = {}
-	for t: Vector2i in _floor_models.keys():
-		dirty[_chunk_of(t)] = true
-	for t: Variant in _walls.keys():
-		if t is Vector2i:
-			dirty[_chunk_of(t)] = true
-	for t: Vector2i in floors.keys():
-		dirty[_chunk_of(t)] = true
-	for k: Vector2i in _chunks.keys():
-		dirty[k] = true
-	for k: Vector2i in _kit_walls.keys():
-		dirty[k] = true
+	for k: Vector2i in sigs:
+		if sigs[k] != _chunk_sigs.get(k):
+			dirty[k] = true
+	for keys: Array in [_chunk_sigs.keys(), _chunks.keys(), _kit_walls.keys()]:
+		for k: Vector2i in keys:
+			if not sigs.has(k):
+				dirty[k] = true
+	_chunk_sigs = sigs
 	for k: Vector2i in dirty:
 		_build_wall_chunk(k, floors)
 	_place_fence_models()
@@ -323,6 +340,35 @@ func _place_fence_models() -> void:
 		var mmi: MultiMeshInstance3D = MultiMeshInstance3D.new()
 		mmi.multimesh = mm
 		_fence_models.add_child(mmi)
+
+
+## Per-chunk hash of everything a wall chunk build reads near its tiles: wall entries and their house, room trim,
+## floors and floor models, each counted in its own chunk and any chunk within one tile (joins cross chunk edges).
+func _wall_chunk_signatures(floors: Dictionary) -> Dictionary:
+	var parts: Dictionary = {}
+	var add: Callable = func(t: Vector2i, value: Variant) -> void:
+		var seen: Dictionary = {}
+		for d: Vector2i in [Vector2i.ZERO, Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+			var k: Vector2i = _chunk_of(t + d)
+			if not seen.has(k):
+				seen[k] = true
+				if not parts.has(k):
+					parts[k] = []
+				(parts[k] as Array).append(value)
+	for t: Variant in _walls.keys():
+		if t is not Vector2i:
+			continue
+		var house: Variant = _house_wall.get(t)
+		var id: int = int((house as Dictionary).get("id", -1)) if house is Dictionary else -1
+		add.call(t, [t, _walls[t], house, _room_wall_trim.has(t), hash(_houses.get(id)), hash(_house_plans.get(id))])
+	for t: Vector2i in floors:
+		add.call(t, [t, floors[t]])
+	for t: Vector2i in _floor_models:
+		add.call(t, [t, _floor_models[t]])
+	var out: Dictionary = {}
+	for k: Vector2i in parts:
+		out[k] = hash(parts[k])
+	return out
 
 
 func _chunk_of(t: Vector2i) -> Vector2i:

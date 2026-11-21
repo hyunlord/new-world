@@ -26,6 +26,32 @@ static func texture(id: String, suffix: String = "") -> Texture2D:
 	return _atlases[key]
 
 
+## Loads every kit part, LOD tier and texture the `s2kit` bindings name (keys and values), so no part's first use
+## mid-game pays a .glb load, merge and mipmap build in one frame (step 41: 40-100 ms when a wall kind first appeared).
+static func prewarm() -> void:
+	var ids: Dictionary = {}
+	_collect_ids(Data3D.binding("s2kit", {}), ids)
+	for id: String in ids:
+		if not ResourceLoader.exists(ROOT + id + ".glb", "PackedScene"):
+			continue
+		mesh(id)
+		mesh(id, true)
+		for suffix: String in ["", "_normal", "_rm"]:
+			texture(id, suffix)
+
+
+static func _collect_ids(value: Variant, ids: Dictionary) -> void:
+	if value is String:
+		ids[value] = true
+	elif value is Dictionary:
+		for key: Variant in value:
+			_collect_ids(key, ids)
+			_collect_ids((value as Dictionary)[key], ids)
+	elif value is Array:
+		for item: Variant in value:
+			_collect_ids(item, ids)
+
+
 static func mesh(id: String, lod: bool = false) -> ArrayMesh:
 	if id.is_empty():
 		return null

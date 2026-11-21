@@ -90,6 +90,7 @@
     "roof_pitch_deg": 38.0,
     "roof_thickness": 0.12,
     "roof_max_rise": 2.4,
+    "rebuild_budget_ms": 12.0,
     "cutaway_zoom": 4.0,
     "cutaway_wall_height": 0.9,
     "cutaway_seconds": 0.25
