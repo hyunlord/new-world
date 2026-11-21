@@ -218,6 +218,8 @@
                 (fact: "target_social", op: "has", value: None),
                 (fact: "social_seek_enabled", op: "has", value: None),
                 (fact: "social_partner_present", op: "has", value: None),
+                // SIMFIX1 (F8): a chase chosen from social memory is not cut the next tick (it looped every tick).
+                (fact: "recallable_social", op: "not", value: None),
                 (fact: "hunger_actionable", op: "has", value: None),
             ],
             score: (constant: 8000000000, terms: []),
@@ -234,6 +236,8 @@
                 (fact: "target_social", op: "has", value: None),
                 (fact: "social_seek_enabled", op: "has", value: None),
                 (fact: "social_partner_present", op: "has", value: None),
+                // SIMFIX1 (F8): a chase chosen from social memory is not cut the next tick (it looped every tick).
+                (fact: "recallable_social", op: "not", value: None),
                 (fact: "thirst_actionable", op: "has", value: None),
             ],
             score: (constant: 8000000000, terms: []),
@@ -250,6 +254,8 @@
                 (fact: "target_social", op: "has", value: None),
                 (fact: "social_seek_enabled", op: "has", value: None),
                 (fact: "social_partner_present", op: "has", value: None),
+                // SIMFIX1 (F8): a chase chosen from social memory is not cut the next tick (it looped every tick).
+                (fact: "recallable_social", op: "not", value: None),
                 (fact: "fatigue_actionable", op: "has", value: None),
             ],
             score: (constant: 8000000000, terms: []),
@@ -2679,6 +2685,106 @@
             hysteresis: 0, life_stages: ["adult", "elder"],
             tags: ["port", "memory"], name_key: "MIND_BEHAVIOUR_SOCIALISE",
             every_ticks: 1, target: Some("social_memory_peer"),
+        ),
+        // SIMFIX1 (SIMFIX2 F1): a person free to talk takes up the invitation of someone walking to
+        // them (`social_invited`: the inviter's own `Seeking{Agent}` state); both then walk to each
+        // other. Not calibrated (D-FEATURE-FIRST).
+        (
+            id: "accept_talk_invite_idle", band: "need", behaviour: "socialise",
+            when: [
+                (fact: "social_invited", op: "has", value: None),
+                (fact: "fleeing", op: "not", value: None),
+                (fact: "drafted", op: "not", value: None),
+                (fact: "idle", op: "has", value: None),
+                (fact: "job_owned_state", op: "not", value: None),
+                (fact: "activity_active", op: "not", value: None),
+                (fact: "hunger_actionable", op: "not", value: None),
+                (fact: "thirst_actionable", op: "not", value: None),
+                (fact: "fatigue_actionable", op: "not", value: None),
+            ],
+            score: (constant: 1000, terms: []),
+            hysteresis: 0, life_stages: ["adult", "elder"],
+            tags: ["simfix1", "invitation"], name_key: "MIND_BEHAVIOUR_SOCIALISE",
+            every_ticks: 1, target: Some("social_peer"),
+        ),
+        (
+            id: "accept_talk_invite_routine", band: "need", behaviour: "socialise",
+            when: [
+                (fact: "social_invited", op: "has", value: None),
+                (fact: "fleeing", op: "not", value: None),
+                (fact: "drafted", op: "not", value: None),
+                (fact: "activity_active", op: "has", value: None),
+                (fact: "has_job", op: "not", value: None),
+                (fact: "hunger_actionable", op: "not", value: None),
+                (fact: "thirst_actionable", op: "not", value: None),
+                (fact: "fatigue_actionable", op: "not", value: None),
+            ],
+            score: (constant: 1000, terms: []),
+            hysteresis: 0, life_stages: ["adult", "elder"],
+            tags: ["simfix1", "invitation"], name_key: "MIND_BEHAVIOUR_SOCIALISE",
+            every_ticks: 1, target: Some("social_peer"),
+        ),
+        // SIMFIX1 (WORK1 F5 provisioning): an idle worker drinks or eats once the need reaches one
+        // meal's worth (30.0), before it would cut a long job short; the job layer admits a long job
+        // only when the needs last to its end. Lowest need score: every real need wins.
+        (
+            id: "prepare_drink", band: "need", behaviour: "drink",
+            when: [
+                (fact: "fleeing", op: "not", value: None),
+                (fact: "drafted", op: "not", value: None),
+                (fact: "idle", op: "has", value: None),
+                (fact: "job_owned_state", op: "not", value: None),
+                (fact: "activity_active", op: "not", value: None),
+                (fact: "worker", op: "has", value: None),
+                (fact: "hunger_actionable", op: "not", value: None),
+                (fact: "thirst_actionable", op: "not", value: None),
+                (fact: "fatigue_actionable", op: "not", value: None),
+                (fact: "thirst_tenths", op: ">=", value: Some(300)),
+                (fact: "water_target_available", op: "has", value: None),
+            ],
+            score: (constant: 2, terms: []),
+            hysteresis: 0, life_stages: ["adult"],
+            tags: ["simfix1", "provision"], name_key: "MIND_BEHAVIOUR_DRINK",
+            every_ticks: 1, target: Some("water"),
+        ),
+        (
+            id: "prepare_eat", band: "need", behaviour: "eat",
+            when: [
+                (fact: "fleeing", op: "not", value: None),
+                (fact: "drafted", op: "not", value: None),
+                (fact: "idle", op: "has", value: None),
+                (fact: "job_owned_state", op: "not", value: None),
+                (fact: "activity_active", op: "not", value: None),
+                (fact: "worker", op: "has", value: None),
+                (fact: "hunger_actionable", op: "not", value: None),
+                (fact: "thirst_actionable", op: "not", value: None),
+                (fact: "fatigue_actionable", op: "not", value: None),
+                (fact: "hunger_tenths", op: ">=", value: Some(300)),
+                (fact: "food_available", op: "has", value: None),
+            ],
+            score: (constant: 1, terms: []),
+            hysteresis: 0, life_stages: ["adult"],
+            tags: ["simfix1", "provision"], name_key: "MIND_BEHAVIOUR_EAT",
+            every_ticks: 1, target: Some("food"),
+        ),
+        // SIMFIX1 (PURPOSE1 F6 starving search, first step): a starving person with no food in
+        // reach goes to the band hearth instead of standing. Score 0: any other need wins.
+        // No idle/activity predicate: the node continues its own `rest` Activity (MIND_AUTHORING).
+        // Eating the seed reserve stays off (planner Q1); food gifts between kin are HOME1.
+        (
+            id: "starving_to_hearth", band: "need", behaviour: "rest",
+            when: [
+                (fact: "fleeing", op: "not", value: None),
+                (fact: "drafted", op: "not", value: None),
+                (fact: "job_owned_state", op: "not", value: None),
+                (fact: "hunger_tenths", op: ">=", value: Some(900)),
+                (fact: "hunger_actionable", op: "not", value: None),
+                (fact: "hearth_available", op: "has", value: None),
+            ],
+            score: (constant: 0, terms: []),
+            hysteresis: 0, life_stages: ["adult", "child", "elder"],
+            tags: ["simfix1", "starving"], name_key: "MIND_BEHAVIOUR_STARVING_TO_HEARTH",
+            every_ticks: 1, target: Some("hearth"),
         ),
         (
             id: "need_idle_social", band: "need", behaviour: "socialise",

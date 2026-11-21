@@ -866,6 +866,7 @@ pub const BUILTIN_PROVIDERS: &[FactProvider] = &[
     overlay!("social_candidate", Bool),
     overlay!("social_memory_candidate", Bool),
     overlay!("social_handshake", Bool),
+    overlay!("social_invited", Bool),
     fact!("running_foraging", Bool, |p, c, _r, _n| Ok(i64::from(
         c.running(p.agent)?
             .is_some_and(|running| !running.finished && running.behaviour == "forage")
@@ -1367,11 +1368,15 @@ pub fn resolve_target(
     if name == "social_current_peer" {
         let person = context.row(agent)?;
         return Ok(match person.state.target() {
-            Some(TargetKind::Agent(peer)) => context.row(peer).ok().map(|other| TargetCandidate {
-                food: None,
-                tile: (other.position.x, other.position.y),
-                agent: Some(peer),
-            }),
+            Some(TargetKind::Agent(peer)) => context
+                .row(peer)
+                .ok()
+                .filter(|other| social_partner_open(person, other, resources))
+                .map(|other| TargetCandidate {
+                    food: None,
+                    tile: social_meeting_tile(person, other, resources),
+                    agent: Some(peer),
+                }),
             _ => None,
         });
     }
@@ -1751,9 +1756,22 @@ pub fn prepare_social_snapshot(
         .collect();
     let mut peers: std::collections::HashMap<(u32, u32), [SocialPeers; 3]> =
         std::collections::HashMap::with_capacity(context.rows().len());
+    // SIMFIX1 (F1, colony with the day-life data): free people look for a partner in their
+    // `social.peer_cell`-tile block, not only on their own tile, and pair off in id order
+    // (1st with 2nd, 3rd with 4th …) instead of everyone choosing the lowest id.
+    let social_rule = resources
+        .rules
+        .colony
+        .and(sim_core::rules::DaylifeRule::get())
+        .map(|rule| rule.social);
+    let invitations = social_rule.is_some();
+    let cell = social_rule.map_or(1, |social| social.peer_cell.max(1));
+    let block = |p: &PersonSnapshot| (p.position.x / cell, p.position.y / cell);
+    let mut lists: BTreeMap<(u32, u32), [Vec<AgentId>; 3]> = BTreeMap::new();
     let routine = resources.rules.agent.routine.is_some();
     for person in context.rows() {
         let available = person.life_stage != LifeStage::Child
+            && (!invitations || person.job.is_none())
             && crate::runtime::agent_actions::routine::idle_equivalent(person.state, routine)
             && (resources.rules.agent.social_seek.is_none()
                 || resources
@@ -1771,8 +1789,15 @@ pub fn prepare_social_snapshot(
             .is_some_and(|v| v > f64::from(needs::HUNGER_THRESHOLD));
         let thirsty = person.thirst.is_some_and(|v| v > needs::THIRST_THRESHOLD);
         let tired = person.fatigue.is_some_and(|v| v > threshold);
+        let mut push = |kind: usize| {
+            if invitations {
+                lists.entry(block(person)).or_default()[kind].push(person.agent);
+            } else {
+                peers.entry(tile).or_default()[kind].push(person.agent);
+            }
+        };
         if lonely && !hungry && !thirsty && !tired && !sites.contains(&tile) {
-            peers.entry(tile).or_default()[0].push(person.agent);
+            push(0);
         }
         let day = (resources.ticks_per_day != 0).then(|| {
             resources
@@ -1788,9 +1813,25 @@ pub fn prepare_social_snapshot(
         )
         .is_some();
         if !night || !tired {
-            peers.entry(tile).or_default()[2].push(person.agent);
+            push(2);
             if lonely {
-                peers.entry(tile).or_default()[1].push(person.agent);
+                push(1);
+            }
+        }
+    }
+    // SIMFIX1 (F1): an invitation is a chaser's own saved state, `Seeking{Agent(invitee)}`; the
+    // lowest inviting id wins. An invitee free to talk (idle or in a routine, no job, no need, not
+    // resting from talk) takes its inviter as its peer wherever the inviter stands.
+    let mut inviters: BTreeMap<AgentId, (AgentId, (u32, u32))> = BTreeMap::new();
+    if invitations {
+        for person in context.rows() {
+            if let AgentState::Seeking {
+                target: TargetKind::Agent(invitee),
+            } = person.state
+            {
+                inviters
+                    .entry(invitee)
+                    .or_insert((person.agent, (person.position.x, person.position.y)));
             }
         }
     }
@@ -1798,9 +1839,21 @@ pub fn prepare_social_snapshot(
         .rows()
         .iter()
         .map(|person| {
-            let tile = (person.position.x, person.position.y);
+            if let Some(&(inviter, at)) = inviters.get(&person.agent) {
+                if social_free(person, resources) {
+                    return (person.agent, at, Some(inviter), Some(inviter), false, true);
+                }
+            }
+            let mut tile = (person.position.x, person.position.y);
             let buckets = peers.get(&tile);
-            let peer = |kind: usize| buckets.and_then(|ids| ids[kind].other(person.agent));
+            let listed = lists.get(&block(person));
+            let peer = |kind: usize| {
+                if invitations {
+                    listed.and_then(|ids| paired(&ids[kind], person.agent))
+                } else {
+                    buckets.and_then(|ids| ids[kind].other(person.agent))
+                }
+            };
             let natural_peer = peer(0);
             let memory_peer = if person.social.is_some_and(|v| v > needs::SOCIAL_THRESHOLD) {
                 peer(1)
@@ -1822,11 +1875,114 @@ pub fn prepare_social_snapshot(
                     false
                 }
             };
-            (person.agent, tile, natural_peer, memory_peer, handshake)
+            if invitations {
+                // The target is where the partner stands (a block holds several tiles).
+                if let Some(other) = natural_peer
+                    .or(memory_peer)
+                    .and_then(|id| context.row(id).ok())
+                {
+                    tile = (other.position.x, other.position.y);
+                }
+            }
+            (
+                person.agent,
+                tile,
+                natural_peer,
+                memory_peer,
+                handshake,
+                false,
+            )
         })
         .collect();
     context.install_social_snapshot(rows)?;
     Ok(())
+}
+
+/// SIMFIX1 (F1): `agent`'s partner in an id-ordered block list: pairs (1st, 2nd), (3rd, 4th) …; an odd
+/// last member has none; someone not listed gets the first member (the old first-other rule).
+fn paired(list: &[AgentId], agent: AgentId) -> Option<AgentId> {
+    match list.iter().position(|id| *id == agent) {
+        Some(index) => list.get(index ^ 1).copied(),
+        None => list.first().copied(),
+    }
+}
+
+/// SIMFIX1 (F1): whether `person` is free to take up a talk: an adult, idle or in a routine
+/// activity, without a job, not hungry, thirsty or tired, and not resting from a talk.
+fn social_free(person: &PersonSnapshot, resources: &SimResources) -> bool {
+    let routine = resources.rules.agent.routine.is_some();
+    person.life_stage != LifeStage::Child
+        && person.job.is_none()
+        && crate::runtime::agent_actions::routine::idle_equivalent(person.state, routine)
+        && resources
+            .social_retry_after
+            .get(&person.agent)
+            .is_none_or(|until| *until <= resources.current_tick)
+        && !person
+            .hunger
+            .is_some_and(|v| v > f64::from(needs::HUNGER_THRESHOLD))
+        && !person.thirst.is_some_and(|v| v > needs::THIRST_THRESHOLD)
+        && !person
+            .fatigue
+            .is_some_and(|v| v > fatigue_threshold(person, resources))
+}
+
+/// SIMFIX1 (F1): where `me` walks to meet `other`. When both walk to each other they step on the same
+/// ticks and can swap tiles for ever, so once `other` walks or talks back the higher id waits on its own
+/// tile and the lower id comes to it. Outside the colony (or without the day-life data) `other`'s tile.
+pub(super) fn social_meeting_tile(
+    me: &PersonSnapshot,
+    other: &PersonSnapshot,
+    resources: &SimResources,
+) -> (u32, u32) {
+    let waits = resources.rules.colony.is_some()
+        && sim_core::rules::DaylifeRule::get().is_some()
+        && me.agent > other.agent
+        && matches!(
+            other.state,
+            AgentState::Seeking { target: TargetKind::Agent(id) } if id == me.agent
+        );
+    if waits {
+        (me.position.x, me.position.y)
+    } else {
+        (other.position.x, other.position.y)
+    }
+}
+
+/// SIMFIX1 (F1): whether `other` still takes part in `me`'s talk. A partner who walks or talks
+/// back to `me` has accepted. Otherwise it must still be free (idle or in a routine, no job), and
+/// a chase that has gone `social.stall_ticks` without being taken up ends (the chase's own
+/// `social_chase_since`). Outside the colony (or without the day-life data) always `true`.
+pub(super) fn social_partner_open(
+    me: &PersonSnapshot,
+    other: &PersonSnapshot,
+    resources: &SimResources,
+) -> bool {
+    let Some(rule) = resources
+        .rules
+        .colony
+        .and(sim_core::rules::DaylifeRule::get())
+    else {
+        return true;
+    };
+    let accepted = matches!(
+        other.state,
+        AgentState::Seeking { target: TargetKind::Agent(id) }
+            | AgentState::Consuming { target: TargetKind::Agent(id) } if id == me.agent
+    );
+    if accepted {
+        return true;
+    }
+    let stalled = resources
+        .social_chase_since
+        .get(&me.agent)
+        .is_some_and(|since| {
+            resources.current_tick.saturating_sub(*since) >= rule.social.stall_ticks
+        });
+    let routine = resources.rules.agent.routine.is_some();
+    !stalled
+        && other.job.is_none()
+        && crate::runtime::agent_actions::routine::idle_equivalent(other.state, routine)
 }
 
 /// Full read-only preparation, excluding the real owner's routine transaction.

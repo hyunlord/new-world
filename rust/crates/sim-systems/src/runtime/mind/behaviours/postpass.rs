@@ -34,6 +34,23 @@ pub(in crate::runtime) fn finish_tick(
         .iter()
         .map(|(_, (a, p))| (a.id, (p.x, p.y)))
         .collect();
+    // SIMFIX1 (F1): two people walking to each other step on the same ticks and swap tiles for ever;
+    // once a partner walks back, the higher id waits on its own tile (`facts::social_meeting_tile`).
+    let meet = resources.rules.colony.is_some() && sim_core::rules::DaylifeRule::get().is_some();
+    let walking_to: BTreeMap<AgentId, AgentId> = if meet {
+        world
+            .query::<(&Agent, &AgentState)>()
+            .iter()
+            .filter_map(|(_, (a, state))| match state {
+                AgentState::Seeking {
+                    target: TargetKind::Agent(peer),
+                } => Some((a.id, *peer)),
+                _ => None,
+            })
+            .collect()
+    } else {
+        BTreeMap::new()
+    };
     let forage = resources
         .rules
         .agent
@@ -171,7 +188,11 @@ pub(in crate::runtime) fn finish_tick(
                         || effects.social_seek_entities.contains(&entity)
                         || seek.is_some();
                     let tile = if classified && *peer != agent.id {
-                        positions.get(peer).copied()
+                        if agent.id > *peer && walking_to.get(peer) == Some(&agent.id) {
+                            Some((pos.x, pos.y))
+                        } else {
+                            positions.get(peer).copied()
+                        }
                     } else {
                         None
                     };

@@ -172,6 +172,7 @@ fn social_missing_peer_has_live_none_target_and_idle_requires_no_other_owner() {
             LifecycleBinding::Social,
             context.row(7).expect("person"),
             &context,
+            &resources,
             None
         ),
         Some(ActionTarget::None)

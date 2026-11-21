@@ -16,6 +16,9 @@
 //! hunt into a `Haul` of up to `hunter_meat` meat by the hunter to the nearest
 //! stockpile cell with room, else a legal hearth pile ([`haul_home`]); the hide and any meat left are
 //! noted in `Wildlife::carcasses` and hauled before other loose stacks.
+//! SIMFIX1 (ADR 0082): a hunt ends (`CancelReason::Stuck`) after `daylife.hunt.max_ticks`, or after
+//! `no_gain_ticks` without closing in on its prey (Chebyshev distance, not the walk's path progress); the
+//! hunter is then skipped for hunts for `retry_after_ticks` (`colony.unreachable`).
 use hecs::{Entity, World};
 use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
 use sim_core::colony::knowledge::gates;
@@ -403,6 +406,27 @@ pub fn step(
         cancel(world, res, entity, CancelReason::TargetGone);
         return;
     };
+    // SIMFIX1 (WORK1 F5): give up a hunt that drags on, before a need abandons it.
+    let tick = res.current_tick;
+    let (best, progress) = match chebyshev(pos, deer) {
+        d if d < job.best_distance => (d, tick),
+        _ => (job.best_distance, job.progress_tick),
+    };
+    if let Some(give_up) = sim_core::rules::DaylifeRule::get().map(|r| r.hunt) {
+        let stalking = !matches!(job.stage, JobStage::ToDest) && job.fetch.is_none();
+        if stalking
+            && (tick.saturating_sub(job.taken_at) >= give_up.max_ticks
+                || tick.saturating_sub(progress) >= give_up.no_gain_ticks)
+        {
+            // Not offered another hunt for a while (the job layer's existing per-person skip list).
+            res.colony.unreachable.insert(
+                (id, job.kind.source()),
+                tick.saturating_add(give_up.retry_after_ticks),
+            );
+            cancel(world, res, entity, CancelReason::Stuck);
+            return;
+        }
+    }
     // The tool stop.
     if let (Some(at), JobStage::ToSource) = (job.fetch, job.stage) {
         if !res.nav.arrived(pos, at) {
@@ -420,6 +444,14 @@ pub fn step(
             if !near {
                 let _ = world.insert_one(entity, SeekTarget::new(deer));
                 super::execute::walk_job(world, res, id, entity, &mut job, pos, deer);
+                // SIMFIX1: a hunt's progress is the Chebyshev distance to its prey; the walk's path
+                // replans (the prey keeps moving) must not restart the hunt's no-gain count.
+                if sim_core::rules::DaylifeRule::get().is_some() {
+                    if let Ok(mut held) = world.get::<&mut Job>(entity) {
+                        held.best_distance = best;
+                        held.progress_tick = progress;
+                    }
+                }
                 return;
             }
             let level = craft::level_of(world, entity, SkillKind::Hunting);

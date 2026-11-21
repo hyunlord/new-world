@@ -402,6 +402,7 @@ impl ColonyMindSystem {
                 effect.lifecycle,
                 context.row(agent).map_err(failure)?,
                 context,
+                resources,
                 seek,
             )
             .ok_or_else(|| failure("retained lifecycle target missing"))?
@@ -432,7 +433,20 @@ impl ColonyMindSystem {
                         )
                         .map_err(failure)?;
                     }
-                    facts::resolve_target(context, resources, agent, name).map_err(failure)?
+                    facts::resolve_target(context, resources, agent, name)
+                        .map_err(failure)?
+                        .or_else(|| {
+                            // SIMFIX1: a running routine keeps its own place when the place list no
+                            // longer offers it (a wall made it unwalkable, or `rest` started it at the
+                            // hearth); without this its continuation failed with MissingTarget.
+                            let kind = effect.activity_kind?;
+                            let activity = context.row(agent).ok()?.activity?;
+                            (activity.kind == kind).then_some(TargetCandidate {
+                                tile: activity.place,
+                                agent: None,
+                                food: None,
+                            })
+                        })
                 }
                 None => None,
             };

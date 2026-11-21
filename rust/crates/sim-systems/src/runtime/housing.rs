@@ -12,7 +12,7 @@
 use hecs::World;
 use sim_core::chronicle::{CauseRef, ChronicleEntry, ChronicleKind};
 use sim_core::colony::building_site::{BuildingSite, BuildingSiteId, BuildingStatus, PiecePhase};
-use sim_core::colony::building_template::BuildingCategory;
+use sim_core::colony::building_template::{BuildingCategory, ShelterKind, TemplateCatalog};
 use sim_core::colony::content::installed_or_bundled;
 use sim_core::colony::household::{
     pack_ownership_change, BedRef, HouseHistory, HouseId, HouseStatus, HouseView, Household,
@@ -88,6 +88,29 @@ pub fn house_at(res: &SimResources, tile: Tile) -> Option<HouseId> {
                 .get(&house.0)
                 .is_some_and(|site| contains(site, tile))
         })
+}
+
+/// SIMFIX1 (F3): whether `tile` lies in a usable Dwelling whose template's `function.warmth` is
+/// `Roofed` (data, never a template name). A hut forms no RoomSystem room but is still a roof.
+pub fn roofed_dwelling_at(res: &SimResources, tile: Tile) -> bool {
+    house_at(res, tile).is_some_and(|house| {
+        usable(res, house)
+            && res
+                .colony
+                .buildings
+                .sites
+                .get(&house.0)
+                .is_some_and(|site| {
+                    template_roofed(installed_or_bundled().building_templates(), &site.template)
+                })
+    })
+}
+
+/// Whether the template `id` shelters its sleepers by its data (`function.warmth: Roofed`).
+pub fn template_roofed(templates: &TemplateCatalog, id: &str) -> bool {
+    templates
+        .get(id)
+        .is_some_and(|template| template.function.warmth == ShelterKind::Roofed)
 }
 
 #[derive(Clone, Copy)]

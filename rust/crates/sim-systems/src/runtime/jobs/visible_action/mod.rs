@@ -318,7 +318,9 @@ impl Projection<'_> {
                         && (activity.arrived_tick.is_none()
                             || activity
                                 .until_tick
-                                .is_some_and(|end| end <= res.current_tick)))
+                                // SIMFIX1 (F8): reads come after a tick ran (`current_tick` is the
+                                // next tick); the mind ends the Activity only when that tick runs.
+                                .is_some_and(|end| end < res.current_tick)))
                 {
                     return;
                 }

@@ -93,7 +93,14 @@ pub(super) fn prepare_social_snapshot(
                     false
                 }
             };
-            (person.agent, tile, natural_peer, memory_peer, handshake)
+            (
+                person.agent,
+                tile,
+                natural_peer,
+                memory_peer,
+                handshake,
+                false,
+            )
         })
         .collect();
     context.install_social_snapshot(rows)?;

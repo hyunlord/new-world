@@ -324,7 +324,7 @@ fn external_social_completion_allows_same_behaviour_to_start_a_new_chase() {
     let mut interaction = crate::runtime::social::SocialInteractionSystem::new();
     // The actual handshake tick seeds progress at zero; later ticks advance it.
     interaction.tick(&mut world, &mut resources);
-    for _ in 0..crate::runtime::agent_actions::needs::REQUIRED_INTERACTION_PROGRESS {
+    for _ in 0..crate::runtime::social::social_interaction_system::talk_ticks(&resources) {
         resources.current_tick += 1;
         interaction.tick(&mut world, &mut resources);
     }

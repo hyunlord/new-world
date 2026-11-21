@@ -1,13 +1,14 @@
 //! MoodSystem: moves each person's mood toward the target its modifiers set, notes the night's sleep and cold, and starts breakdowns.
 //!
 //! Priority: 172 (`MOOD_PRIORITY`). Interval: 60 ticks, offset 7. Gate: `ColonyRule::mood`.
-//! Reads: `Agent`, `Child`, `Life`, `AgentState`, `Position`, `Cold`, `Hunger`, `Thirst`, `Sick`, `Drafted`, `Temperament`, `Apparel`; `SimResources.colony` (rooms, story), `rules` (mood, calendar, clock offset)
+//! Reads: `Agent`, `Child`, `Life`, `AgentState`, `Position`, `Cold`, `Hunger`, `Thirst`, `Sick`, `Drafted`, `Temperament`, `Apparel`; `SimResources.colony` (rooms, story, buildings and housing), `rules` (mood, agent night rest, calendar, clock offset)
 //! Writes: `Mood` (inserted for adults and children of 10 years or more; value, nights, breakdown), `Job` (cancelled at a breakdown); `SimResources.colony` (reservations), `chronicle`
 //! Events: chronicle `Breakdown` (the three largest negative modifiers; cause table → the largest)
 //!
 //! M5 (ADR 0030). Each interval, in `AgentId` order: during the night window
-//! (the colony's sleep hours, 20:00–06:00) a sleeper in a roofed bedroom, a
-//! sleeper outside a roofed room and a cold person are noted for tonight; in
+//! (the colony's sleep hours, 20:00–06:00) a cold person is noted for tonight; from the night-rest
+//! start (21:00, SIMFIX1) a sleeper in a roofed bedroom or a `warmth: Roofed` Dwelling and a
+//! sleeper outside a roofed room are noted too; in
 //! the 8 o'clock hour tonight becomes last night (the system runs at minute 7). The target is `base` + Σ modifiers
 //! ([`modifiers`]; harm avoidance scales the negative ones ×(800 + ha/5) ‰,
 //! reward dependence the social ones), clamped to 0–1,000, and the value moves
@@ -761,6 +762,15 @@ impl RuntimeSystem for MoodSystem {
         // The run in the 8 o'clock hour (one a day; the system runs at minute 7 of each hour, D18).
         let morning = minute / 60 == 8;
         let is_night = night(res);
+        // SIMFIX1 (F3): where a person slept is sampled only from the night-rest start (21:00), so
+        // early-evening dozing on the way to bed no longer decides the night.
+        let sleep_hours = res.rules.agent.night_rest.map_or(is_night, |rest| {
+            crate::runtime::agent_actions::needs::minute_in_window(
+                minute,
+                rest.start_minute,
+                rest.end_minute,
+            )
+        });
         let day = today(res);
         let mut rows: Vec<(AgentId, Entity)> = world
             .query::<&Agent>()
@@ -783,9 +793,11 @@ impl RuntimeSystem for MoodSystem {
                     )
                 });
                 let pos = world.get::<&Position>(e).map(|p| (p.x, p.y)).ok();
-                if asleep {
+                if asleep && sleep_hours {
+                    // A roofed bedroom room, or a completed Dwelling whose data says `warmth: Roofed`.
                     let roofed_bed = pos.is_some_and(|p| {
                         crate::runtime::rooms::roofed_as(res, p, sim_core::rooms::RoomRole::Bedroom)
+                            || crate::runtime::housing::roofed_dwelling_at(res, p)
                     });
                     let roofed = pos.is_some_and(|p| crate::runtime::rooms::roofed(res, p));
                     if roofed_bed {

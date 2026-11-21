@@ -5,6 +5,9 @@
 //! Writes: `AgentState`, `Social`; `SimResources.interaction_progress`, `relationships` (familiarity), `causal_log`, `tallies`
 //! Events: `CausalEvent::SocialInteractionCompleted`; tally `social_completed`
 //!
+//! SIMFIX1 (colony only): a talk completes after `DaylifeRule::social.talk_ticks` progress ticks and
+//! pays `relief_total / talk_ticks` loneliness to both people on every progress tick, not all at completion.
+//!
 //! `SocialInteractionSystem` at priority 134 — the runtime tick of the
 //! Phase 7-β agent-to-agent interaction loop (V7 Phase 7-β / P7β-1).
 //!
@@ -79,6 +82,22 @@ use crate::runtime::agent_actions::needs::{
 /// completion-event push, familiarity bump, and state transition.
 type OrderedPairRow = (RelationshipKey, usize, usize, (u32, u32));
 
+/// SIMFIX1: the colony's paced talk (`DaylifeRule::social`), `None` in baseline worlds.
+fn paced_talk(resources: &SimResources) -> Option<sim_core::rules::daylife::SocialRule> {
+    resources
+        .rules
+        .colony
+        .and(sim_core::rules::DaylifeRule::get())
+        .map(|rule| rule.social)
+        .filter(|social| social.talk_ticks > 0)
+}
+
+/// Progress ticks a talk needs here: `social.talk_ticks` in the colony (SIMFIX1), else
+/// [`REQUIRED_INTERACTION_PROGRESS`].
+pub fn talk_ticks(resources: &SimResources) -> u32 {
+    paced_talk(resources).map_or(REQUIRED_INTERACTION_PROGRESS, |social| social.talk_ticks)
+}
+
 /// Phase 7-β social interaction runtime system. Stateless — all per-pair
 /// state lives in `SimResources::interaction_progress` and
 /// `SimResources::relationships`.
@@ -119,6 +138,13 @@ impl RuntimeSystem for SocialInteractionSystem {
             return;
         }
         let tick = resources.current_tick;
+        // SIMFIX1 (F1, colony only): a talk lasts `social.talk_ticks` and pays `social.relief_total`
+        // out evenly over them, so an interrupted talk keeps what it already paid. Baseline keeps
+        // the 3-tick talk with the whole relief at completion.
+        let paced = paced_talk(resources);
+        let required = talk_ticks(resources);
+        let relief_per_tick =
+            paced.map(|social| f64::from(social.relief_total) / f64::from(social.talk_ticks));
 
         // (a) Snapshot every agent currently in Consuming{Agent(partner_id)}.
         let mut consuming: Vec<ConsumingRow> = Vec::new();
@@ -263,7 +289,14 @@ impl RuntimeSystem for SocialInteractionSystem {
                     *v
                 }
             };
-            if post_value >= REQUIRED_INTERACTION_PROGRESS {
+            if let (Some(relief), true) = (relief_per_tick, post_value > 0) {
+                for entity in [consuming[a_idx].entity, consuming[b_idx].entity] {
+                    if let Ok(mut social) = world.get::<&mut Social>(entity) {
+                        social.loneliness = (social.loneliness - relief).max(0.0);
+                    }
+                }
+            }
+            if post_value >= required {
                 completion_outputs.push((
                     key,
                     position,
@@ -313,6 +346,9 @@ impl RuntimeSystem for SocialInteractionSystem {
             for entity in [*ent_a, *ent_b] {
                 if let Ok(mut state) = world.get::<&mut AgentState>(entity) {
                     *state = AgentState::Idle;
+                }
+                if relief_per_tick.is_some() {
+                    continue;
                 }
                 if let Ok(mut social) = world.get::<&mut Social>(entity) {
                     social.loneliness = (social.loneliness - SOCIAL_CONSUME_AMOUNT).max(0.0);

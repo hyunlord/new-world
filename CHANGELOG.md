@@ -1,5 +1,36 @@
 # Changelog
 
+## SIMFIX1 — day-life fixes from SIMAUDIT1 (2026-11-22)
+
+### Added
+
+- `data/colony/daylife.ron` (`sim_core::rules::DaylifeRule`, strict, embedded, not saved): job admission, hunt give-up,
+  talk pacing and peer search tunables (ADR 0082; rows in `docs/v8/BALANCE_DEBT.md`).
+- Mind nodes `accept_talk_invite_idle`, `accept_talk_invite_routine`, `prepare_drink`, `prepare_eat`,
+  `starving_to_hearth`; derived fact `social_invited`; locale keys `MIND_FACT_SOCIAL_INVITED`,
+  `MIND_FACT_HEARTH_AVAILABLE`, `MIND_BEHAVIOUR_STARVING_TO_HEARTH` (en, ko).
+- `jobs::assign::{admission_estimate, admission_horizon, horizon_for}`, `housing::{roofed_dwelling_at, template_roofed}`.
+- Harnesses `a_hut_is_a_roof_by_its_data_only` (data-only) and `harness_simfix1_daylife_invariants`
+  (`sim-test/tests/simfix1_daylife.rs`).
+
+### Changed
+
+- Colony behaviour (intended; colony identity digests change, baseline unchanged):
+  - sleeping in a usable `warmth: Roofed` Dwelling counts as a roofed bed; sleep is sampled from the night-rest start;
+  - no new job whose estimate ends after bedtime − slack or near the fatigue threshold; long jobs wait until hunger and
+    thirst last; idle workers top up at 30.0;
+  - talks: invitations read from the inviter's state, partners must stay free, untaken chases end after 30 ticks,
+    talks last 20 ticks with relief paid per tick, partners are sought in a 4 × 4-tile block and paired in id order,
+    and once a partner walks back the higher id waits for the lower one;
+  - `finish_social_need_*` no longer cut a chase chosen from social memory the tick after it starts (it looped);
+  - hunts end (`Stuck`) after 360 ticks or 90 ticks without closing in, then a 240-tick hunt pause;
+  - routine places exclude tiles movement refuses; the visible-action read shows an Activity through its last tick;
+  - a starving person without reachable food walks to the band hearth;
+  - the steward skips a hunt zone that already exists.
+- A continuing routine whose place left the place list keeps its own Activity place as target (previously an
+  invariant panic, `MissingTarget`).
+- Save format unchanged (26).
+
 ## INTEG1 — Style 2 on v8/main (2026-11-21)
 
 ### Added

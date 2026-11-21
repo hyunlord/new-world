@@ -1,0 +1,26 @@
+// SIMFIX1 day-life tunables (SIMAUDIT1 N2_PROPOSAL tickets SIMFIX1, SIMFIX2, WORK1, PURPOSE1 starving search).
+// Loaded by sim_core::rules::DaylifeRule::get() (embedded, parsed once; a unit test parses it strictly).
+// Starting values from N2_PROPOSAL; NOT calibrated (D-FEATURE-FIRST). Each row is listed in docs/v8/BALANCE_DEBT.md.
+// Not saved with a game: a world loaded from a save reads the values of the running build.
+(
+    schema_version: 1,
+    rule: (
+        job_admission: (
+            bedtime_slack_minutes: 20,    // a new job's estimate must end before the person's bedtime − slack
+            fatigue_headroom_tenths: 80,  // ... and keep fatigue 8.0 below the daytime sleep threshold
+            work_estimate_ticks: 30,      // work ticks added to the walk legs (Chebyshev × move interval)
+            provision_over_ticks: 180,    // longer jobs wait until hunger and thirst last to their end
+        ),
+        hunt: (
+            no_gain_ticks: 90,            // no closer to the prey for this long: the hunt ends (Stuck)
+            max_ticks: 360,               // a hunt ends after this long; also its estimate at admission
+            retry_after_ticks: 240,       // after giving up, no new hunt for this long
+        ),
+        social: (
+            relief_total: 30,             // = the former one-shot relief (unchanged total; paid per talk tick)
+            talk_ticks: 20,               // a talk lasts this many ticks (was 3)
+            stall_ticks: 30,              // a chase the partner has not taken up after this long ends
+            peer_cell: 4,                 // partners are sought in a 4 × 4-tile block (was the same tile)
+        ),
+    ),
+)

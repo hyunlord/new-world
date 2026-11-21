@@ -225,6 +225,7 @@ pub(in crate::runtime) fn owned_target(
     binding: LifecycleBinding,
     person: &PersonSnapshot,
     context: &TickContext,
+    resources: &SimResources,
     seek: Option<SeekTarget>,
 ) -> Option<ActionTarget> {
     match binding {
@@ -239,14 +240,20 @@ pub(in crate::runtime) fn owned_target(
                 tile: activity.place,
             }),
         LifecycleBinding::Social => match person.state.target() {
-            Some(TargetKind::Agent(peer)) => {
-                Some(context.row(peer).ok().map_or(ActionTarget::None, |other| {
-                    ActionTarget::Agent {
+            Some(TargetKind::Agent(peer)) => Some(
+                context
+                    .row(peer)
+                    .ok()
+                    .filter(|other| {
+                        crate::runtime::mind::facts::social_partner_open(person, other, resources)
+                    })
+                    .map_or(ActionTarget::None, |other| ActionTarget::Agent {
                         agent: peer,
-                        tile: (other.position.x, other.position.y),
-                    }
-                }))
-            }
+                        tile: crate::runtime::mind::facts::social_meeting_tile(
+                            person, other, resources,
+                        ),
+                    }),
+            ),
             _ => None,
         },
         LifecycleBinding::Idle => Some(ActionTarget::None),

@@ -1,4 +1,5 @@
-//! Cached routine places and deterministic candidate admission.
+//! Cached routine places and deterministic candidate admission. In the colony (SIMFIX1) a place must be
+//! passable and in the region reachable from the settlement home, as movement requires.
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 
 use sim_core::components::{ActivityKind, BuildingId, BuildingKind, SettlementId};
@@ -92,12 +93,23 @@ pub(super) fn collect(resources: &SimResources) -> Places {
                 };
             }
         }
+        // SIMFIX1 (F8): in the colony, a place movement would refuse (impassable, or outside the
+        // region reachable from the settlement's home) is no place; facts and starts both read this
+        // list, so a child no longer enters play and is turned back the next tick, over and over.
+        let nav = &resources.nav;
+        let walkable = resources.rules.colony.is_some() && nav.is_built();
+        let home_region = if walkable { nav.region_of(home) } else { 0 };
         let mut places: [Vec<Tile>; 7] = std::array::from_fn(|_| Vec::new());
         let (xs, ys) = scan_area(home, resources.tile_grid.width, resources.tile_grid.height);
         for y in ys {
             for x in xs.clone() {
                 let tile = (x, y);
                 if occupied.contains(&tile) || blocked(resources, x, y) {
+                    continue;
+                }
+                if walkable
+                    && (!nav.passable(tile) || home_region != 0 && !nav.reaches(home_region, tile))
+                {
                     continue;
                 }
                 let d = distance(tile, home);
@@ -122,6 +134,15 @@ pub(super) fn collect(resources: &SimResources) -> Places {
     result
 }
 
+/// The nav version [`collect`] depends on: the colony's built map only (baseline never reads nav).
+fn nav_version(resources: &SimResources) -> u64 {
+    if resources.rules.colony.is_some() && resources.nav.is_built() {
+        resources.nav.version
+    } else {
+        0
+    }
+}
+
 /// Pass 18: the inputs [`collect`] reads, to tell when a cached result is stale.
 #[derive(Debug, Default, PartialEq)]
 struct Inputs {
@@ -130,6 +151,8 @@ struct Inputs {
     registry: HashMap<BuildingId, Tile>,
     settlements: BTreeMap<SettlementId, (Tile, HashSet<BuildingId>)>,
     size: (u32, u32),
+    /// The colony nav map's version (SIMFIX1: places must be walkable; 0 outside the colony).
+    nav: u64,
     /// River/Mountain flags of each settlement's scan area (settlement id
     /// order, then scan order).
     blocked: Vec<bool>,
@@ -158,6 +181,7 @@ impl Inputs {
             registry: resources.building_registry.clone(),
             settlements,
             size,
+            nav: nav_version(resources),
             blocked: blocked_flags,
         }
     }
@@ -166,6 +190,7 @@ impl Inputs {
     fn matches(&self, resources: &SimResources) -> bool {
         let size = (resources.tile_grid.width, resources.tile_grid.height);
         if self.size != size
+            || self.nav != nav_version(resources)
             || self.kinds != resources.building_kinds
             || self.owner != resources.building_owner
             || self.registry != resources.building_registry

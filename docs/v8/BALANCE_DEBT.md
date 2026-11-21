@@ -546,3 +546,26 @@ r1(BASE `c1aeb3585`, 시드0–15×48일, 명령 없음)과 수정 뒤 확인 �
 | Residence | `residence_rule` (`yards.ron`, optional) | absent = Neolocal | Couples found their own household and claim a vacant house | Every single founder is a household, so steward house demand may build more houses than the old bed shortfall |
 | Exclusive beds | owned-house beds | owner household + houseless sub-households first; spare slots lodge the bedless (D-HOUSE1-1) | A house reads as one family's home without stranding beds | Lodgers mix unrelated people in a family's house; strict exclusivity cost three progression fixtures via outdoor raid deaths |
 | Steward demand | houseless households − vacant houses | max with the old bed shortfall | Build a house per houseless household | Wood draw on early seeds uncalibrated (paired smoke 2026-11-21 alive within −1 of BASE) |
+
+## SIMFIX1 day-life fixes
+
+Starting values from SIMAUDIT1's N2_PROPOSAL, in `rust/crates/sim-core/data/colony/daylife.ron` and `mind.ron`.
+Planner Q2 (2026-11-22): the loneliness ≥ 75 bar (≤ 25 % of samples) stays an acceptance bar because it follows from
+repairing the talk mechanic, not from tuning; its values are listed here as well.
+
+| Feature | Tunable | Current value | Intended effect | Suspected issue |
+|---|---|---|---|---|
+| Job admission | `bedtime_slack_minutes` | 20 | No new job whose estimate ends after bedtime − 20 min | The estimate is Chebyshev legs × move interval + a flat work allowance, not the job's real work ticks |
+| Job admission | `fatigue_headroom_tenths` | 80 | No new job that would bring fatigue within 8.0 of the daytime sleep threshold | Rarely binding at the current fatigue growth (0.03/tick) |
+| Job admission | `work_estimate_ticks` | 30 | Work allowance added to every non-hunt estimate | Long crafts and digs are under-estimated |
+| Provisioning | `provision_over_ticks` | 180 | Longer jobs wait until hunger and thirst last to their end | With hunts estimated at 360 ticks, thirst must be ≤ 21 at admission |
+| Provisioning | `prepare_drink` / `prepare_eat` level (`mind.ron`) | thirst/hunger ≥ 30.0 | Idle workers top up one meal's worth before taking long work | More short trips to water and food on some days |
+| Hunt | `no_gain_ticks` | 90 | A hunt that stops closing in ends cleanly (`Stuck`) | Fast prey on open ground may end hunts that would have succeeded |
+| Hunt | `max_ticks` | 360 | No hunt runs longer than 6 hours; also the hunt's admission estimate | Successful hunts took a median 256 ticks; some longer kills are lost |
+| Hunt | `retry_after_ticks` | 240 | After giving up, the hunter is not offered a hunt for 4 hours | Food pressure may need hunters back sooner |
+| Talk | `relief_total` | 30 | Same total relief per talk as before (paid per tick) | Two talks a day only match loneliness growth (0.04/tick ≈ 58/day) |
+| Talk | `talk_ticks` | 20 | Talks last long enough to be seen (was 3) | A longer talk is interrupted more often |
+| Talk | `stall_ticks` | 30 | A chase the partner does not take up ends after 30 ticks with the 480-tick retry cooldown | Partners just out of reach may be given up early |
+| Talk | `peer_cell` | 4 | Free people find a partner in their 4 × 4-tile block and pair off in id order (was: the same tile, everyone choosing the lowest id) | Block edges split people standing side by side |
+| Starving | `starving_to_hearth` hunger level (`mind.ron`) | hunger ≥ 90.0 | A starving person without food in reach goes to the band hearth | The hearth seats two (occupancy < 2); the rest stay idle for 30 ticks |
+| Starving | `eat_seed_when_starving` | not implemented (planner Q1: keep `false`) | Seed reserve kept for the field | Seed-5 style famines can still kill with seed in stock; owner may enable later |

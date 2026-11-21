@@ -477,6 +477,16 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
             ) {
                 return Vec::new();
             }
+            let zone_around = |t: (u32, u32)| {
+                (
+                    t.0.saturating_sub(*radius),
+                    t.1.saturating_sub(*radius),
+                    t.0.saturating_add(*radius).min(res.tile_grid.width - 1),
+                    t.1.saturating_add(*radius).min(res.tile_grid.height - 1),
+                )
+            };
+            // SIMFIX1 (F12): a deer that strayed from its home is unhuntable while its home zone exists;
+            // proposing that zone again is always rejected (873 re-issues in SIMAUDIT1), so skip it.
             let Some(target) = res
                 .colony
                 .wildlife
@@ -485,22 +495,13 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
                 .filter(|a| a.kind == *animal && a.hp > 0 && !res.colony.wildlife.huntable(a))
                 .map(|a| a.home.unwrap_or(a.pos))
                 .filter(|&t| permitted(res, t))
+                .filter(|&t| !res.colony.wildlife.zones.contains(&zone_around(t)))
                 .min_by_key(|&t| (distance(t, hearth), t.1, t.0))
             else {
                 return Vec::new();
             };
-            vec![Command::AddHuntZone {
-                x0: target.0.saturating_sub(*radius),
-                y0: target.1.saturating_sub(*radius),
-                x1: target
-                    .0
-                    .saturating_add(*radius)
-                    .min(res.tile_grid.width - 1),
-                y1: target
-                    .1
-                    .saturating_add(*radius)
-                    .min(res.tile_grid.height - 1),
-            }]
+            let (x0, y0, x1, y1) = zone_around(target);
+            vec![Command::AddHuntZone { x0, y0, x1, y1 }]
         }
         Action::Teach => teach(world, res),
     }

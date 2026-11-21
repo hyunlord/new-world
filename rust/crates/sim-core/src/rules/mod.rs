@@ -5,6 +5,7 @@ mod baseline;
 mod calendar;
 mod colony;
 pub mod data;
+pub mod daylife;
 mod knowledge;
 mod mood;
 mod neighbours;
@@ -13,6 +14,7 @@ mod story;
 mod wildlife;
 pub use calendar::CalendarRule;
 pub use colony::{ColonyRule, EconomyRule, SpaceRule};
+pub use daylife::DaylifeRule;
 pub use knowledge::KnowledgeRule;
 pub use mood::MoodRule;
 pub use neighbours::{

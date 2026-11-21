@@ -523,7 +523,7 @@ impl FoodIndex {
     }
 }
 
-const DERIVED_SLOT_COUNT: usize = 16;
+const DERIVED_SLOT_COUNT: usize = 17;
 
 fn derived_slot(name: &str) -> Option<usize> {
     match name {
@@ -543,6 +543,7 @@ fn derived_slot(name: &str) -> Option<usize> {
         "routine_explore_available" => Some(13),
         "routine_play_available" => Some(14),
         "routine_sit_by_fire_available" => Some(15),
+        "social_invited" => Some(16),
         _ => None,
     }
 }
@@ -572,7 +573,15 @@ fn target_slot(name: &str) -> Option<usize> {
     }
 }
 
-pub(super) type SocialSnapshotRow = (AgentId, (u32, u32), Option<AgentId>, Option<AgentId>, bool);
+/// (person, the peers' tile, natural peer, memory peer, handshake, invited by the natural peer).
+pub(super) type SocialSnapshotRow = (
+    AgentId,
+    (u32, u32),
+    Option<AgentId>,
+    Option<AgentId>,
+    bool,
+    bool,
+);
 
 // Sorting indices avoids repeatedly moving the full factual payload through quicksort.
 fn order_person_rows(rows: &mut [PersonSnapshot]) -> Result<(), ContextError> {
@@ -1586,8 +1595,9 @@ impl TickContext {
             "social_candidate",
             "social_memory_candidate",
             "social_handshake",
+            "social_invited",
         ];
-        let mut derived = [0; 3];
+        let mut derived = [0; 4];
         for (index, name) in names.into_iter().enumerate() {
             derived[index] = derived_slot(name).ok_or_else(|| ContextError::MissingDerived {
                 agent: 0,
@@ -1612,12 +1622,15 @@ impl TickContext {
                 name: "social_cohort".into(),
             });
         }
-        for (index, (agent, tile, natural, memory, handshake)) in rows.into_iter().enumerate() {
+        for (index, (agent, tile, natural, memory, handshake, invited)) in
+            rows.into_iter().enumerate()
+        {
             self.row_at(index, agent)?;
             for (slot, value) in derived.into_iter().zip([
                 i64::from(natural.is_some()),
                 i64::from(memory.is_some()),
                 i64::from(handshake),
+                i64::from(invited),
             ]) {
                 self.derived_slots[slot][index] = Some(Versioned {
                     value,

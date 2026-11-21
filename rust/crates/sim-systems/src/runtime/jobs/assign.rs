@@ -27,6 +27,9 @@
 //! are given first (`teach::assign`), after open orders are tidied.
 //! A worker leaving leisure keeps its `Activity` component for one tick:
 //! the routine's own cleanup at 125 records it as interrupted.
+//! SIMFIX1 (ADR 0082): a job is admitted only when its estimate ([`admission_estimate`]) ends before the
+//! person's bedtime − slack ([`admission_horizon`]), keeps fatigue below the sleep threshold − headroom and,
+//! for a long job, keeps hunger and thirst below their seek thresholds (`data/colony/daylife.ron`).
 use hecs::{Entity, World};
 use sim_core::colony::knowledge::KnowledgeMask;
 use sim_core::colony::{
@@ -1815,6 +1818,10 @@ impl RuntimeSystem for JobAssignSystem {
                         .map_or(pos, |a| a.pos),
                     _ => kind.source(),
                 };
+                // SIMFIX1 (F4) / WORK1: no new job that cannot end before bedtime or would outlast a need.
+                if !admits(world, resources, entity, pos, fetch, target, kind) {
+                    continue;
+                }
                 let job = Job {
                     kind,
                     stage: JobStage::ToSource,
@@ -1882,6 +1889,118 @@ impl RuntimeSystem for JobAssignSystem {
             }
         }
     }
+}
+
+/// SIMFIX1 (F4) and WORK1: a new job's duration estimate in ticks: the Chebyshev walk legs (to the
+/// tool stop, the source and the destination) × the move interval plus `job_admission.work_estimate_ticks`;
+/// a hunt's is `hunt.max_ticks` (its give-up bound). Pure: no draw and no path search. `None` without the
+/// day-life data.
+pub fn admission_estimate(
+    res: &SimResources,
+    pos: (u32, u32),
+    fetch: Option<(u32, u32)>,
+    target: (u32, u32),
+    kind: JobKind,
+) -> Option<u64> {
+    let rule = sim_core::rules::DaylifeRule::get()?;
+    if matches!(kind, JobKind::Hunt { .. }) {
+        return Some(rule.hunt.max_ticks);
+    }
+    let stop = fetch.unwrap_or(pos);
+    let tiles = chebyshev(pos, stop)
+        + chebyshev(stop, target)
+        + kind.dest().map_or(0, |dest| chebyshev(target, dest));
+    Some(
+        u64::from(tiles) * res.rules.agent.move_interval_ticks.max(1)
+            + u64::from(rule.job_admission.work_estimate_ticks),
+    )
+}
+
+/// SIMFIX1 (F4): the minute of day by which a job taken now must end — the person's bedtime (the
+/// night-rest start shifted by temperament) − `bedtime_slack_minutes` — and the minute night rest ends.
+/// `None` without night rest or the day-life data.
+pub fn admission_horizon(world: &World, res: &SimResources, entity: Entity) -> Option<(u64, u64)> {
+    let temperament = world.get::<&sim_core::components::Temperament>(entity).ok();
+    horizon_for(res, temperament.as_deref())
+}
+
+/// [`admission_horizon`] for a person of `temperament` (`None`: the night-rest start itself).
+pub fn horizon_for(
+    res: &SimResources,
+    temperament: Option<&sim_core::components::Temperament>,
+) -> Option<(u64, u64)> {
+    let slack = sim_core::rules::DaylifeRule::get()?
+        .job_admission
+        .bedtime_slack_minutes;
+    let rest = res.rules.agent.night_rest?;
+    let bedtime = match (res.rules.agent.temperament, temperament) {
+        (Some(lean), Some(t)) => lean.bedtime(rest.start_minute, t),
+        _ => rest.start_minute,
+    };
+    Some((
+        u64::from(bedtime.saturating_sub(slack)),
+        u64::from(rest.end_minute),
+    ))
+}
+
+/// SIMFIX1 (F4) and WORK1 (provisioning): whether a new job fits the person's day. Its
+/// [`admission_estimate`] must end, in daytime, by the [`admission_horizon`] and keep fatigue below the
+/// daytime sleep threshold − `fatigue_headroom_tenths`; a job longer than `provision_over_ticks` must also
+/// keep hunger and thirst below their seek thresholds to its end (the `prepare_*` mind nodes top them up).
+fn admits(
+    world: &World,
+    res: &SimResources,
+    entity: Entity,
+    pos: (u32, u32),
+    fetch: Option<(u32, u32)>,
+    target: (u32, u32),
+    kind: JobKind,
+) -> bool {
+    use crate::runtime::agent_actions::needs as n;
+    let (Some(rule), Some(estimate)) = (
+        sim_core::rules::DaylifeRule::get(),
+        admission_estimate(res, pos, fetch, target, kind),
+    ) else {
+        return true;
+    };
+    let a = rule.job_admission;
+    if let (Some((horizon, night_end)), true) = (
+        admission_horizon(world, res, entity),
+        res.ticks_per_day != 0,
+    ) {
+        let minute = res
+            .current_tick
+            .saturating_add(res.rules.clock_offset_ticks)
+            % res.ticks_per_day;
+        // Daytime only; at night the sleep need already withholds work.
+        if minute >= night_end && minute.saturating_add(estimate) > horizon {
+            return false;
+        }
+    }
+    // Need values in tenths at the estimate's end (the components' growth is per tick).
+    let tenths_at_end = |value: f64, growth: f64| (value + growth * estimate as f64) * 10.0;
+    let fatigue_limit = n::FATIGUE_THRESHOLD * 10.0 - f64::from(a.fatigue_headroom_tenths);
+    if world
+        .get::<&sim_core::components::Sleep>(entity)
+        .is_ok_and(|s| tenths_at_end(s.fatigue, s.growth_rate) >= fatigue_limit)
+    {
+        return false;
+    }
+    if estimate > u64::from(a.provision_over_ticks) {
+        let hungry = world
+            .get::<&sim_core::components::Hunger>(entity)
+            .is_ok_and(|h| {
+                tenths_at_end(f64::from(h.value), f64::from(h.growth_rate))
+                    >= f64::from(n::HUNGER_THRESHOLD) * 10.0
+            });
+        let thirsty = world
+            .get::<&sim_core::components::Thirst>(entity)
+            .is_ok_and(|t| tenths_at_end(t.value, t.growth_rate) >= n::THIRST_THRESHOLD * 10.0);
+        if hungry || thirsty {
+            return false;
+        }
+    }
+    true
 }
 
 /// Whether `id` is in a fight (`SimResources.combat_pairs`): no new job then.
