@@ -1,13 +1,14 @@
 # vat3d.gd — vertex-animation crowds for the 3D view (people and animals, M3D-1 scope 6).
 # Purpose: loads a character's VAT built by tools/3d/blender/{people,animals}.py — assets/3d/vat/<id>_static.glb (rest
-#   mesh, faces split, UV2.x = the unsplit vertex's column, COLOR_0 = tint region) and <id>_vat.bin/.json (float16
+#   mesh, faces split, UV2.x = the unsplit vertex's column, COLOR_0 = tint region) and the VAT metadata and payload
+#   (<id>_vat.json and either a single .bin or numbered .0.bin, .1.bin, … parts; float16
 #   RGBA rows, one row of positions per frame; flat normals are derived in the shader) — into an RGBAH ImageTexture
 #   read raw with FileAccess (no import), and rebuilds the mesh so the region code sits in UV2.y and the vertex colour is gone (the MultiMesh
 #   instance colour then carries the first tint). A `textured` character (set B: json `textured`, `atlas`) keeps its atlas
 #   UVs in UV; loaded with `tint_atlas` its regions come from the atlas colour under each vertex (dark → hair 2,
 #   yellow/olive → clothing 3, else skin 1) and the shader rescales the painted colours toward the person's tints
 #   (painted colours kept: skin value only, small clothing hue/value shift, hair blend; params3d `people.tint`), so painted detail stays and appearance still varies. `material()` is a ShaderMaterial on shaders/world3d/vat.gdshader;
-#   per instance: COLOR.rgb = region-1 tint, INSTANCE_CUSTOM = (clip start × 256 + clip count, phase seconds,
+#   per instance: COLOR.rgb = region-1 tint, INSTANCE_CUSTOM = (signed clip pack, phase seconds,
 #   region-2 colour, region-3 colour) with colours packed as r·65536 + g·256 + b (exact in a float).
 # Bridge methods called: none.
 extends RefCounted
@@ -38,18 +39,28 @@ static func load_character(character: String, tint_atlas: bool = false) -> RefCo
 
 func _load(character: String, tint_atlas: bool = false) -> void:
 	id = character
-	var json_path: String = DIR.path_join(character + "_vat.json")
-	var bin_path: String = DIR.path_join(character + "_vat.bin")
+	var vat_path: String = DIR.path_join(character + "_vat")
+	var json_path: String = vat_path + ".json"
 	var glb_path: String = DIR.path_join(character + "_static.glb")
-	if not FileAccess.file_exists(json_path) or not FileAccess.file_exists(bin_path) or not ResourceLoader.exists(glb_path):
+	if not FileAccess.file_exists(json_path) or not ResourceLoader.exists(glb_path):
 		return
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(json_path))
 	if parsed is not Dictionary:
 		return
 	meta = parsed
+	var parts: int = int(meta.get("vat_parts", 0))
+	var first_path: String = vat_path + (".0.bin" if parts > 0 else ".bin")
+	if not FileAccess.file_exists(first_path):
+		return
 	var width: int = int(meta.get("width", 0))
 	var rows: int = int(meta.get("frames", 0))
-	var bytes: PackedByteArray = FileAccess.get_file_as_bytes(bin_path)
+	var bytes: PackedByteArray = FileAccess.get_file_as_bytes(first_path)
+	for part: int in range(1, parts):
+		var part_path: String = vat_path + ".%d.bin" % part
+		if not FileAccess.file_exists(part_path):
+			push_error("vat3d: %s missing part %d" % [character, part])
+			return
+		bytes.append_array(FileAccess.get_file_as_bytes(part_path))
 	if width <= 0 or rows <= 0 or bytes.size() != width * rows * 8:
 		push_error("vat3d: %s size mismatch" % character)
 		return
@@ -234,19 +245,64 @@ func _set_anim(mat: ShaderMaterial) -> void:
 	mat.set_shader_parameter("fps", float(meta.get("fps", 15)))
 
 
-## The packed instance custom value for clip `clip` (falls back to the first clip).
-func clip_pack(clip: String) -> float:
+## Start × 256 + count (falls back to the first clip). The near action player opts into negative one-shot packs.
+## Older consumers, including wildlife, use their existing loop playback.
+func clip_pack(clip: String, one_shots: bool = false) -> float:
 	var clips: Dictionary = meta.get("clips", {})
 	var row: Variant = clips.get(clip)
 	if row is not Dictionary:
 		if clips.is_empty():
 			return 1.0
 		row = clips[clips.keys()[0]]
-	return float(int((row as Dictionary).get("start", 0)) * 256 + maxi(1, int((row as Dictionary).get("count", 1))))
+	var info: Dictionary = row
+	var packed: float = float(int(info.get("start", 0)) * 256 + maxi(1, int(info.get("count", 1))))
+	return -packed if one_shots and not bool(info.get("loop", true)) else packed
 
 
 func has_clip(clip: String) -> bool:
 	return (meta.get("clips", {}) as Dictionary).has(clip)
+
+
+func clip_duration(clip: String) -> float:
+	var row: Dictionary = (meta.get("clips", {}) as Dictionary).get(clip, {})
+	return float(row.get("duration", 0.0))
+
+
+func clip_stride_m(clip: String) -> float:
+	var row: Dictionary = (meta.get("clips", {}) as Dictionary).get(clip, {})
+	return float(row.get("stride_m", 0.0))
+
+
+func prop_name(clip: String) -> String:
+	var track: Dictionary = (meta.get("props", {}) as Dictionary).get(clip, {})
+	return str(track.get("mesh", ""))
+
+
+func fixture_name(clip: String) -> String:
+	return str((meta.get("fixtures", {}) as Dictionary).get(clip, ""))
+
+
+## Local prop transform at the same animation time as the VAT. Attachment switches on its authored sample.
+func prop_pose(clip: String, seconds: float) -> Dictionary:
+	var track: Dictionary = (meta.get("props", {}) as Dictionary).get(clip, {})
+	var frames: Array = track.get("frames", [])
+	if frames.is_empty():
+		return {}
+	var row: Dictionary = (meta.get("clips", {}) as Dictionary).get(clip, {})
+	var loops: bool = bool(row.get("loop", true))
+	var frame: float = seconds * float(meta.get("fps", 15))
+	var last: int = frames.size() - 1
+	frame = fposmod(frame, float(frames.size())) if loops else clampf(frame, 0.0, float(last))
+	var lo: int = floori(frame)
+	var hi: int = lo + 1 if lo < last else (0 if loops else last)
+	var a: Array = frames[lo]
+	var b: Array = frames[hi]
+	var weight: float = frame - float(lo)
+	var from: Vector3 = Vector3(float(a[0]), float(a[1]), float(a[2]))
+	var to: Vector3 = Vector3(float(b[0]), float(b[1]), float(b[2]))
+	var qa: Quaternion = Quaternion(float(a[3]), float(a[4]), float(a[5]), float(a[6])).normalized()
+	var qb: Quaternion = Quaternion(float(b[3]), float(b[4]), float(b[5]), float(b[6])).normalized()
+	return {"transform": Transform3D(Basis(qa.slerp(qb, weight)), from.lerp(to, weight)), "attached": a.size() < 8 or bool(a[7])}
 
 
 static func pack(c: Color) -> float:

@@ -940,6 +940,11 @@ the `scripts/world/view_projection.gd` provider for screen ↔ world conversion.
 `assets/3d/bindings3d.json`, models and VAT from `tools/3d/blender/build_all.py`.
 Material detail uses `assets/3d/textures3d.json` and `scripts/world3d/textures3d.gd`: shared padded albedo/normal atlases in `assets/3d/textures/`, sampled by existing terrain, wall, roof and static-model materials. Original tints and surface counts remain; the crowd/VAT material path is unchanged. See [ADR0068](decisions/0068-generated-material-texture-atlas.md).
 
+Style 2 selects 30 Hz motion capture for the near villager tier. `mocap3d.gd`
+reads the presentation state and draws baked grips and fixtures on the near VAT
+clock. Mid and far tiers use the existing loops. The RON build and its physical
+checks are documented in [ADR0077](decisions/0077-style-2-motion-capture.md).
+
 Style 2 joins roofed template site rows to the cached rotated placement plan.
 `house_shell3d.gd` builds thatched gables, compact round roofs and intersecting
 planar hips. `structures3d.gd` uses the same shell during construction and

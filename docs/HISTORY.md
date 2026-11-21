@@ -1,5 +1,6 @@
 # WorldSim 역사
 
+- 2026-11-21 — MOCAP1에서 공개 CMU 동작 12종을 주민 네 체형에 맞췄다. 스타일 2 근거리에 도구와 접촉을 맞춘 30 Hz 동작을 적용했다. 종전 주택 화면 모음은 Git 이력 `71ea70ae:docs/images/s2house_contact_sheet.png`에 보존한다. [결정](decisions/0077-style-2-motion-capture.md)
 - 2026-11-20 — S2HOUSE2에서 평면과 공사 형태를 맞추고 이엉, 지붕 골선, 흙바닥 단면과 오후광을 다듬었다([ADR0076](decisions/0076-style-2-house-shapes-and-light.md)). S2HOUSE에서 템플릿 단위의 지붕과 공사 연출을 추가하고 눌린 풀과 오후광을 다듬었다([ADR0075](decisions/0075-style-2-house-shells.md)). S2ENV에서 스타일 2의 초지와 관목, 낮 조명을 보강하고 주민 4종의 무릎·발목 굽힘을 보정했다([ADR0074](decisions/0074-style-2-environment.md)).
 - 2026-11-20 — S2KIT에서 절제된 사실풍의 주민·건축·소품을 보강했다. 비교 대상은 ANCHOR2의 120일차 마을이다([ADR0073](decisions/0073-style-2-model-kit.md)).
 - 2026-11-19 — Slice 1에서 절제된 사실풍 앵커를 추가했다. 주민의 새 보행, 원거리 나무 카드, 기존 지붕 단면 보존을 로컬에서 검토한다([ADR0072](decisions/0072-style-2-anchor.md)).
@@ -22,7 +23,6 @@
 - 2026-11-05 — M6b Stage1 게시 후보 `a0ec36d1`: 농경·물리적 씨앗·토양, 생산 제한과 기존 땔감 주문 실행, 명시적 가르침을 구현. 보정26·일반 안전성34/34·BASE 동일성22차(228748값 차이0)·고정 카드 검사는 PASS; held-out·최종 gate·게시는 미완료이며 밭 아트는 [#687](https://github.com/hyunlord/new-world/issues/687)에 이월. [보고서](v8/m6b/M6B_REPORT.md), [ADR0058](decisions/0058-physical-cultivation-and-bounded-stewardship.md).
 - 2026-11-04 — M6b Stage0 중단·미게시(D-S0-1..4). 추가 도구408파일88,383줄을2파일696줄로 축소하고 게시된 M-LOOP/M-READ gate로 복귀했다. 상대 KnowledgeLost·생존 계약29테스트 PASS, 전체 generic gate/고의결함 증명 미완료는 [#685](https://github.com/hyunlord/new-world/issues/685)에 이월. Stage1 농경·#684로 전환하며 원래 실패와 raw는 보존한다.
 - 2026-10-30 — M6a R1: owner11:20KST의2회 수리 보정 후 동결. P26 `9b6644579` 전체42/48 PASS·25/30/39/40/41/45FAIL; soak기아·KnowledgeLost0이나 신선부패3/32·성능4항목·거래0·가시성16/60·빈토스트·stall캡처오류가 남음. waiver미사용·미게시·#670–673OPEN, P27문서전용NOT_FULL_GATED. [보고서](v8/m6a/M6A_REPORT.md).
-
 - 2026-10-30 — M6a 최종 P12 `a9ae9c87`: 전체 게이트2 44/48 PASS·26/39/41/45 FAIL, timeout/signal 없이 exit1. BASE 결정적64파일 동일·새 성능33쌍 PASS이나 수용2개 막대·soak·가시성52/60·stall52.056ms FAIL 유지, NO waiver·미게시·#670–673 OPEN. 후속 P13은 문서 전용 NOT_FULL_GATED; 목표 미완료. [보고서](v8/m6a/M6A_REPORT.md).
 
 - 2026-10-30 — M6a P12: P11 `3191890c` 전체 게이트1 43/48 PASS·5 FAIL을 보존한다. 자식 환경 격리·새 successor proof의 도구4개 수정 후 집중40·전체 Python473 PASS; 제품·정책·보정4/4 동결 유지. 유효 soak #672·가시성 #673 OPEN, 52.771ms stall은 NO M6a waiver. 새 proof·BASE-only 코호트·게이트2 NOT_RUN·미게시. [결정](v8/m6a/M6A_DECISIONS.md).

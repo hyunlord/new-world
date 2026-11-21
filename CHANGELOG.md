@@ -1,5 +1,12 @@
 # Changelog
 
+## Style 2 villager motion capture — 2026-11-21
+
+### Added
+
+- Style 2 near villagers use 30 Hz motion capture for work, rest, gestures and two-handed carry. Transfers play once, with tools and fixtures aligned to baked grips.
+- RON action specs retarget and reuse licensed CMU takes across four bodies, with nine physical checks and a portable skeleton export. See `docs/decisions/0077-style-2-motion-capture.md`.
+
 ## Style 2 houses and daylight — 2026-11-20
 
 ### Changed
