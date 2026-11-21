@@ -27,6 +27,8 @@ tiers use their existing 15 Hz VATs. Walk and loaded carry advance with
 world distance. The near player clamps transfer clips at their terminal
 pose and samples tool transforms on the same clock as the corresponding
 VAT. Grounded baskets remain at their baked anchor through the transfer.
+Write near poses and props only for bins inside the near tier's range.
+Seed their current poses on entry and advance transfer timers across tiers.
 
 The branch derives presentation from read-only agent, activity and
 workshop snapshots. It starts transfer clips on stock-job cargo edges and

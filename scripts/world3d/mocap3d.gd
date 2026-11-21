@@ -122,19 +122,18 @@ func _mesh(asset: String) -> Mesh:
 	return mesh
 
 
-func select(aid: int, vat: RefCounted, clip: String, phase: float, xf: Transform3D, bin: MultiMeshInstance3D) -> void:
+func select(aid: int, vat: RefCounted, clip: String, phase: float, xf: Transform3D) -> void:
 	if _actors.has(aid) and _actors[aid]["clip"] == clip and _actors[aid]["vat"] == vat:
 		var row: Dictionary = _actors[aid]
 		row["phase"] = phase
 		row["xf"] = xf
-		row["bin"] = bin
 		return
 	release(aid)
 	var grip: String = str(vat.call("prop_name", clip))
 	var fixture: String = str(vat.call("fixture_name", clip))
 	if grip.is_empty() and fixture.is_empty():
 		return
-	_actors[aid] = {"vat": vat, "clip": clip, "phase": phase, "xf": xf, "bin": bin,
+	_actors[aid] = {"vat": vat, "clip": clip, "phase": phase, "xf": xf,
 		"grip": "grip_" + grip if not grip.is_empty() else "", "fixture": fixture,
 		"grip_node": null, "fixture_node": null}
 
@@ -159,22 +158,11 @@ func reset() -> void:
 		release(aid)
 
 
-func draw(host: Node3D, clock: float, camera: Camera3D) -> void:
-	if camera == null:
-		return
-	var eye: Vector3 = camera.global_position
+func draw(host: Node3D, clock: float) -> void:
 	for row: Dictionary in _actors.values():
-		var bin: MultiMeshInstance3D = row["bin"]
-		var centre: Vector3 = bin.to_global(bin.multimesh.custom_aabb.get_center())
 		var xf: Transform3D = row["xf"]
-		var near_at: float = bin.visibility_range_end
-		var visible: bool = eye.distance_squared_to(centre) < near_at * near_at
 		for key: String in ["grip", "fixture"]:
 			var node: MeshInstance3D = row[key + "_node"]
-			if not visible:
-				if node != null:
-					node.hide()
-				continue
 			var asset: String = row[key]
 			if asset.is_empty():
 				continue

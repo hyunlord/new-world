@@ -173,6 +173,8 @@ func _process(delta: float) -> void:
 		for aid: int in _state:
 			_active[aid] = true
 	var clock: float = float(get_parent().get("anim_time")) if _mocap != null else 0.0
+	if _mocap != null:
+		_sync_mocap_bins(get_viewport().get_camera_3d())
 	for aid: int in _active.keys():
 		if not _state.has(aid):
 			_active.erase(aid)
@@ -191,6 +193,7 @@ func _process(delta: float) -> void:
 		var cap: int = _cap(mm, copies)
 		var slot: int = int(crowd["slot"][aid])
 		var has_mocap: bool = bool(crowd["mocap"])
+		var near_live: bool = has_mocap and bool(crowd["mocap_near"])
 		if moving or bool(st["dirty"]):
 			var p: Vector2 = _pos(m)
 			var yaw: float = float(m["yaw"])
@@ -211,24 +214,25 @@ func _process(delta: float) -> void:
 			var feet: Vector3 = Vector3(p.x, y, p.y)
 			var near_feet: Vector3 = feet
 			var near_basis: Basis = basis
-			if has_mocap and not advancing and st["perform"] == "talk":
+			if near_live and not advancing and st["perform"] == "talk":
 				var spread: Vector2 = m.get("spread", Vector2.ZERO)
 				if not spread.is_zero_approx():
 					near_basis = Basis(Vector3.UP, atan2(-spread.x, -spread.y)).scaled(Vector3(scale, scale, scale))
-			elif has_mocap and not advancing and st["perform"] == "cook":
+			elif near_live and not advancing and st["perform"] == "cook":
 				near_basis = Basis(Vector3.UP, PI).scaled(Vector3(scale, scale, scale))
 				var tile: Vector2 = Vector2(m["tile"]) + Vector2(0.5, 0.5)
 				var reach: Vector3 = near_basis * _mocap.fixture_offset("fixture_cook")
 				p = tile - Vector2(reach.x, reach.z)
 				near_feet = Vector3(p.x, float(_terrain.call("height_at", p.x, p.y)), p.y)
 			st["feet"] = feet
-			if has_mocap:
+			if near_live:
 				st["near_xf"] = Transform3D(near_basis, near_feet)
 			st["draw_yaw"] = yaw
 			st["h"] = height * scale
 			for c: int in copies:
 				var off: Vector3 = Vector3(float((c * 7) % 5) - 2.0, 0.0, float((c * 3) % 5) - 2.0) * 0.6 if c > 0 else Vector3.ZERO
-				mm.set_instance_transform(cap * c + slot, Transform3D(near_basis, near_feet + off))
+				if not has_mocap or near_live:
+					mm.set_instance_transform(cap * c + slot, Transform3D(near_basis, near_feet + off))
 				if mid != null:
 					mid.set_instance_transform(cap * c + slot, Transform3D(basis, feet + off))
 				if lm != null:
@@ -240,7 +244,7 @@ func _process(delta: float) -> void:
 		var painted: bool = bool(crowd["painted"])
 		var gait: bool = painted and clip_name == "walk"
 		var distance: float = 0.0
-		if gait or (has_mocap and clip_name == "carry"):
+		if gait or (near_live and clip_name == "carry"):
 			distance = float(m.get("gait_distance", 0.0)) + (m["from"] as Vector2).distance_to(_pos(m))
 		if clip != float(st["clip"]) or bool(st["dirty"]) or gait:
 			st["clip"] = clip
@@ -262,14 +266,14 @@ func _process(delta: float) -> void:
 				if lm != null:
 					lm.set_instance_color(cap * c + slot, skin)
 					lm.set_instance_custom_data(cap * c + slot, custom)
-		if has_mocap:
-			_write_near(aid, st, clip_name, advancing, clock, distance, crowd["mmi"], cap, slot, copies)
+		if near_live or (has_mocap and not str(st["cue"]).is_empty()):
+			_write_near(aid, st, clip_name, advancing, clock, distance, mm, cap, slot, copies, near_live)
 		st["dirty"] = false
 		# Done once it stands still, or the clock is stopped (a paused mid-step figure is drawn as it is).
 		if (float(m["t"]) >= 1.0 or not running) and (not has_mocap or str(st["cue"]).is_empty()):
 			_active.erase(aid)
 	if _mocap != null:
-		_mocap.draw(self, clock, get_viewport().get_camera_3d())
+		_mocap.draw(self, clock)
 	var chosen: Dictionary = _state.get(_aid_of.get(selected, -1), {}) if selected != -1 else {}
 	if not chosen.is_empty():
 		_ring.visible = true
@@ -277,8 +281,29 @@ func _process(delta: float) -> void:
 	_update_highlights()
 
 
+func _sync_mocap_bins(camera: Camera3D) -> void:
+	var eye: Vector3 = camera.global_position if camera != null else Vector3.ZERO
+	for crowd: Dictionary in _crowds.values():
+		if not bool(crowd["mocap"]):
+			continue
+		var bin: MultiMeshInstance3D = crowd["mmi"]
+		var centre: Vector3 = bin.to_global(bin.multimesh.custom_aabb.get_center())
+		var limit: float = bin.visibility_range_end
+		var visible_near: bool = camera != null and eye.distance_squared_to(centre) < limit * limit
+		if visible_near == bool(crowd["mocap_near"]):
+			continue
+		crowd["mocap_near"] = visible_near
+		for aid: int in crowd["slot"]:
+			if visible_near:
+				# The near slot needs its current pose when the camera crosses the LOD boundary.
+				_state[aid]["dirty"] = true
+				_active[aid] = true
+			else:
+				_mocap.release(aid)
+
+
 func _write_near(aid: int, st: Dictionary, fallback: String, moving: bool, clock: float, distance: float,
-		bin: MultiMeshInstance3D, cap: int, slot: int, copies: int) -> void:
+		mm: MultiMesh, cap: int, slot: int, copies: int, visible_near: bool) -> void:
 	var vat: RefCounted = _models[st["model"]]["vat"]
 	var clip: String = fallback
 	var phase: float = float(aid % 97) * 0.173
@@ -302,6 +327,9 @@ func _write_near(aid: int, st: Dictionary, fallback: String, moving: bool, clock
 				phase = -started
 			else:
 				st["cue"] = ""
+	# Let a transfer expire at any tier, even when its mesh and prop are out of range.
+	if not visible_near:
+		return
 	if distance_gait:
 		phase = distance / float(st["scale"]) - clock
 	elif carry and clip == "carry":
@@ -314,13 +342,13 @@ func _write_near(aid: int, st: Dictionary, fallback: String, moving: bool, clock
 		var skin: Color = look["skin"]
 		skin.a = fposmod(float(aid) * 0.618034, 1.0)
 		var custom: Color = Color(pack, phase, float(look["hair_p"]), float(look["cloth_p"]))
-		var mm: MultiMesh = bin.multimesh
 		for c: int in copies:
-			mm.set_instance_color(cap * c + slot, skin)
+			if bool(st["dirty"]):
+				mm.set_instance_color(cap * c + slot, skin)
 			mm.set_instance_custom_data(cap * c + slot, custom)
 		st["near_clip"] = clip
 		st["near_phase"] = phase
-		_mocap.select(aid, vat, clip, phase, st["near_xf"], bin)
+	_mocap.select(aid, vat, clip, phase, st["near_xf"])
 
 
 ## One ring per highlighted person present, slightly wider than the selection ring.
@@ -461,7 +489,7 @@ func _bin(model: String, tile: Vector2i) -> String:
 	blob.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	blob.visibility_range_end = lod_at
 	_crowds[key] = {"model": model, "chunk": chunk, "mmi": mmi, "mid": mid, "lod": lod, "blob": blob,
-		"painted": row["painted"], "mocap": row["mocap"], "slot": {}, "free": []}
+		"painted": row["painted"], "mocap": row["mocap"], "mocap_near": false, "slot": {}, "free": []}
 	return key
 
 
