@@ -119,6 +119,14 @@ def test_existing_specs_need_no_layer_or_arm_limits(tmp_path: Path) -> None:
     assert spec.arm_limits == {}
 
 
+def test_stance_offsets_only_apply_to_locked_foot_anchors(tmp_path: Path) -> None:
+    offsets = {"L": [0.05, 0.12], "R": [-0.05, 0.15]}
+    assert action(tmp_path, {"stance_offsets": offsets}).stance_offsets == {
+        "L": (0.05, 0.12), "R": (-0.05, 0.15)}
+    with pytest.raises(M.SpecError, match="stance_offsets requires foot_lock"):
+        action(tmp_path, {"foot_lock": False, "stance_offsets": offsets})
+
+
 def test_loads_output_timing_independently_of_source_trim(tmp_path: Path) -> None:
     spec = action(tmp_path, {
         "duration": 1.35,
@@ -156,9 +164,11 @@ def test_load_carries_with_two_grips_and_in_place_gait(tmp_path: Path) -> None:
 def test_windup_uses_a_spec_peak_and_world_offset(tmp_path: Path) -> None:
     spec = action(tmp_path, {"prop": "axe", "hands": {"R": {"target": "prop"}},
                             "target": {"kind": "swing", "anchor": [0, -0.4, 0.55],
-                                       "windup": [.35, [-.125, -.1, .015]]}})
+                                       "windup": [.35, [-.125, -.1, .015]],
+                                       "release_arc": [-.034, -.03, -.012]}})
 
     assert spec.target.windup == (.35, (-.125, -.1, .015))
+    assert spec.target.release_arc == (-.034, -.03, -.012)
 
 
 def test_combining_specs_rejects_duplicate_visual_keys(tmp_path: Path) -> None:
@@ -184,6 +194,69 @@ def test_set_down_reverses_the_pick_up_source_with_planted_feet() -> None:
 def test_loads_phase_limits_for_torso_lean(tmp_path: Path) -> None:
     curve: M.Value = [[0, 9], [0.5, 23], [1, 9]]
     assert action(tmp_path, {"torso_lean": curve}).torso_lean == ((0., 9.), (.5, 23.), (1., 9.))
+
+
+def test_plausibility_gate_defaults_are_active_without_exceptions(tmp_path: Path) -> None:
+    clip = action(tmp_path, {})
+
+    limits = clip.plausibility
+
+    assert (limits.dynamic, limits.airborne, limits.work, limits.face) == ((), (), (), ())
+    assert (limits.steps, limits.plants, limits.support) == ({}, {}, {})
+    assert (limits.lean_limit, limits.prop_ratio, clip.post_filter) == (15, None, None)
+
+
+def test_loads_plausibility_playback_intervals_and_post_filter_name(tmp_path: Path) -> None:
+    clip = action(tmp_path, {
+        "foot_lock": False,
+        "prop": "basket",
+        "hands": {"R": {"target": "prop"}},
+        "post_filter": "kinematic-balance",
+        "plausibility": {
+            "dynamic": [[.1, .4], [.8, 1]],
+            "airborne": [[.32, .36]],
+            "work": [[.24, .34]],
+            "face": [[0, 0]],
+            "steps": {"R": [[.3, .4]], "L": [[.32, .36]]},
+            "plants": {"R": [[0, .2], [.6, 1]]},
+            "support": {"hand_L": [[.2, .25]], "knee_R": [[.7, .9]]},
+            "lean_limit": 10,
+            "prop_ratio": [.12, .24],
+        },
+    })
+
+    limits = clip.plausibility
+
+    assert limits.dynamic == ((.1, .4), (.8, 1))
+    assert limits.airborne == ((.32, .36),)
+    assert limits.work == ((.24, .34),)
+    assert limits.face == ((0, 0),)
+    assert limits.steps == {"R": ((.3, .4),), "L": ((.32, .36),)}
+    assert limits.plants == {"R": ((0, .2), (.6, 1))}
+    assert limits.support == {"hand_L": ((.2, .25),), "knee_R": ((.7, .9),)}
+    assert (limits.lean_limit, limits.prop_ratio, clip.post_filter) == (10, (.12, .24), "kinematic-balance")
+
+
+@pytest.mark.parametrize(("fields", "message"), [
+    ({"plausibility": {"dynamic": [[.4, .3]]}}, "dynamic"),
+    ({"plausibility": {"dynamic": [[.1, .3], [.3, .7]]}}, "dynamic"),
+    ({"plausibility": {"airborne": [[.3, 1.1]]}}, "airborne"),
+    ({"plausibility": {"work": [[.5, .7], [.1, .2]]}}, "work"),
+    ({"plausibility": {"face": [[True, 1]]}}, "face"),
+    ({"plausibility": {"steps": {"right": [[.1, .2]]}}}, "right"),
+    ({"plausibility": {"support": {"elbow_L": [[.1, .2]]}}}, "elbow_L"),
+    ({"plausibility": {"lean_limit": -1}}, "lean_limit"),
+    ({"plausibility": {"prop_ratio": [.4, .2]}}, "prop_ratio"),
+    ({"plausibility": {"prop_ratio": [.2, .4]}}, "requires a prop"),
+    ({"plausibility": {"steps": {"R": [[.1, .2]]}}}, "foot_lock"),
+    ({"plausibility": {"airborne": [[.1, .2]]}}, "foot_lock"),
+    ({"foot_lock": False, "plausibility": {"steps": {"R": [[.1, .2]]}, "plants": {"R": [[.2, .3]]}}}, "overlap"),
+    ({"post_filter": "../filter"}, "post_filter"),
+    ({"post_filter": True}, "post_filter"),
+])
+def test_rejects_invalid_plausibility_authoring(tmp_path: Path, fields: dict[str, M.Value], message: str) -> None:
+    with pytest.raises(M.SpecError, match=message):
+        action(tmp_path, fields)
 
 
 @pytest.mark.parametrize(("field", "value"), [

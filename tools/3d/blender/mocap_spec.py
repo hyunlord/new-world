@@ -6,7 +6,7 @@ Optional properties are omitted. Coordinates are metres, +Z up and −Y forward.
 """
 
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import hashlib
 import json
 import math
@@ -17,6 +17,7 @@ from typing import Final, TypeAlias
 
 Value: TypeAlias = "str | int | float | bool | None | list[Value] | dict[str, Value]"
 XYZ: TypeAlias = tuple[float, float, float]
+Windows: TypeAlias = tuple[tuple[float, float], ...]
 BODIES = ("p1", "p2", "p3", "p4")
 ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]*")
 LAYER_MASK_FIELDS: Final = (
@@ -48,6 +49,7 @@ class Target:
     fixture_radius: float
     solid: bool
     release_offset: XYZ
+    release_arc: XYZ
     release_pitch: float
     release: bool
     windup: tuple[float, XYZ] | None
@@ -82,6 +84,21 @@ class ArmLimits:
 
 
 @dataclass(frozen=True, slots=True)
+class Plausibility:
+    """Closed output-phase windows for expected movement, work and support."""
+
+    dynamic: Windows = ()
+    airborne: Windows = ()
+    work: Windows = ()
+    face: Windows = ()
+    steps: Mapping[str, Windows] = field(default_factory=lambda: MappingProxyType({}))
+    plants: Mapping[str, Windows] = field(default_factory=lambda: MappingProxyType({}))
+    support: Mapping[str, Windows] = field(default_factory=lambda: MappingProxyType({}))
+    lean_limit: float = 15.
+    prop_ratio: tuple[float, float] | None = None
+
+
+@dataclass(frozen=True, slots=True)
 class Action:
     key: str
     tags: tuple[str, ...]
@@ -106,6 +123,9 @@ class Action:
     impact_window: tuple[float, float]
     in_place: bool
     torso_lean: tuple[tuple[float, float], ...]
+    plausibility: Plausibility = field(default_factory=Plausibility)
+    post_filter: str | None = None
+    stance_offsets: Mapping[str, tuple[float, float]] = field(default_factory=lambda: MappingProxyType({}))
 
 
 @dataclass(frozen=True, slots=True)
@@ -203,7 +223,7 @@ def _hand(value: Value) -> Hand:
 
 
 def _target(value: Value) -> Target:
-    row = _map(value, "kind anchor radius depth tip orientation fixture_radius solid release_offset release_pitch "
+    row = _map(value, "kind anchor radius depth tip orientation fixture_radius solid release_offset release_arc release_pitch "
                "release windup face_clearance rim_clearance rebound_clearance", "kind")
     kind = _text(row["kind"])
     if kind not in {"swing", "circle", "reach", "carry", "free"}:
@@ -223,7 +243,8 @@ def _target(value: Value) -> Target:
     return Target(kind, _xyz(row.get("anchor", [0, 0, 0])), radius,
                   _num(row.get("depth", .065), 0), _xyz(row.get("tip", [0, 0, 0])), orientation,
                   _num(row.get("fixture_radius", .155), 0), _bool(row.get("solid", False)),
-                  _xyz(row.get("release_offset", [0, 0, 0])), _num(row.get("release_pitch", 0), -90, 90),
+                  _xyz(row.get("release_offset", [0, 0, 0])), _xyz(row.get("release_arc", [0, 0, 0])),
+                  _num(row.get("release_pitch", 0), -90, 90),
                   _bool(row.get("release", False)), windup, _num(row.get("face_clearance", 0), 0, 1.),
                   _num(row.get("rim_clearance", 0), 0, 1.), _num(row.get("rebound_clearance", 0), 0, 1.))
 
@@ -315,9 +336,65 @@ def _torso_lean(value: Value) -> tuple[tuple[float, float], ...]:
         raise SpecError(f"torso_lean: {error}") from error
 
 
+def _windows(value: Value, field: str) -> Windows:
+    try:
+        windows = tuple((_num(start, 0, 1), _num(end, 0, 1))
+                        for start, end in (_array(pair, 2) for pair in _array(value)))
+        if any(start > end for start, end in windows) or any(
+            before[1] >= after[0] for before, after in zip(windows, windows[1:])
+        ):
+            raise SpecError("expected ordered, disjoint windows")
+        return windows
+    except SpecError as error:
+        raise SpecError(f"{field}: {error}") from error
+
+
+def _window_map(value: Value, keys: str, field: str) -> Mapping[str, Windows]:
+    return MappingProxyType({key: _windows(windows, f"{field}.{key}")
+                             for key, windows in _map(value, keys).items()})
+
+
+def _plausibility(value: Value, foot_lock: bool, prop: str | None) -> Plausibility:
+    try:
+        row = _map(value, "dynamic airborne work face steps plants support lean_limit prop_ratio")
+        airborne = _windows(row.get("airborne", []), "airborne")
+        steps = _window_map(row.get("steps", {}), "R L", "steps")
+        plants = _window_map(row.get("plants", {}), "R L", "plants")
+        if foot_lock and (airborne or any(steps.values())):
+            raise SpecError("foot_lock cannot declare step or airborne windows")
+        for side, step_windows in steps.items():
+            if any(max(lo, start) <= min(hi, end) for lo, hi in step_windows
+                   for start, end in plants.get(side, ())):
+                raise SpecError(f"{side} step and planted windows overlap")
+        prop_ratio = None
+        if "prop_ratio" in row:
+            try:
+                low, high = _array(row["prop_ratio"], 2)
+                minimum = _positive(low, "minimum")
+                prop_ratio = minimum, _num(high, minimum)
+            except SpecError as error:
+                raise SpecError(f"prop_ratio: {error}") from error
+            if prop is None:
+                raise SpecError("prop_ratio requires a prop")
+        return Plausibility(
+            dynamic=_windows(row.get("dynamic", []), "dynamic"),
+            airborne=airborne,
+            work=_windows(row.get("work", []), "work"),
+            face=_windows(row.get("face", []), "face"),
+            steps=steps,
+            plants=plants,
+            support=_window_map(row.get("support", {}), "hand_R hand_L knee_R knee_L", "support"),
+            lean_limit=_positive(row.get("lean_limit", 15), "lean_limit", 90),
+            prop_ratio=prop_ratio,
+        )
+    except SpecError as error:
+        raise SpecError(f"plausibility: {error}") from error
+
+
 def _action(key: str, value: Value) -> Action:
     row = _map(value, "tags takes trim loop speed stoop prop hands target foot_lock contacts fixture "
-               "reverse heading posture base_layer arm_limits retime duration impact_window in_place torso_lean",
+               "reverse heading posture base_layer arm_limits retime duration impact_window in_place torso_lean "
+               "plausibility post_filter stance_offsets",
                "trim loop target foot_lock")
     tags, takes = _source(row)
     start, finish = (_num(second, 0) for second in _array(row["trim"], 2))
@@ -334,6 +411,12 @@ def _action(key: str, value: Value) -> Action:
     target = _target(row["target"])
     loop = _bool(row["loop"])
     foot_lock = _bool(row["foot_lock"])
+    stance_offsets = MappingProxyType({
+        side: tuple(_num(axis, -.5, .5) for axis in _array(offset, 2))
+        for side, offset in _map(row.get("stance_offsets", {}), "R L").items()
+    })
+    if stance_offsets and not foot_lock:
+        raise SpecError("stance_offsets requires foot_lock")
     in_place = _bool(row.get("in_place", False))
     impact_window = _impact_window(row["impact_window"]) if "impact_window" in row else (.14, .14)
     if target.kind == "reach" and prop is not None and (not contacts or loop):
@@ -352,7 +435,9 @@ def _action(key: str, value: Value) -> Action:
         raise SpecError("rim clearance needs a circular target")
     if target.rebound_clearance and (not any(target.release_offset) or prop is None):
         raise SpecError("rebound clearance needs a swing prop and a release offset")
-    if (any(target.release_offset) or target.release_pitch) and (
+    if any(target.release_arc) and prop is None:
+        raise SpecError("a release arc requires a swung prop")
+    if (any(target.release_offset) or any(target.release_arc) or target.release_pitch) and (
         target.kind != "swing" or not contacts or contacts[0] + impact_window[1] >= 1.
     ):
         raise SpecError("a release target needs a swing contact and room to release before the end")
@@ -360,6 +445,10 @@ def _action(key: str, value: Value) -> Action:
         raise SpecError("a loop's sliding grip must join at the same offset")
     arm_limits = MappingProxyType({body: _arm_limits(body, limits) for body, limits in
                                   _map(row.get("arm_limits", {}), " ".join((*BODIES, "default"))).items()})
+    try:
+        post_filter = _id(row["post_filter"]) if "post_filter" in row else None
+    except SpecError as error:
+        raise SpecError(f"post_filter: {error}") from error
     return Action(_id(key), tags, takes, (start, finish), loop,
                   _bodies(row.get("speed", {}), .85, 1., .01),
                   _bodies(row.get("stoop", {}), 7., 0., 0., 45.), prop, hands,
@@ -369,7 +458,9 @@ def _action(key: str, value: Value) -> Action:
                   _base_layer(key, row["base_layer"]) if "base_layer" in row else None, arm_limits,
                   _retime(row["retime"]) if "retime" in row else (),
                   _positive(row["duration"], "duration") if "duration" in row else None,
-                  impact_window, in_place, _torso_lean(row["torso_lean"]) if "torso_lean" in row else ())
+                  impact_window, in_place, _torso_lean(row["torso_lean"]) if "torso_lean" in row else (),
+                  _plausibility(row["plausibility"], foot_lock, prop) if "plausibility" in row else Plausibility(),
+                  post_filter, stance_offsets)
 
 
 def load(path: Path) -> tuple[Action, ...]:

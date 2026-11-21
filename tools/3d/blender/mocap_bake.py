@@ -15,12 +15,15 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import chars_b as base
 import common as C
 from mocap_bvh import Motion, read_bvh
-from mocap_deform import DeformationReport, check_deformation
+from mocap_anatomy import evaluate_anatomy
+from mocap_deform import MAX_BODY_STRETCH, DeformationReport, check_deformation
+from mocap_kinematics import Check, Track, check_prop, write_track
 from mocap_pose import Retarget, constrain, prop_hand, wrist_center
 from mocap_skin import PLANTED_SOLE_M, relax_body_skin, relax_joint_skin, stabilize_garment_weights
 from mocap_spec import Action, BaseLayer, Take, load_many, select
+from mocap_support import evaluate_support
 import s2clips as legacy
-from s2clips_capture import BODY_SCALE, Clip, ReviewAction, capture_body
+from s2clips_capture import BODY_SCALE, Clip, ReviewAction, capture_body, fixture
 from s2kit import HEIGHT
 
 FPS = 30
@@ -154,25 +157,55 @@ def bake(kit: Path, out: Path, body: str, sources: tuple[tuple[Action, Source, S
             arm, mesh, grips = legacy.source_rig(kit, body, 8000, stabilize_grips=True,
                                                 before_bind=capture_rest, align_arm_weights=fitted,
                                                 weight_adjust=stabilize_garment_weights)
+            mesh.data.calc_loop_triangles()
+            triangles = np.array([tuple(face.vertices) for face in mesh.data.loop_triangles])
+            # Staff removal can leave unrendered vertices below the boots.
+            surface_indices = np.unique(triangles)
+            sole_indices = surface_indices[rest[surface_indices, 2] <= PLANTED_SOLE_M]
+            shoes = {}
+            for side in ("R", "L"):
+                foot = mesh.vertex_groups[f"foot_{side}"].index
+                shoes[side] = [int(index) for index in sole_indices if any(
+                    group.group == foot and group.weight > .5 for group in mesh.data.vertices[int(index)].groups)]
+                if not shoes[side]:
+                    raise RuntimeError(f"{asset}: no rendered sole samples for foot {side}")
+            rest_soles = {side: np.array([tuple(mesh.data.vertices[i].co) for i in indices])
+                          for side, indices in shoes.items()}
         phases, contacts = timeline(action, body)
         start = len(rows)
+        solver = Retarget(arm, motion, action, take, body, lower_body, rest_soles)
         clips[action.key] = Clip(start=start, count=len(phases), loop=action.loop,
                                  duration=(len(phases) - (not action.loop)) / FPS)
-        solver = Retarget(arm, motion, action, take, body, lower_body)
+        if action.in_place:
+            clips[action.key]["stride_m"] = solver.stride.length
         sockets[action.key] = []
         accuracy = []
+        bone_names = tuple(bone.name for bone in arm.pose.bones)
+        parents = tuple(-1 if bone.parent is None else bone_names.index(bone.parent.name) for bone in arm.pose.bones)
+        matrices = []
         contact_wrists = None
         prop_points = None
-        if action.prop is not None and action.target.solid:
+        prop_extent = None
+        if action.prop is not None:
             tool = legacy.prop_mesh(action.prop)
-            prop_points = np.asarray([tuple(vertex.co) for vertex in tool.data.vertices])
+            points = np.asarray([tuple(vertex.co) for vertex in tool.data.vertices])
+            prop_extent = float(np.ptp(points, axis=0).max())
+            if action.target.solid:
+                prop_points = points
             bpy.data.objects.remove(tool, do_unlink=True)
         if action.target.kind == "reach" and action.prop is not None:
             solver.pose(solver.contact)
             contact_wrists = wrist_center(arm, action)
+
+        def constrain_frame(phase: float):
+            return solver.constrain(phase, shoes, lambda: constrain(
+                arm, mesh, grips, action, phase, contact_wrists, prop_points, body,
+            ))
+
         for phase in phases:
             feet = solver.pose(phase)
-            frame = constrain(arm, mesh, grips, action, phase, contact_wrists, prop_points, body)
+            frame = constrain_frame(phase)
+            matrices.append([tuple(tuple(row) for row in bone.matrix) for bone in arm.pose.bones])
             measured = {"phase": phase, "foot_R": feet[0], "foot_L": feet[1], **frame.errors}
             if action.torso_lean:
                 bones = arm.pose.bones
@@ -190,10 +223,14 @@ def bake(kit: Path, out: Path, body: str, sources: tuple[tuple[Action, Source, S
             if frame.prop is not None:
                 prop_sockets.setdefault(action.key, []).append(frame.prop)
             rows.append(frame.positions)
+        track = Track(bone_names, parents,
+                      np.array([tuple(tuple(row) for row in bone.bone.matrix_local) for bone in arm.pose.bones]),
+                      np.array(matrices), np.array([bone.bone.length for bone in arm.pose.bones]))
+        write_track(out / "retarget" / body / f"{action.key}.npz", track, np.asarray(phases), FPS, BODY_SCALE[body])
         seam = None
         if action.loop:
             solver.pose(1.)
-            end = constrain(arm, mesh, grips, action, 1., contact_wrists, prop_points, body)
+            end = constrain_frame(1.)
             first = rows[start]
             seam = float(np.linalg.norm(end.positions - first, axis=1).max())
         records[action.key] = {"take": take.id, "fps": take.fps, "trim_seconds": action.trim,
@@ -202,8 +239,6 @@ def bake(kit: Path, out: Path, body: str, sources: tuple[tuple[Action, Source, S
             records[action.key]["base_layer"] = {"take": lower_body[0].id, "fps": lower_body[0].fps,
                                                   "trim_seconds": action.base_layer.trim}
         if rest is not None:
-            mesh.data.calc_loop_triangles()
-            triangles = np.array([tuple(face.vertices) for face in mesh.data.loop_triangles])
             weights = np.zeros((len(rest), 4))
             groups = {mesh.vertex_groups[name].index: column for column, name in enumerate(
                 ("upper_arm_R", "lower_arm_R", "upper_arm_L", "lower_arm_L"))}
@@ -242,11 +277,32 @@ def bake(kit: Path, out: Path, body: str, sources: tuple[tuple[Action, Source, S
                 np.savez_compressed(out / f"{asset}-{action.key}-deformation.npz", rest=rest, triangles=triangles,
                                     weights=weights, frames=sampled, corrected=corrected, grips=grips)
             failures.extend(measure_pose(action, body, rest, decoded, grips, accuracy, contacts))
-            if action.target.release or action.torso_lean:
-                # Staff removal can leave unrendered vertices below the boots.
-                surface_indices = np.unique(triangles)
-                sole_indices = surface_indices[rest[surface_indices, 2] <= PLANTED_SOLE_M]
-                soles = decoded[:, sole_indices]
+            soles = decoded[:, sole_indices]
+            scale = BODY_SCALE[body]
+            planted = {side: decoded[:, indices] * scale for side, indices in shoes.items()}
+            times = np.asarray(phases)
+            limits = action.plausibility
+            worst_stretch = max((full, report), key=lambda value: value.max_body_edge_ratio)
+            stretch = worst_stretch.max_body_edge_ratio
+            checks = {
+                **evaluate_support(times, track.names, track.heads * scale, track.tails * scale, planted, limits,
+                                   foot_lock=action.foot_lock, loop=action.loop,
+                                   stride=np.asarray(solver.stride) * scale),
+                **evaluate_anatomy(track, body, scale, times, limits, rest_vertices=rest,
+                                   posed_vertices=decoded, grips=grips),
+                "garment_stretch": Check(stretch, worst_stretch.max_body_edge_frame, MAX_BODY_STRETCH,
+                                         stretch <= MAX_BODY_STRETCH,
+                                         "decoded float16" if worst_stretch is report else "before encoding"),
+                "prop_ratio": check_prop(None if prop_extent is None else prop_extent * scale,
+                                         HEIGHT * scale, limits.prop_ratio),
+            }
+            records[action.key]["plausibility"] = {name: asdict(result) for name, result in checks.items()}
+            for name, result in checks.items():
+                if not result.passed:
+                    label = (f"{body} {action.key}: {name} frame {result.frame}, "
+                             f"value {result.value}, limit {result.limit}, {result.detail}")
+                    failures.append(label)
+                    print(f"MOCAP_PLAUSIBILITY_FAIL {label}", flush=True)
             if action.target.release:
                 placed = prop_sockets[action.key][contacts[0]:]
                 drift = max((pose.translation - C.Vector(action.target.anchor)).length for pose in placed)
@@ -286,9 +342,15 @@ def bake(kit: Path, out: Path, body: str, sources: tuple[tuple[Action, Source, S
                     bounds_max=vat[:, :, :3].max((0, 1)).round(4).tolist(),
                     sockets={name: [[legacy.gltf_socket(matrix) for matrix in pair] for pair in frames]
                              for name, frames in sockets.items()},
-                    props={action.key: {"mesh": action.prop,
-                                        "frames": [legacy.gltf_socket(matrix) for matrix in prop_sockets[action.key]]}
-                           for action, _, _ in sources if action.prop is not None})
+                    fixtures={action.key: f"fixture_{action.key}" for action, _, _ in sources
+                              if action.fixture is not None},
+                    props={action.key: {"mesh": action.prop, "frames": [
+                        legacy.gltf_socket(matrix) + [action.target.kind != "reach" or (
+                            i <= records[action.key]["contact_frames"][0] if action.reverse or action.target.release
+                            else i >= records[action.key]["contact_frames"][0]
+                        )]
+                        for i, matrix in enumerate(prop_sockets[action.key])
+                    ]} for action, _, _ in sources if action.prop is not None})
     vat = vat.astype("<f2")
     vat.tofile(out / f"{asset}_vat.bin")
     (out / f"{asset}_vat.json").write_text(json.dumps(metadata, indent=1) + "\n")
@@ -328,6 +390,21 @@ def main() -> None:
     for name in sorted({action.prop for action in actions if action.prop is not None}):
         C.reset_scene()
         C.export_glb(str(destination / f"grip_{name}.glb"), [legacy.prop_mesh(name)])
+    for action in actions:
+        if action.fixture is not None:
+            C.reset_scene()
+            setting = fixture(action.fixture, action.target.anchor, action.target.fixture_radius)
+            if setting is None:
+                raise ValueError(f"{action.key}: unknown fixture {action.fixture!r}")
+            objects = [setting, *setting.children_recursive]
+            if action.fixture == "hearth":
+                # Runtime already draws the gameplay hearth. Export its matching vessel for the stir socket.
+                vessel, = setting.children
+                pose = setting.matrix_world @ vessel.matrix_basis
+                vessel.parent = None
+                vessel.matrix_world = pose
+                objects = [vessel]
+            C.export_glb(str(destination / f"fixture_{action.key}.glb"), objects, vertex_colors=True)
     if mode == "compare":
         original = out / "old"
         original.mkdir()

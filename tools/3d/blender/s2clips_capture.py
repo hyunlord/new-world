@@ -97,6 +97,11 @@ def fixture(name: str | None, anchor: tuple[float, float, float] | None = None,
                   segs=13, r2=.94 * diameter / 2, cap_mat="wood")
         for dx in (-.27, .27):
             shape.rod("wood_dark", (x + dx, y - .12, .025), (x + dx, y + .12, .025), .03, segs=8)
+            bottom = height - diameter
+            if bottom > .04:
+                for sign in (-1, 1):
+                    shape.rod("wood_dark", (x + dx, y + sign * .11, .025),
+                              (x + dx, y + sign * .043, bottom + .041), .034, segs=7)
         return shape.build_object()
     if name == "workbench" and anchor is not None:
         x, y, height = anchor

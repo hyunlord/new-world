@@ -41,6 +41,9 @@ def main() -> int:
     if save.exists():
         parser.error(f"output already exists: {save}; use a fresh --out directory")
     actions = load_many(specs)
+    for action in actions:
+        if action.post_filter is not None:
+            parser.error(f"{action.key}: post_filter {action.post_filter!r} has no implementation")
     if args.compare and {action.key for action in actions} != {"chop", "cook"}:
         parser.error("CLIPS1 comparison requires the chop and cook pilot keys")
     for action in actions:

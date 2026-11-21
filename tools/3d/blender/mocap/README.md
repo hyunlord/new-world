@@ -60,8 +60,9 @@ factors 1.00, 0.95, 0.70 and 0.97 for p1 through p4, including their props.
 
 Positions and offsets use Blender metres with +Z up, −Y forward and +X toward
 the villager's left. `posture` translates the whole retargeted body. Enable
-`foot_lock` for a planted stance. Ordered `contacts` are phases from 0 to 1 in
-output playback order.
+`foot_lock` for a planted stance. Optional `stance_offsets` gives each locked
+foot an `[x, y]` offset in metres from the captured stance. Ordered
+`contacts` are phases from 0 to 1 in output playback order.
 
 | Field | Meaning |
 | --- | --- |
@@ -78,6 +79,7 @@ output playback order.
 | `target.release` | For `reach`, leave the prop at the anchor after contact. |
 | `impact_window` | Approach and release widths in playback phase units. |
 | `target.release_offset`, `target.release_pitch` | Optional blade-tip movement in metres and upward pitch in degrees after impact. |
+| `target.release_arc` | Optional XYZ tip offset at mid-rebound, eased to zero at contact and at the end of release. |
 | `windup` | Phase and world-space prop offset at the swing apex. |
 | `face_clearance`, `rim_clearance`, `rebound_clearance` | Minimum distances in metres at the swing apex, above a stir fixture and after impact. |
 
@@ -107,5 +109,15 @@ To use a capture again, copy its source selection and trim to another visual
 key. Reuse the swing with a different edge or strike point, or change the
 reach anchor and switch `reverse` for putting an object down.
 
+The [playbook](PLAYBOOK.md) lists the nine automatic plausibility checks and
+the rules for authoring exceptions. Set `plausibility.prop_ratio` for every
+held prop. A build that breaches a bound writes the measurements to the
+contacts receipt and exits with an error.
+
 The `sockets` rows are the two skin anchors in right/left order. `props` rows
-hold the shared tool transform, which can remain at the anchor before pickup.
+hold the shared tool transform and an attachment flag. An unattached basket
+stays at its ground anchor before pickup and after release.
+`retarget/<body>/<action>.npz` contains post-IK local rotations and offsets,
+root transforms, the rest skeleton and body scale at 30 Hz, in Z-up armature
+metres before VAT encoding. The optional `post_filter` names a reserved
+offline stage. Leave it unset until an implementation exists.
