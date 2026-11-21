@@ -358,6 +358,15 @@ func _write_near(aid: int, st: Dictionary, fallback: String, moving: bool, clock
 	_mocap.select(aid, vat, clip, phase, st["near_xf"])
 
 
+## The drawn feet of up to `count` villagers nearest `point` (grass3d presses the grass under them).
+func feet_near(point: Vector3, count: int) -> PackedVector3Array:
+	var all: Array[Vector3] = []
+	for st: Dictionary in _state.values():
+		all.append(st["feet"])
+	all.sort_custom(func(a: Vector3, b: Vector3) -> bool: return a.distance_squared_to(point) < b.distance_squared_to(point))
+	return PackedVector3Array(all.slice(0, count))
+
+
 ## One ring per highlighted person present, slightly wider than the selection ring.
 func _update_highlights() -> void:
 	var ids: PackedInt64Array = _people_view.call("highlight_ids") if _people_view != null else PackedInt64Array()

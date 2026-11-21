@@ -21,6 +21,12 @@ uniform float wind_strength = 0.21;
 uniform float wind_speed = 1.25;
 uniform float cutoff = 0.38;
 uniform bool s2 = false;
+// Near the camera cards shorten (camera distance from, to; height at `from`), and around the nearest villagers' feet
+// they are pressed (radius metres, height kept): the foreground never covers a person at z4-z5.
+uniform vec3 near_fade = vec3(3.0, 7.0, 0.25);
+uniform vec2 press = vec2(0.8, 0.3);
+uniform int press_count = 0;
+uniform vec3 press_points[24];
 varying float blade_y;
 
 void vertex() {
@@ -40,6 +46,14 @@ void vertex() {
 		float trodden = max(max(clearing * 0.42, stage * 0.65), built.g);
 		VERTEX.y *= mix(1.0, 1.5, built.b) * (1.0 - 0.74 * clamp(trodden, 0.0, 1.0));
 		bare = stage >= 1.8 || built.g >= 0.9;
+	}
+	if (s2) {
+		VERTEX.y *= mix(near_fade.z, 1.0, smoothstep(near_fade.x, near_fade.y, distance(origin, CAMERA_POSITION_WORLD)));
+		float pressed = 1.0;
+		for (int i = 0; i < press_count; i++) {
+			pressed = min(pressed, mix(press.y, 1.0, smoothstep(press.x * 0.6, press.x, distance(origin.xz, press_points[i].xz))));
+		}
+		VERTEX.y *= pressed;
 	}
 	if (bare || built.r > 0.5) {
 		// Collapse excluded cards to a degenerate triangle before rasterization.

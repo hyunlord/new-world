@@ -58,6 +58,10 @@ func _ready() -> void:
 	for key: String in ["shade", "root_shade", "winter_shade"]:
 		_material.set_shader_parameter(key, Data3D.colour(_settings.get(key, []), Color.WHITE))
 	_material.set_shader_parameter("s2", _s2)
+	var clear: Array = Data3D.param("people.style2_grass_near_fade", [3.0, 7.0, 0.25])
+	_material.set_shader_parameter("near_fade", Vector3(float(clear[0]), float(clear[1]), float(clear[2])))
+	var press: Array = Data3D.param("people.style2_grass_press", [0.8, 0.3])
+	_material.set_shader_parameter("press", Vector2(float(press[0]), float(press[1])))
 	_mesh = QuadMesh.new()
 	_mesh.material = _material
 	_mesh.size = Vector2(float(_settings.get("width", 0.48)), 1.0)
@@ -111,6 +115,9 @@ func set_built(tiles: Dictionary, wear: Dictionary = {}, edges: Dictionary = {},
 
 
 func refresh(focus: Vector2, zoom: float) -> void:
+	# Every third frame is enough for walking speeds; sorting the crowd each frame is not free.
+	if _s2 and Engine.get_process_frames() % 3 == 0:
+		_press_villagers(focus)
 	var lod: int = 0
 	for i: int in _zooms.size():
 		if zoom >= float(_zooms[i]):
@@ -256,3 +263,13 @@ func _water_neighbour(tile: Vector2i) -> Vector2i:
 		if p.x >= 0 and p.y >= 0 and p.x < _width and p.y < _height and int(_terrain[p.y * _width + p.x]) in _water_codes:
 			return step
 	return Vector2i.ZERO
+
+
+## Style 2: the drawn feet of the villagers nearest the focus press the grass under them (shader `press_points`).
+func _press_villagers(focus: Vector2) -> void:
+	var people: Node = get_node_or_null("../../People")
+	if people == null or not people.has_method("feet_near"):
+		return
+	var feet: PackedVector3Array = people.call("feet_near", Vector3(focus.x, 0.0, focus.y), 24)
+	_material.set_shader_parameter("press_points", feet)
+	_material.set_shader_parameter("press_count", feet.size())

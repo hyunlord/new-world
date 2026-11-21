@@ -204,7 +204,10 @@ func with_findability(mat: ShaderMaterial, style2: bool = false, kit: bool = fal
 		# Only figures a few pixels tall (z1) turn to the flat fill; closer views keep shading and clothing colours.
 		var fill_range: Array = Data3D.param("people.style2_far_fill_range", [95.0, 120.0])
 		mat.set_shader_parameter("far_fill_range", Vector2(float(fill_range[0]), float(fill_range[1])))
-		mat.set_shader_parameter("far_fill", Vector4(0.012, 0.010, 0.009, 1.0))
+		# z1 figures read as people: a dark warm brown by day, a muted pale at night (not black holes or white blobs).
+		var s2_fill: Color = Data3D.colour(Data3D.param("people.style2_far_fill", []), Color(0.2, 0.145, 0.11))
+		mat.set_shader_parameter("far_fill", Color(s2_fill, 1.0))
+		mat.set_shader_parameter("far_fill_night", Data3D.colour(Data3D.param("people.style2_far_fill_night", []), Color(0.55, 0.53, 0.48)))
 	var line: ShaderMaterial = ShaderMaterial.new()
 	line.shader = OUTLINE_SHADER
 	_set_anim(line)
