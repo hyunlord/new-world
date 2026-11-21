@@ -26,17 +26,11 @@
 - 2026-11-06 — M6b Stage1 세 번째 held-out1648–1679도 통나무·한파 FAIL로 미게시. 별도 소스 검토에서 다중 화덕의 겨울 비축량 누락을 확인해 계산1줄과 회귀 시험으로 수정했다. 기존 실패와 baseline 동일성35·새 사전 검증을 구분하며 최종 전체 gate·새 held-out은 아직 통과하지 않았다([보고서](v8/m6b/M6B_REPORT.md)).
 - 2026-11-05 — M6b Stage1 게시 후보 `a0ec36d1`: 농경·물리적 씨앗·토양, 생산 제한과 기존 땔감 주문 실행, 명시적 가르침을 구현. 보정26·일반 안전성34/34·BASE 동일성22차(228748값 차이0)·고정 카드 검사는 PASS; held-out·최종 gate·게시는 미완료이며 밭 아트는 [#687](https://github.com/hyunlord/new-world/issues/687)에 이월. [보고서](v8/m6b/M6B_REPORT.md), [ADR0058](decisions/0058-physical-cultivation-and-bounded-stewardship.md).
 - 2026-11-04 — M6b Stage0 중단·미게시(D-S0-1..4). 추가 도구408파일88,383줄을2파일696줄로 축소하고 게시된 M-LOOP/M-READ gate로 복귀했다. 상대 KnowledgeLost·생존 계약29테스트 PASS, 전체 generic gate/고의결함 증명 미완료는 [#685](https://github.com/hyunlord/new-world/issues/685)에 이월. Stage1 농경·#684로 전환하며 원래 실패와 raw는 보존한다.
-
 - 2026-10-30 — M6a R1: owner11:20KST의2회 수리 보정 후 동결. P26 `9b6644579` 전체42/48 PASS·25/30/39/40/41/45FAIL; soak기아·KnowledgeLost0이나 신선부패3/32·성능4항목·거래0·가시성16/60·빈토스트·stall캡처오류가 남음. waiver미사용·미게시·#670–673OPEN, P27문서전용NOT_FULL_GATED. [보고서](v8/m6a/M6A_REPORT.md).
-
 - 2026-10-30 — M6a 최종 P12 `a9ae9c87`: 전체 게이트2 44/48 PASS·26/39/41/45 FAIL, timeout/signal 없이 exit1. BASE 결정적64파일 동일·새 성능33쌍 PASS이나 수용2개 막대·soak·가시성52/60·stall52.056ms FAIL 유지, NO waiver·미게시·#670–673 OPEN. 후속 P13은 문서 전용 NOT_FULL_GATED; 목표 미완료. [보고서](v8/m6a/M6A_REPORT.md).
-
 - 2026-10-30 — M6a P12: P11 `3191890c` 전체 게이트1 43/48 PASS·5 FAIL을 보존한다. 자식 환경 격리·새 successor proof의 도구4개 수정 후 집중40·전체 Python473 PASS; 제품·정책·보정4/4 동결 유지. 유효 soak #672·가시성 #673 OPEN, 52.771ms stall은 NO M6a waiver. 새 proof·BASE-only 코호트·게이트2 NOT_RUN·미게시. [결정](v8/m6a/M6A_DECISIONS.md).
-
 - 2026-10-30 — M6a 수용 FAIL·미게시: P9 동결 후보와 P10 `bd799460c` BASE72 각32세계 비교에서 생존29/32(필요30), 조리24/32(필요26)로 실패했다. 독립 원시 감사도 두 실패를 확인했고 scorer 결함을 찾지 못했다. 다른 막대와 새 성능33/33쌍은 PASS이나 수용 실패를 대체하지 않는다. 보정4/4·원래 동결을 유지하며 추가 튜닝·재시딩·면제는 없다. 이야기 비교는 완료·P11 전체 게이트1은43/48 PASS(16·26·39·41·45 FAIL), 원격 main/wip는 BASE `5b0c8881`, #670 아트·#671 held-out 실패 OPEN이다. [보고서](v8/m6a/M6A_REPORT.md).
-
 - 2026-10-29 — M6a 검증 중: 현재 화면 모음을 실제 음식 사슬 12장으로 교체했다. 이전 `mux_contact_sheet.png`는 BASE `5b0c8881`과 아카이브 색인에 보존한다. 보정2회차와 유효 성능 실패는 M6A_REPORT에 기록하며, 이 교체는 게이트 통과·게시·오너 수용 선언이 아니다.
-
 - M-UX2.1 D22: **M-UX2.1 수용·게시: STRICT_PASS.** 전체 gate 소스와 먼저 게시한 제품 소스는 [ff6af820a](https://github.com/hyunlord/new-world/commit/ff6af820aa1fb4e2d894fa7e4e814bdf897a7868)다. 이 뒤의 문서 전용 후속은 **NOT_FULL_GATED**이며 새 전체 gate 실행을 주장하지 않는다. 원래 strict stall 결과와 모든 실패 영수증은 보존했다. ISS030/#515와 자연 재굽기10.493ms/4ms 목표 미달 ISS347/#658은 OPEN이다. 이번 stall 예외를 자연 재굽기나 M-CORE side64에 확대하지 않는다. [ISS-343/#638 폐쇄](https://github.com/hyunlord/new-world/issues/638#issuecomment-6476850413) · [ISS-344/#655 폐쇄](https://github.com/hyunlord/new-world/issues/655#issuecomment-6476851601) · [ISS-345/#656 폐쇄](https://github.com/hyunlord/new-world/issues/656#issuecomment-6476852746) · [ISS-346/#657 폐쇄](https://github.com/hyunlord/new-world/issues/657#issuecomment-6476854052)
 
 - 2026-10-29 — M-UX2.1 D22: 왜? 제목 폭·헤더 높이 수정, 미측정 topbar 최적화 복원. 기존42 및 EN/KO53검사 통과; 최종 전체 gate 대기 (`docs/v8/mux2_1/MUX21_DECISIONS.md` D22).
