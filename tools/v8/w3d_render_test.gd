@@ -36,6 +36,7 @@
 extends SceneTree
 
 const Data3D = preload("res://scripts/world3d/data3d.gd")
+const People3D = preload("res://scripts/world3d/people3d.gd")
 const TerrainScript = preload("res://scripts/world3d/terrain3d.gd")
 const FloraScript = preload("res://scripts/world3d/flora3d.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
@@ -74,6 +75,10 @@ class FakeWorld extends Node:
 
 	func get_time_snapshot() -> Dictionary:
 		return reads.get("get_time_snapshot", {})
+
+	# Style 2 terrain keeps workshop footprints out of the grass mask.
+	func get_workshops() -> Dictionary:
+		return reads.get("get_workshops", {})
 
 
 ## World3D's stand-in for a standalone layer (the layers read `stamp` from their parent; an empty stamp polls).
@@ -390,12 +395,18 @@ func _people(world: Node, w3d: Node) -> void:
 		var want: String = str(models.get(key, ""))
 		if want.is_empty() or not FileAccess.file_exists("res://assets/3d/vat/%s_vat.json" % want):
 			want = fallback
+		# Style 2 (the default) picks the kit body by age and sex; its scale is the kit's own.
+		var kit: int = People3D.STYLE2_MODELS.find(People3D.style2_model(snap, i)) if Data3D.style2() else -1
+		if kit >= 0:
+			want = People3D.STYLE2_MODELS[kit]
 		var got: String = str(state.get("model", ""))
 		drawn[key] = true
 		if got != want:
 			wrong_model.append("%d %s: %s want %s" % [ids[i], key, got, want])
 		var own_child: bool = got == str(models.get("child", ""))
 		var scale: float = ((1.0 if own_child else child_scale) * (0.75 if i < infants.size() and infants[i] == 1 else 1.0)) if child else 1.0
+		if kit >= 0:
+			scale = People3D.STYLE2_SCALES[kit]
 		var asleep: bool = i < states.size() and i < targets.size() and states[i] == 3 and targets[i] == 3
 		if int(state.get("look_id", -1)) != (looks[i] if i < looks.size() else 0) or int(state.get("variant", -1)) != (int(variants[i]) if i < variants.size() else 0) \
 				or not is_equal_approx(float(state.get("scale", -1.0)), scale) or (asleep and str(state.get("clip", "")) != "sleep"):
@@ -412,7 +423,11 @@ func _people(world: Node, w3d: Node) -> void:
 		if i >= stages.size() or stages[i] != 1:
 			adult = i
 			break
+	# The binding fallback is the legacy path; Style 2 never reads `people.models`.
+	var style2: bool = bool(people.get("_style2"))
+	people.set("_style2", false)
 	var model_now: String = str(people.call("_model_of", snap, adult)) if adult >= 0 else ""
+	people.set("_style2", style2)
 	people_bindings["models"] = saved
 	_check("PEOPLE", "missing_character_falls_back", adult >= 0 and model_now == fallback, "%s want %s" % [model_now, fallback])
 
