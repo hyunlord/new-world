@@ -66,6 +66,16 @@ static func material_for(model: Mesh, wall: bool, id: String = "") -> ShaderMate
 			material.set_shader_parameter("mapped_surface", true)
 			material.set_shader_parameter("normal_tex", normal)
 			material.set_shader_parameter("rm_tex", roughness)
+	# bindings3d `s2kit.straw_parts`: part id -> [apex y, corner z, corner y, band depth] of its rake straw in mesh
+	# units; that band is re-dressed with the house thatch tile laid down the rake (s2kit.gdshader `straw_part`).
+	var rake: Variant = (Data3D.binding("s2kit.straw_parts", {}) as Dictionary).get(id)
+	var straw_id: String = str(Data3D.binding("s2kit.house_thatch_tile", ""))
+	if rake is Array and (rake as Array).size() == 4 and texture(straw_id) != null:
+		material.set_shader_parameter("straw_part", true)
+		var r: Array = rake
+		material.set_shader_parameter("straw_rake", Vector4(float(r[0]), float(r[1]), float(r[2]), float(r[3])))
+		material.set_shader_parameter("straw_tex", texture(straw_id))
+		material.set_shader_parameter("straw_normal_tex", texture(straw_id, "_normal"))
 	return material
 
 

@@ -59,7 +59,8 @@
       "bedroll": "x4",
       "storage_shelf": "x5"
     },
-    "prop_yaw": {"x4": 90}
+    "prop_yaw": {"x4": 90},
+    "straw_parts": {"th_loghouse_gable": [0.60, 0.235, 0.29, 0.10]}
   },
   "flora": {
     "species": {
@@ -224,17 +225,17 @@
         "flint": ["item_003_flint_s", "item_003_flint_m", "item_003_flint_l"],
         "flint_blade": ["item_004_flint_blade_s", "item_004_flint_blade_m", "item_004_flint_blade_l"],
         "stone_axe": ["item_005_stone_axe_s", "item_005_stone_axe_m", "item_005_stone_axe_l"],
-        "hide": ["item_006_hide_s", "item_006_hide_m", "item_006_hide_l"],
+        "hide": ["w3d_pelt_hide_s", "w3d_pelt_hide_m", "w3d_pelt_hide_l"],
         "clay": ["item_007_clay_s", "item_007_clay_m", "item_007_clay_l"],
         "raw_pot": ["item_008_raw_pot_s", "item_008_raw_pot_m", "item_008_raw_pot_l"],
         "clay_pot": ["item_009_clay_pot_s", "item_009_clay_pot_m", "item_009_clay_pot_l"],
         "ground_axe": ["item_010_ground_axe_s", "item_010_ground_axe_m", "item_010_ground_axe_l"],
         "meat": ["item_011_meat_s", "item_011_meat_m", "item_011_meat_l"],
-        "cured_hide": ["item_012_cured_hide_s", "item_012_cured_hide_m", "item_012_cured_hide_l"],
+        "cured_hide": ["w3d_pelt_cured_hide_s", "w3d_pelt_cured_hide_m", "w3d_pelt_cured_hide_l"],
         "hide_wrap": ["item_013_hide_wrap_s", "item_013_hide_wrap_m", "item_013_hide_wrap_l"],
         "fur_cloak": ["item_014_fur_cloak_s", "item_014_fur_cloak_m", "item_014_fur_cloak_l"],
         "spear": ["item_015_spear_s", "item_015_spear_m", "item_015_spear_l"],
-        "wolf_hide": ["item_016_wolf_hide_s", "item_016_wolf_hide_m", "item_016_wolf_hide_l"],
+        "wolf_hide": ["w3d_pelt_wolf_hide_s", "w3d_pelt_wolf_hide_m", "w3d_pelt_wolf_hide_l"],
         "berries": ["item_017_berries_s", "item_017_berries_m", "item_017_berries_l"],
         "hazelnuts": ["item_018_hazelnuts_s", "item_018_hazelnuts_m", "item_018_hazelnuts_l"],
         "wild_grain": ["item_019_wild_grain_s", "item_019_wild_grain_m", "item_019_wild_grain_l"],
@@ -288,7 +289,7 @@
         "millet": ["item_067_millet_s", "item_067_millet_m", "item_067_millet_l"],
         "millet_seed": ["item_068_millet_seed_s", "item_068_millet_seed_m", "item_068_millet_seed_l"],
         "apple": ["item_069_apple_s", "item_069_apple_m", "item_069_apple_l"],
-        "goat_hide": ["item_070_goat_hide_s", "item_070_goat_hide_m", "item_070_goat_hide_l"],
+        "goat_hide": ["w3d_pelt_goat_hide_s", "w3d_pelt_goat_hide_m", "w3d_pelt_goat_hide_l"],
         "wool": ["item_071_wool_s", "item_071_wool_m", "item_071_wool_l"],
         "charcoal": ["item_072_charcoal_s", "item_072_charcoal_m", "item_072_charcoal_l"],
         "copper_ore": ["item_073_copper_ore_s", "item_073_copper_ore_m", "item_073_copper_ore_l"],

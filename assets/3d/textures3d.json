@@ -13,6 +13,7 @@
   "parts": {"log_end": 16},
   "alternates": {"14": 15, "24": 25},
   "model_surfaces": {
+    "fixture_cook": {"clay":38,"earth":36},
     "item_000_log_s": {"trunk":14,"wood":16},
     "item_000_log_m": {"trunk":14,"wood":16},
     "item_000_log_l": {"trunk":14,"wood":16},

@@ -1,0 +1,205 @@
+{
+ "models": {
+  "w3d_pelt_hide_s": {
+   "file": "models/w3d_pelt_hide_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.033,
+   "triangles": 528,
+   "materials": [
+    "fur",
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item",
+   "content_id": "hide",
+   "stack_display_count": 1
+  },
+  "w3d_pelt_hide_m": {
+   "file": "models/w3d_pelt_hide_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.11,
+   "triangles": 1584,
+   "materials": [
+    "fur",
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item",
+   "content_id": "hide",
+   "stack_display_count": 3
+  },
+  "w3d_pelt_hide_l": {
+   "file": "models/w3d_pelt_hide_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.224,
+   "triangles": 3168,
+   "materials": [
+    "fur",
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item",
+   "content_id": "hide",
+   "stack_display_count": 6
+  },
+  "w3d_pelt_wolf_hide_s": {
+   "file": "models/w3d_pelt_wolf_hide_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.036,
+   "triangles": 528,
+   "materials": [
+    "fur",
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item",
+   "content_id": "wolf_hide",
+   "stack_display_count": 1
+  },
+  "w3d_pelt_wolf_hide_m": {
+   "file": "models/w3d_pelt_wolf_hide_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.116,
+   "triangles": 1584,
+   "materials": [
+    "fur",
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item",
+   "content_id": "wolf_hide",
+   "stack_display_count": 3
+  },
+  "w3d_pelt_wolf_hide_l": {
+   "file": "models/w3d_pelt_wolf_hide_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.236,
+   "triangles": 3168,
+   "materials": [
+    "fur",
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item",
+   "content_id": "wolf_hide",
+   "stack_display_count": 6
+  },
+  "w3d_pelt_goat_hide_s": {
+   "file": "models/w3d_pelt_goat_hide_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.033,
+   "triangles": 528,
+   "materials": [
+    "fur",
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item",
+   "content_id": "goat_hide",
+   "stack_display_count": 1
+  },
+  "w3d_pelt_goat_hide_m": {
+   "file": "models/w3d_pelt_goat_hide_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.107,
+   "triangles": 1584,
+   "materials": [
+    "fur",
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item",
+   "content_id": "goat_hide",
+   "stack_display_count": 3
+  },
+  "w3d_pelt_goat_hide_l": {
+   "file": "models/w3d_pelt_goat_hide_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.217,
+   "triangles": 3168,
+   "materials": [
+    "fur",
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item",
+   "content_id": "goat_hide",
+   "stack_display_count": 6
+  },
+  "w3d_pelt_cured_hide_s": {
+   "file": "models/w3d_pelt_cured_hide_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.027,
+   "triangles": 528,
+   "materials": [
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item",
+   "content_id": "cured_hide",
+   "stack_display_count": 1
+  },
+  "w3d_pelt_cured_hide_m": {
+   "file": "models/w3d_pelt_cured_hide_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.089,
+   "triangles": 1584,
+   "materials": [
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item",
+   "content_id": "cured_hide",
+   "stack_display_count": 3
+  },
+  "w3d_pelt_cured_hide_l": {
+   "file": "models/w3d_pelt_cured_hide_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.182,
+   "triangles": 3168,
+   "materials": [
+    "hide"
+   ],
+   "sockets": {},
+   "family": "item",
+   "content_id": "cured_hide",
+   "stack_display_count": 6
+  }
+ }
+}
