@@ -10,7 +10,7 @@
   "camera": {
     "fov_deg": 30.0,
     "pitch_deg": 45.0,
-    "pitch_by_zoom": [[0.25, 50.0], [0.5, 45.0], [1.0, 40.0], [2.0, 45.0], [4.0, 45.0]],
+    "pitch_by_zoom": [[0.25, 48.0], [0.5, 40.0], [1.0, 34.0], [2.0, 28.0], [4.0, 22.0]],
     "zooms": [0.25, 0.5, 1.0, 2.0, 4.0],
     "default_zoom": 1.0,
     "px_per_tile_at_1x": 64.0,
@@ -107,6 +107,7 @@
     "tint": {"skin_value": [0.8, 1.2], "hair_mix": 0.6, "cloth_hue_mix": 0.3, "cloth_value": [0.8, 1.2]},
     "far_scale": [55.0, 2.2],
     "style2_far_scale": [49.0, 2.65],
+    "style2_far_fill_range": [95.0, 120.0],
     "far_fill": [0.16, 0.13, 0.11],
     "far_fill_night": [0.91, 0.89, 0.81],
     "far_fill_strength": 1.0,
