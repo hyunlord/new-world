@@ -1,0 +1,548 @@
+{
+ "models": {
+  "w3d_item_clay_s": {
+   "file": "models/w3d_item_clay_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.187,
+   "triangles": 20,
+   "materials": [
+    "clay"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 7,
+   "content_id": "clay",
+   "stack_display_count": 1
+  },
+  "w3d_item_clay_m": {
+   "file": "models/w3d_item_clay_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.306,
+   "triangles": 60,
+   "materials": [
+    "clay"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 7,
+   "content_id": "clay",
+   "stack_display_count": 3
+  },
+  "w3d_item_clay_l": {
+   "file": "models/w3d_item_clay_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.447,
+   "triangles": 120,
+   "materials": [
+    "clay"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 7,
+   "content_id": "clay",
+   "stack_display_count": 6
+  },
+  "w3d_item_raw_pot_s": {
+   "file": "models/w3d_item_raw_pot_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.3,
+   "triangles": 76,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 8,
+   "content_id": "raw_pot",
+   "stack_display_count": 1
+  },
+  "w3d_item_raw_pot_m": {
+   "file": "models/w3d_item_raw_pot_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.4,
+   "triangles": 228,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 8,
+   "content_id": "raw_pot",
+   "stack_display_count": 3
+  },
+  "w3d_item_raw_pot_l": {
+   "file": "models/w3d_item_raw_pot_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.55,
+   "triangles": 456,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 8,
+   "content_id": "raw_pot",
+   "stack_display_count": 6
+  },
+  "w3d_item_porridge_s": {
+   "file": "models/w3d_item_porridge_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.3,
+   "triangles": 76,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 23,
+   "content_id": "porridge",
+   "stack_display_count": 1
+  },
+  "w3d_item_porridge_m": {
+   "file": "models/w3d_item_porridge_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.4,
+   "triangles": 228,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 23,
+   "content_id": "porridge",
+   "stack_display_count": 3
+  },
+  "w3d_item_porridge_l": {
+   "file": "models/w3d_item_porridge_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.55,
+   "triangles": 456,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 23,
+   "content_id": "porridge",
+   "stack_display_count": 6
+  },
+  "w3d_item_berries_s": {
+   "file": "models/w3d_item_berries_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.205,
+   "triangles": 20,
+   "materials": [
+    "fruit"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 17,
+   "content_id": "berries",
+   "stack_display_count": 1
+  },
+  "w3d_item_berries_m": {
+   "file": "models/w3d_item_berries_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.304,
+   "triangles": 60,
+   "materials": [
+    "fruit"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 17,
+   "content_id": "berries",
+   "stack_display_count": 3
+  },
+  "w3d_item_berries_l": {
+   "file": "models/w3d_item_berries_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.454,
+   "triangles": 120,
+   "materials": [
+    "fruit"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 17,
+   "content_id": "berries",
+   "stack_display_count": 6
+  },
+  "w3d_item_dried_berries_s": {
+   "file": "models/w3d_item_dried_berries_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.186,
+   "triangles": 20,
+   "materials": [
+    "fruit"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 26,
+   "content_id": "dried_berries",
+   "stack_display_count": 1
+  },
+  "w3d_item_dried_berries_m": {
+   "file": "models/w3d_item_dried_berries_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.292,
+   "triangles": 60,
+   "materials": [
+    "fruit"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 26,
+   "content_id": "dried_berries",
+   "stack_display_count": 3
+  },
+  "w3d_item_dried_berries_l": {
+   "file": "models/w3d_item_dried_berries_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.435,
+   "triangles": 120,
+   "materials": [
+    "fruit"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 26,
+   "content_id": "dried_berries",
+   "stack_display_count": 6
+  },
+  "w3d_item_emmer_seed_s": {
+   "file": "models/w3d_item_emmer_seed_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.198,
+   "triangles": 20,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 31,
+   "content_id": "emmer_seed",
+   "stack_display_count": 1
+  },
+  "w3d_item_emmer_seed_m": {
+   "file": "models/w3d_item_emmer_seed_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.296,
+   "triangles": 60,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 31,
+   "content_id": "emmer_seed",
+   "stack_display_count": 3
+  },
+  "w3d_item_emmer_seed_l": {
+   "file": "models/w3d_item_emmer_seed_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.455,
+   "triangles": 120,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 31,
+   "content_id": "emmer_seed",
+   "stack_display_count": 6
+  },
+  "w3d_item_wild_grain_s": {
+   "file": "models/w3d_item_wild_grain_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.204,
+   "triangles": 20,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 19,
+   "content_id": "wild_grain",
+   "stack_display_count": 1
+  },
+  "w3d_item_wild_grain_m": {
+   "file": "models/w3d_item_wild_grain_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.285,
+   "triangles": 60,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 19,
+   "content_id": "wild_grain",
+   "stack_display_count": 3
+  },
+  "w3d_item_wild_grain_l": {
+   "file": "models/w3d_item_wild_grain_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.441,
+   "triangles": 120,
+   "materials": [
+    "thatch"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 19,
+   "content_id": "wild_grain",
+   "stack_display_count": 6
+  },
+  "w3d_item_stone_s": {
+   "file": "models/w3d_item_stone_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.189,
+   "triangles": 20,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 2,
+   "content_id": "stone",
+   "stack_display_count": 1
+  },
+  "w3d_item_stone_m": {
+   "file": "models/w3d_item_stone_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.3,
+   "triangles": 60,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 2,
+   "content_id": "stone",
+   "stack_display_count": 3
+  },
+  "w3d_item_stone_l": {
+   "file": "models/w3d_item_stone_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.446,
+   "triangles": 120,
+   "materials": [
+    "stone"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 2,
+   "content_id": "stone",
+   "stack_display_count": 6
+  },
+  "w3d_item_hazelnuts_s": {
+   "file": "models/w3d_item_hazelnuts_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.185,
+   "triangles": 20,
+   "materials": [
+    "wood"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 18,
+   "content_id": "hazelnuts",
+   "stack_display_count": 1
+  },
+  "w3d_item_hazelnuts_m": {
+   "file": "models/w3d_item_hazelnuts_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.297,
+   "triangles": 60,
+   "materials": [
+    "wood"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 18,
+   "content_id": "hazelnuts",
+   "stack_display_count": 3
+  },
+  "w3d_item_hazelnuts_l": {
+   "file": "models/w3d_item_hazelnuts_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.457,
+   "triangles": 120,
+   "materials": [
+    "wood"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 18,
+   "content_id": "hazelnuts",
+   "stack_display_count": 6
+  },
+  "w3d_item_clay_pot_s": {
+   "file": "models/w3d_item_clay_pot_s.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.3,
+   "triangles": 76,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 9,
+   "content_id": "clay_pot",
+   "stack_display_count": 1
+  },
+  "w3d_item_clay_pot_m": {
+   "file": "models/w3d_item_clay_pot_m.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.4,
+   "triangles": 228,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 9,
+   "content_id": "clay_pot",
+   "stack_display_count": 3
+  },
+  "w3d_item_clay_pot_l": {
+   "file": "models/w3d_item_clay_pot_l.glb",
+   "footprint": [
+    1,
+    1
+   ],
+   "height": 0.55,
+   "triangles": 456,
+   "materials": [
+    "clay",
+    "earth"
+   ],
+   "sockets": {},
+   "family": "item",
+   "item_code": 9,
+   "content_id": "clay_pot",
+   "stack_display_count": 6
+  },
+  "w3d_station_pottery_bench": {
+   "file": "models/w3d_station_pottery_bench.glb",
+   "footprint": [
+    2,
+    1
+   ],
+   "height": 0.805,
+   "triangles": 476,
+   "materials": [
+    "wood",
+    "wood_dark",
+    "clay",
+    "earth",
+    "stone"
+   ],
+   "sockets": {
+    "work": [
+     0,
+     0,
+     0.85
+    ]
+   },
+   "family": "station",
+   "overhang": true
+  }
+ }
+}
