@@ -52,6 +52,11 @@ Colony behaviour changes on purpose (exclusive beds, more steward house demand);
 module and carry an empty tail. H2 (extensions), the renderer's roof work (H4) and the inspector line are later
 passes.
 
+## Source
+
+Owner decision 2026-11-20 (BRIEF_HOUSE1) and the SYS3D audit, sections H1 and H3; pass decisions in
+[HOUSE1_DECISIONS](../v8/house1/HOUSE1_DECISIONS.md).
+
 ## Date
 
 2026-11-20
