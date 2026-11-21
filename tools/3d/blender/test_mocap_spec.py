@@ -169,6 +169,23 @@ def test_combining_specs_rejects_duplicate_visual_keys(tmp_path: Path) -> None:
         M.load_many((path, path))
 
 
+def test_set_down_reverses_the_pick_up_source_with_planted_feet() -> None:
+    spec = Path(__file__).parent / "mocap"
+    pick, = M.load(spec / "pick_up.ron")
+    place, = M.load(spec / "set_down.ron")
+    assert place.takes == ("115_01",)
+    assert place.reverse and not pick.reverse
+    assert place.foot_lock and place.target.release
+    assert (place.tags, place.trim, place.heading, place.posture, place.hands) == (
+        pick.tags, pick.trim, pick.heading, pick.posture, pick.hands)
+    assert place.contacts[0] == pytest.approx(1. - pick.contacts[0])
+
+
+def test_loads_phase_limits_for_torso_lean(tmp_path: Path) -> None:
+    curve: M.Value = [[0, 9], [0.5, 23], [1, 9]]
+    assert action(tmp_path, {"torso_lean": curve}).torso_lean == ((0., 9.), (.5, 23.), (1., 9.))
+
+
 @pytest.mark.parametrize(("field", "value"), [
     ("duration", 0),
     ("duration", float("inf")),
@@ -178,6 +195,9 @@ def test_combining_specs_rejects_duplicate_visual_keys(tmp_path: Path) -> None:
     ("retime", [[0, 0], [0.6, 0.7], [0.7, 0.7], [1, 1]]),
     ("impact_window", [0.2, 0]),
     ("impact_window", [0.55, 0.2]),
+    ("torso_lean", [[0, 9], [0.6, 20], [0.5, 10], [1, 9]]),
+    ("torso_lean", [[0, 9], [1, 65]]),
+    ("torso_lean", [[0, 9], [0.9, 9]]),
 ])
 def test_rejects_invalid_output_timing(tmp_path: Path, field: str, value: M.Value) -> None:
     with pytest.raises(M.SpecError, match=field):

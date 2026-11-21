@@ -4,6 +4,7 @@
 # dependencies = ["Pillow>=10.1"]
 # ///
 # How to run: python3 tools/3d/blender/mocap_review.py contact BAKED_DIR
+# noqa: SIZE_OK - The review commands share capture receipts and panel helpers.
 """Assemble review sheets and 30 fps GIFs from captures of the baked VAT."""
 
 from dataclasses import dataclass
@@ -26,6 +27,8 @@ FINAL_KEYS: Final = (*PILOT, "dig", "build", "sit", "sit_log", "talk", "pick_up"
 FINAL_PICKS: Final = {"dig": 3, "build": 3, "sit": 4, "sit_log": 4}
 FINAL_CHECKS: Final = (("chop", "apex", "Apex grip"), ("chop", "garment", "Garment worst"),
                        ("cook", "stir", "Stir clearance"), ("chop", "rebound", "Axe lift-out"))
+REVISION_KEYS: Final = ("build", "set_down")
+STRIP_COUNT: Final = 12
 GUTTER: Final = 106
 LABEL_HEIGHT: Final = 24
 ROW: Final = CELL + LABEL_HEIGHT
@@ -48,6 +51,7 @@ class Clip(TypedDict):
     detail: NotRequired[int]
     hero: NotRequired[int]
     checks: NotRequired[dict[str, int]]
+    strip: NotRequired[list[int]]
 
 
 class Body(TypedDict):
@@ -196,8 +200,21 @@ def final_frame(capture: Capture, key: str, body: str, view: str, check: str) ->
     return path, sample
 
 
-def final_sheet(captures: tuple[Capture, ...], output: Path) -> None:
-    """Show every action and each carry-forward check across bodies and views."""
+def stamp_frame(canvas: Image.Image, draw: ImageDraw.ImageDraw, font: ImageFont.FreeTypeFont | ImageFont.ImageFont,
+                position: tuple[int, int], path: Path, sample: int, size: int = CELL) -> None:
+    """Place one native frame and its timecode in the review grid."""
+    if not path.is_file():
+        raise ReviewError(f"Missing review frame {path}")
+    with Image.open(path) as image:
+        if image.size != (size, size):
+            raise ReviewError(f"{path}: expected {size} × {size} capture")
+        canvas.paste(image if size == CELL else image.resize((CELL, CELL), Image.Resampling.LANCZOS), position)
+    x, y = position
+    draw.text((x + 7, y + CELL + 2), f"Frame {sample}  /  {sample / 30:.2f}s", font=font, fill=INK)
+
+
+def final_sheet(captures: tuple[Capture, ...], output: Path, *, revision: bool = False) -> None:
+    """Show the full review or the two revised actions and their sampled p1 timelines."""
     by_key: dict[str, Capture] = {}
     for capture in captures:
         keys = capture.bodies["p1"]["clips"].keys()
@@ -207,20 +224,26 @@ def final_sheet(captures: tuple[Capture, ...], output: Path) -> None:
             if key in by_key:
                 raise ReviewError(f"{key} appears in more than one capture directory")
             by_key[key] = capture
-    missing = [key for key in FINAL_KEYS if key not in by_key]
+    required = REVISION_KEYS if revision else FINAL_KEYS
+    missing = [key for key in required if key not in by_key]
     if missing:
         raise ReviewError(f"Missing final-review actions: {', '.join(missing)}")
-    keys = (*FINAL_KEYS, *(key for key in by_key if key not in FINAL_KEYS))
+    keys = required if revision else (*required, *(key for key in by_key if key not in required))
     rows = [(key, "", DISPLAY_NAMES.get(key, key.replace("_", " ").capitalize())) for key in keys]
-    rows.extend(FINAL_CHECKS)
+    if not revision:
+        rows.extend(FINAL_CHECKS)
     gutter, gap, header = 156, 10, 112
     group = len(VIEWS) * CELL + gap
-    canvas = Image.new("RGB", (gutter + group * len(BODY_LABELS), header + len(rows) * ROW + SECTION), BACKGROUND)
+    columns = len(BODY_LABELS)
+    strip_height = SECTION + ROW * ((STRIP_COUNT + columns - 1) // columns)
+    extra_height = len(keys) * strip_height if revision else SECTION
+    canvas = Image.new("RGB", (gutter + group * columns, header + len(rows) * ROW + extra_height), BACKGROUND)
     draw = ImageDraw.Draw(canvas)
     title = ImageFont.load_default(size=28)
     label = ImageFont.load_default(size=19)
     small = ImageFont.load_default(size=16)
-    draw.text((16, 10), "S2 Villager Actions / Final Review", font=title, fill=INK)
+    heading = "Hammer/build and set down" if revision else "Final Review"
+    draw.text((16, 10), f"S2 Villager Actions / {heading}", font=title, fill=INK)
     for col, body in enumerate(BODY_LABELS.values()):
         x = gutter + group * col
         draw.text((x + CELL, 53), body, font=label, fill=INK, anchor="mt")
@@ -237,19 +260,31 @@ def final_sheet(captures: tuple[Capture, ...], output: Path) -> None:
             for angle, view in enumerate(VIEWS):
                 x = gutter + col * group + angle * CELL
                 path, sample = final_frame(by_key[key], key, body, view, check)
-                with Image.open(path) as frame:
-                    size = 440 if check else CELL
-                    if frame.size != (size, size):
-                        raise ReviewError(f"{path}: expected {size} × {size} capture")
-                    canvas.paste(frame.resize((CELL, CELL), Image.Resampling.LANCZOS), (x, y))
-                draw.text((x + 7, y + CELL + 2), f"Frame {sample}  /  {sample / 30:.2f}s", font=small, fill=INK)
+                stamp_frame(canvas, draw, small, (x, y), path, sample, 440 if check else CELL)
+    if revision:
+        for action_index, (key, _, name) in enumerate(rows):
+            capture = by_key[key]
+            clip = capture.bodies["p1"]["clips"][key]
+            samples = clip.get("strip", [])
+            if (len(samples) != STRIP_COUNT or sorted(set(samples)) != samples
+                    or not 0 <= samples[0] < samples[-1] < clip["count"]):
+                raise ReviewError(f"{key} needs twelve distinct p1 frames in playback order")
+            top = header + len(rows) * ROW + action_index * strip_height
+            draw.text((16, top + 9), f"{name} / p1 / {STRIP_COUNT} frames / Side then front 3/4",
+                      font=label, fill=INK)
+            for sample_index, sample in enumerate(samples):
+                row, col = divmod(sample_index, columns)
+                y = top + SECTION + row * ROW
+                for angle, view in enumerate(VIEWS):
+                    x = gutter + col * group + angle * CELL
+                    stamp_frame(canvas, draw, small, (x, y), capture.frame(key, "p1", view, sample), sample)
     output.parent.mkdir(parents=True, exist_ok=True)
     canvas.save(output)
 
 
 def main(argv: list[str]) -> int:
     """Run one captured spec or the matched CLIPS1/MOCAP1 review."""
-    match argv:
+    match argv:  # noqa: MATCH_OK - Unknown argument combinations print usage.
         case ["contact", root]:
             capture = read_capture(Path(root), "MOCAP1")
             make_sheet((capture,), tuple(capture.bodies["p1"]["clips"]), Path(root) / "contact-sheet.png")
@@ -258,6 +293,8 @@ def main(argv: list[str]) -> int:
             make_sheet((capture,), tuple(capture.bodies["p1"]["clips"]), Path(output))
         case ["final", *roots, "--output", output] if roots:
             final_sheet(tuple(read_capture(Path(root), "MOCAP1") for root in roots), Path(output))
+        case ["revision", root, "--output", output]:
+            final_sheet((read_capture(Path(root), "MOCAP1"),), Path(output), revision=True)
         case ["compare", old, new, output]:
             old_capture = read_capture(Path(old), "CLIPS1 keyframe")
             new_capture = read_capture(Path(new), "MOCAP1")
@@ -270,7 +307,7 @@ def main(argv: list[str]) -> int:
                     write_gif(src, key, destination / "gif" / f"{name}_{suffix}.gif")
         case _:
             print("Usage: mocap_review.py contact BAKED_DIR [--output FILE] | compare OLD NEW OUTPUT_DIR"
-                  " | final BAKED_DIR [BAKED_DIR ...] --output FILE",
+                  " | final BAKED_DIR [BAKED_DIR ...] --output FILE | revision BAKED_DIR --output FILE",
                   file=sys.stderr)
             return 2
     return 0

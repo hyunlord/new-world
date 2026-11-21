@@ -2,6 +2,7 @@
 
 from dataclasses import asdict
 import json
+import math
 import os
 from pathlib import Path
 import sys
@@ -27,7 +28,7 @@ REVIEW_PHASES = (0., .20, .40, .60, .80, .97)
 Source = tuple[Take, Motion]
 
 
-def review_for(action: Action, frames: list[dict[str, float]], deformation: DeformationReport) -> ReviewAction:
+def review_for(action: Action, frames: list[dict[str, float]], deformation: DeformationReport, mode: str) -> ReviewAction:
     phases = REVIEW_PHASES
     detail = None
     checks = []
@@ -52,6 +53,11 @@ def review_for(action: Action, frames: list[dict[str, float]], deformation: Defo
             phases = (0., hit / 2, hit, hit + (1 - hit) / 3, hit + 2 * (1 - hit) / 3, 1.)
     if action.target.kind == "circle":
         checks.append(("stir", min(range(len(frames)), key=lambda i: frames[i]["head_above_rim_m"])))
+    contact = action.contacts[0] if action.contacts else None
+    if mode == "strip":
+        return ReviewAction(phases, action.prop, action.fixture, action.target.anchor, prop_hand(action),
+                            action.target.fixture_radius, hero=hero if contact is None else contact,
+                            strip=12, strip_contact=contact)
     return ReviewAction(phases, action.prop, action.fixture, action.target.anchor, prop_hand(action),
                         action.target.fixture_radius, detail, tuple(checks), hero)
 
@@ -168,6 +174,11 @@ def bake(kit: Path, out: Path, body: str, sources: tuple[tuple[Action, Source, S
             feet = solver.pose(phase)
             frame = constrain(arm, mesh, grips, action, phase, contact_wrists, prop_points, body)
             measured = {"phase": phase, "foot_R": feet[0], "foot_L": feet[1], **frame.errors}
+            if action.torso_lean:
+                bones = arm.pose.bones
+                hip = bones["hips"].head
+                measured["torso_lean_deg"] = math.degrees((bones["neck"].head - hip).angle(C.Z))
+                measured["hip_x_m"], measured["hip_y_m"] = hip.x, hip.y
             if action.target.kind == "circle":
                 neck, head = (arm.pose.bones[name].head.z for name in ("neck", "head"))
                 measured["hand_below_chin_m"] = (neck + head) / 2 - frame.sockets[prop_hand(action)].translation.z
@@ -231,8 +242,36 @@ def bake(kit: Path, out: Path, body: str, sources: tuple[tuple[Action, Source, S
                 np.savez_compressed(out / f"{asset}-{action.key}-deformation.npz", rest=rest, triangles=triangles,
                                     weights=weights, frames=sampled, corrected=corrected, grips=grips)
             failures.extend(measure_pose(action, body, rest, decoded, grips, accuracy, contacts))
+            if action.target.release or action.torso_lean:
+                # Staff removal can leave unrendered vertices below the boots.
+                surface_indices = np.unique(triangles)
+                sole_indices = surface_indices[rest[surface_indices, 2] <= PLANTED_SOLE_M]
+                soles = decoded[:, sole_indices]
+            if action.target.release:
+                placed = prop_sockets[action.key][contacts[0]:]
+                drift = max((pose.translation - C.Vector(action.target.anchor)).length for pose in placed)
+                records[action.key]["release_drift_m"] = drift * BODY_SCALE[body]
+                if drift > .001:
+                    failures.append(f"{body} {action.key}: released prop drift ({drift:.3f} m)")
+                if action.foot_lock:
+                    slide = float(np.linalg.norm(soles - soles[0], axis=2).max()) * BODY_SCALE[body]
+                    records[action.key]["sole_slide_m"] = slide
+                    if slide > .01:
+                        failures.append(f"{body} {action.key}: planted sole slide ({slide:.3f} m)")
+            if action.torso_lean:
+                lean_phases, caps = zip(*action.torso_lean)
+                for frame, sole in zip(accuracy, soles):
+                    hip = np.array([frame["hip_x_m"], frame["hip_y_m"]])
+                    ground = sole[:, :2]
+                    excess = np.maximum(ground.min(axis=0) - hip, hip - ground.max(axis=0)).clip(0., None)
+                    frame["hip_outside_stance_m"] = float(np.linalg.norm(excess)) * BODY_SCALE[body]
+                if any(frame["torso_lean_deg"] > np.interp(frame["phase"], lean_phases, caps) + .05
+                       for frame in accuracy):
+                    failures.append(f"{body} {action.key}: torso exceeds the authored lean")
+                if max(frame["hip_outside_stance_m"] for frame in accuracy) > .005:
+                    failures.append(f"{body} {action.key}: hips move outside the planted feet")
             if mode != "bake":
-                review[action.key] = review_for(action, accuracy, report)
+                review[action.key] = review_for(action, accuracy, report, mode)
         print(f"MOCAP_BAKED {body} {action.key} {take.id} {len(phases)} frames", flush=True)
     vat = np.stack(rows)
     vat = np.stack((vat[:, :, 0], vat[:, :, 2], -vat[:, :, 1], np.ones(vat.shape[:2])), axis=2)
@@ -256,7 +295,7 @@ def bake(kit: Path, out: Path, body: str, sources: tuple[tuple[Action, Source, S
     (out / f"{asset}-contacts.json").write_text(json.dumps(records, indent=1) + "\n")
     if mode != "bake" and not failures:
         capture_body(kit, out, mesh, body, tuple(review), clips, sockets, vat, review=review, fps=FPS,
-                     prop_sockets=prop_sockets, selected_only=mode == "final")
+                     prop_sockets=prop_sockets, selected_only=mode in ("final", "strip"))
     return failures
 
 

@@ -170,6 +170,21 @@ class Retarget:
             for name in ("spine", "chest", "neck", "head",
                          *(f"{segment}_{side}" for side in SIDES for segment in ("upper_arm", "lower_arm", "hand"))):
                 rotations[name] = extension @ rotations[name]
+        if self.action.torso_lean:
+            torso = Vector()
+            for name in ("spine", "chest", "neck"):
+                bone = bones[name]
+                parent = bone.parent.name
+                offset = bone.bone.head_local - bone.parent.bone.head_local
+                torso += rotations[parent] @ (self.rest[parent].inverted() @ offset)
+            phases, caps = zip(*self.action.torso_lean)
+            limit = math.radians(np.interp(phase, phases, caps))
+            angle = torso.angle(C.Z)
+            if angle > limit:
+                turn = Quaternion().slerp(torso.rotation_difference(C.Z), 1. - limit / angle)
+                for name in ("hips", "spine", "chest", "neck", "head",
+                             *(f"{segment}_{side}" for side in SIDES for segment in ("upper_arm", "lower_arm", "hand"))):
+                    rotations[name] = turn @ rotations[name]
         for bone in bones:
             name = bone.name
             base = self.rest[name]

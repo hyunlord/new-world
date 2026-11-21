@@ -30,6 +30,7 @@ def main() -> int:
     mode_flags.add_argument("--compare", action="store_true", help="also bake CLIPS1 and compare chop and cook")
     mode_flags.add_argument("--bake-only", action="store_true", help="validate the VAT without rendering a review")
     mode_flags.add_argument("--review-slice", action="store_true", help="render only the selected review frames")
+    mode_flags.add_argument("--review-strip", action="store_true", help="render the contact and a 12-frame p1 strip")
     parser.add_argument("--body", choices=BODIES, action="append", help="only for a focused bake-only check")
     args = parser.parse_args()
     if args.body and not args.bake_only:
@@ -53,13 +54,15 @@ def main() -> int:
     bodies = ",".join(args.body or BODIES)
     variant = save / "new" if args.compare else save
 
-    mode = "bake" if args.bake_only else ("compare" if args.compare else "final" if args.review_slice else "render")
+    mode = next((key for enabled, key in ((args.bake_only, "bake"), (args.compare, "compare"),
+                                         (args.review_slice, "final"), (args.review_strip, "strip")) if enabled),
+                "render")
     inherited = os.environ.get("WORLDSIM_MUX2_LANE_FD")
     descriptors = () if inherited is None else (int(inherited),)
     parameters = (specs[0], index, kit, save, bodies, mode, *specs[1:])
     subprocess.run([*lock, *worker, *map(str, parameters)], cwd=REPO, check=True,
                    pass_fds=descriptors)
-    if args.bake_only or args.review_slice:
+    if mode in ("bake", "final", "strip"):
         return 0
     review = [python, str(HERE / "mocap_review.py")]
     subprocess.run([*review, "contact", str(variant)], check=True)

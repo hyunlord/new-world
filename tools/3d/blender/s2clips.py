@@ -72,6 +72,13 @@ def prop_mesh(name: str) -> bpy.types.Object:
             model.rod("wood_dark", (0, 0, -.12), (0, 0, .35), .019, segs=8)
             model.rod("stone", (-.071, 0, .34), (.095, 0, .34), .057, segs=8, r2=.045)
             model.rod("hide", (0, 0, .295), (0, 0, .37), .031, segs=8)
+        case "mallet":
+            model.rod("wood", (0, 0, -.13), (0, 0, .525), .023, segs=8, r2=.028)
+            model.rod("stone", (-.132, 0, .50), (-.107, 0, .50), .047, segs=8, r2=.066)
+            model.rod("stone", (-.107, 0, .50), (.138, 0, .50), .066, segs=8, r2=.063)
+            model.rod("stone", (.138, 0, .50), (.163, 0, .50), .063, segs=8, r2=.049)
+            for at in (-.025, .015):
+                model.rod("hide", (at, 0, .50), (at + .012, 0, .50), .068, segs=8)
         case "basket":
             # Right and left palms grasp the upper rim 34 cm apart.
             model.lathe("wood", ((.103, -.24), (.135, -.219), (.169, -.04), (.173, 0.)),

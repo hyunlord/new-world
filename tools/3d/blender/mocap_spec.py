@@ -105,6 +105,7 @@ class Action:
     duration: float | None
     impact_window: tuple[float, float]
     in_place: bool
+    torso_lean: tuple[tuple[float, float], ...]
 
 
 @dataclass(frozen=True, slots=True)
@@ -302,9 +303,21 @@ def _impact_window(value: Value) -> tuple[float, float]:
     return _positive(approach, "impact_window approach", 0.5), _positive(release, "impact_window release", 0.5)
 
 
+def _torso_lean(value: Value) -> tuple[tuple[float, float], ...]:
+    try:
+        curve = tuple((_num(phase, 0, 1), _num(degrees, 0, 60))
+                      for point in _array(value) for phase, degrees in [_array(point, 2)])
+        _ordered(tuple(phase for phase, _ in curve))
+        if len(curve) < 2 or curve[0][0] != 0 or curve[-1][0] != 1:
+            raise SpecError("curve needs endpoints at phases zero and one")
+        return curve
+    except SpecError as error:
+        raise SpecError(f"torso_lean: {error}") from error
+
+
 def _action(key: str, value: Value) -> Action:
     row = _map(value, "tags takes trim loop speed stoop prop hands target foot_lock contacts fixture "
-               "reverse heading posture base_layer arm_limits retime duration impact_window in_place",
+               "reverse heading posture base_layer arm_limits retime duration impact_window in_place torso_lean",
                "trim loop target foot_lock")
     tags, takes = _source(row)
     start, finish = (_num(second, 0) for second in _array(row["trim"], 2))
@@ -356,7 +369,7 @@ def _action(key: str, value: Value) -> Action:
                   _base_layer(key, row["base_layer"]) if "base_layer" in row else None, arm_limits,
                   _retime(row["retime"]) if "retime" in row else (),
                   _positive(row["duration"], "duration") if "duration" in row else None,
-                  impact_window, in_place)
+                  impact_window, in_place, _torso_lean(row["torso_lean"]) if "torso_lean" in row else ())
 
 
 def load(path: Path) -> tuple[Action, ...]:

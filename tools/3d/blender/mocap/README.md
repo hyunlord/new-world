@@ -9,6 +9,7 @@ Blender and Pillow. The pilot comparison also needs FFmpeg.
 tools/3d/blender/mocap_build.py tools/3d/blender/mocap/pilot.ron --compare
 tools/3d/blender/mocap_build.py tools/3d/blender/mocap/pick_up.ron
 tools/3d/blender/mocap_build.py tools/3d/blender/mocap/remaining.ron --review-slice
+tools/3d/blender/mocap_build.py tools/3d/blender/mocap/stake_build.ron tools/3d/blender/mocap/set_down.ron --review-strip
 ```
 
 `pilot.ron` contains the two comparison clips. `pick_up.ron` runs the same
@@ -17,7 +18,9 @@ social and carry poses. `walk_reference.ron` builds the review-only walk.
 Pass several spec paths to build one pack with unique action keys. Outputs
 default to `mocap1/builds/<first spec name>/`. Use a new `--out` for another
 attempt. `--review-slice` captures both camera angles at the review pose and at
-the measured detail frames. Use `--bake-only` when captures are unnecessary.
+the measured detail frames. `--review-strip` captures the contact in both views
+for all bodies and 12 time samples in both views for p1. Use `--bake-only`
+when captures are unnecessary.
 
 ## Select and trim a take
 
@@ -47,9 +50,10 @@ Set `duration` in seconds when the output differs from the trim length. Set
 `retime` to pairs of normalized playback and source phases. Both axes must
 increase from `[0, 0]` to `[1, 1]`.
 Use `heading` for a constant yaw correction in degrees. `reverse` plays the
-same trim backward. `in_place` removes net root travel from a take with moving feet.
-The rig is baked at
-one unit height across the four mesh shapes. Review renders use the S2 scale
+same trim backward. Keep the contact in output phase units. `set_down.ron`
+uses the pickup window in reverse and releases at phase 0.55.
+`in_place` removes net root travel from a take with moving feet.
+The rig is baked at one unit height across the four mesh shapes. Review renders use the S2 scale
 factors 1.00, 0.95, 0.70 and 0.97 for p1 through p4, including their props.
 
 ## Place the action
@@ -76,6 +80,11 @@ output playback order.
 | `target.release_offset`, `target.release_pitch` | Optional blade-tip movement in metres and upward pitch in degrees after impact. |
 | `windup` | Phase and world-space prop offset at the swing apex. |
 | `face_clearance`, `rim_clearance`, `rebound_clearance` | Minimum distances in metres at the swing apex, above a stir fixture and after impact. |
+
+`torso_lean` is an optional curve of `[phase, maximum degrees from vertical]`
+pairs. The bake checks the posed torso and the hips against the planted feet.
+For placement actions with foot lock, the bake checks both soles against their
+initial position and the prop against its contact position through the end.
 
 For a layered pose, give `base_layer` a take or search tags and its own `trim`
 and `heading`. `weight` multiplies each per-bone value in `mask`. The `root`

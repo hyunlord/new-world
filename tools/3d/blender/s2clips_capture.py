@@ -35,6 +35,8 @@ class ReviewAction:
     detail: float | None = None
     checks: tuple[tuple[str, int], ...] = ()
     hero: float = .60
+    strip: int = 0
+    strip_contact: float | None = None
 
 
 class Clip(TypedDict):
@@ -103,6 +105,12 @@ def fixture(name: str | None, anchor: tuple[float, float, float] | None = None,
                 shape.rod("trunk", (x + dx, y + dy, 0), (x + dx, y + dy, height - .035), .04, segs=7)
         for dy in (-.112, 0, .112):
             shape.box("wood", (.58, .108, .075), loc=(x, y + dy, height - .0375))
+        return shape.build_object()
+    if name == "stake" and anchor is not None and radius is not None:
+        x, y, top = anchor
+        shoulder = top - .06
+        shape.rod("trunk", (x, y, 0), (x, y, shoulder), 1.18 * radius, segs=9, r2=1.12 * radius)
+        shape.rod("wood", (x, y, shoulder), (x, y, top), 1.12 * radius, segs=9, r2=radius)
         return shape.build_object()
     if name in ("soil", "plant_patch") and anchor is not None:
         x, y, top = anchor
@@ -240,6 +248,18 @@ def capture_body(root: Path, out: Path, mesh: bpy.types.Object, body: str, names
         if context is not None:
             context.matrix_world = stage_scale @ context.matrix_world
         standard = set(picks) if hero is None or not selected_only else {hero}
+        if action is not None and action.strip and body == "p1":
+            if not 3 <= action.strip <= count:
+                raise ValueError(f"{name} needs between three and {count} strip frames")  # noqa: GENERIC_ERR_OK
+            strip = [round((count - 1) * i / (action.strip - 1)) for i in range(action.strip)]
+            if action.strip_contact is not None:
+                contact = min(count - 1, round(end * action.strip_contact))
+                if contact not in strip:
+                    nearest = min(range(1, len(strip) - 1), key=lambda i: abs(strip[i] - contact))
+                    strip[nearest] = contact
+                    strip.sort()
+            review_clips[name]["strip"] = strip
+            standard.update(strip)
         selected = sorted(standard | set(checks.values()) | ({detail} if detail is not None else set()))
         for frame in (range(count) if body == "p1" and not selected_only else selected):
             positions = A.blender_positions(vat[clip["start"] + frame])

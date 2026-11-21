@@ -21,28 +21,6 @@
     "foot_lock": true,
     "contacts": [0.5328467153284672]
   },
-  "build": {
-    "tags": ["bang on high object", "hammer", "building"],
-    "takes": ["82_16"],
-    "trim": [5.275, 6.066666666666666],
-    "duration": 0.85,
-    "loop": true,
-    "heading": 172,
-    "prop": "hammer",
-    "hands": {
-      "R": {"target": "prop", "offset": [0, 0, 0]},
-      "L": {"target": "anchor", "offset": [0.24, 0.12, 0.025]}
-    },
-    "target": {
-      "kind": "swing", "anchor": [-0.22, -0.68, 1.21], "tip": [0.095, 0, 0.385],
-      "orientation": [0.03, -0.81, -0.59], "fixture_radius": 0.18,
-      "solid": true, "release_offset": [0, 0.04, 0.09], "release_pitch": 8
-    },
-    "fixture": "workbench",
-    "foot_lock": true,
-    "contacts": [0.8],
-    "impact_window": [0.17, 0.10]
-  },
   "sit": {
     "tags": ["sitting on ground relaxing", "rest"],
     "takes": ["82_05"],
@@ -71,19 +49,6 @@
     "heading": -177,
     "target": {"kind": "free"},
     "foot_lock": true
-  },
-  "set_down": {
-    "tags": ["set down in another place", "place object"],
-    "takes": ["69_73"],
-    "trim": [6.341666666666667, 8.125],
-    "loop": false,
-    "heading": -111,
-    "in_place": true,
-    "prop": "basket",
-    "hands": {"L": {"target": "prop", "offset": [0.34, 0, 0]}},
-    "target": {"kind": "reach", "anchor": [-0.17, -0.52, 0.245], "release": true},
-    "foot_lock": false,
-    "contacts": [0.5]
   },
   "harvest": {
     "tags": ["bend over scoop up", "ground", "gather"],
