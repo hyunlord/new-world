@@ -1,4 +1,4 @@
-"""Offline shoulder and elbow surface relaxation for the mocap VAT bake."""
+"""Offline garment binding and surface relaxation for the mocap VAT bake."""
 
 from itertools import product
 from typing import Final, Sequence
@@ -6,7 +6,7 @@ from typing import Final, Sequence
 import numpy as np
 from numpy.typing import NDArray
 
-from mocap_deform import _double_areas, _edge_lengths, joint_geometry
+from mocap_deform import MAX_BODY_STRETCH, _double_areas, _edge_lengths, body_edge_geometry, joint_geometry
 
 FloatArray = NDArray[np.float64]
 IndexArray = NDArray[np.intp]
@@ -18,6 +18,39 @@ _RINGS: Final = 6
 _SWEEPS: Final = 60
 _SINGULAR_MAX: Final = 1.22
 _FOOT_HEIGHT: Final = .10
+PLANTED_SOLE_M: Final = .04
+
+
+def stabilize_garment_weights(points: FloatArray, rows: Sequence[dict[str, float]]) -> list[dict[str, float]]:
+    """Bind the shared hem to the pelvis and feather weight toward each thigh."""
+    bottom = points[:, 2].min()
+    height = points[:, 2].max() - bottom
+    x = points[:, 0] / height
+    z = (points[:, 2] - bottom) / height
+
+    def ramp(values: FloatArray, low: float, high: float) -> FloatArray:
+        t = np.clip((values - low) / (high - low), 0., 1.)
+        return t * t * (3. - 2. * t)
+
+    waist = ramp(z, .34, .44)
+    hem = ramp(z, .20, .29) * (1. - ramp(np.abs(x), .03, .19))
+    pelvis = waist + (1. - waist) * hem
+    shared = ramp(z, .20, .29)
+    left_share = ramp(x, -.065, .065)
+    corrected = []
+    for row, bind, crossfade, share in zip(rows, pelvis, shared, left_share):
+        weights = row.copy()
+        for segment in ("upper_leg", "lower_leg"):
+            right, left = f"{segment}_R", f"{segment}_L"
+            right_weight, left_weight = row.get(right, 0.), row.get(left, 0.)
+            total = right_weight + left_weight
+            if not total or not (bind or crossfade):
+                continue
+            weights["hips"] = weights.get("hips", 0.) + bind * total
+            weights[right] = (1. - bind) * ((1. - crossfade) * right_weight + crossfade * (1. - share) * total)
+            weights[left] = (1. - bind) * ((1. - crossfade) * left_weight + crossfade * share * total)
+        corrected.append(weights)
+    return corrected
 
 
 def _scatter(vertices: IndexArray, vectors: FloatArray, count: int) -> FloatArray:
@@ -245,5 +278,60 @@ def relax_joint_skin(
     if duplicate_endpoint:
         poses = np.concatenate((poses, poses[:1]), axis=0)
     # Leave signed zeros and all other original palm/foot bits untouched.
+    poses[:, fixed] = frames[:, fixed]
+    return poses
+
+
+def relax_body_skin(
+    rest: FloatArray, frames: FloatArray, triangles: IndexArray, grips: Sequence[int] | IndexArray,
+    *, loop: bool, arm_weights: FloatArray | None = None,
+) -> FloatArray:
+    """Relax long edges outside the planted soles, palms and repaired arm joints."""
+    edges, lengths = body_edge_geometry(rest, triangles)
+    # The boot collar blends into the shin. Only the contact surface stays pinned.
+    fixed = rest[:, 2] <= PLANTED_SOLE_M
+    fixed[np.asarray(grips, dtype=np.intp)] = True
+    if arm_weights is not None:
+        _, _, joint_edges, _, joint_faces, _ = joint_geometry(rest, triangles, arm_weights)
+        fixed[joint_edges] = True
+        fixed[joint_faces] = True
+
+    duplicate = loop and len(frames) > 1 and np.array_equal(frames[0], frames[-1])
+    poses = frames.copy()
+    movable = ~fixed[edges]
+    projectable = movable.any(axis=1)
+    edges, lengths, movable = edges[projectable], lengths[projectable], movable[projectable]
+    # Edges in one color have disjoint ends, allowing in-place projection without write conflicts.
+    used = [0] * len(rest)
+    colors: list[list[int]] = []
+    for edge, (a, b) in enumerate(edges):
+        neighbor_colors = used[a] | used[b]
+        free = (neighbor_colors + 1) & ~neighbor_colors
+        color = free.bit_length() - 1
+        if color == len(colors):
+            colors.append([])
+        colors[color].append(edge)
+        used[a] |= free
+        used[b] |= free
+
+    freedom = movable / movable.sum(axis=1, keepdims=True)
+    limits = (MAX_BODY_STRETCH - .35) * lengths  # Reserve room for float16 quantization.
+    groups = [(edges[indices].T, limits[indices], freedom[indices].T) for indices in colors]
+    for pose in poses[:-1] if duplicate else poses:
+        for _ in range(192):
+            changed = False
+            for (a, b), caps, (weight_a, weight_b) in groups:
+                links = pose[b] - pose[a]
+                distance = np.linalg.norm(links, axis=1)
+                long = distance > caps + 1.e-6
+                if long.any():
+                    move = links[long] * (1. - caps[long] / distance[long])[:, None]
+                    pose[a[long]] += weight_a[long, None] * move
+                    pose[b[long]] -= weight_b[long, None] * move
+                    changed = True
+            if not changed:
+                break
+    if duplicate:
+        poses[-1] = poses[0]
     poses[:, fixed] = frames[:, fixed]
     return poses

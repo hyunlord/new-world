@@ -5,7 +5,7 @@ import unittest
 import numpy as np
 
 from mocap_deform import check_deformation
-from mocap_skin import relax_joint_skin
+from mocap_skin import relax_body_skin, relax_joint_skin, stabilize_garment_weights
 
 
 class MocapSkinTest(unittest.TestCase):
@@ -44,6 +44,37 @@ class MocapSkinTest(unittest.TestCase):
         rotated = self.rest[:, [1, 2, 0]] + [.05, -.10, .70]
         corrected = relax_joint_skin(self.rest, rotated[None], self.faces, self.weights, self.grips, loop=False)
         np.testing.assert_allclose(corrected[0], rotated, rtol=0., atol=1.e-11)
+
+    def test_hem_weights_match_across_center_and_preserve_feet(self) -> None:
+        points = np.array([[0., 0., 0.], [0., 0., 1.6], [-.006, 0., .50], [.006, 0., .50]])
+        rows = [{'foot_L': 1.}, {'head': 1.}, {'upper_leg_R': 1.}, {'upper_leg_L': 1.}]
+        fixed = stabilize_garment_weights(points, rows)
+        self.assertEqual(fixed[:2], rows[:2])
+        self.assertEqual(fixed[2]['hips'], 1.)
+        self.assertEqual(fixed[3]['hips'], 1.)
+        self.assertTrue(all(abs(sum(row.values()) - 1.) < 1.e-12 for row in fixed))
+
+    def test_body_repair_preserves_palm_joint_pins_and_exact_loop(self) -> None:
+        rest = self.rest.copy()
+        rest[12:, 2] += .4
+        frames = np.stack([rest] * 3)
+        frames[:, 13, 0] += .10
+        corrected = relax_body_skin(rest, frames, self.faces, (*self.grips, 12),
+                                    loop=True, arm_weights=self.weights)
+        np.testing.assert_array_equal(corrected[:, :13], frames[:, :13])
+        np.testing.assert_array_equal(corrected[0], corrected[-1])
+        for result in (corrected, corrected.astype('<f2')):
+            self.assertTrue(check_deformation(rest, result, self.faces, self.weights, local_edges=True).passed)
+
+    def test_body_repair_moves_boot_collar_above_planted_sole(self) -> None:
+        rest = np.array([[0., 0., .025], [.02, 0., .025], [0., .01, .085]])
+        posed = rest[None].copy()
+        posed[0, 2, 2] += .25
+        corrected = relax_body_skin(rest, posed, np.array([[0, 1, 2]]), [], loop=False)
+
+        np.testing.assert_array_equal(corrected[:, :2], posed[:, :2])
+        self.assertTrue(check_deformation(rest, corrected.astype('<f2'), np.array([[0, 1, 2]]),
+                                         np.zeros((3, 4)), check_joints=False).passed)
 
 
 if __name__ == "__main__":

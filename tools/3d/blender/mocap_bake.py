@@ -14,12 +14,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import chars_b as base
 import common as C
 from mocap_bvh import Motion, read_bvh
-from mocap_deform import check_deformation
+from mocap_deform import DeformationReport, check_deformation
 from mocap_pose import Retarget, constrain, prop_hand, wrist_center
-from mocap_skin import relax_joint_skin
-from mocap_spec import Action, BaseLayer, Take, load, select
+from mocap_skin import PLANTED_SOLE_M, relax_body_skin, relax_joint_skin, stabilize_garment_weights
+from mocap_spec import Action, BaseLayer, Take, load_many, select
 import s2clips as legacy
-from s2clips_capture import Clip, ReviewAction, capture_body
+from s2clips_capture import BODY_SCALE, Clip, ReviewAction, capture_body
 from s2kit import HEIGHT
 
 FPS = 30
@@ -27,23 +27,66 @@ REVIEW_PHASES = (0., .20, .40, .60, .80, .97)
 Source = tuple[Take, Motion]
 
 
-def review_for(action: Action, frames: list[dict[str, float]]) -> ReviewAction:
+def review_for(action: Action, frames: list[dict[str, float]], deformation: DeformationReport) -> ReviewAction:
     phases = REVIEW_PHASES
     detail = None
+    checks = []
+    hero = .60
     if action.target.kind == "swing" and action.contacts:
         hit = action.contacts[0]
+        hero = hit
         if action.retime and action.prop is not None and .16 < hit < .88:
             leading = (frame for frame in frames if 0. < frame["phase"] < hit)
             detail = max(leading, key=lambda frame: frame["tip_above_anchor_m"])["phase"]
+            hero = detail
             phases = (0., detail, hit, hit + .13 * (1 - hit), hit + .53 * (1 - hit), .96)
+            later = (i for i, frame in enumerate(frames) if hit < frame["phase"] <= hit + .22)
+            checks = [("garment", deformation.max_body_edge_frame),
+                      ("rebound", max(later, key=lambda i: frames[i]["tip_above_anchor_m"]))]
         elif .16 < hit < .88:
             phases = (0., .40 * hit, .68 * hit, hit, hit + .37 * (1 - hit), hit + .78 * (1 - hit))
-    if action.target.kind == "reach" and not action.loop and action.contacts:
+    if action.target.kind == "reach" and action.contacts:
         hit = action.contacts[0]
-        if .15 < hit < .85:
+        hero = hit
+        if not action.loop and .15 < hit < .85:
             phases = (0., hit / 2, hit, hit + (1 - hit) / 3, hit + 2 * (1 - hit) / 3, 1.)
+    if action.target.kind == "circle":
+        checks.append(("stir", min(range(len(frames)), key=lambda i: frames[i]["head_above_rim_m"])))
     return ReviewAction(phases, action.prop, action.fixture, action.target.anchor, prop_hand(action),
-                        action.target.fixture_radius, detail)
+                        action.target.fixture_radius, detail, tuple(checks), hero)
+
+
+def measure_pose(action: Action, body: str, rest: np.ndarray, posed: np.ndarray, grips: tuple[int, int],
+                 frames: list[dict[str, float]], contacts: list[int]) -> list[str]:
+    """Measure the clearance visible on the same quantized vertices as the review render."""
+    head = rest[:, 2] > .84 * HEIGHT
+    scale = BODY_SCALE[body]
+    if action.target.kind == "circle":
+        for points, frame in zip(posed, frames):
+            frame["head_above_rim_m"] = (float(points[head, 2].min()) - action.target.anchor[2]) * scale
+        if action.target.rim_clearance and min(frame["head_above_rim_m"] for frame in frames) < action.target.rim_clearance:
+            return [f"{body} {action.key}: head clearance at the rim"]
+    if not (action.target.face_clearance or action.target.rebound_clearance):
+        return []
+    hit = contacts[0]
+    failures = []
+    if action.target.face_clearance:
+        apex = max(range(max(1, hit)), key=lambda i: frames[i]["tip_above_anchor_m"])
+        face = head & (rest[:, 1] < np.median(rest[head, 1]))
+        for side, grip in zip(("R", "L"), grips):
+            hand = np.linalg.norm(rest - rest[grip], axis=1) < .055
+            distance = float(np.linalg.norm(posed[apex][hand, None] - posed[apex][None, face], axis=2).min()) * scale
+            frames[apex][f"face_clearance_{side}_m"] = distance
+            if distance < action.target.face_clearance:
+                failures.append(f"{body} {action.key}: {side} hand clearance at the apex ({distance:.3f} m)")
+    if action.target.rebound_clearance:
+        release = frames[hit:hit + round(FPS * .25) + 1]
+        rebound = [frame["tip_above_anchor_m"] * scale for frame in release]
+        initial, lift_out = max(rebound[:5]), max(rebound)
+        minimum = action.target.rebound_clearance
+        if initial < .5 * minimum or lift_out < minimum:
+            failures.append(f"{body} {action.key}: post-impact tip lift ({initial:.3f} m initial, {lift_out:.3f} m peak)")
+    return failures
 
 
 def timeline(action: Action, body: str) -> tuple[list[float], list[int]]:
@@ -62,7 +105,7 @@ def timeline(action: Action, body: str) -> tuple[list[float], list[int]]:
 
 
 def bake(kit: Path, out: Path, body: str, sources: tuple[tuple[Action, Source, Source | None], ...],
-         render: bool) -> list[str]:
+         mode: str) -> list[str]:
     def capture_rest(source: bpy.types.Object) -> None:
         nonlocal rest
         rest = np.array([tuple(vertex.co) for vertex in source.data.vertices])
@@ -78,6 +121,7 @@ def bake(kit: Path, out: Path, body: str, sources: tuple[tuple[Action, Source, S
     rows, sockets, records = [], {}, {}
     prop_sockets: dict[str, list[Matrix]] = {}
     clips: dict[str, Clip] = {}
+    review = {}
     failures = []
     overrides = {action.key for action, _, _ in sources}
     for name in (name for name in base.HUMAN if name not in overrides):
@@ -95,15 +139,15 @@ def bake(kit: Path, out: Path, body: str, sources: tuple[tuple[Action, Source, S
             sockets[name].append(tuple(legacy.socket(arm.pose.bones[f"hand_{side}"], positions[index])
                                        for side, index in zip(("R", "L"), grips)))
     arm.animation_data.action = None
-    fitted = False
+    fitted = None
     for action, (take, motion), lower_body in sources:
         guarded = action.arm_limits.get(body, action.arm_limits.get("default")) is not None
         needs_fitted = guarded or lower_body is not None
         if needs_fitted != fitted:
             fitted = needs_fitted
             arm, mesh, grips = legacy.source_rig(kit, body, 8000, stabilize_grips=True,
-                                                before_bind=capture_rest if fitted else None,
-                                                align_arm_weights=fitted)
+                                                before_bind=capture_rest, align_arm_weights=fitted,
+                                                weight_adjust=stabilize_garment_weights)
         phases, contacts = timeline(action, body)
         start = len(rows)
         clips[action.key] = Clip(start=start, count=len(phases), loop=action.loop,
@@ -146,7 +190,7 @@ def bake(kit: Path, out: Path, body: str, sources: tuple[tuple[Action, Source, S
         if lower_body is not None and action.base_layer is not None:
             records[action.key]["base_layer"] = {"take": lower_body[0].id, "fps": lower_body[0].fps,
                                                   "trim_seconds": action.base_layer.trim}
-        if guarded and rest is not None:
+        if rest is not None:
             mesh.data.calc_loop_triangles()
             triangles = np.array([tuple(face.vertices) for face in mesh.data.loop_triangles])
             weights = np.zeros((len(rest), 4))
@@ -158,30 +202,37 @@ def bake(kit: Path, out: Path, body: str, sources: tuple[tuple[Action, Source, S
                         weights[vertex.index, groups[group.group]] = group.weight
             sampled = np.stack(rows[start:])
             surface = np.concatenate((sampled, end.positions[None])) if action.loop else sampled
-            corrected = relax_joint_skin(rest, surface, triangles, weights, grips, loop=action.loop)
+            corrected = relax_joint_skin(rest, surface, triangles, weights, grips, loop=action.loop) if guarded else surface
+            corrected = relax_body_skin(rest, corrected, triangles, grips, loop=action.loop,
+                                        arm_weights=weights if guarded else None)
             if action.loop:
                 records[action.key]["seam_m"] = float(np.linalg.norm(corrected[-1] - corrected[0], axis=1).max())
                 corrected = corrected[:-1]
-            fixed = np.r_[list(grips), np.flatnonzero(rest[:, 2] <= .10)]
+            fixed = np.r_[list(grips), np.flatnonzero(rest[:, 2] <= PLANTED_SOLE_M)]
             if not np.array_equal(sampled[:, fixed], corrected[:, fixed]):
                 raise RuntimeError(f"{asset} {action.key}: surface correction moved a planted foot or palm")
-            full = check_deformation(rest, corrected, triangles, weights, local_edges=True)
+            full = check_deformation(rest, corrected, triangles, weights, local_edges=guarded, check_joints=guarded)
             # Axis permutation and sign changes preserve the decoded float16 measurements.
-            report = check_deformation(rest, corrected.astype("<f2"), triangles, weights, local_edges=True)
+            decoded = corrected.astype("<f2").astype(float)
+            report = check_deformation(rest, decoded, triangles, weights, local_edges=guarded, check_joints=guarded)
             records[action.key]["deformation"] = asdict(report)
             records[action.key]["deformation"]["before_encoding"] = {
-                "max_edge_ratio": full.max_edge_ratio, "min_area_ratio": full.min_area_ratio, "passed": full.passed,
+                "max_edge_ratio": full.max_edge_ratio, "min_area_ratio": full.min_area_ratio,
+                "max_body_edge_ratio": full.max_body_edge_ratio, "max_body_edge_frame": full.max_body_edge_frame,
+                "passed": full.passed,
             }
             records[action.key]["deformation"]["max_correction_m"] = float(
                 np.linalg.norm(corrected - sampled, axis=2).max())
             rows[start:] = corrected
-            print(f"MOCAP_DEFORMATION {body} {action.key} VAT: stretch {report.max_edge_ratio:.3f} "
-                  f"at frame {report.max_edge_frame}, area {report.min_area_ratio:.3f} "
-                  f"at frame {report.min_area_frame}", flush=True)
+            print(f"MOCAP_DEFORMATION {body} {action.key} whole body {report.max_body_edge_ratio:.3f}x "
+                  f"at frame {report.max_body_edge_frame} (limit 3.0x)", flush=True)
             if not full.passed or not report.passed:
                 failures.append(f"{body} {action.key}")
                 np.savez_compressed(out / f"{asset}-{action.key}-deformation.npz", rest=rest, triangles=triangles,
                                     weights=weights, frames=sampled, corrected=corrected, grips=grips)
+            failures.extend(measure_pose(action, body, rest, decoded, grips, accuracy, contacts))
+            if mode != "bake":
+                review[action.key] = review_for(action, accuracy, report)
         print(f"MOCAP_BAKED {body} {action.key} {take.id} {len(phases)} frames", flush=True)
     vat = np.stack(rows)
     vat = np.stack((vat[:, :, 0], vat[:, :, 2], -vat[:, :, 1], np.ones(vat.shape[:2])), axis=2)
@@ -203,24 +254,23 @@ def bake(kit: Path, out: Path, body: str, sources: tuple[tuple[Action, Source, S
     vat.tofile(out / f"{asset}_vat.bin")
     (out / f"{asset}_vat.json").write_text(json.dumps(metadata, indent=1) + "\n")
     (out / f"{asset}-contacts.json").write_text(json.dumps(records, indent=1) + "\n")
-    if render:
-        review = {action.key: review_for(action, records[action.key]["frames"]) for action, _, _ in sources}
+    if mode != "bake" and not failures:
         capture_body(kit, out, mesh, body, tuple(review), clips, sockets, vat, review=review, fps=FPS,
-                     prop_sockets=prop_sockets)
+                     prop_sockets=prop_sockets, selected_only=mode == "final")
     return failures
 
 
 def main() -> None:
     if not os.environ.get("WORLDSIM_MUX2_LANE_FD"):
         raise RuntimeError("Run this Blender worker through mocap_build.py and the shared GPU lock")
-    spec, index, kit_path, out_path, bodies, mode = C.script_args()
+    spec, index, kit_path, out_path, bodies, mode, *extra_specs = C.script_args()
     kit, out = Path(kit_path), Path(out_path)
     out.mkdir(parents=True, exist_ok=False)
     destination = out
     if mode == "compare":
         destination = out / "new"
         destination.mkdir()
-    actions = load(Path(spec))
+    actions = load_many(tuple(map(Path, (spec, *extra_specs))))
     motions: dict[str, Motion] = {}
 
     def resolve(source: Action | BaseLayer) -> Source:
@@ -233,10 +283,9 @@ def main() -> None:
                     for action in actions)
     if any(action.key == "idle" for action in actions):
         raise ValueError("The idle clip provides the static reference mesh")
-    failures = [error for body in bodies.split(",")
-                for error in bake(kit, destination, body, sources, render=mode != "bake")]
+    failures = [error for body in bodies.split(",") for error in bake(kit, destination, body, sources, mode)]
     if failures:
-        raise RuntimeError(f"Shoulder/elbow deformation failed for {', '.join(failures)}")
+        raise RuntimeError(f"Pose checks failed for {', '.join(failures)}")
     for name in sorted({action.prop for action in actions if action.prop is not None}):
         C.reset_scene()
         C.export_glb(str(destination / f"grip_{name}.glb"), [legacy.prop_mesh(name)])

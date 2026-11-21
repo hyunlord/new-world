@@ -49,6 +49,11 @@ class Target:
     solid: bool
     release_offset: XYZ
     release_pitch: float
+    release: bool
+    windup: tuple[float, XYZ] | None
+    face_clearance: float
+    rim_clearance: float
+    rebound_clearance: float
 
 
 @dataclass(frozen=True, slots=True)
@@ -99,6 +104,7 @@ class Action:
     retime: tuple[tuple[float, float], ...]
     duration: float | None
     impact_window: tuple[float, float]
+    in_place: bool
 
 
 @dataclass(frozen=True, slots=True)
@@ -196,12 +202,12 @@ def _hand(value: Value) -> Hand:
 
 
 def _target(value: Value) -> Target:
-    row = _map(value, "kind anchor radius depth tip orientation fixture_radius solid release_offset release_pitch",
-               "kind")
+    row = _map(value, "kind anchor radius depth tip orientation fixture_radius solid release_offset release_pitch "
+               "release windup face_clearance rim_clearance rebound_clearance", "kind")
     kind = _text(row["kind"])
-    if kind not in {"swing", "circle", "reach", "free"}:
+    if kind not in {"swing", "circle", "reach", "carry", "free"}:
         raise SpecError(f"unknown target kind {kind!r}")
-    if kind != "free" and "anchor" not in row:
+    if kind not in {"carry", "free"} and "anchor" not in row:
         raise SpecError(f"{kind} requires a target anchor")
     radius = _num(row.get("radius", 0), 0)
     if kind == "circle" and radius == 0:
@@ -209,10 +215,16 @@ def _target(value: Value) -> Target:
     orientation = _xyz(row.get("orientation", [0, 0, 1]))
     if not any(orientation):
         raise SpecError("target orientation must be nonzero")
+    windup = None
+    if "windup" in row:
+        phase, location = _array(row["windup"], 2)
+        windup = _num(phase, .01, .99), _xyz(location)
     return Target(kind, _xyz(row.get("anchor", [0, 0, 0])), radius,
                   _num(row.get("depth", .065), 0), _xyz(row.get("tip", [0, 0, 0])), orientation,
                   _num(row.get("fixture_radius", .155), 0), _bool(row.get("solid", False)),
-                  _xyz(row.get("release_offset", [0, 0, 0])), _num(row.get("release_pitch", 0), -90, 90))
+                  _xyz(row.get("release_offset", [0, 0, 0])), _num(row.get("release_pitch", 0), -90, 90),
+                  _bool(row.get("release", False)), windup, _num(row.get("face_clearance", 0), 0, 1.),
+                  _num(row.get("rim_clearance", 0), 0, 1.), _num(row.get("rebound_clearance", 0), 0, 1.))
 
 
 def _bodies(value: Value, elder: float, default: float, low: float,
@@ -292,7 +304,7 @@ def _impact_window(value: Value) -> tuple[float, float]:
 
 def _action(key: str, value: Value) -> Action:
     row = _map(value, "tags takes trim loop speed stoop prop hands target foot_lock contacts fixture "
-               "reverse heading posture base_layer arm_limits retime duration impact_window",
+               "reverse heading posture base_layer arm_limits retime duration impact_window in_place",
                "trim loop target foot_lock")
     tags, takes = _source(row)
     start, finish = (_num(second, 0) for second in _array(row["trim"], 2))
@@ -308,9 +320,25 @@ def _action(key: str, value: Value) -> Action:
         raise SpecError("prop and at least one prop grip must be specified together")
     target = _target(row["target"])
     loop = _bool(row["loop"])
+    foot_lock = _bool(row["foot_lock"])
+    in_place = _bool(row.get("in_place", False))
     impact_window = _impact_window(row["impact_window"]) if "impact_window" in row else (.14, .14)
     if target.kind == "reach" and prop is not None and (not contacts or loop):
         raise SpecError("reaching for a prop requires a one-shot and a contact phase")
+    if target.release and (target.kind != "reach" or prop is None):
+        raise SpecError("release requires a reach with a prop")
+    if target.kind == "carry" and sum(hand.target == "prop" for hand in hands.values()) != 2:
+        raise SpecError("carry requires two prop grips")
+    if in_place and foot_lock:
+        raise SpecError("in-place gait needs moving feet")
+    if target.windup is not None and (target.kind != "swing" or not contacts or target.windup[0] >= contacts[0]):
+        raise SpecError("windup requires a swing and must peak before impact")
+    if target.face_clearance and (target.windup is None or prop is None):
+        raise SpecError("face clearance needs a swing prop and a windup")
+    if target.rim_clearance and target.kind != "circle":
+        raise SpecError("rim clearance needs a circular target")
+    if target.rebound_clearance and (not any(target.release_offset) or prop is None):
+        raise SpecError("rebound clearance needs a swing prop and a release offset")
     if (any(target.release_offset) or target.release_pitch) and (
         target.kind != "swing" or not contacts or contacts[0] + impact_window[1] >= 1.
     ):
@@ -322,13 +350,13 @@ def _action(key: str, value: Value) -> Action:
     return Action(_id(key), tags, takes, (start, finish), loop,
                   _bodies(row.get("speed", {}), .85, 1., .01),
                   _bodies(row.get("stoop", {}), 7., 0., 0., 45.), prop, hands,
-                  target, _bool(row["foot_lock"]), contacts,
+                  target, foot_lock, contacts,
                   _id(row["fixture"]) if "fixture" in row else None, _bool(row.get("reverse", False)),
                   _num(row.get("heading", 0), -360, 360), _xyz(row.get("posture", [0, 0, 0])),
                   _base_layer(key, row["base_layer"]) if "base_layer" in row else None, arm_limits,
                   _retime(row["retime"]) if "retime" in row else (),
                   _positive(row["duration"], "duration") if "duration" in row else None,
-                  impact_window)
+                  impact_window, in_place)
 
 
 def load(path: Path) -> tuple[Action, ...]:
@@ -342,6 +370,14 @@ def load(path: Path) -> tuple[Action, ...]:
         except SpecError as error:
             raise SpecError(f"{path} ({key}): {error}") from error
     return tuple(actions)
+
+
+def load_many(paths: tuple[Path, ...]) -> tuple[Action, ...]:
+    """Read each authored map once and reject accidental clip overrides."""
+    actions = tuple(action for path in paths for action in load(path))
+    if len({action.key for action in actions}) != len(actions):
+        raise SpecError("each visual key must be unique across the selected specs")
+    return actions
 
 
 def _words(value: str) -> str:

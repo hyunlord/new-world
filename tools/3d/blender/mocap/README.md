@@ -8,11 +8,16 @@ Blender and Pillow. The pilot comparison also needs FFmpeg.
 ```sh
 tools/3d/blender/mocap_build.py tools/3d/blender/mocap/pilot.ron --compare
 tools/3d/blender/mocap_build.py tools/3d/blender/mocap/pick_up.ron
+tools/3d/blender/mocap_build.py tools/3d/blender/mocap/remaining.ron --review-slice
 ```
 
 `pilot.ron` contains the two comparison clips. `pick_up.ron` runs the same
-pipeline with a tag-selected bend-and-lift take. Outputs default to
-`mocap1/builds/<spec name>/`. For another attempt pass a new `--out` path.
+pipeline with a tag-selected bend-and-lift take. `remaining.ron` adds work,
+social and carry poses. `walk_reference.ron` builds the review-only walk.
+Pass several spec paths to build one pack with unique action keys. Outputs
+default to `mocap1/builds/<first spec name>/`. Use a new `--out` for another
+attempt. `--review-slice` captures both camera angles at the review pose and at
+the measured detail frames. Use `--bake-only` when captures are unnecessary.
 
 ## Select and trim a take
 
@@ -42,7 +47,8 @@ Set `duration` in seconds when the output differs from the trim length. Set
 `retime` to pairs of normalized playback and source phases. Both axes must
 increase from `[0, 0]` to `[1, 1]`.
 Use `heading` for a constant yaw correction in degrees. `reverse` plays the
-same trim backward so a lift can also provide a set-down. The rig is baked at
+same trim backward. `in_place` removes net root travel from a take with moving feet.
+The rig is baked at
 one unit height across the four mesh shapes. Review renders use the S2 scale
 factors 1.00, 0.95, 0.70 and 0.97 for p1 through p4, including their props.
 
@@ -58,15 +64,18 @@ output playback order.
 | `prop` | A prop mesh identifier. Omit it for an empty hand. |
 | `hands` | Map of `R` and/or `L` grips. Use `target: "prop"` for a prop-local offset or `target: "anchor"` for a world-aligned offset from the fixture. Omit a hand to preserve its captured motion. |
 | `slide` | Optional phase and distance pairs for a grip sliding along local +Z of a prop, added to the static offset. |
-| `target.kind` | `swing` aligns a working edge at contact. `circle` traces a level circle. `reach` reaches a point and supports picking up or setting down a prop. `free` keeps the captured pose. |
+| `target.kind` | `swing` aligns a working edge at contact. `circle` traces a level circle. `reach` reaches a point. `carry` fits an upright prop between the hands. `free` keeps the captured pose. |
 | `target.anchor` | The swing strike point, pot rim centre or reach point. Stirring starts at the rim plane and applies the depth offset. |
 | `target.radius`, `target.depth` | Circle radius and depth below the rim in metres (depth defaults to 0.065). |
 | `target.tip` | Working point in prop-local metres. |
 | `target.orientation` | Direction of the prop's local +Z axis at the target. |
 | `fixture` and `target.fixture_radius` | Optional reference geometry for captures and its size in metres. |
 | `target.solid` | Keep the prop above a strike surface within `fixture_radius`. |
+| `target.release` | For `reach`, leave the prop at the anchor after contact. |
 | `impact_window` | Approach and release widths in playback phase units. |
 | `target.release_offset`, `target.release_pitch` | Optional blade-tip movement in metres and upward pitch in degrees after impact. |
+| `windup` | Phase and world-space prop offset at the swing apex. |
+| `face_clearance`, `rim_clearance`, `rebound_clearance` | Minimum distances in metres at the swing apex, above a stir fixture and after impact. |
 
 For a layered pose, give `base_layer` a take or search tags and its own `trim`
 and `heading`. `weight` multiplies each per-bone value in `mask`. The `root`
@@ -81,7 +90,9 @@ degrees support an overhead reach. For these actions, the bone pivots follow the
 scanned A pose and a local surface correction holds the palms fixed. The build
 checks shoulder and elbow edge stretch (at most 1.35×) and triangle area (at least
 0.35×) against the prepared mesh in both the baked poses and the decoded VAT.
-The contacts receipt includes the worst frames and the measured whole-body stretch.
+Every mocap action also checks that body edges at least 2 mm long stay within
+3× their rest length. The contacts receipt records the worst frame for each
+check.
 
 To use a capture again, copy its source selection and trim to another visual
 key. Reuse the swing with a different edge or strike point, or change the

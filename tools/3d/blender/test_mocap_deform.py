@@ -50,6 +50,32 @@ class MocapDeformTest(unittest.TestCase):
         self.assertEqual(report.max_body_edge_frame, 1)
         self.assertEqual(report.frames[1].max_body_edge_vertices, (12, 13))
 
+    def test_full_body_gate_rejects_nonjoint_stretch_in_both_encodings(self) -> None:
+        frames = np.stack([self.rest] * 3)
+        frames[2, 13, 0] += .063
+        for posed in (frames, frames.astype('<f2')):
+            report = mocap_deform.check_deformation(
+                self.rest, posed, self.triangles, self.weights, local_edges=True,
+            )
+            self.assertFalse(report.passed)
+            self.assertEqual(report.max_body_stretch, 3.)
+            self.assertLess(report.max_edge_ratio, 1.35)
+            self.assertEqual(report.max_body_edge_frame, 2)
+            self.assertEqual(report.frames[2].max_body_edge_vertices, (12, 13))
+
+    def test_body_only_guard_requires_no_arm_triangles(self) -> None:
+        self.weights[:] = 0.
+        frames = np.stack([self.rest] * 2)
+        frames[1, 13, 0] += .063
+        report = mocap_deform.check_deformation(
+            self.rest, frames, self.triangles, self.weights, check_joints=False,
+        )
+        self.assertFalse(report.passed)
+        self.assertEqual(report.edge_scope, 'body')
+        self.assertGreater(report.max_body_edge_ratio, 3.)
+        self.assertEqual(report.max_body_edge_frame, 1)
+        self.assertIsNone(report.min_area_frame)
+
     def test_joint_stretch_fails_with_good_area(self) -> None:
         frames = np.stack([self.rest] * 3)
         frames[1, 1, 0] += .021

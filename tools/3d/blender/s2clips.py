@@ -65,6 +65,13 @@ def prop_mesh(name: str) -> bpy.types.Object:
             model.rod("wood", (0, 0, -.07), (0, 0, .46), .013, segs=7, r2=.019)
             model.ball("wood_dark", .085, (0, 0, .46), (.76, .43, .64), subdiv=2)
             model.ball("wood", .072, (0, .025, .46), (.78, .12, .64), subdiv=2)
+        case "digging_stick":
+            model.rod("wood", (0, 0, -.25), (0, 0, .48), .025, segs=8, r2=.027)
+            model.rod("wood_dark", (0, 0, .46), (0, 0, .55), .027, segs=8, r2=.007)
+        case "hammer":
+            model.rod("wood_dark", (0, 0, -.12), (0, 0, .35), .019, segs=8)
+            model.rod("stone", (-.071, 0, .34), (.095, 0, .34), .057, segs=8, r2=.045)
+            model.rod("hide", (0, 0, .295), (0, 0, .37), .031, segs=8)
         case "basket":
             # Right and left palms grasp the upper rim 34 cm apart.
             model.lathe("wood", ((.103, -.24), (.135, -.219), (.169, -.04), (.173, 0.)),
@@ -167,6 +174,8 @@ def action_weights(mesh: bpy.types.Object, body: str, fitted: bool = False) -> l
                 radial = (delta - distance * along).length
                 support = kit.blend(axial, -.08, .45) * (1 - kit.blend(radial, .074, .122))
                 support *= kit.blend(point.z, .385, .440)
+                if vertex.index not in arms:
+                    support *= kit.blend(point.z, .47, .55)
                 upper = 1 - kit.blend(axial, flexion - .24, flexion + .24)
                 hand = kit.blend(axial, .82, 1.)
                 for name in row:
@@ -216,6 +225,7 @@ def source_rig(
     root: Path, body: str, budget: int, *, stabilize_grips: bool = False,
     before_bind: Callable[[bpy.types.Object], None] | None = None,
     align_arm_weights: bool = False,
+    weight_adjust: Callable[[np.ndarray, list[dict[str, float]]], list[dict[str, float]]] | None = None,
 ) -> tuple[bpy.types.Object, bpy.types.Object, tuple[int, int]]:
     C.reset_scene()
     mesh = kit.import_mesh(root / "prepared" / f"{body}-{budget}.glb")
@@ -228,6 +238,8 @@ def source_rig(
         if other not in (mesh, arm):
             bpy.data.objects.remove(other, do_unlink=True)
     weights = action_weights(mesh, body, align_arm_weights)
+    if weight_adjust is not None:
+        weights = weight_adjust(np.array([tuple(vertex.co) for vertex in mesh.data.vertices]), weights)
     bottom = min(v.co.z for v in mesh.data.vertices)
     height = max(v.co.z for v in mesh.data.vertices) - bottom
     grip_vertices = []

@@ -22,11 +22,12 @@
     },
     "prop": "axe",
     "hands": {
-      "R": {"target": "prop", "offset": [0, 0, 0]},
+      "R": {"target": "prop", "offset": [0, 0, 0],
+            "slide": [[0, 0], [0.22, 0], [0.4444444444, -0.073], [0.6666666667, 0], [1, 0]]},
       "L": {
         "target": "prop",
         "offset": [0, 0, 0.22],
-        "slide": [[0.0, 0.0], [0.4666666667, 0.045], [0.6666666667, -0.095], [1.0, 0.0]]
+        "slide": [[0.0, 0.0], [0.4666666667, 0.065], [0.6666666667, -0.095], [1.0, 0.0]]
       }
     },
     "target": {
@@ -36,8 +37,11 @@
       "orientation": [0, -0.92, -0.38],
       "fixture_radius": 0.155,
       "solid": true,
-      "release_offset": [0, 0.055, 0.09],
-      "release_pitch": 10
+      "windup": [0.4444444444, [-0.15, -0.09, 0.015]],
+      "face_clearance": 0.04,
+      "release_offset": [0, 0.075, 0.155],
+      "release_pitch": 15,
+      "rebound_clearance": 0.08
     },
     "fixture": "block",
     "foot_lock": true,
@@ -49,7 +53,7 @@
     "trim": [2.5, 3.7666666666666666],
     "loop": true,
     "speed": {"p1": 1, "p2": 1, "p3": 1, "p4": 0.85},
-    "stoop": {"p1": 18, "p2": 18, "p3": 18, "p4": 22},
+    "stoop": {"p1": 6, "p2": 6, "p3": 6, "p4": 10},
     "base_layer": {
       "tags": ["kneeling", "stationary"],
       "takes": ["23_03"],
@@ -63,7 +67,7 @@
     "prop": "ladle",
     "hands": {
       "R": {"target": "prop", "offset": [0, 0, 0]},
-      "L": {"target": "anchor", "offset": [0.20, 0.15, 0]}
+      "L": {"target": "anchor", "offset": [0.172, 0.129, 0]}
     },
     "target": {
       "kind": "circle",
@@ -72,7 +76,8 @@
       "depth": 0.065,
       "tip": [0, 0, 0.51],
       "orientation": [0, -0.65, -0.76],
-      "fixture_radius": 0.25
+      "fixture_radius": 0.215,
+      "rim_clearance": 0.15
     },
     "fixture": "hearth",
     "foot_lock": true,

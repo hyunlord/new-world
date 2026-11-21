@@ -1,0 +1,12 @@
+{
+  "walk_reference": {
+    "tags": ["normal walk", "locomotion"],
+    "takes": ["136_20"],
+    "trim": [5.833333333333333, 7.225],
+    "loop": true,
+    "heading": 92,
+    "in_place": true,
+    "target": {"kind": "free"},
+    "foot_lock": false
+  }
+}

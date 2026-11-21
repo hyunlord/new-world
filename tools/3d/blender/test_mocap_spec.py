@@ -138,6 +138,37 @@ def test_omitted_output_timing_preserves_source_clock(tmp_path: Path) -> None:
     assert (spec.duration, spec.retime, spec.impact_window) == (None, (), (0.14, 0.14))
 
 
+def test_placement_can_follow_the_captured_direction(tmp_path: Path) -> None:
+    spec = action(tmp_path, {"prop": "basket", "hands": {"R": {"target": "prop"}},
+                            "target": {"kind": "reach", "anchor": [0, -0.4, 0.15], "release": True}})
+
+    assert spec.target.release and not spec.reverse
+
+
+def test_load_carries_with_two_grips_and_in_place_gait(tmp_path: Path) -> None:
+    spec = action(tmp_path, {"prop": "logs", "in_place": True, "foot_lock": False,
+                            "hands": {"R": {"target": "prop"}, "L": {"target": "prop", "offset": [.48, 0, 0]}},
+                            "target": {"kind": "carry"}})
+
+    assert spec.in_place and spec.target.kind == "carry"
+
+
+def test_windup_uses_a_spec_peak_and_world_offset(tmp_path: Path) -> None:
+    spec = action(tmp_path, {"prop": "axe", "hands": {"R": {"target": "prop"}},
+                            "target": {"kind": "swing", "anchor": [0, -0.4, 0.55],
+                                       "windup": [.35, [-.125, -.1, .015]]}})
+
+    assert spec.target.windup == (.35, (-.125, -.1, .015))
+
+
+def test_combining_specs_rejects_duplicate_visual_keys(tmp_path: Path) -> None:
+    action(tmp_path, {})
+    path = tmp_path / "clip.ron"
+
+    with pytest.raises(M.SpecError, match="visual key must be unique"):
+        M.load_many((path, path))
+
+
 @pytest.mark.parametrize(("field", "value"), [
     ("duration", 0),
     ("duration", float("inf")),

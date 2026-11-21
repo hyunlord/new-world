@@ -58,6 +58,12 @@ class Capture:
         if not .005 < self.scale < 1.:
             raise ValueError(f"{take.id}: invalid BVH to S2 scale {self.scale}")
         first, last = round(self.window[0]), round(self.window[1])
+        self.travel = Vector((0., 0., 0.))
+        if isinstance(spec, Action) and spec.in_place:
+            sample_times = np.arange(len(motion.positions))
+            for axis in range(2):
+                start, finish = np.interp(self.window, sample_times, motion.positions[:, hip, axis])
+                self.travel[axis] = float(finish - start)
         stance = np.median(motion.positions[first:last + 1, foot_indices], axis=0)
         mid = Vector(stance.mean(axis=0))
         self.origin = Vector((mid.x, mid.y, motion.positions[0, hip, 2]))
@@ -92,6 +98,9 @@ class Capture:
         for name, index in self.indices.items():
             samples = self.motion.positions
             position = Vector(samples[lo, index]).lerp(Vector(samples[hi, index]), alpha)
+            if name == "hips" and self.travel.length_squared:
+                fraction = (frame - self.window[0]) / (self.window[1] - self.window[0])
+                position -= (fraction - .5) * self.travel
             matrices = self.motion.rotation
             rotation = Matrix(matrices[lo, index]).to_quaternion().slerp(
                 Matrix(matrices[hi, index]).to_quaternion(), alpha)
@@ -231,8 +240,11 @@ def prop_pose(action: Action, phase: float, palms: tuple[Vector, Vector],
     match target.kind:
         case "swing":
             bottom, top = wrists[primary_side], wrists[1 - primary_side]
-            radial = bottom.lerp(top, .5) - shoulder
-            captured = (top - bottom).lerp(radial, .65).normalized()
+            if sum(hand.target == "prop" for hand in action.hands.values()) == 2:
+                radial = bottom.lerp(top, .5) - shoulder
+                captured = (top - bottom).lerp(radial, .65).normalized()
+            else:
+                captured = (palms[primary_side] - bottom).lerp(bottom - shoulder, .35).normalized()
             contact_axis = tool_frame(axis).to_quaternion()
             tip_goal = anchor.copy()
             if (any(target.release_offset) or target.release_pitch) and action.contacts and phase > action.contacts[0]:
@@ -248,6 +260,10 @@ def prop_pose(action: Action, phase: float, palms: tuple[Vector, Vector],
                        for side, palm in zip(SIDES, palms)
                        if side in action.hands and action.hands[side].target == "prop")
             primary = sum(centers, Vector()) / sum(hand.target == "prop" for hand in action.hands.values())
+            if target.windup is not None:
+                apex, shift = target.windup
+                lift_amount = ease(min(phase / apex, (action.contacts[0] - phase) / (action.contacts[0] - apex)))
+                primary += lift_amount * Vector(shift)
             primary = primary.lerp(tip_goal - rotation @ Vector(target.tip), impact)
             return primary, rotation, 1., impact
         case "circle":
@@ -259,9 +275,17 @@ def prop_pose(action: Action, phase: float, palms: tuple[Vector, Vector],
             if action.prop is None:
                 return anchor, Matrix.Identity(3), impact, impact
             at = action.contacts[0]
-            held = phase <= at if action.reverse else phase >= at
+            held = phase <= at if action.reverse or target.release else phase >= at
             moved = lift if held and lift is not None else Vector((0, 0, 0))
             return anchor + moved, Matrix.Identity(3), 1. if held else impact, impact
+        case "carry":
+            lateral = palms[1] - palms[0]
+            lateral.z = 0.
+            lateral = lateral.normalized() if lateral.length > .01 else C.X
+            depth = C.Z.cross(lateral)
+            rotation = Matrix((lateral, depth, C.Z)).transposed()
+            centers = [palm - rotation @ offset(action.hands[side], phase) for side, palm in zip(SIDES, palms)]
+            return centers[0].lerp(centers[1], .5), rotation, 1., 0.
         case "free":
             return main, Matrix.Identity(3), 1., 0.
         case _:
@@ -476,8 +500,8 @@ def constrain(arm: bpy.types.Object, mesh: bpy.types.Object, grips: tuple[int, i
             if chain is not None:
                 chain.correct(upper, lower, bone, Vector(), pole)
                 positions = clips.posed_positions(mesh)
-            if hand.target == "prop" and action.target.kind in ("swing", "circle"):
-                follow_hand(arm, side, orientation @ (C.X if action.target.kind == "circle" else C.Z))
+            if hand.target == "prop" and action.target.kind in ("swing", "circle", "carry"):
+                follow_hand(arm, side, orientation @ (C.Z if action.target.kind == "swing" else C.X))
                 positions = clips.posed_positions(mesh)
             goal = palm.lerp(goal, weight)
             if aim_palm(upper, lower, bone, Vector(positions[i]), goal, 0. if chain is None else chain.min_reach):

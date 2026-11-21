@@ -33,6 +33,8 @@ class ReviewAction:
     hand: int = 0
     radius: float | None = None
     detail: float | None = None
+    checks: tuple[tuple[str, int], ...] = ()
+    hero: float = .60
 
 
 class Clip(TypedDict):
@@ -64,7 +66,9 @@ def camera() -> bpy.types.Object:
     scene.camera = camera_object
     pad = C.Model("Review ground")
     pad.box("earth", (200, 200, .05), loc=(0, 0, -.025))
-    pad.build_object()
+    ground = pad.build_object()
+    # Fixture palette overrides share material names. Keep the stage colour independent.
+    ground.data.materials[0] = ground.data.materials[0].copy()
     return camera_object
 
 
@@ -83,11 +87,39 @@ def fixture(name: str | None, anchor: tuple[float, float, float] | None = None,
                 shape.rod("wood_dark", (x + length * math.cos(start), y + length * math.sin(start), top + .0008),
                           (x + length * math.cos(end), y + length * math.sin(end), top + .0008), .002, segs=4)
         return shape.build_object()
+    if name == "seat_log" and anchor is not None:
+        x, y, height = anchor
+        diameter = .40 if radius is None else min(.45, 2 * radius)
+        axis = height - diameter / 2
+        shape.rod("trunk", (x - .39, y, axis), (x + .39, y, axis), diameter / 2,
+                  segs=13, r2=.94 * diameter / 2, cap_mat="wood")
+        for dx in (-.27, .27):
+            shape.rod("wood_dark", (x + dx, y - .12, .025), (x + dx, y + .12, .025), .03, segs=8)
+        return shape.build_object()
+    if name == "workbench" and anchor is not None:
+        x, y, height = anchor
+        for dx in (-.20, .20):
+            for dy in (-.09, .09):
+                shape.rod("trunk", (x + dx, y + dy, 0), (x + dx, y + dy, height - .035), .04, segs=7)
+        for dy in (-.112, 0, .112):
+            shape.box("wood", (.58, .108, .075), loc=(x, y + dy, height - .0375))
+        return shape.build_object()
+    if name in ("soil", "plant_patch") and anchor is not None:
+        x, y, top = anchor
+        patch = .25 if radius is None else radius
+        soil_top = top if name == "soil" else 0.
+        shape.rod("earth", (x, y, soil_top - .018), (x, y, soil_top + .003), patch, segs=11, cap_mat="earth")
+        if name == "plant_patch":
+            for dx, dy in ((-.12, -.05), (.08, .08), (.13, -.09), (-.02, .10), (0, 0)):
+                for sign in (-1, 1):
+                    shape.rod("thatch", (x + dx, y + dy, soil_top),
+                              (x + dx + sign * .021, y + dy + .024, top), .009, segs=3, r2=.001)
+        return shape.build_object()
     if name not in ("cook", "pot", "hearth"):
         return None
     centre = P.POT_CENTRE if anchor is None else anchor[:2]
     pot_rim = .335 if anchor is None else anchor[2]
-    pot_scale = 1. if radius is None else radius / .180
+    pot_scale = 1. if radius is None else radius / .199
     raised = max(0., pot_rim - .335)
     if name == "hearth":
         shape.colors["stone"] = (.29, .245, .19)
@@ -147,7 +179,8 @@ def capture_body(root: Path, out: Path, mesh: bpy.types.Object, body: str, names
                  clips: Mapping[str, Clip], sockets: Mapping[str, Sequence[tuple[Matrix, Matrix]]],
                  vat: np.ndarray, *, review: Mapping[str, ReviewAction] | None = None,
                  fps: int = A.FPS, asset_id: str | None = None,
-                 prop_sockets: Mapping[str, Sequence[Matrix]] | None = None) -> None:
+                 prop_sockets: Mapping[str, Sequence[Matrix]] | None = None,
+                 selected_only: bool = False) -> None:
     mesh.hide_render = True
     geometry = mesh.data.copy()
     subject = bpy.data.objects.new(body + " VAT review", geometry)
@@ -195,12 +228,20 @@ def capture_body(root: Path, out: Path, mesh: bpy.types.Object, body: str, names
         prop = A.prop_mesh(prop_name) if prop_name is not None else None
         context = fixture(name) if action is None else fixture(action.fixture, action.anchor, action.radius)
         detail = min(count - 1, round(end * action.detail)) if action is not None and action.detail is not None else None
+        checks = dict(action.checks) if action is not None else {}
+        hero = None if action is None else min(count - 1, round(end * action.hero))
         if detail is not None:
             review_clips[name]["detail"] = detail
+        if checks:
+            review_clips[name]["checks"] = checks
+        if hero is not None:
+            review_clips[name]["hero"] = hero
         hand = 0 if action is None else action.hand
         if context is not None:
             context.matrix_world = stage_scale @ context.matrix_world
-        for frame in (range(count) if body == "p1" else picks):
+        standard = set(picks) if hero is None or not selected_only else {hero}
+        selected = sorted(standard | set(checks.values()) | ({detail} if detail is not None else set()))
+        for frame in (range(count) if body == "p1" and not selected_only else selected):
             positions = A.blender_positions(vat[clip["start"] + frame])
             geometry.vertices.foreach_set("co", positions.ravel())
             geometry.update()
@@ -208,13 +249,12 @@ def capture_body(root: Path, out: Path, mesh: bpy.types.Object, body: str, names
                 transform = prop_sockets[name][frame] if prop_sockets is not None else sockets[name][frame][hand]
                 prop.matrix_world = stage_scale @ transform
             for view, direction in sides.items():
-                if frame not in picks and frame != detail and view == "side":
-                    continue
                 focal = Vector((0, -.29, .98))
                 camera_object.location = focal + 6 * direction.normalized()
                 camera_object.rotation_euler = (-direction).to_track_quat("-Z", "Y").to_euler()
-                scene.render.filepath = str(directory / f"{name}-{body}-{view}-{frame:03d}.png")
-                bpy.ops.render.render(write_still=True)
+                if frame in standard or (body == "p1" and not selected_only and view == "quarter"):
+                    scene.render.filepath = str(directory / f"{name}-{body}-{view}-{frame:03d}.png")
+                    bpy.ops.render.render(write_still=True)
                 if frame == detail:
                     low, high = scale * np.percentile(positions[:, 2], [65, 100])
                     if prop is not None:
@@ -224,6 +264,26 @@ def capture_body(root: Path, out: Path, mesh: bpy.types.Object, body: str, names
                     camera_object.data.ortho_scale = max(1.18, 1.2 * (high - low))
                     scene.render.resolution_x = scene.render.resolution_y = 440
                     scene.render.filepath = str(directory / f"detail-{name}-{body}-{view}-{frame:03d}.png")
+                    bpy.ops.render.render(write_still=True)
+                    camera_object.data.ortho_scale = 2.45
+                    scene.render.resolution_x = scene.render.resolution_y = 260
+                for check, sample in checks.items():
+                    if sample != frame:
+                        continue
+                    anchor = Vector(action.anchor) * scale
+                    if check == "rebound":
+                        centre = anchor + Vector((0., .05, .18)) * scale
+                        width = max(.65, .92 * scale)
+                    elif check == "stir":
+                        centre = Vector((anchor.x * .5, anchor.y * .6, .51 * scale))
+                        width = 1.32 * scale
+                    else:
+                        centre = Vector((0., -.04, .65 * scale))
+                        width = 1.06 * scale
+                    camera_object.location = centre + 6 * direction.normalized()
+                    camera_object.data.ortho_scale = width
+                    scene.render.resolution_x = scene.render.resolution_y = 440
+                    scene.render.filepath = str(directory / f"detail-{check}-{name}-{body}-{view}-{frame:03d}.png")
                     bpy.ops.render.render(write_still=True)
                     camera_object.data.ortho_scale = 2.45
                     scene.render.resolution_x = scene.render.resolution_y = 260

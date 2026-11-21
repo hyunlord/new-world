@@ -17,9 +17,15 @@ from PIL import Image, ImageDraw, ImageFont
 
 CELL: Final = 260
 BODY_LABELS: Final = {"p1": "p1  Man", "p2": "p2  Woman", "p3": "p3  Child", "p4": "p4  Elder"}
-DISPLAY_NAMES: Final = {"chop": "Chop", "cook": "Stir"}
+DISPLAY_NAMES: Final = {"chop": "Chop", "cook": "Stir", "build": "Hammer/build", "sit": "Sit on ground",
+                        "sit_log": "Sit on log", "walk_reference": "Walk reference"}
 VIEWS: Final = {"side": "Side", "quarter": "Front 3/4"}
 PILOT: Final = ("chop", "cook")
+FINAL_KEYS: Final = (*PILOT, "dig", "build", "sit", "sit_log", "talk", "pick_up", "set_down", "harvest", "carry",
+                     "walk_reference")
+FINAL_PICKS: Final = {"dig": 3, "build": 3, "sit": 4, "sit_log": 4}
+FINAL_CHECKS: Final = (("chop", "apex", "Apex grip"), ("chop", "garment", "Garment worst"),
+                       ("cook", "stir", "Stir clearance"), ("chop", "rebound", "Axe lift-out"))
 GUTTER: Final = 106
 LABEL_HEIGHT: Final = 24
 ROW: Final = CELL + LABEL_HEIGHT
@@ -40,6 +46,8 @@ class Clip(TypedDict):
     duration: float
     picks: list[int]
     detail: NotRequired[int]
+    hero: NotRequired[int]
+    checks: NotRequired[dict[str, int]]
 
 
 class Body(TypedDict):
@@ -173,6 +181,72 @@ def detail_sheet(capture: Capture, key: str, output: Path) -> None:
     layout.save(output)
 
 
+def final_frame(capture: Capture, key: str, body: str, view: str, check: str) -> tuple[Path, int]:
+    """Resolve an exact rendered pose from its per-body capture receipt."""
+    clip = capture.bodies[body]["clips"][key]
+    if not check:
+        sample = clip.get("hero", clip["picks"][FINAL_PICKS.get(key, 2)])
+        path = capture.frame(key, body, view, sample)
+    else:
+        sample = clip.get("detail", -1) if check == "apex" else clip.get("checks", {}).get(check, -1)
+        prefix = "detail" if check == "apex" else f"detail-{check}"
+        path = capture.directory / f"{prefix}-{key}-{body}-{view}-{sample:03d}.png"
+    if not 0 <= sample < clip["count"] or not path.is_file():
+        raise ReviewError(f"Missing {key} {check or 'action'} capture for {body} {view}: {path}")
+    return path, sample
+
+
+def final_sheet(captures: tuple[Capture, ...], output: Path) -> None:
+    """Show every action and each carry-forward check across bodies and views."""
+    by_key: dict[str, Capture] = {}
+    for capture in captures:
+        keys = capture.bodies["p1"]["clips"].keys()
+        if any(body["fps"] != 30 or body["clips"].keys() != keys for body in capture.bodies.values()):
+            raise ReviewError(f"{capture.directory}: final review requires the same 30 fps actions for all four bodies")
+        for key in keys:
+            if key in by_key:
+                raise ReviewError(f"{key} appears in more than one capture directory")
+            by_key[key] = capture
+    missing = [key for key in FINAL_KEYS if key not in by_key]
+    if missing:
+        raise ReviewError(f"Missing final-review actions: {', '.join(missing)}")
+    keys = (*FINAL_KEYS, *(key for key in by_key if key not in FINAL_KEYS))
+    rows = [(key, "", DISPLAY_NAMES.get(key, key.replace("_", " ").capitalize())) for key in keys]
+    rows.extend(FINAL_CHECKS)
+    gutter, gap, header = 156, 10, 112
+    group = len(VIEWS) * CELL + gap
+    canvas = Image.new("RGB", (gutter + group * len(BODY_LABELS), header + len(rows) * ROW + SECTION), BACKGROUND)
+    draw = ImageDraw.Draw(canvas)
+    title = ImageFont.load_default(size=28)
+    label = ImageFont.load_default(size=19)
+    small = ImageFont.load_default(size=16)
+    draw.text((16, 10), "S2 Villager Actions / Final Review", font=title, fill=INK)
+    for col, body in enumerate(BODY_LABELS.values()):
+        x = gutter + group * col
+        draw.text((x + CELL, 53), body, font=label, fill=INK, anchor="mt")
+        for angle, view in enumerate(VIEWS.values()):
+            draw.text((x + angle * CELL + CELL // 2, 82), view, font=small, fill=INK, anchor="mt")
+    for index, (key, check, name) in enumerate(rows):
+        y = header + index * ROW
+        if index == len(keys):
+            draw.text((16, y + 9), "Carry-forward checks", font=title, fill=INK)
+        if index >= len(keys):
+            y += SECTION
+        draw.text((10, y + 27), name, font=label, fill=INK)
+        for col, body in enumerate(BODY_LABELS):
+            for angle, view in enumerate(VIEWS):
+                x = gutter + col * group + angle * CELL
+                path, sample = final_frame(by_key[key], key, body, view, check)
+                with Image.open(path) as frame:
+                    size = 440 if check else CELL
+                    if frame.size != (size, size):
+                        raise ReviewError(f"{path}: expected {size} × {size} capture")
+                    canvas.paste(frame.resize((CELL, CELL), Image.Resampling.LANCZOS), (x, y))
+                draw.text((x + 7, y + CELL + 2), f"Frame {sample}  /  {sample / 30:.2f}s", font=small, fill=INK)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    canvas.save(output)
+
+
 def main(argv: list[str]) -> int:
     """Run one captured spec or the matched CLIPS1/MOCAP1 review."""
     match argv:
@@ -182,6 +256,8 @@ def main(argv: list[str]) -> int:
         case ["contact", root, "--output", output]:
             capture = read_capture(Path(root), "MOCAP1")
             make_sheet((capture,), tuple(capture.bodies["p1"]["clips"]), Path(output))
+        case ["final", *roots, "--output", output] if roots:
+            final_sheet(tuple(read_capture(Path(root), "MOCAP1") for root in roots), Path(output))
         case ["compare", old, new, output]:
             old_capture = read_capture(Path(old), "CLIPS1 keyframe")
             new_capture = read_capture(Path(new), "MOCAP1")
@@ -193,7 +269,8 @@ def main(argv: list[str]) -> int:
                     name = DISPLAY_NAMES[key].lower()
                     write_gif(src, key, destination / "gif" / f"{name}_{suffix}.gif")
         case _:
-            print("Usage: mocap_review.py contact BAKED_DIR [--output FILE] | compare OLD NEW OUTPUT_DIR",
+            print("Usage: mocap_review.py contact BAKED_DIR [--output FILE] | compare OLD NEW OUTPUT_DIR"
+                  " | final BAKED_DIR [BAKED_DIR ...] --output FILE",
                   file=sys.stderr)
             return 2
     return 0
