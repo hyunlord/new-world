@@ -1984,7 +1984,7 @@
     "UI_HINT_DRAG_RECT": "Shift+드래그: 네모(속 빔)",
     "UI_HINT_DRAG_RECT_FILLED": "Shift+드래그: 네모(꽉 채움)",
     "UI_HUNGER": "허기",
-    "UI_INSIDE_VIEW": "안 보기",
+    "UI_INSIDE_VIEW": "내부 보기",
     "UI_INSPECTOR_TEMPERAMENT": "기질",
     "UI_INSPECT_BED_FMT": "잠자리: {room} {id} ({roof})",
     "UI_INSPECT_BED_HUT": "잠자리: 오두막",
