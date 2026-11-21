@@ -18,7 +18,9 @@
 #   bindings3d `roofs`) follows the era of the template site that holds the room, else the room's wall category.
 #   Cutaway: at the closest zoom (`structures.cutaway_zoom`) or with the room overlay (R, "방 보기") every roof
 #   dissolves and walls drop to `structures.cutaway_wall_height`; with a room selected (RoomPanel) or a person in the
-#   inspector standing in a roofed room, that room's roof dissolves and the walls around it drop. Construction: a
+#   inspector standing in a roofed room, that room's roof dissolves and the walls around it drop. Style 2 (default)
+#   keeps every roof closed at every zoom; it opens the selected house (walls drop), the house hovered for
+#   `s2_house.hover_open_seconds` and, with the inside view (V), houses within `s2_house.inside_radius`. Construction: a
 #   blueprint site of get_colony_overlay shows its footprint outline (stakes and sills); a wall or door site is its
 #   blueprint id's M3D-ASSETS stage model (bindings3d `sites.walls`: foundation, half; stage = floor(progress × count))
 #   along its wall run, else a block rising with its work progress; a template site still building is its template's
@@ -53,7 +55,10 @@ const S2_ROOM_ROOF_BASE: int = 1 << 32
 var wall_material: ShaderMaterial
 var _slice_pbr: bool = false
 var _style2: bool = SlicePbr.style2()
+## Style 2 "inside view" (HUD button / V): open the houses within `s2_house.inside_radius` tiles of the view focus.
 var inside_view: bool = false
+var _hover_house: int = -1
+var _hover_seconds: float = 0.0
 var _houses: Dictionary = {}
 var _house_plans: Dictionary = {}
 var _house_wall: Dictionary = {}
@@ -1949,7 +1954,8 @@ func _selected_rooms() -> Dictionary:
 
 func global_cut() -> bool:
 	var camera: Node = get_node_or_null("/root/Main/Camera2D")
-	if camera != null and float(camera.call("get_zoom_level")) >= float(Data3D.param("structures.cutaway_zoom", 4.0)) - 0.01:
+	# Style 2 roofs stay closed at every zoom; only the room overlay still opens them all.
+	if not _style2 and camera != null and float(camera.call("get_zoom_level")) >= float(Data3D.param("structures.cutaway_zoom", 4.0)) - 0.01:
 		return true
 	var rooms: Node = get_node_or_null("/root/Main/RoomIndex")
 	return rooms != null and rooms.has_method("is_shown") and bool(rooms.call("is_shown"))
@@ -1960,12 +1966,21 @@ func _update_cutaway(delta: float) -> void:
 	var speed: float = delta / maxf(0.01, seconds)
 	var selected: Dictionary = _selected_rooms()
 	var all_cut: bool = global_cut()
+	# Style 2 opens a roof only for the selected house (walls drop there too), the house hovered for
+	# `s2_house.hover_open_seconds`, and the houses near the view focus while the inside view is on.
+	var opened: Dictionary = selected.duplicate()
 	if _style2:
-		all_cut = (all_cut or inside_view) and selected.is_empty()
+		all_cut = all_cut and selected.is_empty()
+		_update_hover(delta)
+		if _hover_house >= 0 and _hover_seconds >= float(Data3D.param("s2_house.hover_open_seconds", 0.3)):
+			opened[_hover_house] = true
+		if inside_view:
+			for id: int in _houses_near_focus():
+				opened[id] = true
 	var cut_height: String = "s2_house.cutaway_wall_height" if _style2 else "structures.cutaway_wall_height"
 	var low: float = float(Data3D.param(cut_height, 0.9))
 	for id: int in _roofs:
-		var target: float = 0.0 if all_cut or selected.has(id) else 1.0
+		var target: float = 0.0 if all_cut or opened.has(id) else 1.0
 		var previous: float = float(_roof_fade.get(id, 1.0))
 		var f: float = move_toward(previous, target, speed)
 		if _style2 and _roof_fade.has(id) and f == previous and (_roofs[id] as Node3D).visible == (f > 0.001):
@@ -2010,6 +2025,35 @@ func _update_cutaway(delta: float) -> void:
 		material.set_shader_parameter("cut_all", _cut_all)
 		material.set_shader_parameter("cut_rect", Vector4(_cut_rect.position.x, _cut_rect.position.y, _cut_rect.end.x, _cut_rect.end.y))
 		material.set_shader_parameter("cut_rect_height", _cut_rect_h)
+
+
+## The Style 2 house under the mouse (a roof or a room tile), held while the pointer stays on it; none over the UI.
+func _update_hover(delta: float) -> void:
+	var house: int = -1
+	var viewport: Viewport = get_viewport()
+	var world3d: Node = get_parent()
+	if viewport != null and viewport.gui_get_hovered_control() == null and world3d != null and world3d.has_method("screen_to_world"):
+		var w: Vector2 = world3d.call("screen_to_world", viewport.get_mouse_position())
+		if w.x >= 0.0 and w.y >= 0.0:
+			var px: float = float(Data3D.param("camera.px_per_tile_at_1x", 64.0))
+			var key: int = roof_key_at(Vector2i(floori(w.x / px), floori(w.y / px)))
+			house = key if _roofs.has(key) else -1
+	_hover_seconds = _hover_seconds + delta if house == _hover_house and house >= 0 else 0.0
+	_hover_house = house
+
+
+## Style 2 roofs whose house centre lies within `s2_house.inside_radius` tiles of the camera's look target.
+func _houses_near_focus() -> Array[int]:
+	var out: Array[int] = []
+	var rig: Node = get_parent().get("rig") if get_parent() != null else null
+	if rig == null:
+		return out
+	var focus: Vector3 = rig.call("target")
+	var radius: float = float(Data3D.param("s2_house.inside_radius", 12.0))
+	for id: int in _roofs:
+		if _room_rects.has(id) and Rect2(_room_rects[id]).get_center().distance_to(Vector2(focus.x, focus.z)) <= radius:
+			out.append(id)
+	return out
 
 
 ## The ray parameter where `origin + dir · t` meets a visible roof (its wall-top plane over the roofed rectangle

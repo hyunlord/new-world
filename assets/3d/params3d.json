@@ -10,6 +10,7 @@
   "camera": {
     "fov_deg": 30.0,
     "pitch_deg": 45.0,
+    "pitch_by_zoom": [[0.25, 50.0], [0.5, 45.0], [1.0, 40.0], [2.0, 45.0], [4.0, 45.0]],
     "zooms": [0.25, 0.5, 1.0, 2.0, 4.0],
     "default_zoom": 1.0,
     "px_per_tile_at_1x": 64.0,
@@ -64,6 +65,8 @@
   "s2_house": {
     "cutaway_seconds": 0.3,
     "cutaway_lift": 0.9,
+    "hover_open_seconds": 0.3,
+    "inside_radius": 12.0,
     "round_wall_height": 0.50,
     "round_door_height": 0.78,
     "round_roof_pitch_deg": 45.0,

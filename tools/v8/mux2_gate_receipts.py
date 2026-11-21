@@ -187,7 +187,7 @@ def main() -> int:
     parser.add_argument('--kind', choices=KINDS, required=True)
     parser.add_argument('--out', type=Path)
     parser.add_argument('--receipt', type=Path)
-    parser.add_argument('--style', choices=('s2',), default='')
+    parser.add_argument('--style', choices=('s2', 'legacy'), default='')
     parser.add_argument('--godot', type=Path,
                         default=Path(os.environ.get('GODOT_BIN', '/Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot')))
     args = parser.parse_args()

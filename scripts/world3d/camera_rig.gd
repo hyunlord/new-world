@@ -3,7 +3,10 @@
 #   ladder, Home/H, map clamping and every panel that centres the camera keep working. This rig follows it: the look
 #   target is Camera2D.position / 64 (1 tile = 1 unit, x → X, y → Z) on the terrain, the distance makes one tile about
 #   64·zoom screen pixels at the target (so 2D pan speeds and drags feel the same), narrow FOV (params3d
-#   `camera.fov_deg`, 30°) and pitch `camera.pitch_deg` (45°) for a near-isometric look. Q/E turn the view in 90° steps,
+#   `camera.fov_deg`, 30°) and a pitch per zoom stage (`camera.pitch_by_zoom`: [zoom, degrees above the horizon] pairs,
+#   interpolated in log2 zoom so a zoom tween tilts smoothly; `camera.pitch_deg` without a table). It also tells the
+#   Camera2D how far the tilted view reaches on the ground (`screen_ground_extents`) so its clamp keeps the visible
+#   ground on the map. Q/E turn the view in 90° steps,
 #   eased over `camera.rotate_seconds`; the 2D camera's `screen_rotation` follows, so W stays "up on screen". The 3D
 #   zoom ladder is params3d `camera.zooms` (Z1–Z5, Z5 = close-up cutaway). Each frame it also sets the global
 #   shader parameters of the flora x-ray (trees between the camera and the target dissolve; `camera.xray_radius`).
@@ -33,6 +36,7 @@ func setup(camera2d: Camera2D, terrain: Node) -> void:
 	steps.sort()
 	if _camera2d != null:
 		_camera2d.set("zoom_steps_override", steps)
+		_camera2d.set("ground_extents_provider", screen_ground_extents)
 
 
 func _ready() -> void:
@@ -54,6 +58,43 @@ func yaw() -> float:
 func distance_for_zoom(z: float) -> float:
 	var h: float = get_viewport().get_visible_rect().size.y
 	return h / (2.0 * _px_per_tile * maxf(0.05, z) * tan(deg_to_rad(camera.fov) * 0.5))
+
+
+## Degrees above the horizon for 2D zoom `z` (params3d `camera.pitch_by_zoom`, linear in log2 zoom, held at the ends).
+func pitch_for_zoom(z: float) -> float:
+	var table: Variant = Data3D.param("camera.pitch_by_zoom", [])
+	if not table is Array or (table as Array).is_empty():
+		return float(Data3D.param("camera.pitch_deg", 45.0))
+	var rows: Array = table
+	var lz: float = log(maxf(0.01, z))
+	var previous: Array = rows[0]
+	if lz <= log(float(previous[0])):
+		return float(previous[1])
+	for row: Array in rows:
+		var lr: float = log(float(row[0]))
+		if lz <= lr:
+			var lp: float = log(float(previous[0]))
+			return lerpf(float(previous[1]), float(row[1]), (lz - lp) / maxf(0.0001, lr - lp))
+		previous = row
+	return float(previous[1])
+
+
+## How far the view reaches on flat ground from the look target, in 2D world pixels at the current zoom and pitch:
+## (half width at the target, ahead to the top screen edge, back to the bottom screen edge).
+func screen_ground_extents() -> Vector3:
+	var size: Vector2 = get_viewport().get_visible_rect().size
+	var z: float = zoom()
+	var d: float = distance_for_zoom(z)
+	var pitch: float = deg_to_rad(pitch_for_zoom(z))
+	var half_fov: float = deg_to_rad(camera.fov) * 0.5 if camera != null else deg_to_rad(15.0)
+	var height: float = d * sin(pitch)
+	var back: float = d * cos(pitch)
+	# A ray `a` radians below the horizon meets the ground height·cot(a) ahead of the camera.
+	var top: float = maxf(deg_to_rad(2.0), pitch - half_fov)
+	var bottom: float = pitch + half_fov
+	var ahead: float = height * cos(top) / sin(top) - back
+	var behind: float = back - height * cos(bottom) / sin(bottom)
+	return Vector3(size.x / (2.0 * z), ahead * _px_per_tile, behind * _px_per_tile)
 
 
 func zoom() -> float:
@@ -102,7 +143,7 @@ func update_camera(delta: float = 0.0) -> void:
 		var ground: float = float(_terrain.call("height_at", t.x, t.z))
 		_target_y = ground if delta <= 0.0 else lerpf(_target_y, ground, minf(1.0, delta * 6.0))
 		t.y = _target_y
-	var pitch: float = deg_to_rad(float(Data3D.param("camera.pitch_deg", 50.0)))
+	var pitch: float = deg_to_rad(pitch_for_zoom(zoom()))
 	var d: float = distance_for_zoom(zoom())
 	var back: Vector3 = Vector3(sin(_yaw), 0.0, cos(_yaw))
 	camera.global_position = t + back * cos(pitch) * d + Vector3.UP * sin(pitch) * d

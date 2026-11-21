@@ -67,6 +67,8 @@ var _toast_left: float = 0.0
 var screen_rotation: float = 0.0
 ## M3D-1: the 3D view's zoom ladder (empty in 2D: render_params.json `camera.zooms`).
 var zoom_steps_override: Array[float] = []
+## INTEG1: the 3D rig's tilted ground reach (half width, ahead, behind in world pixels); unset = the flat 2D view.
+var ground_extents_provider: Callable = Callable()
 
 
 ## The zoom ladder (camera zoom factors, ascending) from render_params.json.
@@ -402,8 +404,19 @@ func _clamp_position() -> void:
 	limit_right = int(w + margin)
 	limit_bottom = int(h + margin)
 	var half: Vector2 = get_viewport_rect().size / (2.0 * zoom.x)
-	position.x = clampf(position.x, -margin + half.x, maxf(-margin + half.x, w + margin - half.x))
-	position.y = clampf(position.y, -margin + half.y, maxf(-margin + half.y, h + margin - half.y))
+	# Reach on screen: x half width, y ahead (screen up), z behind (screen down).
+	var reach: Vector3 = Vector3(half.x, half.y, half.y)
+	if ground_extents_provider.is_valid():
+		reach = ground_extents_provider.call()
+	# Clamp in the screen-aligned frame; the 3D view turns in 90° steps, so the map stays an axis-aligned box there.
+	var corners: Array[Vector2] = [Vector2(-margin, -margin), Vector2(w + margin, -margin), Vector2(-margin, h + margin), Vector2(w + margin, h + margin)]
+	var bounds: Rect2 = Rect2(corners[0].rotated(-screen_rotation), Vector2.ZERO)
+	for corner: Vector2 in corners:
+		bounds = bounds.expand(corner.rotated(-screen_rotation))
+	var p: Vector2 = position.rotated(-screen_rotation)
+	p.x = clampf(p.x, bounds.position.x + reach.x, maxf(bounds.position.x + reach.x, bounds.end.x - reach.x))
+	p.y = clampf(p.y, bounds.position.y + reach.y, maxf(bounds.position.y + reach.y, bounds.end.y - reach.z))
+	position = p.rotated(screen_rotation)
 	position = (position * zoom.x).round() / zoom.x
 
 
