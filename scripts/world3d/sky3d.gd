@@ -1,9 +1,15 @@
 # World3D/Sky. Drives the sun, seasons and blended colour grade from the simulation clock.
+# One mood system: profiles night/dusk/day/hardship (+ optional `noon`, warmed between dawn and dusk) from mood.json
+# `grade`, the sky from `sky`. Style 2 is the default data; `--style=legacy` reads `legacy.grade`/`legacy.sky`
+# (Data3D.mood). Optional keys (sky clouds, height fog, SSAO, shadow blur, aerial perspective, per-profile sky colours)
+# are absent from the legacy data, which therefore keeps v8/main's MOOD1 look.
 # Bridge methods: SimReads get_time_snapshot and get_ui_facts; direct get_chronicle_since.
 extends Node3D
 
 const Data3D = preload("res://scripts/world3d/data3d.gd")
 const CHRONICLE_DIED: int = 11
+## SSAO radius, intensity and light affect at map zoom (and everywhere when `sky` has no `ssao_*`).
+const MAP_SSAO: Vector3 = Vector3(1.4, 1.8, 0.15)
 
 var sun: DirectionalLight3D
 var environment: Environment
@@ -32,6 +38,7 @@ var _previous_hour: float = -1.0
 var _previous_hardship: float = -1.0
 var _previous_grade: float = -1.0
 var _map_light: Dictionary
+var _sky_material: Material
 
 
 func setup(world_sim: Node, terrain: Node, camera2d: Camera2D = null) -> void:
@@ -51,13 +58,24 @@ func _ready() -> void:
 	_dusk = Data3D.param("light.dusk_hours", [18.0, 20.0])
 	_shadow_distance = float(Data3D.param("light.shadow_distance", 90.0))
 	environment = Environment.new()
-	var sky_material: ProceduralSkyMaterial = ProceduralSkyMaterial.new()
-	sky_material.sky_top_color = Data3D.colour(_sky_data["top"])
-	sky_material.sky_horizon_color = Data3D.colour(_sky_data["horizon"])
-	sky_material.ground_horizon_color = Data3D.colour(_sky_data["ground_horizon"])
-	sky_material.ground_bottom_color = Data3D.colour(_sky_data["ground_bottom"])
+	if _sky_data.has("cloud_colour"):
+		var clouds: ShaderMaterial = ShaderMaterial.new()
+		clouds.shader = preload("res://shaders/world3d/sky.gdshader")
+		for key: String in ["ground_horizon", "ground_bottom", "cloud_colour"]:
+			clouds.set_shader_parameter(key, Data3D.colour(_sky_data[key]))
+		for key: String in ["cloud_scale", "cloud_opacity"]:
+			clouds.set_shader_parameter(key, float(_sky_data[key]))
+		var thresholds: Array = _sky_data["cloud_thresholds"]
+		clouds.set_shader_parameter("cloud_thresholds", Vector2(float(thresholds[0]), float(thresholds[1])))
+		_sky_material = clouds
+	else:
+		var procedural: ProceduralSkyMaterial = ProceduralSkyMaterial.new()
+		procedural.ground_horizon_color = Data3D.colour(_sky_data["ground_horizon"])
+		procedural.ground_bottom_color = Data3D.colour(_sky_data["ground_bottom"])
+		_sky_material = procedural
+	_set_sky_colours(Data3D.colour(_sky_data["top"]), Data3D.colour(_sky_data["horizon"]))
 	var sky_res: Sky = Sky.new()
-	sky_res.sky_material = sky_material
+	sky_res.sky_material = _sky_material
 	environment.background_mode = Environment.BG_SKY
 	environment.sky = sky_res
 	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
@@ -68,11 +86,13 @@ func _ready() -> void:
 	correction.gradient = _lut
 	environment.adjustment_color_correction = correction
 	environment.ssao_enabled = true
-	environment.ssao_radius = 1.4
-	environment.ssao_intensity = 1.8
-	environment.ssao_light_affect = 0.15
+	environment.ssao_radius = MAP_SSAO.x
+	environment.ssao_intensity = MAP_SSAO.y
+	environment.ssao_light_affect = MAP_SSAO.z
 	environment.fog_enabled = true
 	environment.fog_sky_affect = float(_sky_data["fog_sky_affect"])
+	environment.fog_height = float(_sky_data.get("fog_height", environment.fog_height))
+	environment.fog_aerial_perspective = float(_sky_data.get("fog_aerial_perspective", 0.0))
 	environment.glow_enabled = true
 	environment.glow_intensity = 0.6
 	environment.glow_hdr_threshold = 1.2
@@ -82,7 +102,7 @@ func _ready() -> void:
 	sun = DirectionalLight3D.new()
 	sun.name = "Sun"
 	sun.shadow_enabled = true
-	sun.shadow_blur = 2.0
+	sun.shadow_blur = float(_sky_data.get("shadow_blur", 2.0))
 	sun.shadow_bias = 0.04
 	sun.shadow_normal_bias = 1.2
 	sun.directional_shadow_blend_splits = true
@@ -230,6 +250,11 @@ func _apply_hour(hour: float, hardship: float, grade: float = 1.0) -> void:
 		day = inverse_lerp(float(_dusk[1]), float(_dusk[0]), hour)
 	_night = 1.0 - day
 	RenderingServer.global_shader_parameter_set("w3d_night", _night)
+	# An optional `noon` profile warms the day only between the end of dawn and the start of dusk.
+	var warmth: float = 0.0
+	if _profiles.has("noon"):
+		warmth = smoothstep(float(_dawn[1]), float(_dawn[1]) + 1.0, hour)
+		warmth *= 1.0 - smoothstep(float(_dusk[0]) - 1.0, float(_dusk[0]), hour)
 	# The existing sun path crosses the south; the moon holds its direction at night.
 	var frac: float = clampf((hour - 6.0) / 12.0, -0.2, 1.2)
 	var peak: float = lerpf(58.0, float(_sky_data["sun_max_elevation"]), grade)
@@ -241,14 +266,17 @@ func _apply_hour(hour: float, hardship: float, grade: float = 1.0) -> void:
 	var to_sun: Vector3 = Vector3(sin(azimuth) * cos(elevation), sin(elevation), cos(azimuth) * cos(elevation))
 	sun.look_at_from_position(Vector3.ZERO, -to_sun, Vector3.UP)
 	var steps: int = maxi(1, int(_profiles["lut_steps"]))
-	var key: Vector3i = Vector3i(roundi(day * steps), roundi(hardship * steps), 0)
+	var key: Vector3i = Vector3i(roundi(day * steps), roundi(hardship * steps), roundi(warmth * steps))
 	if key == _lut_key and not grade_changed:
 		return
 	_lut_key = key
 	var daylight: float = float(key.x) / steps
 	var stress: float = float(key.y) / steps
 	var a: Dictionary = _profiles["night"] if daylight < 0.5 else _profiles["dusk"]
-	var b: Dictionary = _profiles["dusk"] if daylight < 0.5 else _profiles["day"]
+	var day_profile: Dictionary = _profiles["day"]
+	if key.z > 0:
+		day_profile = _blend_profile(day_profile, _profiles["noon"], float(key.z) / steps)
+	var b: Dictionary = _profiles["dusk"] if daylight < 0.5 else day_profile
 	var grim: Dictionary = _profiles["hardship"]
 	var blend: float = fposmod(daylight * 2.0, 1.0) if daylight < 1.0 else 1.0
 	var stress_blend: float = stress * smoothstep(0.5, 1.0, daylight)
@@ -268,6 +296,18 @@ func _apply_hour(hour: float, hardship: float, grade: float = 1.0) -> void:
 	environment.adjustment_saturation = lerpf(float(_map_light["saturation"]), _number(a, b, grim, "saturation", blend, stress_blend), grade)
 	environment.adjustment_contrast = lerpf(1.03, _number(a, b, grim, "contrast", blend, stress_blend), grade)
 	environment.tonemap_exposure = lerpf(1.0, _number(a, b, grim, "exposure", blend, stress_blend), grade)
+	var top: Color = Data3D.colour(_sky_data["top"])
+	var horizon: Color = Data3D.colour(_sky_data["horizon"])
+	_set_sky_colours(top.lerp(_optional_colour(a, b, grim, "sky_top", top, blend, stress_blend), grade),
+		horizon.lerp(_optional_colour(a, b, grim, "sky_horizon", horizon, blend, stress_blend), grade))
+	var ssao: Vector3 = Vector3(float(_sky_data.get("ssao_radius", MAP_SSAO.x)), float(_sky_data.get("ssao_intensity", MAP_SSAO.y)),
+		float(_sky_data.get("ssao_light_affect", MAP_SSAO.z)))
+	ssao = MAP_SSAO.lerp(ssao, grade)
+	environment.ssao_radius = ssao.x
+	environment.ssao_intensity = ssao.y
+	environment.ssao_light_affect = ssao.z
+	if _sky_data.has("fog_height_density"):
+		environment.fog_height_density = float(_sky_data["fog_height_density"]) * grade
 	var offsets: PackedFloat32Array = []
 	var colours: PackedColorArray = []
 	var points: int = (a["lut"] as Array).size()
@@ -278,6 +318,46 @@ func _apply_hour(hour: float, hardship: float, grade: float = 1.0) -> void:
 		colours.append(Color(x, x, x).lerp(tint, grade))
 	_lut.offsets = offsets
 	_lut.colors = colours
+
+
+func _set_sky_colours(top: Color, horizon: Color) -> void:
+	if _sky_material is ShaderMaterial:
+		(_sky_material as ShaderMaterial).set_shader_parameter("sky_top", top)
+		(_sky_material as ShaderMaterial).set_shader_parameter("sky_horizon", horizon)
+	elif _sky_material is ProceduralSkyMaterial:
+		(_sky_material as ProceduralSkyMaterial).sky_top_color = top
+		(_sky_material as ProceduralSkyMaterial).sky_horizon_color = horizon
+
+
+## `day` moved toward `noon` by `t`: numbers, colours and LUT points that `noon` names; the rest stays `day`'s.
+static func _blend_profile(day: Dictionary, noon: Dictionary, t: float) -> Dictionary:
+	var out: Dictionary = day.duplicate()
+	for key: Variant in noon:
+		var from: Variant = day.get(key)
+		var to: Variant = noon[key]
+		if from is Array and to is Array and (from as Array).size() == (to as Array).size():
+			var mixed: Array = []
+			for i: int in (from as Array).size():
+				var f: Variant = from[i]
+				mixed.append(Data3D.colour(f).lerp(Data3D.colour(to[i]), t) if f is Array else lerpf(float(f), float(to[i]), t))
+			out[key] = _plain(mixed)
+		elif from != null:
+			out[key] = lerpf(float(from), float(to), t)
+	return out
+
+
+static func _plain(values: Array) -> Array:
+	var out: Array = []
+	for v: Variant in values:
+		out.append([v.r, v.g, v.b] if v is Color else v)
+	return out
+
+
+## A profile colour that only some data sets carry; missing in a profile = `fallback`.
+static func _optional_colour(a: Dictionary, b: Dictionary, grim: Dictionary, key: String, fallback: Color, blend: float, stress: float) -> Color:
+	var ca: Color = Data3D.colour(a.get(key, []), fallback)
+	var cb: Color = Data3D.colour(b.get(key, []), fallback)
+	return ca.lerp(cb, blend).lerp(Data3D.colour(grim.get(key, []), fallback), stress)
 
 
 static func _number(a: Dictionary, b: Dictionary, grim: Dictionary, key: String, blend: float, stress: float) -> float:

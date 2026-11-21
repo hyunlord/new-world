@@ -1,22 +1,26 @@
 # vat3d.gd — vertex-animation crowds for the 3D view (people and animals, M3D-1 scope 6).
 # Purpose: loads a character's VAT built by tools/3d/blender/{people,animals}.py — assets/3d/vat/<id>_static.glb (rest
-#   mesh, faces split, UV2.x = the unsplit vertex's column, COLOR_0 = tint region) and <id>_vat.bin/.json (float16
+#   mesh, faces split, UV2.x = the unsplit vertex's column, COLOR_0 = tint region) and the VAT metadata and payload
+#   (<id>_vat.json and either a single .bin or numbered .0.bin, .1.bin, … parts; float16
 #   RGBA rows, one row of positions per frame; flat normals are derived in the shader) — into an RGBAH ImageTexture
 #   read raw with FileAccess (no import), and rebuilds the mesh so the region code sits in UV2.y and the vertex colour is gone (the MultiMesh
 #   instance colour then carries the first tint). A `textured` character (set B: json `textured`, `atlas`) keeps its atlas
 #   UVs in UV; loaded with `tint_atlas` its regions come from the atlas colour under each vertex (dark → hair 2,
 #   yellow/olive → clothing 3, else skin 1) and the shader rescales the painted colours toward the person's tints
 #   (painted colours kept: skin value only, small clothing hue/value shift, hair blend; params3d `people.tint`), so painted detail stays and appearance still varies. `material()` is a ShaderMaterial on shaders/world3d/vat.gdshader;
-#   per instance: COLOR.rgb = region-1 tint, INSTANCE_CUSTOM = (clip start × 256 + clip count, phase seconds,
+#   per instance: COLOR.rgb = region-1 tint, INSTANCE_CUSTOM = (signed clip pack, phase seconds,
 #   region-2 colour, region-3 colour) with colours packed as r·65536 + g·256 + b (exact in a float).
 # Bridge methods called: none.
 extends RefCounted
 
 const VAT_SHADER = preload("res://shaders/world3d/vat.gdshader")
 const OUTLINE_SHADER = preload("res://shaders/world3d/vat_outline.gdshader")
+const VISIBLE_MASK_SHADER = preload("res://shaders/world3d/vat_visible_mask.gdshader")
 const XRAY_SHADER = preload("res://shaders/world3d/vat_xray.gdshader")
+const XRAY_S2_SHADER = preload("res://shaders/world3d/vat_xray_s2.gdshader")
 const Data3D = preload("res://scripts/world3d/data3d.gd")
 const DIR: String = "res://assets/3d/vat"
+static var _style2_shader: Shader
 
 var id: String = ""
 var meta: Dictionary = {}
@@ -36,18 +40,28 @@ static func load_character(character: String, tint_atlas: bool = false) -> RefCo
 
 func _load(character: String, tint_atlas: bool = false) -> void:
 	id = character
-	var json_path: String = DIR.path_join(character + "_vat.json")
-	var bin_path: String = DIR.path_join(character + "_vat.bin")
+	var vat_path: String = DIR.path_join(character + "_vat")
+	var json_path: String = vat_path + ".json"
 	var glb_path: String = DIR.path_join(character + "_static.glb")
-	if not FileAccess.file_exists(json_path) or not FileAccess.file_exists(bin_path) or not ResourceLoader.exists(glb_path):
+	if not FileAccess.file_exists(json_path) or not ResourceLoader.exists(glb_path):
 		return
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(json_path))
 	if parsed is not Dictionary:
 		return
 	meta = parsed
+	var parts: int = int(meta.get("vat_parts", 0))
+	var first_path: String = vat_path + (".0.bin" if parts > 0 else ".bin")
+	if not FileAccess.file_exists(first_path):
+		return
 	var width: int = int(meta.get("width", 0))
 	var rows: int = int(meta.get("frames", 0))
-	var bytes: PackedByteArray = FileAccess.get_file_as_bytes(bin_path)
+	var bytes: PackedByteArray = FileAccess.get_file_as_bytes(first_path)
+	for part: int in range(1, parts):
+		var part_path: String = vat_path + ".%d.bin" % part
+		if not FileAccess.file_exists(part_path):
+			push_error("vat3d: %s missing part %d" % [character, part])
+			return
+		bytes.append_array(FileAccess.get_file_as_bytes(part_path))
 	if width <= 0 or rows <= 0 or bytes.size() != width * rows * 8:
 		push_error("vat3d: %s size mismatch" % character)
 		return
@@ -153,9 +167,12 @@ static func atlas_region(c: Color) -> int:
 	return 1
 
 
-func material(other: Color) -> ShaderMaterial:
+func material(other: Color, style2: bool = false) -> ShaderMaterial:
 	var mat: ShaderMaterial = ShaderMaterial.new()
-	mat.shader = VAT_SHADER
+	if style2 and _style2_shader == null:
+		_style2_shader = Shader.new()
+		_style2_shader.code = "#define S2_VAT\n" + VAT_SHADER.code
+	mat.shader = _style2_shader if style2 else VAT_SHADER
 	if atlas != null:
 		mat.set_shader_parameter("atlas", atlas)
 		mat.set_shader_parameter("textured", true)
@@ -175,31 +192,60 @@ func material(other: Color) -> ShaderMaterial:
 
 ## People only: far figures enlarged (params3d `people.far_scale` [from metres, max]), a screen-constant outline pass
 ## (`people.outline`: px, far_px, day and night colours) and a see-through silhouette where something stands in front
-## (`people.xray`), chained as next passes.
-func with_findability(mat: ShaderMaterial) -> ShaderMaterial:
-	var far: Array = Data3D.param("people.far_scale", [60.0, 1.6])
+## (`people.xray`: v8/main's depth-gap pass). Style 2 reads `people.style2_*` and draws the x-ray after a visible-body
+## stencil (`vat_visible_mask` → `vat_xray_s2`), so it skips pixels occupied by a visible body.
+func with_findability(mat: ShaderMaterial, style2: bool = false, kit: bool = false) -> ShaderMaterial:
+	var far: Array = Data3D.param("people.style2_far_scale" if style2 else "people.far_scale", [60.0, 1.6])
 	mat.set_shader_parameter("far_scale", Vector2(float(far[0]), float(far[1])))
 	var fill: Color = Data3D.colour(Data3D.param("people.far_fill", []), Color(0.16, 0.13, 0.11))
 	mat.set_shader_parameter("far_fill", Color(fill, float(Data3D.param("people.far_fill_strength", 1.0))))
 	mat.set_shader_parameter("far_fill_night", Data3D.colour(Data3D.param("people.far_fill_night", []), Color(0.91, 0.89, 0.81)))
+	if style2:
+		mat.set_shader_parameter("far_fill_range", Vector2(25.0, 48.0))
+		mat.set_shader_parameter("far_fill", Vector4(0.012, 0.010, 0.009, 1.0))
 	var line: ShaderMaterial = ShaderMaterial.new()
 	line.shader = OUTLINE_SHADER
 	_set_anim(line)
 	line.set_shader_parameter("far_scale", Vector2(float(far[0]), float(far[1])))
 	line.set_shader_parameter("body_height", float(meta.get("height", 1.7)))
-	line.set_shader_parameter("outline_px", float(Data3D.param("people.outline.px", 1.5)))
-	line.set_shader_parameter("day_colour", Data3D.colour(Data3D.param("people.outline.day", []), Color(0.14, 0.11, 0.09)))
-	line.set_shader_parameter("night_colour", Data3D.colour(Data3D.param("people.outline.night", []), Color(0.91, 0.89, 0.81)))
-	line.set_shader_parameter("outline_far_px", float(Data3D.param("people.outline.far_px", 4.0)))
+	var ol: String = "people.style2_outline." if style2 else "people.outline."
+	line.set_shader_parameter("outline_px", float(Data3D.param(ol + "px", 1.5)))
+	line.set_shader_parameter("day_colour", Data3D.colour(Data3D.param(ol + "day", []), Color(0.14, 0.11, 0.09)))
+	line.set_shader_parameter("night_colour", Data3D.colour(Data3D.param(ol + "night", []), Color(0.91, 0.89, 0.81)))
+	line.set_shader_parameter("outline_far_px", float(Data3D.param(ol + "far_px", 4.0)))
 	var xray: ShaderMaterial = ShaderMaterial.new()
 	xray.shader = XRAY_SHADER
 	_set_anim(xray)
 	xray.set_shader_parameter("far_scale", Vector2(float(far[0]), float(far[1])))
-	var dc: Color = Data3D.colour(Data3D.param("people.xray.day", []), Color(0.14, 0.11, 0.09))
-	var nc: Color = Data3D.colour(Data3D.param("people.xray.night", []), Color(0.57, 0.65, 0.66))
-	xray.set_shader_parameter("day_colour", Color(dc, float(Data3D.param("people.xray.day_alpha", 0.8))))
-	xray.set_shader_parameter("night_colour", Color(nc, float(Data3D.param("people.xray.night_alpha", 0.54))))
-	line.next_pass = xray
+	if not style2:
+		var dc: Color = Data3D.colour(Data3D.param("people.xray.day", []), Color(0.14, 0.11, 0.09))
+		var nc: Color = Data3D.colour(Data3D.param("people.xray.night", []), Color(0.57, 0.65, 0.66))
+		xray.set_shader_parameter("day_colour", Color(dc, float(Data3D.param("people.xray.day_alpha", 0.8))))
+		xray.set_shader_parameter("night_colour", Color(nc, float(Data3D.param("people.xray.night_alpha", 0.54))))
+		line.next_pass = xray
+		mat.next_pass = line
+		return mat
+	# Style 2: the visible-body stencil, then the stencil x-ray (vat_xray_s2.gdshader) with its own colours.
+	var mask: ShaderMaterial = ShaderMaterial.new()
+	mask.shader = VISIBLE_MASK_SHADER
+	_set_anim(mask)
+	mask.set_shader_parameter("far_scale", Vector2(float(far[0]), float(far[1])))
+	# Stamp every visible body before any transparent silhouette draws.
+	mask.render_priority = -1
+	xray.shader = XRAY_S2_SHADER
+	var sdc: Color = Data3D.colour(Data3D.param("people.style2_xray.day", []), Color(0.06, 0.055, 0.05))
+	var snc: Color = Data3D.colour(Data3D.param("people.style2_xray.night", []), Color(0.57, 0.65, 0.66))
+	xray.set_shader_parameter("day_colour", Color(sdc, float(Data3D.param("people.style2_xray.day_alpha", 0.9))))
+	xray.set_shader_parameter("night_colour", Color(snc, 0.96))
+	xray.set_shader_parameter("distant_only", true)
+	var sleep_start: float = floorf(clip_pack("sleep") / 256.0)
+	for pass_material: ShaderMaterial in [mat, line, mask, xray]:
+		pass_material.set_shader_parameter("distant_sleep_clip", sleep_start)
+		if kit:
+			# The new coats are shallower in the reclined pose at a distance.
+			pass_material.set_shader_parameter("distant_sleep_lift", 2.65)
+	mask.next_pass = xray
+	line.next_pass = mask
 	mat.next_pass = line
 	return mat
 
@@ -210,19 +256,64 @@ func _set_anim(mat: ShaderMaterial) -> void:
 	mat.set_shader_parameter("fps", float(meta.get("fps", 15)))
 
 
-## The packed instance custom value for clip `clip` (falls back to the first clip).
-func clip_pack(clip: String) -> float:
+## Start × 256 + count (falls back to the first clip). The near action player opts into negative one-shot packs.
+## Older consumers, including wildlife, use their existing loop playback.
+func clip_pack(clip: String, one_shots: bool = false) -> float:
 	var clips: Dictionary = meta.get("clips", {})
 	var row: Variant = clips.get(clip)
 	if row is not Dictionary:
 		if clips.is_empty():
 			return 1.0
 		row = clips[clips.keys()[0]]
-	return float(int((row as Dictionary).get("start", 0)) * 256 + maxi(1, int((row as Dictionary).get("count", 1))))
+	var info: Dictionary = row
+	var packed: float = float(int(info.get("start", 0)) * 256 + maxi(1, int(info.get("count", 1))))
+	return -packed if one_shots and not bool(info.get("loop", true)) else packed
 
 
 func has_clip(clip: String) -> bool:
 	return (meta.get("clips", {}) as Dictionary).has(clip)
+
+
+func clip_duration(clip: String) -> float:
+	var row: Dictionary = (meta.get("clips", {}) as Dictionary).get(clip, {})
+	return float(row.get("duration", 0.0))
+
+
+func clip_stride_m(clip: String) -> float:
+	var row: Dictionary = (meta.get("clips", {}) as Dictionary).get(clip, {})
+	return float(row.get("stride_m", 0.0))
+
+
+func prop_name(clip: String) -> String:
+	var track: Dictionary = (meta.get("props", {}) as Dictionary).get(clip, {})
+	return str(track.get("mesh", ""))
+
+
+func fixture_name(clip: String) -> String:
+	return str((meta.get("fixtures", {}) as Dictionary).get(clip, ""))
+
+
+## Local prop transform at the same animation time as the VAT. Attachment switches on its authored sample.
+func prop_pose(clip: String, seconds: float) -> Dictionary:
+	var track: Dictionary = (meta.get("props", {}) as Dictionary).get(clip, {})
+	var frames: Array = track.get("frames", [])
+	if frames.is_empty():
+		return {}
+	var row: Dictionary = (meta.get("clips", {}) as Dictionary).get(clip, {})
+	var loops: bool = bool(row.get("loop", true))
+	var frame: float = seconds * float(meta.get("fps", 15))
+	var last: int = frames.size() - 1
+	frame = fposmod(frame, float(frames.size())) if loops else clampf(frame, 0.0, float(last))
+	var lo: int = floori(frame)
+	var hi: int = lo + 1 if lo < last else (0 if loops else last)
+	var a: Array = frames[lo]
+	var b: Array = frames[hi]
+	var weight: float = frame - float(lo)
+	var from: Vector3 = Vector3(float(a[0]), float(a[1]), float(a[2]))
+	var to: Vector3 = Vector3(float(b[0]), float(b[1]), float(b[2]))
+	var qa: Quaternion = Quaternion(float(a[3]), float(a[4]), float(a[5]), float(a[6])).normalized()
+	var qb: Quaternion = Quaternion(float(b[3]), float(b[4]), float(b[5]), float(b[6])).normalized()
+	return {"transform": Transform3D(Basis(qa.slerp(qb, weight)), from.lerp(to, weight)), "attached": a.size() < 8 or bool(a[7])}
 
 
 static func pack(c: Color) -> float:

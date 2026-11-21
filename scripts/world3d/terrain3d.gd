@@ -11,14 +11,17 @@
 #   ShaderMaterial (shaders/world3d/terrain.gdshader) takes the season tint, snow cover and the per-tile overlay image.
 #   Chunks build progressively (nearest the camera first, a few per frame) and rebuild when the space version, the
 #   field tiles or a reset change them.
-# Bridge methods called: via SimReads get_terrain_snapshot, get_world_info, get_space, get_field_tiles,
-#   get_building_snapshot, get_colony_versions; signal world_reset.
+# Bridge methods called: via SimReads get_workshops (S2 wear), get_terrain_snapshot, get_world_info, get_space, get_field_tiles,
+#   get_building_snapshot, get_colony_versions, get_rooms; signal world_reset.
 extends Node3D
 
 const Data3D = preload("res://scripts/world3d/data3d.gd")
 const View = preload("res://scripts/world/colony/view.gd")
+const SlicePbr = preload("res://scripts/world3d/slice_pbr.gd")
 const TERRAIN_SHADER = preload("res://shaders/world3d/terrain.gdshader")
 const WATER_SHADER = preload("res://shaders/world3d/water.gdshader")
+const Grass = preload("res://scripts/world3d/grass3d.gd")
+const ArtData = preload("res://scripts/world/art/art_data.gd")
 const CHUNKS_PER_FRAME: int = 3
 const SIDES: Array[Vector2i] = [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)]
 
@@ -46,6 +49,7 @@ var _texture_weights: PackedByteArray = PackedByteArray()
 var _texture_map: ImageTexture
 var _dug: Dictionary = {}
 var _floor: Dictionary = {}
+var _house_ground: Dictionary = {}
 var _ford: Dictionary = {}
 var _field: Dictionary = {}
 var _clearing: Dictionary = {}
@@ -60,6 +64,11 @@ var _stamp_key: String = ""
 var _path_stage: PackedByteArray = PackedByteArray()
 var _path_tex: ImageTexture = null
 var _path_version: int = -1
+var _s2: bool
+var _grass: Grass
+var _grass_mask_key: int = 0
+var _grass_rooms_version: int = -1
+var _grass_rooms: Dictionary = {}
 
 
 func setup(world_sim: Node) -> void:
@@ -68,16 +77,40 @@ func setup(world_sim: Node) -> void:
 
 
 func _ready() -> void:
+	_s2 = SlicePbr.style2()
+	_grass = Grass.new()
+	_grass.name = "Grass"
+	add_child(_grass)
 	material = ShaderMaterial.new()
 	material.shader = TERRAIN_SHADER
 	preload("res://scripts/world3d/textures3d.gd").setup(material)
+	var detail: Dictionary = Data3D.mood("detail.terrain", {})
+	for key: String in ["texture_strength", "edge_noise_scale", "edge_warp", "macro_scale", "macro_strength", "normal_strength", "ambient_occlusion"]:
+		if detail.has(key):
+			material.set_shader_parameter(key, float(detail[key]))
+	material.set_shader_parameter("ground_scale", float(detail.get("texture_scale", 0.68)))
+	var roughness: Array = detail.get("roughness_range", [0.79, 0.99])
+	material.set_shader_parameter("roughness_range", Vector2(float(roughness[0]), float(roughness[1])))
+	var path_weights: Array = detail.get("path_strength", [0.52, 0.82, 0.94])
+	material.set_shader_parameter("path_strength", Vector3(float(path_weights[0]), float(path_weights[1]), float(path_weights[2])))
 	material.set_shader_parameter("cliff_colour", Data3D.colour(Data3D.param("terrain.cliff_colour", []), Color(0.43, 0.39, 0.34)))
 	water_material = ShaderMaterial.new()
 	water_material.shader = WATER_SHADER
 	water_material.set_shader_parameter("water_colour", Data3D.colour(Data3D.param("terrain.water_colour", []), Color(0.16, 0.36, 0.45, 0.82)))
 
 
+func set_slice_pbr(enabled: bool) -> bool:
+	if not SlicePbr.configure(material, TERRAIN_SHADER, enabled):
+		return false
+	if enabled and _s2:
+		material.set_shader_parameter("s2", true)
+		for key: String in ["meadow", "meadow_gold", "worn_earth"]:
+			material.set_shader_parameter(key, Data3D.colour(Data3D.mood("style2.ground." + key, [])))
+	return true
+
+
 func _on_world_reset() -> void:
+	_grass.hide()
 	_ready_world = false
 	_loaded = false
 	_space_version = -1
@@ -104,18 +137,22 @@ func _process(_delta: float) -> void:
 			return
 	var stamp: Dictionary = get_parent().get("stamp") if get_parent() != null else {}
 	@warning_ignore("integer_division")
-	var key: String = "%s|%s" % [stamp.get("overlay", -1), int(stamp.get("tick", -1)) / maxi(1, int(Data3D.param("flora.slow_read_ticks", 24)))]
+	var key: String = "%s|%s" % [stamp.get("overlay", -1), int(stamp.get("tick", -1)) / maxi(1, int(Data3D.param("flora.slow_read_ticks", 24)))] + "|%s" % stamp.get("rooms", -1)
 	# After the first full build, recomputes and chunk meshing take World3D's heavy-work slot (one per frame).
 	if _meshes.size() >= _chunk_count():
 		_loaded = true
 	if (key != _stamp_key or stamp.is_empty()) and (not _loaded or _claim()):
 		_stamp_key = key
 		_poll_paths()
-		_poll_space()
+		_poll_space(int(stamp.get("rooms", -1)))
 	elif _loaded and not _dirty.is_empty() and _claim():
 		_build_some(1)
 	if not _loaded:
 		_build_some(CHUNKS_PER_FRAME)
+	var rig: Node = get_parent().get_node_or_null("CameraRig") if get_parent() != null else null
+	if _loaded and rig != null:
+		var focus: Vector3 = rig.call("target")
+		_grass.refresh(Vector2(focus.x, focus.z), float(rig.call("zoom")))
 
 
 func _claim() -> bool:
@@ -137,14 +174,21 @@ func _load_world() -> void:
 	material.set_shader_parameter("map_size", Vector2(width, height))
 	_update_path_texture()
 	for child: Node in get_children():
-		child.queue_free()
+		if child != _grass:
+			child.queue_free()
 	_meshes.clear()
 	_water.clear()
 	_loaded = false
 	_compute_corners()
 	_ready_world = true
 	_space_version = -1
+	_grass_mask_key = 0
+	_grass_rooms_version = -1
+	_grass_rooms = {}
+	_house_ground.clear()
+	_grass.reset_map(width, height, _terrain, int(SimReads.read(_world_sim, "get_world_info").get("seed", 0)))
 	_poll_space()
+	_grass.show()
 	_mark_all()
 
 
@@ -168,12 +212,29 @@ func _update_path_texture() -> void:
 	var data: PackedByteArray = _path_stage if _path_stage.size() == n else PackedByteArray()
 	if data.size() != n:
 		data.resize(n)
+	if _s2:
+		data = _meadow_path_stages(data, width, height)
 	var img: Image = Image.create_from_data(width, height, false, Image.FORMAT_R8, data)
 	if _path_tex == null or _path_tex.get_width() != width or _path_tex.get_height() != height:
 		_path_tex = ImageTexture.create_from_image(img)
 	else:
 		_path_tex.update(img)
 	material.set_shader_parameter("path_tex", _path_tex)
+	_grass.set_maps(_path_tex, _texture_map)
+
+
+## Wide patches of accumulated traffic read as short grass. Narrow runs and paving keep their original surface.
+static func _meadow_path_stages(stages: PackedByteArray, w: int, h: int) -> PackedByteArray:
+	var display: PackedByteArray = stages.duplicate()
+	for y: int in range(1, h - 1):
+		for x: int in range(1, w - 1):
+			var i: int = y * w + x
+			if stages[i] != 2:
+				continue
+			var adjacent: int = int(stages[i - 1] >= 2) + int(stages[i + 1] >= 2) + int(stages[i - w] >= 2) + int(stages[i + w] >= 2)
+			if adjacent >= 3:
+				display[i] = 1
+	return display
 
 
 func _mark_all() -> void:
@@ -204,17 +265,19 @@ func _compute_corners() -> void:
 
 
 ## Space/fields/hearths changed → recompute raises and colours, mark touched chunks.
-func _poll_space() -> void:
+func _poll_space(rooms_version: int = -1) -> void:
 	var space: Dictionary = SimReads.read(_world_sim, "get_space")
 	# The space counter is the shared overlay counter (it moves with every hauled stack): key on the content.
 	var version: int = hash([space.get("dug_xs"), space.get("dug_ys"), space.get("floor_xs"), space.get("floor_ys"),
 		space.get("ford_xs"), space.get("ford_ys")])
 	var fields: Dictionary = SimReads.read(_world_sim, "get_field_tiles")
+	var buildings: Dictionary = SimReads.read(_world_sim, "get_building_snapshot")
+	_update_grass_mask(space, fields, buildings, rooms_version)
 	var fxs: PackedInt64Array = fields.get("xs", PackedInt64Array())
 	var fphases: PackedInt64Array = fields.get("phases", PackedInt64Array())
 	# Only which tiles are fields colours the ground (not their phase), and only lit hearths clear a camp: key on
 	# those, so growing crops and new bedrolls do not recompute the whole map.
-	var field_key: String = "%d:%d:%d" % [fxs.size(), hash(fxs), hash(fields.get("ys"))] + ":" + str(hash(_lit_hearths()))
+	var field_key: String = "%d:%d:%d" % [fxs.size(), hash(fxs), hash(fields.get("ys"))] + ":" + str(hash(_lit_hearths(buildings)))
 	if version == _space_version and field_key == _field_key and not _raise.is_empty():
 		return
 	var dug: Dictionary = _tileset(space.get("dug_xs", PackedInt32Array()), space.get("dug_ys", PackedInt32Array()))
@@ -249,7 +312,7 @@ func _poll_space() -> void:
 	if incremental:
 		_compute_some(changed)
 	else:
-		_compute_clearing()
+		_compute_clearing(buildings)
 		_compute_tiles()
 		if old_raise.size() != _raise.size():
 			_update_texture_map()
@@ -274,6 +337,113 @@ func _poll_space() -> void:
 		_update_path_texture()
 
 
+## Style 2 packs the real completed house interior into bare ground at its existing terrain height.
+func set_house_ground(tiles: Dictionary) -> void:
+	if _house_ground != tiles:
+		_house_ground = tiles
+		_stamp_key = ""
+
+
+func house_floor_lift(tile: Vector2i) -> float:
+	if _house_ground.has(tile) and _floor.has(tile):
+		return float(Data3D.param("structures.floor_height", 0.06))
+	return 0.0
+
+
+func _update_grass_mask(space: Dictionary, fields: Dictionary, buildings: Dictionary, rooms_version: int) -> void:
+	if rooms_version >= 0 and rooms_version != _grass_rooms_version:
+		_grass_rooms_version = rooms_version
+		_grass_rooms = SimReads.read(_world_sim, "get_rooms")
+	var mask_key: int = hash([space.get("wall_xs"), space.get("wall_ys"), space.get("floor_xs"), space.get("floor_ys"),
+		space.get("dug_xs"), space.get("dug_ys"), space.get("bed_xs"), space.get("bed_ys"), fields.get("xs"), fields.get("ys"),
+		buildings.get("xs"), buildings.get("ys"), buildings.get("kinds"), rooms_version])
+	var shops: Dictionary = {}
+	if _s2:
+		shops = SimReads.read(_world_sim, "get_workshops")
+		mask_key = hash([mask_key, space.get("wall_is_door"), shops.get("xs"), shops.get("ys"), shops.get("ws"), shops.get("hs"), _house_ground])
+	if mask_key == _grass_mask_key:
+		return
+	_grass_mask_key = mask_key
+	var blocked: Dictionary = _grass_occupied_tiles(space, fields, buildings, _grass_rooms)
+	if not _s2:
+		_grass.set_built(blocked)
+		return
+	var wear: Dictionary = {}
+	for tile: Vector2i in _house_ground:
+		blocked[tile] = true
+		wear[tile] = 255
+	var edges: Dictionary = {}
+	var doors: PackedByteArray = space.get("wall_is_door", PackedByteArray())
+	var wx: PackedInt32Array = space.get("wall_xs", PackedInt32Array())
+	var wy: PackedInt32Array = space.get("wall_ys", PackedInt32Array())
+	for i: int in mini(doors.size(), mini(wx.size(), wy.size())):
+		if doors[i] == 1:
+			_mark_wear(wear, Vector2i(wx[i], wy[i]))
+	for tile: Vector2i in _lit_hearths(buildings):
+		_mark_wear(wear, tile)
+	var bx: PackedInt32Array = shops.get("xs", PackedInt32Array())
+	var by: PackedInt32Array = shops.get("ys", PackedInt32Array())
+	var ws: PackedInt32Array = shops.get("ws", PackedInt32Array())
+	var hs: PackedInt32Array = shops.get("hs", PackedInt32Array())
+	for i: int in mini(bx.size(), by.size()):
+		for y: int in range(hs[i] if i < hs.size() else 1):
+			for x: int in range(ws[i] if i < ws.size() else 1):
+				var tile: Vector2i = Vector2i(bx[i] + x, by[i] + y)
+				_mark_wear(wear, tile)
+				blocked[tile] = true
+	var fx: PackedInt64Array = fields.get("xs", PackedInt64Array())
+	var fy: PackedInt64Array = fields.get("ys", PackedInt64Array())
+	for i: int in mini(fx.size(), fy.size()):
+		for step: Vector2i in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
+			edges[Vector2i(fx[i], fy[i]) + step] = true
+	material.set_shader_parameter("s2_mask", _grass.set_built(blocked, wear, edges, _house_ground))
+
+
+static func _mark_wear(wear: Dictionary, tile: Vector2i) -> void:
+	wear[tile] = 255
+	for offset: Vector2i in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
+		var neighbour: Vector2i = tile + offset
+		wear[neighbour] = maxi(int(wear.get(neighbour, 0)), 46)
+
+
+static func _grass_occupied_tiles(space: Dictionary, fields: Dictionary, buildings: Dictionary, rooms: Dictionary) -> Dictionary:
+	var blocked: Dictionary = {}
+	for family: String in ["wall", "floor", "dug", "bed"]:
+		blocked.merge(_tileset(space.get(family + "_xs"), space.get(family + "_ys")))
+	var fx: PackedInt64Array = fields.get("xs", PackedInt64Array())
+	var fy: PackedInt64Array = fields.get("ys", PackedInt64Array())
+	for i: int in mini(fx.size(), fy.size()):
+		blocked[Vector2i(fx[i], fy[i])] = true
+	var bx: PackedInt32Array = buildings.get("xs", PackedInt32Array())
+	var by: PackedInt32Array = buildings.get("ys", PackedInt32Array())
+	var kinds: PackedByteArray = buildings.get("kinds", PackedByteArray())
+	for i: int in mini(kinds.size(), mini(bx.size(), by.size())):
+		var binding: Dictionary = _building_binding(kinds[i])
+		var ring: Dictionary = binding.get("ring", {})
+		if binding.get("structure") == null and ring.is_empty():
+			continue
+		var size: Array = ring.get("size", [1, 1])
+		var footprint: Vector2i = Vector2i(int(size[0]), int(size[1]))
+		@warning_ignore("integer_division")
+		var start: Vector2i = Vector2i(bx[i], by[i]) - footprint / 2
+		for y: int in range(start.y, start.y + footprint.y):
+			for x: int in range(start.x, start.x + footprint.x):
+				blocked[Vector2i(x, y)] = true
+	var roofed: PackedByteArray = rooms.get("roofed", PackedByteArray())
+	var ids: PackedInt32Array = rooms.get("ids", PackedInt32Array())
+	var covered: Dictionary = {}
+	for i: int in mini(ids.size(), roofed.size()):
+		if roofed[i] != 0:
+			covered[ids[i]] = true
+	var rx: PackedInt32Array = rooms.get("tile_xs", PackedInt32Array())
+	var ry: PackedInt32Array = rooms.get("tile_ys", PackedInt32Array())
+	var room_ids: PackedInt32Array = rooms.get("tile_rooms", PackedInt32Array())
+	for i: int in mini(room_ids.size(), mini(rx.size(), ry.size())):
+		if covered.has(room_ids[i]):
+			blocked[Vector2i(rx[i], ry[i])] = true
+	return blocked
+
+
 static func _tileset(xs: Variant, ys: Variant) -> Dictionary:
 	var out: Dictionary = {}
 	if xs is PackedInt32Array and ys is PackedInt32Array:
@@ -282,9 +452,8 @@ static func _tileset(xs: Variant, ys: Variant) -> Dictionary:
 	return out
 
 
-func _compute_clearing() -> void:
+func _compute_clearing(buildings: Dictionary) -> void:
 	_clearing.clear()
-	var buildings: Dictionary = SimReads.read(_world_sim, "get_building_snapshot")
 	var bx: PackedInt32Array = buildings.get("xs", PackedInt32Array())
 	var by: PackedInt32Array = buildings.get("ys", PackedInt32Array())
 	var bk: PackedByteArray = buildings.get("kinds", PackedByteArray())
@@ -308,8 +477,7 @@ func _compute_clearing() -> void:
 
 
 ## Tiles of the camp-marking (lit) hearths of get_building_snapshot.
-func _lit_hearths() -> Array[Vector2i]:
-	var buildings: Dictionary = SimReads.read(_world_sim, "get_building_snapshot")
+func _lit_hearths(buildings: Dictionary) -> Array[Vector2i]:
 	var bx: PackedInt32Array = buildings.get("xs", PackedInt32Array())
 	var by: PackedInt32Array = buildings.get("ys", PackedInt32Array())
 	var bk: PackedByteArray = buildings.get("kinds", PackedByteArray())
@@ -326,7 +494,7 @@ static func _clearing_param(key: String, fallback: Variant) -> Variant:
 
 
 static func _building_binding(code: int) -> Dictionary:
-	return preload("res://scripts/world/art/art_data.gd").binding("buildings", code)
+	return ArtData.binding("buildings", code)
 
 
 func _compute_tiles() -> void:
@@ -430,6 +598,7 @@ func _update_texture_map() -> void:
 		material.set_shader_parameter("biome_tex", _texture_map)
 	else:
 		_texture_map.update(image)
+	_grass.set_maps(_path_tex, _texture_map)
 
 
 ## Per-corner water dip: a corner sinks by the bed depth times the share of its four tiles that are water (a ford

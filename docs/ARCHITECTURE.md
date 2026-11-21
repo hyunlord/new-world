@@ -943,6 +943,26 @@ the `scripts/world/view_projection.gd` provider for screen ↔ world conversion.
 `assets/3d/bindings3d.json`, models and VAT from `tools/3d/blender/build_all.py`.
 Material detail uses `assets/3d/textures3d.json` and `scripts/world3d/textures3d.gd`: shared padded albedo/normal atlases in `assets/3d/textures/`, sampled by existing terrain, wall, roof and static-model materials. Original tints and surface counts remain; the crowd/VAT material path is unchanged. See [ADR0068](decisions/0068-generated-material-texture-atlas.md).
 
+Style 2 selects 30 Hz motion capture for the near villager tier. `mocap3d.gd`
+reads the presentation state and draws baked grips and fixtures on the near VAT
+clock. Mid and far tiers use the existing loops. The RON build and its physical
+checks are documented in [ADR0080](decisions/0080-style-2-motion-capture.md).
+
+Style 2 joins roofed template site rows to the cached rotated placement plan.
+`house_shell3d.gd` builds thatched gables, compact round roofs and intersecting
+planar hips. `structures3d.gd` uses the same shell during construction and
+after completion, and provides the interior ground mask to `terrain3d.gd`.
+Enclosed rooms outside template sites use the same shell builder and the room
+panel controls their cutaway. `sky3d.gd` reads the Style 2 house lighting
+profile from `assets/3d/mood.json`.
+See [ADR 0078](decisions/0078-style-2-house-shells.md) and
+[ADR 0079](decisions/0079-style-2-house-shapes-and-light.md).
+
+`assets/3d/mood.json` also tunes the read-only clock and hardship grade,
+occupied-room light pool, terrain blending, foliage, fog and sky. Grass batches
+follow Terrain's chunk rebuild and visible ground exclusions. See
+[ADR0074](decisions/0074-world-look.md).
+
 
 ## Village growth (M-GROW-a, ADR 0070)
 

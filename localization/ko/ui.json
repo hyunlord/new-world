@@ -310,6 +310,7 @@
   "UI_ORDER_TOAST_PLACE_MANY_FMT": "{name} 청사진 {count}칸 놓음",
   "UI_ORDER_TOAST_REFUSED_FMT": "{count}칸은 안 됨 — {reason}",
   "UI_ORDER_TOAST_ROOM_ROLE": "방 역할을 바꿈",
+  "UI_INSIDE_VIEW": "안 보기",
   "UI_ROOMS_TOGGLE": "방 보기 R",
   "ROOM_ROLE_BEDROOM": "침실",
   "ROOM_ROLE_STOREHOUSE": "창고",

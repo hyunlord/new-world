@@ -1,0 +1,58 @@
+{
+ "width": 1320,
+ "vertex_count": 1320,
+ "split_vertex_count": 2364,
+ "frames": 75,
+ "fps": 15,
+ "normals_offset": -1,
+ "clips": {
+  "idle": {
+   "start": 0,
+   "count": 15,
+   "loop": true,
+   "duration": 1.0
+  },
+  "walk": {
+   "start": 15,
+   "count": 15,
+   "loop": true,
+   "duration": 1.0
+  },
+  "work": {
+   "start": 30,
+   "count": 15,
+   "loop": true,
+   "duration": 1.0
+  },
+  "carry": {
+   "start": 45,
+   "count": 15,
+   "loop": true,
+   "duration": 1.0
+  },
+  "sleep": {
+   "start": 60,
+   "count": 15,
+   "loop": true,
+   "duration": 1.0
+  }
+ },
+ "bounds_min": [
+  -0.4129,
+  -0.049,
+  -0.8175
+ ],
+ "bounds_max": [
+  0.9381,
+  2.1746,
+  0.8002
+ ],
+ "height": 1.6004,
+ "format": "float16 LE RGBA, row-major; one row of positions (Godot xyz, w=1) per frame; texel x = UV2.x * width (the unsplit vertex); no normal rows: the shader derives flat face normals; UV0 = atlas UVs",
+ "textured": true,
+ "atlas": "s2_p4_atlas.png",
+ "source_commit": "872dd491717c0c41d157d0987b9eedc8bcad3e8c",
+ "source": "Tripo p4",
+ "walk_stride_m": 1.0,
+ "source_provenance": "Owner Tripo p4; ANCHOR2 rig and clips"
+}

@@ -14,6 +14,8 @@
 
 **현재 게시판은 C1-b (`4a44336e7`, 2026-11-10):** 신석기 콘텐츠와 실제 포획→성체 쌍→출생→착유→도축 사슬을 갖췄다. 전체 게이트49/49와 wip→main 게시를 확인했다. 이전 농경·직조 작업과 측정의 상세 기록은 [M6b 보고](docs/v8/m6b/M6B_REPORT.md)에 보존되어 있다.
 
+[스타일 2 주민 동작 화면 모음](docs/images/mocap1_contact_sheet.png)은 실제 마을에서 베기, 통나무 운반, 바구니를 들어 올리는 순간을 담았다. 로컬 후보는 `--style=s2`로 볼 수 있다.
+
 [UI1 화면 모음](docs/images/ui1_contact_sheet.png)은 같은 정착지의 건설 이유, 주민 정보와 식량 상세를 보여 준다. 원본은 같은 저장의 같은 시점에서 한국어 게임 창 1920×1080으로 촬영했다.
 
 C2 화면 모음은 Git 이력 `9f952db1e`에 보존되어 있다. C2-a 후보의 검사·게시 조건은 [C2 보고](docs/v8/c2/C2_REPORT.md)에 기록한다. 채굴부터 주석 교역과 청동 도구 사용까지의 사슬은 C2-b 작업이다. [C1 게시 기록](docs/v8/c1/C1_REPORT.md), [M-SPINE 기록](docs/v8/spine/M_SPINE_B_REPORT.md), [M6a 기록](docs/v8/m6a/M6A_REPORT.md), [물·물가·겨울 눈 비교](docs/images/mux_compare_sheet.png).

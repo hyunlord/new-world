@@ -24,6 +24,8 @@
 extends Node3D
 
 const Data3D = preload("res://scripts/world3d/data3d.gd")
+const SlicePbr = preload("res://scripts/world3d/slice_pbr.gd")
+const Kit = preload("res://scripts/world3d/s2kit.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 
 var _world_sim: Node = null
@@ -55,6 +57,11 @@ var _item_nodes: Dictionary = {}
 var _glow_on: StandardMaterial3D
 var _glow_off: StandardMaterial3D
 var _tinted: Dictionary = {}
+var _slice_pbr: bool = false
+var _style2: bool = SlicePbr.style2()
+var _kit_props: Dictionary = {}
+var _kit_glows: Dictionary = {}
+var _shelter_kit: Dictionary = {}
 var _stamp_key: String = ""
 ## What the last station rebuild drew: workshops and lit camp buildings (the hearth), for tests and tools.
 var _counts: Dictionary = {"workshops": 0, "hearths": 0}
@@ -70,6 +77,9 @@ func setup(world_sim: Node, terrain: Node, sky: Node) -> void:
 func _ready() -> void:
 	# Renderer warmup (D-MGROW-1 Q4): load the M-GROW 3.4 out-of-input marker before it first appears.
 	Data3D.mesh(str(Data3D.param("stations.short_marker", "")))
+	if _style2:
+		_kit_props = Data3D.binding("s2kit.props", {})
+		_shelter_kit = Data3D.binding("s2kit.house_shelter", {})
 	_light_budget = clampi(int(Data3D.mood("room_lights.cap", 24)), 0, 24)
 	_light_threshold = clampf(float(Data3D.mood("room_lights.activation", 0.25)), 0.0, 0.99)
 	_light_range = float(Data3D.mood("room_lights.range", 3.5))
@@ -102,6 +112,19 @@ func _ready() -> void:
 		node.visible = false
 		add_child(node)
 		_light_pool.append(node)
+
+
+func set_slice_pbr(enabled: bool) -> bool:
+	if enabled and not SlicePbr.load_textures():
+		return false
+	if enabled != _slice_pbr:
+		_slice_pbr = enabled
+		_tinted.clear()
+		_stamp_key = ""
+		_key = ""
+		_items_key = ""
+		_yards_key = ""
+	return true
 
 
 func _on_world_reset() -> void:
@@ -290,7 +313,7 @@ func _rebuild_stations(shops: Dictionary, buildings: Dictionary, settlements: Di
 		_place(bed_model, Rect2i(bedx[i], bedy[i], int(fp[0]), int(fp[1])), false, "bed%d" % i)
 
 
-func _fire_lit(settlements: Dictionary, t: Vector2i) -> bool:
+static func _fire_lit(settlements: Dictionary, t: Vector2i) -> bool:
 	var fx: PackedInt32Array = settlements.get("formation_xs", PackedInt32Array())
 	var fy: PackedInt32Array = settlements.get("formation_ys", PackedInt32Array())
 	var lit: PackedByteArray = settlements.get("fire_lit", PackedByteArray())
@@ -321,11 +344,20 @@ static func state_model(id: String, working: bool) -> String:
 ## Place model `id` centred on footprint `rect`, facing south; `lit` (working) picks its state model and turns its
 ## glow and light on (a lit model also smokes). M-GROW 3.4 `look`: "short" (out of input) sets an overturned empty
 ## basket at the work socket; "ruin" (unused a season) leans and sinks the idle model (params3d `stations.ruin`).
+## Style 2 may replace or cover the station with the kit's open shelter (bindings3d `s2kit.house_shelter`).
 func _place(id: String, rect: Rect2i, lit: bool, node_name: String, look: String = "") -> void:
+	var station_models: Dictionary = _shelter_kit.get("station_models", {})
+	var shelter_mode: String = str(station_models.get(id, ""))
+	var centre: Vector2 = Rect2(rect).get_center()
+	var g: float = float(_terrain.call("height_at", centre.x, centre.y))
+	if shelter_mode == "replace" and _station_shelter(node_name, rect, g) != null:
+		return
 	var mi: MeshInstance3D = MeshInstance3D.new()
 	mi.name = node_name
 	var shown: String = state_model(id, lit)
-	var mesh: Mesh = Data3D.mesh(shown)
+	var kit_id: String = str(_kit_props.get(shown, _kit_props.get(id, "")))
+	var kit_mesh: ArrayMesh = Kit.mesh(kit_id)
+	var mesh: Mesh = kit_mesh if kit_mesh != null else (_tinted_mesh(shown, "") if _slice_pbr else Data3D.mesh(shown))
 	mi.mesh = mesh
 	var row: Dictionary = Data3D.model_row(shown)
 	if row.is_empty():
@@ -334,13 +366,22 @@ func _place(id: String, rect: Rect2i, lit: bool, node_name: String, look: String
 	var fw: float = maxf(0.5, float(fp[0]))
 	var fh: float = maxf(0.5, float(fp[1]))
 	var s: float = clampf(minf(float(rect.size.x) / fw, float(rect.size.y) / fh), 0.85, 1.0)
-	var centre: Vector2 = Vector2(rect.position) + Vector2(rect.size) * 0.5
-	var g: float = float(_terrain.call("height_at", centre.x, centre.y))
 	var basis: Basis = Basis.IDENTITY
 	if look == "ruin":
 		basis = Basis(Vector3(1, 0, 0.4).normalized(), deg_to_rad(float(Data3D.param("stations.ruin.tilt_deg", 7.0))))
 		g -= float(Data3D.param("stations.ruin.sink", 0.12))
-	mi.transform = Transform3D(basis.scaled(Vector3(s, s, s)), Vector3(centre.x, g, centre.y))
+	var placement: Transform3D = Transform3D(basis.scaled(Vector3(s, s, s)), Vector3(centre.x, g, centre.y))
+	mi.transform = placement
+	if kit_mesh != null:
+		var yaws: Dictionary = Data3D.binding("s2kit.prop_yaw", {})
+		var yaw: float = deg_to_rad(float(yaws.get(kit_id, 0.0)))
+		var size: Vector3 = mesh.get_aabb().size
+		var extents: Vector3 = (Basis(Vector3.UP, yaw) * size).abs()
+		var fit: float = minf(float(rect.size.x) / maxf(0.01, extents.x), float(rect.size.y) / maxf(0.01, extents.z))
+		var fitted: Transform3D = Kit.fit(mesh, size * (0.92 * fit), yaw, placement.origin)
+		fitted.basis = basis * fitted.basis
+		mi.transform = fitted
+		Kit.add_lod(mi, kit_id)
 	add_child(mi)
 	if look == "short":
 		var marker: MeshInstance3D = MeshInstance3D.new()
@@ -351,6 +392,8 @@ func _place(id: String, rect: Rect2i, lit: bool, node_name: String, look: String
 		marker.transform = Transform3D(Basis(Vector3.RIGHT, PI * 0.55).scaled(Vector3.ONE * 1.6), at + Vector3(0, 0.12, 0))
 		mi.add_child(marker)
 	_stations.append(mi)
+	if shelter_mode == "cover":
+		_station_shelter(node_name, rect, g)
 	var is_lit_model: bool = bool((Data3D.binding("stations.lit", {}) as Dictionary).get(id, false))
 	for surface: int in mesh.get_surface_count():
 		if Data3D.surface_key(mesh, surface) == "glow":
@@ -360,14 +403,99 @@ func _place(id: String, rect: Rect2i, lit: bool, node_name: String, look: String
 	elif lit:
 		mi.add_child(_work_puffs(row, "smoke"))
 	if is_lit_model and lit:
+		if kit_mesh != null:
+			_add_kit_glow(shown, placement)
 		var sockets: Dictionary = row.get("sockets", {})
 		var socket: Variant = sockets.get("light")
 		var at: Vector3 = Vector3(0, 0.8, 0)
 		if socket is Array and (socket as Array).size() >= 3:
 			at = Vector3(float(socket[0]), float(socket[1]), float(socket[2]))
-		var position_in_world: Vector3 = mi.to_global(at + Vector3(0, _fire_socket_height, 0))
+		var light_at: Vector3 = at + Vector3(0, _fire_socket_height, 0)
+		var position_in_world: Vector3 = mi.to_global(light_at) if kit_mesh == null else to_global(placement * light_at)
 		var room_tile: Vector2i = Vector2i(floori(centre.x), floori(centre.y))
 		_fire_sockets.append({"position": position_in_world, "tile": room_tile, "phase": float(rect.position.x * 7 + rect.position.y * 3)})
+
+
+func _station_shelter(node_name: String, rect: Rect2i, ground: float) -> MeshInstance3D:
+	var structures: Node = get_parent().get("structures")
+	if structures != null and int(structures.call("roof_key_at", Vector2i(Rect2(rect).get_center()))) >= 0:
+		return null
+	var shelter: MeshInstance3D = _open_shelter(node_name, Rect2(rect), ground)
+	if shelter != null:
+		_stations.append(shelter)
+	return shelter
+
+
+func _open_shelter(label: String, rect: Rect2, ground: float) -> MeshInstance3D:
+	var whole_id: String = str(_shelter_kit.get("whole", ""))
+	var whole: ArrayMesh = Kit.mesh(whole_id)
+	if whole == null:
+		return null
+	var native_x: bool = bool(_shelter_kit.get("ridge_x", false))
+	var along_x: bool = rect.size.x > rect.size.y
+	var native: Vector3 = whole.get_aabb().size
+	var yaw: float = PI * 0.5 if native_x != along_x else 0.0
+	var span: float = maxf(rect.size.x, rect.size.y)
+	var width: float = minf(rect.size.x, rect.size.y)
+	var cross_native: float = native.z if native_x else native.x
+	var scale: float = minf(width, 2.3) / maxf(cross_native, 0.01)
+	var bay_id: String = str(_shelter_kit.get("bay", ""))
+	var rear_id: String = str(_shelter_kit.get("rear", ""))
+	var bay: ArrayMesh = Kit.mesh(bay_id)
+	var rear: ArrayMesh = Kit.mesh(rear_id)
+	var axis: Vector3 = Vector3.RIGHT if native_x else Vector3.BACK
+	var spacing: float = maxf(0.01, float(_shelter_kit.get("bay_spacing", 0.62)))
+	var base_length: float = native.x if native_x else native.z
+	var count: int = 1
+	if bay != null and rear != null:
+		count += maxi(0, roundi((span / scale - base_length) / spacing))
+	var root: MeshInstance3D = MeshInstance3D.new()
+	root.name = "OpenShelter_" + label
+	root.set_meta("shelter_model", whole_id)
+	root.set_meta("shelter_bays", count)
+	var center: Vector2 = rect.get_center()
+	var fit: Transform3D = Kit.fit(whole, native * scale, yaw, Vector3(center.x, ground, center.y))
+	root.transform = fit.translated_local(-axis * (float(count - 1) * spacing * 0.5))
+	var material: ShaderMaterial = Kit.material_for(whole, false, whole_id)
+	if count > 1:
+		_shelter_piece(root, "ShelterRear", rear_id, rear, material, Vector3.ZERO)
+	for i: int in count:
+		_shelter_piece(root, "ShelterBay_%d" % i, bay_id if count > 1 else whole_id,
+			bay if count > 1 else whole, material, axis * spacing * float(i))
+	add_child(root)
+	return root
+
+
+static func _shelter_piece(root: MeshInstance3D, label: String, id: String, mesh: ArrayMesh, material: ShaderMaterial, offset: Vector3) -> void:
+	var part: MeshInstance3D = MeshInstance3D.new()
+	part.name = label
+	part.mesh = mesh
+	part.position = offset
+	part.material_override = material
+	Kit.add_lod(part, id)
+	root.add_child(part)
+
+
+## Retain the original emissive flame without drawing the low-poly hearth underneath.
+func _add_kit_glow(id: String, placement: Transform3D) -> void:
+	if not _kit_glows.has(id):
+		var source: Mesh = Data3D.mesh(id)
+		var glow: ArrayMesh = ArrayMesh.new()
+		for surface: int in source.get_surface_count():
+			if Data3D.surface_key(source, surface) == "glow":
+				glow.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, source.surface_get_arrays(surface))
+		_kit_glows[id] = glow
+	var mesh: ArrayMesh = _kit_glows[id]
+	if mesh.get_surface_count() == 0:
+		return
+	var node: MeshInstance3D = MeshInstance3D.new()
+	node.name = "KitFlame"
+	node.mesh = mesh
+	node.material_override = _glow_on
+	node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	node.transform = placement
+	add_child(node)
+	_stations.append(node)
 
 
 ## Chips and dust rising off a station without a fire while it works a bill (params3d `stations.work_puffs`), so a
@@ -455,6 +583,7 @@ func _rebuild_items(overlay: Dictionary) -> void:
 		if not batches.has(bkey):
 			batches[bkey] = []
 		var t: Vector2i = Vector2i(xs[i], ys[i])
+		var lift: float = float(_terrain.call("house_floor_lift", t)) if _style2 else 0.0
 		for copy: int in copies:
 			var off: Vector2 = [Vector2(0, 0), Vector2(0.22, -0.18), Vector2(-0.2, 0.2)][copy]
 			var x: float = t.x + 0.5 + off.x
@@ -462,7 +591,7 @@ func _rebuild_items(overlay: Dictionary) -> void:
 			var yaw: float = float((t.x * 37 + t.y * 91 + copy * 53) % 360) * PI / 180.0
 			# M-GROW 3.5: a pile grows with its count, up to `items.pile_growth` larger at `items.pile_full` items.
 			var grow: float = 1.0 + float(Data3D.param("items.pile_growth", 0.0)) * clampf(float(n - 1) / maxf(1.0, float(Data3D.param("items.pile_full", 30)) - 1.0), 0.0, 1.0)
-			(batches[bkey] as Array).append(Transform3D(Basis(Vector3.UP, yaw).scaled(Vector3.ONE * grow), Vector3(x, float(_terrain.call("height_at", x, z)), z)))
+			(batches[bkey] as Array).append(Transform3D(Basis(Vector3.UP, yaw).scaled(Vector3.ONE * grow), Vector3(x, float(_terrain.call("height_at", x, z)) + lift, z)))
 	for k: String in _item_nodes.keys():
 		if not batches.has(k):
 			(_item_nodes[k] as Node).queue_free()
@@ -517,7 +646,7 @@ func _tinted_mesh(id: String, tint: String) -> Mesh:
 	if _tinted.has(key):
 		return _tinted[key]
 	var base: Mesh = Data3D.mesh(id)
-	if tint == "" or base is not ArrayMesh:
+	if (tint == "" and not _slice_pbr) or base is not ArrayMesh:
 		_tinted[key] = base
 		return base
 	var src: ArrayMesh = base
@@ -526,7 +655,7 @@ func _tinted_mesh(id: String, tint: String) -> Mesh:
 		out.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, src.surface_get_arrays(s))
 		var name: String = Data3D.surface_key(src, s)
 		var mat: Material = src.surface_get_material(s)
-		if name in ["vein", "metal"]:
+		if tint != "" and name in ["vein", "metal"]:
 			var m: StandardMaterial3D = StandardMaterial3D.new()
 			m.albedo_color = Data3D.material_colour(tint, "Mineral")
 			m.metallic = 0.5 if name == "metal" else 0.1
@@ -535,6 +664,12 @@ func _tinted_mesh(id: String, tint: String) -> Mesh:
 			mat = preload("res://scripts/world3d/textures3d.gd").imported(m)
 			if mat is ShaderMaterial:
 				(mat as ShaderMaterial).set_shader_parameter("texture_tile", float(preload("res://scripts/world3d/textures3d.gd").index("materials", tint, preload("res://scripts/world3d/textures3d.gd").index("surfaces", name))))
+		if _slice_pbr and mat is ShaderMaterial:
+			var source: ShaderMaterial = mat
+			if SlicePbr.slot_is_pbr(int(source.get_shader_parameter("texture_tile"))):
+				var ultra: ShaderMaterial = source.duplicate()
+				if SlicePbr.configure(ultra, source.shader, true):
+					mat = ultra
 		out.surface_set_material(out.get_surface_count() - 1, mat)
 	_tinted[key] = out
 	return out
@@ -550,6 +685,9 @@ func _rebuild_yards(buildings: Dictionary, season: int) -> void:
 			_yard_warm[model] = true
 	var sites: Array = buildings.get("template_sites", [])
 	var key: String = str(hash([season, sites.map(func(row: Dictionary) -> Variant: return [row.get("id"), row.get("yard_props", []), row.get("occupants", 0), row.get("complete", false)])]))
+	if _style2:
+		key += str(hash(sites.map(func(row: Dictionary) -> Variant:
+			return [row.get("status"), row.get("is_intact"), row.get("roofed"), row.get("x"), row.get("y"), row.get("rotation")])))
 	if key == _yards_key:
 		return
 	_yards_key = key
@@ -561,6 +699,15 @@ func _rebuild_yards(buildings: Dictionary, season: int) -> void:
 		if value is not Dictionary:
 			continue
 		_chimney(value as Dictionary, season)
+		var site: Dictionary = value
+		if _style2 and bool(site.get("connected", false)) and not bool(site.get("roofed", true)) \
+				and site.get("status") == "complete" and bool(site.get("is_intact", false)):
+			var rect: Rect2 = Rect2(float(site["x"]), float(site["y"]), float(site["width"]), float(site["height"]))
+			var centre: Vector2 = rect.get_center()
+			var ground: float = float(_terrain.call("height_at", centre.x, centre.y))
+			var shelter: MeshInstance3D = _open_shelter("site_%s" % site["id"], rect, ground)
+			if shelter != null:
+				_yard_nodes.append(shelter)
 		for prop: Dictionary in (value as Dictionary).get("yard_props", []):
 			var tile: Vector2i = Vector2i(int(prop.get("x", 0)), int(prop.get("y", 0)))
 			if claimed.has(tile):
@@ -568,7 +715,12 @@ func _rebuild_yards(buildings: Dictionary, season: int) -> void:
 			claimed[tile] = true
 			var node: MeshInstance3D = MeshInstance3D.new()
 			node.name = "Yard_%s_%s" % [(value as Dictionary).get("id", -1), prop.get("id", "")]
-			node.mesh = Data3D.mesh(str(prop.get("model", "")))
+			var model: String = str(prop.get("model", ""))
+			var kit_id: String = str(_kit_props.get(model, ""))
+			var kit_mesh: ArrayMesh = Kit.mesh(kit_id)
+			node.mesh = kit_mesh if kit_mesh != null else (_tinted_mesh(model, "") if _slice_pbr else Data3D.mesh(model))
+			if kit_mesh != null:
+				Kit.add_lod(node, kit_id)
 			var x: float = float(prop.get("x", 0)) + 0.5
 			var y: float = float(prop.get("y", 0)) + 0.5
 			# A decorative model fits wholly within its admitted free tile (wide fence GLBs shrink); small ones (a log

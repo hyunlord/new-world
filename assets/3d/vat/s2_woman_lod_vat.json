@@ -1,0 +1,58 @@
+{
+ "width": 851,
+ "vertex_count": 851,
+ "split_vertex_count": 1494,
+ "frames": 75,
+ "fps": 15,
+ "normals_offset": -1,
+ "clips": {
+  "idle": {
+   "start": 0,
+   "count": 15,
+   "loop": true,
+   "duration": 1.0
+  },
+  "walk": {
+   "start": 15,
+   "count": 15,
+   "loop": true,
+   "duration": 1.0
+  },
+  "work": {
+   "start": 30,
+   "count": 15,
+   "loop": true,
+   "duration": 1.0
+  },
+  "carry": {
+   "start": 45,
+   "count": 15,
+   "loop": true,
+   "duration": 1.0
+  },
+  "sleep": {
+   "start": 60,
+   "count": 15,
+   "loop": true,
+   "duration": 1.0
+  }
+ },
+ "bounds_min": [
+  -0.3595,
+  -0.0095,
+  -0.7981
+ ],
+ "bounds_max": [
+  0.3597,
+  1.602,
+  0.8005
+ ],
+ "height": 1.601,
+ "format": "float16 LE RGBA, row-major; one row of positions (Godot xyz, w=1) per frame; texel x = UV2.x * width (the unsplit vertex); no normal rows: the shader derives flat face normals; UV0 = atlas UVs",
+ "textured": true,
+ "atlas": "s2_woman_lod_atlas.png",
+ "source_commit": "872dd491717c0c41d157d0987b9eedc8bcad3e8c",
+ "source": "models/tripo_woman_lod2.glb",
+ "source_provenance": "Owner-supplied Tripo GLB, existing 17-bone rig, s2 walk and atlas",
+ "walk_stride_m": 1.0
+}

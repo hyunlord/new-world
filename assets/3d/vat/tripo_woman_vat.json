@@ -1,0 +1,57 @@
+{
+ "width": 5083,
+ "vertex_count": 5083,
+ "split_vertex_count": 11994,
+ "frames": 75,
+ "fps": 15,
+ "normals_offset": -1,
+ "clips": {
+  "idle": {
+   "start": 0,
+   "count": 15,
+   "loop": true,
+   "duration": 1.0
+  },
+  "walk": {
+   "start": 15,
+   "count": 15,
+   "loop": true,
+   "duration": 1.0
+  },
+  "work": {
+   "start": 30,
+   "count": 15,
+   "loop": true,
+   "duration": 1.0
+  },
+  "carry": {
+   "start": 45,
+   "count": 15,
+   "loop": true,
+   "duration": 1.0
+  },
+  "sleep": {
+   "start": 60,
+   "count": 15,
+   "loop": true,
+   "duration": 1.0
+  }
+ },
+ "bounds_min": [
+  -0.3617,
+  -0.011,
+  -0.8011
+ ],
+ "bounds_max": [
+  0.3606,
+  1.6011,
+  0.8002
+ ],
+ "height": 1.6004,
+ "format": "float16 LE RGBA, row-major; one row of positions (Godot xyz, w=1) per frame; texel x = UV2.x * width (the unsplit vertex); no normal rows: the shader derives flat face normals; UV0 = atlas UVs",
+ "textured": true,
+ "atlas": "tripo_woman_atlas.png",
+ "source_commit": "a403d174d7270038757b6d820d25971ddbddf558",
+ "source": "models/tripo_woman_lod0.glb",
+ "source_provenance": "Owner-supplied Tripo GLB; processed locally by tripo_build.py and tripo_rig.py"
+}

@@ -22,7 +22,10 @@ extends Node3D
 const Data3D = preload("res://scripts/world3d/data3d.gd")
 const View = preload("res://scripts/world/colony/view.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
+const SlicePbr = preload("res://scripts/world3d/slice_pbr.gd")
+const SliceVegetation = preload("res://scripts/world3d/slice1/vegetation.gd")
 const FLORA_SHADER = preload("res://shaders/world3d/flora.gdshader")
+const LEAF_CARD = "res://assets/3d/textures/leaf_card.png"
 
 var _world_sim: Node = null
 var _terrain: Node = null
@@ -43,10 +46,24 @@ var _slow_tick: int = -1000000
 var _season: int = -1
 var _instances: Dictionary = {}
 var _materials: Dictionary = {}
+var _slice_pbr: bool = false
 var _variants: Dictionary = {}
 var _stumps: Dictionary = {}
 var _chunk: int = 32
 var _markers: MultiMeshInstance3D = null
+var _slice_vegetation: bool = false
+var _slice_tiles: Rect2i
+var _tree_card_distance: float = 0.0
+
+
+## Called by the standalone presentation experiment. An empty rect covers the stress world.
+func configure_slice_vegetation(tiles: Rect2i) -> void:
+	_slice_vegetation = true
+	_slice_tiles = tiles
+	if SlicePbr.style2():
+		_tree_card_distance = float(Data3D.mood("style2.tree_card_distance", 64.0))
+	_stamp_key = ""
+	_on_world_reset()
 
 
 func setup(world_sim: Node, terrain: Node) -> void:
@@ -279,6 +296,13 @@ func _add_tree(batches: Dictionary, t: Vector2i, sp: String, jitter: float, smin
 		size *= large_scale
 	if _near_built.has(t):
 		size *= float(near_scale[int(_near_built[t]) - 1])
+	if _slice_vegetation and (not _slice_tiles.has_area() or _slice_tiles.has_point(t)):
+		model = "slice_conifer" if _habit(sp) == "conifer" else "slice_broadleaf"
+		_add(batches, model + "|", t, h, jitter, size)
+		if _tree_card_distance <= 0.0 and not _near_built.has(t) and h % 4 == 0:
+			# Understory follows the real tree distribution without obscuring berry resources.
+			_add(batches, "slice_fern|", t, View.key_hash(_seed, t.x, t.y, 31), 0.45, 0.9)
+		return
 	_add(batches, model + "|" + _variant_key(sp), t, h, jitter, size)
 
 
@@ -297,7 +321,12 @@ func _build_resources(batches: Dictionary, resources: Dictionary) -> void:
 		if i < ra.size() and ra[i] <= 0 and (row as Dictionary).has("depleted"):
 			m = str(row["depleted"])
 		var t2: Vector2i = Vector2i(rx[i], ry[i])
-		_add(batches, m + "|", t2, View.key_hash(_seed, t2.x, t2.y, 37), jitter * 0.5, 1.0)
+		var size: float = 1.0
+		if _tree_card_distance > 0.0 and (row as Dictionary).has("s2_model"):
+			m = str(row["s2_model"])
+			if i < ra.size() and ra[i] <= 0:
+				size = 0.64
+		_add(batches, m + "|", t2, View.key_hash(_seed, t2.x, t2.y, 37), jitter * 0.5, size)
 
 
 func _build_nodes(batches: Dictionary, overlay: Dictionary) -> void:
@@ -435,20 +464,38 @@ func _apply(family: String, batches: Dictionary, only: Dictionary = {}) -> void:
 		var data: Array = batches[bk]
 		var xforms: Array = data[0]
 		var cols: Array = data[1]
-		var mm: MultiMesh = MultiMesh.new()
-		mm.transform_format = MultiMesh.TRANSFORM_3D
-		mm.use_colors = true
-		mm.mesh = mesh
-		mm.instance_count = xforms.size()
-		for i: int in xforms.size():
-			mm.set_instance_transform(i, xforms[i])
-			mm.set_instance_color(i, cols[i])
 		var mmi: MultiMeshInstance3D = _instances.get(k)
 		if mmi == null:
 			mmi = MultiMeshInstance3D.new()
 			add_child(mmi)
 			_instances[k] = mmi
-		mmi.multimesh = mm
+		mmi.multimesh = _new_batch(mesh, xforms, cols)
+		if _tree_card_distance > 0.0 and parts[0] in ["slice_broadleaf", "slice_conifer"]:
+			_apply_far_cards(mmi, parts[0], xforms, cols)
+
+
+func _new_batch(mesh: Mesh, xforms: Array, colours: Array) -> MultiMesh:
+	var mm: MultiMesh = MultiMesh.new()
+	mm.transform_format = MultiMesh.TRANSFORM_3D
+	mm.use_colors = true
+	mm.mesh = mesh
+	mm.instance_count = xforms.size()
+	for i: int in xforms.size():
+		mm.set_instance_transform(i, xforms[i])
+		mm.set_instance_color(i, colours[i])
+	return mm
+
+
+func _apply_far_cards(near: MultiMeshInstance3D, model: String, xforms: Array, colours: Array) -> void:
+	var far: MultiMeshInstance3D = near.get_node_or_null("FarCards") as MultiMeshInstance3D
+	if far == null:
+		far = MultiMeshInstance3D.new()
+		far.name = "FarCards"
+		far.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		near.add_child(far)
+		near.visibility_range_end = _tree_card_distance
+		far.visibility_range_begin = _tree_card_distance
+	far.multimesh = _new_batch(SliceVegetation.card(model), xforms, colours)
 
 
 func _apply_markers(points: Array[Transform3D], colours: Array[Color]) -> void:
@@ -480,6 +527,8 @@ func _apply_markers(points: Array[Transform3D], colours: Array[Color]) -> void:
 ## surface's colour is baked into the vertex colour and its sway / glow / vein flags into UV, so a tree is one draw per
 ## pass (two surfaces per tree doubled the draw calls, the measured bottleneck of a forested view).
 func _mesh_variant(id: String, variant: String) -> Mesh:
+	if _slice_vegetation and id.begins_with("slice_"):
+		return SliceVegetation.mesh(id)
 	var vkey: String = "%s|%s|%d" % [id, variant, _season]
 	if _variants.has(vkey):
 		return _variants[vkey]
@@ -519,16 +568,31 @@ func _mesh_variant(id: String, variant: String) -> Mesh:
 		var c: Color = params[0]
 		var flags: Vector2 = Vector2(float(params[2]), float(params[1]))
 		var texture_tile: int = preload("res://scripts/world3d/textures3d.gd").index("surfaces", name)
-		for _i: int in sv.size():
+		var canopy: bool = sp != "" and name == "canopy"
+		var bounds: AABB = AABB()
+		if canopy and not sv.is_empty():
+			bounds = AABB(sv[0], Vector3.ZERO)
+			for p: Vector3 in sv:
+				bounds = bounds.expand(p)
+		for p: Vector3 in sv:
 			cols.append(c)
 			uvs.append(flags)
-			texture_uvs.append(Vector2(texture_tile, 0.0))
+			var height: float = (p.y - bounds.position.y) / maxf(bounds.size.y, 0.01)
+			texture_uvs.append(Vector2(texture_tile, 1.0 + height if canopy else 0.0))
 		if si is PackedInt32Array and not (si as PackedInt32Array).is_empty():
 			for v: int in si:
 				index.append(v + offset)
 		else:
 			for v: int in sv.size():
 				index.append(v + offset)
+		if canopy:
+			var patch: Array = _leaf_cards(sv, bounds, c, verts.size())
+			verts.append_array(patch[0])
+			normals.append_array(patch[1])
+			cols.append_array(patch[2])
+			uvs.append_array(patch[3])
+			texture_uvs.append_array(patch[4])
+			index.append_array(patch[5])
 	var out: ArrayMesh = ArrayMesh.new()
 	if verts.is_empty():
 		_variants[vkey] = out
@@ -545,6 +609,59 @@ func _mesh_variant(id: String, variant: String) -> Mesh:
 	out.surface_set_material(0, _shared_material())
 	_variants[vkey] = out
 	return out
+
+
+## Leaf patches on the authored canopy, in its existing MultiMesh surface and species palette.
+static func _leaf_cards(source: PackedVector3Array, bounds: AABB, colour: Color, offset: int) -> Array:
+	var vertices: PackedVector3Array = PackedVector3Array()
+	var normals: PackedVector3Array = PackedVector3Array()
+	var colours: PackedColorArray = PackedColorArray()
+	var uvs: PackedVector2Array = PackedVector2Array()
+	var flags: PackedVector2Array = PackedVector2Array()
+	var index: PackedInt32Array = PackedInt32Array()
+	if not source.is_empty():
+		var settings: Dictionary = Data3D.mood("detail.canopy", {})
+		var count: int = mini(source.size(), int(settings.get("cards", 18)))
+		var tilt: float = float(settings.get("tilt", 0.75))
+		var width: float = maxf(bounds.size.x, bounds.size.z) * float(settings.get("width_fraction", 0.52))
+		var center: Vector3 = bounds.get_center()
+		# Farthest-point sampling spreads clusters over the shell, ignoring coincident GLB vertices.
+		var nearest: PackedFloat32Array = PackedFloat32Array()
+		nearest.resize(source.size())
+		nearest.fill(INF)
+		var point: Vector3 = center
+		for i: int in count:
+			var farthest: int = 0
+			for j: int in source.size():
+				nearest[j] = minf(nearest[j], source[j].distance_squared_to(point))
+				if nearest[j] > nearest[farthest]:
+					farthest = j
+			if nearest[farthest] < 0.0001:
+				break
+			point = source[farthest]
+			var angle: float = float(i) * 2.399963
+			var heading: Vector3 = Vector3(cos(angle), 0.0, sin(angle))
+			var horizontal: Vector3 = heading * width * 0.5
+			var vertical: Vector3 = (Vector3.UP + Vector3(sin(angle), 0.0, -cos(angle)) * tilt).normalized() * width * 0.46
+			var radial: Vector3 = (point - center).normalized()
+			var middle: Vector3 = point + radial * width * float(settings.get("stand_off", 0.13))
+			var light_normal: Vector3 = (radial + Vector3.UP * 0.85).normalized()
+			var height: float = clampf((point.y - bounds.position.y) / maxf(bounds.size.y, 0.01), 0.0, 1.0)
+			var variation: float = float(posmod(i * 7, 13)) / 12.0
+			var tint: Color = colour.lerp(Color(colour.r * 0.68, colour.g * 0.77, colour.b * 0.78), (1.0 - height) * 0.65)
+			tint = tint.lerp(Color(colour.r * 1.23, colour.g * 1.13, colour.b * 0.83), variation * (0.45 + height * 0.55)).clamp()
+			var start: int = offset + vertices.size()
+			vertices.append_array([middle - horizontal + vertical, middle + horizontal + vertical,
+				middle + horizontal - vertical, middle - horizontal - vertical])
+			uvs.append_array([Vector2.ZERO, Vector2.RIGHT, Vector2.ONE, Vector2.DOWN])
+			for _j: int in 4:
+				normals.append(light_normal)
+				colours.append(tint)
+				flags.append(Vector2(-2.0, 0.0))
+			# Double-sided cutouts without changing culling for the opaque trunk and core.
+			index.append_array([start, start + 1, start + 2, start, start + 2, start + 3,
+				start + 2, start + 1, start, start + 3, start + 2, start])
+	return [vertices, normals, colours, uvs, flags, index]
 
 
 ## [colour, sway, kind (0 plain, 1 glow, 2 vein)] of a source surface for this variant and season.
@@ -566,13 +683,30 @@ func _surface_params(name: String, original: Material, variant: String, sp: Stri
 	return [c, sway, 1.0 if name == "glow" else (2.0 if name == "vein" else 0.0)]
 
 
+func set_slice_pbr(enabled: bool) -> bool:
+	if enabled and not SlicePbr.load_textures():
+		return false
+	_slice_pbr = enabled
+	for mat: ShaderMaterial in _materials.values():
+		if not SlicePbr.configure(mat, FLORA_SHADER, enabled):
+			return false
+	return true
+
+
 func _shared_material() -> Material:
 	var mkey: String = "shared|%d" % _season
 	if _materials.has(mkey):
 		return _materials[mkey]
 	var mat: ShaderMaterial = ShaderMaterial.new()
-	mat.shader = FLORA_SHADER
+	SlicePbr.configure(mat, FLORA_SHADER, _slice_pbr)
 	preload("res://scripts/world3d/textures3d.gd").setup(mat)
+	mat.set_shader_parameter("leaf_cards", load(LEAF_CARD) as Texture2D)
+	mat.set_shader_parameter("leaf_cutoff", float(Data3D.mood("detail.canopy.cutoff", 0.44)))
+	mat.set_shader_parameter("shell_distance", float(Data3D.mood("detail.canopy.shell_distance", 88.0)))
+	mat.set_shader_parameter("core_shade", float(Data3D.mood("detail.canopy.core_shade", 0.43)))
+	mat.set_shader_parameter("shell_wind", float(Data3D.mood("detail.canopy.wind_strength", 0.052)))
+	mat.set_shader_parameter("roughness_variation", float(Data3D.mood("detail.surface.roughness_variation", 0.15)))
+	mat.set_shader_parameter("texture_strength", float(Data3D.mood("detail.surface.flora_texture_strength", 0.83)))
 	_materials[mkey] = mat
 	return mat
 

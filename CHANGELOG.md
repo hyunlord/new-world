@@ -1,5 +1,12 @@
 # Changelog
 
+## Style 2 villager motion capture — 2026-11-21
+
+### Added
+
+- Style 2 near villagers use 30 Hz motion capture for work, rest, gestures and two-handed carry. Transfers play once, with tools and fixtures aligned to baked grips.
+- RON action specs retarget and reuse licensed CMU takes across four bodies, with nine physical checks and a portable skeleton export. See `docs/decisions/0080-style-2-motion-capture.md`.
+
 ## HOUSE1 — house identity and household ownership (2026-11-20)
 
 ### Added
@@ -23,6 +30,30 @@
 - Recent pickup, deposit and equip cues and a validated visual-key table with explicit fallbacks.
 - Replay and real-scene checks for the read model. The save format remains unchanged.
 
+## Style 2 houses and daylight — 2026-11-20
+
+### Changed
+- Style 2 follows the built footprint through construction and completion, with layered thatch, planar roof joins and packed-earth cutaways. See `docs/decisions/0079-style-2-house-shapes-and-light.md`.
+- Style 2 also roofs constructed rooms outside the template catalogue and gives daylight softer directional shadows, closer contact shading and gentler distance haze.
+
+## Style 2 house shells — 2026-11-20
+
+### Added
+- Roofed template shells, five construction stages driven by site work, and an Inside view toggle for Style 2. See `docs/decisions/0078-style-2-house-shells.md`.
+
+### Changed
+- Style 2 shows clumped golden-tipped grass, keeps early tracks grassy, and gives the afternoon a warmer grade.
+
+## Style 2 environment — 2026-11-20
+
+### Changed
+- Style 2 meadow ground, worn work areas, denser grass, fern understory and warmer daylight. The four villager rigs use joint-centred knee and ankle weights at all detail levels. Distant occluded villagers have stronger nighttime silhouettes in Style 2. See `docs/decisions/0077-style-2-environment.md`.
+
+## Style 2 model kit — 2026-11-20
+
+### Added
+- Optional Tripo villager variants, modular thatch roof and log wall meshes, and shelter, hearth, rack, bed, and storage props. See `docs/decisions/0076-style-2-model-kit.md`.
+
 ## MERGE1 — UI1 and the MOOD1 grade on M-GROW (2026-11-19)
 
 ### Added
@@ -34,6 +65,18 @@
 
 - DETAIL1 (terrain splat textures, grass cards, leaf canopies, cloud sky, height fog, SSAO tuning): superseded by art style 2.
 - MOOD1's stencil x-ray and darker day outline: they failed or nearly failed step 39 at 0.25x; v8/main's depth-gap x-ray and outline stay.
+
+## Style 2 anchor — 2026-11-19
+
+### Added
+- Optional `--style=s2` in the normal 3D scene with simplified ground, logs and thatch, CC0 vegetation and a retextured Tripo villager.
+- Distance-driven walk and crowd/tree LODs for the anchor, plus the MOOD1 R4 zoom fade. See `docs/decisions/0075-style-2-anchor.md`.
+
+## Slice 1 renderer experiment — 2026-11-19
+
+### Added
+- Local day-120 quality experiment with CC0 PBR materials, leaf-card vegetation, and the existing Tripo crowd animation.
+- Standalone opt-in Forward+ capture and benchmark entry point, including paired GPU comparisons. See `docs/v8/slice1/README.md`.
 
 ## UI1 — settlement HUD (2026-11-18)
 
@@ -49,6 +92,20 @@
 ### Removed
 
 - The persistent two-line function-key legend. Command tooltips carry the corresponding shortcuts.
+
+## MOOD1 / DETAIL1 — 2026-11-18
+
+### Added
+- The existing clock blends daylight, dusk and night grades. A smoothed hardship grade reads the food runway, recent deaths and winter from the bridge.
+- Occupied roofed rooms show emissive windows. The nearest eligible windows and fire sockets share a 24-light pool.
+- Instanced grass and leaf cards add wind movement. A cloud sky and height fog add depth at low camera angles.
+
+### Changed
+- Terrain blends the existing texture atlas across tiles and keeps worn paths distinct. Ground, bark, rock and wood use surface detail and roughness variation.
+- Render tuning for both passes lives in `assets/3d/mood.json`.
+- Dusk and night use brighter blue-teal fill, and the daylight grade is warmer. A stronger distant villager rim improves separation from the ground.
+- Leaf clusters extend past the canopy silhouette, with more colour variation and shaded foliage underneath.
+- A visible-body stencil keeps x-ray silhouettes off villagers’ own surfaces. Hidden silhouettes blend once per pixel with a muted blue-grey palette at night.
 
 ## M-GROW-a — published f9caf0ba5, 2026-11-19
 

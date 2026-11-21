@@ -23,6 +23,7 @@ var _motion: Dictionary = {}
 var _drawn: Array[Dictionary] = []
 var _rows: Array[Dictionary] = []
 var _rows_tick: int = -1
+var slice_models: Dictionary = {}
 
 
 func setup(world_sim: Node, terrain: Node) -> void:
@@ -38,6 +39,8 @@ func _vat(model: String) -> RefCounted:
 
 
 func _species_model(name: String, category: String) -> String:
+	if slice_models.has(name):
+		return str(slice_models[name])
 	var by_id: Dictionary = Data3D.binding("animals.by_id", {})
 	if by_id.has(name):
 		return str(by_id[name])

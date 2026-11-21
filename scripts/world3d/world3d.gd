@@ -103,6 +103,11 @@ func _ready() -> void:
 	add_picker(animals)
 	rig = _layer("CameraRig", RigScript)
 	rig.call("setup", camera2d, terrain)
+	if Data3D.style2():
+		for layer: Node3D in [terrain, structures, flora, props]:
+			if not bool(layer.call("set_slice_pbr", true)):
+				push_error("Style 2 material setup failed on " + str(layer.name))
+		flora.call("configure_slice_vegetation", Rect2i())
 	ViewProjection.provider = self
 	_apply_render_scale()
 
@@ -188,6 +193,10 @@ func screen_to_world(screen: Vector2) -> Vector2:
 	if t_roof < origin.distance_to(p):
 		p = origin + dir * t_roof
 	return Vector2(p.x, p.z) * _px()
+
+
+func untemplated_room_at(tile: Vector2i) -> int:
+	return int(structures.call("untemplated_room_at", tile)) if structures != null else -1
 
 
 ## ViewProjection provider: the body under screen point `screen` in order mode `mode`: the first picker with a body

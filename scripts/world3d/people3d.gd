@@ -17,12 +17,14 @@
 #   chronicle's highlighted people (Main/PeopleView) get a ring in PeopleView.HIGHLIGHT_RGBA.
 #   Picking: `bodies(mode)` lists every person's feet and height (entity bits as id) for world3d.gd's pick (no mode
 #   only); `body_of(bits)` is one person's (camp framing, lesson highlight).
+#   S2 uses a separate 30 Hz near VAT, with baked fixtures and prop poses. Mid and far use their existing loops.
 # Bridge methods called: via SimReads get_agent_snapshot, get_world_info, get_tech; signal world_reset.
 extends Node3D
 
 const Data3D = preload("res://scripts/world3d/data3d.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 const Vat = preload("res://scripts/world3d/vat3d.gd")
+const Mocap = preload("res://scripts/world3d/mocap3d.gd")
 const BLOB_SHADER = preload("res://shaders/world3d/contact_blob.gdshader")
 const PeopleView = preload("res://scripts/world/people_view.gd")
 
@@ -43,6 +45,15 @@ var _top_colours: Dictionary = {}
 ## Tools only (world3d_fps.gd `--replicate`): draw every person this many times, offset, to load the renderer past the
 ## bridge's stress cap. Never set in the game.
 var replicate: int = 1
+var _slice_rect: Rect2i
+var _slice_model: String = ""
+const STYLE2_FALLBACK: String = "s2_woman"
+const STYLE2_MODELS: Array[String] = ["s2_p1", "s2_p2", "s2_p3", "s2_p4"]
+const STYLE2_SCALES: Array[float] = [1.0, 0.95, 0.70, 0.97]
+const STYLE2_MID_DISTANCE: float = 10.0
+const STYLE2_LOD_DISTANCE: float = 18.0
+var _style2: bool = Data3D.style2()
+var _mocap: Mocap
 var _looks: Dictionary = {}
 var _snap_tick: int = -1
 ## AgentId → {model, bin, look, scale, bits, flags, clip, dirty, feet, h}; the slot in its bin is stable while they
@@ -72,11 +83,13 @@ func setup(world_sim: Node, terrain: Node) -> void:
 		_aid_of.clear()
 		_active.clear()
 		for crowd: Dictionary in _crowds.values():
-			for n: Variant in [crowd["mmi"], crowd["lod"], crowd["blob"]]:
+			for n: Variant in [crowd["mmi"], crowd["mid"], crowd["lod"], crowd["blob"]]:
 				if n != null:
 					(n as Node).queue_free()
 		_crowds.clear()
-		_looks.clear())
+		_looks.clear()
+		if _mocap != null:
+			_mocap.reset())
 
 
 func _ready() -> void:
@@ -159,6 +172,9 @@ func _process(delta: float) -> void:
 		_was_running = running
 		for aid: int in _state:
 			_active[aid] = true
+	var clock: float = float(get_parent().get("anim_time")) if _mocap != null else 0.0
+	if _mocap != null:
+		_sync_mocap_bins(get_viewport().get_camera_3d())
 	for aid: int in _active.keys():
 		if not _state.has(aid):
 			_active.erase(aid)
@@ -168,12 +184,16 @@ func _process(delta: float) -> void:
 		var moving: bool = float(m["t"]) < 1.0
 		if running and moving:
 			m["t"] = minf(1.0, float(m["t"]) + delta / maxf(0.01, float(m["dur"])))
+		var advancing: bool = running and float(m["t"]) < 1.0
 		var crowd: Dictionary = _crowds[st["bin"]]
 		var mm: MultiMesh = crowd["mmi"].multimesh
 		var lm: MultiMesh = crowd["lod"].multimesh if crowd["lod"] != null else null
+		var mid: MultiMesh = crowd["mid"].multimesh if crowd["mid"] != null else null
 		var bm: MultiMesh = crowd["blob"].multimesh
 		var cap: int = _cap(mm, copies)
 		var slot: int = int(crowd["slot"][aid])
+		var has_mocap: bool = bool(crowd["mocap"])
+		var near_live: bool = has_mocap and bool(crowd["mocap_near"])
 		if moving or bool(st["dirty"]):
 			var p: Vector2 = _pos(m)
 			var yaw: float = float(m["yaw"])
@@ -184,40 +204,151 @@ func _process(delta: float) -> void:
 				p += Vector2(0.0, 0.6)
 				yaw = PI
 			elif not moving:
-				p += m.get("spread", Vector2.ZERO)
+				var spread: Vector2 = m.get("spread", Vector2.ZERO)
+				p += spread
+				if _style2 and bool((st["flags"] as Array)[0]) and not spread.is_zero_approx():
+					yaw = atan2(spread.x, spread.y)
 			var y: float = float(_terrain.call("height_at", p.x, p.y))
 			var scale: float = float(st["scale"])
 			var basis: Basis = Basis(Vector3.UP, yaw).scaled(Vector3(scale, scale, scale))
 			var feet: Vector3 = Vector3(p.x, y, p.y)
+			var near_feet: Vector3 = feet
+			var near_basis: Basis = basis
+			if near_live and not advancing and st["perform"] == "talk":
+				var spread: Vector2 = m.get("spread", Vector2.ZERO)
+				if not spread.is_zero_approx():
+					near_basis = Basis(Vector3.UP, atan2(-spread.x, -spread.y)).scaled(Vector3(scale, scale, scale))
+			elif near_live and not advancing and st["perform"] == "cook":
+				near_basis = Basis(Vector3.UP, PI).scaled(Vector3(scale, scale, scale))
+				var tile: Vector2 = Vector2(m["tile"]) + Vector2(0.5, 0.5)
+				var reach: Vector3 = near_basis * _mocap.fixture_offset("fixture_cook")
+				p = tile - Vector2(reach.x, reach.z)
+				near_feet = Vector3(p.x, float(_terrain.call("height_at", p.x, p.y)), p.y)
 			st["feet"] = feet
+			if near_live:
+				st["near_xf"] = Transform3D(near_basis, near_feet)
+			st["draw_yaw"] = yaw
 			st["h"] = height * scale
 			for c: int in copies:
 				var off: Vector3 = Vector3(float((c * 7) % 5) - 2.0, 0.0, float((c * 3) % 5) - 2.0) * 0.6 if c > 0 else Vector3.ZERO
-				mm.set_instance_transform(cap * c + slot, Transform3D(basis, feet + off))
+				if not has_mocap or near_live:
+					mm.set_instance_transform(cap * c + slot, Transform3D(near_basis, near_feet + off))
+				if mid != null:
+					mid.set_instance_transform(cap * c + slot, Transform3D(basis, feet + off))
 				if lm != null:
 					lm.set_instance_transform(cap * c + slot, Transform3D(basis, feet + off))
 				bm.set_instance_transform(cap * c + slot, Transform3D(Basis().scaled(Vector3(scale, 1.0, scale)), feet + off + Vector3(0, 0.03, 0)))
 		# Paused mid-step: stand (not walk on the spot).
-		var clip: float = _clip_pack(st["model"], _clip_of(st, running and float(m["t"]) < 1.0))
-		if clip != float(st["clip"]) or bool(st["dirty"]):
+		var clip_name: String = _clip_of(st, advancing)
+		var clip: float = _clip_pack(st["model"], clip_name)
+		var painted: bool = bool(crowd["painted"])
+		var gait: bool = painted and clip_name == "walk"
+		var distance: float = 0.0
+		if gait or (near_live and clip_name == "carry"):
+			distance = float(m.get("gait_distance", 0.0)) + (m["from"] as Vector2).distance_to(_pos(m))
+		if clip != float(st["clip"]) or bool(st["dirty"]) or gait:
 			st["clip"] = clip
 			var look: Dictionary = st["look"]
-			var custom: Color = Color(clip, float(aid % 97) * 0.173, float(look["hair_p"]), float(look["cloth_p"]))
+			var phase: float = float(aid % 97) * 0.173
+			if gait:
+				phase = distance / float(st["scale"]) - float(get_parent().get("anim_time"))
+			var custom: Color = Color(clip, phase, float(look["hair_p"]), float(look["cloth_p"]))
+			var skin: Color = look["skin"]
+			if painted:
+				skin.a = fposmod(float(aid) * 0.618034, 1.0)
 			for c: int in copies:
-				mm.set_instance_color(cap * c + slot, look["skin"])
-				mm.set_instance_custom_data(cap * c + slot, custom)
+				if not has_mocap:
+					mm.set_instance_color(cap * c + slot, skin)
+					mm.set_instance_custom_data(cap * c + slot, custom)
+				if mid != null:
+					mid.set_instance_color(cap * c + slot, skin)
+					mid.set_instance_custom_data(cap * c + slot, custom)
 				if lm != null:
-					lm.set_instance_color(cap * c + slot, look["skin"])
+					lm.set_instance_color(cap * c + slot, skin)
 					lm.set_instance_custom_data(cap * c + slot, custom)
+		if near_live or (has_mocap and not str(st["cue"]).is_empty()):
+			_write_near(aid, st, clip_name, advancing, clock, distance, mm, cap, slot, copies, near_live)
 		st["dirty"] = false
 		# Done once it stands still, or the clock is stopped (a paused mid-step figure is drawn as it is).
-		if float(m["t"]) >= 1.0 or not running:
+		if (float(m["t"]) >= 1.0 or not running) and (not has_mocap or str(st["cue"]).is_empty()):
 			_active.erase(aid)
+	if _mocap != null:
+		_mocap.draw(self, clock)
 	var chosen: Dictionary = _state.get(_aid_of.get(selected, -1), {}) if selected != -1 else {}
 	if not chosen.is_empty():
 		_ring.visible = true
 		_ring.position = (chosen["feet"] as Vector3) + Vector3(0, 0.04, 0)
 	_update_highlights()
+
+
+func _sync_mocap_bins(camera: Camera3D) -> void:
+	var eye: Vector3 = camera.global_position if camera != null else Vector3.ZERO
+	for crowd: Dictionary in _crowds.values():
+		if not bool(crowd["mocap"]):
+			continue
+		var bin: MultiMeshInstance3D = crowd["mmi"]
+		var centre: Vector3 = bin.to_global(bin.multimesh.custom_aabb.get_center())
+		var limit: float = bin.visibility_range_end
+		var visible_near: bool = camera != null and eye.distance_squared_to(centre) < limit * limit
+		if visible_near == bool(crowd["mocap_near"]):
+			continue
+		crowd["mocap_near"] = visible_near
+		for aid: int in crowd["slot"]:
+			if visible_near:
+				# The near slot needs its current pose when the camera crosses the LOD boundary.
+				_state[aid]["dirty"] = true
+				_active[aid] = true
+			else:
+				_mocap.release(aid)
+
+
+func _write_near(aid: int, st: Dictionary, fallback: String, moving: bool, clock: float, distance: float,
+		mm: MultiMesh, cap: int, slot: int, copies: int, visible_near: bool) -> void:
+	var vat: RefCounted = _models[st["model"]]["vat"]
+	var clip: String = fallback
+	var phase: float = float(aid % 97) * 0.173
+	var cue: String = st["cue"]
+	var carry: bool = moving and fallback == "carry"
+	var distance_gait: bool = moving and fallback == "walk"
+	if carry:
+		clip = "carry" if bool(st["wood_load"]) else "carry_generic"
+	elif not moving and fallback != "sleep" and not str(st["perform"]).is_empty():
+		clip = st["perform"]
+	if not cue.is_empty():
+		var started: float = float(st["cue_started"])
+		if fallback == "sleep" or (moving and (started >= 0.0 or clock > float(st["cue_deadline"]))):
+			st["cue"] = ""
+		elif not moving:
+			if started < 0.0:
+				started = clock
+				st["cue_started"] = started
+			if clock - started <= float(vat.call("clip_duration", cue)) + 1.0 / 30.0:
+				clip = cue
+				phase = -started
+			else:
+				st["cue"] = ""
+	# Let a transfer expire at any tier, even when its mesh and prop are out of range.
+	if not visible_near:
+		return
+	if distance_gait:
+		phase = distance / float(st["scale"]) - clock
+	elif carry and clip == "carry":
+		var stride: float = float(vat.call("clip_stride_m", clip)) * float(st["scale"])
+		if stride > 0.0:
+			phase = distance * float(vat.call("clip_duration", clip)) / stride - clock
+	var pack: float = _clip_pack(st["model"], clip, true)
+	if clip != st.get("near_clip", "") or bool(st["dirty"]) or moving or not st.has("near_phase") or phase != float(st["near_phase"]):
+		var look: Dictionary = st["look"]
+		var skin: Color = look["skin"]
+		skin.a = fposmod(float(aid) * 0.618034, 1.0)
+		var custom: Color = Color(pack, phase, float(look["hair_p"]), float(look["cloth_p"]))
+		for c: int in copies:
+			if bool(st["dirty"]):
+				mm.set_instance_color(cap * c + slot, skin)
+			mm.set_instance_custom_data(cap * c + slot, custom)
+		st["near_clip"] = clip
+		st["near_phase"] = phase
+	_mocap.select(aid, vat, clip, phase, st["near_xf"])
 
 
 ## One ring per highlighted person present, slightly wider than the selection ring.
@@ -256,19 +387,43 @@ func _model_ids() -> Array[String]:
 	return out
 
 
-## The VATs and materials of `model` (and of its `<model>_lod` bake), loaded once; {} when the model is missing.
+## The VATs and materials of `model`, loaded once; {} when the model is missing.
 func _model(model: String) -> Dictionary:
 	if _models.has(model):
 		return _models[model]
-	var vat: RefCounted = Vat.load_character(model, true)
+	var painted: bool = model == STYLE2_FALLBACK or STYLE2_MODELS.has(model)
+	var other: Color = Data3D.colour(Data3D.binding("people.other_colour", []), Color(0.3, 0.22, 0.15))
+	var kit: bool = STYLE2_MODELS.has(model)
+	var row: Dictionary = {"lod_vat": null, "lod_mat": null, "mid_vat": null, "mid_mat": null, "painted": painted, "mocap": false}
+	if kit:
+		var mid: RefCounted = Vat.load_character(model + "_mid", false)
+		if bool(mid.get("ok")):
+			row["mid_vat"] = mid
+			row["mid_mat"] = mid.call("with_findability", mid.call("material", other, true), true, kit)
+	var vat: RefCounted = null
+	if _style2 and row["mid_vat"] != null:
+		vat = Vat.load_character("s2_mocap_" + model.trim_prefix("s2_"))
+		if bool(vat.get("ok")):
+			row["mocap"] = true
+			if _mocap == null:
+				_mocap = Mocap.new()
+				_mocap.setup(get_parent().call("catalog"))
+	if not bool(row["mocap"]):
+		vat = Vat.load_character(model, not painted)
 	if not bool(vat.get("ok")):
 		return {}
-	var other: Color = Data3D.colour(Data3D.binding("people.other_colour", []), Color(0.3, 0.22, 0.15))
-	var row: Dictionary = {"vat": vat, "mat": vat.call("with_findability", vat.call("material", other)), "lod_vat": null, "lod_mat": null}
-	var lod: RefCounted = Vat.load_character(model + "_lod", true)
+	row["vat"] = vat
+	row["mat"] = vat.call("with_findability", vat.call("material", other, painted), painted, kit)
+	row["loop_vat"] = row["mid_vat"] if bool(row["mocap"]) else vat
+	var lod: RefCounted = Vat.load_character(model + "_lod", not painted)
 	if bool(lod.get("ok")):
 		row["lod_vat"] = lod
-		row["lod_mat"] = lod.call("with_findability", lod.call("material", other))
+		row["lod_mat"] = lod.call("with_findability", lod.call("material", other, painted), painted, kit)
+		if painted:
+			var pass_material: ShaderMaterial = row["lod_mat"]
+			while pass_material != null:
+				pass_material.set_shader_parameter("vat_step_frames", true)
+				pass_material = pass_material.next_pass as ShaderMaterial
 	_models[model] = row
 	return row
 
@@ -278,11 +433,20 @@ func _model(model: String) -> Dictionary:
 func _simplify_far(on: bool) -> void:
 	# Large crowds also switch to LOD closer (`people.simple_lod_distance`).
 	var lod_at: float = float(Data3D.param("people.simple_lod_distance" if on else "people.lod_distance", 55.0))
+	if _style2:
+		lod_at = minf(lod_at, STYLE2_LOD_DISTANCE)
 	if lod_at != _lod_at:
 		_lod_at = lod_at
 		for crowd: Dictionary in _crowds.values():
 			if crowd["lod"] != null:
-				crowd["mmi"].visibility_range_end = lod_at
+				if crowd["mid"] != null:
+					var near_at: float = minf(STYLE2_MID_DISTANCE, lod_at)
+					crowd["mmi"].visibility_range_end = near_at
+					crowd["mid"].visibility_range_begin = near_at
+					crowd["mid"].visibility_range_end = lod_at
+					crowd["mid"].visible = near_at < lod_at
+				else:
+					crowd["mmi"].visibility_range_end = lod_at
 				crowd["lod"].visibility_range_begin = lod_at
 			crowd["blob"].visibility_range_end = lod_at
 	for row: Dictionary in _models.values():
@@ -305,16 +469,27 @@ func _bin(model: String, tile: Vector2i) -> String:
 		return key
 	var row: Dictionary = _models[model]
 	var lod_at: float = _lod_at if _lod_at > 0.0 else float(Data3D.param("people.lod_distance", 55.0))
+	if _style2:
+		lod_at = minf(lod_at, STYLE2_LOD_DISTANCE)
 	var mmi: MultiMeshInstance3D = _bin_node("Crowd_" + key, row["mat"])
 	var lod: MultiMeshInstance3D = null
+	var mid: MultiMeshInstance3D = null
 	if row["lod_vat"] != null:
 		mmi.visibility_range_end = lod_at
 		lod = _bin_node("Lod_" + key, row["lod_mat"])
 		lod.visibility_range_begin = lod_at
+		if row["mid_vat"] != null:
+			var near_at: float = minf(STYLE2_MID_DISTANCE, lod_at)
+			mmi.visibility_range_end = near_at
+			mid = _bin_node("Mid_" + key, row["mid_mat"])
+			mid.visibility_range_begin = near_at
+			mid.visibility_range_end = lod_at
+			mid.visible = near_at < lod_at
 	var blob: MultiMeshInstance3D = _bin_node("Contact_" + key, null)
 	blob.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	blob.visibility_range_end = lod_at
-	_crowds[key] = {"model": model, "chunk": chunk, "mmi": mmi, "lod": lod, "blob": blob, "slot": {}, "free": []}
+	_crowds[key] = {"model": model, "chunk": chunk, "mmi": mmi, "mid": mid, "lod": lod, "blob": blob,
+		"painted": row["painted"], "mocap": row["mocap"], "mocap_near": false, "slot": {}, "free": []}
 	return key
 
 
@@ -326,8 +501,26 @@ func _bin_node(node_name: String, mat: Material) -> MultiMeshInstance3D:
 	return mmi
 
 
+## Debug slice presentation only. An empty rectangle keeps the complete crowd.
+func configure_slice(rect: Rect2i, model: String) -> bool:
+	if model != "" and _model(model).is_empty():
+		return false
+	_slice_rect = rect
+	_slice_model = model
+	_snap_tick = -1
+	return true
+
+
 ## The model of row `i`: by life stage (1 child) and sex (1 female), falling back to `people.model`.
 func _model_of(snap: Dictionary, i: int) -> String:
+	if _slice_model != "":
+		return _slice_model
+	if _style2:
+		var id: String = style2_model(snap, i)
+		if not _model(id).is_empty():
+			return id
+		if not _model(STYLE2_FALLBACK).is_empty():
+			return STYLE2_FALLBACK
 	var stage: int = _byte(snap, "life_stages", i)
 	var sex: String = "female" if _byte(snap, "sexes", i) == 1 else "male"
 	var age: String = "child" if stage == 1 else ("elder" if stage == 2 else "")
@@ -339,6 +532,18 @@ func _model_of(snap: Dictionary, i: int) -> String:
 			if not id.is_empty() and not _model(id).is_empty():
 				return id
 	return str(Data3D.binding("people.model", ""))
+
+
+## Same row order as the people transforms. Life stage is only a fallback for rows without a recorded age.
+static func style2_model(snap: Dictionary, i: int) -> String:
+	var ages: PackedInt32Array = snap.get("ages_years", PackedInt32Array())
+	var age: int = ages[i] if i < ages.size() else -1
+	var stage: int = _byte(snap, "life_stages", i)
+	if (age >= 0 and age < 13) or (age < 0 and stage == 1):
+		return STYLE2_MODELS[2]
+	if age >= 55 or (age < 0 and stage == 2):
+		return STYLE2_MODELS[3]
+	return STYLE2_MODELS[1 if _byte(snap, "sexes", i) == 1 else 0]
 
 
 ## The colony's current era id (get_tech current_era_order → the catalogue era row), read on the slow cadence.
@@ -362,10 +567,13 @@ func _grow(key: String, need: int, copies: int) -> void:
 	var size: float = float(maxi(4, int(Data3D.param("people.chunk_tiles", 16))))
 	var corner: Vector3 = Vector3(float(crowd["chunk"].x) * size, 0.0, float(crowd["chunk"].y) * size)
 	var aabb: AABB = AABB(corner - Vector3(3.0, 8.0, 3.0), Vector3(size + 6.0, 24.0, size + 6.0))
-	var count: int = maxi(8, need + (need >> 2)) * copies
+	# The kit splits each chunk into up to four bins, so avoid reserving eight copies per sparse cohort.
+	var count: int = maxi(2 if crowd["mid"] != null else 8, need + (need >> 2)) * copies
 	var row: Dictionary = _models[crowd["model"]]
 	var hidden: Transform3D = Transform3D(Basis().scaled(Vector3.ZERO), corner)
 	var parts: Array = [["mmi", row["vat"].get("mesh"), true], ["blob", _blob_mesh, false]]
+	if row["mid_vat"] != null and row["lod_vat"] != null:
+		parts.append(["mid", row["mid_vat"].get("mesh"), true])
 	if row["lod_vat"] != null:
 		parts.append(["lod", row["lod_vat"].get("mesh"), true])
 	for part: Array in parts:
@@ -399,7 +607,7 @@ func _release(aid: int, copies: int) -> void:
 	var size: float = float(maxi(4, int(Data3D.param("people.chunk_tiles", 16))))
 	var hidden: Transform3D = Transform3D(Basis().scaled(Vector3.ZERO), Vector3(float(crowd["chunk"].x) * size, 0.0, float(crowd["chunk"].y) * size))
 	for c: int in copies:
-		for n: Variant in [crowd["mmi"], crowd["lod"], crowd["blob"]]:
+		for n: Variant in [crowd["mmi"], crowd["mid"], crowd["lod"], crowd["blob"]]:
 			if n != null:
 				(n as MultiMeshInstance3D).multimesh.set_instance_transform(cap * c + slot, hidden)
 	(crowd["free"] as Array).append(slot)
@@ -421,18 +629,40 @@ func _refresh(snap: Dictionary) -> void:
 	var bins: PackedStringArray = PackedStringArray()
 	bins.resize(n)
 	var need: Dictionary = {}
-	for i: int in n:
-		models[i] = _model_of(snap, i)
-		bins[i] = _bin(models[i], Vector2i(xs[i], ys[i]))
-		need[bins[i]] = int(need.get(bins[i], 0)) + 1
-	for key: String in need:
-		_grow(key, int(need[key]), copies)
 	var seen: Dictionary = {}
 	for i: int in n:
+		var tile: Vector2i = Vector2i(xs[i], ys[i])
+		if _slice_rect.has_area() and not _slice_rect.has_point(tile):
+			continue
+		models[i] = _model_of(snap, i)
+		bins[i] = _bin(models[i], tile)
+		need[bins[i]] = int(need.get(bins[i], 0)) + 1
+		if _style2:
+			var aid: int = aids[i]
+			seen[aid] = true
+			if _state.has(aid) and _state[aid].get("bin", "") != bins[i]:
+				_release(aid, copies)
+				_state[aid]["dirty"] = true
+				if _mocap != null:
+					_mocap.release(aid)
+	# Release departing slots before assigning arrivals. A tight bin can swap all its occupants in one snapshot.
+	if _style2:
+		for aid: int in _state:
+			if not seen.has(aid):
+				_release(aid, copies)
+	for key: String in need:
+		_grow(key, int(need[key]), copies)
+	if _mocap != null:
+		_mocap.refresh(_world_sim, _snap_tick, snap)
+	var carry_items: PackedInt64Array = snap.get("carry_kinds", PackedInt64Array())
+	var clock: float = float(get_parent().get("anim_time")) if _mocap != null else 0.0
+	for i: int in n:
+		if bins[i].is_empty():
+			continue
 		var aid: int = aids[i]
 		seen[aid] = true
 		var model: String = models[i]
-		if _state.has(aid) and _state[aid].get("bin", "") != bins[i]:
+		if not _style2 and _state.has(aid) and _state[aid].get("bin", "") != bins[i]:
 			_release(aid, copies)
 			_state[aid]["dirty"] = true
 		var crowd: Dictionary = _crowds[bins[i]]
@@ -448,6 +678,8 @@ func _refresh(snap: Dictionary) -> void:
 			_motion[aid] = m
 		elif m["tile"] != tile:
 			var now_pos: Vector2 = _pos(m)
+			if bool(crowd["painted"]):
+				m["gait_distance"] = float(m.get("gait_distance", 0.0)) + (m["from"] as Vector2).distance_to(now_pos)
 			m["from"] = now_pos
 			m["to"] = target
 			m["t"] = 0.0
@@ -468,6 +700,9 @@ func _refresh(snap: Dictionary) -> void:
 		# A model made for children already has a child's height; the scale only shrinks the adult fallback.
 		var own_child: bool = model == str((Data3D.binding("people.models", {}) as Dictionary).get("child", ""))
 		var scale: float = (1.0 if own_child else child_scale) * (0.75 if _byte(snap, "infants", i) == 1 else 1.0) if stage == 1 else 1.0
+		var kit_index: int = STYLE2_MODELS.find(model) if _style2 else -1
+		if kit_index >= 0:
+			scale = STYLE2_SCALES[kit_index]
 		if st.get("look") != look or float(st.get("scale", -1.0)) != scale:
 			st["dirty"] = true
 		st["model"] = model
@@ -479,7 +714,30 @@ func _refresh(snap: Dictionary) -> void:
 		st["bits"] = ids[i] if i < ids.size() else -1
 		_aid_of[st["bits"]] = aid
 		var flags: Array = _flags(snap, i)
-		if bool(st["dirty"]) or flags != st.get("flags") or m["tile"] != tile or float(m["t"]) < 1.0:
+		var flags_changed: bool = flags != st.get("flags")
+		if _style2 and flags_changed and m.has("spread"):
+			st["dirty"] = true
+		if bool(crowd["mocap"]):
+			var state: int = _byte(snap, "states", i)
+			var target_kind: int = _byte(snap, "target_kinds", i)
+			var job: int = _byte(snap, "jobs", i)
+			var count: int = _int(snap, "carry_counts", i)
+			var wood: bool = _mocap.wood_load(carry_items[i] if i < carry_items.size() else -1, _int(snap, "carried_woods", i))
+			var perform: String = _mocap.performing(state, target_kind, job, tile, st["bits"], _byte(snap, "drafted", i) != 0)
+			var previous_count: int = int(st.get("carry_count", count))
+			var transfer: String = Mocap.transfer(previous_count, count, int(st.get("job", 0)), job)
+			st["cue"] = str(st.get("cue", ""))
+			if not transfer.is_empty():
+				st["cue"] = transfer
+				st["cue_started"] = -1.0
+				st["cue_deadline"] = clock + dur
+			if st.get("perform") != perform or st.get("wood_load") != wood or not transfer.is_empty():
+				st["dirty"] = true
+			st["job"] = job
+			st["carry_count"] = count
+			st["wood_load"] = wood
+			st["perform"] = perform
+		if bool(st["dirty"]) or flags_changed or m["tile"] != tile or float(m["t"]) < 1.0:
 			_active[aid] = true
 		st["flags"] = flags
 		_state[aid] = st
@@ -489,6 +747,8 @@ func _refresh(snap: Dictionary) -> void:
 			_aid_of.erase(_state[aid]["bits"])
 			_state.erase(aid)
 			_motion.erase(aid)
+			if _mocap != null:
+				_mocap.release(aid)
 	_spread_sharers()
 
 
@@ -506,7 +766,7 @@ func _spread_sharers() -> void:
 		var group: Array = sharers[tile]
 		group.sort()
 		for k: int in group.size():
-			var off: Vector2 = Vector2.ZERO if group.size() < 2 else Vector2.from_angle(TAU * float(k) / float(group.size())) * 0.28
+			var off: Vector2 = Vector2.ZERO if group.size() < 2 else Vector2.from_angle(TAU * float(k) / float(group.size())) * (0.44 if _style2 else 0.28)
 			var m: Dictionary = _motion[group[k]]
 			if m.get("spread", Vector2.ZERO) != off:
 				m["spread"] = off
@@ -519,10 +779,13 @@ static func _pos(m: Dictionary) -> Vector2:
 	return (m["from"] as Vector2).lerp(m["to"], t * t * (3.0 - 2.0 * t))
 
 
-func _clip_pack(model: String, clip: String) -> float:
-	var key: String = model + "/" + clip
+func _clip_pack(model: String, clip: String, near: bool = false) -> float:
+	var key: String = model + "/" + clip + ("/near" if near else "")
 	if not _clip_packs.has(key):
-		_clip_packs[key] = float(_models[model]["vat"].call("clip_pack", clip))
+		if near:
+			_clip_packs[key] = float(_models[model]["vat"].call("clip_pack", clip, true))
+		else:
+			_clip_packs[key] = float(_models[model]["loop_vat"].call("clip_pack", clip))
 	return _clip_packs[key]
 
 
@@ -613,7 +876,7 @@ func _far_scale(feet: Vector3) -> float:
 	if cam == null:
 		return 1.0
 	if _far_param.is_empty():
-		_far_param = Data3D.param("people.far_scale", [55.0, 2.2])
+		_far_param = Data3D.param("people.style2_far_scale" if _style2 else "people.far_scale", [55.0, 2.2])
 	return clampf(cam.global_position.distance_to(feet) / float(_far_param[0]), 1.0, float(_far_param[1]))
 
 
@@ -635,13 +898,14 @@ func state_of(bits: int) -> Dictionary:
 		return {}
 	var d: Dictionary = _state[aid]
 	var m: Dictionary = _motion.get(aid, {})
-	return {"tile": m.get("tile", Vector2i(-1, -1)), "settled": float(m.get("t", 1.0)) >= 1.0, "feet": d["feet"],
+	return {"tile": m.get("tile", Vector2i(-1, -1)), "settled": float(m.get("t", 1.0)) >= 1.0, "feet": d["feet"], "yaw": float(d.get("draw_yaw", 0.0)),
 		"model": d["model"], "look_id": int(d.get("look_id", 0)), "variant": int(d.get("variant", 0)),
-		"clip": _clip_of(d, _world_sim.process_mode != Node.PROCESS_MODE_DISABLED and float(m.get("t", 1.0)) < 1.0), "scale": float(d["scale"])}
+		"clip": _clip_of(d, _world_sim.process_mode != Node.PROCESS_MODE_DISABLED and float(m.get("t", 1.0)) < 1.0),
+		"near_clip": str(d.get("near_clip", "")), "scale": float(d["scale"])}
 
 
-## Tools (gate step 39): every drawn figure instance of entity `bits` as [MultiMesh, index] pairs — the full and the
-## LOD crowd of its bin, all replicate copies; contact shadows excluded. [] when not drawn.
+## Tools (gate step 39): every drawn figure instance of entity `bits` as [MultiMesh, index] pairs across all LODs
+## and replicate copies. Contact shadows are excluded.
 func figure_instances(bits: int) -> Array:
 	var out: Array = []
 	var aid: int = int(_aid_of.get(bits, -1))
@@ -652,7 +916,7 @@ func figure_instances(bits: int) -> Array:
 		return out
 	var copies: int = maxi(1, replicate)
 	var cap: int = _cap(crowd["mmi"].multimesh, copies)
-	for n: Variant in [crowd["mmi"], crowd["lod"]]:
+	for n: Variant in [crowd["mmi"], crowd["mid"], crowd["lod"]]:
 		if n != null:
 			for c: int in copies:
 				out.append([(n as MultiMeshInstance3D).multimesh, cap * c + int(crowd["slot"][aid])])

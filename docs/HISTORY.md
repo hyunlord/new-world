@@ -1,9 +1,14 @@
 # WorldSim 역사
 
 - 2026-11-21 — HOUSE1: 집을 기존 건설 ID(루트 BuildingSiteId)로 식별하고, 지속 가구 ID·소유권·상속·신거주 규칙(Neolocal 기본)과 format26 저장을 더했다. 소유 가구가 침상을 먼저 쓰고 빈 자리는 침상 없는 주민이 묵는다(D-HOUSE1-1). [ADR 0073](decisions/0073-house-identity-and-household-ownership.md)
+- 2026-11-21 — MOCAP1에서 공개 CMU 동작 12종을 주민 네 체형에 맞췄다. 스타일 2 근거리에 도구와 접촉을 맞춘 30 Hz 동작을 적용했다. 종전 주택 화면 모음은 Git 이력 `71ea70ae:docs/images/s2house_contact_sheet.png`에 보존한다. [결정](decisions/0080-style-2-motion-capture.md)
 - 2026-11-20 — ACTION1: 주민 행동과 물품 이전 신호를 읽기 전용으로 연결했다. [ADR 0072](decisions/0072-visible-actions.md)
+- 2026-11-20 — S2HOUSE2에서 평면과 공사 형태를 맞추고 이엉, 지붕 골선, 흙바닥 단면과 오후광을 다듬었다([ADR0079](decisions/0079-style-2-house-shapes-and-light.md)). S2HOUSE에서 템플릿 단위의 지붕과 공사 연출을 추가하고 눌린 풀과 오후광을 다듬었다([ADR0078](decisions/0078-style-2-house-shells.md)). S2ENV에서 스타일 2의 초지와 관목, 낮 조명을 보강하고 주민 4종의 무릎·발목 굽힘을 보정했다([ADR0077](decisions/0077-style-2-environment.md)).
+- 2026-11-20 — S2KIT에서 절제된 사실풍의 주민·건축·소품을 보강했다. 비교 대상은 ANCHOR2의 120일차 마을이다([ADR0076](decisions/0076-style-2-model-kit.md)).
 - 2026-11-19 — MERGE1: UI1 HUD(자원·메뉴 칩, 명령 카드, 성장 연대기, 주민 욕구와 이유, 따뜻한 테마, [ADR0071](decisions/0071-settlement-hud.md))와 MOOD1 색보정(줌에 따라 지도 모습으로 페이드)·방 조명·밤 실루엣을 M-GROW 위에 합쳤다. DETAIL1(지형 텍스처·풀·잎·구름·SSAO)은 화풍2로 대체되어 제외했고, 단계39를 깨던 스텐실 투시와 진한 낮 외곽선은 v8/main 것을 유지했다. 시뮬레이션 무변경.
 - 2026-11-19 — M-GROW-a 길의 마모·이동 간격, 원인을 남기는 집사 구역 배치, 거주 단계·마당과 안전한 시대별 개축, format24 저장 확장을 `f9caf0ba5`로 게시했다. 전체 게이트51/51(단계41 면제 없이 최대46.9ms), 크래시 감지 PASS. 앞선 두 전체 게이트의 단계41 실패와 정지·수정(fix-F/G)은 [보고서](v8/mgrow/MGROW_REPORT.md)에 보존한다([ADR0070](decisions/0070-bounded-village-growth.md)).
+- 2026-11-19 — Slice 1에서 절제된 사실풍 앵커를 추가했다. 주민의 새 보행, 원거리 나무 카드, 기존 지붕 단면 보존을 로컬에서 검토한다([ADR0075](decisions/0075-style-2-anchor.md)).
+- 2026-11-18 — MOOD1 / DETAIL1 검토 3차(`289a3e7bd`)에서 가림 표시에 스텐실을 적용했다. 주민 등 얼룩이 사라졌으나 가시성 단계39 2/8, 재실 주택 야간 MOOD1 FPS −8.37%로 미게시. 2차(`2cb379246`)는 밤 평균 Y′ 57.05(목표 48.63), 가시성 7/8이었다([ADR0074](decisions/0074-world-look.md)).
 - 2026-11-17 — M-POLISH+GATE: art-tex·gate-reuse를 C3-b 위에 병합하고(3d-roof2·art-ui 병합은 주민 가시성 단계39 실패로 되돌림, 각 브랜치에 보존) D-GATE-1(test 프로필 opt-level 2, 디버그 단언·오버플로 검사 유지)을 더했다. 길어진 카드 묶음이 빈 이야기 띠를 학습 도우미 위로 밀어 도우미가 숨던 문제를 고쳤고, 2D 시절 `mart21_seasons.png`는 `fd3f59801` 이력에 보존한다. 시뮬레이션 무변경([결정](v8/c1/C1_DECISIONS.md)).
 - 2026-11-16 — M-GATE-REUSE 도구 구현: 고정 입력에 묶인 전체 debug 사전 실행 영수증을 full gate step4에서 재사용하며 불일치는 재실행한다. Python 도구 검증과 전체 게임 게이트 검증을 구분하고 C3-b 이후 통합을 기다린다([D-GATE-2](v8/c1/C1_DECISIONS.md), [ADR0069](decisions/0069-frozen-debug-suite-reuse.md)).
 - 2026-11-16 — M3D-SWITCH: 3D 화면이 유일한 월드 화면이 되었다. 2D 월드 레이어15개·셰이더5개를 지우고 UI는 유지했으며, 2D를 재던 게이트 단계(23·34·36·38·39·41·46·48)를 같은 기준의 3D 검사로 옮겼다. 시뮬레이션 무변경, 고디 유지 판정. 지워진 2D 렌더러는 `373ff81b2:scripts/world/` 이력에 있다([ADR0068](decisions/0068-3d-only-view.md)).

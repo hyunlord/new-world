@@ -1,0 +1,56 @@
+{
+  "build": {
+    "tags": ["chopping wood", "overhead swing", "hammer", "stake"],
+    "takes": ["79_01"],
+    "trim": [4.6, 7.45],
+    "duration": 1.5,
+    "retime": [[0, 0], [0.4666666667, 0.3099415205], [0.6666666667, 0.4327485380],
+               [0.6888888889, 0.4678362573], [0.7555555556, 0.8654970760], [0.8444444444, 0.9239766082], [1, 1]],
+    "impact_window": [0.14, 0.09],
+    "loop": true,
+    "speed": {"p1": 1, "p2": 1, "p3": 1, "p4": 0.85},
+    "posture": [0, 0, -0.035],
+    "base_layer": {
+      "takes": ["79_01"],
+      "trim": [5.833333333333333, 5.833333333333333],
+      "weight": 0.78,
+      "mask": {"root": 1}
+    },
+    "torso_lean": [[0, 8.5], [0.53, 8.5], [0.61, 18], [0.6666666667, 8.5], [1, 8.5]],
+    "arm_limits": {
+      "p1": {"upper_roll": 22, "lower_roll": 30, "elevation": 59,
+             "clavicle_lift": 0.026, "spine_extension": 11, "elbow_flexion": 150},
+      "p2": {"upper_roll": 21, "lower_roll": 28, "elevation": 58,
+             "clavicle_lift": 0.026, "spine_extension": 11, "elbow_flexion": 150},
+      "p3": {"upper_roll": 19, "lower_roll": 26, "elevation": 55,
+             "clavicle_lift": 0.021, "spine_extension": 10, "elbow_flexion": 147},
+      "p4": {"upper_roll": 18, "lower_roll": 25, "elevation": 56,
+             "clavicle_lift": 0.022, "spine_extension": 9, "elbow_flexion": 145}
+    },
+    "prop": "mallet",
+    "hands": {
+      "R": {"target": "prop", "offset": [0, 0, 0],
+            "slide": [[0, 0], [0.22, 0], [0.4444444444, -0.073], [0.6666666667, 0], [1, 0]]},
+      "L": {"target": "prop", "offset": [0, 0, 0.22],
+            "slide": [[0, 0], [0.15, -0.065], [0.4666666667, 0.015], [0.535, -0.084],
+                      [0.6666666667, -0.095], [0.82, -0.092], [1, 0]]}
+    },
+    "target": {
+      "kind": "swing",
+      "anchor": [0, -0.733, 0.695],
+      "tip": [0.163, 0, 0.50],
+      "orientation": [0, -1, 0],
+      "fixture_radius": 0.055,
+      "solid": true,
+      "windup": [0.40, [-0.285, -0.25, -0.03]],
+      "face_clearance": 0.04,
+      "release_offset": [0, 0.055, 0.115],
+      "release_pitch": 10,
+      "rebound_clearance": 0.065
+    },
+    "fixture": "stake",
+    "plausibility": {"work": [[0.53, 0.6666666667]], "prop_ratio": [0.39, 0.48]},
+    "foot_lock": true,
+    "contacts": [0.6666666666666666]
+  }
+}

@@ -64,10 +64,21 @@ static func param(path: String, fallback: Variant) -> Variant:
 	return _dig(_params, path, fallback)
 
 
-## Render grading and surface tunables shared by the world view.
+## Render grading and surface tunables shared by the world view. Under `--style=legacy` a path present in mood.json
+## `legacy` (grade, sky) is read from there.
 static func mood(path: String, fallback: Variant) -> Variant:
 	_load()
+	if not style2():
+		var legacy: Variant = _dig(_mood, "legacy." + path, null)
+		if legacy != null:
+			return legacy
 	return _dig(_mood, path, fallback)
+
+
+## Style 2 is the play default since INTEG1; `--style=legacy` keeps the previous look for one release as a
+## regression fallback (`--style=s2` is still accepted and changes nothing).
+static func style2() -> bool:
+	return not OS.get_cmdline_user_args().has("--style=legacy")
 
 
 ## The value at dotted `path` in bindings3d.json, or `fallback`.

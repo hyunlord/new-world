@@ -1,0 +1,11 @@
+{
+  "default": {
+    "spine": 65, "chest": 65, "neck": 65, "head": 60,
+    "upper_arm": 155, "lower_arm": 150, "hand": 100,
+    "upper_leg": 130, "lower_leg": 150, "foot": 75
+  },
+  "p1": {},
+  "p2": {},
+  "p3": {"lower_arm": 147},
+  "p4": {"lower_arm": 145}
+}
