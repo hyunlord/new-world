@@ -36,6 +36,8 @@
 #   16 equip. A third tab 이야기 lists every chronicle line of the person (get_person_chronicle, newest first), each
 #   with "→ 왜?" when it has a cause; a click opens the chain (UI/ChroniclePanel open_why → UI/WhyPanel).
 # M5.5 (goal §9): under the draft line, "도망 중: 늑대" while the person flees (get_agent_m5 `fleeing`).
+# INTEG1: under the dwelling line the HOUSE1 home "사는 곳: 카토네 집" (" (더부살이)" for a lodger, "사는 곳: 집 없음"),
+#   via SimReads get_house_snapshot/get_household_snapshot (house_text.gd); a click opens UI/RoomPanel select_house.
 extends Control
 
 const KoreanText = preload("res://scripts/ui/mux/korean_text.gd")
@@ -53,6 +55,7 @@ const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
 const ReadCache = preload("res://scripts/ui/person_read_cache.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
+const HouseText = preload("res://scripts/ui/panels/house_text.gd")
 ## M4: the inspector's tabs (0 정보, 1 지식).
 const TAB_INFO: int = 0
 const TAB_KNOWLEDGE: int = 1
@@ -134,6 +137,9 @@ var _bar_headers: Array[Label] = []
 const SettlementSelection = preload("res://scripts/core/settlement_selection.gd")
 var _village_label: Label
 var _dwelling_label: Label
+## INTEG1: the HOUSE1 home line and the house it names (-1 homeless).
+var _house_link: LinkButton
+var _house_id: int = -1
 var _vbox: VBoxContainer
 var _label_id: Label
 var _porter_status: Label
@@ -289,6 +295,11 @@ func _ready() -> void:
 	_village_label = _make_label("")
 	_dwelling_label = _make_label("")
 	_dwelling_label.name = "Dwelling"
+	_house_link = LinkButton.new()
+	_house_link.name = "House"
+	_house_link.underline = LinkButton.UNDERLINE_MODE_ON_HOVER
+	_house_link.pressed.connect(_open_house)
+	_vbox.add_child(_house_link)
 	_label_pos = _make_label("")
 	_why_button = Button.new()
 	_why_button.name = "Why"
@@ -566,6 +577,7 @@ func display_agent(detail: Dictionary) -> void:
 	if logs > 0:
 		_carried_label.text = "%s: %s %d" % [_loc("UI_INSPECT_CARRYING"), _loc("ITEM_LOG"), logs]
 	_refresh_economy(agent_id)
+	_refresh_house(agent_id)
 	_refresh_m5(agent_id)
 	_cold_label.text = _loc("INSPECTOR_COLD")
 	_cold_label.visible = _is_cold(agent_id)
@@ -876,6 +888,20 @@ func _refresh_economy(agent_id: int) -> void:
 	_skills_heading.show()
 	_skills_label.text = "\n".join(skill_lines(_economy, _locale))
 	_skills_label.show()
+
+
+## INTEG1: the home line from the house snapshot (per-tick SimReads cache, so cheap per frame).
+func _refresh_house(agent_id: int) -> void:
+	var home: Dictionary = HouseText.home_of(_world_sim, agent_id)
+	_house_id = int((home.get("house", {}) as Dictionary).get("house_id", -1))
+	_house_link.text = HouseText.home_line(_world_sim, home, _locale)
+	_house_link.disabled = _house_id < 0
+
+
+func _open_house() -> void:
+	var panel: Node = get_node_or_null("/root/Main/UI/RoomPanel")
+	if _house_id >= 0 and panel != null and panel.has_method("select_house"):
+		panel.call("select_house", _house_id)
 
 
 ## M3: "잠자리: 침실 3 (지붕 있음)" from get_agent_economy's bed fields (`rooms` = Main/RoomIndex for the

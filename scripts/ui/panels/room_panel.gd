@@ -5,8 +5,11 @@
 #   (지붕 있음 / 지붕 없음 / 판 굴), the doors (or "문이 없어 들어갈 수 없음"), the items under its roof, the people
 #   asleep in it now and the "why?" line "침실 · 지붕 있음 · 침대 4 · 추위 보호 · 잠이 빨리 회복".
 # Re-read once per tick while open (get_room_detail takes an argument, so it is called directly, never per frame).
-# Bridge methods: get_room_detail (direct); via SimReads get_time_snapshot, get_rooms; via SimReads.mutate cmd_set_room_role;
-#   signal world_reset.
+# INTEG1: when the room lies in a HOUSE1 house, a house section on top ("카토네 집": first completed day, template and
+#   era, rooms/beds/hearths, family, lodgers, free beds; house_text.gd). "The selected house" is this panel open on one
+#   of its rooms: `selected_house()` / `select_house(id)`.
+# Bridge methods: get_room_detail (direct); via SimReads get_time_snapshot, get_rooms, get_house_snapshot,
+#   get_household_snapshot, get_world_info; via SimReads.mutate cmd_set_room_role; signal world_reset.
 extends Control
 
 const KoreanText = preload("res://scripts/ui/mux/korean_text.gd")
@@ -17,6 +20,7 @@ const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const RoomIndex = preload("res://scripts/world/room_index.gd")
 const DiagnosisText = preload("res://scripts/ui/panels/diagnosis_text.gd")
+const HouseText = preload("res://scripts/ui/panels/house_text.gd")
 const PANEL_WIDTH: float = 520.0
 ## Dropdown entries: the bridge role names `cmd_set_room_role` takes, and their text.
 const ROLE_CHOICES: Array[String] = ["auto", "bedroom", "storehouse", "workshop", "hall", "unassigned"]
@@ -37,6 +41,13 @@ var _lines: Label
 var _why: Label
 var _diag_label: Label
 var _close: Button
+var _house_box: VBoxContainer
+var _house_title: Label
+var _house_lines: Label
+var _house: int = -1
+var _house_rule: HSeparator
+## The room-only controls; hidden when the panel shows a house without rooms (a hut).
+var _room_box: VBoxContainer
 
 
 func _ready() -> void:
@@ -52,12 +63,30 @@ func _ready() -> void:
 	var column: VBoxContainer = VBoxContainer.new()
 	column.add_theme_constant_override("separation", 8)
 	panel.add_child(column)
+	_house_box = VBoxContainer.new()
+	_house_box.name = "House"
+	_house_box.add_theme_constant_override("separation", 8)
+	_house_box.hide()
+	column.add_child(_house_box)
+	_house_title = Label.new()
+	_house_title.theme_type_variation = &"Heading"
+	_house_box.add_child(_house_title)
+	_house_lines = Label.new()
+	_house_lines.autowrap_mode = TextServer.AUTOWRAP_WORD
+	_house_lines.custom_minimum_size.x = PANEL_WIDTH - 32
+	_house_box.add_child(_house_lines)
+	_house_rule = HSeparator.new()
+	_house_box.add_child(_house_rule)
+	_room_box = VBoxContainer.new()
+	_room_box.name = "Room"
+	_room_box.add_theme_constant_override("separation", 8)
+	column.add_child(_room_box)
 	_title = Label.new()
 	_title.theme_type_variation = &"Heading"
-	column.add_child(_title)
+	_room_box.add_child(_title)
 	var row: HBoxContainer = HBoxContainer.new()
 	row.add_theme_constant_override("separation", 12)
-	column.add_child(row)
+	_room_box.add_child(row)
 	_role_label = Label.new()
 	row.add_child(_role_label)
 	_role = OptionButton.new()
@@ -71,32 +100,32 @@ func _ready() -> void:
 	_lines = Label.new()
 	_lines.autowrap_mode = TextServer.AUTOWRAP_WORD
 	_lines.custom_minimum_size.x = PANEL_WIDTH - 32
-	column.add_child(_lines)
+	_room_box.add_child(_lines)
 	_why = Label.new()
 	_why.autowrap_mode = TextServer.AUTOWRAP_WORD
 	_why.custom_minimum_size.x = PANEL_WIDTH - 32
 	_why.add_theme_color_override("font_color", MUTED)
-	column.add_child(_why)
+	_room_box.add_child(_why)
 	_diag_label = Label.new()
 	_diag_label.name = "RoomDiagnosis"
 	_diag_label.autowrap_mode = TextServer.AUTOWRAP_WORD
 	_diag_label.custom_minimum_size.x = PANEL_WIDTH - 32
 	_diag_label.add_theme_color_override("font_color", Color("a8d888"))
 	_diag_label.hide()
-	column.add_child(_diag_label)
+	_room_box.add_child(_diag_label)
 	var why_button := Button.new()
 	why_button.name = "Why"
 	why_button.text = _loc("MUX_WHY")
 	PanelTooltips.attach(why_button, "", "MUX_WHY")
 	why_button.pressed.connect(_open_tile_why)
-	column.add_child(why_button)
+	_room_box.add_child(why_button)
 	_food_button = Button.new()
 	_food_button.name = "FoodWhy"
 	_food_button.disabled = true
 	_food_button.text = _loc("M6A_FOOD_WHY")
 	PanelTooltips.attach(_food_button, "", "M6A_FOOD_WHY")
 	_food_button.pressed.connect(_open_food)
-	column.add_child(_food_button)
+	_room_box.add_child(_food_button)
 	_close = Button.new()
 	PanelTooltips.attach(_close, "close")
 	_close.focus_mode = Control.FOCUS_NONE
@@ -113,6 +142,7 @@ func display_room(id: int) -> void:
 	_food_tile = Vector2i(-1, -1)
 	_food_button.disabled = true
 	_room = id
+	_house = -1
 	_tick = -1
 	visible = true
 	refresh()
@@ -128,8 +158,32 @@ func detail() -> Dictionary:
 	return _detail
 
 
+## The house id of the shown room (-1 when closed or the room is in no house).
+func selected_house() -> int:
+	return _house if visible else -1
+
+
+## Open the panel on house `house_id`: on its first room, or the house section alone when it has none (a hut).
+func select_house(house_id: int) -> void:
+	var house: Dictionary = HouseText.by_id(_world_sim, house_id)
+	if house.is_empty():
+		return
+	var rooms: PackedInt64Array = house.get("room_ids", PackedInt64Array())
+	if not rooms.is_empty():
+		display_room(rooms[0])
+		return
+	_food_tile = Vector2i(-1, -1)
+	_food_button.disabled = true
+	_room = -1
+	_house = house_id
+	_tick = -1
+	visible = true
+	refresh()
+
+
 func close() -> void:
 	_room = -1
+	_house = -1
 	visible = false
 
 
@@ -147,11 +201,21 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
-## Read the room again and fill the panel (closes when the room is gone).
+## Read the room (or the roomless house) again and fill the panel (closes when it is gone).
 func refresh() -> void:
-	if _world_sim == null or _room < 0:
+	if _world_sim == null or (_room < 0 and _house < 0):
 		return
 	_tick = int(SimReads.read(_world_sim, "get_time_snapshot").get("tick", -1))
+	_room_box.visible = _room >= 0
+	_house_rule.visible = _room >= 0
+	_close.text = _loc("UI_CLOSE")
+	if _room < 0:
+		var hut: Dictionary = HouseText.by_id(_world_sim, _house)
+		if hut.is_empty():
+			close()
+			return
+		_show_house(hut)
+		return
 	var read: Variant = _world_sim.call("get_room_detail", _room)
 	_detail = read if read is Dictionary else {}
 	if not bool(_detail.get("found", false)):
@@ -185,7 +249,16 @@ func refresh() -> void:
 		if not room_diag.is_empty():
 			_diag_label.text = KoreanText.words(room_diag)
 			_diag_label.show()
-	_close.text = _loc("UI_CLOSE")
+	_show_house(HouseText.of_room(_world_sim, _room))
+
+
+## Fill the house section from house row `house` (hidden for {}).
+func _show_house(house: Dictionary) -> void:
+	_house = int(house.get("house_id", -1))
+	_house_box.visible = _house >= 0
+	if _house >= 0:
+		_house_title.text = HouseText.title(_world_sim, house, _locale)
+		_house_lines.text = "\n".join(HouseText.lines(_world_sim, house, _locale))
 
 
 ## The "why?" line: "침실 · 지붕 있음 · 침대 4 · 추위 보호 · 잠이 빨리 회복" (`UI_ROOM_WHY_FMT`).

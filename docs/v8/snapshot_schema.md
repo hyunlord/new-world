@@ -860,9 +860,9 @@ Active roofs use existing site wash. Opaque completed roofs additionally require
 once — in house id order. Derived on read; only `first_completed_tick` and `owner_household` come from saved state.
 Cell lists are flat `[x0, y0, x1, y1, …]` in row-major order; nullable ints are -1. Empty `rows` in a baseline world.
 The audit's H3 `bed_refs` / `hearth_refs` ship as the flat columns `bed_cells` + `bed_slots` + `bed_reachable` and
-`hearth_cells` (D-HOUSE1: packed parallel columns instead of nested reference rows). Not in `SimReads.GETTERS`: no
-view reads it every frame yet, so callers read it on demand (`world_sim.get_house_snapshot()`) and re-read when
-`revision`, `geometry_revision` or the overlay version moved.
+`hearth_cells` (D-HOUSE1: packed parallel columns instead of nested reference rows). Since INTEG1 it is in
+`SimReads.GETTERS` and `TICK_GETTERS` (cached once per tick) for the room panel's house section and the inspector's
+home line (`scripts/ui/panels/house_text.gd`).
 
 | key | type | meaning |
 |---|---|---|

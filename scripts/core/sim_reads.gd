@@ -5,7 +5,8 @@
 #   get_resource_snapshot, get_time_snapshot, get_tallies, get_recent_deaths, get_society_snapshot, get_world_info,
 #   get_terrain_snapshot, get_activity_snapshot, get_porter_snapshot, get_settlement_relations, get_colony_versions,
 #   get_trees, get_colony_overlay, get_workshops, get_work_priorities, get_recipes, get_space, get_rooms, get_tech,
-#   get_teach_orders, get_knowledge_waits, get_story, get_animals, get_drafted, get_neighbours (GETTERS);
+#   get_teach_orders, get_knowledge_waits, get_story, get_animals, get_drafted, get_neighbours,
+#   get_house_snapshot, get_household_snapshot (GETTERS; the HOUSE1 reads cached per tick);
 #   get_visible_action_snapshot (cached per tick); get_visible_action_cues(since_tick);
 #   get_tile_causal_events; get_field_tiles, get_crop_defs (cached read-only cultivation/catalog projections);
 #   advance_ticks, reset_world, reset_world_stress, on_building_placed, cmd_designate_chop, cmd_designate_chop_tiles,
@@ -51,12 +52,15 @@ const GETTERS: Array[String] = [
 	"get_settlement_diagnosis", "get_requests", "get_current_task",
 	# M-LOOP: the food card's validated harvest rectangle (cached per tick).
 	"get_card_harvest_target",
+	# HOUSE1: houses and households (cached per tick).
+	"get_house_snapshot", "get_household_snapshot",
 ]
 ## Read once per simulation tick (M4: the knowledge reads change only when a tick runs or a command is sent).
 const TICK_GETTERS: Array[String] = ["get_porter_snapshot", "get_settlement_relations", "get_tech", "get_teach_orders", "get_knowledge_waits",
 	"get_story", "get_animals", "get_livestock", "get_outcrops", "get_drafted", "get_ui_facts", "get_steward",
 	"get_visible_action_snapshot",
-	"get_settlement_diagnosis", "get_requests", "get_current_task", "get_card_harvest_target"]
+	"get_settlement_diagnosis", "get_requests", "get_current_task", "get_card_harvest_target",
+	"get_house_snapshot", "get_household_snapshot"]
 const MUTATORS: Array[String] = [
 	"advance_ticks", "reset_world", "reset_world_stress",
 	"on_building_placed",

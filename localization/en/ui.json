@@ -2073,5 +2073,16 @@
   "HOUSE_OWNER_REASON_2": "inherited",
   "HOUSE_OWNER_REASON_3": "the household ended",
   "HOUSE_OWNER_REASON_4": "left the village",
-  "HOUSE_OWNER_REASON_5": "the house was lost"
+  "HOUSE_OWNER_REASON_5": "the house was lost",
+  "HOUSE_NAME_FMT": "{name}'s house",
+  "HOUSE_VACANT": "Vacant house",
+  "HOUSE_FIRST_BUILT_FMT": "First completed: {date}",
+  "HOUSE_KIND_FMT": "Type: {template} · {era}",
+  "HOUSE_SPACE_FMT": "Rooms {rooms} · beds {beds} · hearths {hearths}",
+  "HOUSE_FAMILY_FMT": "Household: {names}",
+  "HOUSE_LODGERS_FMT": "Lodgers: {names}",
+  "HOUSE_VACANCY_FMT": "Free beds: {free} of {capacity}",
+  "HOUSE_HOME_FMT": "Home: {house}",
+  "HOUSE_HOME_LODGER_FMT": "Home: {house} (lodger)",
+  "HOUSE_HOME_NONE": "Home: none"
 }

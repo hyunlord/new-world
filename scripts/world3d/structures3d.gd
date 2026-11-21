@@ -1926,6 +1926,10 @@ func _selected_rooms() -> Dictionary:
 	var out: Dictionary = {}
 	var room_panel: Control = get_node_or_null("/root/Main/UI/RoomPanel") as Control
 	if room_panel != null and room_panel.is_visible_in_tree():
+		# Style 2: the panel's house section names the house (a hut opened from the inspector has no room).
+		var house_id: int = int(room_panel.call("selected_house")) if _style2 and room_panel.has_method("selected_house") else -1
+		if _roofs.has(house_id):
+			out[house_id] = true
 		var id: Variant = room_panel.get("_room")
 		if id is int and int(id) >= 0:
 			var house: int = int(_house_rooms.get(id, -1)) if _style2 else int(id)
