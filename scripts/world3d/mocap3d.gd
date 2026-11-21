@@ -1,107 +1,100 @@
 # S2 near-only clip selection and baked prop placement.
-# Bridge methods called via SimReads: get_activity_snapshot, get_workshops.
+# Clips follow ACTION1: each villager's visual key, else its fallback key, maps through params3d
+#   `mocap.clip_for_visual` to a clip of the near VAT (an unlisted key is tried as a clip name; else "idle"). The one
+#   discrimination ACTION1 lacks is kept: an elder's fire seat (activity kind 6) plays sit_log instead of sit.
+#   One-shot cues (pick_up, set_down) come from the cue ring, played once per (tick, sequence).
+# Bridge methods called via SimReads: get_visible_action_snapshot, get_activity_snapshot; SimReads.visible_action_cues
+#   (get_visible_action_cues).
 extends RefCounted
 
 const Data3D = preload("res://scripts/world3d/data3d.gd")
-const ArtData = preload("res://scripts/world/art/art_data.gd")
 const Vat = preload("res://scripts/world3d/vat3d.gd")
-const JOB_CLIPS: Dictionary = {1: "chop", 4: "build", 9: "dig", 12: "dig",
-	18: "harvest", 22: "harvest"}
 
 var _meshes: Dictionary = {}
 var _actors: Dictionary = {}
 var _pool: Dictionary = {}
-var _food_recipes: Dictionary = {}
-var _cooking: Dictionary = {}
-var _sitting: Dictionary = {}
-var _talkers: Dictionary = {}
+var _log_seats: Dictionary = {}
 var _tree_output: int = -1
+var _clip_for: Dictionary = {}
+## AgentId → [visual key, fallback key] of this tick's row; of the latest new cue.
+var _rows: Dictionary = {}
+var _cues: Dictionary = {}
+var _cue_tick: int = -1
+var _cue_seen: Dictionary = {}
 
 
 func setup(catalog: Dictionary) -> void:
 	_tree_output = int((catalog.get("item_roles", {}) as Dictionary).get("tree_output", -1))
-	var food: Dictionary = {}
-	for row: Dictionary in catalog.get("items", []):
-		if row.get("category") == "food":
-			food[int(row["code"])] = true
-	for row: Dictionary in catalog.get("recipes", []):
-		if food.has(int(row["output_code"])):
-			_food_recipes[int(row["code"])] = true
+	_clip_for = Data3D.param("mocap.clip_for_visual", {})
 
 
-func refresh(world: Node, tick: int, snap: Dictionary) -> void:
-	_sitting.clear()
+## Once per tick: this tick's action rows (joined by AgentId), elder log seats and newly committed cues.
+func refresh(world: Node, tick: int) -> void:
+	_log_seats.clear()
 	var activities: Dictionary = SimReads.read(world, "get_activity_snapshot")
 	var bits: PackedInt64Array = activities.get("ids", PackedInt64Array())
 	var kinds: PackedByteArray = activities.get("kinds", PackedByteArray())
 	var until: PackedInt64Array = activities.get("until_tick", PackedInt64Array())
-	for i: int in bits.size():
-		if until[i] > tick:
-			if kinds[i] == 3:
-				_sitting[bits[i]] = "sit"
-			elif kinds[i] == 6:
-				_sitting[bits[i]] = "sit_log"
-
-	var states: PackedByteArray = snap.get("states", PackedByteArray())
-	var targets: PackedByteArray = snap.get("target_kinds", PackedByteArray())
-	var jobs: PackedByteArray = snap.get("jobs", PackedByteArray())
-	var drafted: PackedByteArray = snap.get("drafted", PackedByteArray())
-	var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
-	var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
-	_talkers.clear()
-	for i: int in states.size():
-		if states[i] == 2 and targets[i] == 5 and (i >= drafted.size() or drafted[i] == 0):
-			var tile: Vector2i = Vector2i(xs[i], ys[i])
-			_talkers[tile] = int(_talkers.get(tile, 0)) + 1
-
-	_cooking.clear()
-	if not jobs.has(7):
-		return
-	var shops: Dictionary = SimReads.read(world, "get_workshops")
-	var shop_x: PackedInt32Array = shops.get("xs", PackedInt32Array())
-	var shop_y: PackedInt32Array = shops.get("ys", PackedInt32Array())
-	var shop_kinds: PackedInt64Array = shops.get("kinds", PackedInt64Array())
-	var bill_shops: PackedInt32Array = shops.get("bill_shops", PackedInt32Array())
-	var recipes: PackedInt64Array = shops.get("bill_recipes", PackedInt64Array())
-	var active: PackedInt32Array = shops.get("bill_active", PackedInt32Array())
-	for i: int in bill_shops.size():
-		var shop: int = bill_shops[i]
-		if active[i] == 1 and _food_recipes.has(recipes[i]) and bool(ArtData.binding("workshops", shop_kinds[shop]).get("marks_hearth_firing", false)):
-			_cooking[Vector2i(shop_x[shop], shop_y[shop])] = true
+	for i: int in mini(bits.size(), mini(kinds.size(), until.size())):
+		if until[i] > tick and kinds[i] == 6:
+			_log_seats[bits[i]] = true
+	_rows.clear()
+	var rows: Dictionary = SimReads.read(world, "get_visible_action_snapshot")
+	var aids: PackedInt64Array = rows.get("agent_ids", PackedInt64Array())
+	var keys: PackedStringArray = rows.get("visual_keys", PackedStringArray())
+	var falls: PackedStringArray = rows.get("fallback_keys", PackedStringArray())
+	for i: int in mini(aids.size(), mini(keys.size(), falls.size())):
+		_rows[aids[i]] = [keys[i], falls[i]]
+	# Overlap the last tick (a command can commit a cue at the current tick) and drop the ones already played.
+	var since: int = _cue_tick - 1 if _cue_tick >= 0 else tick - 1
+	var cues: Dictionary = SimReads.visible_action_cues(world, since)
+	var ticks: PackedInt64Array = cues.get("ticks", PackedInt64Array())
+	var seqs: PackedInt64Array = cues.get("sequences", PackedInt64Array())
+	var actors: PackedInt64Array = cues.get("agent_ids", PackedInt64Array())
+	var cue_keys: PackedStringArray = cues.get("visual_keys", PackedStringArray())
+	var cue_falls: PackedStringArray = cues.get("fallback_keys", PackedStringArray())
+	var seen: Dictionary = {}
+	_cues.clear()
+	for i: int in mini(mini(ticks.size(), seqs.size()), mini(actors.size(), mini(cue_keys.size(), cue_falls.size()))):
+		var key: Vector2i = Vector2i(ticks[i], seqs[i])
+		seen[key] = true
+		# The first poll after a load or reset only sets the cursor: retained history is not replayed.
+		if _cue_tick >= 0 and not _cue_seen.has(key):
+			_cues[actors[i]] = [cue_keys[i], cue_falls[i]]
+	_cue_seen = seen
+	_cue_tick = maxi(tick, int(cues.get("tick", tick)))
 
 
-func performing(state: int, target: int, job: int, tile: Vector2i, bits: int, drafted: bool) -> String:
-	if state == 4:
-		return str(_sitting.get(bits, ""))
-	if state == 2 and target == 5 and not drafted and int(_talkers.get(tile, 0)) > 1:
-		# A mutually settled pair matches the legacy social state.
-		return "talk"
-	if state != 3:
+## The sustained near clip of AgentId `aid` (entity `bits`) on `vat`, or "" when ACTION1 has no row for it.
+func action_clip(aid: int, bits: int, vat: RefCounted) -> String:
+	var row: Array = _rows.get(aid, [])
+	if row.is_empty():
 		return ""
-	if target == 4:
-		return "build"
-	if target == 6:
-		return "harvest"
-	if target == 9:
-		if job == 7 and _cooking.has(tile):
-			return "cook"
-		return str(JOB_CLIPS.get(job, ""))
+	var clip: String = _resolve(vat, row)
+	if clip.is_empty():
+		return "idle"
+	if clip == "sit" and _log_seats.has(bits) and bool(vat.call("has_clip", "sit_log")):
+		return "sit_log"
+	return clip
+
+
+## The one-shot clip of a cue newly committed for `aid` (consumed), or "".
+func take_cue(aid: int, vat: RefCounted) -> String:
+	var row: Array = _cues.get(aid, [])
+	_cues.erase(aid)
+	return _resolve(vat, row) if not row.is_empty() else ""
+
+
+func _resolve(vat: RefCounted, keys: Array) -> String:
+	for key: Variant in keys:
+		var clip: String = str(_clip_for.get(key, key))
+		if not clip.is_empty() and bool(vat.call("has_clip", clip)):
+			return clip
 	return ""
 
 
 func wood_load(item: int, loose_wood: int) -> bool:
 	return loose_wood > 0 or (item >= 0 and item == _tree_output)
-
-
-static func transfer(old_count: int, count: int, old_job: int, job: int) -> String:
-	# The action branch has explicit cues. This branch observes the two stock transfer edges.
-	if old_job not in [2, 3] and job not in [2, 3]:
-		return ""
-	if old_count <= 0 and count > 0:
-		return "pick_up"
-	if old_count > 0 and count <= 0:
-		return "set_down"
-	return ""
 
 
 func fixture_offset(asset: String) -> Vector3:
@@ -156,6 +149,10 @@ func release(aid: int) -> void:
 func reset() -> void:
 	for aid: int in _actors.keys():
 		release(aid)
+	_rows.clear()
+	_cues.clear()
+	_cue_seen.clear()
+	_cue_tick = -1
 
 
 func draw(host: Node3D, clock: float) -> void:

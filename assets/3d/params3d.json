@@ -129,6 +129,10 @@
   },
   "chimney": {"about": "M-GROW 3.5 house smoke: particles = amount_by_season[season] + occupants × per_occupant (0 spring … 3 winter); height = metres above the roof ridge (structures.wall_height + roof_max_rise).", "amount_by_season": {"0": 2, "1": 0, "2": 3, "3": 6}, "per_occupant": 1, "height": 0.3},
   "items": {"about": "M-GROW 3.5: a ground pile scales up to 1 + pile_growth at pile_full items.", "pile_growth": 0.35, "pile_full": 30},
+  "mocap": {"about": "INTEG1: Style 2 near-tier clip per ACTION1 visual/fallback key (get_visible_action_snapshot, cues). A key not listed is tried as a clip name itself; a clip the near VAT lacks falls through to the fallback key, then idle (walk while moving). carry picks carry (wood) or carry_generic; sit becomes sit_log on an elder's fire log seat.",
+    "clip_for_visual": {"idle": "idle", "walk": "walk", "run": "walk", "carry": "carry", "work": "work", "sleep": "sleep",
+      "chop": "chop", "cook": "cook", "dig": "dig", "mine": "dig", "till": "dig", "build": "build", "dismantle": "build",
+      "harvest": "harvest", "sit": "sit", "talk": "talk", "pick_up": "pick_up", "set_down": "set_down"}},
   "light": {
     "sun_energy": 1.3,
     "ambient_energy": 0.42,

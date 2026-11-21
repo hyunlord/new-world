@@ -17,8 +17,11 @@
 #   chronicle's highlighted people (Main/PeopleView) get a ring in PeopleView.HIGHLIGHT_RGBA.
 #   Picking: `bodies(mode)` lists every person's feet and height (entity bits as id) for world3d.gd's pick (no mode
 #   only); `body_of(bits)` is one person's (camp framing, lesson highlight).
-#   S2 uses a separate 30 Hz near VAT, with baked fixtures and prop poses. Mid and far use their existing loops.
-# Bridge methods called: via SimReads get_agent_snapshot, get_world_info, get_tech; signal world_reset.
+#   S2 uses a separate 30 Hz near VAT, with baked fixtures and prop poses; its clip follows the ACTION1 row and cues
+#   (mocap3d.gd, params3d `mocap.clip_for_visual`), wood vs generic carry by the carried load. Mid and far use their
+#   existing loops.
+# Bridge methods called: via SimReads get_agent_snapshot, get_world_info, get_tech (and mocap3d's reads); signal
+#   world_reset.
 extends Node3D
 
 const Data3D = preload("res://scripts/world3d/data3d.gd")
@@ -214,11 +217,11 @@ func _process(delta: float) -> void:
 			var feet: Vector3 = Vector3(p.x, y, p.y)
 			var near_feet: Vector3 = feet
 			var near_basis: Basis = basis
-			if near_live and not advancing and st["perform"] == "talk":
+			if near_live and not advancing and st["action"] == "talk":
 				var spread: Vector2 = m.get("spread", Vector2.ZERO)
 				if not spread.is_zero_approx():
 					near_basis = Basis(Vector3.UP, atan2(-spread.x, -spread.y)).scaled(Vector3(scale, scale, scale))
-			elif near_live and not advancing and st["perform"] == "cook":
+			elif near_live and not advancing and st["action"] == "cook":
 				near_basis = Basis(Vector3.UP, PI).scaled(Vector3(scale, scale, scale))
 				var tile: Vector2 = Vector2(m["tile"]) + Vector2(0.5, 0.5)
 				var reach: Vector3 = near_basis * _mocap.fixture_offset("fixture_cook")
@@ -244,7 +247,7 @@ func _process(delta: float) -> void:
 		var painted: bool = bool(crowd["painted"])
 		var gait: bool = painted and clip_name == "walk"
 		var distance: float = 0.0
-		if gait or (near_live and clip_name == "carry"):
+		if gait or (near_live and advancing):
 			distance = float(m.get("gait_distance", 0.0)) + (m["from"] as Vector2).distance_to(_pos(m))
 		if clip != float(st["clip"]) or bool(st["dirty"]) or gait:
 			st["clip"] = clip
@@ -308,12 +311,16 @@ func _write_near(aid: int, st: Dictionary, fallback: String, moving: bool, clock
 	var clip: String = fallback
 	var phase: float = float(aid % 97) * 0.173
 	var cue: String = st["cue"]
-	var carry: bool = moving and fallback == "carry"
-	var distance_gait: bool = moving and fallback == "walk"
+	# The ACTION1 clip; "" (no row) keeps the loop `fallback`. Locomotion clips play only while the figure moves.
+	var action: String = st["action"]
+	var carry: bool = moving and fallback != "sleep" and (action == "carry" if not action.is_empty() else fallback == "carry")
+	var distance_gait: bool = moving and fallback != "sleep" and not carry
 	if carry:
 		clip = "carry" if bool(st["wood_load"]) else "carry_generic"
-	elif not moving and fallback != "sleep" and not str(st["perform"]).is_empty():
-		clip = st["perform"]
+	elif distance_gait:
+		clip = "walk"
+	elif not moving and fallback != "sleep" and not action.is_empty():
+		clip = "idle" if action in ["walk", "carry"] else action
 	if not cue.is_empty():
 		var started: float = float(st["cue_started"])
 		if fallback == "sleep" or (moving and (started >= 0.0 or clock > float(st["cue_deadline"]))):
@@ -653,7 +660,7 @@ func _refresh(snap: Dictionary) -> void:
 	for key: String in need:
 		_grow(key, int(need[key]), copies)
 	if _mocap != null:
-		_mocap.refresh(_world_sim, _snap_tick, snap)
+		_mocap.refresh(_world_sim, _snap_tick)
 	var carry_items: PackedInt64Array = snap.get("carry_kinds", PackedInt64Array())
 	var clock: float = float(get_parent().get("anim_time")) if _mocap != null else 0.0
 	for i: int in n:
@@ -718,25 +725,19 @@ func _refresh(snap: Dictionary) -> void:
 		if _style2 and flags_changed and m.has("spread"):
 			st["dirty"] = true
 		if bool(crowd["mocap"]):
-			var state: int = _byte(snap, "states", i)
-			var target_kind: int = _byte(snap, "target_kinds", i)
-			var job: int = _byte(snap, "jobs", i)
-			var count: int = _int(snap, "carry_counts", i)
+			var vat: RefCounted = _models[model]["vat"]
 			var wood: bool = _mocap.wood_load(carry_items[i] if i < carry_items.size() else -1, _int(snap, "carried_woods", i))
-			var perform: String = _mocap.performing(state, target_kind, job, tile, st["bits"], _byte(snap, "drafted", i) != 0)
-			var previous_count: int = int(st.get("carry_count", count))
-			var transfer: String = Mocap.transfer(previous_count, count, int(st.get("job", 0)), job)
+			var action: String = _mocap.action_clip(aid, st["bits"], vat)
+			var transfer: String = _mocap.take_cue(aid, vat)
 			st["cue"] = str(st.get("cue", ""))
 			if not transfer.is_empty():
 				st["cue"] = transfer
 				st["cue_started"] = -1.0
 				st["cue_deadline"] = clock + dur
-			if st.get("perform") != perform or st.get("wood_load") != wood or not transfer.is_empty():
+			if st.get("action") != action or st.get("wood_load") != wood or not transfer.is_empty():
 				st["dirty"] = true
-			st["job"] = job
-			st["carry_count"] = count
 			st["wood_load"] = wood
-			st["perform"] = perform
+			st["action"] = action
 		if bool(st["dirty"]) or flags_changed or m["tile"] != tile or float(m["t"]) < 1.0:
 			_active[aid] = true
 		st["flags"] = flags
@@ -891,7 +892,8 @@ func body_of(bits: int) -> Dictionary:
 
 
 ## Tools and gate checks: what is drawn for entity `bits` — {tile (the tile the figure stands on or walks to),
-## settled (not mid-step), feet, model, look_id, variant, clip, scale} — or {} when not drawn.
+## settled (not mid-step), feet, model, look_id, variant, clip, near_clip, scale, near_live (its near mocap tier is
+## written)} — or {} when not drawn.
 func state_of(bits: int) -> Dictionary:
 	var aid: int = int(_aid_of.get(bits, -1))
 	if not _state.has(aid):
@@ -901,7 +903,8 @@ func state_of(bits: int) -> Dictionary:
 	return {"tile": m.get("tile", Vector2i(-1, -1)), "settled": float(m.get("t", 1.0)) >= 1.0, "feet": d["feet"], "yaw": float(d.get("draw_yaw", 0.0)),
 		"model": d["model"], "look_id": int(d.get("look_id", 0)), "variant": int(d.get("variant", 0)),
 		"clip": _clip_of(d, _world_sim.process_mode != Node.PROCESS_MODE_DISABLED and float(m.get("t", 1.0)) < 1.0),
-		"near_clip": str(d.get("near_clip", "")), "scale": float(d["scale"])}
+		"near_clip": str(d.get("near_clip", "")), "scale": float(d["scale"]),
+		"near_live": bool((_crowds.get(d.get("bin", ""), {}) as Dictionary).get("mocap_near", false))}
 
 
 ## Tools (gate step 39): every drawn figure instance of entity `bits` as [MultiMesh, index] pairs across all LODs
