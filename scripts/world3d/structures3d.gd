@@ -127,6 +127,14 @@ func _ready() -> void:
 	_resolver.load_imported()
 	if _style2:
 		Kit.prewarm()
+	# Load every construction stage model now: a stage's first appearance mid-game cost a .glb load in one frame
+	# (step 41: `_rebuild_sites` 49 ms).
+	for group: String in ["sites.walls", "sites.templates"]:
+		for stages: Variant in (Data3D.binding(group, {}) as Dictionary).values():
+			for stage: Variant in (stages if stages is Array else []):
+				var model: String = Data3D.first_model([stage])
+				if model != "":
+					Data3D.mesh(model)
 	wall_material = ShaderMaterial.new()
 	wall_material.shader = WALL_SHADER
 	preload("res://scripts/world3d/textures3d.gd").setup(wall_material)

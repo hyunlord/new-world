@@ -54,6 +54,15 @@ var _flicker_rate: float
 var _flicker_secondary_rate: float
 var _lighting_active: bool = false
 var _item_nodes: Dictionary = {}
+## Batch key -> the transforms its MultiMesh holds; an unchanged batch keeps its MultiMesh (step 41 rebuild cost).
+var _item_xf: Dictionary = {}
+## Vector2i(item code, count bucket) -> [model, tint, copies]: the lookups behind a pile, resolved once per world.
+var _item_looks: Dictionary = {}
+## Station signature -> {"nodes", "sockets"} from the last rebuild; an unchanged station keeps its nodes.
+var _station_groups: Dictionary = {}
+var _station_reuse: Dictionary = {}
+## Bumped when every drawn station must be rebuilt (world reset, PBR switch).
+var _station_gen: int = 0
 var _glow_on: StandardMaterial3D
 var _glow_off: StandardMaterial3D
 var _tinted: Dictionary = {}
@@ -120,6 +129,8 @@ func set_slice_pbr(enabled: bool) -> bool:
 	if enabled != _slice_pbr:
 		_slice_pbr = enabled
 		_tinted.clear()
+		_item_xf.clear()
+		_station_gen += 1
 		_stamp_key = ""
 		_key = ""
 		_items_key = ""
@@ -129,6 +140,8 @@ func set_slice_pbr(enabled: bool) -> bool:
 
 func _on_world_reset() -> void:
 	_key = ""
+	_item_looks.clear()
+	_station_gen += 1
 	_items_key = ""
 	_yards_key = ""
 	_stamp_key = ""
@@ -236,8 +249,8 @@ func _station_model(code: int, styles: Dictionary) -> String:
 
 
 func _rebuild_stations(shops: Dictionary, buildings: Dictionary, settlements: Dictionary, space: Dictionary) -> void:
-	for n: MeshInstance3D in _stations:
-		n.queue_free()
+	_station_reuse = _station_groups
+	_station_groups = {}
 	_stations.clear()
 	_fire_sockets.clear()
 	_counts = {"workshops": 0, "hearths": 0}
@@ -311,6 +324,10 @@ func _rebuild_stations(shops: Dictionary, buildings: Dictionary, settlements: Di
 	var fp: Array = (ArtData.bindings().get("space", {}) as Dictionary).get("bed", {}).get("footprint", [2, 1])
 	for i: int in mini(bedx.size(), bedy.size()):
 		_place(bed_model, Rect2i(bedx[i], bedy[i], int(fp[0]), int(fp[1])), false, "bed%d" % i)
+	for group: Dictionary in _station_reuse.values():
+		for n: Node3D in group["nodes"]:
+			n.queue_free()
+	_station_reuse = {}
 
 
 static func _fire_lit(settlements: Dictionary, t: Vector2i) -> bool:
@@ -346,6 +363,25 @@ static func state_model(id: String, working: bool) -> String:
 ## basket at the work socket; "ruin" (unused a season) leans and sinks the idle model (params3d `stations.ruin`).
 ## Style 2 may replace or cover the station with the kit's open shelter (bindings3d `s2kit.house_shelter`).
 func _place(id: String, rect: Rect2i, lit: bool, node_name: String, look: String = "") -> void:
+	# shortcut: a kept station keeps the ground height it was built on; rebuild it if terrain under stations can change.
+	var sig: Array = [id, rect, lit, node_name, look, _station_gen]
+	if (_shelter_kit.get("station_models", {}) as Dictionary).has(id):
+		var structures: Node = get_parent().get("structures")
+		sig.append(structures != null and int(structures.call("roof_key_at", Vector2i(Rect2(rect).get_center()))) >= 0)
+	var group: Dictionary = _station_reuse.get(sig, {}) as Dictionary
+	if group.is_empty():
+		var first_node: int = _stations.size()
+		var first_socket: int = _fire_sockets.size()
+		_place_new(id, rect, lit, node_name, look)
+		group = {"nodes": _stations.slice(first_node), "sockets": _fire_sockets.slice(first_socket)}
+	else:
+		_station_reuse.erase(sig)
+		_stations.append_array(group["nodes"])
+		_fire_sockets.append_array(group["sockets"])
+	_station_groups[sig] = group
+
+
+func _place_new(id: String, rect: Rect2i, lit: bool, node_name: String, look: String) -> void:
 	var station_models: Dictionary = _shelter_kit.get("station_models", {})
 	var shelter_mode: String = str(station_models.get(id, ""))
 	var centre: Vector2 = Rect2(rect).get_center()
@@ -567,19 +603,23 @@ func _rebuild_items(overlay: Dictionary) -> void:
 		if row is Dictionary:
 			catalog[int((row as Dictionary).get("code", -1))] = row
 	var limits: Array = (ArtData.bindings().get("items", {}) as Dictionary).get("bucket_limits", [1, 8])
+	var growth: float = float(Data3D.param("items.pile_growth", 0.0))
+	var full: float = maxf(1.0, float(Data3D.param("items.pile_full", 30)) - 1.0)
 	var batches: Dictionary = {}
 	for i: int in mini(kinds.size(), mini(xs.size(), ys.size())):
 		var code: int = int(kinds[i])
 		var n: int = counts[i] if i < counts.size() else 1
 		var bucket: int = 0 if n <= int(limits[0]) else (1 if n <= int(limits[1]) else 2)
-		var row: Dictionary = catalog.get(code, {})
-		var model: String = own_item_model(str(row.get("id", "")), bucket)
-		# An own model already depicts the stack: one copy in its own colours.
-		var copies: int = 1 if model != "" else bucket + 1
-		var tint: String = "" if model != "" else str(row.get("art_tint_material", ""))
-		if model == "":
-			model = _item_model(code, bucket, row)
-		var bkey: String = model + "|" + tint
+		var look_key: Vector2i = Vector2i(code, bucket)
+		if not _item_looks.has(look_key):
+			var row: Dictionary = catalog.get(code, {})
+			var own: String = own_item_model(str(row.get("id", "")), bucket)
+			# An own model already depicts the stack: one copy in its own colours.
+			_item_looks[look_key] = [own, "", 1] if own != "" else \
+				[_item_model(code, bucket, row), str(row.get("art_tint_material", "")), bucket + 1]
+		var look: Array = _item_looks[look_key]
+		var copies: int = int(look[2])
+		var bkey: String = str(look[0]) + "|" + str(look[1])
 		if not batches.has(bkey):
 			batches[bkey] = []
 		var t: Vector2i = Vector2i(xs[i], ys[i])
@@ -590,18 +630,22 @@ func _rebuild_items(overlay: Dictionary) -> void:
 			var z: float = t.y + 0.5 + off.y
 			var yaw: float = float((t.x * 37 + t.y * 91 + copy * 53) % 360) * PI / 180.0
 			# M-GROW 3.5: a pile grows with its count, up to `items.pile_growth` larger at `items.pile_full` items.
-			var grow: float = 1.0 + float(Data3D.param("items.pile_growth", 0.0)) * clampf(float(n - 1) / maxf(1.0, float(Data3D.param("items.pile_full", 30)) - 1.0), 0.0, 1.0)
+			var grow: float = 1.0 + growth * clampf(float(n - 1) / full, 0.0, 1.0)
 			(batches[bkey] as Array).append(Transform3D(Basis(Vector3.UP, yaw).scaled(Vector3.ONE * grow), Vector3(x, float(_terrain.call("height_at", x, z)) + lift, z)))
 	for k: String in _item_nodes.keys():
 		if not batches.has(k):
 			(_item_nodes[k] as Node).queue_free()
 			_item_nodes.erase(k)
+			_item_xf.erase(k)
 	for k: String in batches:
+		var xf: Array = batches[k]
+		if _item_nodes.has(k) and _item_xf.get(k) == xf:
+			continue
+		_item_xf[k] = xf
 		var parts: PackedStringArray = k.split("|")
 		var mm: MultiMesh = MultiMesh.new()
 		mm.transform_format = MultiMesh.TRANSFORM_3D
 		mm.mesh = _tinted_mesh(parts[0], parts[1])
-		var xf: Array = batches[k]
 		mm.instance_count = xf.size()
 		for i: int in xf.size():
 			mm.set_instance_transform(i, xf[i])

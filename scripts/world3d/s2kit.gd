@@ -32,12 +32,12 @@ static func prewarm() -> void:
 	var ids: Dictionary = {}
 	_collect_ids(Data3D.binding("s2kit", {}), ids)
 	for id: String in ids:
-		if not ResourceLoader.exists(ROOT + id + ".glb", "PackedScene"):
-			continue
-		mesh(id)
-		mesh(id, true)
+		# Texture-only ids (tiles such as the house thatch, atlas names) have no .glb but are drawn too.
 		for suffix: String in ["", "_normal", "_rm"]:
 			texture(id, suffix)
+		if ResourceLoader.exists(ROOT + id + ".glb", "PackedScene"):
+			mesh(id)
+			mesh(id, true)
 
 
 static func _collect_ids(value: Variant, ids: Dictionary) -> void:
