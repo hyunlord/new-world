@@ -91,3 +91,9 @@ Brief: owner-supplied BRIEF_SIMFIX1 (the seven quick fixes of SIMAUDIT1). Source
   day 40, only the 36-item seed reserve by days 45–47) and its starvation deaths fall at BASE's ticks (68,950–69,107)
   plus two more: it is BASE's winter famine. Not tuned (D-FEATURE-FIRST; planner Q1 keeps seed eating off). The
   publication collapse floor (no extinction where BASE survives, KnowledgeLost ≤ 2 × BASE + 2) holds.
+- **D-SIMFIX1-21 (2026-11-22, saved mind policies).** Mac pregate-1 failed three genuine-save tests (C2 base21, C2-b v23,
+  C3 growth): a saved game restores its own mind policy against the provider registry of its time, and the new
+  registered fact `social_invited` changed the current registry, so old saves fell through to the pre-iron variant,
+  which cannot compile a policy that uses iron facts. `MindProgram::load_saved` now tries a pre-SIMFIX1 variant (current
+  registry without `social_invited`) first, and every historical variant excludes it too. The DGX skipped these tests
+  because their fixture saves live only on the Mac; they were copied to the DGX for this check.

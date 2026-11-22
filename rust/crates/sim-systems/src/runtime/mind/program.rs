@@ -15,8 +15,12 @@ use super::facts::{ProviderPlan, ProviderRegistry, BUILTIN_PROVIDERS};
 
 const METAL_FACTS: [&str; 3] = ["job_mining", "job_smelting", "job_casting"];
 const IRON_FACTS: [&str; 2] = ["job_bloomery", "job_forging"];
-const PRE_IRON_EXCLUDED_FACTS: &[&str] = &IRON_FACTS;
+/// SIMFIX1 (ADR 0082) registered `social_invited` after every published save before it.
+const SIMFIX1_FACT: &str = "social_invited";
+const PRE_SIMFIX1_EXCLUDED_FACTS: &[&str] = &[SIMFIX1_FACT];
+const PRE_IRON_EXCLUDED_FACTS: &[&str] = &[IRON_FACTS[0], IRON_FACTS[1], SIMFIX1_FACT];
 const PRE_METAL_EXCLUDED_FACTS: &[&str] = &[
+    SIMFIX1_FACT,
     METAL_FACTS[0],
     METAL_FACTS[1],
     METAL_FACTS[2],
@@ -24,6 +28,7 @@ const PRE_METAL_EXCLUDED_FACTS: &[&str] = &[
     IRON_FACTS[1],
 ];
 const PRE_LIVESTOCK_EXCLUDED_FACTS: &[&str] = &[
+    SIMFIX1_FACT,
     "job_livestock",
     METAL_FACTS[0],
     METAL_FACTS[1],
@@ -32,6 +37,7 @@ const PRE_LIVESTOCK_EXCLUDED_FACTS: &[&str] = &[
     IRON_FACTS[1],
 ];
 const FORMAT13_EXCLUDED_FACTS: &[&str] = &[
+    SIMFIX1_FACT,
     "harvest_window",
     "job_food_transport",
     "harvest_storage_available",
@@ -88,6 +94,12 @@ impl MindProgram {
         let current = Self::load(source)?;
         if history.check_policy(&current.policy).is_ok() {
             return Ok(current);
+        }
+        // Published HOUSE1/INTEG1 (format 26) predate SIMFIX1's `social_invited`.
+        let before_simfix1 =
+            Self::compile_schema(Cow::Owned(source.to_owned()), PRE_SIMFIX1_EXCLUDED_FACTS)?;
+        if history.check_policy(&before_simfix1.policy).is_ok() {
+            return Ok(before_simfix1);
         }
         // Published C2-b used the metal job facts but predates the iron ones.
         let before_iron =
