@@ -316,7 +316,6 @@ fn rejected_player_commands_do_not_change_steward_protection() {
 
 #[test]
 fn cancellation_is_protected_until_the_full_two_day_deadline_then_expires() {
-    use sim_engine::RuntimeSystem;
     let mut engine = sim_test::colony_engine(29);
     submit(
         &mut engine,
@@ -338,14 +337,14 @@ fn cancellation_is_protected_until_the_full_two_day_deadline_then_expires() {
     let mut system = sim_systems::runtime::steward::StewardSystem;
     for at in [cancelled_at + 360, deadline - 1] {
         engine.resources.current_tick = at;
-        system.tick(&mut engine.world, &mut engine.resources);
+        system.run_full_pass(&mut engine.world, &mut engine.resources);
         assert!(
             engine.resources.colony.zones.is_empty(),
             "protected at {at}"
         );
     }
     engine.resources.current_tick = deadline;
-    system.tick(&mut engine.world, &mut engine.resources);
+    system.run_full_pass(&mut engine.world, &mut engine.resources);
     assert!(
         !engine.resources.colony.zones.is_empty(),
         "eligible when two full days have elapsed"

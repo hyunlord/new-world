@@ -47,6 +47,15 @@ pub struct SocialRule {
     pub peer_cell: u32,
 }
 
+/// Steward pacing (D-SIMFIX1-22): the planning pass is spread over ticks so no frame carries it whole.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct StewardPacing {
+    /// The pass's rules run in this many contiguous slices (data order), one slice per tick from the
+    /// period's first tick; 1 keeps the whole pass on one tick.
+    pub pass_slices: u32,
+}
+
 /// The day-life tunables (`data/colony/daylife.ron`).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -57,6 +66,8 @@ pub struct DaylifeRule {
     pub hunt: HuntRule,
     /// Talk.
     pub social: SocialRule,
+    /// Steward pacing.
+    pub steward: StewardPacing,
 }
 
 #[derive(Deserialize)]

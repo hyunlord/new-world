@@ -26,7 +26,8 @@
   - hunts end (`Stuck`) after 360 ticks or 90 ticks without closing in, then a 240-tick hunt pause;
   - routine places exclude tiles movement refuses; the visible-action read shows an Activity through its last tick;
   - a starving person without reachable food walks to the band hearth;
-  - the steward skips a hunt zone that already exists.
+  - the steward skips a hunt zone that already exists, and its planning pass runs one rule per tick over the period's
+    first 16 ticks (`daylife.steward.pass_slices`; `StewardSystem` interval 1);
 - A continuing routine whose place left the place list keeps its own Activity place as target (previously an
   invariant panic, `MissingTarget`).
 - Save format unchanged (26).

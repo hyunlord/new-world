@@ -564,7 +564,7 @@ fn steward_upgrade_dispatch_respects_scope_cooldown_and_interior_veto_and_replay
             Some(site)
         );
         let before = engine.resources.colony.command_log.len();
-        StewardSystem.tick(&mut engine.world, &mut engine.resources);
+        StewardSystem.run_full_pass(&mut engine.world, &mut engine.resources);
         let upgrades: Vec<_> = engine.resources.colony.command_log[before..].iter().filter(|record|
             matches!(&record.command, Command::Steward { command, .. }
                 if matches!(command.as_ref(), Command::UpgradeBuilding { site: target } if *target == site)))
@@ -633,7 +633,7 @@ fn steward_upgrade_dispatch_respects_scope_cooldown_and_interior_veto_and_replay
         .iter()
         .map(|record| (record.tick, record.command.clone()))
         .collect();
-    StewardSystem.tick(&mut replay.world, &mut replay.resources);
+    StewardSystem.run_full_pass(&mut replay.world, &mut replay.resources);
     assert_eq!(replay.resources.colony.buildings.sites[&site], site_after);
     assert_eq!(replay.resources.colony.command_log[before..], records);
     assert_eq!(

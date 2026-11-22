@@ -97,3 +97,15 @@ Brief: owner-supplied BRIEF_SIMFIX1 (the seven quick fixes of SIMAUDIT1). Source
   which cannot compile a policy that uses iron facts. `MindProgram::load_saved` now tries a pre-SIMFIX1 variant (current
   registry without `social_invited`) first, and every historical variant excludes it too. The DGX skipped these tests
   because their fixture saves live only on the Mac; they were copied to the DGX for this check.
+- **D-SIMFIX1-22 (2026-11-23, steward pass sliced; planner answer).** Strict step 41 failed twice on frames carrying
+  StewardSystem's whole 360-tick planning pass (22–38 ms in the Godot debug library). The pass is now spread over
+  ticks: `StewardSystem` runs every tick, and the period's rules (data order) run in `daylife.steward.pass_slices`
+  (16) contiguous slices on the period's first ticks, one rule per tick; needs tracking and zone growth stay on the
+  first tick, and replay runs every tick so replayed commands land on their recorded tick. State-free (the slice is
+  `tick % 360`), so saves and replays are unchanged; a rule's commands land at most 15 ticks after the period start.
+  Measured on the DGX with the Godot library's optimisation levels (sim-systems opt 1, the rest opt 0), seed 0,
+  steward on, 2 days: worst StewardSystem tick 36.7 ms → 19.8 ms. The planner's 6 ms target is not met by slicing:
+  single rules cost FoodPlan ≈ 20 ms (`field_orders` ≈ 12), Bills ≈ 16 ms (`reserved_house_tiles` ≈ 10 when placing a
+  workshop) and House ≈ 11–14 ms; all three share the House planner (`future_house`: a full-map capacity scan
+  calling nav reachability per tile). `StewardSystem::run_full_pass` keeps the unsliced pass for fixtures that call
+  the system directly.

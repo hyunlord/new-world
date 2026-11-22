@@ -150,15 +150,13 @@ fn player_created_edited_or_paused_fuel_bills_are_not_reconciled() {
 
 #[test]
 fn eligible_fuel_bill_is_updated_by_steward_without_grace() {
-    use sim_engine::RuntimeSystem;
-
     let (mut world, mut res, rule, bill) = fixture(true);
     assert!(!rule.extended);
     assert!(rule.grace_ticks.is_none());
     res.steward.enabled = true;
     res.current_tick = 6 * res.ticks_per_day;
     let tick = res.current_tick;
-    super::super::StewardSystem.tick(&mut world, &mut res);
+    super::super::StewardSystem.run_full_pass(&mut world, &mut res);
     assert!(res.colony.command_log.iter().any(|record| {
         record.tick == tick
             && record.result.accepted

@@ -36,7 +36,9 @@ Every fix is a pure function of state the game already saves; no saved type chan
   shows an Activity as performed through its last tick.
 - **Starving.** `starving_to_hearth` walks a person at hunger ≥ 90 with no reachable food to the band hearth
   (`rest:hearth`) instead of standing.
-- **Steward.** The hunt-zone rule skips a zone that already exists, which `AddHuntZone` always rejects.
+- **Steward.** The hunt-zone rule skips a zone that already exists, which `AddHuntZone` always rejects. The
+  planning pass (every 360 ticks) is spread over the period's first ticks in `steward.pass_slices` contiguous slices
+  of rules in data order (D-SIMFIX1-22), so no frame carries the whole pass.
 
 The tunables live in `data/colony/daylife.ron`, read once through `DaylifeRule::get()`. It is not a
 `WorldRules` field, because rules are saved.

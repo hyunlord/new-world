@@ -21,5 +21,8 @@
             stall_ticks: 30,              // a chase the partner has not taken up after this long ends
             peer_cell: 4,                 // partners are sought in a 4 × 4-tile block (was the same tile)
         ),
+        steward: (
+            pass_slices: 16,              // one steward rule per tick over the period's first 16 ticks
+        ),
     ),
 )

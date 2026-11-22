@@ -508,7 +508,6 @@ fn shared_wall_store_requires_current_physical_steward_ownership() {
 #[test]
 fn legacy_role_completion_dispatch_respects_scope_and_cooldown() {
     use sim_core::colony::steward::StewardScope;
-    use sim_engine::RuntimeSystem;
     for scope in [StewardScope::Food, StewardScope::Housing] {
         let (mut engine, rule) = fixture();
         assert!(
@@ -525,11 +524,11 @@ fn legacy_role_completion_dispatch_respects_scope_and_cooldown() {
         let mut system = super::super::StewardSystem;
         for tick in [0, deadline - 1] {
             engine.resources.current_tick = tick;
-            system.tick(&mut engine.world, &mut engine.resources);
+            system.run_full_pass(&mut engine.world, &mut engine.resources);
             assert_eq!(engine.resources.colony.rooms[&1].role, RoomRole::Workshop);
         }
         engine.resources.current_tick = deadline;
-        system.tick(&mut engine.world, &mut engine.resources);
+        system.run_full_pass(&mut engine.world, &mut engine.resources);
         let count = |engine: &sim_engine::SimEngine| {
             engine.resources.colony.command_log.iter().filter(|r|
             r.result.accepted && matches!(&r.command, Command::Steward { rule: id, command } if *id == rule.id && matches!(**command, Command::SetRoomRole { room: 1, role: Some(RoomRole::Bedroom) }))).count()
@@ -541,8 +540,8 @@ fn legacy_role_completion_dispatch_respects_scope_and_cooldown() {
                 1,
                 "real dispatch resumes at the cooldown boundary"
             );
-            engine.resources.current_tick += system.tick_interval();
-            system.tick(&mut engine.world, &mut engine.resources);
+            engine.resources.current_tick += super::super::PASS_TICKS;
+            system.run_full_pass(&mut engine.world, &mut engine.resources);
             assert_eq!(count(&engine), 1, "completion is committed exactly once");
         } else {
             assert_eq!(engine.resources.colony.rooms[&1].role, RoomRole::Workshop);

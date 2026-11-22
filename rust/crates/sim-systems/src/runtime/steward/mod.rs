@@ -1,4 +1,7 @@
-//! Priority 125, interval 360: after assignment, plan ordinary orders in data order.
+//! Priority 125, interval 1: after assignment, plan ordinary orders in data order once every
+//! `PASS_TICKS` (360) ticks. SIMFIX1 (D-SIMFIX1-22): the pass's rules are split in data order into
+//! `daylife.steward.pass_slices` contiguous slices run on the period's first ticks, so no tick carries
+//! the whole pass; needs tracking and zone growth stay on the period's first tick.
 //! Reads: colony, people, registered rules.
 //! Writes: ordinary command effects and steward provenance.
 //! Events: StewardAction for accepted ordinary orders; no RNG draws.
@@ -17,6 +20,9 @@ use hecs::World;
 use sim_core::colony::{steward::rules, Command};
 use sim_engine::{RuntimeSystem, SimResources};
 
+/// Ticks between two planning passes (each rule's own cooldown counts from its slice tick).
+pub const PASS_TICKS: u64 = 360;
+
 /// Deterministic optional colony assistant; default state is disabled.
 #[derive(Default)]
 pub struct StewardSystem;
@@ -28,15 +34,33 @@ impl RuntimeSystem for StewardSystem {
         125
     }
     fn tick_interval(&self) -> u64 {
-        360
+        1
     }
     fn tick(&mut self, world: &mut World, res: &mut SimResources) {
+        let slices = sim_core::rules::DaylifeRule::get()
+            .map_or(1, |rule| u64::from(rule.steward.pass_slices.max(1)))
+            .min(PASS_TICKS);
+        pass(world, res, res.current_tick % PASS_TICKS, slices);
+    }
+}
+
+impl StewardSystem {
+    /// The whole planning pass now, as one unsliced tick at the period's start (fixtures and replay
+    /// checks that call the system directly).
+    pub fn run_full_pass(&mut self, world: &mut World, res: &mut SimResources) {
+        pass(world, res, 0, 1);
+    }
+}
+
+/// Slice `phase` of `slices` of the planning pass (phase 0 also does the pass bookkeeping).
+fn pass(world: &mut World, res: &mut SimResources, phase: u64, slices: u64) {
+    {
         if res.rules.colony.is_none() {
             return;
         }
         // LOOP-D-teach: grace-window bookkeeping runs before any rule acts and in replay too, so a
         // replayed world reaches the same `need_since` as the live one.
-        if res.steward.enabled {
+        if phase == 0 && res.steward.enabled {
             track_needs(world, res);
             // Derived layout runs at the same phase for live and replayed commands.
             zone_growth::maybe_grow_zones(world, res);
@@ -52,13 +76,17 @@ impl RuntimeSystem for StewardSystem {
             }
             return;
         }
-        if !res.steward.enabled {
+        if !res.steward.enabled || phase >= slices {
             return;
         }
         let Ok(data) = rules() else {
             return;
         };
-        for rule in &data.rules {
+        let count = data.rules.len() as u64;
+        for (index, rule) in data.rules.iter().enumerate() {
+            if index as u64 * slices / count.max(1) != phase {
+                continue;
+            }
             let mut profile = RuleProfile::new(res.current_tick, rule.id);
             if !res.steward.scope.permits(rule.scope) {
                 profile.skip(true);
