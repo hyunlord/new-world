@@ -1,6 +1,9 @@
 {
   "style2": {
     "tree_card_distance": 64.0,
+    "tree_lod_bias": 0.2,
+    "tree_shadow_lod_bias": 0.25,
+    "tree_shadow_distance": 40.0,
     "fern_distance": 41.0,
     "grass": {
       "shade": [0.73, 0.67, 0.4],
@@ -118,7 +121,7 @@
     "ssao_radius": 1.05,
     "ssao_intensity": 1.55,
     "ssao_light_affect": 0.15,
-    "shadow_blur": 3.0,
+    "shadow_blur": 1.5,
     "fog_aerial_perspective": 0.08
   },
   "room_lights": {

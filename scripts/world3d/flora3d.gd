@@ -495,6 +495,18 @@ func _apply_far_cards(near: MultiMeshInstance3D, model: String, xforms: Array, c
 		near.add_child(far)
 		near.visibility_range_end = _tree_card_distance
 		far.visibility_range_begin = _tree_card_distance
+		# Near trees draw at mood `style2.tree_lod_bias` and a shadows-only twin at `tree_shadow_lod_bias` casts their sun
+		# shadow: full-detail cut-out trees cost ~11 ms in the colour pass and ~13 ms in both shadow splits at z1 1080p
+		# (step 41).
+		near.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		near.lod_bias = float(Data3D.mood("style2.tree_lod_bias", 1.0))
+		var shadow: MultiMeshInstance3D = MultiMeshInstance3D.new()
+		shadow.name = "ShadowTrees"
+		shadow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY
+		shadow.lod_bias = float(Data3D.mood("style2.tree_shadow_lod_bias", 1.0))
+		shadow.visibility_range_end = minf(_tree_card_distance, float(Data3D.mood("style2.tree_shadow_distance", _tree_card_distance)))
+		near.add_child(shadow)
+	(near.get_node("ShadowTrees") as MultiMeshInstance3D).multimesh = near.multimesh
 	far.multimesh = _new_batch(SliceVegetation.card(model), xforms, colours)
 
 

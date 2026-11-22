@@ -149,7 +149,7 @@
     "dawn_hours": [5.0, 7.0],
     "dusk_hours": [18.0, 20.0],
     "shadow_distance": 90.0,
-    "shadow_atlas": 8192,
+    "shadow_atlas": 4096,
     "saturation": 0.9,
     "fog_density": 0.0022,
     "fire_light_range": 7.0,
