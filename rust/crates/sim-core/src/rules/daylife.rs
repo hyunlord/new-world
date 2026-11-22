@@ -14,8 +14,6 @@ use std::sync::OnceLock;
 pub struct JobAdmission {
     /// A job's estimate must end this many minutes before the person's bedtime.
     pub bedtime_slack_minutes: u32,
-    /// Fatigue (tenths) the estimate must stay below the daytime sleep threshold.
-    pub fatigue_headroom_tenths: u32,
     /// Ticks of work added to a job's walk legs in its estimate (all kinds but hunts).
     pub work_estimate_ticks: u32,
     /// A job whose estimate exceeds this many ticks is admitted only when hunger and thirst stay below their seek

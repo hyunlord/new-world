@@ -28,7 +28,7 @@
 //! A worker leaving leisure keeps its `Activity` component for one tick:
 //! the routine's own cleanup at 125 records it as interrupted.
 //! SIMFIX1 (ADR 0082): a job is admitted only when its estimate ([`admission_estimate`]) ends before the
-//! person's bedtime − slack ([`admission_horizon`]), keeps fatigue below the sleep threshold − headroom and,
+//! person's bedtime − slack ([`admission_horizon`]) when there is somewhere to sleep and,
 //! for a long job, keeps hunger and thirst below their seek thresholds (`data/colony/daylife.ron`).
 use hecs::{Entity, World};
 use sim_core::colony::knowledge::KnowledgeMask;
@@ -1819,7 +1819,15 @@ impl RuntimeSystem for JobAssignSystem {
                     _ => kind.source(),
                 };
                 // SIMFIX1 (F4) / WORK1: no new job that cannot end before bedtime or would outlast a need.
-                if !admits(world, resources, entity, pos, fetch, target, kind) {
+                if !admits(
+                    world,
+                    resources,
+                    &self.food,
+                    (entity, id, pos),
+                    fetch,
+                    target,
+                    kind,
+                ) {
                     continue;
                 }
                 let job = Job {
@@ -1944,14 +1952,15 @@ pub fn horizon_for(
 }
 
 /// SIMFIX1 (F4) and WORK1 (provisioning): whether a new job fits the person's day. Its
-/// [`admission_estimate`] must end, in daytime, by the [`admission_horizon`] and keep fatigue below the
-/// daytime sleep threshold − `fatigue_headroom_tenths`; a job longer than `provision_over_ticks` must also
-/// keep hunger and thirst below their seek thresholds to its end (the `prepare_*` mind nodes top them up).
+/// [`admission_estimate`] must end, in daytime, by the [`admission_horizon`] (when there is somewhere to
+/// sleep); a job longer than `provision_over_ticks` must also
+/// keep hunger (when food is available to the person) and thirst (when there is water) below their seek
+/// thresholds to its end (the `prepare_*` mind nodes top them up).
 fn admits(
     world: &World,
     res: &SimResources,
-    entity: Entity,
-    pos: (u32, u32),
+    food: &crate::runtime::food::choice::FoodChoiceIndex,
+    (entity, id, pos): (Entity, AgentId, (u32, u32)),
     fetch: Option<(u32, u32)>,
     target: (u32, u32),
     kind: JobKind,
@@ -1964,9 +1973,11 @@ fn admits(
         return true;
     };
     let a = rule.job_admission;
+    // Like `sleep_due`: with nowhere to sleep, bedtime withholds no work.
+    let can_sleep = res.sleep_tiles.values().any(|amount| *amount > 0);
     if let (Some((horizon, night_end)), true) = (
         admission_horizon(world, res, entity),
-        res.ticks_per_day != 0,
+        res.ticks_per_day != 0 && can_sleep,
     ) {
         let minute = res
             .current_tick
@@ -1977,25 +1988,28 @@ fn admits(
             return false;
         }
     }
-    // Need values in tenths at the estimate's end (the components' growth is per tick).
+    // Need values in tenths at the estimate's end (the components' growth is per tick). Fatigue keeps
+    // MUX2's rule: work is withheld exactly when the sleep decision is due (`needy`), not earlier.
     let tenths_at_end = |value: f64, growth: f64| (value + growth * estimate as f64) * 10.0;
-    let fatigue_limit = n::FATIGUE_THRESHOLD * 10.0 - f64::from(a.fatigue_headroom_tenths);
-    if world
-        .get::<&sim_core::components::Sleep>(entity)
-        .is_ok_and(|s| tenths_at_end(s.fatigue, s.growth_rate) >= fatigue_limit)
-    {
-        return false;
-    }
+    // Only a need the person can meet first holds a long job back (else it would wait for ever).
     if estimate > u64::from(a.provision_over_ticks) {
-        let hungry = world
-            .get::<&sim_core::components::Hunger>(entity)
-            .is_ok_and(|h| {
-                tenths_at_end(f64::from(h.value), f64::from(h.growth_rate))
-                    >= f64::from(n::HUNGER_THRESHOLD) * 10.0
-            });
-        let thirsty = world
-            .get::<&sim_core::components::Thirst>(entity)
-            .is_ok_and(|t| tenths_at_end(t.value, t.growth_rate) >= n::THIRST_THRESHOLD * 10.0);
+        let carry = world
+            .get::<&sim_core::colony::Carry>(entity)
+            .ok()
+            .map(|carry| *carry);
+        let can_eat = food.available_to(res, pos, id, carry);
+        let can_drink = res.water_tiles.values().any(|amount| *amount > 0);
+        let hungry = can_eat
+            && world
+                .get::<&sim_core::components::Hunger>(entity)
+                .is_ok_and(|h| {
+                    tenths_at_end(f64::from(h.value), f64::from(h.growth_rate))
+                        >= f64::from(n::HUNGER_THRESHOLD) * 10.0
+                });
+        let thirsty = can_drink
+            && world
+                .get::<&sim_core::components::Thirst>(entity)
+                .is_ok_and(|t| tenths_at_end(t.value, t.growth_rate) >= n::THIRST_THRESHOLD * 10.0);
         if hungry || thirsty {
             return false;
         }

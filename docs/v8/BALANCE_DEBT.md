@@ -556,7 +556,6 @@ repairing the talk mechanic, not from tuning; its values are listed here as well
 | Feature | Tunable | Current value | Intended effect | Suspected issue |
 |---|---|---|---|---|
 | Job admission | `bedtime_slack_minutes` | 20 | No new job whose estimate ends after bedtime − 20 min | The estimate is Chebyshev legs × move interval + a flat work allowance, not the job's real work ticks |
-| Job admission | `fatigue_headroom_tenths` | 80 | No new job that would bring fatigue within 8.0 of the daytime sleep threshold | Rarely binding at the current fatigue growth (0.03/tick) |
 | Job admission | `work_estimate_ticks` | 30 | Work allowance added to every non-hunt estimate | Long crafts and digs are under-estimated |
 | Provisioning | `provision_over_ticks` | 180 | Longer jobs wait until hunger and thirst last to their end | With hunts estimated at 360 ticks, thirst must be ≤ 21 at admission |
 | Provisioning | `prepare_drink` / `prepare_eat` level (`mind.ron`) | thirst/hunger ≥ 30.0 | Idle workers top up one meal's worth before taking long work | More short trips to water and food on some days |

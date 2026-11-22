@@ -17,7 +17,7 @@
 
 - Colony behaviour (intended; colony identity digests change, baseline unchanged):
   - sleeping in a usable `warmth: Roofed` Dwelling counts as a roofed bed; sleep is sampled from the night-rest start;
-  - no new job whose estimate ends after bedtime − slack or near the fatigue threshold; long jobs wait until hunger and
+  - no new job whose estimate ends after bedtime − slack (when there is a bed); long jobs wait until hunger and
     thirst last; idle workers top up at 30.0;
   - talks: invitations read from the inviter's state, partners must stay free, untaken chases end after 30 ticks,
     talks last 20 ticks with relief paid per tick, partners are sought in a 4 × 4-tile block and paired in id order,

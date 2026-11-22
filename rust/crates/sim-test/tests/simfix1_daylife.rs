@@ -43,7 +43,7 @@ fn minute(engine: &sim_engine::SimEngine, tick: u64) -> u64 {
     tick.saturating_add(r.rules.clock_offset_ticks) % r.ticks_per_day.max(1)
 }
 
-/// One steward-run colony for four days, every tick: no job is admitted past the bedtime horizon,
+/// One steward-run colony for eight days, every tick: no job is admitted past the bedtime horizon,
 /// no hunt outlives `hunt.max_ticks`, an untaken chase ends within `social.stall_ticks`, talks last
 /// `social.talk_ticks`, no person alternates two mind nodes every tick, and the steward never repeats
 /// a rejected hunt zone.
@@ -61,7 +61,7 @@ fn harness_simfix1_daylife_invariants() {
         )
         .accepted
     );
-    let days = 4;
+    let days = 8;
     let ticks = engine.resources.ticks_per_day * days;
     let mut positions: BTreeMap<AgentId, (u32, u32)> = BTreeMap::new();
     let mut previous_jobs: BTreeMap<AgentId, JobKind> = BTreeMap::new();
@@ -104,11 +104,10 @@ fn harness_simfix1_daylife_invariants() {
                 (Some(JobKind::Haul { .. }), Some(JobKind::Harvest { .. }))
             );
             if let (Some(job), Some(before)) = (job, positions.get(&id)) {
-                if job.taken_at == tick
-                    && !matches!(job.kind, JobKind::Craft { .. })
-                    && !(mind_harvest && matches!(job.kind, JobKind::Harvest { .. }))
-                    && !handoff
-                {
+                let other_path = handoff
+                    || matches!(job.kind, JobKind::Craft { .. })
+                    || (mind_harvest && matches!(job.kind, JobKind::Harvest { .. }));
+                if job.taken_at == tick && !other_path {
                     let target = if matches!(job.kind, JobKind::Hunt { .. }) {
                         *before
                     } else {

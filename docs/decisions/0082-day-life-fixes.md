@@ -17,7 +17,7 @@ Every fix is a pure function of state the game already saves; no saved type chan
   data says `function.warmth: Roofed`. Where a person slept is sampled only from the night-rest start.
 - **Admission horizon.** The job layer admits a new job only when its estimate — Chebyshev walk legs × the
   move interval plus a work allowance, or `hunt.max_ticks` for a hunt — ends before the person's bedtime −
-  slack and keeps fatigue below the sleep threshold − headroom. A job longer than `provision_over_ticks`
+  slack (when there is somewhere to sleep; fatigue keeps MUX2's exact sleep-decision rule). A job longer than `provision_over_ticks`
   waits until hunger and thirst last to its end; the `prepare_drink` / `prepare_eat` mind nodes top idle
   workers up at one meal's worth first.
 - **Talk.** The invitation is the inviter's own saved `Seeking{Agent(invitee)}` state. A free invitee
@@ -60,6 +60,10 @@ starving node only walks people to the hearth; gifts between kin and eating the 
 `sim-test/tests/simfix1_daylife.rs` (data-only roof, admission horizon, hunt bound, chase and talk length,
 node oscillation, steward rejects); the SIMAUDIT1 probe paired smoke, seeds 0–7 × 60 days, BASE against
 candidate (`docs/v8/simfix1/SIMFIX1_DECISIONS.md`).
+
+## Date
+
+2026-11-22 (SIMFIX1; renumbered from 0074 at the rebase onto INTEG1).
 
 ## Source
 

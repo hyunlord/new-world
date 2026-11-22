@@ -7,7 +7,6 @@
     rule: (
         job_admission: (
             bedtime_slack_minutes: 20,    // a new job's estimate must end before the person's bedtime − slack
-            fatigue_headroom_tenths: 80,  // ... and keep fatigue 8.0 below the daytime sleep threshold
             work_estimate_ticks: 30,      // work ticks added to the walk legs (Chebyshev × move interval)
             provision_over_ticks: 180,    // longer jobs wait until hunger and thirst last to their end
         ),

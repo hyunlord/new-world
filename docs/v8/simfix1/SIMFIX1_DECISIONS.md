@@ -78,3 +78,11 @@ Brief: owner-supplied BRIEF_SIMFIX1 (the seven quick fixes of SIMAUDIT1). Source
 - **D-SIMFIX1-17 (2026-11-22, rebase).** Rebased onto INTEG1's published `af2f844d0`. INTEG1 renumbered the art ADRs to
   0074–0081, so this pass's ADR is 0082. Only documentation conflicted (CHANGELOG, ROADMAP, HISTORY, pitfalls); both
   sides were kept, SIMFIX1's entry on top.
+- **D-SIMFIX1-18 (2026-11-22, MUX2 sleep rule kept).** The first full test run failed three MUX2 tests
+  (`mux2_fuel_sleep.rs`): work is withheld exactly when the sleep decision is due (fatigue 49 still takes fuel work;
+  without a bed fatigue never withholds work). N2's 8.0 fatigue headroom contradicted that pinned rule and was
+  dropped; the bedtime horizon, like `sleep_due`, applies only when there is somewhere to sleep.
+- **D-SIMFIX1-19 (2026-11-22, provisioning deadlock).** `c2_chain_bronze` stalled after the tin caravan (day 25 → 120):
+  the provisioning rule held a long job back whenever hunger would end above 50, even for a person with no reachable
+  food, who could then never take it. Hunger now holds a job back only when food is available to the person (the
+  `needy` test), thirst only when there is water.
