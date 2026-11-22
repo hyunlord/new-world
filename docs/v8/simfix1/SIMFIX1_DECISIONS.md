@@ -86,3 +86,8 @@ Brief: owner-supplied BRIEF_SIMFIX1 (the seven quick fixes of SIMAUDIT1). Source
   the provisioning rule held a long job back whenever hunger would end above 50, even for a person with no reachable
   food, who could then never take it. Hunger now holds a job back only when food is available to the person (the
   `needy` test), thirst only when there is water.
+- **D-SIMFIX1-20 (2026-11-22, seed-5 famine).** The final paired smoke (seeds 0–7 × 60 days) ends seed 5 with 9 alive
+  against BASE 11, below the brief's per-seed bar (≥ BASE − 1). The candidate's edible stock follows BASE's (160 on
+  day 40, only the 36-item seed reserve by days 45–47) and its starvation deaths fall at BASE's ticks (68,950–69,107)
+  plus two more: it is BASE's winter famine. Not tuned (D-FEATURE-FIRST; planner Q1 keeps seed eating off). The
+  publication collapse floor (no extinction where BASE survives, KnowledgeLost ≤ 2 × BASE + 2) holds.
