@@ -109,3 +109,10 @@ Brief: owner-supplied BRIEF_SIMFIX1 (the seven quick fixes of SIMAUDIT1). Source
   workshop) and House ≈ 11–14 ms; all three share the House planner (`future_house`: a full-map capacity scan
   calling nav reachability per tile). `StewardSystem::run_full_pass` keeps the unsliced pass for fixtures that call
   the system directly.
+- **D-SIMFIX1-23 (2026-11-23, stopped before the strict capture).** With the sliced pass (e79a2d332) Mac pregate-3 failed
+  two tests: the `SYSTEM_WORLDS.md` registration snapshot (StewardSystem interval 360 → 1; fixed) and
+  `spine_chain_log_house`, which passed with the unsliced pass. On the DGX the same test passes with `pass_slices: 1`
+  and fails with 16: the scripted scene loses villagers to fights in both (4 vs 5 combat deaths, days 13 and 26); with
+  slicing only two remain, a craft interrupted mid-way loses its clay, and the 17-brick bill stops at 16 by day 48.
+  Looking the bill up by recipe and digging one craft of spare clay did not rescue it. Not tuned further; the planner
+  decides (QUESTION.md).
