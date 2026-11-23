@@ -634,11 +634,17 @@ func _cord_world(language: String) -> void:
 	# After a load World3D rebuilds the terrain first, one heavy layer per frame: the props follow within seconds.
 	var pile: MultiMeshInstance3D = null
 	var piled: bool = false
+	# D-SIMFIX1-27: piles batch per (model, tint, chunk); the key is the look plus "|cx,cy".
 	for _frame: int in 300:
-		pile = (props.get("_item_nodes") as Dictionary).get(batch) as MultiMeshInstance3D
-		for i: int in (pile.multimesh.instance_count if pile != null and pile.multimesh != null else 0):
-			var at: Vector3 = pile.multimesh.get_instance_transform(i).origin
-			piled = piled or Rect2(Vector2(tile), Vector2.ONE).has_point(Vector2(at.x, at.z))
+		for key: String in (props.get("_item_nodes") as Dictionary):
+			if not key.begins_with(batch + "|"):
+				continue
+			var chunk: MultiMeshInstance3D = (props.get("_item_nodes") as Dictionary)[key] as MultiMeshInstance3D
+			for i: int in (chunk.multimesh.instance_count if chunk != null and chunk.multimesh != null else 0):
+				var at: Vector3 = chunk.multimesh.get_instance_transform(i).origin
+				if Rect2(Vector2(tile), Vector2.ONE).has_point(Vector2(at.x, at.z)):
+					piled = true
+					pile = chunk
 		if piled:
 			break
 		await process_frame

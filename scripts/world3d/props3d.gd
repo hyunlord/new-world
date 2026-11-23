@@ -19,6 +19,11 @@
 #   At night, fire sockets in occupied roofed rooms and exterior windows share a camera-ranked light pool. A
 #   working station without a fire throws up chips and dust instead (`stations.work_puffs`). `drawn_counts()` counts
 #   the workshops and hearths the last rebuild drew (tests).
+#   Frame budget (D-SIMFIX1-27, params3d `props`): a refresh runs as stages on separate World3D heavy frames (yards,
+#   space only when the overlay version moved, stations, piles); piles are one MultiMesh per (model, tint, chunk) and
+#   only changed chunks rebuild, at most `budget_usec` of builds per frame. Every model props can draw is loaded at
+#   `_ready` and drawn once, far below a pixel, in front of the camera during the first frames, so a pile, station or
+#   yard kind that first appears mid-play costs no .glb load and no GPU pipeline compile.
 # Bridge methods called: via SimReads get_workshops, get_building_snapshot, get_settlement_snapshot, get_space,
 #   get_colony_overlay, get_content_catalog; signal world_reset.
 extends Node3D
@@ -74,6 +79,19 @@ var _shelter_kit: Dictionary = {}
 var _stamp_key: String = ""
 ## What the last station rebuild drew: workshops and lit camp buildings (the hearth), for tests and tools.
 var _counts: Dictionary = {"workshops": 0, "hearths": 0}
+## The refresh in flight: 0 idle, 1 space, 2 stations, 3 piles, 4 pile batches (D-SIMFIX1-27).
+var _stage: int = 0
+var _buildings: Dictionary = {}
+var _space: Dictionary = {}
+var _space_overlay: int = -1
+## [batch key, transforms] still to build; drained within `_budget_usec` per frame.
+var _item_queue: Array = []
+var _budget_usec: int = 3000
+var _chunk_tiles: int = 16
+var _warm_root: Node3D = null
+var _warm_frames: int = 0
+var _warm_scale: float = 0.0001
+var _warm_ids: Dictionary = {}
 
 
 func setup(world_sim: Node, terrain: Node, sky: Node) -> void:
@@ -89,6 +107,13 @@ func _ready() -> void:
 	if _style2:
 		_kit_props = Data3D.binding("s2kit.props", {})
 		_shelter_kit = Data3D.binding("s2kit.house_shelter", {})
+	_budget_usec = maxi(500, int(Data3D.param("props.budget_usec", 3000)))
+	_chunk_tiles = maxi(1, int(Data3D.param("props.chunk_tiles", 16)))
+	_warm_frames = maxi(1, int(Data3D.param("props.warm_frames", 3)))
+	_warm_scale = float(Data3D.param("props.warm_scale", 0.0001))
+	for id: String in _drawable_ids():
+		_warm_ids[id] = true
+		Data3D.mesh(id)
 	_light_budget = clampi(int(Data3D.mood("room_lights.cap", 24)), 0, 24)
 	_light_threshold = clampf(float(Data3D.mood("room_lights.activation", 0.25)), 0.0, 0.99)
 	_light_range = float(Data3D.mood("room_lights.range", 3.5))
@@ -135,11 +160,17 @@ func set_slice_pbr(enabled: bool) -> bool:
 		_key = ""
 		_items_key = ""
 		_yards_key = ""
+		_stage = 0
+		_item_queue.clear()
 	return true
 
 
 func _on_world_reset() -> void:
 	_key = ""
+	_stage = 0
+	_space = {}
+	_space_overlay = -1
+	_item_queue.clear()
 	_item_looks.clear()
 	_station_gen += 1
 	_items_key = ""
@@ -153,32 +184,154 @@ func _on_world_reset() -> void:
 func _process(_delta: float) -> void:
 	if _world_sim == null or _terrain == null or not bool(_terrain.call("is_complete")):
 		return
+	_warm()
 	var stamp: Dictionary = get_parent().get("stamp") if get_parent() != null else {}
 	@warning_ignore("integer_division")
 	var skey: String = "%s|%s" % [stamp.get("overlay", -1), int(stamp.get("tick", -1)) / 12]
-	# A refresh takes World3D's heavy-work slot (one per frame, none on a simulation step); else try next frame.
-	if (skey == _stamp_key and not stamp.is_empty()) or (get_parent() != null and get_parent().has_method("claim_heavy")
+	# Each stage takes World3D's heavy-work slot (one per frame, none on a simulation step); else try next frame.
+	if (_stage == 0 and skey == _stamp_key and not stamp.is_empty()) or (get_parent() != null and get_parent().has_method("claim_heavy")
 			and not bool(get_parent().call("claim_heavy"))):
 		_update_lights()
 		return
-	_stamp_key = skey
-	var shops: Dictionary = SimReads.read(_world_sim, "get_workshops")
-	var buildings: Dictionary = SimReads.read(_world_sim, "get_building_snapshot")
-	_rebuild_yards(buildings, int(SimReads.read(_world_sim, "get_time_snapshot").get("season", 0)))
-	var settlements: Dictionary = SimReads.read(_world_sim, "get_settlement_snapshot")
-	var space: Dictionary = SimReads.read(_world_sim, "get_space")
-	var key: String = str(hash([shops.get("kinds"), shops.get("xs"), shops.get("ys"), shops.get("bill_active"), shops.get("input_short"),
-		shops.get("abandoned"), buildings.get("kinds"),
-		buildings.get("xs"), buildings.get("ys"), settlements.get("fire_lit"), space.get("version")]))
-	if key != _key:
-		_key = key
-		_rebuild_stations(shops, buildings, settlements, space)
-	var overlay: Dictionary = SimReads.read(_world_sim, "get_colony_overlay")
-	var ikey: String = str(int(overlay.get("version", 0)))
-	if ikey != _items_key:
-		_items_key = ikey
-		_rebuild_items(overlay)
+	match _stage:
+		0:
+			_stamp_key = skey
+			_buildings = SimReads.read(_world_sim, "get_building_snapshot")
+			_rebuild_yards(_buildings, int(SimReads.read(_world_sim, "get_time_snapshot").get("season", 0)))
+			_stage = 1
+		1:
+			# get_space `version` is the overlay version: an unchanged overlay keeps the last space read.
+			var overlay_version: int = int(stamp.get("overlay", -1))
+			if _space.is_empty() or overlay_version != _space_overlay or stamp.is_empty():
+				_space = SimReads.read(_world_sim, "get_space")
+				_space_overlay = overlay_version
+			_stage = 2
+		2:
+			var shops: Dictionary = SimReads.read(_world_sim, "get_workshops")
+			var settlements: Dictionary = SimReads.read(_world_sim, "get_settlement_snapshot")
+			var key: String = str(hash([shops.get("kinds"), shops.get("xs"), shops.get("ys"), shops.get("bill_active"), shops.get("input_short"),
+				shops.get("abandoned"), _buildings.get("kinds"),
+				_buildings.get("xs"), _buildings.get("ys"), settlements.get("fire_lit"), _space.get("version")]))
+			if key != _key:
+				_key = key
+				_rebuild_stations(shops, _buildings, settlements, _space)
+			_stage = 3
+		3:
+			var overlay: Dictionary = SimReads.read(_world_sim, "get_colony_overlay")
+			var ikey: String = str(int(overlay.get("version", 0)))
+			if ikey != _items_key:
+				_items_key = ikey
+				_rebuild_items(overlay)
+			_stage = 4 if not _item_queue.is_empty() else 0
+		_:
+			_drain_items()
+			if _item_queue.is_empty():
+				_stage = 0
 	_update_lights()
+
+
+## Every model id props can draw from the bindings: stations (styles, states, lit, bed, fallback), camp buildings,
+## the out-of-input marker and pile models (by_id buckets, by_asset, by_shape, fallback).
+static func _drawable_ids() -> Array[String]:
+	var ids: Dictionary = {}
+	var stations: Dictionary = Data3D.binding("stations", {})
+	for group: String in ["by_style", "lit"]:
+		for key: Variant in (stations.get(group, {}) as Dictionary):
+			ids[str(key)] = true
+			var value: Variant = (stations[group] as Dictionary)[key]
+			if value is String:
+				ids[str(value)] = true
+	for model: Variant in (stations.get("states", {}) as Dictionary):
+		var states: Variant = (stations["states"] as Dictionary)[model]
+		if states is Dictionary:
+			for candidates: Variant in (states as Dictionary).values():
+				for id: Variant in (candidates if candidates is Array else [candidates]):
+					ids[str(id)] = true
+	for key: String in ["fallback", "bed"]:
+		ids[str(stations.get(key, ""))] = true
+	for id: Variant in (Data3D.binding("buildings.by_structure", {}) as Dictionary).values():
+		ids[str(id)] = true
+	ids[str(Data3D.binding("buildings.fallback", ""))] = true
+	ids[str(Data3D.param("stations.short_marker", ""))] = true
+	var items: Dictionary = Data3D.binding("items", {})
+	for models: Variant in (items.get("by_id", {}) as Dictionary).values():
+		for id: Variant in (models if models is Array else [models]):
+			ids[str(id)] = true
+	for group: String in ["by_asset", "by_shape"]:
+		for id: Variant in (items.get(group, {}) as Dictionary).values():
+			ids[str(id)] = true
+	ids[str(items.get("fallback", ""))] = true
+	var out: Array[String] = []
+	for id: String in ids:
+		if Data3D.has_model(id):
+			out.append(id)
+	out.sort()
+	return out
+
+
+## Draw every props mesh (each pile look of the catalogue, station, camp building, yard and kit tier, and the glow
+## materials) once, `warm_scale` times its size just in front of the camera, for `warm_frames` frames from the first
+## complete frame of a world, so their GPU pipelines compile before play rather than at a kind's first appearance.
+func _warm() -> void:
+	if _warm_frames <= 0:
+		return
+	var camera: Camera3D = get_viewport().get_camera_3d()
+	if camera == null:
+		return
+	if _warm_root == null:
+		_warm_root = Node3D.new()
+		_warm_root.name = "PipelineWarm"
+		add_child(_warm_root)
+		var looks: Dictionary = {}
+		var catalog: Dictionary = get_parent().call("catalog") if get_parent() != null and get_parent().has_method("catalog") else {}
+		for value: Variant in catalog.get("items", []):
+			if value is not Dictionary:
+				continue
+			var row: Dictionary = value
+			for bucket: int in 3:
+				var own: String = own_item_model(str(row.get("id", "")), bucket)
+				var look: Array = [own, ""] if own != "" else [_item_model(int(row.get("code", -1)), bucket, row), str(row.get("art_tint_material", ""))]
+				looks["%s|%s" % look] = look
+		for look: Array in looks.values():
+			var mm: MultiMesh = MultiMesh.new()
+			mm.transform_format = MultiMesh.TRANSFORM_3D
+			mm.mesh = _tinted_mesh(str(look[0]), str(look[1]))
+			mm.instance_count = 1
+			mm.set_instance_transform(0, Transform3D.IDENTITY)
+			var mmi: MultiMeshInstance3D = MultiMeshInstance3D.new()
+			mmi.multimesh = mm
+			_warm_root.add_child(mmi)
+		# Stations and camp buildings through the real placement path (model, kit tier, glow override, flame, smoke or
+		# work puffs, shelter, out-of-input marker), lit and unlit; the nodes move under the warm root and the
+		# station bookkeeping is restored.
+		var stations: int = _stations.size()
+		var sockets: int = _fire_sockets.size()
+		var first_child: int = get_child_count()
+		for id: String in _warm_ids:
+			for lit: bool in [false, true]:
+				_place_new(id, Rect2i(0, 0, 2, 2), lit, "warm", "" if lit else "short")
+		var placed: Array[Node] = []
+		for i: int in range(first_child, get_child_count()):
+			placed.append(get_child(i))
+		for node: Node in placed:
+			remove_child(node)
+			_warm_root.add_child(node)
+		_stations.resize(stations)
+		_fire_sockets.resize(sockets)
+		var buildings: Dictionary = _buildings if not _buildings.is_empty() else SimReads.read(_world_sim, "get_building_snapshot")
+		for id: Variant in buildings.get("yard_models", PackedStringArray()):
+			var kit_id: String = str(_kit_props.get(str(id), ""))
+			for mesh: Mesh in [Kit.mesh(kit_id), Kit.mesh(kit_id, true), _tinted_mesh(str(id), "") if _slice_pbr else Data3D.mesh(str(id))]:
+				if mesh != null:
+					var mi: MeshInstance3D = MeshInstance3D.new()
+					mi.mesh = mesh
+					_warm_root.add_child(mi)
+	_warm_root.global_transform = Transform3D(camera.global_basis.scaled(Vector3.ONE * _warm_scale),
+		camera.global_position - camera.global_basis.z * (camera.near * 4.0))
+	_warm_frames -= 1
+	if _warm_frames == 0:
+		_warm_root.queue_free()
+		_warm_root = null
 
 
 func _update_lights() -> void:
@@ -619,10 +772,10 @@ func _rebuild_items(overlay: Dictionary) -> void:
 				[_item_model(code, bucket, row), str(row.get("art_tint_material", "")), bucket + 1]
 		var look: Array = _item_looks[look_key]
 		var copies: int = int(look[2])
-		var bkey: String = str(look[0]) + "|" + str(look[1])
+		var t: Vector2i = Vector2i(xs[i], ys[i])
+		var bkey: String = "%s|%s|%d,%d" % [look[0], look[1], floori(float(t.x) / _chunk_tiles), floori(float(t.y) / _chunk_tiles)]
 		if not batches.has(bkey):
 			batches[bkey] = []
-		var t: Vector2i = Vector2i(xs[i], ys[i])
 		var lift: float = float(_terrain.call("house_floor_lift", t)) if _style2 else 0.0
 		for copy: int in copies:
 			var off: Vector2 = [Vector2(0, 0), Vector2(0.22, -0.18), Vector2(-0.2, 0.2)][copy]
@@ -637,11 +790,21 @@ func _rebuild_items(overlay: Dictionary) -> void:
 			(_item_nodes[k] as Node).queue_free()
 			_item_nodes.erase(k)
 			_item_xf.erase(k)
+	_item_queue.clear()
 	for k: String in batches:
 		var xf: Array = batches[k]
 		if _item_nodes.has(k) and _item_xf.get(k) == xf:
 			continue
-		_item_xf[k] = xf
+		_item_queue.append([k, xf])
+
+
+## Build queued pile batches until this frame's `props.budget_usec` is spent (at least one per frame).
+func _drain_items() -> void:
+	var started: int = Time.get_ticks_usec()
+	while not _item_queue.is_empty():
+		var entry: Array = _item_queue.pop_front()
+		var k: String = entry[0]
+		var xf: Array = entry[1]
 		var parts: PackedStringArray = k.split("|")
 		var mm: MultiMesh = MultiMesh.new()
 		mm.transform_format = MultiMesh.TRANSFORM_3D
@@ -655,6 +818,9 @@ func _rebuild_items(overlay: Dictionary) -> void:
 			add_child(mmi)
 			_item_nodes[k] = mmi
 		mmi.multimesh = mm
+		_item_xf[k] = xf
+		if Time.get_ticks_usec() - started >= _budget_usec:
+			return
 
 
 ## The M3D-ASSETS model of catalogue item `id` for count bucket `bucket` (bindings3d `items.by_id`), else "".

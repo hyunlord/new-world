@@ -147,3 +147,22 @@ Brief: owner-supplied BRIEF_SIMFIX1 (the seven quick fixes of SIMAUDIT1). Source
   spent 32.9 ms in world3d `props`. The StewardSystem maximum in the capture is 8.3 ms (was 26–37 ms), so the
   steward no longer owns a slow frame. Per D-25 the pass stopped without a retry or publication; the frame owner (a
   world3d props first build/draw) went to the planner (QUESTION.md 4).
+- **D-SIMFIX1-27 (2026-11-23, planner answer D-SIMFIX1-26; props frame budget, render-only).** Measured with a probe of
+  the step-41 scene (seed 0, steward on, 60 s per zoom, mux2 perf monitor and Godot pipeline-compilation monitors):
+  the 55 ms frame was the first appearance of an item pile kind mid-play (tick 152 `item_001_firewood_m`, 155
+  `item_000_log_m`): the items rebuild loaded the model (26.7 / 19.7 ms) and its first draw compiled 10 surface and 6
+  specialization pipelines; steady refreshes cost 3.5–4.8 ms, almost all `get_space` (1.5–3 ms) and
+  `get_building_snapshot` (0.8–1.7 ms) reads. `props3d.gd` now: loads every model it can draw at `_ready`; on the first
+  complete frame draws each pile look of the catalogue, each yard model and each station/camp model through the real
+  placement path (lit and unlit, incl. kit tiers, flame, smoke, marker) at 1e-4 scale in front of the camera for three
+  frames, so their pipelines compile at startup; runs a refresh as stages on separate World3D heavy frames (yards,
+  space only when the overlay version moved — `get_space.version` is `overlay_version` and bed changes bump it —
+  stations, piles); batches piles per (model, tint, 16 × 16-tile chunk) and rebuilds only changed chunks within a
+  3 ms per-frame budget (params3d `props`). Result, base → new (60 s per zoom, post-warm-up): props time max 28.5 →
+  3.3 ms (z1) and 16.6 → 3.4 ms (z0.5), frames with props > 3 ms 102 → 3 and 115 → 1; z1 p50 21.1 → 20.9 ms, p99 24.0
+  → 23.5 ms, > 25 ms 17 → 7, > 33 ms 1 → 0; z0.5 p50 15.0 → 15.0 ms, p99 17.1 → 16.9 ms, > 25 ms 13 → 5; mean draw
+  calls 714 → 723 and 787 → 797 (pile chunks). One z0.5 frame of 150 ms was all draw, with no props work and no
+  compile, while the owner's Rokoko Studio held the GPU. Residual: when the hearth is first lit (tick ≈ 482) 5 surface
+  and 2 specialization pipelines still compile (21 ms frame, props 1.5–2.3 ms); warming its kit flame, smoke particles
+  and a fire omni light did not remove it, so its owner is outside props. Beds and stations stay one node each:
+  batching them would change their per-node LOD visibility ranges (visuals must not change).

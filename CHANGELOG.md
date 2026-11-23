@@ -31,6 +31,9 @@
     planner's capacity scan and the production-input node scans are cheaper with identical results;
   - the dev profile (the debug Godot library) builds sim-core, sim-engine and sim-systems at opt-level 2 (was
     sim-systems 1, others 0), keeping debug assertions and overflow checks (D-SIMFIX1-25);
+  - the 3D props layer loads and draws every pile, station and yard model once at startup (no mid-play model load or
+    pipeline compile), refreshes in stages on separate frames, reads `get_space` only when the overlay changed, and
+    batches piles per 16 × 16-tile chunk within a 3 ms per-frame budget (params3d `props`, D-SIMFIX1-27);
 - A continuing routine whose place left the place list keeps its own Activity place as target (previously an
   invariant panic, `MissingTarget`).
 - Save format unchanged (26).
