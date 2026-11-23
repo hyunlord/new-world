@@ -141,3 +141,9 @@ Brief: owner-supplied BRIEF_SIMFIX1 (the seven quick fixes of SIMAUDIT1). Source
   dev-built probe against 1f300f1be's release run. Worst StewardSystem tick on the DGX (one core, seeds 0/1/2 × 3
   days): 8.4 / 8.8 / 9.9 ms with this branch's code (1f300f1be's code: 9.2 / 9.3 / 9.5 ms). Cost: slower debug builds
   of those three crates. The exact speedups of D-24 stay.
+- **D-SIMFIX1-26 (2026-11-23, stopped at the strict step-41 capture).** On e09e63e8e the Mac pregate passed (rc 0) and
+  the strict stall capture alone failed: zoom 1.0 passed (max 41.2 ms, none > 50), zoom 0.5 had one 55.2 ms frame at
+  t = 12.7 s (tick 151) with no simulation tick in it and 49.4 ms in the draw phase; at the same moment the zoom 1.0 arm
+  spent 32.9 ms in world3d `props`. The StewardSystem maximum in the capture is 8.3 ms (was 26–37 ms), so the
+  steward no longer owns a slow frame. Per D-25 the pass stopped without a retry or publication; the frame owner (a
+  world3d props first build/draw) went to the planner (QUESTION.md 4).
