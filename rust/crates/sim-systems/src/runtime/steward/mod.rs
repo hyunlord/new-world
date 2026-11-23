@@ -1,7 +1,7 @@
-//! Priority 125, interval 1: after assignment, plan ordinary orders in data order once every
-//! `PASS_TICKS` (360) ticks. SIMFIX1 (D-SIMFIX1-22): the pass's rules are split in data order into
-//! `daylife.steward.pass_slices` contiguous slices run on the period's first ticks, so no tick carries
-//! the whole pass; needs tracking and zone growth stay on the period's first tick.
+//! Priority 125, interval 360: after assignment, plan ordinary orders in data order once every
+//! `PASS_TICKS` (360) ticks. SIMFIX1 (D-SIMFIX1-22/24): `daylife.steward.pass_slices` > 1 runs the
+//! system every tick and splits the pass's rules in data order into that many contiguous slices on the
+//! period's first ticks (needs tracking and zone growth stay on the first); the shipped value is 1.
 //! Reads: colony, people, registered rules.
 //! Writes: ordinary command effects and steward provenance.
 //! Events: StewardAction for accepted ordinary orders; no RNG draws.
@@ -34,14 +34,22 @@ impl RuntimeSystem for StewardSystem {
         125
     }
     fn tick_interval(&self) -> u64 {
-        1
+        if pass_slices() > 1 {
+            1
+        } else {
+            PASS_TICKS
+        }
     }
     fn tick(&mut self, world: &mut World, res: &mut SimResources) {
-        let slices = sim_core::rules::DaylifeRule::get()
-            .map_or(1, |rule| u64::from(rule.steward.pass_slices.max(1)))
-            .min(PASS_TICKS);
-        pass(world, res, res.current_tick % PASS_TICKS, slices);
+        pass(world, res, res.current_tick % PASS_TICKS, pass_slices());
     }
+}
+
+/// `daylife.steward.pass_slices` (1 when the file is malformed), at most `PASS_TICKS`.
+fn pass_slices() -> u64 {
+    sim_core::rules::DaylifeRule::get()
+        .map_or(1, |rule| u64::from(rule.steward.pass_slices.max(1)))
+        .min(PASS_TICKS)
 }
 
 impl StewardSystem {

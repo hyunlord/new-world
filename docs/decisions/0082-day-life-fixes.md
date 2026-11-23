@@ -37,8 +37,11 @@ Every fix is a pure function of state the game already saves; no saved type chan
 - **Starving.** `starving_to_hearth` walks a person at hunger ≥ 90 with no reachable food to the band hearth
   (`rest:hearth`) instead of standing.
 - **Steward.** The hunt-zone rule skips a zone that already exists, which `AddHuntZone` always rejects. The
-  planning pass (every 360 ticks) is spread over the period's first ticks in `steward.pass_slices` contiguous slices
-  of rules in data order (D-SIMFIX1-22), so no frame carries the whole pass.
+  planning pass (every 360 ticks) can be spread over the period's first ticks in `steward.pass_slices` contiguous
+  slices of rules in data order (D-SIMFIX1-22); the shipped value is 1 (one whole pass, as before), because 16 slices
+  moved the timing of a scripted scene (D-SIMFIX1-24). The house planner's capacity scan uses whole-map passability
+  and reachability masks and the production-input planner reads each node's yield once per call; commands are
+  byte-identical (8 seeds × 60 days).
 
 The tunables live in `data/colony/daylife.ron`, read once through `DaylifeRule::get()`. It is not a
 `WorldRules` field, because rules are saved.

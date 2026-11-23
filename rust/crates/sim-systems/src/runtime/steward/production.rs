@@ -92,18 +92,34 @@ pub(super) fn inputs_with_discovery(
         });
         region.is_none_or(|region| res.nav.reaches(region, tile))
     };
+    // Each node's yield once per call, in node order (the content lookup dominated the per-kind scans).
+    let mut yield_of: Vec<(sim_core::colony::NodeKind, ItemKind)> = Vec::new();
+    let node_yields: Vec<_> = res
+        .colony
+        .nodes
+        .iter()
+        .map(|(tile, node)| {
+            let yields = match yield_of.iter().find(|(k, _)| *k == node.kind) {
+                Some(&(_, item)) => item,
+                None => {
+                    let item = node.kind.yields();
+                    yield_of.push((node.kind, item));
+                    item
+                }
+            };
+            (tile, node, yields)
+        })
+        .collect();
     let mut commands = Vec::new();
     for (kind, wanted) in need {
         profile.begin_kind(kind, wanted, &res.nav);
         profile.phase(Phase::Marked);
-        let marked: u32 = res
-            .colony
-            .nodes
+        let marked: u32 = node_yields
             .iter()
-            .filter(|(tile, node)| {
-                node.kind.yields() == kind && res.colony.designations.contains_key(tile)
+            .filter(|(tile, _, yields)| {
+                *yields == kind && res.colony.designations.contains_key(*tile)
             })
-            .map(|(_, node)| u32::from(node.left))
+            .map(|(_, node, _)| u32::from(node.left))
             .sum();
         profile.phase(Phase::Count);
         let available = maintain_count(world, res, kind);
@@ -112,19 +128,19 @@ pub(super) fn inputs_with_discovery(
         profile.phase(Phase::Filter);
         let mut scanned = 0usize;
         let mut reaches = 0usize;
-        let mut eligible = res.colony.nodes.iter().filter(|(tile, node)| {
+        let mut eligible = node_yields.iter().filter(|(tile, _, yields)| {
             if profiling {
                 scanned += 1;
             }
-            node.kind.yields() == kind
-                && !res.colony.designations.contains_key(tile)
+            *yields == kind
+                && !res.colony.designations.contains_key(*tile)
                 && !res
                     .steward
                     .vetoed(&Target::Tile(tile.0, tile.1), res.current_tick)
         });
         if deficit == 0 {
             // The old discarded scan could build lazy nav regions on its first eligible node.
-            if let Some((&tile, _)) = eligible.next() {
+            if let Some(&(&tile, _, _)) = eligible.next() {
                 if profiling {
                     reaches += 1;
                 }
@@ -134,12 +150,13 @@ pub(super) fn inputs_with_discovery(
             continue;
         }
         let mut nodes: Vec<_> = eligible
-            .filter(|(tile, _)| {
+            .filter(|(tile, _, _)| {
                 if profiling {
                     reaches += 1;
                 }
                 camp_reaches(**tile)
             })
+            .map(|&(tile, node, _)| (tile, node))
             .collect();
         let candidates = nodes.len();
         profile.phase(Phase::Sort);

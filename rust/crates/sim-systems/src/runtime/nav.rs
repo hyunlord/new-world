@@ -24,7 +24,14 @@ pub fn tile_cost(res: &SimResources, tile: Tile) -> u8 {
     if tile.0 >= grid.width || tile.1 >= grid.height {
         return IMPASSABLE;
     }
-    let i = grid.idx(tile.0, tile.1);
+    cost_at(res, grid.idx(tile.0, tile.1), tile, |i| {
+        path_stage_cost(res, i)
+    })
+}
+
+/// [`tile_cost`] of the in-grid `tile` at index `i`, with the plain-ground cost from `stage_cost`.
+fn cost_at(res: &SimResources, i: usize, tile: Tile, stage_cost: impl Fn(usize) -> u8) -> u8 {
+    let grid = &res.tile_grid;
     match grid.terrain_type[i] {
         TerrainType::River if grid.is_ford(i) => return COST_BANK,
         TerrainType::River | TerrainType::Mountain => return IMPASSABLE,
@@ -38,6 +45,9 @@ pub fn tile_cost(res: &SimResources, tile: Tile) -> u8 {
             IMPASSABLE
         };
     }
+    if res.colony.space_sites.is_empty() {
+        return stage_cost(i);
+    }
     match res
         .colony
         .space_sites
@@ -46,8 +56,31 @@ pub fn tile_cost(res: &SimResources, tile: Tile) -> u8 {
     {
         Some(PlannedNav::Blocked) => IMPASSABLE,
         Some(PlannedNav::Door) => COST_DOOR,
-        Some(PlannedNav::Unchanged) | None => path_stage_cost(res, i),
+        Some(PlannedNav::Unchanged) | None => stage_cost(i),
     }
+}
+
+/// [`passable`] for every tile, indexed like the grid: one pass, the path-stage table read once
+/// (D-SIMFIX1-24: whole-map planners call this instead of `passable` per tile).
+pub fn passable_mask(res: &SimResources) -> Vec<bool> {
+    let grid = &res.tile_grid;
+    let stages = paths::installed();
+    let stage_costs: Vec<u8> = (0..=u8::MAX)
+        .map(|code| {
+            stages
+                .stage_by_code(code)
+                .map_or(COST_PLAIN, |s| s.nav_cost)
+        })
+        .collect();
+    let stage_cost =
+        |i: usize| stage_costs[usize::from(res.colony.path_stage.get(i).copied().unwrap_or(0))];
+    let width = grid.width as usize;
+    (0..grid.len())
+        .map(|i| {
+            let tile = ((i % width.max(1)) as u32, (i / width.max(1)) as u32);
+            cost_at(res, i, tile, stage_cost) != IMPASSABLE
+        })
+        .collect()
 }
 
 /// Plain-ground cost adjusted by the tile's path stage (M-GROW 3.2).
@@ -126,6 +159,50 @@ mod tests {
             ..WorldRules::default()
         };
         res
+    }
+
+    #[test]
+    fn passable_mask_equals_passable_tile_by_tile() {
+        let mut res = res();
+        let g = &mut res.tile_grid;
+        let i = g.idx(0, 0);
+        g.terrain_type[i] = TerrainType::River;
+        let i = g.idx(1, 0);
+        g.terrain_type[i] = TerrainType::River;
+        g.set_ford(i, true);
+        let i = g.idx(2, 0);
+        g.terrain_type[i] = TerrainType::Hill;
+        let i = g.idx(3, 0);
+        g.terrain_type[i] = TerrainType::Hill;
+        g.set_dug(i, true);
+        let i = g.idx(4, 0);
+        g.wall_material[i] = Some(MaterialId::from_str_hash("oak"));
+        let i = g.idx(5, 0);
+        g.wall_material[i] = Some(MaterialId::from_str_hash("oak"));
+        g.set_door(i, true);
+        let i = g.idx(0, 1);
+        g.terrain_type[i] = TerrainType::Mountain;
+        let check = |res: &SimResources| {
+            let mask = passable_mask(res);
+            for y in 0..res.tile_grid.height {
+                for x in 0..res.tile_grid.width {
+                    assert_eq!(
+                        mask[res.tile_grid.idx(x, y)],
+                        passable(res, (x, y)),
+                        "{x},{y}"
+                    );
+                }
+            }
+        };
+        check(&res);
+        res.colony
+            .space_sites
+            .insert((1, 1), BlueprintKind::LogWall);
+        res.colony.space_sites.insert((2, 1), BlueprintKind::Door);
+        res.colony
+            .space_sites
+            .insert((3, 1), BlueprintKind::PackedFloor);
+        check(&res);
     }
 
     #[test]

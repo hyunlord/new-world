@@ -22,7 +22,7 @@
             peer_cell: 4,                 // partners are sought in a 4 × 4-tile block (was the same tile)
         ),
         steward: (
-            pass_slices: 16,              // one steward rule per tick over the period's first 16 ticks
+            pass_slices: 1,               // 1 = the whole pass on one tick every 360 (D-SIMFIX1-24); n > 1 spreads it over n ticks
         ),
     ),
 )

@@ -566,6 +566,6 @@ repairing the talk mechanic, not from tuning; its values are listed here as well
 | Talk | `talk_ticks` | 20 | Talks last long enough to be seen (was 3) | A longer talk is interrupted more often |
 | Talk | `stall_ticks` | 30 | A chase the partner does not take up ends after 30 ticks with the 480-tick retry cooldown | Partners just out of reach may be given up early |
 | Talk | `peer_cell` | 4 | Free people find a partner in their 4 × 4-tile block and pair off in id order (was: the same tile, everyone choosing the lowest id) | Block edges split people standing side by side |
-| Steward | `steward.pass_slices` | 16 | One steward rule per tick over the period's first 16 ticks (frame time) | Orders land up to 15 ticks later than with one whole pass |
+| Steward | `steward.pass_slices` | 1 | The whole planning pass on one tick every 360 (n > 1 spreads it over n ticks for frame time) | n = 16 moved a scripted scene's outcome (D-SIMFIX1-24); the debug-build frame cost is an optimisation-level question |
 | Starving | `starving_to_hearth` hunger level (`mind.ron`) | hunger ≥ 90.0 | A starving person without food in reach goes to the band hearth | The hearth seats two (occupancy < 2); the rest stay idle for 30 ticks |
 | Starving | `eat_seed_when_starving` | not implemented (planner Q1: keep `false`) | Seed reserve kept for the field | Seed-5 style famines can still kill with seed in stock; owner may enable later |

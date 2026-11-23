@@ -567,19 +567,29 @@ fn house_capacity(
     } else {
         None
     };
-    for yy in 0..res.tile_grid.height {
+    // D-SIMFIX1-24: whole-map masks (one look at the nav regions and the path stages), not a
+    // reachability query and a cost lookup per tile; the same predicates as before.
+    let grid = &res.tile_grid;
+    let camp_reach = camp_region.map(|region| res.nav.reach_mask(region, grid.width, grid.height));
+    let passable = crate::runtime::nav::passable_mask(res);
+    for yy in 0..grid.height {
         let mut row = 0usize;
         let mut stock_row = 0usize;
-        for xx in 0..res.tile_grid.width {
-            let tile = (xx, yy);
-            let tile_flags = flags[res.tile_grid.idx(xx, yy)];
+        for xx in 0..grid.width {
+            let i = yy as usize * grid.width as usize + xx as usize;
+            let tile_flags = flags[i];
             stock_row += usize::from(tile_flags & STOCKED != 0);
+            // = unoccupied_tile_can_hold_items.
+            let holds = !matches!(
+                grid.terrain_type[i],
+                sim_core::TerrainType::River | sim_core::TerrainType::Mountain
+            ) && (res.rules.colony.is_none()
+                || (passable[i] && grid.wall_material[i].is_none()));
             row += usize::from(
                 (tile_flags & if store { !STOCKED } else { u8::MAX }) == 0
-                    && (!floor
-                        || res.tile_grid.floor_material[res.tile_grid.idx(xx, yy)].is_none())
-                    && crate::runtime::jobs::items::unoccupied_tile_can_hold_items(res, tile)
-                    && camp_region.is_none_or(|region| res.nav.reaches(region, tile)),
+                    && (!floor || grid.floor_material[i].is_none())
+                    && holds
+                    && camp_reach.as_ref().is_none_or(|mask| mask[i]),
             );
             let i = (yy as usize + 1) * stride + xx as usize + 1;
             capacity[i] = capacity[i - stride] + row;

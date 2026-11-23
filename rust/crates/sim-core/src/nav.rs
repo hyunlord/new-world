@@ -560,6 +560,36 @@ impl NavState {
         })
     }
 
+    /// [`Self::reaches`] for every tile of a `width` × `height` grid under one look at the regions,
+    /// indexed `y * width + x` (all false for region 0).
+    #[inline] // whole-map loop: compiled at the calling crate's optimisation level
+    pub fn reach_mask(&self, region: u32, width: u32, height: u32) -> Vec<bool> {
+        let mut mask = vec![false; width as usize * height as usize];
+        if region == 0 {
+            return mask;
+        }
+        let map = &self.map;
+        let (mw, mh) = (map.width as usize, map.height as usize);
+        self.with_regions(|labels| {
+            let label = |x: usize, y: usize| x < mw && y < mh && labels[y * mw + x] == region;
+            for y in 0..height as usize {
+                for x in 0..width as usize {
+                    let on_map = x < mw && y < mh;
+                    mask[y * width as usize + x] = if on_map && map.cost[y * mw + x] != IMPASSABLE {
+                        labels[y * mw + x] == region
+                    } else {
+                        // An impassable tile is reached from a passable 8-neighbour of the region.
+                        (y.saturating_sub(1)..=y + 1).any(|ny| {
+                            (x.saturating_sub(1)..=x + 1)
+                                .any(|nx| (nx, ny) != (x, y) && label(nx, ny))
+                        })
+                    };
+                }
+            }
+        });
+        mask
+    }
+
     /// Whether `to` can be reached from `from` (`from` itself must be passable).
     pub fn reachable(&self, from: Tile, to: Tile) -> bool {
         let r = self.region_of(from);
@@ -1243,6 +1273,25 @@ mod tests {
         assert!(!n.can_step((0, 0), (1, 1)));
         let p = n.path((0, 0), (1, 1)).expect("detour");
         assert_eq!(*p, vec![(0, 1), (1, 1)]);
+    }
+
+    #[test]
+    fn reach_mask_equals_reaches_tile_by_tile() {
+        let n = nav(&["..#..", "..#..", "###..", "..#.."]);
+        for from in [(0, 0), (4, 0), (2, 0)] {
+            let region = n.region_of(from);
+            // One row and column past the map: off-map tiles are never reached.
+            let mask = n.reach_mask(region, 6, 5);
+            for y in 0..5 {
+                for x in 0..6 {
+                    assert_eq!(
+                        mask[y * 6 + x],
+                        n.reaches(region, (x as u32, y as u32)),
+                        "{from:?} {x},{y}"
+                    );
+                }
+            }
+        }
     }
 
     #[test]

@@ -27,7 +27,7 @@ Validation status: **NOT_RUN** for the production switch; parent-owned focused v
 | JobAssignSystem | 124 | 1 | yes | yes |
 | AgentDecisionSystem | 125 | 1 | yes | no |
 | ColonyMindSystem | 125 | 1 | no | yes |
-| StewardSystem | 125 | 1 | yes | yes |
+| StewardSystem | 125 | 360 | yes | yes |
 | StaleSeekTargetSystem | 126 | 1 | yes | yes |
 | JobExecuteSystem | 127 | 1 | yes | yes |
 | OreDiscoverySystem | 128 | 8 | no | yes |
