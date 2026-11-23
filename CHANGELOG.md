@@ -26,8 +26,11 @@
   - hunts end (`Stuck`) after 360 ticks or 90 ticks without closing in, then a 240-tick hunt pause;
   - routine places exclude tiles movement refuses; the visible-action read shows an Activity through its last tick;
   - a starving person without reachable food walks to the band hearth;
-  - the steward skips a hunt zone that already exists, and its planning pass runs one rule per tick over the period's
-    first 16 ticks (`daylife.steward.pass_slices`; `StewardSystem` interval 1);
+  - the steward skips a hunt zone that already exists; its planning pass can be spread over ticks
+    (`daylife.steward.pass_slices`, shipped 1 = the whole pass every 360 ticks as before, D-SIMFIX1-24), and the house
+    planner's capacity scan and the production-input node scans are cheaper with identical results;
+  - the dev profile (the debug Godot library) builds sim-core, sim-engine and sim-systems at opt-level 2 (was
+    sim-systems 1, others 0), keeping debug assertions and overflow checks (D-SIMFIX1-25);
 - A continuing routine whose place left the place list keeps its own Activity place as target (previously an
   invariant panic, `MissingTarget`).
 - Save format unchanged (26).

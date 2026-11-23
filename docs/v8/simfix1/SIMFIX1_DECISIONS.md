@@ -116,3 +116,28 @@ Brief: owner-supplied BRIEF_SIMFIX1 (the seven quick fixes of SIMAUDIT1). Source
   slicing only two remain, a craft interrupted mid-way loses its clay, and the 17-brick bill stops at 16 by day 48.
   Looking the bill up by recipe and digging one craft of spare clay did not rescue it. Not tuned further; the planner
   decides (QUESTION.md).
+- **D-SIMFIX1-24 (2026-11-23, planner answer D-SIMFIX1-24; stopped at the 10 ms target).** `pass_slices` is 1 again and
+  `StewardSystem` registers interval 360 when it is 1 (the slice machinery stays for n > 1), so the steward's timing
+  is exactly 1f300f1be's. Exact speedups: the production-input planner reads each node's yield once per call (it was
+  a content lookup per node per item kind, twice), and `house_capacity` uses a whole-grid passability mask
+  (`nav::passable_mask`, sharing `tile_cost`'s body) and one nav reachability mask (`CostNav::reach_mask`) instead
+  of a cost lookup and a region query per tile; both masks have tile-by-tile equality tests. The 8-seed × 60-day
+  SIMAUDIT1 smoke is byte-identical to 1f300f1be in every output but the two wall-time columns of `daily.csv`.
+  A per-pass `future_house` cache shared by Bills, FoodPlan and House is not exact-useful: those rules issue commands
+  (workshop blueprints, fields, bills) between their calls in nearly every pass, and the plan reads the state those
+  commands change. `house_origins` spans the whole interior, so the capacity window is the whole map.
+  Measured on the DGX (one core, seeds 0/1/2 × 3 days) the earlier "Godot-like" numbers had sim-systems at opt-level
+  2 (the test profile's package override). With the Godot debug library's real profile (opt 0, sim-systems opt 1)
+  the worst StewardSystem tick is 1f300f1be 83.7/89.4/90.9 ms and this code 67.2/79.9/78.6 ms; with sim-core,
+  sim-engine and sim-systems at opt-level 2 it is 9.2/9.3/9.5 and 8.4/8.8/9.9 ms. At tick 360 (debug profile) Bills
+  costs 33 ms (house plan 19, workshop-site ranking of 36,100 locations 12) and FoodPlan 30 ms (house plan 17.5,
+  harvest 6, cooking 2.4). The 10 ms target is not reachable by exact code changes in an opt-0 build; per the answer,
+  stopped and reported (QUESTION.md 3).
+- **D-SIMFIX1-25 (2026-11-23, planner answer D-SIMFIX1-25; gate-path build-profile change).** The dev profile — the
+  build of the debug Godot library the gate's frame captures run — compiles `sim-core`, `sim-engine` and `sim-systems`
+  at `opt-level = 2` (was: sim-systems 1 since 78af5e245, the others 0). Debug assertions and overflow checks stay on
+  (the dev defaults), as in the test profile since D-GATE-1. Rust optimisation levels do not change integer or float
+  semantics (no fast-math), so simulation results are unchanged; proved by the 8-seed × 60-day SIMAUDIT1 smoke with a
+  dev-built probe against 1f300f1be's release run. Worst StewardSystem tick on the DGX (one core, seeds 0/1/2 × 3
+  days): 8.4 / 8.8 / 9.9 ms with this branch's code (1f300f1be's code: 9.2 / 9.3 / 9.5 ms). Cost: slower debug builds
+  of those three crates. The exact speedups of D-24 stay.

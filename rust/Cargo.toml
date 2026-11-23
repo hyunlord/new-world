@@ -28,8 +28,16 @@ criterion = "0.5"
 godot = "0.4"
 bincode = "1.3"
 
+# D-SIMFIX1-25: the debug Godot library (dev profile) runs the simulation crates at opt-level 2 so the
+# periodic steward pass fits a frame; debug assertions and overflow checks stay on (dev defaults).
+[profile.dev.package.sim-core]
+opt-level = 2
+
+[profile.dev.package.sim-engine]
+opt-level = 2
+
 [profile.dev.package.sim-systems]
-opt-level = 1
+opt-level = 2
 
 [profile.test]
 opt-level = 2
