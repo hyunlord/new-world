@@ -1,0 +1,19 @@
+# External engines this game consumes (D-REPO1-1). The game never vendors engine code: it pins a tag + commit here
+# and runs a generation step on the Mac/DGX (never at game runtime) that writes assets plus a provenance file each.
+# Bump: change tag + commit together, rerun the generation step, commit the regenerated assets and their provenance.
+
+[motion-engine]
+repo = "https://github.com/hyunlord/motion-engine"
+tag = "v0.1.0"
+commit = "183695ca9b3869a51059593236e9314097b97608"
+licence = "Apache-2.0"
+profile = "profiles/worldsim"
+python = "3.12"
+
+[human-forge]
+repo = "https://github.com/hyunlord/human-forge"
+tag = "v0.1.0"
+commit = "23177b4648970f068d91c308c40f7d2a697f068f"
+licence = "Apache-2.0"
+profile = "profiles/worldsim"
+python = "3.12"

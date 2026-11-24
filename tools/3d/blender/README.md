@@ -1,5 +1,9 @@
 # Procedural 3D models (Blender, headless)
 
+> Character and motion tooling (the mocap retarget/bake/audit pipeline, CHAR3, LOOK2, PHYS2, VID2MO) moved to the
+> engine repositories motion-engine and human-forge; see [tools/external](../../external/README.md). This folder keeps
+> the game's own content generators.
+
 Scripts in this folder are the source of truth for every model in `assets/3d/models/` and every
 vertex-animation texture in `assets/3d/vat/`. Never hand-edit the outputs; change the tables and rerun.
 
