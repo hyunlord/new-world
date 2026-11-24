@@ -34,8 +34,14 @@ GODOT
 cat > "$SANDBOX/bin/cargo" <<'CARGO'
 #!/usr/bin/env bash
 printf '%s\n' "$*" >> "$FAKE_CARGO_CALLS"
-mkdir -p target/debug
-: > target/debug/libsim_bridge.dylib
+dir=debug; prev=""
+for arg in "$@"; do
+    [[ "$prev" == --profile ]] && dir="$arg"
+    [[ "$arg" == --release ]] && dir=release
+    prev="$arg"
+done
+mkdir -p "target/$dir/.fingerprint/sim-bridge-0"
+printf '%s\n' "$dir" > "target/$dir/libsim_bridge.dylib"
 CARGO
 chmod +x "$SANDBOX/bin/git" "$SANDBOX/bin/Godot" "$SANDBOX/bin/cargo"
 export PATH="$SANDBOX/bin:$PATH"
@@ -57,7 +63,7 @@ fixture() {
     cp "$SOURCE" "$REPO/tools/play.sh"
     cp "$ROOT/tools/v8/run_bounded.sh" "$REPO/tools/v8/run_bounded.sh"
     printf '.godot/\nrust/target/\n' > "$REPO/.gitignore"
-    printf 'macos.debug = "res://rust/target/debug/libsim_bridge.dylib"\n' > "$REPO/sim_bridge.gdextension"
+    printf 'macos.debug = "res://rust/target/%s/libsim_bridge.dylib"\n' "${GDEXT_PROFILE:-debug}" > "$REPO/sim_bridge.gdextension"
     printf 'fixture\n' > "$REPO/README.md"
     : > "$REPO/project.godot"
     : > "$REPO/rust/Cargo.toml"
@@ -208,6 +214,21 @@ fixture window_error
 export FAKE_ERROR=headless
 run_play main
 check 'windowed ERROR with exit zero is failure' test "$CODE" -eq 1
+
+export GDEXT_PROFILE=game
+fixture game_profile
+run_play main --update-only
+check 'game profile builds with --profile game' grep -qx -- 'build -p sim-bridge --profile game' "$FAKE_CARGO_CALLS"
+check 'game profile library is the game build' grep -qx game "$PLAY_ROOT/main/rust/target/game/libsim_bridge.dylib"
+run_play main --update-only --dev
+check '--dev prepares successfully' test "$CODE" -eq 0
+check '--dev builds the dev profile' grep -qx -- 'build -p sim-bridge' "$FAKE_CARGO_CALLS"
+check '--dev puts the dev library at the game path' grep -qx debug "$PLAY_ROOT/main/rust/target/game/libsim_bridge.dylib"
+check '--dev leaves the dev build intact' grep -qx debug "$PLAY_ROOT/main/rust/target/debug/libsim_bridge.dylib"
+check '--dev drops the game fingerprint' test ! -e "$PLAY_ROOT/main/rust/target/game/.fingerprint/sim-bridge-0"
+run_play main --update-only
+check 'next run without --dev restores the game library' grep -qx game "$PLAY_ROOT/main/rust/target/game/libsim_bridge.dylib"
+unset GDEXT_PROFILE
 
 for name in . ..; do
     fixture "invalid-${#name}"

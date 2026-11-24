@@ -72,7 +72,7 @@ func _run() -> void:
 			var row: Dictionary = {"id": id, "save": path, "sha256": FileAccess.get_sha256(path), "day": day, "hour": hour, "tick": int(clock.get("tick", -1)), "clock": clock}
 			scenes.append(row)
 			print("MUX2_VISIBILITY_SAVE " + JSON.stringify(row))
-	var result: Dictionary = {"schema": 1, "seed": 0, "steward": "on", "source": "actual debug bridge; no player construction/draft orders; batched advance only for preparation", "bridge_sha256": FileAccess.get_sha256("res://rust/target/debug/libsim_bridge.dylib"), "script_sha256": FileAccess.get_sha256("res://tools/v8/mux2_visibility_saves.gd"), "scenes": scenes}
+	var result: Dictionary = {"schema": 1, "seed": 0, "steward": "on", "source": "actual game-profile bridge; no player construction/draft orders; batched advance only for preparation", "bridge_sha256": FileAccess.get_sha256("res://rust/target/game/libsim_bridge.dylib"), "script_sha256": FileAccess.get_sha256("res://tools/v8/mux2_visibility_saves.gd"), "scenes": scenes}
 	var file: FileAccess = FileAccess.open(out.path_join("manifest.json"), FileAccess.WRITE)
 	if file == null:
 		_fail("manifest write failed")

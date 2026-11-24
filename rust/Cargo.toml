@@ -50,3 +50,17 @@ opt-level = 2
 [profile.release]
 lto = "thin"
 codegen-units = 1
+
+# PERF2-1 A: the library the game loads (sim_bridge.gdextension macos.debug = rust/target/game/). Every crate,
+# the bridge's dependencies included, at opt-level 3 with debug assertions and overflow checks off, thin LTO.
+# Its own profile (own target/game dir) so cargo test/clippy --release never relink the game's dylib with
+# workspace-unified features. `tools/play.sh --dev` loads the dev-profile library instead (debugging).
+[profile.game]
+inherits = "release"
+opt-level = 3
+debug = false
+debug-assertions = false
+overflow-checks = false
+lto = "thin"
+codegen-units = 1
+incremental = false

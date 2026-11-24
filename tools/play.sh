@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # tools/play.sh — play any version of WorldSim with one command (V8-PLAY goal 2.1).
 #
-# usage: tools/play.sh [version] [--seed N] [--speed 1-4] [--no-build] [--headless-check|--update-only] [-- godot args…]
-#   version: main (default, = v8/main), wip, m1, v8-0, v7, or any commit/tag/branch
+# usage: tools/play.sh [version] [--seed N] [--speed 1-4] [--no-build] [--dev] [--headless-check|--update-only] [-- godot args…]
+#   version: main (default, = v8/main), wip, m1, v8-0, v7, or any commit/tag/branch; --dev: dev-profile bridge (debugging)
 #
 # 1. Godot: $GODOT_BIN if set; else the path in tools/v8/godot_bin.sh; else Spotlight
 #    (org.godotengine.godot); else /Applications/Godot.app. None → exit 2.
@@ -10,7 +10,9 @@
 #    this clone, after a fetch); an existing one is reused and fast-forwarded when the version is
 #    a branch. This checkout itself is never used for playing.
 # 3. Ask cargo to incrementally build sim-bridge in that worktree (including embedded data and
-#    deleted inputs), using the library profile selected by macos.debug in .gdextension.
+#    deleted inputs), using the library profile selected by macos.debug in .gdextension (PERF2-1: target/game,
+#    the optimised `game` profile). --dev builds the dev profile instead and puts its library at that path; the
+#    next run without --dev rebuilds the game library (cargo's sim-bridge fingerprint in target/game is removed).
 # 4. Import headless when .godot/ is missing (twice) or older than assets/ scripts/ scenes/ shaders/.
 # 5. Launch windowed; M-UX fits the actual window to the screen's usable area.
 # 6. Log to $PLAY_DATA/logs/<version>-<timestamp>.log.
@@ -38,6 +40,7 @@ speed=""
 build=1
 headless=0
 update_only=0
+dev=0
 version_set=0
 extra=()
 while (( $# > 0 )); do
@@ -50,6 +53,7 @@ while (( $# > 0 )); do
             [[ "${2:-}" =~ ^[1-4]$ ]] || { echo "play: --speed는 1-4여야 합니다" >&2; usage >&2; exit 4; }
             speed="$2"; shift 2 ;;
         --no-build) build=0; shift ;;
+        --dev) dev=1; shift ;;
         --headless-check) headless=1; shift ;;
         --update-only) update_only=1; shift ;;
         --) shift; extra=("$@"); break ;;
@@ -181,8 +185,16 @@ lib_path="$(sed -n 's/^macos\.debug *= *"res:\/\/\(.*\)"/\1/p' sim_bridge.gdexte
 case "$lib_path" in
     */target/debug/*) profile=debug; cargo_flags=() ;;
     */target/release/*) profile=release; cargo_flags=(--release) ;;
+    */target/game/*) profile=game; cargo_flags=(--profile game) ;;
     *) say "play: sim_bridge.gdextension에서 macos.debug 라이브러리를 읽지 못했습니다"; exit 1 ;;
 esac
+# --dev: build and load the dev-profile library (debug assertions, overflow checks) at the same path.
+staged_path=""
+if (( dev == 1 )) && [[ "$profile" == game ]]; then
+    staged_path="$lib_path"
+    lib_path="${lib_path%/target/game/*}/target/debug/${lib_path##*/}"
+    profile=debug; cargo_flags=()
+fi
 build_state="생략"
 build_secs=0
 if (( build == 0 )); then
@@ -196,6 +208,14 @@ else
     (cd rust && cargo build -p sim-bridge ${cargo_flags[@]+"${cargo_flags[@]}"}) >> "$LOG" 2>&1 || { say "play: 빌드 실패 — $LOG"; exit 1; }
     build_secs=$(( $(date +%s) - started ))
     build_state="완료(${profile}, ${build_secs}초)"
+fi
+if [[ -n "$staged_path" ]]; then
+    [[ -f "$lib_path" ]] || { say "play: --dev인데 ${lib_path}가 없습니다"; exit 1; }
+    # rm first: the game path is a hard link of cargo's deps/ copy. The removed fingerprint makes the next
+    # non---dev build relink the game library.
+    rm -f "$staged_path" && mkdir -p "$(dirname "$staged_path")" && cp "$lib_path" "$staged_path" || { say "play: --dev 라이브러리 복사 실패"; exit 1; }
+    rm -rf "$(dirname "$staged_path")"/.fingerprint/sim-bridge-*
+    build_state="$build_state, dev 라이브러리 → $staged_path"
 fi
 
 # --- 4. Import ----------------------------------------------------------------------------------

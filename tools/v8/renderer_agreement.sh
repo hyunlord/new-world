@@ -31,7 +31,7 @@ cd "$ROOT"
 
 fail() { echo "RENDERER_AGREEMENT FAIL $*"; exit 1; }
 
-(cd rust && cargo build -p sim-bridge && cargo build --release -p sim-test --bin worldsim_probe) > "$LOG/build.log" 2>&1 \
+(cd rust && cargo build -p sim-bridge --profile game && cargo build --release -p sim-test --bin worldsim_probe) > "$LOG/build.log" 2>&1 \
     || fail "build failed (see $LOG/build.log)"
 PROBE="$ROOT/rust/target/release/worldsim_probe"
 

@@ -6,7 +6,7 @@
 # with its start time, duration and exit code in <log_dir>/gate.txt. The
 # gate passes only when every step except `perf` and `nav_bench` (report only) exits 0.
 #    1 fmt               cargo fmt --all -- --check
-#    2 bridge_build      cargo build -p sim-bridge (the library Godot loads)
+#    2 bridge_build      cargo build -p sim-bridge --profile game (the library Godot loads; PERF2-1)
 #    3 godot_import      bounded headless --import --editor --quit (twice: a fresh
 #                        import logs font errors before fonts exist)
 #    4 test_debug        cargo test --workspace --no-fail-fast -- --test-threads=8
@@ -174,7 +174,7 @@ debug_step() {
     return "$code"
 }
 step 1 fmt bash -c 'cd rust && cargo fmt --all -- --check'
-step 2 bridge_build bash -c 'cd rust && cargo build -p sim-bridge'
+step 2 bridge_build bash -c 'cd rust && cargo build -p sim-bridge --profile game'
 step 3 godot_import bash -c 'bash tools/v8/run_bounded.sh 600 "$GODOT_BIN" --headless --path . --import --editor --quit; bash tools/v8/run_bounded.sh 600 "$GODOT_BIN" --headless --path . --import --editor --quit'
 debug_step
 step 5 test_release bash -c 'cd rust && cargo test --workspace --release --no-fail-fast -- --test-threads=8'
