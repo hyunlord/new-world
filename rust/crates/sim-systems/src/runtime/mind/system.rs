@@ -359,6 +359,8 @@ impl ColonyMindSystem {
                     &mut self.fact_values,
                 )
                 .map_err(failure)?;
+            #[cfg(feature = "subprofile")]
+            let timer = crate::subprofile::Timer::start();
             let selected = choose_with_reader(
                 &self.program.policy,
                 &mut row,
@@ -372,6 +374,8 @@ impl ColonyMindSystem {
                 &mut self.scratch,
             )
             .map_err(failure)?;
+            #[cfg(feature = "subprofile")]
+            timer.stop("mind.choose_incl_facts");
             Some(selected)
         } else {
             None
@@ -643,6 +647,8 @@ impl ColonyMindSystem {
                 call.effects.job_releases.push(call.entity);
             }
         }
+        #[cfg(feature = "subprofile")]
+        let timer = crate::subprofile::Timer::start();
         let status = match node.finish {
             Some(mode) => {
                 call.finish_reason = match mode {
@@ -656,6 +662,8 @@ impl ColonyMindSystem {
             None => (effect.start)(&mut call),
         }
         .map_err(|error| failure(format!("effect {}: {error:?}", effect.name)))?;
+        #[cfg(feature = "subprofile")]
+        timer.stop(effect.name);
         for eater in std::mem::take(&mut call.effects.completed_meals) {
             let choice_id = call
                 .resources
