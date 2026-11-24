@@ -18,6 +18,8 @@ const CurrentActivity = preload("res://scripts/ui/panels/current_activity_text.g
 
 const TILE: float = 64.0
 
+const ACTIVITY_THROTTLE_MSEC: int = 500
+var _activity_msec: int = -1000000
 var _locale: Node = null
 var _world_sim: Node = null
 var _panel: PanelContainer
@@ -268,8 +270,12 @@ func _refresh_activity() -> void:
 	if _activity_label == null or _world_sim == null:
 		return
 	var tick: int = int(SimReads.read(_world_sim, "get_time_snapshot").get("tick", -1))
-	if tick != _activity_tick or _activity_summary.is_empty():
+	# PERF2-1 D: a colony of 200+ re-summarises every person at most every ACTIVITY_THROTTLE_MSEC, not every tick.
+	var large: bool = (SimReads.read(_world_sim, "get_people_view").get("agent_ids", PackedInt64Array()) as PackedInt64Array).size() >= 200
+	var fresh: bool = large and Time.get_ticks_msec() - _activity_msec < ACTIVITY_THROTTLE_MSEC
+	if (tick != _activity_tick and not fresh) or _activity_summary.is_empty():
 		_activity_tick = tick
+		_activity_msec = Time.get_ticks_msec()
 		_activity_summary = CurrentActivity.summarize(
 			SimReads.read(_world_sim, "get_agent_snapshot"),
 			SimReads.read(_world_sim, "get_activity_snapshot"), tick)
