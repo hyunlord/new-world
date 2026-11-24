@@ -189,7 +189,11 @@ func _sync_frame() -> void:
 		_usec.clear()
 		_freeze_usec.clear()
 
+## Bumped by every invalidate() (commands, world replacement): observers key "nothing changed" on (tick, this).
+var invalidations: int = 0
+
 func invalidate() -> void:
+	invalidations += 1
 	_cache.clear()
 	_tick_cache.clear()
 	_tick = -1

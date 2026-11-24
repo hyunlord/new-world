@@ -737,7 +737,6 @@ func _release(aid: int, copies: int) -> void:
 
 ## A new snapshot (once per tick): motion targets, appearance and state flags per AgentId, stable instance slots.
 func _refresh(snap: Dictionary) -> void:
-	var ids: PackedInt64Array = snap.get("ids", PackedInt64Array())
 	var aids: PackedInt64Array = snap.get("agent_ids", PackedInt64Array())
 	var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
 	var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
@@ -897,7 +896,6 @@ func _refresh_view(view: Dictionary, force_full: bool) -> void:
 	if not incremental:
 		_refresh(view)
 		return
-	var ids: PackedInt64Array = view.get("ids", PackedInt64Array())
 	var aids: PackedInt64Array = view.get("agent_ids", PackedInt64Array())
 	var xs: PackedInt32Array = view.get("xs", PackedInt32Array())
 	var ys: PackedInt32Array = view.get("ys", PackedInt32Array())

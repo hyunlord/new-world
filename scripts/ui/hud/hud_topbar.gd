@@ -35,6 +35,12 @@ const QUIET_COLOR: Color = Color("c8b89a")
 
 const FOOD_REFRESH_SECONDS: float = 0.5
 const COUNTER_REFRESH_SECONDS: float = 0.15
+## PERF2-1 D: the tick the counters and the food supply were last read at; a poll without a new tick does nothing.
+var _counter_tick: int = -1
+var _food_tick: int = -1
+## The cold label's highlight and the risk badge colour last applied (theme overrides only on change).
+var _cold_highlight: int = -1
+var _risk_colour: Color = Color(-1, -1, -1, -1)
 var _controls: ControlsCatalog = ControlsCatalog.new()
 var _world_sim: Node = null
 var _shelters_label: Button
@@ -302,14 +308,19 @@ func _process(delta: float) -> void:
 	if _world_sim == null:
 		return
 	_refresh_controls()
+	var reader: Node = SimReads.resolve(_world_sim)
+	# Snapshots change only with a tick or a command (SimReads.invalidations): key every poll on both.
+	var tick: int = int(_snapshot("get_time_snapshot").get("tick", -1)) * 4096 + (int(reader.get("invalidations")) % 4096 if reader != null else 0)
 	_food_poll_left -= delta
-	if _food_poll_left <= 0.0:
+	if _food_poll_left <= 0.0 and tick != _food_tick:
 		_food_poll_left = FOOD_REFRESH_SECONDS
+		_food_tick = tick
 		_poll_food_supply()
 	_counter_poll_left -= delta
-	if _counter_poll_left > 0.0:
+	if _counter_poll_left > 0.0 or tick == _counter_tick:
 		return
 	_counter_poll_left = COUNTER_REFRESH_SECONDS
+	_counter_tick = tick
 	_refresh()
 	if _food_tooltip.visible:
 		_place_food_tooltip()
@@ -430,10 +441,12 @@ func _refresh() -> void:
 				cold_count += 1
 	_cold_label.visible = colds is PackedByteArray
 	_cold_label.text = _loc("HUD_COLD") + " %d" % cold_count
-	if cold_count > 0:
-		_cold_label.add_theme_color_override("font_color", Color("a8c0d0"))
-	else:
-		_cold_label.remove_theme_color_override("font_color")
+	if int(cold_count > 0) != _cold_highlight:
+		_cold_highlight = int(cold_count > 0)
+		if cold_count > 0:
+			_cold_label.add_theme_color_override("font_color", Color("a8c0d0"))
+		else:
+			_cold_label.remove_theme_color_override("font_color")
 	_cold_icon.visible = cold_count > 0
 	var berries: int = 0
 	var resources: Dictionary = _snapshot("get_resource_snapshot")
@@ -489,8 +502,10 @@ func _refresh_knowledge() -> void:
 	var at_risk: int = int(tech.get("at_risk", 0))
 	_risk_button.text = KnowledgeText.trf(_locale, "M4_HUD_AT_RISK_FMT", {"count": at_risk})
 	var colour: Color = RISK_COLOR if at_risk > 0 else QUIET_COLOR
-	for state: String in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
-		_risk_button.add_theme_color_override(state, colour)
+	if colour != _risk_colour:
+		_risk_colour = colour
+		for state: String in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
+			_risk_button.add_theme_color_override(state, colour)
 	var first: Dictionary = KnowledgeText.first_at_risk(tech)
 	if at_risk > 0 and not first.is_empty():
 		_warn_label.text = warning_line(_locale, tech, int(first["id"]), int(first["holder"]))
