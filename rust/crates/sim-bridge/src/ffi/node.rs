@@ -130,6 +130,8 @@ pub struct WorldSimNode {
     sim_speed: f64,
     mux2_profile: Option<Mux2Profile>,
     visible_action_revision_base: i64,
+    /// PERF2-1 B: the people layer's per-tick view and the rows it was diffed from (read-only cache).
+    people_view: std::cell::RefCell<super::people_view::PeopleViewCache>,
     base: Base<Node>,
 }
 
@@ -301,6 +303,7 @@ impl WorldSimNode {
             sim_speed: 1.0,
             mux2_profile,
             visible_action_revision_base: 0,
+            people_view: std::cell::RefCell::default(),
             base,
         }))
     }
@@ -1675,6 +1678,17 @@ impl WorldSimNode {
     #[func]
     fn get_activity_snapshot(&self) -> VarDictionary {
         activity_rows_to_dict(&collect_activity_snapshot(&self.engine.world))
+    }
+
+    /// PERF2-1 B: the people layer's packed per-tick view (`ffi/people_view.rs`): the drawn columns in AgentId
+    /// order and the rows moved / changed / removed since the previously built view. Built once per tick.
+    #[func]
+    fn get_people_view(&self) -> VarDictionary {
+        super::people_view::cached_people_view_to_dict(
+            &mut self.people_view.borrow_mut(),
+            &self.engine,
+            self.visible_action_revision_base,
+        )
     }
 
     /// Current visible actions, in AgentId order. The tick/revision pair identifies the read boundary.

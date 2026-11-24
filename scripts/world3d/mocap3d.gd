@@ -45,6 +45,48 @@ func refresh(world: Node, tick: int) -> void:
 	var falls: PackedStringArray = rows.get("fallback_keys", PackedStringArray())
 	for i: int in mini(aids.size(), mini(keys.size(), falls.size())):
 		_rows[aids[i]] = [keys[i], falls[i]]
+	_refresh_cues(world, tick)
+
+
+## PERF2-1 C: refresh() from the people view (`get_people_view`, no visible-action or activity read): the action
+## rows and log seats of view rows `rows` (every row when `full`), departed AgentIds dropped; cues as refresh().
+func refresh_view(world: Node, tick: int, view: Dictionary, rows: PackedInt32Array, full: bool) -> void:
+	var aids: PackedInt64Array = view.get("agent_ids", PackedInt64Array())
+	var bits: PackedInt64Array = view.get("ids", PackedInt64Array())
+	var keys: PackedStringArray = view.get("visual_keys", PackedStringArray())
+	var falls: PackedStringArray = view.get("fallback_keys", PackedStringArray())
+	var seats: PackedByteArray = view.get("log_seats", PackedByteArray())
+	var n: int = mini(mini(aids.size(), bits.size()), mini(mini(keys.size(), falls.size()), seats.size()))
+	if full:
+		_rows.clear()
+		_log_seats.clear()
+		rows = PackedInt32Array()
+		rows.resize(n)
+		for i: int in n:
+			rows[i] = i
+	for aid: int in view.get("removed", PackedInt64Array()):
+		_rows.erase(aid)
+	for i: int in rows:
+		if i >= n:
+			continue
+		# A person without an ACTION1 row has no keys (get_visible_action_snapshot lists every live person).
+		if keys[i].is_empty() and falls[i].is_empty():
+			_rows.erase(aids[i])
+		else:
+			_rows[aids[i]] = [keys[i], falls[i]]
+		if seats[i] == 1:
+			_log_seats[bits[i]] = true
+		else:
+			_log_seats.erase(bits[i])
+	_refresh_cues(world, tick)
+
+
+## The cue actors of this tick's poll (refresh / refresh_view), not yet taken.
+func cue_actors() -> Array:
+	return _cues.keys()
+
+
+func _refresh_cues(world: Node, tick: int) -> void:
 	# Overlap the last tick (a command can commit a cue at the current tick) and drop the ones already played.
 	var since: int = _cue_tick - 1 if _cue_tick >= 0 else tick - 1
 	var cues: Dictionary = SimReads.visible_action_cues(world, since)

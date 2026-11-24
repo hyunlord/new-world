@@ -427,6 +427,42 @@ agents with an `Activity`, ordered by `(AgentId, entity bits)`.
 | `place_y` | PackedInt32Array | the activity's place, tile y |
 | `until_tick` | PackedInt64Array | completion tick after arrival; -1 while walking there |
 
+### `get_people_view`
+`collect_people_rows` → `people_view_to_dict` (`ffi/people_view.rs`, PERF2-1). The 3D people layer's one read per
+tick: the columns it draws from, one person per row in AgentId order, under the `get_agent_snapshot` key names (same
+values), plus the ACTION1 clip keys and the elder fire seat, and the rows that differ from the previously built view.
+Built once per (tick, world, command count) and cached by the bridge; a reader whose last `serial` is not
+`base_serial` missed a view and refreshes every row. Read-only.
+
+| key | type | meaning |
+|---|---|---|
+| `tick` | int | completed tick count, same clock as `get_time_snapshot` |
+| `serial` | int | this view's build counter (node-local) |
+| `base_serial` | int | the build the deltas are relative to; -1 when `full` |
+| `full` | bool | first view of this world (load, reset): every row is in `changed` |
+| `ids` | PackedInt64Array | entity bits, as `get_agent_snapshot().ids` |
+| `agent_ids` | PackedInt64Array | AgentId (ascending) |
+| `xs` | PackedInt32Array | tile x |
+| `ys` | PackedInt32Array | tile y |
+| `states` | PackedByteArray | as `get_agent_snapshot().states` |
+| `target_kinds` | PackedByteArray | as `get_agent_snapshot().target_kinds` |
+| `carried_woods` | PackedInt32Array | as `get_agent_snapshot().carried_woods` |
+| `life_stages` | PackedByteArray | 0 adult, 1 child, 2 elder |
+| `ages_years` | PackedInt32Array | whole years, -1 without Life |
+| `infants` | PackedByteArray | 1 for an infant |
+| `jobs` | PackedByteArray | as `get_agent_snapshot().jobs` |
+| `carry_kinds` | PackedInt64Array | as `get_agent_snapshot().carry_kinds` |
+| `tops` | PackedByteArray | as `get_agent_snapshot().tops` |
+| `sexes` | PackedByteArray | 0 male, 1 female |
+| `look_ids` | PackedInt32Array | as `get_agent_snapshot().look_ids` |
+| `variants` | PackedByteArray | face variant 0–5 |
+| `visual_keys` | PackedStringArray | `get_visible_action_snapshot().visual_keys` of the person, "" without a row |
+| `fallback_keys` | PackedStringArray | `get_visible_action_snapshot().fallback_keys` of the person, "" without a row |
+| `log_seats` | PackedByteArray | 1 while sitting at the fire (activity kind 6 with `until_tick` after this tick) |
+| `moved` | PackedInt32Array | row indices whose tile alone changed since `base_serial` |
+| `changed` | PackedInt32Array | row indices that are new or changed in any other column |
+| `removed` | PackedInt64Array | AgentIds present in `base_serial` and gone now (ascending) |
+
 ### `get_visible_action_snapshot`
 `sim_systems::visible_action_rows` → `visible_action_snapshot_to_dict` (`ffi/visible_action.rs`). One live agent per
 row, strictly ordered by AgentId. Join with `get_agent_snapshot().agent_ids`. All packed arrays have equal lengths,

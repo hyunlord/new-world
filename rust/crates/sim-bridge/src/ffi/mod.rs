@@ -38,6 +38,7 @@ pub mod mind;
 pub mod neighbours;
 pub mod node;
 pub mod ore;
+pub mod people_view;
 pub mod reads_agent;
 pub mod reads_settlement;
 pub mod relations;

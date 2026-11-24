@@ -48,6 +48,10 @@ var _texture_tiles: PackedByteArray = PackedByteArray()
 var _texture_weights: PackedByteArray = PackedByteArray()
 var _texture_map: ImageTexture
 var _dug: Dictionary = {}
+## PERF2-1 C: tile_corners of each tile, filled on first use (people and props call height_at per figure per frame).
+## Cleared whenever an input of tile_corners changes (_corner, _dip, _raise, _craise, _dug).
+var _hcache: PackedFloat32Array = PackedFloat32Array()
+var _hvalid: PackedByteArray = PackedByteArray()
 var _floor: Dictionary = {}
 var _house_ground: Dictionary = {}
 var _ford: Dictionary = {}
@@ -262,6 +266,7 @@ func _compute_corners() -> void:
 					total += float(_elev[ty * width + tx]) if _elev.size() == width * height else 128.0
 					n += 1
 			_corner[cy * (width + 1) + cx] = (total / float(n)) / 255.0 * metres
+	_clear_heights()
 
 
 ## Space/fields/hearths changed → recompute raises and colours, mark touched chunks.
@@ -306,6 +311,7 @@ func _poll_space(rooms_version: int = -1) -> void:
 	_space_version = version
 	_field_key = field_key
 	_dug = dug
+	_clear_heights()
 	_floor = floor
 	_ford = ford
 	_field = field
@@ -518,6 +524,7 @@ func _compute_tiles() -> void:
 	for i: int in n:
 		_compute_tile(i, raises, water_codes, colours, clearing_c, dug_c, field_c, ford_c, noise_scale, noise_tint, seed)
 	_compute_corner_raise()
+	_clear_heights()
 
 
 ## Recomputes only tiles `changed` (indices) and the corners around them; returns them for chunk marking.
@@ -546,6 +553,7 @@ func _compute_some(changed: Dictionary) -> void:
 					for dx: int in [-1, 0]:
 						total += _raise[clampi(cy + dy, 0, height - 1) * width + clampi(cx + dx, 0, width - 1)]
 				_craise[cy * w1 + cx] = total * 0.25
+	_clear_heights()
 
 
 func _compute_tile(i: int, raises: Dictionary, water_codes: Array, colours: Dictionary, clearing_c: Color, dug_c: Color,
@@ -616,6 +624,7 @@ func _compute_water_dip(water_codes: Array, bed: float) -> void:
 					if water_codes.has(code) or water_codes.has(float(code)):
 						wet += 0.5 if _ford.has(Vector2i(tx, ty)) else 1.0
 			_dip[cy * (width + 1) + cx] = bed * clampf(wet / 3.0, 0.0, 1.0)
+	_clear_heights()
 
 
 ## The ground height under world point (x, z) in units (tile plateau or bed included).
@@ -626,8 +635,24 @@ func height_at(x: float, z: float) -> float:
 	var ty: int = clampi(floori(z), 0, height - 1)
 	var fx: float = clampf(x - tx, 0.0, 1.0)
 	var fz: float = clampf(z - ty, 0.0, 1.0)
-	var h: PackedFloat32Array = tile_corners(tx, ty)
-	return lerpf(lerpf(h[0], h[1], fx), lerpf(h[2], h[3], fx), fz)
+	var i: int = ty * width + tx
+	if _hvalid.size() != width * height:
+		_hvalid = PackedByteArray()
+		_hvalid.resize(width * height)
+		_hcache.resize(width * height * 4)
+	var k: int = i * 4
+	if _hvalid[i] == 0:
+		var h: PackedFloat32Array = tile_corners(tx, ty)
+		_hcache[k] = h[0]
+		_hcache[k + 1] = h[1]
+		_hcache[k + 2] = h[2]
+		_hcache[k + 3] = h[3]
+		_hvalid[i] = 1
+	return lerpf(lerpf(_hcache[k], _hcache[k + 1], fx), lerpf(_hcache[k + 2], _hcache[k + 3], fx), fz)
+
+
+func _clear_heights() -> void:
+	_hvalid = PackedByteArray()
 
 
 ## Heights of tile (tx, ty)'s corners [00, 10, 01, 11]: the smooth base plus the plateau raise averaged over the four
@@ -672,6 +697,7 @@ func _compute_corner_raise() -> void:
 				for dx: int in [-1, 0]:
 					total += _raise[clampi(cy + dy, 0, height - 1) * width + clampi(cx + dx, 0, width - 1)]
 			_craise[cy * (width + 1) + cx] = total * 0.25
+	_clear_heights()
 
 
 ## The ground height of tile `t` at its centre, ignoring water beds (where things stand).
