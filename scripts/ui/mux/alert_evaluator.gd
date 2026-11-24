@@ -49,15 +49,22 @@ func reset() -> void:
 
 
 func poll(delta: float, read_facts: Callable) -> bool:
-	_elapsed += maxf(0.0, delta)
-	if _elapsed < INTERVAL or not read_facts.is_valid():
+	if not read_facts.is_valid() or not due(delta):
 		return false
-	_elapsed = 0.0
 	var facts: Variant = read_facts.call()
 	if not facts is Dictionary:
 		data_error = "UI facts must be an object"
 		return true
 	evaluate(facts)
+	return true
+
+
+## Advance the refresh clock; true (and restart it) when a refresh is due (poll's cadence).
+func due(delta: float) -> bool:
+	_elapsed += maxf(0.0, delta)
+	if _elapsed < INTERVAL:
+		return false
+	_elapsed = 0.0
 	return true
 
 

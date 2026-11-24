@@ -821,19 +821,7 @@ func _refresh_row(snap: Dictionary, i: int, model: String, key: String, dur: flo
 		_motion[aid] = m
 		_settle(aid, true, touched)
 	elif m["tile"] != tile:
-		if float(m["t"]) >= 1.0:
-			_settle(aid, false, touched)
-		var now_pos: Vector2 = _pos(m)
-		if bool(crowd["painted"]):
-			m["gait_distance"] = float(m.get("gait_distance", 0.0)) + (m["from"] as Vector2).distance_to(now_pos)
-		m["from"] = now_pos
-		m["to"] = target
-		m["t"] = 0.0
-		m["dur"] = dur * maxf(1.0, (target - now_pos).length())
-		m["tile"] = tile
-		var d: Vector2 = target - now_pos
-		if d.length_squared() > 0.0001:
-			m["yaw"] = atan2(d.x, d.y)
+		_retarget(aid, m, tile, dur, bool(crowd["painted"]), touched)
 	var stage: int = _byte(snap, "life_stages", i)
 	var akey: int = hash([aid, _int(snap, "look_ids", i), _byte(snap, "variants", i), _byte(snap, "tops", i), stage])
 	var look: Dictionary = _looks.get(akey, {})
@@ -917,19 +905,20 @@ func _refresh_view(view: Dictionary, force_full: bool) -> void:
 			if _mocap != null:
 				_mocap.release(aid)
 	var visit: Dictionary = {}
+	# Rows that only moved take the short path (true); changed rows and cue actors the full one (false).
 	for i: int in view.get("moved", PackedInt32Array()):
 		if i < n:
-			visit[i] = true
+			visit[i] = _state.has(aids[i])
 	var changed: PackedInt32Array = view.get("changed", PackedInt32Array())
 	for i: int in changed:
 		if i < n:
-			visit[i] = true
+			visit[i] = false
 	if _mocap != null:
 		_mocap.refresh_view(_world_sim, _snap_tick, view, changed, false)
 		for aid: int in _mocap.cue_actors():
 			var at: int = aids.bsearch(aid)
 			if at < n and aids[at] == aid:
-				visit[at] = true
+				visit[at] = false
 	var rows: Array = visit.keys()
 	rows.sort()
 	# Models and bins first; a person leaving their bin frees the slot before arrivals are placed.
@@ -938,7 +927,7 @@ func _refresh_view(view: Dictionary, force_full: bool) -> void:
 	var arrivals: Dictionary = {}
 	for i: int in rows:
 		var aid: int = aids[i]
-		var model: String = _model_of(view, i)
+		var model: String = str(_state[aid]["model"]) if bool(visit[i]) else _model_of(view, i)
 		var key: String = _bin(model, Vector2i(xs[i], ys[i]))
 		models[i] = model
 		bins[i] = key
@@ -966,7 +955,10 @@ func _refresh_view(view: Dictionary, force_full: bool) -> void:
 	rows.sort()
 	var dur: float = _step_seconds()
 	for i: int in rows:
-		_refresh_row(view, i, models[i], bins[i], dur, copies, touched)
+		if bool(visit[i]):
+			_move_row(aids[i], Vector2i(xs[i], ys[i]), bins[i], dur, copies, touched)
+		else:
+			_refresh_row(view, i, models[i], bins[i], dur, copies, touched)
 	_spread_tiles(touched)
 
 
@@ -1008,6 +1000,42 @@ func _spread_tiles(touched: Dictionary) -> void:
 				m["spread"] = off
 				_state[group[k]]["dirty"] = true
 				_active[group[k]] = true
+
+
+## A person's next step: glide from where they are drawn now to the centre of `tile` (leaves the settled sharers).
+func _retarget(aid: int, m: Dictionary, tile: Vector2i, dur: float, painted: bool, touched: Dictionary) -> void:
+	if float(m["t"]) >= 1.0:
+		_settle(aid, false, touched)
+	var target: Vector2 = Vector2(tile) + Vector2(0.5, 0.5)
+	var now_pos: Vector2 = _pos(m)
+	if painted:
+		m["gait_distance"] = float(m.get("gait_distance", 0.0)) + (m["from"] as Vector2).distance_to(now_pos)
+	m["from"] = now_pos
+	m["to"] = target
+	m["t"] = 0.0
+	m["dur"] = dur * maxf(1.0, (target - now_pos).length())
+	m["tile"] = tile
+	var d: Vector2 = target - now_pos
+	if d.length_squared() > 0.0001:
+		m["yaw"] = atan2(d.x, d.y)
+
+
+## A row whose tile alone changed (the bridge's `moved`): only its slot, bin and step change; look, scale, flags
+## and action are those of the last refresh (_refresh_row would recompute the same values).
+func _move_row(aid: int, tile: Vector2i, key: String, dur: float, copies: int, touched: Dictionary) -> void:
+	var st: Dictionary = _state[aid]
+	if not _style2 and st.get("bin", "") != key:
+		_release(aid, copies)
+		st["dirty"] = true
+	var crowd: Dictionary = _crowds[key]
+	if not (crowd["slot"] as Dictionary).has(aid):
+		crowd["slot"][aid] = (crowd["free"] as Array).pop_back()
+		st["dirty"] = true
+	st["bin"] = key
+	var m: Dictionary = _motion[aid]
+	if m["tile"] != tile:
+		_retarget(aid, m, tile, dur, bool(crowd["painted"]), touched)
+	_active[aid] = true
 
 
 ## People settled on one tile (several sleepers on a camp sleep tile) are drawn spread around its centre, each in

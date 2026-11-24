@@ -12,6 +12,9 @@ const Evaluator = preload("res://scripts/ui/mux/alert_evaluator.gd")
 const THEME = preload("res://assets/ui/worldsim_theme.tres")
 
 var evaluator: Evaluator = Evaluator.new()
+## PERF2-1 D: colonies of at least ASYNC_PEOPLE evaluate their alerts on a worker thread (_task, -1 when none).
+const ASYNC_PEOPLE: int = 200
+var _task: int = -1
 var _world: Node
 var _locale: Node
 var _list: VBoxContainer
@@ -74,6 +77,7 @@ func setup(world: Node) -> void:
 	_world = world
 	if is_instance_valid(_world) and _world.has_signal("world_reset"):
 		_world.connect("world_reset", _reset)
+	_join()
 	evaluator.reset()
 
 
@@ -148,13 +152,38 @@ func _mux2_record(metric: String, elapsed: int) -> void:
 
 func _process_alerts(delta: float) -> void:
 	if not is_instance_valid(_world): return
+	if _task >= 0:
+		if not WorkerThreadPool.is_task_completed(_task):
+			return
+		_join()
+		_show_refresh()
+		return
 	var started: int = Time.get_ticks_usec() if _mux2_profile else 0
-	var refreshed: bool = evaluator.poll(delta, _read_facts)
+	if not evaluator.due(delta):
+		return
+	var raw: Dictionary = SimReads.read(_world, "get_ui_facts")
+	var people: int = (SimReads.read(_world, "get_people_view").get("agent_ids", PackedInt64Array()) as PackedInt64Array).size()
+	if people >= ASYNC_PEOPLE:
+		# PERF2-1 D: a large colony's facts take ~16 ms to adapt and evaluate; off the main thread. The evaluator is not
+		# touched on the main thread until the task is joined (_join before every other evaluator use).
+		_task = WorkerThreadPool.add_task(func() -> void: evaluator.evaluate(FactsAdapter.adapt(raw)))
+		return
+	evaluator.evaluate(FactsAdapter.adapt(raw))
 	if _mux2_profile: _mux2_record("poll", Time.get_ticks_usec() - started)
-	if refreshed:
-		var rows: Array[Dictionary] = evaluator.active_alerts()
-		if rows != _last_rows or evaluator.data_error != _last_error:
-			_rebuild()
+	_show_refresh()
+
+
+func _show_refresh() -> void:
+	var rows: Array[Dictionary] = evaluator.active_alerts()
+	if rows != _last_rows or evaluator.data_error != _last_error:
+		_rebuild()
+
+
+## Wait for a running background evaluation (main thread only).
+func _join() -> void:
+	if _task >= 0:
+		WorkerThreadPool.wait_for_task_completion(_task)
+		_task = -1
 
 
 func _read_facts() -> Dictionary:
@@ -170,11 +199,13 @@ func _language_changed(_language: String) -> void:
 
 
 func _reset() -> void:
+	_join()
 	evaluator.reset()
 	_rebuild()
 
 
 func refresh_from_facts(facts: Dictionary) -> bool:
+	_join()
 	var valid: bool = evaluator.evaluate(facts)
 	_rebuild()
 	return valid
@@ -196,6 +227,7 @@ func _rebuild_rows() -> void:
 		_list.remove_child(child)
 		child.queue_free()
 	_title.text = _tr("MUX_ALERTS_TITLE")
+	_join()
 	_last_rows = evaluator.active_alerts()
 	_last_error = evaluator.data_error
 	var invalid: bool = not evaluator.last_error.is_empty() or not evaluator.data_error.is_empty()
@@ -233,6 +265,7 @@ func _add_alert(alert: Dictionary) -> void:
 
 
 func activate(id: String) -> void:
+	_join()
 	var target: Dictionary = evaluator.next_target(id)
 	if not target.is_empty():
 		jump_requested.emit(target)
@@ -240,6 +273,7 @@ func activate(id: String) -> void:
 
 
 func dismiss(id: String) -> void:
+	_join()
 	evaluator.dismiss(id)
 	_rebuild()
 
