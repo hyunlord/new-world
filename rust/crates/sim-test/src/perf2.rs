@@ -43,7 +43,9 @@ pub fn scene_agents(label: &str) -> Result<u32, String> {
         other => other
             .strip_prefix('n')
             .and_then(|n| n.parse().ok())
-            .ok_or_else(|| format!("unknown scene {other} (stress_1000, stress_village_300, n<N>)")),
+            .ok_or_else(|| {
+                format!("unknown scene {other} (stress_1000, stress_village_300, n<N>)")
+            }),
     }
 }
 
@@ -74,7 +76,8 @@ fn offset(engine: &SimEngine) -> u64 {
 
 /// Whether the clock now reads 06:00 (the gift time of `perf`).
 fn at_gift_time(engine: &SimEngine) -> bool {
-    (engine.current_tick() + offset(engine)) % tpd(engine) == crate::perf::SAMPLE_MINUTE * tpd(engine) / 1440
+    (engine.current_tick() + offset(engine)) % tpd(engine)
+        == crate::perf::SAMPLE_MINUTE * tpd(engine) / 1440
 }
 
 /// Gift food to the lowest settlement (benchmark-only supply, outside timing).
@@ -147,7 +150,9 @@ fn parse(args: &[String]) -> Result<Args, String> {
     };
     let mut i = 1;
     while i < args.len() {
-        let v = args.get(i + 1).ok_or_else(|| format!("{} needs a value", args[i]))?;
+        let v = args
+            .get(i + 1)
+            .ok_or_else(|| format!("{} needs a value", args[i]))?;
         let num = |v: &str| v.parse::<u64>().map_err(|e| format!("{v}: {e}"));
         match args[i].as_str() {
             "--scene" => a.scene = v.clone(),
@@ -190,8 +195,10 @@ fn write_save(engine: &mut SimEngine, path: &std::path::Path) -> Result<Value, S
     let loaded = sim_systems::save::load(&bytes).map_err(|e| e.to_string())?;
     let load_ms = started.elapsed().as_secs_f64() * 1000.0;
     let same = crate::probe::fingerprint(&loaded) == crate::probe::fingerprint(engine);
-    Ok(json!({"path": path.display().to_string(), "bytes": bytes.len(), "fnv64": fnv64(&bytes),
-              "save_ms": save_ms, "load_ms": load_ms, "load_fingerprint_equal": same}))
+    Ok(
+        json!({"path": path.display().to_string(), "bytes": bytes.len(), "fnv64": fnv64(&bytes),
+              "save_ms": save_ms, "load_ms": load_ms, "load_fingerprint_equal": same}),
+    )
 }
 
 fn scene_cmd(a: &Args, agents: u32) -> Result<(), String> {
@@ -218,8 +225,11 @@ fn scene_cmd(a: &Args, agents: u32) -> Result<(), String> {
         "git_sha": std::env::var("WORLDSIM_GIT_SHA").unwrap_or_else(|_| "unknown".into())});
     let mut sidecar = a.out.clone().into_os_string();
     sidecar.push(".json");
-    std::fs::write(&sidecar, serde_json::to_string_pretty(&report).map_err(|e| e.to_string())? + "\n")
-        .map_err(|e| e.to_string())?;
+    std::fs::write(
+        &sidecar,
+        serde_json::to_string_pretty(&report).map_err(|e| e.to_string())? + "\n",
+    )
+    .map_err(|e| e.to_string())?;
     eprintln!("perf2-scene: {}", report);
     Ok(())
 }
@@ -229,7 +239,13 @@ fn stats(values: &[u64]) -> Value {
     let mut sorted = values.to_vec();
     sorted.sort_unstable();
     let n = sorted.len();
-    let pick = |p: f64| if n == 0 { 0 } else { sorted[crate::perf::nearest_rank(p, n) - 1] };
+    let pick = |p: f64| {
+        if n == 0 {
+            0
+        } else {
+            sorted[crate::perf::nearest_rank(p, n) - 1]
+        }
+    };
     let sum: u64 = sorted.iter().sum();
     json!({"n": n, "mean": if n == 0 { 0.0 } else { sum as f64 / n as f64 },
            "p50": pick(50.0), "p90": pick(90.0), "p99": pick(99.0), "max": sorted.last().copied().unwrap_or(0), "sum": sum})
@@ -284,7 +300,7 @@ fn sim_cmd(a: &Args, agents: u32) -> Result<(), String> {
         if at_gift_time(&engine) {
             feed(&mut engine)?;
         }
-        if (engine.current_tick() + offset(&engine)) % tpd(&engine) == 0 {
+        if (engine.current_tick() + offset(&engine)).is_multiple_of(tpd(&engine)) {
             let nav = *engine.resources.nav.stats.borrow();
             #[cfg(feature = "subprofile")]
             let search_ms = {
@@ -333,7 +349,12 @@ fn sim_cmd(a: &Args, agents: u32) -> Result<(), String> {
                    "mean_us_per_call": if calls == 0 { 0.0 } else { total as f64 / calls as f64 / 1000.0 }})
         })
         .collect();
-    systems.sort_by(|x, y| y["total_ms"].as_f64().unwrap_or(0.0).total_cmp(&x["total_ms"].as_f64().unwrap_or(0.0)));
+    systems.sort_by(|x, y| {
+        y["total_ms"]
+            .as_f64()
+            .unwrap_or(0.0)
+            .total_cmp(&x["total_ms"].as_f64().unwrap_or(0.0))
+    });
     let snapshots = crate::perf::snapshot_timings(&engine);
     let save = match &a.save_out {
         Some(path) => write_save(&mut engine, path)?,
@@ -375,11 +396,15 @@ fn sim_cmd(a: &Args, agents: u32) -> Result<(), String> {
     #[cfg(feature = "subprofile")]
     let report = {
         let mut report = report;
-        report["subprofile_scopes"] = subprofile.summary(offset(&engine), tpd(&engine))["scopes"].clone();
+        report["subprofile_scopes"] =
+            subprofile.summary(offset(&engine), tpd(&engine))["scopes"].clone();
         report
     };
-    std::fs::write(&a.out, serde_json::to_string_pretty(&report).map_err(|e| e.to_string())? + "\n")
-        .map_err(|e| format!("{}: {e}", a.out.display()))?;
+    std::fs::write(
+        &a.out,
+        serde_json::to_string_pretty(&report).map_err(|e| e.to_string())? + "\n",
+    )
+    .map_err(|e| format!("{}: {e}", a.out.display()))?;
     eprintln!(
         "perf2-sim {} n={agents}: tick mean {:.3} ms p99 {} us, alive {alive}, wall {wall_s:.1} s",
         a.scene,

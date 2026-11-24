@@ -24,8 +24,8 @@
 use serde::{Deserialize, Serialize};
 use std::cell::RefCell;
 
-/// PERF2-0 (feature `subprofile` only): summed A* search wall time on this
-/// thread. Measurement only; never read by a system.
+// PERF2-0 (feature `subprofile` only): summed A* search wall time on this
+// thread. Measurement only; never read by a system.
 #[cfg(feature = "subprofile")]
 thread_local! {
     static SEARCH_NS: std::cell::Cell<u64> = const { std::cell::Cell::new(0) };
