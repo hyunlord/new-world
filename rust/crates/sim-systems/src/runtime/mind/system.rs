@@ -144,6 +144,8 @@ impl ColonyMindSystem {
         if let Some(transaction) = routine.as_mut() {
             transaction.prepare_preview_places(resources);
         }
+        #[cfg(feature = "subprofile")]
+        let timer = crate::subprofile::Timer::start();
         let mut effects = EffectState::prepare(world, resources);
         let mut context = facts::prepare_continuation_context_with_claims(
             world,
@@ -154,6 +156,8 @@ impl ColonyMindSystem {
         .map_err(failure)?;
         effects.harvest_budget.clone_from(&context.harvest_budget);
         *context.harvest_food.borrow_mut() = Some(self.harvest_food.snapshot(resources));
+        #[cfg(feature = "subprofile")]
+        timer.stop("mind.prepare_context");
         let mut pending: Vec<_> = context.rows().iter().map(|row| row.agent).collect();
         let mut completed = BTreeSet::new();
         let mut replay_visit = false;
@@ -692,7 +696,11 @@ impl ColonyMindSystem {
         if finished {
             completed.insert(agent);
         }
+        #[cfg(feature = "subprofile")]
+        let timer = crate::subprofile::Timer::start();
         invalidate(context, call.effects, call.resources)?;
+        #[cfg(feature = "subprofile")]
+        timer.stop("mind.invalidate");
         Ok(())
     }
 }
@@ -768,7 +776,12 @@ impl RuntimeSystem for ColonyMindSystem {
         1
     }
     fn tick(&mut self, world: &mut World, resources: &mut SimResources) {
-        if let Err(error) = self.try_tick(world, resources) {
+        #[cfg(feature = "subprofile")]
+        let timer = crate::subprofile::Timer::start();
+        let result = self.try_tick(world, resources);
+        #[cfg(feature = "subprofile")]
+        timer.stop("mind.total");
+        if let Err(error) = result {
             panic!("ColonyMindSystem invariant: {error}");
         }
     }
