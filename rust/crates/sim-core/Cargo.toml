@@ -13,6 +13,11 @@ ahash = { workspace = true }
 thiserror = { workspace = true }
 arrayvec = { version = "0.7", features = ["serde"] }
 
+[features]
+# PERF2-0: A* search wall time (`nav::search_ns`) for `worldsim_perf perf2-sim`.
+# Never on by default; enabled only through sim-systems/subprofile.
+subprofile = []
+
 [dev-dependencies]
 criterion = { workspace = true }
 serde_json = "1"

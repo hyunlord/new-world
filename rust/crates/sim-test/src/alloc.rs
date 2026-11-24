@@ -18,6 +18,8 @@ use std::sync::atomic::{AtomicU64, Ordering};
 
 static LIVE: AtomicU64 = AtomicU64::new(0);
 static ALLOCATIONS: AtomicU64 = AtomicU64::new(0);
+/// PERF2-0: bytes requested by every allocation and every growing reallocation.
+static ALLOCATED: AtomicU64 = AtomicU64::new(0);
 
 /// The counting allocator: forwards to [`System`] and tracks live bytes.
 /// Use it only as `#[global_allocator] static ALLOC: Counting = Counting;`
@@ -27,6 +29,7 @@ pub struct Counting;
 
 fn add(bytes: usize) {
     LIVE.fetch_add(bytes as u64, Ordering::Relaxed);
+    ALLOCATED.fetch_add(bytes as u64, Ordering::Relaxed);
 }
 
 fn sub(bytes: usize) {
@@ -82,6 +85,12 @@ unsafe impl GlobalAlloc for Counting {
 /// allocator of this process).
 pub fn live_bytes() -> u64 {
     LIVE.load(Ordering::Relaxed)
+}
+
+/// PERF2-0: bytes allocated (allocations plus reallocation growth) since the
+/// process started (0 when [`Counting`] is not the global allocator).
+pub fn allocated_bytes() -> u64 {
+    ALLOCATED.load(Ordering::Relaxed)
 }
 
 /// Allocations (including reallocations) made through [`Counting`] since the

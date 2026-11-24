@@ -29,6 +29,16 @@ fn main() -> std::process::ExitCode {
             }
         };
     }
+    // PERF2-0: stress scenes and the whole-game sim baseline (`sim_test::perf2`).
+    if matches!(args[0].as_str(), "perf2-scene" | "perf2-sim") {
+        return match sim_test::perf2::main(&args) {
+            Ok(()) => std::process::ExitCode::SUCCESS,
+            Err(error) => {
+                eprintln!("{error}");
+                std::process::ExitCode::FAILURE
+            }
+        };
+    }
     // M1.5: the standing benchmark has its own parser (`sim_test::bench`).
     if matches!(args[0].as_str(), "bench" | "bench-one" | "bench-summarise") {
         return match sim_test::bench::main(&args) {

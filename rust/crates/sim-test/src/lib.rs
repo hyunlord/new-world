@@ -20,6 +20,8 @@ pub mod m6a;
 pub mod nav_bench;
 /// Revitalize Pass 15: tick timings, the stress world and snapshot costs (`worldsim_perf`).
 pub mod perf;
+/// PERF2-0: stress scenes and the whole-game sim baseline (`worldsim_perf perf2-scene|perf2-sim`).
+pub mod perf2;
 /// Headless measurements and trajectory fingerprints.
 pub mod probe;
 /// Shared production-scene fixtures.

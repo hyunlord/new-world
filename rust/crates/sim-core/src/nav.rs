@@ -23,6 +23,31 @@
 //! behaviour. Derived parts (map, regions, memo, scratch, stats) are not saved.
 use serde::{Deserialize, Serialize};
 use std::cell::RefCell;
+
+/// PERF2-0 (feature `subprofile` only): summed A* search wall time on this
+/// thread. Measurement only; never read by a system.
+#[cfg(feature = "subprofile")]
+thread_local! {
+    static SEARCH_NS: std::cell::Cell<u64> = const { std::cell::Cell::new(0) };
+}
+
+/// PERF2-0: nanoseconds spent in A* searches on this thread so far.
+#[cfg(feature = "subprofile")]
+pub fn search_ns() -> u64 {
+    SEARCH_NS.with(std::cell::Cell::get)
+}
+
+#[cfg(feature = "subprofile")]
+struct SearchTimer(std::time::Instant);
+
+#[cfg(feature = "subprofile")]
+impl Drop for SearchTimer {
+    fn drop(&mut self) {
+        let ns = u64::try_from(self.0.elapsed().as_nanos()).unwrap_or(u64::MAX);
+        SEARCH_NS.with(|total| total.set(total.get().saturating_add(ns)));
+    }
+}
+
 #[cfg(test)]
 use std::cmp::Reverse;
 #[cfg(test)]
@@ -796,6 +821,8 @@ impl NavState {
 
     /// Plain A* (no memo, no region test). `None` if the search exhausts.
     fn search(&self, from: Tile, to: Tile) -> Option<Vec<Tile>> {
+        #[cfg(feature = "subprofile")]
+        let _timer = SearchTimer(std::time::Instant::now());
         let mut s = self.scratch.borrow_mut();
         s.open.clear();
         #[cfg(test)]
