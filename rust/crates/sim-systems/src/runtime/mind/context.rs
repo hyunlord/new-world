@@ -803,6 +803,8 @@ impl TickContext {
         };
         // Fresh query lengths sum archetype metadata, without visiting each entity.
         // An incomplete Agent can alias a captured ID: preserve the old second pass then.
+        #[cfg(feature = "subprofile")]
+        let timer = crate::subprofile::Timer::start();
         let complete = world.query::<&Agent>().iter().len()
             == world
                 .query::<(&Agent, &Position, &AgentState)>()
@@ -826,6 +828,8 @@ impl TickContext {
                 .collect()
         };
         order_person_rows(&mut rows)?;
+        #[cfg(feature = "subprofile")]
+        timer.stop("ctx.rows");
         let mut row_refresh_states = vec![
             RowRefreshState {
                 rich,
@@ -874,7 +878,11 @@ impl TickContext {
                 tiles: ChunkIndex::default(),
             }),
         };
+        #[cfg(feature = "subprofile")]
+        let timer = crate::subprofile::Timer::start();
         context.capture_target_scopes(world, resources, initial_stock);
+        #[cfg(feature = "subprofile")]
+        timer.stop("ctx.target_scopes");
         if let Some(claims) = initial_claims {
             context.claims = claims;
         } else {

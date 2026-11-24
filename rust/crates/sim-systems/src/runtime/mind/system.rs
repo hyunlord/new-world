@@ -147,6 +147,8 @@ impl ColonyMindSystem {
         #[cfg(feature = "subprofile")]
         let timer = crate::subprofile::Timer::start();
         let mut effects = EffectState::prepare(world, resources);
+        #[cfg(feature = "subprofile")]
+        let timer_effects = crate::subprofile::Timer::start();
         let mut context = facts::prepare_continuation_context_with_claims(
             world,
             resources,
@@ -154,6 +156,8 @@ impl ColonyMindSystem {
             Some(&effects.forage_plans),
         )
         .map_err(failure)?;
+        #[cfg(feature = "subprofile")]
+        timer_effects.stop("ctx.capture_total");
         effects.harvest_budget.clone_from(&context.harvest_budget);
         *context.harvest_food.borrow_mut() = Some(self.harvest_food.snapshot(resources));
         #[cfg(feature = "subprofile")]

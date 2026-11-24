@@ -2115,7 +2115,11 @@ pub(super) fn prepare_continuation_context_with_claims(
 ) -> Result<TickContext, FactError> {
     let mut context =
         TickContext::capture_continuation_with_claims(world, resources, claims, initial_stock)?;
+    #[cfg(feature = "subprofile")]
+    let timer = crate::subprofile::Timer::start();
     prepare_social_snapshot(&mut context, world, resources)?;
+    #[cfg(feature = "subprofile")]
+    timer.stop("ctx.social");
     // Match the original capture -> social snapshot -> replace_claims boundary.
     context.invalidate(Domain::Claims)?;
     Ok(context)
