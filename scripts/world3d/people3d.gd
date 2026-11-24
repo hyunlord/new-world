@@ -79,10 +79,15 @@ var _era_tick: int = -1000000
 ## PERF2 profile (WORLDSIM_MUX2_PROFILE=1 only): µs of this frame's refresh / per-person loop / mocap draw / rest.
 var _profile: bool = OS.get_environment("WORLDSIM_MUX2_PROFILE") == "1"
 var perf_split: Dictionary = {}
-## PERF2-1 C: see _update_bin_views. Far-only walkers are re-placed every FAR_RATE frames.
+## PERF2-1 C: see _update_bin_views. Walkers in a bin seen only at mid (far) detail are re-placed every MID_RATE
+## (FAR_RATE) frames; near bins every frame.
 const VIEW_MARGIN: float = 12.0
 const VIEW_HYSTERESIS: float = 1.0
 const FAR_RATE: int = 3
+const MID_RATE: int = 2
+## PERF2-1 F: frames left to draw every people model and tier once in front of the camera (pipeline warm-up).
+var _warm_frames: int = 3
+var _warm_root: Node3D = null
 var _view_key: Array = []
 var _frame_no: int = 0
 ## PERF2-1 C: the get_people_view serial last applied (-1: the next view refreshes every row), the settled people by
@@ -176,6 +181,7 @@ func _process(delta: float) -> void:
 	if _world_sim == null or _terrain == null or int(_terrain.get("width")) <= 0 or _models.is_empty():
 		return
 	var t0: int = Time.get_ticks_usec() if _profile else 0
+	_warm_pipelines()
 	var stamp: Dictionary = get_parent().get("stamp") if get_parent() != null else {}
 	if _state.is_empty() or stamp.is_empty() or int(stamp.get("tick", -1)) != _snap_tick:
 		_snap_tick = int(stamp.get("tick", -1))
@@ -229,7 +235,7 @@ func _process(delta: float) -> void:
 		if not bool(st["dirty"]) and float(m["t"]) < 1.0 and running:
 			if not view_vis and (_frame_no + aid) % 4 != 0:
 				continue
-			if view_vis and bool(crowd.get("far_only", false)) and (_frame_no + aid) % FAR_RATE != 0:
+			if view_vis and (_frame_no + aid) % int(crowd.get("rate", 1)) != 0:
 				continue
 		var w_near: bool = view_vis and bool(crowd.get("w_near", true))
 		var w_mid: bool = view_vis and bool(crowd.get("w_mid", true))
@@ -357,6 +363,52 @@ func _sync_mocap_bins(camera: Camera3D) -> void:
 				_mocap.release(aid)
 
 
+## PERF2-1 F: draw every people model's near, mid and far bake (and the contact disc) once, in the same MultiMesh
+## format as the crowd bins, a hair in front of the camera for _warm_frames frames, so their GPU pipelines compile at
+## load rather than when a model or tier first appears in play (the props warm-up of D-SIMFIX1-27).
+func _warm_pipelines() -> void:
+	if _warm_frames <= 0:
+		return
+	var camera: Camera3D = get_viewport().get_camera_3d()
+	if camera == null:
+		return
+	if _warm_root == null:
+		_warm_root = Node3D.new()
+		_warm_root.name = "PipelineWarm"
+		add_child(_warm_root)
+		var ids: Array[String] = _model_ids()
+		if _style2:
+			ids.append_array(STYLE2_MODELS)
+			ids.append(STYLE2_FALLBACK)
+		var parts: Array = [[_blob_mesh, null, false]]
+		for id: String in ids:
+			var row: Dictionary = _model(id)
+			if row.is_empty():
+				continue
+			for tier: Array in [[row.get("vat"), row.get("mat")], [row.get("mid_vat"), row.get("mid_mat")], [row.get("lod_vat"), row.get("lod_mat")]]:
+				if tier[0] != null and tier[1] != null:
+					parts.append([(tier[0] as RefCounted).get("mesh"), tier[1], true])
+		for part: Array in parts:
+			var m: MultiMesh = MultiMesh.new()
+			m.transform_format = MultiMesh.TRANSFORM_3D
+			m.use_colors = part[2]
+			m.use_custom_data = part[2]
+			m.mesh = part[0]
+			m.instance_count = 1
+			m.set_instance_transform(0, Transform3D.IDENTITY)
+			var mmi: MultiMeshInstance3D = MultiMeshInstance3D.new()
+			mmi.multimesh = m
+			if part[1] != null:
+				mmi.material_override = part[1]
+			_warm_root.add_child(mmi)
+	_warm_root.global_transform = Transform3D(camera.global_basis.scaled(Vector3.ONE * 0.0001),
+		camera.global_position - camera.global_basis.z * (camera.near * 4.0))
+	_warm_frames -= 1
+	if _warm_frames == 0:
+		_warm_root.queue_free()
+		_warm_root = null
+
+
 ## PERF2-1 C: per bin, the LOD tiers the camera can see (Godot hides a whole bin MultiMesh by the distance to its
 ## AABB centre, the same test _sync_mocap_bins uses) and whether the bin is within VIEW_MARGIN of the view frustum
 ## (off-view casters still shade the view). Recomputed when the camera, the bins or the LOD distances change; a bin
@@ -401,7 +453,7 @@ func _update_bin_views(camera: Camera3D) -> void:
 		crowd["w_mid"] = w_mid
 		crowd["w_lod"] = w_lod
 		crowd["w_blob"] = w_blob
-		crowd["far_only"] = w_lod and not w_mid and not w_near
+		crowd["rate"] = 1 if w_near else (MID_RATE if w_mid else (FAR_RATE if w_lod else 1))
 		if changed and vis:
 			for aid: int in crowd["slot"]:
 				if _state.has(aid):
