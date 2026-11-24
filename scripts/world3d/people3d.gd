@@ -75,6 +75,9 @@ var _was_running: bool = true
 ## Current era id (bindings3d `people.by_era` picks the age/sex/era variant).
 var _era: String = ""
 var _era_tick: int = -1000000
+## PERF2 profile (WORLDSIM_MUX2_PROFILE=1 only): µs of this frame's refresh / per-person loop / mocap draw / rest.
+var _profile: bool = OS.get_environment("WORLDSIM_MUX2_PROFILE") == "1"
+var perf_split: Dictionary = {}
 
 
 func setup(world_sim: Node, terrain: Node) -> void:
@@ -157,6 +160,7 @@ func _step_seconds() -> float:
 func _process(delta: float) -> void:
 	if _world_sim == null or _terrain == null or int(_terrain.get("width")) <= 0 or _models.is_empty():
 		return
+	var t0: int = Time.get_ticks_usec() if _profile else 0
 	var stamp: Dictionary = get_parent().get("stamp") if get_parent() != null else {}
 	if _state.is_empty() or stamp.is_empty() or int(stamp.get("tick", -1)) != _snap_tick:
 		_snap_tick = int(stamp.get("tick", -1))
@@ -165,6 +169,8 @@ func _process(delta: float) -> void:
 			_refresh_era()
 		_refresh(SimReads.read(_world_sim, "get_agent_snapshot"))
 		_simplify_far(_state.size() * maxi(1, replicate) > int(Data3D.param("people.simple_above", 2000)))
+	var t1: int = Time.get_ticks_usec() if _profile else 0
+	var visited: int = _active.size()
 	var running: bool = _world_sim.process_mode != Node.PROCESS_MODE_DISABLED
 	var copies: int = maxi(1, replicate)
 	var height: float = float(Data3D.param("people.adult_height", 1.7))
@@ -275,13 +281,18 @@ func _process(delta: float) -> void:
 		# Done once it stands still, or the clock is stopped (a paused mid-step figure is drawn as it is).
 		if (float(m["t"]) >= 1.0 or not running) and (not has_mocap or str(st["cue"]).is_empty()):
 			_active.erase(aid)
+	var t2: int = Time.get_ticks_usec() if _profile else 0
 	if _mocap != null:
 		_mocap.draw(self, clock)
+	var t3: int = Time.get_ticks_usec() if _profile else 0
 	var chosen: Dictionary = _state.get(_aid_of.get(selected, -1), {}) if selected != -1 else {}
 	if not chosen.is_empty():
 		_ring.visible = true
 		_ring.position = (chosen["feet"] as Vector3) + Vector3(0, 0.04, 0)
 	_update_highlights()
+	if _profile:
+		perf_split = {"frame": Engine.get_process_frames(), "refresh_us": t1 - t0, "loop_us": t2 - t1, "mocap_us": t3 - t2,
+			"rest_us": Time.get_ticks_usec() - t3, "visited": visited, "people": _state.size()}
 
 
 func _sync_mocap_bins(camera: Camera3D) -> void:

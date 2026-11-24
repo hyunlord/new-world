@@ -340,6 +340,11 @@ func _run() -> void:
 			bridge_ms += float(usec.get(g, 0)) / 1000.0
 		row["bridge_calls"] = bridge_calls
 		row["bridge_ms"] = bridge_ms
+		var people_node: Node = main.get_node_or_null("World3D/People")
+		if people_node != null and people_node.get("perf_split") is Dictionary:
+			var split: Dictionary = people_node.get("perf_split")
+			if int(split.get("frame", -1)) == pf:
+				row["people_split"] = split
 		if has_native:
 			var nat: Dictionary = world.call("mux2_native_timings")
 			var tot: Dictionary = nat.get("totals", {})
