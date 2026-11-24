@@ -26,7 +26,8 @@ func _run() -> void:
 	var config: ConfigFile = ConfigFile.new()
 	config.load("res://sim_bridge.gdextension")
 	var library: String = str(config.get_value("libraries", "macos.debug", ""))
-	var world: Object = ClassDB.instantiate("WorldSimNode")
+	# WorldSimNode is no_init: create() is its only constructor (content boot first).
+	var world: Object = ClassDB.class_call_static("WorldSimNode", "create")
 	if world == null or scene.is_empty() or not bool(world.call("load_world", scene)):
 		push_error("PERF2_IDENTITY cannot load " + scene)
 		quit(1)
