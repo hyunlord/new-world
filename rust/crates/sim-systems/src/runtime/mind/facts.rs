@@ -1214,6 +1214,9 @@ impl LazyRow<'_> {
             FactPreparation::Gather => Some("gather_food"),
             FactPreparation::Direct | FactPreparation::Routine(_) => None,
         };
+        // D-HOME1-3 Q3: per-fact provider time under the `subprofile` feature (absent from normal builds).
+        #[cfg(feature = "subprofile")]
+        let timer = crate::subprofile::Timer::start();
         let value = if let Some(binding) = target_binding {
             i64::from(resolve_target(self.context, self.resources, self.agent, binding)?.is_some())
         } else if let Some(key) = random_key {
@@ -1234,6 +1237,8 @@ impl LazyRow<'_> {
                 name,
             )?
         };
+        #[cfg(feature = "subprofile")]
+        timer.stop(name);
         if provider.kind == FactKind::Bool && !matches!(value, 0 | 1) {
             return Err(MindEvalError::InvalidBoolean(fact).into());
         }
