@@ -180,6 +180,16 @@ func _run() -> void:
 	for _i: int in 60:
 		await process_frame
 	var game_first_frame_msec: int = _first_frame_msec
+	# Probes go in before the load so the rebuild frames after it are attributed too.
+	var w3d_early: Node = main.get_node_or_null("World3D")
+	_bracket(main)
+	if w3d_early != null:
+		_bracket(w3d_early)
+	_bracket(main.get_node_or_null("UI"))
+	_bracket(main.get_node_or_null("UI/MuxHud"))
+	var probes_early: Array = []
+	_probes_in_order(main, probes_early)
+	var after_load_top: Array = []
 	var save: String = _arg("--load", "")
 	var load_ms: float = -1.0
 	if save != "":
@@ -196,6 +206,16 @@ func _run() -> void:
 		await RenderingServer.frame_post_draw
 		var now: int = Time.get_ticks_usec()
 		after_load.append(float(now - last) / 1000.0)
+		if float(now - last) > 100000.0:
+			var pf0: int = Engine.get_process_frames()
+			var top0: Array = []
+			for k0: int in probes_early.size() - 1:
+				var a0: Probe = probes_early[k0]
+				var b0: Probe = probes_early[k0 + 1]
+				if a0.frame == pf0 and b0.frame == pf0 and b0.usec >= a0.usec:
+					top0.append([a0.key, float(b0.usec - a0.usec) / 1000.0])
+			top0.sort_custom(func(x: Array, y: Array) -> bool: return float(x[1]) > float(y[1]))
+			after_load_top.append({"frame": after_load.size() - 1, "ms": float(now - last) / 1000.0, "compiles": _compilations(), "top": top0.slice(0, 5)})
 		last = now
 	var w3d: Node = main.get_node_or_null("World3D")
 	if _arg("--paused", "") == "1":
@@ -235,11 +255,6 @@ func _run() -> void:
 		graph.position = Vector2(12, 12)
 		layer.add_child(graph)
 		root.add_child(layer)
-	_bracket(main)
-	if w3d != null:
-		_bracket(w3d)
-	_bracket(main.get_node_or_null("UI"))
-	_bracket(main.get_node_or_null("UI/MuxHud"))
 	var late: Probe = Probe.new()
 	late.name = "Perf2ProbeLate"
 	late.key = "<late priority>"
@@ -255,6 +270,11 @@ func _run() -> void:
 		await process_frame
 	var vp: RID = root.get_viewport_rid()
 	RenderingServer.viewport_set_measure_render_time(vp, true)
+	# `--freeze 1`: stop every _process under Main (simulation, views, UI) so the frame time is the renderer's alone
+	# (CPU submit + GPU; vsync off). Used where the GPU timer is unavailable.
+	if _arg("--freeze", "") == "1":
+		main.process_mode = Node.PROCESS_MODE_DISABLED
+	var rd: RenderingDevice = RenderingServer.get_rendering_device()
 	var probes: Array = []
 	_probes_in_order(main, probes)
 	probes.append(late)
@@ -271,7 +291,10 @@ func _run() -> void:
 	var s0: int = Time.get_ticks_usec()
 	_post_usec = -1
 	var sample_frames: int = 0
-	while Time.get_ticks_usec() - s0 < int(seconds * 1e6):
+	# `--frames N` (capture video with --write-movie): stop after N drawn frames instead of S wall seconds.
+	var frame_limit: int = int(_arg("--frames", "0"))
+	print("PERF2_MOVIE_START %d" % Engine.get_frames_drawn())
+	while (frame_limit > 0 and sample_frames < frame_limit) or (frame_limit <= 0 and Time.get_ticks_usec() - s0 < int(seconds * 1e6)):
 		await RenderingServer.frame_post_draw
 		var now_usec: int = Time.get_ticks_usec()
 		var pf: int = Engine.get_process_frames()
@@ -288,6 +311,11 @@ func _run() -> void:
 		row["objects"] = Performance.get_monitor(Performance.RENDER_TOTAL_OBJECTS_IN_FRAME)
 		row["gpu_ms"] = RenderingServer.viewport_get_measured_render_time_gpu(vp)
 		row["render_cpu_ms"] = RenderingServer.viewport_get_measured_render_time_cpu(vp) + RenderingServer.get_frame_setup_time_cpu()
+		if rd != null and sample_frames % 60 == 5:
+			var passes: Dictionary = {}
+			for ti: int in rd.get_captured_timestamps_count():
+				passes[rd.get_captured_timestamp_name(ti)] = float(rd.get_captured_timestamp_gpu_time(ti)) / 1e6
+			row["gpu_timestamps_ms"] = passes
 		var c: float = _compilations()
 		row["compiles"] = c - compiles_prev
 		compiles_prev = c
@@ -366,6 +394,16 @@ func _run() -> void:
 		getters[g2] = {"calls_per_frame": float(getter_calls[g2]) / maxf(1.0, float(frames.size())),
 			"usec_per_frame": float(getter_usec[g2]) / maxf(1.0, float(frames.size())),
 			"usec_per_call": float(getter_usec[g2]) / maxf(1.0, float(getter_calls[g2])), "bytes": snap_bytes}
+	# Save through the bridge (as the game's save menu does), timed; the file goes to user:// and is removed.
+	var save_ms: float = -1.0
+	var save_bytes: int = -1
+	if _arg("--time-save", "1") == "1" and world.has_method("save_world"):
+		var tmp: String = ProjectSettings.globalize_path("user://perf2_frame_tmp.wsave")
+		var ts: int = Time.get_ticks_usec()
+		if bool(world.call("save_world", tmp)):
+			save_ms = float(Time.get_ticks_usec() - ts) / 1000.0
+			save_bytes = FileAccess.get_file_as_bytes(tmp).size()
+			DirAccess.remove_absolute(tmp)
 	var people: int = (SimReads.read(world, "get_agent_snapshot").get("ids", PackedInt64Array()) as PackedInt64Array).size()
 	var summary: Dictionary = {"scene": save.get_file(), "zoom": zoom, "paused": _arg("--paused", "") == "1", "hide": _arg("--hide", ""),
 		"label": _arg("--label", ""), "people": people, "seconds": elapsed, "frames": frames.size(), "fps": float(frames.size()) / maxf(0.001, elapsed),
@@ -378,14 +416,14 @@ func _run() -> void:
 		"segments_ms_mean": seg_mean, "segments_ms_max": seg_max, "getters": getters,
 		"compiles_warmup": compiles_measure_start - warm_compiles, "compiles_measured": compiles_prev - compiles_measure_start,
 		"hitches": hitches.slice(0, 60), "hitch_count": hitches.size(),
-		"load_world_ms": load_ms, "after_load_frames_ms": after_load,
+		"load_world_ms": load_ms, "save_world_ms": save_ms, "save_world_bytes": save_bytes, "after_load_frames_ms": after_load, "after_load_slow": after_load_top,
 		"startup": {"engine_to_first_frame_msec": game_first_frame_msec, "engine_to_tool_start_msec": boot_msec},
 		"memory": {"video_mem": Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED), "texture_mem": _monitor("RENDER_TEXTURE_MEM_USED"),
 			"buffer_mem": _monitor("RENDER_BUFFER_MEM_USED"), "static_mem": Performance.get_monitor(Performance.MEMORY_STATIC),
 			"objects": Performance.get_monitor(Performance.OBJECT_COUNT), "nodes": Performance.get_monitor(Performance.OBJECT_NODE_COUNT),
 			"resources": Performance.get_monitor(Performance.OBJECT_RESOURCE_COUNT), "orphans": Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT)},
 		"census": _scene_census(w3d) if w3d != null else {}, "native_profile": has_native,
-		"size": [root.size.x, root.size.y], "focus": root.has_focus(), "renderer": RenderingServer.get_current_rendering_method(),
+		"size": [root.size.x, root.size.y], "focus": root.has_focus(), "renderer": RenderingServer.get_current_rendering_method(), "rd_timestamps_supported": rd != null and rd.get_captured_timestamps_count() > 0, "freeze": _arg("--freeze", "") == "1",
 		"adapter": RenderingServer.get_video_adapter_name()}
 	var out: String = _arg("--out", "")
 	if out != "":
