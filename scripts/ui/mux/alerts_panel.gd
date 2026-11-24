@@ -179,6 +179,11 @@ func _show_refresh() -> void:
 		_rebuild()
 
 
+func _exit_tree() -> void:
+	# A worker task still running at quit crashes the engine's teardown (recursive_mutex): finish it first.
+	_join()
+
+
 ## Wait for a running background evaluation (main thread only).
 func _join() -> void:
 	if _task >= 0:
