@@ -235,6 +235,9 @@ func _run() -> void:
 		if hidden is Node3D:
 			(hidden as Node3D).visible = false
 			hidden.process_mode = Node.PROCESS_MODE_DISABLED
+	# PERF2-1: `--speed N` runs the simulation at N× (camera_controller.set_speed, 1–4).
+	if _arg("--speed", "") != "":
+		camera.call("set_speed", float(_arg("--speed", "1")))
 	var zoom: float = float(_arg("--zoom", "1"))
 	camera.zoom = Vector2(zoom, zoom)
 	var info: Dictionary = SimReads.read(world, "get_world_info")
@@ -411,7 +414,7 @@ func _run() -> void:
 			DirAccess.remove_absolute(tmp)
 	var people: int = (SimReads.read(world, "get_agent_snapshot").get("ids", PackedInt64Array()) as PackedInt64Array).size()
 	var summary: Dictionary = {"scene": save.get_file(), "zoom": zoom, "paused": _arg("--paused", "") == "1", "hide": _arg("--hide", ""),
-		"label": _arg("--label", ""), "people": people, "seconds": elapsed, "frames": frames.size(), "fps": float(frames.size()) / maxf(0.001, elapsed),
+		"label": _arg("--label", ""), "speed": float(_arg("--speed", "1")), "people": people, "seconds": elapsed, "frames": frames.size(), "fps": float(frames.size()) / maxf(0.001, elapsed),
 		"frame_ms": {"mean": mean, "p50": _pct(sorted, 50.0), "p90": _pct(sorted, 90.0), "p99": _pct(sorted, 99.0), "max": _pct(sorted, 100.0)},
 		"over_33ms_per_min": over33 / elapsed * 60.0, "over_50ms_per_min": over50 / elapsed * 60.0,
 		"process_ms_mean": avg.call("process_ms"), "physics_ms_mean": avg.call("physics_ms"), "gpu_ms_mean": avg.call("gpu_ms"),
