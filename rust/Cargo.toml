@@ -55,6 +55,7 @@ codegen-units = 1
 # the bridge's dependencies included, at opt-level 3 with debug assertions and overflow checks off, thin LTO.
 # Its own profile (own target/game dir) so cargo test/clippy --release never relink the game's dylib with
 # workspace-unified features. `tools/play.sh --dev` loads the dev-profile library instead (debugging).
+# codegen-units 16: DGX n1000 x 6 days, 6.97 ms/tick against 7.03 ms at 1 (two interleaved runs each), and it builds faster.
 [profile.game]
 inherits = "release"
 opt-level = 3
@@ -62,5 +63,5 @@ debug = false
 debug-assertions = false
 overflow-checks = false
 lto = "thin"
-codegen-units = 1
+codegen-units = 16
 incremental = false
