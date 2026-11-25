@@ -17,7 +17,7 @@ Json: TypeAlias = None | bool | int | float | str | list['Json'] | dict[str, 'Js
 INPUT_DIRS: Final = ('rust/crates', 'scripts', 'scenes', 'shaders', 'assets', 'localization', 'tools/v8')
 INPUT_FILES: Final = ('rust/Cargo.toml', 'rust/Cargo.lock', 'rust/rust-toolchain.toml',
                       'project.godot', 'sim_bridge.gdextension', 'tools/play.sh')
-BRIDGE: Final = 'rust/target/debug/libsim_bridge.dylib'
+BRIDGE: Final = 'rust/target/game/libsim_bridge.dylib'  # the library sim_bridge.gdextension maps on macOS (PERF2-1)
 
 
 @dataclass(slots=True)

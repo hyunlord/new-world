@@ -32,7 +32,7 @@ func _hashes() -> Dictionary:
 	result["res://assets/ui/chronicle_feed.json"] = FileAccess.get_sha256("res://assets/ui/chronicle_feed.json")
 	result["res://scripts/ui/mux/mux_hud.gd"] = FileAccess.get_sha256("res://scripts/ui/mux/mux_hud.gd")
 	result["res://scripts/ui/mux/legacy_layout.gd"] = FileAccess.get_sha256("res://scripts/ui/mux/legacy_layout.gd")
-	for path: String in [get_script().resource_path, "res://tools/v8/mux2_text_capture.gd", "res://scripts/ui/panels/agent_inspector_panel.gd", "res://scripts/ui/panels/causal_panel.gd", "res://scripts/ui/panels/chronicle_panel.gd", "res://sim_bridge.gdextension", "res://rust/target/debug/libsim_bridge.dylib", "res://rust/target/release/libsim_bridge.dylib"]:
+	for path: String in [get_script().resource_path, "res://tools/v8/mux2_text_capture.gd", "res://scripts/ui/panels/agent_inspector_panel.gd", "res://scripts/ui/panels/causal_panel.gd", "res://scripts/ui/panels/chronicle_panel.gd", "res://sim_bridge.gdextension", "res://rust/target/game/libsim_bridge.dylib", "res://rust/target/release/libsim_bridge.dylib"]:
 		result[path] = FileAccess.get_sha256(path) if FileAccess.file_exists(path) else "ABSENT"
 	return result
 
